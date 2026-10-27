@@ -12,7 +12,8 @@ Pattern: the kind tabs' Strategy (neighbour_lists.KindTab), as the
 covenant's Manors tab uses it: the tab is a KindTab of lists and a block,
 drawn by each front-end's kind-tab code, the covenant adapted to a
 neighbour's record (manors.manors_of). A kind of project is a dict entry
-(KIND_TEXT), not a class: 932-C's Menagerie joins it as a second kind."""
+(KIND_TEXT), not a class: the Menagerie joins it as a second kind, and
+the staged projects (staged_projects.py) as three more."""
 
 from __future__ import annotations
 
@@ -21,6 +22,7 @@ from collections.abc import Callable
 from typing import Any
 
 from . import menagerie as men
+from . import staged_projects as staged
 from .commands import Act, Command, Confirm, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -50,6 +52,7 @@ from .models.hermetic_projects import (
     REPAIR,
     RITUAL,
     SHODDY,
+    STAGED_KINDS,
     STANDARD,
     STRESS,
     STRESS_OUTCOMES,
@@ -63,6 +66,7 @@ from .neighbour_lists import KindBlock, KindList, KindTab, LedgerEntry, tab_ops
 from .references import Fact
 from .rules import dice, sites
 from .rules import hermetic_projects as hp
+from .rules import staged_projects as staged_rules
 from .rules.aura_change import number as aura_number
 from .sections import (
     PROJECT_DEVICES_SECTION,
@@ -82,6 +86,7 @@ PANEL = "[dim]Choose a project, a work or a device.[/]"
 KIND_TEXT: dict[str, str] = {
     GREAT_TOWER: "a tower raised level by level, by ritual and by masons",
     MENAGERIE: men.KIND_LINE,
+    **staged_rules.KIND_LINES,
 }
 
 
@@ -135,6 +140,8 @@ def _coloured(words: str, tone: str) -> str:
 def progress(project: HermeticProject) -> str:
     if project.kind == MENAGERIE:
         return men.progress(project)
+    if project.kind in STAGED_KINDS:
+        return staged.progress(project)
     levels = hp.height_levels(project)
     if not levels:
         return "not built"
@@ -144,6 +151,8 @@ def progress(project: HermeticProject) -> str:
 def note(project: HermeticProject) -> str:
     if project.kind == MENAGERIE:
         return men.note(project)
+    if project.kind in STAGED_KINDS:
+        return staged.note(project)
     quality = hp.quality(project)
     if not quality:
         return ""
@@ -198,6 +207,8 @@ def project_info(saga: Saga, holder: Neighbour, index: int) -> str:
         f"{_when(project.season, project.year)}.",
         men.menagerie_text(saga, covenant, project)
         if project.kind == MENAGERIE
+        else staged.project_text(saga, project)
+        if project.kind in STAGED_KINDS
         else tower_text(saga, covenant, project),
     ]
     if project.description.strip():
@@ -617,6 +628,8 @@ def _write_project(project: HermeticProject, values: dict[str, Any]) -> None:
     project.raw_materials = values.get("raw_materials") or 0
     project.description = values.get("description") or ""
     men.write_project(project, values)
+    if project.kind in STAGED_KINDS and not project.stages:
+        project.stages = staged.seed(project.kind)
 
 
 def project_form(
@@ -1400,12 +1413,28 @@ def menagerie_tab(saga: Saga, covenant: Covenant) -> KindTab:
     )
 
 
+def staged_tab(saga: Saga, covenant: Covenant) -> KindTab:
+    """The Projects tab with a staged project shown: its projects, the
+    project's facts and rules, its stages and their works
+    (staged_projects.py)."""
+    return KindTab(
+        "Projects",
+        TAB_ID,
+        (PROJECTS_LIST, staged.STAGES_LIST, staged.STAGE_WORKS_LIST),
+        blocks=(staged.staged_block(saga, covenant, tower_edit, PROJECTS_SECTION),),
+        icon="covenant",
+        panel=staged.PANEL,
+    )
+
+
 def projects_tab(saga: Saga, covenant: Covenant) -> KindTab:
     """The covenant's Projects tab: its projects, the one shown's tower,
-    works and craft devices; a Menagerie's own sections when one is
-    shown."""
+    works and craft devices; a Menagerie's or a staged project's own
+    sections when one is shown."""
     if shown_kind(covenant) == MENAGERIE:
         return menagerie_tab(saga, covenant)
+    if shown_kind(covenant) in STAGED_KINDS:
+        return staged_tab(saga, covenant)
     return KindTab(
         "Projects",
         TAB_ID,

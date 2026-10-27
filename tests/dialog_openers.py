@@ -19,8 +19,11 @@ from ars_magica_manager import (
     giving,
     grog_templates,
     meeting,
+    melee_events,
+    menagerie,
     neighbour_filter,
     siege_actions,
+    staged_projects,
     storage,
     vis,
 )
@@ -30,13 +33,23 @@ from ars_magica_manager import house_rules as hr
 from ars_magica_manager import mystery_cults as cult_core
 from ars_magica_manager.forms import agents as agent_forms
 from ars_magica_manager.forms import animal as animal_forms
+from ars_magica_manager.forms import certamen_duel as certamen_forms
 from ars_magica_manager.forms import charter as charter_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
 from ars_magica_manager.forms import covers as cover_forms
 from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import (
+    grog_story,
+    lab_item,
+    ship_build,
+    whereabouts,
+    wizards_war,
+)
 from ars_magica_manager.forms import grogs as grog_forms
-from ars_magica_manager.forms import lab_item
+from ars_magica_manager.forms import hook_stories as hook_story_forms
 from ars_magica_manager.forms import land_shaping as land_forms
+from ars_magica_manager.forms import threshold as threshold_forms
+from ars_magica_manager.forms import trait_roll as trait_roll_forms
 from ars_magica_manager.forms import tribunal as tribunal_forms
 from ars_magica_manager.forms import worksheet as wf
 
@@ -50,11 +63,13 @@ from ars_magica_manager.models import (
     Battle,
     BattleSide,
     Book,
+    Case,
     Character,
     CharterClause,
     CraftDevice,
     CultDegree,
     CultScript,
+    DeepCover,
     HermeticProject,
     KnownSpell,
     LandProject,
@@ -74,7 +89,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.models.criamon import Stigma
 from ars_magica_manager.models.menagerie import Beast, Breeding
-from ars_magica_manager.rules import creation_xp
+from ars_magica_manager.rules import creation_xp, hermetic_law
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
 from ars_magica_manager.rules.xp import ability_xp as cult_ability_xp
@@ -83,6 +98,8 @@ from ars_magica_manager.sections import (
     BREEDINGS_SECTION,
     PROJECT_DEVICES_SECTION,
     PROJECT_WORKS_SECTION,
+    STAGE_WORKS_SECTION,
+    STAGED_STAGES_SECTION,
     TOWER_SECTION,
 )
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
@@ -713,6 +730,96 @@ async def _open_rhine_rite(ws) -> None:
             }
         )
     await _open_meeting_step(2, "meeting-business")(ws)
+
+
+# -- the guides' gaps, round two --
+
+
+def _run(build):
+    """An opener that runs `build(ws)`'s first step."""
+    return lambda ws: ws._run_steps(build(ws))
+
+
+async def _open_staged(ws, kind: str, open_form) -> None:
+    """A form of the covenant's Projects tab with a staged project of
+    `kind` shown, Vulcan's Hearth, its chapter's stages (added in memory,
+    saved only with the form)."""
+    covenant = ws.selected_covenant
+    if not any(p.id == "hearth" for p in covenant.hermetic_projects):
+        covenant.hermetic_projects.insert(
+            0,
+            HermeticProject(
+                id="hearth",
+                name="Vulcan's Hearth",
+                kind=kind,
+                stages=staged_projects.seed(kind),
+            ),
+        )
+        covenant.project_shown = "hearth"
+        await ws._show_covenant_detail(covenant)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    open_form()
+
+
+def _staged(kind: str, form):
+    """An opener running `form(ws)` with a staged project of `kind` shown."""
+    return lambda ws: _open_staged(ws, kind, lambda: form(ws))
+
+
+async def _open_menagerie_award(ws) -> None:
+    """More's Reputation Award on the Spur Menagerie, Alys its owner."""
+
+    def form() -> None:
+        project = ws.selected_covenant.hermetic_projects[0]
+        project.owner_id, project.reputation = "comp1", "Keeper of Beasts"
+        ws._run_steps(menagerie.award_form(ws.saga, ws.selected_covenant))
+
+    await _open_menagerie(ws, form)
+
+
+def _with_war(ws):
+    """A Wizard's War on the Rhine's docket: Leandro on Brother Oda."""
+    tribunal = ws.saga.tribunals[0]
+    if not any(c.id == "war-contract" for c in tribunal.cases):
+        tribunal.cases.insert(
+            0,
+            Case(
+                "Leandro on Brother Oda",
+                kind=hermetic_law.WAR,
+                brought_by="Leandro",
+                against="Brother Oda",
+                filed_year=ws.saga.current_year,
+                filed_season="Spring",
+                month=1,
+                id="war-contract",
+            ),
+        )
+    return wizards_war.end_form(ws.saga, tribunal, 0)
+
+
+def _faerie_hill(ws):
+    """Cross the Threshold at the Drachenfels, made a Faerie place of aura
+    5 with Realms of Power: Faerie in play (in memory)."""
+    place = ws.saga.neighbour("drachenfels")
+    place.realm = "Faerie"
+    place.details["levels"] = []
+    if ws.saga.books_in_play is not None and "RoP:F" not in ws.saga.books_in_play:
+        ws.saga.books_in_play.append("RoP:F")
+    return threshold_forms.threshold_form(ws.saga, place)
+
+
+def _with_cover(ws):
+    """A Disguise Roll for Leandro, given a cover (in memory)."""
+    character = ws.selected_character
+    if not character.covers:
+        character.covers.append(DeepCover("Reynard", role="a mercenary"))
+    return cover_forms.disguise_form(ws.saga, character)
+
+
+def _with_hook(ws):
+    """Suggest a Story from Rabenstein's Hook."""
+    return hook_story_forms.story_form(ws.saga, ws.selected_covenant)
 
 
 OPENERS: dict[str, Opener] = {
@@ -1765,6 +1872,59 @@ OPENERS: dict[str, Opener] = {
     "seek loophole": Opener(
         "town", lambda ws: _on_charter_lord(ws, lambda ws: ws.action_seek_loophole())
     ),
+    # The guides' gaps, round two.
+    "grog story experience": Opener(
+        "character",
+        _run(lambda ws: grog_story.story_form(ws.saga, ws.saga.character("grog9"))),
+    ),
+    "melee event": Opener(
+        "character",
+        _run(lambda ws: melee_events.melee_form(ws.saga, ws.selected_character)),
+    ),
+    "certamen": Opener(
+        "character",
+        _run(lambda ws: certamen_forms.duel_form(ws.saga, ws.selected_character)),
+    ),
+    "where he is": Opener(
+        "character",
+        _run(lambda ws: whereabouts.where_form(ws.saga, ws.selected_character)),
+    ),
+    "trait roll": Opener(
+        "character",
+        _run(lambda ws: trait_roll_forms.roll_form(ws.saga, ws.selected_character)),
+    ),
+    "build a ship": Opener(
+        "covenant",
+        _run(lambda ws: ship_build.build_form(ws.saga, ws.selected_covenant)),
+    ),
+    "suggest a story": Opener("covenant", _run(_with_hook)),
+    "disguise roll": Opener("character", _run(_with_cover)),
+    "menagerie reputation award": Opener("covenant", _open_menagerie_award),
+    # A staged Hermetic Project (Hermetic Projects pp. 9-118).
+    "add project stage": Opener(
+        "covenant",
+        _staged("Burning City", lambda ws: ws._core_verb(STAGED_STAGES_SECTION, "add")),
+    ),
+    "add stage work": Opener(
+        "covenant",
+        _staged("Burning City", lambda ws: ws._core_verb(STAGE_WORKS_SECTION, "add")),
+    ),
+    "warning bell": Opener(
+        "covenant", _staged("Burning City", lambda ws: ws.action_warning_bell())
+    ),
+    "gather a connection": Opener(
+        "covenant",
+        _staged("Intangible Assassin", lambda ws: ws.action_gather_connection()),
+    ),
+    "lower an aegis": Opener(
+        "covenant",
+        _staged("Intangible Assassin", lambda ws: ws.action_lower_aegis()),
+    ),
+    "death roll": Opener(
+        "covenant", _staged("Living Corpse", lambda ws: ws.action_death_roll())
+    ),
+    "war's end": Opener("tribunal", _run(_with_war)),
+    "cross the threshold": Opener("place", _run(_faerie_hill)),
 }
 
 

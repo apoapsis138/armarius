@@ -259,6 +259,21 @@ def test_loyalty_of_minus_six_halves_the_covenfolks_savings():
     assert inhabitants.productivity_note(6).startswith("Prevailing Loyalty +6")
 
 
+def test_loyalty_of_minus_six_halves_income_that_relies_on_the_covenfolk():
+    """DE p. 185: income which relies upon covenfolk is halved too."""
+    from ars_magica_manager.models import IncomeSource
+
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.economics.income_sources = [
+        IncomeSource("mill", "Mill", income=30, covenfolk_work=True),
+        IncomeSource("rents", "Rents", income=20),
+    ]
+    assert economics.summarize(saga, covenant).income == 50
+    covenant.loyalty.actions_and_events = -200
+    assert economics.summarize(saga, covenant).income == 35
+
+
 def test_writing_materials_count_scribes_kept_as_specialists():
     saga = _saga()
     covenant = saga.covenants[0]

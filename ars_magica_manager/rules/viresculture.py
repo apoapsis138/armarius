@@ -174,6 +174,16 @@ def breeding_seasons(total: int) -> int:
     return round_up(max(0, total) / INVIGORATION_PER_SEASON)
 
 
+#: A Stirps' breeding season: the spring for animals, the autumn for
+#: plants (Legends of Hermes p. 75).
+PLANT_FORM = "Herbam"
+
+
+def breeding_season(form: str) -> str:
+    """The season a Stirps of `form` breeds in."""
+    return "Autumn" if form.casefold() == PLANT_FORM.casefold() else "Spring"
+
+
 def pawns_per_breeding(level: int) -> int:
     """The pawns of vis in each litter or crop: a fifth of the Might (or
     effect level), rounded up."""

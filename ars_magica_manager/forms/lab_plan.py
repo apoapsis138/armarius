@@ -19,7 +19,7 @@ import uuid
 from collections.abc import Callable
 from typing import Any
 
-from .. import catalog, seasons
+from .. import catalog, seasons, staged_projects
 from .. import lab_texts as lt
 from .. import spell_parameters as sp
 from .. import spells as spl
@@ -97,6 +97,10 @@ NO_OWNER = (
 )
 
 ShowIf = Callable[[dict[str, Any]], bool]
+
+
+#: The Magical Focus choice, when the focus records its Arts.
+FOCUS_BY_ARTS, FOCUS_YES, FOCUS_NO = "arts", "yes", "no"
 
 
 def _doing(*keys: str) -> ShowIf:
@@ -394,6 +398,16 @@ class LabPlanForm:
                 bool(design and design.ritual),
                 show_if=inventing,
             ),
+            DialogField(
+                "lasting",
+                "Creates something lasting",
+                "check",
+                bool(design and design.lasting),
+                show_if=lambda v: inventing(v) and v.get("technique") == "Creo",
+                hint="A Creo effect whose creation is meant to stay after a "
+                "Momentary Duration must be a Ritual (DE p. 311); a flame or "
+                "bolt that is gone at once is not.",
+            ),
         ]
         for kind in KINDS:
             current = getattr(design, kind) if design else FIRST_STEPS[kind]
@@ -467,6 +481,39 @@ class LabPlanForm:
         ]
         return found
 
+    def _focus_field(self, plan: SeasonPlan | None) -> DialogField:
+        """Whether the Magical Focus applies: by the Arts the focus records
+        (the default when it records some), or ticked by hand."""
+        arts = lab_seasons.focus_arts(self.magus)
+        if not arts:
+            return DialogField(
+                "focus",
+                "Magical Focus",
+                "check",
+                bool(plan and plan.focus),
+                show_if=_chosen,
+            )
+        named = ", ".join(sorted(arts))
+        if plan is None or plan.focus_by_arts:
+            chosen = FOCUS_BY_ARTS
+        else:
+            chosen = FOCUS_YES if plan.focus else FOCUS_NO
+        return DialogField(
+            "focus",
+            "Magical Focus",
+            "select",
+            chosen,
+            options=[
+                (escape(f"By its Arts ({named})"), FOCUS_BY_ARTS),
+                ("Applies", FOCUS_YES),
+                ("Doesn't apply", FOCUS_NO),
+            ],
+            show_if=_chosen,
+            hint="By its Arts, it applies when the work's Technique and Form "
+            "are among them; choose otherwise for a focus narrower than its "
+            "Arts (DE p. 94).",
+        )
+
     def design_values(self, values: dict[str, Any]) -> dict[str, Any]:
         """The design fields' values from the spell Start from names (all
         blank for a new spell)."""
@@ -480,6 +527,7 @@ class LabPlanForm:
             "requisites": ", ".join(design.requisites) if design else "",
             "base_level": design.base_level if design else None,
             "ritual": bool(design and design.ritual),
+            "lasting": bool(design and design.lasting),
             "extra_magnitudes": design.extra_magnitudes if design else 0,
             "base_effect": "",
             "guideline": None,
@@ -720,6 +768,7 @@ class LabPlanForm:
                 allow_blank=True,
                 placeholder="(choose; they're kept on the Inventory chapters)",
                 show_if=enchanting,
+                fills=self._bonus_of_device,
             ),
             DialogField(
                 "shape",
@@ -744,6 +793,7 @@ class LabPlanForm:
                 hint="Choosing an effect chooses its device.",
                 fills=self._device_of_effect,
             ),
+            *self._attunement_fields(),
             DialogField(
                 "effect_text",
                 "From Lab Text",
@@ -993,15 +1043,7 @@ class LabPlanForm:
             ),
         ]
         if lab_seasons.has_focus(self.magus):
-            found.append(
-                DialogField(
-                    "focus",
-                    "Magical Focus",
-                    "check",
-                    bool(plan and plan.focus),
-                    show_if=_chosen,
-                )
-            )
+            found.append(self._focus_field(plan))
         specialty = lab_seasons.theory_specialty(self.magus)
         if specialty:
             found.append(
@@ -1036,6 +1078,17 @@ class LabPlanForm:
                 show_if=_chosen,
                 hint="10 cost nothing, 11-20 lower the Lab Total, more rule it out.",
             ),
+            DialogField(
+                "recreating_theory",
+                "Recreating a flawed experiment: Magic Theory then",
+                "int",
+                plan.recreating_theory if plan else 0,
+                show_if=_chosen,
+                hint="Recreating what an experiment left flawed, in a later "
+                "season, adds the Magic Theory score you experimented with "
+                "again (DE p. 274). 0 if not.",
+            ),
+            *self._stage_fields(plan),
             DialogField(
                 "other_modifier",
                 "Other modifiers",
@@ -1133,6 +1186,75 @@ class LabPlanForm:
                     "shape": es.suggested_shape_bonus(self.magus, device, effect),
                 }
         return {}
+
+    def _stage_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """A season spent on a stage of one of his covenant's staged
+        Hermetic Projects (a Burning City's, a Living Corpse's): it goes
+        into the project's works when the season is applied."""
+        options = staged_projects.stage_options(self.saga, self.magus)
+        if not options:
+            return []
+        return [
+            DialogField(
+                "project_stage",
+                "Spent on a project's stage",
+                "select",
+                _kept(plan.project_stage if plan else None, options),
+                options=options,
+                allow_blank=True,
+                placeholder="(none)",
+                show_if=_chosen,
+                hint="Hermetic Projects: the season is kept with the stage's works.",
+            )
+        ]
+
+    def _attunement_fields(self) -> list[DialogField]:
+        """Opening or instilling his talisman, the one attunement it gains
+        this season (DE p. 259)."""
+        options = [
+            (escape(label), value)
+            for label, value in es.attunement_options(self.saga, self.magus)
+        ]
+        if not options:
+            return []
+        plan = self.existing
+        talisman_id = options[0][1].partition(":")[0]
+        return [
+            DialogField(
+                "attunement",
+                "Attune the talisman to",
+                "select",
+                _kept(plan.attunement if plan else None, options),
+                options=options,
+                allow_blank=True,
+                placeholder="(none this season)",
+                show_if=lambda v: (
+                    v.get("activity") in es.ATTUNING and v.get("device") == talisman_id
+                ),
+                hint="Each season it is opened or an effect instilled, a "
+                "talisman may gain one attunement from its shapes and "
+                "materials: the bonus to Casting Totals while touching it "
+                "(DE p. 259).",
+            )
+        ]
+
+    def _bonus_of_device(self, values: dict[str, Any]) -> dict[str, Any]:
+        """Choosing a device offers its Shape & Material bonuses that suit
+        the effect chosen, up to Magic Theory (DE p. 258)."""
+        device = next(
+            (
+                d
+                for d in es.devices_for(self.saga, self.magus, self.lab)
+                if d.id == values.get("device")
+            ),
+            None,
+        )
+        if device is None:
+            return {}
+        effect = next((e for e in device.effects if e.id == values.get("effect")), None)
+        if effect is None:
+            return {}
+        return {"shape": es.suggested_shape_bonus(self.magus, device, effect)}
 
     def _effect_texts(self) -> list[tuple[str, str]]:
         """The enchantment Lab Texts the magus could instil an effect of
@@ -1274,6 +1396,7 @@ class LabPlanForm:
             custom_steps=custom,
             extra_magnitudes=values.get("extra_magnitudes") or 0,
             ritual=bool(values.get("ritual")),
+            lasting=bool(values.get("lasting")),
             recurring=values.get("recurring") or "",
             description=values.get("description") or "",
             base_effect=values.get("base_effect") or "",
@@ -1384,10 +1507,13 @@ class LabPlanForm:
             activity=activity,
             lab_id=self.lab.id,
             days_away=values.get("days_away") or 0,
-            focus=bool(values.get("focus")),
+            focus=values.get("focus") in (True, FOCUS_YES),
+            focus_by_arts=values.get("focus") == FOCUS_BY_ARTS,
             theory_specialty=bool(values.get("specialty")),
             chthonic=bool(values.get("chthonic")),
             other_modifier=values.get("other_modifier") or 0,
+            recreating_theory=max(0, values.get("recreating_theory") or 0),
+            project_stage=values.get("project_stage") or "",
             potent=bool(values.get("potent")),
             cycle_bonus=bool(values.get("cycle_bonus")),
             cycle_penalty=bool(values.get("cycle_penalty")),
@@ -1491,6 +1617,7 @@ class LabPlanForm:
                 lambda v: {
                     "device_id": v.get("device"),
                     "shape_bonus": v.get("shape") or 0,
+                    "attunement": v.get("attunement") or "",
                 },
             ),
             (
@@ -1763,6 +1890,7 @@ def level_text(design: SpellDesign) -> str:
         ritual=design.ritual,
         custom_steps=design.custom_steps,
         technique=design.technique,
+        lasting=design.lasting,
         form=design.form,
         recurring=design.recurring,
         requisites=design.requisites,

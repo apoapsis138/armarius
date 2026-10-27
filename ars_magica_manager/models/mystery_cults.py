@@ -24,6 +24,7 @@ from .definitions import (
     TraditionDef,
     VirtueFlawDef,
 )
+from .world import Attitude
 
 #: A saga cult's id starts with this, which tells it from the catalog's.
 SAGA_CULT_PREFIX = "custom_cult_"
@@ -204,6 +205,12 @@ class MysteryCult:
     founded: int | None = None
     description: str = ""
     degrees: list[CultDegree] = field(default_factory=list)
+    #: As a secret society, a faction in the Order's politics: what it
+    #: works for, and its attitudes toward the troupe's covenants, which
+    #: its members' covenants lean by at a Tribunal (older saves load with
+    #: none).
+    agenda: str = ""
+    attitudes: list[Attitude] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> MysteryCult:
@@ -225,6 +232,7 @@ class MysteryCult:
         if d.get("founded") is not None:
             d["founded"] = _int(d["founded"], f"{where}: the year founded")
         d["degrees"] = [CultDegree.from_dict(g) for g in d.get("degrees") or []]
+        d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes") or []]
         return cls(**d)
 
 

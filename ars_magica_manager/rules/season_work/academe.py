@@ -152,21 +152,34 @@ def _formula_of(
 
 
 def _ingredients(
-    character: Character, kind: str, level: int, doses: int, result: SupplementWork
+    saga: Saga,
+    character: Character,
+    kind: str,
+    level: int,
+    doses: int,
+    result: SupplementWork,
 ) -> None:
     """The ingredients' Labor Points: from his own store when he keeps one,
-    else an apothecary's (A&A pp. 65, 75, 77)."""
+    else the store of his covenant's best apothecary (apothecary.supplier;
+    A&A pp. 65, 75, 77)."""
     cost = philosophy.labor_cost(kind, level, doses)
     made = f"{doses} dose(s) of a level {level} {kind}"
+    store = apothecary.supplier(saga, character) if cost else None
     if not cost:
         result.notes.append(f"{made}: no ingredients (parchment and ink).")
-    elif apothecary.keeps_store(character):
+    elif store is character:
         result.labor_points -= cost
         result.notes.append(f"{made}: {cost} Labor Points from his own store.")
+    elif store is not None:
+        result.labor_from.append((store.id, cost))
+        result.notes.append(
+            f"{made}: {cost} Labor Points of ingredients from {store.name}'s "
+            "apothecary's store."
+        )
     else:
         result.notes.append(
             f"{made}: {cost} Labor Points of ingredients from an apothecary's "
-            "store (take them off the apothecary's Labor Points)."
+            "store; no apothecary keeps one here, so take them off by hand."
         )
 
 
@@ -181,7 +194,7 @@ def _produce_remedies(
     name = plan.title.strip()
     if known is None:
         # A formula with no design recorded: its typed level and doses.
-        _ingredients(character, kind, level, max(1, plan.extra_vis), result)
+        _ingredients(saga, character, kind, level, max(1, plan.extra_vis), result)
         return
     total = philosophy.lab_total(character, kind, plan.other_modifier)
     result.notes.append(f"Lab Total: {total.line()}, against level {level}.")
@@ -197,7 +210,7 @@ def _produce_remedies(
             f"With its Laboratory Text: {doses} dose(s) of {name} (a Lab Total "
             f"of {total.total} makes up to {work.doses})."
         )
-        _ingredients(character, kind, level, doses, result)
+        _ingredients(saga, character, kind, level, doses, result)
         return
     record = progress_of(character, "concoction", name)
     before = record.points if record is not None and not record.done else 0
@@ -211,7 +224,7 @@ def _produce_remedies(
     result.lab_texts.append(name)
     result.products.append((product, 1))
     result.notes.append(f"{name} concocted: a dose, and its Laboratory Text written.")
-    _ingredients(character, kind, level, 1, result)
+    _ingredients(saga, character, kind, level, 1, result)
 
 
 def _produce_problems(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:

@@ -42,8 +42,10 @@ from . import mystic_paths as mystic_forms
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
 from .forms import careers
+from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
+from .forms import threshold as threshold_forms
 from .forms import tmre_divination as tmre_divination_forms
 from .forms import tmre_dreams as tmre_dream_forms
 from .forms import tmre_spirits as tmre_spirit_forms
@@ -64,8 +66,9 @@ from .models import (
     Saga,
     Tribunal,
 )
-from .rules import agents as agent_rules
+from .models.hermetic_projects import BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE
 from .rules import (
+    activities,
     apothecary,
     casting,
     covenfolk,
@@ -75,10 +78,12 @@ from .rules import (
     options,
     philosophy,
 )
+from .rules import agents as agent_rules
 from .rules import clergy as clergy_rules
 from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
 from .rules import goetic as goetic_rules
+from .rules import hermetic_projects as project_rules
 from .rules import holy_influence as holy_influence_rules
 from .rules import sin as sin_rules
 from .rules import theban_customs as byzantine
@@ -127,6 +132,7 @@ from .sections import (
     SILVER_SECTIONS,
     SOURCES_SECTION,
     SPELL_SECTION,
+    STAGED_SECTION,
     TABLES_SECTION,
     TOKENS_SECTION,
     TRADITIONS_SECTION,
@@ -322,9 +328,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("y", "recovery_roll", "Recovery Roll"),
     MenuItem("e", "end_session", "End of Session"),
     MenuItem("t", "tourney_season", "Tournament"),
+    MenuItem("v", "melee_event", "Melee Event"),
     MenuItem("c", "command_beast", "Command the Beast"),
     MenuItem("a", "place_aging_points", "Place Aging Points"),
     MenuItem("w", "resolve_twilight", "Resolve Twilight"),
+    MenuItem("g", "disguise_roll", "Disguise Roll"),
+    MenuItem("o", "trait_roll", "Roll"),
+    MenuItem("o", "familiar_trait_roll", "Roll"),
     MenuItem("f", "edit_familiar_fatigue", "Edit Fatigue"),
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
@@ -342,6 +352,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "set_date", "Set Date"),
     MenuItem("a", "edit_arms", "Arms"),
     MenuItem("w", "withdraw_case", "Withdraw"),
+    MenuItem("e", "war_end", "War's End"),
     MenuItem("n", "neutralize_shard", "Neutralize a Shard"),
     MenuItem("l", "tribunal_longevity", "The Tribunal's Longevity Ritual"),
     MenuItem("r", "roll_fair", "Roll Income"),
@@ -364,6 +375,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("g", "form_group", "Form a Group"),
     MenuItem("u", "break_group", "Break up a Group"),
     MenuItem("t", "restart_fight", "Restart the Fight"),
+    MenuItem("m", "group_morale", "Discipline or Morale"),
+    MenuItem("l", "rally_group", "Rally a Group"),
     MenuItem("n", "next_siege_event", "Next Siege Event"),
     MenuItem("a", "siege_actions", "Siege Actions"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
@@ -376,6 +389,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("p", "add_purity", "Add a Purity"),
     MenuItem("j", "plan_journey", "Travel"),
     MenuItem("l", "labor_story", "Labor Points from a Story"),
+    # A grog's story experience, counted against the yearly update.
+    MenuItem("s", "grog_story_xp", "Story Experience"),
+    # A covenant's Hook proposes a story to accept.
+    MenuItem("y", "suggest_story", "Suggest a Story"),
+    # A grog's season of copying, planned like anyone's (DE p. 380).
+    MenuItem("c", "plan_copying", "Plan Copying"),
+    MenuItem("x", "clear_copying", "Clear Copying"),
     MenuItem("v", "invest_labor", "Invest Time or Money"),
     MenuItem("r", "discipline_grog", "Reward or Punish"),
     MenuItem("n", "grog_pension", "Pension"),
@@ -446,6 +466,10 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
     MenuItem("v", "dream_working", "Dream Working"),
     MenuItem("a", "hermetic_sacrifice", "Hermetic Sacrifice"),
+    # A certamen duel with another magus (DE pp. 231-233).
+    MenuItem("z", "certamen_duel", "Certamen"),
+    # Where a character is now: the aura his casting counts.
+    MenuItem("h", "whereabouts", "Where He Is"),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     MenuItem("n", "tmre_divination", "Divination"),
     MenuItem("s", "tmre_astrology", "Astrology"),
@@ -462,10 +486,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("s", "library_search", "Search the Great Library"),
     # A tomb's trap springs (Lands of the Nile).
     MenuItem("o", "overcome_trap", "Overcome It"),
+    # A place with a Faerie aura: crossing into the Faerie Realm.
+    MenuItem("t", "cross_threshold", "Cross the Threshold"),
     # A covenant's ships (Hermetic Projects; City & Guild).
     MenuItem("s", "ship_stress", "Stress Check"),
     MenuItem("c", "ship_combat", "Ship Combat"),
     MenuItem("f", "ship_fate", "Sunk or Taken"),
+    MenuItem("b", "build_ship", "Build a Ship"),
     # Shaping the land by magic (Transforming Mythic Europe).
     MenuItem("l", "shape_land", "Shape the Land"),
     # A cleric's career (The Church).
@@ -486,6 +513,14 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("x", "end_marriage", "End a Marriage"),
     # A covenant's Menagerie (Hermetic Projects): taming the chosen beast.
     MenuItem("t", "tame_beast", "Tame a Beast"),
+    MenuItem("w", "menagerie_award", "Reputation Award"),
+    # A covenant's staged Hermetic Project: a Burning City's warning bell,
+    # an Intangible Assassin's connections and Aegis, a Living Corpse's
+    # death roll.
+    MenuItem("b", "warning_bell", "Warning Bell"),
+    MenuItem("g", "gather_connection", "Gather a Connection"),
+    MenuItem("a", "lower_aegis", "Lower an Aegis"),
+    MenuItem("r", "death_roll", "Death Roll"),
     # Polemic and Charter Strength (Transforming Mythic Europe pp. 27-36).
     MenuItem("c", "circulate_text", "Circulate a Text"),
     MenuItem("d", "draft_charter", "Draft the Charter"),
@@ -502,11 +537,18 @@ MORE_SECTIONS: dict[str, str] = {
     "recovery_roll": "section-char-health",
     "end_session": "section-reputations",
     "tourney_season": "section-reputations",
+    "melee_event": "section-reputations",
     "command_beast": "section-personality-traits",
     "place_aging_points": "section-aging",
     "resolve_twilight": "section-aging",
+    "disguise_roll": "section-char-covers",
+    "whereabouts": "section-casting",
+    "suggest_story": "section-cov-hooks",
+    "trait_roll": "section-personality-traits",
+    "familiar_trait_roll": "section-fam-personality-traits",
     "edit_familiar_fatigue": "section-fam-health",
     "withdraw_case": CASES_SECTION,
+    "war_end": CASES_SECTION,
     "neutralize_shard": TOKENS_SECTION,
     "tribunal_longevity": TOKENS_SECTION,
     "roll_fair": FAIRS_SECTION,
@@ -529,6 +571,8 @@ MORE_SECTIONS: dict[str, str] = {
     "form_group": FIGHTS_SECTION,
     "break_group": FIGHTS_SECTION,
     "restart_fight": FIGHTS_SECTION,
+    "group_morale": FIGHTS_SECTION,
+    "rally_group": FIGHTS_SECTION,
     "next_siege_event": SIEGES_SECTION,
     "siege_actions": SIEGES_SECTION,
     "craft_by_magic": "section-known-spells",
@@ -550,6 +594,7 @@ MORE_SECTIONS: dict[str, str] = {
     "ship_stress": "section-pos-ship",
     "ship_combat": "section-pos-ship",
     "ship_fate": "section-pos-ship",
+    "build_ship": "section-pos-ship",
     # A cleric's career: the exorcism on Holy Orders.
     "perform_exorcism": ORDERS_SECTION,
     # Saga Content's Mystery Cults.
@@ -562,6 +607,7 @@ MORE_SECTIONS: dict[str, str] = {
     "end_marriage": "section-nb-marriages",
     # A covenant's Menagerie: Tame a Beast on the chosen beast.
     "tame_beast": "section-cov-menagerie-beasts",
+    "menagerie_award": "section-cov-menagerie-beasts",
     # Polemic: Circulate a Text on an argument's chosen text.
     "circulate_text": ARGUMENT_TEXTS_SECTION,
     # A Criamon magus's path: Follow an Avenue.
@@ -1291,6 +1337,24 @@ BEGIN_PROJECT_SECTIONS = (
 )
 
 
+def _staged(kind: str) -> Callable[[ActionFacts], bool]:
+    """A staged project's More command: on its project's block, while a
+    project of that kind is shown."""
+
+    def rule(facts: ActionFacts) -> bool:
+        covenant = facts.selected_covenant
+        project = (
+            project_rules.shown_project(covenant) if covenant is not None else None
+        )
+        return (
+            project is not None
+            and project.kind == kind
+            and facts.active_section() == STAGED_SECTION
+        )
+
+    return rule
+
+
 def _begins_project(facts: ActionFacts) -> bool:
     """Begin Project: on a full covenant's record or Attributes tab."""
     covenant = facts.selected_covenant
@@ -1381,6 +1445,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
     "dream_working": _on_known_spells(tmre_dream_forms.offers_dreams),
     "hermetic_sacrifice": _on_known_spells(tmre_dream_forms.offers_sacrifice),
+    "certamen_duel": _on_known_spells(certamen_forms.offers),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     "tmre_divination": _reads_signs(tmre_divination_forms.offers_divination),
     "tmre_astrology": _reads_signs(tmre_divination_forms.offers_astrology),
@@ -1395,6 +1460,11 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     # Attributes; a magus's tunnel on his Known Spells.
     "begin_project": _begins_project,
     "open_tunnel": _on_known_spells(tunnel_forms.offers),
+    # A covenant's staged project, by its kind.
+    "warning_bell": _staged(BURNING_CITY),
+    "gather_connection": _staged(INTANGIBLE_ASSASSIN),
+    "lower_aegis": _staged(INTANGIBLE_ASSASSIN),
+    "death_roll": _staged(LIVING_CORPSE),
 }
 
 
@@ -1420,6 +1490,19 @@ def _restores(facts: ActionFacts, section: str) -> bool:
             )
         )
     )
+
+
+def _with_morale_rules(action: str) -> Callable[[ActionFacts, str], bool]:
+    """In its section, while the saga plays Morale and Discipline (LoM
+    pp. 134-135)."""
+    in_section = _in_more_section(action)
+
+    def rule(facts: ActionFacts, section: str) -> bool:
+        return in_section(facts, section) and options.is_on(
+            facts.saga, options.MORALE_DISCIPLINE
+        )
+
+    return rule
 
 
 def _in_more_section(action: str) -> Callable[[ActionFacts, str], bool]:
@@ -1523,6 +1606,20 @@ def _adds_purity(facts: ActionFacts, section: str) -> bool:
     return row is not None and 0 <= row < len(listed) and gd.takes_purities(listed[row])
 
 
+def _grog_season(facts: ActionFacts, section: str) -> bool:
+    character = facts.selected_character
+    return (
+        section == "section-char-season"
+        and character is not None
+        and not activities.is_planned(character)
+    )
+
+
+def _grog_has_plan(facts: ActionFacts) -> bool:
+    character = facts.selected_character
+    return character is not None and seasons.plan_for(facts.saga, character) is not None
+
+
 def _works_for_labor(
     test: Callable[[Character], bool],
 ) -> Callable[[ActionFacts, str], bool]:
@@ -1602,9 +1699,27 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "break_clause": _breaks_clause,
     "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
     "invest_labor": _works_for_labor(merchants.earns_labor),
+    # A grog's season of copying, on This Season: planned, then cleared.
+    "plan_copying": lambda facts, section: (
+        _grog_season(facts, section) and not _grog_has_plan(facts)
+    ),
+    "clear_copying": lambda facts, section: (
+        _grog_season(facts, section) and _grog_has_plan(facts)
+    ),
+    # A grog's story experience (Grogs p. 67), on This Season.
+    "grog_story_xp": _grog_season,
+    # A place with a Faerie aura (RoP: Faerie pp. 20-24), on its record.
+    "cross_threshold": lambda facts, section: (
+        section == NEIGHBOUR_INFO_SECTION
+        and isinstance(record := facts.record_to_export(), Neighbour)
+        and threshold_forms.offers(facts.saga, record)
+    ),
     # A craftsman's sale of his finished goods, on This Season.
     "sell_goods": _works_for_labor(lambda c: bool(selling.crafts(c))),
     **{action: _in_more_section(action) for action in MORE_SECTIONS},
+    # Lords of Men's Morale and Discipline, a saga option.
+    "group_morale": _with_morale_rules("group_morale"),
+    "rally_group": _with_morale_rules("rally_group"),
     # An apothecary's searching and preserving, on This Season.
     "apothecary_store": _works_for_labor(apothecary.keeps_store),
     # The hunt and Area Lore on the road, beside Travel on Ahead.

@@ -21,6 +21,7 @@ from .. import artwork
 from .. import familiars as fam
 from .. import sheet_text as st
 from ..forms import familiar as ff
+from ..forms import trait_roll as trait_roll_forms
 from ..forms import virtue as virtue_forms
 from ..models import Familiar, Saga
 from ..sheets import familiar as fs
@@ -218,6 +219,13 @@ class FamiliarPage(QWidget):
                 "section-fam-personality-traits",
                 p,
                 self.run,
+                [
+                    edit_button(
+                        "Roll",
+                        p,
+                        lambda: self.run(trait_roll_forms.roll_form(self.saga, f)),
+                    )
+                ],
             ),
             trait_section(
                 "Reputations",

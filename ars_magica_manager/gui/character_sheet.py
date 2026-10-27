@@ -65,6 +65,7 @@ from .. import books as bk
 from .. import enchanted_devices as ed
 from .. import lab_texts as lt
 from .. import laboratories as labs
+from .. import lineage as lineages
 from .. import saga_overview as ov
 from .. import sheet_text as st
 from .. import spells as spl
@@ -884,12 +885,17 @@ class CharacterSheet(QWidget):
                 "section-personality-traits",
                 p,
                 self.run,
-                self.placer.buttons("Personality Traits") if self.placer else [],
+                self._placed("Personality Traits"),
             )
         )
         parts.append(
             trait_section(
-                "Reputations", c.reputations, "section-reputations", p, self.run
+                "Reputations",
+                c.reputations,
+                "section-reputations",
+                p,
+                self.run,
+                self._placed("Reputations"),
             )
         )
         parts.append(
@@ -905,6 +911,10 @@ class CharacterSheet(QWidget):
             )
         )
         parts.append(connections_section(saga, c, p, self.run))
+        if lineages.shown(saga, c):
+            line = section("Lineage", p, TextBlock(lineages.text(saga, c), p))
+            line.setObjectName(lineages.SECTION)
+            parts.append(line)
         if marriages.of_character(saga, c):
             wed = section(
                 "Marriages", p, TextBlock(marriages.character_text(saga, c), p)
@@ -917,7 +927,15 @@ class CharacterSheet(QWidget):
             fatigue_ladder(cs.fatigue_track(c), p),
             fact_grid(cs.health_facts(c, saga), p, 4),
         ]
-        parts.append(section("Health", p, *health, edits=edits("Wounds", "Fatigue")))
+        parts.append(
+            section(
+                "Health",
+                p,
+                *health,
+                edits=edits("Wounds", "Fatigue"),
+                buttons=self._placed("Health"),
+            )
+        )
         aging = cs.aging_facts(c)
         effects = c.aging.effects
         if c.aging.twilight_scars.strip():
@@ -931,12 +949,17 @@ class CharacterSheet(QWidget):
                 *([fact_grid(aging, p, 4)] if aging else []),
                 *([prose(effects, p, initial=False)] if effects or not aging else []),
                 edits=edits("Aging"),
+                buttons=self._placed("Aging"),
             )
         )
         parts.append(self._constant_effects())
         if cover_forms.shown(c):
             parts.append(self._covers())
         return scrolling_page(p, *parts)
+
+    def _placed(self, section_name: str) -> list[QWidget]:
+        """The More menu's buttons placed beside `section_name`."""
+        return list(self.placer.buttons(section_name)) if self.placer else []
 
     def _covers(self) -> QWidget:
         """The character's deep covers and personae (HoH:S pp. 87-89)."""
@@ -962,7 +985,10 @@ class CharacterSheet(QWidget):
             if rows.rows
             else TextBlock(cover_forms.EMPTY, p),
             *([TextBlock(line, p)] if line else []),
-            buttons=verb_buttons(cover_forms.ops(c), chooser, self.run, p),
+            buttons=[
+                *verb_buttons(cover_forms.ops(c), chooser, self.run, p),
+                *self._placed("Covers"),
+            ],
         )
         widget.setObjectName(COVERS_SECTION)
         return widget
@@ -1274,6 +1300,11 @@ class CharacterSheet(QWidget):
             *(
                 [TextBlock(escape("\n".join(hybrid)), p)]
                 if (hybrid := hybrid_magic.summary(c))
+                else []
+            ),
+            *(
+                [TextBlock("\n".join(casting_text.certamen_lines(c)), p)]
+                if c.type == "magus"
                 else []
             ),
             section(

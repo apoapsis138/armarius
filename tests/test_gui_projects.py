@@ -20,11 +20,12 @@ from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from test_hermetic_projects import tower_saga
 from test_menagerie import menagerie_saga
 
-from ars_magica_manager import storage
+from ars_magica_manager import staged_projects, storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.forms import FieldsDialog
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.models import HermeticProject
 
 
 @pytest.fixture(scope="module")
@@ -109,3 +110,27 @@ def test_a_menagerie_its_beasts_and_breedings(app):
     assert "Ol Thomae (Animal Handling 4), Lech" in words
     buttons = [b.text().strip() for b in chapter.findChildren(QPushButton)]
     assert "Tame a Beast" in buttons and "Show Project" in buttons
+
+
+def test_a_staged_project_its_stages_and_its_kinds_buttons(app):
+    saga = tower_saga()
+    covenant = saga.covenants[0]
+    covenant.hermetic_projects.insert(
+        0,
+        HermeticProject(
+            id="hearth",
+            name="Vulcan's Hearth",
+            kind="Burning City",
+            stages=staged_projects.seed("Burning City"),
+        ),
+    )
+    covenant.project_shown = "hearth"
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.open_covenant("dam")
+    page = _page(window, "Projects")
+    chapter = page.codex.chapter(page.codex.chapters().index("Projects"))
+    words = _words(chapter)
+    assert "Vulcan's Hearth: Burning City" in words
+    assert "Stages (8)" in words and "Find a volcano" in words
+    assert "Warning Bell" in section_buttons(page, "Vulcan's Hearth: Burning City")

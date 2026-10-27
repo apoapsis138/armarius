@@ -15,12 +15,14 @@ from ..models import (
     SEASONS,
     Character,
     DiaryEntry,
+    GrogYear,
     ResearchAttempt,
     Saga,
     SeasonPlan,
     SeasonRecord,
     SeasonRecordLine,
     VirtueFlawInstance,
+    new_instance_id,
     next_season,
 )
 from ..rules import activities as rules
@@ -52,13 +54,14 @@ from .character_effects import (
     gain_warping,
 )
 from .covenant import covenant_season
-from .defaults import default_text, grog_default, notified
+from .defaults import default_text, grog_awards_cost, grog_default, notified
 from .digestion import apply_digestions
 from .healing import season_healing
 from .lab_apply import (
     apply_book_work,
     apply_lab_work,
     apply_supplement,
+    season_stirpes,
     set_up_new_lab,
     year_end_business,
 )
@@ -114,14 +117,45 @@ def _record_raised(character: Character, outcome: rules.Outcome) -> None:
         )
 
 
+#: A found child's age: the youngest the Arts are usually opened at (DE p.
+#: 269).
+FOUND_CHILD_AGE = 7
+
+
+def _found_child(saga: Saga, character: Character, outcome: rules.Outcome) -> None:
+    """A search for an apprentice that found a Gifted child: the child,
+    added as a character at the magus's covenant, in creation (DE p. 269)."""
+    if not outcome.found_child:
+        return
+    child = Character(
+        id=new_instance_id(),
+        name=f"A Gifted child found by {character.name}",
+        type="companion",
+        covenant_id=character.covenant_id,
+        in_creation=True,
+    )
+    child.background.year_born = outcome.plan.year - FOUND_CHILD_AGE
+    child.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
+    child.description.biography = (
+        f"Found in {outcome.plan.season} {outcome.plan.year} by {character.name}, "
+        "searching for an apprentice; name and build the child, then open the "
+        "Arts to make the apprentice."
+    )
+    saga.characters.append(child)
+
+
 def _apply_apprentice(saga: Saga, outcome: rules.Outcome) -> None:
-    """An apprentice's Arts opened, or a Hermetic Virtue taught."""
+    """An apprentice found, his Arts opened, or a Hermetic Virtue taught."""
+    searcher = saga.character(outcome.character_id)
+    if searcher is not None:
+        _found_child(saga, searcher, outcome)
     work = outcome.apprentice_work
     student = saga.character(outcome.plan.subject_id)
     if work is None or student is None:
         return
     if outcome.plan.activity == aps.OPEN_ARTS:
-        aps.open_arts(student, work)
+        magus = saga.character(outcome.plan.character_id)
+        outcome.notes += aps.open_arts(student, work, magus)
     elif outcome.plan.activity == aps.TEACH_VIRTUE and work.succeeds:
         student.virtues_flaws.append(VirtueFlawInstance(outcome.plan.effect_id or ""))
         if work.flaw_id:
@@ -162,6 +196,9 @@ def _apply_warping_and_agency(
     _apply_warping(saga, character, outcome)
     _apply_agency(character, outcome)
     outcome.notes += house_magic.keep_covers(character)
+    plan = outcome.plan
+    if plan.activity == rules.CAMPAIGNING:
+        character.campaign_seasons.append(f"{plan.year} {plan.season}")
 
 
 def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
@@ -213,15 +250,9 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
             pool[key] = max(0, pool.get(key, 0) - pawns)
             if not pool[key]:
                 del pool[key]
-        if outcome.plan.activity in medicine.EUCRASIA_SEASONS:
-            lost = medicine.lose_eucrasia(
-                character,
-                outcome.plan.year,
-                medicine.EUCRASIA_SEASONS[outcome.plan.activity],
-            )
-            if lost:
-                outcome.notes.append(lost)
+        _lose_eucrasia(character, outcome)
         character.diary.append(diary_entry(saga, character, outcome))
+        _count_grog_season(character)
         applied.append(character)
     house_virtue.count_seasons(saga, [o.plan for o in worked if o.ok])
     now = (saga.current_year, SEASONS.index(saga.current_season))
@@ -229,6 +260,25 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         p for p in saga.season_plans if (p.year, SEASONS.index(p.season)) > now
     ]
     return applied
+
+
+def _lose_eucrasia(character: Character, outcome: rules.Outcome) -> None:
+    if outcome.plan.activity in medicine.EUCRASIA_SEASONS:
+        lost = medicine.lose_eucrasia(
+            character,
+            outcome.plan.year,
+            medicine.EUCRASIA_SEASONS[outcome.plan.activity],
+        )
+        if lost:
+            outcome.notes.append(lost)
+
+
+def _count_grog_season(character: Character) -> None:
+    """A grog's planned season (copying) takes one of the yearly update."""
+    if rules.is_planned(character):
+        return
+    character.grog_year = character.grog_year or GrogYear()
+    character.grog_year.copying += 1
 
 
 def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
@@ -239,34 +289,54 @@ def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
         if rules.is_planned(character) or not takes_part_in_play(character):
             continue
         year = character.grog_year
-        default = grog_default(saga, character) if year is None else None
-        if year is None and default is None:
+        copying = year.copying if year is not None else 0
+        awards = (year.story_awards if year is not None else 0) + copying
+        # Story Experience alone sets a year up with nothing chosen: the
+        # default then runs, less each award's season in Grogs p. 67's
+        # order (exposure 2, vocational 7, practice 4, exposure 2).
+        chosen = year is not None and year.chosen()
+        default = None if chosen else grog_default(saga, character)
+        if not chosen and default is None:
+            if year is not None:
+                year.story_awards = year.copying = 0
             continue
-        if year is not None:
-            gains = [(ability, xp) for ability, xp, _ in grog_year_gains(character)]
+        if chosen:
+            gains = [
+                (ability, xp) for ability, xp, _ in grog_year_gains(character, copying)
+            ]
         else:
             assert default is not None
-            gains = [default]
+            ability, xp = default
+            xp = max(0, xp - grog_awards_cost(awards))
+            gains = [(ability, xp)] if xp else []
         for ability, xp in gains:
             _add_xp(character, rules.ability_subject(ability), xp)
         summary = ", ".join(f"{a} +{xp}" for a, xp in gains) or "no xp"
-        if year is None:
+        if not chosen:
             details = (
                 "No yearly update was set up: the saga's default, 2 xp of "
                 "Exposure a season in their highest Ability (Edit Saga)."
+            ) + (
+                f" {awards} story award(s) and copying season(s) took a season "
+                "each (Grogs p. 67)."
+                if awards
+                else ""
             )
+            if year is not None:
+                year.story_awards = year.copying = 0
         else:
+            assert year is not None
             details = "Grogs, Chapter 5, Updating Grogs" + (
-                f"; {year.story_awards} story award(s) took seasons of it."
-                if year.story_awards
+                f"; {awards} story award(s) and copying season(s) took seasons of it."
+                if awards
                 else "."
             )
-            year.story_awards = 0
+            year.story_awards = year.copying = 0
         character.diary.append(
             DiaryEntry(
                 year=saga.current_year,
                 season=saga.current_season,
-                name=f"Yearly update{' (default)' if year is None else ''}: {summary}",
+                name=f"Yearly update{'' if chosen else ' (default)'}: {summary}",
                 details=details,
                 activity="Aging",
             )
@@ -448,6 +518,7 @@ def finish_season(
         # Next year's transitions of maturation (Apprentices pp. 14-15).
         players = [c for c in saga.characters if takes_part_in_play(c)]
         year_end += childhood.year_end_transitions(saga, players)
+    year_end += season_stirpes(saga, rng)
     year_end += season_aging(saga, rng)
     year_end += season_healing(saga, rng)
     year_end += covenant_season(saga, secured)

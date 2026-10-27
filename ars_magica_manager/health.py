@@ -45,8 +45,8 @@ def harm_fields(saga: Saga) -> list[DialogField]:
     injury, poison = _kind_is(harm.INJURY, harm.BRUISE), _kind_is(harm.POISON)
     sickness = _kind_is() if academe else _kind_is(harm.DISEASE)
     agents = _kind_is(harm.POISON) if academe else _kind_is(harm.POISON, harm.DISEASE)
-    heat = [(f"{name} (+{bonus})", name) for name, bonus in harm.HEAT]
-    impact = [(f"{name} (+{bonus})", name) for name, bonus in harm.IMPACT]
+    heat = [(f"{name} (+{bonus})", name) for name, bonus in harm.heat_table(saga)]
+    impact = [(f"{name} (+{bonus})", name) for name, bonus in harm.impact_table(saga)]
     return [
         DialogField(
             "kind",
@@ -64,7 +64,13 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             allow_blank=True,
             placeholder="(type the damage bonus)",
             hint="The Heat and Corrosion and Impact tables (DE p. 407); falling "
-            "is +1 per two feet, doubled on a hard surface, halved on a soft one.",
+            "is +1 per two feet, doubled on a hard surface, halved on a soft one."
+            + (
+                " Lava is each round, armour no help once it covers half the "
+                "body (Hermetic Projects p. 14)."
+                if harm.volcanoes(saga)
+                else ""
+            ),
             show_if=injury,
         ),
         DialogField("bonus", "Damage bonus", "int", 0, show_if=injury),
@@ -105,7 +111,10 @@ def harm_fields(saga: Saga) -> list[DialogField]:
             "Poison",
             "select",
             None,
-            options=[(f"{n} (Ease Factor {e}, {w})", n) for n, e, w in harm.POISONS],
+            options=[
+                (f"{n} (Ease Factor {e}, {w})", n)
+                for n, e, w in harm.poison_table(saga)
+            ],
             allow_blank=True,
             placeholder="(type it below)",
             show_if=poison,
@@ -264,9 +273,12 @@ def _values(values: dict[str, Any]) -> dict[str, Any]:
     kind = found.get("kind")
     preset = found.get("preset")
     if kind in (harm.INJURY, harm.BRUISE) and preset:
-        found["bonus"] = dict(harm.HEAT + harm.IMPACT)[preset]
+        found["bonus"] = harm.ALL_PRESETS[preset]
         found["harm_from"] = found.get("harm_from") or harm.PRESET_SOURCES.get(preset)
-    for key, table in (("poison", harm.POISONS), ("disease", harm.DISEASES)):
+    for key, table in (
+        ("poison", harm.POISONS + harm.VOLCANIC_POISONS),
+        ("disease", harm.DISEASES),
+    ):
         name = found.get(key)
         if kind == key and name:
             entry = next(e for e in table if e[0] == name)

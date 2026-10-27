@@ -68,6 +68,9 @@ class SpellDesign:
     #: Size, complexity and requisite magnitudes on top.
     extra_magnitudes: int = 0
     ritual: bool = False
+    #: A Creo effect that makes something meant to last past its Duration
+    #: (a wall that stays, food that feeds): it needs a Ritual (DE p. 311).
+    lasting: bool = False
     #: Spell Timing: how often the spell recurs (a
     #: rules.spell_levels.RECURRING key; "" for a spell that doesn't).
     recurring: str = ""
@@ -116,6 +119,11 @@ class SeasonPlan:
     #: Opening the Arts: keep the apprentice's Supernatural Abilities (an
     #: Intellego Vim Lab Total of at least double their level allows it).
     keep_supernatural: bool = False
+    #: Opening the Arts at double the Lab Total needed: the Hermetic Virtues
+    #: (ids) the apprentice's Supernatural Abilities become instead, one for
+    #: each, of its size (DE p. 271); empty to keep or lose them. A save from
+    #: before held one, `convert_to`, read into it at load.
+    conversions: list[str] = field(default_factory=list)
     #: Teaching a Hermetic Virtue: a Hermetic Flaw of the teacher's taught
     #: with it (DE p. 271).
     taught_flaw_id: str | None = None
@@ -142,8 +150,17 @@ class SeasonPlan:
     #: twice), their Magic Theory Specialty applies (+1), and any other
     #: modifier the troupe allows.
     focus: bool = False
+    #: The Magical Focus applies when the work's Arts are among those the
+    #: focus records (lab_seasons.in_focus), instead of by the tick.
+    focus_by_arts: bool = False
     theory_specialty: bool = False
     other_modifier: int = 0
+    #: Recreating what an experiment left flawed: the Magic Theory score
+    #: the magus had when he experimented, added again (DE p. 274); 0: not.
+    recreating_theory: int = 0
+    #: Lab work spent on a staged Hermetic Project's stage (a ProjectStage
+    #: id): the season goes into the project's works; "" for none.
+    project_stage: str = ""
     #: Lab work on a dark or sinister effect: a chthonic magus's Chthonic
     #: Magic stands in for Magic Theory (RoP: The Infernal p. 123).
     chthonic: bool = False
@@ -186,6 +203,10 @@ class SeasonPlan:
     device_id: str | None = None
     effect_id: str | None = None
     shape_bonus: int = 0
+    #: Opening or instilling a talisman: the one attunement it gains this
+    #: season, as "<device id>:<index of its Shape & Material bonus>"
+    #: (DE p. 259); "" for none.
+    attunement: str = ""
     #: Binding a familiar: the Technique and Form used, and the
     #: cords the Lab Total buys (0-5 each).
     technique: str = ""
@@ -295,9 +316,16 @@ class SeasonPlan:
     #: Undergoing an Initiation: the Script written out as its components
     #: (rules.mysteries; empty: the Script bonus alone is typed).
     script_components: list[ScriptPart] = field(default_factory=list)
-    #: An Initiation's sacrifice of goods or of great symbolic value: what
-    #: is given up ("device:<id>" or "item:<id>"), taken when it's played.
+    #: An Initiation's sacrifice: what is given up ("device:<id>",
+    #: "item:<id>", "book:<id>", "familiar:<id>", "apprentice:<id>",
+    #: "wealth", "vis", "service"), taken when it's played.
     sacrifice: str = ""
+    #: A sacrifice of vis: its Art and pawns, from the plan's vis source.
+    sacrifice_art: str = ""
+    sacrifice_pawns: int = 0
+    #: Campaigning: the disease a whole year in the army risks ("" the
+    #: Bloody Flux, common in campaigning armies, A&A p. 47).
+    camp_disease: str = ""
     #: Reinventing the Lesser Elixir: its new ingredient (`title`, its bonus
     #: in `book_level`) is one the alchemist devised himself (TMRE p. 42).
     devised: bool = False
@@ -321,6 +349,10 @@ class SeasonPlan:
         if d.get("artwork") is not None:
             d["artwork"] = ArtworkPlan.from_dict(d["artwork"])
         d["more_stirpes"] = _stirpes(d.get("more_stirpes"))
+        old = d.pop("convert_to", "")
+        if old and not d.get("conversions"):
+            d["conversions"] = [str(old)]
+        d["conversions"] = [str(v) for v in d.get("conversions") or [] if v]
         return cls(**known_fields(cls, d))
 
 

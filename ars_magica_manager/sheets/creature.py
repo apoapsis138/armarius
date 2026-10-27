@@ -220,9 +220,19 @@ def infernal_facts(creature: Creature) -> list[Fact]:
 
 
 def faerie_role_facts(creature: Creature) -> list[Fact]:
-    """A faerie's role and the story it wants (RoP: Faerie pp. 140-142)."""
+    """A faerie's role and the story it wants (RoP: Faerie pp. 140-142),
+    and a vampire's precautions, limitations and death (Against the Dark
+    pp. 115-117)."""
     text = faerie_build.role_text(creature)
-    return [Fact("Role", text)] if text else []
+    found = [Fact("Role", text)] if text else []
+    for label, value in (
+        ("Stopped by (all of)", creature.vampire_precautions),
+        ("Limitations", creature.vampire_limitations),
+        ("Killed for good by", creature.vampire_death),
+    ):
+        if value:
+            found.append(Fact(label, value))
+    return found
 
 
 def confidence_text(creature: Creature) -> str:

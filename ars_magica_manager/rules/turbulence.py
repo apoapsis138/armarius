@@ -30,8 +30,10 @@ the dice on p. 59), while that book is in play.
   die: on a 0, as many botch dice as the parens' Lab Total / 10 (rounded
   up); any 0 and he loses the Gift (p. 59).
 
-A young character's Characteristics take the Aging Chart's modifier
-(rules.childhood), as the book's example does (p. 23).
+A young character's Characteristics on the sheet already hold the Aging
+Chart's modifier (rules.creation_characteristics: the sheet's score is the
+one in play), so the rolls use them as they are: the book's example
+applies the modifier once (p. 23).
 
 Pattern: plain functions over dice results; the More form (forms.turbulence)
 rolls them and keeps the result.
@@ -101,13 +103,10 @@ def years(saga: Saga, character: Character) -> int | None:
     return age(saga, character)
 
 
-def characteristic(saga: Saga, character: Character, name: str) -> tuple[int, int]:
-    """(score, the Aging Chart's modifier at his age) of a Characteristic."""
-    score = getattr(character.characteristics, name.lower())
-    old = years(saga, character)
-    if old is None:
-        return score, 0
-    return score, childhood.characteristic_modifier(character, old, name)
+def characteristic(character: Character, name: str) -> int:
+    """A Characteristic as the sheet has it: a child's already holds the
+    Aging Chart's modifier."""
+    return getattr(character.characteristics, name.lower())
 
 
 def suggested_arts(character: Character) -> list[str]:
@@ -206,15 +205,11 @@ def incurring_lines(
     aegis: int = 0,
     confidence: int = 0,
 ) -> list[Line]:
-    """The terms of the incurring roll: Intelligence (and its age
-    modifier), the aura's modifier to a Magic power, an Aegis he had no part
-    in, and Confidence spent."""
-    score, modifier = characteristic(saga, character, "Intelligence")
+    """The terms of the incurring roll: Intelligence (a child's with its
+    age modifier already in it), the aura's modifier to a Magic power, an
+    Aegis he had no part in, and Confidence spent."""
+    score = characteristic(character, "Intelligence")
     lines = [Line("Intelligence", amount=score, source=SOURCE)]
-    if modifier:
-        lines.append(
-            Line("Age (Aging Chart)", amount=modifier, source=childhood.CHART_SOURCE)
-        )
     aura_part = realms.aura_modifier(realms.HERMETIC, aura_realm, aura)
     if aura_part:
         lines.append(
@@ -240,9 +235,8 @@ def incurring_lines(
 
 
 def control_stamina(saga: Saga, character: Character, confidence: int = 0) -> int:
-    """Stamina (with its age modifier) + Confidence spent."""
-    score, modifier = characteristic(saga, character, "Stamina")
-    return score + modifier + CONFIDENCE_BONUS * max(0, confidence)
+    """Stamina (a child's with its age modifier in it) + Confidence spent."""
+    return characteristic(character, "Stamina") + CONFIDENCE_BONUS * max(0, confidence)
 
 
 def incur(

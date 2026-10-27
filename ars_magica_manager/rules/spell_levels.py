@@ -482,14 +482,16 @@ def spell_level(
     form: str = "",
     recurring: str = "",
     requisites: Sequence[str] = (),
+    lasting: bool = False,
 ) -> Design | None:
     """The level of a spell with this base and Range/Duration/Target, plus
     `extra_magnitudes` of size and requisites. A parameter a Virtue or
     Mystery grants costs as its standard counterpart; `custom_steps` gives
     the magnitudes of any other ("range"/"duration"/"target" -> n: a
     breakthrough or a troupe ruling). Given the `technique`, a Momentary
-    Creo spell that isn't a Ritual gets a note: what it creates vanishes
-    unless the spell is a Ritual (DE p. 311). A spell recurring each
+    Creo spell marked `lasting` (what it makes is meant to stay) that
+    isn't a Ritual gets a note: it must be one (DE p. 311). A Momentary
+    flame or bolt, as Pilum of Fire, needs none (DE p. 344). A spell recurring each
     `recurring` (a RECURRING key) adds its magnitudes and must be a Ritual;
     given the `form`, a Fire Duration spell not of Ignem or Imaginem gets a
     note, and so does a Dream Target spell with no Mentem in its Form or
@@ -518,7 +520,7 @@ def spell_level(
     if (ritual or design.ritual_required) and level < RITUAL_MINIMUM:
         design.level = RITUAL_MINIMUM
         design.notes.append(f"A Ritual is at least level {RITUAL_MINIMUM}.")
-    if technique == "Creo" and duration == "Momentary" and not ritual:
+    if technique == "Creo" and duration == "Momentary" and lasting and not ritual:
         design.notes.append(MOMENTARY_CREO)
     if duration == "Fire" and form and form not in FIRE_FORMS:
         design.notes.append(

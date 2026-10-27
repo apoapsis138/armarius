@@ -15,6 +15,7 @@ from . import (
     battle_muster,
     battles,
     combat_options_form,
+    fight_morale,
     fights,
     siege_actions,
     sieges,
@@ -49,6 +50,12 @@ COMMANDS: dict[str, Callable[[Saga, int], Command]] = {
     ),
     "restart_fight": lambda saga, row: fights.restart(saga, fights.fight_of(saga, row)),
     "fight_options": lambda saga, row: combat_options_form.options_form(
+        saga, fights.fight_of(saga, row)
+    ),
+    "group_morale": lambda saga, row: fight_morale.check_form(
+        saga, fights.fight_of(saga, row)
+    ),
+    "rally_group": lambda saga, row: fight_morale.rally_form(
         saga, fights.fight_of(saga, row)
     ),
     "next_siege_event": lambda saga, row: sieges.next_event(

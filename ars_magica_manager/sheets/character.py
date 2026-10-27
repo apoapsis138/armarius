@@ -57,7 +57,7 @@ from ..rules import vf_change as vf_change_rules
 from ..rules import warping as warping_rules
 from ..rules import xp as xp_rules
 from ..rules.breakdown import Breakdown
-from ..rules.realms import home_aura
+from ..rules.realms import present_aura
 from ..tables import Table
 from ..world import signed
 
@@ -706,7 +706,7 @@ def virtue_flaw_points(character: Character, side: str) -> float:
 def casting_grid(saga: Saga, character: Character) -> dict[tuple[str, str], Breakdown]:
     """Every Technique and Form's Casting Score, with its terms, in the
     magus's home aura."""
-    aura, realm = home_aura(saga, character)
+    aura, realm = present_aura(saga, character)
     return {
         (technique, form): casting.casting_score(
             character, technique, form, aura=aura, aura_realm=realm
@@ -720,7 +720,7 @@ def spontaneous_score(
     saga: Saga, character: Character, technique: str, form: str
 ) -> Breakdown:
     """A Technique and Form's Spontaneous Casting Score in the home aura."""
-    aura, realm = home_aura(saga, character)
+    aura, realm = present_aura(saga, character)
     return casting.casting_score(
         character, technique, form, aura=aura, aura_realm=realm, spontaneous=True
     )

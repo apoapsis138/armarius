@@ -187,6 +187,10 @@ class InhabitantEntry:
         return self._own("role", "")
 
     @property
+    def on_council(self) -> bool:
+        return self._own("on_council", False)
+
+    @property
     def skill_from_ability(self) -> int | None:
         """The Level of the linked Ability on the character's sheet, or None when
         the score isn't tied to one (no sheet, no Ability chosen, or the sheet

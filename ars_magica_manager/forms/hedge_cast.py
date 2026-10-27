@@ -15,6 +15,7 @@ from ..commands import Form, notes
 from ..form_spec import DialogField
 from ..markup import escape
 from ..models import Character, Saga, TraditionDef
+from ..rules import casting as hermetic_casting
 from ..rules import creation_access as access
 from ..rules import dice, realms
 from ..rules import hedge_casting as hc
@@ -51,7 +52,7 @@ def _chosen(character: Character, values: dict[str, Any]):
 
 def fields(saga: Saga, character: Character) -> list[DialogField]:
     found = _rules(character)
-    aura, _ = realms.home_aura(saga, character)
+    aura, _ = realms.present_aura(saga, character)
     castings: list[tuple[str, str]] = []
     for tradition, index, _key in found:
         for c in hc.castings(character, tradition, tradition.casting[index]):
@@ -141,6 +142,11 @@ def cast(
     botch_dice = hc.botch_dice(
         tradition, rule, level=level, vis_pawns=pawns, aura=aura, aura_realm=realm
     )
+    # A familiar's Golden Cord takes dice off any magic, never to none (DE
+    # p. 267).
+    cord = hermetic_casting.golden_cord(saga, character)
+    if botch_dice > 1 and cord:
+        botch_dice = max(1, botch_dice - cord)
     typed = values.get("die")
     zeroes = 0
     if rule.die == "none":

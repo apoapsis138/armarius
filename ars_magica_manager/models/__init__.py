@@ -58,6 +58,7 @@ from .character import Ordeal as Ordeal
 from .character import Progress as Progress
 from .character import RefusedVendetta as RefusedVendetta
 from .character import ResearchAttempt as ResearchAttempt
+from .character import Stirps as Stirps
 from .character import TraditionEffect as TraditionEffect
 from .character import Wounds as Wounds
 from .character import WoundState as WoundState
@@ -109,6 +110,7 @@ from .conflicts import FightEntry as FightEntry
 from .conflicts import FightGroup as FightGroup
 from .conflicts import FightSide as FightSide
 from .conflicts import Grip as Grip
+from .conflicts import Outwork as Outwork
 from .conflicts import Siege as Siege
 from .conflicts import SiegeEvent as SiegeEvent
 from .covenant import BOON_HOOK_DESCRIPTION as BOON_HOOK_DESCRIPTION
@@ -208,6 +210,7 @@ from .goods import PurityExample as PurityExample
 # Hermetic Projects: a covenant's great works (Hermetic Projects).
 from .hermetic_projects import CraftDevice as CraftDevice
 from .hermetic_projects import HermeticProject as HermeticProject
+from .hermetic_projects import ProjectStage as ProjectStage
 from .hermetic_projects import ProjectWork as ProjectWork
 
 # Technological savings (Transforming Mythic Europe).

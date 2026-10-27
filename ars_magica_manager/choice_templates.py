@@ -648,7 +648,7 @@ def apply(
 
 
 def where(template: ChoiceTemplateDef) -> str:
-    """ "Definitive Edition, page 46"."""
+    """ "Definitive Edition, page 47"."""
     book = BOOK_NAMES.get(template.book) or sourcebooks.SOURCEBOOKS.get(
         template.book, template.book
     )

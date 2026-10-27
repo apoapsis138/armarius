@@ -30,8 +30,9 @@ from .models import (
     Saga,
     Spell,
 )
+from .rules import activities, study, tme_books
 from .rules import hybrid_magic as hybrid
-from .rules import study
+from .rules import options as rule_options
 from .rules.library import (
     POOL_LEVELS,
     POOL_POINTS,
@@ -659,6 +660,32 @@ def summary_texts(
     return left, right
 
 
+def _large_library_lines(saga: Saga, book: Book) -> list[str]:
+    """With the Large Library rule, a covenant's summa or tractatus shows
+    its library's Level and Quality in the book's subject (Transforming
+    Mythic Europe p. 105)."""
+    if book.owner_kind != "covenant" or not rule_options.is_on(
+        saga, rule_options.LARGE_LIBRARY
+    ):
+        return []
+    subject_key = activities.book_subject(book)
+    if subject_key is None:
+        return []
+    shelf = [
+        b
+        for b in books_owned_by(saga, "covenant", book.owner_id or "")
+        if activities.book_subject(b) == subject_key
+    ]
+    figures = tme_books.library_score(shelf)
+    if figures is None:
+        return []
+    return [
+        f"[b]The library on it:[/] Level {figures.level}, Quality "
+        f"{figures.quality} ({figures.summae} summa(e), {figures.tractatus} "
+        "tractatus; Transforming Mythic Europe p. 105)"
+    ]
+
+
 def detail_text(saga: Saga, book: Book | None) -> str:
     """The details panel (markup): every field of the book in the sheet's
     order -- Name; then Type, Art/Ability/Spell, Level, Quality down the left
@@ -702,6 +729,7 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     if kind:
         lines.append(f"[b]Kind:[/] {escape(kind)}")
     lines += [f"{lm}{' ' * (width - lw)}{rm}" for (lm, lw), (rm, _) in zip(left, right)]
+    lines += _large_library_lines(saga, book)
     if priced(saga, book):
         # Build Points matter only while its covenant is being created;
         # in play they're on the covenant's Build tab.

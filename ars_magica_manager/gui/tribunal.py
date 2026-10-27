@@ -17,10 +17,19 @@ from typing import Any
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import acta, artwork, hall, meeting, tribunal_packages, tribunals, world
+from .. import (
+    acta,
+    artwork,
+    hall,
+    meeting,
+    tribunal_packages,
+    tribunals,
+    world,
+)
 from ..commands import Command, Form, Refuse, SectionOps, Then
 from ..forms import polemic as polemic_forms
 from ..forms import tribunal as tribunal_forms
+from ..forms import wizards_war
 from ..markup import aligned, escape, markdown_text
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
 from ..sections import (
@@ -355,6 +364,12 @@ class TribunalPage(QWidget):
             lambda row: tribunal_forms.withdraw_case(t, row),
             lambda _row: True,
         )
+        war_end: RowVerb = (
+            wizards_war.TITLE,
+            "combat",
+            lambda row: wizards_war.end_form(saga, t, row),
+            lambda row: wizards_war.is_war(t, row),
+        )
         return scrolling_page(
             self.p,
             self._grid(
@@ -362,7 +377,7 @@ class TribunalPage(QWidget):
                 tribunal_sheet.cases_grid(saga, t),
                 CASES_SECTION,
                 self._show_case(lambda: tribunal_sheet.open_cases(t)),
-                more=[withdraw],
+                more=[withdraw, war_end],
             ),
             self._grid(
                 tribunal_sheet.past_title(t),

@@ -3321,6 +3321,28 @@
     "description": "A mineral bath heated from a volcanic source, where the magus bathes while he ponders his work. Grants +1 to an Aquam and a Longevity Rituals Specialization (Hermetic Projects p. 27)."
   },
   {
+    "id": "labvf_volcanic_minerals",
+    "source": "HP",
+    "name": "Volcanic Minerals",
+    "type": "Virtue",
+    "category": "Outfittings",
+    "tier": "Free",
+    "cost": 0,
+    "modifiers": [
+      {
+        "applies_to": "lab_characteristic",
+        "target": "upkeep",
+        "amount": -1
+      },
+      {
+        "applies_to": "lab_specialization",
+        "target": "Terram",
+        "amount": 1
+      }
+    ],
+    "description": "Exotic minerals from a volcano supply the lab, as a Stone Harvester's do for up to five laboratories; lost if they stop coming, and worth nothing taken twice. Grants +1 to a Terram Specialization (Hermetic Projects p. 19)."
+  },
+  {
     "id": "labvf_volcanic_spirit_forge",
     "source": "HP",
     "name": "Volcanic Spirit Forge",

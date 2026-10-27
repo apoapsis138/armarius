@@ -109,6 +109,12 @@ class Castle(TypedDict, total=False):
     garrison: str
     defences: str
     supplies: str
+    #: Its kind for a siege: "free", "minor" or "great" (Lords of Men p.
+    #: 111), its garrison in combat groups, its Supplies quality, a moat.
+    kind: str
+    groups: int
+    supply: str
+    moat: bool
 
 
 def castles(neighbour: Neighbour) -> list[Castle]:
@@ -135,6 +141,12 @@ def gratitude(neighbour: Neighbour) -> list[Gratitude]:
 def income(neighbour: Neighbour) -> int:
     """His manors' yearly income, in pounds."""
     return manors(neighbour) * MANOR_INCOME
+
+
+def coin(neighbour: Neighbour) -> int:
+    """The pounds he holds in coin (0 when none are recorded)."""
+    raw = neighbour.details.get("coin")
+    return raw if isinstance(raw, int) and not isinstance(raw, bool) else 0
 
 
 def surplus(neighbour: Neighbour) -> int:
@@ -215,6 +227,7 @@ def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
             f"{income(neighbour)} pounds a year ({MANOR_INCOME} a manor, LoM p. 72)",
         ),
         Fact("Surplus", surplus_text(neighbour)),
+        Fact("Coin in hand", f"{coin(neighbour)} pounds"),
         Fact("Mercenary budget", budget_text(neighbour)),
     ]
     if t == "landed":
@@ -319,6 +332,14 @@ def fields(_saga: Saga, neighbour: Neighbour | None) -> list[DialogField]:
         DialogField(
             "seat", "Seat", "text", d.get("seat", ""), placeholder="e.g. Arnsberg"
         ),
+        DialogField(
+            "coin",
+            "Coin in hand (pounds)",
+            "int",
+            coin(neighbour) if neighbour is not None else 0,
+            hint="What he could pay at once, as for a manor he buys (Lords of "
+            "Men p. 85); his yearly surplus is beside it.",
+        ),
         *_affinity_fields(d),
     ]
 
@@ -405,6 +426,36 @@ def castle_fields(
             c.get("supplies", ""),
             placeholder="e.g. a season's siege",
         ),
+        DialogField(
+            "kind",
+            "Kind (for a siege)",
+            "select",
+            c.get("kind") or None,
+            options=[
+                ("A free choice: Defenses Standard", "free"),
+                ("A minor castle: Defenses Superior", "minor"),
+                ("A great castle: Defenses Excellent", "great"),
+            ],
+            allow_blank=True,
+            placeholder="(not set)",
+            hint="Lords of Men p. 111: what a siege of it starts from.",
+        ),
+        DialogField(
+            "groups",
+            "Garrison (combat groups)",
+            "optint",
+            c.get("groups"),
+        ),
+        DialogField(
+            "supply",
+            "Supplies quality",
+            "select",
+            c.get("supply") or None,
+            options=[(q, q) for q in ("Shoddy", "Standard", "Superior", "Excellent")],
+            allow_blank=True,
+            placeholder="(not set)",
+        ),
+        DialogField("moat", "A moat", "check", bool(c.get("moat"))),
     ]
 
 

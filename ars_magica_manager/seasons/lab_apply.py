@@ -7,7 +7,14 @@ import random
 from collections.abc import MutableMapping, Sequence
 from dataclasses import replace
 
-from .. import book_kinds, research_text, spell_parameters, storage, vis
+from .. import (
+    book_kinds,
+    research_text,
+    spell_parameters,
+    staged_projects,
+    storage,
+    vis,
+)
 from .. import books as bk
 from .. import familiars as fam
 from .. import spells as spl
@@ -33,6 +40,7 @@ from ..models import (
     SeasonPlan,
     SeasonRecordLine,
     StationReached,
+    Stirps,
     VirtueFlawInstance,
     assign_laboratory,
     new_instance_id,
@@ -64,6 +72,7 @@ from ..rules import familiar_seasons as fs
 from ..rules import lab as lab_rules
 from ..rules import laboratory_seasons as ls
 from ..rules import supplement_work as sw
+from ..rules import viresculture as vc
 from ..rules.season_work import city_guild as cg
 from ..world import takes_part_in_play
 from .character_effects import _add_xp, age_character, gain_warping
@@ -277,6 +286,9 @@ def _apply_enchanting(
     if effect is not None and plan.activity in instilling:
         # Who instilled it: a talisman's effects must all be its magus's.
         effect.instilled_by = magus.id
+    attuned = es.attune(device, plan)
+    if attuned:
+        work.notes.append(attuned)
     if plan.activity == es.OPEN:
         device.pawns_opened += work.pawns_opened or work.vis_cost.get("Vim", 0)
     elif plan.activity == es.ATTUNE:
@@ -378,6 +390,8 @@ def apply_supplement(
         vis.pay(vis.season_pool(saga, character, plan), work.vis_cost)
     character.workshop_innovation += work.innovation
     character.workshop_raw_materials += work.raw_materials
+    _keep_stirpes(character, work)
+    _take_labor(saga, work)
     for kind, name, target, points in work.progress:
         record = sw.progress_of(character, kind, name)
         if record is None or record.done:
@@ -417,11 +431,7 @@ def apply_supplement(
             cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
         _apply_initiation(character, work, plan, saga)
-    if work.summa_level is not None:
-        book_id, level = work.summa_level
-        book = next((b for b in saga.books if b.id == book_id), None)
-        if book is not None:
-            book.level = level
+    _raise_summa(saga, work)
     if plan.activity == "bind_catalog":
         character.raw_vis["vim"] = character.raw_vis.get("vim", 0) - 1
         if not character.raw_vis["vim"]:
@@ -498,6 +508,8 @@ def _apply_initiation(
     )
     if work.sacrifice and saga is not None and plan is not None:
         _make_sacrifice(saga, character, work.sacrifice, plan)
+    done = {q.casefold() for q in character.quests}
+    character.quests += [q for q in work.quests if q.casefold() not in done]
     # A Criamon station reached: when, for The Enigma's Stations.
     if work.enigma_station:
         season, year = (plan.season, plan.year) if plan is not None else ("", None)
@@ -535,8 +547,12 @@ def _make_sacrifice(
     elif kind == "wealth":
         name = "mundane wealth"
     elif kind == "vis":
-        name = "vis"
-        details += " Take the pawns from the vis stock."
+        art, pawns = plan.sacrifice_art, plan.sacrifice_pawns
+        pool = vis.season_pool(saga, character, plan)
+        taken = min(pawns, pool.get(art.lower(), 0)) if art else 0
+        if taken:
+            vis.pay(pool, {art: taken})
+        name = f"{taken} pawns of {art} vis" if taken else "vis"
     elif kind == "service":
         name = "a season serving the cult"
         details = _serve_the_cult(saga, character, plan)
@@ -639,6 +655,94 @@ _FINISHED = {
     "land_shaping": "every Ritual of the land project is cast; More's Shape the "
     "Land settles manors on the new land.",
 }
+
+
+def _take_labor(saga: Saga, work: sw.SupplementWork) -> None:
+    """Ingredients bought from another apothecary's store."""
+    for keeper_id, points in work.labor_from:
+        keeper = saga.character(keeper_id)
+        if keeper is not None:
+            keeper.labor_points -= points
+
+
+def _raise_summa(saga: Saga, work: sw.SupplementWork) -> None:
+    """A summa's new Level (inspeximus)."""
+    if work.summa_level is None:
+        return
+    book_id, level = work.summa_level
+    book = next((b for b in saga.books if b.id == book_id), None)
+    if book is not None:
+        book.level = level
+
+
+def _keep_stirpes(character: Character, work: sw.SupplementWork) -> None:
+    """The Stirpes Invigorated, with their Form and Might, for the harvest."""
+    for name, form, level in work.stirpes:
+        kept = [s for s in character.stirpes if s.name != name]
+        character.stirpes = [*kept, Stirps(name, form, level)]
+
+
+def season_stirpes(saga: Saga, rng: random.Random) -> list[SeasonRecordLine]:
+    """Each Invigorated Stirps breeds once a year (Legends of Hermes p. 74),
+    in its breeding season: the spring for animals, the autumn for plants
+    (Herbam) (p. 75). A fifth of its Might in pawns of its Form goes into
+    its magus's raw vis, each pawn one in ten a new, uninvigorated Stirps;
+    one breeding season fewer is left. A magus oversees no more Stirpes
+    than his Viresculture score: those past it don't breed (p. 75). Their
+    care (12 Labor Points a year) is taken as given."""
+    lines: list[SeasonRecordLine] = []
+    for character in saga.characters:
+        tended = 0
+        for stirps in character.stirpes:
+            record = sw.progress_of(character, vc.INVIGORATED, stirps.name)
+            if record is None or record.points <= 0:
+                continue
+            if saga.current_season != vc.breeding_season(stirps.form):
+                continue
+            tended += 1
+            if tended > vc.score(character):
+                character.diary.append(
+                    DiaryEntry(
+                        year=saga.current_year,
+                        season=saga.current_season,
+                        name=f"Stirps untended: {stirps.name}",
+                        details=(
+                            f"{character.name} oversees no more Stirpes than his "
+                            f"Viresculture score ({vc.score(character)}): "
+                            f"{stirps.name} doesn't breed.\nRules: {vc.SOURCE}"
+                        ),
+                    )
+                )
+                continue
+            pawns = vc.pawns_per_breeding(stirps.level)
+            born = vc.roll_stirpes(rng, pawns)
+            record.points -= 1
+            key = stirps.form.lower()
+            character.raw_vis[key] = character.raw_vis.get(key, 0) + pawns
+            told = (
+                f"{stirps.name} breeds: {pawns} pawn(s) of {stirps.form} vis"
+                + (f", {born} of them new uninvigorated Stirpes" if born else "")
+                + f"; {record.points} breeding season(s) left."
+            )
+            character.diary.append(
+                DiaryEntry(
+                    year=saga.current_year,
+                    season=saga.current_season,
+                    name=f"Stirps harvested: {stirps.name}",
+                    details=f"{told}\nRules: {vc.SOURCE}",
+                )
+            )
+            lines.append(
+                SeasonRecordLine(
+                    character.id,
+                    character.name,
+                    character.covenant_id,
+                    "Stirps harvest",
+                    stirps.name,
+                    told,
+                )
+            )
+    return lines
 
 
 def year_end_business(saga: Saga) -> list[SeasonRecordLine]:
@@ -1420,6 +1524,19 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
     lab = saga.laboratory(plan.lab_id)
     if work is None or lab is None:
         return
+    if plan.project_stage:
+        staged_projects.spend_season(
+            saga,
+            magus,
+            plan.project_stage,
+            work.spell.name
+            if work.spell is not None
+            else rules.ACTIVITIES[plan.activity].label
+            if plan.activity in rules.ACTIVITIES
+            else plan.activity,
+            plan.season,
+            plan.year,
+        )
     if work.experiment is not None and _apply_experiment(saga, magus, lab, plan, work):
         return
     spell = work.spell

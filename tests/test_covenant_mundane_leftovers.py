@@ -429,7 +429,7 @@ def test_levies_are_raised_only_on_home_ground():
     assert armies.army_groups(lord, at_home=False) == 12
 
 
-def test_a_rout_after_a_failed_rally_ends_the_battle():
+def test_a_second_failed_rally_routs_the_army_and_ends_the_battle():
     assert battle.morale_result(None, None) == ""
     assert battle.morale_result(7, None) == battle.HOLDS
     assert battle.morale_result(4, None) == battle.WAVERS
@@ -440,6 +440,9 @@ def test_a_rout_after_a_failed_rally_ends_the_battle():
         sides=[BattleSide("Ours", groups=10), BattleSide("Theirs", groups=10)],
         events=[BattleEvent("x", 0, won=True, morale=3, rally=2)],
     )
+    # A first failed rally only disorders the army (Lords of Men p. 106).
+    assert battles.routed(entry) is None
+    entry.events.append(BattleEvent("x", 0, won=True, morale=3, rally=2))
     assert battles.routed(entry) == 1
     assert isinstance(battles.event_form(Saga("s", "S"), entry), Refuse)
 

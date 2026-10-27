@@ -15,6 +15,7 @@ from .... import (
     disputations,
     health,
     labor,
+    melee_events,
     seasons,
     selling,
     session_end,
@@ -38,14 +39,17 @@ from ....forms import apothecary as apothecary_forms
 from ....forms import beast as beast_forms
 from ....forms import boost as boost_forms
 from ....forms import careers as career_forms
+from ....forms import certamen_duel as certamen_forms
 from ....forms import character as character_forms
 from ....forms import church as church_forms
+from ....forms import covers as cover_forms
 from ....forms import craft_magic as craft_forms
 from ....forms import criamon as criamon_forms
 from ....forms import experimental_effects
 from ....forms import faerie_dealings as faerie_forms
 from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
+from ....forms import grog_story as grog_story_forms
 from ....forms import grogs as grog_forms
 from ....forms import hedge_cast as hedge_cast_forms
 from ....forms import holy_influence as holy_influence_forms
@@ -53,16 +57,19 @@ from ....forms import hubris as hubris_forms
 from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
 from ....forms import pilgrimage as pilgrimage_forms
+from ....forms import season as season_forms
 from ....forms import sin as sin_forms
 from ....forms import spell as spell_forms
 from ....forms import tmre_alchemy as tmre_alchemy_forms
 from ....forms import tmre_divination as tmre_divination_forms
 from ....forms import tmre_dreams as tmre_dream_forms
 from ....forms import tmre_spirits as tmre_spirit_forms
+from ....forms import trait_roll as trait_roll_forms
 from ....forms import tunnel as tunnel_forms
 from ....forms import turbulence as turbulence_forms
 from ....forms import twilight as twilight_forms
 from ....forms import vf_change as vf_change_forms
+from ....forms import whereabouts as whereabouts_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -74,6 +81,7 @@ from ....models import (
     KnownSpell,
     LabTextAccess,
     Possession,
+    Saga,
     Spell,
     add_raw_vis,
     replace_raw_vis,
@@ -249,6 +257,28 @@ class CharacterActions(WorkspaceBase):
             lambda _end: self._commit("section-aging"),
         )
 
+    def action_trait_roll(self) -> None:
+        """More's Roll on Personality Traits: a trait roll, resisting
+        mental influence or the familiar's rescue, with the Silver Cord."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app, trait_roll_forms.roll_form(self.saga, character), lambda _e: None
+        )
+
+    def action_disguise_roll(self) -> None:
+        """More's Disguise Roll on Covers: a cover's Disguise roll worked
+        out and rolled (shown, not kept)."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            cover_forms.disguise_form(self.saga, character),
+            lambda _e: None,
+        )
+
     def action_resolve_twilight(self) -> None:
         """More's Resolve Twilight on Aging & Warping: the storyguide's
         choice of its effects, applied and kept in the Diary."""
@@ -285,6 +315,18 @@ class CharacterActions(WorkspaceBase):
             lambda _end: self._commit("section-reputations", "tab-diary"),
         )
 
+    def action_melee_event(self) -> None:
+        """More's Melee Event on Reputations: a roll on the Melee Events
+        Table, and the ransom fair from the knight it presents."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            melee_events.melee_form(self.saga, character),
+            lambda _end: self._commit("section-reputations", "tab-diary"),
+        )
+
     def action_labor_story(self) -> None:
         """More's Labor Points from a Story on This Season: a story's award
         in seasons' worth of Labor Points, kept in the Diary."""
@@ -295,6 +337,37 @@ class CharacterActions(WorkspaceBase):
             self.app,
             labor.story_form(self.saga, character),
             lambda _end: self._commit("section-char-season", "tab-diary"),
+        )
+
+    def action_grog_story_xp(self) -> None:
+        """More's Story Experience on a grog's This Season: the story's
+        xp at once, counted against the yearly update."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            grog_story_forms.story_form(self.saga, character),
+            lambda _end: self._commit("section-char-season", "tab-diary"),
+        )
+
+    def action_plan_copying(self) -> None:
+        """More's Plan Copying on a grog's This Season: a season of copying
+        a book or Lab Texts, planned like anyone's."""
+        self._grog_copying(season_forms.copying_form)
+
+    def action_clear_copying(self) -> None:
+        """More's Clear Copying: drop a grog's season of copying."""
+        self._grog_copying(season_forms.clear_copying_form)
+
+    def _grog_copying(self, build: Callable[[Saga, Character | None], Command]) -> None:
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            build(self.saga, character),
+            lambda _end: self._commit("section-char-season"),
         )
 
     def action_invest_labor(self) -> None:
@@ -1711,6 +1784,21 @@ class CharacterActions(WorkspaceBase):
     def action_dream_working(self) -> None:
         """More's Dream Working: a dream traveler's roll, kept in the Diary."""
         self._byzantine_step(tmre_dream_forms.dream_form, "section-known-spells")
+
+    def action_whereabouts(self) -> None:
+        """More's Where He Is on Casting Scores: the aura he is in now."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            whereabouts_forms.where_form(self.saga, character),
+            lambda _end: self._commit("section-casting"),
+        )
+
+    def action_certamen_duel(self) -> None:
+        """More's Certamen: a duel with another magus, played out."""
+        self._byzantine_step(certamen_forms.duel_form, "section-known-spells")
 
     def action_hermetic_sacrifice(self) -> None:
         """More's Hermetic Sacrifice: the vis a sacrifice stands in for, kept

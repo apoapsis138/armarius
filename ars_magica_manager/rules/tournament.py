@@ -78,6 +78,25 @@ MELEE_EVENTS: tuple[tuple[int, str], ...] = (
 )
 
 
+#: The ransom it is reasonable to take, by the beaten knight's means (p.
+#: 67): never service or an oath.
+RANSOMS: dict[str, str] = {
+    "Wealthy": "his horse and his armor",
+    "average": "his horse or his armor",
+    "Poor": "perhaps his weapons",
+    "inexperienced": "little: it is poor manners to take much from a young knight",
+}
+
+
+def ransom_due(line: str) -> str:
+    """What a fair ransom is from the knight a Melee Events line presents
+    (a company's opponents are judged one by one)."""
+    for means in ("Wealthy", "average", "Poor", "inexperienced"):
+        if means.casefold() in line.casefold():
+            return RANSOMS[means]
+    return "as each knight's means allow"
+
+
 def knight_xp(done: Iterable[str]) -> int:
     """The season's experience points toward Prudhomme: the highest of what
     he did, not their sum."""

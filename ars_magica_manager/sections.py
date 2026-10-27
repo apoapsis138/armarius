@@ -136,6 +136,8 @@ TOURNEY_SECTION = "section-trib-tourney"
 PRIVILEGES_SECTION = "section-trib-privileges"
 AMBASSADORS_SECTION = "section-trib-ambassadors"
 TREATIES_SECTION = "section-trib-treaties"
+#: The Grand Tribunal's delegates (tribunal_packages.grand).
+DELEGATES_SECTION = "section-trib-delegates"
 #: The Region's top panel, and the covenants the troupe doesn't play.
 REGION_INFO_SECTION = "section-region-info"
 REGION_COVENANTS_SECTION = "section-region-covenants"
@@ -292,6 +294,11 @@ MARRIAGE_TERMS_SECTION = "section-nb-marriage"
 MENAGERIE_SECTION = "section-cov-menagerie"
 BEASTS_SECTION = "section-cov-menagerie-beasts"
 BREEDINGS_SECTION = "section-cov-menagerie-breedings"
+#: A covenant's staged Hermetic Project (staged_projects.py, Hermetic
+#: Projects pp. 9-118): the project shown, its stages and their works.
+STAGED_SECTION = "section-cov-staged"
+STAGED_STAGES_SECTION = "section-cov-staged-stages"
+STAGE_WORKS_SECTION = "section-cov-staged-works"
 #: A Criamon magus's The Enigma tab (forms.criamon, HoH:MC pp. 50-73): his
 #: path, its stations, and his stigmata.
 CRIAMON_PATH_SECTION = "section-char-criamon-path"
@@ -327,6 +334,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     PRIVILEGES_SECTION: frozenset({"add", "edit", "remove"}),
     AMBASSADORS_SECTION: frozenset({"add", "edit", "remove"}),
     TREATIES_SECTION: frozenset({"add", "edit", "remove"}),
+    DELEGATES_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_CHURCH_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_UNIVERSITIES_SECTION: frozenset({"add", "edit", "remove"}),
@@ -422,6 +430,10 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     MENAGERIE_SECTION: frozenset({"edit"}),
     BEASTS_SECTION: frozenset({"add", "edit", "remove"}),
     BREEDINGS_SECTION: frozenset({"add", "edit", "remove"}),
+    # A covenant's staged project (Hermetic Projects).
+    STAGED_SECTION: frozenset({"edit"}),
+    STAGED_STAGES_SECTION: frozenset({"add", "edit", "remove"}),
+    STAGE_WORKS_SECTION: frozenset({"add", "edit", "remove"}),
     # A Criamon magus's path and stigmata (HoH:MC).
     CRIAMON_PATH_SECTION: frozenset({"edit"}),
     STIGMATA_SECTION: frozenset({"add", "edit", "remove"}),

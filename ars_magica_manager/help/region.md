@@ -327,7 +327,9 @@ The Manors list's own buttons:
 **Buy a Manor** adds one at its price: 30 to 50 times its 20 pounds a
 year, 600 to 1,000 pounds, less if the seller keeps some of its rights or
 you take on its dues, better for coin in hand, more when his lord takes a
-cut (p. 85); a covenant may pay it from its Wealth. **Assart** clears the
+cut (p. 85); a covenant may pay it from its Wealth, and a lord from his
+**Coin in hand** (on Edit Lord), or else by installments from his yearly
+surplus, which the result counts in years. **Assart** clears the
 chosen manor's waste: a strong laborer with proper tools clears an acre
 of lightly wooded land a month doing nothing else (p. 84, errata p. 74);
 villeins clearing between their duties are much slower, and land cleared
@@ -684,6 +686,11 @@ serjeants and infantry, untrained for the rest.
 More (or the button) on a battle, for what comes before and after its
 battlefield events (Lords of Men, Chapter Eight):
 
+- **A crusade** (p. 104): tick it on Raise Allies for a churchman with
+  Senior Clergy: the Affinity is the most prominent noble's of his
+  diocese, rolled on the Allied Troops Table. The book names an Army Size
+  Table that doesn't exist, and Holy Influence (Realms of Power: The
+  Divine p. 38) has no Affinity in it, so this is the app's reading.
 - **Raise Allies** (pp. 102-103): who calls them, his Affinity score and
   his core vassal groups (his lord's title gives them, levies only on home
   ground), and the Allied Troops Table's modifiers that apply. Presence +
@@ -740,16 +747,42 @@ Stamina + Leadership + their army's Ground and Numbers + those three,
 9 for the first event (Engaged), 12 for the second (Advantage or
 Setback), 15 for the third and any after (Imminent Victory or Defeat).
 
-Play the event out as a fight, then say how it went and **Record**. The
-side that lost it loses combat groups equal to its Size times the
-winner's Numbers, when the winner has the greater army, and the next
-event's Numbers are worked out from what is left. After an event, type
-the losing commander's **Morale** roll (Presence + Leadership + a stress
-die, against 6) and, if it fails, his **rally** at the next event
-(against 9); a failed rally routs his army and ends the battle, and
-Battle Event then refuses (Lords of Men p. 106). The troops lost in the
-fight itself are left to the troupe; edit the battle to change its
-groups. Each event recorded is
+Tick **Play it out as a fight** to have the event made into a fight on
+Conflicts (Lords of Men pp. 105-108): the leader and his own group (**His
+group**, from the Standard Combat Groups table, p. 108) against the
+groups the Size sets (Lesser: one about half his; Even: one;
+Outnumbered: two; Overwhelmed: three; I Stand Alone: he alone against a
+full group) of the troops its Enemy names (**Their troops**: levies,
+infantry or archers, knights or serjeants, the Baggage guarded by
+levies; a Special enemy is the storyguide's to add with Add Combatant).
+Weight of Numbers adds as many men to each group of the side it favours;
+knights, serjeants and infantry fight as trained groups. The leader
+fights with the first weapon he carries (Edit Combatant changes it).
+Play it, five rounds unless the event says otherwise, then open Battle
+Event again: it is filled in as you left it, and the line above Record
+says what the fight showed.
+
+Then say **How it went** by the Maneuver's own condition (pp. 106-108):
+a Defend is won by beating the attackers or holding for the rounds set;
+an Attack by defeating or routing them; Run the Gauntlet by reaching its
+objective; a Take by taking it and holding it against the counter-attack;
+a Heroic Gesture is won if its leader dies (or survives meeting the
+storyguide's conditions), and lost if another player character is
+killed. **Record**. The side that lost loses the groups the fight cost
+it, and as many more as the event's Size times the winner's Numbers,
+when the winner has the greater army; the next event's Numbers are
+worked out from what is left. After an event, type the losing
+commander's **Morale** roll (Presence + Leadership + a stress die,
+against 6) and, if it fails, his **rally** at the next event (against
+9). A failed rally disorders his army; a second, while it is still
+disordered, routs it and ends the battle (Lords of Men p. 106). While an
+army is disordered, the next Battle Event offers **A rally by** a player
+character who takes command: his roll (Presence + Leadership + a stress
+die against 9, p. 135), or a story event played for it, won or lost. A
+rally lifts the army a step, routed to disordered, disordered to steady.
+With Morale and Discipline on, a disordered or routed army's groups start
+its event's fight that way (see [Discipline, Morale and
+rallying](help:group-morale)). Each event recorded is
 written as a line in the Diary of each army's lord or covenant (see
 [A lord's Diary](help:tab-nb-lord-diary)) and of the leading character.
 
@@ -1338,6 +1371,19 @@ carried off makes 1 of Lunar aura wherever it is taken. Since the fall
 Diameter, Sun, Moon and Year Durations fail everywhere, and Parma Magica
 and the Aegis of the Hearth with them; each replacement duration is a
 Minor Breakthrough of 30 points (p. 37).
+
+### Cross the Threshold
+<!-- help: cross-threshold -->
+
+**Cross the Threshold** (More on the place's record; on the desktop beside
+Edit Neighbour) counts the points a set of circumstances gathers: choose
+the level they start from, who leads the crossing (his faerie Virtues and
+Flaws come from his sheet), the border, the time, his emotion and life
+change, a work of art, Spirit Away, an Arcadian Travel charm's total and
+a cognizant faerie's Might. The panel sets the total against the
+Threshold's strength; Try writes the attempt in the place's Diary, and
+says whether the Threshold comes (and the Guardian's least Might) or
+that these circumstances can't open it again before the next moonrise.
 
 ## Regio Levels
 <!-- help: section-nb-levels -->

@@ -489,7 +489,10 @@ def case_text(saga: Saga, tribunal: Tribunal, case: Case | None) -> str:
         f"[b]{escape(case.title)}[/]  {escape(hermetic_law.kind_label(case.kind))}"
     )
     if case.status == CASE_OPEN:
-        if tribunal.next_year is not None:
+        if not hermetic_law.heard(case):
+            # A war no meeting hears unless its service is disputed.
+            heading += " · on the docket, not heard"
+        elif tribunal.next_year is not None:
             heading += f" · to be heard {tribunal.next_season} {tribunal.next_year}"
     else:
         heading += f" · {escape(outcome(case))}"

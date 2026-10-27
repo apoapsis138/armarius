@@ -19,6 +19,7 @@ from .models import (
     CharacterType,
     Covenant,
     CreationXp,
+    Inhabitant,
     KnownSpell,
     LabCharacteristics,
     Laboratory,
@@ -81,7 +82,26 @@ def add_character(
         in_creation=True,
     )
     saga.characters.append(character)
+    covenant = saga.covenant(covenant_id)
+    if character_type == "grog" and covenant is not None:
+        # A new grog joins the covenant's household, among the Turb, where
+        # he counts as an inhabitant; move him to Specialists or
+        # Craftspeople on the Inhabitants tab.
+        covenant.inhabitants.append(
+            Inhabitant(
+                id=storage.generate_unique_id(
+                    f"turb-{name}", [r.id for r in covenant.inhabitants]
+                ),
+                kind=NEW_GROG_KIND,
+                name=name,
+                character_id=character.id,
+            )
+        )
     return character
+
+
+#: The Inhabitants list a new grog joins.
+NEW_GROG_KIND = "turb"
 
 
 def add_laboratory(

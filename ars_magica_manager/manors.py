@@ -79,6 +79,7 @@ from .neighbour_lists import KindBlock, KindList, KindTab, list_ops, tab_ops
 from .references import Fact
 from .rules import dice, scores
 from .rules import marriage as marriage_rules
+from .rules.rounding import round_up
 from .sections import (
     ESTABLISHMENTS_SECTION,
     HOUSEHOLD_SECTION,
@@ -1482,6 +1483,17 @@ def buy_fields(saga: Saga, holder: Neighbour) -> list[DialogField]:
                 True,
             )
         )
+    else:
+        found.append(
+            DialogField(
+                "pay",
+                f"Pay it from his coin ({lords.coin(holder)} pounds)",
+                "check",
+                lords.coin(holder) > 0,
+                hint="Unticked, he pays by installments from his yearly "
+                "surplus, at a worse price (LoM p. 85).",
+            )
+        )
     found.append(DialogField("note", "Note", "text", ""))
     return found
 
@@ -1519,8 +1531,25 @@ def buy(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
                 f"Paid from its Wealth: {covenant.economics.wealth} pounds left."
             )
     else:
+        if values.get("pay"):
+            holder.details["coin"] = lords.coin(holder) - price
+            lines.append(f"Paid from his coin: {lords.coin(holder)} pounds left.")
+        else:
+            spare = lords.surplus(holder)
+            lines.append(
+                f"Paid by installments from his surplus of {spare} pounds a year"
+                + (
+                    f": about {round_up(price / spare)} years."
+                    if spare > 0
+                    else "; he has none to spare, so the seller must wait."
+                )
+            )
         place_events.diary(holder).append(
-            {"year": saga.current_year, "season": saga.current_season, "text": lines[0]}
+            {
+                "year": saga.current_year,
+                "season": saga.current_season,
+                "text": " ".join(lines),
+            }
         )
     lines.append(
         "Its 20 pounds a year are its lord's from now"
@@ -1540,6 +1569,8 @@ def _buy_problem(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> str |
     covenant = holder_covenant(saga, holder)
     if covenant is not None and values.get("pay") and price > covenant.economics.wealth:
         return f"The covenant has only {covenant.economics.wealth} pounds."
+    if covenant is None and values.get("pay") and price > lords.coin(holder):
+        return f"He has only {lords.coin(holder)} pounds in coin."
     return None
 
 

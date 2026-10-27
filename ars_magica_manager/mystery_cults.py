@@ -45,9 +45,11 @@ import random
 import re
 from dataclasses import dataclass, field
 
-from . import catalog
+from . import catalog, world
 from .models import (
+    Case,
     Character,
+    Covenant,
     CultComponent,
     CultDegree,
     CultScript,
@@ -748,3 +750,67 @@ def offers_experiment(saga: Saga, cult_row: int | None, degree_row: int | None) 
     return degree.script is None or any(
         script_inadequate(cult, degree, guide) for guide in mystagogues(saga, cult)
     )
+
+
+# -- as factions (secret societies in the Order's politics) --------------------
+
+
+def cults_of(saga: Saga, covenant: Covenant) -> set[str]:
+    """The saga cults any of the covenant's magi belongs to, by name."""
+    people = [c for c in saga.characters if c.covenant_id == covenant.id]
+    return {
+        cult.name
+        for cult in saga.custom_cults
+        for person in people
+        if is_member(person, cult)
+    }
+
+
+def cult_leaning(saga: Saga, case: Case, covenant: Covenant) -> tuple[str, str] | None:
+    """How a covenant leans on `case` for its magi's cult: with a covenant
+    sharing a cult that is a party, else by the cult's attitude toward a
+    troupe covenant that is a party (Warm or better with it, Wary or worse
+    against it). Which side ("brought_by" or "against") and why; None when
+    no cult of its magi takes a side. A cult's members voting as one is
+    the app's reading, as the Rhine's gilds are."""
+    own = cults_of(saga, covenant)
+    if not own:
+        return None
+    for other in saga.covenants:
+        if other is covenant:
+            continue
+        shared = own & cults_of(saga, other)
+        name = other.name.strip().casefold()
+        if not shared or not name:
+            continue
+        cult = min(shared)
+        if name in case.brought_by.casefold():
+            return "brought_by", f"its cult, {cult}, stands with {other.name}"
+        if name in case.against.casefold():
+            return "against", f"its cult, {cult}, stands with {other.name}"
+    for cult in saga.custom_cults:
+        if cult.name not in own:
+            continue
+        for attitude in cult.attitudes:
+            troupe = saga.covenant(attitude.covenant_id)
+            score = world.attitude_score(attitude)
+            if troupe is None or not score or not troupe.name.strip():
+                continue
+            name = troupe.name.strip().casefold()
+            side = (
+                "brought_by"
+                if name in case.brought_by.casefold()
+                else "against"
+                if name in case.against.casefold()
+                else ""
+            )
+            if not side:
+                continue
+            if score < 0:
+                side = "against" if side == "brought_by" else "brought_by"
+            word = world.attitude_word(score)
+            return (
+                side,
+                f"its cult, {cult.name}, is {word.lower()} toward {troupe.name}",
+            )
+    return None

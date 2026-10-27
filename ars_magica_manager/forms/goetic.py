@@ -16,7 +16,7 @@ from ..rules import dice, penetration, realms
 from ..rules import goetic as gr
 from ..rules import hybrid_magic as hybrid
 from ..rules.infernalists import SACRIFICES
-from ..rules.realms import home_aura
+from ..rules.realms import present_aura
 
 TITLE = "Ars Goetia"
 HELP_ID = "ars-goetia"
@@ -45,7 +45,7 @@ def _summons(character: Character):
 
 def goetic_fields(saga: Saga, character: Character) -> list[DialogField]:
     """What Ars Goetia asks."""
-    aura, aura_realm = home_aura(saga, character)
+    aura, aura_realm = present_aura(saga, character)
     areas = _area_lores(character)
     summons = _summons(character)
     return [

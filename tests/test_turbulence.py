@@ -53,7 +53,9 @@ def _saga() -> Saga:
     magus.arts = {"creo": ArtScore(xp=art_xp(5)), "ignem": ArtScore(xp=art_xp(5))}
     child = Character(id="e", name="Eleanor", type="companion", covenant_id="cov")
     child.background.year_born = YEAR - 7
-    child.characteristics = Characteristics(intelligence=3, stamina=3)
+    # The book's Int +3 and Sta +3, with her age's -4 in them, as the sheet
+    # keeps them (the score in play).
+    child.characteristics = Characteristics(intelligence=-1, stamina=-1)
     child.abilities = [Ability("Magic Theory", xp=ability_xp(2))]
     child.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
     lab = Laboratory(
@@ -86,8 +88,7 @@ def test_the_books_example_incurs_and_fails_to_control():
     eleanor = saga.character("e")
     lines = tb.incurring_lines(saga, eleanor, aura=2)
     assert [(line.label, line.amount) for line in lines] == [
-        ("Intelligence", 3),
-        ("Age (Aging Chart)", -4),
+        ("Intelligence", -1),
         ("Magic aura 2", 2),
     ]
     incurring = tb.incur(saga, eleanor, Faces(9, 6), lines)
@@ -107,7 +108,8 @@ def test_age_must_be_beaten_as_well_as_the_storyguide():
     saga = _saga()
     eleanor = saga.character("e")
     eleanor.background.year_born = YEAR - 12
-    lines = tb.incurring_lines(saga, eleanor, aura=0)  # 3 - 1 for age 12
+    eleanor.characteristics.intelligence = 2  # 3 bought, -1 for age 12
+    lines = tb.incurring_lines(saga, eleanor, aura=0)
     short = tb.incur(saga, eleanor, Faces(8, 2), lines)
     assert (short.total, short.against) == (10, 12)
     assert not short.incurred
@@ -122,7 +124,7 @@ def test_another_realms_aura_and_an_aegis_take_from_the_roll():
     lines = tb.incurring_lines(
         saga, eleanor, aura=3, aura_realm="Divine", aegis=15, confidence=1
     )
-    assert [(line.label, line.amount) for line in lines][2:] == [
+    assert [(line.label, line.amount) for line in lines][1:] == [
         ("Divine aura 3", -9),
         ("Aegis of the Hearth 15", -7),
         ("Confidence x 1", 3),
@@ -223,6 +225,7 @@ def _lead_total(saga: Saga) -> int:
 
 def test_an_uncontrolled_lab_turbulence_halves_the_apprentices_aid():
     saga = _saga()
+    saga.character("e").characteristics.intelligence = 3
     assisting = _assisting(saga)
     before = _lead_total(saga)
     assisting.turbulence = tb.CONTROLLED
@@ -267,7 +270,7 @@ def test_the_form_rolls_and_keeps_a_lab_seasons_check():
     assert tb.LAB in [value for _, value in tf.occasions(saga, eleanor)]
     lab = {**values, "occasion": tb.LAB, "gift_roll": True}
     said = tf.turbulence_lines(saga, eleanor, lab)
-    assert said[0].startswith("Incurring: Intelligence +3, Age (Aging Chart) -4")
+    assert said[0].startswith("Incurring: Intelligence -1, Magic aura 2 +2")
     assert any("Assisting Tiberius" in line for line in said)
     assert any("botch dice" in line for line in said)
     result = form.apply(lab)

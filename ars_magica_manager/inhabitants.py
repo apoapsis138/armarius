@@ -37,7 +37,7 @@ from .rules.covenfolk import (
     minimum_teamsters,
     other_covenfolk_count,
 )
-from .rules.rounding import round_away_from_zero
+from .rules.rounding import round_nearest
 
 INHABITANTS_SOURCE = (
     "Covenants, Chapter Five: Wealth & Poverty, Points of Inhabitants, p. 63"
@@ -232,10 +232,12 @@ def familiarity(saga: Saga, covenant: Covenant) -> int:
 
 
 def base_loyalty(saga: Saga, covenant: Covenant) -> int:
-    """Base Loyalty: the average, across the covenant's magi, of each one's
-    Gift modifier. 0 with no magi. An unset manual Gift is assumed to be the
-    ordinary Gift (the default expectation for a magus). LOYALTY_SOURCE; the
-    average rounds away from zero (covenant finances)."""
+    """Base Loyalty: the average, across the council, of each member's
+    Gift modifier: the covenant's magi, and its companions and specialists
+    with a full vote on the council, who count 0 (Covenants p. 38). 0 with
+    no magi. An unset manual Gift is assumed to be the ordinary Gift (the
+    default expectation for a magus). LOYALTY_SOURCE; the average rounds to
+    the nearest, as the book's example does (-225 / 7 is -32)."""
     magi = entries_for_kind(saga, covenant, "magus")
     if not magi:
         return 0
@@ -243,7 +245,18 @@ def base_loyalty(saga: Saga, covenant: Covenant) -> int:
         GIFT_LOYALTY_MODIFIERS.get(entry.gift, GIFT_LOYALTY_MODIFIERS["The Gift"])
         for entry in magi
     )
-    return round_away_from_zero(total / len(magi))
+    return round_nearest(total / (len(magi) + len(council_companions(saga, covenant))))
+
+
+def council_companions(saga: Saga, covenant: Covenant) -> list[InhabitantEntry]:
+    """The companions and specialists with a full vote on the council: any
+    non-magus with an equal vote (Covenants p. 38)."""
+    return [
+        e
+        for kind in ("companion", "specialist")
+        for e in entries_for_kind(saga, covenant, kind)
+        if e.on_council
+    ]
 
 
 def _role_holders(saga: Saga, covenant: Covenant) -> list[InhabitantEntry]:
@@ -472,6 +485,8 @@ def detail_text(entry: InhabitantEntry | None, current_year: int) -> str:
         lines.append(f"[b]Gift:[/] {escape(entry.gift)}")
     if kind in GROG_KINDS + ("companion",) and entry.responsibility:
         lines.append(f"[b]Responsibility:[/] {escape(entry.responsibility)}")
+    if kind == "companion" and entry.on_council:
+        lines.append("[b]Council:[/] a full vote (counts 0 in Base Loyalty)")
     if kind in ("companion", "specialist", "inhabitant") and entry.role:
         lines.append(f"[b]Covenant Role:[/] {escape(entry.role)}")
         if entry.role_bonus is not None:

@@ -86,6 +86,10 @@ class FightGroup:
     trained: bool = False
     leader: str = ""
     bonus_to: str = "attack"
+    #: Its spirit under the Morale and Discipline option (rules.
+    #: group_morale): "" steady, "disordered", "disordered_untrained",
+    #: "routed".
+    state: str = ""
     id: str = field(default_factory=new_instance_id)
 
     @classmethod
@@ -180,6 +184,13 @@ class Fight:
     over: str = ""
     #: Whether its ending is written in its fighters' Diaries.
     recorded: bool = False
+    #: The battle whose next event it plays out ("" for a fight of its own),
+    #: and that event's choices as the Battle Event form made them.
+    battle_id: str = ""
+    battle_event: dict[str, Any] = field(default_factory=dict)
+    #: Fought amid a battle, though not one of its events: spells need a
+    #: Concentration roll (Lords of Men p. 109), as in an event's fight.
+    part_of_battle: bool = False
     id: str = field(default_factory=new_instance_id)
 
     @classmethod
@@ -204,6 +215,23 @@ class Fight:
             str(k): [str(x) for x in v] for k, v in (d.get("located") or {}).items()
         }
         return cls(**known_fields(cls, d))
+
+
+@dataclass
+class Outwork:
+    """An external defense the besiegers must take before the castle
+    (Lords of Men p. 114, optional): its name, Defense Quality, walls'
+    damage levels left (None: whole) and whether it has fallen. It shares
+    the castle's Supplies and Garrison."""
+
+    name: str = ""
+    defenses: str = "Superior"
+    walls: int | None = None
+    taken: bool = False
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Outwork:
+        return cls(**known_fields(cls, data))
 
 
 @dataclass
@@ -269,6 +297,21 @@ class Siege:
     gunner: int = 0
     counter_sapper: int = 0
     engineer: int = 0
+    #: The characters who are those experts, by role ("sapper", "gunner",
+    #: "counter_sapper", "engineer"): their figures replace the typed ones.
+    experts: dict[str, str] = field(default_factory=dict)
+    #: The characters inside the castle: -2 Living Conditions for a year
+    #: with a season under siege (Lords of Men p. 112).
+    inside: list[str] = field(default_factory=list)
+    #: The garrison's own engines by kind, and its engine master's total
+    #: (Intelligence + Siege Weapon) for firing them (pp. 111, 115-116).
+    garrison_engines: dict[str, int] = field(default_factory=dict)
+    garrison_gunner: int = 0
+    #: Outworks to take first, in order (p. 114).
+    outworks: list[Outwork] = field(default_factory=list)
+    #: Raise the Veronese Flag's illusion holds the walls until this day:
+    #: none looks undefended (Lords of Men p. 116); None: no flag raised.
+    flag_until: int | None = None
     days: int = 0
     supply_rolls: int = 0
     #: The day the next supplies roll comes due: the last one's day plus
@@ -294,8 +337,12 @@ class Siege:
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Siege:
         d = dict(data)
+        d["outworks"] = [Outwork.from_dict(o) for o in d.get("outworks") or []]
         d["events"] = [SiegeEvent.from_dict(e) for e in d.get("events") or []]
         d["engines"] = {str(k): int(v) for k, v in (d.get("engines") or {}).items()}
+        d["garrison_engines"] = {
+            str(k): int(v) for k, v in (d.get("garrison_engines") or {}).items()
+        }
         if d.get("walls") is not None:
             d["walls"] = _four(d["walls"])
         d["besieger_walls"] = _four(d.get("besieger_walls"))
@@ -385,6 +432,18 @@ class BattleEvent:
     engaged_other: list[int] = field(default_factory=lambda: [0, 0])
     #: The enemy threw naptha bombs.
     naptha: bool = False
+    #: The fight it was played out as ("" when it wasn't), and the
+    #: Maneuver's condition it was won or lost by (battle_fights).
+    fight_id: str = ""
+    win_condition: str = ""
+    #: A player character's rally of a failing army at this event's start
+    #: (Lords of Men pp. 106, 135): who, the army's side, and either his
+    #: roll (Presence + Leadership + stress die against 9) or how the
+    #: story event played as one went ("won" or "lost").
+    rally_by: str = ""
+    rally_side: int = 0
+    rally_roll: int | None = None
+    rally_story: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleEvent:
@@ -422,6 +481,17 @@ class Battle:
     at_sea: bool = False
     #: How the day ended, once it has ("" while it goes on).
     ended: str = ""
+    #: An escalade fought as one battle (Lords of Men pp. 114-115): the
+    #: siege, the wall, and what the garrison's side (the second) takes in
+    #: place of Weight of Numbers and Territorial Advantage: its Garrison
+    #: row's Weight of Numbers and the castle's Defense Bonus there.
+    siege_id: str = ""
+    siege_wall: int = 0
+    siege_weight: int = 0
+    siege_defense: int = 0
+    #: The covenant whose land an army put to chevauchee in the campaign:
+    #: those returning to it take -2 on their next Aging roll (LoM p. 103).
+    chevauchee_on: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Battle:

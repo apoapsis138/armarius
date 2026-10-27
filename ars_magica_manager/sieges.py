@@ -16,7 +16,18 @@ from .commands import Command, Confirm, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, WALLS, Neighbour, Saga, Siege, SiegeEvent
+from .models import (
+    SEASONS,
+    WALLS,
+    Battle,
+    BattleSide,
+    Neighbour,
+    Outwork,
+    Saga,
+    Siege,
+    SiegeEvent,
+    details_list,
+)
 from .rules import battle
 from .rules import siege as rules
 
@@ -148,6 +159,7 @@ def fields(
             required=True,
             placeholder="e.g. The Siege of Burg Falkenstein",
         ),
+        *_from_castle_field(saga, siege),
         DialogField(
             "castle", "Castle", "text", s.castle, placeholder="e.g. Burg Falkenstein"
         ),
@@ -266,6 +278,26 @@ def fields(
             s.engineer,
             hint="Intelligence + Profession: Siege Engineer.",
         ),
+        *_expert_fields(saga, s),
+        *(
+            DialogField(
+                f"garrison_engine_{kind}",
+                f"Garrison's {kind.lower()}s",
+                "int",
+                s.garrison_engines.get(kind, 0),
+            )
+            for kind in rules.WALL_BREAKERS
+        ),
+        DialogField(
+            "garrison_gunner",
+            "Garrison's engine master",
+            "int",
+            s.garrison_gunner,
+            hint="Intelligence + Siege Weapon, for firing back at the "
+            "besiegers' engines.",
+        ),
+        *_outwork_fields(s),
+        *_inside_fields(saga, s),
     ]
     lords = [n for n in saga.neighbours if n.kind == "lord"]
     holders = [n for n in saga.neighbours if n.kind in ("lord", "place", "town")]
@@ -327,6 +359,149 @@ def _army(saga: Saga, neighbour_id: str) -> int | None:
     )
 
 
+def _castles(saga: Saga) -> list[tuple[str, str]]:
+    """Every lord's castle as a Select option ("<lord id>:<index>")."""
+    return [
+        (f"{escape(c['name'])} ({escape(n.name)})", f"{n.id}:{i}")
+        for n in saga.neighbours
+        if n.kind == "lord"
+        for i, c in enumerate(details_list(n, "castles"))
+    ]
+
+
+def _from_castle_field(saga: Saga, siege: Siege | None) -> list[DialogField]:
+    """A new siege may start from one of a lord's castles (Lords of Men
+    pp. 110-112)."""
+    found = _castles(saga)
+    if siege is not None or not found:
+        return []
+    return [
+        DialogField(
+            "from_castle",
+            "From a lord's castle",
+            "select",
+            None,
+            options=found,
+            allow_blank=True,
+            placeholder="(typed below)",
+            hint="Fills the castle's name, Garrison, Defenses (by its kind: free "
+            "Standard, minor Superior, great Excellent, p. 111), Supplies and "
+            "moat from the lord's Castles list, and links him as its holder.",
+        ),
+    ]
+
+
+def _fill_from_castle(saga: Saga, siege: Siege, picked: str) -> None:
+    lord_id, _, index = picked.partition(":")
+    lord = saga.neighbour(lord_id)
+    if lord is None or not index.isdigit():
+        return
+    listed = details_list(lord, "castles")
+    if int(index) >= len(listed):
+        return
+    castle = listed[int(index)]
+    siege.castle = castle["name"]
+    siege.castle_id = lord.id
+    if castle.get("kind") in rules.CASTLE_KIND_DEFENSES:
+        siege.defenses = rules.CASTLE_KIND_DEFENSES[castle["kind"]]
+    if castle.get("groups"):
+        siege.garrison = int(castle["groups"])
+    if castle.get("supply"):
+        siege.supplies = castle["supply"]
+    siege.moat = siege.moat or bool(castle.get("moat"))
+
+
+def _expert_fields(saga: Saga, s: Siege) -> list[DialogField]:
+    people = [(escape(c.name), c.id) for c in saga.characters]
+    return [
+        DialogField(
+            f"expert_{role}",
+            f"{label}: a character",
+            "select",
+            s.experts.get(role) or None,
+            options=people,
+            allow_blank=True,
+            placeholder="(the total typed below)",
+            hint=f"Intelligence + {rules.EXPERT_ABILITIES[role]} from his sheet"
+            + (
+                "; Profession: Sapper can't be used untrained, Profession: "
+                "Miner can with three botch dice (p. 114)."
+                if "sapper" in role
+                else "."
+            ),
+        )
+        for role, label in (
+            ("sapper", "Besiegers' sapper"),
+            ("gunner", "Besiegers' engine master"),
+            ("counter_sapper", "Castle's counter-miner"),
+            ("engineer", "Castle's engineer"),
+        )
+    ]
+
+
+#: How many outworks the form offers.
+MOST_OUTWORKS = 3
+
+
+def _outwork_fields(s: Siege) -> list[DialogField]:
+    """Outworks the besiegers must take first, in order (Lords of Men p.
+    114, optional): a name and Defense Quality each; a minor castle's
+    Superior by default."""
+    found: list[DialogField] = []
+    for i in range(MOST_OUTWORKS):
+        work = s.outworks[i] if i < len(s.outworks) else None
+        found += [
+            DialogField(
+                f"outwork_name_{i}",
+                f"Outwork {i + 1}",
+                "text",
+                work.name if work else "",
+                placeholder="e.g. the Accursed Tower" if i == 0 else "",
+                hint="Taken before the castle: its own Defense Bonus, the "
+                "castle's Supplies and Garrison (p. 114)."
+                if i == 0
+                else "",
+            ),
+            DialogField(
+                f"outwork_defenses_{i}",
+                f"Outwork {i + 1}'s Defenses",
+                "select",
+                work.defenses if work else "Superior",
+                options=pairs(rules.QUALITIES),
+            ),
+        ]
+    return found
+
+
+def _write_outworks(siege: Siege, values: dict[str, Any]) -> None:
+    kept = {o.name: o for o in siege.outworks}
+    found: list[Outwork] = []
+    for i in range(MOST_OUTWORKS):
+        name = (values.get(f"outwork_name_{i}") or "").strip()
+        if not name:
+            continue
+        work = kept.get(name) or Outwork(name)
+        work.defenses = values.get(f"outwork_defenses_{i}") or work.defenses
+        found.append(work)
+    siege.outworks = found
+
+
+def _inside_fields(saga: Saga, s: Siege) -> list[DialogField]:
+    """Who is inside the castle: each character a tick, everyone of a
+    besieged covenant by default (a castle sends its children, sick and
+    elderly away, so tick them off; p. 112)."""
+    covenant = s.covenant_id
+    return [
+        DialogField(
+            f"inside_{c.id}",
+            f"Inside: {escape(c.name)}",
+            "check",
+            c.id in s.inside if s.inside or not covenant else c.covenant_id == covenant,
+        )
+        for c in saga.characters
+    ]
+
+
 def _write(saga: Saga, siege: Siege, values: dict[str, Any]) -> None:
     for key in (
         "name",
@@ -373,6 +548,22 @@ def _write(saga: Saga, siege: Siege, values: dict[str, Any]) -> None:
     siege.garrison, siege.soldiers = int(garrison), int(soldiers)
     if "ended" in values:
         siege.ended = values.get("ended") or ""
+    siege.experts = {
+        role: str(values[f"expert_{role}"])
+        for role in rules.EXPERT_ABILITIES
+        if values.get(f"expert_{role}")
+    }
+    siege.inside = [c.id for c in saga.characters if values.get(f"inside_{c.id}")]
+    siege.garrison_engines = {
+        kind: n
+        for kind in rules.WALL_BREAKERS
+        if (n := int(values.get(f"garrison_engine_{kind}") or 0)) > 0
+    }
+    siege.garrison_gunner = int(values.get("garrison_gunner") or 0)
+    if any(f"outwork_name_{i}" in values for i in range(MOST_OUTWORKS)):
+        _write_outworks(siege, values)
+    if values.get("from_castle"):
+        _fill_from_castle(saga, siege, str(values["from_castle"]))
 
 
 def problem(values: dict[str, Any]) -> str | None:
@@ -456,6 +647,40 @@ def event_fields(siege: Siege) -> list[DialogField]:
             options=[(w, str(i)) for i, w in enumerate(WALLS)],
             show_if=_needs_wall,
         ),
+        *(
+            DialogField(
+                f"group_wall_{i}",
+                f"Group {i + 1} ({count} {kind.lower()}{'s' if count > 1 else ''}) at",
+                "select",
+                "0",
+                options=[(w, str(n)) for n, w in enumerate(WALLS)],
+                show_if=lambda v: v.get("event") == rules.ARTILLERY,
+            )
+            for i, (kind, count) in enumerate(rules.engine_groups(siege))
+        ),
+        *(
+            DialogField(
+                f"group_target_{i}",
+                f"Their group {i + 1} ({count} {kind.lower()}"
+                f"{'s' if count > 1 else ''}) at",
+                "select",
+                next(
+                    iter(k for k in rules.ENGINES if siege.engines.get(k)), "Mangonel"
+                ),
+                options=pairs(tuple(rules.ENGINES)),
+                show_if=lambda v: v.get("event") == rules.COUNTER,
+                hint="Each group of the garrison's mangonels and trebuchets fires "
+                "once at one of the besiegers' engines: Intelligence + Siege "
+                "Weapon + its Attack + stress die against 6 (an engine's "
+                "Defense; the book gives none); a hit destroys it (Lords of "
+                "Men pp. 113-116)."
+                if i == 0
+                else "",
+            )
+            for i, (kind, count) in enumerate(
+                rules.engine_groups(siege, siege.garrison_engines)
+            )
+        ),
         DialogField(
             "target",
             "Against the besiegers'",
@@ -476,12 +701,27 @@ def event_fields(siege: Siege) -> list[DialogField]:
             "as the troupe says.",
         ),
         DialogField(
+            "one_battle",
+            "Take the castle in one battle",
+            "check",
+            False,
+            show_if=lambda v: v.get("event") == rules.ESCALADE,
+            hint="Instead of a single event: a battle on Conflicts with only "
+            "the troops at this wall, the Garrison row's Weight of Numbers and "
+            "the Defense Bonus for the garrison, and no baggage to strike; "
+            "each besiegers' win takes the Garrison a step down (Lords of Men "
+            "pp. 114-115).",
+        ),
+        DialogField(
             "result",
             "How the battlefield event went",
             "select",
             "won",
             options=[("The besiegers won", "won"), ("The garrison won", "lost")],
-            show_if=lambda v: v.get("event") in (rules.ESCALADE, rules.SALLY),
+            show_if=lambda v: (
+                v.get("event") == rules.SALLY
+                or (v.get("event") == rules.ESCALADE and not v.get("one_battle"))
+            ),
             hint="Play it out as a battlefield event (Battles), then say who won it.",
         ),
     ]
@@ -534,17 +774,79 @@ def event_live(siege: Siege, values: dict[str, Any]) -> str:
     )
 
 
+def escalade_battle(saga: Saga, siege: Siege, wall: int) -> rules.Played:
+    """An escalade fought to take the castle in one battle (Lords of Men
+    pp. 114-115): a battle on Conflicts between the troops at the wall,
+    the garrison's side taking its Garrison row's Weight of Numbers and the
+    Defense Bonus there."""
+    name = WALLS[wall]
+    entry = Battle(
+        f"The escalade at the {name} wall: {castle_name(saga, siege)}",
+        place=castle_name(saga, siege),
+        year=saga.current_year,
+        season=saga.current_season,
+        sides=[
+            BattleSide(
+                siege.besieger or besieger_name(saga, siege),
+                groups=siege.besieger_walls[wall],
+                neighbour_id=siege.besieger_id,
+            ),
+            BattleSide(
+                siege.holder or castle_name(saga, siege),
+                groups=siege.garrison_walls[wall],
+            ),
+        ],
+        siege_id=siege.id,
+        siege_wall=wall,
+        siege_weight=rules.garrison(siege.garrison)[1],
+        siege_defense=rules.wall_bonus(siege, wall),
+    )
+    saga.battles.append(entry)
+    return rules.Played(
+        f"The besiegers try to take the castle at the {name} wall in one battle: "
+        f"it is on Conflicts, {entry.name}. Play its events; a win at a Shoddy "
+        "wall breaches the castle (End of the Day)."
+    )
+
+
 def play_event(
-    siege: Siege, values: dict[str, Any], rng: random.Random
+    siege: Siege,
+    values: dict[str, Any],
+    rng: random.Random,
+    saga: Saga | None = None,
 ) -> rules.Played:
-    """The chosen event, played (each a Strategy of rules.siege)."""
+    """The chosen event, played (each a Strategy of rules.siege); while an
+    outwork stands, the besiegers' mine, engines and escalade strike it
+    first (p. 114)."""
     event = values.get("event") or rules.WAIT
     wall = int(values.get("wall") or 0)
     won = values.get("result") == "won"
     rules.begin(siege)
+    if event == rules.ESCALADE and values.get("one_battle") and saga is not None:
+        return escalade_battle(saga, siege, wall)
+    if rules.outwork(siege) is not None and event in (
+        rules.UNDERMINE,
+        rules.ARTILLERY,
+        rules.ESCALADE,
+    ):
+        return rules.strike_outwork(siege, event, won, rng, saga)
+    group_walls = [
+        int(values.get(f"group_wall_{i}") or wall)
+        for i in range(len(rules.engine_groups(siege)))
+    ]
     plays = {
-        rules.UNDERMINE: lambda: rules.undermine(siege, wall, rng),
-        rules.ARTILLERY: lambda: rules.bombard(siege, wall, rng),
+        rules.UNDERMINE: lambda: rules.undermine(siege, wall, rng, saga),
+        rules.ARTILLERY: lambda: rules.bombard(siege, wall, rng, saga, group_walls),
+        rules.COUNTER: lambda: rules.counter_battery(
+            siege,
+            "Mangonel",
+            rng,
+            saga,
+            [
+                str(values.get(f"group_target_{i}") or "Mangonel")
+                for i in range(len(rules.engine_groups(siege, siege.garrison_engines)))
+            ],
+        ),
         rules.ESCALADE: lambda: rules.escalade(siege, wall, won),
         rules.SALLY: lambda: rules.sally(
             siege,
@@ -572,11 +874,14 @@ def next_event(
     dice = rng or random.Random()
 
     def apply(values: dict[str, Any]) -> list[str]:
-        played = play_event(siege, values, dice)
+        # An event is dated the day it is played (the first when the siege
+        # is invested, LoM p. 112); the interval it begins passes after it.
+        day = siege.days
+        played = play_event(siege, values, dice, saga)
         supplies = [] if siege.ended else rules.pass_interval(siege, dice, saga)
         siege.events.append(
             SiegeEvent(
-                siege.days,
+                day,
                 values.get("event") or rules.WAIT,
                 played.text,
                 played.lines + supplies,

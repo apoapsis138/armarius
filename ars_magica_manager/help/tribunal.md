@@ -286,7 +286,8 @@ one, which a Tribunal that asks magi to name a representative treats as
 wilfully ignored; or not delivered, when the messenger tells a Quaesitor,
 who rules whether it stands (HoH: Societates p. 23). A war stays on the
 docket but no meeting hears it, unless **Its service is disputed** is
-ticked or it was not delivered. The same two magi can't be at war again
+ticked or it was not delivered: its details then read "on the docket, not
+heard" instead of the next meeting's season. The same two magi can't be at war again
 until the first war has ended, so a renewed declaration gives a month of
 war, a month of peace (HoH: Societates p. 23); a magus may be at war with
 several others at once. The details say when the war runs, whether it is
@@ -300,7 +301,8 @@ endangering the Order, even Marched (DE p. 21; HoH: True Lineages p. 48).
 The three in seven years is a storyguide's default the app chose, not a
 rule: no book says how often is too often (DE p. 21; HoH: Societates
 p. 24 speaks only of extreme abuse).
-A war being fought shows on both magi's Hermetic Background.
+A war being fought shows on both magi's Hermetic Background. When it is
+over, **War's End** records how (see [War's End](help:wars-end)).
 
 **Spell traces.** A charge (or motion, appeal or March) can record a
 spell trace found as evidence: **Spell trace: the spell's level**, its
@@ -343,6 +345,20 @@ the past rulings. Choose a case to read all of it under the lists.
 the chosen one off the docket and keeps it among the past rulings.
 Choose a case to read all of it beside the list.
 <!-- /gui -->
+
+### War's End
+<!-- help: wars-end -->
+
+**War's End** (More on a Wizard's War on the docket) records how the war
+came out: the month of war ran out with both alive, the declarer slew his
+foe, the foe slew the declarer, or they made peace, with a line on what
+happened. The war leaves the docket and is kept among the past rulings
+with its outcome. A magus of the saga who keeps House Acclaim by House
+Flambeau's table earns it there: 1 to 3 for having fought bravely, and
+for winning, twice his foe's highest Reputation (HoH: Societates p. 31;
+the foe's is filled in when he is of the saga). Both magi's Diaries and
+the Tribunal's record it. A slain magus is not marked dead on his sheet:
+do that as the saga does.
 
 ### Rulings of Past Tribunals
 <!-- help: section-trib-past -->
@@ -890,6 +906,32 @@ Alms, each a Hermetic Reputation of 2 for seven years) are worked out.
 Teams level on points keep the order they were entered, since the book
 breaks ties by seniority: enter the senior first. The 21st team keeps
 6 pawns and gives 6 to the teams below it.
+
+## Delegates tab
+<!-- help: tab-trib-delegates -->
+
+The Grand Tribunal's delegates. Only a Tribunal following the Grand
+Tribunal's customs has this tab. The Grand Tribunal meets every 33 years
+at Durenmar and is the only Tribunal with authority over the whole Order;
+it settles disputes between Tribunals (DE p. 22). Choosing its customs on
+New or Edit Tribunal fills in its 33 years, Durenmar and the next Grand
+Tribunal's year. Its Praeco is the Primus of House Bonisagus and its
+Presiding Quaesitor the Primus of House Guernicus (DE p. 22): naming either
+Primus on the Delegates tab as a magus of the saga makes him so. It holds
+no covenants of its own.
+
+### Delegates
+<!-- help: section-trib-delegates -->
+
+Those who vote at the Grand Tribunal, a vote each: three representatives
+from each regional Tribunal of the saga, and the Primi of every House.
+Each has a name, the Tribunal they represent (or, for a Primus, his
+House) and, if one, the magus of the saga they are (or, if not, the
+covenant he comes from). A Tribunal can't send more than three. Holding
+the meeting counts the delegates for its quorum, any legal Tribunal's:
+at least twelve magi from at least four covenants, and a Quaesitor, the
+Primus of Guernicus or a Guernicus magus among them (DE p. 22). Add one,
+edit it or delete it.
 
 ## Ambassadors tab
 <!-- help: tab-trib-ambassadors -->

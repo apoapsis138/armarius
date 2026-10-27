@@ -21,6 +21,7 @@ from ..rules import creation_access as access
 from ..rules import (
     divine_state,
     grog_discipline,
+    harm,
     medicine,
     mysticism,
     realm_warping,
@@ -299,6 +300,31 @@ def gain_warping(
     return notes
 
 
+def _camp_disease(
+    saga: Saga, character: Character, year: int, rng: random.Random
+) -> list[str]:
+    """After a whole year in a campaigning army, a Disease Avoidance roll
+    (Lords of Men p. 102) against the camp's disease, the Bloody Flux unless
+    a plan names another (Art & Academe pp. 46-47)."""
+    if living_rules.campaign_seasons(character, year) < living_rules.CAMPAIGN_YEAR:
+        return []
+    named = next(
+        (
+            p.camp_disease
+            for p in saga.season_plans
+            if p.character_id == character.id and p.year == year and p.camp_disease
+        ),
+        CAMP_DISEASE,
+    )
+    caught = harm.catch_disease(saga, character, {"aa_disease": named}, rng)
+    return [f"A year with the army: {named}: " + " ".join(caught.lines)]
+
+
+#: The camp's disease unless a plan names another: "common in towns and
+#: campaigning armies" (Art & Academe p. 47).
+CAMP_DISEASE = "Bloody Flux"
+
+
 def age_character(
     saga: Saga,
     character: Character,
@@ -333,18 +359,21 @@ def age_character(
     if living is None:
         # A grog's year on better or worse rations counts for his aging
         # roll only (Grogs pp. 23, 25).
-        living = living_rules.living_conditions(
-            saga, character
-        ) + grog_discipline.rations_living(character, year)
+        living = (
+            living_rules.living_conditions(saga, character)
+            + grog_discipline.rations_living(character, year)
+            + living_rules.chevauchee_aging(saga, character)
+        )
     result = aging_rules.roll(character, age, living, bronze, rng, saga, young=young)
     aging = character.aging
+    camp = _camp_disease(saga, character, year, rng)
     if result.apparent:
         aging.apparent_age = (
             aging.apparent_age if aging.apparent_age is not None else age - 1
         ) + 1
     elif aging.apparent_age is None:
         aging.apparent_age = age - 1
-    notes = list(result.notes)
+    notes = list(result.notes) + camp
     for name, points in result.points.items():
         notes += aging_rules.add_points(character, name, points)
     if result.points:

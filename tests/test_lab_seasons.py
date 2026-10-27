@@ -185,6 +185,14 @@ def test_lab_options_add_to_the_lab_total():
     assert int(work.lab_total.total) == 23
 
 
+def test_recreating_a_flawed_experiment_adds_magic_theory_again():
+    """DE p. 274: the Magic Theory score at the experiment, added again."""
+    saga = _saga()
+    _, work = _work(saga, _plan("bolt", recreating_theory=3))
+    _, plain = _work(_saga(), _plan("bolt"))
+    assert int(work.lab_total.total) == int(plain.lab_total.total) + 3
+
+
 def _design(**kw):
     values = {
         "key": "k",
@@ -567,3 +575,25 @@ async def test_the_lab_work_screen_plans_spells_from_a_teacher():
         assert (plan.teacher_id, plan.taught_spell_ids) == ("t", ["bolt"])
         region = screen.query_one("#inv-taught-row").region
         assert region.right <= 120
+
+
+def test_a_focus_that_records_its_arts_applies_by_them():
+    """DE p. 94: a Magical Focus spread over Arts (necromancy: Corpus and
+    Mentem) applies to work in them."""
+    from ars_magica_manager.rules import lab_seasons as ls
+
+    saga = _saga()
+    magus = saga.character("m")
+    magus.virtues_flaws = [
+        VirtueFlawInstance(
+            "vf_minor_magical_focus", params={"focus": "fire", "arts": "ignem"}
+        )
+    ]
+    assert ls.in_focus(magus, "Creo", "Ignem") and not ls.in_focus(
+        magus, "Creo", "Aquam"
+    )
+    # A requisite in the focus counts (DE p. 94).
+    assert ls.in_focus(magus, "Creo", "Auram", ["Ignem"])
+    _, by_arts = _work(saga, _plan("bolt", focus_by_arts=True))
+    _, plain = _work(saga, _plan("bolt"))
+    assert by_arts.lab_total.total > plain.lab_total.total

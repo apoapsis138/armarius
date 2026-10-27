@@ -290,10 +290,24 @@ def season_pool(
     """The raw vis a season plan (not a laboratory plan) draws on, by its
     `vis_from`: the character's own, their laboratory's, or their
     covenant's vis stores."""
-    if plan.vis_from == LABORATORY:
+    return pool_of(saga, character, plan.vis_from)
+
+
+#: Where a character's vis can be paid from, as a form's choice.
+PLACES: list[tuple[str, str]] = [
+    ("Their own raw vis", CHARACTER),
+    ("Their laboratory's", LABORATORY),
+    ("The covenant's stores", COVENANT),
+]
+
+
+def pool_of(saga: Saga, character: Character, where: str) -> MutableMapping[str, int]:
+    """The character's own raw vis, their laboratory's, or their covenant's
+    vis stores, by `where` (PLACES; anything else is their own)."""
+    if where == LABORATORY:
         lab = saga.laboratory(character.assigned_lab_id)
         return lab.raw_vis if lab is not None else {}
-    if plan.vis_from == COVENANT:
+    if where == COVENANT:
         return covenant_pool(saga, character.covenant_id, character.name)
     return character.raw_vis
 

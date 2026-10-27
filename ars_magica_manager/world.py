@@ -18,6 +18,7 @@ from .models import (
     Creature,
     Favour,
     Link,
+    MysteryCult,
     Neighbour,
     Saga,
 )
@@ -86,7 +87,7 @@ def player_covenants(saga: Saga) -> list[Covenant]:
 
 
 def attitude_toward(
-    record: Character | Covenant | Neighbour, covenant_id: str
+    record: Character | Covenant | Neighbour | MysteryCult, covenant_id: str
 ) -> Attitude | None:
     """`record`'s attitude toward the player covenant `covenant_id`, or None
     when none is set."""

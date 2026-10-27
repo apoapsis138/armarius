@@ -38,6 +38,8 @@ BREAD_BONUS = rules.BREAD_BONUS
 #: to resist its suggestion (p. 116). The spell only darkens his view until
 #: sunset; whether he lifts the siege is the storyguide's.
 RAISE_EASE = 12
+#: A siege ended by a breach: its castle still to be recorded taken.
+BREACHED = "Breached"
 #: The most intervals Run the Stockade plays at once.
 MOST_INTERVALS = 52
 
@@ -45,6 +47,9 @@ MOST_INTERVALS = 52
 def undefended(siege: Siege) -> list[int]:
     """The walls the besiegers hold that no garrison unit defends: each
     may provoke an undefended escalade (p. 113)."""
+    if siege.flag_until is not None and siege.days < siege.flag_until:
+        # Raise the Veronese Flag's men-at-arms seem to hold every wall.
+        return []
     return [
         i
         for i in range(4)
@@ -130,17 +135,22 @@ def _deploy_live(values: dict[str, Any]) -> str:
 # -- supplies stories and spells (pp. 112, 116) --------------------------------
 
 
-STORY_BLOCKADE, STORY_RELIEF, SPELL_BREAD, SPELL_RAISE = (
+STORY_BLOCKADE, STORY_RELIEF, SPELL_BREAD, SPELL_RAISE, SPELL_FLAG = (
     "blockade",
     "relief",
     "bread",
     "raise",
+    "flag",
 )
 STORIES: list[tuple[str, str]] = [
     ("A blockade: the Supplies fall a step", STORY_BLOCKADE),
     ("A relief: the Supplies rise a step", STORY_RELIEF),
     ("Conjuration of Bread: +7 to this season's supplies rolls", SPELL_BREAD),
     ("Raise the Siege: the commander resists, or despairs until sunset", SPELL_RAISE),
+    (
+        "Raise the Veronese Flag: illusory men-at-arms on every wall until sunset",
+        SPELL_FLAG,
+    ),
 ]
 
 
@@ -188,6 +198,13 @@ def supplies_story(saga: Saga, siege: Siege, rng: random.Random | None = None) -
             else:
                 siege.supplies = higher
                 text = f"A relief: the Supplies rise to {higher}."
+        elif story == SPELL_FLAG:
+            siege.flag_until = siege.days + 1
+            text = (
+                "Raise the Veronese Flag (CrIm 30, Sun): ten illusory men-at-arms "
+                "seem to hold the walls until sunset, so no wall looks undefended "
+                "(p. 116)."
+            )
         elif story == SPELL_BREAD:
             siege.bread_until = siege.days + rules.DAYS_PER_SEASON
             text = (
@@ -315,6 +332,10 @@ STEPS: dict[str, tuple[str, Callable[[Saga, Siege], Command]]] = {
 def actions(saga: Saga, siege: Siege | None) -> Command:
     if siege is None:
         return Refuse(TITLE, "Choose a siege first.")
+    if siege.ended == BREACHED:
+        # A breached castle's battle inside decides it: The Castle Taken
+        # records the end (Lords of Men p. 115).
+        return castle_taken(saga, siege)
     if siege.ended:
         return Refuse(TITLE, f"The siege has ended: {escape(siege.ended)}.")
     return Choose(

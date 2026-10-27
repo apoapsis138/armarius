@@ -330,6 +330,24 @@ as Major for balancing Boons (DE p. 182). Take it either as the Unknown
 entry or by marking a Minor Hook Unknown, not both: with both, the checks
 say it is counted twice.
 
+### Suggest a Story
+<!-- help: hook-story -->
+
+Hooks are the troupe's story ideas (DE p. 181).
+<!-- tui -->
+More's **Suggest a Story** (`m`, `y`) on the Hooks
+<!-- /tui -->
+<!-- gui -->
+**Suggest a Story** beside the Hooks
+<!-- /gui -->
+takes one of the covenant's Hooks and proposes a story from it: its title
+is drawn from the Hook's name and the detail typed on it, and the panel
+shows what the Hook says (its description as typed, or the catalogue's).
+Change the title as you like, and choose the season it is set for (the
+next by default). **Accept** makes it an open Story Event in the
+covenant's Diary, linked to the Hook, and an entry on Ahead in that
+season; Cancel leaves nothing. The app writes no story of its own.
+
 ## Charter tab
 <!-- help: tab-cov-charter -->
 
@@ -473,8 +491,11 @@ supplement.
 <!-- help: section-inh-loyalty -->
 
 The covenfolk's Prevailing Loyalty. Base Loyalty Points is the average of
-the magi's Gifts (an ordinary Gift is -30, a Blatant Gift -105, a Gentle
-Gift or none 0). Total modifiers adds up the column on the right: Living
+the council's Gifts (an ordinary Gift is -30, a Blatant Gift -105, a Gentle
+Gift or none 0): the magi, and each companion or specialist ticked **On the
+council, with a full vote** on their entry, who counts 0 (Covenants p. 38).
+A token seat doesn't count. The average rounds to the nearest whole number,
+as the book's example does (-225 over seven is -32). Total modifiers adds up the column on the right: Living
 Conditions (10 for each point of Living Conditions (Mundane)), Equipment and
 Money from the choices you make with
 <!-- tui -->
@@ -788,6 +809,17 @@ Choose a ship, then the buttons beside Add, Edit and Delete:
 
 The captain's Profession is the best of his seafaring Professions (Sailor, Mariner, Captain, Ship, Navigator, Pilot). Sailing speed is City & Guild's 60 to 80 miles a day (about 30 by the Definitive Edition, p. 408).
 
+### Build a Ship
+<!-- help: build-ship -->
+
+**Build a Ship** makes a new ship for the covenant three ways (Hermetic Projects pp. 62-65):
+
+- **A shipwright and his team**: the master's Workshop Total (Intelligence + Profession: Shipwright + the workshop's Innovation and Raw Materials) sets her quality against the Craft Levels (3 Shoddy, 6 Standard, 12 Superior, 15 Excellent, a point higher in a supernatural aura); an Excellent ship's bonus is +1 for every 3 over, at most his score / 3 (City & Guild pp. 67-69). At Profession: Shipwright 5 she takes two seasons, at 10 one, in between to the nearest nice fraction (City & Guild p. 68); the Conscientious Carpenter adds 1 to his score for the time. She is on Ahead in the season she is finished.
+- **Rego craft magic**: Perception + Finesse + a stress die against her Ease Factor (a river barge 15, a coastal buss 21, a large cog 27, a grain barge 30; HP p. 63). For another ship type **Craft magic Ease Factor**: a shipwright's Ease Factor + 6 for a season's work or + 9 for a year's (Covenants p. 49). Success makes her as good as the caster's Workshop Total makes her: his Intelligence + Profession: Shipwright + the workshop's Innovation and Raw Materials, as a shipwright's build (HP p. 63).
+- **A Creo ritual**: Intelligence + Finesse + a stress die against 9; she is a copy of the ritual's template, of the template's quality.
+
+The panel also says what opening her for enchantment takes (pp. 66-67): her hull alone (10 pawns of Vim for a small ship up to 18 for a huge one), or as a compound device with the parts ticked (a mast 8, rigging 10, sails 5, a rudder 8, a castle 8, an anchor 20), the costliest part's pawns or all of them, and the Magic Theory to handle that in a season. The Diary records how she was built.
+
 ### Properties and Land
 <!-- help: section-pos-property -->
 
@@ -927,7 +959,7 @@ the effect last clicked once (see
 ## Projects tab
 <!-- help: tab-cov-projects -->
 
-A covenant's great works: a Great Tower now (Hermetic Projects pp. 36-41). The tab shows once a project is begun: Begin Project, beside Edit Description on the Attributes tab (More on the covenant in the terminal). Deleting the last project hides it again.
+A covenant's great works (Hermetic Projects): a Great Tower (pp. 36-41), a Menagerie (pp. 119-142), or one followed stage by stage, a Burning City, an Intangible Assassin or a Living Corpse (pp. 9-28, 77-118). The tab shows once a project is begun: Begin Project, beside Edit Description on the Attributes tab (More on the covenant in the terminal). Deleting the last project hides it again.
 
 **See also:** [Possessions tab](help:tab-cov-possessions), [Economics tab](help:tab-cov-economics)
 
@@ -967,8 +999,13 @@ A Menagerie of magical beasts is the second kind of Hermetic Project (Hermetic P
 - **Site**: the place and its aura. A beast that always lives in a Magic aura weaker than its Might / 5 (rounded up) suffers Acclimation and is named in a warning (Realms of Power: Magic p. 53; HP p. 119). An enchanted brand that is always working may help (HP p. 130).
 - **Can tend** (HP p. 136): each handler tends 10 domesticated herbivores per point of Animal Handling, half as many carnivores, a fifth as many wild beasts; "holding" counts the beasts the same way, and a warning shows when they are more than the staff can tend.
 - **Upkeep** (HP p. 123): a beast costs Inhabitants points as a horse (Size +3) costs 1, each Size smaller doubling how many cost a point and each Size larger doubling the points; a carnivore costs double; the total is rounded up. It counts in the covenant's points of inhabitants.
-- **Reputation** (HP p. 138): the owner's Reputation of that name, from his sheet. The storyguide awards its experience points: HP suggests 1 for every 10 visitors, 1 per magnitude of a captured beast's Might, 1 for every year past the first, 1 for each beast sold.
+- **Reputation** (HP p. 138): the owner's Reputation of that name, from his sheet. The storyguide awards its experience points: HP suggests 1 for every 10 visitors, 1 per magnitude of a captured beast's Might, 1 for every year past the first, 1 for each beast sold. **Reputation Award** on the Beasts list works the year's award out from those suggestions (the visitors, the beasts captured this year, whether it is past its first year, the beasts sold) and adds it to his Reputation, as a Reputation rises with experience; his Diary records it. Award anything else by hand (Reputation Award, below).
 - **As realia** (HP p. 123): studied, the menagerie counts as a tractatus of Quality equal to its magical breeds, usually in Magic Lore; its collector can't study it.
+
+### Reputation Award
+<!-- help: menagerie-reputation -->
+
+More's **Reputation Award** on a menagerie's Beasts works out the year's experience toward its owner's Reputation from Hermetic Projects' suggestions (p. 138): a point for every ten visitors, a point per magnitude of the Might of each beast captured this year (ticked), a point for a year past the menagerie's first, and a point for each beast sold to another magus. The storyguide may change any of them, so the figures are typed. Saving adds the experience to the owner's Reputation (it rises as an Ability does) and writes it in his Diary. The owner and the Reputation's name come from Edit Project.
 
 ### Beasts
 <!-- help: section-cov-menagerie-beasts -->
@@ -989,6 +1026,25 @@ Each season's breeding of a pair, as rolled. Add is **Breed a Pair**, HP's optio
 - **Birth** is played out: the dam rolls as for a Medium Wound every two hours (doubled for each Size above 0), a handler adding his Animal Handling; a hatchling rolls Stamina + Survival + stress die against 9 (HP p. 134; Art & Academe p. 62).
 
 Roll keeps the breeding and, with "Add the young to Beasts" ticked, adds each young that lives to the beasts: of its sire's kind, animal and breed (its dam's on a 13 for the beast), born this year, with the result in its note. A young of one magical parent is magical only exceptionally (HP p. 134), so it is added with no Might. Edit corrects a breeding as kept.
+
+### The staged project
+<!-- help: section-cov-staged -->
+
+A Burning City (a covenant in the heart of a volcano, HP pp. 9-28), an Intangible Assassin (the tunnel spells and their kin, for Wizard's War, pp. 77-95) or a Living Corpse (a ghost bound to an animated corpse, pp. 96-118) is followed stage by stage. Most of each chapter is its spells and devices, which the magi invent as lab work, so the app keeps the stages and the work spent on each, and the chapter's own rules. With one shown (Show Project), the tab shows the project, its stages and its works in place of a tower's sections. Its facts: what it is, when begun, the stages done, the stage now (with its pages) and the seasons spent.
+
+- **A Burning City**: a volcano's hazards are on Take Harm (a character's Health), with Hermetic Projects in play: lava +15 a round, multiplied by how much it covers, armour no help once it covers half the body; boiling mud +3; the heat within 30 yards of lava +3 a Diameter; falling rocks in an eruption +5 to +20; the fumes a Stamina check against 6 a Diameter (a Medium Wound), with an air Deprivation check every 30 seconds (pp. 13-14). Its laboratories' Virtues, Flaws and Features (Volcanic Minerals, Dormant and Active Volcano, Mineral Bath, Volcanic Spirit Forge, Hell Portal; Fumes, Pool of Lava, Thermal Spring, Volcanic Rock) are in the lab's lists (pp. 19, 26-27). **Warning Bell** (More) rolls Vulcan's Warning Bell when the volcano stirs: a stress die of days' warning; on a 0 the botch die's face is the hours, and a botch gives none (pp. 16-17). It goes in the covenant's Diary.
+- **An Intangible Assassin**: its tunnels are Open a Tunnel's, on a magus's Known Spells. **Gather a Connection** (More) keeps an Arcane Connection to the quarry in one of the covenant's laboratories, lasting as the way it was gathered does: his spilled blood, or the weapon that drew it, years; a book or Lab Text he wrote lately, weeks; his breath, hours (pp. 86-91); it adds a work to Gathering connections. **Lower an Aegis** (More) works out the Aegis problem (pp. 94-95): Guttering of the Home-Fires suppresses an Aegis of less than half its level + 15, for a Diameter; Removing the Hearth's Keystone dispels one of less than its level + 15 + a stress die, which Roll throws. Each must Penetrate the Aegis too. A magus casting from inside a hostile Aegis loses half its level from his Casting Total (p. 79).
+- **A Living Corpse**: **Death Roll** (More) is a magus's death, when he means to become one: the troupe's option, the chart's simple die (1 no spirit, 2 a ghost of another realm, 3 mindless, 4-5 an animating spirit, 6-7 a specter, 8 a shade, 9-10 an apparition) or the contest of his stress die + aura + Magic Lore + Vim Form Bonus against the storyguide's stress die (no botch) + all his Personality Traits + his highest Dominion, Infernal or Faerie Lore (equal or higher a magic ghost, 3 higher a specter, 6 a shade, 9 an apparition; lower, a ghost of that Lore's realm; a botch, none). An unGifted character's magic ghost is only ever a specter. Then the ghost's starting Might by the saga's power, its Season and the experience to buy back his Abilities (Spring 120, Summer 360, Autumn 720, Winter 1200), its vis (a pawn for each 5 of Might), its Virtues (Magic Spirit, Transformed (Being), Magical Air: none for the Gentle Gift, Blatant for the Blatant) and his one Personality Trait, his highest doubled; and a corpse animated days after death loses 1 from each Physical Characteristic a day, to -5, which lasts a year (pp. 107-111). It is written in his Diary and on The transformation stage. His sheet isn't rebuilt: his Qualities, Abilities and Powers are bought again by hand, as a magic creature's (Realms of Power: Magic). A living corpse doesn't age, Warp or fall into Final Twilight, can't be Incapacitated and does no lab work (p. 114).
+
+### Stages
+<!-- help: section-cov-staged-stages -->
+
+The project's stages, in the chapter's order, each with its pages, the works spent on it, their seasons and whether it is done. A new project starts with its chapter's: a Burning City finds a volcano, raises or wakes one, protects its people, controls it, builds and lives in the crater, deals with its inhabitants and fits out its laboratories; an Intangible Assassin learns its tunnel spells, manipulates and defends against tunnels, its effects to cast through them, gathers connections, raises its Casting Total and faces the Aegis; a Living Corpse binds a ghost to a vessel, animates the corpse, passes control to the ghost, enchants its devices and goes through the transformation. Add, Edit and Delete as anywhere; Edit ticks a stage done. A magus's lab season is spent on a stage by choosing it on his lab work ("Spent on a project's stage"); when the season is played it is kept with the stage's works.
+
+### Works on the stages
+<!-- help: section-cov-staged-works -->
+
+What has been done on the project: each lab season spent on a stage (written when the season is played), each connection gathered and each death roll, and anything Added by hand (a story's work takes 0 seasons). Each names its stage, when, who and the seasons spent.
 
 ## Economics tab
 <!-- help: tab-cov-economics -->
@@ -1142,8 +1198,9 @@ again at 0 each year.
 
 At a Prevailing Loyalty of -6 the covenfolk's productivity is halved (DE
 p. 185): the Laborers' and Craftspeople's savings are halved, and their
-rows say why. Income that relies on covenfolk is halved too, but the app
-can't tell which sources do: lower those by hand. At +6 productivity
+rows say why. Income that relies on covenfolk is halved too: tick
+**Relies on the covenfolk's work** on each such source of income, and the
+year's Income counts it at half. At +6 productivity
 rises, but the book gives no figure, so the rows only note it.
 
 ## Manors tab
@@ -1248,6 +1305,11 @@ shelves (Summae, Tractatus, Laboratory Texts, Casting Tablets, Other
 Books), a summa as tall as its level; click a book to see its figures and
 its Owner (the covenant, a laboratory, or a character) in the inspector.
 <!-- /gui -->
+
+With the Large Library rule on (Edit Saga), a summa's or tractatus's
+details also give the library's Level and Quality in its subject, worked
+out from every summa and tractatus the covenant holds on it, as Read's
+"the whole library" uses them (Transforming Mythic Europe p. 105).
 A book added here belongs to the covenant.
 <!-- tui -->
 Space (or

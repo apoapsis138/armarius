@@ -29,7 +29,7 @@ siege.
   (with mangonels or trebuchets) or scale it (escalade: a battlefield
   event, the garrison's Weight of Numbers and the Defense Bonus standing
   in for numbers and ground; each besiegers' win takes the Garrison a
-  step down, and a win at a Shoddy or broken wall breaches the castle),
+  step down, and a win at a Shoddy wall breaches the castle),
   or the garrison sallies out (a Battle Ease Factor 9 event that removes
   the units it targets). A stockade's supplies rolls come due at the
   Supplies interval. Time is counted in days: a week 7, a month 30, a
@@ -50,8 +50,9 @@ from __future__ import annotations
 import random
 from dataclasses import dataclass, field
 
-from ..models import WALLS, Saga, Siege
+from ..models import WALLS, Outwork, Saga, Siege
 from . import dice
+from .scores import ability_level
 
 SOURCE = "Lords of Men, Chapter Eight: Siegecraft, pp. 109-116"
 QUALITIES = ("Shoddy", "Standard", "Superior", "Excellent")
@@ -158,15 +159,19 @@ WALL_BREAKERS = ("Mangonel", "Trebuchet")
 #: The Garrison's steps by combat groups: each besiegers' win in an
 #: escalade takes it down to the top of the step below.
 GARRISON_STEPS = (10, 20, 40)
-UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, WAIT = (
+UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, WAIT, COUNTER = (
     "Undermine a wall",
     "Bombard a wall",
     "Escalade",
     "The garrison sallies out",
     "The magi seal a breach",
     "Keep the stockade",
+    "The garrison's engines fire back",
 )
-EVENTS = (UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, WAIT)
+EVENTS = (UNDERMINE, ARTILLERY, ESCALADE, SALLY, SEAL, COUNTER, WAIT)
+#: The besiegers' engines a counter-battery aims at: each is targeted on
+#: its own, its Defense an Ease Factor of 6 (Lords of Men pp. 113, 116).
+ENGINE_EASE = 6
 SALLY_TARGETS = ("Miners", *WALL_BREAKERS, "Ballista", "Soldiers")
 
 
@@ -281,22 +286,82 @@ def years_run(siege: Siege) -> int:
     return siege.days // DAYS_PER_YEAR
 
 
-def engine_groups(siege: Siege) -> list[tuple[str, int]]:
+def engine_groups(
+    siege: Siege, engines: dict[str, int] | None = None
+) -> list[tuple[str, int]]:
     """The wall-breaking engines in groups of up to five: (kind, how
-    many)."""
+    many); the besiegers' unless `engines` names another side's."""
     found: list[tuple[str, int]] = []
+    held = siege.engines if engines is None else engines
     for kind in WALL_BREAKERS:
-        left = siege.engines.get(kind, 0)
+        left = held.get(kind, 0)
         while left > 0:
             found.append((kind, min(MAX_ENGINE_GROUP, left)))
             left -= MAX_ENGINE_GROUP
     return found
 
 
+#: A lord's castle's Defenses by its kind: a free choice Standard, a minor
+#: castle Superior, a great castle Excellent (Lords of Men p. 111).
+CASTLE_KIND_DEFENSES: dict[str, str] = {
+    "free": "Standard",
+    "minor": "Superior",
+    "great": "Excellent",
+}
+#: Each expert's Ability, after Intelligence (pp. 113-114).
+EXPERT_ABILITIES: dict[str, str] = {
+    "sapper": "Profession: Sapper",
+    "gunner": "Siege Weapon",
+    "counter_sapper": "Profession: Sapper",
+    "engineer": "Profession: Siege Engineer",
+}
+#: Profession Sapper can't be used untrained; Profession Miner may run a
+#: mine with three botch dice (p. 114).
+MINER = "Profession: Miner"
+MINER_BOTCH_DICE = 3
+
+
+@dataclass(frozen=True)
+class Expert:
+    """An expert's total before the die, his botch dice, and why he can't
+    do the work ("" when he can)."""
+
+    total: int
+    botch_dice: int = 1
+    problem: str = ""
+
+
+def expert(saga: Saga | None, siege: Siege, role: str) -> Expert:
+    """The siege's expert in `role`: a character's Intelligence + Ability
+    when one is named, else the typed total (pp. 113-114)."""
+    typed = getattr(siege, role)
+    who = saga.character(siege.experts.get(role)) if saga is not None else None
+    if who is None:
+        return Expert(typed)
+    intelligence = who.characteristics.intelligence
+    ability = EXPERT_ABILITIES[role]
+    score = ability_level(who, ability)
+    if score or not ability.startswith("Profession: Sapper"):
+        return Expert(intelligence + score)
+    miner = ability_level(who, MINER)
+    if miner:
+        return Expert(intelligence + miner, MINER_BOTCH_DICE)
+    return Expert(
+        intelligence,
+        problem=f"{who.name} has no Profession: Sapper, which can't be used "
+        "untrained (Lords of Men p. 114).",
+    )
+
+
 def _roll(
-    rng: random.Random, saga: Saga | None, label: str, base: int, lines: list[str]
+    rng: random.Random,
+    saga: Saga | None,
+    label: str,
+    base: int,
+    lines: list[str],
+    botch_dice: int = 1,
 ) -> tuple[int, bool]:
-    die = dice.stress_die(rng, saga=saga)
+    die = dice.stress_die(rng, botch_dice, saga=saga)
     if die.botched:
         lines.append(f"{label}: {base} + a botch")
         # A botch adds nothing, so a negative base stays negative (DE p. 393).
@@ -316,9 +381,23 @@ def undermine(
     begin(siege)
     lines: list[str] = []
     bonus = wall_bonus(siege, wall, against_mines=True)
-    attack, botched = _roll(rng, saga, "Mine Attack", siege.sapper, lines)
+    sapper = expert(saga, siege, "sapper")
+    if sapper.problem:
+        return Played(sapper.problem)
+    if sapper.botch_dice > 1:
+        lines.append(
+            f"A miner, not a sapper, runs the mine: {sapper.botch_dice} botch dice "
+            "(p. 114)."
+        )
+    attack, botched = _roll(
+        rng, saga, "Mine Attack", sapper.total, lines, sapper.botch_dice
+    )
     defence, guard_botched = _roll(
-        rng, saga, "Castle Defense", siege.counter_sapper + bonus, lines
+        rng,
+        saga,
+        "Castle Defense",
+        expert(saga, siege, "counter_sapper").total + bonus,
+        lines,
     )
     name = WALLS[wall]
     if botched:
@@ -342,39 +421,188 @@ def undermine(
 
 
 def bombard(
-    siege: Siege, wall: int, rng: random.Random, saga: Saga | None = None
+    siege: Siege,
+    wall: int,
+    rng: random.Random,
+    saga: Saga | None = None,
+    group_walls: list[int] | None = None,
 ) -> Played:
-    """Each group of up to five engines makes one attack on the wall; a
-    hit costs it a damage level for each engine in the group."""
+    """Each group of up to five engines makes one attack on its wall (the
+    one `group_walls` names for it, else `wall`): several walls can be
+    struck in one event given the engines (p. 114). A hit costs the wall a
+    damage level for each engine in the group; each group's attack meets
+    the castle's defence at its wall."""
     groups = engine_groups(siege)
     if not groups:
         return Played("The besiegers have no mangonel or trebuchet to bombard with.")
     begin(siege)
     lines: list[str] = []
     left = walls(siege)
-    name = WALLS[wall]
-    lost = 0
-    for kind, count in groups:
-        bonus = wall_bonus(siege, wall)
+    struck: dict[int, int] = {}
+    targets = [
+        (group_walls[i] if group_walls and i < len(group_walls) else wall)
+        for i in range(len(groups))
+    ]
+    for (kind, count), at in zip(groups, targets, strict=True):
+        bonus = wall_bonus(siege, at)
         plural = "s" if count > 1 else ""
         attack, botched = _roll(
-            rng, saga, f"{count} {kind}{plural}", siege.gunner + ENGINES[kind][1], lines
+            rng,
+            saga,
+            f"{count} {kind}{plural}",
+            expert(saga, siege, "gunner").total + ENGINES[kind][1],
+            lines,
         )
-        defence, _ = _roll(rng, saga, "Castle Defense", siege.engineer + bonus, lines)
+        defence, _ = _roll(
+            rng,
+            saga,
+            "Castle Defense",
+            expert(saga, siege, "engineer").total + bonus,
+            lines,
+        )
         if not botched and attack > defence:
-            hit = min(count, left[wall])
-            left[wall] -= hit
-            lost += hit
+            hit = min(count, left[at])
+            left[at] -= hit
+            struck[at] = struck.get(at, 0) + hit
     siege.walls = left
-    if not lost:
-        return Played(f"The engines pound the {name} wall to no effect.", lines)
-    plural = "s" if lost > 1 else ""
-    end = ": it no longer gives its Defense Bonus." if left[wall] == 0 else "."
+    if not struck:
+        named = " and ".join(WALLS[w] for w in sorted(set(targets)))
+        return Played(f"The engines pound the {named} wall to no effect.", lines)
+    told = []
+    for at, lost in sorted(struck.items()):
+        plural = "s" if lost > 1 else ""
+        end = ": it no longer gives its Defense Bonus" if left[at] == 0 else ""
+        told.append(
+            f"the {WALLS[at]} wall {lost} damage level{plural}, {left[at]} left{end}"
+        )
+    return Played("The engines batter " + "; ".join(told) + ".", lines)
+
+
+def counter_battery(
+    siege: Siege,
+    target: str,
+    rng: random.Random,
+    saga: Saga | None = None,
+    targets: list[str] | None = None,
+) -> Played:
+    """The garrison's mangonels and trebuchets fire at the besiegers'
+    engines, each group once at the engine it picks (`targets`, by group;
+    `target` for a group with none): Intelligence + Siege Weapon + the
+    engine's Attack + stress die, a hit destroying that engine (Lords of Men
+    pp. 114-116, which target engines individually; only a mangonel's or
+    trebuchet's hit destroys one, so ballistae don't fire). The book gives
+    the counter-battery no Ease Factor: 6, an engine's own Defense, is the
+    app's (p. 113)."""
+    groups = engine_groups(siege, siege.garrison_engines)
+    if not groups:
+        return Played("The garrison has no mangonel or trebuchet to fire back with.")
+    begin(siege)
+    lines: list[str] = []
+    destroyed = 0
+    for index, (kind, count) in enumerate(groups):
+        aim = (targets or [])[index] if index < len(targets or []) else target
+        if siege.engines.get(aim, 0) <= 0:
+            continue
+        plural = "s" if count > 1 else ""
+        attack, botched = _roll(
+            rng,
+            saga,
+            f"The garrison's {count} {kind}{plural}",
+            siege.garrison_gunner + ENGINES[kind][1],
+            lines,
+        )
+        if not botched and attack >= ENGINE_EASE:
+            siege.engines[aim] -= 1
+            destroyed += 1
+            lines.append(f"It destroys one of the besiegers' {aim.lower()}s.")
+            if siege.engines[aim] == 0:
+                siege.engines.pop(aim, None)
+    if not destroyed:
+        return Played("The garrison's engines miss the besiegers' engines.", lines)
+    plural = "s" if destroyed > 1 else ""
     return Played(
-        f"The engines batter the {name} wall: {lost} damage level{plural} lost, "
-        f"{left[wall]} left{end}",
+        f"The garrison's engines destroy {destroyed} of the besiegers' engine{plural}.",
         lines,
     )
+
+
+# -- outworks (p. 114, optional) ----------------------------------------------
+
+
+def outwork(siege: Siege) -> Outwork | None:
+    """The first outwork not yet taken: the besiegers' events strike it
+    before the castle (p. 114)."""
+    return next((o for o in siege.outworks if not o.taken), None)
+
+
+def outwork_walls(siege: Siege, work: Outwork) -> int:
+    """An outwork's damage levels left: its Defense Bonus x the castle's
+    size modifier until struck (its Size is the app's: the castle's)."""
+    if work.walls is not None:
+        return work.walls
+    return wall_damage_levels(DEFENSES[work.defenses][1], siege.size)
+
+
+def strike_outwork(
+    siege: Siege, event: str, won: bool, rng: random.Random, saga: Saga | None
+) -> Played:
+    """An event aimed at the outwork: a mine lowers its Defense Quality,
+    the engines its walls, an escalade won or its walls at 0 take it."""
+    work = outwork(siege)
+    assert work is not None
+    begin(siege)
+    lines: list[str] = []
+    bonus = DEFENSES[work.defenses][1]
+    if event == UNDERMINE:
+        sapper = expert(saga, siege, "sapper")
+        if sapper.problem:
+            return Played(sapper.problem)
+        attack, _ = _roll(
+            rng, saga, "Mine Attack", sapper.total, lines, sapper.botch_dice
+        )
+        defence, _ = _roll(
+            rng,
+            saga,
+            "Outwork Defense",
+            expert(saga, siege, "counter_sapper").total + bonus,
+            lines,
+        )
+        if attack > defence and (lower := worse(work.defenses)) is not None:
+            work.defenses = lower
+            return Played(f"The mine brings {work.name}'s Defenses to {lower}.", lines)
+        return Played(f"The mine under {work.name} is countered.", lines)
+    if event == ARTILLERY:
+        left = outwork_walls(siege, work)
+        for kind, count in engine_groups(siege):
+            attack, botched = _roll(
+                rng,
+                saga,
+                f"{count} {kind}",
+                expert(saga, siege, "gunner").total + ENGINES[kind][1],
+                lines,
+            )
+            defence, _ = _roll(
+                rng,
+                saga,
+                "Outwork Defense",
+                expert(saga, siege, "engineer").total + (bonus if left else 0),
+                lines,
+            )
+            if not botched and attack > defence:
+                left = max(0, left - count)
+        work.walls = left
+        if left == 0:
+            work.taken = True
+            return Played(f"{work.name}'s walls fall: it is taken.", lines)
+        return Played(
+            f"The engines batter {work.name}: {left} damage levels left.", lines
+        )
+    if event == ESCALADE:
+        if won:
+            work.taken = True
+            return Played(f"The besiegers storm {work.name}: it is taken.")
+        return Played(f"The assault on {work.name} is thrown back.")
+    return Played("Nothing strikes the outwork.")
 
 
 def step_down(groups: int) -> int:
@@ -386,13 +614,15 @@ def step_down(groups: int) -> int:
 
 def escalade(siege: Siege, wall: int, besiegers_won: bool) -> Played:
     """An escalade at a wall, played as a battlefield event: a besiegers'
-    win takes the Garrison a step down, and at a Shoddy or broken wall
-    breaches the castle."""
+    win takes the Garrison a step down, and at a Shoddy wall breaches the
+    castle (Lords of Men p. 115). A wall battered to 0 no longer gives its
+    Defense Bonus (p. 114), which the escalade's battle already counts; it
+    isn't a breach of itself."""
     name = WALLS[wall]
     if not besiegers_won:
         return Played(f"The escalade at the {name} wall is thrown back.")
     siege.garrison = step_down(siege.garrison)
-    if siege.defenses == QUALITIES[0] or walls(siege)[wall] <= 0:
+    if siege.defenses == QUALITIES[0]:
         siege.ended = "Breached"
         return Played(
             f"The besiegers carry the {name} wall and breach the castle: fight the "

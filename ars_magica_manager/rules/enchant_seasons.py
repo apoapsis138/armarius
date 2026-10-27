@@ -155,6 +155,52 @@ def _matching(
     ]
 
 
+#: The seasons a talisman can gain an attunement: preparing it for
+#: enchantment, or instilling an effect (DE p. 259).
+ATTUNING = (OPEN, INSTIL)
+
+
+def attunement_options(saga: Saga, magus: Character) -> list[tuple[str, str]]:
+    """The attunements the magus's talisman could take: its Shape &
+    Material bonuses it isn't yet attuned to, as (label, "<device
+    id>:<index>")."""
+    talisman = enchantment.talisman_of(saga, magus)
+    if talisman is None:
+        return []
+    held = {(a.applies_to, a.shape) for a in talisman.attunements}
+    return [
+        (
+            f"{talisman.name}: +{b.bonus} {b.applies_to}"
+            + (f" ({b.shape})" if b.shape else ""),
+            f"{talisman.id}:{i}",
+        )
+        for i, b in enumerate(talisman.bonuses)
+        if b.year is None and b.bonus and (b.applies_to, b.shape) not in held
+    ]
+
+
+def attune(device: EnchantedDevice, plan: SeasonPlan) -> str | None:
+    """The season's attunement, gained (DE p. 259): one a season, while
+    opening or instilling the talisman. What it gave, for the Diary."""
+    device_id, _, index = plan.attunement.partition(":")
+    if (
+        plan.activity not in ATTUNING
+        or device_id != device.id
+        or not device.talisman
+        or not index.isdigit()
+        or int(index) >= len(device.bonuses)
+    ):
+        return None
+    chosen = device.bonuses[int(index)]
+    if any(
+        (a.applies_to, a.shape) == (chosen.applies_to, chosen.shape)
+        for a in device.attunements
+    ):
+        return None
+    device.attunements.append(replace(chosen, year=plan.year, season=plan.season))
+    return f"{device.name} is attuned: +{chosen.bonus} {chosen.applies_to}."
+
+
 def suggested_shape_bonus(
     magus: Character, device: EnchantedDevice, effect: InstilledEffect
 ) -> int:

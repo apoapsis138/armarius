@@ -291,6 +291,8 @@ _STORYGUIDE_ACTIONS = frozenset(
         "break_group",
         "restart_fight",
         "fight_options",
+        "group_morale",
+        "rally_group",
         "next_siege_event",
         "siege_actions",
         "found_covenant",

@@ -51,6 +51,7 @@ from ..sections import (
     TRIBUNAL_INFO_SECTION,
 )
 from ..sheets import tribunal as tribunal_sheet
+from ..tribunal_packages import grand
 from .secrets import secrets_ops
 
 
@@ -114,6 +115,21 @@ def _character_options(saga: Saga) -> list[tuple[str, str]]:
     return [(escape(c.name), c.id) for c in saga.characters]
 
 
+def _grand_fills(saga: Saga, values: dict[str, Any]) -> dict[str, Any]:
+    """Choosing the Grand Tribunal's customs suggests when and where it
+    meets: every 33 years, at Durenmar (DE p. 22)."""
+    if values.get("package") != grand.KEY:
+        return {}
+    year = saga.current_year
+    return {
+        "meets_every": grand.EVERY,
+        "meeting_place": grand.PLACE,
+        "next_year": year
+        if meeting.grand_tribunal_year(year)
+        else meeting.next_grand_tribunal(year),
+    }
+
+
 def tribunal_fields(saga: Saga, tribunal: Tribunal | None) -> list[DialogField]:
     """New or Edit Tribunal: its name, when and where it next meets, its
     officers and how big it really is."""
@@ -131,7 +147,9 @@ def tribunal_fields(saga: Saga, tribunal: Tribunal | None) -> list[DialogField]:
                 for p in tribunal_packages.offered(saga, t.package)
             ],
             hint="Core rules, or a region's customs from a book in play. "
-            "Switching keeps the other customs' records, hidden.",
+            "Switching keeps the other customs' records, hidden. The Grand "
+            "Tribunal is a customs of its own.",
+            fills=lambda v: _grand_fills(saga, v),
         ),
         DialogField(
             "summary",

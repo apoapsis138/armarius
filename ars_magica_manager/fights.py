@@ -184,6 +184,16 @@ def fields(saga: Saga, fight: Fight | None) -> list[DialogField]:
             f.aura if f else 0,
             hint="Added to the Casting Totals of spells cast in the fight (DE p. 214).",
         ),
+        DialogField(
+            "part_of_battle",
+            "Part of a battle",
+            "check",
+            bool(f and f.part_of_battle),
+            hint="Amid a battle a magus must pass a Concentration roll to cast: "
+            "Stamina + Concentration + stress die against 12 engaged, 9 "
+            "standing off (Lords of Men p. 109). A battle event's fight "
+            "always is.",
+        ),
     ]
 
 
@@ -194,6 +204,7 @@ def _write(fight: Fight, values: dict[str, Any]) -> None:
     fight.year = int(values.get("year") or fight.year)
     fight.range = max(0, int(values.get("range") or 0))
     fight.aura = int(values.get("aura") or 0)
+    fight.part_of_battle = bool(values.get("part_of_battle"))
     first, second = sides(fight)[:2]
     first.name, first.covenant_id = (
         values.get("first") or "",
@@ -948,11 +959,13 @@ def blow_fields(saga: Saga, fight: Fight) -> list[DialogField]:
                 v.get("action") not in (rules.DISENGAGE, rules.WAIT, rules.BREAK_FREE)
             ),
         ),
-        *_magic_fields(saga, who),
+        *_magic_fields(saga, who, rules.in_battle(fight)),
     ]
 
 
-def _magic_fields(saga: Saga, who: rules.Unit | None) -> list[DialogField]:
+def _magic_fields(
+    saga: Saga, who: rules.Unit | None, battle_casting: bool = False
+) -> list[DialogField]:
     """What Cast a Spell and Use a Device ask: the spell (or the Arts and
     level of a spontaneous one) or the device's effect, and the damage it
     does."""
@@ -1001,6 +1014,34 @@ def _magic_fields(saga: Saga, who: rules.Unit | None) -> list[DialogField]:
             allow_blank=True,
             placeholder="(none)",
             show_if=casting,
+        ),
+        DialogField(
+            "horse_size",
+            "The horse's Size",
+            "int",
+            rules.HORSE_SIZE,
+            show_if=lambda v: v.get("action") == rules.CHARGE,
+            hint="A mounted charge's shock: the target resists against the "
+            "Damage Total (before Soak) + this (Lords of Men p. 127).",
+        ),
+        DialogField(
+            "saddle",
+            "The target's saddle",
+            "select",
+            None,
+            options=[("Cantled (+3)", "cantled"), ("No stirrups (-3)", "no stirrups")],
+            allow_blank=True,
+            placeholder="(an ordinary one, or on foot)",
+            show_if=lambda v: v.get("action") == rules.CHARGE,
+        ),
+        DialogField(
+            "standing_off",
+            "Standing off, not engaged",
+            "check",
+            False,
+            show_if=lambda v: casting(v) and battle_casting,
+            hint="Amid a battle: Concentration against 9 standing off, 12 "
+            "engaged (Lords of Men p. 109).",
         ),
         DialogField(
             "fatiguing",
@@ -1104,6 +1145,10 @@ ACTION_WORDS: dict[str, str] = {
     "less Soak.",
     rules.EXERTION: "Spends a Fatigue level (each member's, in a group) for "
     "the Combat Ability on the Attack.",
+    rules.CHARGE: "Moves and attacks with the Combat Ability on the Attack, "
+    "for a Fatigue level (the horse's, mounted); not across difficult "
+    "ground. A mounted charge that hits a smaller target may unhorse or "
+    "knock it down (Lords of Men pp. 123, 126-127).",
     rules.SCUFFLE: "Knocks out rather than kills: the wound is read as "
     "Fatigue on the Scuffle Effects table.",
     rules.GRAPPLE: "Brawl, with free hands: any Advantage above 0 becomes the "
@@ -1205,6 +1250,9 @@ def blow_of(values: dict[str, Any]) -> rules.Blow:
         arts=values.get("arts") or "",
         level=int(values.get("level") or 0),
         fatiguing=bool(values.get("fatiguing", True)),
+        standing_off=bool(values.get("standing_off")),
+        horse_size=int(values.get("horse_size") or rules.HORSE_SIZE),
+        saddle=values.get("saddle") or "",
         effect=values.get("effect") or "",
         damage=None if damage is None else int(damage),
         casting_requisites=tuple(

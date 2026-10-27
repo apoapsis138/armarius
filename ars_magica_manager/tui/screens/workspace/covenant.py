@@ -14,6 +14,7 @@ from .... import (
     menagerie,
     seasons,
     sourcebooks,
+    staged_projects,
     vis,
 )
 from .... import covenants as cov_rules
@@ -23,8 +24,10 @@ from .... import possessions as pos
 from ....commands import Command, Form
 from ....forms import charter as charter_forms
 from ....forms import covenant as covenant_forms
+from ....forms import hook_stories as hook_story_forms
 from ....forms import inhabitant as inhabitant_forms
 from ....forms import land_shaping as land_forms
+from ....forms import ship_build as ship_build_forms
 from ....forms import ships as ship_forms
 from ....forms import world as world_forms
 from ....markup import escape
@@ -766,6 +769,29 @@ class CovenantActions(WorkspaceBase):
             lambda _end: self._commit("section-pos-ship", "tab-cov-diary", tree=tree),
         )
 
+    def action_build_ship(self) -> None:
+        """More's Build a Ship on the Ships list."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            ship_build_forms.build_form(self.saga, covenant),
+            lambda _end: self._commit("section-pos-ship", "tab-cov-diary"),
+        )
+
+    def action_suggest_story(self) -> None:
+        """More's Suggest a Story on Hooks: a Hook's story, accepted as a
+        Story Event and an entry on Ahead."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            hook_story_forms.story_form(self.saga, covenant),
+            lambda _end: self._commit("section-cov-hooks", "tab-cov-diary"),
+        )
+
     def action_ship_stress(self) -> None:
         """More's Stress Check on the chosen ship."""
         self._on_ship(ship_forms.stress_check)
@@ -1031,6 +1057,28 @@ class CovenantActions(WorkspaceBase):
         )
 
     # -- Covenant: a Menagerie (Hermetic Projects pp. 119-142) --
+
+    def action_menagerie_award(self) -> None:
+        """More's Reputation Award on the menagerie shown."""
+        self._on_projects(lambda covenant: menagerie.award_form(self.saga, covenant))
+
+    # -- Covenant: a staged project (Hermetic Projects pp. 9-118) --
+
+    def action_warning_bell(self) -> None:
+        """More's Warning Bell on the Burning City shown."""
+        self._on_projects(partial(staged_projects.bell_form, self.saga))
+
+    def action_gather_connection(self) -> None:
+        """More's Gather a Connection on the Intangible Assassin shown."""
+        self._on_projects(partial(staged_projects.gather_form, self.saga))
+
+    def action_lower_aegis(self) -> None:
+        """More's Lower an Aegis on the Intangible Assassin shown."""
+        self._on_projects(partial(staged_projects.aegis_form, self.saga))
+
+    def action_death_roll(self) -> None:
+        """More's Death Roll on the Living Corpse shown."""
+        self._on_projects(partial(staged_projects.death_form, self.saga))
 
     def action_tame_beast(self) -> None:
         """More's Tame a Beast on the chosen beast of the menagerie shown."""

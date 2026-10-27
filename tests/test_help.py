@@ -5,7 +5,7 @@ import pytest
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
 from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
-from ars_magica_manager import __version__, storage
+from ars_magica_manager import __version__, staged_projects, storage
 from ars_magica_manager import help_text as ht
 from ars_magica_manager.models import (
     SKETCH,
@@ -13,6 +13,7 @@ from ars_magica_manager.models import (
     DeepCover,
     HermeticProject,
     Marriage,
+    Tribunal,
 )
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import SelectableList, WorkspaceScreen
@@ -110,6 +111,9 @@ DIALOG_PAGES = {
     "seek-loophole",
 }
 
+#: The sample saga's nodes, and the Grand Tribunal the help test adds.
+HELP_NODES = {**NODES, "grand_tribunal": ("tribunal", "grand")}
+
 #: The sheets whose tabs and sections need help, by tree node.
 SHEETS = {
     "character": "_character_sheet_view",
@@ -122,6 +126,7 @@ SHEETS = {
     "normandy_tribunal": "_tribunal_sheet_view",
     "transylvania_tribunal": "_tribunal_sheet_view",
     "hibernia_tribunal": "_tribunal_sheet_view",
+    "grand_tribunal": "_tribunal_sheet_view",
     "region": "_region_sheet_view",
     "neighbour": "_neighbour_sheet_view",
     "town": "_neighbour_sheet_view",
@@ -289,12 +294,19 @@ async def test_every_tab_and_section_has_help():
     # Covers and Marriages show once the character has one.
     magus = next(c for c in saga.characters if c.id == NODES["character"][1])
     magus.covers.append(DeepCover("Reynard", role="a mercenary"))
+    magus.hermetic.parens = "Prudentius"  # Lineage shows with a parens
     saga.marriages.append(Marriage(bride="Adela", groom_ref="character:" + magus.id))
     next(
         c for c in saga.covenants if c.id == NODES["covenant"][1]
     ).hermetic_projects = [
         HermeticProject(id="project-tower", name="The Tower"),
         HermeticProject(id="project-menagerie", name="The Menagerie", kind="Menagerie"),
+        HermeticProject(
+            id="project-city",
+            name="The Burning City",
+            kind="Burning City",
+            stages=staged_projects.seed("Burning City"),
+        ),
     ]
     # A sketch's sheet has tabs of its own: the companion is drawn as one,
     # and a sketch covenant is added.
@@ -309,6 +321,10 @@ async def test_every_tab_and_section_has_help():
             played=False,
         )
     )
+    # The Grand Tribunal's customs have a tab of their own.
+    saga.tribunals.append(
+        Tribunal(id="grand", name="The Grand Tribunal", package="grand")
+    )
     extra = {
         ("character", sketch.id): "_character_sheet_view",
         ("covenant", "sketch_cov"): "_covenant_sheet_view",
@@ -322,7 +338,7 @@ async def test_every_tab_and_section_has_help():
         workspace = app.screen
         tree = workspace.query_one("#nav-tree", Tree)
         for kind, attr in SHEETS.items():
-            node = _node(tree, NODES[kind])
+            node = _node(tree, HELP_NODES[kind])
             before = getattr(workspace, attr)
             tree.select_node(node)
             assert await wait_until(
@@ -334,13 +350,14 @@ async def test_every_tab_and_section_has_help():
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)
             on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
-            if kind == "covenant":
-                # Showing the Menagerie rebuilds the Projects tab with its
-                # sections in place of the tower's.
+            # Showing the Menagerie, then the Burning City, rebuilds the
+            # Projects tab with their sections in place of the tower's.
+            for shown in (1, 2) if kind == "covenant" else ():
                 rows = view.query_one("#cov-projects-list", SelectableList)
-                rows.select_data_index(1)
+                rows.select_data_index(shown)
                 assert await wait_until(
-                    pilot, lambda rows=rows: rows.selected_data_index == 1
+                    pilot,
+                    lambda rows=rows, shown=shown: rows.selected_data_index == shown,
                 )
                 workspace.action_show_project()
                 assert await wait_until(
@@ -556,6 +573,7 @@ GUIDES = [
     "guide-formatting",
     "guide-lab-magic-item",
     "guide-mythic-locations",
+    "guide-staged-project",
 ]
 
 

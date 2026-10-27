@@ -128,6 +128,9 @@ SOURCE = ASSIGNING_SOURCE
 
 #: The character types planned season by season (grogs are updated yearly).
 PLANNED_TYPES: tuple[str, ...] = ("magus", "companion", "mythic companion")
+#: A grog's seasons are the yearly update, but a covenant scribe's copying
+#: is planned season by season like anyone's (DE p. 380).
+GROG_COPYING: tuple[str, ...] = (*PLANNED_TYPES, "grog")
 #: The types that work two seasons a year (Assigning Seasons).
 WORKING_TYPES: tuple[str, ...] = ("companion", "mythic companion")
 #: Working seasons a companion owes each year, before Virtues and Flaws
@@ -136,6 +139,10 @@ WORKING_SEASONS_PER_YEAR = 2
 
 OTHER = "other"
 EXPOSURE = "exposure"
+#: A season with a campaigning army: Exposure as a working season, and a
+#: year with one of them -1 Living Conditions (Lords of Men p. 102).
+CAMPAIGNING = "campaigning"
+CAMPAIGNING_SOURCE = "Lords of Men, Medieval Armies, p. 102"
 PRACTICE = "practice"
 ADVENTURE = "adventure"
 READ = "read"
@@ -202,6 +209,18 @@ ACTIVITIES: dict[str, Activity] = {
             EXPOSURE_SOURCE,
             working=True,
             distractable=True,
+            group=groups.WORK,
+        ),
+        Activity(
+            CAMPAIGNING,
+            "Campaigning",
+            "A season with a campaigning army: Exposure (2 xp in one Ability, "
+            "or 1 each in two). A year with a season of it is -1 to Living "
+            "Conditions; a whole year of it brings a Disease Avoidance roll.",
+            CAMPAIGNING_SOURCE,
+            working=True,
+            distractable=True,
+            book="LoM",
             group=groups.WORK,
         ),
         Activity(
@@ -527,6 +546,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Copying: carefully a tractatus, or 6 + Scribe summa points, a "
             "season; quickly three times as much at 1 Quality lower.",
             book_seasons.COPY_SOURCE,
+            who=GROG_COPYING,
             distractable=True,
             group=groups.WRITING,
         ),
@@ -555,6 +575,7 @@ ACTIVITIES: dict[str, Activity] = {
             "Copying a readable Lab Text or a Casting Tablet: Profession: "
             "Scribe x 60 levels a season.",
             book_seasons.LAB_TEXT_SOURCE,
+            who=GROG_COPYING,
             group=groups.WRITING,
         ),
         Activity(
@@ -883,7 +904,7 @@ def source_quality(plan: SeasonPlan) -> int | None:
     typed, or the rule's default."""
     if plan.source_quality is not None:
         return plan.source_quality
-    if plan.activity in (EXPOSURE, TEACH):
+    if plan.activity in (EXPOSURE, CAMPAIGNING, TEACH):
         return EXPOSURE_QUALITY
     if plan.activity == PRACTICE:
         # Split between subjects, it is the lowest of their qualities (DE p.
@@ -903,7 +924,7 @@ def allocations(plan: SeasonPlan) -> list[XpAllocation]:
     subject, or as typed when split; Adventure's are as typed. Study from a teacher, a master or vis names one subject
     (its Source Quality is worked out in outcome())."""
     chosen = [a for a in plan.allocations if a.subject]
-    if plan.activity == EXPOSURE:
+    if plan.activity in (EXPOSURE, CAMPAIGNING):
         each = EXPOSURE_QUALITY // max(1, len(chosen[:2]))
         return [XpAllocation(a.subject, each) for a in chosen[:2]]
     if plan.activity == PRACTICE and len(chosen) > 1:
@@ -1324,10 +1345,12 @@ def problems(
     """Why `plan` can't be carried out as it stands (empty when it can).
     The study activities need the saga (books, teachers, vis)."""
     activity = ACTIVITIES.get(plan.activity)
-    if not is_planned(character):
+    if not is_planned(character) and (
+        activity is None or character.type not in activity.who
+    ):
         return [
             "Grogs aren't planned season by season: they're updated once a "
-            "year (Grogs, Chapter 5)."
+            "year (Grogs, Chapter 5), but for copying."
         ]
     if activity is None:
         return [f"Unknown activity {plan.activity!r}."]
@@ -1386,6 +1409,8 @@ class Outcome:
     problems: list[str] = field(default_factory=list)
     #: How the Source Quality is (or was) worked out, rolls, botches.
     notes: list[str] = field(default_factory=list)
+    #: A search for an apprentice found a Gifted child (DE p. 269).
+    found_child: bool = False
     #: Vis study: (pool "character"/"laboratory", art, pawns) to spend.
     vis_spent: tuple[str, str, int] | None = None
     #: Reading a tractatus: its id, to mark it read.
@@ -1478,6 +1503,7 @@ def _lab_teaching(saga: Saga, teacher: Character) -> list[Line]:
 #: The study_total activity (rules.study's Virtue lookups) of each activity.
 _STUDY_KIND: dict[str, str] = {
     EXPOSURE: "exposure",
+    CAMPAIGNING: "exposure",
     PRACTICE: "practice",
     ADVENTURE: "adventure",
     READ: "reading",
@@ -1705,6 +1731,7 @@ def _wound_problem(character: Character, plan: SeasonPlan, activity: Activity) -
 ADVANCEMENT_ACTIVITIES: tuple[str, ...] = (
     *STUDY_ACTIVITIES,
     EXPOSURE,
+    CAMPAIGNING,
     PRACTICE,
     ADVENTURE,
 )
@@ -2102,6 +2129,10 @@ def _apprentice_outcome(
             f"Perception + House Acclaim {bonus} + die {die} = {total} against "
             f"{acclaim.APPRENTICE_EASE}: {acclaim.apprentice_search(total, botched)}"
         )
+        # Only a child found is a new character: one taken by right is
+        # another magus's apprentice already (DE p. 270), whom the
+        # storyguide names.
+        result.found_child = not botched and total >= acclaim.APPRENTICE_EASE
         return
     if botched:
         # A botch dupes the searcher (DE p. 269).
@@ -2115,11 +2146,12 @@ def _apprentice_outcome(
         f"Perception + die {die} = {total} against "
         f"{apprentice_seasons.SEARCH_EASE}: "
         + (
-            "a Gifted child is found (add them as a character)."
+            "a Gifted child is found: added to the saga as a character."
             if total >= apprentice_seasons.SEARCH_EASE
             else "no apprentice found this season."
         )
     )
+    result.found_child = total >= apprentice_seasons.SEARCH_EASE
 
 
 # Integrating an insight into Arcane Discovery: a roll.
@@ -2630,7 +2662,7 @@ def _plain_problems(
     if len({a.subject for a in chosen}) < len(chosen):
         found.append("The same subject is named twice.")
     found += _virtue_problems(saga, character, plan)
-    if plan.activity == EXPOSURE and len(chosen) > 2:
+    if plan.activity in (EXPOSURE, CAMPAIGNING) and len(chosen) > 2:
         found.append("Exposure goes into one subject, or is split between two.")
     if plan.activity == PRACTICE:
         found += _practice_split_problems(character, plan, chosen)
@@ -2773,7 +2805,10 @@ def _handlers() -> dict[str, Handler]:
             (laboratory_seasons.NEW,),
         ),
         (_with_saga(_study_family_problems, _study_outcome), STUDY_ACTIVITIES),
-        (Handler(_plain_problems, _plain_outcome), (EXPOSURE, PRACTICE, ADVENTURE)),
+        (
+            Handler(_plain_problems, _plain_outcome),
+            (EXPOSURE, CAMPAIGNING, PRACTICE, ADVENTURE),
+        ),
     ]
     handlers: dict[str, Handler] = {}
     for handler, keys in families:

@@ -48,6 +48,11 @@ def offers(_saga: Saga, character: Character) -> bool:
     return ac.keeps_acclaim(character)
 
 
+def offers_flambeau(character: Character) -> bool:
+    """Whether he keeps House Acclaim by House Flambeau's table of deeds."""
+    return ac.keeps_acclaim(character) and house(character) == ac.FLAMBEAU
+
+
 def house(character: Character) -> str:
     """The House whose table applies: his own, else the one his House
     Acclaim's reach names (Bonisagus when it names neither)."""

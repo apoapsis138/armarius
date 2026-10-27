@@ -70,7 +70,9 @@ from . import (
     combat_groups,
     derived,
     dice,
+    group_morale,
     magic_combat,
+    options,
     penetration,
     realms,
     recovery,
@@ -79,6 +81,7 @@ from .apprentice_seasons import gifted
 from .breakdown import Breakdown
 from .disputatio import GENTLE_GIFT
 from .lab import ability_score
+from .scores import ability_level
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Eleven: Obstacles, Combat, pp. 394-398"
 MISSILE_ABILITIES = ("Bows", "Thrown Weapon", "Crossbow")
@@ -97,6 +100,14 @@ GRAPPLE, BREAK_FREE, SPLIT, CAST, DEVICE = (
     "Cast a spell",
     "Use a device",
 )
+#: A charge: move and attack with the Combat Ability on the Attack, a
+#: Fatigue level spent (the horse's, mounted), and a mounted charge's
+#: shock may unhorse or knock down its target (Lords of Men pp. 123,
+#: 126-127).
+CHARGE = "Charge"
+#: A warhorse's Size when the charge's form says none (a riding or war
+#: horse's +2, the Bestiary's horse).
+HORSE_SIZE = 2
 #: The actions fought with bare hands, not a weapon.
 BARE_ACTIONS = (SCUFFLE, GRAPPLE, BREAK_FREE)
 #: Searching a round for an invisible foe (HoH:S p. 32); offered only
@@ -105,6 +116,7 @@ LOCATE = "Locate the unseen"
 ACTIONS: tuple[str, ...] = (
     ATTACK,
     EXERTION,
+    CHARGE,
     SCUFFLE,
     GRAPPLE,
     BREAK_FREE,
@@ -304,6 +316,12 @@ class Fighter:
             else self.combatant.wounds
         )
 
+    def wound_penalty(self) -> int:
+        """The fighter's Wound Penalty (Fatigue apart)."""
+        c = self.character
+        wounds = c.wounds if c is not None else self.combatant.wounds
+        return derived.wound_penalty(wounds, c.virtues_flaws if c is not None else [])
+
     def down(self) -> bool:
         """Out of the fight: dead, incapacitated, unconscious, or gone."""
         if self.combatant.out:
@@ -357,6 +375,9 @@ class Unit:
         coordinate them all."""
         group = self.group
         if group is None or not group.trained:
+            return 0
+        if not group_morale.state_of(group).trained_counts:
+            # Disordered, it fights as an untrained group (LoM p. 134).
             return 0
         # Fighters who can't see one another can't fight as a trained
         # group (HoH:S p. 33).
@@ -456,6 +477,12 @@ class Blow:
     arts: str = ""
     level: int = 0
     fatiguing: bool = True
+    #: Amid a battle, casting from outside the melee (LoM p. 109).
+    standing_off: bool = False
+    #: A charge's horse's Size, and whether the target's saddle is cantled
+    #: (+3) or has no stirrups (-3) for resisting its shock (LoM p. 127).
+    horse_size: int = HORSE_SIZE
+    saddle: str = ""
     effect: str = ""
     damage: int | None = None
     #: Cast a Spell: the Arts chosen as casting requisites for what it is
@@ -760,12 +787,14 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
         chances.attack.append(
             Term("Range", penalty, f"{fight.range} range increments: {penalty}")
         )
-    if action == EXERTION:
+    if action in (EXERTION, CHARGE):
         chances.attack.append(
             Term(
-                "Exertion",
+                action,
                 mine.ability,
-                f"Exertion: +{mine.ability} (a Fatigue level spent)",
+                f"{action}: +{mine.ability} (a Fatigue level spent"
+                + (", the horse's" if action == CHARGE and ride else "")
+                + ")",
             )
         )
     if action == SCUFFLE and mine.damage != mine.bare_damage:
@@ -825,12 +854,18 @@ def _strike(
     target: Unit,
     action: str,
     rng: random.Random,
+    blow: Blow | None = None,
 ) -> Played:
+    if who.group is not None and group_morale.state_of(who.group).flees:
+        return Played(
+            f"{who.name} is routed: it tries to disengage and flee (LoM p. "
+            "135); rally it first."
+        )
     chances = odds(saga, fight, who, target, action)
     if chances.blocked:
         return Played(chances.blocked)
     lines = [term.line for term in chances.attack + chances.defence if term.line]
-    if action == EXERTION:
+    if action == EXERTION or (action == CHARGE and not who.vanguard.combatant.mounted):
         for f in who.standing():
             f.tire()
     hit_total, botched = _roll(
@@ -883,13 +918,85 @@ def _strike(
             + " (DE p. 397)."
         )
         victims = exposed
-    told = _land(victims, len(who.standing()), excess, scuffle=action == SCUFFLE)
+    blows = group_morale.hits(who.group, len(who.standing()))
+    if blows < len(who.standing()):
+        lines.append(
+            f"{who.name} is disordered: {blows} of its attacks hit (LoM p. 135)."
+        )
+    told = _land(victims, blows, excess, scuffle=action == SCUFFLE)
     lines += told
+    if action == CHARGE and who.vanguard.combatant.mounted:
+        lines += shock_of_the_charge(saga, blow or Blow(CHARGE), target, damage, rng)
     fallen = [f.name for f in victims if f.down()]
     text = f"{who.name} hits {target.name}: " + "; ".join(told) + "."
     if fallen:
         text += " " + ", ".join(fallen) + (" falls." if len(fallen) == 1 else " fall.")
+    lines += morale_due(saga, target)
     return Played(text, lines)
+
+
+def shock_of_the_charge(
+    saga: Saga, blow: Blow, target: Unit, damage: int, rng: random.Random
+) -> list[str]:
+    """A mounted charge's shock on a target smaller than the horse: it
+    stays upright on Dexterity + Ride + saddle (mounted) or Strength +
+    Size + Combat Ability (on foot) + stress die against the Damage Total
+    before Soak + the horse's Size; failing, it falls or is knocked down
+    (Lords of Men p. 127)."""
+    horse = blow.horse_size
+    struck = target.vanguard
+    figures = struck.figures()
+    if figures.size >= horse or struck.down():
+        return []
+    mounted = struck.combatant.mounted
+    if mounted:
+        ride = struck.combatant.ride
+        if struck.character is not None:
+            ride = ability_level(struck.character, "Ride")
+        dexterity = (
+            struck.character.characteristics.dexterity if struck.character else 0
+        )
+        base = dexterity + ride + {"cantled": 3, "no stirrups": -3}.get(blow.saddle, 0)
+    else:
+        strength = struck.character.characteristics.strength if struck.character else 0
+        base = strength + figures.size + figures.ability
+    die = dice.stress_die(rng, 1, saga=saga)
+    total = base + (0 if die.botched else die.value)
+    against = damage + horse
+    line = (
+        f"Shock of the charge: {struck.name} {base} + stress die = {total} "
+        f"against {against}"
+    )
+    if total >= against:
+        return [line + ": stays upright."]
+    if mounted:
+        struck.combatant.mounted = False
+        return [line + ": unhorsed, and lands prone (falling damage the gait's)."]
+    return [line + ": knocked down, prone."]
+
+
+def morale_due(saga: Saga, target: Unit) -> list[str]:
+    """Under the Morale and Discipline option, the Morale check a blow has
+    brought on the group struck: its leader or vanguard down, or every
+    member at -3 or worse (Lords of Men p. 134)."""
+    group = target.group
+    if group is None or not options.is_on(saga, options.MORALE_DISCIPLINE):
+        return []
+    leader = next((f for f in target.fighters if f.id == group.leader), None)
+    if target.vanguard.down() or (leader is not None and leader.down()):
+        return [
+            f"{target.name} must make a Morale check against "
+            f"{group_morale.LEADER_DOWN_EASE}: its leader or vanguard is down "
+            "(More, Discipline or Morale)."
+        ]
+    standing = target.standing()
+    if standing and all(f.wound_penalty() <= -3 for f in standing):
+        return [
+            f"{target.name} must make a Morale check against "
+            f"{group_morale.ALL_WOUNDED_EASE}: every member is at -3 or worse "
+            "(More, Discipline or Morale)."
+        ]
+    return []
 
 
 def group_dice(unit: Unit, lines: list[str] | None = None) -> int:
@@ -1054,7 +1161,7 @@ def play(saga: Saga, fight: Fight, blow: Blow, rng: random.Random) -> Played:
         elif action in (CAST, DEVICE):
             played = _magic(saga, fight, who, target, action, blow, rng)
         else:
-            played = _strike(saga, fight, who, target, action, rng)
+            played = _strike(saga, fight, who, target, action, rng, blow)
     played.lines += _split(saga, fight)
     played.lines += _loosen(saga, fight)
     fight.log.append(FightEntry(fight.round, played.text, played.lines))
@@ -1686,6 +1793,12 @@ def _magic(
                 f"{who.name} can't cast {odds_.name}: Incompatible Arts (DE p. 134).",
                 lines,
             )
+        if in_battle(fight) and not _battle_concentration(saga, who, blow, rng, lines):
+            return Played(
+                f"{who.name} loses {odds_.name} in the press of battle (Lords of "
+                "Men p. 109).",
+                lines,
+            )
         total = _casting_total(saga, who, odds_, blow, rng, lines)
         if total is None:
             return Played(
@@ -1821,6 +1934,36 @@ def _spontaneous_short(
                 f"Life-Linked: {owed - spent} levels still owed, {_a(band)} Wound"
             )
     return None
+
+
+#: Casting amid a battle: Concentration against 12 engaged, 9 standing
+#: off (Lords of Men p. 109); a failed roll loses the spell (DE p. 215).
+ENGAGED_CONCENTRATION, STANDING_OFF_CONCENTRATION = 12, 9
+
+
+def in_battle(fight: Fight) -> bool:
+    """Whether the fight is part of a battle: one of its events, or marked
+    so."""
+    return bool(fight.battle_id) or fight.part_of_battle
+
+
+def _battle_concentration(
+    saga: Saga, who: Unit, blow: Blow, rng: random.Random, lines: list[str]
+) -> bool:
+    """Stamina + Concentration + stress die against the battle's Ease
+    Factor (Lords of Men p. 109; the roll, DE p. 215)."""
+    caster = who.vanguard.character
+    stamina = caster.characteristics.stamina if caster is not None else 0
+    skill = ability_level(caster, "Concentration") if caster is not None else 0
+    ease = STANDING_OFF_CONCENTRATION if blow.standing_off else ENGAGED_CONCENTRATION
+    die = dice.stress_die(rng, 1, saga=saga)
+    total = 0 if die.botched else stamina + skill + die.value
+    lines.append(
+        f"Concentration amid the battle: Stamina {stamina:+d} + Concentration "
+        f"{skill} + stress die {'(a botch)' if die.botched else die.value} = "
+        f"{total} against {ease}"
+    )
+    return total >= ease
 
 
 def _casting_total(

@@ -50,7 +50,7 @@ from ..models import (
     new_instance_id,
 )
 from ..rules import creation_characteristics as cch
-from ..rules import faerie_sympathy, vf_change
+from ..rules import faerie_sympathy, schools, vf_change
 from ..rules.vf_eligibility import VirtueFlawChooser
 
 Owner = Character | Familiar | Creature | Laboratory
@@ -95,6 +95,14 @@ BLOOD_NAMES: tuple[str, ...] = (
 
 #: Parameters that may be left blank: (label, placeholder).
 OPTIONAL_PARAMS: dict[str, tuple[str, str]] = {
+    "arts": (
+        "The Arts it spans",
+        "e.g. Corpus, Mentem (blank: tick it on each plan)",
+    ),
+    "school": (
+        "Where (Art & Academe p. 79)",
+        "(blank: no school's limits)",
+    ),
     "since": (
         "Ages twice as fast since (year)",
         "blank: since birth",
@@ -151,6 +159,8 @@ def param_choices(
         "form": FORMS,
         "realm": REALM_NAMES,
         "blood": BLOOD_NAMES,
+        # Educated's school sets the Limits of Education.
+        "school": schools.NAMES,
         # A natural weapon's Quality or Inferiority names the weapon.
         "weapon": list(
             dict.fromkeys(
@@ -198,15 +208,16 @@ def param_fields(
 
     def field(param: str) -> DialogField:
         if param in choices:
+            optional = OPTIONAL_PARAMS.get(param)
             return DialogField(
                 param,
-                param.title(),
+                optional[0] if optional else param.title(),
                 "select",
                 current.get(param) or None,
                 options=choices[param],
-                required=True,
+                required=optional is None,
                 allow_blank=True,
-                placeholder=f"(choose the {param})",
+                placeholder=optional[1] if optional else f"(choose the {param})",
             )
         if param in OPTIONAL_PARAMS:
             label, hint = OPTIONAL_PARAMS[param]
@@ -227,7 +238,7 @@ def param_fields(
 
 def params_from(parameters: Sequence[str], values: dict[str, Any]) -> dict[str, str]:
     """{parameter: value} from param_fields' values, lower-cased."""
-    return {param: values[param].lower() for param in parameters}
+    return {param: (values.get(param) or "").lower() for param in parameters}
 
 
 def lab_needs_input(entry: LabVirtueFlawDef) -> bool:

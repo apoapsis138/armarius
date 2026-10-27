@@ -10,12 +10,14 @@ different person; the character has one for each point of Persona."""
 
 from __future__ import annotations
 
+import random
 from typing import Any
 
-from ..commands import Form, SectionOps, delete
+from ..commands import Form, Refuse, SectionOps, delete, notes
 from ..form_spec import DialogField, pairs
 from ..markup import escape, problem
-from ..models import COVER, PERSONA_KIND, Character, DeepCover
+from ..models import COVER, PERSONA_KIND, Character, DeepCover, Saga
+from ..rules import dice
 from ..rules import house_magic as hm
 from ..rules.scores import ability_level
 from ..sections import COVERS_SECTION
@@ -275,4 +277,154 @@ def ops(character: Character) -> SectionOps:
             character.covers, index, character.covers[index].name or "this cover"
         ),
         rows=lambda: [c.name or "(unnamed)" for c in character.covers],
+    )
+
+
+# -- the Disguise roll --------------------------------------------------------
+
+DISGUISE_TITLE = "Disguise Roll"
+DISGUISE_HELP = "disguise-roll"
+#: The two rolls of a disguise (HoH:S p. 87): the Disguise roll itself,
+#: and fooling someone he talks with.
+LOOKS, TALKS = "looks", "talks"
+ROLLS: list[tuple[str, str]] = [
+    ("The Disguise roll (Int + Guile against 9 + modifiers)", LOOKS),
+    ("Talking with someone (Pre + Guile against Int + Folk Ken)", TALKS),
+]
+
+
+def _covers_kept(character: Character) -> list[tuple[str, str]]:
+    return [
+        (escape(c.name or "(unnamed)"), c.id)
+        for c in character.covers
+        if c.kind == COVER
+    ]
+
+
+def _looks(values: dict[str, Any]) -> bool:
+    return values.get("roll", LOOKS) == LOOKS
+
+
+def _talks(values: dict[str, Any]) -> bool:
+    return values.get("roll") == TALKS
+
+
+def _disguise_fields(character: Character) -> list[DialogField]:
+    kept = _covers_kept(character)
+    return [
+        DialogField(
+            "cover",
+            "The cover",
+            "select",
+            kept[0][1] if kept else None,
+            options=kept,
+        ),
+        DialogField("roll", "Roll", "select", LOOKS, options=ROLLS),
+        DialogField(
+            "questioned",
+            "Convincing someone of it",
+            "check",
+            True,
+            hint="Questioned by a suspicious priest, or covering a comrade's "
+            "slip: the Ease Factor falls by the cover's Reputation. Unticked: "
+            "establishing it, with no help from a Reputation (HoH:S p. 88).",
+            show_if=_looks,
+        ),
+        *(
+            DialogField(
+                f"mod_{index}", f"{name} (+{amount})", "check", False, show_if=_looks
+            )
+            for index, (name, amount) in enumerate(hm.DISGUISE_MODIFIERS.items())
+        ),
+        DialogField(
+            "against",
+            "Their Intelligence + Folk Ken",
+            "int",
+            0,
+            hint="They add a stress die (HoH:S p. 87).",
+            show_if=_talks,
+        ),
+        DialogField("die", "Stress die", "optint", None, hint="Blank: rolled."),
+        DialogField(
+            "their_die",
+            "Their stress die",
+            "optint",
+            None,
+            hint="Blank: rolled.",
+            show_if=_talks,
+        ),
+    ]
+
+
+def _reputation_off(character: Character, values: dict[str, Any]) -> int:
+    cover = next((c for c in character.covers if c.id == values.get("cover")), None)
+    if cover is None or not values.get("questioned"):
+        return 0
+    return reputation(character, cover)
+
+
+def _ease(character: Character, values: dict[str, Any]) -> int:
+    chosen = [
+        name
+        for index, name in enumerate(hm.DISGUISE_MODIFIERS)
+        if values.get(f"mod_{index}")
+    ]
+    return int(hm.disguise_ease(chosen, _reputation_off(character, values)).total)
+
+
+def _disguise_live(character: Character, values: dict[str, Any]) -> str:
+    if _talks(values):
+        own = int(hm.deceive_total(character).total)
+        return (
+            f"[$label]Presence + Guile[/] {own} + stress die  ·  "
+            f"[$label]against[/] {values.get('against') or 0} + stress die "
+            "(The Gift's penalty counts: it is a social roll; HoH:S p. 87)"
+        )
+    own = int(hm.disguise_total(character).total)
+    return (
+        f"[$label]Intelligence + Guile[/] {own} + stress die  ·  "
+        f"[$label]Ease Factor[/] {_ease(character, values)} (HoH:S pp. 87-88)"
+    )
+
+
+def disguise_form(
+    saga: Saga, character: Character, rng: random.Random | None = None
+) -> Form | Refuse:
+    """More's Disguise Roll on Covers: the Disguise roll, Intelligence +
+    Guile + stress die against 9 + the modifiers that apply, less the
+    cover's Reputation when it is defended rather than established; or
+    talking with someone, Presence + Guile + stress die against their
+    Intelligence + Folk Ken + stress die (HoH:S pp. 87-88). Shown, not
+    kept."""
+    if not _covers_kept(character):
+        return Refuse(DISGUISE_TITLE, "Add a deep cover first.")
+    dice_ = rng or random.Random()
+
+    def roll(typed: Any) -> int:
+        return (
+            typed if typed is not None else dice.stress_die(dice_, 1, saga=saga).value
+        )
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        if _talks(values):
+            own = int(hm.deceive_total(character).total) + roll(values.get("die"))
+            theirs = (values.get("against") or 0) + roll(values.get("their_die"))
+            return notes(
+                f"Presence + Guile {own} against {theirs}"
+                + (": they are fooled." if own > theirs else ": they see through it.")
+            )
+        own = int(hm.disguise_total(character).total) + roll(values.get("die"))
+        ease = _ease(character, values)
+        return notes(
+            f"Disguise {own} against {ease}"
+            + (": the disguise holds." if own >= ease else ": the disguise fails.")
+        )
+
+    return Form(
+        DISGUISE_TITLE,
+        lambda: _disguise_fields(character),
+        apply,
+        live=lambda values: _disguise_live(character, values),
+        save_label="Roll",
+        help_id=DISGUISE_HELP,
     )

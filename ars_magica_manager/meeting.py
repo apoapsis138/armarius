@@ -34,7 +34,15 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass, replace
 from typing import Any
 
-from . import acta, polemic, ruling_templates, tribunal_packages, tribunals, world
+from . import (
+    acta,
+    mystery_cults,
+    polemic,
+    ruling_templates,
+    tribunal_packages,
+    tribunals,
+    world,
+)
 from .arts import ARTS
 from .commands import Command, Confirm, Form, Refuse, SectionOps, Then
 from .form_spec import DialogField, pairs
@@ -206,7 +214,11 @@ REDCAP_HOUSE = "house_mercere"
 
 def quorum(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> str:
     """ "13 magi from 5 covenants, and a Quaesitor: quorate", or what it
-    lacks."""
+    lacks (or as the Tribunal's customs count it: the Grand Tribunal's
+    delegates)."""
+    own = tribunal_packages.of(tribunal).quorum
+    if own is not None:
+        return own(saga, tribunal, meeting)
     counts = [
         in_person(saga, meeting, c) for c in tribunals.covenants_of(saga, tribunal)
     ]
@@ -362,6 +374,11 @@ def leaning_why(
         if found is not None:
             side, why = found
             return (FOR if side == "brought_by" else AGAINST), why
+    # Its magi's secret society, as a faction.
+    society = mystery_cults.cult_leaning(saga, case, covenant)
+    if society is not None:
+        side, why = society
+        return (FOR if side == "brought_by" else AGAINST), why
     for player in world.player_covenants(saga):
         if player is covenant:
             continue

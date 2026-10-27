@@ -19,6 +19,7 @@ from .. import book_kinds, catalog, seasons, sourcebooks
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import spells as spl
+from ..arts import FORMS, TECHNIQUES
 from ..commands import Command, Confirm, Form, Picked, Refuse, SectionOps
 from ..form_spec import EMPHASIS_HINT, ChoiceReads, DialogField, attr, read_for_choice
 from ..markup import escape
@@ -48,6 +49,7 @@ from ..rules import (
     study_virtues,
     supplement_seasons,
 )
+from ..rules import disease as disease_rules
 from ..rules import options as rule_options
 from ..rules import supplement_work as sw
 from ..rules import tradition_seasons as ts
@@ -80,6 +82,11 @@ ShowIf = Callable[[dict[str, Any]], bool]
 #: The Plan Season form's Season field: "Summer 1220".
 WHEN = "when"
 When = tuple[str, int]
+
+
+#: How many Supernatural Abilities Opening the Arts can convert, one
+#: Virtue each (DE p. 271).
+CONVERSIONS = 3
 
 
 def when_value(when: When) -> str:
@@ -168,6 +175,7 @@ def season_plan_from(
         allocations=allocations,
         source_quality=values.get("source_quality"),
         months_lost=values.get("months_lost") or 0,
+        camp_disease=values.get("camp_disease") or "",
         in_lab=bool(values.get("in_lab", True)),
         details=values.get("details") or "",
         correspondence=values.get("correspondence") or "",
@@ -250,6 +258,11 @@ _SEASON_READS: ChoiceReads = (
         lambda v: {
             "subject_id": v.get("student_id"),
             "keep_supernatural": bool(v.get("keep_supernatural")),
+            "conversions": [
+                str(v[f"convert_{i}"])
+                for i in range(CONVERSIONS)
+                if v.get(f"convert_{i}")
+            ],
         },
     ),
     (
@@ -484,6 +497,13 @@ def _supplement_plan_values(
         )
         found["knows_power"] = bool(values.get("knows_power"))
         found["sacrifice"] = values.get("sacrifice") or ""
+        vis_given = found["sacrifice"] == "vis"
+        found["sacrifice_art"] = (
+            (values.get("sacrifice_art") or "") if vis_given else ""
+        )
+        found["sacrifice_pawns"] = (
+            max(0, values.get("sacrifice_pawns") or 0) if vis_given else 0
+        )
         experimental = bool(values.get("experimental_script"))
         found["experimental_script"] = experimental
         found["risk"] = values.get("script_risk") or 0 if experimental else 0
@@ -908,12 +928,12 @@ def _initiation_fields(
 
 
 #: The sacrifices an Initiation's Script can make that aren't one of the
-#: initiate's records (TMRE pp. 12, 15): kept as a line in the Diary,
-#: except a season of service, which takes the next season.
+#: initiate's records (TMRE pp. 12, 15): wealth kept as a line in the
+#: Diary, vis taken from his stock, a season of service the next season.
 SACRIFICE_KINDS: list[tuple[str, str]] = [
     ("Mundane wealth", "wealth"),
     ("A season serving the cult (the next season)", "service"),
-    ("Vis (take the pawns from the stock by hand)", "vis"),
+    ("Vis", "vis"),
 ]
 
 
@@ -1000,6 +1020,23 @@ def _script_fields(
             "even if the Initiation fails: wealth, a season serving the cult, "
             "a talisman, familiar or device, books, vis or an apprentice. Its "
             "bonus is the Script's Sacrifice component (TMRE pp. 12, 15-16).",
+        ),
+        DialogField(
+            "sacrifice_art",
+            "Vis of",
+            "select",
+            (plan.sacrifice_art if plan else "") or None,
+            options=[(a, a) for a in (*TECHNIQUES, *FORMS)],
+            allow_blank=True,
+            show_if=lambda v: initiation(v) and v.get("sacrifice") == "vis",
+        ),
+        DialogField(
+            "sacrifice_pawns",
+            "Pawns sacrificed",
+            "int",
+            plan.sacrifice_pawns if plan else 0,
+            show_if=lambda v: initiation(v) and v.get("sacrifice") == "vis",
+            hint="Taken from the initiate's own raw vis when the season is played.",
         ),
         DialogField(
             "knows_power",
@@ -1476,6 +1513,7 @@ def _subject_fields(
         if n == 1:
             shown = _activity_is(
                 season_rules.EXPOSURE,
+                season_rules.CAMPAIGNING,
                 season_rules.PRACTICE,
                 season_rules.ADVENTURE,
                 season_rules.TAUGHT,
@@ -1489,7 +1527,10 @@ def _subject_fields(
             )
         elif n == 2:
             shown = _activity_is(
-                season_rules.EXPOSURE, season_rules.PRACTICE, season_rules.ADVENTURE
+                season_rules.EXPOSURE,
+                season_rules.CAMPAIGNING,
+                season_rules.PRACTICE,
+                season_rules.ADVENTURE,
             )
         else:
             shown = _activity_is(season_rules.PRACTICE, season_rules.ADVENTURE)
@@ -1750,6 +1791,28 @@ def _student_and_research_fields(
                 "are lost (DE p. 271)."
             ),
         ),
+        *(
+            DialogField(
+                f"convert_{i}",
+                "Or convert them into" if i == 0 else f"And into ({i + 1})",
+                "select",
+                (
+                    (attr(existing, "conversions", None) or [])[i]
+                    if i < len(attr(existing, "conversions", None) or [])
+                    else None
+                ),
+                options=apprentice_seasons.convertible(character),
+                allow_blank=True,
+                placeholder="(keep or lose them)" if i == 0 else "(none)",
+                show_if=_activity_is(apprentice_seasons.OPEN_ARTS),
+                hint="At double the Lab Total needed, each Supernatural Ability "
+                "becomes a Hermetic Virtue of yours of its own size, Major for "
+                "Major and Minor for Minor; the rest are lost (DE p. 271)."
+                if i == 0
+                else "",
+            )
+            for i in range(CONVERSIONS)
+        ),
         DialogField(
             "student_subject",
             "Teaching them",
@@ -1858,12 +1921,25 @@ def _closing_fields(
             hint="Leave blank for the app to roll it when the season is applied.",
         ),
         DialogField(
+            "camp_disease",
+            "The camp's disease",
+            "select",
+            attr(existing, "camp_disease", "") or None,
+            options=[(d.name, d.name) for d in disease_rules.CATALOG if d.avoidable],
+            allow_blank=True,
+            placeholder="(the Bloody Flux)",
+            show_if=_activity_is(season_rules.CAMPAIGNING),
+            hint="After a whole year with the army, a Disease Avoidance roll "
+            "against it (Lords of Men p. 102; Art & Academe pp. 46-47).",
+        ),
+        DialogField(
             "months_lost",
             "Months lost (0-3)",
             "int",
             attr(existing, "months_lost", 0),
             show_if=_activity_is(
                 season_rules.EXPOSURE,
+                season_rules.CAMPAIGNING,
                 season_rules.PRACTICE,
                 season_rules.READ,
                 season_rules.TAUGHT,
@@ -2118,10 +2194,13 @@ def plan_season(
     *,
     vf_picker: VfPicker | None = None,
     when: When | None = None,
+    copying: bool = False,
 ) -> Form:
     """Plan `character`'s season `when` (the current one by default), or
-    change its plan; a grog's is the Yearly Update instead."""
-    if not season_rules.is_planned(character):
+    change its plan; a grog's is the Yearly Update instead, unless
+    `copying`: a grog's season of copying (DE p. 380), whose form offers
+    only the activities a grog may plan."""
+    if not season_rules.is_planned(character) and not copying:
         return grog_year_form(character)
     when = when or (saga.current_season, saga.current_year)
     existing = seasons.plan_for(saga, character, *when)
@@ -2141,6 +2220,21 @@ def plan_season(
         live=lambda values: season_plan_live(saga, character, values, existing, when),
         help_id="plan-season",
     )
+
+
+def copying_form(saga: Saga, character: Character | None) -> Command:
+    """More's Plan Copying on a grog's This Season: a season's copying,
+    planned like anyone's (DE p. 380); it takes a season of the yearly
+    update."""
+    if character is None:
+        return Refuse("Plan Copying", "Choose a character first.")
+    return plan_season(saga, character, copying=True)
+
+
+def clear_copying_form(saga: Saga, character: Character | None) -> Command:
+    if character is None:
+        return Refuse("Clear Copying", "Choose a character first.")
+    return clear_season(saga, character)
 
 
 def clear_season(

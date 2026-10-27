@@ -166,3 +166,17 @@ def test_advance_season_asks_after_winter_only():
     assert isinstance(step, advance_forms.Played) or (
         isinstance(step, Form) and step.title != world_turns.title(1220)
     )
+
+
+def test_the_year_s_favours_suggest_an_attitude_change_to_accept():
+    """A favour the covenant did a neighbour this year suggests +1."""
+    from ars_magica_manager.models import Covenant, Favour, Neighbour
+
+    covenant = Covenant(id="cov", saga_id="s", name="Rabenstein", played=True)
+    lord = Neighbour(id="lord", name="Godfrey", kind="lord")
+    lord.favours = [Favour("a horse healed", owed_by="lord", owed_to="cov", year=1220)]
+    assert world_turns.suggestion(lord, covenant, 1220) == (
+        1,
+        "a favour done them: a horse healed",
+    )
+    assert world_turns.suggestion(lord, covenant, 1221) == (0, "")

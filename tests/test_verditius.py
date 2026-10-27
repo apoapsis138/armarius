@@ -172,7 +172,8 @@ def test_an_inner_mystery_initiated_by_the_house_s_script():
     saga = _saga(initiate, mystagogue)
     plan = _initiation()
     assert sw.problems(saga, initiate, plan) == []
-    # Ease 15 (known); Presence 1 + Lore 6 + Script 9 = 16.
+    # Ease 15 (known); Presence 1 + Lore 6 + Script 9, + 3 for the first
+    # Inner Mystery's Hubris Ordeal (HoH:MC p. 117) = 19.
     assert sw.initiation_target(saga, initiate, plan) == 15
     done = sw.work(saga, initiate, plan, random.Random(1))
     assert done.initiated
@@ -181,7 +182,7 @@ def test_an_inner_mystery_initiated_by_the_house_s_script():
         verditius.HUBRIS_FLAW,
     ]
     assert done.ordeal == "Minor"
-    assert done.notes[-1].startswith("Initiation Total 16")
+    assert done.notes[-1].startswith("Initiation Total 19")
     assert any("Hubris Personality Trait to 1" in n for n in done.notes)
 
 

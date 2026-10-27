@@ -590,3 +590,19 @@ def test_beasts_of_female_and_male_for_breeding():
     project = menagerie()
     assert [b.name for b in men._sires(project)] == ["Bock", "Hare of Virtue"]
     assert FEMALE in {b.sex for b in men._dams(project)}
+
+
+def test_the_reputation_award_follows_the_book_s_suggestions():
+    """HP p. 138: a point for ten visitors, a magnitude of a captured
+    beast's Might, a year past the first, a beast sold."""
+    assert mg.reputation_award(25, [12, 0], True, 1) == 2 + 3 + 1 + 1
+    saga = menagerie_saga()
+    project = _project(saga)
+    covenant = saga.covenants[0]
+    owner = saga.character(project.owner_id)
+    assert owner is not None and project.reputation
+    form = men.award_form(saga, covenant)
+    assert isinstance(form, Form)
+    form.apply({"visitors": 50, "sold": 0, "another_year": False})
+    held = next(r for r in owner.reputations if r.name == project.reputation.strip())
+    assert held.score == 1

@@ -472,6 +472,22 @@ class Progress:
 
 
 @dataclass
+class Stirps:
+    """A Stirps a magus has Invigorated (Legends of Hermes pp. 73-74): its
+    vis's Form and its Magic Might (or Lesser Enchantment Vis's level),
+    which set each breeding season's pawns; its breeding seasons left are
+    its "invigorated stirps" Progress record's points."""
+
+    name: str
+    form: str = ""
+    level: int = 0
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Stirps:
+        return cls(**known_fields(cls, data))
+
+
+@dataclass
 class GrogYear:
     """A grog's yearly update (Grogs Ch. 5), applied in Winter:
     the vocational training (7 xp, or the teacher's Source Quality), 4 xp of
@@ -484,6 +500,15 @@ class GrogYear:
     exposure: str = ""
     exposure_2: str = ""
     story_awards: int = 0
+    #: Seasons spent copying this year (planned seasons, DE p. 380): each
+    #: takes a season of the update, as a story award does.
+    copying: int = 0
+
+    def chosen(self) -> bool:
+        """Whether any of the year's seasons has an Ability chosen."""
+        return bool(
+            self.vocational or self.practice or self.exposure or self.exposure_2
+        )
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> GrogYear:
@@ -903,6 +928,9 @@ class Character:
     constant_effects: list[ConstantEffect] = field(default_factory=list)
     #: Deep covers and personae (Houses of Hermes: Societates pp. 87-89).
     covers: list[DeepCover] = field(default_factory=list)
+    #: The seasons spent campaigning with an army ("1220 Summer"), for the
+    #: year's Living Conditions and Disease Avoidance (Lords of Men p. 102).
+    campaign_seasons: list[str] = field(default_factory=list)
     #: Beings bound to the character by a tradition, and the points in
     #: each of their traditions' pools ("<tradition id>:<pool name>").
     bound_beings: list[BoundBeing] = field(default_factory=list)
@@ -971,6 +999,19 @@ class Character:
     #: Text (older saves load with none).
     formula_designs: list[Formula] = field(default_factory=list)
     ordeals: list[Ordeal] = field(default_factory=list)
+    #: The Quests the character has performed in Initiations, as their
+    #: Scripts name them: a Script repeating one must be changed first
+    #: (Legends of Hermes pp. 50-51).
+    quests: list[str] = field(default_factory=list)
+    #: Where he is now, when away from home: a place of the saga (its
+    #: aura), or an aura typed (score and realm). His Casting Scores and
+    #: the like count this aura, his seasons his home's (DE pp. 410-411).
+    away_place_id: str = ""
+    away_aura: int | None = None
+    away_realm: str = ""
+    #: The Stirpes the character has Invigorated (older saves load with
+    #: none): harvested each Winter while breeding seasons are left.
+    stirpes: list[Stirps] = field(default_factory=list)
     #: Verditius vendettas refused and not yet made good (older saves
     #: load with none).
     refused_vendettas: list[RefusedVendetta] = field(default_factory=list)
@@ -1102,6 +1143,7 @@ class Character:
                 "a whole number."
             )
         d["ordeals"] = [Ordeal.from_dict(o) for o in d.get("ordeals", [])]
+        d["stirpes"] = [Stirps.from_dict(s) for s in d.get("stirpes") or []]
         d["refused_vendettas"] = [
             RefusedVendetta.from_dict(v) for v in d.get("refused_vendettas", [])
         ]

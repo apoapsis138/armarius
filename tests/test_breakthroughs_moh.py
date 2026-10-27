@@ -468,3 +468,32 @@ def test_the_form_reads_other_stirpes() -> None:
     plan = season_forms.season_plan_from(saga, magus, values)
     assert plan.more_stirpes == {"Second rooster": 10}
     assert plan.vis_from == "covenant"
+
+
+def test_an_invigorated_stirps_is_harvested_each_winter() -> None:
+    """LoH p. 74: each breeding season, a fifth of its Might in pawns of its
+    Form; once a year without magic."""
+    import random
+
+    from ars_magica_manager.seasons.lab_apply import season_stirpes
+
+    saga = _saga()
+    magus = saga.character("m")
+    assert magus is not None
+    plan = _plan(vc.INVIGORATE, title="Rooster", book_level=10, form="Animal")
+    result = SupplementWork()
+    REGISTRY[vc.INVIGORATE].outcome(saga, magus, plan, None, result)
+    apply_supplement(saga, magus, plan, result)
+    before = magus.raw_vis.get("animal", 0)
+    # An animal Stirps breeds in the spring, a plant in the autumn (LoH p.
+    # 75).
+    saga.current_season = "Winter"
+    assert season_stirpes(saga, random.Random(3)) == []
+    saga.current_season = "Spring"
+    lines = season_stirpes(saga, random.Random(3))
+    assert magus.raw_vis["animal"] == before + 2 and len(lines) == 1
+    record = next(p for p in magus.progress if p.kind == vc.INVIGORATED)
+    assert record.points == 1
+    season_stirpes(saga, random.Random(3))
+    assert season_stirpes(saga, random.Random(3)) == []
+    assert vc.breeding_season("Herbam") == "Autumn"

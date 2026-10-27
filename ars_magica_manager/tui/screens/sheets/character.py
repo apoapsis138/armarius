@@ -16,7 +16,14 @@ from textual.widgets import (
 )
 
 from .... import books as bk
-from .... import casting_text, marriages, seasons, tradition_text, traditions
+from .... import (
+    casting_text,
+    lineage,
+    marriages,
+    seasons,
+    tradition_text,
+    traditions,
+)
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
 from .... import laboratories as lab_text
@@ -631,6 +638,13 @@ class CharacterSheetView(SheetView):
                         id="character-reputations-list",
                     )
             yield from self._connections(character)
+            if lineage.shown(self.saga, character):
+                with SheetSection(title="Lineage", id=lineage.SECTION):
+                    yield self._static(
+                        lineage.SECTION,
+                        lambda: lineage.text(self.saga, self.character),
+                        id="char-lineage-content",
+                    )
             if marriages.of_character(self.saga, character):
                 with SheetSection(title="Marriages", id=marriages.CHARACTER_SECTION):
                     yield self._static(

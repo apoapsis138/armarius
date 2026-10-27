@@ -17,6 +17,7 @@ from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import ships as ship_text
 from ..forms import possession as possession_forms
+from ..forms import ship_build
 from ..forms import ships as ship_forms
 from ..models import Covenant, Possession, Saga
 from ..possessions import KIND_TITLES
@@ -25,7 +26,7 @@ from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .ornaments import ledger_entry
 from .themes import Palette
-from .widgets import badge, serif, text
+from .widgets import badge, edit_button, serif, text
 
 #: Inspect: the inspector's title, the line under it, and its markup.
 Inspect = Callable[[str, str, str], None]
@@ -170,13 +171,21 @@ def ships_section(
         f"{KIND_TITLES['ship']} ({len(listed)})",
         p,
         body,
-        buttons=verb_buttons(
-            possession_forms.possession_ops(saga, covenant, "ship"),
-            chooser,
-            run,
-            p,
-            more=more,
-        ),
+        buttons=[
+            *verb_buttons(
+                possession_forms.possession_ops(saga, covenant, "ship"),
+                chooser,
+                run,
+                p,
+                more=more,
+            ),
+            edit_button(
+                ship_build.TITLE,
+                p,
+                lambda: run(ship_build.build_form(saga, covenant)),
+                "new",
+            ),
+        ],
     )
     widget.setObjectName(SECTION_ID)
     return widget

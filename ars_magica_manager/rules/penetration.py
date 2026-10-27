@@ -270,7 +270,7 @@ def faith_magic_resistance(
     )
     if saga is not None and options.is_on(saga, "dominion_magic_resistance"):
         if dominion_aura is None:
-            aura, realm = realms.home_aura(saga, character)
+            aura, realm = realms.present_aura(saga, character)
             dominion_aura = aura if realm == "Divine" else 0
         if faithful(character):
             resistance = max(resistance, 5 * dominion_aura)

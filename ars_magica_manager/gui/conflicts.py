@@ -39,6 +39,7 @@ from .. import conflicts, fights, medallions, sieges
 from ..commands import Command
 from ..models import FATIGUE_LEVELS, WALLS, Fight, Saga, Siege
 from ..rules import fight as fight_rules
+from ..rules import options as rule_options
 from ..rules import siege as siege_rules
 from . import gilding, heraldry, illumination, pictures
 from . import medallions as drawn
@@ -710,6 +711,14 @@ class FightPage(QWidget):
                 ("Next Round", "combat", lambda: self.act("next_round")),
                 ("Restart", "update", lambda: self.act("restart_fight")),
                 ("Combat Options", "combat", lambda: self.act("fight_options")),
+                *(
+                    [
+                        ("Morale", "combat", lambda: self.act("group_morale")),
+                        ("Rally", "troupe", lambda: self.act("rally_group")),
+                    ]
+                    if rule_options.is_on(saga, rule_options.MORALE_DISCIPLINE)
+                    else []
+                ),
             ],
             p,
         )

@@ -33,6 +33,7 @@ from .. import (
     giving,
     health,
     labor,
+    melee_events,
     neighbours,
     packs,
     places,
@@ -88,7 +89,7 @@ from ..models import (
     Spell,
     Tribunal,
 )
-from ..rules import covenfolk, lab_seasons
+from ..rules import covenfolk, creation_tradition, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
 from ..sections import LAB_TEXTS_SECTION
@@ -97,7 +98,9 @@ from . import apothecary as apothecary_forms
 from . import beast as beast_forms
 from . import boost as boost_forms
 from . import careers
+from . import certamen_duel as certamen_forms
 from . import church as church_forms
+from . import covers as cover_forms
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
@@ -105,9 +108,11 @@ from . import criamon as criamon_forms
 from . import faerie_dealings as faerie_forms
 from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
+from . import grog_story as grog_story_forms
 from . import grogs as grog_forms
 from . import hedge_cast as hedge_cast_forms
 from . import holy_influence as holy_influence_forms
+from . import hook_stories as hook_story_forms
 from . import hosting as hosting_forms
 from . import hubris as hubris_forms
 from . import importing as import_forms
@@ -116,16 +121,21 @@ from . import land_shaping as land_forms
 from . import library as library_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
+from . import season as season_forms
+from . import ship_build as ship_build_forms
 from . import sin as sin_forms
+from . import threshold as threshold_forms
 from . import tmre_alchemy as tmre_alchemy_forms
 from . import tmre_divination as tmre_divination_forms
 from . import tmre_dreams as tmre_dream_forms
 from . import tmre_spirits as tmre_spirit_forms
+from . import trait_roll as trait_roll_forms
 from . import tribunal as tribunal_forms
 from . import tunnel as tunnel_forms
 from . import turbulence as turbulence_forms
 from . import twilight as twilight_forms
 from . import vf_change as vf_change_forms
+from . import whereabouts as whereabouts_forms
 
 #: The record a page shows, as deletion and actions take it.
 Record = Covenant | Character | Laboratory | Familiar | Tribunal | Neighbour | Creature
@@ -143,11 +153,14 @@ NOT_ON_PAGES = frozenset(
         "edit_arms",
         "edit_fatigue",
         "edit_familiar_fatigue",
+        # The familiar's page draws Roll as its Personality Traits' button.
+        "familiar_trait_roll",
         "instill_effect",
         "use_charge",
         "use_effect",
         "give",
         "withdraw_case",
+        "war_end",
         "neutralize_shard",
         "tribunal_longevity",
         "roll_fair",
@@ -170,6 +183,8 @@ NOT_ON_PAGES = frozenset(
         "break_group",
         "restart_fight",
         "fight_options",
+        "group_morale",
+        "rally_group",
         "next_siege_event",
         "siege_actions",
         # The desktop draws them as the Agents list's own buttons.
@@ -201,10 +216,12 @@ NOT_ON_PAGES = frozenset(
         "library_search",
         # A tomb's trap springs: the Traps list's own button.
         "overcome_trap",
+        "cross_threshold",
         # A covenant's ships: the Ships list's own buttons.
         "ship_stress",
         "ship_combat",
         "ship_fate",
+        "build_ship",
         # A cleric's career: Holy Orders' own button.
         "perform_exorcism",
         # A saga cult's degrees: the Degrees list's own button.
@@ -219,6 +236,12 @@ NOT_ON_PAGES = frozenset(
         "end_marriage",
         # A covenant's Menagerie: the Beasts list's own button.
         "tame_beast",
+        "menagerie_award",
+        # A covenant's staged project: its block's own buttons.
+        "warning_bell",
+        "gather_connection",
+        "lower_aegis",
+        "death_roll",
         # Polemic and Charter Strength: the Texts list's and the charter
         # lords' own buttons.
         "circulate_text",
@@ -552,8 +575,12 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
     "end_session": ((NodeKind.CHARACTER, "Reputations"),),
     "tourney_season": ((NodeKind.CHARACTER, "Reputations"),),
+    "melee_event": ((NodeKind.CHARACTER, "Reputations"),),
     # Beside This Season's Plan, Edit and Clear.
     "labor_story": ((NodeKind.CHARACTER, "This Season"),),
+    "grog_story_xp": ((NodeKind.CHARACTER, "This Season"),),
+    "plan_copying": ((NodeKind.CHARACTER, "This Season"),),
+    "clear_copying": ((NodeKind.CHARACTER, "This Season"),),
     "invest_labor": ((NodeKind.CHARACTER, "This Season"),),
     "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
     "discipline_grog": ((NodeKind.CHARACTER, "Personality Traits"),),
@@ -561,6 +588,10 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "craft_by_magic": ((NodeKind.CHARACTER, "Known Spells"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     "resolve_twilight": ((NodeKind.CHARACTER, "Aging"),),
+    "disguise_roll": ((NodeKind.CHARACTER, "Covers"),),
+    "whereabouts": ((NodeKind.CHARACTER, "Known Spells"),),
+    "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
+    "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "boost_spell": ((NodeKind.CHARACTER, "Known Spells"),),
@@ -633,6 +664,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # Dream magic and Hermetic sacrifice beside Known Spells' buttons.
     "dream_working": ((NodeKind.CHARACTER, "Known Spells"),),
     "hermetic_sacrifice": ((NodeKind.CHARACTER, "Known Spells"),),
+    "certamen_duel": ((NodeKind.CHARACTER, "Known Spells"),),
     # Divination and Hermetic astrology beside the Abilities' buttons.
     "tmre_divination": ((NodeKind.CHARACTER, "Abilities"),),
     "tmre_astrology": ((NodeKind.CHARACTER, "Abilities"),),
@@ -717,6 +749,15 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
     ),
     "invest_labor": lambda page: available(
         "invest_labor", replace(page, section="section-char-season")
+    ),
+    "grog_story_xp": lambda page: available(
+        "grog_story_xp", replace(page, section="section-char-season")
+    ),
+    "plan_copying": lambda page: available(
+        "plan_copying", replace(page, section="section-char-season")
+    ),
+    "clear_copying": lambda page: available(
+        "clear_copying", replace(page, section="section-char-season")
     ),
     # A craftsman's sale of his finished goods.
     "sell_goods": lambda page: available(
@@ -1273,9 +1314,12 @@ def character_traditions_fields(saga: Saga, character: Character) -> list[Dialog
     ]
 
 
-def apply_character_traditions(character: Character, values: dict[str, Any]) -> None:
+def apply_character_traditions(
+    character: Character, values: dict[str, Any]
+) -> list[str]:
     """Join or leave each tradition listed; an Ability of a tradition left
-    stays, in the Abilities chapter."""
+    stays, in the Abilities chapter. A tradition joined brings what its
+    membership requires and a Gifted member's Opening (creation_tradition.join)."""
     chosen = [
         key.removeprefix(TRADITION_KEY)
         for key, ticked in values.items()
@@ -1287,7 +1331,20 @@ def apply_character_traditions(character: Character, values: dict[str, Any]) -> 
         if key.startswith(TRADITION_KEY)
     }
     kept = [i for i in character.traditions if i not in listed]
+    joined = [i for i in chosen if i not in character.traditions]
     character.traditions = kept + [i for i in chosen if i not in kept]
+    told: list[str] = []
+    for tradition_id in joined:
+        added = creation_tradition.join(character, tradition_id)
+        if added:
+            told.append(f"Joining brings {', '.join(escape(a) for a in added)}.")
+        if creation_tradition.gifted(character):
+            told.append(
+                "A Gifted member's Gift is Opened by a Gifted master of the "
+                "tradition: plan Open a student's Gift to a tradition for him "
+                "(Hedge Magic Revised p. 7)."
+            )
+    return notes(*told)
 
 
 def character_traditions(saga: Saga, character: Character) -> Form:
@@ -1659,6 +1716,10 @@ def _covenant(page: Page) -> Covenant | None:
     return page.covenant
 
 
+def _neighbour(page: Page) -> Neighbour | None:
+    return page.neighbour
+
+
 def _character(page: Page) -> Character | None:
     return page.character
 
@@ -1706,7 +1767,11 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),
     "tourney_season": _needs(_character, tourney_season.tourney_form),
+    "melee_event": _needs(_character, melee_events.melee_form),
     "labor_story": _needs(_character, labor.story_form),
+    "grog_story_xp": _needs(_character, grog_story_forms.story_form),
+    "plan_copying": _needs(_character, season_forms.copying_form),
+    "clear_copying": _needs(_character, season_forms.clear_copying_form),
     "invest_labor": _needs(_character, labor.invest_form),
     "command_beast": _needs(_character, beast_forms.command_form),
     "discipline_grog": _needs(_character, grog_forms.discipline_form),
@@ -1714,6 +1779,12 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "craft_by_magic": _needs(_character, craft_forms.craft_form),
     "place_aging_points": _needs(_character, aging_due.character_form),
     "resolve_twilight": _needs(_character, twilight_forms.resolve_twilight_form),
+    "disguise_roll": _needs(_character, cover_forms.disguise_form),
+    "whereabouts": _needs(_character, whereabouts_forms.where_form),
+    "suggest_story": _needs(_covenant, hook_story_forms.story_form),
+    "build_ship": _needs(_covenant, ship_build_forms.build_form),
+    "cross_threshold": _needs(_neighbour, threshold_forms.threshold_form),
+    "trait_roll": _needs(_character, trait_roll_forms.roll_form),
     "import_data": _import_command,
     "research_bonuses": _needs(_covenant, research_bonuses),
     "export_record": _export_command,
@@ -1796,6 +1867,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     # Dream magic and Hermetic sacrifice (The Mysteries Revised Edition).
     "dream_working": _needs(_character, tmre_dream_forms.dream_form),
     "hermetic_sacrifice": _needs(_character, tmre_dream_forms.sacrifice_form),
+    "certamen_duel": _needs(_character, certamen_forms.duel_form),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     "tmre_divination": _needs(_character, tmre_divination_forms.divination_form),
     "tmre_astrology": _needs(_character, tmre_divination_forms.astrology_form),

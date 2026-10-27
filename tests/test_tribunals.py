@@ -201,7 +201,8 @@ def test_a_package_is_offered_while_its_book_is_in_play():
     saga = everything_saga()
     rhine = saga.tribunals[0]
     saga.books_in_play = []
-    assert [p.key for p in tribunal_packages.offered(saga)] == ["core"]
+    # The core and the Grand Tribunal's need no book.
+    assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "grand"]
     # The one a Tribunal follows stays on offer, whatever its book.
     assert "rhine" in [p.key for p in tribunal_packages.offered(saga, rhine.package)]
     saga.books_in_play = ["GotF"]
@@ -358,7 +359,11 @@ def test_a_package_without_data_is_a_note_on_the_peripheral_code():
     rhine.package = "hibernia"
     assert "Hill of Tara" in tribunal_sheet.customs_note(rhine)
     saga.books_in_play = ["F&F"]
-    assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "provence"]
+    assert [p.key for p in tribunal_packages.offered(saga)] == [
+        "core",
+        "grand",
+        "provence",
+    ]
 
 
 def test_the_levant_package_is_the_treaty_of_baghdad_as_a_note():
@@ -372,7 +377,11 @@ def test_the_levant_package_is_the_treaty_of_baghdad_as_a_note():
     note = tribunal_sheet.customs_note(tribunal)
     assert "Treaty of Baghdad" in note and "Guernicus" in note
     saga.books_in_play = ["B&S"]
-    assert [p.key for p in tribunal_packages.offered(saga)] == ["core", "levant"]
+    assert [p.key for p in tribunal_packages.offered(saga)] == [
+        "core",
+        "grand",
+        "levant",
+    ]
 
 
 def _export(saga: Saga) -> dict:

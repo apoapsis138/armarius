@@ -318,7 +318,7 @@ Then the app asks for any names the Ability list leaves to you, such as an Area 
 ### Quick and Easy Virtues and Flaws
 <!-- help: quick-virtues-flaws -->
 
-The Definitive Edition's Quick and Easy Virtues and Flaws (Chapter 3, page 46) are a fast way to choose a character's Virtues and Flaws. Each type's Template list has its recipes, marked "(DE quick)":
+The Definitive Edition's Quick and Easy Virtues and Flaws (Chapter 3, page 47) are a fast way to choose a character's Virtues and Flaws. Each type's Template list has its recipes, marked "(DE quick)":
 
 - **Grog**: a Minor Personality Flaw for how you want to play the grog, Covenfolk, and one Minor Virtue: Warrior for a grog who fights, Educated for one who is educated, Arcane Lore for one who knows about the supernatural, or Puissant in the grog's specialty for anyone else (typed in, such as Craft: Blacksmith).
 - **Companions**: a Major Personality or Story Flaw, which says what stories they are in, Covenfolk, and three points of Virtues from one of four recipes:
@@ -849,6 +849,8 @@ Each cult the saga has invented: its Lore, realm, founder and how many degrees i
 <!-- help: section-content-cult -->
 
 The cult's Lore, realm and founding. Initiation is the Mystagogue's Presence (or the Characteristic the cult chose) + the Lore + the Script's bonus, with no die. A probationer needs the Lore at 1 before his first Initiation, and the season holds every Initiate to that. The second and later Initiations typically need 3 (TMRE pp. 11, 13; DE p. 387): counted by the Initiations he has taken (the cult's Virtues he holds), not by the degree, so a cult whose path may start anywhere is not held to it. The season only warns when he falls short, and the troupe may go ahead. Members are worked out, not listed: one joins by gaining the cult's Lore, so a member is everyone who has it, at any score, and the founder, who may have it at 0 (TMRE pp. 11, 13, 19). One of its Virtues alone doesn't make a member, since most can be taken at creation. Each member is shown at the highest degree whose Virtue he holds. Someone with only the Lore is a probationer. If anyone may join, an unGifted Initiate needs an Ordeal in every Initiation, and his past Ordeals don't lower its Target (Hedge Magic Revised Edition p. 14).
+
+**As a secret society.** A cult is a faction in the Order's politics too, as a Tribunal's factions are. On Add or Edit, **As a secret society: what it works for** gives its agenda, and **Its attitude toward** each of the troupe's covenants, from Hostile (-3) to Allied (+3), how it stands with them; the chosen cult's details show both. At a Tribunal meeting, a covenant with a member among its magi leans with its cult before the debate: with a covenant sharing the cult that brings the case or answers it, else by the cult's attitude toward a troupe covenant that does (Warm or better with it, Wary or worse against it). The Rhine's gilds lean first, then the cult. That the members vote as one is the app's reading, not a rule; the vote's leanings can be changed as ever.
 
 ### Degrees
 <!-- help: section-content-cult-degrees -->

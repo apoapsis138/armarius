@@ -68,6 +68,7 @@ from ars_magica_manager.models import (
     Tribunal,
     VirtueFlawInstance,
 )
+from ars_magica_manager.models.hermetic_projects import ProjectStage
 from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
@@ -1744,8 +1745,8 @@ async def test_battle_event_at_sea_acts_on_the_chosen_fleet_battle():
 
 
 async def test_menagerie_lists_act_on_the_chosen_rows():
-    """In one session, with a Menagerie shown: e edits the chosen beast, m
-    Tames the chosen beast, d deletes it after asking; e and d on the
+    """In one session, with a Menagerie shown: e edits the chosen beast,
+    More's Tame a Beast tames the chosen beast, d deletes it after asking; e and d on the
     chosen breeding likewise."""
     saga = _saga()
     covenant = saga.covenants[0]
@@ -1786,7 +1787,8 @@ async def test_menagerie_lists_act_on_the_chosen_rows():
         await _press(pilot, app, "e", FieldsDialog)
         await _save_name(pilot, app, "Geiss")
         assert await wait_until(pilot, lambda: _saved(beasts)[1].name == "Geiss")
-        await _press(pilot, app, "m", FieldsDialog)
+        await _press(pilot, app, "m", MenuScreen)
+        await _press(pilot, app, "t", FieldsDialog)
         assert "Geiss" in str(app.screen.query_one("#fields-title").render())
         await pilot.press("escape")
         assert await wait_until(pilot, lambda: app.screen is workspace)
@@ -1808,6 +1810,71 @@ async def test_menagerie_lists_act_on_the_chosen_rows():
         assert await wait_until(
             pilot, lambda: [b.id for b in _saved(breedings)] == ["br1"]
         )
+
+
+# -- A covenant's staged Hermetic Project: its stages and their works --
+
+
+async def test_staged_project_lists_act_on_the_chosen_rows():
+    """In one session, with a Burning City shown: e edits the chosen stage,
+    d deletes it after asking; e and d on the chosen work likewise."""
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.hermetic_projects.insert(
+        0,
+        HermeticProject(
+            id="city1",
+            name="Etna",
+            kind="Burning City",
+            stages=[
+                ProjectStage(id="st1", name="Find a volcano [old]"),
+                ProjectStage(id="st2", name="Protect the people"),
+            ],
+            works=[
+                ProjectWork(id="w1", name="Scent of Ash", stage="st1"),
+                ProjectWork(id="w2", name="Vulcan's Glass", stage="st1"),
+            ],
+        ),
+    )
+    covenant.project_shown = "city1"
+    storage.save_saga(saga)
+    stages = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-staged-stages",
+        "cov-staged-stages-list",
+        lambda s: s.covenants[0].hermetic_projects[0].stages,
+    )
+    works = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-staged-works",
+        "cov-staged-works-list",
+        lambda s: s.covenants[0].hermetic_projects[0].works,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, stages)
+        await _choose_row(pilot, view, stages, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Protect the folk")
+        assert await wait_until(
+            pilot, lambda: _saved(stages)[1].name == "Protect the folk"
+        )
+        await _choose_row(pilot, view, stages, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Find a volcano [old]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(stages)) == 1)
+
+        view.query_one(f"#{works.list_id}").focus()
+        await _choose_row(pilot, view, works, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-name", Input).value == "Vulcan's Glass"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Vulcan's Glass?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: [w.id for w in _saved(works)] == ["w1"])
 
 
 # -- A lord's Marriages tab (Lords of Men pp. 10-11) --

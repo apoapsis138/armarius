@@ -17,7 +17,7 @@ from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
 from .rules import tradition_seasons as ts
 from .rules import tradition_totals as tt
-from .rules.realms import home_aura
+from .rules.realms import home_aura, present_aura
 from .tables import Table
 
 #: Characteristic abbreviations, as the books print them.
@@ -210,7 +210,7 @@ class CastingPart:
 def rule_part(
     saga: Saga, character: Character, tradition: TraditionDef, rule: CastingRule
 ) -> CastingPart:
-    aura, realm = home_aura(saga, character)
+    aura, realm = present_aura(saga, character)
     draw = _grid if rule.kind == "art_pair" else _listed
     table = draw(character, tradition, rule, aura, realm)
     lines = [
@@ -411,7 +411,7 @@ def seasons_text(saga: Saga, character: Character, tradition: TraditionDef) -> s
 def _effect_cells(
     saga: Saga, character: Character, tradition: TraditionDef
 ) -> list[list[str]]:
-    aura, realm = home_aura(saga, character)
+    aura, realm = present_aura(saga, character)
     rows = []
     for _, effect in he.of_tradition(character, tradition.id):
         found = he.effect_total(character, tradition, effect, aura, realm)

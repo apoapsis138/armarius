@@ -111,7 +111,9 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Battle": ""},
     ),
     "battle event (conflicts)": Contract(
-        prefill={"Maneuver": "Defend", "Fighting for": "0", "How it went": "won"},
+        prefill={"Maneuver": "Defend", "Fighting for": "0", "How it went": "beaten"},
+        # One "How it went" a Maneuver: the Defend one shown.
+        aliases={"How it went": "fld-condition_Defend"},
         edits={"Leading the event": "comp1", "Size": "Outnumbered"},
         saved=lambda s: (s.battles[0].sides[1].groups, len(s.battles[0].events)),
         expected=(16, 2),

@@ -32,7 +32,12 @@ from .rules import (
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
 from .rules.infernalists import hierarchy
-from .rules.realms import home_aura, home_aura_kind, home_in_regio
+from .rules.realms import (
+    away,
+    home_in_regio,
+    present_aura,
+    present_aura_kind,
+)
 
 
 def _levels(count: int) -> str:
@@ -75,8 +80,8 @@ def _aligned_lines(kind: str, realm: str, aura: int) -> list[str]:
 
 
 def casting_scores_text(saga: Saga, magus: Character) -> str:
-    aura, realm = home_aura(saga, magus)
-    kind = home_aura_kind(saga, magus)
+    aura, realm = present_aura(saga, magus)
+    kind = present_aura_kind(saga, magus)
     header = " " * 12 + "".join(f"{ART_ABBREVIATIONS[f]:>5}" for f in FORMS)
     rows = [header]
     sample = None
@@ -97,6 +102,11 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     ]
     lines = [
         *rows,
+        *(
+            [f"[$label]Away from home:[/] a {realm} aura of {aura} (Where He Is)."]
+            if away(magus)
+            else []
+        ),
         "",
         "Every score adds: " + ", ".join(shared) + " (firm words, bold gestures).",
         *_aligned_lines(kind, realm, aura),
@@ -133,9 +143,21 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         + (f", then halved ({escape(', '.join(weak))})" if weak else "")
         + "."
     )
+    lines += certamen_lines(magus)
+    multipliers = [line for line in sample.lines if line.multiplier is not None]
+    halved = sorted({line.label for line in multipliers})
+    if halved:
+        lines.append(f"Halved totals for: {escape(', '.join(halved))}.")
+    lines += [escape(line) for line in hybrid.summary(magus)]
+    return "\n".join(lines)
+
+
+def certamen_lines(magus: Character) -> list[str]:
+    """His certamen totals before the dice and the Arts (DE p. 231), and
+    his school's, as markup."""
     duel = certamen.certamen_totals(magus, TECHNIQUES[0], FORMS[0])
     c = magus.characteristics
-    lines.append(
+    lines = [
         f"Certamen: Initiative {duel.initiative:+d}, Attack Presence {c.presence:+d} "
         f"+ Art, Defence Perception {c.perception:+d} + the other Art, Weakening "
         f"{duel.weakening_base:+d} + advantage, Resistance {duel.resistance:+d}."
@@ -144,16 +166,11 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
             if certamen.certamen_focus(magus)
             else ""
         )
-    )
+    ]
     school = certamen.school_text(magus)
     if school:
         lines.append(escape(school))
-    multipliers = [line for line in sample.lines if line.multiplier is not None]
-    halved = sorted({line.label for line in multipliers})
-    if halved:
-        lines.append(f"Halved totals for: {escape(', '.join(halved))}.")
-    lines += [escape(line) for line in hybrid.summary(magus)]
-    return "\n".join(lines)
+    return lines
 
 
 def _spontaneous_lines(magus: Character, aura: int, realm: str) -> list[str]:
@@ -266,7 +283,7 @@ def tablet_casting_line(saga: Saga, magus: Character, spell: Spell) -> str:
             f"{name}: can't read it (needs Artes Liberales "
             f"{TABLET_ARTES_LIBERALES} and Latin {TABLET_LATIN})"
         )
-    aura, realm = home_aura(saga, magus)
+    aura, realm = present_aura(saga, magus)
     score = int(
         casting.tablet_casting_score(magus, spell, aura=aura, aura_realm=realm).total
     )
@@ -291,14 +308,14 @@ def known_spell_casting_lines(
     saga: Saga, magus: Character, known: KnownSpell, spell: Spell
 ) -> list[str]:
     """The details panel's casting lines for a known spell."""
-    aura, realm = home_aura(saga, magus)
+    aura, realm = present_aura(saga, magus)
     abilities = casting.mastery_counts(known.mastery_abilities)
     score = casting.spell_casting_score(
         magus,
         spell,
         aura=aura,
         aura_realm=realm,
-        aura_kind=home_aura_kind(saga, magus),
+        aura_kind=present_aura_kind(saga, magus),
         mastery=known.mastery_score,
         mastery_abilities=abilities,
     )

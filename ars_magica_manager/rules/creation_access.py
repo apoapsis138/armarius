@@ -23,7 +23,7 @@ from ..models import (
     TraditionDef,
     VirtueFlawInstance,
 )
-from . import grog_aging, xp
+from . import grog_aging, schools, xp
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -607,7 +607,8 @@ def art_cap(character: Character, ability: str) -> int | None:
 
 def ability_cap_for(character: Character, age: int | None, ability: str) -> int | None:
     """The highest score `ability` may have at creation: the age cap, two
-    more with an Affinity with it, None (no cap) when Mentored by Demons.
+    more with an Affinity with it, None (no cap) when Mentored by Demons;
+    no higher than the school named on Educated teaches it (schools.cap).
     An Ability on the Art table has no age cap, only its tradition's
     (art_cap). Puissant adds when the Ability is used, so it never
     counts."""
@@ -623,6 +624,9 @@ def ability_cap_for(character: Character, age: int | None, ability: str) -> int 
     favoured = savant_ability(character)
     if favoured is not None:
         cap = min(cap, SAVANT_FAVOURED_CAP if ability == favoured else SAVANT_CAP)
+    taught = schools.cap(character, ability)
+    if taught is not None:
+        cap = min(cap, taught)
     return cap
 
 

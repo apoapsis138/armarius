@@ -85,7 +85,13 @@ def _faerie(values: dict[str, Any]) -> bool:
 
 
 #: What only a Faerie creature has (Realms of Power: Faerie pp. 140-142).
-FAERIE_FIELDS = {"faerie_role": "", "faerie_story": ""}
+FAERIE_FIELDS = {
+    "faerie_role": "",
+    "faerie_story": "",
+    "vampire_precautions": "",
+    "vampire_limitations": "",
+    "vampire_death": "",
+}
 
 
 def _creature_identity_fields(c: Creature | None) -> list[DialogField]:
@@ -207,6 +213,32 @@ def _faerie_fields(c: Creature | None) -> list[DialogField]:
             placeholder="e.g. to be wooed by a mortal knight and spurn him",
             show_if=_faerie,
         ),
+        DialogField(
+            "vampire_precautions",
+            "A vampire: the precautions that stop it forming",
+            "text",
+            attr(c, "vampire_precautions", ""),
+            show_if=_faerie,
+            hint="One to three from Against the Dark p. 115's list; all must be "
+            "met. Blank for a faerie that isn't a vampire.",
+        ),
+        DialogField(
+            "vampire_limitations",
+            "A vampire: the limitations it obeys",
+            "text",
+            attr(c, "vampire_limitations", ""),
+            show_if=_faerie,
+            hint="One to three from p. 116's list (that it can't leave its "
+            "resting place by day is almost universal).",
+        ),
+        DialogField(
+            "vampire_death",
+            "A vampire: the one way that kills it for good",
+            "text",
+            attr(c, "vampire_death", ""),
+            show_if=_faerie,
+            hint="One from p. 117's list; any other way, it reforms in days or weeks.",
+        ),
     ]
 
 
@@ -303,6 +335,8 @@ def apply_info(saga: Saga, creature: Creature, values: dict[str, Any]) -> None:
         values.update(FAERIE_FIELDS)
     else:
         values["faerie_role"] = values.get("faerie_role") or ""
+        for key in ("vampire_precautions", "vampire_limitations", "vampire_death"):
+            values[key] = (values.get(key) or "").strip()
     if values.get("confidence_score") is None:
         values["confidence_points"] = 0
     if not values.get("many"):

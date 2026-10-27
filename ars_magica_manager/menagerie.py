@@ -28,6 +28,7 @@ from .models import (
     SEASONS,
     Character,
     Covenant,
+    DiaryEntry,
     Neighbour,
     Saga,
     SeasonPlan,
@@ -53,7 +54,7 @@ from .models.menagerie import (
 )
 from .neighbour_lists import KindBlock, KindList, LedgerEntry
 from .references import Fact
-from .rules import activities, dice, lab_seasons, realms, sites
+from .rules import activities, confidence, dice, lab_seasons, realms, sites
 from .rules import hermetic_projects as hp
 from .rules import menagerie as mg
 from .rules.scores import ability_level
@@ -1508,4 +1509,90 @@ def menagerie_block(
         after=after,
         facts=menagerie_facts,
         facts_inline=True,
+    )
+
+
+# -- the owner's Reputation (p. 138) -------------------------------------------
+
+REPUTATION_AWARD = "Reputation Award"
+
+
+def award_fields(saga: Saga, project: HermeticProject) -> list[DialogField]:
+    return [
+        DialogField(
+            "visitors", "Visitors this year", "int", 0, hint="A point for ten."
+        ),
+        *(
+            DialogField(
+                f"captured_{beast.id}",
+                f"Captured this year: {escape(beast.name)} (Might {beast.might})",
+                "check",
+                False,
+            )
+            for beast in project.beasts
+            if beast.might > 0
+        ),
+        DialogField(
+            "another_year",
+            "Another year past its first",
+            "check",
+            saga.current_year > project.year,
+        ),
+        DialogField("sold", "Beasts sold to other magi", "int", 0),
+    ]
+
+
+def _award(project: HermeticProject, values: dict[str, Any]) -> int:
+    mights = [b.might for b in project.beasts if values.get(f"captured_{b.id}")]
+    return mg.reputation_award(
+        int(values.get("visitors") or 0),
+        mights,
+        bool(values.get("another_year")),
+        int(values.get("sold") or 0),
+    )
+
+
+def award_form(saga: Saga, covenant: Covenant, _index: int | None = None) -> Command:
+    """More's Reputation Award on the menagerie's beasts: the year's
+    experience toward its owner's Reputation, from the book's suggestions
+    (HP p. 138), which the storyguide may change."""
+    project = hp.shown_project(covenant)
+    if project is None or project.kind != MENAGERIE:
+        return Refuse(REPUTATION_AWARD, "Show a menagerie first.")
+    owner = saga.character(project.owner_id) if project.owner_id else None
+    if owner is None or not project.reputation.strip():
+        return Refuse(
+            REPUTATION_AWARD,
+            "Name the menagerie's owner and his Reputation first (Edit Project).",
+        )
+
+    def live(values: dict[str, Any]) -> str:
+        return (
+            f"{_award(project, values)} experience toward {escape(owner.name)}'s "
+            f"{escape(project.reputation)} (HP p. 138: the storyguide may "
+            "fine-tune it)."
+        )
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        xp = _award(project, values)
+        held = confidence.deed_toward(owner, project.reputation.strip(), xp)
+        owner.diary.append(
+            DiaryEntry(
+                saga.current_year,
+                saga.current_season,
+                f"{REPUTATION_AWARD}: {project.name or 'the menagerie'}",
+                f"{xp} experience toward {held.name}, now {held.score}.\n"
+                "Rules: Hermetic Projects, Hermetic Relations, p. 138",
+            )
+        )
+        return notes(
+            f"{escape(held.name)} {held.score} ({held.deeds} xp toward the next)."
+        )
+
+    return Form(
+        f"{REPUTATION_AWARD}: {escape(owner.name)}",
+        lambda: award_fields(saga, project),
+        apply,
+        live=live,
+        help_id="menagerie-reputation",
     )

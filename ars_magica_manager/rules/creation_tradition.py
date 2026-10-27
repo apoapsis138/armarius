@@ -19,7 +19,7 @@ tradition's Character Creation.
 from __future__ import annotations
 
 from .. import catalog
-from ..models import Ability, Character, Saga, TraditionDef
+from ..models import Ability, Character, Saga, TraditionDef, VirtueFlawInstance
 from . import creation_access as access
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import THE_GIFT
@@ -149,6 +149,26 @@ def open_tradition(character: Character) -> list[str]:
     added = unopened(character)
     for name in added:
         character.abilities.append(opened_ability(name))
+    return added
+
+
+def join(character: Character, tradition_id: str) -> list[str]:
+    """A character joins a tradition in play (ticked on the sheet): the
+    Virtues and Social Status membership requires. The Opening of the Gift
+    isn't part of joining: a Gifted master of the tradition does it, a
+    season's teaching (Open a student's Gift to a tradition; Hedge Magic
+    Revised p. 7). What was added, for a note."""
+    t = catalog.load_tradition_catalog_by_id().get(tradition_id)
+    if t is None:
+        return []
+    wanted = [*t.virtues, *([t.social_status] if t.social_status else [])]
+    held = {vf.vf_id for vf in character.virtues_flaws}
+    names = catalog.load_virtue_flaw_catalog_by_id()
+    added: list[str] = []
+    for vf_id in dict.fromkeys(wanted):
+        if vf_id not in held:
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+            added.append(names[vf_id].name if vf_id in names else vf_id)
     return added
 
 

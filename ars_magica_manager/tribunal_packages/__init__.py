@@ -191,6 +191,10 @@ class TribunalPackage:
     #: A meeting that would fall in a Grand Tribunal's year is held a year
     #: earlier (the Rhine's of 1227, Guardians of the Forests p. 143).
     skips_grand_tribunal: bool = False
+    #: Its own quorum, in words ending ": quorate" or ": not quorate (...)",
+    #: in place of the core's twelve magi from four covenants (the Grand
+    #: Tribunal's delegates); None for the core's.
+    quorum: Callable[[Saga, Tribunal, Meeting], str] | None = None
     #: Whether a quorum needs a Quaesitor present (Thebes has no
     #: Presiding Quaesitor, The Sundered Eagle p. 25).
     quorum_needs_quaesitor: bool = True
@@ -338,6 +342,7 @@ def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
 
 # The packages register themselves as they are imported.
 from . import (  # noqa: F401
+    grand,
     hibernia,
     levant,
     normandy,

@@ -56,7 +56,15 @@ from .models import (
     Possession,
     Saga,
 )
-from .rules import animal_aging, base_covenants, childhood, covenfolk, realms, scores
+from .rules import (
+    animal_aging,
+    base_covenants,
+    childhood,
+    covenfolk,
+    realms,
+    schools,
+    scores,
+)
 from .rules import animal_grogs as ag
 from .rules import creation as rules
 from .rules import creation_access as access
@@ -549,7 +557,13 @@ def xp_details(saga: Saga, character: Character, target: str) -> str:
             lines.append("[b]Creation cap:[/] none (Mentored by Demons)")
         else:
             over = " [$text-error](over it)[/]" if progress.score > cap else ""
-            lines.append(f"[b]Creation cap:[/] {cap}{over}")
+            taught = schools.cap(character, target)
+            why = (
+                f" [dim](its school teaches it to {taught}, {schools.SOURCE})[/]"
+                if taught is not None and taught == cap
+                else ""
+            )
+            lines.append(f"[b]Creation cap:[/] {cap}{over}{why}")
     spends = [
         f"{ENTRY_STEPS.get(x.step, x.step)} {x.xp}"
         + (

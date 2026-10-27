@@ -169,6 +169,37 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
 
 
+def present_aura(saga: Saga, character: Character) -> tuple[int, str]:
+    """The aura (score, realm) a character is in now: the place he is
+    at, or the aura typed, when he is away; else his home's. Casting,
+    Penetration and the like use it; his seasons, aging and warping his
+    home's (DE pp. 410-411)."""
+    if character.away_place_id:
+        place = sites.place(saga, character.away_place_id)
+        if place is not None:
+            return sites.aura_at(place)
+    if character.away_aura is not None:
+        return character.away_aura, character.away_realm or HERMETIC
+    return home_aura(saga, character)
+
+
+def present_aura_kind(saga: Saga, character: Character) -> str:
+    """The kind of the aura he is in now (rules.aura_kinds): the place
+    he is at's, none for an aura typed, else his home's."""
+    if character.away_place_id:
+        place = sites.place(saga, character.away_place_id)
+        if place is not None:
+            return sites.aura_kind_at(place)
+    if character.away_aura is not None:
+        return ""
+    return home_aura_kind(saga, character)
+
+
+def away(character: Character) -> bool:
+    """Whether he is away from home (a place or an aura set)."""
+    return bool(character.away_place_id) or character.away_aura is not None
+
+
 def home_aura_kind(saga: Saga, character: Character) -> str:
     """The kind of the aura a character lives in (rules.aura_kinds: a
     Magic aura's alignment, a Faerie one's tints, a Divine one's source),

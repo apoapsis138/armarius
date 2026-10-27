@@ -22,6 +22,7 @@ from .. import (
     menagerie,
     neighbours,
     place_events,
+    staged_projects,
     tombs,
     town_court,
     towns,
@@ -30,7 +31,9 @@ from ..commands import Command, Refuse, SectionOps
 from ..forms import charter_strength as charter_strength_forms
 from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
+from ..forms import threshold as threshold_forms
 from ..models import Covenant, Neighbour, Saga
+from ..models.hermetic_projects import BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE
 from ..neighbour_lists import KindBlock, KindList, KindTab, LedgerEntry
 from ..sections import (
     BATTLES_SECTION,
@@ -44,6 +47,7 @@ from ..sections import (
     MANORS_SECTION,
     MARRIAGES_SECTION,
     PROJECTS_SECTION,
+    STAGED_SECTION,
     TABLES_SECTION,
     TOMB_TRAPS_SECTION,
     TOWER_SECTION,
@@ -181,7 +185,18 @@ class NeighbourPage(QWidget):
                         2,
                         follow=follower(self.run),
                     ),
-                    edits={"Edit Neighbour": self._edit},
+                    edits={
+                        "Edit Neighbour": self._edit,
+                        **(
+                            {
+                                threshold_forms.TITLE: lambda: self.run(
+                                    threshold_forms.threshold_form(saga, n)
+                                )
+                            }
+                            if threshold_forms.offers(saga, n)
+                            else {}
+                        ),
+                    },
                 )
             )
         return self.kinds.chapter(tab, head)
@@ -247,6 +262,30 @@ def _on_covenant(
     if covenant is None:
         return Refuse("Hermetic Projects", "Only a covenant keeps projects.")
     return step(covenant)
+
+
+def _staged_edits(saga: Saga, n: Neighbour, run: Run) -> dict[str, Callable[[], None]]:
+    """The staged project shown's commands, by its kind: a Burning City's
+    Warning Bell, an Intangible Assassin's Gather a Connection and Lower
+    an Aegis, a Living Corpse's Death Roll."""
+    project = staged_projects.shown(saga, n)
+    kind = project.kind if project is not None else ""
+    found: dict[str, Callable[[Covenant], Command]] = {
+        BURNING_CITY: {
+            staged_projects.WARNING_BELL: lambda c: staged_projects.bell_form(saga, c)
+        },
+        INTANGIBLE_ASSASSIN: {
+            staged_projects.GATHER: lambda c: staged_projects.gather_form(saga, c),
+            staged_projects.LOWER_AEGIS: lambda c: staged_projects.aegis_form(saga, c),
+        },
+        LIVING_CORPSE: {
+            staged_projects.DEATH_ROLL: lambda c: staged_projects.death_form(saga, c)
+        },
+    }.get(kind, {})
+    return {
+        label: (lambda step=step: run(_on_covenant(saga, n, step)))
+        for label, step in found.items()
+    }
 
 
 class KindChapters:
@@ -364,7 +403,14 @@ class KindChapters:
                     lambda row: _on_covenant(
                         saga, n, lambda c: menagerie.tame_form(saga, c, row)
                     ),
-                )
+                ),
+                (
+                    menagerie.REPUTATION_AWARD,
+                    "more",
+                    lambda row: _on_covenant(
+                        saga, n, lambda c: menagerie.award_form(saga, c, row)
+                    ),
+                ),
             ],
         }
         # Charter Strength (TME p. 36): the charter lords' own buttons.
@@ -408,6 +454,9 @@ class KindChapters:
                     )
                 ),
             }
+        # A staged project: its kind's own commands.
+        if entry.section_id == STAGED_SECTION:
+            return _staged_edits(saga, n, run)
         return {}
 
     def _grid(

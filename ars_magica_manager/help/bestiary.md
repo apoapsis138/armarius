@@ -203,6 +203,13 @@ Deleting a creature removes the links to it from other records, and a
 neighbour it ruled keeps its name as a name typed; nothing else
 changes.
 
+**A vampire** (Against the Dark pp. 115-117) is a faerie: its Edit form also asks the
+**precautions** that stop it forming (one to three from the book's list, all of which must be
+met), the **limitations** it obeys (one to three; that it can't leave its resting place by day
+is almost universal) and **the one way that kills it for good** (any other, it reforms in days
+or weeks). They are typed, as the storyguide picks them from the book's lists; the sheet shows
+them beside its Role. Leave them blank for a faerie that isn't a vampire.
+
 **Role.** A faerie plays a part in the stories it takes part in, and wants a story to play it
 in. Its Edit form (for a Faerie creature) asks its **Role in its stories**, one of the
 dramatis personae: the Hero, the Villain, the Donor (who grants the hero a magical gift, not

@@ -474,3 +474,24 @@ def birth_interval(size: int) -> int:
 
 def is_herbivore(beast: Beast) -> bool:
     return beast.diet == HERBIVORE
+
+
+# -- the owner's Reputation (p. 138) -------------------------------------------
+
+#: The book's suggested awards, which the storyguide fine-tunes: a point for
+#: ten visitors, a magnitude of a captured beast's Might, a year past the
+#: first, a beast sold to another magus.
+VISITORS_PER_POINT = 10
+
+
+def reputation_award(
+    visitors: int, mights: Sequence[int], another_year: bool, sold: int
+) -> int:
+    """The year's Reputation experience for the menagerie's owner."""
+    captured = sum(magnitude(m) for m in mights if m > 0)
+    return (
+        max(0, visitors) // VISITORS_PER_POINT
+        + captured
+        + (1 if another_year else 0)
+        + max(0, sold)
+    )

@@ -58,6 +58,17 @@ def inhabitant_fields(
             )
         )
     if kind in ("companion", "specialist"):
+        fields.append(
+            DialogField(
+                "on_council",
+                "On the council, with a full vote",
+                "check",
+                entry.on_council if entry else False,
+                hint="An unGifted council member counts 0 in Base Loyalty's "
+                "average; a token seat doesn't count (Covenants p. 38).",
+            )
+        )
+    if kind in ("companion", "specialist"):
         fields += _covenant_role_fields(entry)
     if kind == "inhabitant":
         fields.append(

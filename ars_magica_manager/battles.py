@@ -15,15 +15,18 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from . import armies, diaries
+from . import armies, diaries, fight_morale
+from . import battle_fights as bf
 from . import fleet_battles as fleet
 from .commands import Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, Battle, BattleEvent, BattleSide, Neighbour, Saga
+from .models import SEASONS, Battle, BattleEvent, BattleSide, Fight, Neighbour, Saga
 from .rules import battle, confidence
 from .rules import fleet_battle as fleet_rules
+from .rules import options as rule_options
+from .rules import siege as siege_rules
 from .rules.lab import ability_score
 
 #: What a side can be: a covenant, or one of the Region's powers.
@@ -103,11 +106,19 @@ def weight(entry: Battle, side: int = 0, saga: Saga | None = None) -> int:
     at sea (with the `saga` that holds the ships) by ships."""
     if entry.at_sea and saga is not None:
         return fleet.weight(saga, sides(entry), side)
+    if entry.siege_id:
+        # An escalade: the garrison's Garrison row, for it, against the
+        # besiegers (Lords of Men p. 115).
+        return entry.siege_weight if side == 1 else -entry.siege_weight
     mine, theirs = sides(entry)[side], sides(entry)[1 - side]
     return battle.weight_of_numbers(mine.groups, theirs.groups)
 
 
 def territorial(entry: Battle, side: int = 0) -> int:
+    if entry.siege_id:
+        # The castle's Defense Bonus stands for Territorial Advantage, the
+        # garrison's (p. 115).
+        return entry.siege_defense if side == 1 else -entry.siege_defense
     mine, theirs = sides(entry)[side], sides(entry)[1 - side]
     return battle.territorial_advantage(mine.deployment, theirs.deployment)
 
@@ -118,11 +129,45 @@ def baggage_short(entry: Battle, side: int = 0) -> int:
     return max(0, battle.baggage_needed(mine.groups) - mine.baggage)
 
 
-def routed(entry: Battle) -> int | None:
-    """The side whose army routed, which ends the battle (None: none has)."""
+#: An army's spirit: steady, disordered by a first failed rally, routed by
+#: a second (Lords of Men pp. 106, 134-135).
+STEADY, DISORDERED, ROUTED = "steady", "disordered", "routed"
+_SPIRIT = (STEADY, DISORDERED, ROUTED)
+#: A player character's rally: Presence + Leadership + stress die (p. 135).
+PC_RALLY_EASE = 9
+
+
+def rally_held(event: BattleEvent) -> bool:
+    """Whether a player character's rally at the event succeeded."""
+    if not event.rally_by:
+        return False
+    if event.rally_story:
+        return event.rally_story == "won"
+    return event.rally_roll is not None and event.rally_roll >= PC_RALLY_EASE
+
+
+def spirits(entry: Battle) -> list[str]:
+    """Each army's spirit after the events so far: a failed rally of its
+    commander steps it down (steady to disordered, disordered to routed),
+    a player character's rally steps it up, one step at a time (pp. 106,
+    135)."""
+    found = [0, 0]
     for event in entry.events:
+        if event.rally_by and rally_held(event):
+            side = event.rally_side
+            found[side] = max(0, found[side] - 1)
         if battle.morale_result(event.morale, event.rally) == battle.ROUTS:
-            return 1 - event.side if event.won else event.side
+            losing = 1 - event.side if event.won else event.side
+            found[losing] = min(2, found[losing] + 1)
+    return [_SPIRIT[n] for n in found]
+
+
+def routed(entry: Battle) -> int | None:
+    """The side whose army routed, which ends the battle (None: none has):
+    a first failed rally only disorders it (p. 106)."""
+    for side, spirit in enumerate(spirits(entry)):
+        if spirit == ROUTED:
+            return side
     return None
 
 
@@ -137,7 +182,7 @@ def morale_text(event: BattleEvent) -> str:
         f"(against {battle.RALLY_EASE})",
         battle.RALLIES: f"Morale {event.morale} fails; rallied ({event.rally})",
         battle.ROUTS: f"Morale {event.morale} fails; the rally ({event.rally}) "
-        "fails too: the army routs, and the battle is over",
+        "fails too: the army is disordered, or routs if it was already",
     }
     return words[result]
 
@@ -233,6 +278,19 @@ def fields(
         DialogField("place", "Where", "text", e.place, placeholder="e.g. by the Lippe"),
         DialogField("season", "Season", "select", e.season, options=pairs(SEASONS)),
         DialogField("year", "Year", "int", e.year),
+        DialogField(
+            "chevauchee_on",
+            "Chevauchee on",
+            "select",
+            e.chevauchee_on or None,
+            options=[(escape(c.name), c.id) for c in saga.covenants],
+            allow_blank=True,
+            placeholder="(no covenant's land)",
+            hint="The covenant whose land an army ravaged: those who return "
+            "to it from the campaign take -2 on their next Aging roll; in "
+            "extreme cases the land may take an Infernal aura, the "
+            "storyguide's (Lords of Men p. 103).",
+        ),
     ]
     for index, label in enumerate(("First army", "Second army")):
         side = sides(e)[index]
@@ -297,6 +355,7 @@ def _write(saga: Saga, entry: Battle, values: dict[str, Any]) -> None:
     entry.place = values.get("place") or ""
     entry.season = values.get("season") or entry.season
     entry.year = int(values.get("year") or entry.year)
+    entry.chevauchee_on = values.get("chevauchee_on") or ""
     for index in range(2):
         side = sides(entry)[index]
         linked = str(values.get(f"army_{index}") or "")
@@ -418,14 +477,35 @@ def info(saga: Saga, entry: Battle) -> str:
             f"{'won' if event.won else 'lost'}"
             + (f", {event.losses} groups lost" if event.losses else "")
             + (f"; {escape(morale_text(event))}" if morale_text(event) else "")
+            + (
+                f"; rallied by {escape(_name(saga, event.rally_by))}"
+                + ("" if rally_held(event) else ", in vain")
+                if event.rally_by
+                else ""
+            )
             + "."
         )
+    for side, spirit in enumerate(spirits(entry)):
+        if spirit != STEADY:
+            lines.append(
+                f"{escape(side_name(saga, entry, side))}'s army is {spirit}"
+                + (
+                    ": a player character may rally it at the next event."
+                    if spirit == DISORDERED
+                    else ": the battle is over."
+                )
+            )
     lines.append(
         f"[dim]{battle.SOURCE}"
         + (f"; at sea, {fleet_rules.SOURCE}" if entry.at_sea else "")
         + ".[/]"
     )
     return "\n".join(lines)
+
+
+def _name(saga: Saga, character_id: str) -> str:
+    who = saga.character(character_id)
+    return who.name if who else "(gone)"
 
 
 def info_for(saga: Saga, neighbour: Neighbour, index: int) -> str:
@@ -458,10 +538,14 @@ def event_of(saga: Saga, entry: Battle, values: dict[str, Any]) -> battle.Event 
 
 
 def event_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
-    """The Event Total so far; at sea, the ships engaged first."""
+    """The Event Total so far; at sea, the ships engaged first; with a
+    fight played for it, what the fight says."""
     total = _event_total_live(saga, entry, values)
     if entry.at_sea:
         return fleet.event_live(saga, sides(entry), values) + "\n" + total
+    playing = bf.pending(saga, entry)
+    if playing is not None:
+        return total + "\n" + escape(bf.proposal_text(saga, playing))
     return total
 
 
@@ -487,12 +571,20 @@ def _event_total_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
 
 def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
     at_sea = fleet.event_fields(saga, entry, sides(entry)) if entry.at_sea else []
+    playing = bf.pending(saga, entry)
+    kept = dict(playing.battle_event) if playing is not None else {}
+
+    def was(key: str, default: Any) -> Any:
+        return kept.get(key, default)
+
+    won = bf.proposal(saga, playing).won if playing is not None else None
+    on_land = [] if entry.at_sea else _fight_fields(playing, won)
     return at_sea + [
         DialogField(
             "who",
             "Leading the event",
             "select",
-            saga.characters[0].id if saga.characters else None,
+            was("who", saga.characters[0].id if saga.characters else None),
             options=[(escape(c.name), c.id) for c in saga.characters],
             required=True,
             hint="The player character at its heart: Stamina + Leadership.",
@@ -501,7 +593,7 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "side",
             "Fighting for",
             "select",
-            "0",
+            was("side", "0"),
             options=[(escape(side_name(saga, entry, i)), str(i)) for i in range(2)],
             required=True,
         ),
@@ -509,7 +601,7 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "maneuver",
             "Maneuver",
             "select",
-            "Defend",
+            was("maneuver", "Defend"),
             options=[(f"{name} (+{n})", name) for name, n in battle.MANEUVERS.items()],
             required=True,
         ),
@@ -517,7 +609,7 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "enemy",
             "Enemy",
             "select",
-            "Standard",
+            was("enemy", "Standard"),
             options=[(f"{name} (+{n})", name) for name, n in battle.ENEMIES.items()],
             required=True,
         ),
@@ -525,18 +617,26 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             "size",
             "Size",
             "select",
-            "Even",
+            was("size", "Even"),
             options=[(f"{name} (+{n})", name) for name, n in battle.SIZES.items()],
             required=True,
         ),
-        DialogField("initiative", "Give up the initiative (+1)", "check", False),
+        DialogField(
+            "initiative",
+            "Give up the initiative (+1)",
+            "check",
+            bool(was("initiative", False)),
+        ),
+        *on_land,
+        *_rally_fields(saga, entry),
         DialogField(
             "result",
             "How it went",
             "select",
-            "won",
+            "won" if won is not False else "lost",
             options=pairs(("won", "lost")),
             required=True,
+            show_if=lambda _v: entry.at_sea,
             hint="Play the event out as a combat; then say who won it.",
         ),
         DialogField(
@@ -559,6 +659,195 @@ def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
     ]
 
 
+def _rally_fields(saga: Saga, entry: Battle) -> list[DialogField]:
+    """A player character's rally of a disordered army, offered while one
+    is (Lords of Men pp. 106, 135)."""
+    failing = [i for i, s in enumerate(spirits(entry)) if s == DISORDERED]
+    if not failing:
+        return []
+
+    def rallied(values: dict[str, Any]) -> bool:
+        return bool(values.get("rally_by"))
+
+    return [
+        DialogField(
+            "rally_by",
+            "A rally by",
+            "select",
+            None,
+            options=[(escape(c.name), c.id) for c in saga.characters],
+            allow_blank=True,
+            placeholder="(no one)",
+            hint="A player character takes command of the disordered army: "
+            f"{escape(side_name(saga, entry, failing[0]))}'s.",
+        ),
+        DialogField(
+            "rally_way",
+            "The rally is",
+            "select",
+            "roll",
+            options=[
+                ("A roll: Presence + Leadership + stress die against 9", "roll"),
+                ("A story event played for it", "story"),
+            ],
+            show_if=rallied,
+        ),
+        DialogField(
+            "rally_roll",
+            "His roll",
+            "optint",
+            None,
+            show_if=lambda v: rallied(v) and v.get("rally_way") != "story",
+        ),
+        DialogField(
+            "rally_story",
+            "The story",
+            "select",
+            "won",
+            options=pairs(("won", "lost")),
+            show_if=lambda v: rallied(v) and v.get("rally_way") == "story",
+        ),
+    ]
+
+
+def condition_key(maneuver: str) -> str:
+    """The form's key for a Maneuver's "How it went" ("condition_Run_the_
+    Gauntlet"): a field's key becomes a widget id, which takes no spaces."""
+    return "condition_" + "".join(c if c.isalnum() else "_" for c in maneuver)
+
+
+def _fight_fields(playing: Fight | None, won: bool | None) -> list[DialogField]:
+    """Playing the event out as a fight (battle_fights): the leader's own
+    group and the enemy's troops, and each Maneuver's ways to win."""
+    found: list[DialogField] = []
+    if playing is None:
+        found += [
+            DialogField(
+                "play_fight",
+                "Play it out as a fight",
+                "check",
+                False,
+                hint="Makes a fight on Conflicts from the Maneuver, Enemy and "
+                "Size: the leader and his group against the enemy's groups "
+                "from the Standard Combat Groups (Lords of Men pp. 105-108). "
+                "Play it, then come back to record the event.",
+            ),
+            DialogField(
+                "company",
+                "His company is one group",
+                "check",
+                False,
+                show_if=lambda v: bool(v.get("play_fight")),
+                hint="A Knight Banneret's or Mercenary Captain's company stays "
+                "one group whatever the Weight of Numbers (Lords of Men p. "
+                "104); ticked for him by the Virtue.",
+            ),
+            DialogField(
+                "own_troop",
+                "His group",
+                "select",
+                bf.own_troop_options()[4][1],
+                options=bf.own_troop_options(),
+                show_if=lambda v: bool(v.get("play_fight")),
+            ),
+        ]
+        for enemy in battle.ENEMIES:
+            options = bf.enemy_troop_options(enemy)
+            if not options:
+                continue
+            found.append(
+                DialogField(
+                    f"enemy_troop_{enemy}",
+                    "Their troops",
+                    "select",
+                    options[0][1],
+                    options=options,
+                    show_if=lambda v, enemy=enemy: (
+                        bool(v.get("play_fight")) and v.get("enemy") == enemy
+                    ),
+                )
+            )
+    for maneuver, conditions in bf.WIN_CONDITIONS.items():
+        # A finished fight proposes the Maneuver's first win, or first loss.
+        first = next(
+            (key for key, _w, wins in conditions if won is None or wins == won),
+            conditions[0][0],
+        )
+        found.append(
+            DialogField(
+                condition_key(maneuver),
+                "How it went",
+                "select",
+                first,
+                options=[(words, key) for key, words, _won in conditions],
+                show_if=lambda v, maneuver=maneuver: (
+                    not v.get("play_fight") and v.get("maneuver") == maneuver
+                ),
+                hint="How the Maneuver is won or lost (Lords of Men pp. 106-108).",
+            )
+        )
+    return found
+
+
+def _make_fight(
+    saga: Saga, entry: Battle, values: dict[str, Any], event: battle.Event
+) -> list[str]:
+    """The event's fight, made and left on Conflicts to play."""
+    side = int(values.get("side") or 0)
+    who = saga.character(values.get("who"))
+    weapon = next(
+        (i.id for i in (who.inventory if who else []) if i.kind == "weapon"), ""
+    )
+    enemy_row = values.get(f"enemy_troop_{event.enemy}")
+    made = bf.Template(
+        who=values.get("who") or "",
+        weapon_id=weapon,
+        side_name=side_name(saga, entry, side),
+        enemy_name=side_name(saga, entry, 1 - side),
+        enemy=event.enemy,
+        size=event.size,
+        weight=event.weight,
+        own_row=int(values.get("own_troop") or 0),
+        enemy_row=int(enemy_row) if enemy_row is not None else None,
+        company=bool(values.get("company"))
+        or bf.leads_a_company(saga, values.get("who") or ""),
+    )
+    fight = bf.fight_for(saga, entry, len(entry.events), made)
+    fight.battle_event = bf.template_values(values)
+    if rule_options.is_on(saga, rule_options.MORALE_DISCIPLINE):
+        # An army disordered or routed fights its event so (p. 106).
+        spirit = spirits(entry)
+        for fight_side, army in ((0, side), (1, 1 - side)):
+            if spirit[army] != STEADY:
+                fight_morale.disorder_army(fight, fight_side, spirit[army])
+    saga.fights.append(fight)
+    special = (
+        " A Special enemy is the storyguide's: add it with Add Combatant."
+        if event.enemy == "Special"
+        else ""
+    )
+    return [
+        f"The fight {fight.name} is on Conflicts: play it (five rounds, unless "
+        f"the event says otherwise), then Battle Event again records it.{special}"
+    ]
+
+
+def _escalade_problem(entry: Battle, values: dict[str, Any]) -> str | None:
+    if entry.siege_id and values.get("enemy") == "Baggage":
+        return "In an escalade the besiegers can't strike the baggage (p. 115)."
+    return None
+
+
+def _escalade_won(saga: Saga, entry: Battle, besiegers_won: bool) -> list[str]:
+    """An escalade battle's event: a besiegers' win takes the Garrison a
+    step down from the next siege event (p. 115)."""
+    siege = next((s for s in saga.sieges if s.id == entry.siege_id), None)
+    if siege is None or not besiegers_won:
+        return []
+    siege.garrison = siege_rules.step_down(siege.garrison)
+    return [f"The garrison falls to {siege.garrison} combat groups."]
+
+
 def event_form(saga: Saga, entry: Battle | None) -> Command:
     """Battle Event on a battle: the next event's focal character, the
     side they fight on, its Maneuver, Enemy and Size, its Event Total, and
@@ -577,16 +866,32 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         return Refuse("Battle Event", f"The battle is over: {escape(entry.ended)}")
     stage = len(entry.events)
 
-    def apply(values: dict[str, Any]) -> None:
+    def apply(values: dict[str, Any]) -> list[str] | None:
         event = event_of(saga, entry, values)
         assert event is not None
+        if values.get("play_fight") and not entry.at_sea:
+            return _make_fight(saga, entry, values, event)
         side = int(values.get("side") or 0)
-        won = values.get("result") == "won"
+        condition = str(values.get(condition_key(event.maneuver)) or "")
+        by_condition = bf.condition_won(event.maneuver, condition)
+        won = (
+            by_condition
+            if by_condition is not None and not entry.at_sea
+            else values.get("result") == "won"
+        )
         mine = event.weight
+        # Attrition: the event's Size times the winner's Weight of Numbers
+        # (p. 106), on top of the groups the fight itself cost.
         lost = battle.losses(event.size, mine if won else -mine)
+        playing = bf.pending(saga, entry)
+        if playing is not None:
+            found = bf.proposal(saga, playing)
+            lost += found.lost_theirs if won else found.lost_ours
         losing = 1 - side if won else side
         loser = sides(entry)[losing]
         take_losses(loser, event.enemy, lost)
+        if entry.siege_id:
+            _escalade_won(saga, entry, losing == 1)
         who = saga.character(values["who"])
         name = who.name if who else "someone"
         record = BattleEvent(
@@ -602,6 +907,17 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
             values.get("morale"),
             values.get("rally"),
         )
+        record.win_condition = condition
+        if playing is not None:
+            record.fight_id = playing.id
+        if values.get("rally_by"):
+            failing = [i for i, s in enumerate(spirits(entry)) if s == DISORDERED]
+            record.rally_by = str(values["rally_by"])
+            record.rally_side = failing[0] if failing else side
+            if values.get("rally_way") == "story":
+                record.rally_story = str(values.get("rally_story") or "won")
+            else:
+                record.rally_roll = values.get("rally_roll")
         if entry.at_sea:
             record.deed = str(values.get("deed") or fleet_rules.FLEET_EVENT_DEFAULT)
             record.engaged_ships = fleet.engaged_ids(saga, sides(entry), values)
@@ -635,6 +951,7 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         if event.enemy == "Baggage" and who is not None:
             # Attacking the baggage earns 1 xp toward a bad Reputation (p. 106).
             confidence.deed_toward(who, BAGGAGE_REPUTATION, 1, bad=True)
+        return None
 
     return Form(
         f"Battle Event {stage + 1}"
@@ -644,6 +961,8 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         apply,
         validate=(lambda values: fleet.event_problem(sides(entry), values))
         if entry.at_sea
+        else (lambda values: _escalade_problem(entry, values))
+        if entry.siege_id
         else None,
         live=lambda values: event_live(saga, entry, values),
         save_label="Record",

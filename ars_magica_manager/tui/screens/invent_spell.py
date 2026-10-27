@@ -83,6 +83,10 @@ _WIDGET_OF: dict[str, str] = {
     "requisites": "inv-requisites",
     "base_level": "inv-base",
     "ritual": "inv-ritual",
+    "lasting": "inv-lasting",
+    "attunement": "inv-attunement",
+    "recreating_theory": "inv-recreating",
+    "project_stage": "inv-stage",
     **{kind: f"inv-{kind}" for kind in KINDS},
     **{f"{kind}_name": f"inv-{kind}-name" for kind in KINDS},
     **{f"{kind}_steps": f"inv-{kind}-steps" for kind in KINDS},
@@ -496,6 +500,13 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 id="inv-ritual",
                 compact=True,
             )
+            yield Label(" Lasting")
+            yield Checkbox(
+                "",
+                value=bool(design and design.lasting),
+                id="inv-lasting",
+                compact=True,
+            )
         with Horizontal(classes="inv-row"):
             for kind in KINDS:
                 yield Label(("" if kind == "range" else " ") + kind.title())
@@ -672,6 +683,16 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             )
             yield Label(" Shape & material")
             yield _number(str(plan.shape_bonus) if plan else "0", "inv-shape")
+            attunements = self._spec_options("attunement")
+            if attunements:
+                yield Label(" Attune to")
+                yield Select(
+                    attunements,
+                    value=self._spec_value("attunement"),
+                    prompt="(none this season)",
+                    id="inv-attunement",
+                    compact=True,
+                )
         with Horizontal(classes="inv-row", id="inv-effect-row"):
             yield Label("Effect")
             yield Select(
@@ -826,12 +847,22 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             )
             if lab_seasons.has_focus(self.magus):
                 yield Label(" Magical Focus")
-                yield Checkbox(
-                    "",
-                    value=bool(plan and plan.focus),
-                    id="inv-focus",
-                    compact=True,
-                )
+                focus = self._spec_options("focus")
+                if focus:
+                    yield Select(
+                        focus,
+                        value=self._spec_value("focus"),
+                        allow_blank=False,
+                        id="inv-focus",
+                        compact=True,
+                    )
+                else:
+                    yield Checkbox(
+                        "",
+                        value=bool(plan and plan.focus),
+                        id="inv-focus",
+                        compact=True,
+                    )
             if lab_seasons.theory_specialty(self.magus):
                 yield Label(
                     f" Magic Theory ({escape(lab_seasons.theory_specialty(self.magus))})"
@@ -850,6 +881,21 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 " (10 cost nothing, 11-20 lower the Lab Total, more rule it out)   Other"
             )
             yield _number(str(plan.other_modifier) if plan else "0", "inv-other")
+            yield Label(" Recreating (Magic Theory then)")
+            yield _number(
+                str(plan.recreating_theory) if plan else "0", "inv-recreating"
+            )
+        stages = self._spec_options("project_stage")
+        if stages:
+            with Horizontal(classes="inv-row"):
+                yield Label("Spent on a project's stage")
+                yield Select(
+                    stages,
+                    value=self._spec_value("project_stage"),
+                    prompt="(none)",
+                    id="inv-stage",
+                    compact=True,
+                )
         with Horizontal(classes="inv-row"):
             yield Label("Notes")
             yield Input(plan.details if plan else "", id="inv-notes", compact=True)
@@ -921,6 +967,19 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-scroll").styles.max_height = max(self.size.height - 6, 8)
 
     # -- reading the form ------------------------------------------------------
+
+    def _spec(self, key: str) -> DialogField | None:
+        return next((f for f in self._fields if f.key == key), None)
+
+    def _spec_options(self, key: str) -> list[tuple[str, str]]:
+        """A core field's choices, when the core form offers it as one."""
+        spec = self._spec(key)
+        return list(spec.options) if spec is not None and spec.kind == "select" else []
+
+    def _spec_value(self, key: str) -> object:
+        spec = self._spec(key)
+        value = spec.value if spec is not None else None
+        return value if isinstance(value, str) and value else Select.NULL
 
     def _select(self, selector: str) -> str | None:
         value = self.query_one(selector, Select).value
@@ -1319,6 +1378,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
             "" if not design or design.base_level is None else str(design.base_level)
         )
         self.query_one("#inv-ritual", Checkbox).value = bool(design and design.ritual)
+        self.query_one("#inv-lasting", Checkbox).value = bool(design and design.lasting)
         for kind in KINDS:
             current = getattr(design, kind) if design else lpf.FIRST_STEPS[kind]
             chosen, other_name = self.form.parameter_choice(kind, current)

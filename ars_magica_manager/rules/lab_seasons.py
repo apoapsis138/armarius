@@ -29,10 +29,11 @@ One-season lab work:
 
 from __future__ import annotations
 
-from collections.abc import Callable, MutableMapping
+from collections.abc import Callable, MutableMapping, Sequence
 from dataclasses import dataclass, field
 
 from .. import catalog, vis
+from ..arts import FORMS, TECHNIQUES
 from ..models import (
     SEASONS,
     SUPERNATURAL_CATEGORIES,
@@ -610,7 +611,15 @@ def _spell_work(
             others_text=text is not None and text.author_id != magus.id,
             hermetic_text=text is not None and hybrid.hermetic_source(saga, text),
         )
-        return _with_options(magus, plan, technique, form, total, saga)
+        return _with_options(
+            magus,
+            plan,
+            technique,
+            form,
+            total,
+            saga,
+            [learned.technique, learned.form, *learned.requisites],
+        )
 
     total = spell_total(spell)
     if lab.distraction_penalty(max(0, plan.days_away)) is None:
@@ -1392,6 +1401,10 @@ def project_points_key(saga: Saga, key: str) -> int:
     return next((p.points for p in saga.lab_projects if p.spell_id == key), 0)
 
 
+RECREATING_SOURCE = (
+    "Ars Magica Definitive Edition, Arcane Experimentation, Extraordinary "
+    "Results, p. 274"
+)
 FOCUS_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 4: Virtues and Flaws, Major Magical Focus, "
     "p. 94"
@@ -1401,6 +1414,40 @@ FOCUS_SOURCE = (
 def has_focus(magus: Character) -> bool:
     """Whether the magus has a Magical Focus (Major or Minor)."""
     return any("magical_focus" in vf.vf_id for vf in magus.virtues_flaws)
+
+
+#: A Magical Focus's parameter naming the Techniques and Forms it spans.
+FOCUS_ARTS = "arts"
+
+
+def focus_arts(magus: Character) -> frozenset[str]:
+    """The Arts the magus's Magical Focus records it spans (none recorded:
+    whether it applies is ticked on each plan)."""
+    for vf in magus.virtues_flaws:
+        if "magical_focus" in vf.vf_id:
+            raw = str(vf.params.get(FOCUS_ARTS) or "")
+            return frozenset(a.strip().title() for a in raw.split(",") if a.strip())
+    return frozenset()
+
+
+def in_focus(
+    magus: Character, technique: str, form: str, requisites: Sequence[str] = ()
+) -> bool:
+    """Whether work with `technique` and `form` (and `requisites`) falls in
+    the focus by its Arts: a Technique of the work's among those it names
+    (any, if none), and a Form of the work's among those it names (any, if
+    none). A requisite counts: the lowest applicable score may be a
+    requisite's (DE p. 94). A focus narrower than its Arts (birds, within
+    Animal) is the troupe's to untick."""
+    arts = focus_arts(magus)
+    if not arts:
+        return False
+    techniques = arts & set(TECHNIQUES)
+    forms = arts & set(FORMS)
+    work = {technique, form, *requisites}
+    return (not techniques or bool(work & techniques)) and (
+        not forms or bool(work & forms)
+    )
 
 
 def theory_specialty(magus: Character) -> str:
@@ -1416,14 +1463,19 @@ def _with_options(
     form: str,
     total: lab.LabTotal,
     saga: Saga | None = None,
+    requisites: Sequence[str] = (),
 ) -> lab.LabTotal:
-    """The Lab Total with the plan's options: a Magical Focus counts the
+    """The Lab Total with the plan's options (`requisites`: the work's own
+    Arts besides `technique` and `form`, for its Magical Focus): a Magical Focus counts the
     lower Art twice, a Magic Theory Specialty that applies adds 1, any
     other modifier the troupe allows, and the Virtues and Flaws of
     rules.lab_virtues (Potent Magic, a Laboratory Horoscope... and the
     halvings, last)."""
     extra: list[Line] = []
-    if plan.focus and has_focus(magus):
+    focused = plan.focus or (
+        plan.focus_by_arts and in_focus(magus, technique, form, requisites)
+    )
+    if focused and has_focus(magus):
         lower = min(
             sum(lab.art_score(magus, technique)), sum(lab.art_score(magus, form))
         )
@@ -1444,6 +1496,14 @@ def _with_options(
                 "Chthonic Magic for Magic Theory",
                 amount=more,
                 source=hybrid.CHTHONIC_SOURCE,
+            )
+        )
+    if plan.recreating_theory:
+        extra.append(
+            Line(
+                "Recreating a flawed experiment (Magic Theory again)",
+                amount=plan.recreating_theory,
+                source=RECREATING_SOURCE,
             )
         )
     if plan.other_modifier:

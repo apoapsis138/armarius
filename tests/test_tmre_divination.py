@@ -390,3 +390,17 @@ def test_a_periapt_horoscope_counts_charges_and_a_favorable_hour_its_time():
     hour = fields | {"what": forms.HOUR, "bonus": 2}
     said = forms.apply_astrology(saga, star, hour, Faces(5, 2, 3))[0]
     assert "+2 to spells" in said and "hour 6 after midnight" in said
+
+
+def test_the_question_fills_the_ceremonial_bonus_and_no_method_offers_the_table():
+    """TMRE p. 61: each method's uses and their bonus."""
+    saga = _saga(_augur(method="Aeromancy"))
+    fields = {f.key: f for f in forms.divination_fields(saga, saga.characters[0])}
+    question = fields[forms.QUESTION_KEY + "aeromancy"]
+    assert question.fills is not None
+    values = {"method": "Aeromancy", question.key: "5:weather"}
+    assert question.fills(values) == {"ceremonial": 5}
+    assert question.fills({**values, question.key: forms.OTHER_QUESTION}) == {}
+    unnamed = _augur(method="")
+    fields = {f.key: f for f in forms.divination_fields(_saga(unnamed), unnamed)}
+    assert len(fields["method"].options) == len(td.METHODS)

@@ -343,3 +343,19 @@ def test_the_season_form_asks_for_the_formula_and_its_level():
     assert season_forms._supplement_level("research_formula", {"formula_level": 5}) == 5
     found = season_forms._supplement_plan_values(martin, "produce_remedies", values)
     assert (found["other_modifier"], found["extra_vis"]) == (4, 0)
+
+
+def test_a_theriac_without_a_store_of_his_own_draws_on_the_covenant_s_apothecary():
+    """A&A pp. 65, 71: the ingredients' Labor Points come off the store."""
+    from ars_magica_manager.models import Ability, Character, Saga
+    from ars_magica_manager.rules.season_work import academe
+    from ars_magica_manager.rules.season_work.base import SupplementWork
+    from ars_magica_manager.rules.xp import ability_xp
+
+    maker = Character(id="m", name="Galen", type="companion", covenant_id="c")
+    keeper = Character(id="k", name="Herba", type="companion", covenant_id="c")
+    keeper.abilities = [Ability("Profession: Apothecary", xp=ability_xp(3))]
+    saga = Saga(id="s", name="S", characters=[maker, keeper])
+    result = SupplementWork()
+    academe._ingredients(saga, maker, "theriac", 10, 2, result)
+    assert result.labor_from == [("k", 4)] and result.labor_points == 0

@@ -102,6 +102,13 @@ class Creature:
     #: Faerie pp. 40, 140-142); only a Faerie creature has them.
     faerie_role: str = ""
     faerie_story: str = ""
+    #: A vampire (a faerie, Against the Dark pp. 115-117): the precautions
+    #: that alone stop it forming (all must be met), the limitations it
+    #: obeys, and the one way that kills it for good, each chosen from the
+    #: book's lists (one to three, one to three, and one); "" when none.
+    vampire_precautions: str = ""
+    vampire_limitations: str = ""
+    vampire_death: str = ""
     characteristics: Characteristics = field(default_factory=Characteristics)
     #: Animal intelligence: its Intelligence is a Cunning score (Cun).
     cunning: bool = False

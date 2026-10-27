@@ -312,13 +312,24 @@ def test_a_botched_apprentice_search_dupes_the_magus():
 def test_a_momentary_creo_spell_is_reminded_of_the_ritual():
     design = spell_levels.spell_level(5, "Touch", "Momentary", "Individual")
     assert design is not None and spell_levels.MOMENTARY_CREO not in design.notes
-    creo = spell_levels.spell_level(
+    # A flame gone at once, as Pilum of Fire, needs no Ritual (DE p. 344).
+    bolt = spell_levels.spell_level(
         5, "Touch", "Momentary", "Individual", technique="Creo"
+    )
+    assert bolt is not None and spell_levels.MOMENTARY_CREO not in bolt.notes
+    creo = spell_levels.spell_level(
+        5, "Touch", "Momentary", "Individual", technique="Creo", lasting=True
     )
     assert creo is not None and spell_levels.MOMENTARY_CREO in creo.notes
     assert not creo.ritual_required
     ritual = spell_levels.spell_level(
-        5, "Touch", "Momentary", "Individual", technique="Creo", ritual=True
+        5,
+        "Touch",
+        "Momentary",
+        "Individual",
+        technique="Creo",
+        ritual=True,
+        lasting=True,
     )
     assert ritual is not None and spell_levels.MOMENTARY_CREO not in ritual.notes
 

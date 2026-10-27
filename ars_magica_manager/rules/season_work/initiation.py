@@ -17,7 +17,7 @@ from __future__ import annotations
 
 import random
 
-from ... import catalog
+from ... import catalog, vis
 from ...models import (
     Character,
     InitiationScript,
@@ -412,10 +412,30 @@ def _ordeal_problem(character: Character, plan: SeasonPlan) -> str:
     return ""
 
 
+def _sacrifice_short(saga: Saga, character: Character, plan: SeasonPlan) -> str:
+    """A vis sacrifice the season's pool can't pay: the component is
+    invalid, and an invalid component invalidates the whole Script (The
+    Mysteries Revised Edition p. 16)."""
+    if plan.sacrifice.partition(":")[0] != "vis" or not plan.sacrifice_pawns:
+        return ""
+    art = plan.sacrifice_art
+    held = vis.season_pool(saga, character, plan).get(art.lower(), 0) if art else 0
+    if held >= plan.sacrifice_pawns:
+        return ""
+    return (
+        f"The Script sacrifices {plan.sacrifice_pawns} pawns of "
+        f"{art or 'vis'}, and {vis.payer(character, plan)} raw vis holds "
+        f"{held}: a Sacrifice not made invalidates the whole Script (The "
+        "Mysteries Revised Edition p. 16)."
+    )
+
+
 def _initiation_problems(
     saga: Saga, character: Character, plan: SeasonPlan
 ) -> list[str]:
-    found = _initiation_problem(saga, character, plan)
+    found = _initiation_problem(saga, character, plan) or _sacrifice_short(
+        saga, character, plan
+    )
     return [found] if found else []
 
 
@@ -433,6 +453,7 @@ def _undergo_initiation(
     trait, name, lore, script = _initiation_terms(mystagogue, plan, character)
     result.notes += _script_notes(character, plan)
     result.notes += _later_lore_warning(character, plan)
+    result.notes += _repeated_quest_warning(character, plan)
     beast = _bjornaer_terms(character, mystagogue, plan, name, result)
     beast = beast or _criamon_terms(character, mystagogue, plan, name, result)
     lore = beast[1] if beast is not None else lore
@@ -489,6 +510,7 @@ def _undergo_initiation(
         # The rite was carried out: its sacrifice is made, whatever came of it.
         if plan.sacrifice:
             result.sacrifice = plan.sacrifice
+        result.quests = quests_of(plan)
     if initiated and plan.effect_id:
         _house_hubris(character, plan.effect_id, result)
         _merinita_ordeal(plan, result)
@@ -541,6 +563,38 @@ def _suffer_ordeal(
         result.remove_vfs.append(lost)
     result.ordeal = size
     _criamon_outcome(character, plan, result, initiated=initiated)
+
+
+#: The Script components that are Quests.
+QUEST_KEYS = ("quest", "unique_quest")
+QUESTS_SOURCE = "Legends of Hermes, Multiple or Overlapping Scripts, pp. 50-51"
+
+
+def quests_of(plan: SeasonPlan) -> list[str]:
+    """The Quests a Script written out as components names."""
+    return [
+        p.note.strip()
+        for p in plan.script_components
+        if p.key in QUEST_KEYS and p.note.strip()
+    ]
+
+
+def _repeated_quest_warning(initiate: Character, plan: SeasonPlan) -> list[str]:
+    """A Quest the Initiate has already performed: the Script must be
+    changed first, its subject modified (Intelligence + Cult Lore against
+    12) or the Quest replaced (against 15)."""
+    done = {q.casefold() for q in initiate.quests}
+    repeated = [q for q in quests_of(plan) if q.casefold() in done]
+    if not repeated:
+        return []
+    return [
+        f"{initiate.name} has already performed the Quest "
+        + ", ".join(f"'{q}'" for q in repeated)
+        + ": it gives the Script nothing, since a Quest counts toward one "
+        "Initiation only. Change the Script first, modifying its subject "
+        "(Intelligence + Cult Lore against 12) or replacing it (against 15), "
+        f"the troupe deciding whether a change is enough ({QUESTS_SOURCE})."
+    ]
 
 
 def _later_lore_warning(initiate: Character, plan: SeasonPlan) -> list[str]:
@@ -705,7 +759,24 @@ def script_lines(initiate: Character, plan: SeasonPlan) -> list[Line]:
     whole Script."""
     if not plan.script_components or plan.hedge_script:
         return []
-    lines = mysteries.parts_lines(plan.script_components, components_for(initiate))
+    # A Quest counts toward one Initiation only: one already performed gives
+    # nothing (The Mysteries Revised Edition p. 16).
+    done = {q.casefold() for q in initiate.quests}
+    repeated = [
+        p
+        for p in plan.script_components
+        if p.key in QUEST_KEYS and p.note.strip().casefold() in done
+    ]
+    parts = [p for p in plan.script_components if p not in repeated]
+    lines = mysteries.parts_lines(parts, components_for(initiate))
+    lines += [
+        Line(
+            f"Quest '{p.note.strip()}' already performed: no bonus",
+            amount=0,
+            source=QUESTS_SOURCE,
+        )
+        for p in repeated
+    ]
     size = ordeal_size(plan)
     if not size and verditius.gives_hubris(initiate, plan.effect_id or ""):
         component = mysteries.ORDEAL_COMPONENTS["Minor"]
@@ -733,17 +804,39 @@ def script_lines(initiate: Character, plan: SeasonPlan) -> list[Line]:
     return lines
 
 
+def hubris_bonus(initiate: Character, plan: SeasonPlan) -> int:
+    """A Verditius's first Inner Mystery always brings the Hubris Flaw, a
+    Minor Ordeal worth +3 to the Script (Houses of Hermes: Mystery Cults
+    pp. 117-118): added to a typed bonus or a catalog Script, which can't
+    know of it. A Script written as components counts it there instead
+    (script_lines); a plan naming its own Ordeal counts that."""
+    if plan.script_components and not plan.hedge_script:
+        return 0
+    if ordeal_size(plan) or not verditius.gives_hubris(initiate, plan.effect_id or ""):
+        return 0
+    return mysteries.ORDEAL_COMPONENTS["Minor"].bonus
+
+
 def _script_notes(initiate: Character, plan: SeasonPlan) -> list[str]:
     """The Script's components as a note: the plan's own, or a catalog
     Script's printed ones, and a confraternity's path."""
+    hubris = hubris_bonus(initiate, plan)
+    said = (
+        [f"The Hubris Ordeal of a first Inner Mystery adds +{hubris} (HoH:MC p. 117)."]
+        if hubris
+        else []
+    )
     hedge = ts.hedge_script(plan.hedge_script)
     if hedge is not None:
         _, script = hedge
         found = [
             mysteries.printed_components_note(script.components, script.bonus),
             verditius.confraternity_note(script.name),
+            *said,
         ]
         return [note for note in found if note]
+    if said:
+        return said
     lines = script_lines(initiate, plan)
     if not lines:
         return []
@@ -768,7 +861,7 @@ def _initiation_terms(
             "Presence",
             name,
             _hermetic_lore(mystagogue, name),
-            int(listed) + plan.other_modifier,
+            int(listed) + plan.other_modifier + hubris_bonus(initiate, plan),
         )
     tradition, script = hedge
     rule = tradition.initiation
@@ -779,6 +872,7 @@ def _initiation_terms(
         _hedge_lore(mystagogue, rule.lore),
         script.bonus
         + plan.other_modifier
+        + hubris_bonus(initiate, plan)
         + bjornaer.script_extra(initiate, plan.hedge_script)
         + criamon.script_extra(initiate, plan.hedge_script),
     )

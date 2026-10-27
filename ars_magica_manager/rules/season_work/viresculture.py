@@ -132,6 +132,7 @@ def _invigorate(
     for name, level in stirpes:
         pawns = vc.pawns_per_breeding(level)
         result.progress.append((vc.INVIGORATED, name, 0, seasons))
+        result.stirpes.append((name, plan.form, level))
         vitalized = progress_of(character, vc.VITALIZING, name)
         if vitalized is None or not vitalized.done:
             result.notes.append(

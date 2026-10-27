@@ -51,6 +51,7 @@ CHARTER_STRENGTH = "charter_strength"
 #: Rules for a Large Library (Transforming Mythic Europe p. 105): each
 #: subject's books summed as one Level and Quality, studied as one.
 LARGE_LIBRARY = "large_library"
+MORALE_DISCIPLINE = "morale_discipline"
 
 
 @dataclass(frozen=True)
@@ -300,6 +301,20 @@ OPTIONS: tuple[RuleOption, ...] = (
         ),
         source="Transforming Mythic Europe, Rules for a Large Library, p. 105",
         book="TME",
+    ),
+    # Lords of Men's optional combat rules.
+    RuleOption(
+        key=MORALE_DISCIPLINE,
+        label="Morale and Discipline for combat groups",
+        effect=(
+            "Combat groups make Discipline and Morale rolls on the leader's "
+            "Presence + Leadership; failing, they are disordered (a trained "
+            "group fights as untrained, then only half an untrained group's "
+            "attacks hit) or routed, until the leader rallies them; a battle "
+            "event's fight shows its army's disorder."
+        ),
+        source="Lords of Men, Morale and Discipline, pp. 134-135",
+        book="LoM",
     ),
     # Charter Strength (Transforming Mythic Europe).
     RuleOption(

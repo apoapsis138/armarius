@@ -9,9 +9,10 @@
   at least 10 for a Minor Virtue's and 30 for a Major's (10 or 30 for a
   power with no Ability), all added together. Reaching it, they are lost;
   only at double it or more may the master keep them
-  (`SeasonPlan.keep_supernatural`) or convert each into a Virtue of its
-  size he has and can perform (a similar one he lacks at the troupe's
-  word), which is done on the Virtues tab (DE p. 271). An inborn Ex Miscellanea tradition Virtue is
+  (`SeasonPlan.keep_supernatural`) or convert each into a Hermetic Virtue
+  of its own size he has and can perform, Major for Major and Minor for
+  Minor (`SeasonPlan.conversions`, one for each; a similar one he lacks at
+  the troupe's word) (DE p. 271). An inborn Ex Miscellanea tradition Virtue is
   exempt (DE p. 270): the troupe leaves it off. A Gift already Opened by a
   non-Hermetic tradition adds 30 to the total needed (Rival Magic p. 6).
 - Teaching the apprentice each year is the ordinary Teach activity.
@@ -83,6 +84,9 @@ class ApprenticeWork:
     quality: int = 0
     target: int = 0
     flaw_id: str = ""
+    #: Opening the Arts: the Hermetic Virtues the Supernatural Abilities are
+    #: converted into, one for each converted.
+    converted: list[str] = field(default_factory=list)
     notes: list[str] = field(default_factory=list)
 
     @property
@@ -173,10 +177,17 @@ def work(
 OPENED_ELSEWHERE = 30
 
 
-def supernatural_needs(student: Character) -> list[tuple[str, int, str | None]]:
-    """What each of the apprentice's Supernatural Abilities and powers
-    needs of the Intellego Vim Lab Total: (Ability name or "", level,
-    the Virtue's id)."""
+def supernatural_tiers(student: Character) -> list[str]:
+    """Each of the apprentice's Supernatural Abilities' and powers' size,
+    "Major" or "Minor", in supernatural_needs' order."""
+    return [
+        "Major" if least == 30 else "Minor"
+        for _, least, _ in _needs_with_least(student)
+    ]
+
+
+def _needs_with_least(student: Character) -> list[tuple[str, int, str | None]]:
+    """(Ability name or "", the size's least level, the Virtue's id)."""
     by_id = {e.id: e for e in catalog.load_virtue_flaw_catalog()}
     virtues = {
         e.name: (vf.vf_id, e.tier)
@@ -190,13 +201,50 @@ def supernatural_needs(student: Character) -> list[tuple[str, int, str | None]]:
         if ability.category != "Supernatural":
             continue
         vf_id, tier = virtues.pop(ability.name, (None, "Minor"))
-        least = 30 if tier == "Major" else 10
-        found.append(
-            (ability.name, max(5 * ability_level(student, ability.name), least), vf_id)
-        )
+        found.append((ability.name, 30 if tier == "Major" else 10, vf_id))
     for vf_id, tier in virtues.values():
         found.append(("", 30 if tier == "Major" else 10, vf_id))
     return found
+
+
+def supernatural_needs(student: Character) -> list[tuple[str, int, str | None]]:
+    """What each of the apprentice's Supernatural Abilities and powers
+    needs of the Intellego Vim Lab Total: (Ability name or "", level,
+    the Virtue's id): 5 x the Ability, at least 10 for a Minor's and 30 for
+    a Major's."""
+    return [
+        (name, max(5 * ability_level(student, name), least) if name else least, vf_id)
+        for name, least, vf_id in _needs_with_least(student)
+    ]
+
+
+def conversion_problem(student: Character, conversions: list[str]) -> str:
+    """Why the Virtues chosen can't take the apprentice's Supernatural
+    Abilities ("" if they can): one Virtue for each, of its size, Major
+    for Major and Minor for Minor (DE p. 271)."""
+    if not conversions:
+        return ""
+    tiers = sorted(supernatural_tiers(student))
+    by_id = catalog.load_virtue_flaw_catalog_by_id()
+    chosen = sorted(
+        entry.tier if (entry := by_id.get(v)) is not None else "" for v in conversions
+    )
+    if len(chosen) > len(tiers):
+        return (
+            f"{student.name} has {len(tiers)} Supernatural Abilit"
+            f"{'y' if len(tiers) == 1 else 'ies'}: convert each into one Virtue "
+            "(DE p. 271)."
+        )
+    needed = {tier: tiers.count(tier) for tier in set(tiers)}
+    for tier in chosen:
+        if needed.get(tier, 0) <= 0:
+            return (
+                f"Each Supernatural Ability converts into a Virtue of its own "
+                f"size, Major for Major and Minor for Minor: {student.name}'s are "
+                f"{', '.join(tiers)} (DE p. 271)."
+            )
+        needed[tier] -= 1
+    return ""
 
 
 def _supernatural(
@@ -229,6 +277,9 @@ def _supernatural(
             + (" (+30 for a Gift already Opened)" if opened else "")
             + f"; {magus.name}'s is {total}."
         )
+    wrong = conversion_problem(student, plan.conversions)
+    if wrong:
+        return wrong
     keep = plan.keep_supernatural and total >= 2 * level
     if keep:
         result.notes.append(
@@ -238,6 +289,16 @@ def _supernatural(
         return ""
     result.lost_abilities = [name for name, _, _ in needs if name]
     result.lost_virtues = [vf_id for _, _, vf_id in needs if vf_id]
+    if plan.conversions and total >= 2 * level:
+        result.converted = list(plan.conversions)
+        result.notes.append(
+            f"Intellego Vim Lab Total {total}, at least double {level}: "
+            f"{student.name}'s Supernatural Abilities become "
+            f"{len(plan.conversions)} Hermetic "
+            f"Virtue{'s' if len(plan.conversions) > 1 else ''}, one each "
+            "(DE p. 271)."
+        )
+        return ""
     result.notes.append(
         f"Intellego Vim Lab Total {total} against {level}: "
         f"{student.name}'s Supernatural Abilities are lost"
@@ -267,10 +328,36 @@ def teachable_virtues(
     return found
 
 
-def open_arts(student: Character, work_: ApprenticeWork) -> None:
-    """Give the apprentice his Arts at 0, and the Deficiencies."""
+#: The Social Status an apprentice has from the season his Arts are
+#: opened (Apprentices p. 9; DE p. 270).
+APPRENTICE = "vf_apprentice"
+
+
+def open_arts(
+    student: Character, work_: ApprenticeWork, magus: Character | None = None
+) -> list[str]:
+    """Give the apprentice his Arts at 0, and the Deficiencies; the magus
+    claims him as his apprentice from this season (DE p. 270). What it
+    did, for the Diary."""
+    told: list[str] = []
     for art in (*TECHNIQUES, *FORMS):
         student.arts.setdefault(art.lower(), ArtScore())
+    if work_.converted:
+        by_id = catalog.load_virtue_flaw_catalog_by_id()
+        for vf_id in work_.converted:
+            student.virtues_flaws.append(VirtueFlawInstance(vf_id))
+        names = [
+            entry.name if (entry := by_id.get(v)) is not None else v
+            for v in work_.converted
+        ]
+        told.append(f"Supernatural Abilities converted into {', '.join(names)}.")
+    if magus is not None:
+        if not any(vf.vf_id in _APPRENTICE_IDS for vf in student.virtues_flaws):
+            student.virtues_flaws.append(VirtueFlawInstance(APPRENTICE))
+        student.hermetic.parens = magus.name
+        if not student.hermetic.house:
+            student.hermetic.house = magus.hermetic.house
+        told.append(f"{magus.name} claims {student.name} as his apprentice.")
     student.abilities = [
         a for a in student.abilities if a.name not in work_.lost_abilities
     ]
@@ -281,3 +368,15 @@ def open_arts(student: Character, work_: ApprenticeWork) -> None:
         vf_id = "vf_deficient_technique" if art in TECHNIQUES else "vf_deficient_form"
         key = "technique" if art in TECHNIQUES else "form"
         student.virtues_flaws.append(VirtueFlawInstance(vf_id, params={key: art}))
+    return told
+
+
+#: The Apprentice Social Status, and the Rhine's own.
+_APPRENTICE_IDS = frozenset({APPRENTICE, "vf_apprentice_rhine_tribunal"})
+
+
+def convertible(saga_magus: Character) -> list[tuple[str, str]]:
+    """The Hermetic Virtues a parens may convert an apprentice's
+    Supernatural Abilities into: his own (DE p. 271). A similar Virtue he
+    lacks is the troupe's call, chosen by hand."""
+    return teachable_virtues(saga_magus)

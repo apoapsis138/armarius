@@ -9,6 +9,7 @@ from .... import possessions as pos
 from .... import sourcebooks, storage
 from ....forms import character as character_forms
 from ....forms import familiar as ff
+from ....forms import trait_roll as trait_roll_forms
 from ....markup import escape
 from ....models import (
     Ability,
@@ -27,6 +28,7 @@ from ..prompts import (
     _ability_dialog,
     _ability_from,
 )
+from ..steps import run_steps
 from .base import (
     WorkspaceBase,
     _SectionOps,
@@ -110,6 +112,16 @@ class FamiliarActions(WorkspaceBase):
                 character_forms.wounds_fields(familiar.wounds, soak=False),
             ),
             handle_result,
+        )
+
+    def action_familiar_trait_roll(self) -> None:
+        """More's Roll on the familiar's Personality Traits, with its
+        Silver Cord (DE p. 267)."""
+        familiar = self.selected_familiar
+        if familiar is None:
+            return
+        run_steps(
+            self.app, trait_roll_forms.roll_form(self.saga, familiar), lambda _e: None
         )
 
     def _edit_familiar_fatigue(self) -> None:

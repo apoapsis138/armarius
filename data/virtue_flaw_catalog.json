@@ -1648,6 +1648,9 @@
       "category": "General",
       "tier": "Minor",
       "cost": 1,
+      "parameters": [
+        "school"
+      ],
       "source": "DE",
       "summary": "May buy Academic Abilities at character creation, plus 50 xp for Latin and Artes Liberales.",
       "description": "You have been educated in a grammar school, and may have attended a university or cathedral school. You may purchase Academic Abilities during character generation. During character generation you get an additional 50 experience points, which must be spent on Latin and Artes Liberales."
@@ -5966,7 +5969,8 @@
       "tier": "Major",
       "cost": 3,
       "parameters": [
-        "focus"
+        "focus",
+        "arts"
       ],
       "source": "DE",
       "summary": "Within a focus smaller than one Art (e.g. weather, necromancy), add the lowest applicable Art twice to Casting and Lab Totals.",
@@ -5980,7 +5984,8 @@
       "tier": "Major",
       "cost": 3,
       "parameters": [
-        "sign"
+        "sign",
+        "arts"
       ],
       "source": "TMRE",
       "summary": "Major Magical Focus covering effects governed by one zodiac sign or one planet; spells aided by it are Astrological.",
@@ -6301,7 +6306,8 @@
       "tier": "Minor",
       "cost": 1,
       "parameters": [
-        "focus"
+        "focus",
+        "arts"
       ],
       "source": "DE",
       "summary": "Within a narrow focus (narrower than one Technique+Form), add the lowest applicable Art twice to Casting and Lab Totals.",
@@ -6315,7 +6321,8 @@
       "tier": "Minor",
       "cost": 1,
       "parameters": [
-        "house"
+        "house",
+        "arts"
       ],
       "source": "TMRE",
       "summary": "Minor Magical Focus covering effects governed by one astrological house; spells aided by it are Astrological.",

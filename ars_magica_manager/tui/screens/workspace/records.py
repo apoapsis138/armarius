@@ -43,7 +43,9 @@ from ....forms import go_to as go_to_forms
 from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
 from ....forms import polemic as polemic_forms
+from ....forms import threshold as threshold_forms
 from ....forms import tribunal as tribunal_forms
+from ....forms import wizards_war
 from ....markup import escape
 from ....models import (
     Character,
@@ -191,6 +193,18 @@ class RecordActions(WorkspaceBase):
         run_steps(
             self.app,
             tribunal_forms.withdraw_case(view.tribunal, row),
+            lambda _end: self._commit(CASES_SECTION),
+        )
+
+    def action_war_end(self) -> None:
+        """More's War's End on the docket's chosen Wizard's War."""
+        view = self._tribunal_sheet_view
+        row = view.section_row(CASES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            wizards_war.end_form(self.saga, view.tribunal, row),
             lambda _end: self._commit(CASES_SECTION),
         )
 
@@ -374,6 +388,14 @@ class RecordActions(WorkspaceBase):
         """More's Combat Options on the chosen fight: Lords of Men's
         optional rules worked out for one of its characters."""
         self._conflict_command("fight_options")
+
+    def action_group_morale(self) -> None:
+        """More's Discipline or Morale on the chosen fight's group."""
+        self._conflict_command("group_morale")
+
+    def action_rally_group(self) -> None:
+        """More's Rally a Group on the chosen fight."""
+        self._conflict_command("rally_group")
 
     def action_battle_muster(self) -> None:
         """More's Muster and Aftermath on Conflicts' chosen battle: allies,
@@ -701,6 +723,17 @@ class RecordActions(WorkspaceBase):
         self._on_manor(hunting_forms.area_lore_on_manor)
 
     # -- a tomb's trap springs (Lands of the Nile) --
+
+    def action_cross_threshold(self) -> None:
+        """More's Cross the Threshold on a place with a Faerie aura."""
+        view = self._neighbour_sheet_view
+        if view is None:
+            return
+        run_steps(
+            self.app,
+            threshold_forms.threshold_form(self.saga, view.neighbour),
+            lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, DIARY_SECTION),
+        )
 
     def action_overcome_trap(self) -> None:
         """More's Overcome It on a tomb's chosen trap."""

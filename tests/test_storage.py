@@ -442,6 +442,14 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
             devices=[models.CraftDevice(name="The Arms of Hercules")],
         )
     )
+    # A staged project, with a stage (Hermetic Projects).
+    covenant.hermetic_projects.append(
+        models.HermeticProject(
+            name="The Hearth",
+            kind="Burning City",
+            stages=[models.ProjectStage(name="Find a volcano")],
+        )
+    )
     # A Menagerie, with a beast and a breeding (Hermetic Projects).
     covenant.hermetic_projects.append(
         models.HermeticProject(
@@ -550,6 +558,7 @@ def _saga_with_every_record() -> Saga:
     )
     magus.powers.append(CharacterPower("Owl", "Greater Power", level=30))
     magus.covers.append(models.DeepCover("Reynard", role="a mercenary"))
+    magus.stirpes.append(models.Stirps("Rooster", form="Animal", level=10))
     magus.constant_effects.append(ConstantEffect("Ring of Flight", powerful=True))
     magus.progress.append(Progress("vis", "Study"))
     magus.ordeals, magus.refused_vendettas = (
@@ -668,7 +677,11 @@ def _saga_with_every_record() -> Saga:
         )
     )
     saga.sieges.append(
-        Siege("A siege", events=[SiegeEvent(7, "Keep the stockade", "It holds.")])
+        Siege(
+            "A siege",
+            events=[SiegeEvent(7, "Keep the stockade", "It holds.")],
+            outworks=[models.Outwork("The Accursed Tower")],
+        )
     )
     # A marriage (Lords of Men pp. 10-11).
     saga.marriages.append(

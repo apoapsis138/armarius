@@ -256,7 +256,7 @@ Virtue whose Specialization hasn't been chosen, a Servant, Greater Guardian
 or Greater Horde with no Intelligence entered, or a Servant whose grog is no
 longer in the saga.
 
-The Burning City's laboratory customizations (Hermetic Projects pp. 26-27): the Features Fumes (Pe, Au, Ig), Pool of Lava (Ig, Te), Thermal Spring (Cr, Aq, Ig) and Volcanic Rock (Mu, Ig, Te), each as a Greater or Lesser Feature; Dormant Volcano, Active Volcano, Mineral Bath, Volcanic Spirit Forge and Hell Portal; and the Volcano Shape and Material bonus (+5 volcanoes). Experimenting on such work may bring the book's volcanic side effects (pp. 27-28): lava tears, a sulphurous stench, footprints that scorch, toxic fumes, humors thrown out of balance (an Aging modifier of -1 or +1 for good), a crust of skin (+3 Soak for Sun), a warm glow that keeps off hunger and thirst; the troupe picks or invents them.
+The Burning City's laboratory customizations (Hermetic Projects pp. 26-27): the Features Fumes (Pe, Au, Ig), Pool of Lava (Ig, Te), Thermal Spring (Cr, Aq, Ig) and Volcanic Rock (Mu, Ig, Te), each as a Greater or Lesser Feature; Dormant Volcano, Active Volcano, Mineral Bath, Volcanic Spirit Forge and Hell Portal; Volcanic Minerals, a Free Outfitting a Stone Harvester supplies to up to five laboratories (-1 Upkeep, +1 Te; p. 19); and the Volcano Shape and Material bonus (+5 volcanoes). Experimenting on such work may bring the book's volcanic side effects (pp. 27-28): lava tears, a sulphurous stench, footprints that scorch, toxic fumes, humors thrown out of balance (an Aging modifier of -1 or +1 for good), a crust of skin (+3 Soak for Sun), a warm glow that keeps off hunger and thirst; the troupe picks or invents them.
 
 **See also:** [Characteristics](help:section-lab-characteristics),
 [Features](help:section-lab-features),
@@ -769,6 +769,10 @@ vis stores.
   season is applied (an assistant's help doesn't count against it). A
   magus has one talisman at a time (DE p. 259), and gains one new
   attunement a season (DE p. 260), which the device warns about.
+- **Attune the talisman to**, on a season opening the magus's talisman or
+  instilling an effect in it, chooses the one attunement it gains that
+  season from its Shape & Material bonuses not yet attuned (DE p. 259).
+  When the season is applied it joins the talisman's attunements, dated.
 - **More Lab Texts** (inventing from a Lab Text) adds further texts to learn
   the same season. Every spell must be of the first one's Technique and
   Form, and their levels together must be within the lowest of their Lab
@@ -801,7 +805,11 @@ You type the
 name, the effect, the Technique and Form, any requisites, the base level,
 whether it is a Ritual, the Range, Duration and Target, any size or extra
 magnitudes and the guideline used. The app works out the spell's level from
-the base level and the parameters.
+the base level and the parameters. For a Creo spell, tick **Creates
+something lasting** when what it makes is meant to stay once a Momentary
+Duration ends (a wall, food): such a spell must be a Ritual, and the form
+says so until it is one (DE p. 311). A flame or bolt that is gone at once,
+as Pilum of Fire, is not lasting (DE p. 344).
 
 The **Guideline** field fills the base level from a catalog of supplement guidelines: see [Basing a spell on a guideline](help:invent-spell-guideline).
 
@@ -926,10 +934,23 @@ adds the laboratory's terms from the [Lab Totals tab](help:tab-lab-totals).
 The Lab work fields below the design add their own terms: the magnitude of a
 similar spell the magus knows (when inventing, instilling an effect, making
 a lesser enchantment or charged item, or empowering a familiar's bond), a
-Magical Focus (the lower Art counted again)
+Magical Focus (the lower Art counted again; when the focus records the
+Arts it spans, on the Virtue's **The Arts it spans**, it applies **By its
+Arts** unless you choose otherwise, for a focus narrower than its Arts
+such as birds within Animal; a requisite counts, so a Creo Auram spell with
+an Ignem requisite falls in a fire focus, and the lower Art counted again
+may be a requisite's, DE p. 94)
 and a Magic Theory specialty, if the magus has them, days away from the
 laboratory (up to 10 cost nothing, 11 to 20 lower the total, more rule lab
-work out), and any other modifier the troupe allows.
+work out), and any other modifier the troupe allows. **Recreating a flawed
+experiment: Magic Theory then** is for work that remakes what an
+experiment left flawed, in a later season: type the Magic Theory score the
+magus experimented with, and it is added again (DE p. 274).
+**Spent on a project's stage** is offered when the magus's covenant has a
+staged Hermetic Project (a Burning City, an Intangible Assassin, a Living
+Corpse): choose the stage the season's work belongs to, and when the
+season is played it is kept with that stage's works on the covenant's
+Projects tab.
 
 The total is built in a fixed order: the Arts and the laboratory's terms,
 then the options and anyone helping, and last of all any halving (a lab

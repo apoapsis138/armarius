@@ -351,6 +351,9 @@ class Inhabitant:
     #: sheet but no longer counts as an inhabitant (died, left...). A departed
     #: record just marks that; it is not listed and not counted.
     departed: bool = False
+    #: Companions only: sits on the council with a vote equal to the magi's,
+    #: so counts 0 in Base Loyalty's average (Covenants p. 38).
+    on_council: bool = False
     #: A specialist bought with Build Points at covenant creation:
     #: the score in the Ability used for the covenant
     #: (`linked_ability`); a teacher also has Communication and Teaching
@@ -437,6 +440,9 @@ class IncomeSource:
     #: it has dwindled since (seasons.dwindle); None until its first year end.
     dwindling_from: int | None = None
     dwindled_years: int = 0
+    #: The income relies on the covenfolk's work (a mill they run, a
+    #: craft they sell): halved at a Prevailing Loyalty of -6 (DE p. 185).
+    covenfolk_work: bool = False
 
     def __post_init__(self) -> None:
         if self.type not in INCOME_TYPES:

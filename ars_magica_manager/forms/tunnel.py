@@ -20,7 +20,7 @@ from ..markup import escape
 from ..models import Character, KnownSpell, Saga, Spell
 from ..rules import casting, dice, penetration
 from ..rules import hermetic_projects as hp
-from ..rules.realms import home_aura, home_aura_kind
+from ..rules.realms import home_aura_kind, present_aura
 from ..rules.scores import ability_level
 
 OPEN_TUNNEL = "Open a Tunnel"
@@ -175,7 +175,7 @@ def _bonus(saga: Saga, magus: Character, values: dict[str, Any]) -> tuple[int, s
 
 
 def _score(saga: Saga, magus: Character, known: KnownSpell, spell: Spell) -> int:
-    aura, realm = home_aura(saga, magus)
+    aura, realm = present_aura(saga, magus)
     return int(
         casting.spell_casting_score(
             magus,

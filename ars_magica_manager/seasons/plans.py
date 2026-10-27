@@ -137,9 +137,19 @@ def is_departed(saga: Saga, character: Character) -> bool:
     )
 
 
+def being_opened(saga: Saga, character: Character) -> bool:
+    """Whether a magus opens `character`'s Arts this season: the child
+    spends it with him and learns nothing else (DE p. 270)."""
+    return any(
+        p.activity == aps.OPEN_ARTS and p.subject_id == character.id
+        for p in due_plans(saga)
+    )
+
+
 def unplanned(saga: Saga) -> list[Character]:
     """The magi and companions (Mythic or not) with nothing planned for the
-    current season, leaving out any marked departed."""
+    current season, leaving out any marked departed and a child whose Arts
+    are being opened."""
     return [
         c
         for c in saga.characters
@@ -147,6 +157,7 @@ def unplanned(saga: Saga) -> list[Character]:
         and takes_part_in_play(c)
         and not is_departed(saga, c)
         and plan_for(saga, c) is None
+        and not being_opened(saga, c)
     ]
 
 
@@ -586,7 +597,7 @@ def plan_text(
     give, worked out from the character as they stand now. `how` says where
     to plan when nothing is planned yet."""
     if not rules.is_planned(character):
-        return grog_year_text(character)
+        return grog_year_text(saga, character)
     extra = livelihood_text(character, saga.current_year)
     text = _plan_text(saga, character, how)
     return f"{text}\n\n{extra}" if extra else text
@@ -671,9 +682,23 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
 _AWARD_ORDER = ("exposure", "vocational", "practice", "exposure_2")
 
 
-def grog_year_gains(character: Character) -> list[tuple[str, int, str]]:
+def copying_seasons(saga: Saga, character: Character) -> int:
+    """How many seasons of this year a grog has spent or planned copying
+    (DE p. 380): each takes a season of the yearly update, as a story
+    award does."""
+    done = character.grog_year.copying if character.grog_year else 0
+    return done + sum(
+        1
+        for p in saga.season_plans
+        if p.character_id == character.id and p.year == saga.current_year
+    )
+
+
+def grog_year_gains(
+    character: Character, copying: int = 0
+) -> list[tuple[str, int, str]]:
     """(Ability, xp, kind) a grog's yearly update gives, less the seasons
-    story awards take."""
+    story awards and `copying` seasons take."""
     year = character.grog_year
     if year is None:
         return []
@@ -683,30 +708,49 @@ def grog_year_gains(character: Character) -> list[tuple[str, int, str]]:
         "exposure": (year.exposure, 2, "exposure"),
         "exposure_2": (year.exposure_2, 2, "exposure"),
     }
-    for key in _AWARD_ORDER[: max(0, year.story_awards)]:
+    for key in _AWARD_ORDER[: max(0, year.story_awards + copying)]:
         gains.pop(key, None)
     return [g for g in gains.values() if g[0]]
 
 
-def grog_year_text(character: Character) -> str:
-    """A grog's Planning tab: the yearly update (Grogs Ch. 5)."""
+def grog_year_text(saga: Saga, character: Character) -> str:
+    """A grog's Planning tab: the yearly update (Grogs Ch. 5), and a
+    season of copying planned for now."""
+    copying = copying_seasons(saga, character)
+    plan = plan_for(saga, character)
+    now = (
+        "\n\n[b]This season[/]  " + escape(plan_summary(saga, character, plan))
+        if plan is not None
+        else ""
+    )
+    return _grog_year_text(character, copying) + now
+
+
+def _grog_year_text(character: Character, copying: int) -> str:
     year = character.grog_year
     head = (
         "[dim]Grogs aren't planned season by season: they're updated once a "
         "year, in Winter (Grogs, Chapter 5). Press e to set it up.[/]"
     )
     if year is None:
-        return head
+        return head + (
+            f"\n[dim]{copying} season(s) of copying this year take a season "
+            "each of the default.[/]"
+            if copying
+            else ""
+        )
     lines = ["[b]Yearly update (applied in Winter)[/]"]
-    for ability, xp, kind in grog_year_gains(character):
+    for ability, xp, kind in grog_year_gains(character, copying):
         lines.append(f"  {escape(ability)} +{xp} xp ({kind})")
     if year.story_awards:
         lines.append(
             f"  {year.story_awards} story award(s) this year take "
             f"{min(year.story_awards, 4)} season(s) of it."
         )
-    if len(lines) == 1:
-        lines.append("  [dim]nothing chosen yet[/]")
+    if copying:
+        lines.append(f"  {copying} season(s) of copying this year take as many.")
+    if not year.chosen():
+        lines.insert(1, "  [dim]nothing chosen yet: the saga's default runs[/]")
     return "\n".join(lines)
 
 
@@ -860,6 +904,8 @@ def livelihood_text(character: Character, year: int | None = None) -> str:
                 philosophy.formula_label(character, f) for f in character.formulas
             )
         )
+    if character.quests:
+        lines.append("Quests performed: " + ", ".join(character.quests))
     if character.ordeals:
         ordeals = ", ".join(
             f"{o.size} ({o.initiations_since} Initiation(s) since)"

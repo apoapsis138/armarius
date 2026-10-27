@@ -658,3 +658,28 @@ def test_choosing_an_effect_offers_the_device_s_matching_bonuses():
     effect = next(f for f in form.fields() if f.key == "effect")
     assert effect.fills is not None
     assert effect.fills({"effect": "fire"}) == {"device": "staff", "shape": 5}
+    device = next(f for f in form.fields() if f.key == "device")
+    assert device.fills is not None
+    assert device.fills({"device": "staff", "effect": "fire"}) == {"shape": 5}
+    assert device.fills({"device": "staff"}) == {}
+
+
+def test_opening_a_talisman_gains_the_attunement_chosen():
+    """DE p. 259: each season a talisman is opened or instilled, one
+    attunement from its shapes and materials."""
+    from ars_magica_manager.models import ShapeMaterialBonus
+
+    saga = _saga()
+    staff = _device(saga, "staff")
+    staff.talisman, staff.maker_id = True, "m"
+    staff.bonuses = [ShapeMaterialBonus(4, "control things at a distance", "staff")]
+    magus = saga.character("m")
+    assert es.attunement_options(saga, magus) == [
+        ("Staff: +4 control things at a distance (staff)", "staff:0")
+    ]
+    plan = _plan(es.OPEN, device_id="staff", attunement="staff:0")
+    assert es.attune(staff, plan) is not None
+    assert staff.attunements[0].year == 1220 and staff.attunements[0].bonus == 4
+    # Once attuned, it isn't offered or gained again.
+    assert es.attunement_options(saga, magus) == []
+    assert es.attune(staff, plan) is None

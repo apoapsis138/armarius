@@ -4,8 +4,10 @@ Tower now); a tower keeps a ledger of the works done on it (rituals
 cast, a master mason's seasons, repairs, stress checks) and the craft
 devices that speed its building. What those add up to (its height,
 quality, damage levels, the mason's rate) is rules.hermetic_projects'.
+A Burning City, an Intangible Assassin or a Living Corpse keeps its
+stages, each with the works and lab seasons spent on it.
 
-Hermetic Projects pp. 36-41."""
+Hermetic Projects pp. 9-118."""
 
 from __future__ import annotations
 
@@ -20,9 +22,16 @@ from .menagerie import MENAGERIE, Beast, Breeding, beasts_from, breedings_from
 from .traits import new_instance_id
 
 GREAT_TOWER = "Great Tower"
+BURNING_CITY = "Burning City"
+INTANGIBLE_ASSASSIN = "Intangible Assassin"
+LIVING_CORPSE = "Living Corpse"
+#: The projects followed stage by stage: the Burning City (HP pp. 9-28),
+#: the Intangible Assassin (pp. 77-95) and the Living Corpse (pp. 96-118).
+STAGED_KINDS: tuple[str, ...] = (BURNING_CITY, INTANGIBLE_ASSASSIN, LIVING_CORPSE)
 #: The kinds of project a covenant can begin: a Great Tower (HP pp.
-#: 36-41) or a Menagerie of magical beasts (HP pp. 119-142).
-PROJECT_KINDS: tuple[str, ...] = (GREAT_TOWER, MENAGERIE)
+#: 36-41), a Menagerie of magical beasts (HP pp. 119-142), or one of the
+#: staged projects.
+PROJECT_KINDS: tuple[str, ...] = (GREAT_TOWER, MENAGERIE, *STAGED_KINDS)
 
 #: The quality of a piece of work, worst first (City & Guild p. 67).
 SHODDY, STANDARD, SUPERIOR, EXCELLENT = "Shoddy", "Standard", "Superior", "Excellent"
@@ -94,6 +103,9 @@ class ProjectWork:
     details: str = ""
     #: Anything else: a tether made, a story it began.
     note: str = ""
+    #: A staged project's work: the stage it was spent on (a ProjectStage
+    #: id), "" for none.
+    stage: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], what: str) -> ProjectWork:
@@ -105,7 +117,7 @@ class ProjectWork:
         d["season"] = _one_of(d.get("season", "Spring"), SEASONS, f"{label}: season")
         d["year"] = _whole(d.get("year", 1220), f"{label}: year", None)
         d["levels"] = _whole(d.get("levels", 0), f"{label}: levels")
-        d["seasons"] = _whole(d.get("seasons", 1), f"{label}: seasons", 1)
+        d["seasons"] = _whole(d.get("seasons", 1), f"{label}: seasons")
         d["damage"] = _whole(d.get("damage", 0), f"{label}: damage levels")
         quality = d.get("quality") or ""
         if quality:
@@ -115,7 +127,32 @@ class ProjectWork:
         if outcome:
             _one_of(outcome, STRESS_OUTCOMES, f"{label}: outcome")
         d["outcome"] = outcome
-        for key in ("name", "who", "rebuilt", "details", "note"):
+        for key in ("name", "who", "rebuilt", "details", "note", "stage"):
+            d[key] = _text(d.get(key), f"{label}: {key}")
+        return cls(**d)
+
+
+@dataclass
+class ProjectStage:
+    """One stage of a staged project (finding the volcano, gathering
+    Arcane Connections...): its name, whether it is done, and a note. The
+    works and lab seasons spent on it name it (ProjectWork.stage)."""
+
+    id: str = field(default_factory=new_instance_id)
+    name: str = ""
+    done: bool = False
+    note: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any], what: str) -> ProjectStage:
+        if not isinstance(data, dict):
+            raise ValueError(f"{what}: a stage should be a mapping, not {data!r}.")
+        d = known_fields(cls, data)
+        label = f"{what}, stage {d.get('name') or d.get('id') or '?'}"
+        done = d.get("done", False)
+        if not isinstance(done, bool):
+            raise ValueError(f"{label}: done should be true or false, not {done!r}.")
+        for key in ("name", "note"):
             d[key] = _text(d.get(key), f"{label}: {key}")
         return cls(**d)
 
@@ -180,6 +217,8 @@ class HermeticProject:
     reputation: str = ""
     beasts: list[Beast] = field(default_factory=list)
     breedings: list[Breeding] = field(default_factory=list)
+    #: A staged project's stages, in order.
+    stages: list[ProjectStage] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], covenant: str = "") -> HermeticProject:
@@ -213,6 +252,10 @@ class HermeticProject:
             d[key] = _text(d.get(key), f"{label}: {key}")
         d["beasts"] = beasts_from(d.get("beasts"), label)
         d["breedings"] = breedings_from(d.get("breedings"), label)
+        stages = d.get("stages") or []
+        if not isinstance(stages, list):
+            raise ValueError(f"{label}: its stages should be a list.")
+        d["stages"] = [ProjectStage.from_dict(s, label) for s in stages]
         return cls(**d)
 
 

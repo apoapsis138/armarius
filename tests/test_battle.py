@@ -93,7 +93,8 @@ def test_a_lord_s_battle_records_its_events_and_losses():
     assert battles.record_text(entry) == "1 won, 0 lost"
     assert "1. Engaged (9)" in battles.info_for(saga, lord, 0)
     # The next event is the second stage's, against the smaller army.
-    values["result"] = "lost"
+    # On land the Maneuver's condition says how it went (pp. 106-108).
+    values["condition_Defend"] = "taken"
     battles.event_form(saga, entry).apply(values)  # type: ignore[union-attr]
     assert entry.sides[0].groups == 40  # the enemy, outnumbered, takes no extra toll
     assert battles.record_text(entry) == "1 won, 1 lost"

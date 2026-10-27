@@ -428,3 +428,29 @@ def test_the_season_form_saves_the_script_choices():
     assert (plan.experimental_script, plan.risk, plan.script_sympathy) == (True, 2, 1)
     plan = sf.season_plan_from(saga, wulf, values | {"experimental_script": False})
     assert (plan.risk, plan.script_sympathy) == (0, 0)
+
+
+# -- Quests performed (Legends of Hermes pp. 50-51) ------------------------------
+
+
+def test_a_quest_performed_is_recorded_and_a_script_repeating_it_is_flagged():
+    from ars_magica_manager.models import ScriptPart
+
+    saga = _saga()
+    wulf = saga.character("c")
+    assert wulf is not None
+    wulf.type = "magus"
+    quest = [ScriptPart("quest", note="Rescue the drowned scroll")]
+    plan = _plan(teacher_id="m", other_modifier=10, script_components=quest)
+    wulf = _run(saga, plan)
+    assert wulf.quests == ["Rescue the drowned scroll"]
+    again = _plan(teacher_id="m", other_modifier=10, script_components=quest)
+    work = _work(saga, again)
+    assert any("already performed the Quest" in n for n in work.notes)
+    # It gives the Script nothing: a Quest counts toward one Initiation
+    # (TMRE p. 16).
+    from ars_magica_manager.rules.season_work import initiation as init_season
+
+    lines = init_season.script_lines(wulf, again)
+    assert sum(line.amount or 0 for line in lines) == 0
+    assert any("already performed" in line.label for line in lines)

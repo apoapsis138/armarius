@@ -341,8 +341,15 @@ def test_the_sacrifice_form():
     typed = {**values, "spell": forms.TYPED_LEVEL, "level": None}
     assert form.validate(typed)
     assert "still needs: [b]8[/]" in form.live({**typed, "level": 50})
-    lines = form.apply(values)
+    # The rest is paid from the magus's own vis, of the Ritual's Technique.
+    assert "needs 4 pawn(s) of Rego; there are 0" in form.validate(
+        {**values, "pay_from": "character"}
+    )
+    magus.raw_vis = {"rego": 5}
+    lines = form.apply({**values, "pay_from": "character"})
     assert "The level 30 Ritual still needs 4 pawn(s) of vis." in lines
+    assert "4 pawn(s) of Rego paid from their own raw vis." in lines
+    assert magus.raw_vis == {"rego": 1}
     assert magus.diary[-1].name == "Sacrifice to Mercury"
     assert isinstance(forms.sacrifice_form(saga, _morphea()), Refuse)
 

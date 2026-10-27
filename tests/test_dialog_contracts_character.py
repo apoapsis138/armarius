@@ -1423,6 +1423,56 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Where": ""}],
         shown={"#char-stigmata-list": "Brow"},
     ),
+    # The guides' gaps, round two.
+    "grog story experience": Contract(
+        prefill={"Experience": "5"},
+        edits={"The story": "Wolves", "Ability": "Brawl"},
+        saved=lambda s: (
+            next(a.xp for a in s.character("grog9").abilities if a.name == "Brawl"),
+            s.character("grog9").grog_year.story_awards,
+            s.character("grog9").diary[-1].name,
+        ),
+        expected=(5, 1, "Story experience: Wolves"),
+        invalid={"Ability": "Brawl", "Experience": "6"},
+    ),
+    "melee event": Contract(
+        prefill={"Events rolled this melee": "0"},
+        edits={"Confidence spent (+ or -)": "1"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Melee Event: Leandro",
+        invalid={"Confidence spent (+ or -)": "x"},
+    ),
+    "certamen": Contract(
+        prefill={
+            "Against": "mag_sketch",
+            "Technique": "Creo",
+        },
+        edits={"The stakes": "a book"},
+        saved=lambda s: character(s).diary[-1].name.startswith("Certamen: Leandro"),
+        expected=True,
+        invalid={"His rival's vis, attacking": "x"},
+    ),
+    "where he is": Contract(
+        prefill={"He is": "home"},
+        edits={"He is": "typed", "Its aura": "4", "Of the realm": "Divine"},
+        saved=lambda s: (character(s).away_aura, character(s).away_realm),
+        expected=(4, "Divine"),
+        invalid=[{"He is": "typed", "Its aura": "x"}],
+    ),
+    "disguise roll": Contract(
+        prefill={"Roll": "looks", "Convincing someone of it": True},
+        edits={"Change sex (+6)": True, "Stress die": "7"},
+        saved=lambda s: [c.name for c in character(s).covers],
+        expected=["Reynard"],
+        invalid={"Stress die": "x"},
+    ),
+    "trait roll": Contract(
+        prefill={"Roll": "trait"},
+        edits={"Roll": "resist", "The roll's own total": "3"},
+        saved=lambda s: len(character(s).personality_traits) > 0,
+        expected=True,
+        invalid=[{"Roll": "resist", "The roll's own total": "x"}],
+    ),
 }
 
 

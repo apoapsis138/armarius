@@ -6,9 +6,12 @@ the year's events with each neighbour), each line with a tick box. Only
 the ticked lines are applied, and all of them go into one entry of the
 saga's record (Saga.world_turns); deleting that entry undoes them.
 
-Nothing is guessed: an attitude moves only by the change and reason the
-storyguide gives, and the dice for an aura or a fair are rolled when the
-question is asked, so what is shown is what is applied.
+Nothing is applied unasked: an attitude moves only by the change and
+reason the storyguide gives, though the review suggests one where the
+year's favours make it plain (a favour the covenant did the neighbour, or
+one it repaid, +1), to accept or change; and the dice for an aura or a
+fair are rolled when the question is asked, so what is shown is what is
+applied.
 
 Each change is a small record (a dict, so it saves with the saga):
 "set" a value at a path within a record, "append" an entry to a list
@@ -78,6 +81,9 @@ class Proposal:
     neighbour_id: str = ""
     covenant_id: str = ""
     events: list[str] = field(default_factory=list)
+    #: The change the year's favours suggest, and why (0: none).
+    suggested: int = 0
+    suggested_reason: str = ""
 
 
 # -- changes --
@@ -412,6 +418,34 @@ def _events(saga: Saga, neighbour: Any, covenant: Any, year: int) -> list[str]:
     return found
 
 
+def _is(who: str, record: Any) -> bool:
+    """Whether a favour's party (a name or a record's id) is `record`."""
+    wanted = who.strip().casefold()
+    return bool(wanted) and wanted in (record.id.casefold(), record.name.casefold())
+
+
+def suggestion(neighbour: Any, covenant: Any, year: int) -> tuple[int, str]:
+    """The attitude change the year's favours suggest: +1 for each favour
+    the covenant did the neighbour (the neighbour owes it) or repaid it,
+    at most +3; 0 when they suggest nothing. The app's reading, for the
+    storyguide to accept or change."""
+    reasons = []
+    for favour in neighbour.favours:
+        if (
+            favour.year == year
+            and _is(favour.owed_by, neighbour)
+            and _is(favour.owed_to, covenant)
+        ):
+            reasons.append(f"a favour done them: {favour.what}")
+        elif (
+            favour.repaid_year == year
+            and _is(favour.owed_by, covenant)
+            and _is(favour.owed_to, neighbour)
+        ):
+            reasons.append(f"a favour repaid: {favour.what}")
+    return min(len(reasons), 3), "; ".join(reasons)
+
+
 def _attitudes(saga: Saga, year: int) -> list[Proposal]:
     found = []
     for neighbour in saga.neighbours:
@@ -420,6 +454,7 @@ def _attitudes(saga: Saga, year: int) -> list[Proposal]:
         for covenant in world.player_covenants(saga):
             events = _events(saga, neighbour, covenant, year)
             if events:
+                change, why = suggestion(neighbour, covenant, year)
                 found.append(
                     Proposal(
                         ATTITUDES,
@@ -428,6 +463,8 @@ def _attitudes(saga: Saga, year: int) -> list[Proposal]:
                         neighbour_id=neighbour.id,
                         covenant_id=covenant.id,
                         events=events,
+                        suggested=change,
+                        suggested_reason=why,
                     )
                 )
     return found
@@ -474,15 +511,19 @@ def review_fields(found: list[Proposal]) -> list[DialogField]:
                     f"change_{index}",
                     "Change",
                     "select",
-                    "0",
+                    f"{proposal.suggested:+d}" if proposal.suggested else "0",
                     options=[("No change" if c == "0" else c, c) for c in CHANGES],
                     required=True,
+                    hint=f"Suggested from the year's favours: {proposal.suggested:+d}; "
+                    "accept it or change it."
+                    if proposal.suggested
+                    else "",
                 ),
                 DialogField(
                     f"reason_{index}",
                     "Reason",
                     "text",
-                    "",
+                    proposal.suggested_reason,
                     show_if=lambda v, index=index: v.get(f"change_{index}") != "0",
                     placeholder="why it moved",
                 ),

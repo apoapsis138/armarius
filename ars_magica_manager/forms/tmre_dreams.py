@@ -11,7 +11,8 @@ import random
 from typing import Any
 
 from .. import catalog, diaries
-from ..arts import FORMS, TECHNIQUES
+from .. import vis as vis_stores
+from ..arts import ARTS, FORMS, TECHNIQUES
 from ..commands import Command, Form, Refuse, notes
 from ..form_spec import DialogField, pairs
 from ..markup import BULLET, escape
@@ -611,6 +612,25 @@ def sacrifice_fields(saga: Saga, magus: Character) -> list[DialogField]:
         ),
         DialogField("pure", "Pure and unblemished", "check", True),
         DialogField("made_by_magic", "Created or altered by magic", "check", False),
+        DialogField(
+            "pay_from",
+            "Pay the vis still needed from",
+            "select",
+            vis_stores.CHARACTER,
+            options=[*vis_stores.PLACES, ("Not now (pay it by hand)", "")],
+            allow_blank=True,
+            hint="The rest of the Ritual's vis, of its Technique or Form.",
+        ),
+        DialogField(
+            "pay_art",
+            "Of",
+            "select",
+            None,
+            options=pairs(ARTS),
+            allow_blank=True,
+            placeholder="(the Ritual's Technique)",
+            show_if=lambda v: bool(v.get("pay_from")),
+        ),
     ]
 
 
@@ -623,6 +643,9 @@ def _sacrifice_validate(saga: Saga, magus: Character) -> Any:
             return "Name the altar's deity."
         if not str(values.get("beast") or "").strip():
             return "Name the beast sacrificed."
+        short = _short_of_vis(saga, magus, values)
+        if short:
+            return short
         return (
             dr.sacrifice_problem(
                 magus,
@@ -634,6 +657,30 @@ def _sacrifice_validate(saga: Saga, magus: Character) -> Any:
         )
 
     return validate
+
+
+def _pay_art(saga: Saga, magus: Character, values: dict[str, Any]) -> str:
+    """The Art the rest of the vis is paid in: the one chosen, else the
+    Ritual's Technique (Vim for a typed Ritual)."""
+    chosen = values.get("pay_art")
+    if chosen:
+        return str(chosen)
+    for known, spell in _rituals(saga, magus):
+        if known.spell_id == values.get("spell"):
+            return spell.technique
+    return "Vim"
+
+
+def _short_of_vis(saga: Saga, magus: Character, values: dict[str, Any]) -> str:
+    where = values.get("pay_from") or ""
+    vis = _vis(saga, magus, values)
+    if not where or vis is None or int(vis.total) <= 0:
+        return ""
+    art = _pay_art(saga, magus, values)
+    held = vis_stores.pool_of(saga, magus, where).get(art.lower(), 0)
+    if held < int(vis.total):
+        return f"The Ritual still needs {int(vis.total)} pawn(s) of {art}; there are {held}."
+    return ""
 
 
 def _vis(saga: Saga, magus: Character, values: dict[str, Any]) -> Breakdown | None:
@@ -699,6 +746,12 @@ def apply_sacrifice(saga: Saga, magus: Character, values: dict[str, Any]) -> lis
         f"pawn(s) of vis.",
         f"The level {level} Ritual still needs {left} pawn(s) of vis.",
     ]
+    where = values.get("pay_from") or ""
+    if where and left > 0:
+        art = _pay_art(saga, magus, values)
+        vis_stores.pay(vis_stores.pool_of(saga, magus, where), {art: left})
+        named = {v: k for k, v in vis_stores.PLACES}[where].lower()
+        lines.append(f"{left} pawn(s) of {art} paid from {named}.")
     diaries.write(
         saga.current_year,
         saga.current_season,

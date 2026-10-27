@@ -33,6 +33,7 @@ from .form_spec import DialogField
 from .markup import escape, problem
 from .models import Battle, BattleSide, Character, Neighbour, Saga
 from .rules import battle, confidence, dice
+from .rules import siege as siege_rules
 from .rules.scores import ability_level
 
 TITLE = "Muster and Aftermath"
@@ -58,6 +59,10 @@ ALLY_MODIFIERS: dict[str, tuple[str, int]] = {
     "major_social_flaw": ("A Major social Flaw", -3),
     "spoils": ("The promise of wealth or title", 3),
 }
+#: A crusade is called by a churchman with Senior Clergy (Realms of
+#: Power: The Divine p. 93), treated as having the Affinity of the most
+#: prominent noble of his diocese (Lords of Men p. 104).
+SENIOR_CLERGY = "vf_senior_clergy"
 #: A War Loan's multiple of the budget it gives up (p. 104).
 LOAN_TIMES = 5
 
@@ -136,7 +141,21 @@ def _ally_fields(saga: Saga, entry: Battle) -> list[DialogField]:
             placeholder="(a lord with no sheet: Presence and Leadership 0)",
         ),
         DialogField(
-            "affinity", "Affinity score", "int", 0, hint="His Affinity (p. 102)."
+            "crusade",
+            "A crusade",
+            "check",
+            False,
+            hint="Called by a churchman with Senior Clergy: his Affinity is "
+            "the most prominent noble's of his diocese, rolled on the Allied "
+            "Troops Table (Lords of Men p. 104; the book's Army Size Table "
+            "doesn't exist, so the troupe's reading).",
+        ),
+        DialogField(
+            "affinity",
+            "Affinity score",
+            "int",
+            0,
+            hint="His Affinity (p. 102); for a crusade, the noble's.",
         ),
         DialogField(
             "core",
@@ -175,6 +194,15 @@ def _ally_live(saga: Saga, values: dict[str, Any]) -> str:
     )
 
 
+def _ally_problem(saga: Saga, values: dict[str, Any]) -> str | None:
+    if not values.get("crusade"):
+        return None
+    who = saga.character(values.get("commander"))
+    if who is None or all(vf.vf_id != SENIOR_CLERGY for vf in who.virtues_flaws):
+        return "A crusade is called by a churchman with Senior Clergy (p. 104)."
+    return None
+
+
 def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) -> Form:
     def apply(values: dict[str, Any]) -> list[str]:
         side = _side(entry, values)
@@ -185,7 +213,8 @@ def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) ->
         _share, name = battle.allied_proportion(rolled)
         extra = battle.allied_groups(values.get("core") or 0, rolled)
         battles.add_groups(side, battles.ALLIES, extra)
-        text = f"Allies called: {total} + die {die} = {rolled}" + (
+        called = "Crusaders" if values.get("crusade") else "Allies"
+        text = f"{called} called: {total} + die {die} = {rolled}" + (
             f": {name}, {extra} group(s) join." if extra else ": none come."
         )
         _diary(saga, entry, side, text)
@@ -195,6 +224,7 @@ def raise_allies(saga: Saga, entry: Battle, rng: random.Random | None = None) ->
         "Raise Allies",
         lambda: _ally_fields(saga, entry),
         apply,
+        validate=lambda values: _ally_problem(saga, values),
         live=lambda values: _ally_live(saga, values),
         save_label="Roll",
         help_id=HELP_ID,
@@ -490,6 +520,7 @@ def end_of_day(saga: Saga, entry: Battle) -> Form:
             told.append(f"{leader.name}: 1 xp toward {label}.")
         for side in battles.sides(entry):
             _diary(saga, entry, side, entry.ended)
+        told += _breach(saga, entry, side_index)
         return notes(*(escape(t) for t in told))
 
     return Form(
@@ -499,6 +530,25 @@ def end_of_day(saga: Saga, entry: Battle) -> Form:
         save_label="Record",
         help_id=HELP_ID,
     )
+
+
+def _breach(saga: Saga, entry: Battle, victors: int) -> list[str]:
+    """An escalade battle won by the besiegers (the first side) at a Shoddy
+    wall breaches the castle, which becomes the backdrop of a standard
+    battle (Lords of Men p. 115)."""
+    siege = next((s for s in saga.sieges if s.id == entry.siege_id), None)
+    if siege is None or victors != 0:
+        return []
+    if (
+        siege.defenses != siege_rules.QUALITIES[0]
+        and siege_rules.walls(siege)[entry.siege_wall]
+    ):
+        return ["The wall stands: the castle holds, its garrison the poorer."]
+    siege.ended = "Breached"
+    return [
+        "The castle is breached: fight the battle inside as a standard battle, "
+        "and record it taken with Siege Actions' The Castle Taken."
+    ]
 
 
 #: Muster and Aftermath's steps, by their choice.

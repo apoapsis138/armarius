@@ -103,10 +103,31 @@ does. You type all of these with the **Edit** button beside The Bond;
 <!-- /gui -->
 the app works out each Cord's point
 cost from its score (Ars Magica Definitive Edition, Chapter 8: Laboratory,
-Familiars). The Bronze Cord is added to aging and recovery rolls and the
-Golden Cord to botch dice. The Silver Cord's bonus to Personality Trait
-rolls and to resisting mental influence (DE p. 267) is added at the table:
-the app makes neither roll.
+Familiars). The Bronze Cord is added to aging and recovery rolls, and the
+Golden Cord takes dice off the botch dice of the magus's casting, a hedge
+power's too, never to none. The Silver Cord is added by **Roll** beside
+Personality Traits, on the familiar's sheet and its magus's: a
+Personality Trait roll, a roll to resist mental influence, or the
+familiar's rescue of a mind overcome (DE p. 267). See
+[Roll](help:trait-roll).
+
+## Roll
+<!-- help: trait-roll -->
+
+**Roll** (More beside Personality Traits, on a character or a familiar)
+rolls one of three things, adding the bond's Silver Cord (Ars Magica
+Definitive Edition p. 267):
+
+- **A Personality Trait roll**: the trait chosen + the Silver Cord + a
+  stress die against the Ease Factor you type.
+- **Resisting mental influence** (a spell, intimidation, verbal
+  trickery): type the roll's own total as its rules give it; the Silver
+  Cord and a stress die are added, against the Ease Factor.
+- **The familiar frees a mind overcome**: a stress die + the Silver Cord
+  against 9, one try a day; a botch overcomes the familiar's mind too.
+  Offered only where there is a Silver Cord.
+
+Leave the die blank to roll it. The result is shown, not kept.
 
 ### Virtues
 <!-- help: section-fam-vf-virtues; tui -->

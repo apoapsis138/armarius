@@ -84,6 +84,27 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # The guides' gaps, round two: their forms' contracts.
+    "ars_magica_manager/forms/grog_story.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/melee_events.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/certamen_duel.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/rules/certamen_duel.py": (
+        "test_dialog_contracts_character.py",
+    ),
+    "ars_magica_manager/forms/whereabouts.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/trait_roll.py": ("test_dialog_contracts_character.py",),
+    "ars_magica_manager/forms/ship_build.py": ("test_dialog_contracts_covenant.py",),
+    "ars_magica_manager/rules/ship_building.py": ("test_dialog_contracts_covenant.py",),
+    "ars_magica_manager/forms/hook_stories.py": ("test_dialog_contracts_covenant.py",),
+    "ars_magica_manager/forms/wizards_war.py": ("test_dialog_contracts_tribunal.py",),
+    "ars_magica_manager/forms/threshold.py": ("test_dialog_contracts_tribunal.py",),
+    "ars_magica_manager/tribunal_packages/grand.py": (
+        "test_help.py",
+        "test_tribunals.py",
+    ),
+    "ars_magica_manager/lineage.py": ("test_help.py", "test_gui_sheet.py"),
     "ars_magica_manager/gui/choices.py": ("test_gui_sheet.py",),
     "ars_magica_manager/gui/medallions.py": (
         "test_gui_conflicts.py",
@@ -387,6 +408,16 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_list_flows.py",
         "test_gui_conflicts.py",
     ),
+    # A covenant's staged Hermetic Project: its tests, the forms'
+    # contracts, the lists' flow and the Projects tab on both front-ends.
+    "ars_magica_manager/staged_projects.py": (
+        "test_staged_projects.py",
+        "test_dialog_contracts_covenant.py",
+        "test_list_flows.py",
+        "test_screens_projects.py",
+        "test_gui_projects.py",
+    ),
+    "ars_magica_manager/rules/staged_projects.py": ("test_staged_projects.py",),
     # A covenant's Menagerie (Hermetic Projects): its tests, the forms'
     # contracts, the lists' flow and the Projects tab on both front-ends.
     "ars_magica_manager/menagerie.py": (

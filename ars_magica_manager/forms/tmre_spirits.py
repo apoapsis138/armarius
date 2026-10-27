@@ -18,7 +18,7 @@ from ..rules import dice, penetration, realms
 from ..rules import hybrid_magic as hybrid
 from ..rules import tmre_spirits as ts
 from ..rules.creation_virtues import tally
-from ..rules.realms import home_aura
+from ..rules.realms import present_aura
 from ..rules.rounding import round_up
 
 TITLE = "Spirits and Names"
@@ -106,7 +106,7 @@ AURAL = (SPELL_SPIRIT, FORM_SPIRIT, THEURGIC_LAB, SYNTHEMATA, INTUIT, FASTING, F
 
 def spirits_fields(saga: Saga, character: Character) -> list[DialogField]:
     """What Spirits and Names asks."""
-    aura, aura_realm = home_aura(saga, character)
+    aura, aura_realm = present_aura(saga, character)
 
     def on(*keys: str) -> Callable[[dict[str, Any]], bool]:
         return _on(character, *keys)

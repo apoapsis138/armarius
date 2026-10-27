@@ -19,6 +19,17 @@ NOTHING = "nothing"
 OPTIONS: list[tuple[str, str]] = [("Work / Exposure", EXPOSURE), ("Nothing", NOTHING)]
 #: A grog's default year: 2 xp of Exposure each season.
 GROG_YEAR_XP = 8
+#: What each story award takes in turn, a season of the Grogs year in its
+#: order: exposure, vocational, practice, exposure (Grogs p. 67).
+GROG_AWARD_COSTS: tuple[int, ...] = (2, 7, 4, 2)
+
+
+def grog_awards_cost(awards: int) -> int:
+    """The xp `awards` story awards (and copying seasons) take from a
+    grog's year, each the next season in Grogs p. 67's order."""
+    return sum(GROG_AWARD_COSTS[: max(0, awards)])
+
+
 #: Abilities a default season never goes into while there is another: a
 #: season isn't spent working at a language.
 LANGUAGES = ("Living Language", "Dead Language")

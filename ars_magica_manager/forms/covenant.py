@@ -482,6 +482,14 @@ def income_fields(source: IncomeSource | None) -> list[DialogField]:
             hint=f"Usual per year: {usual}.",
         ),
         description_field(source.description if source else ""),
+        DialogField(
+            "covenfolk_work",
+            "Relies on the covenfolk's work",
+            "check",
+            bool(source and source.covenfolk_work),
+            hint="Halved while Prevailing Loyalty is -6, with their "
+            "productivity (DE p. 185).",
+        ),
         *contested_fields(source),
     ]
 

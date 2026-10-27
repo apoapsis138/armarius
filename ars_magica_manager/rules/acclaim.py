@@ -244,7 +244,8 @@ TOURNAMENT: dict[str, tuple[str, int]] = {
     "competed": ("Competed", 1),
     "finalist": ("Was a finalist", 3),
     "champion": ("Was champion", 5),
-    "dismal": ("A dismal performance", -2),
+    # -3, and still the 1 for competing.
+    "dismal": ("A dismal performance (-3, +1 for competing)", -2),
 }
 
 #: A miles's experience in House Acclaim from his Flaw (HoH:S p. 31).
@@ -399,13 +400,17 @@ def apprentice_search(total: int, botched: bool) -> str:
             "an enemy that he gains the Major Story Flaw Enemies."
         )
     if total >= APPRENTICE_EASE:
-        return "a Gifted child is found, as normal (add them as a character)."
+        return "a Gifted child is found, as normal: added to the saga as a character."
     if APPRENTICE_EASE - total >= ANTAGONIZED_BY:
         return (
             "he takes an apprentice from another magus, as is his right, "
-            "and has antagonized him: he must be compensated to be placated."
+            "and has antagonized him: he must be compensated to be placated. "
+            "The storyguide names whose apprentice (DE p. 270)."
         )
-    return "he takes an apprentice from another magus, as is his right."
+    return (
+        "he takes an apprentice from another magus, as is his right: the "
+        "storyguide names whose (DE p. 270)."
+    )
 
 
 def apprentice_bonus(character: Character) -> int:

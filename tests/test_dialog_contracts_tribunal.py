@@ -101,7 +101,9 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#nb-battles-list": "Siege of Soest", "#section-nb-battles": "(2)"},
     ),
     "battle event": Contract(
-        prefill={"Maneuver": "Defend", "Size": "Even", "How it went": "won"},
+        prefill={"Maneuver": "Defend", "Size": "Even", "How it went": "beaten"},
+        # One "How it went" a Maneuver: the Defend one shown.
+        aliases={"How it went": "fld-condition_Defend"},
         edits={"Leading the event": "comp1", "Size": "Outnumbered"},
         saved=lambda s: (
             s.battles[0].sides[1].groups,
@@ -1157,6 +1159,29 @@ CONTRACTS: dict[str, Contract] = {
         expected=0,
         invalid={"Searching for": "superior"},
         live={"#fields-live": "Charter Strength 0"},
+    ),
+    # The guides' gaps, round two.
+    "war's end": Contract(
+        prefill={"How it ended": "ran_out"},
+        edits={"How it ended": "peace"},
+        saved=lambda s: next(
+            (c.status, c.outcome)
+            for c in s.tribunals[0].cases
+            if c.id == "war-contract"
+        ),
+        expected=("decided", "They made peace before it was fought"),
+    ),
+    "cross the threshold": Contract(
+        prefill={"From": "0"},
+        edits={"Arcadian Travel charm": "30"},
+        saved=lambda s: (
+            s.neighbour("drachenfels")
+            .details["diary"][-1]["text"]
+            .startswith("Cross the Threshold")
+        ),
+        expected=True,
+        invalid={"Arcadian Travel charm": "x"},
+        live={"#fields-live": "Threshold points against a strength of 24"},
     ),
 }
 

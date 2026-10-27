@@ -109,6 +109,94 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.29.0 — 2026-10-27
+
+### Gauntlet
+
+- A season searching for an apprentice that finds a Gifted child adds
+  him as a companion of seven, in creation. A Bonisagus who takes one by
+  right takes another magus's apprentice, whom the storyguide names.
+- Opening the Arts makes the child the master's apprentice, and converts
+  each Supernatural Ability into one of the master's Hermetic Virtues of
+  its own size (DE p. 271).
+- Educated can name its school, and the school caps the subjects it
+  teaches (Art & Academe p. 79). A municipal school is chosen for
+  Medicine or for Civil Law.
+- Ticking a tradition in play brings the Virtues its members need; a
+  Gifted member's Gift is still Opened by a master's season.
+- A new grog joins the covenant's Turb.
+
+### Pagina
+
+- A magus's sheet shows his lineage.
+- The desktop gains the buttons for Reputations, Health, Aging and
+  Covers, and End of Session.
+- Where He Is sets where a character is, and casting counts that aura.
+- A deep cover's Disguise roll is Intelligence + Guile against 9 and its
+  modifiers, and talking in disguise Presence + Guile against
+  Intelligence + Folk Ken (HoH: Societates p. 87).
+- The Silver Cord adds to trait rolls and offers its rescue; the Golden
+  Cord lowers a hedge power's botch dice.
+- Certamen plays a whole duel between two magi; a botch stops it for the
+  storyguide.
+- A vampire's precautions, limitations and death are on its form.
+
+### Book of Hours
+
+- Grogs earn Story Experience, and can plan seasons copying books and Lab
+  Texts. Each award or copying season takes a season of the Grogs year
+  in its order (Grogs p. 67).
+- Lab work can recreate a flawed experiment, spend its season on a
+  Hermetic Project's stage, attune a talisman, and fill a device's Shape
+  and Material bonuses.
+- A Magical Focus records the Arts it spans and applies by them,
+  requisites included (DE p. 94).
+- Quests performed are recorded, and a repeated Quest gives the Script
+  nothing (TMRE p. 16). A vis sacrifice the initiate can't pay refuses
+  the Initiation.
+- An Invigorated Stirps breeds in its season, spring for animals and
+  autumn for plants, up to its magus's Viresculture score (LoH p. 75).
+- Hermetic Sacrifice pays its vis, a theriac takes the apothecary's
+  Labor Points, and divination fills its ceremonial bonus from the
+  question.
+
+### Computus
+
+- Base Loyalty rounds to the nearest, and a companion or specialist with
+  a full council vote counts 0 in it (Covenants p. 38).
+- Income that relies on the covenfolk is halved at Loyalty -6.
+- Take Harm offers a volcano's hazards with Hermetic Projects in play.
+- The Spirit and Rally rules, battle magic's Concentration and the
+  mounted charge are played in battles and fights.
+
+### Orbis
+
+- Hermetic Projects: the Hermetic Shipyard's Build a Ship, a menagerie's
+  Reputation Award, and the Burning City, the Intangible Assassin and the
+  Living Corpse followed stage by stage, with their Warning Bell, Gather
+  a Connection, Lower an Aegis and Death Roll.
+- A covenant's Hooks suggest stories; the world turn suggests attitude
+  changes from the year's favours; Cross the Threshold counts its points.
+- Battles: a leader's groups, life on campaign and chevauchee. Sieges:
+  the garrison's engines targeting the besiegers' one by one, several
+  walls, outworks, who is inside (a season under siege counts), and an
+  escalade breaching only at a Shoddy wall.
+- Melee Events, a lord's coin for a manor, and the siege's dates fixed.
+
+### Concilium
+
+- The Grand Tribunal: a Tribunal with its delegates, quorate as any legal
+  Tribunal, its Praeco and Presiding Quaesitor the Primi of Bonisagus and
+  Guernicus.
+- War's End records a Wizard's War's outcome and Flambeau's Acclaim; a
+  war no meeting hears says so.
+- A saga's Mystery Cults have agendas and attitudes, and lean at meetings.
+
+### Glossa
+
+- Help for all of it, a how-to for a staged Hermetic Project, and the
+  Rhine's notice period corrected.
+
 ## 3.28.0 — 2026-10-27
 
 ### Gauntlet

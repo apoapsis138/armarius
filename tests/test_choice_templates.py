@@ -59,7 +59,7 @@ def test_the_templates_name_only_what_the_catalogs_hold():
     templates = ct.load_catalog()
     quick = [t for t in templates if t.kind == "quick" and t.book == "DE"]
     assert [t.id for t in quick] == list(PICKS)
-    assert all(t.book == "DE" and t.page == 46 for t in quick)
+    assert all(t.book == "DE" and t.page == 47 for t in quick)
     abilities = {a.name for a in catalog.load_ability_catalog()}
     for template in templates:
         assert template.type in ct.LIMITS
@@ -212,7 +212,7 @@ def test_new_character_offers_each_type_its_recipes(kind, template_id):
     live = creation_forms.character_create_live(
         {"type": kind, creation_forms.template_key(kind): template_id}
     )
-    assert "page 46" in live and "Its choices come next" in live
+    assert "page 47" in live and "Its choices come next" in live
 
 
 def test_new_character_with_a_recipe_asks_its_choices_then_makes_the_character():

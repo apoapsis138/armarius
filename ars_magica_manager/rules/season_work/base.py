@@ -108,6 +108,12 @@ class SupplementWork:
     ordeal: str = ""
     #: What an Initiation's sacrifice gives up (SeasonPlan.sacrifice).
     sacrifice: str = ""
+    #: The Quests an Initiation's rite performed (Character.quests).
+    quests: list[str] = field(default_factory=list)
+    #: Labor Points taken from another's store: (character id, points).
+    labor_from: list[tuple[str, int]] = field(default_factory=list)
+    #: Stirpes Invigorated: (name, Form, Might or level) each.
+    stirpes: list[tuple[str, str, int]] = field(default_factory=list)
     #: An Initiation gave its Virtue (only that spends a step of each past
     #: Ordeal's reduction).
     initiated: bool = False

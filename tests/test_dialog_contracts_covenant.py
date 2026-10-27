@@ -1098,6 +1098,98 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Year": "x"},
         live={"#fields-live": "taming points"},
     ),
+    # The guides' gaps, round two.
+    "build a ship": Contract(
+        prefill={"Like": "buss", "Built by": "shipwright"},
+        edits={"Her name": "The Hermes", "Built by": "creo_ritual"},
+        saved=lambda s: covenant(s).diary[-1].name,
+        expected="Build a Ship: The Hermes",
+        live={"#fields-live": "Opened as her hull alone"},
+    ),
+    "suggest a story": Contract(
+        prefill={},
+        edits={"The story": "The wyrm wakes", "Year": "1222"},
+        saved=lambda s: (
+            covenant(s).diary[-1].name,
+            covenant(s).diary[-1].status,
+            s.calendar[-1].year,
+        ),
+        expected=("The wyrm wakes", "Open", 1222),
+        invalid={"Year": "x"},
+    ),
+    "menagerie reputation award": Contract(
+        prefill={"Visitors this year": "0"},
+        edits={"Visitors this year": "50"},
+        saved=lambda s: next(
+            r.score
+            for r in s.character("comp1").reputations
+            if r.name == "Keeper of Beasts"
+        ),
+        expected=1,
+        invalid={"Visitors this year": "x"},
+        live={"#fields-live": "experience toward"},
+    ),
+    # A staged Hermetic Project (Hermetic Projects pp. 9-118).
+    "add project stage": Contract(
+        prefill={"Stage": "", "Done": False},
+        edits={"Stage": "Woo the fire spirit"},
+        saved=lambda s: covenant(s).hermetic_projects[0].stages[-1].name,
+        expected="Woo the fire spirit",
+        invalid={"Stage": ""},
+        shown={"#cov-staged-stages-list": "Woo the fire spirit"},
+    ),
+    "add stage work": Contract(
+        prefill={"Seasons spent": "1"},
+        edits={"Work": "Vulcan's Glass", "Seasons spent": "2"},
+        saved=lambda s: [
+            (w.name, w.seasons, p.stages[0].id == w.stage)
+            for p in covenant(s).hermetic_projects[:1]
+            for w in p.works
+        ],
+        expected=[("Vulcan's Glass", 2, True)],
+        invalid=[{"Seasons spent": "x"}, {"Seasons spent": "-1"}],
+        shown={"#cov-staged-works-list": "Vulcan's Glass"},
+    ),
+    "warning bell": Contract(
+        prefill={},
+        edits={},
+        saved=lambda s: covenant(s).diary[-1].name,
+        expected="Warning Bell: Vulcan's Hearth",
+        live={"#fields-live": "A stress die of days"},
+    ),
+    "gather a connection": Contract(
+        prefill={"Gathered from": "blood"},
+        edits={"Or by name": "Brother Oda", "Gathered from": "breath"},
+        saved=lambda s: [
+            c.lasts
+            for lab in s.laboratories
+            for c in lab.arcane_connections
+            if c.to.startswith("Brother Oda")
+        ],
+        expected=["Hours or days"],
+        invalid={"Or by name": ""},
+        live={"#fields-live": "hours or days"},
+    ),
+    "lower an aegis": Contract(
+        prefill={"Its level": "30"},
+        edits={"Its level": "40", "Or an Aegis of level": "20"},
+        saved=lambda s: [e for e in covenant(s).diary if e.name.startswith("Lower")],
+        expected=[],
+        invalid={"Its level": "x"},
+        live={"#fields-live": "Guttering of the Home-Fires 40"},
+    ),
+    "death roll": Contract(
+        prefill={"The saga's power": "Medium"},
+        edits={"Days dead before animated": "2"},
+        saved=lambda s: [
+            e.name
+            for c in s.characters
+            for e in c.diary
+            if e.name == "Death Roll: Vulcan's Hearth"
+        ],
+        expected=["Death Roll: Vulcan's Hearth"],
+        invalid={"Days dead before animated": "x"},
+    ),
 }
 
 

@@ -10,8 +10,9 @@ in adds, and a physician's regimen (rules.medicine).
 from __future__ import annotations
 
 from .. import catalog
-from ..models import Character, Covenant, Saga
+from ..models import SEASONS, Character, Covenant, Saga
 from . import effects, medicine, sites
+from . import siege as siege_rules
 from .lab_stats import lab_characteristic_total
 from .rounding import round_down
 
@@ -94,4 +95,64 @@ def living_conditions(saga: Saga, character: Character) -> int:
         living
         + int(effects.amount_total(here))
         + medicine.regimen_bonus(saga, character)
+        + campaign_living(saga, character)
+        + siege_living(saga, character)
     )
+
+
+#: A year with a season under siege (Lords of Men p. 112).
+SIEGE_LIVING = siege_rules.LIVING_UNDER_SIEGE
+
+
+def siege_days_in(start_season: str, start_year: int, days: int, year: int) -> int:
+    """How many of a siege's days fall in `year`, the siege begun at the
+    start of `start_season` of `start_year` and run `days` days (a season
+    91 days, a year 364, as the siege's own intervals count them)."""
+    season = siege_rules.INTERVAL_DAYS["Season"]
+    begun = (start_year * 4 + SEASONS.index(start_season)) * season
+    first, last = year * 4 * season, (year + 1) * 4 * season
+    return max(0, min(begun + days, last) - max(begun, first))
+
+
+def siege_living(saga: Saga, character: Character) -> int:
+    """-2 for a year in which the character spent at least a season (91
+    days) inside a besieged castle (Lords of Men p. 112), counted from the
+    siege's start and the days it has run."""
+    season = siege_rules.INTERVAL_DAYS["Season"]
+    besieged = any(
+        character.id in s.inside
+        and siege_days_in(s.season, s.year, s.days, saga.current_year) >= season
+        for s in saga.sieges
+    )
+    return SIEGE_LIVING if besieged else 0
+
+
+#: A year with a season in a campaigning army (Lords of Men p. 102).
+CAMPAIGN_LIVING = -1
+#: A whole year of it brings a Disease Avoidance roll (p. 102).
+CAMPAIGN_YEAR = 4
+#: Coming back to land put to chevauchee: -2 on the next Aging roll
+#: (Lords of Men p. 103).
+CHEVAUCHEE_AGING = -2
+
+
+def campaign_seasons(character: Character, year: int) -> int:
+    return sum(1 for s in character.campaign_seasons if s.startswith(f"{year} "))
+
+
+def campaign_living(saga: Saga, character: Character) -> int:
+    """-1 for a year with a season campaigning (Lords of Men p. 102)."""
+    return CAMPAIGN_LIVING if campaign_seasons(character, saga.current_year) else 0
+
+
+def chevauchee_aging(saga: Saga, character: Character) -> int:
+    """-2 on the Aging roll for those of land put to chevauchee this year,
+    returning to it (Lords of Men p. 103): everyone of the ravaged
+    covenant."""
+    ravaged = any(
+        b.chevauchee_on
+        and b.chevauchee_on == character.covenant_id
+        and b.year == saga.current_year
+        for b in saga.battles
+    )
+    return CHEVAUCHEE_AGING if ravaged else 0

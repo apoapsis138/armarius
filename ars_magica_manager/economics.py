@@ -508,11 +508,19 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     # total.
     magic = next(r for r in savings if r.key == "magic")
     cost_savings = sum(saved.values()) + magic.savings + eco.emergency_savings
-    # A contested source gives nothing until it is secured.
-    income = sum(
-        s.current_income
-        for s in eco.income_sources
-        if not s.contested or (s.secured_until or 0) >= saga.current_year
+    # A contested source gives nothing until it is secured; one the
+    # covenfolk work for is halved with their productivity.
+    income = round_away_from_zero(
+        sum(
+            s.current_income
+            * (
+                PRODUCTIVITY_HALVED
+                if s.covenfolk_work and loyalty <= -inh.PRODUCTIVITY_LOYALTY
+                else 1
+            )
+            for s in eco.income_sources
+            if not s.contested or (s.secured_until or 0) >= saga.current_year
+        )
     )
     total_expenditure = before - cost_savings
     surplus_deficit = income - total_expenditure
@@ -716,6 +724,11 @@ def source_detail_text(source: IncomeSource | None) -> str:
         f"[b]Type:[/] {escape(source.type)}",
         f"[b]Current Income:[/] {income}",
     ]
+    if source.covenfolk_work:
+        lines.append(
+            "Relies on the covenfolk's work: halved while Prevailing Loyalty "
+            "is -6 (DE p. 185)."
+        )
     if source.note.strip():
         lines += ["", "[b]Note:[/]", escape(source.note.strip())]
     if source.description.strip():

@@ -17,11 +17,14 @@ from dataclasses import dataclass
 from typing import Any
 
 from .. import mystery_cults as mc
+from .. import world
 from ..commands import Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, pairs
 from ..markup import escape, fit
 from ..models import (
+    ATTITUDE_RANGE,
     TRADITION_REALMS,
+    Attitude,
     Character,
     CultComponent,
     CultDegree,
@@ -220,6 +223,18 @@ def cult_info(saga: Saga, cult: MysteryCult) -> str:
     ]
     if cult.description.strip():
         lines += ["", escape(cult.description.strip())]
+    if cult.agenda.strip():
+        lines.append(
+            f"[$label]As a society, it works for:[/] {escape(cult.agenda.strip())}"
+        )
+    for attitude in cult.attitudes:
+        troupe = saga.covenant(attitude.covenant_id)
+        if troupe is not None:
+            score = world.attitude_score(attitude)
+            lines.append(
+                f"[$label]Toward {escape(troupe.name)}:[/] "
+                f"{world.attitude_word(score)} ({world.signed(score)})"
+            )
     lines += [
         "",
         f"[dim]A probationer needs the Lore at 1 before his first Initiation; "
@@ -535,7 +550,36 @@ def _cult_fields(saga: Saga, existing: MysteryCult | None) -> list[DialogField]:
         DialogField(
             "description", "What it is", "area", attr(existing, "description", "")
         ),
+        DialogField(
+            "agenda",
+            "As a secret society: what it works for",
+            "text",
+            attr(existing, "agenda", ""),
+            hint="A cult is a faction in the Order's politics too: its members' "
+            "covenants lean by it at a Tribunal.",
+        ),
+        *_attitude_fields(saga, existing),
     ]
+
+
+def _attitude_fields(saga: Saga, existing: MysteryCult | None) -> list[DialogField]:
+    """Its attitude toward each troupe covenant, -3 to +3."""
+    found = []
+    for covenant in world.player_covenants(saga):
+        held = world.attitude_toward(existing, covenant.id) if existing else None
+        found.append(
+            DialogField(
+                f"attitude_{covenant.id}",
+                f"Its attitude toward {escape(covenant.name)}",
+                "select",
+                str(world.attitude_score(held)),
+                options=[
+                    (f"{world.attitude_word(n)} ({world.signed(n)})", str(n))
+                    for n in range(ATTITUDE_RANGE[0], ATTITUDE_RANGE[1] + 1)
+                ],
+            )
+        )
+    return found
 
 
 def cult_problem(
@@ -567,6 +611,19 @@ def _apply_cult(
     cult.founder_id = values.get("founder_id") or ""
     cult.founded = values.get("founded")
     cult.description = values.get("description") or ""
+    cult.agenda = values.get("agenda") or ""
+    for covenant in world.player_covenants(saga):
+        key = f"attitude_{covenant.id}"
+        if key not in values:
+            continue
+        wanted = int(values.get(key) or 0)
+        held = world.attitude_toward(cult, covenant.id)
+        if held is None:
+            if wanted:
+                cult.attitudes.append(Attitude(covenant.id, wanted))
+        else:
+            # The start moves so the score is what was chosen; its reasons stay.
+            held.start += wanted - world.attitude_score(held)
     if existing is None:
         saga.custom_cults.append(cult)
     mc.changed(saga)

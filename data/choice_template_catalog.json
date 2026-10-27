@@ -8,7 +8,7 @@
       "type": "companion",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A fighter: Warrior, with Puissant and Affinity in one Martial Ability.",
       "flaw": {
         "tier": "Major",
@@ -46,7 +46,7 @@
       "type": "companion",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A scholar: Educated, with Puissant in two Academic Abilities, or Puissant and Affinity in one.",
       "flaw": {
         "tier": "Major",
@@ -114,7 +114,7 @@
       "type": "companion",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A talker: one social Virtue, with Puissant in two Social Abilities.",
       "flaw": {
         "tier": "Major",
@@ -185,7 +185,7 @@
       "type": "companion",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A touch of the supernatural: one Minor Supernatural Virtue that grants an Ability, with Puissant and Affinity in that Ability.",
       "flaw": {
         "tier": "Major",
@@ -216,7 +216,7 @@
       "type": "grog",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A Minor Personality Flaw for how you want to play the grog, and one Minor Virtue for what the grog does.",
       "flaw": {
         "tier": "Minor",
@@ -275,7 +275,7 @@
       "type": "magus",
       "kind": "quick",
       "book": "DE",
-      "page": 46,
+      "page": 47,
       "concept": "A Minor Magical Focus, Puissant and Affinity in a Technique and Puissant in a Form that overlap it, and Deficient Form in a Form you are not interested in.",
       "flaw": {
         "tier": "Major",

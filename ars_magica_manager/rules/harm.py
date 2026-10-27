@@ -30,6 +30,11 @@ and, with the Lords of Men option, bruises.
 - **Lasting damage** (Art & Academe p. 43, with its medicine option): an
   Incapacitating wound an injury deals calls for rules.serious_damage's
   Stamina roll against 6.
+- **A volcano's hazards** (Hermetic Projects pp. 13-14, with that book in
+  play): lava +15, boiling mud +3, the heat within 30 yards of lava +3
+  each Diameter, falling rocks in an eruption +5 to +20, and the fumes a
+  Stamina check against 6 each Diameter or a Medium Wound. Armour counts
+  against lava only while it covers less than half the body.
 
 Pattern: each kind is a Strategy, a function kept in HARMS by its name.
 """
@@ -41,6 +46,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, field
 from typing import Any
 
+from .. import sourcebooks
 from ..models import FATIGUE_LEVELS, Character, Saga
 from . import armour as armour_rules
 from . import (
@@ -104,6 +110,25 @@ POISONS: tuple[tuple[str, int, str], ...] = (
     ("Monkshood", 9, "heavy"),
     ("Arsenic", 9, "medium"),
 )
+#: A volcano's heat, blows and fumes (Hermetic Projects pp. 13-14).
+VOLCANO_BOOK = "HP"
+LAVA = "Lava"
+VOLCANIC_HEAT: tuple[tuple[str, int], ...] = (
+    (LAVA, 15),
+    ("Boiling mud", 3),
+    ("Heat within 30 yards of lava, a Diameter", 3),
+)
+VOLCANIC_IMPACT: tuple[tuple[str, int], ...] = (
+    ("Falling rocks at an eruption's edge", 5),
+    ("Falling rocks at an eruption's heart", 20),
+)
+VOLCANIC_POISONS: tuple[tuple[str, int, str], ...] = (
+    ("Volcanic fumes, a Diameter", 6, "medium"),
+)
+#: Every preset by name, whichever books are in play.
+ALL_PRESETS: dict[str, int] = dict(HEAT + IMPACT + VOLCANIC_HEAT + VOLCANIC_IMPACT)
+#: Lava covering this much (half the body) or more gets behind armour.
+LAVA_PAST_ARMOUR = 3
 #: (name, Ease Factor, wound) for City & Guild's diseases (pp. 27-28); the
 #: Ague and Bloody Flux take the air's strength.
 DISEASES: tuple[tuple[str, int, str], ...] = (
@@ -165,6 +190,11 @@ PRESET_SOURCES: dict[str, str] = {
     "Inside a collapsing wooden house": "wood",
     "Mature tree felled onto the character": "wood",
     "Inside a collapsing stone building": "metal_stone",
+    LAVA: "fire",
+    "Boiling mud": "fire",
+    "Heat within 30 yards of lava, a Diameter": "fire",
+    "Falling rocks at an eruption's edge": "metal_stone",
+    "Falling rocks at an eruption's heart": "metal_stone",
     "Adder bite": "animal",
     "Asp bite": "animal",
     "Monkshood": "herbal",
@@ -187,6 +217,32 @@ SEVERITY_OF_BAND = {
     "Incapacitating": "incapacitating",
     "Dead": "dead",
 }
+
+
+def volcanoes(saga: Saga | None) -> bool:
+    """Whether a volcano's hazards are offered: Hermetic Projects in play."""
+    return sourcebooks.in_play(VOLCANO_BOOK, sourcebooks.saga_books(saga))
+
+
+def heat_table(saga: Saga | None) -> tuple[tuple[str, int], ...]:
+    return HEAT + (VOLCANIC_HEAT if volcanoes(saga) else ())
+
+
+def impact_table(saga: Saga | None) -> tuple[tuple[str, int], ...]:
+    return IMPACT + (VOLCANIC_IMPACT if volcanoes(saga) else ())
+
+
+def poison_table(saga: Saga | None) -> tuple[tuple[str, int, str], ...]:
+    return POISONS + (VOLCANIC_POISONS if volcanoes(saga) else ())
+
+
+def armour_counts(values: dict[str, Any]) -> bool:
+    """Whether armour adds to Soak: as ticked, and never against lava
+    covering half the body or more (Hermetic Projects p. 14)."""
+    covers = int(values.get("coverage") or 1)
+    if values.get("preset") == LAVA and covers >= LAVA_PAST_ARMOUR:
+        return False
+    return bool(values.get("armour", True))
 
 
 @dataclass
@@ -273,7 +329,7 @@ def injury(
         bonus,
         rng,
         saga,
-        armour=bool(values.get("armour", True)),
+        armour=armour_counts(values),
         form_bonus=resist,
     )
     done = Harmed([f"Damage {hit} against Soak {soaked}{named}"])

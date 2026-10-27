@@ -86,9 +86,55 @@ def _kinds(character: Character) -> list[tuple[str, str]]:
     return found
 
 
+def _method_names(character: Character) -> list[str]:
+    """The character's own methods, or with none named on his Virtue the
+    whole table, to choose the one he follows (p. 61)."""
+    return td.methods(character) or [m.name for m in td.METHODS]
+
+
 def _method_options(character: Character) -> list[tuple[str, str]]:
-    own = td.methods(character)
-    return [(name, name) for name in own] or [("(no method named)", "")]
+    return [(name, name) for name in _method_names(character)]
+
+
+#: A method's question field: its key, by the method's name.
+QUESTION_KEY = "question_"
+#: The question choice for one the table doesn't list.
+OTHER_QUESTION = "other"
+
+
+def _question_fields(character: Character) -> list[DialogField]:
+    """For each method with uses, what the question is about: the table's
+    uses and their bonus, which fills the Ceremonial bonus in (p. 61)."""
+    found: list[DialogField] = []
+    for name in _method_names(character):
+        known = td.method(name)
+        if known is None or not known.uses or known.uses[0][0] == "any question":
+            continue
+        options = [
+            (f"{use.capitalize()} (+{bonus})", str(bonus) + ":" + use)
+            for use, bonus in known.uses
+        ]
+        found.append(
+            DialogField(
+                QUESTION_KEY + name.lower(),
+                "The question is about",
+                "select",
+                OTHER_QUESTION,
+                options=[*options, ("Something else (type the bonus)", OTHER_QUESTION)],
+                show_if=lambda v, n=name: (
+                    _is(td.CEREMONIAL)(v) and str(v.get("method") or "") == n
+                ),
+                fills=_fills_from_question,
+            )
+        )
+    return found
+
+
+def _fills_from_question(values: dict[str, Any]) -> dict[str, Any]:
+    method = str(values.get("method") or "").lower()
+    chosen = str(values.get(QUESTION_KEY + method) or "")
+    bonus, _, _ = chosen.partition(":")
+    return {"ceremonial": int(bonus)} if bonus.isdigit() else {}
 
 
 def _is(*kinds: str) -> Callable[[dict[str, Any]], bool]:
@@ -108,7 +154,7 @@ def _fills_bonus(values: dict[str, Any]) -> dict[str, Any]:
 
 
 def divination_fields(saga: Saga, character: Character) -> list[DialogField]:
-    aura, realm = realms.home_aura(saga, character)
+    aura, realm = realms.present_aura(saga, character)
     ceremonial = _is(td.CEREMONIAL)
     fields = [
         DialogField(
@@ -156,7 +202,12 @@ def divination_fields(saga: Saga, character: Character) -> list[DialogField]:
             options=_method_options(character),
             show_if=ceremonial,
             fills=_fills_bonus,
+            hint=""
+            if td.methods(character)
+            else "His Virtue names no method: "
+            "the table's (TMRE p. 61); name his on the Virtue to keep it.",
         ),
+        *_question_fields(character),
         DialogField(
             "ceremonial",
             "Ceremonial bonus (+0 to +5)",

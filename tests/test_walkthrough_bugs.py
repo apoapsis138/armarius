@@ -908,3 +908,30 @@ def test_a_persona_starts_at_1_and_grows_with_the_persona_ability():
     assert hm.cover_reputation(persona, magus) == 1
     magus.abilities[0].xp += 10  # 15 xp: Reputation 2
     assert hm.cover_reputation(persona, magus) == 2
+
+
+def test_a_vis_sacrifice_is_taken_from_the_initiates_stock():
+    from ars_magica_manager.models import SeasonPlan
+    from ars_magica_manager.rules.season_work import initiation as initiation_season
+    from ars_magica_manager.seasons import lab_apply
+
+    magus = Character(id="m", name="Ulric", type="magus")
+    magus.raw_vis = {"ignem": 5}
+    saga = Saga(id="s", name="S", characters=[magus])
+    plan = SeasonPlan(
+        "m",
+        1220,
+        "Spring",
+        "undergo_initiation",
+        sacrifice="vis",
+        sacrifice_art="Ignem",
+        sacrifice_pawns=3,
+    )
+    lab_apply._make_sacrifice(saga, magus, "vis", plan)
+    assert magus.raw_vis == {"ignem": 2}
+    assert magus.diary[-1].name == "Sacrificed: 3 pawns of Ignem vis"
+    # Short of the pawns, the Script is invalid and the plan refused (TMRE
+    # p. 16).
+    assert "invalidates the whole Script" in initiation_season._sacrifice_short(
+        saga, magus, plan
+    )

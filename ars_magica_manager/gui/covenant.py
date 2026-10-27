@@ -355,8 +355,15 @@ class CovenantPage(QWidget):
             stack.setSpacing(10)
             chooser = Chooser()
             ops = covenant_forms.boon_hook_ops(self.saga, covenant, kind)
+            placed = (
+                list(self.placer.buttons("Hooks"))
+                if kind == "Hook" and self.placer
+                else []
+            )
             heading = section(
-                f"{kind}s", p, buttons=verb_buttons(ops, chooser, self.run, p)
+                f"{kind}s",
+                p,
+                buttons=[*verb_buttons(ops, chooser, self.run, p), *placed],
             )
             stack.addWidget(heading)
             stack.addWidget(

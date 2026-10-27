@@ -395,6 +395,17 @@ Reputations list marks a new one "replacing" the old.
 More offers **House Acclaim** to magi of Bonisagus and Flambeau, and
 **Reputation Roll** to anyone with a Reputation.
 
+
+### Lineage
+<!-- help: section-char-lineage -->
+
+A magus's line, read from each character's **Parens** (Hermetic
+Background): his parens, theirs and so on back as far as the saga names
+them (a parens who isn't a character of the saga ends the line), and below
+him his filii and theirs, an apprentice marked so. It shows for a
+character with a parens, or with filii in the saga. Change it by editing
+the Parens on the Hermetic Background.
+
 ### Marriages
 <!-- help: section-char-marriages -->
 
@@ -649,6 +660,13 @@ choose Keep:
   their bonus by how much of the body they cover (a hand x1, a limb x2,
   half the body x3, all of it x4); untick **Armour protects** for boiling
   water and the like (Definitive Edition p. 407).
+  With Hermetic Projects in play the tables add a volcano's hazards (pp.
+  13-14): lava +15 each round (x2 a limb, x3 half the body, x4 immersed;
+  armour counts only while it covers less than half the body), boiling
+  mud +3, the heat within 30 yards of lava +3 a Diameter, and falling
+  rocks in an eruption +5 at its edge to +20 at its heart. Its fumes are a
+  poison, a Stamina check against 6 each Diameter or a Medium Wound,
+  beside an air Deprivation check every 30 seconds.
 - **A poison** or **a disease**: a Stamina check (stress die) against its
   Ease Factor, from the Poison table (p. 406), City & Guild's urban
   diseases (pp. 27-28), or typed. Failing it gives the wound named, which
@@ -818,6 +836,22 @@ Points a season on the circuit makes him and how many seasons a year keep
 an errant knight (36 Labor Points a year, p. 69). It is written in his
 Diary.
 <!-- /tui -->
+
+## Melee Event
+<!-- help: melee-event -->
+
+**Melee Event** (More on Reputations) rolls the Melee Events Table for a
+tournament's grand charge (Lords of Men p. 68): a stress die + his
+Prudhomme Reputation + any Confidence spent (either way), with a botch die
+more for each event he has already rolled in this melee. The result names
+the knight or company that presents itself, the ransom fair from him (from
+a Wealthy knight his horse and armor, an average one his horse or armor, a
+Poor one perhaps his weapons, little from a young one; never service or
+an oath, p. 67), and the Light Wounds his opponents already carry (one for
+each event past the first). A botch is an accident. Tick **With a
+company** for a company's single roll. Each roll is written in his Diary;
+the fight itself, and taking the ransom, are played out. Ransoms he takes
+or leaves unpaid count on Tournament.
 
 ## Labor Points from a Story
 <!-- help: labor-from-story -->
@@ -1059,8 +1093,11 @@ Synthemata spoils the altar (Errata p. 51).
 More's Hermetic Sacrifice, on his record or Known Spells, takes one of
 his known Rituals (or a level typed) and shows the vis it still needs: a
 pawn a magnitude, halved with Mercurian Magic and a third more with
-Waster of Vis, less the sacrifice, never below 0. Saving writes it in his
-Diary; take the vis from the stores by hand.
+Waster of Vis, less the sacrifice, never below 0. **Pay the vis still
+needed from** takes the rest from his own raw vis (the default), his
+laboratory's or the covenant's stores, of the Ritual's Technique unless
+**Of** names another Art; Save is refused when there isn't enough. Choose
+**Not now** to pay it by hand. Saving writes it in his Diary.
 
 ## An Artist's Career
 <!-- help: artist-career -->
@@ -1865,6 +1902,28 @@ or anyone with one recorded. Add, edit or delete one:
   is made, and every xp put into Persona after that goes to every
   persona's Reputation too (p. 90).
 
+**Disguise Roll** (More, beside Covers) rolls a deep cover's Disguise:
+the Characteristic you choose (Communication by default, as for a lie)
++ Guile + a stress die, against the questioner's Perception + Awareness
++ a stress die (DE p. 165). When the cover is being defended (questioned
+by a suspicious priest, covering a comrade's slip) the cover's
+Reputation comes off their total; untick **Convincing someone of it**
+for the roll that first establishes it (HoH:S p. 88). The result is
+shown, not kept.
+
+## Disguise Roll
+<!-- help: disguise-roll -->
+
+A deep cover's two rolls (Houses of Hermes: Societates pp. 87-88). **The
+Disguise roll** is Intelligence + Guile + stress die against an Ease Factor
+of 9 + the modifiers that apply (a change of social status +3, a minor
+alteration in appearance +1, a major one +3, a change of sex +6, minimal
+preparation +3, none +6), less the cover's Reputation while it is defended
+rather than established. **Talking with someone** in disguise is Presence +
+Guile + stress die against their Intelligence + Folk Ken + stress die; it is
+a social roll, so The Gift's penalty counts. Leave a die blank to roll it.
+Nothing is changed: the form shows whether the cover holds.
+
 ## Constant Effects
 <!-- help: section-char-constant-effects -->
 
@@ -2167,6 +2226,14 @@ saga offers are listed (see [Traditions Offered](help:section-traditions)).
 character belongs to: only those the saga offers are listed (see
 [Traditions Offered](help:section-traditions)).
 <!-- /gui -->
+
+Ticking a tradition the character didn't belong to joins it: the Virtues
+and Social Status its members need are added, and a note says what was
+added. Leaving a tradition takes nothing away. Joining doesn't Open a
+Gifted member's Gift: a Gifted master of the tradition does that, usually
+at the start of an apprenticeship (Hedge Magic Revised p. 7). Plan **Open a
+student's Gift to a tradition** for the master: it brings the Opening's
+Arts and Abilities at 0 and its free Virtues.
 
 A magus may belong to a tradition too. A Hermetic society, such as Sol
 Invictus or the Priory of Saint Nerius, is open to any magus; a tradition
@@ -2878,7 +2945,10 @@ spells they know and their Mastery.
 
 **The app works out:** each Art's score from its XP, the Casting Score for
 every Technique and Form, Magic Resistance, Penetration and the Certamen
-totals.
+totals (on the desktop, under the Casting Scores).
+
+**Certamen** (More on Known Spells; see [Certamen](help:certamen-duel))
+plays a duel with another magus of the saga.
 
 The casting notes end with **craft magic**: Rego craft (shaping raw
 materials) is Perception + Finesse, Creo craft (making the thing) is
@@ -3216,6 +3286,47 @@ in a city.
 
 With the saga option Learning cantations in play, More (`m`) here (on the desktop, a button beside Known Spells) offers [Learn a Cantation](help:learn-cantation).
 
+## Where He Is
+<!-- help: whereabouts -->
+
+A character's Casting Scores, Penetration, and his tradition's and his
+Mysteries' totals count the aura where he is. At home that is his
+covenant's. **Where He Is** (More on Casting Scores; on the desktop beside
+Known Spells) sets where he is now, when away: a place of the saga, whose
+aura (and its kind) is used, or somewhere else, its aura and realm typed.
+A foreign realm's aura then counts as the realms' interactions say
+(DE pp. 410-411): a Magic magus's casting is lowered in a Divine or
+Infernal aura, and so on. The Casting Scores say he is away. His seasons,
+laboratory work, aging and warping stay at home. Set him back **At home**
+when he returns.
+
+## Certamen
+<!-- help: certamen-duel -->
+
+**Certamen** plays a duel between two magi of the saga (DE pp. 231-233).
+Choose the rival, the Technique (by custom the challenger's) and the Form
+(the challenged's), and the stakes. Each side has a plan for the whole
+duel: which Art he attacks with (the Technique, the Form, or whichever is
+better for him), the pawns of vis he spends a round on attack and on
+defense (of the Art used, +2 a pawn, at most his score in it), and when
+he concedes (at -1, -3 or -5 of Fatigue, or never).
+
+Initiative (Quickness + Finesse + a stress die) is rolled once. Each round
+the winner attacks first, then the other: Presence + the attacking Art +
+a stress die against Perception + the other Art + a stress die, a tie
+going to the defender. What the attack wins by adds to Intelligence +
+Penetration; less Stamina + Parma Magica, every five points or fraction
+cost a Fatigue level, whose penalty then counts. A Tremere's Focus counts
+the lower Art double. It ends when one falls unconscious (the victor may
+cast a spell of the duel's Arts at him, his Parma circumvented) or
+concedes (his Parma stands). The panel shows both duelists' totals; the
+result shows every round. **Take the Fatigue they lose** puts it on their
+sheets; the vis spent comes off their raw vis, and both Diaries record it.
+A magus who would change plan mid-duel, or a duel broken by a lost
+Concentration roll, is played at the table. A magus can botch (DE p. 231),
+and the book doesn't say what that does, so a botch stops the duel there:
+the storyguide says what comes of it, and the rest is played at the table.
+
 ## Craft by Magic
 <!-- help: craft-magic -->
 
@@ -3330,7 +3441,10 @@ Factor or fails: it is not open-ended (p. 62).
   Connection's and each sympathetic connection's multiplier, DE p. 220) + a
   Scrying Device's bonus (its effect's level over 10, rounded up). The
   horoscopes count only divining by Astrology. The Errata (p. 50) keeps these
-  bonuses out of a casual divination.
+  bonuses out of a casual divination. **The question is about** offers the
+  method's uses from the table (Aeromancy's weather, +5), which fill the
+  Ceremonial bonus in; choose Something else to type it. A diviner whose
+  Virtue names no method is offered the whole table.
 - **Penetration**: the total + the Penetration bonus - the Ease Factor.
 - With Hermetic Dream Interpreter: a **symbolic reading** (stress die +
   Intelligence + Divination, no aura; 9 the dreamer's state, 12-15 the dream's
@@ -3403,7 +3517,9 @@ or roll is kept in the Diary.
   to the usual roll, Perception + a stress die against 9 (DE p. 269; TL
   repeats the older 12): less still finds one, taken from another magus
   by right; failing by 5 or more antagonizes him, who must be
-  compensated; a botch makes him the Major Story Flaw Enemies.
+  compensated; a botch makes him the Major Story Flaw Enemies. Only a
+  child found is added as a new character: one taken by right is that
+  magus's apprentice already (DE p. 270), whom the storyguide names.
 - **An argument over a folio** (Bonisagus, TL p. 23): Presence +
   Leadership, or Communication + Artes Liberales, + House Acclaim + a
   stress die, against the other magus's total; the higher wins.
@@ -3414,7 +3530,8 @@ or roll is kept in the Diary.
   Reputation, known in the whole Order. Experience for deeds before
   credible witnesses: an exceptional Gauntlet 2 to 5, a Wizard's March 1,
   a certamen won 1 (2 against a senior magus), a tournament 1 to compete,
-  3 as a finalist, 5 as champion, -2 for a dismal showing, fighting
+  3 as a finalist, 5 as champion, -3 for a dismal showing (still 1 for
+  competing, so -2 in all), fighting
   bravely in a Wizard's War 1 to 3, winning one twice the foe's highest
   Reputation, slaying a renounced magus three times his, a supernatural
   beast its Might/5, a Primus's order fulfilled or another glorious deed
@@ -4355,7 +4472,8 @@ storyguide's die there is no-botch (p. 22): the player's die, and both
 dice of the control roll, are ordinary stress dice that can botch. A
 botched die counts 0, the inspector and the Diary say which die botched,
 and what else the botch brings is the troupe's call. A child's
-Characteristics take the Aging Chart's modifier. Controlling it is Stamina +
+Characteristics are used as the sheet has them, the Aging Chart's
+modifier already in them (it counts once, p. 23). Controlling it is Stamina +
 stress die against Warping Score + stress die (Errata p. 83); half the
 difference is the effect's magnitude (the book gives no rounding for an
 odd difference: the app rounds down, its own gap-fill), any Technique and Form (an Affinity or
