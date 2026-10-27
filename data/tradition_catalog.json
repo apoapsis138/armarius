@@ -23468,6 +23468,580 @@
           }
         ]
       }
+    },
+    {
+      "id": "trad_criamon_mysteries",
+      "name": "House Criamon (Mystery Cult)",
+      "source": "HoH:MC; DE",
+      "realm": "Magic",
+      "description": "The Mystery Cult of House Criamon: the Enigma, and the paths toward its answer, each of five stations reached by following an avenue with a guide: the Paths of the Body, of Seeming, of Strife and of Walking Backwards, and the Primi's Path of the Mirror.",
+      "abilities": [
+        "Mystery Cult Lore: Criamon",
+        "Enigmatic Wisdom"
+      ],
+      "favored": [],
+      "virtues": [
+        "vf_the_enigma",
+        "vf_station_of_the_perfect_tool",
+        "vf_station_of_spiritual_nourishment",
+        "vf_station_of_perfect_economy_of_movement",
+        "vf_station_of_the_microcosm",
+        "vf_threshold_of_corporeal_repose",
+        "vf_station_of_differentiation_of_seeming",
+        "vf_station_of_true_sight",
+        "vf_station_of_vivid_memories_from_objects",
+        "vf_station_of_passing_through_seeming",
+        "vf_station_from_which_to_ignore_the_real",
+        "vf_station_of_the_eater_of_sin",
+        "vf_station_of_blood_and_bronze",
+        "vf_station_that_repels_and_attracts_elements",
+        "vf_station_that_charms_the_elements",
+        "vf_station_of_golden_cider",
+        "vf_station_of_service_to_harmony",
+        "vf_station_of_rice_and_honey",
+        "vf_station_of_expression",
+        "vf_station_of_exaltation",
+        "vf_immortal_ascension_as_repose"
+      ],
+      "hermetic": "",
+      "notes": "Every magus Initiated into the Enigma belongs to the House (DE p. 235). A magus follows one path at a time: stepping onto another he keeps only his Enigmatic Wisdom, and rejoining he regains its stations; the Primi keep theirs on the Path of the Mirror (Houses of Hermes: Mystery Cults p. 58). A station needs House Criamon Lore of its place on the path + 1 (p. 60). Guide and Mystagogue use the same numbers; the Paths of Strife and of the Mirror have formal Initiation by superiors (p. 59). Every follower of a path ends Disfigured, with Vow or Pious (p. 60). Stigmata mark each insight (pp. 50-51).",
+      "training": {
+        "gift": "required",
+        "minimums": {},
+        "notes": "An apprentice meditates on fifteen riddles of the Arts and answers the Riddle of the Magus; Enigmatic Wisdom can't be learned without the Enigma (DE p. 235; HoH:MC p. 60)."
+      },
+      "advancement": {
+        "practice_arts": true,
+        "vis_study": false,
+        "notes": "Members advance as magi. House Criamon Lore is the cult's Lore (the Ability catalog's Mystery Cult Lore: Criamon); a path's last station needs it at 6, usually learned at the Cave of Twisting Shadows (p. 60)."
+      },
+      "initiation": {
+        "characteristic": "Presence",
+        "lore": "Mystery Cult Lore: Criamon",
+        "self_initiation": true,
+        "notes": "Houses of Hermes: Mystery Cults pp. 58-73, with the Errata p. 55's Target 18 for the Path of Strife's fourth avenue; the Definitive Edition pp. 235-236 reprints the Path of the Body's first and agrees. Each avenue's Target is a Major Virtue's 21, lowered by past Ordeals; with no guide chosen, the guide the House provides guides him at Presence + House Criamon Lore 6, the printed Scripts' assumption, or a ghostly Primus at the Cave of Twisting Shadows when The Enigma names one (House Criamon Lore 9, p. 60). A guide need only know House Criamon Lore; one not of the House is unusual (p. 59; DE p. 387).",
+        "scripts": [
+          {
+            "name": "The Path of the Body, I: The Avenue of Subduing the Meat",
+            "components": [
+              [
+                "Major Ordeal: Vow, Deleterious Circumstances, Disfigured",
+                9
+              ],
+              [
+                "Sympathy: a year's cycle as a plant, or the like",
+                3
+              ],
+              [
+                "Special time and place: a symbolic rebirth",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "The Station of the Perfect Tool (Major): Minor Potency in an aspect of Corpus; Enigmatic Wisdom for Medicine and Chirurgy",
+            "ordeal": "Vow, Deleterious Circumstances, Disfigured",
+            "who": "gifted",
+            "notes": "The Avenue of Subduing the Meat: a year of mortifications or exertions, ended by a guide as midwife to a symbolic rebirth. The book prints Target 21, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 61).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 2
+            }
+          },
+          {
+            "name": "The Path of the Body, II: The Avenue of Drinking the Winds of Inspiration",
+            "components": [
+              [
+                "Quest: psychodramatic visions, or securing a site",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 6,
+            "gains": "The Station of Spiritual Nourishment (Major): need not eat, drink or sleep in high auras; replaces a longevity ritual",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of Drinking the Winds of Inspiration: fasting and labyrinth meditations in a Magic aura of 7 or more, from the first day of Virgo. The book prints Target 12, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 61).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 3
+            }
+          },
+          {
+            "name": "The Path of the Body, III: The Avenue of the Tiniest Seed",
+            "components": [
+              [
+                "Ordeal: Pious (Major) replaces Vow",
+                6
+              ],
+              [
+                "The guide's time",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 9,
+            "gains": "The Station of Perfect Economy of Movement (Major): once a day, a Dexterity roll of 21 or less succeeds",
+            "ordeal": "Pious (Major) replaces Vow",
+            "who": "gifted",
+            "notes": "The Avenue of the Tiniest Seed: a season's training in focus and movement from his guide. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 61).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 4
+            }
+          },
+          {
+            "name": "The Path of the Body, IV: The Avenue of the Spherical Mirror",
+            "components": [
+              [
+                "Quest: psychodramatic",
+                3
+              ],
+              [
+                "The guide's time",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 9,
+            "gains": "The Station of the Microcosm (Major): casts as if holding an Arcane Connection to places and things he recalls",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of the Spherical Mirror: a season sealed in quartz or glass, in darkness. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 61).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 5
+            }
+          },
+          {
+            "name": "The Path of the Body, V: The Avenue of Repose in the Body",
+            "components": [
+              [
+                "Three Quests to legendary places",
+                9
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of Corporeal Repose (Major): purified of mortal frailties",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of Repose in the Body: the four humors, three of them found by Quests, consumed where body and universe meet. The book prints Target 17, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 61).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 6
+            }
+          },
+          {
+            "name": "The Path of Seeming, I: The Avenue of Gruel, Water and Starlight",
+            "components": [
+              [
+                "Minor Ordeal: Disfigured",
+                3
+              ],
+              [
+                "The guide's time",
+                3
+              ],
+              [
+                "Quest: psychodramatic, subduing the senses",
+                3
+              ],
+              [
+                "Special time and place: a cave, at the dark of the moon",
+                3
+              ],
+              [
+                "Sympathy: deprivation",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "The Station of Differentiation of Seeming (Major): Clear Thinker, Common Sense, Keen Vision",
+            "ordeal": "Disfigured",
+            "who": "gifted",
+            "notes": "The Avenue of Gruel, Water and Starlight: labyrinth meditations on gruel and water, then investitures in a series of caves that tune his senses. The book prints Target 21, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 64).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 2
+            }
+          },
+          {
+            "name": "The Path of Seeming, II: The Avenue that Assaults the Modesty of the Universe",
+            "components": [
+              [
+                "Ordeal: Vow",
+                3
+              ],
+              [
+                "Quest: insane wanderings",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ],
+              [
+                "The guide's time",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of True Sight (Major): Enigmatic Wisdom as Second Sight and Magic Sensitivity",
+            "ordeal": "Vow",
+            "who": "gifted",
+            "notes": "The Avenue that Assaults the Modesty of the Universe: a season wandering in madness, defended by his companions and at last his guide. The book prints Target 18, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 64).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 3
+            }
+          },
+          {
+            "name": "The Path of Seeming, III: The Avenue of the Unexpected Pages",
+            "components": [
+              [
+                "Ordeal: Pious (Major) replaces Vow",
+                6
+              ],
+              [
+                "Special time and place (or the loss of his talisman)",
+                3
+              ],
+              [
+                "Quest: psychodramatic",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of Vivid Memories from Objects (Major): reads the memories of objects",
+            "ordeal": "Pious (Major) replaces Vow",
+            "who": "gifted",
+            "notes": "The Avenue of the Unexpected Pages: he falls into the memories of the objects around him and must play them through to where he acquired the object; failing, he tries again; the object becomes his talisman. The book prints Target 18, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 64).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 4
+            }
+          },
+          {
+            "name": "The Path of Seeming, IV: The Avenue that is a Crossroad",
+            "components": [
+              [
+                "The guide's time",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ],
+              [
+                "Sympathy",
+                3
+              ],
+              [
+                "Quest",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of Passing through Seeming (Major): spirit travelling",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue that is a Crossroad: his spirit drawn to the four Edges of the World, each to escape. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 64).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 5
+            }
+          },
+          {
+            "name": "The Path of Seeming, V: The Avenue that Leads to Transcendence",
+            "components": [
+              [
+                "Major Ordeal: Twilight Prone",
+                9
+              ],
+              [
+                "The guide's time",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of From Which to Ignore the Real (Major): may briefly ignore mundane objects",
+            "ordeal": "Twilight Prone",
+            "who": "gifted",
+            "notes": "The Avenue that Leads to Transcendence: investiture at the Axis Magica on New Year's Eve. The book prints Target 17, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 64).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 6
+            }
+          },
+          {
+            "name": "The Path of Strife, I: The Avenue of Faith in Strife",
+            "components": [
+              [
+                "Major Ordeal: the Blatant Gift",
+                9
+              ],
+              [
+                "Special time and place",
+                3
+              ],
+              [
+                "Sympathy: transgressions (meat, sex, profanities)",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "The Station of the Eater of Sin (Major): Enigmatic Wisdom as Magic Sensitivity and as a weapon's Ability",
+            "ordeal": "the Blatant Gift",
+            "who": "gifted",
+            "notes": "The Avenue of Faith in Strife: the Labyrinth of Strife, escaped only by violating the House's tenets, before the Keeper of the Path. The book prints Target 21, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 67).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 2
+            }
+          },
+          {
+            "name": "The Path of Strife, I: The Primus Slain",
+            "components": [
+              [
+                "Special place and time: the House's succession ritual",
+                3
+              ],
+              [
+                "Sympathy: the transgression of murdering the Primus",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 6,
+            "gains": "The Station of the Eater of Sin (Major), without the Blatant Gift",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The other Script of the first station: the magus who kills the Primus in the succession ritual, the genius of the House his Mystagogue (Presence + House Criamon Lore 15, typed as the plan's other modifier over his own guide's total). He can't go on until he studies House Criamon Lore; the second avenue adds the Blatant Gift, +9 (p. 67)."
+          },
+          {
+            "name": "The Path of Strife, II: The Avenue that Splinters",
+            "components": [
+              [
+                "Minor Ordeal: Higher Purpose (to eat sin for the House)",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 6,
+            "gains": "The Station of Blood and Bronze (Major): destroys things by meditating round them; strikes at four times the Attack Total",
+            "ordeal": "Higher Purpose (to eat sin for the House)",
+            "who": "gifted",
+            "notes": "The Avenue that Splinters: investiture at a place saturated with strife, on the anniversary of its greatest slaughter. The book prints Target 12, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 67).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 3
+            }
+          },
+          {
+            "name": "The Path of Strife, III: The Avenue of Charm and Scorn",
+            "components": [
+              [
+                "Quest: seek a lover",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ],
+              [
+                "Sympathy: marriage",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 9,
+            "gains": "The Station of That Repels and Attracts Elements (Major): attracts or repels one element at a time",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of Charm and Scorn: a mystical marriage to a lover who is his perfect complement. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 67).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 4
+            }
+          },
+          {
+            "name": "The Path of Strife, IV: The Avenue of Befriending the Silent",
+            "components": [
+              [
+                "Ordeal: Pious (Major) replaces Higher Purpose",
+                6
+              ],
+              [
+                "Ordeal: the equivalent of a Supernatural Nuisance",
+                3
+              ],
+              [
+                "Ordeal: Disfigured",
+                3
+              ],
+              [
+                "The guide's time",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "The Station of That Charms the Elements (Major): speaks to elementally pure objects",
+            "ordeal": "Pious (Major) replaces Higher Purpose; the equivalent of a Supernatural Nuisance; Disfigured",
+            "who": "gifted",
+            "notes": "The Avenue of Befriending the Silent: the symbolic language of elemental spirits, taught by the guide. The book prints Target 18, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 67).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 5
+            }
+          },
+          {
+            "name": "The Path of Strife, V: The Avenue of Death",
+            "components": [
+              [
+                "Ordeal: four pairs of Incompatible Arts",
+                12
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of Golden Cider (Major): makes some mystical things mundane",
+            "ordeal": "four pairs of Incompatible Arts",
+            "who": "gifted",
+            "notes": "The Avenue of Death: a private ritual under the path's most senior magus: Creo is lost but with Corpus and Vim. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 67).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 6
+            }
+          },
+          {
+            "name": "The Path of Walking Backwards, I: The Avenue of Surrender",
+            "components": [
+              [
+                "Major Ordeal: Pious",
+                9
+              ],
+              [
+                "Special time and place",
+                3
+              ],
+              [
+                "The guide's time",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 15,
+            "gains": "The Station of Service to Harmony (Major): the Gentle Gift, or the Blatant Gift's Flaw lifted",
+            "ordeal": "Pious",
+            "who": "gifted",
+            "notes": "The Avenue of Surrender: his destructive past forsworn, a pilgrimage and rites of purification, then a season's training. The book prints Target 21, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 71).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 2
+            }
+          },
+          {
+            "name": "The Path of Walking Backwards, II: The Avenue of Healing",
+            "components": [
+              [
+                "Ordeal: Noncombatant",
+                3
+              ],
+              [
+                "Ordeal: the equivalent of a Vow to help the injured",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 6,
+            "gains": "The Station of Rice and Honey (Major): dances damaged things to wholeness",
+            "ordeal": "Noncombatant; the equivalent of a Vow to help the injured",
+            "who": "gifted",
+            "notes": "The Avenue of Healing: he becomes a healer who cannot choose to harm. The book prints Target 12, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 71).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 3
+            }
+          },
+          {
+            "name": "The Path of Walking Backwards, III: The Avenue of Adulation",
+            "components": [
+              [
+                "The guide's time",
+                3
+              ],
+              [
+                "Quest: a place of unspeakable beauty",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 9,
+            "gains": "The Station of Expression (Major): Free Expression, Inspirational, Enigmatic Wisdom for an art",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of Adulation: a place of unimaginable profoundness, then the guide coaxes him into expressing it. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 71).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 4
+            }
+          },
+          {
+            "name": "The Path of Walking Backwards, IV: The Avenue of a Thousand Beautiful Faces",
+            "components": [
+              [
+                "Ordeal: four pairs of Incompatible Arts",
+                12
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 12,
+            "gains": "The Station of Exaltation (Major): draws a single positive property out of an object",
+            "ordeal": "four pairs of Incompatible Arts",
+            "who": "gifted",
+            "notes": "The Avenue of a Thousand Beautiful Faces: he gives up Perdo but with Vim and Imaginem. The book prints Target 18, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 71).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 5
+            }
+          },
+          {
+            "name": "The Path of Walking Backwards, V: The Avenue of Silencing Discordant Whispers",
+            "components": [
+              [
+                "The guide's time",
+                3
+              ],
+              [
+                "Quests: the psychic residue",
+                3
+              ],
+              [
+                "Special time and place",
+                3
+              ]
+            ],
+            "ease_factor": 21,
+            "bonus": 9,
+            "gains": "The Station of Immortal Ascension (Major): chooses his age and sex; the threshold of repose",
+            "ordeal": "",
+            "who": "gifted",
+            "notes": "The Avenue of Silencing Discordant Whispers: spiritual obstacles: temptations of power, comfort, the senses and eternal life. The book prints Target 15, the Major Virtue's 21 less the reduction of the Ordeals earlier on the path; the guide's Presence + Lore is assumed to be 6 (pp. 60, 71).",
+            "requires": {
+              "Mystery Cult Lore: Criamon": 6
+            }
+          }
+        ]
+      }
     }
   ]
 }

@@ -13,10 +13,14 @@ from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
 from .... import meeting, tribunal_packages
+from ....forms import polemic as polemic_forms
 from ....forms import tribunal as tribunal_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Case, Saga, Tribunal
 from ....sections import (
+    ARGUMENT_SECTION,
+    ARGUMENT_TEXTS_SECTION,
+    ARGUMENTS_SECTION,
     ATTENDANCE_SECTION,
     BUSINESS_SECTION,
     CASES_SECTION,
@@ -39,6 +43,13 @@ _CASES = (CASES_SECTION, PAST_CASES_SECTION)
 #: The meeting's lists: holding a step can change the cases, the
 #: roster's proxies, the Diary and the next meeting.
 _HALL = (BUSINESS_SECTION, VOTE_SECTION, ATTENDANCE_SECTION)
+#: The Arguments tab's lists, its details panel, and what follows the
+#: argument chosen.
+_ARGUMENTS = (ARGUMENTS_SECTION, ARGUMENT_SECTION, ARGUMENT_TEXTS_SECTION)
+ARGUMENTS_LIST = "trib-arguments"
+TEXTS_LIST = "trib-argument-texts"
+ARGUMENTS_INFO = "trib-arguments-info"
+_ARGUMENT_CHOSEN = "trib-argument-chosen"
 
 
 class TribunalSheetView(SheetView):
@@ -70,6 +81,18 @@ class TribunalSheetView(SheetView):
         #: Each package tab's chosen row its details panel shows: the
         #: list and the row, by the tab's id.
         self._package_chosen: dict[str, tuple[tribunal_packages.PackageList, int]] = {}
+        #: The Arguments tab (Transforming Mythic Europe), while its book is
+        #: in play: the argument chosen, and the row its panel shows.
+        self.arguments_shown = polemic_forms.tab_offered(saga)
+        self.argument_index: int | None = None
+        self._argument_panel: tuple[str, int | None] = (ARGUMENT_TEXTS_SECTION, None)
+        self.core_ops[ARGUMENTS_SECTION] = polemic_forms.arguments_ops(saga, tribunal)
+        self.core_ops[ARGUMENT_SECTION] = polemic_forms.argument_ops(
+            saga, tribunal, self.chosen_argument
+        )
+        self.core_ops[ARGUMENT_TEXTS_SECTION] = polemic_forms.texts_ops(
+            saga, tribunal, self.chosen_argument
+        )
 
     def compose(self) -> ComposeResult:
         info = (TRIBUNAL_INFO_SECTION, ROSTER_SECTION, *_CASES, *_HALL)
@@ -91,6 +114,8 @@ class TribunalSheetView(SheetView):
             yield self._tab("Roster", "tab-trib-roster", self._roster_tab)
             yield self._tab("History", "tab-trib-history", self._history_tab)
             yield self._tab("Docket", "tab-trib-docket", self._docket_tab)
+            if self.arguments_shown:
+                yield self._tab("Arguments", "tab-trib-arguments", self._arguments_tab)
             yield self._tab("Meeting", "tab-trib-meeting", self._meeting_tab)
             yield self._tab("Peripheral Code", "tab-trib-code", self._code_tab)
             yield self._tab("Treasury", "tab-trib-treasury", self._treasury_tab)
@@ -102,7 +127,11 @@ class TribunalSheetView(SheetView):
     def stale(self) -> bool:
         """Whether the Tribunal's customs changed since the sheet was
         built, so its tabs are no longer theirs."""
-        return tribunal_packages.of(self.tribunal) is not self.package
+        return tribunal_packages.of(
+            self.tribunal
+        ) is not self.package or self.arguments_shown != polemic_forms.tab_offered(
+            self.saga
+        )
 
     def _package_tab(
         self, extra: tribunal_packages.PackageTab
@@ -319,6 +348,9 @@ class TribunalSheetView(SheetView):
         """A case or a step of the meeting was chosen: show it in its
         tab's details panel."""
         list_id = event.selectable_list.id or ""
+        if self._argument_chosen(list_id, event.data_index):
+            event.stop()
+            return
         for extra in self.package.tabs:
             for entry in extra.lists:
                 if not extra.panel_id or entry.info is None:
@@ -412,3 +444,83 @@ class TribunalSheetView(SheetView):
             lambda: tribunal_sheet.diary_grid(t).lines(),
             "trib-diary",
         )
+
+    # -- Arguments (Transforming Mythic Europe pp. 27-35) --
+
+    def chosen_argument(self) -> int | None:
+        return self.argument_index
+
+    def _arguments_tab(self) -> ComposeResult:
+        """The Tribunal's arguments, the chosen one's reach and Argument
+        Total, and its texts, with the chosen row's details docked below
+        (forms/polemic.py)."""
+        saga, t = self.saga, self.tribunal
+        chosen = self.chosen_argument
+        follows = (TRIBUNAL_INFO_SECTION, *_CASES, *_HALL, *_ARGUMENTS)
+        on_argument = (*follows, _ARGUMENT_CHOSEN)
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                yield from self._grid_section(
+                    ARGUMENTS_SECTION,
+                    follows,
+                    lambda: polemic_forms.arguments_title(t),
+                    lambda: polemic_forms.arguments_grid(saga, t).lines(),
+                    ARGUMENTS_LIST,
+                )
+                with SheetSection(
+                    title=self._titled(
+                        on_argument,
+                        ARGUMENT_SECTION,
+                        lambda: escape(polemic_forms.argument_title(t, chosen)),
+                    ),
+                    id=ARGUMENT_SECTION,
+                ):
+                    yield self._static(
+                        on_argument,
+                        lambda: polemic_forms.argument_text(saga, t, chosen),
+                        id="trib-argument-text",
+                    )
+                yield from self._grid_section(
+                    ARGUMENT_TEXTS_SECTION,
+                    on_argument,
+                    lambda: polemic_forms.texts_title(t, chosen),
+                    lambda: polemic_forms.texts_grid(saga, t, chosen).lines(),
+                    TEXTS_LIST,
+                )
+            yield self._panel(on_argument, self._argument_panel_text, id=ARGUMENTS_INFO)
+        # After a change redraws the lists, choose the argument again.
+        self._on_refresh(follows, self._rechoose_argument)
+
+    def _argument_panel_text(self) -> str:
+        section, row = self._argument_panel
+        if section == ARGUMENTS_SECTION:
+            return polemic_forms.argument_info(self.saga, self.tribunal, row)
+        return polemic_forms.text_info(
+            self.saga, self.tribunal, self.chosen_argument, row
+        )
+
+    def _rechoose_argument(self) -> None:
+        """Choose the remembered argument again in the redrawn list (or
+        forget one that is gone)."""
+        arguments = self.query_one(f"#{ARGUMENTS_LIST}", SelectableList)
+        if self.argument_index is not None and not arguments.select_data_index(
+            self.argument_index
+        ):
+            self.argument_index = None
+            self.refresh_section(_ARGUMENT_CHOSEN)
+
+    def _argument_chosen(self, list_id: str, index: int) -> bool:
+        """A row of the Arguments tab was chosen: follow it. False for a
+        list of another tab."""
+        if list_id == ARGUMENTS_LIST:
+            self._argument_panel = (ARGUMENTS_SECTION, index)
+            if index != self.argument_index:
+                self.argument_index = index
+                self.refresh_section(_ARGUMENT_CHOSEN)
+                return True
+        elif list_id == TEXTS_LIST:
+            self._argument_panel = (ARGUMENT_TEXTS_SECTION, index)
+        else:
+            return False
+        self.query_one(f"#{ARGUMENTS_INFO}", Static).update(self._argument_panel_text())
+        return True

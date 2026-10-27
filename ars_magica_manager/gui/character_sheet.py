@@ -75,6 +75,7 @@ from ..forms import agents as agent_forms
 from ..forms import character as cf
 from ..forms import church as church_forms
 from ..forms import constant_effect as constant_forms
+from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
@@ -101,8 +102,14 @@ from ..references import Fact
 from ..rules import activities as season_rules
 from ..rules import agents as agent_rules
 from ..rules import clergy as clergy_rules
+from ..rules import criamon as criamon_rules
 from ..rules import enchantment, hybrid_magic, library, sigils
-from ..sections import CANON_SECTION, ORDINATIONS_SECTION, PETITIONS_SECTION
+from ..sections import (
+    CANON_SECTION,
+    ORDINATIONS_SECTION,
+    PETITIONS_SECTION,
+    STIGMATA_SECTION,
+)
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
@@ -179,6 +186,8 @@ CHAPTERS = (
     ("Abilities", "library"),
     ("Virtues & Flaws", "magic"),
     ("Hermetic Magic", "enchanted_item"),
+    # A Criamon magus's path, its stations and his stigmata.
+    ("The Enigma", "twilight"),
     ("Research", "lab_text"),
     ("Inventory", "combat"),
     ("Agents", "faction"),
@@ -657,6 +666,7 @@ class CharacterSheet(QWidget):
             "Inventory": self._inventory,
             "Agents": self._agents,
             "Church": self._church,
+            "The Enigma": self._criamon,
             "Planning": self._planning,
             "Diary": self._diary,
             "Secrets": lambda: secrets_chapter(character, palette, run),
@@ -1602,6 +1612,11 @@ class CharacterSheet(QWidget):
             ),
         )
 
+    def _criamon(self) -> QWidget:
+        return _criamon_chapter(
+            self.saga, self.character, self.p, self.run, self.inspect
+        )
+
     def _church(self) -> QWidget:
         """Holy Orders (Edit Holy Orders, Perform an Exorcism), then the
         Ordinations, Petitions and Canon Court as ledger entries, each with
@@ -1661,6 +1676,60 @@ class CharacterSheet(QWidget):
         return scrolling_page(p, *parts)
 
 
+def _criamon_chapter(
+    saga: Saga,
+    c: Character,
+    p: Palette,
+    run: Callable[[Command], None],
+    inspect: Callable[[str, str, str], None],
+) -> QWidget:
+    """The path (Change Path, Follow an Avenue), its five stations as
+    ledger entries, and the stigmata with Add, Edit and Delete; the
+    chosen one shows in the inspector."""
+    ops = criamon_forms.ops(saga, c)
+    words = TextBlock(criamon_forms.path_desk_text(saga, c), p)
+    words.setFont(serif(12.5))
+    notes = c.enigma.notes.strip()
+    path = section(
+        criamon_forms.path_title(c),
+        p,
+        fact_grid(
+            [Fact(k, plain(v)) for k, v in criamon_forms.path_facts(saga, c)], p, 3
+        ),
+        *([prose(notes, p)] if notes else []),
+        words,
+        edits={
+            "Change Path": lambda: run(criamon_forms.path_form(saga, c)),
+            "Follow an Avenue": lambda: run(criamon_forms.avenue_form(saga, c)),
+        },
+    )
+    stations = section(
+        criamon_forms.stations_title(c),
+        p,
+        church_ledger(
+            criamon_forms.station_entries(c),
+            p,
+            Chooser(),
+            inspect,
+            criamon_forms.stations_empty(c),
+        ),
+    )
+    chooser = Chooser()
+    stigmata = section(
+        criamon_forms.stigmata_title(c),
+        p,
+        church_ledger(
+            criamon_forms.stigma_entries(c),
+            p,
+            chooser,
+            inspect,
+            criamon_forms.STIGMATA_EMPTY,
+        ),
+        buttons=verb_buttons(ops[STIGMATA_SECTION], chooser, run, p),
+    )
+    return scrolling_page(p, path, stations, stigmata)
+
+
 def _left_out(character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
     for a magus, the Statblock but for a Line or Sketch character, and
@@ -1677,6 +1746,8 @@ def _left_out(character: Character) -> set[str]:
         left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic", "Research"}
     if cs.has_statblock(character) or not clergy_rules.has_church_tab(character):
         left.add("Church")
+    if cs.has_statblock(character) or not criamon_rules.has_enigma_tab(character):
+        left.add("The Enigma")
     return left
 
 

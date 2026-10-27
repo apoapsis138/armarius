@@ -86,6 +86,13 @@ class KindBlock:
     #: The terminal sets its facts three to a line, joined by dots,
     #: rather than one to a line.
     facts_inline: bool = False
+    #: Its title worked out from the record (a lord's marriage's terms
+    #: named for the couple); None: `title`.
+    heading: Callable[[Saga, Neighbour], str] | None = None
+
+    def titled(self, saga: Saga, neighbour: Neighbour) -> str:
+        """The block's title for `neighbour`."""
+        return self.title if self.heading is None else self.heading(saga, neighbour)
 
 
 @dataclass(frozen=True)

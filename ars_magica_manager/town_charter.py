@@ -62,6 +62,7 @@ from .models import (
 )
 from .neighbour_lists import KindBlock, KindList, KindTab, list_ops
 from .references import Fact
+from .rules import options
 from .sections import (
     CHARTER_GIVES_SECTION,
     CHARTER_LORDS_SECTION,
@@ -201,6 +202,14 @@ class CharterLord(TypedDict, total=False):
     disease: bool
     merchants: bool
     labour: bool
+    # Charter Strength, an optional rule (Transforming Mythic Europe p. 36):
+    # the lord's (superior) and the town's or covenant's (subordinate)
+    # scores, None until drafted, the last loophole found in it, and
+    # whether it is English (its notaries use Common Law).
+    superior_strength: int | None
+    subordinate_strength: int | None
+    loophole: str
+    in_england: bool
 
 
 class CharterTerms(TypedDict, total=False):
@@ -460,7 +469,7 @@ def lords_grid(_saga: Saga, neighbour: Neighbour) -> Grid:
     )
 
 
-def lord_info(_saga: Saga, neighbour: Neighbour, row: int) -> str:
+def lord_info(saga: Saga, neighbour: Neighbour, row: int) -> str:
     listed = charter_lords(neighbour)
     if row >= len(listed):
         return ""
@@ -481,6 +490,8 @@ def lord_info(_saga: Saga, neighbour: Neighbour, row: int) -> str:
     if e.get("note"):
         lines.append(escape(e.get("note", "")))
     lines.append(f"[$label]{hold}:[/] {meaning}")
+    if strength := strength_line(saga, e):
+        lines.append(strength)
     if kind == "Church":
         lines.append(
             f"[$label]Church:[/] a charter the Church holds gives the walls a "
@@ -554,7 +565,61 @@ def lord_fields(
             DialogField(key, name, "check", bool(e.get(key)), hint=what, show_if=demon)
             for key, name, what in DEMON_SERVICES
         ),
+        *_strength_fields(_saga, e),
     ]
+
+
+def _strength_fields(saga: Saga, e: CharterLord | dict[str, Any]) -> list[DialogField]:
+    """The charter's two Charter Strengths, typed in, while the saga uses
+    the optional rule (Transforming Mythic Europe p. 36)."""
+    if not options.is_on(saga, options.CHARTER_STRENGTH):
+        return []
+    return [
+        DialogField(
+            "superior_strength",
+            "Lord's Charter Strength",
+            "optint",
+            e.get("superior_strength"),
+            hint="Blank until drafted: More's Draft the Charter rolls it.",
+        ),
+        DialogField(
+            "subordinate_strength",
+            "Town's Charter Strength",
+            "optint",
+            e.get("subordinate_strength"),
+        ),
+        DialogField(
+            "in_england",
+            "In England",
+            "check",
+            bool(e.get("in_england")),
+            hint="Its notaries use Common Law, not Civil and Canon Law (p. 36).",
+        ),
+    ]
+
+
+#: An English charter, as the lord's details say it (TME p. 36).
+ENGLISH = "; in England, Common Law"
+
+
+def strength_line(saga: Saga, e: CharterLord) -> str:
+    """The charter's two Charter Strengths as a line of markup, while the
+    saga uses the optional rule; "" otherwise."""
+    if not options.is_on(saga, options.CHARTER_STRENGTH):
+        return ""
+
+    def shown(key: str) -> str:
+        value = e.get(key)
+        return "not drafted" if value is None else str(value)
+
+    line = (
+        f"[$label]Charter Strength:[/] the lord's {shown('superior_strength')}, "
+        f"the town's {shown('subordinate_strength')}"
+        f"{ENGLISH if e.get('in_england') else ''} (TME p. 36)"
+    )
+    if e.get("loophole"):
+        line += f"\n[$label]Loophole:[/] {escape(str(e.get('loophole')))}"
+    return line
 
 
 def lord_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:

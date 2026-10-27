@@ -1546,6 +1546,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-trib-arguments": {
+      "active": "section-trib-arguments",
+      "keys": {
+        "a": "FieldsDialog: Add Argument",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument": {
+      "active": "section-trib-argument",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: Add an argument first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument-texts": {
+      "active": "section-trib-argument-texts",
+      "keys": {
+        "a": "notice: Add an argument first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a text of an argument first.",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-meeting-business": {
       "active": "section-meeting-business",
       "keys": {
@@ -1718,6 +1748,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-trib-arguments": {
+      "active": "section-trib-arguments",
+      "keys": {
+        "a": "FieldsDialog: Add Argument",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument": {
+      "active": "section-trib-argument",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: Add an argument first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument-texts": {
+      "active": "section-trib-argument-texts",
+      "keys": {
+        "a": "notice: Add an argument first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a text of an argument first.",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-meeting-business": {
       "active": "section-meeting-business",
       "keys": {
@@ -1867,6 +1927,36 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-arguments": {
+      "active": "section-trib-arguments",
+      "keys": {
+        "a": "FieldsDialog: Add Argument",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument": {
+      "active": "section-trib-argument",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: Add an argument first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument-texts": {
+      "active": "section-trib-argument-texts",
+      "keys": {
+        "a": "notice: Add an argument first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },
@@ -2121,6 +2211,26 @@
         "e": "FieldsDialog: Edit the Household",
         "d": "(disabled)",
         "m": "MenuScreen: Settle an Inheritance, Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-marriages": {
+      "active": "section-nb-marriages",
+      "keys": {
+        "a": "FieldsDialog: Arrange a Marriage",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Go To, End a Marriage",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-marriage": {
+      "active": "section-nb-marriage",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: No marriage yet: arrange one first.",
+        "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }
     },
@@ -2984,6 +3094,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-trib-arguments": {
+      "active": "section-trib-arguments",
+      "keys": {
+        "a": "FieldsDialog: Add Argument",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument": {
+      "active": "section-trib-argument",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: Add an argument first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument-texts": {
+      "active": "section-trib-argument-texts",
+      "keys": {
+        "a": "notice: Add an argument first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a text of an argument first.",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-meeting-business": {
       "active": "section-meeting-business",
       "keys": {
@@ -3123,6 +3263,36 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-arguments": {
+      "active": "section-trib-arguments",
+      "keys": {
+        "a": "FieldsDialog: Add Argument",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument": {
+      "active": "section-trib-argument",
+      "keys": {
+        "a": "(disabled)",
+        "e": "notice: Add an argument first.",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-trib-argument-texts": {
+      "active": "section-trib-argument-texts",
+      "keys": {
+        "a": "notice: Add an argument first.",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "notice: Choose a text of an argument first.",
         "slash": "(disabled)"
       }
     },

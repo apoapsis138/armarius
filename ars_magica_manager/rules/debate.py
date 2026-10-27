@@ -129,6 +129,9 @@ class Debater:
     #: Total by arguing a side known to be false (the Truthful Trait).
     handicap: int = 0
     falsehood: int = 0
+    #: The bonus (or penalty) a circulated argument buys, on every Attack
+    #: and Defense roll (Transforming Mythic Europe p. 31).
+    polemic: int = 0
 
     def attack(self) -> str:
         """The Attack Ability it is best at (the first on a tie)."""
@@ -291,6 +294,7 @@ def run(
                 + ATTACK_MODIFIERS[(attack_ability, defence_ability)]
                 + fatigue_penalty(lost[attacker], a.clear_thinker)
                 + boost
+                + a.polemic
                 + _roll(rng)
             )
             defence = (
@@ -298,6 +302,7 @@ def run(
                 + d.defences.get(defence_ability, 0)
                 + fatigue_penalty(lost[defender], d.clear_thinker)
                 + guard
+                + d.polemic
                 - d.falsehood
                 + _roll(rng)
             )

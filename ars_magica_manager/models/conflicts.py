@@ -9,7 +9,7 @@ the siege has run and a chronicle of its events (rules.siege).
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, cast
 
 from .character import Wounds
 from .common import FatigueLevel, known_fields
@@ -315,10 +315,31 @@ class BattleSide:
     #: Fighting on its home ground: only then does a lord's title raise
     #: his levies (Lords of Men pp. 31, 102).
     at_home: bool = False
+    # A fleet battle (Tales of Power pp. 106-110): the side's ships.
+    #: The ids of its covenant's ship Possessions that sail with it.
+    ships: list[str] = field(default_factory=list)
+    #: Ships besides those, kept on no covenant's Possessions.
+    other_ships: int = 0
+    #: The character whose seafaring Ability takes Area Lore's place in
+    #: its Deployment Total ("" for none named).
+    pilot_id: str = ""
+    #: Its ships are bearded: iron plates on their prows.
+    bearded: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleSide:
-        return cls(**known_fields(cls, data))
+        d = known_fields(cls, data)
+        name = str(d.get("name") or "a battle's side")
+        ships = d.get("ships") or []
+        if not isinstance(ships, list):
+            raise ValueError(f"Battle side {name}: ships must be a list of ids")
+        d["ships"] = [str(s) for s in cast(list[Any], ships)]
+        other = d.get("other_ships", 0)
+        if isinstance(other, bool) or not isinstance(other, int) or other < 0:
+            raise ValueError(
+                f"Battle side {name}: other_ships must be a whole number, not {other!r}"
+            )
+        return cls(**d)
 
 
 @dataclass
@@ -341,10 +362,35 @@ class BattleEvent:
     #: next event's start when that failed (None: not rolled).
     morale: int | None = None
     rally: int | None = None
+    # At sea (Tales of Power pp. 106-110).
+    #: What the event was, told at sea (a key of rules.fleet_battle.
+    #: FLEET_EVENTS); "" on land.
+    deed: str = ""
+    #: The ship Possessions engaged in it, on either side, and each side's
+    #: other ships engaged (first side, second side).
+    engaged_ships: list[str] = field(default_factory=list)
+    engaged_other: list[int] = field(default_factory=lambda: [0, 0])
+    #: The enemy threw naptha bombs.
+    naptha: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> BattleEvent:
-        return cls(**known_fields(cls, data))
+        d = known_fields(cls, data)
+        ships = d.get("engaged_ships") or []
+        other = d.get("engaged_other") or [0, 0]
+        if not isinstance(ships, list) or not isinstance(other, list):
+            raise ValueError("A battle event's engaged ships must be lists")
+        d["engaged_ships"] = [str(s) for s in cast(list[Any], ships)]
+        counts: list[int] = []
+        for value in cast(list[Any], other)[:2]:
+            if isinstance(value, bool) or not isinstance(value, int) or value < 0:
+                raise ValueError(
+                    f"A battle event's other ships engaged must be whole "
+                    f"numbers, not {value!r}"
+                )
+            counts.append(value)
+        d["engaged_other"] = counts + [0] * (2 - len(counts))
+        return cls(**d)
 
 
 @dataclass
@@ -359,6 +405,8 @@ class Battle:
     sides: list[BattleSide] = field(default_factory=list)
     events: list[BattleEvent] = field(default_factory=list)
     id: str = field(default_factory=new_instance_id)
+    #: Fought at sea, between fleets (Tales of Power pp. 106-110).
+    at_sea: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Battle:

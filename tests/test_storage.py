@@ -442,6 +442,15 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
             devices=[models.CraftDevice(name="The Arms of Hercules")],
         )
     )
+    # A Menagerie, with a beast and a breeding (Hermetic Projects).
+    covenant.hermetic_projects.append(
+        models.HermeticProject(
+            name="The Spur Menagerie",
+            kind="Menagerie",
+            beasts=[models.Beast(name="Bock", might=10, brands=["a palm brand"])],
+            breedings=[models.Breeding(pair="Bock × Geiß", young=1)],
+        )
+    )
 
 
 def _add_animal_and_formula(magus: Character) -> None:
@@ -456,6 +465,13 @@ def _add_animal_and_formula(magus: Character) -> None:
         immortal_age=161,
     )
     magus.magic_might = 30
+    # A Criamon magus's Enigma (HoH:MC pp. 50-73).
+    magus.enigma = models.Enigma(
+        path="seeming",
+        aptitude_path="seeming",
+        reached=[models.StationReached("vf_station_of_true_sight", "Autumn", 1214)],
+        stigmata=[models.Stigma("Eyelids", "A spiral", "station", year=1214)],
+    )
 
 
 def _add_own_goods_and_abilities(saga: Saga) -> None:
@@ -502,6 +518,13 @@ def _add_own_cult(saga: Saga) -> None:
             ],
         )
     )
+
+
+def _add_players_sources_and_codex(saga: Saga) -> None:
+    saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
+    saga.sources.append(SagaSource("HR", "House rules"))
+    saga.codices.append(Codex("codex", "Bound together", palimpsest=True))
+    saga.books[0].codex_id = "codex"
 
 
 def _saga_with_every_record() -> Saga:
@@ -574,7 +597,11 @@ def _saga_with_every_record() -> Saga:
     rhine.cases.append(Case("Interference"))
     rhine.rulings.append(Ruling("No new covenants on the Rhine"))
     rhine.treasury.append(TreasuryEntry("vis", 5, "Vim"))
-    rhine.diary.append(TribunalDiaryEntry(1221))
+    # A diary entry, and an argument with its polemic (TME pp. 27-35).
+    rhine.diary, rhine.arguments = (
+        [TribunalDiaryEntry(1221)],
+        [models.Argument("Charters", texts=[models.PolemicText(book_id="b")])],
+    )
     device = saga.enchanted_devices[0]
     device.bonuses.append(ShapeMaterialBonus(3, "fire", "Oak"))
     saga.season_plans.append(
@@ -603,10 +630,7 @@ def _saga_with_every_record() -> Saga:
     )
     saga.custom_boons_hooks.append(CovenantBoonHookDef("bh", "BH", "Boon", "Minor", 1))
     _add_own_goods_and_abilities(saga)
-    saga.players.append(Player("ana", "Ana", "player", "scrypt$00$00"))
-    saga.sources.append(SagaSource("HR", "House rules"))
-    saga.codices.append(Codex("codex", "Bound together", palimpsest=True))
-    saga.books[0].codex_id = "codex"
+    _add_players_sources_and_codex(saga)
     other = saga.covenants[0]
     other.attitudes.append(Attitude(other.id, 1, [Reason("Helped at the ford", 1)]))
     other.favours.append(Favour("Shelter", "Fengheld", other.id))
@@ -644,6 +668,10 @@ def _saga_with_every_record() -> Saga:
     )
     saga.sieges.append(
         Siege("A siege", events=[SiegeEvent(7, "Keep the stockade", "It holds.")])
+    )
+    # A marriage (Lords of Men pp. 10-11).
+    saga.marriages.append(
+        models.Marriage(bride="Adelheid", groom_ref="neighbour:gottfried", lands=2)
     )
     return saga
 

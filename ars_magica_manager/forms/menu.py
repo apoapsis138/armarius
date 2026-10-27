@@ -99,6 +99,7 @@ from . import church as church_forms
 from . import craft_magic as craft_forms
 from . import creation as creation_forms
 from . import creature as creature_forms
+from . import criamon as criamon_forms
 from . import faerie_dealings as faerie_forms
 from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
@@ -206,6 +207,17 @@ NOT_ON_PAGES = frozenset(
         "tower_conjure",
         "show_project",
         "begin_project",
+        # A lord's marriages: the Marriages list's own button.
+        "end_marriage",
+        # A covenant's Menagerie: the Beasts list's own button.
+        "tame_beast",
+        # Polemic and Charter Strength: the Texts list's and the charter
+        # lords' own buttons.
+        "circulate_text",
+        "draft_charter",
+        "seek_loophole",
+        # A Criamon magus's path: its own Follow an Avenue button.
+        "follow_avenue",
     }
 )
 
@@ -1735,4 +1747,6 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "perform_exorcism": _needs(_character, church_forms.exorcism_step),
     # Wizard's War's tunnel (Hermetic Projects pp. 78-81).
     "open_tunnel": _needs(_character, tunnel_forms.tunnel_form),
+    # A Criamon magus's path (HoH:MC pp. 58-73).
+    "follow_avenue": _needs(_character, criamon_forms.avenue_step),
 }

@@ -418,6 +418,14 @@ feudal duties except what the charter asks; the charter can't make the
 magi serve him. Its lords, as a town's [Lords](help:section-nb-charter-lords)
 are kept. Add, edit or delete a lord.
 
+With the saga's Charter Strength option on (Transforming Mythic Europe
+p. 36), each lord's charter has two scores, the lord's (the superior
+signatory's) and the town's or covenant's (the subordinate's). They show
+in the lord's details and can be typed on his form, with **In England**
+for an English charter (its notaries use Common Law, not Civil and Canon
+Law); More's Draft the Charter rolls one and Seek a Loophole looks for
+grounds against one.
+
 ### Charter terms
 <!-- help: section-cov-charter-terms -->
 
@@ -944,6 +952,37 @@ The tower's ledger: rituals (their levels, Finesse roll and quality), the master
 <!-- help: section-cov-tower-devices -->
 
 The enchanted devices that speed the building (HP pp. 39-41): each adds +1 to the mason's Craft: Mason for the rate (The Arms of Hercules, True Falsework, The Stonemason's Art, The Laborer's Rest; each kind once); a Flying Buttress adds +1 to stress checks instead, as many as his Craft: Mason; the Water Wheel adds +1 Innovation, to +3.
+
+### The Menagerie
+<!-- help: section-cov-menagerie -->
+
+A Menagerie of magical beasts is the second kind of Hermetic Project (Hermetic Projects pp. 119-142). With one shown (Show Project on the projects list), the tab shows the menagerie, its beasts and its breedings in place of a tower's sections. Edit Project names its site (the place whose aura the beasts live in; the covenant's own aura without one), up to three handlers, the lead handler first, its owner and the name of his Reputation.
+
+- **Site**: the place and its aura. A beast that always lives in a Magic aura weaker than its Might / 5 (rounded up) suffers Acclimation and is named in a warning (Realms of Power: Magic p. 53; HP p. 119). An enchanted brand that is always working may help (HP p. 130).
+- **Can tend** (HP p. 136): each handler tends 10 domesticated herbivores per point of Animal Handling, half as many carnivores, a fifth as many wild beasts; "holding" counts the beasts the same way, and a warning shows when they are more than the staff can tend.
+- **Upkeep** (HP p. 123): a beast costs Inhabitants points as a horse (Size +3) costs 1, each Size smaller doubling how many cost a point and each Size larger doubling the points; a carnivore costs double; the total is rounded up. It counts in the covenant's points of inhabitants.
+- **Reputation** (HP p. 138): the owner's Reputation of that name, from his sheet. The storyguide awards its experience points: HP suggests 1 for every 10 visitors, 1 per magnitude of a captured beast's Might, 1 for every year past the first, 1 for each beast sold.
+- **As realia** (HP p. 123): studied, the menagerie counts as a tractatus of Quality equal to its magical breeds, usually in Magic Lore; its collector can't study it.
+
+### Beasts
+<!-- help: section-cov-menagerie-beasts -->
+
+The menagerie's beasts, one beast or several alike to a row. Each is a Beast of Virtue, a Beast of Legend or a Transformed Animal (no Might, never breeds true; HP p. 124), of an animal, its kind (lions, horses), and a breed of it (a destrier, a jennet; HP p. 131; a realia counts breeds), with its Might when grown and its Form, its Size, sex, diet, and whether it has Cunning. "In the Bestiary" ties it to a creature of the saga's Bestiary: choosing one fills its Might, Form, Size and Cunning. A beast born in the menagerie has the year it was born: until it is grown (five years for most) its Might is its grown Might divided by its years to grow, rounded down, at least 1 (HP p. 134). Ferocity is an aggressive beast's, taken off its Breeding Roll. Brands are listed one a line: a brand is an enchanted device of material 2, x2 for a palm's size, x3 a haunch, x4 the whole back (HP p. 130).
+
+Its state: Tamed (ticked, or its taming finished), Taming (its tamer's points so far), Young or Wild.
+
+**Tame a Beast** (More; the desktop's button): plans the chosen beast's taming. Choose who tames it. A magus's season is a Rego (its Form) lab season in his laboratory, his Lab Total (with Animal Handling and Animal Ken) less the beast's Might; anyone else's is Intelligence (Magic Lore for a Master of Creatures) + Animal Handling + Animal Ken - its Might, less the Gift's penalty (DE pp. 384-385). Plan saves a magus's or companion's season, worked out when the season is played; a grog plans no seasons, so his season is kept at once. Points last only over consecutive seasons and stay with their tamer; the beast is tamed when they reach its Might. A young beast is tamed at its smaller Might (HP p. 134). Only a beast with Cunning can be tamed; an Intelligent one must be befriended (HP p. 135).
+
+### Breedings
+<!-- help: section-cov-menagerie-breedings -->
+
+Each season's breeding of a pair, as rolled. Add is **Breed a Pair**, HP's optional rules (pp. 140-142): choose the male and the female, what the breeding aims at (just young, for the best of a breed, or for the beast, a new line), the diet and environment, similar animals near, the pair the only ones of their kind (ticked when no other beast of their animal, of any breed, is kept; HP pp. 131, 141), a Hermetic spell's magnitudes, a ligature (Art & Academe p. 68) and the lead handler.
+
+- **Breeding Roll**: stress die + adequate diet +1 (inadequate -2) + agreeable environment +1 (unsatisfactory -2) + a spell +1 per 2 magnitudes + herbivore +1 (carnivore -1) + the lead handler's Animal Handling / 5 and Magic Lore / 5 (each rounded up) - a magical beast's Might in magnitudes - 3 for the only pair of its kind (its animal, any breed) + 1 for similar animals near + 3 if both are tamed - an aggressive beast's Ferocity, against 9. A botch: one escapes (one botch), is sterile (two), is hurt mating (three or more).
+- **The young**: as many as suit the kind; each is male on an even simple die. For the best or for the beast, each rolls a stress die + diet, environment, a spell +1 a magnitude, a ligature +1 to +3 (and +3 for a crossbred dam like her own dam): for the best a botch gives a Major Supernatural Flaw or Inferiority, 0 a Minor one, 1-3 weak (Stamina -1), 4-12 like its parents, 13-15 hardy (Stamina +1), 16-17 a Minor Virtue or Quality, 18+ a Major one; for the beast a botch dies days after birth, 0 weaker than its sire, 1-12 like its sire, 13 like its dam, 14 its sire's with a Minor Virtue or Quality of its dam's, 15+ a Major one.
+- **Birth** is played out: the dam rolls as for a Medium Wound every two hours (doubled for each Size above 0), a handler adding his Animal Handling; a hatchling rolls Stamina + Survival + stress die against 9 (HP p. 134; Art & Academe p. 62).
+
+Roll keeps the breeding and, with "Add the young to Beasts" ticked, adds each young that lives to the beasts: of its sire's kind, animal and breed (its dam's on a 13 for the beast), born this year, with the result in its note. A young of one magical parent is magical only exceptionally (HP p. 134), so it is added with no Might. Edit corrects a breeding as kept.
 
 ## Economics tab
 <!-- help: tab-cov-economics -->

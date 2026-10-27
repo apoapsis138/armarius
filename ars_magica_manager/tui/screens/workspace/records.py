@@ -18,11 +18,13 @@ from .... import (
     grog_templates,
     lords,
     manors,
+    marriages,
     place_events,
     places,
     ruins,
     storage,
     threats,
+    town_charter,
     town_court,
     towns,
     tribunal_packages,
@@ -33,12 +35,14 @@ from ....actions import (
     NodeKind,
 )
 from ....commands import Command, Go
+from ....forms import charter_strength as charter_strength_forms
 from ....forms import choice_templates as choice_forms
 from ....forms import creation as creation_forms
 from ....forms import creature as creature_forms
 from ....forms import go_to as go_to_forms
 from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
+from ....forms import polemic as polemic_forms
 from ....forms import tribunal as tribunal_forms
 from ....markup import escape
 from ....models import (
@@ -48,9 +52,12 @@ from ....models import (
     Neighbour,
 )
 from ....sections import (
+    ARGUMENT_TEXTS_SECTION,
     BATTLES_SECTION,
     CASES_SECTION,
+    CHARTER_LORDS_SECTION,
     COURT_CASES_SECTION,
+    COV_CHARTER_LORDS_SECTION,
     DIARY_SECTION,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
@@ -61,6 +68,8 @@ from ....sections import (
     LIBRARY_RULES_SECTION,
     LIBRARY_SEARCHES_SECTION,
     MANORS_SECTION,
+    MARRIAGE_TERMS_SECTION,
+    MARRIAGES_SECTION,
     NEIGHBOUR_INFO_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
@@ -683,4 +692,85 @@ class RecordActions(WorkspaceBase):
             self.app,
             tomb_rules.overcome_trap(self.saga, view.neighbour, row),
             lambda _end: self._commit(TOMB_TRAPS_SECTION, DIARY_SECTION),
+        )
+
+    # -- a lord's marriages --
+
+    def action_end_marriage(self) -> None:
+        """More's End a Marriage on a lord's chosen marriage: a lord who
+        dies goes on to Settle an Inheritance."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(MARRIAGES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            marriages.end_form(self.saga, view.neighbour, row),
+            lambda _end: self._commit(
+                MARRIAGES_SECTION,
+                MARRIAGE_TERMS_SECTION,
+                HOUSEHOLD_SECTION,
+                NEIGHBOUR_INFO_SECTION,
+                DIARY_SECTION,
+            ),
+        )
+
+    # -- polemic and Charter Strength (Transforming Mythic Europe) --
+
+    def action_circulate_text(self) -> None:
+        """More's Circulate a Text on the chosen argument's chosen text."""
+        view = self._tribunal_sheet_view
+        if view is None:
+            return
+        run_steps(
+            self.app,
+            polemic_forms.circulate_form(
+                self.saga,
+                view.tribunal,
+                view.chosen_argument,
+                view.section_row(ARGUMENT_TEXTS_SECTION),
+            ),
+            lambda _end: self._commit(ARGUMENT_TEXTS_SECTION),
+        )
+
+    def _charter_lords(self) -> tuple[Neighbour, str, int] | None:
+        """The charter whose lord is chosen: a town's, or the covenant's own
+        (as the town record its forms act on), its section and the row."""
+        view = self._current_sheet_view()
+        if view is None:
+            return None
+        if self.selected_kind == NodeKind.NEIGHBOUR and self._neighbour_sheet_view:
+            charter: Neighbour | None = self._neighbour_sheet_view.neighbour
+            section = CHARTER_LORDS_SECTION
+        else:
+            covenant = self.selected_covenant
+            charter = town_charter.charter_of(covenant) if covenant else None
+            section = COV_CHARTER_LORDS_SECTION
+        row = view.section_row(section)
+        if charter is None or row is None:
+            return None
+        return charter, section, row
+
+    def action_draft_charter(self) -> None:
+        """More's Draft the Charter on the chosen charter lord."""
+        found = self._charter_lords()
+        if found is None:
+            return
+        charter, section, row = found
+        run_steps(
+            self.app,
+            charter_strength_forms.draft_form(self.saga, charter, row),
+            lambda _end: self._commit(section),
+        )
+
+    def action_seek_loophole(self) -> None:
+        """More's Seek a Loophole on the chosen charter lord."""
+        found = self._charter_lords()
+        if found is None:
+            return
+        charter, section, row = found
+        run_steps(
+            self.app,
+            charter_strength_forms.loophole_form(self.saga, charter, row),
+            lambda _end: self._commit(section),
         )

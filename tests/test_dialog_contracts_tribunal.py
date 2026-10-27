@@ -1036,6 +1036,128 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Art, Ability or spell": ""},
         shown={"#trib-library-searches-list": "Certamen"},
     ),
+    # A lord's marriages (Lords of Men pp. 10-11; DE pp. 148, 512-513).
+    "arrange marriage": Contract(
+        prefill={
+            "Season": "Autumn",
+            "It stands": "betrothed",
+            "Her parents' children": "1",
+        },
+        edits={
+            "Bride's name": "Adelheid of Sayn",
+            "Groom": "neighbour:gottfried",
+            "Her parents' land (manors)": "6",
+            "Her parents' children": "2",
+        },
+        saved=lambda s: s.marriages[-1].groom_ref,
+        expected="neighbour:gottfried",
+        invalid=[{"Bride's name": ""}, {"Her parents' children": "0"}],
+        live={"#fields-live": "6 manors / 2"},
+        shown={
+            "#nb-marriages-list": "Adelheid of Sayn",
+            "#section-nb-marriages": "(1)",
+        },
+    ),
+    "edit marriage": Contract(
+        prefill={"Bride's name": "Adelheid of Sayn", "It stands": "married"},
+        edits={"Note": "A love match"},
+        saved=lambda s: s.marriages[0].note,
+        expected="A love match",
+        invalid={"Bride's name": ""},
+        shown={"#nb-marriages-list": "Married"},
+    ),
+    "edit marriage terms": Contract(
+        prefill={"Her parents' land (manors)": "4"},
+        edits={"Custom for the dowry": "england"},
+        saved=lambda s: s.marriages[0].custom,
+        expected="england",
+        invalid=[
+            {"Her parents' land (manors)": "-1"},
+            # With a patrimony the eldest son comes out of the division too.
+            {"The eldest son's patrimony, kept out (French custom)": "1"},
+        ],
+        shown={"#nb-marriage-facts": "England"},
+    ),
+    "end marriage": Contract(
+        prefill={"It ends": "husband", "Season": "Autumn"},
+        edits={"It ends": "part"},
+        saved=lambda s: s.marriages[0].ended,
+        expected="part",
+        live={"#fields-live": "feud"},
+        shown={"#nb-marriages-list": "Separated"},
+    ),
+    # Polemic and Charter Strength (Transforming Mythic Europe pp. 27-36).
+    "add argument": Contract(
+        prefill={"Argument": "", "It concerns": "tribunal", "It backs": "for"},
+        edits={"Argument": "Covenants may hold charters", "It concerns": "covenant"},
+        saved=lambda s: [(a.topic, a.reach) for a in s.tribunal("rhine").arguments],
+        expected=[("Covenants may hold charters", "covenant")],
+        invalid={"Argument": ""},
+        shown={
+            "#trib-arguments": "Covenant 6",
+            "#section-trib-arguments": "(1)",
+        },
+    ),
+    "edit argument": Contract(
+        prefill={"Argument": "Covenants may hold charters", "Its ideal": "Charters"},
+        edits={"Last debate": "won"},
+        saved=lambda s: s.tribunal("rhine").arguments[0].outcome,
+        expected="won",
+        invalid={"Argument": ""},
+        shown={"#trib-argument-text": "won: its bonus carries"},
+    ),
+    "add text": Contract(
+        prefill={"Kind": "polemic", "Circulated to": "tribunal"},
+        edits={"Book": "b-polemic", "Seasons spent circulating": "1"},
+        saved=lambda s: [
+            (t.kind, t.book_id, t.author_id, t.seasons_spent)
+            for t in s.tribunal("rhine").arguments[0].texts
+        ],
+        expected=[("polemic", "b-polemic", "mag1", 1)],
+        invalid={"Seasons spent circulating": "-1"},
+        shown={
+            "#trib-argument-texts": "Summa, Code of Hermes L4 Q11",
+            "#section-trib-argument-texts": "(1)",
+        },
+    ),
+    "circulate text": Contract(
+        prefill={"Seasons spent so far (+1 each)": "0", "To": "tribunal"},
+        edits={"Seasons spent so far (+1 each)": "1"},
+        saved=lambda s: s.tribunal("rhine").arguments[0].texts[0].seasons_spent,
+        expected=2,
+        invalid={"Seasons spent so far (+1 each)": "x"},
+        live={"#fields-live": "+ 1 for seasons spent"},
+        shown={"#trib-argument-texts": "Circulat"},
+    ),
+    "draft charter": Contract(
+        prefill={
+            "Drawn up for": "subordinate",
+            "Other notaries (−1 botch die each)": "0",
+        },
+        edits={"Other notaries (−1 botch die each)": "2", "In England": True},
+        saved=lambda s: (
+            isinstance(
+                s.neighbour("soest")
+                .details["charter_lords"][0]
+                .get("subordinate_strength"),
+                int,
+            ),
+            s.neighbour("soest").details["charter_lords"][0].get("in_england"),
+        ),
+        expected=(True, True),
+        invalid={"Other notaries (−1 botch die each)": "-1"},
+        live={"#fields-live": "1 botch dice"},
+    ),
+    "seek loophole": Contract(
+        prefill={"Searching for": "subordinate", "Season": "Autumn"},
+        edits={"Year": "1221"},
+        saved=lambda s: s.neighbour("soest").details["charter_lords"][0][
+            "superior_strength"
+        ],
+        expected=0,
+        invalid={"Searching for": "superior"},
+        live={"#fields-live": "Charter Strength 0"},
+    ),
 }
 
 

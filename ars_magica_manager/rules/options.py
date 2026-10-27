@@ -44,6 +44,10 @@ STANDARD_APPRENTICESHIP = "standard_apprenticeship"
 HAZARDOUS_LAB_TEXTS = "hazardous_lab_texts"
 NO_MAGICAL_LAB_TEXTS = "no_magical_lab_texts"
 
+#: Charter Strength (Transforming Mythic Europe p. 36): a charter's two
+#: scores, drafted by each side's notaries, and loopholes sought in it.
+CHARTER_STRENGTH = "charter_strength"
+
 
 @dataclass(frozen=True)
 class RuleOption:
@@ -279,6 +283,18 @@ OPTIONS: tuple[RuleOption, ...] = (
             "Transforming Mythic Europe, Optional Rule: No Magical Copying of "
             "Laboratory Texts, p. 104"
         ),
+        book="TME",
+    ),
+    # Charter Strength (Transforming Mythic Europe).
+    RuleOption(
+        key=CHARTER_STRENGTH,
+        label="Charter Strength",
+        effect=(
+            "A charter between a lord and a town or covenant has two scores, "
+            "the lord's and the other side's, rolled by each side's notaries "
+            "when it is drafted; a season's search may find a loophole in it."
+        ),
+        source="Transforming Mythic Europe, Optional Rule: Charter Strength, p. 36",
         book="TME",
     ),
 )

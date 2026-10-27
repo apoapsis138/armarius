@@ -29,12 +29,12 @@
       (none recorded)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 92)
+    ▼ Traditions Offered (1 of 93)
 
         On       Book       Tradition
       ○ no       HMRE       Elementalists
       ○ no       HMRE       Folk Witches
-      ○ no       HMRE       Gruagachan                                                                ▆▆
+      ○ no       HMRE       Gruagachan                                                                ▇▇
       ○ no       HMRE       Learned Magicians
       ○ no       HMRE       Nightwalkers
       ○ yes      HMRE       Vitkir

@@ -279,10 +279,15 @@ class HelpScreen(ModalDialog[None]):
         markdown = self.query_one("#help-page", Markdown)
         for _, title, block_id in markdown.table_of_contents or ():
             if str(title) == topic.title and block_id:
-                heading = markdown.query_one(f"#{block_id}")
-                if heading.virtual_region.y == 0 and tries:
+                # The contents can name a heading not mounted yet.
+                found = markdown.query(f"#{block_id}")
+                waiting = not found or found.first().virtual_region.y == 0
+                if waiting and tries:
                     self.call_after_refresh(self._scroll_to, topic_id, tries - 1)
                     return
+                if not found:
+                    return
+                heading = found.first()
                 scroll.scroll_to_widget(heading, top=True, animate=False)
                 return
 

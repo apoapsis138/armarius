@@ -34,7 +34,7 @@ from collections.abc import Callable, Iterator
 from dataclasses import dataclass, replace
 from typing import Any
 
-from . import acta, ruling_templates, tribunal_packages, tribunals, world
+from . import acta, polemic, ruling_templates, tribunal_packages, tribunals, world
 from .arts import ARTS
 from .commands import Command, Confirm, Form, Refuse, SectionOps, Then
 from .form_spec import DialogField, pairs
@@ -1217,6 +1217,9 @@ class Hearing(Step):
                     "but may recommend the proposal to the next Grand Tribunal.",
                 )
             )
+        argued = _polemic_words(saga, tribunal, case)
+        if argued:
+            found.append(DialogField("polemic", "Arguments", "info", argued))
         entered = kept.get("entered") and not kept.get("settled")
         found += [
             DialogField(
@@ -1344,16 +1347,31 @@ class Hearing(Step):
                 [debate.testimony_bonus(e) for e in _lines(case.evidence)],
                 [debate.testimony_bonus(e) for e in _lines(defence)],
             )
+            argued = polemic.case_bonuses(saga, tribunal, case)
+            panel = self._panel(saga, tribunal, meeting, speakers, skills, record)
             held = debate.run(
-                (sides[0], sides[1]),
+                (
+                    replace(sides[0], polemic=argued[0]),
+                    replace(sides[1], polemic=argued[1]),
+                ),
                 testimony,
                 record["rounds"],
                 rng(),
-                panel=self._panel(saga, tribunal, meeting, speakers, skills, record),
+                panel=[replace(m, polemic=argued[1]) for m in panel] if panel else None,
             )
-            record |= {"lost": held.lost, "entered": False, "lines": held.lines}
+            record |= {
+                "lost": held.lost,
+                "entered": False,
+                "lines": held.lines,
+                "polemic": list(argued),
+            }
         meeting.setdefault("debates", {})[case.id] = record
         _keep_note(meeting, self.key, values)
+        if not record.get("settled"):
+            # An argument backing the winner is won, one backing the loser
+            # lost (Transforming Mythic Europe p. 35).
+            won = certamen_winner(meeting, case) or strength(meeting, case)[0]
+            polemic.record_outcome(tribunal, case, _POLEMIC_SIDES.get(won or ""))
 
     def _panel(
         self,
@@ -1467,6 +1485,26 @@ def _lines(text: str) -> list[str]:
     return [line.strip() for line in text.splitlines() if line.strip()]
 
 
+#: A hearing's sides as an argument names them.
+_POLEMIC_SIDES = {FOR: "for", AGAINST: "against"}
+
+
+def _polemic_words(saga: Saga, tribunal: Tribunal, case: Case) -> str:
+    """The arguments circulated for and against `case` and the bonus each
+    side gains from them on every Attack and Defense (Transforming Mythic
+    Europe p. 31); "" for none."""
+    argued = polemic.arguments_for(tribunal, case)
+    if not argued:
+        return ""
+    bonuses = polemic.case_bonuses(saga, tribunal, case)
+    names = ", ".join(escape(a.topic) for a in argued)
+    return (
+        f"{names}: {polemic.signed(bonuses[0])} for it, "
+        f"{polemic.signed(bonuses[1])} against it, on every Attack and Defense "
+        "(Transforming Mythic Europe p. 31)."
+    )
+
+
 def _character(saga: Saga, name: str) -> Character | None:
     wanted = name.strip().casefold()
     if not wanted:
@@ -1507,8 +1545,16 @@ def debate_text(meeting: Meeting, case: Case) -> str:
             f"({name}): {won}"
         )
     rounds = [escape(line) for line in held_debate.get("lines", [])]
+    argued = held_debate.get("polemic") or [0, 0]
+    texts = (
+        f"[$label]Polemic:[/] {polemic.signed(argued[0])} for it, "
+        f"{polemic.signed(argued[1])} against it, on every Attack and Defense."
+        if any(argued)
+        else ""
+    )
     return _join(
         f"[$label]The debate:[/] {escape(sides)} levels; {escape(outcome)}.",
+        texts,
         *rounds,
     )
 

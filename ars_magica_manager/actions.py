@@ -64,7 +64,7 @@ from .models import (
     Tribunal,
 )
 from .rules import agents as agent_rules
-from .rules import apothecary, covenfolk, merchants, philosophy
+from .rules import apothecary, covenfolk, merchants, options, philosophy
 from .rules import clergy as clergy_rules
 from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
@@ -76,12 +76,14 @@ from .rules import tmre_alchemy as tmre_alchemy_rules
 from .sections import (
     AGENTS_SECTION,
     AHEAD_SECTION,
+    ARGUMENT_TEXTS_SECTION,
     BATTLES_SECTION,
     BOOK_SECTIONS,
     BOOKS_SECTION,
     CASES_SECTION,
     CATALOGS_SECTION,
     CHAR_AHEAD_SECTION,
+    CHARTER_LORDS_SECTION,
     CHARTER_SECTION,
     CLAUSES_SECTION,
     CONFLICT_BATTLES_SECTION,
@@ -89,6 +91,7 @@ from .sections import (
     CORE_SECTIONS,
     COURT_CASES_SECTION,
     COV_AHEAD_SECTION,
+    COV_CHARTER_LORDS_SECTION,
     CREATURE_INFO_SECTION,
     CULT_DEGREES_SECTION,
     CULTS_SECTION,
@@ -461,6 +464,16 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("w", "show_project", "Show Project"),
     MenuItem("b", "begin_project", "Begin Project"),
     MenuItem("o", "open_tunnel", "Open a Tunnel"),
+    # A lord's marriages: the chosen one ends (LoM p. 11; DE pp. 148, 513).
+    MenuItem("x", "end_marriage", "End a Marriage"),
+    # A covenant's Menagerie (Hermetic Projects): taming the chosen beast.
+    MenuItem("t", "tame_beast", "Tame a Beast"),
+    # Polemic and Charter Strength (Transforming Mythic Europe pp. 27-36).
+    MenuItem("c", "circulate_text", "Circulate a Text"),
+    MenuItem("d", "draft_charter", "Draft the Charter"),
+    MenuItem("o", "seek_loophole", "Seek a Loophole"),
+    # A Criamon magus's path: plan the next avenue (HoH:MC pp. 58-73).
+    MenuItem("v", "follow_avenue", "Follow an Avenue"),
 )
 
 #: The More commands offered in one section only, by that section's id.
@@ -522,6 +535,14 @@ MORE_SECTIONS: dict[str, str] = {
     "tower_stress": "section-cov-tower",
     "tower_conjure": "section-cov-tower",
     "show_project": "section-cov-projects",
+    # A lord's marriages: End a Marriage on the chosen one.
+    "end_marriage": "section-nb-marriages",
+    # A covenant's Menagerie: Tame a Beast on the chosen beast.
+    "tame_beast": "section-cov-menagerie-beasts",
+    # Polemic: Circulate a Text on an argument's chosen text.
+    "circulate_text": ARGUMENT_TEXTS_SECTION,
+    # A Criamon magus's path: Follow an Avenue.
+    "follow_avenue": "section-char-criamon-path",
 }
 
 #: Where in the navigation each record can be created: the saga, and
@@ -1482,6 +1503,17 @@ def _plans_journey(_facts: ActionFacts, section: str) -> bool:
     return section in (AHEAD_SECTION, COV_AHEAD_SECTION)
 
 
+def _on_charter_lord(facts: ActionFacts, section: str) -> bool:
+    """Draft the Charter and Seek a Loophole: on a town's or a covenant's
+    charter lords, with a lord chosen, while the saga uses the Charter
+    Strength rule (TME p. 36)."""
+    return (
+        section in (CHARTER_LORDS_SECTION, COV_CHARTER_LORDS_SECTION)
+        and facts.chosen_row(section) is not None
+        and options.is_on(facts.saga, options.CHARTER_STRENGTH)
+    )
+
+
 def _imports(facts: ActionFacts, section: str) -> bool:
     return facts.selected_kind == NodeKind.SAGA or section in LIBRARY_SECTIONS
 
@@ -1557,4 +1589,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
             facts.chosen_row(CULT_DEGREES_SECTION),
         )
     ),
+    # Charter Strength (TME p. 36), on a charter's chosen lord.
+    "draft_charter": _on_charter_lord,
+    "seek_loophole": _on_charter_lord,
 }

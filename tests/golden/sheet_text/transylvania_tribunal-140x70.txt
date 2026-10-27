@@ -11,7 +11,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diar
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Cove
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -79,7 +79,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diar
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Cove
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   History: not written yet. Edit the Tribunal (e) to tell it.
@@ -147,7 +147,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diar
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Cove
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -202,6 +202,74 @@
   ▌
 
 
+===== tab-trib-arguments
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Transylvania
+
+      Customs:       Transylvania: Privileges            Praeco:              (not chosen)
+      Meets every:   7 years                             Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1228                         Covenants:           0
+      Meeting place: the Shipka Pass                     Magi:                0
+      Cases:         none pending                        Your votes:          0 of 0
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Cove
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arguments (0)
+
+      No argument yet: Add one, then its polemic as a text.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ No argument chosen
+
+      Add an argument to follow its texts and its total.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Texts (0)
+
+      Add an argument first.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a text.
+  ▌
+
+
 ===== tab-trib-meeting
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -215,7 +283,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diar
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Cove
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   The Next Meeting: Summer 1228
@@ -283,7 +351,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diary
+  istory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Covenants  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Transylvania: Privileges. Its magi live in oppida, and each belongs to one of five legal covenants,
@@ -351,7 +419,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diary  9 Secrets
+  cket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Covenants  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -419,7 +487,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diary  9 Secrets
+  cket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Covenants  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -487,7 +555,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diary  9 Secrets
+  cket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Covenants  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -555,7 +623,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Five Covenants  8 Diary  9 Secrets
+  cket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Five Covenants  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

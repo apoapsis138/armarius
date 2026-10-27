@@ -9,6 +9,7 @@ from dataclasses import dataclass, field
 from typing import Any, TypedDict
 
 from .common import Change, known_fields, move_secrets
+from .polemic import Argument
 from .traits import new_instance_id
 
 #: The Tribunal package every saga has: the Definitive Edition's rules,
@@ -227,6 +228,9 @@ class Tribunal:
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
+    # Polemic (Transforming Mythic Europe pp. 27-35): the arguments meant
+    # for coming meetings, each with its texts. Older saves load without.
+    arguments: list[Argument] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Tribunal:
@@ -244,4 +248,5 @@ class Tribunal:
             TribunalDiaryEntry(**known_fields(TribunalDiaryEntry, e))
             for e in d.get("diary", [])
         ]
+        d["arguments"] = [Argument.from_dict(a) for a in d.get("arguments") or []]
         return cls(**d)

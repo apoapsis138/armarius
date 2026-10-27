@@ -109,6 +109,45 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.27.0 — 2026-10-27
+
+### Concilium
+
+- **Polemic** (Transforming Mythic Europe pp. 28-35): an Arguments tab on
+  a Tribunal, with each case's polemic, diatribes and apologia written on
+  any knowledge Ability, their circulation and Reputations, and one
+  Argument Total for each side of a debate.
+- **Charter Strength** (TME p. 36), a saga option: a charter's strength
+  for its lord and his subjects, Draft the Charter and Seek a Loophole, by
+  Civil and Canon Law, or Common Law in England.
+
+### Pagina
+
+- **The Menagerie** (Hermetic Projects pp. 122-142): a second kind of
+  project, with its beasts, their animal and breed, taming, breeding by
+  the book's optional rules, the young's Might, what the staff can tend,
+  acclimation, upkeep and Realia.
+
+### Orbis
+
+- **Battles at sea** (Lords of Men pp. 105-106; Tales of Power pp.
+  106-110): a battle fought by ships from a covenant's Possessions, with
+  pilots, the Weight of Numbers by ships, and events at sea.
+- **Marriages** (Lords of Men pp. 10-11, 81; City & Guild p. 113): a
+  Marriages tab on a lord, with noble and merchant dowries and their
+  terms by custom, and End a Marriage leading to Settle an Inheritance.
+- A widow keeps the profit of a third of her husband's land until she
+  remarries, and the daughters' inheritance gives both customs (DE pp.
+  512-513).
+
+### Computus
+
+- **House Criamon's Enigma** (HoH: Mystery Cults pp. 50-73): The Enigma
+  chapter for a Criamon magus, with his path, its stations and stigmata;
+  Follow an Avenue and Change Path, with the House's guide at Presence +
+  Lore 6, each station's Virtues and Ordeals, and the Path of the Mirror
+  for the Primus.
+
 ## 3.26.0 — 2026-10-27
 
 ### Sodales

@@ -16,17 +16,19 @@ from collections.abc import Callable
 from typing import Any
 
 from . import armies, diaries
+from . import fleet_battles as fleet
 from .commands import Command, Confirm, Form, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
 from .models import SEASONS, Battle, BattleEvent, BattleSide, Neighbour, Saga
 from .rules import battle
+from .rules import fleet_battle as fleet_rules
 from .rules.lab import ability_score
 
 #: What a side can be: a covenant, or one of the Region's powers.
 ARMY_KINDS = ("lord", "town", "threat", "faction", "church")
-COVENANT, NEIGHBOUR = "covenant:", "neighbour:"
+COVENANT, NEIGHBOUR = fleet.COVENANT, fleet.NEIGHBOUR
 
 
 def sides(entry: Battle) -> list[BattleSide]:
@@ -54,8 +56,11 @@ def involving(saga: Saga, neighbour: Neighbour) -> list[Battle]:
     ]
 
 
-def weight(entry: Battle, side: int = 0) -> int:
-    """`side`'s Weight of Numbers against the other."""
+def weight(entry: Battle, side: int = 0, saga: Saga | None = None) -> int:
+    """`side`'s Weight of Numbers against the other: by combat groups, or
+    at sea (with the `saga` that holds the ships) by ships."""
+    if entry.at_sea and saga is not None:
+        return fleet.weight(saga, sides(entry), side)
     mine, theirs = sides(entry)[side], sides(entry)[1 - side]
     return battle.weight_of_numbers(mine.groups, theirs.groups)
 
@@ -95,6 +100,14 @@ def morale_text(event: BattleEvent) -> str:
     return words[result]
 
 
+def ships_text(saga: Saga, entry: Battle) -> str:
+    """ "3 v 2": each fleet's ships afloat ("" for a battle on land)."""
+    if not entry.at_sea:
+        return ""
+    first, second = (fleet.ship_count(saga, side) for side in sides(entry)[:2])
+    return f"{first} v {second}"
+
+
 def record_text(entry: Battle) -> str:
     """Events the first side won and lost ("2 won, 1 lost"; "none yet")."""
     if not entry.events:
@@ -121,7 +134,7 @@ def grid(saga: Saga, neighbour: Neighbour | None = None) -> Grid:
             f"{side_name(saga, b, 0)} v {side_name(saga, b, 1)}",
             f"{sides(b)[0].groups} v {sides(b)[1].groups}",
             f"{territorial(b):+d}",
-            f"{weight(b):+d}",
+            f"{weight(b, saga=saga):+d}",
             record_text(b),
         ]
         for b in listed
@@ -174,6 +187,7 @@ def fields(
             required=True,
             placeholder="e.g. The ford at Werl",
         ),
+        fleet.fought_field(e),
         DialogField("place", "Where", "text", e.place, placeholder="e.g. by the Lippe"),
         DialogField("season", "Season", "select", e.season, options=pairs(SEASONS)),
         DialogField("year", "Year", "int", e.year),
@@ -231,6 +245,7 @@ def fields(
                 hint="A group for every ten combat groups (blank: as many as it "
                 "needs); each one short is -1 to its Event Totals.",
             ),
+            *fleet.side_fields(saga, side, index),
         ]
     return found
 
@@ -265,6 +280,7 @@ def _write(saga: Saga, entry: Battle, values: dict[str, Any]) -> None:
         side.baggage = (
             battle.baggage_needed(side.groups) if baggage is None else int(baggage)
         )
+    fleet.write(saga, entry, sides(entry), values)
 
 
 def problem(values: dict[str, Any]) -> str | None:
@@ -300,9 +316,13 @@ def ops(saga: Saga, neighbour: Neighbour | None = None) -> SectionOps:
             "Add a Battle" if entry is None else "Edit a Battle",
             lambda: fields(saga, entry, neighbour),
             apply,
-            validate=problem,
+            validate=lambda values: problem(values) or fleet.problem(saga, values),
+            live=lambda values: fleet.battle_live(saga, values),
             save_label="Add" if entry is None else "Save",
             help_id="section-nb-battles",
+            inspector="The Fleets"
+            if entry is not None and entry.at_sea
+            else "The Armies",
         )
 
     def remove(index: int) -> Command:
@@ -326,27 +346,43 @@ def info(saga: Saga, entry: Battle) -> str:
     lines = [
         f"[b]{escape(entry.name)}[/]  [dim]{entry.season} {entry.year}"
         + (f", {escape(entry.place)}" if entry.place else "")
+        + (", at sea" if entry.at_sea else "")
         + "[/]",
         f"{escape(side_name(saga, entry, 0))}: {first.groups} combat groups, "
         f"Deployment Total {first.deployment}, {first.baggage} baggage.",
-        f"{escape(side_name(saga, entry, 1))}: {second.groups} combat groups, "
-        f"Deployment Total {second.deployment}, {second.baggage} baggage.",
-        f"For the first army: Weight of Numbers {weight(entry):+d}, Territorial "
-        f"Advantage {territorial(entry):+d}.",
     ]
+    if entry.at_sea:
+        lines.append(fleet.side_line(saga, first))
+    lines.append(
+        f"{escape(side_name(saga, entry, 1))}: {second.groups} combat groups, "
+        f"Deployment Total {second.deployment}, {second.baggage} baggage."
+    )
+    if entry.at_sea:
+        lines.append(fleet.side_line(saga, second))
+    lines.append(
+        f"For the first army: Weight of Numbers {weight(entry, saga=saga):+d}"
+        + (" by ships" if entry.at_sea else "")
+        + f", Territorial Advantage {territorial(entry):+d}."
+    )
     for stage, event in enumerate(entry.events):
         who = saga.character(event.who)
         lines.append(
             f"{stage + 1}. {battle.stage_name(stage)} ({battle.ease_factor(stage)}): "
             f"{escape(who.name if who else '(gone)')} for "
-            f"{escape(side_name(saga, entry, event.side))}, {event.maneuver} "
+            f"{escape(side_name(saga, entry, event.side))}, "
+            + (f"{escape(fleet.event_words(event))}: " if event.deed else "")
+            + f"{event.maneuver} "
             f"{event.enemy} {event.size}, Event Total {event.total}: "
             f"{'won' if event.won else 'lost'}"
             + (f", {event.losses} groups lost" if event.losses else "")
             + (f"; {escape(morale_text(event))}" if morale_text(event) else "")
             + "."
         )
-    lines.append(f"[dim]{battle.SOURCE}.[/]")
+    lines.append(
+        f"[dim]{battle.SOURCE}"
+        + (f"; at sea, {fleet_rules.SOURCE}" if entry.at_sea else "")
+        + ".[/]"
+    )
     return "\n".join(lines)
 
 
@@ -368,7 +404,9 @@ def event_of(saga: Saga, entry: Battle, values: dict[str, Any]) -> battle.Event 
         stamina=who.characteristics.stamina,
         leadership=sum(ability_score(who, "Leadership")),
         territorial=territorial(entry, side),
-        weight=weight(entry, side),
+        weight=fleet.event_weight(saga, sides(entry), values, side)
+        if entry.at_sea
+        else weight(entry, side),
         maneuver=values.get("maneuver") or "Defend",
         enemy=values.get("enemy") or "Inexpensive",
         size=values.get("size") or "Lesser",
@@ -378,6 +416,14 @@ def event_of(saga: Saga, entry: Battle, values: dict[str, Any]) -> battle.Event 
 
 
 def event_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
+    """The Event Total so far; at sea, the ships engaged first."""
+    total = _event_total_live(saga, entry, values)
+    if entry.at_sea:
+        return fleet.event_live(saga, sides(entry), values) + "\n" + total
+    return total
+
+
+def _event_total_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
     stage = len(entry.events)
     event = event_of(saga, entry, values)
     if event is None:
@@ -398,7 +444,8 @@ def event_live(saga: Saga, entry: Battle, values: dict[str, Any]) -> str:
 
 
 def _event_fields(saga: Saga, entry: Battle) -> list[DialogField]:
-    return [
+    at_sea = fleet.event_fields(saga, entry, sides(entry)) if entry.at_sea else []
+    return at_sea + [
         DialogField(
             "who",
             "Leading the event",
@@ -491,7 +538,7 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         assert event is not None
         side = int(values.get("side") or 0)
         won = values.get("result") == "won"
-        mine = weight(entry, side)
+        mine = event.weight
         lost = battle.losses(event.size, mine if won else -mine)
         losing = 1 - side if won else side
         loser = sides(entry)[losing]
@@ -511,12 +558,20 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
             values.get("morale"),
             values.get("rally"),
         )
+        if entry.at_sea:
+            record.deed = str(values.get("deed") or fleet_rules.FLEET_EVENT_DEFAULT)
+            record.engaged_ships = fleet.engaged_ids(saga, sides(entry), values)
+            record.engaged_other = fleet.engaged_other(sides(entry), values)
+            record.naptha = bool(values.get("naptha"))
+        at_sea = fleet.event_words(record)
         spirit = morale_text(record)
         diaries.write(
             saga.current_year,
             saga.current_season,
             entry.name or "Battle",
-            f"{battle.stage_name(stage)}: {name} led {event.maneuver} for "
+            f"{battle.stage_name(stage)}"
+            + (f" at sea ({at_sea})" if at_sea else "")
+            + f": {name} led {event.maneuver} for "
             f"{side_name(saga, entry, side)} against {event.enemy} ({event.size}), "
             f"Event Total {event.total}: {'won' if won else 'lost'}"
             + (
@@ -535,12 +590,18 @@ def event_form(saga: Saga, entry: Battle | None) -> Command:
         entry.events.append(record)
 
     return Form(
-        f"Battle Event {stage + 1}: {escape(entry.name)}",
+        f"Battle Event {stage + 1}"
+        + (" at sea" if entry.at_sea else "")
+        + f": {escape(entry.name)}",
         lambda: _event_fields(saga, entry),
         apply,
+        validate=(lambda values: fleet.event_problem(sides(entry), values))
+        if entry.at_sea
+        else None,
         live=lambda values: event_live(saga, entry, values),
         save_label="Record",
         help_id="battle-event",
+        inspector="The Event" if entry.at_sea else "",
     )
 
 

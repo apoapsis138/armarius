@@ -211,6 +211,8 @@ TRADITION_SYMBOLS: dict[str, Path] = {
     "trad_merinita_mysteries": SYMBOLS / "houses" / "merinita.svg",
     # House Bjornaer's Mystery Cult.
     "trad_bjornaer_mysteries": SYMBOLS / "houses" / "bjornaer.svg",
+    # House Criamon's Mystery Cult.
+    "trad_criamon_mysteries": SYMBOLS / "houses" / "criamon.svg",
 }
 #: The symbol every Mystery Cult of a saga's own shows (one the troupe
 #: invents has no book's emblem): a keyhole in a ring, drawn by

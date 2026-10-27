@@ -18,9 +18,11 @@ from ars_magica_manager.models import (
     Ability,
     AbilityDef,
     Agent,
+    Argument,
     Battle,
     BattleSide,
     BondPower,
+    Book,
     BoundBeing,
     Breakthrough,
     CanonCase,
@@ -48,20 +50,24 @@ from ars_magica_manager.models import (
     LabItemBenefit,
     Laboratory,
     LabSpecialtyGrant,
+    Marriage,
     MysteryCult,
     NamedDescription,
     Neighbour,
     Petition,
+    PolemicText,
     Possession,
     ProjectWork,
     Saga,
     SagaSource,
     ScoredTrait,
     Siege,
+    Stigma,
     TraditionEffect,
     Tribunal,
     VirtueFlawInstance,
 )
+from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -1688,3 +1694,322 @@ async def test_mystery_cults_lists_act_on_the_chosen_rows():
         await _choose_row(pilot, view, script, 0)
         await _press(pilot, app, "e", FieldsDialog)
         assert app.screen.query_one("#fld-name", Input).value == "Rite [old]"
+
+
+# -- Fleet battles (Tales of Power): a Battle at sea with the covenant's ships --
+
+
+async def test_battle_event_at_sea_acts_on_the_chosen_fleet_battle():
+    """More's Battle Event on the chosen battle, fought at sea with the
+    Keep's two ships: the ships engaged go on that battle's event alone."""
+    saga = _conflicts_saga()
+    saga.battles[1].at_sea = True
+    saga.battles[1].sides[0].covenant_id = "cov1"
+    saga.battles[1].sides[0].ships = ["sh1", "sh2"]
+    saga.battles[1].sides[1].other_ships = 2
+    storage.save_saga(saga)
+    case = CONFLICT_LISTS["battles"][0]
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "m", FieldsDialog)
+        dialog = app.screen
+        assert "at sea" in str(dialog.query_one("#fields-title").render())
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        saved = storage.load_saga("test_saga")
+        assert saved.battles[0].events == []
+        [event] = saved.battles[1].events
+        assert (event.deed, event.engaged_ships, event.engaged_other) == (
+            "cut",
+            ["sh1", "sh2"],
+            [0, 2],
+        )
+
+
+# -- A covenant's Menagerie (Hermetic Projects): its beasts and breedings --
+
+
+async def test_menagerie_lists_act_on_the_chosen_rows():
+    """In one session, with a Menagerie shown: e edits the chosen beast, m
+    Tames the chosen beast, d deletes it after asking; e and d on the
+    chosen breeding likewise."""
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.hermetic_projects.insert(
+        0,
+        HermeticProject(
+            id="men1",
+            name="Zoo",
+            kind="Menagerie",
+            beasts=[
+                Beast(id="be1", name="Bock [old]", sex="male", might=10),
+                Beast(id="be2", name="Geiß", might=10),
+            ],
+            breedings=[
+                Breeding(id="br1", pair="Bock × Geiß [1]"),
+                Breeding(id="br2", pair="Bock × Geiß [2]"),
+            ],
+        ),
+    )
+    covenant.project_shown = "men1"
+    storage.save_saga(saga)
+    beasts = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-menagerie-beasts",
+        "cov-menagerie-beasts-list",
+        lambda s: s.covenants[0].hermetic_projects[0].beasts,
+    )
+    breedings = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-menagerie-breedings",
+        "cov-menagerie-breedings-list",
+        lambda s: s.covenants[0].hermetic_projects[0].breedings,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, beasts)
+        await _choose_row(pilot, view, beasts, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        await _save_name(pilot, app, "Geiss")
+        assert await wait_until(pilot, lambda: _saved(beasts)[1].name == "Geiss")
+        await _press(pilot, app, "m", FieldsDialog)
+        assert "Geiss" in str(app.screen.query_one("#fields-title").render())
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _choose_row(pilot, view, beasts, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete Bock [old]?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(beasts)) == 1)
+
+        view.query_one(f"#{breedings.list_id}").focus()
+        await _choose_row(pilot, view, breedings, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-pair", Input).value == "Bock × Geiß [2]"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the breeding of Bock × Geiß [2]?"
+        await pilot.press("y")
+        assert await wait_until(
+            pilot, lambda: [b.id for b in _saved(breedings)] == ["br1"]
+        )
+
+
+# -- A lord's Marriages tab (Lords of Men pp. 10-11) --
+
+
+async def test_a_lords_marriages_act_on_the_chosen_row():
+    """In one session on a lord's Marriages tab: e edits the chosen
+    marriage, More's End a Marriage ends the chosen one (and only it), and
+    d asks about the chosen one before deleting it."""
+    saga = _saga()
+    saga.neighbours = [Neighbour(id="dieter", name="Count Dieter", kind="lord")]
+    saga.marriages = [
+        Marriage(groom_ref="neighbour:dieter", bride="Adelheid [of Sayn]"),
+        Marriage(bride="Kunigunde", groom="Otto", bride_house="dieter"),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("neighbour", "dieter"),
+        "section-nb-marriages",
+        "nb-marriages-list",
+        lambda s: s.marriages,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one("#fld-note", Input).value = "A love match"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].note == "A love match")
+        assert _saved(case)[0].note == ""
+
+        await _choose_row(pilot, view, case, 0)
+        await pilot.press("m")  # a menu, or its one More command at once
+        if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+            await _press(pilot, app, "x", FieldsDialog)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        app.screen.query_one("#fld-how", Select).value = "part"
+        await pilot.pause()
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[0].ended == "part")
+        assert _saved(case)[1].ended == ""
+        while app.screen is not workspace:  # the command's notes
+            await pilot.press("escape")
+            await pilot.pause()
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the marriage of Kunigunde and Otto?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+
+# -- A Criamon magus's The Enigma tab (HoH:MC pp. 50-73) --
+
+
+async def test_the_enigmas_stigmata_act_on_the_chosen_row():
+    """In one session on The Enigma: choosing a station shows it in the
+    panel; e edits the chosen stigma, d asks about the chosen one before
+    deleting it; More on the path offers Follow an Avenue."""
+    saga = _saga()
+    magus = saga.characters[0]
+    magus.hermetic.house = "house_criamon"
+    magus.virtues_flaws += [
+        VirtueFlawInstance("vf_the_enigma"),
+        VirtueFlawInstance("vf_station_of_differentiation_of_seeming"),
+    ]
+    magus.abilities.append(Ability("Mystery Cult Lore: Criamon", xp=50))
+    magus.enigma.stigmata = [
+        Stigma("Temples", "Rings [open] eyes", "riddle"),
+        Stigma("Wrists", "A loop", "twilight"),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("character", magus.id),
+        "section-char-stigmata",
+        "char-stigmata-list",
+        lambda s: s.characters[0].enigma.stigmata,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        stations = ListCase(
+            case.node,
+            "section-char-criamon-stations",
+            "char-criamon-stations-list",
+            case.entries,
+        )
+        await _choose_row(pilot, view, stations, 1)
+        assert await wait_until(
+            pilot,
+            lambda: "True Sight" in str(view.query_one("#criamon-info").render()),
+        )
+
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        dialog = app.screen
+        dialog.query_one("#fld-where", Input).value = "Forearms"
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda: _saved(case)[1].where == "Forearms")
+        assert _saved(case)[0].where == "Temples"
+
+        await _choose_row(pilot, view, case, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete the stigma Rings [open] eyes?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
+
+        view.query_one("#section-char-criamon-path", SheetSection).focus_section()
+        await pilot.pause()
+        await pilot.press("m")
+        if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+            await _press(pilot, app, "v", FieldsDialog)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert "The Avenue" in str(app.screen.query_one("#fields-live").border_title)
+        assert workspace is not None
+
+
+# -- A Tribunal's Arguments tab (Transforming Mythic Europe pp. 27-35) --
+
+
+async def test_a_tribunals_arguments_act_on_the_chosen_row():
+    """In one session on the Arguments tab: choosing an argument shows its
+    texts; e edits the chosen argument and the chosen text; d asks about
+    the chosen text before deleting it (and only it); More on the texts
+    offers Circulate a Text on the chosen one."""
+    saga = _saga()
+    saga.books += [
+        Book(
+            id="pol",
+            name="On Charters",
+            type="Ability Summa",
+            ability="Code of Hermes",
+            level=4,
+            quality=11,
+        ),
+        Book(
+            id="dia",
+            name="Against [them]",
+            type="Tractatus",
+            ability="Code of Hermes",
+            quality=9,
+        ),
+    ]
+    saga.tribunals = [
+        Tribunal(
+            id="rhine",
+            name="Rhine",
+            arguments=[
+                Argument(
+                    "Charters [for]",
+                    texts=[
+                        PolemicText(book_id="pol", circulated=True),
+                        PolemicText(kind="diatribe", book_id="dia", studied=True),
+                    ],
+                ),
+                Argument("The silk pact", reach="covenant"),
+            ],
+        )
+    ]
+    storage.save_saga(saga)
+    arguments = ListCase(
+        ("tribunal", "rhine"),
+        "section-trib-arguments",
+        "trib-arguments",
+        lambda s: s.tribunals[0].arguments,
+    )
+    texts = ListCase(
+        ("tribunal", "rhine"),
+        "section-trib-argument-texts",
+        "trib-argument-texts",
+        lambda s: s.tribunals[0].arguments[0].texts,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, arguments)
+        await _choose_row(pilot, view, arguments, 1)
+        assert await wait_until(
+            pilot, lambda: "No text yet" in _list_text(view, texts.list_id)
+        )
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-topic", Input).value == "The silk pact"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _choose_row(pilot, view, arguments, 0)
+        assert await wait_until(
+            pilot, lambda: "Tractatus" in _list_text(view, texts.list_id)
+        )
+        await _choose_row(pilot, view, texts, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert app.screen.query_one("#fld-book_id", Select).value == "dia"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await pilot.press("m")  # a menu, or its one More command at once
+        if await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen)):
+            await _press(pilot, app, "c", FieldsDialog)
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _choose_row(pilot, view, texts, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith(
+            "Delete the diatribe Tractatus, Code of Hermes Q9?"
+        )
+        await pilot.press("y")
+        assert await wait_until(
+            pilot, lambda: [t.book_id for t in _saved(texts)] == ["pol"]
+        )
+
+
+def _list_text(view, list_id: str) -> str:
+    rows = view.query_one(f"#{list_id}", SelectableList)
+    return " ".join(str(markup) for _index, markup in rows._rows)

@@ -28,6 +28,7 @@ from ....boon_hook_text import counted, match_colour, points_title
 from ....forms import agents as agent_forms
 from ....forms import church as church_forms
 from ....forms import constant_effect as constant_forms
+from ....forms import criamon as criamon_forms
 from ....forms import power as power_forms
 from ....forms import tradition as tradition_forms
 from ....forms.secrets import secrets_ops
@@ -41,15 +42,19 @@ from ....models import (
 from ....rules import activities as season_rules
 from ....rules import clergy as clergy_rules
 from ....rules import creation_virtues as cv
+from ....rules import criamon as criamon_rules
 from ....rules import library
 from ....sections import (
     AGENTS_SECTION,
     CANON_SECTION,
     CONSTANT_EFFECTS_SECTION,
+    CRIAMON_PATH_SECTION,
+    CRIAMON_STATIONS_SECTION,
     ORDERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
     POWERS_SECTION,
+    STIGMATA_SECTION,
 )
 from ....sections import CHAR_AHEAD_SECTION as AHEAD_SECTION
 from ....sections import CHAR_CALENDAR_SECTION as CALENDAR_SECTION
@@ -110,6 +115,25 @@ CHURCH_SOURCES = (
     "section-vf-virtues",
     "section-vf-flaws",
     "section-reputations",
+)
+
+#: The Enigma tab's lists, which share one details panel, and what its
+#: path reads besides its own: the Characteristics, Abilities (Enigmatic
+#: Wisdom, the Lore) and Virtues (the stations held).
+CRIAMON_STATIONS_LIST = "char-criamon-stations-list"
+STIGMATA_LIST = "char-stigmata-list"
+CRIAMON_INFO = "criamon-info"
+CRIAMON_LISTS = {
+    CRIAMON_STATIONS_LIST: CRIAMON_STATIONS_SECTION,
+    STIGMATA_LIST: STIGMATA_SECTION,
+}
+CRIAMON_SECTIONS = (CRIAMON_PATH_SECTION, CRIAMON_STATIONS_SECTION, STIGMATA_SECTION)
+CRIAMON_SOURCES = (
+    *CRIAMON_SECTIONS,
+    "section-char-characteristics",
+    "tab-abilities",
+    "section-vf-virtues",
+    "section-vf-flaws",
 )
 
 #: The Seasons Ahead list and the chosen season's plan under it.
@@ -191,6 +215,12 @@ class CharacterSheetView(SheetView):
             cs.has_statblock(character)
         )
         self._church_chosen: tuple[str, int] | None = None
+        #: Whether the sheet was built with The Enigma (a Criamon magus),
+        #: and the row chosen in one of its lists.
+        self._enigma_shown = criamon_rules.has_enigma_tab(character) and not (
+            cs.has_statblock(character)
+        )
+        self._criamon_chosen: tuple[str, int] | None = None
         if cs.has_statblock(character):
             self.INITIAL_TAB = "tab-statblock"
 
@@ -218,6 +248,9 @@ class CharacterSheetView(SheetView):
                 yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
             if scores and character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
+                # A Criamon magus's path and stigmata.
+                if self._enigma_shown:
+                    yield self._tab("The Enigma", "tab-criamon", self._criamon_tab)
                 if not sketch:
                     yield self._tab("Research", "tab-research", self._research_tab)
             if scores:
@@ -931,7 +964,10 @@ class CharacterSheetView(SheetView):
         wanted = clergy_rules.has_church_tab(self.character) and not (
             cs.has_statblock(self.character)
         )
-        return wanted != self._church_shown
+        enigma = criamon_rules.has_enigma_tab(self.character) and not (
+            cs.has_statblock(self.character)
+        )
+        return wanted != self._church_shown or enigma != self._enigma_shown
 
     def _church_tab(self) -> ComposeResult:
         """Holy Orders, Ordinations, Petitions and the Canon Court, with
@@ -990,6 +1026,61 @@ class CharacterSheetView(SheetView):
         }[section]
         return info(self.character, index)
 
+    def _criamon_tab(self) -> ComposeResult:
+        """The path, its stations and the stigmata, with one details panel
+        for the chosen station or stigma."""
+        saga, character = self.saga, self.character
+        self.core_ops.update(criamon_forms.ops(saga, character))
+        with Vertical(classes="panel-body"):
+            with VerticalScroll():
+                with SheetSection(
+                    title=self._titled(
+                        CRIAMON_SOURCES,
+                        CRIAMON_PATH_SECTION,
+                        lambda: criamon_forms.path_title(self.character),
+                    ),
+                    id=CRIAMON_PATH_SECTION,
+                ):
+                    yield self._static(
+                        CRIAMON_SOURCES,
+                        lambda: criamon_forms.path_text(self.saga, self.character),
+                        id="char-criamon-path-text",
+                    )
+                for section, list_id, title, header, rows in (
+                    (
+                        CRIAMON_STATIONS_SECTION,
+                        CRIAMON_STATIONS_LIST,
+                        lambda: criamon_forms.stations_title(self.character),
+                        criamon_forms.stations_header(),
+                        lambda: criamon_forms.station_rows(self.character),
+                    ),
+                    (
+                        STIGMATA_SECTION,
+                        STIGMATA_LIST,
+                        lambda: criamon_forms.stigmata_title(self.character),
+                        criamon_forms.stigmata_header(),
+                        lambda: criamon_forms.stigma_rows(self.character),
+                    ),
+                ):
+                    with SheetSection(
+                        title=self._titled(CRIAMON_SOURCES, section, title), id=section
+                    ):
+                        yield TableHeader(header)
+                        yield self._list(
+                            CRIAMON_SOURCES, rows, id=list_id, group="criamon"
+                        )
+            yield self._panel(CRIAMON_SOURCES, self._criamon_info, id=CRIAMON_INFO)
+
+    def _criamon_info(self) -> str:
+        """The chosen station or stigma in full."""
+        chosen = self._criamon_chosen
+        if chosen is None:
+            return criamon_forms.EMPTY_PANEL
+        section, index = chosen
+        if section == STIGMATA_SECTION:
+            return criamon_forms.stigma_info(self.character, index)
+        return criamon_forms.station_info(self.character, index)
+
     def selected_personality_trait(self) -> int | None:
         """Index into character.personality_traits of the chosen row, or None."""
         return self.query_one(
@@ -1041,6 +1132,14 @@ class CharacterSheetView(SheetView):
             self.query_one(f"#{AHEAD_INFO}", Static).update(
                 seasons.ahead_info(self.saga, self.character, event.data_index)
             )
+            return
+        if list_id in CRIAMON_LISTS:
+            event.stop()
+            index = event.data_index
+            self._criamon_chosen = (
+                None if index is None else (CRIAMON_LISTS[list_id], index)
+            )
+            self.query_one(f"#{CRIAMON_INFO}", Static).update(self._criamon_info())
             return
         if list_id in CHURCH_LISTS:
             event.stop()

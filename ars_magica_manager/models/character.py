@@ -17,6 +17,7 @@ from .common import (
     known_fields,
     move_secrets,
 )
+from .criamon import Enigma
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .philosophy import Formula
@@ -958,6 +959,9 @@ class Character:
     #: His grade in holy orders, ordinations, petitions to the Church and
     #: canon-court cases (The Church pp. 33-38, 46-48; empty for most).
     church: ChurchCareer = field(default_factory=ChurchCareer)
+    #: A Criamon magus's path, guide, stations' dates and stigmata
+    #: (Houses of Hermes: Mystery Cults pp. 50-73; empty for most).
+    enigma: Enigma = field(default_factory=Enigma)
 
     @property
     def being_of_magic(self) -> bool:
@@ -1070,6 +1074,7 @@ class Character:
             for author, entry in (d.get("lab_text_access") or {}).items()
         }
         d["church"] = ChurchCareer.from_dict(d.get("church") or {})
+        d["enigma"] = Enigma.from_dict(d.get("enigma") or {})
         return cls(**known_fields(cls, d))
 
 

@@ -129,6 +129,11 @@ from .creature import BodyVis as BodyVis
 from .creature import Creature as Creature
 from .creature import CreatureAttack as CreatureAttack
 from .creature import CreaturePower as CreaturePower
+
+# A Criamon magus's Enigma: path, stations and stigmata (HoH:MC pp. 50-73).
+from .criamon import Enigma as Enigma
+from .criamon import StationReached as StationReached
+from .criamon import Stigma as Stigma
 from .definitions import BOTCH_RULES as BOTCH_RULES
 from .definitions import CASTING_DICE as CASTING_DICE
 from .definitions import CASTING_KINDS as CASTING_KINDS
@@ -258,6 +263,13 @@ from .laboratory import link_unlinked_features as link_unlinked_features
 from .land_shaping import LAND_KIND as LAND_KIND
 from .land_shaping import LandProject as LandProject
 
+# Marriages, their dowries and what follows (LoM pp. 10-11; DE pp. 512-513).
+from .marriage import Marriage as Marriage
+
+# A Menagerie of magical beasts, a Hermetic Project (Hermetic Projects).
+from .menagerie import Beast as Beast
+from .menagerie import Breeding as Breeding
+
 # A saga's own Mystery Cults.
 from .mystery_cults import CultComponent as CultComponent
 from .mystery_cults import CultDegree as CultDegree
@@ -266,6 +278,14 @@ from .mystery_cults import MysteryCult as MysteryCult
 from .mystery_scripts import ScriptPart as ScriptPart
 from .philosophy import FORMULA_KINDS as FORMULA_KINDS
 from .philosophy import Formula as Formula
+
+# Polemic: a Tribunal's arguments and their texts (TME pp. 27-35).
+from .polemic import APOLOGIA as APOLOGIA
+from .polemic import DIATRIBE as DIATRIBE
+from .polemic import POLEMIC as POLEMIC
+from .polemic import TEXT_KINDS as TEXT_KINDS
+from .polemic import Argument as Argument
+from .polemic import PolemicText as PolemicText
 from .saga import Player as Player
 from .saga import Saga as Saga
 from .saga import SagaSource as SagaSource

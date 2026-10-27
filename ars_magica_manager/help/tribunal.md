@@ -351,6 +351,110 @@ The cases past meetings decided, with their outcome, and those
 withdrawn. Edit one to correct it, or set its Status back to open to
 return it to the docket.
 
+## Arguments tab
+<!-- help: tab-trib-arguments -->
+
+Shown while Transforming Mythic Europe is in play. An argument is a
+position someone means to win at a coming meeting, argued beforehand in
+writing: a polemic sets it out, diatribes attack it, apologia defend it
+(Transforming Mythic Europe pp. 27-35). Choose an argument to see its
+total and its texts; choose a text to read it in the panel below.
+
+### Arguments
+<!-- help: section-trib-arguments -->
+
+Each argument: its reach, its proponent, its Argument Total and the debate
+bonus it buys ("−7: −3"), or "not out" while its polemic isn't circulated.
+
+What an argument records:
+
+- **Argument**: the position, in a line.
+- **Its ideal**: what its texts' Reputations name: Supporter of (ideal)
+  for a polemic or apologia, Opposed to (ideal) for a diatribe (pp. 31,
+  33, 35). Blank: the argument itself.
+- **It concerns**: its reach on the Prevailing Wisdom Table (p. 29): a
+  magus 3 (or his Reputation, if higher: **His Reputation**), a covenant
+  6, a Tribunal 9, a House 12, the Order 15.
+- **Proponent**: who argues it.
+- **Written on**: any knowledge Ability (p. 28). Code of Hermes, Order
+  of Hermes Lore and Area Lore (with the troupe's agreement), the book's
+  suggestions, come first; then the other Academic and Arcane Abilities
+  and the Lores. Every text on the argument is a summa or tractatus on
+  it.
+- **Goes to**: the case or motion on the Docket where it is debated.
+- **It backs**: the case or motion (its prosecutor or proposer), or the
+  defence against it. A case or motion hears one argument for each side:
+  a second is refused (adding two arguments' bonuses together would be
+  a house rule); answer the first with a diatribe or apologia instead.
+- **Last debate** (editing): not yet debated, won, or lost. Holding the
+  debate sets it.
+
+### The chosen argument
+<!-- help: section-trib-argument -->
+
+Its reach and Prevailing Wisdom, its proponent, the Argument Total worked
+out (one per argument: the polemic's Quality − the Prevailing Wisdom,
++ each circulated apologia's Quality, − each circulated diatribe's,
+whoever wrote it, pp. 31, 33), what it does in
+debate, what the next text still circulating would make it, and where it
+is debated.
+
+At the hearing the total is spent as experience on the Art table (DE
+p. 49): 1 buys +1, 3 buys +2, 6 buys +3, 10 buys +4; a negative total
+buys a penalty the same way. The bonus goes on every Attack and Defense
+roll of the side the argument backs, on top of Houses of Hermes:
+Societates's testimony and the rest. Won, the bonus carries to later
+Tribunals; lost, at that Tribunal or a later one, it is gone (p. 35).
+Choosing not to debate it keeps the total for the next meeting.
+
+### Texts
+<!-- help: section-trib-argument-texts -->
+
+The chosen argument's polemic, diatribes and apologia. A text is a link
+to a book in the saga's library, not a copy: its Quality and level are
+read from the book, so add the summa or tractatus to the library first
+(it may belong to no one). A tractatus counts as level 5 (p. 28).
+
+What a text records:
+
+- **Kind**: one polemic per argument, written first; diatribes and
+  apologia answer it.
+- **Book**: a summa or tractatus on the argument's Ability.
+- **Author**: blank takes the book's author. A diatribe's author gains
+  Opposed to (ideal) 1, an apologia's Supporter of (ideal) 1, when the
+  text is added (it is gained "on writing or circulating", pp. 33, 35),
+  or 5 experience toward it if he has it already.
+- **Studied the work it answers**: a diatribe or apologia is written
+  only after a season studying the work it answers (pp. 31, 35); it
+  can't be circulated until this is ticked.
+- **Circulated to**: a Tribunal (6 copies), a House (9) or the Order (18).
+- **Circulated by**: a sponsor who circulates it with his own Reputation
+  (p. 29); blank: its author.
+- **Seasons spent circulating**, **New works bound with it**: +1 each to
+  the next Circulation roll (pp. 29-30).
+- **Circulated**, **Out since**: whether it is out, and when.
+
+More's **Circulate a Text** rolls a season's circulation.
+
+## Circulate a Text
+<!-- help: circulate-text -->
+
+A season spent circulating the chosen text (Transforming Mythic Europe
+pp. 29-31): the circulator's highest Reputation, good or bad, House
+Acclaim among them, + the text's level (5 for a tractatus) + 1 for each
+season already spent + 1 for each new work bound into every copy + a
+simple die, against 15 for a Tribunal, 18 for a House, 24 for the Order.
+Each season is a distraction of 5, 10 or 15 days.
+
+Short of it, the season counts +1 toward the next roll. Out, the text
+counts toward the Argument Total. A polemic's author gains Supporter of
+(ideal) 1 (p. 31); a diatribe's or apologia's author had his Reputation
+on writing it, and a circulator who isn't its author gains it now
+(pp. 33, 35): Opposed to (ideal) for a diatribe, Supporter of (ideal)
+for an apologia. One who has it already gains 5 experience toward it
+instead (Hermetic, reaching the Tribunal, the House or the Order), and
+no one gains it twice from the same text.
+
 ## Meeting tab
 <!-- help: tab-trib-meeting -->
 
@@ -387,6 +491,12 @@ and the rulings, the treasury and the Closing on the last. A step held
 is marked ✓, and the step in hand ▶. The step chosen is described under
 the list: what was entered at it, then what the app works out at it and
 what each entry changes.
+
+The argument on the Arguments tab that goes to the case for a side
+(one each side at most) adds its debate bonus (or penalty) to every
+Attack and Defense of that side; the form lists them. Once the hearing is held, an argument backing the winner
+is marked won (its bonus carries to later Tribunals) and one backing the
+loser lost (Transforming Mythic Europe pp. 31, 35).
 
 <!-- tui -->
 `e` holds the chosen step (again, if it was held already), and saving

@@ -366,6 +366,8 @@ VIRTUE_MEMBERS: dict[str, str] = {
     "trad_merinita_mysteries": "vf_faerie_magic",
     # House Bjornaer's, by the Heartbeast (Houses of Hermes: Mystery Cults p. 18).
     "trad_bjornaer_mysteries": "vf_heartbeast",
+    # House Criamon's, by the Enigma (DE p. 235).
+    "trad_criamon_mysteries": "vf_the_enigma",
 }
 
 

@@ -140,6 +140,9 @@ class SupplementWork:
     #: Hermetic Projects: works done on a project this season (a master
     #: mason's), as (project id, work), kept in its works when applied.
     project_works: list[tuple[str, ProjectWork]] = field(default_factory=list)
+    #: House Criamon: the station's Virtue an avenue reached (rules.criamon),
+    #: its season kept on The Enigma when the season is applied.
+    enigma_station: str = ""
 
 
 #: What a season does beyond experience, written into `result` (rolls made

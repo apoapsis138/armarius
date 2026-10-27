@@ -312,6 +312,8 @@ _STORYGUIDE_ACTIONS = frozenset(
         # A hunt on a lord's or covenant's manor.
         "hunt_on_manor",
         "area_lore_on_manor",
+        # A lord's marriages: ending one.
+        "end_marriage",
     }
 )
 

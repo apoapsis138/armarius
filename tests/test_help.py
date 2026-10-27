@@ -9,7 +9,7 @@ from ars_magica_manager import __version__, storage
 from ars_magica_manager import help_text as ht
 from ars_magica_manager.models import SKETCH, Covenant, HermeticProject
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
-from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens import SelectableList, WorkspaceScreen
 from ars_magica_manager.tui.screens.creation_worksheet import CreationWorksheetScreen
 from ars_magica_manager.tui.screens.help import HelpScreen, page_chunks, whats_new_text
 from ars_magica_manager.tui.screens.invent_spell import InventSpellScreen
@@ -95,6 +95,13 @@ DIALOG_PAGES = {
     "canon-case",
     "perform-exorcism",
     "edit-holy-orders",
+    "arrange-marriage",
+    "end-marriage",
+    "follow-avenue",
+    "change-path",
+    "circulate-text",
+    "draft-charter",
+    "seek-loophole",
 }
 
 #: The sheets whose tabs and sections need help, by tree node.
@@ -264,14 +271,21 @@ async def test_every_tab_and_section_has_help():
     """The coverage rule: a tab or section without help fails
     here, and so does help for one that no longer exists."""
     saga = everything_saga()
-    # The Church tab and the Projects tab show only once the record has
+    # The Church tab, the Projects tab and The Enigma show only once the record has
     # something for them.
     next(
         c for c in saga.characters if c.id == NODES["character"][1]
     ).church.grade = "Doorkeeper"
+    # The Enigma tab shows only for a magus of House Criamon.
+    next(
+        c for c in saga.characters if c.id == NODES["character"][1]
+    ).hermetic.house = "house_criamon"
     next(
         c for c in saga.covenants if c.id == NODES["covenant"][1]
-    ).hermetic_projects = [HermeticProject(id="project-tower", name="The Tower")]
+    ).hermetic_projects = [
+        HermeticProject(id="project-tower", name="The Tower"),
+        HermeticProject(id="project-menagerie", name="The Menagerie", kind="Menagerie"),
+    ]
     # A sketch's sheet has tabs of its own: the companion is drawn as one,
     # and a sketch covenant is added.
     sketch = next(c for c in saga.characters if c.id != NODES["character"][1])
@@ -310,6 +324,22 @@ async def test_every_tab_and_section_has_help():
             view = getattr(workspace, attr)
             await build_all_tabs(pilot, view)
             on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
+            if kind == "covenant":
+                # Showing the Menagerie rebuilds the Projects tab with its
+                # sections in place of the tower's.
+                rows = view.query_one("#cov-projects-list", SelectableList)
+                rows.select_data_index(1)
+                assert await wait_until(
+                    pilot, lambda rows=rows: rows.selected_data_index == 1
+                )
+                workspace.action_show_project()
+                assert await wait_until(
+                    pilot,
+                    lambda attr=attr, view=view: getattr(workspace, attr) is not view,
+                )
+                view = getattr(workspace, attr)
+                await build_all_tabs(pilot, view)
+                on_sheets |= {w.id for w in view.query("Collapsible, TabPane") if w.id}
         for (kind, record_id), attr in extra.items():
             tree.select_node(_node(tree, (kind, record_id)))
             assert await wait_until(

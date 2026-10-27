@@ -1335,6 +1335,70 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"What changes": "temporary_ends"}],
         live={"#fields-live": "taken off the sheet"},
     ),
+    # A Criamon magus's The Enigma tab (HoH:MC pp. 50-73).
+    "change path": Contract(
+        prefill={
+            "Path": "",
+            "Guide": "house",
+            "A ghostly Primus's Presence": "0",
+            "Head bound in infancy (or a like modification) for": "",
+        },
+        edits={
+            "Path": "seeming",
+            "A ghostly Primus's Presence": "2",
+            "Head bound in infancy (or a like modification) for": "body",
+        },
+        saved=lambda s: (
+            character(s).enigma.path,
+            character(s).enigma.primus_presence,
+            character(s).enigma.aptitude_path,
+        ),
+        expected=("seeming", 2, "body"),
+        invalid=[{"A ghostly Primus's Presence": "lots"}],
+        shown={"#char-criamon-path-text": "Path: of Seeming"},
+    ),
+    "follow an avenue": Contract(
+        prefill={"Season": "Autumn", "Year": "1220", "Guide": "house"},
+        edits={"Season": "Winter"},
+        saved=lambda s: [
+            (p.season, p.hedge_script.rpartition(", ")[2], p.effect_id)
+            for p in s.season_plans
+            if p.character_id == "mag1"
+        ],
+        expected=[
+            (
+                "Winter",
+                "III: The Avenue of the Unexpected Pages",
+                "vf_station_of_vivid_memories_from_objects",
+            )
+        ],
+        invalid=[{"Year": "soon"}],
+        live={"#fields-live": "against Target 21"},
+    ),
+    "add stigma": Contract(
+        prefill={"Where": "", "What it marks": "other"},
+        edits={
+            "Where": "Eyelids",
+            "The mark": "A spiral that turns inward",
+            "What it marks": "station",
+            "Which": "the Station of True Sight",
+            "Year": "1214",
+        },
+        saved=lambda s: [
+            (g.where, g.why, g.detail, g.year) for g in character(s).enigma.stigmata
+        ][1:],
+        expected=[("Eyelids", "station", "the Station of True Sight", 1214)],
+        invalid=[{"Where": ""}, {"The mark": ""}, {"Year": "soon"}],
+        shown={"#char-stigmata-list": "Eyelids"},
+    ),
+    "edit stigma": Contract(
+        prefill={"Where": "Temples", "The mark": "Rings of open eyes"},
+        edits={"Where": "Brow"},
+        saved=lambda s: [g.where for g in character(s).enigma.stigmata],
+        expected=["Brow"],
+        invalid=[{"Where": ""}],
+        shown={"#char-stigmata-list": "Brow"},
+    ),
 }
 
 

@@ -380,6 +380,61 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
     ),
     "ars_magica_manager/gui/mystery_cults.py": ("test_gui_sheet.py",),
     "ars_magica_manager/models/mystery_cults.py": ("test_own_cults.py",),
+    # Fleet battles (Tales of Power): the Battle forms at sea.
+    "ars_magica_manager/fleet_battles.py": (
+        "test_dialog_contracts_saga.py",
+        "test_dialog_contracts_tribunal.py",
+        "test_list_flows.py",
+        "test_gui_conflicts.py",
+    ),
+    # A covenant's Menagerie (Hermetic Projects): its tests, the forms'
+    # contracts, the lists' flow and the Projects tab on both front-ends.
+    "ars_magica_manager/menagerie.py": (
+        "test_menagerie.py",
+        "test_dialog_contracts_covenant.py",
+        "test_list_flows.py",
+        "test_screens_projects.py",
+        "test_gui_projects.py",
+    ),
+    # A lord's marriages (Lords of Men): the forms' contracts, the list's
+    # flow and the Marriages tab on both front-ends.
+    "ars_magica_manager/marriages.py": (
+        "test_marriage.py",
+        "test_dialog_contracts_tribunal.py",
+        "test_list_flows.py",
+        "test_gui_marriage.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/rules/marriage.py": ("test_marriage.py",),
+    "ars_magica_manager/models/marriage.py": ("test_marriage.py",),
+    # A Criamon magus's The Enigma tab, its forms and lists (HoH:MC).
+    "ars_magica_manager/forms/criamon.py": (
+        "test_criamon.py",
+        "test_dialog_contracts_character.py",
+        "test_list_flows.py",
+        "test_gui_criamon.py",
+    ),
+    "ars_magica_manager/rules/criamon.py": ("test_criamon.py",),
+    "ars_magica_manager/models/criamon.py": ("test_criamon.py", "test_storage.py"),
+    # Polemic and Charter Strength (Transforming Mythic Europe): the
+    # Arguments tab, its forms and lists on both front-ends, and the charter
+    # lords' Draft the Charter and Seek a Loophole.
+    "ars_magica_manager/forms/polemic.py": (
+        "test_polemic.py",
+        "test_dialog_contracts_tribunal.py",
+        "test_list_flows.py",
+        "test_tribunals.py",
+        "test_sheet_text.py",
+    ),
+    "ars_magica_manager/gui/polemic.py": ("test_polemic.py", "test_tribunals.py"),
+    "ars_magica_manager/polemic.py": ("test_polemic.py", "test_meeting.py"),
+    "ars_magica_manager/rules/polemic.py": ("test_polemic.py",),
+    "ars_magica_manager/models/polemic.py": ("test_polemic.py", "test_storage.py"),
+    "ars_magica_manager/forms/charter_strength.py": (
+        "test_polemic.py",
+        "test_dialog_contracts_tribunal.py",
+        "test_town_charter.py",
+    ),
 }
 
 

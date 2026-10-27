@@ -12,7 +12,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambass
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -55,7 +55,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambass
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   History: not written yet. Edit the Tribunal (e) to tell it.
@@ -98,7 +98,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambass
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -127,6 +127,49 @@
   ▌
 
 
+===== tab-trib-arguments
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Hibernia
+
+      Customs:       Hibernia: Cathaigh and    Praeco:              (not chosen)
+      ambassadors                              Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                   Covenants:           0
+      Next meeting:  Summer 1227               Magi:                0
+      Meeting place: the Hill of Tara          Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arguments (0)
+
+      No argument yet: Add one, then its polemic as a text.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ No argument chosen
+
+      Add an argument to follow its texts and its total.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Texts (0)
+
+      Add an argument first.
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a text.
+  ▌
+
+
 ===== tab-trib-meeting
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -141,7 +184,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambass
+    2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Am
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   The Next Meeting: Summer 1227
@@ -184,7 +227,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambassadors  8 Di
+  Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ambassadors  9 Di
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Hibernia: Cathaigh and ambassadors. A covenant's magi vote only while it shows its
@@ -227,7 +270,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambassadors  8 Diary  9 Secrets
+  ents  5 Meeting  6 Peripheral Code  7 Treasury  8 Ambassadors  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -270,7 +313,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambassadors  8 Diary  9 Secrets
+  ents  5 Meeting  6 Peripheral Code  7 Treasury  8 Ambassadors  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -313,7 +356,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambassadors  8 Diary  9 Secrets
+  ents  5 Meeting  6 Peripheral Code  7 Treasury  8 Ambassadors  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -356,7 +399,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  cket  4 Meeting  5 Peripheral Code  6 Treasury  7 Ambassadors  8 Diary  9 Secrets
+  ents  5 Meeting  6 Peripheral Code  7 Treasury  8 Ambassadors  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

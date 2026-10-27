@@ -31,13 +31,17 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "sketch_covenant": 54,
     # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
     # The Rhine's Great Library tab adds its (unbuilt) pane and its tab: 2.
-    "tribunal": 44,
-    "theban_tribunal": 42,
-    "normandy_tribunal": 44,  # one tab more: History
-    "transylvania_tribunal": 42,
-    "hibernia_tribunal": 42,
+    # The Arguments tab (Transforming Mythic Europe) adds its (unbuilt)
+    # pane and its tab: 2.
+    "tribunal": 46,
+    "theban_tribunal": 44,
+    "normandy_tribunal": 46,  # one tab more: History
+    "transylvania_tribunal": 44,
+    "hibernia_tribunal": 44,
     "region": 50,
-    "neighbour": 44,  # a lord's Fief tab lists his sieges too; his Manors tab adds 2
+    # A lord's Fief tab lists his sieges too; his Manors tab adds 2, and his
+    # Marriages tab its (unbuilt) pane and its tab: 2.
+    "neighbour": 46,
     "town": 40,
     "church": 40,
     "university": 40,

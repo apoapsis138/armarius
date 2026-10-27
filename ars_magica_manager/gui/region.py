@@ -18,6 +18,8 @@ from .. import (
     hermetic_projects,
     lords,
     manors,
+    marriages,
+    menagerie,
     neighbours,
     place_events,
     tombs,
@@ -25,18 +27,22 @@ from .. import (
     towns,
 )
 from ..commands import Command, Refuse, SectionOps
+from ..forms import charter_strength as charter_strength_forms
 from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
 from ..models import Covenant, Neighbour, Saga
 from ..neighbour_lists import KindBlock, KindList, KindTab, LedgerEntry
 from ..sections import (
     BATTLES_SECTION,
+    BEASTS_SECTION,
+    CHARTER_LORDS_SECTION,
     COURT_CASES_SECTION,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
     GRATITUDE_SECTION,
     HOUSEHOLD_SECTION,
     MANORS_SECTION,
+    MARRIAGES_SECTION,
     PROJECTS_SECTION,
     TABLES_SECTION,
     TOMB_TRAPS_SECTION,
@@ -342,7 +348,39 @@ class KindChapters:
                     ),
                 )
             ],
+            # A lord's marriages: the chosen one ends.
+            MARRIAGES_SECTION: [
+                (
+                    marriages.END,
+                    "more",
+                    lambda row: marriages.end_form(saga, n, row),
+                )
+            ],
+            # A covenant's Menagerie: taming the chosen beast.
+            BEASTS_SECTION: [
+                (
+                    menagerie.TAME_BEAST,
+                    "more",
+                    lambda row: _on_covenant(
+                        saga, n, lambda c: menagerie.tame_form(saga, c, row)
+                    ),
+                )
+            ],
         }
+        # Charter Strength (TME p. 36): the charter lords' own buttons.
+        if charter_strength_forms.offered(saga):
+            verbs[CHARTER_LORDS_SECTION] = [
+                (
+                    charter_strength_forms.DRAFT_TITLE,
+                    "more",
+                    lambda row: charter_strength_forms.draft_form(saga, n, row),
+                ),
+                (
+                    charter_strength_forms.LOOPHOLE_TITLE,
+                    "more",
+                    lambda row: charter_strength_forms.loophole_form(saga, n, row),
+                ),
+            ]
         return [
             (words, concept, step, lambda _row: True)
             for words, concept, step in verbs.get(section_id, [])
@@ -470,7 +508,7 @@ class KindChapters:
         edits.update(self._edits(block))
         if block.gloss:
             words = block.text(saga, n) if block.text is not None else ""
-            return _gloss(block.title, words, p, edits)
+            return _gloss(block.titled(saga, n), words, p, edits)
         shown: list[QWidget] = []
         if block.facts is not None:
             shown.append(fact_grid(block.facts(saga, n), p, 3))
@@ -487,7 +525,7 @@ class KindChapters:
             shown.append(
                 side_by_side(*(_column(column, p) for column in block.columns(saga, n)))
             )
-        return section(block.title, p, *shown, edits=edits or None)
+        return section(block.titled(saga, n), p, *shown, edits=edits or None)
 
 
 class LedgerRow(QWidget):

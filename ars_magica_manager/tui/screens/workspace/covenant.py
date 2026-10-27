@@ -7,7 +7,15 @@ from collections.abc import Callable
 from functools import partial
 from typing import Any, ClassVar
 
-from .... import catalog, covenant_diary, hermetic_projects, seasons, sourcebooks, vis
+from .... import (
+    catalog,
+    covenant_diary,
+    hermetic_projects,
+    menagerie,
+    seasons,
+    sourcebooks,
+    vis,
+)
 from .... import covenants as cov_rules
 from .... import economics as eco
 from .... import inhabitants as inh
@@ -33,7 +41,12 @@ from ....models import (
     new_instance_id,
 )
 from ....rules import covenfolk
-from ....sections import CHARTER_SECTION, CLAUSES_SECTION, PROJECTS_SECTION
+from ....sections import (
+    BEASTS_SECTION,
+    CHARTER_SECTION,
+    CLAUSES_SECTION,
+    PROJECTS_SECTION,
+)
 from ..fields import FieldsDialog
 from ..forms import (
     _improve_income_dialog,
@@ -1011,4 +1024,14 @@ class CovenantActions(WorkspaceBase):
         row = view.section_row(PROJECTS_SECTION) if view is not None else None
         self._on_projects(
             lambda covenant: hermetic_projects.show_project(self.saga, covenant, row)
+        )
+
+    # -- Covenant: a Menagerie (Hermetic Projects pp. 119-142) --
+
+    def action_tame_beast(self) -> None:
+        """More's Tame a Beast on the chosen beast of the menagerie shown."""
+        view = self._covenant_sheet_view
+        row = view.section_row(BEASTS_SECTION) if view is not None else None
+        self._on_projects(
+            lambda covenant: menagerie.tame_form(self.saga, covenant, row)
         )

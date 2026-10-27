@@ -428,8 +428,12 @@ about 10, a landed knight 16, a banneret 24, a baron 40, an earl 140,
 his mesnie's knights counted in it), his mesnie of household knights (a
 wealthy lord keeps eight to ten), his heirs, the custom his lands pass by
 (to the heir he names, or the eldest, or the strongest his liege
-chooses; or divided between his sons; with no son, between his daughters,
-p. 10), the relief his heir owes his liege, and his hunting rights:
+chooses; or divided between his sons; with no son, where the eldest
+takes all, local custom decides whether a daughter takes the land intact
+or it is divided between the sisters or their husbands, and where land
+is split between all the siblings, daughters inherit alongside their
+brothers, DE p. 512; LoM p. 10 agrees), the relief his heir owes his
+liege, and his hunting rights:
 warrens, chases and parks are his alone, forests the king's (pp. 48, 79).
 Edit Household changes them.
 <!-- tui -->
@@ -440,9 +444,126 @@ More (`m`) > **Settle an Inheritance**
 <!-- /gui -->
 passes the lands to his heir: the heir becomes the record's ruler, the
 relief owed his liege is noted, divided lands are shared out among the
-heirs (give each heir's manors a record of their own), a widow keeps a
-third of the estate for her support, likely lost if she remarries (p.
-11), and his Diary keeps it.
+heirs (give each heir's manors a record of their own), a widow keeps the profit (not the income) of a third of his land until
+she remarries (DE p. 513, which wins over LoM p. 11's third of his
+estate; ticked already when his last marriage on the Marriages tab
+stands, or ended with his death), and his Diary keeps it.
+
+## Marriages tab
+<!-- help: tab-nb-marriages -->
+
+A lord's family's marriages and betrothals, and the terms of the one that
+stands, with what follows from it (Lords of Men pp. 10-11). A marriage is
+kept once and shown on the page of each house it joins: the bride's and
+the groom's, and a lord who marries shows it on his own.
+<!-- tui -->
+Choose a marriage to see it in full in the details panel.
+<!-- /tui -->
+<!-- gui -->
+Choose a marriage to see it in full in the inspector.
+<!-- /gui -->
+
+### Marriages
+<!-- help: section-nb-marriages -->
+
+The marriages joining his house: the spouses (his own family's first),
+when, the dowry, and where it stands: betrothed, married, ended by his
+death or hers, or separated. Arrange a Marriage adds one; edit or delete
+one.
+<!-- tui -->
+More (`m`) > **End a Marriage**
+<!-- /tui -->
+<!-- gui -->
+**End a Marriage**
+<!-- /gui -->
+records how the chosen one ends.
+
+### The Terms
+<!-- help: section-nb-marriage -->
+
+The marriage that stands (or the last one), named for the couple: the
+bride and groom (with their ages, from their sheets), the custom that
+governs the dowry, the dowry (or a dower, for an heiress), the consents,
+and what the Church asks: only a spoken intent and a dowry, though it
+prefers a priest and two witnesses (LoM p. 10). **What follows:** an
+heiress keeps her own fief while married, except in England, where her
+rights become her husband's (DE p. 512); her dowry is managed, kept or
+taken by her husband as the custom says (LoM p. 11); a widow keeps the
+profit, not the income, of a third of his land until she remarries (DE
+p. 513; Lords of Men's "a third of his estate" gives way to it); if they
+part, a dowry goes back to her family. A warning shows when her father
+withholds his consent (in many places that stops it, though no Christian
+father may choose her husband, LoM p. 10), when she hasn't consented
+(then there is no sacrament), and for close kin or bigamy. Edit Terms
+edits it.
+
+## Arrange a Marriage
+<!-- help: arrange-marriage -->
+
+Who marries whom (a character of the saga, a lord of the Region, or a
+name typed in), the houses whose pages show it, when, and whether they
+are betrothed or married. Then the bride's family, which sets her dowry:
+
+- **Noble** (LoM p. 11): an equal share of her parents' land between
+  their children; in the French sphere the eldest son and his patrimony
+  both come out of the division: enter the patrimony, count all her
+  parents' children, and the eldest son is left out of the sharing. The
+  book then lists what makes a dowry larger or smaller and
+  gives no figures: tick the statements true of her (her groom's family
+  is wealthier, she is one of many acceptable brides, not a virgin, less
+  than ten years younger than him, will receive nothing after, has fewer
+  siblings than most, mostly brothers, will find it hard to get money from
+  the heir, is paid in other rights rather than land or money); each
+  ticked makes it larger, each not smaller. The Contract works out the
+  share and counts them; the troupe settles the figure and types it as the
+  dowry agreed. An heiress brings no dowry: the groom's family may pay her
+  father a dower instead.
+- **Merchant** (City & Guild p. 113, as the errata p. 57 corrects it):
+  her father's Social Status the same as the groom's, or one level
+  higher, pays 10 times his yearly profit divided by his children (married
+  daughters left out), as Mythic Pounds, larger or smaller by the same
+  statements, except that hers is larger paid in assets (land or goods)
+  rather than money, and two more (paid in instalments; her parents would
+  seem richer than they are). Two levels higher, he raises the groom instead: a
+  Poor member of the status just below the father's, his surplus Labor
+  Points lost. A daughter who will inherit the business likely brings no
+  dowry.
+- **Peasant**: no figure in the books. Serfs of different lords need
+  their lord's leave, bought with merchet, more for a large dowry or when
+  she moves to her husband's lord's manor (LoM p. 81); the manor court
+  keeps it.
+
+The custom for the dowry is each marriage's own: Italy, or much of
+France (in both he manages it but may not spend it, may be sued for
+mismanaging it, and gives it back if they separate; only Italy's sends it
+to her children or her parents if she dies first, and for France the
+books are silent, so the troupe decides), parts of France (he may keep
+much of it),
+England (everything she has becomes his), or another the troupe sets
+(LoM p. 11). Her consent is needed for the sacrament; her father's where
+custom asks it. Marriage between close kin (since 1215, those sharing a
+great-great-grandparent) and bigamy are canon crimes (The Church p. 37;
+LoM p. 82). A marriage blessing is a petition at Ease Factor 3 (The
+Church p. 47). **The Contract** says all this as you fill the form in.
+
+## End a Marriage
+<!-- help: end-marriage -->
+
+How the chosen marriage ends, and when. **He dies first:** she keeps the
+profit (not the income) of a third of his land until she remarries, and,
+landed at her marriage with no adult sons, likely her own lands outright
+(DE p. 513); when he is a lord of the Region, Settle an Inheritance
+follows with his widow ticked. **She dies first:** her dowry goes to her
+children or back to her parents (Italy), or the troupe decides (much of
+France: the books don't say), or he may keep much of it (parts of
+France), or it is his already (England); her own fief goes to
+her eldest son where the eldest takes all, or to one of her sons where
+land is divided (DE p. 512). **They separate** (or it is annulled):
+separation, not divorce, is allowed in many places for infidelity; her
+dowry goes back to her family, in part or whole, and among nobles this
+can start a feud (DE p. 148; LoM p. 11). Annulling a marriage of common
+folk is a petition at Ease Factor 9 (The Church p. 47). Both families'
+Diaries, and the spouses' own, note it.
 
 ## Castles
 <!-- help: section-nb-castles -->
@@ -505,6 +626,23 @@ A Deployment Total is Intelligence + Area Lore + a stress die, the
 commander's own or a lieutenant's, plus the magnitude of any spell that
 shapes the field in his favour.
 
+**At sea: a fleet battle.** Set *Fought* to *At sea* and the battle is
+fought between fleets (Tales of Power p. 106). Each army then ticks its
+ships: when an army is a covenant, every ship on its Possessions is
+listed (all ticked at first; a wrecked one is left out of the count), and
+*other ships* counts those kept on no covenant's Possessions (a pirate
+fleet, ships hired). Weight of Numbers counts ships, not combat groups: 3
+ships against 2 is +1 (Lords of Men p. 105's ratios). Combat groups left
+blank are the picked ships' crews and fighting men in groups of five.
+The *pilot* (anyone with a seafaring Profession) replaces Area Lore in the
+Deployment Total: Intelligence + his Profession + stress die (ToP p. 106);
+the inspector shows the sum to roll against. *Bearded* ships (iron plates
+on the bow) are appreciably slower, but the plates are armour: the ship
+is more resistant to damage, and it rams and takes collisions better.
+The book gives no figure, so the storyguide sets the bonus in an event
+(ToP pp. 106, 110). Boarding
+is fought much as on land.
+
 ## Sieges
 <!-- help: section-nb-sieges -->
 
@@ -558,6 +696,16 @@ knights, 5 of serjeants, 2 of infantry or archers and 1 of levies. Every
 ten groups need a group of baggage, and each one short is -1 to the
 Event Totals.
 
+**An event at sea.** In a fleet battle the event is told at sea: cutting
+off part of their fleet, boarding their flagship, bringing down the mast
+that flies their signals, intercepting them with swift ships, or another.
+Tick the ships *engaged* in it (and how many of each army's other ships):
+at first every ship, later the ones engaged last time. Only the engaged
+ships count for this event's Weight of Numbers, so beating part of their
+fleet alone pays (ToP p. 106); the losses it causes use that figure. *They
+throw naptha bombs*: +5 damage, and the ship is set alight; water won't
+put it out, a great deal of sand will (ToP p. 110).
+
 # A town
 <!-- help: tab-nb-town -->
 
@@ -596,6 +744,14 @@ splitting the revenue by an agreement older than the charter (p. 10).
 **Parallel**: a secret demonic charter beside a mundane one (p. 11). A
 demon's entry also ticks the services it offers. Add, edit or delete a
 lord.
+
+With the saga's Charter Strength option on (Transforming Mythic Europe
+p. 36), each lord's charter has two scores, the lord's (the superior
+signatory's) and the town's or covenant's (the subordinate's). They show
+in the lord's details and can be typed on his form, with **In England**
+for an English charter (its notaries use Common Law, not Civil and Canon
+Law); More's Draft the Charter rolls one and Seek a Loophole looks for
+grounds against one.
 
 ### Terms
 <!-- help: section-nb-charter-terms -->

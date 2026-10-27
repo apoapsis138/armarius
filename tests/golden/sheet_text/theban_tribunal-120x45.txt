@@ -11,7 +11,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -54,7 +54,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   History: not written yet. Edit the Tribunal (e) to tell it.
@@ -97,7 +97,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -127,6 +127,49 @@
   ▌
 
 
+===== tab-trib-arguments
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Theban
+
+      Customs:       Theban: The Polity        Praeco:              (not chosen)
+      Meets every:   7 years                   Presiding Quaesitor: (not chosen)
+      Next meeting:  Summer 1225               Covenants:           0
+      Meeting place: Thebes                    Magi:                0
+      Cases:         none pending              Your votes:          0 of 0
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treas
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arguments (0)
+
+      No argument yet: Add one, then its polemic as a text.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ No argument chosen
+
+      Add an argument to follow its texts and its total.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Texts (0)
+
+      Add an argument first.
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a text.
+  ▌
+
+
 ===== tab-trib-meeting
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -140,7 +183,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-   1 Roster  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Po
+    2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Th
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   The Next Meeting: Summer 1225
@@ -183,7 +226,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  2 History  3 Docket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Dia
+  Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Polity  9 Dia
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Theban: The Polity. Its magi are politai or metoikoi, each voting once; a polites
@@ -226,7 +269,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
+  ments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Polity  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Silver in hand: 0 pounds
@@ -269,7 +312,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
+  ments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Polity  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -312,7 +355,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
+  ments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Polity  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -355,7 +398,7 @@
       In the Saga: not written yet. Edit the Tribunal to say.
           Edit (e)
 
-  ocket  4 Meeting  5 Peripheral Code  6 Treasury  7 The Polity  8 Diary  9 Secrets
+  ments  5 Meeting  6 Peripheral Code  7 Treasury  8 The Polity  9 Diary  0 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

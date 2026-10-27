@@ -1224,3 +1224,73 @@ Open it from **Import** in the saga page's Saga Management chapter, then Spells.
 - **Cancel** closes the helper.
 
 **See also:** [Spells](help:tab-content-spells), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
+
+## Follow an Avenue
+<!-- help: follow-avenue -->
+
+Plans the Initiation season that follows an avenue to its station
+(Houses of Hermes: Mystery Cults pp. 59-60). Choose the avenue (the next
+on his path, or the next on another path, which steps onto it), the guide
+(the guide the House provides, at Presence + House Criamon Lore 6 as the
+printed Scripts assume; a character of the saga with House Criamon Lore,
+one not of the House shown as unusual; or a ghostly Primus at the Cave of
+Twisting Shadows, Lore 9, p. 60), whether the Path of Seeming's third
+avenue gives up his talisman in place of the special time and place (the
+same +3, not an added one, p. 64) and the season. A head bound in infancy
+for the path, set on Change Path, adds +3 to its first station only
+(p. 51).
+
+The Avenue shows the guide's Presence + Lore + the Script against the
+Target (21, less his past Ordeal's reduction), whether his House Criamon
+Lore is enough (the station's place + 1), the avenue's story (a
+psychodrama: failing, he may try again; utter failure may bring a
+Twilight check, p. 59) and what success brings. Plan puts an Undergo an
+Initiation season on Planning (it replaces a plan for that season); when
+it is played, the season adds the station's Virtue and its Ordeal's
+Flaws (a Major Pious replacing his Vow, say), and the Virtues some
+stations bring with them: Clear Thinker, Common Sense and Keen Vision
+(Differentiation of Seeming; trade Keen Vision for another sense by hand,
+p. 64), the Gentle Gift, or the Blatant Gift lifted to an ordinary Gift
+(Service to Harmony, p. 70), and Free Expression and Inspirational
+(Expression, p. 71), none twice. It keeps the season on
+Stations, and reminds you to add the new stigma. A Flaw the book only
+describes (Incompatible Arts, "the equivalent of a Supernatural
+Nuisance") is noted for you to add by hand.
+
+## Change Path
+<!-- help: change-path -->
+
+The path he walks (or "as his stations show"), his guide, a ghostly
+Primus's Presence (the one he had in life; his House Criamon Lore is 9,
+p. 60), and the path a head bound in infancy (or a like modification)
+suits, +3 to its first station only (a cone suits Seeming, a
+double-lobed skull the Body, p. 51), with notes. Changing path sets aside
+his stations on the old one (p. 58). The Path of the Mirror is offered
+only to the Primus (pp. 57, 59): a magus whose Hermetic background names
+himself as the House's Primus.
+
+## Draft the Charter
+<!-- help: draft-charter -->
+
+A season's work by one side's notaries (Transforming Mythic Europe
+p. 36): the principal notary's Intelligence + Civil and Canon Law + a
+stress die is that side's Charter Strength. Tick **In England** for an
+English charter: its notaries use Common Law instead, and only it; the
+tick is kept on the lord (his form has it too). There are 3 botch dice,
+one fewer for each notary beyond the first; a botch leaves the strength
+at 0, no legal defence.
+
+## Seek a Loophole
+<!-- help: seek-loophole -->
+
+A season examining the charter and its legal texts, then Intelligence +
+Civil and Canon Law (Common Law, and only it, for a charter in England)
++ a stress die against the other side's Charter Strength (Transforming
+Mythic Europe p. 36). Higher finds a loophole: legal grounds to break
+one or more of its provisions, noted on the lord. The other side's
+strength must be drafted (or typed) first.
+
+The book gives the search no botch dice; the app rolls one. A botch is
+a total of 0 and something goes wrong (DE p. 7), as the storyguide
+decides: a false loophole the searcher believes in, say, or the other
+side learning of the search.

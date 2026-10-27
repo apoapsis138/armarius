@@ -566,6 +566,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
         "Roster",
         "History",
         "Docket",
+        "Arguments",
         "Meeting",
         "Peripheral Code",
         "Treasury",

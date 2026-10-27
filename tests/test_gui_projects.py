@@ -16,8 +16,9 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from test_hermetic_projects import tower_saga
+from test_menagerie import menagerie_saga
 
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
@@ -91,3 +92,20 @@ def test_a_stress_check_from_the_desktop_is_kept_in_the_works(app):
     assert [type(d) for d in asked] == [FieldsDialog]
     project = storage.load_saga(saga_id).covenants[0].hermetic_projects[0]
     assert project.works[-1].kind == "stress"
+
+
+def test_a_menagerie_its_beasts_and_breedings(app):
+    """A Menagerie shown: its facts, its beasts as ledger entries with Tame
+    a Beast beside Add, Edit and Delete, and its breedings (HP pp.
+    119-142)."""
+    saga = menagerie_saga()
+    storage.save_saga(saga)
+    window = MainWindow(saga_ids=[saga.id])
+    window.open_covenant("dam")
+    page = _page(window, "Projects")
+    chapter = page.codex.chapter(page.codex.chapters().index("Projects"))
+    words = _words(chapter)
+    assert "Beasts (8, in 5 rows)" in words and "Breedings (0)" in words
+    assert "Ol Thomae (Animal Handling 4), Lech" in words
+    buttons = [b.text().strip() for b in chapter.findChildren(QPushButton)]
+    assert "Tame a Beast" in buttons and "Show Project" in buttons

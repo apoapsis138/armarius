@@ -1039,6 +1039,57 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Ritual": "conjuring"},
         live={"#fields-live": "Botch dice: 5"},
     ),
+    # A covenant's Menagerie (Hermetic Projects pp. 119-142).
+    "add beast": Contract(
+        prefill={"Name": "", "Kind": "Beast of Virtue", "How many": "1"},
+        edits={
+            "Name": "Basilisk",
+            "Kind": "Beast of Legend",
+            "Magic Might (grown)": "20",
+        },
+        saved=lambda s: [
+            (b.name, b.kind, b.might)
+            for b in covenant(s).hermetic_projects[0].beasts[3:]
+        ],
+        expected=[("Basilisk", "Beast of Legend", 20)],
+        invalid=[
+            {"Name": ""},
+            {"Name": "Dog", "Kind": "Transformed Animal", "Magic Might (grown)": "5"},
+        ],
+        shown={"#cov-menagerie-beasts-list": "Basilisk"},
+    ),
+    "breed a pair": Contract(
+        prefill={"Male": "bock", "Female": "geiss", "Year": "1220"},
+        edits={"Season": "Winter"},
+        saved=lambda s: [
+            (b.pair, b.season) for b in covenant(s).hermetic_projects[0].breedings[1:]
+        ],
+        expected=[("Bock × Geiß", "Winter")],
+        invalid={"Ligature (0 to +3)": "4"},
+        live={"#fields-live": "against 9"},
+    ),
+    "edit breeding": Contract(
+        prefill={"Pair": "Bock × Geiß", "Young born": "0"},
+        edits={"Result": "Two kids", "Young born": "2"},
+        saved=lambda s: [
+            (b.result, b.young) for b in covenant(s).hermetic_projects[0].breedings
+        ],
+        expected=[("Two kids", 2)],
+        invalid={"Young born": "-1"},
+        shown={"#cov-menagerie-breedings-list": "Two kids"},
+    ),
+    "tame a beast": Contract(
+        prefill={"Tamed by": "comp1", "Year": "1220"},
+        edits={"Season": "Summer"},
+        saved=lambda s: [
+            (p.activity, p.title, p.season)
+            for p in s.season_plans
+            if p.character_id == "comp1" and p.title == "Hare of Virtue"
+        ],
+        expected=[("tame_animal", "Hare of Virtue", "Summer")],
+        invalid={"Year": "x"},
+        live={"#fields-live": "taming points"},
+    ),
 }
 
 

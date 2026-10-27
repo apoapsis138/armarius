@@ -18,6 +18,7 @@ from ..models import (
     Saga,
 )
 from . import effects, living, medicine, scores
+from .menagerie import covenant_upkeep
 from .rounding import round_away_from_zero, round_up
 
 SOURCE = (
@@ -339,6 +340,8 @@ def inhabitant_points(
     )
     if not exclude_roles:
         total += regimen_points(saga, covenant)
+    # A Menagerie's beasts cost points as horses do (Hermetic Projects p. 123).
+    total += covenant_upkeep(covenant)
     return total
 
 

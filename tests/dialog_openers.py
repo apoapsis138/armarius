@@ -41,7 +41,10 @@ from ars_magica_manager.models import (
     Ability,
     AbilityDef,
     Agent,
+    Argument,
     ArtScore,
+    Battle,
+    BattleSide,
     Book,
     Character,
     CharterClause,
@@ -51,8 +54,10 @@ from ars_magica_manager.models import (
     HermeticProject,
     KnownSpell,
     LandProject,
+    Marriage,
     MysteryCult,
     Neighbour,
+    PolemicText,
     Possession,
     Progress,
     ProjectWork,
@@ -63,11 +68,15 @@ from ars_magica_manager.models import (
     Spell,
     VirtueFlawInstance,
 )
+from ars_magica_manager.models.criamon import Stigma
+from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.rules import creation_xp
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
 from ars_magica_manager.rules.xp import ability_xp as cult_ability_xp
 from ars_magica_manager.sections import (
+    BEASTS_SECTION,
+    BREEDINGS_SECTION,
     PROJECT_DEVICES_SECTION,
     PROJECT_WORKS_SECTION,
     TOWER_SECTION,
@@ -1591,7 +1600,119 @@ OPENERS: dict[str, Opener] = {
     "open a tunnel": Opener("character", lambda ws: _open_tunnel(ws)),
     # A Virtue gained by magic for a while ends (Grogs pp. 62-63).
     "end a temporary virtue": Opener("character", lambda ws: _open_temporary(ws)),
+    # Fleet battles (Tales of Power): a Battle at sea with the covenant's ships.
+    "edit fleet battle": Opener(
+        "conflicts",
+        lambda ws: _open_fleet(
+            ws, lambda ws: ws._core_verb("section-conflict-battles", "edit")
+        ),
+    ),
+    "fleet battle event": Opener(
+        "conflicts",
+        lambda ws: _open_fleet(ws, lambda ws: ws.action_conflict_battle_event()),
+    ),
+    # A covenant's Menagerie (Hermetic Projects pp. 119-142).
+    "add beast": Opener(
+        "covenant",
+        lambda ws: _open_menagerie(ws, lambda: ws._core_verb(BEASTS_SECTION, "add")),
+    ),
+    "breed a pair": Opener(
+        "covenant",
+        lambda ws: _open_menagerie(ws, lambda: ws._core_verb(BREEDINGS_SECTION, "add")),
+    ),
+    "edit breeding": Opener(
+        "covenant",
+        lambda ws: _open_menagerie(
+            ws, lambda: ws._core_verb(BREEDINGS_SECTION, "edit"), "breedings"
+        ),
+    ),
+    "tame a beast": Opener(
+        "covenant",
+        lambda ws: _open_menagerie(ws, ws.action_tame_beast, "beasts", 2),
+    ),
+    # A lord's marriages (Lords of Men pp. 10-11).
+    "arrange marriage": Opener(
+        "neighbour", _built(lambda ws: ws._core_verb("section-nb-marriages", "add"))
+    ),
+    "edit marriage": Opener(
+        "neighbour",
+        lambda ws: _on_marriage(
+            ws, lambda ws: ws._core_verb("section-nb-marriages", "edit")
+        ),
+    ),
+    "edit marriage terms": Opener(
+        "neighbour",
+        lambda ws: _on_marriage(
+            ws, lambda ws: ws._core_verb("section-nb-marriage", "edit")
+        ),
+    ),
+    "end marriage": Opener(
+        "neighbour", lambda ws: _on_marriage(ws, lambda ws: ws.action_end_marriage())
+    ),
+    # A Criamon magus's The Enigma tab (HoH:MC pp. 50-73).
+    "change path": Opener(
+        "character",
+        lambda ws: _open_criamon(ws, lambda: ws._core_verb(CRIAMON_PATH, "edit")),
+    ),
+    "follow an avenue": Opener(
+        "character", lambda ws: _open_criamon(ws, ws.action_follow_avenue)
+    ),
+    "add stigma": Opener(
+        "character",
+        lambda ws: _open_criamon(ws, lambda: ws._core_verb(STIGMATA, "add")),
+    ),
+    "edit stigma": Opener(
+        "character",
+        lambda ws: _open_criamon(ws, lambda: ws._core_verb(STIGMATA, "edit"), True),
+    ),
+    # Polemic and Charter Strength (Transforming Mythic Europe pp. 27-36).
+    "add argument": Opener(
+        "tribunal", _built(lambda ws: ws._core_verb("section-trib-arguments", "add"))
+    ),
+    "edit argument": Opener(
+        "tribunal",
+        lambda ws: _on_argument(
+            ws, lambda ws: ws._core_verb("section-trib-argument", "edit")
+        ),
+    ),
+    "add text": Opener(
+        "tribunal",
+        lambda ws: _on_argument(
+            ws, lambda ws: ws._core_verb("section-trib-argument-texts", "add")
+        ),
+    ),
+    "circulate text": Opener(
+        "tribunal",
+        lambda ws: _on_argument(ws, lambda ws: ws.action_circulate_text(), text=True),
+    ),
+    "draft charter": Opener(
+        "town", lambda ws: _on_charter_lord(ws, lambda ws: ws.action_draft_charter())
+    ),
+    "seek loophole": Opener(
+        "town", lambda ws: _on_charter_lord(ws, lambda ws: ws.action_seek_loophole())
+    ),
 }
+
+
+async def _on_marriage(ws, action) -> None:
+    """A command on Gottfried's Marriages tab, on his marriage to Adelheid
+    of Sayn, added in memory (saved only with the form)."""
+    if not ws.saga.marriages:
+        ws.saga.marriages.append(
+            Marriage(
+                groom_ref="neighbour:gottfried",
+                bride="Adelheid of Sayn",
+                state="married",
+                lands=4,
+            )
+        )
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section("section-nb-marriages")
+    listed = view.query_one("#nb-marriages-list", scr.SelectableList)
+    listed.select_data_index(0)
+    await until(lambda: listed.selected_data_index == 0)
+    action(ws)
 
 
 def _open_biographical_academe(ws) -> None:
@@ -2173,3 +2294,173 @@ def _open_temporary(ws) -> None:
     (in memory, saved only with the form)."""
     ws.selected_character.virtues_flaws[0].temporary = True
     ws.action_change_virtues_flaws()
+
+
+async def _open_fleet(ws, open_editor) -> None:
+    """A form on a battle at sea, chosen first: the covenant's Seehund and
+    Möwe against two pirate ships (added in memory, saved only with the
+    form)."""
+    covenant = ws.saga.covenants[0]
+    if not any(p.id == "seehund" for p in covenant.possessions):
+        covenant.possessions += [
+            Possession(
+                id=pid,
+                kind="ship",
+                name=name,
+                ship=Ship(ship_type="buss", kind_name="Coastal buss"),
+            )
+            for pid, name in (("seehund", "Seehund"), ("moewe", "Möwe"))
+        ]
+        ws.saga.battles.insert(
+            0,
+            Battle(
+                "Off Terschelling",
+                at_sea=True,
+                sides=[
+                    BattleSide(
+                        covenant_id=covenant.id, groups=3, ships=["seehund", "moewe"]
+                    ),
+                    BattleSide("Pirates", groups=4, other_ships=2),
+                ],
+            ),
+        )
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section("section-conflict-battles")
+    rows = view.query_one("#conflict-battles-list", scr.SelectableList)
+    rows.select_data_index(0)
+    await until(lambda: rows.selected_data_index == 0)
+    open_editor(ws)
+
+
+async def _open_menagerie(ws, open_form, rows: str = "", row: int = 0) -> None:
+    """A form of the covenant's Projects tab with the Spur Menagerie shown:
+    Bock and Geiß (tamed Goats of Virtue), four wild Hares of Virtue, and
+    a breeding of the goats; Alys its lead handler (added in memory, saved
+    only with the form). `rows` names the list whose `row` is chosen."""
+    covenant = ws.selected_covenant
+    if not any(p.id == "spur" for p in covenant.hermetic_projects):
+        covenant.hermetic_projects.insert(
+            0,
+            HermeticProject(
+                id="spur",
+                name="The Spur Menagerie",
+                kind="Menagerie",
+                handler_ids=["comp1"],
+                beasts=[
+                    Beast(id="bock", name="Bock", might=10, sex="male", tamed=True),
+                    Beast(id="geiss", name="Geiß", might=10, tamed=True),
+                    Beast(
+                        id="hares",
+                        name="Hare of Virtue",
+                        might=5,
+                        size=-3,
+                        count=4,
+                        sex="both",
+                    ),
+                ],
+                breedings=[Breeding(id="b1", pair="Bock × Geiß", result="No young")],
+            ),
+        )
+        covenant.project_shown = "spur"
+        await ws._show_covenant_detail(covenant)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    if rows:
+        found = view.query_one(f"#cov-menagerie-{rows}-list", scr.SelectableList)
+        found.select_data_index(row)
+        await until(lambda: found.selected_data_index == row)
+    open_form()
+
+
+CRIAMON_PATH = "section-char-criamon-path"
+STIGMATA = "section-char-stigmata"
+
+
+async def _open_criamon(ws, open_form, choose: bool = False) -> None:
+    """A form of Leandro's The Enigma tab: he is made a Criamon magus two
+    stations along the Path of Seeming, with House Criamon Lore 4 and a
+    stigma on his temples (in memory, saved only with the form), and shown
+    again so the sheet has the tab; `choose` picks the stigma first."""
+    character = ws.selected_character
+    if character.hermetic.house != "house_criamon":
+        character.hermetic.house = "house_criamon"
+        for vf_id in (
+            "vf_the_enigma",
+            "vf_station_of_differentiation_of_seeming",
+            "vf_station_of_true_sight",
+        ):
+            character.virtues_flaws.append(VirtueFlawInstance(vf_id))
+        character.abilities.append(
+            Ability("Mystery Cult Lore: Criamon", xp=cult_ability_xp(4))
+        )
+        character.enigma.stigmata.append(
+            Stigma("Temples", "Rings of open eyes", "riddle", year=1196)
+        )
+        await ws._show_character_detail(character)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    if choose:
+        rows = view.query_one("#char-stigmata-list", scr.SelectableList)
+        rows.select_data_index(0)
+        await until(lambda: rows.selected_data_index == 0)
+    open_form()
+
+
+async def _on_argument(ws, open_form, text: bool = False) -> None:
+    """A form of the Rhine's Arguments tab, on an argument for its first
+    case with a summa on Code of Hermes in the library to write it in (in
+    memory, saved only with the form); `text` gives it its polemic, not
+    yet circulated, chosen first."""
+    saga = ws.saga
+    tribunal = saga.tribunal("rhine")
+    if not any(b.id == "b-polemic" for b in saga.books):
+        saga.books.append(
+            Book(
+                id="b-polemic",
+                name="On Charters",
+                type="Ability Summa",
+                ability="Code of Hermes",
+                level=4,
+                quality=11,
+                author_id="mag1",
+            )
+        )
+    if not tribunal.arguments:
+        argument = Argument(
+            "Covenants may hold charters",
+            ideal="Charters",
+            proponent_id="mag1",
+            case_id=tribunal.cases[0].id,
+        )
+        if text:
+            argument.texts.append(PolemicText(book_id="b-polemic", author_id="mag1"))
+        tribunal.arguments.append(argument)
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section("section-trib-arguments")
+    if text:
+        rows = view.query_one("#trib-argument-texts", scr.SelectableList)
+        rows.select_data_index(0)
+        await until(lambda: rows.selected_data_index == 0)
+    open_form(ws)
+
+
+async def _on_charter_lord(ws, open_form) -> None:
+    """A Charter Strength command on Soest's charter, its lord the
+    Archbishop of Cologne with his strength drafted at 0, the saga using
+    the optional rule (in memory, saved only with the form)."""
+    saga = ws.saga
+    saga.rule_options["charter_strength"] = True
+    town = saga.neighbour("soest")
+    if not town.details.get("charter_lords"):
+        town.details["charter_lords"] = [
+            {"lord": "The Archbishop of Cologne", "superior_strength": 0}
+        ]
+    view = ws._current_sheet_view()
+    await view.build_all_tabs()
+    view.refresh_section("section-nb-charter-lords")
+    rows = view.query_one("#nb-charter-lords-list", scr.SelectableList)
+    rows.select_data_index(0)
+    await until(lambda: rows.selected_data_index == 0)
+    open_form(ws)

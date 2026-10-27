@@ -523,6 +523,42 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Kind": "place"},
         shown={"#content-cult-scripts-list": "The head of the Minotaur"},
     ),
+    # Fleet battles (Tales of Power pp. 106-110).
+    "edit fleet battle": Contract(
+        prefill={
+            "Fought": "sea",
+            "Seehund, coastal buss, 8 men": True,
+            "Second army's other ships": "2",
+        },
+        edits={"Möwe, coastal buss, 8 men": False, "Second army's other ships": "3"},
+        saved=lambda s: (
+            s.battles[0].sides[0].ships,
+            s.battles[0].sides[1].other_ships,
+        ),
+        expected=(["seehund"], 3),
+        invalid=[
+            {"Second army's other ships": "-1"},
+            {"Second army's other ships": "0"},
+        ],
+        live={"#fields-live": "1 ship against 3"},
+        shown={"#conflicts-info-panel": "Ships: Seehund (8 men)."},
+    ),
+    "fleet battle event": Contract(
+        prefill={"Event": "cut", "Engaged: Seehund": True, "Engaged: Möwe": True},
+        edits={
+            "Event": "board",
+            "Engaged: Möwe": False,
+            "Engaged: Second army's others": "1",
+            "Leading the event": "comp1",
+        },
+        saved=lambda s: [
+            (e.deed, e.engaged_ships, e.engaged_other) for e in s.battles[0].events
+        ],
+        expected=[("board", ["seehund"], [0, 1])],
+        invalid={"Engaged: Second army's others": "3"},
+        live={"#fields-live": "Engaged: 1 against 1"},
+        shown={"#conflict-battles-list": "Off Terschelling"},
+    ),
 }
 
 

@@ -277,6 +277,26 @@ PROJECTS_SECTION = "section-cov-projects"
 TOWER_SECTION = "section-cov-tower"
 PROJECT_WORKS_SECTION = "section-cov-tower-works"
 PROJECT_DEVICES_SECTION = "section-cov-tower-devices"
+#: A Tribunal's Arguments tab (Transforming Mythic Europe pp. 27-35): its
+#: arguments, the chosen one, and that one's texts.
+ARGUMENTS_SECTION = "section-trib-arguments"
+ARGUMENT_SECTION = "section-trib-argument"
+ARGUMENT_TEXTS_SECTION = "section-trib-argument-texts"
+#: A lord's Marriages tab (marriages.py, Lords of Men pp. 10-11): the
+#: marriages joining his house, and the terms of the one that stands.
+MARRIAGES_SECTION = "section-nb-marriages"
+MARRIAGE_TERMS_SECTION = "section-nb-marriage"
+
+#: A covenant's Menagerie, a Hermetic Project (menagerie.py, Hermetic
+#: Projects pp. 119-142): the menagerie shown, its beasts, its breedings.
+MENAGERIE_SECTION = "section-cov-menagerie"
+BEASTS_SECTION = "section-cov-menagerie-beasts"
+BREEDINGS_SECTION = "section-cov-menagerie-breedings"
+#: A Criamon magus's The Enigma tab (forms.criamon, HoH:MC pp. 50-73): his
+#: path, its stations, and his stigmata.
+CRIAMON_PATH_SECTION = "section-char-criamon-path"
+CRIAMON_STATIONS_SECTION = "section-char-criamon-stations"
+STIGMATA_SECTION = "section-char-stigmata"
 
 CORE_SECTIONS: dict[str, frozenset[str]] = {
     POWERS_SECTION: frozenset({"add", "edit", "remove"}),
@@ -388,4 +408,18 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     TOWER_SECTION: frozenset({"edit"}),
     PROJECT_WORKS_SECTION: frozenset({"add", "edit", "remove"}),
     PROJECT_DEVICES_SECTION: frozenset({"add", "edit", "remove"}),
+    # A Tribunal's arguments and their texts (Transforming Mythic Europe).
+    ARGUMENTS_SECTION: frozenset({"add", "edit", "remove"}),
+    ARGUMENT_SECTION: frozenset({"edit"}),
+    ARGUMENT_TEXTS_SECTION: frozenset({"add", "edit", "remove"}),
+    # A lord's marriages and the terms of the one that stands.
+    MARRIAGES_SECTION: frozenset({"add", "edit", "remove"}),
+    MARRIAGE_TERMS_SECTION: frozenset({"edit"}),
+    # A covenant's Menagerie (Hermetic Projects).
+    MENAGERIE_SECTION: frozenset({"edit"}),
+    BEASTS_SECTION: frozenset({"add", "edit", "remove"}),
+    BREEDINGS_SECTION: frozenset({"add", "edit", "remove"}),
+    # A Criamon magus's path and stigmata (HoH:MC).
+    CRIAMON_PATH_SECTION: frozenset({"edit"}),
+    STIGMATA_SECTION: frozenset({"add", "edit", "remove"}),
 }

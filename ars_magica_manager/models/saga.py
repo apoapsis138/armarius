@@ -28,6 +28,7 @@ from .devices import EnchantedDevice
 from .familiar import Familiar
 from .goods import GoodDef, GoodPurity
 from .laboratory import Laboratory
+from .marriage import Marriage
 from .mystery_cults import MysteryCult
 from .seasons import CalendarEntry, LabProject, SeasonPlan, SeasonRecord, WorldTurn
 from .traits import Spell
@@ -178,6 +179,9 @@ class Saga:
     #: storage.saved_by): a signed-in player's name, else "" for the
     #: storyguide. Shown when another copy picks up the change.
     saved_by: str = ""
+    #: The saga's marriages and betrothals (marriages.py), each shown on
+    #: the page of every house it joins.
+    marriages: list[Marriage] = field(default_factory=list)
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""
@@ -277,6 +281,8 @@ class Saga:
                 if book.id in ids and book.owner_kind is None:
                     book.owner_kind = "covenant"
                     book.owner_id = library.get("covenant_id")
+        # The saga's marriages.
+        d["marriages"] = [Marriage.from_dict(m) for m in d.get("marriages") or []]
         saga = cls(**known_fields(cls, d))
         _link_vis_store_locations(saga)
         _key_lab_text_access_by_author(saga)

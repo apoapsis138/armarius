@@ -20,6 +20,7 @@ from . import (
     factions,
     lords,
     manors,
+    marriages,
     place_events,
     places,
     references,
@@ -116,7 +117,8 @@ for _kind in (
         lords.problem,
         lords.facts,
         lords.TAB,
-        (manors.LORD_TAB, lords.DIARY_TAB),
+        # A lord's Marriages tab comes after his Manors.
+        (manors.LORD_TAB, marriages.TAB, lords.DIARY_TAB),
     ),
     NeighbourKind(
         "town",

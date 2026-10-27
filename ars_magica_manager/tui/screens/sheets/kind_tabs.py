@@ -120,7 +120,12 @@ class KindTabsView(SheetView):
         columns."""
         saga, n = self.saga, self.kind_holder()
         stem = block.section_id.removeprefix("section-")
-        with SheetSection(title=block.title, id=block.section_id):
+        title = (
+            block.title
+            if block.heading is None
+            else self._titled(watched, block.section_id, lambda: block.titled(saga, n))
+        )
+        with SheetSection(title=title, id=block.section_id):
             facts, text, prose = block.facts, block.text, block.prose
             if facts is not None and block.facts_inline:
                 yield self._static(

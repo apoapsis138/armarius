@@ -3451,6 +3451,94 @@ penalty. Every aim needs the troupe to agree it suits the pilgrim.
 At a saint's shrine, one with a Devotion to the saint gains 10 Devotion
 Points, +5 for each further site of the saint's life, and up to 5 for
 relics seen (p. 19).
+## The Enigma tab
+<!-- help: tab-criamon -->
+
+A Criamon magus's path toward the Enigma: the path he walks, its five
+stations and what the next avenue needs, and his stigmata (Houses of
+Hermes: Mystery Cults pp. 50-51, 58-73). The tab is there only for a magus
+of House Criamon (or one Initiated into the Enigma).
+
+**You type:** the path (or let his stations show it), his guide, and his
+stigmata.
+
+**The app works out:** which stations he holds (from his Virtues), what
+the next avenue needs (his House Criamon Lore, its Target against the
+guide and the Script), and, when an Initiation season follows an avenue,
+the station's Virtue, its Ordeal's Flaws and the season it was reached.
+
+**See also:** [Hermetic Magic tab](help:tab-hermetic),
+[Planning tab](help:tab-planning)
+
+### The path
+<!-- help: section-char-criamon-path -->
+
+The path he walks: of the Body, of Seeming, of Strife, of Walking
+Backwards, or the Path of the Mirror, which only the Primus follows
+(pp. 57, 59; its stations aren't printed): Change Path offers it only to
+a magus whose Hermetic background names him as the House's Primus.
+Unless Change Path names one, it is the path most of his
+stations are on; with none, he walks the Winding Path (p. 58).
+
+**Station:** how far along it he is. **Enigmatic Wisdom** and **House
+Criamon Lore** (the sheet's Mystery Cult Lore: Criamon; House Criamon Lore
+under that name counts too): a station needs the Lore at its place on the
+path + 1, so the fifth needs 6 (p. 60). **Flaws of the path:** the Flaws
+the stations' Ordeals have given him; every follower of a path ends
+Disfigured, with Vow or Pious (p. 60). **Guide:** his Presence + House
+Criamon Lore. The book's Scripts assume 6, and the House always provides
+such a guide, so with none named he has the House's (Presence + Lore 6).
+A ghostly Primus at the Cave of Twisting Shadows sometimes guides: Lore 9
+and the Presence he had in life (p. 60). Any character who knows House
+Criamon Lore can guide; one not of the House is unusual, and shown as a
+warning (p. 59; DE p. 387).
+
+**Next:** the next avenue, its station, and the Target (21 for a Major
+Virtue, less his best past Ordeal's reduction, DE p. 388) against the
+guide + the Script. A head bound in infancy (or castration, broken bones,
+severed joints) gives an aptitude for one path, set on Change Path: +3 to
+that path's first station only (p. 51).
+
+One path at a time: a magus who steps onto another keeps only his
+Enigmatic Wisdom of the old path's stations, which the tab lists as set
+aside; rejoining, he regains them. Only the Primus keeps his on the Path
+of the Mirror (p. 58).
+
+<!-- tui -->
+e changes the path, the guide, a ghostly Primus's Presence and the path
+his head binding suits; m (More) offers Follow an Avenue.
+<!-- /tui -->
+<!-- gui -->
+Change Path and Follow an Avenue sit beside the title.
+<!-- /gui -->
+
+### Stations
+<!-- help: section-char-criamon-stations -->
+
+The path's five stations, each a Major Mystery Virtue: its name, what it
+gives, its Script against the Target the book prints (which already
+counts the Ordeals of the stations before it) and when he reached it: the
+season, kept when an Initiation season reached it, or "reached" for one
+held before. The next is marked "next", or "needs Lore n" when his House
+Criamon Lore is short. Choosing one shows its avenue in full (pp. 61-71;
+Errata p. 55 for the Path of Strife's fourth, Target 18). The Path of
+Walking Backwards' fifth shows its reduction as the book prints it (its
+second Initiation since a Major Ordeal, −6, p. 71); the app's Ordeal sizes
+are the Definitive Edition's Minor, Medium and Major (DE p. 388).
+
+### Stigmata
+<!-- help: section-char-stigmata -->
+
+A Criamon magus's marks: where, the mark, what it marks and when. A new
+one appears, or older ones move, for a station reached, a rise in
+Enigmatic Wisdom, an Inner Mystery learned, an apprentice begun or
+finished, a familiar sought or bound, or a great work of the Art; the
+first usually with the Riddle of the Magus, and loops on the wrists after
+Twilight (p. 50). They have no mechanical cause and can't be removed, even
+by magic. Another Criamon magus reads what one marks with Intelligence +
+Enigmatic Wisdom against 6 (p. 60). A tattoo that is an enchanted device
+is an ordinary device on the character, not a stigma (p. 51).
+
 ## Research tab
 <!-- help: tab-research -->
 

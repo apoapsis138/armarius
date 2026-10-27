@@ -40,6 +40,7 @@ from ....forms import careers as career_forms
 from ....forms import character as character_forms
 from ....forms import church as church_forms
 from ....forms import craft_magic as craft_forms
+from ....forms import criamon as criamon_forms
 from ....forms import experimental_effects
 from ....forms import faerie_dealings as faerie_forms
 from ....forms import gauntlet as gauntlet_forms
@@ -1748,6 +1749,18 @@ class CharacterActions(WorkspaceBase):
     def action_perform_exorcism(self) -> None:
         """More's Perform an Exorcism on Holy Orders: the roll, said."""
         self._byzantine_step(church_forms.exorcism_step)
+
+    # -- A Criamon magus's path (Houses of Hermes: Mystery Cults) --
+
+    def action_follow_avenue(self) -> None:
+        """More's Follow an Avenue on the path: the Initiation season that
+        follows it, planned."""
+        self._byzantine_step(
+            criamon_forms.avenue_step,
+            "section-char-criamon-path",
+            "section-char-ahead",
+            "tab-planning",
+        )
 
     def action_open_tunnel(self) -> None:
         """More's Open a Tunnel on Known Spells (Hermetic Projects): the

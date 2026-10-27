@@ -93,6 +93,7 @@ from .pages import (
     symbol_label,
     with_new,
 )
+from .polemic import charter_strength_verbs
 from .region import KindChapters
 from .ships import ships_section
 from .themes import Palette
@@ -460,7 +461,11 @@ class CovenantPage(QWidget):
                     if grid.rows
                     else _none(grid.empty, p),
                     buttons=verb_buttons(
-                        ops[COV_CHARTER_LORDS_SECTION], chooser, self.run, p
+                        ops[COV_CHARTER_LORDS_SECTION],
+                        chooser,
+                        self.run,
+                        p,
+                        more=charter_strength_verbs(saga, charter),
                     ),
                 )
             )

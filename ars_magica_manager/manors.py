@@ -33,7 +33,13 @@ Men); a covenant that holds land keeps the same Manors tab.
 - The household (pp. 9-12): its size (a lord of the manor about 10, a
   landed knight 16, a banneret 24, a baron 40, an earl 140), the mesnie of
   household knights, the heirs and the custom of inheritance (p. 10; a
-  widow keeps a third for her support, p. 11), and hunting rights (p. 48).
+  widow keeps the profit of a third of his land until she remarries, DE
+  p. 513, which wins over LoM p. 11's third of his estate; with no son,
+  where the eldest takes all, local custom decides whether a daughter
+  takes the land intact or it is divided between the sisters, and where
+  land is split between all the siblings daughters inherit alongside their
+  brothers, DE p. 512, as LoM p. 10 agrees),
+  and hunting rights (p. 48).
 - Buying land costs 30 to 50 times its yearly income (p. 85); a strong
   laborer with proper tools clears an acre of lightly wooded land a month
   doing nothing else (p. 84, errata p. 74).
@@ -72,6 +78,7 @@ from .models import (
 from .neighbour_lists import KindBlock, KindList, KindTab, list_ops, tab_ops
 from .references import Fact
 from .rules import dice, scores
+from .rules import marriage as marriage_rules
 from .sections import (
     ESTABLISHMENTS_SECTION,
     HOUSEHOLD_SECTION,
@@ -1202,7 +1209,17 @@ HOUSEHOLDS = (
     "a lord of the manor about 10, a landed knight 16, a banneret 24, a baron "
     "40, an earl 140"
 )
-WIDOWS_SHARE = "a third of his estate for her support, likely lost if she remarries"
+#: The widow's portion: the Definitive Edition's (p. 513) wins over Lords of
+#: Men's "a third of his estate, likely lost if she remarries" (p. 11).
+WIDOWS_SHARE = marriage_rules.WIDOWS_PORTION
+#: What daughters inherit (DE p. 512; LoM p. 10 agrees).
+DAUGHTERS_HINT = (
+    "With no son, where the eldest takes all, local custom decides: in some "
+    "places a daughter takes the land intact, in others it is divided "
+    "between the sisters (or their husbands). Where land is split between "
+    "all the siblings, daughters inherit alongside their brothers (DE p. 512; "
+    "LoM p. 10)."
+)
 
 
 class Household(TypedDict, total=False):
@@ -1290,7 +1307,7 @@ def household_fields(holder: Neighbour) -> list[DialogField]:
             options=pairs(tuple(INHERITANCE)),
             allow_blank=True,
             placeholder="(not said)",
-            hint="With no son, they are divided between his daughters (p. 10).",
+            hint=DAUGHTERS_HINT,
         ),
         DialogField(
             "hunting",
@@ -1331,7 +1348,12 @@ def _first_heir(holder: Neighbour) -> str:
     return first.split(" (")[0].strip()
 
 
-def settle_fields(holder: Neighbour) -> list[DialogField]:
+def settle_fields(
+    saga: Saga, holder: Neighbour, widow: bool | None = None
+) -> list[DialogField]:
+    """Settle an Inheritance's fields; `widow` ticks "A widow survives
+    him" (None: as his last marriage says)."""
+
     def divided(values: dict[str, Any]) -> bool:
         return values.get("custom") != "Primogeniture"
 
@@ -1355,6 +1377,7 @@ def settle_fields(holder: Neighbour) -> list[DialogField]:
                 ("Divided among daughters (no son)", "Divided among daughters"),
             ],
             required=True,
+            hint=DAUGHTERS_HINT,
         ),
         DialogField(
             "share",
@@ -1367,8 +1390,9 @@ def settle_fields(holder: Neighbour) -> list[DialogField]:
             "widow",
             "A widow survives him",
             "check",
-            False,
-            hint=f"She keeps {WIDOWS_SHARE} (p. 11).",
+            marriage_rules.leaves_widow(saga, holder.id) if widow is None else widow,
+            hint=f"She keeps {WIDOWS_SHARE} (DE p. 513). Ticked when his last "
+            "marriage on the Marriages tab stands, or ended with his death.",
         ),
         DialogField("note", "Note", "text", "", placeholder="e.g. died at Bouvines"),
     ]
@@ -1405,7 +1429,7 @@ def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
     if liege is not None:
         lines.append(f"He owes {liege.name} relief of {lords.relief(holder)} pounds.")
     if values.get("widow"):
-        lines.append(f"The widow keeps {WIDOWS_SHARE} ({LOM} p. 11).")
+        lines.append(f"The widow keeps {WIDOWS_SHARE} (DE p. 513).")
     note = str(values.get("note") or "").strip()
     place_events.diary(holder).append(
         {
@@ -1418,10 +1442,10 @@ def settle(saga: Saga, holder: Neighbour, values: dict[str, Any]) -> list[str]:
     return notes(*lines)
 
 
-def settle_form(saga: Saga, holder: Neighbour) -> Command:
+def settle_form(saga: Saga, holder: Neighbour, widow: bool | None = None) -> Command:
     return Form(
         SETTLE,
-        lambda: settle_fields(holder),
+        lambda: settle_fields(saga, holder, widow),
         lambda values: settle(saga, holder, values),
         validate=_settle_problem,
         help_id=HOUSEHOLD_SECTION,

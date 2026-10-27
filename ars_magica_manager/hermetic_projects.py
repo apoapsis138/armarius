@@ -20,6 +20,7 @@ import random
 from collections.abc import Callable
 from typing import Any
 
+from . import menagerie as men
 from .commands import Act, Command, Confirm, Form, Refuse, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -41,6 +42,7 @@ from .models.hermetic_projects import (
     DEVICE_KINDS,
     GREAT_TOWER,
     HELD,
+    MENAGERIE,
     OTHER,
     PROJECT_KINDS,
     QUALITIES,
@@ -79,6 +81,7 @@ PANEL = "[dim]Choose a project, a work or a device.[/]"
 #: What each kind of project is, in a line.
 KIND_TEXT: dict[str, str] = {
     GREAT_TOWER: "a tower raised level by level, by ritual and by masons",
+    MENAGERIE: men.KIND_LINE,
 }
 
 
@@ -130,6 +133,8 @@ def _coloured(words: str, tone: str) -> str:
 
 
 def progress(project: HermeticProject) -> str:
+    if project.kind == MENAGERIE:
+        return men.progress(project)
     levels = hp.height_levels(project)
     if not levels:
         return "not built"
@@ -137,6 +142,8 @@ def progress(project: HermeticProject) -> str:
 
 
 def note(project: HermeticProject) -> str:
+    if project.kind == MENAGERIE:
+        return men.note(project)
     quality = hp.quality(project)
     if not quality:
         return ""
@@ -189,7 +196,9 @@ def project_info(saga: Saga, holder: Neighbour, index: int) -> str:
     lines = [
         f"{escape(project.kind)}, {KIND_TEXT.get(project.kind, '')}; begun "
         f"{_when(project.season, project.year)}.",
-        tower_text(saga, covenant, project),
+        men.menagerie_text(saga, covenant, project)
+        if project.kind == MENAGERIE
+        else tower_text(saga, covenant, project),
     ]
     if project.description.strip():
         lines.append(escape(project.description.strip()))
@@ -506,6 +515,10 @@ def _people_options(saga: Saga, covenant: Covenant) -> list[tuple[str, str]]:
     ]
 
 
+def _is_tower(values: dict[str, Any]) -> bool:
+    return values.get("kind", GREAT_TOWER) == GREAT_TOWER
+
+
 def project_fields(
     saga: Saga, covenant: Covenant, project: HermeticProject | None
 ) -> list[DialogField]:
@@ -542,6 +555,7 @@ def project_fields(
             allow_blank=True,
             placeholder="(none yet)",
             hint=f"His {hp.MASON_CRAFT} sets how fast the tower rises ({HP} p. 36).",
+            show_if=_is_tower,
         ),
         DialogField(
             "place_id",
@@ -551,7 +565,8 @@ def project_fields(
             options=places,
             allow_blank=True,
             placeholder="(none)",
-            hint="Its rituals' tethers go to this place's aura.",
+            hint="Its rituals' tethers go to this place's aura; a menagerie's "
+            "beasts live in its aura.",
         ),
         DialogField(
             "innovation",
@@ -560,6 +575,7 @@ def project_fields(
             project.innovation if project else 0,
             hint="The building operation's own, 0 to 3; De Architectura and the "
             f"Water Wheel add theirs ({HP} pp. 37, 41).",
+            show_if=_is_tower,
         ),
         DialogField(
             "raw_materials",
@@ -567,7 +583,10 @@ def project_fields(
             "int",
             project.raw_materials if project else 0,
             hint="0 to 3.",
+            show_if=_is_tower,
         ),
+        # A Menagerie's staff and owner.
+        *men.project_fields(saga, covenant, project),
         DialogField(
             "description",
             "Description",
@@ -597,6 +616,7 @@ def _write_project(project: HermeticProject, values: dict[str, Any]) -> None:
     project.innovation = values.get("innovation") or 0
     project.raw_materials = values.get("raw_materials") or 0
     project.description = values.get("description") or ""
+    men.write_project(project, values)
 
 
 def project_form(
@@ -1351,20 +1371,46 @@ def conjure_form(
 # -- the tab -------------------------------------------------------------------
 
 
+PROJECTS_LIST = KindList(
+    PROJECTS_SECTION,
+    projects_title,
+    projects_grid,
+    projects_ops,
+    project_info,
+)
+
+
+def shown_kind(covenant: Covenant) -> str:
+    """The kind of the project the tab shows ("" with none): it picks the
+    tab's sections."""
+    project = hp.shown_project(covenant)
+    return project.kind if project is not None else ""
+
+
+def menagerie_tab(saga: Saga, covenant: Covenant) -> KindTab:
+    """The Projects tab with a Menagerie shown: its projects, the
+    menagerie, its beasts and its breedings (menagerie.py)."""
+    return KindTab(
+        "Projects",
+        TAB_ID,
+        (PROJECTS_LIST, men.BEASTS_LIST, men.BREEDINGS_LIST),
+        blocks=(men.menagerie_block(saga, covenant, tower_edit, PROJECTS_SECTION),),
+        icon="covenant",
+        panel=men.PANEL,
+    )
+
+
 def projects_tab(saga: Saga, covenant: Covenant) -> KindTab:
     """The covenant's Projects tab: its projects, the one shown's tower,
-    works and craft devices."""
+    works and craft devices; a Menagerie's own sections when one is
+    shown."""
+    if shown_kind(covenant) == MENAGERIE:
+        return menagerie_tab(saga, covenant)
     return KindTab(
         "Projects",
         TAB_ID,
         (
-            KindList(
-                PROJECTS_SECTION,
-                projects_title,
-                projects_grid,
-                projects_ops,
-                project_info,
-            ),
+            PROJECTS_LIST,
             KindList(
                 PROJECT_WORKS_SECTION,
                 works_title,

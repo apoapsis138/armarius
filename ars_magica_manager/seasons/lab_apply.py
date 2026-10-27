@@ -31,6 +31,7 @@ from ..models import (
     ScoredTrait,
     SeasonPlan,
     SeasonRecordLine,
+    StationReached,
     VirtueFlawInstance,
     assign_laboratory,
     new_instance_id,
@@ -412,7 +413,7 @@ def apply_supplement(
             character.virtues_flaws.append(instance)
             cch.apply_virtue(saga, character, instance)
     if plan.activity == "undergo_initiation":
-        _apply_initiation(character, work)
+        _apply_initiation(character, work, plan)
     if work.summa_level is not None:
         book_id, level = work.summa_level
         book = next((b for b in saga.books if b.id == book_id), None)
@@ -474,7 +475,9 @@ def _apply_gains(
     )
 
 
-def _apply_initiation(character: Character, work: sw.SupplementWork) -> None:
+def _apply_initiation(
+    character: Character, work: sw.SupplementWork, plan: SeasonPlan | None = None
+) -> None:
     """An Initiation's Ordeals and House Verditius's Hubris. One that gave
     its Virtue used up a step of each past Ordeal's reduction (a failed one
     spends none); one past its third Initiation lowers nothing more."""
@@ -487,6 +490,12 @@ def _apply_initiation(character: Character, work: sw.SupplementWork) -> None:
     verditius.apply_hubris(
         character, work.hubris_start, work.hubris_xp, work.hubris_rises
     )
+    # A Criamon station reached: when, for The Enigma's Stations.
+    if work.enigma_station:
+        season, year = (plan.season, plan.year) if plan is not None else ("", None)
+        character.enigma.reached.append(
+            StationReached(work.enigma_station, season, year)
+        )
 
 
 def _apply_reputations(

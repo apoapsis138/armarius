@@ -28,7 +28,7 @@ from ...models import (
 )
 from ...models.mystery_cults import LATER_LORE, is_saga_cult
 from .. import activity_groups as groups
-from .. import bjornaer, dice, enchantment, merinita, mysteries, verditius
+from .. import bjornaer, criamon, dice, enchantment, merinita, mysteries, verditius
 from .. import tradition_seasons as ts
 from ..apprentice_seasons import gifted
 from ..breakdown import Line
@@ -76,6 +76,8 @@ def initiation_target(saga: Saga, character: Character, plan: SeasonPlan) -> int
     # House Bjornaer's Great Beast knows the Inner Mystery, and a
     # Refinement's Ease Factor is its own (HoH:MC pp. 30, 33).
     knows = knows or bjornaer.knows_by_rule(plan.hedge_script)
+    # House Criamon's avenues are followed at their printed Targets (p. 60).
+    knows = knows or criamon.knows_by_rule(plan.hedge_script)
     hedge = ts.hedge_script(plan.hedge_script)
     if hedge is not None:
         _, script = hedge
@@ -161,7 +163,12 @@ def ordeal_size(plan: SeasonPlan) -> str:
 #: Lore: Bjornaer"), the books' ("House Bjornaer Lore", HoH:MC pp. 28, 30;
 #: Errata p. 54; "House Merinita Lore", p. 88) and older ones, so a
 #: character holding it under any of them scores it.
-_HOUSE_LORE_NAMES = (bjornaer.LORE_NAMES, merinita.LORE_NAMES, verditius.LORE_NAMES)
+_HOUSE_LORE_NAMES = (
+    bjornaer.LORE_NAMES,
+    merinita.LORE_NAMES,
+    verditius.LORE_NAMES,
+    criamon.LORE_NAMES,
+)
 
 
 def _lore_names(lore: str) -> tuple[str, ...]:
@@ -230,6 +237,8 @@ def _initiation_problem(saga: Saga, character: Character, plan: SeasonPlan) -> s
         or bjornaer.mystagogue_problem(
             character, mystagogue, plan.hedge_script, ordeal_reduction(character)
         )
+        # House Criamon's avenues: in order on the path (HoH:MC pp. 58-60).
+        or criamon.avenue_problem(character, plan.effect_id or "", plan.hedge_script)
         or (
             mysteries.parts_problem(plan.script_components, components_for(character))
             if hedge is None
@@ -267,7 +276,9 @@ def _hedge_problem(
     magicians' master's test, pp. 88-89) fails an Initiate without them."""
     rule = tradition.initiation
     assert rule is not None  # ts.hedge_script finds Scripts only in a rule
-    if not ts.belongs(mystagogue, tradition.id):
+    if not ts.belongs(mystagogue, tradition.id) and not criamon.lore_is_enough(
+        tradition.id
+    ):
         return (
             f"{mystagogue.name} isn't one of the {tradition.name}: the "
             "Mystagogue must be."
@@ -423,6 +434,7 @@ def _undergo_initiation(
     result.notes += _script_notes(character, plan)
     result.notes += _later_lore_warning(character, plan)
     beast = _bjornaer_terms(character, mystagogue, plan, name, result)
+    beast = beast or _criamon_terms(character, mystagogue, plan, name, result)
     lore = beast[1] if beast is not None else lore
     target = initiation_target(saga, character, plan)
     size = ordeal_size(plan)
@@ -469,15 +481,7 @@ def _undergo_initiation(
         if plan.effect_id:
             result.add_vfs.append(_initiated(plan))
     if suffered:
-        if gained := _ordeal_gained(plan):
-            result.add_vfs.append(gained)
-            if gained.vf_id == verditius.INCREASED_HUBRIS:
-                # Enough experience for one more point of Hubris (HoH:MC
-                # p. 121), counted when the season is applied.
-                result.hubris_rises += 1
-        if lost := _ordeal_lost(plan):
-            result.remove_vfs.append(lost)
-        result.ordeal = size
+        _suffer_ordeal(character, plan, result, size, initiated=initiated)
     if initiated and plan.effect_id:
         _house_hubris(character, plan.effect_id, result)
         _merinita_ordeal(plan, result)
@@ -508,6 +512,28 @@ def _undergo_initiation(
         + ordeal
         + gains
     )
+
+
+def _suffer_ordeal(
+    character: Character,
+    plan: SeasonPlan,
+    result: SupplementWork,
+    size: str,
+    *,
+    initiated: bool,
+) -> None:
+    """The Ordeal suffered: the plan's Flaw gained or Virtue lost, and a
+    Criamon avenue's own."""
+    if gained := _ordeal_gained(plan):
+        result.add_vfs.append(gained)
+        if gained.vf_id == verditius.INCREASED_HUBRIS:
+            # Enough experience for one more point of Hubris (HoH:MC
+            # p. 121), counted when the season is applied.
+            result.hubris_rises += 1
+    if lost := _ordeal_lost(plan):
+        result.remove_vfs.append(lost)
+    result.ordeal = size
+    _criamon_outcome(character, plan, result, initiated=initiated)
 
 
 def _later_lore_warning(initiate: Character, plan: SeasonPlan) -> list[str]:
@@ -603,6 +629,58 @@ def _bjornaer_outcome(
         result.notes.append(note)
 
 
+def _criamon_terms(
+    character: Character,
+    mystagogue: Character,
+    plan: SeasonPlan,
+    lore_name: str,
+    result: SupplementWork,
+) -> tuple[int, int] | None:
+    """House Criamon's notes on an avenue, and, when the plan names no
+    Mystagogue, the Presence and Lore of the guide the House provides
+    (Presence + Lore 6) or of a ghostly Primus (HoH:MC pp. 58-60). A guide
+    not of the House is unusual, and warned of."""
+    guide = criamon.stand_in(character, mystagogue, plan.hedge_script)
+    if guide is not None and guide.house:
+        result.notes.append(
+            f"A guide the House provides guides him: Presence + {lore_name} "
+            f"{guide.total} (Houses of Hermes: Mystery Cults p. 60)."
+        )
+    elif guide is not None:
+        result.notes.append(
+            f"A ghostly Primus guides him: Presence {guide.presence:+d}, "
+            f"{lore_name} {guide.lore} (Houses of Hermes: Mystery Cults p. 60)."
+        )
+    elif (
+        mystagogue is not character
+        and criamon.station_of_script(plan.hedge_script) is not None
+        and not criamon.is_criamon(mystagogue)
+    ):
+        result.notes.append(criamon.outsider_warning(mystagogue.name))
+    result.notes += criamon.initiation_notes(character, plan.hedge_script)
+    return (guide.presence, guide.lore) if guide is not None else None
+
+
+def _criamon_outcome(
+    character: Character, plan: SeasonPlan, result: SupplementWork, *, initiated: bool
+) -> None:
+    """An avenue's Ordeal (its Flaws, unless the plan names its own) and,
+    when initiated, the station reached (HoH:MC pp. 61-71)."""
+    found = criamon.outcome(
+        character, plan.hedge_script, own_ordeal=bool(ordeal_kind(plan))
+    )
+    if found is None:
+        return
+    result.add_vfs += found.add
+    result.remove_vfs += found.remove
+    result.ordeal = result.ordeal or found.ordeal
+    if initiated:
+        result.add_vfs += found.granted
+        result.remove_vfs += found.lifted
+        result.enigma_station = found.station
+        result.notes += found.notes
+
+
 def components_for(initiate: Character) -> list[mysteries.Component]:
     """The Script components an Initiation plan may list: the general ones,
     and for a Verditius Initiate the House's own (HoH:MC p. 117)."""
@@ -694,7 +772,8 @@ def _initiation_terms(
         _hedge_lore(mystagogue, rule.lore),
         script.bonus
         + plan.other_modifier
-        + bjornaer.script_extra(initiate, plan.hedge_script),
+        + bjornaer.script_extra(initiate, plan.hedge_script)
+        + criamon.script_extra(initiate, plan.hedge_script),
     )
 
 

@@ -12,12 +12,17 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any
 
+from .checked import one_of as _one_of
+from .checked import text as _text
+from .checked import whole as _whole
 from .common import SEASONS, known_fields
+from .menagerie import MENAGERIE, Beast, Breeding, beasts_from, breedings_from
 from .traits import new_instance_id
 
 GREAT_TOWER = "Great Tower"
-#: The kinds of project a covenant can begin.
-PROJECT_KINDS: tuple[str, ...] = (GREAT_TOWER,)
+#: The kinds of project a covenant can begin: a Great Tower (HP pp.
+#: 36-41) or a Menagerie of magical beasts (HP pp. 119-142).
+PROJECT_KINDS: tuple[str, ...] = (GREAT_TOWER, MENAGERIE)
 
 #: The quality of a piece of work, worst first (City & Guild p. 67).
 SHODDY, STANDARD, SUPERIOR, EXCELLENT = "Shoddy", "Standard", "Superior", "Excellent"
@@ -58,29 +63,6 @@ DEVICE_KIND_LABELS: dict[str, str] = {
     BUTTRESS: "+1 to stress checks (a Flying Buttress)",
     INNOVATION: "+1 Innovation (the Water Wheel)",
 }
-
-
-def _whole(value: Any, what: str, least: int | None = 0) -> int:
-    if isinstance(value, bool) or not isinstance(value, int):
-        raise ValueError(f"{what} should be a whole number, not {value!r}.")
-    if least is not None and value < least:
-        raise ValueError(f"{what} should be at least {least}, not {value}.")
-    return value
-
-
-def _one_of(value: Any, allowed: tuple[str, ...], what: str) -> str:
-    text = str(value)
-    if text not in allowed:
-        raise ValueError(f"{what}: {text!r} is not one of {', '.join(allowed)}.")
-    return text
-
-
-def _text(value: Any, what: str) -> str:
-    if value is None:
-        return ""
-    if not isinstance(value, str):
-        raise ValueError(f"{what} should be text, not {value!r}.")
-    return value
 
 
 @dataclass
@@ -190,6 +172,14 @@ class HermeticProject:
     description: str = ""
     works: list[ProjectWork] = field(default_factory=list)
     devices: list[CraftDevice] = field(default_factory=list)
+    # A Menagerie (HP pp. 119-142): its handlers (character ids), its
+    # owner and the name of the Reputation it earns him (p. 138), its
+    # beasts and the breedings of their pairs.
+    handler_ids: list[str] = field(default_factory=list)
+    owner_id: str = ""
+    reputation: str = ""
+    beasts: list[Beast] = field(default_factory=list)
+    breedings: list[Breeding] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], covenant: str = "") -> HermeticProject:
@@ -214,6 +204,15 @@ class HermeticProject:
             raise ValueError(f"{label}: its works and devices should be lists.")
         d["works"] = [ProjectWork.from_dict(w, label) for w in works]
         d["devices"] = [CraftDevice.from_dict(x, label) for x in devices]
+        # A Menagerie's staff, owner, beasts and breedings.
+        handlers = d.get("handler_ids") or []
+        if not isinstance(handlers, list):
+            raise ValueError(f"{label}: its handlers should be a list.")
+        d["handler_ids"] = [_text(h, f"{label}: a handler") for h in handlers]
+        for key in ("owner_id", "reputation"):
+            d[key] = _text(d.get(key), f"{label}: {key}")
+        d["beasts"] = beasts_from(d.get("beasts"), label)
+        d["breedings"] = breedings_from(d.get("breedings"), label)
         return cls(**d)
 
 

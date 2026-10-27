@@ -534,7 +534,11 @@ def battle_card(
     names = QVBoxLayout()
     names.setSpacing(0)
     names.addWidget(text(entry.name, p["foreground"], serif(16, bold=True), wrap=True))
-    when = f"{entry.season} {entry.year}" + (f", {entry.place}" if entry.place else "")
+    when = (
+        f"{entry.season} {entry.year}"
+        + (f", {entry.place}" if entry.place else "")
+        + (", at sea" if entry.at_sea else "")
+    )
     names.addWidget(text(when, p["label"], serif(11.5, italic=True), wrap=True))
     top.addLayout(names, 1)
     card.column.addLayout(top)
@@ -544,6 +548,9 @@ def battle_card(
         Fact("Ground and numbers", f"{row[3]}, {row[4]}"),
         Fact("Events", row[5]),
     ]
+    if entry.at_sea:
+        # A fleet battle: its ships, whose count sets the Weight of Numbers.
+        facts.insert(2, Fact("Ships", battles.ships_text(saga, entry)))
     card.column.addWidget(fact_grid(facts, p, 1))
     ops = conflicts.ops(saga)[CONFLICT_BATTLES_SECTION]
     line = QHBoxLayout()

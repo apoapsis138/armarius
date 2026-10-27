@@ -79,7 +79,7 @@ def _form(command: object) -> Form:
 
 def test_a_lord_has_a_manors_tab_after_his_fief_and_a_covenant_has_one_too():
     kind = neighbours.KINDS["lord"]
-    assert [t.title for t in kind.more] == ["Manors", "Diary"]
+    assert [t.title for t in kind.more] == ["Manors", "Marriages", "Diary"]
     assert not kind.more[0].after_standing
     tab = manors.LORD_TAB
     assert [p.section_id for p in tab.parts()] == [
@@ -399,7 +399,7 @@ def test_settling_an_inheritance_makes_the_heir_the_ruler():
     text = " ".join(lines)
     assert "divided between 3 heirs, about 1 each" in text
     assert "relief of 15 pounds" in text
-    assert "a third of his estate" in text
+    assert "the profit (not the income) of a third of his land" in text
     assert lord.details["diary"][-1]["text"].startswith("Dieter III inherits")
 
 

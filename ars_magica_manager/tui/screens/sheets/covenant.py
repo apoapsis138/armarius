@@ -122,6 +122,8 @@ class CovenantSheetView(KindTabsView):
             covenant
         )
         self._projects_tab = hermetic_projects.projects_tab(saga, covenant)
+        # The shown project's kind picks the tab's sections (a Menagerie's).
+        self._projects_kind = hermetic_projects.shown_kind(covenant)
         if self.shows_projects:
             self.core_ops.update(hermetic_projects.covenant_ops(saga, covenant))
         self._register_refreshers()
@@ -874,10 +876,13 @@ class CovenantSheetView(KindTabsView):
 
     def stale(self) -> bool:
         """Whether a project was begun (or the last one deleted) since the
-        sheet was built, so its Projects tab should come or go."""
-        return not self.sketch and self.shows_projects != (
-            hermetic_projects.has_projects(self.covenant)
-        )
+        sheet was built, so its Projects tab should come or go; or a
+        project of another kind is shown, with sections of its own."""
+        if self.sketch:
+            return False
+        return self.shows_projects != hermetic_projects.has_projects(
+            self.covenant
+        ) or self._projects_kind != hermetic_projects.shown_kind(self.covenant)
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations

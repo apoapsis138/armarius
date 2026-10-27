@@ -19,6 +19,7 @@ from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from .. import acta, artwork, hall, meeting, tribunal_packages, tribunals, world
 from ..commands import Command, Form, Refuse, SectionOps, Then
+from ..forms import polemic as polemic_forms
 from ..forms import tribunal as tribunal_forms
 from ..markup import aligned, escape, markdown_text
 from ..models import Case, Saga, Tribunal, TribunalDiaryEntry
@@ -46,6 +47,7 @@ from .hall import GrandHall, OpeningCard
 from .ledger_rows import ledger_rows
 from .manage import RecordControls
 from .pages import symbol_label
+from .polemic import ArgumentsChapter
 from .themes import Palette
 from .widgets import Codex, display_name, scrolling_page, serif, table_view, text
 
@@ -79,6 +81,13 @@ class TribunalPage(QWidget):
         self.codex.add("Roster", "tribunal", self._roster())
         self.codex.add("History", "year", self._history())
         self.codex.add("Docket", "worksheet", self._docket())
+        # Polemic (Transforming Mythic Europe), while its book is in play.
+        if polemic_forms.tab_offered(saga):
+            self.codex.add(
+                "Arguments",
+                "worksheet",
+                ArgumentsChapter(saga, tribunal, p, run, self.codex.inspect),
+            )
         self.codex.add("Meeting", "tribunal", self._meeting())
         self.codex.add("Peripheral Code", "lab_text", self._code())
         self.codex.add("Treasury", "income", self._treasury())
