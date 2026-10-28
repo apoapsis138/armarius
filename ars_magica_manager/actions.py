@@ -72,6 +72,7 @@ from .rules import (
     apothecary,
     casting,
     covenfolk,
+    faiths,
     hedge_casting,
     house_magic,
     merchants,
@@ -79,12 +80,10 @@ from .rules import (
     philosophy,
 )
 from .rules import agents as agent_rules
-from .rules import clergy as clergy_rules
 from .rules import faerie_dealings as faerie_dealing_rules
 from .rules import gauntlet as gauntlet_rules
 from .rules import goetic as goetic_rules
 from .rules import hermetic_projects as project_rules
-from .rules import holy_influence as holy_influence_rules
 from .rules import sin as sin_rules
 from .rules import theban_customs as byzantine
 from .rules import tmre_alchemy as tmre_alchemy_rules
@@ -113,6 +112,7 @@ from .sections import (
     DEVICE_SECTIONS,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
+    FAITH_SECTION,
     FIGHTS_SECTION,
     GILDS_SECTION,
     GOODS_SECTION,
@@ -447,6 +447,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # Devotion and the saints (The Church, RoP: The Divine).
     MenuItem("w", "invoke_saint", "Invoke a Saint"),
     MenuItem("x", "threaten_saint", "Threaten a Saint"),
+    MenuItem("p", "patron_saint", "Patron Saint"),
     MenuItem("d", "devotion_points", "Devotion Points"),
     MenuItem("g", "act_of_piety", "Indulgence, Vigil or Fast"),
     # Holy influence and tempers (RoP: The Divine).
@@ -496,9 +497,6 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # Shaping the land by magic (Transforming Mythic Europe).
     MenuItem("l", "shape_land", "Shape the Land"),
     # A cleric's career (The Church).
-    MenuItem("p", "petition_church", "Petition the Church"),
-    MenuItem("j", "canon_case", "Add Canon Case"),
-    MenuItem("o", "holy_orders", "Holy Orders"),
     MenuItem("x", "perform_exorcism", "Perform an Exorcism"),
     # Saga Content's Mystery Cults.
     MenuItem("x", "experiment_script", "Experiment on a Script"),
@@ -1154,36 +1152,34 @@ def _casts_in_lacuna(facts: ActionFacts, section: str) -> bool:
     )
 
 
-def _keeps_devotion(test: Callable[[Saga], bool]) -> Callable[[ActionFacts], bool]:
-    """Devotion and the saints' More commands: on a person's record (not
-    an animal's), when `test` finds the saga's books allow it."""
+def _keeps_faith(
+    action: str, books: Callable[[Saga, Character], bool]
+) -> Callable[[ActionFacts], bool]:
+    """A faith's More command (devotion, the saints, the mystic paths, God's
+    aid, holy influence): in the Faith section of the character's Religion
+    chapter, when `books` finds the saga's books give it and his faith
+    offers it to him (rules.faiths.may)."""
 
     def rule(facts: ActionFacts) -> bool:
         character = facts.selected_character
         return (
             facts.selected_kind == NodeKind.CHARACTER
-            and facts.on_record()
             and character is not None
-            and character.animal is None
-            and test(facts.saga)
+            and facts.active_section() == FAITH_SECTION
+            and books(facts.saga, character)
+            and faiths.may(character, action)
         )
 
     return rule
 
 
-# Holy influence and tempers (RoP: The Divine).
-
-
-def _influences_holily(facts: ActionFacts) -> bool:
-    """Holy Influence: a person of holy standing (clergy, True Faith,
-    Dominion Lore...) on his Personality Traits, with Realms of Power: The
-    Divine in play."""
-    character = _on_traits(facts)
+def _exorcises(facts: ActionFacts) -> bool:
+    """Perform an Exorcism: on Holy Orders, for a clergyman."""
+    character = facts.selected_character
     return (
         character is not None
-        and character.animal is None
-        and holy_influence_rules.has_standing(character)
-        and sourcebooks.in_play("RoP:D", sourcebooks.saga_books(facts.saga))
+        and facts.active_section() == ORDERS_SECTION
+        and faiths.may_exorcise(character)
     )
 
 
@@ -1304,25 +1300,6 @@ def _has_reputation(facts: ActionFacts) -> bool:
     return character is not None and bool(character.reputations)
 
 
-def _churchgoer(*, without_tab: bool = False) -> Callable[[ActionFacts], bool]:
-    """A cleric's career's More commands: on a person's record (not an
-    animal's) while The Church is in play; Holy Orders (`without_tab`)
-    only while the sheet has no Church tab, where e edits them."""
-
-    def rule(facts: ActionFacts) -> bool:
-        character = facts.selected_character
-        return (
-            facts.selected_kind == NodeKind.CHARACTER
-            and facts.on_record()
-            and character is not None
-            and character.animal is None
-            and devotion_forms.the_church(facts.saga)
-            and not (without_tab and clergy_rules.has_church_tab(character))
-        )
-
-    return rule
-
-
 # A covenant's Hermetic Projects (Hermetic Projects).
 
 #: Where Begin Project is offered: the covenant's record and the
@@ -1425,17 +1402,36 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "faerie_bargain": _bargains_with_faeries,
     "faerie_offer": _offers_to_faerie,
     # Devotion and the saints (The Church, RoP: The Divine).
-    "invoke_saint": _keeps_devotion(devotion_forms.invokes),
-    "threaten_saint": _keeps_devotion(devotion_forms.threatens),
-    "devotion_points": _keeps_devotion(devotion_forms.the_church),
-    "act_of_piety": _keeps_devotion(devotion_forms.the_church),
+    "invoke_saint": _keeps_faith(
+        "invoke_saint", lambda s, _c: devotion_forms.invokes(s)
+    ),
+    "threaten_saint": _keeps_faith(
+        "threaten_saint", lambda s, _c: devotion_forms.threatens(s)
+    ),
+    "patron_saint": _keeps_faith(
+        "patron_saint", lambda s, _c: devotion_forms.invokes(s)
+    ),
+    "devotion_points": _keeps_faith(
+        "devotion_points", lambda s, _c: devotion_forms.the_church(s)
+    ),
+    "act_of_piety": _keeps_faith(
+        "act_of_piety", lambda s, _c: devotion_forms.the_church(s)
+    ),
     # Holy influence and tempers (RoP: The Divine).
-    "holy_influence": _influences_holily,
-    # Mystic paths, God's aid, the Font and the Commanding Aura.
-    "mystic_path": _walks_in_faith(mystic_forms.offers_path),
-    "spiritual_path": _walks_in_faith(mystic_forms.offers_spiritual),
-    "monistic_revelation": _walks_in_faith(mystic_forms.offers_revelation),
-    "gods_aid": _walks_in_faith(mystic_forms.offers_aid),
+    "holy_influence": _keeps_faith(
+        "holy_influence",
+        lambda s, _c: sourcebooks.in_play("RoP:D", sourcebooks.saga_books(s)),
+    ),
+    # Mystic paths and God's aid in the Faith section; the Font and the
+    # Commanding Aura where they act.
+    "mystic_path": _keeps_faith("mystic_path", mystic_forms.offers_path),
+    "spiritual_path": _keeps_faith("spiritual_path", mystic_forms.offers_spiritual),
+    "monistic_revelation": _keeps_faith(
+        "monistic_revelation", mystic_forms.offers_revelation
+    ),
+    "gods_aid": _keeps_faith("gods_aid", mystic_forms.offers_aid),
+    # A clergyman's exorcism, on Holy Orders (The Church p. 34).
+    "perform_exorcism": _exorcises,
     "font_of_knowledge": _walks_in_faith(mystic_forms.offers_font),
     "commanding_aura": _walks_in_faith(mystic_forms.offers_aura),
     # House Verditius's Hubris and vendettas.
@@ -1452,10 +1448,6 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     # House Acclaim and Reputation rolls (HoH:TL, HoH:S, LoH, DE).
     "house_acclaim": _keeps_acclaim,
     "reputation_roll": _has_reputation,
-    # A cleric's career (The Church).
-    "petition_church": _churchgoer(),
-    "canon_case": _churchgoer(),
-    "holy_orders": _churchgoer(without_tab=True),
     # A covenant's Hermetic Projects: Begin Project on its record and its
     # Attributes; a magus's tunnel on his Known Spells.
     "begin_project": _begins_project,

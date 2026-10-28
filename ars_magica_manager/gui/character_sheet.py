@@ -83,6 +83,7 @@ from ..forms import device as device_forms
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..forms import power as power_forms
+from ..forms import religion as religion_forms
 from ..forms import season as season_forms
 from ..forms import spell as spell_forms
 from ..forms import tradition as tradition_forms
@@ -105,9 +106,8 @@ from ..models import (
 from ..references import Fact
 from ..rules import activities as season_rules
 from ..rules import agents as agent_rules
-from ..rules import clergy as clergy_rules
 from ..rules import criamon as criamon_rules
-from ..rules import enchantment, hybrid_magic, library, sigils
+from ..rules import enchantment, faiths, hybrid_magic, library, sigils
 from ..sections import (
     CANON_SECTION,
     COVERS_SECTION,
@@ -190,14 +190,15 @@ CHAPTERS = (
     ("Description", "character"),
     ("Abilities", "library"),
     ("Virtues & Flaws", "magic"),
+    # His faith and what it lets him do, and a cleric's career; its icon
+    # is his faith's (forms.religion.icon).
+    ("Religion", "church"),
     ("Hermetic Magic", "enchanted_item"),
     # A Criamon magus's path, its stations and his stigmata.
     ("The Enigma", "twilight"),
     ("Research", "lab_text"),
     ("Inventory", "combat"),
     ("Agents", "faction"),
-    # A cleric's career, for a character with a grade, a petition or a case.
-    ("Church", "church"),
     ("Planning", "season"),
     ("Diary", "year"),
     ("Secrets", "secrets"),
@@ -670,15 +671,17 @@ class CharacterSheet(QWidget):
             "Research": self._research,
             "Inventory": self._inventory,
             "Agents": self._agents,
-            "Church": self._church,
+            "Religion": self._religion,
             "The Enigma": self._criamon,
             "Planning": self._planning,
             "Diary": self._diary,
             "Secrets": lambda: secrets_chapter(character, palette, run),
         }
         for name, concept in CHAPTERS:
-            if name in _left_out(character):
+            if name in _left_out(saga, character):
                 continue
+            if name == "Religion":
+                concept = religion_forms.icon(character)
             self.codex.add(name, concept, builders[name]())
             if name == "Hermetic Magic" or (
                 name == "Virtues & Flaws" and character.type != "magus"
@@ -1710,53 +1713,86 @@ class CharacterSheet(QWidget):
             self.saga, self.character, self.p, self.run, self.inspect
         )
 
-    def _church(self) -> QWidget:
-        """Holy Orders (Edit Holy Orders, Perform an Exorcism), then the
-        Ordinations, Petitions and Canon Court as ledger entries, each with
-        Add, Edit and Delete; the chosen one shows in the inspector."""
+    def _religion(self) -> QWidget:
+        """His Faith (Edit Religion, and the actions his faith offers him),
+        then, for a Christian with The Church in play, the Church's
+        sections: Holy Orders (Edit Holy Orders, Perform an Exorcism) and
+        the Ordinations for one who may hold orders, the Petitions and the
+        Canon Court for all, as ledger entries, each with Add, Edit and
+        Delete; the chosen one shows in the inspector."""
         saga, p, c = self.saga, self.p, self.character
-        ops = church_forms.ops(saga, c)
-        career = c.church
-        words = TextBlock(church_forms.orders_desk_text(saga, c), p)
-        words.setFont(serif(12.5))
-        orders = section(
-            "Holy Orders",
+        faith = section(
+            "Faith",
             p,
             fact_grid(
-                [Fact(k, plain(v)) for k, v in church_forms.orders_facts(c)], p, 3
+                [Fact(k, plain(v)) for k, v in religion_forms.faith_facts(c)], p, 3
             ),
-            *([prose(career.notes.strip(), p)] if career.notes.strip() else []),
-            words,
+            prose(religion_forms.faith_note(c), p, initial=False),
             edits={
-                "Edit Holy Orders": lambda: self.run(
-                    church_forms.holy_orders_form(saga, c)
-                ),
-                "Perform an Exorcism": lambda: self.run(
-                    church_forms.exorcism_form(saga, c)
-                ),
+                "Edit Religion": lambda: self.run(religion_forms.religion_form(saga, c))
             },
+            buttons=self._placed("Faith"),
         )
-        parts: list[QWidget] = [orders]
-        for title, section_id, entries, empty in (
-            (
-                church_forms.ordinations_title(career),
-                ORDINATIONS_SECTION,
-                church_forms.ordination_entries(c),
-                church_forms.ordination_rows(c)[0][1],
-            ),
+        parts: list[QWidget] = [faith]
+        if not religion_forms.church_shown(saga, c):
+            return scrolling_page(p, *parts)
+        ops = church_forms.ops(saga, c)
+        career = c.church
+        lists = [
             (
                 church_forms.petitions_title(career),
                 PETITIONS_SECTION,
                 church_forms.petition_entries(c),
-                church_forms.petition_rows(c)[0][1],
+                "[dim]None yet: Add petitions the Church.[/]",
             ),
             (
                 church_forms.canon_title(career),
                 CANON_SECTION,
                 church_forms.case_entries(c),
-                church_forms.canon_rows(c)[0][1],
+                "[dim]None yet: Add records a case.[/]",
             ),
-        ):
+        ]
+        if religion_forms.orders_shown(saga, c):
+            words = TextBlock(church_forms.orders_desk_text(saga, c), p)
+            words.setFont(serif(12.5))
+            parts.append(
+                section(
+                    "Holy Orders",
+                    p,
+                    fact_grid(
+                        [Fact(k, plain(v)) for k, v in church_forms.orders_facts(c)],
+                        p,
+                        3,
+                    ),
+                    *([prose(career.notes.strip(), p)] if career.notes.strip() else []),
+                    words,
+                    edits={
+                        "Edit Holy Orders": lambda: self.run(
+                            church_forms.holy_orders_form(saga, c)
+                        ),
+                        # Any clergyman's, not a layman's or a monk's.
+                        **(
+                            {
+                                "Perform an Exorcism": lambda: self.run(
+                                    church_forms.exorcism_form(saga, c)
+                                )
+                            }
+                            if faiths.may_exorcise(c)
+                            else {}
+                        ),
+                    },
+                )
+            )
+            lists.insert(
+                0,
+                (
+                    church_forms.ordinations_title(career),
+                    ORDINATIONS_SECTION,
+                    church_forms.ordination_entries(c),
+                    church_forms.ordination_rows(c)[0][1],
+                ),
+            )
+        for title, section_id, entries, empty in lists:
             chooser = Chooser()
             parts.append(
                 section(
@@ -1823,7 +1859,7 @@ def _criamon_chapter(
     return scrolling_page(p, path, stations, stigmata)
 
 
-def _left_out(character: Character) -> set[str]:
+def _left_out(saga: Saga, character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
     for a magus, the Statblock but for a Line or Sketch character, and
     what only play needs (Inventory, Agents, Planning, Research) for those. A Line character
@@ -1837,8 +1873,8 @@ def _left_out(character: Character) -> set[str]:
         left.add("Statblock")
     if character.detail == LINE:
         left |= {"Abilities", "Virtues & Flaws", "Hermetic Magic", "Research"}
-    if cs.has_statblock(character) or not clergy_rules.has_church_tab(character):
-        left.add("Church")
+    if cs.has_statblock(character) or not religion_forms.shows(saga, character):
+        left.add("Religion")
     if cs.has_statblock(character) or not criamon_rules.has_enigma_tab(character):
         left.add("The Enigma")
     return left

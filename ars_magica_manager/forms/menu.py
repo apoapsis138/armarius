@@ -93,7 +93,7 @@ from ..models import (
 from ..rules import covenfolk, creation_tradition, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
-from ..sections import LAB_TEXTS_SECTION
+from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
 from . import acclaim as acclaim_forms
 from . import apothecary as apothecary_forms
 from . import beast as beast_forms
@@ -641,22 +641,21 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # the Lab, and beside This Season's buttons.
     "cast_in_lacuna": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     "pilgrimage": ((NodeKind.CHARACTER, "This Season"),),
-    # Devotion and the saints (The Church, RoP: The Divine): beside the
-    # Personality Traits' buttons, where Pious is.
-    "invoke_saint": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "threaten_saint": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "devotion_points": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "act_of_piety": ((NodeKind.CHARACTER, "Personality Traits"),),
-    # Holy influence and tempers (RoP: The Divine), beside Infernal
-    # Influence.
-    "holy_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
-    # Mystic paths and God's aid beside the Personality Traits' buttons
-    # (where Pious is), the Font beside the Abilities', the Commanding
-    # Aura beside Health's (its Soak).
-    "mystic_path": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "spiritual_path": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "monistic_revelation": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "gods_aid": ((NodeKind.CHARACTER, "Personality Traits"),),
+    # Devotion and the saints, holy influence, the mystic paths and God's
+    # aid (The Church, RoP: The Divine): in the Religion chapter's Faith
+    # section, each where his faith offers it (rules.faiths). The Font
+    # beside the Abilities' buttons, the Commanding Aura beside Health's
+    # (its Soak).
+    "invoke_saint": ((NodeKind.CHARACTER, "Faith"),),
+    "threaten_saint": ((NodeKind.CHARACTER, "Faith"),),
+    "patron_saint": ((NodeKind.CHARACTER, "Faith"),),
+    "devotion_points": ((NodeKind.CHARACTER, "Faith"),),
+    "act_of_piety": ((NodeKind.CHARACTER, "Faith"),),
+    "holy_influence": ((NodeKind.CHARACTER, "Faith"),),
+    "mystic_path": ((NodeKind.CHARACTER, "Faith"),),
+    "spiritual_path": ((NodeKind.CHARACTER, "Faith"),),
+    "monistic_revelation": ((NodeKind.CHARACTER, "Faith"),),
+    "gods_aid": ((NodeKind.CHARACTER, "Faith"),),
     "font_of_knowledge": ((NodeKind.CHARACTER, "Abilities"),),
     "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
     # House Verditius's Hubris beside the Personality Traits' buttons.
@@ -681,12 +680,6 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "change_virtues_flaws": ((NodeKind.CHARACTER, "Virtues & Flaws"),),
     # Shaping the land by magic, beside Improve Income.
     "shape_land": ((NodeKind.COVENANT, "Income"),),
-    # A cleric's career (The Church): beside the Personality Traits'
-    # buttons, with devotion's, so a character without a Church chapter
-    # reaches them.
-    "petition_church": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "canon_case": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "holy_orders": ((NodeKind.CHARACTER, "Personality Traits"),),
     # Wizard's War's tunnel (Hermetic Projects), in Magic Outside the Lab.
     "open_tunnel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
 }
@@ -784,6 +777,7 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
 #: The section a placed spot stands for, for the checks that ask which
 #: section focus is in: a desktop page has none focused.
 SPOT_SECTIONS: dict[str, str] = {
+    "Faith": FAITH_SECTION,
     "Reputations": "section-reputations",
     "Health": "section-char-health",
     "Aging": "section-aging",
@@ -1870,6 +1864,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     # Devotion and the saints (The Church, RoP: The Divine).
     "invoke_saint": _needs(_character, devotion_forms.invoke_form),
     "threaten_saint": _needs(_character, devotion_forms.threaten_form),
+    "patron_saint": _needs(_character, devotion_forms.patron_form),
     "devotion_points": _needs(_character, devotion_forms.points_form),
     "act_of_piety": _needs(_character, devotion_forms.piety_form),
     # Holy influence and tempers (RoP: The Divine).
@@ -1904,9 +1899,6 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     # Shaping the land by magic (TME pp. 54-77).
     "shape_land": _needs(_covenant, land_forms.shape_form),
     # A cleric's career (The Church).
-    "petition_church": _needs(_character, church_forms.petition_form),
-    "canon_case": _needs(_character, church_forms.canon_form),
-    "holy_orders": _needs(_character, church_forms.holy_orders_form),
     "perform_exorcism": _needs(_character, church_forms.exorcism_step),
     # Wizard's War's tunnel (Hermetic Projects pp. 78-81).
     "open_tunnel": _needs(_character, tunnel_forms.tunnel_form),

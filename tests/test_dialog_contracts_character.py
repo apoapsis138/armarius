@@ -1050,6 +1050,18 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Confidence Points spent": "99"},
         live={"#fields-live": "Against 14"},
     ),
+    "patron saint": Contract(
+        prefill={"His patron saint": "-none-"},
+        edits={
+            "His patron saint": "-another-",
+            "Another saint's name": "Saint Crispin",
+        },
+        saved=lambda s: [
+            p.name for p in character(s).progress if p.kind == "patron saint"
+        ],
+        expected=["Saint Crispin"],
+        invalid=[{"His patron saint": "-another-", "Another saint's name": ""}],
+    ),
     "devotion points": Contract(
         prefill={"How": "season", "Points gained (or lost)": "5"},
         edits={"The saint": "-another-", "Another saint's name": "Saint Nerius"},
@@ -1309,6 +1321,13 @@ CONTRACTS: dict[str, Contract] = {
         saved=lambda s: (character(s).church.grade, character(s).church.benefice),
         expected=("Acolyte", "Parish clerk"),
         shown={"#char-orders-text": "Acolyte (minor orders)"},
+    ),
+    "edit religion": Contract(
+        prefill={},
+        edits={"Religion": "Jewish"},
+        saved=lambda s: character(s).background.religion,
+        expected="Jewish",
+        shown={"#char-faith-text": "Jewish"},
     ),
     "perform an exorcism": Contract(
         prefill={"Faith or Confidence Points spent": "1", "Holy water (+1)": True},

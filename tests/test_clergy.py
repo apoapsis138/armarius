@@ -8,10 +8,11 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form
 from ars_magica_manager.forms import church as church_forms
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import religion as religion_forms
 from ars_magica_manager.models import (
     Ability,
     CanonCase,
@@ -446,20 +447,24 @@ def test_the_church_tab_shows_only_with_a_grade_a_petition_or_a_case():
     assert cl.has_church_tab(c)
 
 
-def test_the_commands_are_offered_on_a_person_and_holy_orders_only_without_the_tab():
+def test_the_church_sections_follow_faith_on_the_religion_tab():
     c = _clerk()
     saga = _saga(c)
+    saga.books_in_play = ["TC"]
+    # A layman Christian: Petitions and the Canon Court, but no orders.
+    assert religion_forms.church_shown(saga, c)
+    assert not religion_forms.orders_shown(saga, c)
+    c.virtues_flaws.append(VirtueFlawInstance(cl.CLERK))
+    assert religion_forms.orders_shown(saga, c)
+    # Not a Christian's: none, until he has a career on record.
+    c.background.religion = "Jewish"
+    assert not religion_forms.church_shown(saga, c)
+    c.church.cases.append(CanonCase("Usury"))
+    assert religion_forms.church_shown(saga, c)
+    # More no longer offers them: Add on the lists and Edit Holy Orders do.
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
-    for action in ("petition_church", "canon_case", "holy_orders"):
-        assert available(action, page)
-        assert action in {
-            i.action for i in menu_forms.placed(page, "Personality Traits")
-        }
-        assert isinstance(menu_forms.command(page, action), Form)
-    c.church.grade = "Lector"
-    assert not available("holy_orders", page)
-    saga.books_in_play = ["HoH:S"]
-    assert not available("petition_church", page)
+    offered = {i.action for i in menu_forms.more_items(page)}
+    assert not offered & {"petition_church", "canon_case", "holy_orders"}
 
 
 def test_the_lists_say_when_they_are_empty():

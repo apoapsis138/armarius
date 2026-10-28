@@ -5,6 +5,7 @@ Powers' guidelines (pp. 46-56; Errata pp. 48-49) and the maleficia's
 
 import random
 import re
+from dataclasses import replace
 
 from ars_magica_manager import actions, catalog, tradition_text
 from ars_magica_manager.actions import NodeKind
@@ -28,6 +29,7 @@ from ars_magica_manager.rules import hedge_effects as he
 from ars_magica_manager.rules import holy_influence as hi
 from ars_magica_manager.rules import holy_powers as hp
 from ars_magica_manager.rules import maleficia as mal
+from ars_magica_manager.sections import FAITH_SECTION
 from ars_magica_manager.sheets import creature as sheet
 
 
@@ -468,12 +470,22 @@ def test_holy_influence_is_offered_to_one_of_holy_standing():
     saga = Saga(id="s", name="S")
     saga.characters += [_priest(), Character(id="m", name="M", type="companion")]
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
-    labels = [item.label for item in menu_forms.placed(page, "Personality Traits")]
+    labels = [item.label for item in menu_forms.placed(page, "Faith")]
     assert "Holy Influence" in labels
+    faith = replace(page, section=FAITH_SECTION)
+    assert actions.available("holy_influence", faith)
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert not actions.available("holy_influence", plain)
+    assert not actions.available(
+        "holy_influence", replace(plain, section=FAITH_SECTION)
+    )
+    # A rabbi has it too; a pagan priest's faith gives no holy influence.
+    saga.character("p").background.religion = "Jewish"
+    assert actions.available("holy_influence", faith)
+    saga.character("p").background.religion = "Pagan"
+    assert not actions.available("holy_influence", faith)
+    saga.character("p").background.religion = ""
     saga.books_in_play = ["DE"]
-    assert not actions.available("holy_influence", page)
+    assert not actions.available("holy_influence", faith)
 
 
 def _guideline_set(name: str) -> list[dict]:

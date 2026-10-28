@@ -92,6 +92,7 @@ from ....sections import (
     AGENTS_SECTION,
     CHAR_AHEAD_SECTION,
     CONSTANT_EFFECTS_SECTION,
+    FAITH_SECTION,
     POWERS_SECTION,
 )
 from ..fields import (
@@ -1686,16 +1687,23 @@ class CharacterActions(WorkspaceBase):
 
     def action_invoke_saint(self) -> None:
         """More's Invoke a Saint: the roll, kept in the Diary."""
-        self._byzantine_step(devotion_forms.invoke_form)
+        self._byzantine_step(devotion_forms.invoke_form, FAITH_SECTION)
 
     def action_threaten_saint(self) -> None:
         """More's Threaten a Saint: the roll and the Confidence spent."""
-        self._byzantine_step(devotion_forms.threaten_form, "section-personality-traits")
+        self._byzantine_step(
+            devotion_forms.threaten_form, FAITH_SECTION, "section-personality-traits"
+        )
+
+    def action_patron_saint(self) -> None:
+        """More's Patron Saint: the saint he calls on as his own."""
+        self._byzantine_step(devotion_forms.patron_form, FAITH_SECTION)
 
     def action_devotion_points(self) -> None:
-        """More's Devotion Points: a Devotion begun or raised, and the
-        patron saint."""
-        self._byzantine_step(devotion_forms.points_form, "section-char-season")
+        """More's Devotion Points: a Devotion begun or raised."""
+        self._byzantine_step(
+            devotion_forms.points_form, FAITH_SECTION, "section-char-season"
+        )
 
     def action_act_of_piety(self) -> None:
         """More's Indulgence, Vigil or Fast: the Faith, Confidence, Piety
@@ -1710,7 +1718,7 @@ class CharacterActions(WorkspaceBase):
     # -- holy influence and tempers (RoP: The Divine) --
 
     def action_holy_influence(self) -> None:
-        """More's Holy Influence on Personality Traits: the roll, kept in
+        """More's Holy Influence in the Faith section: the roll, kept in
         the Diary."""
         self._byzantine_step(
             holy_influence_forms.holy_influence_form, "section-char-info"
@@ -1720,7 +1728,9 @@ class CharacterActions(WorkspaceBase):
 
     def action_mystic_path(self) -> None:
         """More's Mystic Path: the path followed or left, in the Diary."""
-        self._byzantine_step(mystic_forms.mystic_path_form, "section-char-season")
+        self._byzantine_step(
+            mystic_forms.mystic_path_form, FAITH_SECTION, "section-char-season"
+        )
 
     def action_spiritual_path(self) -> None:
         """More's Spiritual Path: a path begun, a Quest Component counted,
@@ -1854,22 +1864,6 @@ class CharacterActions(WorkspaceBase):
         )
 
     # -- A cleric's career (The Church) --
-
-    def action_petition_church(self) -> None:
-        """More's Petition the Church: the petition kept on the Church tab
-        (which a first petition brings)."""
-        self._byzantine_step(church_forms.petition_form, "section-char-petitions")
-
-    def action_canon_case(self) -> None:
-        """More's Add Canon Case: the case kept on the Church tab."""
-        self._byzantine_step(
-            church_forms.canon_form, "section-char-canon", "section-char-orders"
-        )
-
-    def action_holy_orders(self) -> None:
-        """More's Holy Orders: a grade held before play, for a character
-        with no Church tab yet."""
-        self._byzantine_step(church_forms.holy_orders_form, "section-char-orders")
 
     def action_perform_exorcism(self) -> None:
         """More's Perform an Exorcism on Holy Orders: the roll, said."""

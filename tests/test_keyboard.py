@@ -239,8 +239,8 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         view = workspace._current_sheet_view()
         tabbed = view.query_one(TabbedContent)
         strip = next(line for line in screen_lines(app) if "1 Description" in line)
-        assert "2 Abilities  3 Virtues & Flaws  4 Hermetic Magic" in strip
-        assert "5 Research  6 Rune Magic  7 Inventor" in strip
+        assert "2 Abilities  3 Virtues & Flaws  4 Religion  5 Hermetic Magic" in strip
+        assert "6 Research  7 Rune Magic" in strip
 
         await pilot.press("3")
         assert await wait_until(pilot, lambda: tabbed.active == "tab-vf")
@@ -257,12 +257,13 @@ async def test_the_tabs_are_numbered_and_a_number_opens_its_tab():
         )
         await pilot.press("3")
         assert await wait_until(pilot, lambda: app.focused is virtues)
-        # The tenth tab, the Diary, is opened by 0; the eleventh (Secrets)
-        # has no number, and a number past the last tab does nothing.
-        assert view.tab_ids[9] == "tab-diary" and len(view.tab_ids) == 11
-        assert not workspace.check_action("show_tab", (12,))
+        # The tenth tab, Planning, is opened by 0; the eleventh and twelfth
+        # (Diary, Secrets) have no number, and a number past the last tab
+        # does nothing.
+        assert view.tab_ids[9] == "tab-planning" and len(view.tab_ids) == 12
+        assert not workspace.check_action("show_tab", (13,))
         await pilot.press("0")
-        assert await wait_until(pilot, lambda: tabbed.active == "tab-diary")
+        assert await wait_until(pilot, lambda: tabbed.active == "tab-planning")
 
 
 async def test_escape_steps_out_from_the_sheet_to_the_tree_to_the_saga_picker():
@@ -487,21 +488,10 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Turbulence",
             "A Scholar's Career",
             "An Offer to Faerie",
-            # Devotion and the saints (The Church, RoP: The Divine), after
-            # An Offer to Faerie.
-            "Invoke a Saint",
-            "Threaten a Saint",
-            "Devotion Points",
-            "Indulgence, Vigil or Fast",
-            # A mystic's path and God's aid (The Church, RoP: The Divine).
-            "Mystic Path",
-            "Invoke God's Aid",
+            # The saints, the mystic paths and God's aid are More in the
+            # Religion tab's Faith section, not on the record.
             # A certamen duel, for a magus with a rival magus in the saga.
             "Certamen",
-            # A cleric's career (The Church).
-            "Petition the Church",
-            "Add Canon Case",
-            "Holy Orders",
         ]
         await menu(pilot, app, "m", "In Creation / In Play")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))

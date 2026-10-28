@@ -86,19 +86,8 @@ def test_each_page_offers_what_applies_there():
         "An Offer to Faerie",
         # A magus may cast in a lacuna (HoH: Societates).
         "Cast in a Lacuna",
-        # Devotion and the saints (The Church, RoP: The Divine), after the
-        # lacuna's Cast in a Lacuna.
-        "Invoke a Saint",
-        "Threaten a Saint",
-        "Devotion Points",
-        "Indulgence, Vigil or Fast",
-        # A mystic's path and God's aid (The Church, RoP: The Divine).
-        "Mystic Path",
-        "Invoke God's Aid",
-        # A cleric's career (The Church).
-        "Petition the Church",
-        "Add Canon Case",
-        "Holy Orders",
+        # Devotion and the saints, the mystic paths and God's aid are in
+        # the Religion chapter's Faith section, not on the record.
     ]
     assert _labels(menu_forms.new_items(page)) == ["New Character", "Bind Familiar"]
     deleted = menu_forms.deletes(page)

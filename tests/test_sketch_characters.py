@@ -229,6 +229,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
                 "Description",
                 "Abilities",
                 "Virtues & Flaws",
+                "Religion",
                 "Hermetic Magic",
                 "Research",
                 "Inventory",

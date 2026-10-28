@@ -34,6 +34,7 @@ from ars_magica_manager.rules import gods_aid as aid
 from ars_magica_manager.rules import mysticism as my
 from ars_magica_manager.rules.season_work import mysticism as path_seasons
 from ars_magica_manager.rules.xp import ability_xp
+from ars_magica_manager.sections import FAITH_SECTION
 
 
 class Faces(random.Random):
@@ -475,11 +476,26 @@ def test_offered_on_a_person_with_the_books(action, book, prepare):
         ds.set_path(clara, prepare)
         ds.note_ascent(clara)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
-    assert available(action, page)
-    assert action in {i.action for i in menu_forms.placed(page, "Personality Traits")}
-    assert isinstance(menu_forms.command(page, action), Form)
+    faith = replace(page, section=FAITH_SECTION)
+    assert available(action, faith)
+    assert action in {i.action for i in menu_forms.placed(page, "Faith")}
+    assert isinstance(menu_forms.command(faith, action), Form)
     saga.books_in_play = ["HoH:S"]
-    assert not available(action, replace(page))
+    assert not available(action, replace(faith))
+
+
+def test_a_mystic_path_needs_piety_and_a_divine_tie():
+    saga = _saga("TC")
+    clara = saga.character("c")
+    faith = replace(
+        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c"),
+        section=FAITH_SECTION,
+    )
+    assert available("mystic_path", faith)
+    clara.personality_traits = []
+    assert not available("mystic_path", faith)
+    ds.set_path(clara, my.CONTEMPLATIVE)
+    assert available("mystic_path", faith)
 
 
 def test_the_font_and_the_aura_are_offered_to_those_who_have_them():

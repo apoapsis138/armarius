@@ -574,6 +574,7 @@ GUIDES = [
     "guide-lab-magic-item",
     "guide-mythic-locations",
     "guide-staged-project",
+    "guide-religion",
 ]
 
 

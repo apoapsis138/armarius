@@ -21,6 +21,7 @@ from .criamon import Enigma
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .philosophy import Formula
+from .religion import religion_from_text
 from .tmre_alchemy import Alchemy
 from .traits import (
     Ability,
@@ -93,6 +94,7 @@ class Background:
     year_born: int | None = None
     race_nationality: str = ""
     place_of_origin: str = ""
+    #: One of models.religion.RELIGIONS, or "" (counted as Christian).
     religion: str = ""
     title_profession: str = ""
 
@@ -103,6 +105,8 @@ class Background:
             # Older saves used a single "confidence"; migrate on load
             # so existing characters don't become unreadable over the split.
             d["confidence_score"] = d.pop("confidence")
+        # Religion was free text before it was a list.
+        d["religion"] = religion_from_text(str(d.get("religion") or ""))
         return cls(**known_fields(cls, d))
 
 

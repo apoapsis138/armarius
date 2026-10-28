@@ -266,26 +266,18 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
     saga = _saga()
     grog = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
     labels = [item.label for item in menu_forms.placed(grog, "Personality Traits")]
-    saints = [
-        "Invoke a Saint",
-        "Threaten a Saint",
-        "Devotion Points",
-        "Indulgence, Vigil or Fast",
-        # The mystic paths and God's aid (The Church, RoP: The Divine).
-        "Mystic Path",
-        "Invoke God's Aid",
-        # A cleric's career (The Church), reachable before he has a Church tab.
-        "Petition the Church",
-        "Add Canon Case",
-        "Holy Orders",
-    ]
     # Roll: a trait roll, with the Silver Cord's help for a familiar's master.
-    assert labels == ["Reward or Punish", "Pension", "Roll", *saints]
-    magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == [
-        "Roll",
-        *saints,
+    # The saints and the Church are on the Religion chapter's Faith.
+    assert labels == ["Reward or Punish", "Pension", "Roll"]
+    # A grog may pray to the saints, but can't spend Confidence on God's
+    # aid; with no Pious trait he has no Devotions to keep.
+    assert [i.label for i in menu_forms.placed(grog, "Faith")] == [
+        "Invoke a Saint",
+        "Patron Saint",
+        "Indulgence, Vigil or Fast",
     ]
+    magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
+    assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == ["Roll"]
     assert not menu_forms.placed(magus, "Known Spells")
     assert [i.label for i in menu_forms.placed(magus, "Magic Outside the Lab")] == [
         "Craft by Magic",

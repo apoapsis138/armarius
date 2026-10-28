@@ -171,6 +171,22 @@ def _saint_fields(saga: Saga, character: Character) -> list[DialogField]:
     ]
 
 
+def _refused_fields(character: Character) -> list[DialogField]:
+    """Only a saint who has refused his invocation may be threatened (RoP:
+    The Divine p. 87)."""
+    refused = dv.refused(character)
+    return [
+        DialogField(
+            "saint",
+            "The saint who refused",
+            "select",
+            refused[0] if refused else None,
+            options=[(escape(name), name) for name in refused],
+            required=True,
+        )
+    ]
+
+
 def _power_field(saga: Saga) -> DialogField:
     offered = sr.powers_in_play(_books(saga))
     return DialogField(
@@ -531,6 +547,10 @@ def invoke_form(
         else:
             lines.append(f"{name} does not answer; he may ask again tomorrow.")
             title = f"Invoked {name}"
+        if not values.get("yazata"):
+            dv.note_answer(
+                character, name, rolled.heard, saga.current_season, saga.current_year
+            )
         _diary(saga, character, title, " ".join(lines))
         return notes(*map(escape, lines))
 
@@ -556,7 +576,7 @@ def threaten_fields(saga: Saga, character: Character) -> list[DialogField]:
         saint = catalog_saint(saga, _saint_name(values))
         return {"might": saint.might if saint is not None else None}
 
-    fields = _saint_fields(saga, character)
+    fields = _refused_fields(character)
     fields[0].fills = might_of
     first = catalog_saint(saga, str(fields[0].value or ""))
     return [
@@ -614,6 +634,10 @@ def _threat_problem(character: Character) -> Any:
             return "Name the saint."
         if found := _yazata_problem(values, threat=True):
             return found
+        if not any(
+            dv.same_saint(_saint_name(values), n) for n in dv.refused(character)
+        ):
+            return "Only a saint who refused his invocation may be threatened."
         spent = _number(values.get("confidence"))
         if spent < 0:
             return "Confidence spent can't be below 0."
@@ -660,6 +684,12 @@ def threaten_form(
     spent; written in the Diary."""
     if character is None:
         return Refuse(THREATEN, "Choose a character first.")
+    if not dv.refused(character):
+        return Refuse(
+            THREATEN,
+            "No saint has refused him: only a saint who refused his invocation "
+            "may be threatened (RoP: The Divine p. 87).",
+        )
 
     def apply(values: dict[str, Any]) -> list[str]:
         name = _saint_name(values)
@@ -676,6 +706,7 @@ def threaten_form(
         power = sr.POWERS.get(str(values.get("power") or ""))
         if outcome == dv.THREAT_GRANTED and power is not None:
             lines.append(f"{name} works {power.name}.")
+        dv.clear_refusal(character, name)
         _diary(saga, character, f"Threatened {name}", " ".join(lines))
         return notes(*map(escape, lines))
 
@@ -721,14 +752,6 @@ def points_fields(saga: Saga, character: Character) -> list[DialogField]:
             abs(dv.GAINS[how].low),
             hint="Devotion Points; lost, for a neglected feast.",
         ),
-        DialogField(
-            "patron",
-            "His patron saint",
-            "check",
-            dv.same_saint(dv.patron(character), str(fields[0].value or "")),
-            hint="One of the saints he is devoted to, or any saint: the "
-            "player's choice (The Church p. 13).",
-        ),
     ]
 
 
@@ -745,7 +768,7 @@ def _points_problem(character: Character) -> Any:
             return "Name the saint."
         if _number(values.get("points")) < 0:
             return "Type the points as a number of 0 or more."
-        if not _number(values.get("points")) and not values.get("patron"):
+        if not _number(values.get("points")):
             return "Gain at least one Devotion Point."
         if values.get("how") == dv.CREATION:
             return dv.creation_problem(character, name, _points(values))
@@ -791,7 +814,7 @@ def points_live(character: Character) -> Any:
 
 def points_form(saga: Saga, character: Character | None) -> Command:
     """More's Devotion Points: a Devotion begun or raised (or lowered for
-    a neglected feast), and the patron saint; written in the Diary."""
+    a neglected feast); written in the Diary."""
     if character is None:
         return Refuse(POINTS, "Choose a character first.")
 
@@ -808,13 +831,6 @@ def points_form(saga: Saga, character: Character | None) -> Command:
                 f"{abs(change)} Devotion Point(s) {verb} toward {record.name} "
                 f"({why}): Devotion {dv.devotion_label(record)}."
             )
-        was = dv.patron(character)
-        if values.get("patron") and not dv.same_saint(was, name):
-            dv.set_patron(character, name)
-            lines.append(f"{name} is now his patron saint.")
-        elif not values.get("patron") and dv.same_saint(was, name):
-            dv.set_patron(character, "")
-            lines.append(f"{name} is no longer his patron saint.")
         if lines:
             _diary(saga, character, f"Devotion to {name}", " ".join(lines))
         return notes(*map(escape, lines))
@@ -827,6 +843,73 @@ def points_form(saga: Saga, character: Character | None) -> Command:
         live=points_live(character),
         help_id=HELP_ID,
         inspector="The Devotion",
+    )
+
+
+# -- the patron saint (The Church p. 13) --
+
+PATRON = "Patron Saint"
+NO_PATRON = "-none-"
+
+
+def patron_fields(saga: Saga, character: Character) -> list[DialogField]:
+    listed = saint_options(saga, character)
+    held = dv.patron(character)
+    return [
+        DialogField(
+            "saint",
+            "His patron saint",
+            "select",
+            next((v for _, v in listed if dv.same_saint(v, held)), NO_PATRON),
+            options=[("(none)", NO_PATRON), *listed],
+            required=True,
+            hint="Often his church's, his home's or his trade's saint, or one "
+            "he is devoted to: the player's choice. Anyone may have one, Pious "
+            "or not (The Church p. 13).",
+        ),
+        DialogField(
+            "other",
+            "Another saint's name",
+            "text",
+            "",
+            placeholder="e.g. Saint Bartholomew",
+            show_if=lambda v: v.get("saint") == OTHER,
+        ),
+    ]
+
+
+def _patron_problem(values: dict[str, Any]) -> str | None:
+    if values.get("saint") == OTHER and not str(values.get("other") or "").strip():
+        return "Name the saint."
+    return None
+
+
+def patron_form(saga: Saga, character: Character | None) -> Command:
+    """More's Patron Saint: the saint he calls on without the -15 (The
+    Church p. 13; RoP: The Divine p. 87), or none."""
+    if character is None:
+        return Refuse(PATRON, "Choose a character first.")
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        chosen = "" if values.get("saint") == NO_PATRON else _saint_name(values)
+        was = dv.patron(character)
+        if dv.same_saint(was, chosen) or (not was and not chosen):
+            return []
+        dv.set_patron(character, chosen)
+        line = (
+            f"{chosen} is now his patron saint."
+            if chosen
+            else f"{was} is no longer his patron saint."
+        )
+        _diary(saga, character, "Patron saint", line)
+        return notes(escape(line))
+
+    return Form(
+        f"{PATRON}: {escape(character.name)}",
+        lambda: patron_fields(saga, character),
+        apply,
+        validate=_patron_problem,
+        help_id=HELP_ID,
     )
 
 

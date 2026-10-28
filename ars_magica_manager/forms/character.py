@@ -49,6 +49,7 @@ from ..models import (
     known_fields,
 )
 from ..models.character import MERCURIAN_MAGIC
+from ..models.religion import RELIGIONS
 from ..rules import aging as aging_rules
 from ..rules import (
     certamen_styles,
@@ -84,8 +85,6 @@ _BIOGRAPHY_TEXT_FIELDS: list[tuple[str, str]] = [
 _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR: list[tuple[str, str]] = [
     ("Race/Nationality", "race_nationality"),
     ("Place of Origin", "place_of_origin"),
-    ("Religion", "religion"),
-    ("Title/Profession", "title_profession"),
 ]
 
 
@@ -143,6 +142,10 @@ def biographical_fields(
             DialogField(attribute, label, "text", getattr(background, attribute))
             for label, attribute in _BIOGRAPHY_TEXT_FIELDS_AFTER_YEAR
         ),
+        religion_field(background.religion),
+        DialogField(
+            "title_profession", "Title/Profession", "text", background.title_profession
+        ),
         DialogField("height", "Height", "optfloat", d.height),
         DialogField("weight", "Weight", "optfloat", d.weight),
         DialogField("hair", "Hair", "text", d.hair),
@@ -163,6 +166,20 @@ def biographical_fields(
         DialogField("biography", "Biography", "area", d.biography, hint=EMPHASIS_HINT),
         *(complexion_fields(d) if academe or d.complexion else []),
     ]
+
+
+def religion_field(religion: str) -> DialogField:
+    """Religion, from the list; blank counts as Christian."""
+    return DialogField(
+        "religion",
+        "Religion",
+        "select",
+        religion or None,
+        options=[(name, name) for name in RELIGIONS],
+        allow_blank=True,
+        placeholder="(not set: counts as Christian)",
+        hint="His faith decides what the Religion chapter offers him.",
+    )
 
 
 def complexion_fields(description: Description) -> list[DialogField]:
@@ -202,6 +219,8 @@ def biographical_problem(values: dict[str, Any]) -> str | None:
 def apply_biographical(character: Character, result: dict[str, Any]) -> None:
     for attribute in known_fields(Background, result):
         setattr(character.background, attribute, result[attribute])
+    if "religion" in result:
+        character.background.religion = str(result["religion"] or "")
     old = character.description
     found = known_fields(Description, result)
     for key in ("complexion", "complexion_minor"):

@@ -81,13 +81,15 @@ TC = "TC"
 ROPD = "RoP:D"
 
 #: The kinds of the character's progress records devotion keeps: a
-#: Devotion (points toward a saint), the patron saint, a season's fast.
+#: Devotion (points toward a saint), the patron saint, a season's fast,
+#: and a saint who refused his invocation (whom he may now threaten).
 DEVOTION = "devotion"
 PATRON = "patron saint"
 FAST = "fast"
+REFUSED = "refused invocation"
 
 #: Every kind devotion keeps.
-KINDS = (DEVOTION, PATRON, FAST)
+KINDS = (DEVOTION, PATRON, FAST, REFUSED)
 
 INVOKE_EASE = 15
 THREAT_EASE = 9
@@ -257,6 +259,36 @@ def creation_problem(character: Character, saint: str, points: int) -> str | Non
     if spent > allowed:
         return f"Only {allowed} Devotion Points at creation (his Pious)."
     return None
+
+
+# -- refusals --
+
+
+def refused(character: Character) -> list[str]:
+    """The saints who refused his invocation and have not been threatened
+    since: those he may threaten (RoP: The Divine p. 87)."""
+    return [p.name for p in character.progress if p.kind == REFUSED]
+
+
+def note_answer(
+    character: Character, saint: str, heard: bool, season: str, year: int
+) -> None:
+    """Record how the saint answered an invocation: a refusal is kept (one
+    a saint, the latest), a miracle clears it."""
+    clear_refusal(character, saint)
+    if not heard:
+        character.progress.append(
+            Progress(REFUSED, saint.strip(), last_season=season, last_year=year)
+        )
+
+
+def clear_refusal(character: Character, saint: str) -> None:
+    """Forget the saint's refusal: he has been threatened, or has heard."""
+    character.progress[:] = [
+        p
+        for p in character.progress
+        if not (p.kind == REFUSED and same_saint(p.name, saint))
+    ]
 
 
 # -- fasting --

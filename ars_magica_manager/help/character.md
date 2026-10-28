@@ -1235,12 +1235,14 @@ the Theban Tribunal's customs:
 <!-- help: devotion -->
 
 <!-- tui -->
-More (`m`) on a person's record offers invoking the saints, and with The
-Church in play, Devotions and acts of piety:
+More (`m`) in the Faith section of a Christian's [Religion tab](help:tab-religion)
+offers invoking the saints, and with The Church in play, Devotions and
+acts of piety:
 <!-- /tui -->
 <!-- gui -->
-Beside the Personality Traits' buttons are invoking the saints, and with
-The Church in play, Devotions and acts of piety:
+The Faith section of a Christian's [Religion chapter](help:tab-religion)
+offers invoking the saints, and with The Church in play, Devotions and
+acts of piety:
 <!-- /gui -->
 
 - **Invoke a Saint** (with Realms of Power: The Divine, The Church, The
@@ -1273,7 +1275,11 @@ The Church in play, Devotions and acts of piety:
   With The Cradle and the Crescent, a Mazdean yazata is invoked the same
   way, by one ritually pure through the Nahn rite (p. 85).
 - **Threaten a Saint** (RoP: The Divine): after a saint has refused an
-  invocation, the humiliation of a saint (pp. 87-88). Presence +
+  invocation, the humiliation of a saint (pp. 87-88). It is offered only
+  while a saint who refused him is on record (an invocation he didn't
+  answer; the Faith section lists them under **Refused him**), and only
+  such a saint may be chosen. A threat, or a later miracle from him,
+  takes him off the list. Presence +
   Leadership + the threats (exposing his bones +1, defiling his relics
   +2, berating him before others +1, barring others from him +3,
   imminent peril +1; a miracle this month -20; -15 for an unfamiliar
@@ -1285,7 +1291,14 @@ The Church in play, Devotions and acts of piety:
   miracle comes at once; fail, and he hears none of the petitioner's
   prayers for a month; fail by 10 or more, a minor curse and nothing for
   a season; botch, the saint's curse. A yazata is never threatened.
-- **Devotion Points** (The Church): a Devotion is a reverence for a saint
+- **Patron Saint**: the saint he calls on as his own, without the -15
+  for an unfamiliar saint: often his church's, his home's or his
+  trade's, or one he is devoted to. Anyone may have one, Pious or not,
+  and **(none)** clears it (The Church p. 13; RoP: The Divine p. 87). The
+  Diary records the change.
+- **Devotion Points** (The Church): offered only to one who holds a
+  Devotion, or has a positive Pious trait (or the Pious Flaw) to begin
+  one. A Devotion is a reverence for a saint
   (or the Virgin) that rises as an Ability does, on Devotion Points
   alone, never experience, and has no Specialty (p. 12). At creation a
   character with a positive Pious trait has as many Devotion Points (the
@@ -1298,9 +1311,8 @@ The Church in play, Devotions and acts of piety:
   2, a general one 1), furthering his cultus (the Petitioning Ease
   Factor), witnessing his miracle (5 to 10), his feast's procession (1 to
   5), a pilgrimage in his honour, or a vision from him (1) (pp. 14-15).
-  Neglecting his feast day loses at least 3 (p. 14). Tick **His patron
-  saint** to make the saint his patron (anyone may have one, Pious or
-  not). The Planning tab lists his patron and his Devotions.
+  Neglecting his feast day loses at least 3 (p. 14). The Planning tab
+  and the Religion tab's Faith list his patron and his Devotions.
 - **Indulgence, Vigil or Fast** (The Church pp. 11-12): an indulgence
   shortens a penance, it does not forgive: about 6 pennies a season for
   the poor, a pound or more for the wealthy; after a season of
@@ -1375,14 +1387,16 @@ rolls it, spends a ceremony's point and writes the result in the Diary.
 <!-- help: mystic-path -->
 
 <!-- tui -->
-More (`m`) on a person's record offers, with The Church in play, his
-**Mystic Path**, and on that path **Spiritual Path** or **Monistic
-Revelation**:
+More (`m`) in the Faith section of a Christian's [Religion tab](help:tab-religion)
+offers, with The Church in play, his **Mystic Path** (once he is Pious
+and tied to the Divine, or already on a path), and on that path
+**Spiritual Path** or **Monistic Revelation**:
 <!-- /tui -->
 <!-- gui -->
-Beside the Personality Traits' buttons, with The Church in play, are his
-**Mystic Path**, and on that path **Spiritual Path** or **Monistic
-Revelation**:
+The Faith section of a Christian's [Religion chapter](help:tab-religion)
+offers, with The Church in play, his **Mystic Path** (once he is Pious
+and tied to the Divine, or already on a path), and on that path
+**Spiritual Path** or **Monistic Revelation**:
 <!-- /gui -->
 
 - **Mystic Path** (The Church pp. 19-24): contemplative mysticism, the
@@ -1455,7 +1469,11 @@ both. The Diary records it. See Mystic Paths.
 <!-- help: holy-influence -->
 
 Leading others to virtue, or tempering a Divine aura (Realms of Power: The
-Divine, Holy Influence and Tempers, pp. 38-41).
+Divine, Holy Influence and Tempers, pp. 38-41). The Faith section of the
+[Religion chapter](help:tab-religion) offers it to a Christian, Jew or
+Muslim of holy standing (clergy, a monk, True Faith, Temporal Influence,
+Inspirational, or Dominion Lore); a rabbi has it over his community (p.
+125).
 
 - **Those in his care**: a simple die + Presence + Leadership. 9 gives the
   new trait +1, 15 +2, 24 +3, the most. He needs spiritual authority over
@@ -1485,8 +1503,9 @@ writes the result in the Diary.
 ## Invoking God's Aid
 <!-- help: gods-aid -->
 
-With Realms of Power: The Divine in play, More on a person offers Invoke
-God's Aid (pp. 41-42): a short prayer and a Confidence Point (a Faith
+With Realms of Power: The Divine in play, the Faith section of a
+Christian's, Jew's or Muslim's [Religion chapter](help:tab-religion)
+offers Invoke God's Aid (pp. 41-42): a short prayer and a Confidence Point (a Faith
 Point with True Faith; never a grog's, nor one with Low Self-Esteem). A
 stress die + Communication + Dominion Lore: 9 gives +1, 15 +2, 24 +3, to
 every roll in the scene clearly made toward the aim named, spellcasting
@@ -4230,20 +4249,42 @@ the character's Diary under the agent's name and the task.
 **His Roll** shows the total, the Ease Factor and the die he needs before
 you roll.
 
-## Church tab
-<!-- help: tab-church -->
+## Religion tab
+<!-- help: tab-religion -->
 
-A character's career in the Church: his grade in holy orders, the ordinations that brought him there, his petitions to the Church and the cases he has stood in before its courts (The Church pp. 33-38, 46-48). The tab is there only for a character with a grade, a petition or a canon case; anyone else reaches Petition the Church, Add Canon Case and Holy Orders from More on the record, and an Ordination season from Planning. The first of them brings the tab.
+A character's faith and what it lets him do, and his career in the Church. The tab follows Virtues & Flaws. It is there for a person (not an animal) while a book that gives the faiths their rites is in play (Realms of Power: The Divine, The Church, The Sundered Eagle, The Contested Isle, The Cradle and the Crescent), or for anyone with a grade, an ordination, a petition or a canon case on record. Its icon is his faith's: a church for a Christian, a crescent and star for a Muslim, a Star of David for a Jew, a fire altar for a Mazdean, a tree for a pagan.
 
+**Faith** comes first: his religion and what it gives him. For a Christian with The Church in play, the Church's sections follow: **Holy Orders** and **Ordinations** for one who may hold orders (a clerical Social Status: Clerk, Priest, Religious, Senior Clergy or Mendicant Friar, or a grade or ordination on record), then **Petitions** and the **Canon Court** for any Christian (The Church pp. 33-38, 46-48). A layman begins in orders with an Ordination season on Planning, or by taking a clerical Social Status on Virtues & Flaws.
+
+**You type:** his religion, his birth diocese, standing and benefice, each petition and each case.
+
+**The app works out:** what his faith offers him and whether he may take it, each examination's total and result, what an ordination brings (the grade, a Faith Point, the Social Status and a Reputation), what still stands between him and the priesthood, and each petition's total, who may grant it and whether it is granted.
+
+**See also:** [Which faith actions can he take?](help:guide-religion), [Virtues & Flaws tab](help:tab-vf), [Planning tab](help:tab-planning)
+
+### Faith
+<!-- help: section-char-faith -->
+
+His religion (blank counts as Christian, as most of Mythic Europe is), and for a Christian his patron saint, his Devotions, his mystic path and the saints who have refused his invocations; then his Pious trait and a line on what his faith gives him.
+
+<!-- tui -->
+`e` edits his religion. `m` (More) offers what his faith lets him do:
+<!-- /tui -->
 <!-- gui -->
-On the desktop those three buttons sit beside the Personality Traits' buttons.
+Edit Religion sits beside the title, with what his faith lets him do:
 <!-- /gui -->
 
-**You type:** his birth diocese, standing and benefice, each petition and each case.
+- **A Christian:** [Invoke a Saint](help:devotion), Threaten a Saint (only after a saint has refused him), Patron Saint, Devotion Points (with a Devotion, or Pious enough to begin one) and Indulgence, Vigil or Fast (with The Church), [Mystic Path](help:mystic-path) (Pious and tied to the Divine) and its Spiritual Path or Monistic Revelation, [Invoke God's Aid](help:gods-aid) and [Holy Influence](help:holy-influence).
+- **A Muslim or a Jew:** Invoke God's Aid, and Holy Influence for one with spiritual authority (a rabbi over his community).
+- **A Mazdean:** invoking a yazata, as a Christian invokes a saint (Invoke a Saint, with The Cradle and the Crescent).
+- **A pagan:** the books give pagans no rite like the saints'. His faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), and his dealings with them are on the Abilities chapter (Ars Fabulosa, A Faerie Bargain, An Offer to Faerie).
 
-**The app works out:** each examination's total and result, what an ordination brings (the grade, a Faith Point, the Social Status and a Reputation), what still stands between him and the priesthood, and each petition's total, who may grant it and whether it is granted.
+God's aid is never a grog's, nor one's with Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41).
 
-**See also:** [Agents tab](help:tab-agents), [Planning tab](help:tab-planning)
+## Edit Religion
+<!-- help: religion -->
+
+His religion, from the list: Christian, Muslim, Jewish, Mazdean, Pagan or Other. Left blank, he counts as Christian. It decides what the [Religion tab](help:tab-religion) offers him. Biographical Detail edits the same field.
 
 ### Holy Orders
 <!-- help: section-char-orders -->
@@ -4257,10 +4298,10 @@ His grade (minor orders: doorkeeper, lector, exorcist, acolyte; major orders: su
 **Standing:** In good standing, Irregular (a cleric who has shed blood or committed a grossly immoral crime: he can't use Faith Points until he confesses; no trial needed, p. 37) or Excommunicated (shown while a guilty verdict of excommunication stands against him in the Canon Court).
 
 <!-- tui -->
-`e` edits Holy Orders; `m` (More) performs an exorcism.
+`e` edits Holy Orders; `m` (More) performs an exorcism, for a clergyman: one in orders, or a Clerk, Priest, Senior Clergy or Mendicant Friar (a monk or nun who is Religious only is not; p. 34).
 <!-- /tui -->
 <!-- gui -->
-Edit Holy Orders and Perform an Exorcism sit beside the title.
+Edit Holy Orders sits beside the title, and Perform an Exorcism for a clergyman: one in orders, or a Clerk, Priest, Senior Clergy or Mendicant Friar (a monk or nun who is Religious only is not; p. 34).
 <!-- /gui -->
 
 ### Ordinations
@@ -4291,7 +4332,7 @@ Cases in the Church's courts, the character accused or accusing: the charge (the
 ## Petition the Church
 <!-- help: petition-church -->
 
-Anyone may petition the Church: clergy, peasants, nobles, magi (The Church pp. 46-48). Choose the book's example it is most like (p. 47: 3 a marriage blessing, 6 a parish crypt or library, 9 the cathedral library, an appeal of an ordination exam or a dispensation, 12 rent land to a Hermetic covenant, 15 excommunicate a nobleman, 18 a monastery, 21 a new diocese, 24 change canon law, 30 declare a saint, 42 a crusade), or type the Ease Factor.
+Anyone may petition the Church: clergy, peasants, nobles, magi (The Church pp. 46-48). Add on the Religion tab's Petitions makes one. Choose the book's example it is most like (p. 47: 3 a marriage blessing, 6 a parish crypt or library, 9 the cathedral library, an appeal of an ordination exam or a dispensation, 12 rent land to a Hermetic covenant, 15 excommunicate a nobleman, 18 a monastery, 21 a new diocese, 24 change canon law, 30 declare a saint, 42 a crusade), or type the Ease Factor.
 
 **Petition Total:** Communication + Church Lore for a letter (a scribe's Communication + Church Lore may stand in: type his name and total; The Gift doesn't apply), or Presence + Church Lore in an audience (The Gift's penalty applies), plus: many testify +1; magical evidence +1; a holy vision +3; miracles +6; the highest clergy support (+1 a priest or deacon, +3 a senior clergyman, +6 an archbishop or higher) and the highest lay support (+1 a knight, +3 a nobleman, +6 a king, duke, earl or emperor), once each; a donation +1 to +3; each argument, by Civil and Canon Law, Artes Liberales (Logic) or Intrigue, +1 to +3, which counts only if Intelligence + the Ability + a stress die reaches 9 (rolled when the petition is made; a botch makes its bonus a penalty); his Reputation with the Church; spells cast on those deciding (p. 46).
 

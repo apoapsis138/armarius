@@ -38,6 +38,7 @@ from ....forms import constant_effect as constant_forms
 from ....forms import covers as cover_forms
 from ....forms import criamon as criamon_forms
 from ....forms import power as power_forms
+from ....forms import religion as religion_forms
 from ....forms import tradition as tradition_forms
 from ....forms.secrets import secrets_ops
 from ....markup import escape
@@ -48,7 +49,6 @@ from ....models import (
     TraditionDef,
 )
 from ....rules import activities as season_rules
-from ....rules import clergy as clergy_rules
 from ....rules import creation_virtues as cv
 from ....rules import criamon as criamon_rules
 from ....rules import library
@@ -59,6 +59,7 @@ from ....sections import (
     COVERS_SECTION,
     CRIAMON_PATH_SECTION,
     CRIAMON_STATIONS_SECTION,
+    FAITH_SECTION,
     ORDERS_SECTION,
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
@@ -115,6 +116,17 @@ CHURCH_SECTIONS = (
     ORDINATIONS_SECTION,
     PETITIONS_SECTION,
     CANON_SECTION,
+)
+#: What the Faith section reads: his religion (Info and Biographical
+#: Detail), his Pious trait and his Virtues; his patron, Devotions, path
+#: and refusals are its own forms'.
+FAITH_SOURCES = (
+    FAITH_SECTION,
+    "section-char-info",
+    "section-char-biographical",
+    "section-personality-traits",
+    "section-vf-virtues",
+    "section-vf-flaws",
 )
 CHURCH_SOURCES = (
     *CHURCH_SECTIONS,
@@ -218,11 +230,10 @@ class CharacterSheetView(SheetView):
         super().__init__(saga)
         self.character = character
         self.core_ops = secrets_ops(character)
-        #: Whether the sheet was built with the Church tab, and the row
-        #: chosen in one of its lists (its section and the row's index).
-        self._church_shown = clergy_rules.has_church_tab(character) and not (
-            cs.has_statblock(character)
-        )
+        #: What the Religion tab was built with (_religion_layout), and the
+        #: row chosen in one of its Church lists (its section and the row's
+        #: index).
+        self._religion_shown = self._religion_layout()
         self._church_chosen: tuple[str, int] | None = None
         #: Whether the sheet was built with The Enigma (a Criamon magus),
         #: and the row chosen in one of its lists.
@@ -255,6 +266,9 @@ class CharacterSheetView(SheetView):
             if scores:
                 yield self._tab("Abilities", "tab-abilities", self._abilities_tab)
                 yield self._tab("Virtues & Flaws", "tab-vf", self._virtues_flaws_tab)
+            # His faith and what it lets him do, and a cleric's career.
+            if self._religion_shown[0]:
+                yield self._tab("Religion", "tab-religion", self._religion_tab)
             if scores and character.type == "magus":
                 yield self._tab("Hermetic Magic", "tab-hermetic", self._hermetic_tab)
                 # A Criamon magus's path and stigmata.
@@ -272,10 +286,6 @@ class CharacterSheetView(SheetView):
             if not sketch:
                 yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
                 yield self._tab("Agents", "tab-agents", self._agents_tab)
-                # A cleric's career: only for a character with a grade, a
-                # petition or a canon case.
-                if self._church_shown:
-                    yield self._tab("Church", "tab-church", self._church_tab)
                 yield self._tab(
                     "Planning", "tab-planning", self._scrolling(self._planning_tab)
                 )
@@ -995,61 +1005,89 @@ class CharacterSheetView(SheetView):
                 id=AGENTS_INFO,
             )
 
-    def stale(self) -> bool:
-        """Whether the Church tab should come or go: the sheet was built
-        before the character had a grade, a petition or a case (or after
-        the last was deleted)."""
-        wanted = clergy_rules.has_church_tab(self.character) and not (
-            cs.has_statblock(self.character)
+    def _religion_layout(self) -> tuple[bool, bool, bool]:
+        """Whether the sheet has the Religion tab, the Church's Petitions
+        and Canon Court on it, and Holy Orders and Ordinations."""
+        saga, character = self.saga, self.character
+        if cs.has_statblock(character) or not religion_forms.shows(saga, character):
+            return (False, False, False)
+        return (
+            True,
+            religion_forms.church_shown(saga, character),
+            religion_forms.orders_shown(saga, character),
         )
+
+    def stale(self) -> bool:
+        """Whether the Religion tab or its sections should come or go (his
+        faith changed, he took a clerical Social Status, a first career
+        record was made or the last deleted), or The Enigma."""
+        wanted = self._religion_layout()
         enigma = criamon_rules.has_enigma_tab(self.character) and not (
             cs.has_statblock(self.character)
         )
-        return wanted != self._church_shown or enigma != self._enigma_shown
+        return wanted != self._religion_shown or enigma != self._enigma_shown
 
-    def _church_tab(self) -> ComposeResult:
-        """Holy Orders, Ordinations, Petitions and the Canon Court, with
-        one details panel for the chosen ordination, petition or case."""
+    def _religion_tab(self) -> ComposeResult:
+        """His Faith, then (a Christian with The Church in play) Holy
+        Orders and the Ordinations for one who may hold orders, the
+        Petitions and the Canon Court, with one details panel for the
+        chosen ordination, petition or case."""
         saga, character = self.saga, self.character
-        self.core_ops.update(church_forms.ops(saga, character))
+        self.core_ops.update(religion_forms.ops(saga, character))
+        _, church, orders = self._religion_shown
         career = character.church
+        lists = [
+            (
+                PETITIONS_SECTION,
+                PETITIONS_LIST,
+                lambda: church_forms.petitions_title(career),
+                church_forms.petitions_header(),
+                lambda: church_forms.petition_rows(self.character),
+            ),
+            (
+                CANON_SECTION,
+                CANON_LIST,
+                lambda: church_forms.canon_title(career),
+                church_forms.canon_header(),
+                lambda: church_forms.canon_rows(self.character),
+            ),
+        ]
+        if orders:
+            lists.insert(
+                0,
+                (
+                    ORDINATIONS_SECTION,
+                    ORDINATIONS_LIST,
+                    lambda: church_forms.ordinations_title(career),
+                    church_forms.ordinations_header(),
+                    lambda: church_forms.ordination_rows(self.character),
+                ),
+            )
+        if church:
+            self.core_ops.update(church_forms.ops(saga, character))
         with Vertical(classes="panel-body"):
             with VerticalScroll():
-                with SheetSection(title="Holy Orders", id=ORDERS_SECTION):
+                with SheetSection(title="Faith", id=FAITH_SECTION):
                     yield self._static(
-                        CHURCH_SOURCES,
-                        lambda: church_forms.orders_text(self.saga, self.character),
-                        id="char-orders-text",
+                        FAITH_SOURCES,
+                        lambda: religion_forms.faith_text(self.character),
+                        id="char-faith-text",
                     )
-                for section, list_id, title, header, rows in (
-                    (
-                        ORDINATIONS_SECTION,
-                        ORDINATIONS_LIST,
-                        lambda: church_forms.ordinations_title(career),
-                        church_forms.ordinations_header(),
-                        lambda: church_forms.ordination_rows(self.character),
-                    ),
-                    (
-                        PETITIONS_SECTION,
-                        PETITIONS_LIST,
-                        lambda: church_forms.petitions_title(career),
-                        church_forms.petitions_header(),
-                        lambda: church_forms.petition_rows(self.character),
-                    ),
-                    (
-                        CANON_SECTION,
-                        CANON_LIST,
-                        lambda: church_forms.canon_title(career),
-                        church_forms.canon_header(),
-                        lambda: church_forms.canon_rows(self.character),
-                    ),
-                ):
+                if church and orders:
+                    with SheetSection(title="Holy Orders", id=ORDERS_SECTION):
+                        yield self._static(
+                            CHURCH_SOURCES,
+                            lambda: church_forms.orders_text(self.saga, self.character),
+                            id="char-orders-text",
+                        )
+                for section, list_id, title, header, rows in lists if church else []:
                     with SheetSection(
                         title=self._titled(section, section, title), id=section
                     ):
                         yield TableHeader(header)
                         yield self._list(section, rows, id=list_id, group="church")
-            yield self._panel(CHURCH_SECTIONS, self._church_info, id=CHURCH_INFO)
+            if church:
+                yield self._panel(CHURCH_SECTIONS, self._church_info, id=CHURCH_INFO)
 
     def _church_info(self) -> str:
         """The chosen ordination, petition or case in full."""

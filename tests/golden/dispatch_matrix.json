@@ -520,7 +520,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Certamen, Petition the Church, Add Canon Case, Holy Orders",
+        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Certamen",
         "slash": "(disabled)"
       }
     },
@@ -560,7 +560,7 @@
         "a": "FieldsDialog: Add a Personality Trait",
         "e": "FieldsDialog: Edit a Personality Trait",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Roll, Mystic Path, Invoke God's Aid",
+        "m": "FieldsDialog: Roll: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -648,6 +648,36 @@
       "active": "section-char-powers",
       "keys": {
         "a": "FieldsDialog: Add a Power",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-char-faith": {
+      "active": "section-char-faith",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: Edit Religion",
+        "d": "(disabled)",
+        "m": "MenuScreen: Invoke a Saint, Patron Saint, Indulgence, Vigil or Fast, Invoke God's Aid",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-char-petitions": {
+      "active": "section-char-petitions",
+      "keys": {
+        "a": "FieldsDialog: Petition the Church",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-char-canon": {
+      "active": "section-char-canon",
+      "keys": {
+        "a": "FieldsDialog: Add Canon Case",
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",

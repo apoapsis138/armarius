@@ -997,3 +997,24 @@ A Burning City, an Intangible Assassin or a Living Corpse is followed stage by s
 5. **Tick a stage done** with Edit on the stages list. The facts show the stage now and the seasons spent.
 
 **See also:** [The staged project](help:section-cov-staged), [Stages](help:section-cov-staged-stages), [Take Harm](help:take-harm)
+
+# Which faith actions can he take?
+<!-- help: guide-religion -->
+
+A character's faith decides what the [Religion tab](help:tab-religion) offers him: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
+
+<!-- tui -->
+1. **Set his religion.** Open his Religion tab, focus Faith and press `e` (or set Religion on Biographical Detail). Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Edit Saga).
+2. **See what he may do.** With focus in Faith, press `m` (More). Only the actions his faith offers him, and that he qualifies for, are listed.
+<!-- /tui -->
+<!-- gui -->
+1. **Set his religion.** Open his Religion chapter (after Virtues & Flaws) and click Edit Religion beside Faith, or set Religion on Biographical Detail. Blank counts as Christian. The chapter is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Edit Saga).
+2. **See what he may do.** The buttons beside Faith are the actions his faith offers him, and that he qualifies for.
+<!-- /gui -->
+3. **Anyone of his faith.** A Christian may Invoke a Saint (no Ability or Virtue needed, RoP: The Divine p. 87), choose his Patron Saint (anyone may have one), and with The Church in play take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion or has a positive Pious trait (or the Pious Flaw) to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.
+4. **Only once something happens.** Threaten a Saint comes only after a saint has refused his invocation (RoP: The Divine p. 87): invoke first, and if the saint doesn't answer, Threaten appears with that saint.
+5. **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine: True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point: not a grog, nor Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41). Holy Influence needs spiritual authority: clergy, a monk, a rabbi, True Faith, Temporal Influence, Inspirational or Dominion Lore (pp. 38, 125).
+6. **The Church's sections.** With The Church in play a Christian has Petitions and the Canon Court; Add on each makes one (anyone may petition the Church, and the canon courts hear laymen and clergy alike, pp. 36, 46). Holy Orders and Ordinations are there for one with a clerical Social Status (Clerk, Priest, Religious, Senior Clergy, Mendicant Friar) or a grade on record, and Perform an Exorcism for a clergyman only (p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
+7. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with on the Abilities chapter's faerie actions.
+
+**See also:** [Devotion and the Saints](help:devotion), [Mystic Paths](help:mystic-path), [Invoking God's Aid](help:gods-aid), [Holy Influence](help:holy-influence)

@@ -266,8 +266,10 @@ CULTS_SECTION = "section-content-cults"
 CULT_SECTION = "section-content-cult"
 CULT_DEGREES_SECTION = "section-content-cult-degrees"
 CULT_SCRIPT_SECTION = "section-content-cult-scripts"
-#: A character's Church tab (forms.church): his grade in holy orders,
-#: his ordinations, his petitions to the Church and his canon-court cases.
+#: A character's Religion tab (forms.religion): his faith and what it lets
+#: him do, then (forms.church) his grade in holy orders, his ordinations,
+#: his petitions to the Church and his canon-court cases.
+FAITH_SECTION = "section-char-faith"
 ORDERS_SECTION = "section-char-orders"
 ORDINATIONS_SECTION = "section-char-ordinations"
 PETITIONS_SECTION = "section-char-petitions"
@@ -409,7 +411,8 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CULT_SECTION: frozenset({"edit"}),
     CULT_DEGREES_SECTION: frozenset({"add", "edit", "remove"}),
     CULT_SCRIPT_SECTION: frozenset({"add", "edit", "remove"}),
-    # A cleric's career (The Church).
+    # A character's faith (Edit Religion), and a cleric's career (The Church).
+    FAITH_SECTION: frozenset({"edit"}),
     ORDERS_SECTION: frozenset({"edit"}),
     ORDINATIONS_SECTION: frozenset({"add", "edit", "remove"}),
     PETITIONS_SECTION: frozenset({"add", "edit", "remove"}),

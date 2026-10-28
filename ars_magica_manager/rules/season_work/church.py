@@ -6,8 +6,9 @@ from __future__ import annotations
 import random
 
 from ...models import Character, Saga, SeasonPlan
+from ...models.religion import CHRISTIAN
 from .. import activity_groups as groups
-from .. import clergy
+from .. import clergy, faiths
 from .base import (
     ANYONE,
     CH,
@@ -183,6 +184,10 @@ def _ordination(
 
 def _ordination_check(saga: Saga, character: Character, plan: SeasonPlan) -> list[str]:
     career = character.church
+    if faiths.religion(character) != CHRISTIAN:
+        return [
+            "Only a Christian is ordained into the Church's orders (The Church p. 33)."
+        ]
     if career.barred:
         return [
             "His last examination botched: a petition must let him sit again "

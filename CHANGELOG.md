@@ -109,6 +109,42 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.31.0 — 2026-10-28
+
+### Pagina
+
+- A character's Church chapter is now the Religion chapter, right after
+  Virtues & Flaws, in both versions. It opens with Faith: his religion,
+  patron saint, Devotions, mystic path and the saints who have refused
+  him, with Edit Religion.
+- The saints, the mystic paths, God's aid and holy influence left the
+  Personality Traits heading for Faith, and each is offered only to
+  those the books allow: Threaten a Saint only after a saint has
+  refused him, Devotion Points only with a Devotion or a positive Pious
+  trait, Mystic Path only when Pious and tied to the Divine, God's aid
+  not to a grog or one with Low Self-Esteem unless he has True Faith.
+- Patron Saint is its own action, open to any Christian.
+- A Christian has Petitions and the Canon Court; Holy Orders and
+  Ordinations show only for one with a clerical Social Status or a
+  grade, Perform an Exorcism only for a clergyman, and only a Christian
+  may plan an Ordination season. Petition the Church, Add Canon Case and
+  Holy Orders left More: Add on each list and Edit Holy Orders do them.
+- Religion is chosen from a list (Christian, Muslim, Jewish, Mazdean,
+  Pagan, Other); a blank one counts as Christian, and religions typed
+  before are read into the list. A Jew or a Muslim is offered God's aid
+  and holy influence, a Mazdean the yazata.
+
+### Insignia
+
+- The Religion chapter's icon is his faith's: a church, a Star of David,
+  a crescent and star, a fire altar or a sacred tree, the last four
+  drawn by the app in the manner of its other icons.
+
+### Glossa
+
+- A help topic for the Religion tab and its Faith section, Edit Religion
+  and Patron Saint, and a how-to: "Which faith actions can he take?"
+
 ## 3.30.0 — 2026-10-28
 
 ### Illuminatio

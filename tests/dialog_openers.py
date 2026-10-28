@@ -90,6 +90,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.models.criamon import Stigma
 from ars_magica_manager.models.menagerie import Beast, Breeding
 from ars_magica_manager.rules import creation_xp, hermetic_law
+from ars_magica_manager.rules import devotion as devotion_rules
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
 from ars_magica_manager.rules.xp import ability_xp as cult_ability_xp
@@ -170,6 +171,13 @@ class Opener:
     node: str | None
     #: Opens the dialog, given the workspace (or saga picker) screen.
     open: Callable[[object], object]
+
+
+def _refused_then_threaten(ws) -> None:
+    """Threaten a Saint, once The Magi have refused his invocation: only
+    then is it offered (RoP: The Divine p. 87)."""
+    devotion_rules.note_answer(ws.selected_character, "The Magi", False, "Spring", 1220)
+    ws.action_threaten_saint()
 
 
 def _built(open_editor):
@@ -1631,7 +1639,8 @@ OPENERS: dict[str, Opener] = {
     ),
     # Devotion and the saints (The Church, RoP: The Divine).
     "invoke a saint": Opener("character", lambda ws: ws.action_invoke_saint()),
-    "threaten a saint": Opener("character", lambda ws: ws.action_threaten_saint()),
+    "threaten a saint": Opener("character", lambda ws: _refused_then_threaten(ws)),
+    "patron saint": Opener("character", lambda ws: ws.action_patron_saint()),
     "devotion points": Opener("character", lambda ws: ws.action_devotion_points()),
     "indulgence, vigil or fast": Opener(
         "character", lambda ws: ws.action_act_of_piety()
@@ -1731,6 +1740,7 @@ OPENERS: dict[str, Opener] = {
     "petition the church": Opener("character", lambda ws: _open_church(ws, "petition")),
     "add canon case": Opener("character", lambda ws: _open_church(ws, "canon")),
     "edit holy orders": Opener("character", lambda ws: _open_church(ws, "orders")),
+    "edit religion": Opener("character", lambda ws: _open_church(ws, "religion")),
     "perform an exorcism": Opener("character", lambda ws: _open_church(ws, "exorcism")),
     "add ordination": Opener("character", lambda ws: _open_church(ws, "ordination")),
     # Saga Content's Mystery Cults.
@@ -2423,6 +2433,7 @@ async def _open_church(ws, which: str) -> None:
         "canon": ("section-char-canon", "add"),
         "orders": ("section-char-orders", "edit"),
         "ordination": ("section-char-ordinations", "add"),
+        "religion": ("section-char-faith", "edit"),
     }[which]
     ws._core_verb(section, verb)
 

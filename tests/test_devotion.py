@@ -33,6 +33,7 @@ from ars_magica_manager.rules import dice
 from ars_magica_manager.rules import saints as sr
 from ars_magica_manager.rules.xp import ability_xp
 from ars_magica_manager.seasons import plans
+from ars_magica_manager.sections import FAITH_SECTION
 
 
 class Faces(random.Random):
@@ -423,6 +424,7 @@ def test_threatening_spends_confidence_and_is_written_down():
     thomas = saga.character("t")
     thomas.background.confidence_points = 2
     dv.add_points(thomas, "Saint Peter", 1)
+    dv.note_answer(thomas, "Saint Peter", False, "Spring", 1220)
     form = _form(forms.threaten_form(saga, thomas, Faces(2)))
     values = _values(form, saint="Saint Peter", might=75, confidence=1, bones=True)
     assert "Against [b]24[/]" in form.live(values)
@@ -433,13 +435,31 @@ def test_threatening_spends_confidence_and_is_written_down():
     assert "minor curse" in lines[1]
     assert thomas.background.confidence_points == 1
     assert thomas.diary[-1].name == "Threatened Saint Peter"
+    # The threat answers the refusal: he may not threaten Peter again.
+    assert dv.refused(thomas) == []
     assert form.validate is not None
-    assert "only 1 Confidence" in str(form.validate(_values(form, confidence=3)))
+    again = _values(form, saint="Saint Peter", confidence=1)
+    assert "refused his invocation" in str(form.validate(again))
+    dv.note_answer(thomas, "Saint Peter", False, "Spring", 1220)
+    assert "only 1 Confidence" in str(form.validate({**again, "confidence": 3}))
+
+
+def test_a_refusal_is_kept_until_the_saint_hears_him():
+    saga = _saga()
+    thomas = saga.character("t")
+    invoke = _form(forms.invoke_form(saga, thomas, Faces(1, 9)))
+    invoke.apply(_values(invoke, saint=forms.OTHER, other="Saint Peter"))
+    assert dv.refused(thomas) == ["Saint Peter"]
+    threat = _form(forms.threaten_form(saga, thomas))
+    assert [v for _, v in threat.fields()[0].options] == ["Saint Peter"]
+    dv.note_answer(thomas, "St. Peter", True, "Summer", 1220)
+    assert dv.refused(thomas) == []
 
 
 def test_the_saints_might_is_filled_from_the_books():
     saga = _saga()
     thomas = saga.character("t")
+    dv.note_answer(thomas, "Saint Martin of Tours", False, "Spring", 1220)
     form = _form(forms.threaten_form(saga, thomas))
     saint = form.fields()[0]
     assert saint.fills is not None
@@ -452,21 +472,56 @@ def test_the_saints_might_is_filled_from_the_books():
 # -- Devotion Points --
 
 
-def test_devotion_points_at_creation_and_the_patron():
+def test_devotion_points_at_creation():
     saga = _saga()
     thomas = saga.character("t")
     thomas.in_creation = True
     form = _form(forms.points_form(saga, thomas))
-    values = _values(
-        form, saint=forms.OTHER, other="Saint Bartholomew", points=1, patron=True
-    )
+    assert "patron" not in {f.key for f in form.fields()}
+    values = _values(form, saint=forms.OTHER, other="Saint Bartholomew", points=1)
     assert values["how"] == dv.CREATION
     assert form.validate is not None and form.validate(values) is None
     form.apply(values)
     assert dv.devotion(thomas, "Saint Bartholomew").points == 1
-    assert dv.patron(thomas) == "Saint Bartholomew"
+    assert dv.patron(thomas) == ""
     too_many = _values(form, saint=forms.OTHER, other="Blessed Virgin", points=2)
     assert "Only 2 Devotion Points" in str(form.validate(too_many))
+
+
+def test_the_patron_saint_is_chosen_on_its_own():
+    saga = _saga()
+    thomas = saga.character("t")
+    form = _form(forms.patron_form(saga, thomas))
+    assert form.fields()[0].value == forms.NO_PATRON
+    assert form.validate is not None
+    assert form.validate(_values(form, saint=forms.OTHER)) == "Name the saint."
+    lines = form.apply(_values(form, saint=forms.OTHER, other="Saint Crispin"))
+    assert dv.patron(thomas) == "Saint Crispin"
+    assert lines == ["Saint Crispin is now his patron saint."]
+    assert thomas.diary[-1].name == "Patron saint"
+    again = _form(forms.patron_form(saga, thomas))
+    assert again.fields()[0].value == "Saint Crispin"
+    assert again.apply(_values(again)) == []
+    again.apply(_values(again, saint=forms.NO_PATRON))
+    assert dv.patron(thomas) == ""
+
+
+def test_devotion_points_wait_for_a_devotion_or_piety():
+    saga = _saga()
+    thomas = saga.character("t")
+    faith = replace(
+        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
+        section=FAITH_SECTION,
+    )
+    assert available("devotion_points", faith)
+    thomas.personality_traits = []
+    assert not available("devotion_points", faith)
+    assert available("patron_saint", faith)
+    thomas.virtues_flaws.append(VirtueFlawInstance("vf_pious"))
+    assert available("devotion_points", faith)
+    thomas.virtues_flaws.clear()
+    dv.add_points(thomas, "Saint Bartholomew", 1)
+    assert available("devotion_points", faith)
 
 
 def test_a_neglected_feast_loses_points():
@@ -552,17 +607,40 @@ def test_a_season_of_personal_devotion_earns_five_points():
         ("invoke_saint", "TSE"),
         ("threaten_saint", "RoP:D"),
         ("devotion_points", "TC"),
+        ("patron_saint", "RoP:D"),
         ("act_of_piety", "TC"),
     ],
 )
 def test_offered_on_a_person_with_the_books(action, book):
     saga = _saga(book)
+    dv.note_answer(saga.character("t"), "Saint Peter", False, "Spring", 1220)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t")
-    assert available(action, page)
-    assert action in {i.action for i in menu_forms.placed(page, "Personality Traits")}
-    assert isinstance(menu_forms.command(page, action), Form)
+    faith = replace(page, section=FAITH_SECTION)
+    assert available(action, faith)
+    assert not available(action, page)
+    assert action in {i.action for i in menu_forms.placed(page, "Faith")}
+    assert action not in {
+        i.action for i in menu_forms.placed(page, "Personality Traits")
+    }
+    assert isinstance(menu_forms.command(faith, action), Form)
     saga.books_in_play = ["HoH:S"]
-    assert not available(action, replace(page))
+    assert not available(action, replace(faith))
+
+
+def test_threatening_waits_for_a_refusal_and_the_saints_are_christian():
+    saga = _saga()
+    thomas = saga.character("t")
+    faith = replace(
+        menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="t"),
+        section=FAITH_SECTION,
+    )
+    assert available("invoke_saint", faith)
+    assert not available("threaten_saint", faith)
+    dv.note_answer(thomas, "Saint Peter", False, "Spring", 1220)
+    assert available("threaten_saint", faith)
+    thomas.background.religion = "Jewish"
+    for action in ("invoke_saint", "threaten_saint", "devotion_points", "act_of_piety"):
+        assert not available(action, faith)
 
 
 # -- a church's relics --
@@ -591,6 +669,7 @@ def test_a_yazata_needs_ritual_purity_and_is_never_threatened():
     impure = _values(invoke, saint=forms.OTHER, other="Mithra", yazata=True)
     assert "Nahn" in str(invoke.validate(impure))
     assert invoke.validate({**impure, "pure": True}) is None
+    dv.note_answer(thomas, "Saint Peter", False, "Spring", 1220)
     threat = _form(forms.threaten_form(saga, thomas))
     assert threat.validate is not None
     values = _values(threat, saint=forms.OTHER, other="Mithra", yazata=True)
