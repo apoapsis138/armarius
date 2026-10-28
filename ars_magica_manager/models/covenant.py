@@ -34,8 +34,9 @@ COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
 #: The category whose entries have a Status, a linked Boon/Hook and a
 #: Revisit year.
 STORY_EVENT = "Story Event"
-#: A Story Event's Status.
-STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved")
+#: A Story Event's Status: still to be told, told, or grown into a
+#: threat of the Region (open_stories).
+STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved", "Grown into a threat")
 
 
 @dataclass
@@ -44,7 +45,10 @@ class CovenantDiaryEntry:
     when, with optional amounts. Only `loyalty` changes the sheet (it adds
     into the Loyalty block's Actions and Events); pounds and vis are a
     record. `status`, `boon_hook_id` (a VirtueFlawInstance.id among the
-    covenant's Boons/Hooks) and `revisit_year` are for Story Events;
+    covenant's Boons/Hooks) and `revisit_year` are for Story Events, as
+    are `concerns` (what the story is about: "" the covenant, "region",
+    or "characters:<id>" / "laboratories:<id>") and `threat_id` (the
+    threat it grew into);
     `build_points` for a Story Event linked to a Hidden Resources Boon: the
     points of that Boon's pool it unlocked."""
 
@@ -61,6 +65,8 @@ class CovenantDiaryEntry:
     boon_hook_id: str | None = None
     revisit_year: int | None = None
     build_points: int | None = None
+    concerns: str = ""
+    threat_id: str | None = None
 
 
 #: A charter clause's status (Covenants p. 35: only breaking the charter

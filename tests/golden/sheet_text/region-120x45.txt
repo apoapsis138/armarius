@@ -22,9 +22,9 @@
 
         Name                   Kind  Ruler or leader  Attitude     Detail
       ○ Gottfried of Arnsberg  Lord  Count Gottfried  ◉ −1 Wary    Sketch
-      ○ Soest                  Town                   ◉ 0 Neutral  Sketch
+      ○ Soest                  Town                   ◉ 0 Neutral  Sketch         ▅▅
 
-  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▇▇
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ The Church (1)
 
         Name                   Kind    Ruler or leader  Attitude     Detail

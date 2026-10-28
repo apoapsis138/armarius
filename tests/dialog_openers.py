@@ -55,6 +55,7 @@ from ars_magica_manager.forms import worksheet as wf
 
 # Hermetic Projects (a covenant's Great Tower; Wizard's War's tunnels).
 from ars_magica_manager.models import (
+    STORY_EVENT,
     Ability,
     AbilityDef,
     Agent,
@@ -66,6 +67,7 @@ from ars_magica_manager.models import (
     Case,
     Character,
     CharterClause,
+    CovenantDiaryEntry,
     CraftDevice,
     CultDegree,
     CultScript,
@@ -375,6 +377,41 @@ def _open_mastery_ability(ws) -> None:
     editor = spec.picker(spec.value)
     ws.app.push_screen(editor)
     ws.app.call_later(editor.action_add)
+
+
+async def _grow_a_story(ws) -> None:
+    """Grow into a Threat on an open story the troupe's covenant's Diary
+    holds, chosen on the Region's Open Stories."""
+    covenant = ws.saga.covenants[0]
+    covenant.played = True
+    # The contract opens the form several times: one story is enough.
+    if not any(e.name == "A salamander in the lab" for e in covenant.diary):
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                1220,
+                "Summer",
+                "A salamander in the lab",
+                "It may want to become his familiar.",
+                category=STORY_EVENT,
+                status="Open",
+                concerns="characters:mag1",
+            )
+        )
+    view = ws._current_sheet_view()
+    view.refresh_all()
+    rows = view.query_one("#region-stories-list", scr.SelectableList)
+    await until(lambda: rows.row_count > 1)
+    rows.select_data_index(0)
+    await until(lambda: rows.selected_data_index == 0)
+    ws.action_grow_story()
+
+
+def _with_crown_on_a_track(ws) -> None:
+    """Add a trigger once the Hollow Crown moves along a track, which a
+    trigger can move."""
+    crown = ws.saga.neighbour("crown")
+    crown.details["moves"] = "A track"
+    ws._core_verb("section-nb-triggers", "add")
 
 
 def _pick(open_editor, list_id: str, index: int = 0):
@@ -1029,6 +1066,9 @@ OPENERS: dict[str, Opener] = {
     "add trigger": Opener(
         "place", lambda ws: ws._core_verb("section-nb-triggers", "add")
     ),
+    "tie trigger": Opener("place", _with_crown_on_a_track),
+    "grow story": Opener("region", _grow_a_story),
+    "delay threat": Opener("threat", lambda ws: ws.action_delay_threat()),
     "edit looking ahead": Opener(
         "seasons", lambda ws: ws._core_verb("section-seasons-info", "edit")
     ),
@@ -1382,6 +1422,9 @@ OPENERS: dict[str, Opener] = {
         "character", lambda ws: ws._add_character_diary_entry()
     ),
     "add covenant diary entry": Opener(
+        "covenant", lambda ws: ws._add_covenant_diary_entry()
+    ),
+    "add story event concerning a character": Opener(
         "covenant", lambda ws: ws._add_covenant_diary_entry()
     ),
     "add hidden resources story event": Opener(

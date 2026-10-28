@@ -297,6 +297,8 @@ _STORYGUIDE_ACTIONS = frozenset(
         "siege_actions",
         "found_covenant",
         "begin_story",
+        "delay_threat",
+        "grow_story",
         "create_character",
         "create_laboratory",
         "create_familiar",

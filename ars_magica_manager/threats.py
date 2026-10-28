@@ -10,13 +10,23 @@ storyguide moves the threat's position). A stage the troupe stopped or
 turned no longer comes; one marked as happened has come whatever the
 date.
 
+A threat moving by dates can be delayed (or hastened) by a number of
+seasons held on the threat, which moves every stage still to come
+without editing each one: the dates typed stay as they are. One moving
+along a track can be tied to a place's trigger (place_events), whose
+answer each time it comes moves the threat on or leaves it.
+
+Either way its clock shows how far it has come: a segment for each
+stage of a dated threat, filled as each comes, or one for each step of
+a track up to its last stage, filled to its position.
+
 A threat can be dormant: a story the storyguide hasn't begun (one left
 unticked when its pack was imported). It has reached no stage, nothing
 of it comes due, and Begin This Story starts it, its first stage due
 next season at the soonest.
 
 Kept in Neighbour.details: "antagonist", "moves", "position",
-"dormant" and "stages" (each {"title", "year", "season", "at", "clues",
+"delay" (seasons), "dormant", "diary" (as a place's) and "stages" (each {"title", "year", "season", "at", "clues",
 "ignored", "stopped", "turned", "outcome"})."""
 
 from __future__ import annotations
@@ -25,7 +35,7 @@ from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
 from . import diaries, world
-from .commands import Confirm, SectionOps, notes
+from .commands import Confirm, Form, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
@@ -102,13 +112,14 @@ def begin(saga: Saga, neighbour: Neighbour) -> None:
     if not by_date(neighbour):
         return
     pending = [
-        stage_order(s)
+        when
         for s in stages(neighbour)
-        if (s.get("outcome") or PENDING) == PENDING and stage_order(s) is not None
+        if (s.get("outcome") or PENDING) == PENDING
+        and (when := stage_when(neighbour, s)) is not None
     ]
     if not pending:
         return
-    shift = max(0, _now(saga) + 1 - min(o for o in pending if o is not None))
+    shift = max(0, _now(saga) + 1 - min(pending))
     if not shift:
         return
     for stage in stages(neighbour):
@@ -144,8 +155,111 @@ def begin_command(saga: Saga, neighbour: Neighbour) -> Confirm:
     )
 
 
+DELAY_TITLE = "Delay or Hasten"
+
+
+def delay_form(saga: Saga, neighbour: Neighbour) -> Form:
+    """More's Delay or Hasten on a threat under way: something the troupe
+    did (or failed to do) pushes it later or brings it sooner. A dated
+    threat's stages still to come move by the seasons given; a track's
+    position moves back or on by the steps given. The reason goes into
+    the threat's Diary."""
+    dated = by_date(neighbour)
+    unit = "Seasons" if dated else "Steps"
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "_now",
+                "",
+                "info",
+                f"Delayed {delay_text(delay(neighbour))} so far."
+                if dated and delay(neighbour)
+                else f"At {position(neighbour)} on its track."
+                if not dated
+                else "Not delayed so far.",
+            ),
+            DialogField(
+                "by",
+                f"{unit} later" if dated else f"{unit} back",
+                "int",
+                1,
+                required=True,
+                hint="Every stage still to come moves this many seasons later "
+                "(below 0: sooner)."
+                if dated
+                else "The threat moves back this many steps (below 0: on).",
+            ),
+            DialogField(
+                "reason",
+                "Why",
+                "text",
+                "",
+                required=True,
+                placeholder="e.g. the bridge was burned",
+            ),
+        ]
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if not values.get("by"):
+            return f"Say how many {unit.lower()} it moves."
+        if not dated and position(neighbour) - (values.get("by") or 0) < 0:
+            return "Its position can't go below 0."
+        return None
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        line = move(saga, neighbour, int(values["by"]), values["reason"].strip())
+        return notes(escape(line))
+
+    return Form(
+        DELAY_TITLE,
+        fields,
+        apply,
+        validate=problem,
+        save_label="Apply",
+        help_id="threat-delay",
+    )
+
+
+def move(saga: Saga, neighbour: Neighbour, by: int, reason: str) -> str:
+    """Push a threat later by `by` (seasons on its dates, or steps back on
+    its track; below 0 sooner, or on), with a line in its Diary saying
+    why. Returns the line."""
+    if by_date(neighbour):
+        neighbour.details["delay"] = delay(neighbour) + by
+        count = abs(by)
+        what = f"{'Delayed' if by > 0 else 'Hastened'} {count} season" + (
+            "" if count == 1 else "s"
+        )
+    else:
+        before = position(neighbour)
+        neighbour.details["position"] = before - by
+        what = f"Moved {'back' if by > 0 else 'on'} from {before} to {before - by}"
+    text = f"{what}: {reason}" if reason else what
+    diaries.write(
+        saga.current_year,
+        saga.current_season,
+        neighbour.name,
+        text,
+        neighbours=[neighbour],
+    )
+    return f"{neighbour.name}: {text}."
+
+
 def position(neighbour: Neighbour) -> int:
     return int(neighbour.details.get("position") or 0)
+
+
+def delay(neighbour: Neighbour) -> int:
+    """The seasons a dated threat's stages still to come are pushed later
+    (below 0: brought sooner)."""
+    return int(neighbour.details.get("delay") or 0)
+
+
+def tied(neighbour: Neighbour) -> bool:
+    """Whether a place's trigger can move the threat: one moving along a
+    track or an omen count."""
+    return is_threat(neighbour) and not by_date(neighbour)
 
 
 class Stage(TypedDict, total=False):
@@ -179,6 +293,15 @@ def stage_order(stage: Stage) -> int | None:
     return season_order(season=stage.get("season"), year=year)
 
 
+def stage_when(neighbour: Neighbour, stage: Stage) -> int | None:
+    """When a dated stage comes, its threat's delay counted: a stage
+    still to come moves with the delay, one already settled stays."""
+    when = stage_order(stage)
+    if when is None or (stage.get("outcome") or PENDING) != PENDING:
+        return when
+    return when + delay(neighbour)
+
+
 def _now(saga: Saga) -> int:
     return season_order(season=saga.current_season, year=saga.current_year)
 
@@ -192,7 +315,7 @@ def has_come(saga: Saga, neighbour: Neighbour, stage: Stage) -> bool:
     if is_dormant(neighbour):
         return False
     if by_date(neighbour):
-        when = stage_order(stage)
+        when = stage_when(neighbour, stage)
         return when is not None and when <= _now(saga)
     at = stage.get("at")
     return at is not None and at <= position(neighbour)
@@ -219,6 +342,10 @@ def when_text(neighbour: Neighbour, stage: Stage) -> str:
         year = stage.get("year")
         if year is None:
             return ""
+        when = stage_when(neighbour, stage)
+        if when is not None and when != stage_order(stage):
+            year, index = divmod(when, len(SEASONS))
+            return f"{SEASONS[index]} {year}"
         season = stage.get("season")
         return f"{season} {year}" if season else str(year)
     at = stage.get("at")
@@ -231,7 +358,7 @@ def due(saga: Saga, neighbour: Neighbour) -> tuple[int, str] | None:
     upcoming = reached(saga, neighbour).next
     if upcoming is None or not by_date(neighbour):
         return None
-    when = stage_order(upcoming)
+    when = stage_when(neighbour, upcoming)
     if when is None:
         return None
     return when, f"{neighbour.name}, {when_text(neighbour, upcoming)}"
@@ -247,6 +374,10 @@ def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         return [*found, Fact("Dormant", "not begun: More, Begin This Story")]
     if not by_date(neighbour):
         found.append(Fact("Position", str(position(neighbour))))
+    elif delay(neighbour):
+        found.append(Fact("Delayed", delay_text(delay(neighbour))))
+    if words := clock_text(saga, neighbour):
+        found.append(Fact("Clock", words))
     found += [
         Fact(
             "Stage reached",
@@ -260,6 +391,55 @@ def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         ),
     ]
     return found
+
+
+def delay_text(seasons: int) -> str:
+    """ "2 seasons later", "1 season sooner"."""
+    count = abs(seasons)
+    return f"{count} season{'' if count == 1 else 's'} " + (
+        "later" if seasons > 0 else "sooner"
+    )
+
+
+#: A clock's segments, filled and empty.
+FILLED, EMPTY = "■", "□"
+
+
+def clock(saga: Saga, neighbour: Neighbour) -> tuple[int, int] | None:
+    """How far the threat has come, as (filled, segments): a dated
+    threat's stages come, or a track's position up to its last stage.
+    None while it is dormant or has nothing to count."""
+    if is_dormant(neighbour):
+        return None
+    every = stages(neighbour)
+    if by_date(neighbour):
+        total = len(every)
+        filled = sum(1 for s in every if has_come(saga, neighbour, s))
+    else:
+        total = max((s.get("at") or 0 for s in every), default=0)
+        filled = min(max(position(neighbour), 0), total)
+    if total <= 0:
+        return None
+    return filled, total
+
+
+def clock_squares(saga: Saga, neighbour: Neighbour) -> str:
+    """ "■■□□", the clock alone, for a line with little room
+    (Ahead); "" with no clock."""
+    found = clock(saga, neighbour)
+    if found is None:
+        return ""
+    filled, total = found
+    return FILLED * filled + EMPTY * (total - filled)
+
+
+def clock_text(saga: Saga, neighbour: Neighbour) -> str:
+    """ "■■□□ 2 of 4"; "" with no clock."""
+    found = clock(saga, neighbour)
+    if found is None:
+        return ""
+    filled, total = found
+    return f"{FILLED * filled}{EMPTY * (total - filled)} {filled} of {total}"
 
 
 # -- the form --
@@ -291,6 +471,15 @@ def fields(_saga: Saga, neighbour: Neighbour | None) -> list[DialogField]:
             "int",
             d.get("position", 0),
             hint="For a track or an omen count: where it stands now.",
+        ),
+        DialogField(
+            "delay",
+            "Delayed by (seasons)",
+            "int",
+            d.get("delay", 0),
+            hint="For fixed dates: how many seasons later every stage still to "
+            "come arrives (below 0: sooner). The dates typed stay as they are.",
+            show_if=lambda v: v.get("moves") == MOVES[0],
         ),
     ]
 

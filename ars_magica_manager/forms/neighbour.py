@@ -10,7 +10,14 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import neighbour_filter, neighbours, places, references, sourcebooks
+from .. import (
+    neighbour_filter,
+    neighbours,
+    open_stories,
+    places,
+    references,
+    sourcebooks,
+)
 from ..commands import (
     Choice,
     Choose,
@@ -26,7 +33,8 @@ from ..markup import escape
 from ..models import DETAIL_LEVELS, REALMS, Neighbour, Saga
 from ..neighbour_lists import KindBlock, KindList, block_ops
 from ..rules import realms, sites
-from ..sections import NEIGHBOUR_INFO_SECTION
+from ..sections import NEIGHBOUR_INFO_SECTION, REGION_STORIES_SECTION
+from . import diary as diary_forms
 from . import world as world_forms
 
 
@@ -377,8 +385,14 @@ def filter_form(saga: Saga) -> Form:
 
 
 def region_ops(saga: Saga) -> dict[str, SectionOps]:
-    """Every list of the Region the core edits, by section id."""
-    return {g.section_id: group_ops(saga, g.key) for g in neighbours.GROUPS}
+    """Every list of the Region the core edits, by section id: each
+    group's, and the open stories (whose Edit is their Diary entry's)."""
+    return {
+        **{g.section_id: group_ops(saga, g.key) for g in neighbours.GROUPS},
+        REGION_STORIES_SECTION: open_stories.ops(
+            saga, lambda covenant: diary_forms.covenant_diary_ops(saga, covenant)
+        ),
+    }
 
 
 def neighbour_ops(saga: Saga, neighbour: Neighbour) -> dict[str, SectionOps]:

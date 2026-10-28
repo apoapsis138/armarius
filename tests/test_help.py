@@ -575,6 +575,8 @@ GUIDES = [
     "guide-mythic-locations",
     "guide-staged-project",
     "guide-religion",
+    "guide-threat-clock",
+    "guide-story-hook",
 ]
 
 

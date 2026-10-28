@@ -168,6 +168,8 @@ NOT_ON_PAGES = frozenset(
         "roll_fair",
         "court_roll",
         "roll_table",
+        # The desktop draws it as the Open Stories' own button.
+        "grow_story",
         "battle_event",
         "redeem_gratitude",
         "buy_manor",
@@ -492,6 +494,11 @@ MANAGE: dict[str, str] = {
     "does: it starts In Creation, sited here, and the ruin becomes its claim.",
     "begin_story": "Start this dormant story: its stages begin to come, the "
     "first due next season at the soonest.",
+    "grow_story": "Make the chosen open story a threat of the Region, from "
+    "its words; the story is marked Grown, naming the threat.",
+    "delay_threat": "Push the threat later or bring it sooner: its dated stages "
+    "still to come move together, or it moves back or on along its track; "
+    "the reason goes in its Diary.",
     DELETE_RECORD: "Remove it from the saga, after saying what happens to "
     "what it holds.",
 }
@@ -1762,6 +1769,14 @@ def _begin_command(page: Page) -> Command:
     return threats.begin_command(page.saga, record)
 
 
+def _delay_command(page: Page) -> Command:
+    record = page.record_to_delete()
+    if not threats.is_threat(record) or threats.is_dormant(record):
+        return Refuse(threats.DELAY_TITLE, "Only a threat under way can be delayed.")
+    assert isinstance(record, Neighbour)
+    return threats.delay_form(page.saga, record)
+
+
 def _arms_command(page: Page) -> Command:
     record = page.record_to_delete()
     if record is None or not arms.bears_arms(record):
@@ -1819,6 +1834,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "edit_arms": _arms_command,
     "found_covenant": _found_command,
     "begin_story": _begin_command,
+    "delay_threat": _delay_command,
     "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),

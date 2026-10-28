@@ -39,7 +39,8 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "normandy_tribunal": 46,  # one tab more: History
     "transylvania_tribunal": 44,
     "hibernia_tribunal": 44,
-    "region": 50,
+    # The Open Stories section and its list: 2.
+    "region": 52,
     # A lord's Fief tab lists his sieges too; his Manors tab adds 2, and his
     # Marriages tab its (unbuilt) pane and its tab: 2.
     "neighbour": 46,

@@ -9,11 +9,12 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Stages  2 Standing  3 Secrets
+   1 Stages  2 Diary  3 Standing  4 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   Antagonist:    A faerie king without a court
   Moves by:      fixed dates
+  Clock:         ■□□ 1 of 3
   Stage reached: Cattle go missing
   Next:          The ford floods, Winter 1220
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -23,6 +24,48 @@
       ○ Cattle go missing  Spring 1219  Reached
       ○ The ford floods    Winter 1220  To come  The mill is lost
       ○ The crowning       1222         To come
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-nb-threat-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Hollow Crown
+
+      Kind:            Threat                  Answers to: no one
+      Detail:          Sketch                  Realm:      none
+      Ruler or leader: (not named)             Book:       core rules
+      Summary: not written yet. Edit the neighbour to say.
+          Edit (e)
+
+   1 Stages  2 Diary  3 Standing  4 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Diary (0)
+
+      Nothing written yet: what moves it, delays it or comes of its stages is
+      written here.
+
+
+
+
+
+
 
 
 
@@ -52,7 +95,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Stages  2 Standing  3 Secrets
+   1 Stages  2 Diary  3 Standing  4 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -95,7 +138,7 @@
       Summary: not written yet. Edit the neighbour to say.
           Edit (e)
 
-   1 Stages  2 Standing  3 Secrets
+   1 Stages  2 Diary  3 Standing  4 Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

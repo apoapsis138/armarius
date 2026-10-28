@@ -148,6 +148,8 @@ REGION_UNIVERSITIES_SECTION = "section-region-universities"
 REGION_FACTIONS_SECTION = "section-region-factions"
 REGION_THREATS_SECTION = "section-region-threats"
 REGION_PLACES_SECTION = "section-region-places"
+#: The troupe's covenants' open Story Events, together (open_stories).
+REGION_STORIES_SECTION = "section-region-stories"
 #: A neighbour's sheet's top panel.
 NEIGHBOUR_INFO_SECTION = "section-nb-info"
 #: The lists a kind of neighbour adds: a lord's castles, Gratitude and
@@ -343,6 +345,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     REGION_FACTIONS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_THREATS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_PLACES_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_STORIES_SECTION: frozenset({"edit"}),
     NEIGHBOUR_INFO_SECTION: frozenset({"edit"}),
     CASTLES_SECTION: frozenset({"add", "edit", "remove"}),
     GRATITUDE_SECTION: frozenset({"add", "edit", "remove"}),

@@ -400,6 +400,42 @@ CONTRACTS: dict[str, Contract] = {
         invalid=[{"Trigger": ""}, {"Year": ""}],
         shown={"#nb-triggers-list": "Level 3 opens"},
     ),
+    "tie trigger": Contract(
+        prefill={"Trigger": "", "Comes": "Once"},
+        edits={
+            "Trigger": "Abnoba's due",
+            "Comes": "Each year",
+            "Season": "Winter",
+            "Moves a threat": "crown",
+            "Failing moves it (steps)": "2",
+        },
+        saved=lambda s: (
+            s.neighbour("drachenfels").details["triggers"][-1]["threat_id"],
+            s.neighbour("drachenfels").details["triggers"][-1]["steps"],
+        ),
+        expected=("crown", 2),
+        invalid=[{"Comes": "Whenever", "What happens": "The hunt rides"}],
+        shown={"#nb-triggers-list": "Failing it moves The Hollow Crown 2 steps"},
+    ),
+    "grow story": Contract(
+        prefill={"Threat": "A salamander in the lab", "Begin it now": "now"},
+        edits={"Threat": "The Salamander's Hunger", "Antagonist": "A salamander"},
+        saved=lambda s: (
+            s.covenants[0].diary[-1].status,
+            s.neighbour(s.covenants[0].diary[-1].threat_id or "").name,
+        ),
+        expected=("Grown into a threat", "The Salamander's Hunger"),
+        invalid={"Threat": ""},
+        shown={"#region-threats-list": "The Salamander's Hunger"},
+    ),
+    "delay threat": Contract(
+        prefill={"Seasons later": "1", "Why": ""},
+        edits={"Seasons later": "2", "Why": "The bridge was burned"},
+        saved=lambda s: s.neighbour("crown").details["delay"],
+        expected=2,
+        invalid=[{"Why": ""}, {"Seasons later": "0"}],
+        shown={"#nb-kind-facts": "2 seasons later"},
+    ),
     "edit looking ahead": Contract(
         prefill={"Looking ahead": "2", "Show": "Everything"},
         edits={"Looking ahead": "3", "Show": "Places"},

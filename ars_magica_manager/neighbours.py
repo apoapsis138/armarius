@@ -176,6 +176,7 @@ for _kind in (
         threats.problem,
         threats.facts,
         threats.TAB,
+        (place_events.THREAT_DIARY_TAB,),
     ),
     NeighbourKind(
         sites.PLACE,

@@ -2171,6 +2171,16 @@
         "m": "(disabled)",
         "slash": "FieldsDialog: Filter Neighbours"
       }
+    },
+    "SheetSection#section-region-stories": {
+      "active": "section-region-stories",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
     }
   },
   "neighbour": {
@@ -2690,7 +2700,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
-        "m": "ChooseScreen: Go To",
+        "m": "MenuScreen: Delay or Hasten, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2700,6 +2710,16 @@
         "a": "FieldsDialog: Add a Stage",
         "e": "FieldsDialog: Edit a Stage",
         "d": "ConfirmScreen",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-place-diary": {
+      "active": "section-nb-place-diary",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }

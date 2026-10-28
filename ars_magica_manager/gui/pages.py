@@ -30,12 +30,14 @@ from .. import (
     fights,
     neighbour_filter,
     neighbours,
+    open_stories,
     sieges,
     troupe,
     world,
 )
 from .. import saga_overview as ov
 from ..commands import Command
+from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..models import Character, Creature, Neighbour, Saga, Tribunal
 from ..references import Fact
@@ -127,7 +129,7 @@ def page_header(
 
 
 def card_title(
-    card: ClickableCard, title: str, subtitle: str, p: Palette, symbol: QLabel | None
+    card: Card, title: str, subtitle: str, p: Palette, symbol: QLabel | None
 ) -> None:
     top = QHBoxLayout()
     top.setSpacing(10)
@@ -407,13 +409,78 @@ def _region_facts(saga: Saga, p: Palette, open_neighbour: Open) -> QWidget:
     return fact_grid(region_sheet.facts(saga, showing=False), p, 3, beside)
 
 
+def story_card(
+    saga: Saga, row: int, p: Palette, run: Callable[[Command], None]
+) -> Card:
+    """An open story as a card: what it concerns, the season it arose and
+    the covenant whose Diary keeps it, its words, and its Edit and Grow
+    into a Threat."""
+    story = open_stories.stories(saga)[row]
+    entry = story.entry
+    card = Card(p, pad=16)
+    card_title(
+        card,
+        entry.name or "(unnamed)",
+        f"{entry.season} {entry.year}, {story.covenant.name}'s Diary",
+        p,
+        symbol_label(artwork.icon("threat"), p),
+    )
+    facts = [Fact("Concerns", open_stories.concerns_text(saga, story.covenant, entry))]
+    card.column.addWidget(fact_grid(facts, p, 1))
+    if entry.details.strip():
+        card.column.addWidget(
+            text(entry.details.strip(), p["foreground"], serif(12.5), wrap=True)
+        )
+    ops = open_stories.ops(
+        saga, lambda covenant: diary_forms.covenant_diary_ops(saga, covenant)
+    )
+    line = QHBoxLayout()
+    line.setSpacing(6)
+    if ops.edit is not None:
+        edit = ops.edit
+        line.addWidget(edit_button("Edit", p, lambda: run(edit(row))))
+    line.addWidget(
+        edit_button(
+            open_stories.GROW_TITLE,
+            p,
+            lambda: run(open_stories.grow_form(saga, row)),
+            "threat",
+        )
+    )
+    line.addStretch(1)
+    card.column.addLayout(line)
+    return card
+
+
+def stories_part(saga: Saga, p: Palette, run: Callable[[Command], None]) -> QWidget:
+    """The Region's Open Stories: their heading, and a card for each."""
+    part = QWidget()
+    column = QVBoxLayout(part)
+    column.setContentsMargins(0, 0, 0, 0)
+    column.setSpacing(12)
+    column.addWidget(chapter_title(open_stories.title(saga), p))
+    count = len(open_stories.stories(saga))
+    if count:
+        column.addWidget(card_grid([story_card(saga, i, p, run) for i in range(count)]))
+    else:
+        column.addWidget(
+            text(open_stories.grid(saga).empty, p["dim"], serif(12.5, italic=True))
+        )
+    return part
+
+
 def region_chapter(
-    saga: Saga, p: Palette, open_neighbour: Open, new: QWidget | None
+    saga: Saga,
+    p: Palette,
+    open_neighbour: Open,
+    new: QWidget | None,
+    run: Callable[[Command], None] = lambda _command: None,
 ) -> QWidget:
     """The Region: its facts (Threat due with a leaf that opens the
     threat), then each group's neighbours the filter lets through as
     cards, the filter's quiet drop-downs at the right of the first
-    group's heading, and the New card that adds one."""
+    group's heading, and the New card that adds one; then the troupe's
+    open stories."""
     facts = _region_facts(saga, p, open_neighbour)
     parts: list[QWidget] = [chapter_title(region_sheet.neighbours_title(saga), p)]
     groups = QWidget()
@@ -478,7 +545,7 @@ def region_chapter(
         parts.append(card_grid(with_new([], new)))
     elif not saga.neighbours:
         parts.append(text("None yet.", p["dim"], serif(12.5, italic=True)))
-    return scrolling_page(p, *parts)
+    return scrolling_page(p, *parts, stories_part(saga, p, run))
 
 
 def creature_card(
@@ -833,7 +900,7 @@ class SagaPage(QWidget):
             "The Region",
             "region",
             lambda: region_chapter(
-                saga, p, self.open_neighbour, self._new("Neighbours")
+                saga, p, self.open_neighbour, self._new("Neighbours"), run
             ),
         )
         self.codex.add(

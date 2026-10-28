@@ -128,6 +128,7 @@ from .sections import (
     NEIGHBOUR_INFO_SECTION,
     ORDERS_SECTION,
     PLAYERS_SECTION,
+    REGION_STORIES_SECTION,
     SIEGES_SECTION,
     SILVER_SECTIONS,
     SOURCES_SECTION,
@@ -381,6 +382,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("a", "siege_actions", "Siege Actions"),
     MenuItem("f", "found_covenant", "Found a Covenant Here"),
     MenuItem("b", "begin_story", "Begin This Story"),
+    MenuItem("h", "delay_threat", "Delay or Hasten"),
+    MenuItem("g", "grow_story", "Grow into a Threat"),
     MenuItem("g", "go_to", "Go To"),
     MenuItem("i", "impress_agent", "Impress"),
     MenuItem("x", "spend_agency_xp", "Spend Agency Experience"),
@@ -545,6 +548,7 @@ MORE_SECTIONS: dict[str, str] = {
     "disguise_roll": "section-char-covers",
     "whereabouts": "section-casting",
     "suggest_story": "section-cov-hooks",
+    "grow_story": REGION_STORIES_SECTION,
     "trait_roll": "section-personality-traits",
     "familiar_trait_roll": "section-fam-personality-traits",
     "edit_familiar_fatigue": "section-fam-health",
@@ -949,6 +953,15 @@ def _on_ruin(facts: ActionFacts) -> bool:
 
 def _on_dormant_threat(facts: ActionFacts) -> bool:
     return facts.on_record() and threats.is_dormant(facts.record_to_delete())
+
+
+def _on_threat_under_way(facts: ActionFacts) -> bool:
+    record = facts.record_to_delete()
+    return (
+        facts.on_record()
+        and threats.is_threat(record)
+        and not threats.is_dormant(record)
+    )
 
 
 def _goes_to(facts: ActionFacts) -> bool:
@@ -1376,6 +1389,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "edit_arms": _bears_arms,
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
+    "delay_threat": _on_threat_under_way,
     "go_to": _goes_to,
     # A scholar's ligature (Art & Academe).
     "make_ligature": _makes_ligature,

@@ -20,7 +20,8 @@ def test_each_source_says_what_is_coming_in_the_span():
     found = _titles(ahead.entries(saga))
     assert ("Summer", 1220, "The Drachenfels: Level 2 opens") in found
     assert ("Summer", 1221, "The Drachenfels: Level 2 opens") in found
-    assert ("Winter", 1220, "The Hollow Crown: The ford floods") in found
+    # The threat's clock: one of its three stages has come.
+    assert ("Winter", 1220, "■□□ The Hollow Crown: The ford floods") in found
     assert ("Winter", 1220, "The world turns: the yearly step") in found
     assert ("Winter", 1221, "The world turns: the yearly step") in found
     fair = [t for t in found if "fair" in t[2]]

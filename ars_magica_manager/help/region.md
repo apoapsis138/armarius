@@ -107,9 +107,29 @@ core rules). Add, edit or delete one.
 ### Threats
 <!-- help: section-region-threats -->
 
-The stories that grow if left alone (the core rules). Add, edit or
+The stories that grow if left alone (the core rules): each one's
+**Clock** (how far it has come, a filled square for each stage come or
+each step taken), its next stage and when, and its attitude. Add, edit or
 delete one. A story not yet begun shows as **Dormant**: open it and
 choose **Begin This Story** in More to start it.
+
+### Open Stories
+<!-- help: section-region-stories -->
+
+Every open Story Event of the troupe's covenants, oldest first: what it
+concerns, the covenant whose Diary keeps it, and the season it arose.
+An experiment's story event, a Disaster's covenant story and Suggest a
+Story write one, and you add them by hand in a covenant's Diary (as a
+Story Event). Edit opens its Diary entry: mark it **Resolved** once it
+is told, and it leaves the list.
+<!-- tui -->
+More (`m`) > **Grow into a Threat** makes the chosen story a threat of
+the Region (see [Grow into a Threat](help:grow-story)).
+<!-- /tui -->
+<!-- gui -->
+**Grow into a Threat** on a story's card makes it a threat of the
+Region (see [Grow into a Threat](help:grow-story)).
+<!-- /gui -->
 
 ### Places
 <!-- help: section-region-places -->
@@ -1129,6 +1149,23 @@ Its Stages tab shows the stage it has reached and the next to come,
 worked out from the saga's date (or its position); the Region's top
 panel names the threat whose next stage is due soonest.
 
+Its **Clock** shows how far it has come, as filled squares: one for each
+stage of a dated threat, filled as each comes, or one for each step of
+a track up to its last stage, filled to its position (■■■□□ 3 of 5). The
+threat's page, its card on the Region and its lines on Ahead show it.
+
+A threat moving along a track can be moved by a place's
+[trigger](help:section-nb-triggers): each time the trigger comes, its
+season asks whether the troupe **failed** it (the threat moves on) or
+**kept** it (it stays). See
+[How to set up a threat's clock](help:guide-threat-clock).
+
+**Delay or Hasten**, in the threat's More, pushes it later or brings it
+sooner when something the troupe did changes it: a dated threat's stages
+still to come all move by the seasons you give (the dates typed stay as
+they are, and Edit shows the delay so far), a track's position moves
+back or on. The reason goes in its [Diary](help:tab-nb-threat-diary).
+
 A threat can be **dormant**: a story the storyguide hasn't begun, such
 as one left unticked when its pack was imported. It reaches no stage,
 nothing of it comes due, and the Tribunal sheet counts it under
@@ -1154,6 +1191,15 @@ Click a stage to read it in full in the Inspector: when it comes, what
 became of it, its clues, and what happens if it is ignored, stopped or
 turned.
 <!-- /gui -->
+
+## Diary tab
+<!-- help: tab-nb-threat-diary -->
+
+What moved the threat, season by season: each answer to a trigger tied
+to it (failed or kept), each Delay or Hasten and its reason, and what
+came of a stage marked Happened, Stopped or Turned. It works as a
+place's [Diary](help:section-nb-place-diary): add, edit or delete an
+entry.
 
 # A place
 <!-- help: tab-nb-place -->
@@ -1446,6 +1492,12 @@ year** (a season), **every N years** (a season, and a year it comes),
 or **whenever** something happens (say what in What happens). The
 dated ones show their next date, and the soonest is the place's Next.
 Add, edit or delete one.
+
+A dated trigger can **move a threat** that moves along a track or an
+omen count: choose it in **Moves a threat**, and say how many steps
+failing it moves the threat (1 if left blank). Each time the trigger
+comes, the season it comes in asks how it went (see
+[The World Turns](help:world-turns)).
 
 ## Roll Tables tab
 <!-- help: tab-nb-tables -->

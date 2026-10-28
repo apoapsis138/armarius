@@ -272,6 +272,10 @@ def _places(saga: Saga, start: int, stop: int) -> list[Entry]:
             date = place_events.next_date(saga, trigger)
             if date is None:
                 continue
+            title = f"{place.name}: {trigger['name']}"
+            if (threat := place_events.threat_of(saga, trigger)) is not None:
+                clock = threats.clock_squares(saga, threat)
+                title = f"{clock + ' ' if clock else ''}{title} ({threat.name})"
             when = trigger.get("when")
             step = (
                 len(SEASONS)
@@ -283,15 +287,7 @@ def _places(saga: Saga, start: int, stop: int) -> list[Entry]:
             for year, season in repeats(
                 season_order(season=date[1], year=date[0]), step, start, stop
             ):
-                found.append(
-                    Entry(
-                        year,
-                        season,
-                        f"{place.name}: {trigger['name']}",
-                        PLACES,
-                        place.name,
-                    )
-                )
+                found.append(Entry(year, season, title, PLACES, place.name))
     return found
 
 
@@ -305,19 +301,28 @@ def _threats(saga: Saga, start: int, stop: int) -> list[Entry]:
             or threats.is_dormant(threat)
         ):
             continue
+        clock = threats.clock_squares(saga, threat)
         for stage in threats.stages(threat):
             if (stage.get("outcome") or threats.PENDING) != threats.PENDING:
                 continue
-            year = stage.get("year")
-            if year is None:
+            when = threats.stage_when(threat, stage)
+            if when is None:
                 continue
-            season = stage.get("season") or SEASONS[-1]
-            if start <= season_order(season=season, year=year) <= stop:
+            if threats.delay(threat):
+                year, index = divmod(when, len(SEASONS))
+                season = SEASONS[index]
+            else:
+                year = when // len(SEASONS)
+                season = stage.get("season") or SEASONS[-1]
+                when = season_order(season=season, year=year)
+            if start <= when <= stop:
                 found.append(
                     Entry(
                         year,
                         season,
-                        f"{threat.name}: {stage['title']}",
+                        # The clock first: a long title is cut at its end.
+                        (f"{clock} " if clock else "")
+                        + f"{threat.name}: {stage['title']}",
                         THREATS,
                         threat.name,
                     )

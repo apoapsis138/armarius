@@ -495,6 +495,18 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Pounds": "lots"},
         shown={"#cov-diary-list": "Bought a mill"},
     ),
+    "add story event concerning a character": Contract(
+        prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
+        edits={
+            "Category": "Story Event",
+            "Name": "A salamander in the lab",
+            "Concerns": "characters:mag1",
+        },
+        saved=lambda s: (covenant(s).diary[-1].status, covenant(s).diary[-1].concerns),
+        expected=("Open", "characters:mag1"),
+        invalid={"Name": ""},
+        shown={"#cov-diary-list": "A salamander in the lab"},
+    ),
     "add hidden resources story event": Contract(
         prefill={"Year": "1220", "Season": "Autumn", "Name": ""},
         edits={**HIDDEN_STORY, "Build Points unlocked": "120"},

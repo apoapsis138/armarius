@@ -19,6 +19,7 @@ from .... import (
     lords,
     manors,
     marriages,
+    open_stories,
     place_events,
     places,
     ruins,
@@ -73,6 +74,8 @@ from ....sections import (
     MARRIAGE_TERMS_SECTION,
     MARRIAGES_SECTION,
     NEIGHBOUR_INFO_SECTION,
+    REGION_STORIES_SECTION,
+    REGION_THREATS_SECTION,
     STAGES_SECTION,
     TABLES_SECTION,
     TOKENS_SECTION,
@@ -697,6 +700,30 @@ class RecordActions(WorkspaceBase):
         run_steps(
             self.app,
             threats.begin_command(self.saga, record),
+            lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+        )
+
+    def action_grow_story(self) -> None:
+        """More's Grow into a Threat on the Region's chosen open story."""
+        view = self._region_sheet_view
+        row = view.section_row(REGION_STORIES_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            open_stories.grow_form(self.saga, row),
+            lambda _end: self._commit(REGION_STORIES_SECTION, REGION_THREATS_SECTION),
+        )
+
+    def action_delay_threat(self) -> None:
+        """More's Delay or Hasten on a threat under way."""
+        record = self._record_to_delete()
+        if not threats.is_threat(record) or threats.is_dormant(record):
+            return
+        assert isinstance(record, Neighbour)
+        run_steps(
+            self.app,
+            threats.delay_form(self.saga, record),
             lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
         )
 

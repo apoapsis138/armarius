@@ -570,12 +570,13 @@ def _covenant_diary_entry_dialog(
     default_year: int,
     existing: CovenantDiaryEntry | None = None,
     default_season: str = SEASONS[0],
+    saga: Saga | None = None,
 ) -> FieldsDialog[CovenantDiaryEntry]:
     """Add or edit a covenant Diary entry (diary_forms.covenant_entry_fields)."""
     return FieldsDialog(
         diary_forms.entry_title(existing),
         diary_forms.covenant_entry_fields(
-            covenant, default_year, existing, default_season
+            covenant, default_year, existing, default_season, saga
         ),
         validate=diary_forms.covenant_entry_problem(covenant, existing),
         build=diary_forms.covenant_entry_from(covenant, existing),

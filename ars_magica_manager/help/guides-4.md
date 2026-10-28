@@ -1019,3 +1019,63 @@ A character's faith decides what the [Religion tab](help:tab-religion) offers hi
 8. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with on the Abilities chapter's faerie actions.
 
 **See also:** [Devotion and the Saints](help:devotion), [Mystic Paths](help:mystic-path), [Invoking God's Aid](help:gods-aid), [Holy Influence](help:holy-influence)
+
+# How to set up a threat's clock
+<!-- help: guide-threat-clock -->
+
+A threat can move on whenever the troupe fails something the saga asks
+of it, as a clock fills in a Powered by the Apocalypse game: the
+Watchtower's due to Abnoba each Winter, unpaid, brings the Hollow Crown
+a step nearer.
+
+1. **Make the threat move along a track.** New Threat (or Edit) with
+   **Moves by** set to *A track* (or *An omen count*), and its position
+   where it stands now (0 for a fresh one).
+2. **Give its stages their steps.** Add each stage with **Comes at**:
+   the step it comes at (2, 4, 6). The last stage's step is the clock's
+   size: the threat's page shows ■■□□□□ 2 of 6.
+3. **Tie a place's trigger to it.** On the place's Regio tab, add (or
+   edit) a dated trigger, such as *Abnoba's due*, Winter, each year.
+   Choose the threat in **Moves a threat**, and how many steps failing
+   it moves the threat.
+4. **Play the seasons.** When the trigger's season is played, Advance
+   Season asks: **Failed** moves the threat on, **Kept** leaves it.
+   Either is written in the threat's Diary and the place's, and the
+   stage it reaches comes.
+5. **Push it back when the troupe acts.** If the troupe thwarts it some
+   other way, choose **Delay or Hasten** in the threat's More and move it
+   back, with the reason.
+
+A threat moving by fixed dates has a clock too (a square for each
+stage), and Delay or Hasten moves all its stages still to come by the
+seasons you give.
+
+**See also:** [A threat](help:tab-nb-threat), [Triggers](help:section-nb-triggers), [The World Turns](help:world-turns), [Delay or Hasten](help:threat-delay)
+
+# How to follow a story from its start to a threat
+<!-- help: guide-story-hook -->
+
+A season's work can start a story that comes later: a salamander drawn
+by Aurelia's fire spell hangs about her laboratory, and may want to
+become her familiar (a story event may come some time after the
+experiment, DE p. 276). The app keeps each one as an open Story Event until it is
+told, or grows into a threat.
+
+1. **Where they come from.** An experiment's story event writes one in
+   the covenant's Diary, concerning the magus, and a Disaster's
+   covenant story one concerning the covenant (DE p. 275); Suggest a
+   Story on a covenant's Hooks writes one when accepted. Add your own
+   in the covenant's Diary: a Story Event, Open, with what it
+   **Concerns**.
+2. **Find them.** The Region's [Open Stories](help:section-region-stories)
+   lists every open one of the troupe's covenants; a character's or
+   laboratory's Connections lists its own.
+3. **Tell it.** When the troupe plays it out, Edit it and mark it
+   **Resolved**.
+4. **Or let it grow.** Left alone, it can become a threat of the Region:
+   **Grow into a Threat** makes one from its words, and marks the story
+   Grown. Add the threat's stages, and give it a clock if a place's
+   trigger should move it (see
+   [How to set up a threat's clock](help:guide-threat-clock)).
+
+**See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)

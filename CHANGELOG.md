@@ -109,6 +109,39 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.34.0 — 2026-10-28
+
+### Orbis
+
+- Threats have clocks: a row of squares filled as each stage comes (a
+  dated threat) or as it moves along its track, on the threat's page,
+  its card on the Region, the Region's Threats list (now with each
+  threat's next stage) and Ahead.
+- A place's trigger can move a threat along its track. When the
+  trigger's season is played, Advance Season asks whether the troupe
+  failed it (the threat moves on, and you're told which stage it
+  reaches) or kept it, and writes the answer in the threat's and the
+  place's Diary. Outside Winter this is its own short review, *The
+  World This Season*, undone by deleting its entry like the yearly one.
+- Delay or Hasten, in a threat's More, pushes it later or brings it
+  sooner: a dated threat's stages still to come all move by the seasons
+  you give, without retyping their dates, and a track's position moves
+  back or on. The reason goes in the threat's new Diary tab.
+- Open stories: a covenant's Story Event can say what it concerns (a
+  character, a laboratory, the covenant or the Region). An experiment's
+  story event names the magus, and a Disaster's covenant story the
+  covenant. The Region lists every open story of the troupe's covenants
+  under Open Stories, and a character's or laboratory's Connections
+  names its own.
+- Grow into a Threat makes an open story a threat of the Region, from
+  its words, and marks the story Grown into a threat.
+
+### Glossa
+
+- Help for threat clocks, Delay or Hasten, Open Stories and Grow into a
+  Threat, and two new how-tos: setting up a threat's clock, and
+  following a story from its start to a threat.
+
 ## 3.33.0 — 2026-10-28
 
 ### Illuminatio

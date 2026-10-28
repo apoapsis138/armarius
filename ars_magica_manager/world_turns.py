@@ -6,6 +6,11 @@ the year's events with each neighbour), each line with a tick box. Only
 the ticked lines are applied, and all of them go into one entry of the
 saga's record (Saga.world_turns); deleting that entry undoes them.
 
+A place's trigger tied to a threat's clock is asked in the season it
+comes, Winter or not: failed moves the threat on, kept leaves it, and
+either is written in both Diaries. In a season other than Winter its
+answers are the season's only questions, kept as an entry the same way.
+
 Nothing is applied unasked: an attitude moves only by the change and
 reason the storyguide gives, though the review suggests one where the
 year's favours make it plain (a favour the covenant did the neighbour, or
@@ -46,7 +51,8 @@ from .models import (
 from .rules import aura_change, dice, sites
 
 #: The groups the review lists, in order.
-PLACES, THREATS, NEIGHBOURS, TREASURY, ATTITUDES = (
+CLOCKS, PLACES, THREATS, NEIGHBOURS, TREASURY, ATTITUDES = (
+    "Threat clocks",
     "Places",
     "Threats",
     "Neighbours",
@@ -54,6 +60,7 @@ PLACES, THREATS, NEIGHBOURS, TREASURY, ATTITUDES = (
     "Attitudes",
 )
 _GROUP_NOTES = {
+    CLOCKS: "triggers tied to a threat: failed moves it on, kept leaves it",
     PLACES: "from each place's triggers and its aura",
     THREATS: "from each threat's dated stages",
     NEIGHBOURS: "each town's fairs: the income rolls",
@@ -84,6 +91,23 @@ class Proposal:
     #: The change the year's favours suggest, and why (0: none).
     suggested: int = 0
     suggested_reason: str = ""
+    #: For a threat clock's line: the answers it offers.
+    answers: list[Answer] = field(default_factory=list)
+
+
+@dataclass
+class Answer:
+    """One answer a threat clock's line offers: its value, its label, the
+    line it writes in the record, and its changes."""
+
+    value: str
+    label: str
+    line: str
+    changes: list[Change] = field(default_factory=list)
+
+
+#: A threat clock's answers.
+FAILED, KEPT, UNANSWERED = "failed", "kept", "unanswered"
 
 
 # -- changes --
@@ -242,12 +266,95 @@ def _diary_line(year: int, season: str, text: str) -> dict[str, Any]:
     return {"year": year, "season": season, "text": text}
 
 
+def _written(
+    year: int, season: str, place: Any, threat: Any, text: str
+) -> list[Change]:
+    """A threat clock's answer, as a line in the threat's Diary and the
+    place's."""
+    return [
+        append_change(
+            "neighbour",
+            threat.id,
+            ["details", "diary"],
+            _diary_line(year, season, f"{place.name}: {text}"),
+        ),
+        append_change(
+            "neighbour", place.id, ["details", "diary"], _diary_line(year, season, text)
+        ),
+    ]
+
+
+def _clock(saga: Saga, place: Any, trigger: Any, threat: Any) -> Proposal:
+    """A trigger tied to `threat` come this season, and its answers:
+    failed moves the threat its steps on (saying which stages that
+    reaches), kept leaves it."""
+    year, season = saga.current_year, saga.current_season
+    now = threats.position(threat)
+    after = now + place_events.steps(trigger)
+    reaches = [
+        s["title"]
+        for s in threats.stages(threat)
+        if (s.get("outcome") or threats.PENDING) == threats.PENDING
+        and (at := s.get("at")) is not None
+        and now < at <= after
+    ]
+    failed = f"{trigger['name']} failed: {threat.name} moves from {now} to {after}"
+    if reaches:
+        failed += f", reaching {', '.join(reaches)}"
+    kept = f"{trigger['name']} kept: {threat.name} stays at {now}"
+    clock = threats.clock_text(saga, threat) or f"at {now}"
+    return Proposal(
+        CLOCKS,
+        f"{place.name}: {trigger['name']} ({threat.name}, {clock})",
+        answers=[
+            Answer(
+                FAILED,
+                f"Failed: it moves to {after}",
+                failed,
+                [
+                    set_change(
+                        "neighbour",
+                        threat.id,
+                        ["details", "position"],
+                        threat.details.get("position"),
+                        after,
+                    ),
+                    *_written(year, season, place, threat, failed),
+                ],
+            ),
+            Answer(
+                KEPT,
+                "Kept: it stays",
+                kept,
+                _written(year, season, place, threat, kept),
+            ),
+            Answer(UNANSWERED, "Leave it unanswered", ""),
+        ],
+    )
+
+
+def _clocks(saga: Saga) -> list[Proposal]:
+    """Each trigger tied to a threat's clock that comes this season."""
+    found = []
+    for place in sites.all_places(saga):
+        for trigger in place_events.triggers(place):
+            threat = place_events.threat_of(saga, trigger)
+            if (
+                threat is not None
+                and place_events.comes_in(trigger, saga.current_year)
+                == saga.current_season
+            ):
+                found.append(_clock(saga, place, trigger, threat))
+    return found
+
+
 def _places(saga: Saga, year: int, rng: random.Random) -> list[Proposal]:
     found = []
     for place in sites.all_places(saga):
         for trigger in place_events.triggers(place):
             season = place_events.comes_in(trigger, year)
-            if season is None:
+            # A trigger tied to a threat is asked in its own season.
+            if season is None or place_events.threat_of(saga, trigger) is not None:
                 continue
             what = trigger.get("what") or trigger["name"]
             found.append(
@@ -309,7 +416,7 @@ def _threats(saga: Saga, year: int) -> list[Proposal]:
         for index, stage in enumerate(threats.stages(threat)):
             if (stage.get("outcome") or threats.PENDING) != threats.PENDING:
                 continue
-            when = threats.stage_order(stage)
+            when = threats.stage_when(threat, stage)
             if when is None or when > end:
                 continue
             found.append(
@@ -470,8 +577,18 @@ def _attitudes(saga: Saga, year: int) -> list[Proposal]:
     return found
 
 
+def season_proposals(saga: Saga, rng: random.Random) -> list[Proposal]:
+    """What the season being played asks: the threat clocks whose
+    triggers come in it, and in Winter everything the year brought."""
+    found = _clocks(saga)
+    if saga.current_season == SEASONS[-1]:
+        found += proposals(saga, rng)
+    return found
+
+
 def proposals(saga: Saga, rng: random.Random) -> list[Proposal]:
-    """Everything the year that is ending brought, to review."""
+    """Everything the year that is ending brought, to review (the threat
+    clocks aside, which are asked in their own season)."""
     year = saga.current_year
     return [
         *_places(saga, year, rng),
@@ -499,7 +616,20 @@ def review_fields(found: list[Proposal]) -> list[DialogField]:
                     f"{group.upper()}: {_GROUP_NOTES[group]}",
                 )
             )
-        if proposal.group == ATTITUDES:
+        if proposal.answers:
+            fields += [
+                DialogField(f"_line_{index}", "", "info", proposal.text),
+                DialogField(
+                    f"answer_{index}",
+                    "Answer",
+                    "select",
+                    None,
+                    options=[(a.label, a.value) for a in proposal.answers],
+                    allow_blank=True,
+                    placeholder="(choose)",
+                ),
+            ]
+        elif proposal.group == ATTITUDES:
             fields += [
                 DialogField(
                     f"_events_{index}",
@@ -544,7 +674,12 @@ def _chosen(
     year = saga.current_year
     chosen = []
     for index, proposal in enumerate(found):
-        if proposal.group == ATTITUDES:
+        if proposal.answers:
+            wanted = values.get(f"answer_{index}")
+            answer = next((a for a in proposal.answers if a.value == wanted), None)
+            if answer is not None and answer.changes:
+                chosen.append((answer.line, answer.changes))
+        elif proposal.group == ATTITUDES:
             change = int(values.get(f"change_{index}") or 0)
             if not change:
                 continue
@@ -576,6 +711,8 @@ def _chosen(
 
 def _problem(found: list[Proposal], values: dict[str, Any]) -> str | None:
     for index, proposal in enumerate(found):
+        if proposal.answers and not values.get(f"answer_{index}"):
+            return f"Say how {proposal.text} went: failed, kept, or unanswered."
         if proposal.group != ATTITUDES or values.get(f"change_{index}") in (None, "0"):
             continue
         if not (values.get(f"reason_{index}") or "").strip():
@@ -583,11 +720,15 @@ def _problem(found: list[Proposal], values: dict[str, Any]) -> str | None:
     return None
 
 
-def title(year: int) -> str:
+def title(year: int, season: str = SEASONS[-1]) -> str:
+    if season != SEASONS[-1]:
+        return f"The World This Season: {season} {year}"
     return f"The World Turns: Winter {year}"
 
 
 def entry_title(turn: WorldTurn) -> str:
+    if turn.season != SEASONS[-1]:
+        return f"The world this season, {turn.season} {turn.year}"
     return f"The world turns, {turn.season} {turn.year}"
 
 
@@ -595,13 +736,14 @@ def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
     """The review of `found`: Apply applies the ticked lines into one
     entry of the saga's record, then runs `then()` (the season played
     out)."""
-    year = saga.current_year
+    year, season = saga.current_year, saga.current_season
+    entry = entry_title(WorldTurn(year, season))
 
     def live(values: dict[str, Any]) -> str:
         count = sum(len(changes) > 0 for _t, changes in _chosen(saga, found, values))
         return (
             f"[b]{count} change{'' if count == 1 else 's'}[/] go into the saga's "
-            f"record as one entry, [i]The world turns, Winter {year}[/]. "
+            f"record as one entry, [i]{entry}[/]. "
             "Delete that entry (Seasons) to undo them."
         )
 
@@ -610,7 +752,7 @@ def review(saga: Saga, found: list[Proposal], then: Any) -> Form:
         return then()
 
     return Form(
-        title(year),
+        title(year, season),
         lambda: review_fields(found),
         apply,
         validate=lambda values: _problem(found, values),
@@ -625,7 +767,7 @@ def record(saga: Saga, chosen: list[tuple[str, list[Change]]]) -> WorldTurn | No
     chosen)."""
     if not chosen:
         return None
-    turn = WorldTurn(saga.current_year, SEASONS[-1])
+    turn = WorldTurn(saga.current_year, saga.current_season)
     for text, changes in chosen:
         for change in changes:
             apply_change(saga, change)

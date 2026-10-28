@@ -9,6 +9,7 @@ from dataclasses import replace
 
 from .. import (
     book_kinds,
+    open_stories,
     research_text,
     spell_parameters,
     staged_projects,
@@ -1103,10 +1104,7 @@ def _disaster(
             person.wounds.heavy += 2
         lines.append("Two Heavy Wounds for everyone in the lab.")
     if chart.zeroes >= ex.DISASTER_CHOICE and chart.disaster_choice == "covenant":
-        chart.stories.append(
-            "The Disaster's after-effects threaten the whole covenant (the "
-            "storyguide's story)."
-        )
+        chart.stories.append(DISASTER_STORY)
     elif chart.zeroes >= ex.DISASTER_CHOICE:
         for person in everyone:
             person.wounds.incapacitated = True
@@ -1163,6 +1161,14 @@ def _bonus_spells(
     return lines
 
 
+#: The story a Disaster's after-effects bring the whole covenant (DE p.
+#: 275): it concerns the covenant, where an experiment's story event
+#: concerns the magus.
+DISASTER_STORY = (
+    "The Disaster's after-effects threaten the whole covenant (the storyguide's story)."
+)
+
+
 def _stories(
     saga: Saga,
     magus: Character,
@@ -1171,7 +1177,8 @@ def _stories(
     chart: ex.Extraordinary,
 ) -> list[str]:
     """Each story event, a line in the lab's Diary entry and an open Story
-    Event in the covenant's Diary."""
+    Event in the covenant's Diary, concerning the magus (a Disaster's, the
+    covenant)."""
     covenant = saga.covenant(lab.covenant_id) if lab.covenant_id else None
     lines = []
     for story in chart.stories:
@@ -1185,6 +1192,9 @@ def _stories(
                     details=story,
                     category=STORY_EVENT,
                     status="Open",
+                    concerns=""
+                    if story == DISASTER_STORY
+                    else open_stories.concerns_of(magus),
                 )
             )
     return lines

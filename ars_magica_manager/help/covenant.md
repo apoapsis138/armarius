@@ -212,10 +212,13 @@ theirs, so nothing is entered here:
   note on its link.
 - **Rules**: each neighbour whose Ruler or leader this is.
 - **Linked from**: any other record whose Links include this one.
+- **Open stories**: a character's or laboratory's open Story Events,
+  and the covenant whose Diary keeps them.
 
 A connection is changed where it is made: on the faction's Links, the
-neighbour's Ruler or leader, the covenant's or laboratory's place, or
-the Tribunal's gilds.
+neighbour's Ruler or leader, the covenant's or laboratory's place, the
+Tribunal's gilds, or the Story Event's Concerns in the covenant's
+Diary.
 <!-- gui -->
 Click an underlined name to open its record; **Back** returns here.
 <!-- /gui -->
@@ -1447,10 +1450,18 @@ A dated record of what happens to the covenant, in date order. Each entry
 has a Year, Season, Category and Name, and can carry pounds, vis and
 Loyalty points. Only the Loyalty points change the sheet: they are added
 into Actions and events under Loyalty. Pounds and vis are a record.
-A Story Event also has a Status (Open or Resolved), a year to revisit it
-and, optionally, a link to one of the covenant's Boons or Hooks. The app
-adds entries of its own too: vis harvests, vis moved in or out, and
-contested resources that went unsecured.
+A Story Event also has a Status (Open, Resolved, or Grown into a
+threat), what it **Concerns** (the covenant, the Region, or one of the
+covenant's characters or laboratories), a year to revisit it and,
+optionally, a link to one of the covenant's Boons or Hooks. Every open
+Story Event of the troupe's covenants is listed together on the
+Region's [Open Stories](help:section-region-stories), and one that
+concerns a character or laboratory shows on its
+[Connections](help:section-connections). The app adds entries of its
+own too: vis harvests, vis moved in or out, contested resources that
+went unsecured, and an open Story Event for an experiment's story event
+(concerning the magus) or a Disaster's covenant story (concerning the
+covenant).
 
 A Story Event linked to a Hidden Resources Boon also has **Build Points
 unlocked**: the points of that Boon's 250 that the story opened up. They

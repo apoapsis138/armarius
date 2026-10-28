@@ -7,8 +7,14 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from . import place_events
-from .models import Character, Covenant, CovenantDiaryEntry, DiaryEntry, Neighbour
+from .models import (
+    Character,
+    Covenant,
+    CovenantDiaryEntry,
+    DiaryEntry,
+    Neighbour,
+    details_list,
+)
 
 
 def write(
@@ -31,7 +37,7 @@ def write(
         covenant.diary.append(CovenantDiaryEntry(year, season, name, text))
         count += 1
     for neighbour in _once(neighbours):
-        place_events.diary(neighbour).append(
+        details_list(neighbour, "diary").append(
             {"year": year, "season": season, "text": f"{name}: {text}"}
         )
         count += 1

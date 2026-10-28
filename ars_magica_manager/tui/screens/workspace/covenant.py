@@ -871,6 +871,7 @@ class CovenantActions(WorkspaceBase):
                 covenant,
                 self.saga.current_year,
                 default_season=self.saga.current_season,
+                saga=self.saga,
             ),
             handle_result,
         )
@@ -890,7 +891,10 @@ class CovenantActions(WorkspaceBase):
 
             self.app.push_screen(
                 _covenant_diary_entry_dialog(
-                    covenant, self.saga.current_year, existing=covenant.diary[index]
+                    covenant,
+                    self.saga.current_year,
+                    existing=covenant.diary[index],
+                    saga=self.saga,
                 ),
                 handle_result,
             )

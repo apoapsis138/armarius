@@ -14,7 +14,7 @@ from textual.app import ComposeResult
 from textual.containers import Vertical, VerticalScroll
 from textual.widgets import Button, Collapsible, Static, TabbedContent
 
-from .... import arms, neighbour_filter, neighbours
+from .... import arms, neighbour_filter, neighbours, open_stories
 from ....forms import neighbour as neighbour_forms
 from ....markup import aligned, escape, markdown_text
 from ....models import Covenant, Neighbour, Saga
@@ -26,6 +26,7 @@ from ....sections import (
     NEIGHBOUR_INFO_SECTION,
     REGION_COVENANTS_SECTION,
     REGION_INFO_SECTION,
+    REGION_STORIES_SECTION,
 )
 from ....sheets import region as region_sheet
 from ..widgets import (
@@ -71,6 +72,8 @@ class RegionSheetView(SheetView):
         #: The group the sheet was opened on, whose list takes focus.
         self.group = group
         self._chosen: Neighbour | Covenant | None = None
+        #: The open story chosen, by its row (None: a neighbour is shown).
+        self._story: int | None = None
 
     def compose(self) -> ComposeResult:
         watched = (REGION_INFO_SECTION, *_GROUP_SECTIONS, REGION_COVENANTS_SECTION)
@@ -120,13 +123,33 @@ class RegionSheetView(SheetView):
                             ).lines(),
                             id=_list_id(group.section_id),
                         )
+                with SheetSection(
+                    title=self._titled(
+                        REGION_STORIES_SECTION,
+                        REGION_STORIES_SECTION,
+                        lambda: open_stories.title(saga),
+                    ),
+                    id=REGION_STORIES_SECTION,
+                ):
+                    yield self._list(
+                        (REGION_STORIES_SECTION, *_GROUP_SECTIONS),
+                        lambda: open_stories.grid(saga).lines(),
+                        id=_list_id(REGION_STORIES_SECTION),
+                    )
             yield self._panel(
-                (*_GROUP_SECTIONS, REGION_COVENANTS_SECTION, FAVOURS_SECTION),
+                (
+                    *_GROUP_SECTIONS,
+                    REGION_COVENANTS_SECTION,
+                    REGION_STORIES_SECTION,
+                    FAVOURS_SECTION,
+                ),
                 self._details,
                 id="region-info-panel",
             )
 
     def _details(self) -> str:
+        if self._story is not None:
+            return open_stories.text(self.saga, self._story)
         chosen = self._chosen
         if isinstance(chosen, Neighbour) and chosen not in self.saga.neighbours:
             chosen = self._chosen = None
@@ -136,6 +159,12 @@ class RegionSheetView(SheetView):
         """A row was chosen: show it in the details panel."""
         list_id = event.selectable_list.id or ""
         index = event.data_index
+        if list_id == _list_id(REGION_STORIES_SECTION):
+            event.stop()
+            self._story = index
+            self.query_one("#region-info-panel", Static).update(self._details())
+            return
+        self._story = None
         if list_id == _list_id(REGION_COVENANTS_SECTION):
             listed: list = region_sheet.others(self.saga)
         else:

@@ -535,11 +535,10 @@ def _world_turns(
     backup: Backup,
     rng: Callable[[], random.Random],
 ):
-    """When Winter is played: the yearly step's review of what the year
-    brought (world_turns), then the season played out."""
-    found = (
-        world_turns.proposals(saga, rng()) if saga.current_season == SEASONS[-1] else []
-    )
+    """What the season asks of the world (world_turns): the threat clocks
+    whose triggers come in it, and when Winter is played the yearly
+    step's review of what the year brought; then the season played out."""
+    found = world_turns.season_proposals(saga, rng())
     if not found:
         return _finish(saga, worked, secured, finish, lost, backup, rng)
     return world_turns.review(

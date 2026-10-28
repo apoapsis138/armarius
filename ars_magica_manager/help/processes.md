@@ -818,6 +818,14 @@ question before the season is played out: what the year brought beyond
 the covenants. Each line has a tick box, and only the ticked lines are
 applied.
 
+- **Threat clocks**: a place's trigger tied to a threat comes up in the
+  season it comes, Winter or not. Answer **Failed** (the threat moves on
+  its steps, and the line says which stage that reaches), **Kept** (it
+  stays) or **Leave it unanswered** (nothing is written). Failed and
+  Kept are written in the threat's Diary and the place's. In a season
+  other than Winter these are the only questions, titled *The World This
+  Season*, and they go into an entry of their own.
+
 - **Places**: each place's triggers that came this year (written into
   the place's Diary), and, with the Auras change rule option, each
   aura's year: a Magic aura's yearly modifier and its roll on the
@@ -837,7 +845,8 @@ applied.
   alone suggests nothing, since the app can't tell how it went. A change
   needs its reason.
 
-**You type:** the ticks, and each attitude's change and reason.
+**You type:** the ticks, each threat clock's answer, and each
+attitude's change and reason.
 
 **The app works out:** everything applied goes into one entry, *The
 world turns, Winter 1220*, under The World Turned on Seasons. Delete
@@ -1345,3 +1354,43 @@ The book gives the search no botch dice; the app rolls one. A botch is
 a total of 0 and something goes wrong (DE p. 7), as the storyguide
 decides: a false loophole the searcher believes in, say, or the other
 side learning of the search.
+
+# Delay or Hasten
+<!-- help: threat-delay -->
+
+Something the troupe did (or failed to do) pushes a threat later or
+brings it sooner, without editing each stage.
+
+- **A threat moving by fixed dates**: give the seasons later (below 0,
+  sooner). Every stage still to come moves by that much; the dates you
+  typed stay as they are, and the threat's Edit shows the delay so far
+  in Delayed by. A stage already marked Happened, Stopped or Turned
+  doesn't move.
+- **A threat moving along a track or an omen count**: give the steps
+  back (below 0, on). Its position can't go below 0.
+
+**You type:** how far, and why.
+
+**The app works out:** the new dates or position, and a line in the
+threat's [Diary](help:tab-nb-threat-diary) saying what moved it and why.
+To undo it, Delay or Hasten again the other way, or Edit the threat.
+
+**See also:** [A threat](help:tab-nb-threat), [How to set up a threat's clock](help:guide-threat-clock)
+
+# Grow into a Threat
+<!-- help: grow-story -->
+
+An open story the troupe left alone becomes a threat of the Region:
+a story that grows on its own (see [A threat](help:tab-nb-threat)).
+
+**You type:** the threat's name (the story's, unless you change it),
+its antagonist, how it moves (by fixed dates, a track or an omen
+count), and whether it begins now or waits, dormant, until Begin This
+Story.
+
+**The app works out:** the threat, its summary the story's words and a
+link to the covenant whose Diary kept the story; the story is marked
+**Grown into a threat**, so it leaves Open Stories; and the threat's
+Diary says where it came from. Add its stages on its page.
+
+**See also:** [Open Stories](help:section-region-stories), [How to follow a story from its start to a threat](help:guide-story-hook)

@@ -206,11 +206,47 @@ def places_grid(saga: Saga) -> Grid:
     )
 
 
+def threats_grid(saga: Saga) -> Grid:
+    """The threats: each one's clock, its next stage and when, and its
+    attitude toward the home covenant (no Detail: the clock takes its
+    room)."""
+    rows = []
+    styles: dict[tuple[int, int], str] = {}
+    for index, found in enumerate(neighbour_filter.shown(saga, "threats")):
+        words, colour = _attitude_cell(saga, found)
+        if colour:
+            styles[(index, 4)] = colour
+        upcoming = threats.reached(saga, found).next
+        rows.append(
+            [
+                found.name,
+                kind_text(found),
+                threats.clock_text(saga, found),
+                ""
+                if upcoming is None
+                else f"{upcoming['title']}, {threats.when_text(found, upcoming)}".rstrip(
+                    ", "
+                ),
+                words,
+            ]
+        )
+    return Grid(
+        ["Name", "Kind", "Clock", "Next", "Attitude"],
+        rows,
+        list(range(len(rows))),
+        _empty(saga, "None yet: add a threat here."),
+        styles,
+        caps=[24, 8, 14, 26, 0],
+    )
+
+
 def group_grid(saga: Saga, group_key: str) -> Grid:
     """The group's neighbours: kind, ruler, attitude toward the home
     covenant and detail."""
     if group_key == "places":
         return places_grid(saga)
+    if group_key == "threats":
+        return threats_grid(saga)
     rows = []
     styles: dict[tuple[int, int], str] = {}
     members = neighbour_filter.shown(saga, group_key)
@@ -380,6 +416,8 @@ def card_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         ]
     words, _colour = _attitude_cell(saga, neighbour)
     facts = [Fact("Attitude", words)] if words else []
+    if threats.is_threat(neighbour) and (clock := threats.clock_text(saga, neighbour)):
+        facts.append(Fact("Clock", clock))
     ruler = ruler_fact(saga, neighbour, "Ruler", "")
     if ruler.value:
         facts.append(ruler)

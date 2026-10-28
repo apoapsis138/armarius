@@ -6,7 +6,10 @@ changes with the Realms of Power: Magic option.
 A trigger comes once (a season and year), each year (a season), every N
 years (a season, from a year), or whenever something happens (a
 sentence, which the yearly step reminds the storyguide of). The dated
-ones are worked out to their next date.
+ones are worked out to their next date. A dated trigger can be tied to
+a threat moving along a track (its "clock"): each time it comes, the
+season it comes in asks whether the troupe failed it, which moves the
+threat on its steps, or kept it, which leaves it (world_turns).
 
 A roll table names its die (a simple die, a stress die, a d6 or a d10)
 and its rows, one a line: "1-3: Nothing stirs", "4: The stag", "9+: The
@@ -19,7 +22,7 @@ the glamour of the faerie that claims it as Realms of Power: Faerie says
 (rules.aura_change); this module adds their fields to a place's form.
 
 Kept in Neighbour.details: "triggers" (each {"name", "when", "season",
-"year", "every", "what"}), "tables" (each {"name", "die", "rows",
+"year", "every", "what", "threat_id", "steps"}), "tables" (each {"name", "die", "rows",
 "last"}) and "diary" (each {"year", "season", "text"}); the aura
 change's own keys are listed in rules.aura_change."""
 
@@ -30,7 +33,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
-from . import places
+from . import places, threats
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -67,10 +70,37 @@ class Trigger(TypedDict, total=False):
     year: int | None
     every: int | None
     what: str
+    #: The threat whose track failing this trigger moves, and how far.
+    threat_id: str
+    steps: int | None
 
 
 def triggers(place: Neighbour) -> list[Trigger]:
     return cast(list[Trigger], details_list(place, "triggers"))
+
+
+def threat_of(saga: Saga, trigger: Trigger) -> Neighbour | None:
+    """The threat a trigger is tied to, while it is one a trigger can
+    move (None if untied, or the threat is gone or now moves by date)."""
+    wanted = trigger.get("threat_id")
+    if not wanted:
+        return None
+    found = saga.neighbour(wanted)
+    return found if found is not None and threats.tied(found) else None
+
+
+def steps(trigger: Trigger) -> int:
+    """How far failing a tied trigger moves its threat (1 unless said)."""
+    return max(1, whole_number(trigger.get("steps") or 1))
+
+
+def tie_text(saga: Saga, trigger: Trigger) -> str:
+    """ "failing it moves The Hollow Crown 1 step"; "" when untied."""
+    threat = threat_of(saga, trigger)
+    if threat is None:
+        return ""
+    count = steps(trigger)
+    return f"failing it moves {threat.name} {count} step{'' if count == 1 else 's'}"
 
 
 def next_date(saga: Saga, trigger: Trigger) -> tuple[int, str] | None:
@@ -160,12 +190,15 @@ def triggers_grid(saga: Saga, place: Neighbour) -> Grid:
     rows = []
     for trigger in triggers(place):
         date = next_date(saga, trigger)
+        what = trigger.get("what", "")
+        if tie := tie_text(saga, trigger):
+            what = f"{what} ({tie})" if what else tie[0].upper() + tie[1:]
         rows.append(
             [
                 trigger["name"],
                 when_text(trigger),
                 f"{date[1]} {date[0]}" if date is not None else "",
-                trigger.get("what", ""),
+                what,
             ]
         )
     return Grid(
@@ -180,9 +213,10 @@ def triggers_grid(saga: Saga, place: Neighbour) -> Grid:
 
 
 def trigger_fields(
-    _saga: Saga, _place: Neighbour, entry: Trigger | None
+    saga: Saga, _place: Neighbour, entry: Trigger | None
 ) -> list[DialogField]:
     e = entry or {}
+    clocks = [(n.name, n.id) for n in saga.neighbours if threats.tied(n)]
     return [
         DialogField(
             "name",
@@ -218,6 +252,26 @@ def trigger_fields(
         ),
         DialogField("every", "Every (years)", "optint", e.get("every")),
         DialogField("what", "What happens", "text", e.get("what", "")),
+        DialogField(
+            "threat_id",
+            "Moves a threat",
+            "select",
+            e.get("threat_id") or None,
+            options=clocks,
+            allow_blank=True,
+            placeholder="(none)",
+            hint="A threat moving along a track: each time this comes, its "
+            "season asks whether the troupe failed it (the threat moves on) "
+            "or kept it (it stays).",
+        ),
+        DialogField(
+            "steps",
+            "Failing moves it (steps)",
+            "optint",
+            e.get("steps"),
+            show_if=lambda v: bool(v.get("threat_id")),
+            placeholder="1",
+        ),
     ]
 
 
@@ -231,6 +285,10 @@ def _trigger_problem(values: dict[str, Any]) -> str | None:
         return "Say how many years apart it comes."
     if when == WHENEVER and not (values.get("what") or "").strip():
         return "Say what sets it off and what happens."
+    if values.get("threat_id") and when == WHENEVER:
+        return "A trigger that moves a threat needs a date: its season asks."
+    if (values.get("steps") or 1) < 1:
+        return "Failing it moves the threat at least 1 step."
     return None
 
 
@@ -750,4 +808,23 @@ DIARY_TAB = KindTab(
     "Diary",
     "tab-nb-place-diary",
     (KindList(DIARY_SECTION, diary_title, diary_grid, diary_ops),),
+)
+
+#: A threat's Diary: what moved it, delayed it or came of its stages,
+#: kept as a place's is.
+THREAT_DIARY_TAB = KindTab(
+    "Diary",
+    "tab-nb-threat-diary",
+    (
+        KindList(
+            DIARY_SECTION,
+            diary_title,
+            lambda _saga, threat: diary_rows(
+                threat,
+                "Nothing written yet: what moves it, delays it or comes of its "
+                "stages is written here.",
+            ),
+            diary_ops,
+        ),
+    ),
 )

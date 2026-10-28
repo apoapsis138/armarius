@@ -14,7 +14,7 @@ from __future__ import annotations
 from collections.abc import Callable, MutableSequence, Sequence
 from typing import Any
 
-from .. import catalog, covenant_diary
+from .. import catalog, covenant_diary, open_stories
 from ..arts import ARTS
 from ..commands import Form, SectionOps, delete
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
@@ -101,6 +101,7 @@ class _CovenantEntryForm:
 
     def __init__(self, covenant: Covenant, existing: CovenantDiaryEntry | None):
         self.covenant = covenant
+        self.existing = existing
         # The entry being edited, left out of its pool's points so far.
         self.skip = next(
             (i for i, e in enumerate(covenant.diary) if e is existing), None
@@ -144,6 +145,14 @@ class _CovenantEntryForm:
         values["vis_art"] = values.get("vis_art") or ""
         if self.story(values):
             values["status"] = values.get("status") or STORY_EVENT_STATUSES[0]
+            values["concerns"] = values.get("concerns") or (
+                self.existing.concerns if self.existing is not None else ""
+            )
+            # The threat a story grew into is kept: the form doesn't edit it.
+            if self.existing is not None:
+                values["threat_id"] = self.existing.threat_id
+        else:
+            values.pop("concerns", None)
         return CovenantDiaryEntry(**values)
 
 
@@ -152,10 +161,12 @@ def covenant_entry_fields(
     default_year: int,
     existing: CovenantDiaryEntry | None = None,
     default_season: str = SEASONS[0],
+    saga: Saga | None = None,
 ) -> list[DialogField]:
     """A covenant Diary entry. The amounts are optional; Status, the linked
-    Boon/Hook and Revisit are shown for Story Events only (a hidden field
-    is left out, so it falls back to blank)."""
+    Boon/Hook, Revisit and (given the saga) what it concerns are shown for
+    Story Events only (a hidden field is left out, so it falls back to
+    blank)."""
     form = _CovenantEntryForm(covenant, existing)
     by_id = catalog.load_covenant_boon_hook_catalog_by_id()
     boons_hooks = [
@@ -195,6 +206,23 @@ def covenant_entry_fields(
             allow_blank=True,
             placeholder="(none)",
             show_if=form.story,
+        ),
+        *(
+            [
+                DialogField(
+                    "concerns",
+                    "Concerns",
+                    "select",
+                    attr(existing, "concerns", ""),
+                    options=open_stories.concerns_options(saga, covenant),
+                    show_if=form.story,
+                    hint="Who or what the story is about; the Region lists every "
+                    "open story, and a character's or laboratory's Connections "
+                    "its own.",
+                )
+            ]
+            if saga is not None
+            else []
         ),
         DialogField(
             "revisit_year",
@@ -326,7 +354,7 @@ def covenant_diary_ops(saga: Saga, covenant: Covenant) -> SectionOps:
         return Form(
             entry_title(existing),
             lambda: covenant_entry_fields(
-                covenant, saga.current_year, existing, saga.current_season
+                covenant, saga.current_year, existing, saga.current_season, saga
             ),
             lambda values: save(build(values)),
             validate=covenant_entry_problem(covenant, existing),
