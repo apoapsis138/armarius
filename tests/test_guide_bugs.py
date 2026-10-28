@@ -893,9 +893,15 @@ def test_a_magus_away_from_home_casts_in_the_aura_he_is_in():
     magus = Character(id="m", name="Leandro", type="magus", covenant_id="c")
     saga = Saga(id="s", name="S", covenants=[home], characters=[magus])
     assert realms.present_aura(saga, magus) == realms.home_aura(saga, magus)
+    assert whereabouts.where_line(saga, magus) == (
+        "At home, at Rabenstein: a Magic aura of 5."
+    )
     whereabouts.apply(saga, magus, {"where": "typed", "aura": 4, "realm": "Divine"})
     assert realms.present_aura(saga, magus) == (4, "Divine")
     assert realms.home_aura(saga, magus)[1] == "Magic"
+    assert whereabouts.where_line(saga, magus) == (
+        "Away from home: a Divine aura of 4."
+    )
     whereabouts.apply(saga, magus, {"where": "home"})
     assert not realms.away(magus)
 

@@ -416,7 +416,8 @@ def temporary_virtues_end(saga: Saga) -> list[SeasonRecordLine]:
                     name=f"{name} ends",
                     details=(
                         f"{name} was gained for a while, and this was its last "
-                        "season. Take it off with More > Gain or Lose in Play > "
+                        "season. Take it off with Gain or Lose in Play (on "
+                        "Virtues & Flaws) > "
                         "A temporary Virtue or Flaw ends.\n"
                         f"Rule: {vf_change_rules.SOURCE}"
                     ),

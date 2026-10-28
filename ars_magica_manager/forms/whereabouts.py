@@ -1,4 +1,4 @@
-"""More's Where He Is on a character's Casting Scores: where he is now,
+"""More's Current Location on a character's Casting Scores: where he is now,
 when away from home, so his casting counts that place's aura, a foreign
 realm's included (DE pp. 410-411). A place of the saga gives its aura; one
 not kept is typed in. His seasons, aging and warping stay at home.
@@ -16,7 +16,7 @@ from ..markup import escape
 from ..models import Character, Saga
 from ..rules import realms, sites
 
-TITLE = "Where He Is"
+TITLE = "Current Location"
 HELP_ID = "whereabouts"
 HOME, PLACE, TYPED = "home", "place", "typed"
 
@@ -32,11 +32,11 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
     return [
         DialogField(
             "where",
-            "He is",
+            "Location",
             "select",
             where,
             options=[
-                ("At home (his covenant's aura)", HOME),
+                ("At home (the covenant's aura)", HOME),
                 *([("At a place of the saga", PLACE)] if places else []),
                 ("Somewhere else (type its aura)", TYPED),
             ],
@@ -76,9 +76,24 @@ def apply(saga: Saga, character: Character, values: dict[str, Any]) -> list[str]
     if where == HOME:
         return notes(f"{escape(character.name)} is at home: {realm} aura {aura}.")
     return notes(
-        f"{escape(character.name)} is away: his casting counts a {realm} aura of "
+        f"{escape(character.name)} is away: casting there counts a {realm} aura of "
         f"{aura} (DE pp. 410-411)."
     )
+
+
+def where_line(saga: Saga, character: Character) -> str:
+    """Where the character is now and the aura his casting counts there
+    (markup), as the top of his Hermetic Magic shows it."""
+    aura, realm = realms.present_aura(saga, character)
+    if character.away_place_id:
+        place = sites.place(saga, character.away_place_id)
+        where = f"Away, at {escape(place.name)}" if place else "Away"
+    elif character.away_aura is not None:
+        where = "Away from home"
+    else:
+        covenant = saga.covenant(character.covenant_id)
+        where = f"At home, at {escape(covenant.name)}" if covenant else "At home"
+    return f"{where}: a {realm} aura of {aura}."
 
 
 def where_form(saga: Saga, character: Character | None) -> Command:

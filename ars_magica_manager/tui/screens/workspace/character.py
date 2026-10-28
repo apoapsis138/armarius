@@ -1786,7 +1786,7 @@ class CharacterActions(WorkspaceBase):
         self._byzantine_step(tmre_dream_forms.dream_form, "section-known-spells")
 
     def action_whereabouts(self) -> None:
-        """More's Where He Is on Casting Scores: the aura he is in now."""
+        """More's Current Location on Casting Scores: the aura he is in now."""
         character = self.selected_character
         if character is None:
             return

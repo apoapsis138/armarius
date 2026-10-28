@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.30.0 — 2026-10-28
+
+### Illuminatio
+
+- Gain or Lose in Play has its own "During the Saga" strip under the
+  Virtues and Flaws, above Powers, so the two columns' headings match.
+  Each change it saves is still kept in the Diary.
+- Hermetic Magic opens with a Current Location section: where the
+  character is and the aura their casting counts.
+- Craft by Magic, Certamen, Cast in a Lacuna and the Mystery buttons
+  moved from the Known Spells heading to a new "Magic Outside the Lab"
+  section under Raw Vis, and each opens in its own window.
+
 ## 3.29.2 — 2026-10-28
 
 ### Concilium

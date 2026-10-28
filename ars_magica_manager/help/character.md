@@ -1047,8 +1047,9 @@ his Diary.
 <!-- help: dream-working -->
 
 A magus with Dream Magic (The Mysteries Revised Edition pp. 102-107)
-sends his spirit into a dream; his body lies in a trance. More's Dream
-Working, on his record or Known Spells, rolls one of five things and
+sends his spirit into a dream; his body lies in a trance. Dream
+Working (More on his record or Known Spells; on the desktop, in
+Magic Outside the Lab under Raw Vis) rolls one of five things and
 writes it in his Diary:
 
 - **A spell in the dream.** Every spell is Imaginem there: he casts with
@@ -1090,7 +1091,8 @@ deity, cast via the altar. A beast created or altered by magic is never
 acceptable. The deity must cooperate: forcing the spirit with Hermetic
 Synthemata spoils the altar (Errata p. 51).
 
-More's Hermetic Sacrifice, on his record or Known Spells, takes one of
+Hermetic Sacrifice (More on his record or Known Spells; on the desktop,
+in Magic Outside the Lab under Raw Vis) takes one of
 his known Rituals (or a level typed) and shows the vis it still needs: a
 pawn a magnitude, halved with Mercurian Magic and a third more with
 Waster of Vis, less the sacrifice, never below 0. **Pay the vis still
@@ -2117,7 +2119,7 @@ On a magus with a Mystery of spirit magic or theurgy, More (`m`) offers
 [Spirits and Names](help:spirits-and-names) from his record or Known Spells.
 <!-- /tui -->
 <!-- gui -->
-**Spirits and Names**, beside the Known Spells' buttons, works out the
+**Spirits and Names**, in **Magic Outside the Lab**, under Raw Vis on the Hermetic Magic chapter, works out the
 figures of a Mystery of spirit magic or theurgy.
 <!-- /gui -->
 
@@ -2826,8 +2828,15 @@ place in the list.
 one names, such as Puissant Magic Theory to Puissant Finesse; it keeps its
 place in the list.
 <!-- /gui -->
+<!-- tui -->
 **Gain or Lose in Play** (in More) records a Virtue or Flaw that comes or
 goes during the saga, with how, in the Diary ([help](help:vf-change)).
+<!-- /tui -->
+<!-- gui -->
+**Gain or Lose in Play**, on the During the Saga strip under the Virtues
+and Flaws, records a Virtue or Flaw that comes or goes during the saga, with
+how, in the Diary ([help](help:vf-change)).
+<!-- /gui -->
 The choices are the ones Add offers, so a second Puissant Magic Theory is
 still refused, and a Great Characteristic can only move to a
 Characteristic at +3. Changing a Great or Poor Characteristic moves both
@@ -2938,6 +2947,14 @@ magus's Talisman, how far it is opened and its attunements.
 <!-- /tui -->
 <!-- gui -->
 their research. Only a magus has this chapter.
+
+**Current Location**, at the top of the chapter, says where the magus is now
+and the aura his casting counts there; its button sets it
+([Current Location](help:whereabouts)). **Magic Outside the Lab**, under
+Raw Vis, holds the rest of what he can do with his magic: Craft by
+Magic, Certamen, and Cast in a Lacuna, Spirits and Names, Dream
+Working, Hermetic Sacrifice and Open a Tunnel when he can use them.
+Each of these buttons opens its form in a window of its own.
 <!-- /gui -->
 
 **You type:** the XP in each Art, the raw vis the magus holds, and the
@@ -2947,7 +2964,8 @@ spells they know and their Mastery.
 every Technique and Form, Magic Resistance, Penetration and the Certamen
 totals (on the desktop, under the Casting Scores).
 
-**Certamen** (More on Known Spells; see [Certamen](help:certamen-duel))
+**Certamen** (More on Known Spells; on the desktop, in Magic Outside
+the Lab; see [Certamen](help:certamen-duel))
 plays a duel with another magus of the saga.
 
 The casting notes end with **craft magic**: Rego craft (shaping raw
@@ -3271,8 +3289,8 @@ Total and Hierarchy x 5 to its Penetration against a demon (p. 124).
 More (`m`) here offers [Craft by Magic](help:craft-magic).
 <!-- /tui -->
 <!-- gui -->
-**Craft by Magic**, beside Known Spells' buttons, works out a craft spell's
-Finesse roll.
+**Craft by Magic**, in **Magic Outside the Lab**, under Raw Vis on the Hermetic Magic chapter, works out a craft
+spell's Finesse roll ([Craft by Magic](help:craft-magic)).
 <!-- /gui -->
 
 <!-- tui -->
@@ -3280,19 +3298,21 @@ With Houses of Hermes: Societates in play, More (`m`) here also offers
 [Cast in a Lacuna](help:cast-in-lacuna).
 <!-- /tui -->
 <!-- gui -->
-**Cast in a Lacuna**, beside Known Spells' buttons, works out a spell cast
-in a city.
+**Cast in a Lacuna**, in **Magic Outside the Lab**, under Raw Vis on the Hermetic Magic chapter (with
+Houses of Hermes: Societates in play), works out a spell cast in a city
+([Cast in a Lacuna](help:cast-in-lacuna)).
 <!-- /gui -->
 
 With the saga option Learning cantations in play, More (`m`) here (on the desktop, a button beside Known Spells) offers [Learn a Cantation](help:learn-cantation).
 
-## Where He Is
+## Current Location
 <!-- help: whereabouts -->
 
 A character's Casting Scores, Penetration, and his tradition's and his
 Mysteries' totals count the aura where he is. At home that is his
-covenant's. **Where He Is** (More on Casting Scores; on the desktop beside
-Known Spells) sets where he is now, when away: a place of the saga, whose
+covenant's. **Current Location** (More on Casting Scores; on the desktop, the
+button at the top of the Hermetic Magic chapter, under the line saying
+where he is) sets where he is now, when away: a place of the saga, whose
 aura (and its kind) is used, or somewhere else, its aura and realm typed.
 A foreign realm's aura then counts as the realms' interactions say
 (DE pp. 410-411): a Magic magus's casting is lowered in a Divine or
@@ -3359,7 +3379,7 @@ without the details; a botch makes something that hinders the caster.
 ## Open a Tunnel
 <!-- help: open-tunnel -->
 
-More's Open a Tunnel, on a magus's Known Spells once he knows a tunnel spell, works out a Wizard's War tunnel (Hermetic Projects pp. 78-81; DE pp. 219, 372). Choose the tunnel and the level he casts it at, the Arcane Connection (one of his covenant's laboratories', or one held otherwise) and how long it lasts, the sympathetic connections he holds (signature, name, horoscopes, a symbolic representation: no more than +2 each), and the target: a magus of the saga (his own Magic Resistance against each Form), or a Parma Magica typed, and any Aegis he shelters in.
+Open a Tunnel (More on a magus's Known Spells; on the desktop, in Magic Outside the Lab under Raw Vis), offered once he knows a tunnel spell, works out a Wizard's War tunnel (Hermetic Projects pp. 78-81; DE pp. 219, 372). Choose the tunnel and the level he casts it at, the Arcane Connection (one of his covenant's laboratories', or one held otherwise) and how long it lasts, the sympathetic connections he holds (signature, name, horoscopes, a symbolic representation: no more than +2 each), and the target: a magus of the saga (his own Magic Resistance against each Form), or a Parma Magica typed, and any Aegis he shelters in.
 
 The inspector gives the Penetration multiplier (1 + the connection + the sympathies, DE p. 219), the tunnel's Penetration against his Vim, then each spell he knows that fits through: Touch range or more, and no higher than the tunnel allows (Opening the Intangible Tunnel and The Minute of Reckoning their own level, The Cursèd Day a magnitude less, Wizard's Siege two less, The Evil Eye and The Master's Message a magnitude more). The same multiplier applies to each, since he holds an Arcane Connection to the target. Inside an Aegis every spell must also Penetrate it, unless its caster holds the Aegis's token (p. 79). Break the Siege suppresses a tunnel of less than its level + 2 magnitudes (errata p. 81). Cast rolls the tunnel once; nothing is kept.
 
@@ -3567,8 +3587,16 @@ Societates p. 53). The roll is kept in the Diary.
 ## Gain or Lose in Play
 <!-- help: vf-change -->
 
+<!-- tui -->
 More on a character's Virtues or Flaws: a Virtue or Flaw that comes or
 goes during the saga, kept in the Diary with what happened.
+<!-- /tui -->
+<!-- gui -->
+The button on the During the Saga strip under a character's Virtues and
+Flaws, above Powers: a Virtue or Flaw that comes or goes during the saga.
+<!-- /gui -->
+Saving adds a Diary entry for the season: what changed, how it came
+about, the story you gave it and the rules it follows.
 
 - **Gain a Flaw**, by mishap (an injury, an amputation, a disease: a lost
   hand is always Missing Hand), by their own actions (a feud, a debt, an

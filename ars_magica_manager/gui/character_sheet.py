@@ -89,6 +89,7 @@ from ..forms import tradition as tradition_forms
 from ..forms import trait as trait_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
+from ..forms import whereabouts as whereabouts_forms
 from ..forms.secrets import NONE_YET, secrets_form
 from ..markup import escape
 from ..models import (
@@ -1185,8 +1186,11 @@ class CharacterSheet(QWidget):
     def _virtues_flaws(self) -> QWidget:
         """The Virtues beside the Flaws, as cards, each side with its Add,
         Edit and Delete (Edit changes only what it names: its Ability, Art or
-        Characteristic)."""
+        Characteristic); under both, the page's own buttons (Gain or Lose in
+        Play) on a strip across the page, then the powers."""
         p, c = self.p, self.character
+        placed = self.placer.buttons("Virtues & Flaws") if self.placer else []
+        strip = [section("During the Saga", p, buttons=placed)] if placed else []
         columns = []
         for side, tone in (("Virtue", "text-success"), ("Flaw", "text-error")):
             chooser = Chooser()
@@ -1205,21 +1209,14 @@ class CharacterSheet(QWidget):
                     f"{side}s  ·  {points:g} points",
                     p,
                     *cards,
-                    buttons=[
-                        *verb_buttons(ops, chooser, self.run, p),
-                        # The page's own buttons (Gain or Lose in Play),
-                        # once, beside the Virtues'.
-                        *(
-                            self.placer.buttons("Virtues & Flaws")
-                            if self.placer and side == "Virtue"
-                            else []
-                        ),
-                    ],
+                    buttons=verb_buttons(ops, chooser, self.run, p),
                 )
             )
             stack.addStretch(1)
             columns.append(column)
-        return scrolling_page(p, side_by_side(*columns, spacing=18), self._powers())
+        return scrolling_page(
+            p, side_by_side(*columns, spacing=18), *strip, self._powers()
+        )
 
     def _powers(self) -> QWidget:
         """The powers the character's Virtues grant, with their Initiative,
@@ -1283,7 +1280,27 @@ class CharacterSheet(QWidget):
     def _hermetic(self) -> QWidget:
         p, saga, c = self.p, self.saga, self.character
         spells = Chooser()
+        moving = (
+            self.placer.buttons("Current Location", window=True) if self.placer else []
+        )
+        others = (
+            self.placer.buttons("Magic Outside the Lab", window=True)
+            if self.placer
+            else []
+        )
         parts: list[QWidget] = [
+            *(
+                [
+                    section(
+                        "Current Location",
+                        p,
+                        TextBlock(whereabouts_forms.where_line(saga, c), p),
+                        buttons=moving,
+                    )
+                ]
+                if moving
+                else []
+            ),
             section(
                 "Magical Arts",
                 p,
@@ -1322,6 +1339,7 @@ class CharacterSheet(QWidget):
                 ],
             ),
             self._raw_vis(),
+            *([section("Magic Outside the Lab", p, buttons=others)] if others else []),
         ]
         return scrolling_page(p, *parts)
 

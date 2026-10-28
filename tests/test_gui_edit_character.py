@@ -11,7 +11,7 @@ pytest.importorskip("PySide6")
 
 from gui_steps import answering, section_buttons
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import QApplication, QLabel
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import catalog, storage
@@ -22,6 +22,7 @@ from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import VirtueFlawInstance
+from ars_magica_manager.rules import vf_change as vc
 
 
 @pytest.fixture(scope="module")
@@ -148,14 +149,16 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
     assert _saved(saga_id).arts["vim"].xp == 21
     page = _page(window)
     spells = section_buttons(page, "Known Spells")
-    assert set(spells) == {
-        "Add",
-        "Edit",
-        "Delete",
-        "Craft by Magic",
-        "Cast in a Lacuna",
-        "Where He Is",
-    }
+    assert set(spells) == {"Add", "Edit", "Delete"}
+    assert set(section_buttons(page, "Current Location")) == {"Current Location"}
+    others = section_buttons(page, "Magic Outside the Lab")
+    assert set(others) == {"Craft by Magic", "Cast in a Lacuna"}
+    # Their forms open as windows over the page, not in place.
+    asked = answering(window, None)
+    others["Craft by Magic"].click()
+    assert len(asked) == 1 and not getattr(asked[0], "inline", True)
+    page = _page(window)
+    spells = section_buttons(page, "Known Spells")
     if _saved(saga_id).spells_known:
         page.spell_view.selectRow(0)
         source = page.spell_view.model().index(0, 0)
@@ -178,3 +181,32 @@ def test_adding_a_research_goal_and_an_item_of_personal_gear(app):
     section_buttons(page, "Personal Gear")["Add"].click()
     assert asked[1].windowTitle() == "Add a Item"
     assert _saved(saga_id).inventory[-1].name == "Lantern"
+
+
+def test_gain_or_lose_in_play_sits_across_both_sides_and_keeps_the_diary(app):
+    window, saga_id = _window()
+    page = _page(window)
+    page.open_chapter("Virtues & Flaws")
+    strip = section_buttons(page, "During the Saga")
+    assert list(strip) == ["Gain or Lose in Play"]
+    virtues = next(t for t in _titles(page) if t.startswith("Virtues  ·"))
+    flaws = next(t for t in _titles(page) if t.startswith("Flaws  ·"))
+    assert set(section_buttons(page, virtues)) == set(section_buttons(page, flaws))
+    answering(
+        window,
+        {
+            "change": vc.GAIN_FLAW,
+            "flaw_cause": vc.MISHAP,
+            "flaw": VirtueFlawInstance("vf_missing_hand"),
+            "story": "lost his hand at the ford",
+        },
+    )
+    strip["Gain or Lose in Play"].click()
+    saved = _saved(saga_id)
+    assert saved.virtues_flaws[-1].vf_id == "vf_missing_hand"
+    assert saved.diary[-1].name == "Gain a Flaw: Missing Hand"
+    assert "lost his hand at the ford" in saved.diary[-1].details
+
+
+def _titles(page) -> list[str]:
+    return [label.text() for label in page.findChildren(QLabel)]

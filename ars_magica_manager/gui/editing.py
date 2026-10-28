@@ -253,12 +253,26 @@ class InPlace:
         self.hidden = []
 
 
+#: The property that marks a button whose steps open as windows.
+_IN_A_WINDOW = "opens-in-a-window"
+
+
+def open_in_a_window(button: QWidget) -> QWidget:
+    """Mark `button` so its steps open as windows over the page, not in
+    place (place_for); returns it."""
+    button.setProperty(_IN_A_WINDOW, True)
+    return button
+
+
 def place_for(button: QWidget | None, page: QWidget) -> InPlace | None:
     """Where the steps of `button` (None: a menu's) open on `page`: in the
     section the button is in, else under the part of the chapter or page
     holding it, else at the top of the page. None if the page has no
-    layout to open them in. A step opened in a scrolling chapter scrolls
+    layout to open them in, or the button's steps open as windows
+    (open_in_a_window). A step opened in a scrolling chapter scrolls
     with it, so a form taller than the window can still be read."""
+    if button is not None and button.property(_IN_A_WINDOW):
+        return None
     widget = button
     while widget is not None and widget is not page:
         if isinstance(widget, Section):

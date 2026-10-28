@@ -586,11 +586,12 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
     "discipline_grog": ((NodeKind.CHARACTER, "Personality Traits"),),
     "grog_pension": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "craft_by_magic": ((NodeKind.CHARACTER, "Known Spells"),),
+    "craft_by_magic": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     "resolve_twilight": ((NodeKind.CHARACTER, "Aging"),),
     "disguise_roll": ((NodeKind.CHARACTER, "Covers"),),
-    "whereabouts": ((NodeKind.CHARACTER, "Known Spells"),),
+    # At the top of Hermetic Magic, under where the character is now.
+    "whereabouts": ((NodeKind.CHARACTER, "Current Location"),),
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
@@ -636,9 +637,9 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "ars_fabulosa": ((NodeKind.CHARACTER, "Abilities"),),
     "faerie_bargain": ((NodeKind.CHARACTER, "Abilities"),),
     "faerie_offer": ((NodeKind.CHARACTER, "Abilities"),),
-    # The lacuna and the pilgrim (HoH:S, The Church): beside Known Spells'
-    # buttons, and This Season's.
-    "cast_in_lacuna": ((NodeKind.CHARACTER, "Known Spells"),),
+    # The lacuna and the pilgrim (HoH:S, The Church): in Magic Outside
+    # the Lab, and beside This Season's buttons.
+    "cast_in_lacuna": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     "pilgrimage": ((NodeKind.CHARACTER, "This Season"),),
     # Devotion and the saints (The Church, RoP: The Divine): beside the
     # Personality Traits' buttons, where Pious is.
@@ -660,12 +661,12 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
     # House Verditius's Hubris beside the Personality Traits' buttons.
     "verditius_hubris": ((NodeKind.CHARACTER, "Personality Traits"),),
-    # Hermetic spirit magic and theurgy beside Known Spells' buttons.
-    "spirits_and_names": ((NodeKind.CHARACTER, "Known Spells"),),
-    # Dream magic and Hermetic sacrifice beside Known Spells' buttons.
-    "dream_working": ((NodeKind.CHARACTER, "Known Spells"),),
-    "hermetic_sacrifice": ((NodeKind.CHARACTER, "Known Spells"),),
-    "certamen_duel": ((NodeKind.CHARACTER, "Known Spells"),),
+    # Hermetic spirit magic and theurgy, dream magic, Hermetic sacrifice
+    # and certamen in Magic Outside the Lab, under Raw Vis.
+    "spirits_and_names": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
+    "dream_working": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
+    "hermetic_sacrifice": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
+    "certamen_duel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     # Divination and Hermetic astrology beside the Abilities' buttons.
     "tmre_divination": ((NodeKind.CHARACTER, "Abilities"),),
     "tmre_astrology": ((NodeKind.CHARACTER, "Abilities"),),
@@ -686,8 +687,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "petition_church": ((NodeKind.CHARACTER, "Personality Traits"),),
     "canon_case": ((NodeKind.CHARACTER, "Personality Traits"),),
     "holy_orders": ((NodeKind.CHARACTER, "Personality Traits"),),
-    # Wizard's War's tunnel (Hermetic Projects), beside Known Spells.
-    "open_tunnel": ((NodeKind.CHARACTER, "Known Spells"),),
+    # Wizard's War's tunnel (Hermetic Projects), in Magic Outside the Lab.
+    "open_tunnel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
 }
 
 #: The saga page's Saga Management: each entry with what it does.

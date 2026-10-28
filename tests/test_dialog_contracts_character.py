@@ -1454,11 +1454,11 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"His rival's vis, attacking": "x"},
     ),
     "where he is": Contract(
-        prefill={"He is": "home"},
-        edits={"He is": "typed", "Its aura": "4", "Of the realm": "Divine"},
+        prefill={"Location": "home"},
+        edits={"Location": "typed", "Its aura": "4", "Of the realm": "Divine"},
         saved=lambda s: (character(s).away_aura, character(s).away_realm),
         expected=(4, "Divine"),
-        invalid=[{"He is": "typed", "Its aura": "x"}],
+        invalid=[{"Location": "typed", "Its aura": "x"}],
     ),
     "disguise roll": Contract(
         prefill={"Roll": "looks", "Convincing someone of it": True},

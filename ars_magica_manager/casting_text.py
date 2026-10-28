@@ -103,7 +103,7 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
     lines = [
         *rows,
         *(
-            [f"[$label]Away from home:[/] a {realm} aura of {aura} (Where He Is)."]
+            [f"[$label]Away from home:[/] a {realm} aura of {aura} (Current Location)."]
             if away(magus)
             else []
         ),

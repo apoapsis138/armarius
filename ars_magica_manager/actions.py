@@ -469,7 +469,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # A certamen duel with another magus (DE pp. 231-233).
     MenuItem("z", "certamen_duel", "Certamen"),
     # Where a character is now: the aura his casting counts.
-    MenuItem("h", "whereabouts", "Where He Is"),
+    MenuItem("h", "whereabouts", "Current Location"),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     MenuItem("n", "tmre_divination", "Divination"),
     MenuItem("s", "tmre_astrology", "Astrology"),

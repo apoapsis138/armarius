@@ -294,7 +294,7 @@ def test_only_a_mystery_holder_finds_it_on_known_spells():
     saga = _saga(magus)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert "Spirits and Names" in [
-        i.label for i in menu_forms.placed(page, "Known Spells")
+        i.label for i in menu_forms.placed(page, "Magic Outside the Lab")
     ]
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="p")
     assert not actions.available("spirits_and_names", plain)

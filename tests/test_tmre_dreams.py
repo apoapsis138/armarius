@@ -363,7 +363,7 @@ def test_more_offers_the_dream_forms_only_to_their_initiates():
     assert available("dream_working", spells)
     assert available("hermetic_sacrifice", spells)
     assert {"dream_working", "hermetic_sacrifice"} <= {
-        i.action for i in menu_forms.placed(page, "Known Spells")
+        i.action for i in menu_forms.placed(page, "Magic Outside the Lab")
     }
     magus.virtues_flaws = []
     assert not available("dream_working", spells)
