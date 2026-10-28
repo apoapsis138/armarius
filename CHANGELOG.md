@@ -109,6 +109,43 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.36.0 — 2026-10-28
+
+### Pagina
+
+- A covenant's charter has its Official Seal: whether a Quaesitor
+  notarized it, who and when. The Charter tab says what the law makes of
+  it: notarized, breaking it can be charged as a Low Crime; otherwise it
+  is the covenant's own affair.
+- Start a charter from a template: the Charter of Arae Flaviae from
+  Covenants, given in full under the charter's sections, with the
+  covenant's and its Tribunal's names filled in. Used unaltered, it
+  counts as ratified at once. Save any charter as a template of your
+  own, for any Tribunal or one Tribunal's customs, and forget one you no
+  longer want.
+- Each seal has a standing: full, associate or probationary member,
+  Protected Guest, or expelled (struck through, and kept on the
+  charter). A charter sets how many seasons its probation lasts, and
+  says when one has run.
+- Censure a broken clause: privileges withheld (with a warning when it
+  is the magus's laboratory or his food and shelter, which may break the
+  Oath of Hermes), his standing lowered, or expulsion. An expelled magus
+  can be taken off the covenant's lists at once or later with End
+  Membership, and Advance Season asks again each season while he is
+  still there.
+- The amended clause's note now says that several Tribunals, not all,
+  make changing a member's obligation against his will a High Crime.
+- A new how-to: How to draw up and keep a charter.
+
+### Concilium
+
+- Tribunals' own charter customs: in Provence a sworn charter is a
+  legal obligation, breakable as a Low Crime even before it is
+  notarized; in Thebes the Conciliatory Board reviews a new covenant's
+  charter, ticked on Edit Charter.
+- Charge at Tribunal on a broken clause of a binding charter puts a
+  charge of a Low Crime on the covenant's Tribunal's docket.
+
 ## 3.35.0 — 2026-10-28
 
 ### Pagina

@@ -368,40 +368,96 @@ A sketch covenant has this tab too, after its Overview, for the clauses
 that matter in play. Below the charter come the town charter of a
 Chartered Town Boon and the towns the covenant charters as a Charter Lord.
 
-**You type:** the charter's name, preamble and when it was sworn, whether
-a Quaesitor ratified it, who has sealed it and when, and each clause.
+**You type:** the charter's name, preamble and when it was sworn, its
+Official Seal (whether a Quaesitor notarized it, who and when), its
+probation, who has sealed it, when and in what standing, each clause,
+and each censure.
 
 **The app works out:** how many clauses are in force and how many broken,
-the members still to seal it, and the grouping of the clauses by the
-charter's sections.
+the members still to seal it, the grouping of the clauses by the
+charter's sections, whether a breach can be charged as a Low Crime (from
+the Official Seal and the Tribunal's customs), whether a charter drawn
+from the Charter of Arae Flaviae still stands unaltered, when a
+probation ends, and which expelled magi are still of the covenant.
+
+See [How to draw up and keep a charter](help:guide-charter).
 
 ### The charter
 <!-- help: section-cov-charter -->
 
-The charter's name, when it was sworn, whether a Quaesitor ratified it,
-the members' seals and its preamble (the oath, or what the charter is
-for).
+The charter's name, when it was sworn, its Official Seal, the members'
+seals, its preamble (the oath, or what the charter is for), and what the
+law makes of it.
 <!-- tui -->
-`e` opens **Edit Charter**. More (`m`) here opens **Seal the Charter**:
-a tick, season and year for each of the covenant's magi. The **Sealed
-by** line lists those who have sealed it and when; the covenant's other
-magi are listed as not yet sworn.
+`e` opens **Edit Charter**. More (`m`) here offers **Seal the Charter**
+(a tick, season, year and standing for each of the covenant's magi),
+**Use a Template**, **Save as Template**, **Forget a Template** (while
+the saga keeps one) and **End Membership** (while a magus expelled under
+it is still of the covenant). The **Sealed by** line lists those who
+have sealed it, when, and any standing other than full member; the
+covenant's other magi are listed as not yet sworn, and the expelled
+struck through.
 <!-- /tui -->
 <!-- gui -->
-**Edit Charter** changes its name, preamble, when it was sworn and
-whether it was ratified. **Seal the Charter** sets which of the
-covenant's magi have sealed it and when: each seal is pressed in red wax
-with the magus's House symbol, his name and year beneath, and a magus
-who hasn't sworn yet shows as an empty dashed ring.
+**Edit Charter** changes its name, preamble, when it was sworn, its
+probation and its Official Seal. **Seal the Charter** sets which of the
+covenant's magi have sealed it, when and in what standing: each seal is
+pressed in red wax with the magus's House symbol, his name and year
+beneath (or his standing, when it isn't full member), an expelled
+magus's seal is struck through, and a magus who hasn't sworn yet shows
+as an empty dashed ring. **Use a Template**, **Save as Template**,
+**Forget a Template** and **End Membership** are its other buttons.
 <!-- /gui -->
 
-The charter lists its members, whose seals or signatures are affixed to
-show they agree to it (Covenants p. 33). A charter a Quaesitor ratified
-can become part of the Tribunal's Peripheral Code, and breaking it can
-then be charged as a Low Crime (Covenants pp. 32, 36); where the
-Tribunal asks for it, ratification is obligatory. The Charter of Arae
-Flaviae, if adopted unaltered, is ratified at once (Covenants p. 33; its
-text is in the Appendix, pp. 125-128).
+**Membership.** The charter lists its members, whose seals or signatures
+are affixed to show they agree to it. There may be full and associate
+members, and a period of servitude before or after admittance without
+full privileges (Covenants p. 33); the Charter of Arae Flaviae has
+probationary members for seven seasons, and Protected Guests (pp.
+126-128). A seal's standing is one of full, associate or probationary
+member, Protected Guest, or expelled. A probationary seal ends when the
+charter's **Probation** says (any number of seasons, or none), or when
+you set it; once it has run, the charter says so, and Seal the Charter
+makes him a full member or extends it. A new magus also lowers
+Prevailing Loyalty: the app counts every magus of the covenant in Base
+Loyalty, sealed or not, since the covenfolk feel his Gift whether or not
+he has sworn (Covenants pp. 36-37).
+
+**The Official Seal.** A charter a Quaesitor notarized is enforceable
+under the Tribunal's Peripheral Code, and breaking it can be charged as
+a Low Crime (Covenants pp. 32, 36). No Quaesitor can dictate what it
+says unless it breaks the Code. The Charter of Arae Flaviae, used
+unaltered, is ratified at once (p. 33), so a charter drawn from it shows
+as notarized until a clause is amended or broken, or its preamble or
+clauses change. A Tribunal's customs may say more:
+- **Provence:** a charter once accepted and sworn is a legal obligation,
+  and breaking it can be prosecuted as a Low Crime (Through the Aegis p.
+  54). A Quaesitor must still notarize it, though some covenants put that
+  off, and founding needs no leave of the Tribunal (Faith & Flame p. 21).
+- **Thebes:** a new covenant declares its purpose, has a willing patron
+  and draws up a suitable charter; the Conciliatory Board reviews it,
+  then the Tribunal votes on a decree of founding, usually a formality
+  (The Sundered Eagle p. 31). Edit Charter adds **Reviewed by the
+  Conciliatory Board**.
+- **The Rhine** formed one covenant's charter itself and votes on
+  whether a group needs its permission to form (Guardians of the Forests
+  pp. 18, 66, 142); **Normandy** asks permission to found near the
+  Tribunal's own vis sources (The Lion and the Lily p. 21). Neither sets
+  a rule the app applies.
+
+**Templates.** **Use a Template** draws the charter from one: its
+preamble and clauses replace the charter's, with the covenant's name,
+its Tribunal's and the year filled in; its seals and Official Seal stay.
+The book's is the Charter of Arae Flaviae (Covenants pp. 125-128), split
+under the charter's sections. **Save as Template** keeps this charter
+with the saga to start others from, for any Tribunal or one Tribunal's
+customs (a covenant of that Tribunal sees it first); the covenant's and
+its Tribunal's names become blanks again. **Forget a Template** drops one
+the saga keeps; charters drawn from it keep their clauses.
+
+**Governance.** How the council meets and votes, and how the charter may
+be altered, is the covenant's own (Covenants pp. 32-35): write it as
+clauses under Method of Governance.
 
 ### Clauses
 <!-- help: section-cov-clauses -->
@@ -409,18 +465,22 @@ text is in the Appendix, pp. 125-128).
 The charter's clauses, each with its number or a title, its words, when
 it was agreed and its status: **In force**, **Amended** (with a note of
 what changed and when; the earlier wording isn't kept) or **Broken**
-(struck through and dimmed, with when and how it was broken).
+(struck through and dimmed, with when and how it was broken, and its
+censure).
 <!-- tui -->
 `a` adds a clause, `e` edits the chosen one and `d` deletes it after
 asking. More (`m`) on a clause not yet broken opens **Break a Clause**:
 the season, the year and how it was broken; its inspector shows the
-clause struck through as it will read.
+clause struck through as it will read. On a broken clause, More offers
+**Censure**, and **Charge at Tribunal** where the charter binds under
+the Peripheral Code.
 <!-- /tui -->
 <!-- gui -->
 **Add**, **Edit** and **Delete** act on the chosen clause. **Break a
 Clause**, on a clause not yet broken, asks the season, the year and how
 it was broken; its inspector shows the clause struck through as it will
-read.
+read. On a broken clause, **Censure** and (where the charter binds under
+the Peripheral Code) **Charge at Tribunal**.
 <!-- /gui -->
 A clause broken by mistake is mended with Edit: set its status back.
 
@@ -430,10 +490,34 @@ Rights, Member Obligations or Censure (Covenants pp. 33-35). Once any
 clause has one, the list groups the clauses under small headings in that
 order, with those that name none under **Other**.
 
-Only breaking the charter is censured, by withholding privileges or by
-expulsion (Covenants p. 35). The charter says how it may be altered (p.
-33), but a covenant may not change a member's obligation against his
-will (p. 35).
+**Censure.** Only breaking the charter is censured (Covenants p. 35).
+**Censure** asks whom, and the penalty:
+- **Privileges withheld**, which ones and until when (blank: until he
+  makes amends). A covenant can withhold only what it holds in common,
+  usually the library and shares of vis and money; most Tribunals take a
+  magus's laboratory for his own, and withholding what is his deprives
+  him of his magical power, against the Oath of Hermes, so the form warns
+  you when you tick the laboratory or food, drink and shelter (p. 36).
+- **Standing lowered**: a full member to probation, any other member to
+  Protected Guest, as the Charter of Arae Flaviae's censure does (p.
+  128).
+- **Expelled**: his seal is struck through and stays on the charter.
+  The app then asks whether to take him off the covenant's lists now;
+  choose No to do your own bookkeeping first. While he is still of the
+  covenant the charter says so, End Membership removes him, and each
+  time a season is played Advance Season asks again.
+
+**Charge at Tribunal.** On a broken clause of a charter that binds (see
+the Official Seal above), this puts a charge of a Low Crime on the
+covenant's Tribunal's [docket](help:section-trib-cases), brought by the
+covenant, with the clause's words and how it was broken as its charge
+and evidence. A member the covenant wronged under its charter has the
+Tribunal as his remedy too.
+
+**Amending.** The charter says how it may be altered (Covenants p. 33).
+Several Tribunals hold that a charter may not change a member's
+obligation without his agreement, and that doing so is a High Crime (p.
+35).
 
 ### Charter lords
 <!-- help: section-cov-charter-lords -->

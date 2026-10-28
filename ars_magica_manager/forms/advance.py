@@ -31,6 +31,7 @@ from ..rules import laboratory_seasons as ls
 from ..rules.activities import ACTIVITIES, Outcome
 from ..seasons import defaults, repeat
 from ..seasons.advance import Advanced
+from . import charter as charter_forms
 from . import experiment_results
 from . import season as season_forms
 
@@ -537,13 +538,19 @@ def _world_turns(
 ):
     """What the season asks of the world (world_turns): the threat clocks
     whose triggers come in it, and when Winter is played the yearly
-    step's review of what the year brought; then the season played out."""
+    step's review of what the year brought; then whether to end the
+    membership of magi expelled under a charter and still of their
+    covenant; then the season played out."""
+
+    def played() -> Any:
+        return charter_forms.season_reminder(
+            saga, lambda: _finish(saga, worked, secured, finish, lost, backup, rng)
+        )
+
     found = world_turns.season_proposals(saga, rng())
     if not found:
-        return _finish(saga, worked, secured, finish, lost, backup, rng)
-    return world_turns.review(
-        saga, found, lambda: _finish(saga, worked, secured, finish, lost, backup, rng)
-    )
+        return played()
+    return world_turns.review(saga, found, played)
 
 
 def _finish(

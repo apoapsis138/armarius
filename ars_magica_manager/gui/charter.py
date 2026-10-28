@@ -12,13 +12,24 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QFont, QMouseEvent, QPainter, QPaintEvent
+from PySide6.QtGui import QColor, QFont, QMouseEvent, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import artwork
 from .. import covenant_charter as cc
 from ..forms import charter as charter_forms
-from ..models import CLAUSE_BROKEN, CharterClause, Covenant, Saga
+from ..markup import escape
+from ..models import (
+    CLAUSE_BROKEN,
+    STANDING_ASSOCIATE,
+    STANDING_EXPELLED,
+    STANDING_FULL,
+    STANDING_GUEST,
+    STANDING_PROBATION,
+    CharterClause,
+    Covenant,
+    Saga,
+)
 from ..sections import CHARTER_SECTION, CLAUSES_SECTION
 from . import pictures
 from .character_sheet import TextBlock, section
@@ -44,9 +55,15 @@ class SealCell(QWidget):
         self.shown, self.p = shown, p
         self.setFixedSize(108, 2 * self.RADIUS + 52)
         name = shown.character.name
+        standing = cc.standing_words(shown.seal) if shown.seal else ""
         self.setToolTip(
-            f"{name}: sealed {shown.when}" if shown.seal else f"{name}: not yet sworn"
+            f"{name}: sealed {shown.when}" + (f", {standing}" if standing else "")
+            if shown.seal
+            else f"{name}: not yet sworn"
         )
+
+    def _under(self) -> str:
+        return _seal_under(self.shown)
 
     def paintEvent(self, _event: QPaintEvent) -> None:
         g = QPainter(self)
@@ -62,6 +79,14 @@ class SealCell(QWidget):
                 else None
             )
             member_seal(g, c, r, mark, character.name[:1].upper())
+            if self.shown.expelled:
+                # An expelled magus's seal stays on the charter, struck.
+                pen = QPen(QColor(self.p["text-error"]), 2.5)
+                g.setPen(pen)
+                g.drawLine(
+                    QPointF(c.x() - r * 1.1, c.y() + r * 0.9),
+                    QPointF(c.x() + r * 1.1, c.y() - r * 0.9),
+                )
         else:
             empty_seal(g, c, r, self.p)
         name = character.name.split(" of ")[0]
@@ -82,11 +107,29 @@ class SealCell(QWidget):
         g.drawText(
             QRectF(0, top + 17, self.width(), 18),
             Qt.AlignmentFlag.AlignHCenter | Qt.AlignmentFlag.AlignTop,
-            (self.shown.when if self.shown.when != "—" else "sealed")
-            if self.shown.seal
-            else "not yet sworn",
+            self._under(),
         )
         g.end()
+
+
+#: A standing as the line under a seal says it.
+SHORT_STANDINGS = {
+    STANDING_ASSOCIATE: "associate",
+    STANDING_PROBATION: "probationary",
+    STANDING_GUEST: "guest",
+    STANDING_EXPELLED: "expelled",
+}
+
+
+def _seal_under(shown: cc.SealShown) -> str:
+    """The line under a seal: when it was sealed, or the standing that
+    matters more (probationary, expelled, associate, guest)."""
+    if shown.seal is None:
+        return "not yet sworn"
+    if shown.seal.standing != STANDING_FULL:
+        # One word: the seal's cell is narrow.
+        return SHORT_STANDINGS.get(shown.seal.standing, shown.seal.standing)
+    return shown.when if shown.when != "—" else "sealed"
 
 
 def seal_row(saga: Saga, covenant: Covenant, p: Palette) -> QWidget:
@@ -117,7 +160,7 @@ class ClauseEntry(QWidget):
     its words (struck through and dimmed when broken), and how it was
     broken or amended."""
 
-    def __init__(self, clause: CharterClause, p: Palette) -> None:
+    def __init__(self, saga: Saga, clause: CharterClause, p: Palette) -> None:
         super().__init__()
         self.p = p
         self.chosen = False
@@ -162,10 +205,11 @@ class ClauseEntry(QWidget):
         words = _quiet(TextBlock(cc.clause_text(clause), p))
         words.setFont(serif(13.5))
         column.addWidget(words)
-        if extra := cc.note_line(clause):
-            note = _quiet(TextBlock(extra, p))
-            note.setFont(serif(12))
-            column.addWidget(note)
+        for extra in (cc.note_line(clause), cc.censure_line(saga, clause)):
+            if extra:
+                note = _quiet(TextBlock(extra, p))
+                note.setFont(serif(12))
+                column.addWidget(note)
         row.addLayout(column, 1)
 
     def set_chosen(self, chosen: bool) -> None:
@@ -208,11 +252,79 @@ def _choose_entries(
     chooser.listeners.append(mark)
 
 
+def charter_buttons(saga: Saga, covenant: Covenant, p: Palette, run: Run) -> list:
+    """The charter's own buttons: Seal the Charter and the templates'
+    Use and Save always; Forget a Template while the saga keeps one, and
+    End Membership while an expelled magus is still of the covenant."""
+    found = [
+        edit_button(
+            "Seal the Charter",
+            p,
+            lambda: run(charter_forms.seal_form(saga, covenant)),
+            "charter",
+        ),
+        edit_button(
+            charter_forms.USE_TEMPLATE,
+            p,
+            lambda: run(charter_forms.use_template(saga, covenant)),
+            "worksheet",
+        ),
+        edit_button(
+            charter_forms.SAVE_TEMPLATE,
+            p,
+            lambda: run(charter_forms.save_template(saga, covenant)),
+            "export",
+        ),
+    ]
+    if saga.charter_templates:
+        found.append(
+            edit_button(
+                charter_forms.FORGET_TEMPLATE,
+                p,
+                lambda: run(charter_forms.forget_template(saga)),
+                "delete",
+            )
+        )
+    if charter_forms.can_end_membership(saga, covenant):
+        found.append(
+            edit_button(
+                charter_forms.END_MEMBERSHIP,
+                p,
+                lambda: run(charter_forms.end_membership_step(saga, covenant)),
+                "close",
+            )
+        )
+    return found
+
+
+def law_note(saga: Saga, covenant: Covenant, p: Palette) -> TextBlock:
+    """What the law makes of the charter, the Tribunal's customs, and
+    what waits on the troupe (an expelled magus still of the covenant, a
+    probation run its term)."""
+    lines = [f"[dim]{escape(cc.law_line(saga, covenant))}[/]"]
+    if note := cc.custom_note(saga, covenant):
+        lines.append(f"[dim]{escape(note)}[/]")
+    for line in cc.probations_ended(saga, covenant):
+        lines.append(
+            f"[$text-warning]{escape(line)}: Seal the Charter to make him a full "
+            "member, or extend it.[/]"
+        )
+    if out := cc.still_resident(saga, covenant):
+        names = ", ".join(escape(c.name) for c in out)
+        lines.append(
+            f"[$text-warning]Expelled but still of the covenant: {names}. "
+            "End Membership removes them.[/]"
+        )
+    block = TextBlock("\n".join(lines), p)
+    block.setFont(serif(12))
+    return block
+
+
 def charter_section(saga: Saga, covenant: Covenant, p: Palette, run: Run) -> QWidget:
-    """The charter: its name, its facts, the members' seals and its
-    preamble, with Edit Charter and Seal the Charter."""
+    """The charter: its name, its facts, the members' seals, its preamble
+    and what the law makes of it, with Edit Charter, Seal the Charter and
+    the templates."""
     charter = cc.charter_of(covenant)
-    edit = charter_forms.charter_form
     widget = section(
         cc.charter_title(charter),
         p,
@@ -225,15 +337,9 @@ def charter_section(saga: Saga, covenant: Covenant, p: Palette, run: Run) -> QWi
             p["dim"],
             serif(12.5, italic=True),
         ),
-        edits={"Edit Charter": lambda: run(edit(covenant))},
-        buttons=[
-            edit_button(
-                "Seal the Charter",
-                p,
-                lambda: run(charter_forms.seal_form(saga, covenant)),
-                "charter",
-            )
-        ],
+        law_note(saga, covenant, p),
+        edits={"Edit Charter": lambda: run(charter_forms.charter_form(saga, covenant))},
+        buttons=charter_buttons(saga, covenant, p, run),
     )
     widget.setObjectName(CHARTER_SECTION)
     return widget
@@ -258,11 +364,11 @@ def clauses_section(
             heading.setContentsMargins(12, 8, 0, 0)
             stack.addWidget(heading)
         for index in found:
-            entry = ClauseEntry(charter.clauses[index], p)
+            entry = ClauseEntry(saga, charter.clauses[index], p)
 
             def show(index: int = index) -> None:
                 title, subtitle = cc.inspector_title(charter, index)
-                inspect(title, subtitle, cc.info(charter, index, wide=False))
+                inspect(title, subtitle, cc.info(saga, covenant, index, wide=False))
 
             entry.clicked = show
             entries.append(entry)
@@ -279,7 +385,19 @@ def clauses_section(
             "threat",
             lambda row: charter_forms.break_clause(saga, covenant, row),
             lambda row: charter_forms.can_break(covenant, row),
-        )
+        ),
+        (
+            charter_forms.CENSURE,
+            "threat",
+            lambda row: charter_forms.censure_clause(saga, covenant, row),
+            lambda row: charter_forms.can_censure(covenant, row),
+        ),
+        (
+            charter_forms.CHARGE,
+            "tribunal",
+            lambda row: charter_forms.charge(saga, covenant, row),
+            lambda row: charter_forms.can_charge(saga, covenant, row),
+        ),
     ]
     widget = section(
         cc.clauses_title(charter),

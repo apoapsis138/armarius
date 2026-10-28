@@ -56,6 +56,7 @@ from ars_magica_manager.forms import worksheet as wf
 
 # Hermetic Projects (a covenant's Great Tower; Wizard's War's tunnels).
 from ars_magica_manager.models import (
+    CLAUSE_BROKEN,
     STORY_EVENT,
     Ability,
     AbilityDef,
@@ -547,6 +548,40 @@ async def _open_break_clause(ws) -> None:
     covenant = _with_clause(ws)
     await ws._current_sheet_view().build_all_tabs()
     ws._run_steps(charter_forms.break_clause(ws.saga, covenant, 0))
+
+
+def _with_broken_clause(ws, *, notarized: bool = False):
+    """The covenant's one clause broken by Leandro (and its charter
+    notarized, so a breach can be charged at Tribunal)."""
+    covenant = _with_clause(ws)
+    clause = covenant.charter_of_covenant.clauses[0]
+    clause.status, clause.since_year = CLAUSE_BROKEN, 1220
+    clause.note = "Leandro kept the Vim vis."
+    covenant.charter_of_covenant.ratified = notarized
+    return covenant
+
+
+async def _open_censure_clause(ws) -> None:
+    covenant = _with_broken_clause(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._run_steps(charter_forms.censure_clause(ws.saga, covenant, 0))
+
+
+async def _open_charge_clause(ws) -> None:
+    covenant = _with_broken_clause(ws, notarized=True)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._run_steps(charter_forms.charge(ws.saga, covenant, 0))
+
+
+async def _open_use_template(ws) -> None:
+    await ws._current_sheet_view().build_all_tabs()
+    ws.action_use_charter_template()
+
+
+async def _open_save_template(ws) -> None:
+    _with_clause(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws.action_save_charter_template()
 
 
 def _with_guest(ws):
@@ -1624,6 +1659,10 @@ OPENERS: dict[str, Opener] = {
     "edit clause": Opener("covenant", _open_edit_clause),
     "break clause": Opener("covenant", _open_break_clause),
     "seal charter": Opener("covenant", _open_seal_charter),
+    "censure clause": Opener("covenant", _open_censure_clause),
+    "charge clause": Opener("covenant", _open_charge_clause),
+    "use charter template": Opener("covenant", _open_use_template),
+    "save charter template": Opener("covenant", _open_save_template),
     "pay the fee": Opener("covenant", _open_pay_fee),
     # The Theban treasury's loans of vis.
     "lend vis": Opener(

@@ -204,6 +204,12 @@ NOT_ON_PAGES = frozenset(
         # The desktop draws them as the Charter's and Clauses' own buttons.
         "seal_charter",
         "break_clause",
+        "censure_clause",
+        "charge_clause",
+        "use_charter_template",
+        "save_charter_template",
+        "forget_charter_template",
+        "end_membership",
         # The desktop draws it as the Guests list's own button.
         "pay_fee",
         # The desktop draws the names a page holds as links instead.

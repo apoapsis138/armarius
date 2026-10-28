@@ -15,6 +15,7 @@ from .covenant import (
     BOON_HOOK_DESCRIPTION,
     BOON_HOOK_DETAIL,
     BOON_HOOK_UNKNOWN,
+    CharterTemplate,
     Covenant,
 )
 from .creature import Creature
@@ -148,6 +149,9 @@ class Saga:
     #: {"name", "text"} with {blanks} (ruling_templates.py); None, what
     #: older saves load as, means the app's own.
     ruling_templates: list[dict[str, str]] | None = None
+    #: The charters the troupe saved to start covenants' own from
+    #: (charter_templates.py), beside the book's.
+    charter_templates: list[CharterTemplate] = field(default_factory=list)
     #: Lab work in progress over several seasons.
     lab_projects: list[LabProject] = field(default_factory=list)
     #: User-made catalog entries: house rules and entries from
@@ -257,6 +261,9 @@ class Saga:
         ]
         d["custom_boons_hooks"] = [
             CovenantBoonHookDef.from_dict(e) for e in d.get("custom_boons_hooks", [])
+        ]
+        d["charter_templates"] = [
+            CharterTemplate.from_dict(c) for c in d.get("charter_templates", [])
         ]
         d["custom_goods"] = [GoodDef.from_dict(g) for g in d.get("custom_goods", [])]
         d["good_purities"] = [

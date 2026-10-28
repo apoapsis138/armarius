@@ -407,6 +407,13 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("f", "craft_by_magic", "Craft by Magic"),
     MenuItem("s", "seal_charter", "Seal the Charter"),
     MenuItem("b", "break_clause", "Break a Clause"),
+    MenuItem("c", "censure_clause", "Censure"),
+    MenuItem("g", "charge_clause", "Charge at Tribunal"),
+    # A covenant's charter: its templates and its expelled members.
+    MenuItem("u", "use_charter_template", "Use a Template"),
+    MenuItem("t", "save_charter_template", "Save as Template"),
+    MenuItem("f", "forget_charter_template", "Forget a Template"),
+    MenuItem("x", "end_membership", "End Membership"),
     # A guest's yearly fee for his hospitality, on the host's Guests.
     MenuItem("p", "pay_fee", "Pay the Fee"),
     # The Theban treasury's loans of vis.
@@ -589,6 +596,8 @@ MORE_SECTIONS: dict[str, str] = {
     "siege_actions": SIEGES_SECTION,
     "craft_by_magic": "section-known-spells",
     "seal_charter": CHARTER_SECTION,
+    "use_charter_template": CHARTER_SECTION,
+    "save_charter_template": CHARTER_SECTION,
     # The Theban treasury's loans of vis.
     "lend_vis": TOKENS_SECTION,
     "repay_vis_loan": TOKENS_SECTION,
@@ -1670,6 +1679,43 @@ def _breaks_clause(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _censures_clause(facts: ActionFacts, section: str) -> bool:
+    """Censure: on the Clauses list, for a chosen broken clause."""
+    covenant = facts.selected_covenant
+    return (
+        section == CLAUSES_SECTION
+        and covenant is not None
+        and charter_forms.can_censure(covenant, facts.chosen_row(section))
+    )
+
+
+def _charges_clause(facts: ActionFacts, section: str) -> bool:
+    """Charge at Tribunal: on a chosen broken clause of a charter that binds
+    under the Peripheral Code, not charged yet."""
+    covenant = facts.selected_covenant
+    return (
+        section == CLAUSES_SECTION
+        and covenant is not None
+        and charter_forms.can_charge(facts.saga, covenant, facts.chosen_row(section))
+    )
+
+
+def _forgets_template(facts: ActionFacts, section: str) -> bool:
+    """Forget a Template: on the charter, while the saga keeps one."""
+    return section == CHARTER_SECTION and bool(facts.saga.charter_templates)
+
+
+def _ends_membership(facts: ActionFacts, section: str) -> bool:
+    """End Membership: on the charter, while a magus expelled under it is
+    still of the covenant."""
+    covenant = facts.selected_covenant
+    return (
+        section == CHARTER_SECTION
+        and covenant is not None
+        and charter_forms.can_end_membership(facts.saga, covenant)
+    )
+
+
 def _owes_fee(facts: ActionFacts, section: str) -> bool:
     """Pay the Fee: on the Guests list, for a guest owing this year's."""
     covenant = facts.selected_covenant
@@ -1727,6 +1773,10 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "add_purity": _adds_purity,
     "plan_journey": _plans_journey,
     "break_clause": _breaks_clause,
+    "censure_clause": _censures_clause,
+    "charge_clause": _charges_clause,
+    "forget_charter_template": _forgets_template,
+    "end_membership": _ends_membership,
     "pay_fee": _owes_fee,
     "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
     "invest_labor": _works_for_labor(merchants.earns_labor),

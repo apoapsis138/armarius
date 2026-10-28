@@ -12,6 +12,7 @@ from .models import (
     ATTITUDE_RANGE,
     DETAIL_LEVELS,
     FULL,
+    SEASONS,
     Attitude,
     Character,
     Covenant,
@@ -147,6 +148,19 @@ def when_text(year: int | None, season: str) -> str:
     if year is None:
         return ""
     return f"{season} {year}" if season else str(year)
+
+
+def seasons_after(year: int, season: str, count: int) -> tuple[int, str]:
+    """The year and season `count` seasons after (year, season); an
+    unknown season counts as Spring."""
+    index = SEASONS.index(season) if season in SEASONS else 0
+    year += (index + count) // len(SEASONS)
+    return year, SEASONS[(index + count) % len(SEASONS)]
+
+
+def season_number(year: int, season: str) -> int:
+    """A season as one number, for comparing: four to a year."""
+    return year * len(SEASONS) + (SEASONS.index(season) if season in SEASONS else 0)
 
 
 def favour_is_open(favour: Favour) -> bool:

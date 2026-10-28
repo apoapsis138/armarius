@@ -1107,3 +1107,37 @@ storyguide asks the fee each year.
    **Not a guest anywhere**.
 
 **See also:** [Stay as Guest](help:guest-stay), [Current Location](help:whereabouts)
+
+# How to draw up and keep a charter
+<!-- help: guide-charter -->
+
+Four magi found Dammërstein in the Rhine and swear the Charter of Arae
+Flaviae; years later one of them breaks it.
+
+1. **Start from a template.** On the covenant's Charter tab, choose
+   **Use a Template** (More on the charter) and the Charter of Arae
+   Flaviae: its oath, its 25 clauses under the charter's sections and its
+   seven-season probation are filled in with the covenant's and the
+   Tribunal's names. Used unaltered, it counts as ratified (Covenants p.
+   33).
+2. **Swear it.** **Edit Charter** sets when it was sworn and its Official
+   Seal. **Seal the Charter** ticks each founder, with the season and his
+   standing; a newcomer sealed as a probationary member serves the
+   charter's probation, and the charter tells you when it has run.
+3. **Make it yours.** Amend clauses with Edit, or add your own. Any change
+   ends the automatic ratification, so tick **Notarized by a Quaesitor**
+   once one has seen it. To reuse it for another covenant, **Save as
+   Template**, for any Tribunal or the Rhine's alone.
+4. **Record a breach.** Choose the clause and **Break a Clause**: when,
+   and how. Then **Censure** says what the covenant did: privileges
+   withheld (not his laboratory, unless the charter says so), his
+   standing lowered, or expulsion.
+5. **Expel, and tidy up.** On expulsion the app asks whether to take him
+   off the covenant's lists now. Say No to move his books and vis first;
+   the charter reminds you, and Advance Season asks again each season.
+6. **Take it to Tribunal.** A charter that binds under the Peripheral
+   Code (notarized, or sworn in Provence) can be broken as a Low Crime:
+   **Charge at Tribunal** puts the case on the Tribunal's docket.
+
+**See also:** [The charter](help:section-cov-charter), [Clauses](help:section-cov-clauses)
+

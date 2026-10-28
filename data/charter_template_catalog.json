@@ -1,0 +1,142 @@
+{
+  "attribution": "Charter templates: the Charter of Arae Flaviae from Covenants (Ars Magica Fifth Edition), Appendix pp. 125-128, split under the charter's sections for Armarius. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "entries": [
+    {
+      "id": "arae_flaviae",
+      "name": "The Charter of Arae Flaviae",
+      "tribunal": "",
+      "source": "Covenants pp. 125-128",
+      "charter_name": "The Charter of {covenant}",
+      "preamble": "I pledge my lifelong support and loyalty to the Covenant of {covenant}, and declare that the trials and fortunes of this covenant are now my own. Just as I am pledged to the Oath of Hermes, so do I pledge the covenant to the Order of Hermes and the authority of the Tribunal of {tribunal}. I swear to uphold and protect this covenant regardless of the personal price. Over all the years of my life and throughout my studies and travels, I will neither betray the covenant nor give aid to its enemies. In times of need, I will aid the covenant in whatever way I am able, and I will devote myself to its service if the need is clear. I will abide by the decisions of the ruling council of this covenant, and I will treat these decisions as if they were my own. I will treat my fellows with respect and fairness, and I will not attempt to harm them in any way. Their blood is my blood. Where the covenant stands, there do I stand; how the covenant grows, so do I grow; should the covenant fall, then do I fall. This I so swear, upon the honor of my house and its Founder.",
+      "probation_seasons": 7,
+      "ratified_unaltered": true,
+      "clauses": [
+        {
+          "number": "Kinds of membership",
+          "section": "Membership",
+          "text": "The covenant allows for two types of membership of its council, and recognizes a third status, which it offers to visitors to the covenant."
+        },
+        {
+          "number": "Protected Guests",
+          "section": "Membership",
+          "text": "The status of Protected Guest may be extended to any person by the formal invitation of a single full member of the covenant. Protected Guests are afforded the basic rights detailed by this charter, and are not obligated to the Council of Members, nor are they a member of this council. Protected Guests may partake in meetings of the Council of Members should they desire it, but are required to leave if asked to do so by a member of that council, and are afforded no voice nor vote unless granted such by the council's chairman, the disceptator. The status of Protected Guest may be revoked by the member who granted it, or by a vote of the Council of Members."
+        },
+        {
+          "number": "Probationary members",
+          "section": "Membership",
+          "text": "The status of Probationary Member of the Council may be extended to any magus in good standing of the Order of Hermes, who owes no allegiance nor fealty to any other covenant, and is admitted upon the unanimous approval of the current Council of Members. Provisional members assume the basic and provisional rights detailed by this charter and the duties therein attached. The status of provisional member shall last a period of seven seasons, unless abridged through censure or canceled through expulsion."
+        },
+        {
+          "number": "Full members",
+          "section": "Membership",
+          "text": "The status of Full Member of the Council is extended upon the completion of the duties and obligations of a probationary member, unless testimony is brought against him that proves him unfit to swear the Oath of Covenant in good conscience; in which case all rights of membership will be withdrawn. Should elevation to the role of full member take place, then all rights and duties of probationary membership are shed, to be replaced with the assumption of the basic and full rights detailed by this charter, and the duties therein attached. Full membership persists, unless abridged through censure or canceled through expulsion."
+        },
+        {
+          "number": "Release",
+          "section": "Membership",
+          "text": "Should a magus ever come to desire release from this covenant, he must renounce his Oath of Covenant in the presence of at least two members of the council, and shall thereby be relieved of all duties and rights, and may not call upon such rights furthermore."
+        },
+        {
+          "number": "The Council of Members",
+          "section": "Method of Governance",
+          "text": "The members of this covenant are governed by the Council of Members, which shall consist of all probationary and full members of the covenant. This council shall not declare action except on behalf of the entire membership of the covenant; no action may be demanded of individuals by council agreement. Conversely, the rulings of the council cannot be overturned by an individual."
+        },
+        {
+          "number": "Convening the council",
+          "section": "Method of Governance",
+          "text": "Any member of the covenant shall have the right and duty to convene the Council of Members for consideration of matters justly grave, and all members shall be charged with attendance and diligence in the proceedings. Should it not be possible to convene the full Council of Members, any quorum consisting of more than half of its current members is considered valid; else the discharge of the council's duty must be delayed until such time as the full council may be convened. The Council of Members shall convene four times each year, one day prior to each equinox and solstice, regardless of call from any member, and all members of the covenant should endeavor to make themselves present."
+        },
+        {
+          "number": "Motions and votes",
+          "section": "Method of Governance",
+          "text": "Motions to be decided upon by the Council of Members must be introduced by a member; debated fully and justly, allowing those who wish to speak to do so; and then proposed for the vote. Proposals must be seconded by another member of the covenant, else no vote can take place. All issues shall be passed by a majority vote of the members there present; excepting that the unanimous opinion of the Council of Members is required for issues involving changes to the charter; expulsion of a member; and acceptance of a new probationary member."
+        },
+        {
+          "number": "The disceptator",
+          "section": "Method of Governance",
+          "text": "The Council of Members shall confer the office of disceptator to the representative of the covenant in matters of governance and temporal concern. The title of disceptator is a duty of each and every full member of the covenant; this position is cyclical and mandatory, with the responsibility rotating in sequence of Hermetic seniority amongst the full members of the council. Each disceptator serves for a period of seven years, commencing one year following Tribunal. The duties of the disceptator are: to attend regular meetings of the council; to keep order at meetings; to break tied votes with a discretionary casting vote; to determine the yearly surplus of provision and store; and to act as a spokesman for the Council of Members. The disceptator shall not be empowered to rule on matters on the covenant's behalf, but instead is charged with ensuring that the rulings of the Council of Members are enacted."
+        },
+        {
+          "number": "Held in common",
+          "section": "Covenant Resources",
+          "text": "Resources of this covenant are held in common by the Council of Members, and it is the responsibility of this council to maintain and defend them."
+        },
+        {
+          "number": "Vis",
+          "section": "Covenant Resources",
+          "text": "This covenant lays claim to all the vis originating from undisputed and unclaimed sources discovered by members of the council; save for the first harvest of a new vis source, which belongs to the finder or finders. This covenant also lays claim to any vis gifted to the Council of Members as a whole. In all other situations, undisputed and unclaimed vis belongs to the finder or finders."
+        },
+        {
+          "number": "Books",
+          "section": "Covenant Resources",
+          "text": "This covenant lays claim to all books obtained by members of the council while acting at the behest of the council, and all books scribed by members of the council where payment was received for this scribing from the covenant's resources. This covenant also lays claim to any texts gifted to the Council of Members as a whole."
+        },
+        {
+          "number": "Magical items",
+          "section": "Covenant Resources",
+          "text": "This council lays claim to all magical items obtained by members of the council while acting at the behest of the council; and all magical items made by members of the council where payment was received for this manufacture from the covenant's resources. This covenant also lays claim to any magical items gifted to the Council of Members as a whole."
+        },
+        {
+          "number": "Monies",
+          "section": "Covenant Resources",
+          "text": "This council lays claim to all monies generated using the resources of the covenant. This council also lays claim to all monies obtained by members of the council while acting at the behest of the council. This covenant also lays claim to any monies gifted to the Council of Members as a whole."
+        },
+        {
+          "number": "Buildings and inhabitants",
+          "section": "Covenant Resources",
+          "text": "This council lays claim to the buildings, defenses, chattels, and inhabitants of the covenant. This council also lays claim to any such buildings, defenses, chattels, and inhabitants gifted to the Council of Members as a whole."
+        },
+        {
+          "number": "Surplus",
+          "section": "Covenant Resources",
+          "text": "Surplus resources of the covenant will be determined at the Winter meeting of the Council of Members. Resources necessary for the continued existence of the covenant and the protection of its members' rights are accounted for first; this includes payment for seasons of work performed on behalf of the covenant, and a stipend of vis for the casting of the Aegis of the Hearth. Contributions to all debts owed to the covenant are decided by the disceptator, and set aside. The remaining resources are deemed surplus, and shall be allocated to the settlement of requests from each member of the covenant."
+        },
+        {
+          "number": "Basic rights",
+          "section": "Member Rights",
+          "text": "Each and every member of this covenant and protected guests shall be entitled to the basic rights of the covenant; to whit, full and unrestricted access to the protection and support of the covenant within the boundaries of the covenant by all the rights and benefits accorded by the Code of Hermes, the benefit of a sanctum which shall remain inviolate and the supply of materials thereof, access to the library of the covenant, and victuals appropriate to the status of a magus. These basic rights shall not be abridged except by expulsion from the Council of Members."
+        },
+        {
+          "number": "Full rights",
+          "section": "Member Rights",
+          "text": "In furtherance and additional to the basic rights, a full member of the covenant shall be entitled to the full rights of the covenant; to whit, the right to presence and a vote in the Council of Members, which he shall exercise dutifully with due prudence. Further, full and unrestricted access to the services and skills of the servants and covenfolk. Further, an equal right to all surplus provision and store necessary to conduct his studies, or the travel demanded by those studies; such rights to include (but be not limited to) vis, monies, and diverse magical and mundane resources claimed by the covenant. Where a conflict is evident between members of the council over the allotment of surplus resource, distribution is drawn by ballot; excepting that priority claims that have been advanced and agreed by the disceptator are taken into consideration prior to the ballot. These rights shall not be abridged except by decision of the council under conditions of grave concern."
+        },
+        {
+          "number": "Probationary rights",
+          "section": "Member Rights",
+          "text": "In furtherance and additional to the basic rights of a member of this covenant, a probationary member of the covenant is entitled the probationary rights of the covenant; to whit, a fractional share of those rights and duties offered to a full member of the covenant, such share being equal to half that offered to full members. A probationary member's vote counts only half of that of a full member, and they may only claim half the share of the surplus provision and store of the covenant's resources afforded a full member. The services and skills of the servants and covenfolk may not be halved, but the needs of a full member of the covenant take precedence over the needs of a probationary member. Further, a probationary member of the covenant who remains true to his Oath of Covenant has the right to remain at the covenant for a total of seven seasons following the conferral of this status. Further, a probationary member of the covenant has the right to be considered for full membership of this covenant after serving a total of seven seasons as a probationary member. These rights shall not be abridged except by decision of the council under conditions of grave concern."
+        },
+        {
+          "number": "The Code",
+          "section": "Member Obligations",
+          "text": "Members of this covenant are obligated to obey the Oath of Hermes and the Peripheral Code, as demanded by the Oath of Covenant; failure on this account will not be tolerated by the Council of Members, and the covenant reserves the right to censure those members who are convicted in just Tribunal of an offense against the Order of Hermes."
+        },
+        {
+          "number": "Assigned duties",
+          "section": "Member Obligations",
+          "text": "The responsibility of the members of this covenant towards its lasting success is dependent on service to the covenant. The Council of Members will declare the duties that need to be performed at the regular meetings of the covenant. Such duties include (but are not limited to) the safeguarding and harvesting of the covenant's claimed vis sources, the safeguarding and harvesting of the covenant's income, the wellbeing and discipline of the covenant's employees, the maintenance of the covenant's resources, the increase of the covenant's resources, and the maintenance of good relations with the covenant's allies. Duties that will not entail more than a week of service at low personal risk will be assigned by the council to its members, with no more than one being assigned to each member in each season. Such assigned duties attract no recompense or advantage to the member who discharges them, but cannot be refused without reasonable extenuation."
+        },
+        {
+          "number": "Remunerated service",
+          "section": "Member Obligations",
+          "text": "Duties which will entail a higher investment of time or personal risk will be offered up for service by the covenant. These services will attract a remuneration which shall be commensurate with the time, risk, and potential benefit to the covenant. This remuneration is decided by the disceptator, but maintains a minimum payment which shall be, for a single season of work at low risk with a low gain, two pawns of vis, of the flavor most prevalent in the stores at the time. The disceptator may increase the remuneration to increase the attractiveness of a particular urgent task, for the Council of Members is not empowered to force a member to accept one of these duties unless failure to perform it would be in breach of this covenant, in which case the threat of censure may be employed. All payments will be made in the Spring meeting of the Council. If there is more than one claimant for the service, and each claimant refuses to share the duty, then the disceptator will assign the duty by ballot. If there is insufficient vis to meet the demands of the council, the disceptator may withhold payment for one or more years. Covenant work may be declared such retroactively."
+        },
+        {
+          "number": "Probationary service",
+          "section": "Member Obligations",
+          "text": "Each probationary member of the covenant is obligated to perform no fewer than one of the tasks under remuneration currently outlined by the Council of Members during his period of probation. For this mandatory service, no payment need be offered by the Council of Members."
+        },
+        {
+          "number": "Censure",
+          "section": "Censure",
+          "text": "If a member should contravene the decisions of the council, by vote or by charter, then the member may be censured or expelled by a vote of the Council of Members. Censure requires the passing of a motion at a meeting of the Council of Members. The censure of a full member revokes the rights of that status, returning him to probationary status; whereupon he assumes all the duties and rights of that status. Censure must not prejudice the application of a probationary member to the position of full member of the covenant. The censure of a probationary member shall abridge the rights of the member to remain a probationary member of the covenant, and shall confer upon him instead the status of Protected Guest. The status of a Protected Guest may be withdrawn at any time by a vote of the Council of Members without need for censure."
+        },
+        {
+          "number": "Expulsion",
+          "section": "Censure",
+          "text": "Expulsion is enacted by a unanimous vote of the remaining Council of Members. Expulsion is the only means through which a member of the covenant shall lose his basic rights; and requires that the former member ceases to draw upon those basic rights subsequent to the first full moon after expulsion was enacted. Should a magus be cast out from the Order, it is the duty and obligation of this covenant that he shall also and without delay be expelled from this covenant."
+        }
+      ]
+    }
+  ]
+}

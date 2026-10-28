@@ -133,6 +133,19 @@ class Envoy:
 
 
 @dataclass(frozen=True)
+class CharterCustom:
+    """What a Tribunal's customs make of a covenant's Charter of Covenant
+    beyond Covenants pp. 32-36: whether a charter once sworn binds by the
+    Peripheral Code (then breaking it can be charged as a Low Crime,
+    notarized or not), who reviews a new covenant's charter before it is
+    founded ("" for no one), and what the books say, with their pages."""
+
+    sworn_binds: bool = False
+    reviewed_by: str = ""
+    note: str = ""
+
+
+@dataclass(frozen=True)
 class TribunalPackage:
     """One Tribunal's customs."""
 
@@ -223,6 +236,9 @@ class TribunalPackage:
     #: the treasury's Add offers (Transylvania's levies and promissory
     #: notes, treasury.LEVY and treasury.NOTE).
     treasury_kinds: tuple[str, ...] = ()
+    #: What its customs make of a covenant's charter (None: only what
+    #: Covenants says).
+    charter: CharterCustom | None = None
 
     @property
     def lists(self) -> tuple[PackageList, ...]:
@@ -312,6 +328,12 @@ def lacks_credential(saga: Saga, tribunal: Tribunal, covenant: Covenant) -> str:
     if not package.credential or package.lacks_credential is None:
         return ""
     return package.lacks_credential(saga, tribunal, covenant)
+
+
+def charter_custom(saga: Saga, covenant: Covenant) -> CharterCustom | None:
+    """What the covenant's Tribunal's customs make of its charter."""
+    tribunal = saga.tribunal(covenant.tribunal_id)
+    return of(tribunal).charter if tribunal is not None else None
 
 
 def package_verb(tribunal: Tribunal, action: str) -> PackageVerb | None:

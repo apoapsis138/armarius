@@ -103,6 +103,64 @@ def _season(value: Any, what: str) -> str:
     return season
 
 
+#: What a covenant does to a member who broke its charter (Covenants pp.
+#: 35-36): withhold privileges until he makes amends, lower his standing
+#: (the Charter of Arae Flaviae's censure, p. 128), or expel him.
+CENSURE_WITHHELD = "Privileges withheld"
+CENSURE_LOWERED = "Standing lowered"
+CENSURE_EXPELLED = "Expelled"
+CENSURES: tuple[str, ...] = (CENSURE_WITHHELD, CENSURE_LOWERED, CENSURE_EXPELLED)
+
+#: What a covenant may withhold (Covenants pp. 34-36). The laboratory and
+#: food, drink and shelter are on shaky ground (PERSONAL_PRIVILEGES).
+PRIVILEGES: tuple[str, ...] = (
+    "Library",
+    "Magical items",
+    "Vis share",
+    "Money",
+    "Vote",
+    "Laboratory",
+    "Food, drink and shelter",
+)
+#: Privileges most Tribunals take for a magus's own: denying them may break
+#: the Oath of Hermes (Covenants p. 36).
+PERSONAL_PRIVILEGES: tuple[str, ...] = ("Laboratory", "Food, drink and shelter")
+
+
+@dataclass
+class Censure:
+    """What the covenant did about a broken clause: whom it censured
+    (a character id), how, which privileges it withholds, when, until
+    when, a note, and the Tribunal case it was charged in ("" for none)."""
+
+    character_id: str
+    penalty: str = CENSURE_WITHHELD
+    withheld: list[str] = field(default_factory=list)
+    year: int | None = None
+    season: str = ""
+    until_year: int | None = None
+    until_season: str = ""
+    note: str = ""
+    case_id: str = ""
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> Censure:
+        d = dict(data)
+        what = "A censure under a covenant's charter"
+        if not d.get("character_id"):
+            raise ValueError(f"{what} names no magus.")
+        if d.get("penalty", CENSURE_WITHHELD) not in CENSURES:
+            raise ValueError(f"{what}: {d.get('penalty')!r} is not a penalty.")
+        withheld = d.get("withheld") or []
+        if not isinstance(withheld, list) or any(w not in PRIVILEGES for w in withheld):
+            raise ValueError(f"{what}: {withheld!r} are not privileges.")
+        d["year"] = _optional_year(d.get("year"), what)
+        d["until_year"] = _optional_year(d.get("until_year"), what)
+        d["season"] = _season(d.get("season"), what)
+        d["until_season"] = _season(d.get("until_season"), what)
+        return cls(**known_fields(cls, d))
+
+
 @dataclass
 class CharterClause:
     """One clause of a covenant's charter, kept like a diary line: its
@@ -119,6 +177,8 @@ class CharterClause:
     since_year: int | None = None
     since_season: str = ""
     note: str = ""
+    #: What the covenant did about it, once broken (None: nothing yet).
+    censure: Censure | None = None
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CharterClause:
@@ -133,17 +193,45 @@ class CharterClause:
         d["since_year"] = _optional_year(d.get("since_year"), what)
         d["season"] = _season(d.get("season"), what)
         d["since_season"] = _season(d.get("since_season"), what)
+        if d.get("censure"):
+            d["censure"] = Censure.from_dict(d["censure"])
+        else:
+            d["censure"] = None
         return cls(**known_fields(cls, d))
+
+
+#: A sealed magus's standing under the charter (Covenants p. 33: full and
+#: associate members, and a period of servitude; the Charter of Arae
+#: Flaviae's probationary members and Protected Guests, pp. 126-128), or
+#: Expelled, whose seal stays on the charter, struck.
+STANDING_FULL = "Full member"
+STANDING_ASSOCIATE = "Associate member"
+STANDING_PROBATION = "Probationary member"
+STANDING_GUEST = "Protected Guest"
+STANDING_EXPELLED = "Expelled"
+STANDINGS: tuple[str, ...] = (
+    STANDING_FULL,
+    STANDING_ASSOCIATE,
+    STANDING_PROBATION,
+    STANDING_GUEST,
+    STANDING_EXPELLED,
+)
 
 
 @dataclass
 class CharterSeal:
     """A magus's seal on the charter (Covenants p. 33: the members' seals
-    or signatures affixed to it), and when he sealed it."""
+    or signatures affixed to it), when he sealed it, and his standing:
+    a probationary member's probation ends in `until_*`; an expelled
+    magus's seal stays, with when he was expelled in `until_*`. Older
+    saves load as full members."""
 
     character_id: str
     year: int | None = None
     season: str = ""
+    standing: str = STANDING_FULL
+    until_year: int | None = None
+    until_season: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> CharterSeal:
@@ -151,8 +239,13 @@ class CharterSeal:
         what = "A seal on a covenant's charter"
         if not d.get("character_id"):
             raise ValueError(f"{what} names no magus.")
+        d["standing"] = d.get("standing") or STANDING_FULL
+        if d["standing"] not in STANDINGS:
+            raise ValueError(f"{what}: {d['standing']!r} is not a standing.")
         d["year"] = _optional_year(d.get("year"), what)
         d["season"] = _season(d.get("season"), what)
+        d["until_year"] = _optional_year(d.get("until_year"), what)
+        d["until_season"] = _season(d.get("until_season"), what)
         return cls(**known_fields(cls, d))
 
 
@@ -160,15 +253,25 @@ class CharterSeal:
 class CovenantCharter:
     """The covenant's Charter of Covenant (Covenants pp. 32-36): its name,
     preamble (the oath, or what the charter is for), when it was sworn,
-    whether a Quaesitor ratified it (then breaking it is a Low Crime, p.
-    36), its clauses and the members' seals. Not the Chartered Town
-    Boon's town charter, which is Covenant.charter."""
+    its Official Seal (`ratified`: whether a Quaesitor notarized it, then
+    who and when, p. 36), whether its Tribunal's reviewers passed it
+    (Thebes's Conciliatory Board), its clauses and the members' seals.
+    `template` is the template it was drawn from ("" for none);
+    `probation_seasons` how long a probationary member serves (None: the
+    charter sets no term). Not the Chartered Town Boon's town charter,
+    which is Covenant.charter."""
 
     name: str = ""
     preamble: str = ""
     year: int | None = None
     season: str = ""
     ratified: bool = False
+    notarized_by: str = ""
+    notarized_year: int | None = None
+    notarized_season: str = ""
+    reviewed: bool = False
+    template: str = ""
+    probation_seasons: int | None = None
     clauses: list[CharterClause] = field(default_factory=list)
     seals: list[CharterSeal] = field(default_factory=list)
 
@@ -183,8 +286,47 @@ class CovenantCharter:
         d["year"] = _optional_year(d.get("year"), what)
         d["season"] = _season(d.get("season"), what)
         d["ratified"] = bool(d.get("ratified"))
+        d["reviewed"] = bool(d.get("reviewed"))
+        d["notarized_year"] = _optional_year(d.get("notarized_year"), what)
+        d["notarized_season"] = _season(d.get("notarized_season"), what)
+        probation = d.get("probation_seasons")
+        if probation is not None and (
+            isinstance(probation, bool)
+            or not isinstance(probation, int)
+            or probation < 1
+        ):
+            raise ValueError(f"{what}: a probation of {probation!r} seasons.")
         d["clauses"] = [CharterClause.from_dict(c) for c in d.get("clauses") or []]
         d["seals"] = [CharterSeal.from_dict(s) for s in d.get("seals") or []]
+        return cls(**known_fields(cls, d))
+
+
+@dataclass
+class CharterTemplate:
+    """A charter to start a covenant's own from (charter_templates.py):
+    the book's (the Charter of Arae Flaviae) or one the troupe saved. Its
+    name, preamble and clauses' words may hold {covenant}, {tribunal} and
+    {year}. `tribunal` is the Tribunal package it suits ("" for any);
+    `ratified_unaltered`, whether Quaesitores ratify it at once while it is
+    used as it stands (Covenants p. 33)."""
+
+    id: str
+    name: str
+    tribunal: str = ""
+    source: str = ""
+    charter_name: str = ""
+    preamble: str = ""
+    probation_seasons: int | None = None
+    ratified_unaltered: bool = False
+    clauses: list[CharterClause] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> CharterTemplate:
+        d = dict(data)
+        if not d.get("id") or not d.get("name"):
+            raise ValueError(f"A charter template needs an id and a name: {data!r}.")
+        d["ratified_unaltered"] = bool(d.get("ratified_unaltered"))
+        d["clauses"] = [CharterClause.from_dict(c) for c in d.get("clauses") or []]
         return cls(**known_fields(cls, d))
 
 

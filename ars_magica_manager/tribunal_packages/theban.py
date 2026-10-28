@@ -27,6 +27,7 @@ from ..markup import escape
 from ..models import Covenant, Saga, TreasuryEntry, Tribunal
 from ..sections import ARCHAI_SECTION, TOKENS_SECTION
 from . import (
+    CharterCustom,
     PackageList,
     PackageTab,
     PackageVerb,
@@ -940,6 +941,14 @@ THEBAN = TribunalPackage(
     covenant_fields=covenant_phyle_fields,
     save_covenant=save_covenant_phyle,
     coins=coinage.pounds_in_coins,
+    charter=CharterCustom(
+        reviewed_by="the Conciliatory Board",
+        note="A new Theban covenant declares its purpose, has a willing "
+        "patron at its site and draws up a suitable charter. The Conciliatory "
+        "Board reviews the proposal, that the charter is in good order and "
+        "the patron real and willing, then the Tribunal votes on a decree of "
+        "founding, in most cases a formality (The Sundered Eagle p. 31).",
+    ),
 )
 
 register(THEBAN)

@@ -67,7 +67,10 @@ licence.
 **Changes made:** the text has been condensed, reformatted and split into
 structured data (names, costs, prerequisites, game effects) for use in the
 program; some entries are summarised rather than quoted, and examples and
-sidebars are left out.
+sidebars are left out. The Charter of Arae Flaviae (*Covenants*, Appendix
+pp. 125-128) is given in full as a charter template, split into clauses
+under the charter's sections, its blanks made fill-ins, and a doubled
+"may be" in its Protected Guest clause dropped.
 
 ### Artwork, icons and fonts
 

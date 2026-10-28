@@ -117,14 +117,25 @@ def test_a_chosen_clause_shows_in_the_inspector_and_break_follows_it(app):
     page = _page(window)
     entries = _chapter(page, "Charter").findChildren(ClauseEntry)
     buttons = section_buttons(page, "Clauses")
-    assert list(buttons) == ["Add", "Edit", "Delete", "Break a Clause"]
+    assert list(buttons) == [
+        "Add",
+        "Edit",
+        "Delete",
+        "Break a Clause",
+        "Censure",
+        "Charge at Tribunal",
+    ]
     entries[0].clicked()  # the Oath's clause, broken
     assert page.inspector.title.text() == "Clause 2"
     assert "Covenants p. 35" in plain(page.inspector.body.text())
     assert not buttons["Break a Clause"].isEnabled()
+    assert buttons["Censure"].isEnabled()
+    # Not notarized, and its Tribunal makes no sworn charter law.
+    assert not buttons["Charge at Tribunal"].isEnabled()
     entries[1].clicked()
     assert page.inspector.title.text() == "Clause 1"
     assert buttons["Break a Clause"].isEnabled()
+    assert not buttons["Censure"].isEnabled()
 
 
 def test_break_a_clause_and_seal_the_charter(app):
@@ -144,3 +155,19 @@ def test_break_a_clause_and_seal_the_charter(app):
         ("char1", 1200),
         ("oda", 1215),
     ]
+
+
+def test_use_a_template_draws_the_charter_of_arae_flaviae(app):
+    window, saga_id = _window()
+    page = _page(window)
+    buttons = section_buttons(page, "The Keep's Accord")
+    assert "Use a Template" in buttons and "Save as Template" in buttons
+    # The saga keeps none of its own yet, and no one is expelled.
+    assert "Forget a Template" not in buttons and "End Membership" not in buttons
+    answering(window, {"template": "arae_flaviae"})
+    buttons["Use a Template"].click()
+    charter = storage.load_saga(saga_id).covenants[0].charter_of_covenant
+    assert charter.template == "arae_flaviae" and len(charter.clauses) == 25
+    assert "At once: The Charter of Arae Flaviae, unaltered" in _words(
+        _chapter(_page(window), "Charter")
+    )

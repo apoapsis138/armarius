@@ -846,6 +846,54 @@ class CovenantActions(WorkspaceBase):
             lambda _end: self._commit(CLAUSES_SECTION),
         )
 
+    def _on_clause(self, build: Callable[[Saga, Covenant, int | None], Any]) -> None:
+        """Run a More command built on the chosen clause."""
+        covenant = self.selected_covenant
+        view = self._covenant_sheet_view
+        if covenant is None or view is None:
+            return
+        run_steps(
+            self.app,
+            build(self.saga, covenant, view.section_row(CLAUSES_SECTION)),
+            # Ending a membership moves a magus out of the covenant.
+            lambda _end: self._commit(CLAUSES_SECTION, CHARTER_SECTION, tree=True),
+        )
+
+    def _on_charter(self, build: Callable[[Saga, Covenant], Any]) -> None:
+        """Run a More command built on the covenant's charter."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            build(self.saga, covenant),
+            lambda _end: self._commit(CHARTER_SECTION, CLAUSES_SECTION, tree=True),
+        )
+
+    def action_censure_clause(self) -> None:
+        """More's Censure on the chosen broken clause."""
+        self._on_clause(charter_forms.censure_clause)
+
+    def action_charge_clause(self) -> None:
+        """More's Charge at Tribunal on the chosen broken clause."""
+        self._on_clause(charter_forms.charge)
+
+    def action_use_charter_template(self) -> None:
+        """More's Use a Template on the charter."""
+        self._on_charter(charter_forms.use_template)
+
+    def action_save_charter_template(self) -> None:
+        """More's Save as Template on the charter."""
+        self._on_charter(charter_forms.save_template)
+
+    def action_forget_charter_template(self) -> None:
+        """More's Forget a Template on the charter."""
+        self._on_charter(lambda saga, _covenant: charter_forms.forget_template(saga))
+
+    def action_end_membership(self) -> None:
+        """More's End Membership on the charter."""
+        self._on_charter(charter_forms.end_membership_step)
+
     def action_pay_fee(self) -> None:
         """More's Pay the Fee on the chosen guest."""
         covenant = self.selected_covenant

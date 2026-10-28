@@ -23,7 +23,7 @@ from typing import Any
 
 from ..models import Character, Saga, Tribunal
 from ..rules.rhine_ranks import gauntlet_year
-from . import TribunalPackage, data, register
+from . import CharterCustom, TribunalPackage, data, register
 
 KEY = "provence"
 
@@ -106,6 +106,14 @@ PROVENCE = TribunalPackage(
     about="Any magus may found a covenant, with no leave from the Tribunal. "
     "A magus is a resident who attended one of its last three meetings or "
     "was granted residency by vote at his first.",
+    charter=CharterCustom(
+        sworn_binds=True,
+        note="In Provence a covenant's charter, once accepted and sworn, is "
+        "a legal obligation by the Peripheral Code, and breaking it can be "
+        "prosecuted as a Low Crime (Through the Aegis p. 54). A Quaesitor "
+        "must still notarize it, though some covenants put that off, and "
+        "founding needs no leave of the Tribunal (Faith & Flame p. 21).",
+    ),
 )
 
 register(PROVENCE)

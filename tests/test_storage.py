@@ -427,7 +427,16 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
     """A diary entry, and a charter with a clause and a magus's seal."""
     covenant.diary.append(CovenantDiaryEntry(1220))
     covenant.charter_of_covenant = CovenantCharter(
-        clauses=[CharterClause("1", "Share all vis.", 1220, "Spring")],
+        clauses=[
+            CharterClause(
+                "1",
+                "Share all vis.",
+                1220,
+                "Spring",
+                status="Broken",
+                censure=models.Censure(magus_id, withheld=["Library"]),
+            )
+        ],
         seals=[CharterSeal(magus_id, 1220, "Spring")],
     )
     # A land project: an island raised by magic (Transforming Mythic Europe).
@@ -484,6 +493,11 @@ def _add_animal_and_formula(magus: Character) -> None:
 
 def _add_own_goods_and_abilities(saga: Saga) -> None:
     """The saga's own good, purity and Ability (HoH:S p. 104)."""
+    saga.charter_templates.append(
+        models.CharterTemplate(
+            "accord", "Accord", clauses=[CharterClause("1", "Share all vis.")]
+        )
+    )
     saga.custom_goods.append(
         GoodDef(
             "custom_good_amber",

@@ -144,20 +144,22 @@ def test_status_words_and_the_struck_clause():
     assert plain(cc.note_line(clauses[2])) == "Broken, 1205: Matthaios's letters."
 
 
-def test_a_broken_clause_is_a_low_crime_only_once_ratified():
+def test_a_broken_clause_is_a_low_crime_only_once_notarized():
     saga = _saga()
-    charter = _covenant(saga).charter_of_covenant
-    assert "Covenants p. 35" in cc.info(charter, 2, wide=True)
-    assert "was ratified" not in cc.info(charter, 2, wide=True)
+    covenant = _covenant(saga)
+    charter = covenant.charter_of_covenant
+    assert "Covenants p. 35" in cc.info(saga, covenant, 2, wide=True)
+    assert "This charter binds" not in cc.info(saga, covenant, 2, wide=True)
     charter.ratified = True
-    assert "was ratified by a Quaesitor" in cc.info(charter, 2, wide=True)
-    assert "Covenants p. 36" in cc.charter_text(saga, _covenant(saga))
+    assert "This charter binds" in cc.info(saga, covenant, 2, wide=True)
+    assert "Covenants pp. 32, 36" in cc.charter_text(saga, covenant)
 
 
 def test_an_amended_clause_cites_the_rule_on_altering_the_charter():
-    charter = _covenant(_saga()).charter_of_covenant
-    shown = cc.info(charter, 1, wide=False)
-    assert "Covenants p. 33" in shown and "against a member's will" in shown
+    saga = _saga()
+    shown = cc.info(saga, _covenant(saga), 1, wide=False)
+    assert "Covenants p. 33" in shown and "Several Tribunals" in shown
+    assert "High Crime" in shown
 
 
 def test_with_no_sections_the_clauses_are_one_group_as_entered():

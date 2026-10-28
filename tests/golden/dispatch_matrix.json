@@ -78,7 +78,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Charter",
         "d": "(disabled)",
-        "m": "FieldsDialog: Seal the Charter",
+        "m": "MenuScreen: Seal the Charter, Use a Template, Save as Template",
         "slash": "(disabled)"
       }
     },
@@ -1500,7 +1500,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Charter",
         "d": "(disabled)",
-        "m": "FieldsDialog: Seal the Charter",
+        "m": "MenuScreen: Seal the Charter, Use a Template, Save as Template",
         "slash": "(disabled)"
       }
     },

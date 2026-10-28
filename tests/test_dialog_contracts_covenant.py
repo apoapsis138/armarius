@@ -833,13 +833,13 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#inh-horse-list": "Ponies"},
     ),
     "edit charter": Contract(
-        prefill={"Name": "", "Year": "", "Ratified by a Quaesitor": False},
+        prefill={"Name": "", "Year": "", "Notarized by a Quaesitor": False},
         edits={
             "Name": "The Keep's Accord",
             "Sworn in": "Summer",
             "Year": "1190",
             "Preamble": "We swear to hold the Keep together.",
-            "Ratified by a Quaesitor": True,
+            "Notarized by a Quaesitor": True,
         },
         saved=lambda s: (
             covenant(s).charter_of_covenant.name,
@@ -945,6 +945,56 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Leandro": True, "Year": "soon"},
         shown={"#cov-charter-text": "Sealed by: Leandro (Spring 1219)"},
         live={"#fields-live": "Not yet sworn: Brother Oda"},
+    ),
+    "censure clause": Contract(
+        prefill={"Penalty": "Privileges withheld", "Library": False},
+        edits={"Library": True, "Vis share": True},
+        saved=lambda s: [
+            (c.censure.character_id, c.censure.penalty, c.censure.withheld)
+            for c in covenant(s).charter_of_covenant.clauses
+            if c.censure is not None
+        ],
+        expected=[("mag1", "Privileges withheld", ["Library", "Vis share"])],
+        invalid={"Year": "soon"},
+        shown={"#cov-clauses-list": "censured"},
+        live={"#fields-live": "privileges withheld (Library, Vis share)"},
+    ),
+    "charge clause": Contract(
+        prefill={"Evidence": "Leandro kept the Vim vis."},
+        edits={"Case": "The Keep against Leandro"},
+        saved=lambda s: [
+            (c.title, c.kind, c.against)
+            for c in s.tribunal(covenant(s).tribunal_id).cases
+            if c.kind == "charge" and c.brought_by == covenant(s).name
+        ],
+        expected=[("The Keep against Leandro", "charge", "Leandro")],
+        invalid={"Case": ""},
+        shown={"#cov-clauses-list": "censured"},
+    ),
+    "use charter template": Contract(
+        prefill={"Template": "arae_flaviae"},
+        edits={"Sworn in the year": "1100"},
+        saved=lambda s: (
+            covenant(s).charter_of_covenant.template,
+            len(covenant(s).charter_of_covenant.clauses),
+            covenant(s).charter_of_covenant.year,
+        ),
+        expected=("arae_flaviae", 25, 1100),
+        invalid={"Sworn in the year": "long ago"},
+        shown={
+            "#section-cov-clauses": "Clauses (25 in force of 25)",
+            "#cov-charter-text": "At once: The Charter of Arae Flaviae",
+        },
+        live={"#fields-live": "25 clauses"},
+    ),
+    "save charter template": Contract(
+        prefill={"Suits": "rhine"},
+        edits={"Name": "The Keep's Way"},
+        saved=lambda s: [
+            (t.name, t.tribunal, len(t.clauses)) for t in s.charter_templates
+        ],
+        expected=[("The Keep's Way", "rhine", 1)],
+        invalid={"Name": ""},
     ),
     # A covenant's ships (Hermetic Projects; City & Guild).
     "add ship": Contract(

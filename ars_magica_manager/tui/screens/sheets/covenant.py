@@ -415,7 +415,8 @@ class CovenantSheetView(KindTabsView):
             yield self._panel(
                 own,
                 lambda: cc.info(
-                    cc.charter_of(covenant),
+                    saga,
+                    covenant,
                     self.section_row(CLAUSES_SECTION),
                     wide=True,
                 ),
@@ -942,7 +943,7 @@ class CovenantSheetView(KindTabsView):
         if list_id == "cov-clauses-list":
             event.stop()
             self.query_one("#cov-charter-info", Static).update(
-                cc.info(cc.charter_of(self.covenant), event.data_index, wide=True)
+                cc.info(self.saga, self.covenant, event.data_index, wide=True)
             )
             return
         if list_id == "cov-guests-list":
