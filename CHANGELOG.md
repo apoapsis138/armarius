@@ -109,6 +109,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.40.0 — 2026-10-28
+
+### Book of Hours
+
+- Recreating a flawed creation is chosen, not typed: Invent Spell, the
+  enchanting work and a Longevity Ritual list the magus's own creations
+  an experiment changed in an earlier season, with their chart results,
+  and the Magic Theory he experimented with is added to the Lab Total
+  again (DE p. 274). For an experiment over several seasons it is the
+  last season's score.
+- A recreated spell is a new spell, and both stay known; when it is
+  finished, Advance Season asks whether to retire the flawed one. A
+  recreated item effect is a new effect beside the flawed one, and a
+  second Longevity Ritual overrides the flawed ritual, the bonus
+  included.
+- A new how-to, "How to recreate a flawed creation".
+
 ## 3.39.0 — 2026-10-28
 
 ### Florilegium

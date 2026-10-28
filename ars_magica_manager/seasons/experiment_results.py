@@ -15,7 +15,7 @@ import random
 from collections.abc import Sequence
 
 from .. import spells as spl
-from ..models import Character, Saga
+from ..models import Character, Saga, Spell
 from ..rules import activities as rules
 from ..rules import dice, lab_seasons
 from ..rules import experiment as ex
@@ -36,6 +36,29 @@ def experiments_to_settle(
             continue
         if chart.choices:
             found.append(outcome)
+    return found
+
+
+def flawed_to_retire(
+    saga: Saga, worked: Sequence[rules.Outcome]
+) -> list[tuple[rules.Outcome, Spell]]:
+    """The season's inventions that finish recreating a flawed spell the
+    magus still knows, each with that spell: Advance Season asks whether to
+    retire it (both stay known otherwise, DE p. 279)."""
+    found = []
+    for outcome in worked:
+        work = outcome.lab_work
+        magus = saga.character(outcome.character_id)
+        flawed_id = lab_seasons.recreated_spell(outcome.plan)
+        if work is None or magus is None or not flawed_id or not work.finished:
+            continue
+        if work.experiment is not None and work.experiment.wasted:
+            continue
+        if not any(k.spell_id == flawed_id for k in magus.spells_known):
+            continue
+        spell = next((s for s in magus.invented_spells if s.id == flawed_id), None)
+        if spell is not None:
+            found.append((outcome, spell))
     return found
 
 

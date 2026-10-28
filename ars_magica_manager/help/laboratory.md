@@ -943,9 +943,13 @@ may be a requisite's, DE p. 94)
 and a Magic Theory specialty, if the magus has them, days away from the
 laboratory (up to 10 cost nothing, 11 to 20 lower the total, more rule lab
 work out), and any other modifier the troupe allows. **Recreating a flawed
-experiment: Magic Theory then** is for work that remakes what an
-experiment left flawed, in a later season: type the Magic Theory score the
-magus experimented with, and it is added again (DE p. 274).
+creation** is offered to Invent a spell, the enchanting work and a
+Longevity Ritual when the magus has a creation of that kind an experiment
+changed, in an earlier season: choose it, and the Magic Theory he
+experimented with is added again (DE p. 274). Each is listed with its
+chart results; whether it is flawed is yours to judge. Where the record
+doesn't keep the score, **Magic Theory then** asks for it (see [How to
+recreate a flawed creation](help:guide-lab-planning-recreate)).
 **Spent on a project's stage** is offered when the magus's covenant has a
 staged Hermetic Project (a Burning City, an Intangible Assassin, a Living
 Corpse): choose the stage the season's work belongs to, and when the
@@ -1170,3 +1174,14 @@ the rest (the anamorphs, the two level 5 emotions and the craft table)
 only while Houses of Hermes: Societates is in play. For the Definitive Edition's
 other guidelines, type the base level.
 
+# Retire Flawed Spells
+<!-- help: advance-retire-flawed -->
+
+When a magus finishes recreating a flawed spell this season, Advance
+Season asks, before the season is played, whether to retire the flawed
+one. Both versions stay known unless you tick **Retire the flawed
+(spell)?**: a magus may know many usable versions of the same spell (Ars
+Magica Definitive Edition p. 279). Retiring it only takes it off Known
+Spells, once the new spell is invented; its record and Lab Text are kept.
+A season the experiment wastes doesn't ask. See [How to recreate a flawed
+creation](help:guide-lab-planning-recreate).

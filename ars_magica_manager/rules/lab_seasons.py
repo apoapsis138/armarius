@@ -217,6 +217,9 @@ class LabWork:
     research_magnitude: int = 0
     #: Experimental effects an invention carries to its spell.
     carried_effects: list[ExperimentalEffect] = field(default_factory=list)
+    #: Recreating a flawed spell: the storyguide chose, in Advance Season,
+    #: to retire the flawed one once this one is invented.
+    retire_flawed: bool = False
     research_warping: int = 0
     #: Experimenting: the season's Extraordinary Results.
     experiment: experiment.Extraordinary | None = None
@@ -564,6 +567,13 @@ def _work(
     return _spell_work(saga, magus, plan, lab_)
 
 
+def recreated_spell(plan: SeasonPlan) -> str:
+    """The flawed spell the plan recreates (its id in `plan.recreating`,
+    "spell:<id>"), or ""."""
+    kind, _, ident = plan.recreating.partition(":")
+    return ident if kind == "spell" else ""
+
+
 def _spell_work(
     saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory
 ) -> tuple[list[str], LabWork | None]:
@@ -571,7 +581,9 @@ def _spell_work(
     found, spell = _chosen_spell(saga, magus, plan)
     if spell is None:
         return found, None
-    if any(k.spell_id == spell.id for k in magus.spells_known):
+    # Recreating a flawed spell invents the spell the magus knows again.
+    flawed = recreated_spell(plan)
+    if spell.id != flawed and any(k.spell_id == spell.id for k in magus.spells_known):
         return [f"{magus.name} already knows {spell.name}."], None
     if needed := _mystery_needed(magus, spell, inventing=plan.activity == INVENT):
         return [needed], None
@@ -580,6 +592,7 @@ def _spell_work(
     )
     if (
         source is not None
+        and source.id != flawed
         and any(k.spell_id == source.id for k in magus.spells_known)
         and same_spell(source, spell)
     ):

@@ -457,8 +457,56 @@ def _discoveries(
     return experiment_results.experiment_results(
         saga,
         worked,
-        lambda: _new_labs(saga, worked, secured, lost, backup, rng),
+        lambda: _retire_flawed(
+            saga, worked, lambda: _new_labs(saga, worked, secured, lost, backup, rng)
+        ),
         rng,
+    )
+
+
+def _retire_flawed(saga: Saga, worked: list[Any], then: Callable[[], Any]):
+    """For each invention finishing the recreation of a flawed spell,
+    whether to retire the flawed one (a tick each, unticked: both stay
+    known), then the next step."""
+    found = seasons.flawed_to_retire(saga, worked)
+    if not found:
+        return then()
+
+    def apply(values: dict[str, Any]):
+        for index, (outcome, _spell) in enumerate(found):
+            work = outcome.lab_work
+            if work is not None:
+                work.retire_flawed = bool(values.get(f"retire_{index}"))
+        return then()
+
+    fields: list[DialogField] = []
+    for index, (outcome, spell) in enumerate(found):
+        magus = saga.character(outcome.character_id)
+        assert magus is not None
+        fields += [
+            DialogField(
+                f"_retire_{index}",
+                "",
+                "info",
+                f"{escape(magus.name)} finishes recreating {escape(spell.name)} "
+                "this season. Both versions stay known unless the flawed one "
+                "is retired (Ars Magica Definitive Edition p. 279).",
+            ),
+            DialogField(
+                f"retire_{index}",
+                f"Retire the flawed {escape(spell.name)}?",
+                "check",
+                False,
+                hint="Takes it off Known Spells once the new one is invented; "
+                "its Lab Text stays in the library.",
+            ),
+        ]
+    return Form(
+        "Retire Flawed Spells",
+        lambda: fields,
+        apply,
+        save_label="Continue",
+        help_id="advance-retire-flawed",
     )
 
 

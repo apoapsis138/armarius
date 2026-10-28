@@ -36,6 +36,7 @@ from .covenant import season_table as season_table
 from .covenant import season_title as season_title
 from .experiment_results import bonus_spell_limit as bonus_spell_limit
 from .experiment_results import experiments_to_settle as experiments_to_settle
+from .experiment_results import flawed_to_retire as flawed_to_retire
 from .experiment_results import settle_experiment as settle_experiment
 from .experiment_results import vis_needed as vis_needed
 from .experiment_results import vis_to_hand as vis_to_hand

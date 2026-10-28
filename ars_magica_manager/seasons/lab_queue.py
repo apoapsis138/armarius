@@ -494,12 +494,15 @@ def _with_effects(
     return spell
 
 
-def _invented_spell(saga: Saga, magus: Character, design: SpellDesign) -> Spell:
+def _invented_spell(
+    saga: Saga, magus: Character, design: SpellDesign, *, fresh: bool = False
+) -> Spell:
     """The spell a finished design gives: the spell it started from when it
-    wasn't changed, otherwise a new spell of the magus's own."""
+    wasn't changed, otherwise (or when `fresh`, recreating a flawed spell) a
+    new spell of the magus's own."""
     designed = lab_seasons.design_spell(design)
     source = catalog.find_spell(saga, design.source_spell_id)
-    if source is not None and lab_seasons.same_spell(source, designed):
+    if not fresh and source is not None and lab_seasons.same_spell(source, designed):
         return source
     spell = spl.add_invented_spell(
         saga, magus, designed.name, designed.technique, designed.form

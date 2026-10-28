@@ -357,6 +357,24 @@ An experiment's results stay with what it made, "warts and all" (Ars Magica Defi
 
 **The app's assumptions.** The rules don't size a change of potency. The app takes one step of potency as 5 points of the Lab Total behind the creation, which is 1 point of a Longevity Ritual's modifier: a ritual reduced by a step protects one point less on every aging roll. Where nothing is worked out from the Lab Total (a spell's or an item's power), the change is only recorded and described for the storyguide.
 
+### How to recreate a flawed creation
+<!-- help: guide-lab-planning-recreate -->
+
+A creation an experiment left flawed or hard to use can be lived with, or recreated under the normal laboratory rules, in a later season and with no need to experiment again. Recreating it adds the Magic Theory the magus had when he experimented to the Lab Total, so Magic Theory counts twice (Ars Magica Definitive Edition, Chapter 8: Laboratory, Arcane Experimentation, p. 274).
+
+1. Plan the lab work that makes it again: **Invent a spell** for a spell, the enchanting work for an item's effect, **Longevity Ritual** for a ritual.
+2. In **Recreating a flawed creation**, choose it. The list holds the magus's own creations of that kind that carry an experimental effect from an earlier season, each with its chart results and the Magic Theory it adds. Whether it is flawed enough to remake is yours to judge.
+3. Where the record is from before the app kept the score, type it in **Magic Theory then**.
+4. Design the spell as it should be (start from the flawed one and set its Range, Duration and Target back if an experiment changed them), and schedule it.
+
+What the finished recreation does:
+
+- **A spell** is a new spell of the magus's own, and both stay known. When it is finished, Advance Season asks whether to retire the flawed one (see [Retire Flawed Spells](help:advance-retire-flawed)).
+- **An item's effect** is a new effect, with its own space and vis at the usual cost. The flawed effect stays in its device and keeps its space (pp. 274-275). A flawed item from Arcane Discovery loses all the vis of its first experiment (p. 279).
+- **A Longevity Ritual** for the same subject overrides the flawed ritual (p. 275).
+
+**The app's assumptions.** The Longevity Ritual paragraph doesn't say whether the bonus applies; the app adds it, since the p. 274 rule covers any creation the chart flawed. For an experiment over several seasons, the rules don't say which season's Magic Theory counts: the app takes the last, and the recreation must come after that season.
+
 ### When the season is advanced
 <!-- help: guide-lab-planning-advance -->
 

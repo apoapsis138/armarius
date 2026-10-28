@@ -40,6 +40,7 @@ from ..models import (
     ScoredTrait,
     SeasonPlan,
     SeasonRecordLine,
+    Spell,
     StationReached,
     Stirps,
     VirtueFlawInstance,
@@ -1526,6 +1527,28 @@ def _write_text(
         bs.grant_access(reader, bs.author_key(book), level, "assisted")
 
 
+def _clean_copy(saga: Saga, magus: Character, flawed: Spell) -> Spell:
+    """A new spell of the magus's own recreating `flawed` without its
+    experimental effects. A Range, Duration or Target an effect changed
+    stays as it now is, for the troupe to set back on the spell."""
+    spell = spl.add_invented_spell(
+        saga, magus, flawed.name, flawed.technique, flawed.form
+    )
+    for attribute in (
+        "level",
+        "description",
+        "requisites",
+        "range",
+        "duration",
+        "target",
+        "ritual",
+        "base_level",
+    ):
+        setattr(spell, attribute, getattr(flawed, attribute))
+    spell.source = "Invented"
+    return spell
+
+
 def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None:
     """A season of lab work: the invention's points, and when it's done, the
     spell known, a Lab Text in the laboratory and the lab's Diary entry."""
@@ -1571,13 +1594,19 @@ def apply_lab_work(saga: Saga, magus: Character, outcome: rules.Outcome) -> None
     ]
     if work.finished:
         project = spell.id
+        flawed = lab_seasons.recreated_spell(plan)
         if plan.design is not None:
-            spell = _invented_spell(saga, magus, plan.design)
+            spell = _invented_spell(saga, magus, plan.design, fresh=bool(flawed))
+        elif flawed and spell.id == flawed:
+            spell = _clean_copy(saga, magus, spell)
         if carried:
             spell = _with_effects(saga, magus, spell, carried)
         for learned in (spell, *work.more_spells):
             if not any(k.spell_id == learned.id for k in magus.spells_known):
                 magus.spells_known.append(KnownSpell(spell_id=learned.id))
+        if flawed and work.retire_flawed and flawed != spell.id:
+            magus.spells_known = [k for k in magus.spells_known if k.spell_id != flawed]
+            work.notes.append("The flawed spell was retired.")
         # One Lab Text for every effect created, from a Lab Text too (DE p.
         # 262).
         if plan.activity in (lab_seasons.INVENT, lab_seasons.LAB_TEXT):

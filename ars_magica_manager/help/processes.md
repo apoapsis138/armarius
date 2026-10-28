@@ -333,6 +333,7 @@ After you choose Advance, the app may ask:
 - In Winter, if a covenant is in deficit, whether to advance anyway. Advance anyway rolls the year over; No (or Escape) leaves the date alone so the books can be balanced first.
 - Which contested vis or income sources whose security has lapsed were secured this season, one tick each. A ticked one is secure for five years; one left unticked gives nothing until it is.
 - For each experiment whose Extraordinary Results need the storyguide's word, what they are: which of two rolls stands, what each side or modified effect is, what a Discovery teaches, what a special result becomes, and whether to take a Discovery the risk can reach (see [Experiment Results](help:advance-experiment-results)).
+- For a magus finishing a recreation of a flawed spell, whether to retire the flawed one (see [Retire Flawed Spells](help:advance-retire-flawed)).
 - For a magus setting up a new laboratory, whether they would like to finish it next season (see [A new laboratory](help:advance-new-lab)).
 
 Cancelling any of these leaves the date and the saga as they were.

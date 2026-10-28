@@ -57,6 +57,7 @@ from ..rules import (
     lab_seasons,
     lab_virtues,
     library,
+    recreating,
     research,
     spell_levels,
     target_sizes,
@@ -1078,16 +1079,7 @@ class LabPlanForm:
                 show_if=_chosen,
                 hint="10 cost nothing, 11-20 lower the Lab Total, more rule it out.",
             ),
-            DialogField(
-                "recreating_theory",
-                "Recreating a flawed experiment: Magic Theory then",
-                "int",
-                plan.recreating_theory if plan else 0,
-                show_if=_chosen,
-                hint="Recreating what an experiment left flawed, in a later "
-                "season, adds the Magic Theory score you experimented with "
-                "again (DE p. 274). 0 if not.",
-            ),
+            *self._recreating_fields(plan),
             *self._stage_fields(plan),
             DialogField(
                 "other_modifier",
@@ -1186,6 +1178,93 @@ class LabPlanForm:
                     "shape": es.suggested_shape_bonus(self.magus, device, effect),
                 }
         return {}
+
+    def recreatable(self, activity: str) -> list[recreating.Flawed]:
+        """The flawed creations the magus may recreate with `activity` this
+        season."""
+        return recreating.recreatable(
+            self.saga, self.magus, activity, self.year, self.season
+        )
+
+    def _recreating_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """A choice of the flawed creation recreated, one for each kind of
+        lab work that can recreate (the creation's Magic Theory then is
+        added again), and the score typed where its record didn't keep it.
+        A plan from before the choice keeps its typed score."""
+        found: list[DialogField] = []
+        unrecorded: set[str] = set()
+        chosen = plan.recreating if plan else ""
+        hints = {
+            recreating.SPELL: "Inventing it again adds the Magic Theory the magus "
+            "experimented with (DE p. 274). Both spells stay known; when it is "
+            "done, Advance Season offers to retire the flawed one.",
+            recreating.EFFECT: "Instilling it again adds the Magic Theory the "
+            "magus experimented with (DE p. 274). It is a new effect, with its "
+            "own space and vis; the flawed one stays in its device. "
+            + recreating.VIS_LOST,
+            recreating.LONGEVITY: "A second ritual overrides the flawed one (DE "
+            "p. 275) and adds the Magic Theory the magus experimented with "
+            "(DE p. 274). Choose the ritual of this plan's subject.",
+        }
+        for kind in (recreating.SPELL, recreating.EFFECT, recreating.LONGEVITY):
+            activities = [a for a, k in recreating.KIND_OF.items() if k == kind]
+            listed = recreating.recreatable(
+                self.saga, self.magus, activities[0], self.year, self.season
+            )
+            if not listed:
+                continue
+            unrecorded |= {f.key for f in listed if f.theory is None}
+            found.append(
+                DialogField(
+                    f"recreating_{kind}",
+                    "Recreating a flawed creation",
+                    "select",
+                    _kept(chosen, [(f.label, f.key) for f in listed]),
+                    options=[(escape(f.label), f.key) for f in listed],
+                    allow_blank=True,
+                    placeholder="(none)",
+                    show_if=_doing(*activities),
+                    hint=hints[kind],
+                )
+            )
+        legacy = bool(plan and plan.recreating_theory and not plan.recreating)
+
+        def typed(values: dict[str, Any]) -> bool:
+            if not _chosen(values):
+                return False
+            kind = recreating.KIND_OF.get(values.get("activity") or "")
+            key = values.get(f"recreating_{kind}") if kind else None
+            return key in unrecorded or (legacy and not key)
+
+        if unrecorded or legacy:
+            found.append(
+                DialogField(
+                    "recreating_theory",
+                    "Magic Theory then",
+                    "int",
+                    plan.recreating_theory if plan else 0,
+                    show_if=typed,
+                    hint="The record doesn't keep the magus's Magic Theory when "
+                    "he experimented: type it, and it is added again (DE p. 274).",
+                )
+            )
+        return found
+
+    def _recreating_of(self, activity: str, values: dict[str, Any]) -> tuple[str, int]:
+        """The flawed creation the values choose and the Magic Theory it
+        adds: its record's, else the score typed; with none chosen, a
+        plan from before the choice keeps its typed score."""
+        typed = max(0, values.get("recreating_theory") or 0)
+        kind = recreating.KIND_OF.get(activity)
+        key = values.get(f"recreating_{kind}") or "" if kind else ""
+        if key:
+            found = recreating.find(self.saga, self.magus, key)
+            if found is not None:
+                return key, found.theory if found.theory is not None else typed
+        existing = self.existing
+        if existing and existing.recreating_theory and not existing.recreating:
+            return "", typed
+        return "", 0
 
     def _stage_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
         """A season spent on a stage of one of his covenant's staged
@@ -1512,7 +1591,6 @@ class LabPlanForm:
             theory_specialty=bool(values.get("specialty")),
             chthonic=bool(values.get("chthonic")),
             other_modifier=values.get("other_modifier") or 0,
-            recreating_theory=max(0, values.get("recreating_theory") or 0),
             project_stage=values.get("project_stage") or "",
             potent=bool(values.get("potent")),
             cycle_bonus=bool(values.get("cycle_bonus")),
@@ -1530,6 +1608,7 @@ class LabPlanForm:
             research_kind=self._goal_kind(values.get("research") or ""),
             **read_for_choice(activity, values, self._reads()),
         )
+        plan.recreating, plan.recreating_theory = self._recreating_of(activity, values)
         if activity in (*es.ACTIVITIES, *fs.ACTIVITIES):
             # The vis is of the work's Technique unless its Form is chosen.
             arts = self.work_arts(plan)
@@ -1678,6 +1757,9 @@ class LabPlanForm:
             device = es.device_of(self.saga, plan)
             if device is None or es.effect_of(device, plan) is None:
                 return "Choose an effect of the chosen device."
+        mismatch = recreating.problem(self.magus, plan)
+        if mismatch is not None:
+            return mismatch
         paired = paired_plans.pair_problem(self.saga, self.magus, plan)
         if paired is not None:
             return paired

@@ -158,6 +158,10 @@ class SeasonPlan:
     #: Recreating what an experiment left flawed: the Magic Theory score
     #: the magus had when he experimented, added again (DE p. 274); 0: not.
     recreating_theory: int = 0
+    #: The flawed creation recreated (rules.recreating: "spell:<id>",
+    #: "effect:<id>", "longevity:<subject id>"); "": none, or a plan from
+    #: before it was chosen, whose typed score stands alone.
+    recreating: str = ""
     #: Lab work spent on a staged Hermetic Project's stage (a ProjectStage
     #: id): the season goes into the project's works; "" for none.
     project_stage: str = ""

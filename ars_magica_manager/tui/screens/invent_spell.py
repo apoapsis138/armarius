@@ -86,6 +86,9 @@ _WIDGET_OF: dict[str, str] = {
     "lasting": "inv-lasting",
     "attunement": "inv-attunement",
     "recreating_theory": "inv-recreating",
+    "recreating_spell": "inv-recreating-spell",
+    "recreating_effect": "inv-recreating-effect",
+    "recreating_longevity": "inv-recreating-longevity",
     "project_stage": "inv-stage",
     **{kind: f"inv-{kind}" for kind in KINDS},
     **{f"{kind}_name": f"inv-{kind}-name" for kind in KINDS},
@@ -881,10 +884,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                 " (10 cost nothing, 11-20 lower the Lab Total, more rule it out)   Other"
             )
             yield _number(str(plan.other_modifier) if plan else "0", "inv-other")
-            yield Label(" Recreating (Magic Theory then)")
-            yield _number(
-                str(plan.recreating_theory) if plan else "0", "inv-recreating"
-            )
+        yield from self._compose_recreating()
         stages = self._spec_options("project_stage")
         if stages:
             with Horizontal(classes="inv-row"):
@@ -951,6 +951,35 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
                         number = _number(value, widget_id)
                         number.tooltip = spec.hint or None
                         yield number
+
+    def _recreating_specs(self) -> list[DialogField]:
+        """The core form's fields for recreating a flawed creation."""
+        return [f for f in self._fields if f.key.startswith("recreating")]
+
+    def _compose_recreating(self) -> ComposeResult:
+        """A row for recreating a flawed creation: the choice for each kind
+        of lab work that can recreate, and the Magic Theory then where its
+        record didn't keep it (shown as the form's show_if says)."""
+        specs = self._recreating_specs()
+        if not specs:
+            return
+        with Horizontal(classes="inv-row"):
+            for spec in specs:
+                widget_id = _WIDGET_OF[spec.key]
+                yield Label(f" {spec.label}", id=f"{widget_id}-label")
+                if spec.kind == "select":
+                    yield Select(
+                        spec.options,
+                        value=spec.value if spec.value else Select.NULL,
+                        prompt=spec.placeholder or "(none)",
+                        id=widget_id,
+                        compact=True,
+                        tooltip=spec.hint or None,
+                    )
+                else:
+                    number = _number(str(spec.value or 0), widget_id)
+                    number.tooltip = spec.hint or None
+                    yield number
 
     def on_mount(self) -> None:
         self._ready = True
@@ -1121,7 +1150,7 @@ class InventSpellScreen(ModalDialog[SeasonPlan | None]):
         self.query_one("#inv-header", Static).update(self._header(plan.activity))
         for row, shown in _ROWS_SHOWN.items():
             self.query_one(f"#{row}").display = shown(plan.activity)
-        for spec in self.form.virtue_fields(plan):
+        for spec in [*self.form.virtue_fields(plan), *self._recreating_specs()]:
             visible = spec.show_if is None or bool(spec.show_if(values))
             widget_id = _WIDGET_OF[spec.key]
             for found in self.query(f"#{widget_id}, #{widget_id}-label"):
