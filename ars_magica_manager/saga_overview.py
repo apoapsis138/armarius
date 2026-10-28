@@ -23,7 +23,8 @@ from .models import (
     season_order,
 )
 from .rules import activity_groups as groups
-from .rules import lab_stats, sites
+from .rules import lab as lab_rules
+from .rules import lab_stats, realms
 from .rules.activities import ACTIVITIES
 from .rules.activities import OTHER as OTHER_KEY
 from .seasons.plans import result_text
@@ -96,8 +97,9 @@ def covenant_cards(saga: Saga) -> list[CovenantCard]:
     for covenant in world.troupe_first(saga.covenants):
         people = members(saga, covenant.id)
         labs = [lab for lab in saga.laboratories if lab.covenant_id == covenant.id]
+        aura, realm = realms.aura_of(covenant)
         facts = [
-            cs.Fact("Aura", f"{covenant.aura_realm} {covenant.aura}"),
+            cs.Fact("Aura", f"{realm} {aura}"),
             *(
                 cs.Fact(group, str(sum(c.type in types for c in people)))
                 for group, types in PEOPLE
@@ -179,11 +181,7 @@ def lab_cards(saga: Saga, covenant_id: str | None) -> list[LabCard]:
 
 def _lab_card(saga: Saga, lab: Laboratory) -> LabCard:
     owner = saga.character(lab.owner_id)
-    covenant = saga.covenant(lab.covenant_id)
-    own = sites.lab_aura(saga, lab)
-    aura = lab_stats.lab_aura_total(
-        lab, own[0] if own is not None else covenant.aura if covenant else 0
-    )
+    aura, _ = lab_rules.lab_aura(saga, lab)
     by_id = catalog.load_lab_virtue_flaw_catalog_by_id()
 
     def total(name: str) -> str:

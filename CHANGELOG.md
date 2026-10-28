@@ -109,6 +109,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.36.1 — 2026-10-28
+
+### Illuminatio
+
+- A covenant's card on the saga page shows its aura with its Boons and
+  Hooks counted, as its own page does: each Aura Boon adds 1. A
+  laboratory's card likewise shows the aura its Lab Totals use.
+
 ## 3.36.0 — 2026-10-28
 
 ### Pagina

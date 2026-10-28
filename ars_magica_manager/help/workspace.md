@@ -198,7 +198,9 @@ The top node of the tree. It shows the saga's own details and what it holds.
 The saga's page, opened from its card on the Sagas page. It has seven chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The World** shows its
 Covenants, Tribunals, Unassigned Characters and Unassigned Laboratories as cards, each
 heading ending in a blank card (New Covenant, New Tribunal, New Character, New
-Laboratory) that makes one more. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
+Laboratory) that makes one more. A covenant's card shows its aura with its Boons and
+Hooks counted (each Aura Boon adds 1, Definitive Edition p. 183), the same total its
+page shows. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
 **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
 magus or in their laboratory.
@@ -450,7 +452,7 @@ The Laboratories node under a covenant, or Unassigned Laboratories under the sag
 **You type:** nothing here. `n` (New) offers New Laboratory, with this covenant already chosen.
 <!-- /tui -->
 <!-- gui -->
-A covenant's Laboratories chapter, or Unassigned Laboratories on the saga's The World, shows the laboratories as cards; click one to open its page.
+A covenant's Laboratories chapter, or Unassigned Laboratories on the saga's The World, shows the laboratories as cards; click one to open its page. A card's Aura is the one its Lab Totals use: its covenant's (Boons and Hooks counted), or its own place's, with the lab's own modifier.
 
 **You type:** nothing here. The **New Laboratory** card at the end of the cards makes one, with this covenant already chosen.
 <!-- /gui -->

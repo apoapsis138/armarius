@@ -5,8 +5,14 @@ from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
+from ars_magica_manager import catalog
 from ars_magica_manager import saga_overview as ov
-from ars_magica_manager.models import Character, DiaryEntry, SeasonPlan
+from ars_magica_manager.models import (
+    Character,
+    DiaryEntry,
+    SeasonPlan,
+    VirtueFlawInstance,
+)
 
 
 def test_a_covenant_card_counts_its_people_and_laboratories():
@@ -18,6 +24,30 @@ def test_a_covenant_card_counts_its_people_and_laboratories():
     assert (facts["Magi"], facts["Grogs"], facts["Laboratories"]) == ("1", "1", "1")
     # The unassigned have their own headings on the saga page.
     assert [c.name for c in cards] == ["Test Covenant"]
+
+
+def test_the_cards_show_the_aura_with_the_covenants_aura_boons():
+    # Each Aura Boon raises the covenant's Magic aura by 1 (DE p. 183).
+    saga = _sample_saga_with_covenant()
+    covenant = saga.covenants[0]
+    covenant.aura, covenant.aura_realm = 3, "Magic"
+
+    def lab_aura() -> int:
+        (card,) = ov.lab_cards(saga, covenant.id)
+        return int({f.label: f.value for f in card.facts}["Aura"])
+
+    before = lab_aura()
+    aura_boon = next(
+        e.id
+        for e in catalog.load_covenant_boon_hook_catalog_by_id().values()
+        if any(
+            m.applies_to == "covenant_aura" and (m.amount or 0) > 0 for m in e.modifiers
+        )
+    )
+    covenant.boons_hooks = [VirtueFlawInstance(vf_id=aura_boon)] * 2
+    facts = {f.label: f.value for f in ov.covenant_cards(saga)[0].facts}
+    assert facts["Aura"] == "Magic 5"
+    assert lab_aura() == before + 2
 
 
 def test_people_are_grouped_magi_first_and_empty_groups_left_out():
