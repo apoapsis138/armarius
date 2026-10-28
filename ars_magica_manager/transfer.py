@@ -22,7 +22,9 @@ save does and older exports keep working.
 Links to records that aren't in the file (a character's covenant, a
 laboratory's owner, a book's author...) are kept by name: importing matches
 each to the one record of that kind and name in the target saga, or drops
-it. Nothing already in the target saga is changed, except that a
+it. A character's or laboratory's covenant also travels as a stub (its name,
+aura and realm): where the target has no covenant of that name, the stub is
+added, so the aura comes along. Nothing already in the target saga is changed, except that a
 laboratory with no owner (or a magus with no laboratory) can be given the
 imported partner the file names. Everything imported gets ids that are
 free in the target. Season plans, season records and lab projects under
@@ -35,12 +37,13 @@ import json
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict
 
 from . import __version__, catalog, places, storage
 from .files import write_atomic
 from .models import (
     ITEM_DEVICE_PARAM,
+    REALMS,
     Book,
     CalendarEntry,
     Character,
@@ -262,8 +265,37 @@ def bundle_data(
         "name": name,
         "from_saga": saga.name,
         "links": links,
+        "stubs": {COVENANT: _covenant_stubs(saga, [*characters, *labs], links)},
         "saga": content,
     }
+
+
+class CovenantStub(TypedDict):
+    """What an export holds of the covenant a character or laboratory in
+    it belongs to when the covenant itself isn't in the file."""
+
+    name: str
+    aura: int
+    aura_realm: str
+
+
+def _covenant_stubs(
+    saga: Saga,
+    members: Iterable[Character | Laboratory],
+    links: dict[str, dict[str, str]],
+) -> dict[str, CovenantStub]:
+    """The covenants the members belong to that the file links to: id ->
+    name and the aura in force there (a placed covenant's is its place's)."""
+    stubs: dict[str, CovenantStub] = {}
+    for member in members:
+        covenant = saga.covenant(member.covenant_id)
+        if covenant is not None and covenant.id in links[COVENANT]:
+            stubs[covenant.id] = CovenantStub(
+                name=covenant.name,
+                aura=covenant.aura,
+                aura_realm=covenant.aura_realm,
+            )
+    return stubs
 
 
 def export_to(
@@ -330,6 +362,10 @@ class ImportPlan:
     name: str
     from_saga: str
     covenants: list[Covenant] = field(default_factory=list)
+    #: Covenants a character or laboratory belongs to that the saga has
+    #: none of the name of: added with only the name and aura the file
+    #: gives.
+    stub_covenants: list[Covenant] = field(default_factory=list)
     #: Tribunals the covenants name that the saga has none of the name of.
     tribunals: list[Tribunal] = field(default_factory=list)
     characters: list[Character] = field(default_factory=list)
@@ -401,6 +437,9 @@ class _Import:
     plan: ImportPlan
     #: The export's links to records outside the file: kind -> id -> name.
     links: dict[str, dict[str, str]]
+    #: What the file holds of the covenants it links to (kind -> id ->
+    #: stub); older exports have none.
+    stubs: dict[str, dict[str, CovenantStub]] = field(default_factory=dict)
     #: Whether a record the target has one of the same name of is taken
     #: for that one rather than added (a pack).
     match: bool = False
@@ -507,13 +546,60 @@ def _match_outside(job: _Import) -> None:
         for old_id, name in named.items():
             found = [r for r in targets[record_kind] if r.name == name]
             label = f"{KIND_LABELS[record_kind]} {name}"
+            stub = (job.stubs.get(record_kind) or {}).get(old_id)
             if len(found) == 1:
                 job.outside[record_kind][old_id] = found[0].id
                 job.plan.matched.append(f"{label} (matched by name)")
+            elif not found and record_kind == COVENANT and stub is not None:
+                job.outside[record_kind][old_id] = _add_stub(job, old_id, stub)
             else:
                 job.outside[record_kind][old_id] = None
                 why = "not in this saga" if not found else "more than one here"
                 job.plan.dropped.append(f"{label}: {why}")
+
+
+def _add_stub(job: _Import, old_id: str, stub: CovenantStub) -> str:
+    """A covenant the file only names, added with the aura it gives: its
+    new id."""
+    taken = [c.id for c in job.target.covenants]
+    taken += [*job.record_map[COVENANT].values()]
+    taken += [c.id for c in job.plan.stub_covenants]
+    covenant = Covenant(
+        id=_Ids(taken).new(old_id, stub["name"]),
+        saga_id=job.target.id,
+        name=stub["name"],
+        aura=stub["aura"],
+        aura_realm=stub["aura_realm"],
+    )
+    job.plan.stub_covenants.append(covenant)
+    return covenant.id
+
+
+def _read_stubs(data: dict[str, Any]) -> dict[str, dict[str, CovenantStub]]:
+    """The file's covenant stubs, checked. Raises ValueError for one that
+    isn't a name, a whole-number aura and a realm."""
+    held = data.get("stubs") or {}
+    raw = held.get(COVENANT) or {} if isinstance(held, dict) else None
+    if not isinstance(raw, dict):
+        raise ValueError("the export's covenant stubs aren't a list by id")
+    stubs: dict[str, CovenantStub] = {}
+    for old_id, stub in raw.items():
+        name = stub.get("name") if isinstance(stub, dict) else None
+        aura = stub.get("aura") if isinstance(stub, dict) else None
+        realm = stub.get("aura_realm") if isinstance(stub, dict) else None
+        if (
+            not isinstance(name, str)
+            or not name
+            or not isinstance(aura, int)
+            or isinstance(aura, bool)
+            or realm not in REALMS
+        ):
+            raise ValueError(
+                f"the export's covenant {old_id!r} needs a name, an aura and "
+                f"one of the realms ({', '.join(REALMS)})"
+            )
+        stubs[str(old_id)] = CovenantStub(name=name, aura=aura, aura_realm=realm)
+    return {COVENANT: stubs}
 
 
 def _map_entries(job: _Import) -> None:
@@ -1001,6 +1087,7 @@ def plan_import(
             from_saga=str(data.get("from_saga") or ""),
         ),
         links=data.get("links") or {},
+        stubs=_read_stubs(data),
     )
     _map_records(job)
     for record_kind, ids in (same_ids or {}).items():
@@ -1036,6 +1123,10 @@ def preview(plan: ImportPlan) -> str:
     origin = f" from {plan.from_saga}" if plan.from_saga else ""
     lines = [f"Import {KIND_LABELS[plan.kind]}: {plan.name}{origin}", "", "Adds:"]
     lines += [f"  Covenant: {c.name}" for c in plan.covenants]
+    lines += [
+        f"  Covenant: {c.name} (only its name and aura, {c.aura} {c.aura_realm})"
+        for c in plan.stub_covenants
+    ]
     lines += [f"  Tribunal: {t.name}" for t in plan.tribunals]
     lines += [f"  Laboratory: {lab.name}" for lab in plan.laboratories]
     lines += [f"  Character: {c.name} ({c.type})" for c in plan.characters]
@@ -1067,7 +1158,7 @@ def preview(plan: ImportPlan) -> str:
 
 def apply(target: Saga, plan: ImportPlan) -> None:
     """Add everything in `plan` to `target` (the caller saves it)."""
-    target.covenants += plan.covenants
+    target.covenants += plan.covenants + plan.stub_covenants
     target.tribunals += plan.tribunals
     target.characters += plan.characters
     target.laboratories += plan.laboratories

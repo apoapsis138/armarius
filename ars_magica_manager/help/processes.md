@@ -1052,7 +1052,7 @@ A row that can't be read is skipped, and the preview says why. When a book or sp
 ### Importing an exported record
 <!-- help: import-data-records -->
 
-What travels with the record comes too, and everything imported gets new ids. Links to records that aren't in the file (a character's covenant, a laboratory's owner, a book's author) are matched by name to the one record of that kind and name in this saga, or dropped; the preview lists which. A record with the same name as one already here is added beside it. Nothing already in the saga is changed, except that a laboratory with no owner, or a magus with no laboratory, can be linked to the imported partner the file names.
+What travels with the record comes too, and everything imported gets new ids. Links to records that aren't in the file (a character's covenant, a laboratory's owner, a book's author) are matched by name to the one record of that kind and name in this saga, or dropped; the preview lists which. A character's or laboratory's covenant is the exception when this saga has no covenant of that name: the file carries its name, aura and realm, and the import adds a covenant with just those, so the aura comes too. The preview lists it under Adds as having only its name and aura; fill in the rest on its sheet. A record with the same name as one already here is added beside it. Nothing already in the saga is changed, except that a laboratory with no owner, or a magus with no laboratory, can be linked to the imported partner the file names.
 
 ### Exporting
 <!-- help: import-data-export -->

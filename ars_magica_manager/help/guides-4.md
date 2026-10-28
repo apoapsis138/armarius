@@ -310,7 +310,7 @@ The record keeps its place in the saga; see [Updating a record from a file](help
 The preview lists what will be added, the links kept and the links dropped. [Importing an exported record](help:import-data-records) explains the rules:
 
 - Everything imported gets new ids, so nothing in this saga is overwritten. A record with the same name as one already here is added beside it, and the preview says so.
-- A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it is dropped, and you can set it again on the sheet.
+- A link to a record that isn't in the file, such as a character's covenant or a laboratory's owner, is kept only if this saga has exactly one record of that kind with that name. Otherwise it is dropped, and you can set it again on the sheet. The one exception is a character's or laboratory's covenant when this saga has none of that name: a covenant with that name and the aura it had is added, so the aura comes too.
 - A saga-made spell is matched to one here with the same name, Technique, Form and level. A House Rule is matched to one with the same name, type and tier. A saga Ability is matched to one here (the catalog's or the saga's) with the same name. Anything not matched is added.
 
 ### Importing books from a CSV file

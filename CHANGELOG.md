@@ -109,6 +109,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.38.1 — 2026-10-28
+
+### Fundamenta
+
+- An exported character or laboratory carries its covenant's name, aura
+  and realm. Imported into a saga with no covenant of that name, it
+  brings a covenant with just those, so it keeps its aura; the preview
+  lists it as having only its name and aura. A saga with one covenant of
+  that name links to it as before, and one with two drops the link.
+
 ## 3.38.0 — 2026-10-28
 
 ### Pagina

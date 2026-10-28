@@ -239,6 +239,10 @@ def test_a_guest_s_stay_follows_its_host_by_name_or_ends():
     leandro = source.character("leandro")
     assert leandro is not None
     leandro.stay = GuestStay("keep", 1220, "Spring", fee_kind="vis", fee=3)
+    # A guest of another covenant than his own: only his own travels as a
+    # stub, so a host this saga hasn't is not added for him.
+    source.covenants.append(Covenant(id="abbey", saga_id="src", name="Abbey"))
+    leandro.covenant_id = "abbey"
     target = _target()
     transfer.apply(target, transfer.plan_import(target, _roundtrip(source, leandro)))
     stay = target.characters[0].stay
@@ -248,6 +252,96 @@ def test_a_guest_s_stay_follows_its_host_by_name_or_ends():
     target.covenants[0].name = "Elsewhere"
     transfer.apply(target, transfer.plan_import(target, _roundtrip(source, leandro)))
     assert target.characters[0].stay is None
+
+
+def _stubbed_source() -> Saga:
+    source = _source()
+    keep = source.covenant("keep")
+    assert keep is not None
+    keep.aura, keep.aura_realm = 5, "Faerie"
+    return source
+
+
+def test_a_character_s_covenant_travels_as_a_stub_with_its_aura():
+    source = _stubbed_source()
+    data = _roundtrip(source, source.character("leandro"))
+    assert data["stubs"] == {
+        "covenant": {"keep": {"name": "Keep", "aura": 5, "aura_realm": "Faerie"}}
+    }
+    # A saga with no covenant of that name gets one with just the stub.
+    target = Saga(id="dst", name="Target Saga")
+    plan = transfer.plan_import(target, data)
+    assert "  Covenant: Keep (only its name and aura, 5 Faerie)" in (
+        transfer.preview(plan)
+    )
+    assert not any(line.startswith("Covenant Keep") for line in plan.dropped)
+    transfer.apply(target, plan)
+    [keep] = target.covenants
+    assert (keep.name, keep.aura, keep.aura_realm, keep.saga_id) == (
+        "Keep",
+        5,
+        "Faerie",
+        "dst",
+    )
+    assert keep.tribunal_id is None and keep.place_id is None
+    assert target.characters[0].covenant_id == keep.id
+    storage.save_saga(target)
+    assert storage.load_saga("dst").covenants[0].aura == 5
+
+
+def test_a_laboratory_s_covenant_travels_as_a_stub_too():
+    source = _stubbed_source()
+    data = _roundtrip(source, source.laboratory("tower"))
+    target = Saga(id="dst", name="Target Saga")
+    transfer.apply(target, transfer.plan_import(target, data))
+    [keep] = target.covenants
+    assert (keep.name, keep.aura) == ("Keep", 5)
+    assert target.laboratories[0].covenant_id == keep.id
+
+
+def test_the_stub_is_not_added_beside_a_covenant_of_that_name():
+    source = _stubbed_source()
+    data = _roundtrip(source, source.character("leandro"))
+    # One of that name: linked to it, its own aura kept.
+    target = _target()
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert [(c.id, c.aura) for c in target.covenants] == [("hold", 0)]
+    # Two of that name: the link is dropped, and nothing is added.
+    target = _target()
+    target.covenants.append(Covenant(id="hold2", saga_id="dst", name="Keep"))
+    plan = transfer.plan_import(target, data)
+    assert "Covenant Keep: more than one here" in plan.dropped
+    transfer.apply(target, plan)
+    assert len(target.covenants) == 2
+    assert target.characters[0].covenant_id is None
+
+
+def test_an_export_from_before_stubs_drops_the_covenant_as_it_did():
+    source = _stubbed_source()
+    data = _roundtrip(source, source.character("leandro"))
+    del data["stubs"]
+    target = Saga(id="dst", name="Target Saga")
+    plan = transfer.plan_import(target, data)
+    assert "Covenant Keep: not in this saga" in plan.dropped
+    transfer.apply(target, plan)
+    assert target.covenants == [] and target.characters[0].covenant_id is None
+
+
+@pytest.mark.parametrize(
+    "stub",
+    [
+        {"name": "", "aura": 5, "aura_realm": "Faerie"},
+        {"name": "Keep", "aura": "5", "aura_realm": "Faerie"},
+        {"name": "Keep", "aura": 5, "aura_realm": "Fae"},
+        "Keep",
+    ],
+)
+def test_a_bad_covenant_stub_is_reported(stub):
+    source = _stubbed_source()
+    data = _roundtrip(source, source.character("leandro"))
+    data["stubs"]["covenant"]["keep"] = stub
+    with pytest.raises(ValueError, match="covenant 'keep' needs a name"):
+        transfer.plan_import(Saga(id="dst", name="Target Saga"), data)
 
 
 def test_importing_into_the_same_saga_makes_a_second_copy_with_new_ids():
