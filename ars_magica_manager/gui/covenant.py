@@ -85,7 +85,15 @@ from .character_sheet import (
 )
 from .charter import charter_section, clauses_section
 from .editing import Chooser, RowVerb, Run, choose_cards, give_verb, verb_buttons
-from .figures import Seal, attitude_seal, aura_seal, fact_grid, prose, shelf
+from .figures import (
+    SeasonSeal,
+    attitude_seal,
+    aura_seal,
+    fact_grid,
+    loyalty_seal,
+    prose,
+    shelf,
+)
 from .heraldry import arms_section, neighbours_arms
 from .manage import RecordControls
 from .medallions import Medallion
@@ -275,7 +283,7 @@ class CovenantPage(QWidget):
             row.addWidget(fact_grid(cvs.sketch_facts(saga, covenant), p, 3))
             row.addSpacing(10)
             if covenant.detail != LINE:
-                row.addWidget(aura_seal(cvs.aura(covenant), p))
+                row.addWidget(aura_seal(saga, cvs.aura(covenant), p))
             for target in world_forms.attitude_targets(saga, covenant):
                 seal = attitude_seal(world.attitude_toward(covenant, target.id), p)
                 seal.setToolTip(f"Toward {target.name}: {seal.toolTip()}")
@@ -290,25 +298,8 @@ class CovenantPage(QWidget):
             return box
         row.addWidget(fact_grid(cvs.charter_facts(saga, covenant), p, 2))
         row.addSpacing(10)
-        row.addWidget(aura_seal(cvs.aura(covenant), p))
-        loyalty = cvs.loyalty(saga, covenant)
-        tone = (
-            "text-success"
-            if loyalty.score > 0
-            else "text-error"
-            if loyalty.score < 0
-            else "label"
-        )
-        row.addWidget(
-            Seal(
-                f"{loyalty.score:+d}" if loyalty.score else "0",
-                "Loyalty",
-                p[tone],
-                f"Prevailing Loyalty {loyalty.score:+d}"
-                f" ({loyalty.points} Loyalty Points)",
-                p,
-            )
-        )
+        row.addWidget(aura_seal(saga, cvs.aura(covenant), p))
+        row.addWidget(loyalty_seal(saga, cvs.loyalty(saga, covenant), p))
         row.addWidget(self._season_badge(covenant))
         mode = self.controls.mode(p) if self.controls is not None else None
         if mode is not None:
@@ -320,14 +311,16 @@ class CovenantPage(QWidget):
         )
         return box
 
-    def _season_badge(self, covenant: Covenant) -> Medallion:
+    def _season_badge(self, covenant: Covenant) -> SeasonSeal:
         """The covenant's own season (its Covenant Season, not the saga's
-        present one) as a medallion, with no words: the subtitle says it."""
-        badge = Medallion(
-            self.saga, covenant.covenant_season, self.saga.current_year, self.p
+        present one) as a seal beside the aura and Loyalty, its name under
+        it as theirs are."""
+        return SeasonSeal(
+            self.saga,
+            covenant.covenant_season,
+            f"{covenant.covenant_season} covenant",
+            self.p,
         )
-        badge.setToolTip(f"{covenant.covenant_season} covenant")
-        return badge
 
     def _edit_button(self, form: Callable[[], Form]) -> QPushButton:
         """The header's Edit, opening Edit Covenant."""

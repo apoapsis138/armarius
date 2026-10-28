@@ -22,6 +22,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QImage,
     QLinearGradient,
     QPainter,
     QPainterPath,
@@ -716,6 +717,71 @@ def numbered(
         QRectF(centre.x() - r, centre.y() - r, 2 * r, 2 * r),
         Qt.AlignmentFlag.AlignCenter,
         str(number),
+    )
+    painter.restore()
+
+
+def duotone(image: QImage, tone: QColor) -> QImage:
+    """`image` in shades of `tone` alone: deep where it was dark, pale
+    where it was light, its own transparency kept."""
+    out = image.convertToFormat(QImage.Format.Format_Grayscale8).convertToFormat(
+        QImage.Format.Format_ARGB32_Premultiplied
+    )
+    out.setDevicePixelRatio(image.devicePixelRatio())
+    g = QPainter(out)
+    g.setCompositionMode(QPainter.CompositionMode.CompositionMode_Screen)
+    g.fillRect(out.rect(), tone.darker(260))
+    g.setCompositionMode(QPainter.CompositionMode.CompositionMode_Multiply)
+    g.fillRect(out.rect(), tone.lighter(165))
+    g.setCompositionMode(QPainter.CompositionMode.CompositionMode_DestinationIn)
+    g.drawImage(QPointF(), image)
+    g.end()
+    return out
+
+
+def figure_medallion(
+    painter: QPainter,
+    key: str,
+    centre: QPointF,
+    radius: float,
+    value: str,
+    tone: QColor,
+    year: int,
+    p: Palette,
+) -> None:
+    """A figure (an aura, a Loyalty) as a numbered medallion of set `key`
+    wholly in `tone`, so its colour says what the figure is or how it
+    stands, never the season. The set's Spring medallion gives the shape."""
+    scale = max(1.0, painter.device().devicePixelRatioF())
+    reach = math.ceil(radius * ROOM / 2)
+    art = QImage(
+        math.ceil(2 * reach * scale),
+        math.ceil(2 * reach * scale),
+        QImage.Format.Format_ARGB32_Premultiplied,
+    )
+    art.fill(0)
+    g = QPainter(art)
+    g.scale(scale, scale)
+    paint(g, key, QPointF(reach, reach), radius, "Spring", year, p)
+    g.end()
+    art.setDevicePixelRatio(scale)
+    painter.save()
+    painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+    painter.drawImage(centre - QPointF(reach, reach), duotone(art, tone))
+    r = radius * 0.6
+    shine = QRadialGradient(centre - QPointF(r * 0.3, r * 0.3), r * 1.4)
+    shine.setColorAt(0, tone.lighter(125))
+    shine.setColorAt(1, tone)
+    painter.setBrush(QBrush(shine))
+    painter.setPen(QPen(tone.darker(150), max(1.0, radius * 0.07)))
+    painter.drawEllipse(centre, r, r)
+    # A pale tone takes dark ink, so the number keeps its contrast.
+    painter.setPen(tone.darker(320) if tone.lightnessF() > 0.6 else WHITE)
+    painter.setFont(_font(max(8.0, radius * 0.5), bold=True))
+    painter.drawText(
+        QRectF(centre.x() - r, centre.y() - r, 2 * r, 2 * r),
+        Qt.AlignmentFlag.AlignCenter,
+        value,
     )
     painter.restore()
 

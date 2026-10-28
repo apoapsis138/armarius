@@ -34,14 +34,15 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGridLayout, QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
-from .. import artwork, references, world
+from .. import artwork, medallions, references, world
 from ..markup import markdown_text
-from ..models import Attitude
+from ..models import Attitude, Saga
 from ..sheets import character as cs
 from ..sheets import covenant as cs_cov
 from ..sheets import laboratory as cs_lab
 from . import motion, pictures
 from .markup_html import to_html
+from .medallions import figure_medallion, paint_season
 from .paper import lift, shade
 from .themes import Palette
 from .widgets import mix, serif, text
@@ -535,7 +536,11 @@ class CompassRose(QWidget):
 class Seal(QWidget):
     """A figure as a wax seal in `colour`: the value in the middle, the
     caption under it. A laboratory's or covenant's aura, a covenant's
-    Loyalty."""
+    Loyalty. A subclass draws another face in the same place by overriding
+    `face`, so whatever stands in a row of seals lines up with them."""
+
+    #: Where the seal's disc sits; the caption is under it.
+    DISC = QRectF(18, 6, 68, 68)
 
     def __init__(
         self, value: str, caption: str, colour: str, tooltip: str, p: Palette
@@ -548,10 +553,20 @@ class Seal(QWidget):
 
     def paintEvent(self, event: QPaintEvent) -> None:
         p = self.p
-        colour = QColor(self.colour)
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        seal = QRectF(18, 6, 68, 68)
+        self.face(painter, self.DISC)
+        painter.setPen(QColor(p["label"]))
+        painter.setFont(serif(10, caps=True))
+        painter.drawText(
+            QRectF(0, 78, 104, 16), Qt.AlignmentFlag.AlignCenter, self.caption
+        )
+        painter.end()
+
+    def face(self, painter: QPainter, seal: QRectF) -> None:
+        """The wax disc with the value in it."""
+        p = self.p
+        colour = QColor(self.colour)
         painter.setPen(QPen(colour, 2))
         painter.setBrush(mix(p["surface"], colour.name(), 0.18))
         painter.drawEllipse(seal)
@@ -561,26 +576,90 @@ class Seal(QWidget):
         painter.setPen(QColor(p["foreground"]))
         painter.setFont(serif(22, bold=True))
         painter.drawText(seal, Qt.AlignmentFlag.AlignCenter, self.value)
-        painter.setPen(QColor(p["label"]))
-        painter.setFont(serif(10, caps=True))
-        painter.drawText(
-            QRectF(0, 78, 104, 16), Qt.AlignmentFlag.AlignCenter, self.caption
+
+
+class SeasonSeal(Seal):
+    """A season's medallion in the saga's set where a seal's disc would
+    be, with the season's name under it: a covenant's own season beside
+    its aura and Loyalty."""
+
+    def __init__(self, saga: Saga, season: str, tooltip: str, p: Palette) -> None:
+        super().__init__("", season, p["label"], tooltip, p)
+        self.saga, self.season = saga, season
+
+    def face(self, painter: QPainter, seal: QRectF) -> None:
+        # Every set stays within 1.06 r of its centre up and down, so this
+        # radius fills the disc; the illuminated set's ivy (1.47 r to the
+        # sides) still fits the seal's width.
+        paint_season(
+            painter,
+            self.saga,
+            seal.center(),
+            seal.height() / 2 / 1.06,
+            self.season,
+            self.saga.current_year,
+            self.p,
         )
-        painter.end()
 
 
-def aura_seal(aura: cs_lab.Aura, p: Palette) -> Seal:
-    """An aura (a laboratory's or a covenant's) as a seal in its realm's
-    colour."""
+class FigureSeal(Seal):
+    """A figure as a numbered medallion in the saga's set, drawn wholly in
+    `colour`, so the colour carries the figure's meaning (an aura's realm,
+    whether Loyalty is high or low) and not the season."""
+
+    def __init__(
+        self,
+        saga: Saga,
+        value: str,
+        caption: str,
+        colour: str,
+        tooltip: str,
+        p: Palette,
+    ) -> None:
+        super().__init__(value, caption, colour, tooltip, p)
+        self.saga = saga
+
+    def face(self, painter: QPainter, seal: QRectF) -> None:
+        figure_medallion(
+            painter,
+            medallions.chosen(self.saga),
+            seal.center(),
+            seal.height() / 2 / 1.06,
+            self.value,
+            QColor(self.colour),
+            self.saga.current_year,
+            self.p,
+        )
+
+
+def aura_seal(saga: Saga, aura: cs_lab.Aura, p: Palette) -> Seal:
+    """An aura (a laboratory's or a covenant's) as a medallion in its
+    realm's colour."""
     working = (
         f"{aura.covenant} from the covenant, {aura.modifier:+d} {aura.modifier_from}"
     )
-    return Seal(
+    return FigureSeal(
+        saga,
         str(aura.total),
         f"{aura.realm} Aura",
         p[f"realm-{aura.realm}"],
         f"{aura.realm} aura {aura.total}: {working}"
         + (f"\n{aura.note}" if aura.note else ""),
+        p,
+    )
+
+
+def loyalty_seal(saga: Saga, loyalty: cs_cov.Loyalty, p: Palette) -> Seal:
+    """A covenant's prevailing Loyalty as a medallion in the theme's
+    Loyalty colours above and below zero, plain at zero."""
+    score = loyalty.score
+    tone = "loyalty-high" if score > 0 else "loyalty-low" if score < 0 else "label"
+    return FigureSeal(
+        saga,
+        f"{score:+d}" if score else "0",
+        "Loyalty",
+        p[tone],
+        f"Prevailing Loyalty {score:+d} ({loyalty.points} Loyalty Points)",
         p,
     )
 

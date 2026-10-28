@@ -31,8 +31,11 @@ there too. A familiar is bound on its magus or in their laboratory.
 <!-- /tui -->
 <!-- gui -->
 The header, with the covenant's name, its Tribunal and season, the Aegis,
-the Living Conditions, and the Aura and Loyalty as seals, stays in view
-above the chapters. The rail on the left lists the chapters: **Attributes**,
+the Living Conditions, and the Aura, Loyalty and Covenant Season as
+medallions in the saga's set, stays in view above the chapters. The
+aura's medallion is in its realm's colour, and Loyalty's is teal above
+zero and rose below, whatever the season. The rail on the left lists the
+chapters: **Attributes**,
 **Charter**, **People**, **Covenfolk**, **Laboratories**, **Possessions**,
 **Treasury**, **Manors**, **Library**, **Seasons**, **Diary**, **Build**,
 [**Secrets**](help:tab-secrets) and **Manage**. The help

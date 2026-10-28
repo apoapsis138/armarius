@@ -59,6 +59,11 @@ SCRIPTORUM = Palette(
         "realm-Divine": "#B8860B",
         "realm-Faerie": "#4A7A5C",
         "realm-Infernal": "#8B0000",
+        # Loyalty above and below zero: apart in lightness, so red-green
+        # colour blindness still tells them apart, and unlike any realm's
+        # colour.
+        "loyalty-high": "#1F6F78",
+        "loyalty-low": "#D77A93",
         # A book's binding: the brown its leather is tanned toward, the gilt
         # of its tooling, and the light and shade on its bands.
         "leather": "#4A3324",
@@ -112,6 +117,8 @@ SCRIPTORUM_DARK = Palette(
         "realm-Divine": "#E3C25A",
         "realm-Faerie": "#74B08A",
         "realm-Infernal": "#F87171",
+        "loyalty-high": "#4FB3B8",
+        "loyalty-low": "#F2A0B5",
         # A book's binding: the brown its leather is tanned toward, the gilt
         # of its tooling, and the light and shade on its bands.
         "leather": "#4A3324",

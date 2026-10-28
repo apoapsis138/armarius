@@ -21,6 +21,7 @@ from support import everything_saga
 from ars_magica_manager import medallions, storage
 from ars_magica_manager.gui import medallions as drawn
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.figures import FigureSeal, Seal, SeasonSeal
 from ars_magica_manager.gui.medallions import Medallion, SeasonHeadpiece
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.timeline import SeasonHeader
@@ -28,6 +29,8 @@ from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import SEASONS, Saga, SeasonRecord
 
 SET = "enamel"
+#: The radius a season seal draws its medallion at.
+SEAL_RADIUS = Seal.DISC.height() / 2 / 1.06
 
 
 @pytest.fixture(scope="module")
@@ -87,13 +90,25 @@ def test_the_seasons_page_title_chapters_and_ahead(app):
 def test_the_covenant_header_and_seasons_chapter(app):
     window, saga = _window()
     window.open_covenant("cov1")
-    # The header shows the covenant's own season, without words.
+    # The header shows the covenant's own season as a seal named under it,
+    # the same size as the aura and Loyalty seals and level with them.
     covenant = saga.covenant("cov1")
     assert covenant is not None
-    header = [m for m in _shown(window) if m.radius == 31]
-    assert [(m.season, m.now, m.caption) for m in header] == [
-        (covenant.covenant_season, False, False)
+    QApplication.processEvents()
+    page = window.page()
+    assert page is not None
+    seals = [s for s in page.findChildren(Seal) if s.isVisibleTo(window)]
+    season = [s for s in seals if isinstance(s, SeasonSeal)]
+    assert [(s.season, s.caption) for s in season] == [
+        (covenant.covenant_season, covenant.covenant_season)
     ]
+    others = [s for s in seals if not isinstance(s, SeasonSeal)]
+    assert {s.caption for s in others} >= {"Loyalty"}
+    assert all(isinstance(s, FigureSeal) for s in others)
+    for seal in others:
+        assert seal.size() == season[0].size()
+        top = seal.mapTo(window, QPoint()).y()
+        assert top == season[0].mapTo(window, QPoint()).y(), seal.caption
     _chapter(window, "Seasons")
     radii = sorted({m.radius for m in _shown(window)})
     assert 20 in radii and 16 in radii, "the chapter's title and its Ahead"
@@ -167,7 +182,7 @@ def test_every_placement_draws_in_the_saga_set(app, monkeypatch):
         return {r for _key, r, _s in drew}
 
     assert drawn_on(lambda: window.open_seasons()) >= {17, 24, 16}
-    assert drawn_on(lambda: window.open_covenant("cov1")) >= {17, 31}
+    assert drawn_on(lambda: window.open_covenant("cov1")) >= {17, SEAL_RADIUS}
     assert drawn_on(lambda: _chapter(window, "Seasons")) >= {20, 16}
     window.show_character("mag1")
     assert drawn_on(lambda: _chapter(window, "Planning")) >= {20}
@@ -239,6 +254,21 @@ def test_no_set_clips_in_the_headpiece_or_a_medallion(app, key):
             assert _opaque_on_edge(image) == [], (key, radius)
             assert image.pixelColor(image.width() // 2, image.height() // 2).alpha()
             widget.deleteLater()
+        # The covenant header's season seal.
+        for season in SEASONS:
+            widget = SeasonSeal(saga, season, "", p)
+            image = QImage(widget.size(), QImage.Format.Format_ARGB32)
+            image.fill(0)
+            widget.render(image, QPoint(), QRegion(), QWidget.RenderFlag.DrawChildren)
+            assert _opaque_on_edge(image) == [], (key, season, "seal")
+            widget.deleteLater()
+        # A figure (an aura, a Loyalty) drawn as a medallion in one colour.
+        widget = FigureSeal(saga, "+2", "Loyalty", p["text-success"], "", p)
+        image = QImage(widget.size(), QImage.Format.Format_ARGB32)
+        image.fill(0)
+        widget.render(image, QPoint(), QRegion(), QWidget.RenderFlag.DrawChildren)
+        assert _opaque_on_edge(image) == [], (key, "figure")
+        widget.deleteLater()
 
 
 def test_a_medallion_widget_names_its_season(app):

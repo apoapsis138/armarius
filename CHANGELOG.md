@@ -109,6 +109,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.37.0 — 2026-10-28
+
+### Illuminatio
+
+- On the desktop, a covenant's header shows its aura, Loyalty and
+  Covenant Season as a row of medallions in the saga's set, the same
+  size and level with each other, each named under it. The aura's
+  medallion is in its realm's colour and Loyalty's is teal above zero
+  and rose below, so their colour says what they are, never the season.
+  A laboratory's aura is drawn the same way.
+
 ## 3.36.1 — 2026-10-28
 
 ### Illuminatio

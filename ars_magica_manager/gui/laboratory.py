@@ -258,7 +258,7 @@ class LaboratoryPage(QWidget):
         row.addStretch(1)
         row.addWidget(fact_grid(ls.capacity_facts(lab), p, 3))
         row.addSpacing(10)
-        row.addWidget(aura_seal(ls.aura(saga, lab), p))
+        row.addWidget(aura_seal(saga, ls.aura(saga, lab), p))
         mode = self.controls.mode(p) if self.controls is not None else None
         if mode is not None:
             row.addWidget(mode, 0, Qt.AlignmentFlag.AlignTop)
