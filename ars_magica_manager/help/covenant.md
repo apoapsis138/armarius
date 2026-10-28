@@ -665,6 +665,30 @@ The covenant's animals, kept here for convenience. Livestock are not
 inhabitants: they count towards neither Total Inhabitants nor the points of
 inhabitants.
 
+### Guests
+<!-- help: section-cov-guests -->
+
+The magi staying at the covenant as its guests ([Stay as
+Guest](help:guest-stay)), each with when he came, the last year of his
+stay, his yearly fee and **This Year**: *Due* while this year's fee is
+owed, *Paid* once it is. A sketch covenant lists them on its Overview,
+while it has any.
+<!-- tui -->
+`e` edits the chosen guest's stay. More (`m`) on a guest who owes this
+year's fee opens **Pay the Fee**.
+<!-- /tui -->
+<!-- gui -->
+**Edit** opens the chosen guest's stay. **Pay the Fee**, on a guest who
+owes this year's fee, takes it.
+<!-- /gui -->
+
+**Pay the Fee** takes the year's vis from the guest's own (choose which
+Art) or his silver, and gives it to the covenant as Give does, both
+Diaries saying so; a fee in service asks what he did, and writes that in
+both Diaries. Either marks the year paid. A guest who holds too little
+is refused: give him what he needs first, or note it in the stay's
+conditions.
+
 ## Seasons tab
 <!-- help: tab-cov-seasons -->
 

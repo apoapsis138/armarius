@@ -177,6 +177,8 @@ SENTENCES_SECTION = "section-nb-sentences"
 #: tab.
 CHARTER_SECTION = "section-cov-charter"
 CLAUSES_SECTION = "section-cov-clauses"
+#: The magi staying at a covenant as its guests (guest_stays).
+GUESTS_SECTION = "section-cov-guests"
 #: A covenant's own town charter (the Chartered Town Boon) and the towns
 #: it charters (the Charter Lord Hook), on its Charter tab too.
 COV_CHARTER_LORDS_SECTION = "section-cov-charter-lords"
@@ -363,6 +365,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     COV_CHARTER_TERMS_SECTION: frozenset({"edit"}),
     CHARTER_SECTION: frozenset({"edit"}),
     CLAUSES_SECTION: frozenset({"add", "edit", "remove"}),
+    GUESTS_SECTION: frozenset({"edit"}),
     MANORS_SECTION: frozenset({"add", "edit", "remove"}),
     ESTABLISHMENTS_SECTION: frozenset({"add", "edit", "remove"}),
     HOUSEHOLD_SECTION: frozenset({"edit"}),

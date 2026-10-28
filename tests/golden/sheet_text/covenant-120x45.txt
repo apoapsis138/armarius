@@ -106,7 +106,7 @@
     ▼ Loyalty
 
       Type of Governance:       (not set)     Situational Modifiers for:
-      Base Loyalty Points:      -30           Living Conditions:  +0 (Spring)     ▆▆
+      Base Loyalty Points:      -30           Living Conditions:  +0 (Spring)
       Total modifiers:          10            (+0)
       Current Loyalty Points:   -20           Equipment:          Standard  (+0)
       Prevailing Loyalty Score: -2            Money:              Standard salary

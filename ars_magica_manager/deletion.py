@@ -296,6 +296,9 @@ def delete_covenant(saga: Saga, covenant: Covenant) -> None:
     for character in saga.characters:
         if character.covenant_id == covenant.id:
             character.covenant_id = None
+        # A guest there is a guest no more.
+        if character.stay is not None and character.stay.host_id == covenant.id:
+            character.stay = None
     for lab in saga.laboratories:
         if lab.covenant_id == covenant.id:
             lab.covenant_id = None

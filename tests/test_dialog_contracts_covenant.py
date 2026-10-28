@@ -907,6 +907,17 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#cov-clauses-list": "Amended Winter"},
         live={"#fields-live": "Amended"},
     ),
+    "pay the fee": Contract(
+        prefill={"Pawns": "3"},
+        edits={"Pawns": "2"},
+        saved=lambda s: (
+            next(c for c in s.characters if c.id == "mag_sketch").raw_vis,
+            next(c for c in s.characters if c.id == "mag_sketch").stay.paid,
+        ),
+        expected=({"vim": 3}, [1220]),
+        invalid={"Pawns": "9"},
+        shown={"#section-cov-guests": "Guests (1)", "#cov-guests-list": "Paid"},
+    ),
     "break clause": Contract(
         prefill={"Season": "Autumn", "Year": "1220", "How it was broken": ""},
         edits={"How it was broken": "Leandro kept the Vim vis."},

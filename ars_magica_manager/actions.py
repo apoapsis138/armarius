@@ -21,6 +21,7 @@ from . import (
     arms,
     catalog,
     giving,
+    guest_stays,
     hosting,
     places,
     seasons,
@@ -117,6 +118,7 @@ from .sections import (
     GILDS_SECTION,
     GOODS_SECTION,
     GRATITUDE_SECTION,
+    GUESTS_SECTION,
     HIDDEN_SECTION,
     HOUSE_RULES_SECTION,
     HOUSEHOLD_SECTION,
@@ -405,6 +407,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("f", "craft_by_magic", "Craft by Magic"),
     MenuItem("s", "seal_charter", "Seal the Charter"),
     MenuItem("b", "break_clause", "Break a Clause"),
+    # A guest's yearly fee for his hospitality, on the host's Guests.
+    MenuItem("p", "pay_fee", "Pay the Fee"),
     # The Theban treasury's loans of vis.
     MenuItem("v", "lend_vis", "Lend Vis from the Treasury"),
     MenuItem("p", "repay_vis_loan", "Repay a Loan of Vis"),
@@ -477,6 +481,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("z", "certamen_duel", "Certamen"),
     # Where a character is now: the aura his casting counts.
     MenuItem("h", "whereabouts", "Current Location"),
+    # A stay as a guest at another covenant (DE pp. 381, 518).
+    MenuItem("u", "guest_stay", "Stay as Guest"),
     # Divination and Hermetic astrology (The Mysteries Revised Edition).
     MenuItem("n", "tmre_divination", "Divination"),
     MenuItem("s", "tmre_astrology", "Astrology"),
@@ -547,6 +553,7 @@ MORE_SECTIONS: dict[str, str] = {
     "resolve_twilight": "section-aging",
     "disguise_roll": "section-char-covers",
     "whereabouts": "section-casting",
+    "guest_stay": "section-casting",
     "suggest_story": "section-cov-hooks",
     "grow_story": REGION_STORIES_SECTION,
     "trait_roll": "section-personality-traits",
@@ -1663,6 +1670,16 @@ def _breaks_clause(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _owes_fee(facts: ActionFacts, section: str) -> bool:
+    """Pay the Fee: on the Guests list, for a guest owing this year's."""
+    covenant = facts.selected_covenant
+    return (
+        section == GUESTS_SECTION
+        and covenant is not None
+        and guest_stays.can_pay(facts.saga, covenant, facts.chosen_row(section))
+    )
+
+
 def _plans_journey(_facts: ActionFacts, section: str) -> bool:
     """Travel, the calculator: on Ahead, the Seasons page's or a
     covenant's."""
@@ -1710,6 +1727,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "add_purity": _adds_purity,
     "plan_journey": _plans_journey,
     "break_clause": _breaks_clause,
+    "pay_fee": _owes_fee,
     "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
     "invest_labor": _works_for_labor(merchants.earns_labor),
     # A grog's season of copying, on This Season: planned, then cleared.

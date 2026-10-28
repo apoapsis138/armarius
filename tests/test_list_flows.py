@@ -44,6 +44,7 @@ from ars_magica_manager.models import (
     Fight,
     FightSide,
     GoodDef,
+    GuestStay,
     HermeticProject,
     IncomeSource,
     Inhabitant,
@@ -851,6 +852,50 @@ async def test_clauses_edit_delete_and_break_act_on_the_chosen_row():
         await pilot.press("y")
         assert await wait_until(pilot, lambda: len(_saved(case)) == 2)
         assert [c.number for c in _saved(case)] == ["1", "2"]
+
+
+# -- A covenant's guests --
+
+
+async def test_guests_edit_and_pay_act_on_the_chosen_row():
+    """In one session, on two guests of the Keep from another covenant: e
+    opens the chosen guest's Stay as Guest, and m his Pay the Fee."""
+    saga = _saga()
+    saga.covenants.append(Covenant(id="cov2", saga_id="test_saga", name="Tower"))
+    saga.characters += [
+        Character(
+            id=f"guest{i}",
+            name=name,
+            type="magus",
+            covenant_id="cov2",
+            raw_vis={"vim": 5},
+            stay=GuestStay("cov1", saga.current_year, fee_kind="vis", fee=2),
+        )
+        for i, name in enumerate(("Aurelia", "Bertrand"))
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-guests",
+        "cov-guests-list",
+        lambda s: [c.stay for c in s.characters if c.stay is not None],
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert "Bertrand" in str(app.screen.query_one("#fields-title").render())
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+
+        await _press(pilot, app, "m", FieldsDialog)
+        assert "Bertrand" in str(app.screen.query_one("#fields-title").render())
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot, lambda: _saved(case)[1].paid == [saga.current_year]
+        )
+        assert _saved(case)[0].paid == []
 
 
 # -- A laboratory's Magic Items --

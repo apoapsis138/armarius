@@ -577,6 +577,7 @@ GUIDES = [
     "guide-religion",
     "guide-threat-clock",
     "guide-story-hook",
+    "guide-guest-stay",
 ]
 
 

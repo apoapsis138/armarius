@@ -1494,6 +1494,20 @@ CONTRACTS: dict[str, Contract] = {
         expected=(4, "Divine"),
         invalid=[{"Location": "typed", "Its aura": "x"}],
     ),
+    "stay as guest": Contract(
+        prefill={"Staying at": ""},
+        # Fengheld keeps the Rhine's Peripheral Code: choosing it fills in
+        # 3 years and 3 pawns of vis a year (GotF p. 20).
+        edits={"Staying at": "cov_sketch"},
+        saved=lambda s: (
+            character(s).stay.host_id,
+            character(s).stay.until_year,
+            character(s).stay.fee_kind,
+            character(s).stay.fee,
+        ),
+        expected=("cov_sketch", 1222, "vis", 3),
+        invalid=[{"Staying at": "cov_sketch", "Since (year)": "x"}],
+    ),
     "disguise roll": Contract(
         prefill={"Roll": "looks", "Convincing someone of it": True},
         edits={"Change sex (+6)": True, "Stress die": "7"},

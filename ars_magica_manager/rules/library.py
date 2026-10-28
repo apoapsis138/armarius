@@ -10,7 +10,7 @@ from dataclasses import dataclass
 from .. import book_kinds, catalog
 from ..book_kinds import Adjustment
 from ..models import Book, Character, Codex, Covenant, Saga, Spell
-from . import options
+from . import hospitality, options
 from .rounding import round_up
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Six: Covenants, Library, p. 179"
@@ -132,14 +132,17 @@ def books_owned_by(saga: Saga, kind: str, owner_id: str) -> list[Book]:
 def can_read(saga: Saga, character: Character, book: Book) -> bool:
     """Whether `character` may study `book`: a
     book in the covenant's library (owned by the covenant) is open to
-    everyone of that covenant; a book someone keeps (in their inventory, or
+    everyone of that covenant, and to a guest staying there with the use
+    of its library (scribal hospitality, DE p. 381); a book someone keeps (in their inventory, or
     in their laboratory) only to them. A book with no owner is in nobody's
     library."""
     owner = owner_record(saga, book)
     if owner is None:
         return False
     if book.owner_kind == "covenant":
-        return character.covenant_id == owner.id
+        return character.covenant_id == owner.id or hospitality.reads_at(
+            character, owner.id
+        )
     if book.owner_kind == "laboratory":
         return owner.owner_id == character.id
     return owner.id == character.id

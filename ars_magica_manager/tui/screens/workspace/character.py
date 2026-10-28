@@ -13,6 +13,7 @@ from .... import (
     catalog,
     creation,
     disputations,
+    guest_stays,
     health,
     labor,
     melee_events,
@@ -1817,6 +1818,18 @@ class CharacterActions(WorkspaceBase):
         run_steps(
             self.app,
             whereabouts_forms.where_form(self.saga, character),
+            lambda _end: self._commit("section-casting"),
+        )
+
+    def action_guest_stay(self) -> None:
+        """More's Stay as Guest on Casting Scores: a stay at another
+        covenant."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            guest_stays.stay_form(self.saga, character),
             lambda _end: self._commit("section-casting"),
         )
 

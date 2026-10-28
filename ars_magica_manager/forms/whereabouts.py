@@ -1,7 +1,8 @@
 """More's Current Location on a character's Casting Scores: where he is now,
 when away from home, so his casting counts that place's aura, a foreign
 realm's included (DE pp. 410-411). A place of the saga gives its aura; one
-not kept is typed in. His seasons, aging and warping stay at home.
+not kept is typed in. A guest's home, while he stays at another covenant
+(guest_stays), is that covenant. His seasons, aging and warping stay at home.
 
 Pattern: a commands.Form over the character.
 """
@@ -36,7 +37,12 @@ def fields(saga: Saga, character: Character) -> list[DialogField]:
             "select",
             where,
             options=[
-                ("At home (the covenant's aura)", HOME),
+                (
+                    "Where he is a guest (its aura)"
+                    if character.stay is not None
+                    else "At home (the covenant's aura)",
+                    HOME,
+                ),
                 *([("At a place of the saga", PLACE)] if places else []),
                 ("Somewhere else (type its aura)", TYPED),
             ],
@@ -74,7 +80,9 @@ def apply(saga: Saga, character: Character, values: dict[str, Any]) -> list[str]
     character.away_realm = str(values.get("realm") or "") if where == TYPED else ""
     aura, realm = realms.present_aura(saga, character)
     if where == HOME:
-        return notes(f"{escape(character.name)} is at home: {realm} aura {aura}.")
+        staying = realms.host(saga, character)
+        at = f"a guest at {escape(staying.name)}" if staying else "at home"
+        return notes(f"{escape(character.name)} is {at}: {realm} aura {aura}.")
     return notes(
         f"{escape(character.name)} is away: casting there counts a {realm} aura of "
         f"{aura} (DE pp. 410-411)."
@@ -90,6 +98,8 @@ def where_line(saga: Saga, character: Character) -> str:
         where = f"Away, at {escape(place.name)}" if place else "Away"
     elif character.away_aura is not None:
         where = "Away from home"
+    elif (staying := realms.host(saga, character)) is not None:
+        where = f"A guest at {escape(staying.name)}"
     else:
         covenant = saga.covenant(character.covenant_id)
         where = f"At home, at {escape(covenant.name)}" if covenant else "At home"

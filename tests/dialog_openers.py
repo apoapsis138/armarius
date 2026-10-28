@@ -18,6 +18,7 @@ from ars_magica_manager import (
     combat_options_form,
     giving,
     grog_templates,
+    guest_stays,
     meeting,
     melee_events,
     menagerie,
@@ -72,6 +73,7 @@ from ars_magica_manager.models import (
     CultDegree,
     CultScript,
     DeepCover,
+    GuestStay,
     HermeticProject,
     KnownSpell,
     LandProject,
@@ -545,6 +547,24 @@ async def _open_break_clause(ws) -> None:
     covenant = _with_clause(ws)
     await ws._current_sheet_view().build_all_tabs()
     ws._run_steps(charter_forms.break_clause(ws.saga, covenant, 0))
+
+
+def _with_guest(ws):
+    """Severinus of Fengheld as a guest of the Keep, owing 3 pawns of vis
+    this year, with 5 pawns of Vim (in memory, saved only with the
+    form)."""
+    guest = next(c for c in ws.saga.characters if c.id == "mag_sketch")
+    guest.raw_vis = {"vim": 5}
+    guest.stay = GuestStay(
+        ws.selected_covenant.id, ws.saga.current_year, "Spring", fee_kind="vis", fee=3
+    )
+    return ws.selected_covenant
+
+
+async def _open_pay_fee(ws) -> None:
+    covenant = _with_guest(ws)
+    await ws._current_sheet_view().build_all_tabs()
+    ws._run_steps(guest_stays.pay_form(ws.saga, covenant, 0))
 
 
 async def _open_seal_charter(ws) -> None:
@@ -1604,6 +1624,7 @@ OPENERS: dict[str, Opener] = {
     "edit clause": Opener("covenant", _open_edit_clause),
     "break clause": Opener("covenant", _open_break_clause),
     "seal charter": Opener("covenant", _open_seal_charter),
+    "pay the fee": Opener("covenant", _open_pay_fee),
     # The Theban treasury's loans of vis.
     "lend vis": Opener(
         "theban_tribunal",
@@ -1943,6 +1964,10 @@ OPENERS: dict[str, Opener] = {
     "where he is": Opener(
         "character",
         _run(lambda ws: whereabouts.where_form(ws.saga, ws.selected_character)),
+    ),
+    "stay as guest": Opener(
+        "character",
+        _run(lambda ws: guest_stays.stay_form(ws.saga, ws.selected_character)),
     ),
     "trait roll": Opener(
         "character",

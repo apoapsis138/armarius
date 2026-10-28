@@ -900,6 +900,57 @@ class AnimalForm:
         return cls(**known_fields(cls, data))
 
 
+#: How a guest pays for his hospitality: pawns of vis or pounds of silver
+#: a year, seasons of service a year, or nothing asked.
+FEE_VIS, FEE_SILVER, FEE_SERVICE, FEE_NONE = "vis", "silver", "service", "none"
+FEE_KINDS: tuple[str, ...] = (FEE_VIS, FEE_SILVER, FEE_SERVICE, FEE_NONE)
+
+
+@dataclass
+class GuestStay:
+    """A stay as a guest at another covenant of the saga (DE p. 518;
+    scribal hospitality, DE p. 381 and Covenants pp. 96-98): the host,
+    when the stay began and the year it ends with (None: open-ended), the
+    yearly fee (`fee` of `fee_kind`), whether the guest may read and copy
+    from the host's library and has a laboratory there, the conditions of
+    hospitality in words, and the years whose fee is paid."""
+
+    host_id: str
+    year: int | None = None
+    season: str = ""
+    until_year: int | None = None
+    fee_kind: str = FEE_NONE
+    fee: int = 0
+    library: bool = True
+    laboratory: bool = False
+    terms: str = ""
+    paid: list[int] = field(default_factory=list)
+
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> GuestStay:
+        if not isinstance(data, dict) or not data.get("host_id"):
+            raise ValueError(f"A guest's stay names no host covenant: {data!r}.")
+        d = dict(data)
+        kind = d.get("fee_kind") or FEE_NONE
+        if kind not in FEE_KINDS:
+            raise ValueError(f"A guest's stay: {kind!r} is not a kind of fee.")
+        d["fee_kind"] = kind
+        for key in ("year", "until_year"):
+            value = d.get(key)
+            if value is not None and (
+                isinstance(value, bool) or not isinstance(value, int)
+            ):
+                raise ValueError(f"A guest's stay: {key} {value!r} isn't a year.")
+        fee = d.get("fee") or 0
+        if isinstance(fee, bool) or not isinstance(fee, int) or fee < 0:
+            raise ValueError(f"A guest's stay: the fee {fee!r} isn't a whole number.")
+        paid = d.get("paid") or []
+        if not all(isinstance(y, int) and not isinstance(y, bool) for y in paid):
+            raise ValueError(f"A guest's stay: the years paid {paid!r} aren't years.")
+        d["paid"] = list(paid)
+        return cls(**known_fields(cls, d))
+
+
 @dataclass
 class LabTextAccess:
     """How far a magus can read one author's raw Lab Texts: up to `level`, and how that
@@ -1013,6 +1064,9 @@ class Character:
     away_place_id: str = ""
     away_aura: int | None = None
     away_realm: str = ""
+    #: His stay as a guest at another covenant of the saga, if he is one
+    #: (guest_stays.py); older saves load with none.
+    stay: GuestStay | None = None
     #: The Stirpes the character has Invigorated (older saves load with
     #: none): harvested each Winter while breeding seasons are left.
     stirpes: list[Stirps] = field(default_factory=list)
@@ -1140,6 +1194,7 @@ class Character:
         d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
         if d.get("alchemy") is not None:
             d["alchemy"] = Alchemy.from_dict(d["alchemy"])
+        d["stay"] = GuestStay.from_dict(d["stay"]) if d.get("stay") else None
         might = d.get("magic_might", 0)
         if isinstance(might, bool) or not isinstance(might, int):
             raise ValueError(

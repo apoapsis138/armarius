@@ -31,6 +31,7 @@ from .. import (
     deletion,
     disputations,
     giving,
+    guest_stays,
     health,
     labor,
     melee_events,
@@ -203,6 +204,8 @@ NOT_ON_PAGES = frozenset(
         # The desktop draws them as the Charter's and Clauses' own buttons.
         "seal_charter",
         "break_clause",
+        # The desktop draws it as the Guests list's own button.
+        "pay_fee",
         # The desktop draws the names a page holds as links instead.
         "go_to",
         # The Theban treasury's loans: the Tokens list's own buttons.
@@ -600,6 +603,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "disguise_roll": ((NodeKind.CHARACTER, "Covers"),),
     # At the top of Hermetic Magic, under where the character is now.
     "whereabouts": ((NodeKind.CHARACTER, "Current Location"),),
+    "guest_stay": ((NodeKind.CHARACTER, "Current Location"),),
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
@@ -1814,6 +1818,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "resolve_twilight": _needs(_character, twilight_forms.resolve_twilight_form),
     "disguise_roll": _needs(_character, cover_forms.disguise_form),
     "whereabouts": _needs(_character, whereabouts_forms.where_form),
+    "guest_stay": _needs(_character, guest_stays.stay_form),
     "suggest_story": _needs(_covenant, hook_story_forms.story_form),
     "build_ship": _needs(_covenant, ship_build_forms.build_form),
     "cross_threshold": _needs(_neighbour, threshold_forms.threshold_form),

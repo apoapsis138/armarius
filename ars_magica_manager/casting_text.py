@@ -35,6 +35,7 @@ from .rules.infernalists import hierarchy
 from .rules.realms import (
     away,
     home_in_regio,
+    host,
     present_aura,
     present_aura_kind,
 )
@@ -105,6 +106,11 @@ def casting_scores_text(saga: Saga, magus: Character) -> str:
         *(
             [f"[$label]Away from home:[/] a {realm} aura of {aura} (Current Location)."]
             if away(magus)
+            else [
+                f"[$label]A guest at {escape(staying.name)}:[/] a {realm} aura of "
+                f"{aura} (Stay as Guest)."
+            ]
+            if (staying := host(saga, magus)) is not None
             else []
         ),
         "",

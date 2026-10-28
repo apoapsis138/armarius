@@ -30,6 +30,11 @@ from .character import BOND_APPLIES as BOND_APPLIES
 from .character import BRUISE_SEVERITIES as BRUISE_SEVERITIES
 from .character import COVER as COVER
 from .character import COVER_KINDS as COVER_KINDS
+from .character import FEE_KINDS as FEE_KINDS
+from .character import FEE_NONE as FEE_NONE
+from .character import FEE_SERVICE as FEE_SERVICE
+from .character import FEE_SILVER as FEE_SILVER
+from .character import FEE_VIS as FEE_VIS
 from .character import PERSONA_KIND as PERSONA_KIND
 from .character import TRADITION_EFFECT_KINDS as TRADITION_EFFECT_KINDS
 from .character import TRADITION_ITEM_KINDS as TRADITION_ITEM_KINDS
@@ -51,6 +56,7 @@ from .character import Description as Description
 from .character import Discipline as Discipline
 from .character import Disease as Disease
 from .character import GrogYear as GrogYear
+from .character import GuestStay as GuestStay
 from .character import HermeticBackground as HermeticBackground
 from .character import Investment as Investment
 from .character import LabTextAccess as LabTextAccess

@@ -20,6 +20,7 @@ from .... import (
     arms,
     book_value,
     catalog,
+    guest_stays,
     hermetic_projects,
     manors,
     seasons,
@@ -68,6 +69,7 @@ from ....sections import (
     COV_AHEAD_SECTION,
     COV_CHARTER_LORDS_SECTION,
     COV_CHARTER_TERMS_SECTION,
+    GUESTS_SECTION,
     MAGI_SECTION,
     WHAT_MATTERS_SECTION,
 )
@@ -117,6 +119,7 @@ class CovenantSheetView(KindTabsView):
                 **manors.covenant_ops(saga, covenant),
             }
         self.core_ops.update(charter_forms.charter_ops(saga, covenant))
+        self.core_ops.update(guest_stays.section_ops(saga, covenant))
         self.core_ops.update(secrets_ops(covenant))
         # A covenant's Hermetic Projects: their tab, once one is begun.
         self.shows_projects = not self.sketch and hermetic_projects.has_projects(
@@ -277,7 +280,28 @@ class CovenantSheetView(KindTabsView):
                     yield from self._relations(covenant)
         else:
             yield from self._relations(covenant)
+        # A sketch lists its guests only while it has some.
+        if guest_stays.guests(saga, covenant):
+            yield from self._guests()
         yield from self._connections(covenant)
+
+    def _guests(self, group: str | None = None) -> ComposeResult:
+        """The magi staying at the covenant as its guests."""
+        saga, covenant = self.saga, self.covenant
+        with SheetSection(
+            title=self._titled(
+                GUESTS_SECTION,
+                GUESTS_SECTION,
+                lambda: guest_stays.title(saga, covenant),
+            ),
+            id=GUESTS_SECTION,
+        ):
+            yield self._list(
+                GUESTS_SECTION,
+                lambda: guest_stays.grid(saga, covenant).lines(),
+                id="cov-guests-list",
+                group=group,
+            )
 
     def _build_tab(self) -> ComposeResult:
         """What the covenant's Build Points went on: the one
@@ -597,6 +621,7 @@ class CovenantSheetView(KindTabsView):
                         yield SelectableList(
                             self._inh_rows(kind), id=f"inh-{kind}-list", group="inh"
                         )
+                yield from self._guests(group="inh")
             yield DetailsPanel(inh.detail_text(None, saga.current_year), id="inh-panel")
 
     def _possessions_tab(self) -> ComposeResult:
@@ -918,6 +943,15 @@ class CovenantSheetView(KindTabsView):
             event.stop()
             self.query_one("#cov-charter-info", Static).update(
                 cc.info(cc.charter_of(self.covenant), event.data_index, wide=True)
+            )
+            return
+        if list_id == "cov-guests-list":
+            event.stop()
+            if self.sketch:
+                # A sketch's Overview has no details panel.
+                return
+            self.query_one("#inh-panel", Static).update(
+                guest_stays.detail_text(self.saga, self.covenant, event.data_index)
             )
             return
         if list_id == "cov-diary-list":

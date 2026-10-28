@@ -1079,3 +1079,31 @@ told, or grows into a threat.
    [How to set up a threat's clock](help:guide-threat-clock)).
 
 **See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
+
+# How to stay at another covenant
+<!-- help: guide-guest-stay -->
+
+Flavia of Fengheld spends three years at a Rhine covenant to read its
+library: she pays three pawns of vis a year, studies its summae, and the
+storyguide asks the fee each year.
+
+1. **Make her a guest.** On Flavia's Casting Scores, choose **Stay as
+   Guest** (More; on the desktop, under Current Location). Choose the
+   host in **Staying at**: a Rhine covenant fills in three years and
+   three pawns of vis a year (Guardians of the Forests p. 20). Elsewhere,
+   type the terms the troupe agrees. Tick **May study and copy from its
+   library**.
+2. **Cast and study there.** Her Casting Scores now count the host's
+   aura. In her season's plan, the host's books are offered beside her
+   own, to study or copy.
+3. **Pay the fee.** On the host's Inhabitants (a sketch covenant's
+   Overview), [Guests](help:section-cov-guests) shows her fee as *Due*.
+   Choose her and **Pay the Fee**: the vis goes from her to the
+   covenant, and both Diaries say so.
+4. **Bring a gift.** Give the host something with [Give](help:give):
+   courtesy asks it, and House Jerbiton's code counts it (Houses of
+   Hermes: Societates p. 51).
+5. **Go home.** When the stay ends, open Stay as Guest again and choose
+   **Not a guest anywhere**.
+
+**See also:** [Stay as Guest](help:guest-stay), [Current Location](help:whereabouts)

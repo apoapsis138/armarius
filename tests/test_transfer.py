@@ -19,6 +19,7 @@ from ars_magica_manager.models import (
     DiaryEntry,
     EnchantedDevice,
     Familiar,
+    GuestStay,
     Inhabitant,
     InstilledEffect,
     KnownSpell,
@@ -231,6 +232,22 @@ def test_importing_a_character_matches_links_by_name_or_drops_them():
         "Flavia": LabTextAccess(20, "decoded"),
         "Old Jacobus": LabTextAccess(10),
     }
+
+
+def test_a_guest_s_stay_follows_its_host_by_name_or_ends():
+    source = _source()
+    leandro = source.character("leandro")
+    assert leandro is not None
+    leandro.stay = GuestStay("keep", 1220, "Spring", fee_kind="vis", fee=3)
+    target = _target()
+    transfer.apply(target, transfer.plan_import(target, _roundtrip(source, leandro)))
+    stay = target.characters[0].stay
+    assert stay is not None and stay.host_id == "hold"
+
+    target = _target()
+    target.covenants[0].name = "Elsewhere"
+    transfer.apply(target, transfer.plan_import(target, _roundtrip(source, leandro)))
+    assert target.characters[0].stay is None
 
 
 def test_importing_into_the_same_saga_makes_a_second_copy_with_new_ids():

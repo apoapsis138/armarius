@@ -162,16 +162,29 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
     effective Aura (its Boons and Hooks included); 0 Magic without one. The
     one place this is worked out (casting totals, vis study,
     aging and warping all use it)."""
-    covenant = saga.covenant(character.covenant_id)
+    return aura_of(saga.covenant(character.covenant_id))
+
+
+def aura_of(covenant: Covenant | None) -> tuple[int, str]:
+    """A covenant's effective Aura (its Boons and Hooks included) and its
+    realm; 0 Magic for none."""
     if covenant is None:
         return 0, HERMETIC
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
 
 
+def host(saga: Saga, character: Character) -> Covenant | None:
+    """The covenant the character is staying at as a guest, if any
+    (guest_stays.py)."""
+    stay = character.stay
+    return saga.covenant(stay.host_id) if stay is not None else None
+
+
 def present_aura(saga: Saga, character: Character) -> tuple[int, str]:
     """The aura (score, realm) a character is in now: the place he is
-    at, or the aura typed, when he is away; else his home's. Casting,
+    at, or the aura typed, when he is away; else the covenant he is a
+    guest at's, while he is one; else his home's. Casting,
     Penetration and the like use it; his seasons, aging and warping his
     home's (DE pp. 410-411)."""
     if character.away_place_id:
@@ -180,6 +193,9 @@ def present_aura(saga: Saga, character: Character) -> tuple[int, str]:
             return sites.aura_at(place)
     if character.away_aura is not None:
         return character.away_aura, character.away_realm or HERMETIC
+    staying = host(saga, character)
+    if staying is not None:
+        return aura_of(staying)
     return home_aura(saga, character)
 
 
@@ -192,6 +208,9 @@ def present_aura_kind(saga: Saga, character: Character) -> str:
             return sites.aura_kind_at(place)
     if character.away_aura is not None:
         return ""
+    staying = host(saga, character)
+    if staying is not None:
+        return sites.kind_where(sites.covenant_place(saga, staying))
     return home_aura_kind(saga, character)
 
 

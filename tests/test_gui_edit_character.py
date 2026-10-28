@@ -150,7 +150,10 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
     page = _page(window)
     spells = section_buttons(page, "Known Spells")
     assert set(spells) == {"Add", "Edit", "Delete"}
-    assert set(section_buttons(page, "Current Location")) == {"Current Location"}
+    assert set(section_buttons(page, "Current Location")) == {
+        "Current Location",
+        "Stay as Guest",
+    }
     others = section_buttons(page, "Magic Outside the Lab")
     assert set(others) == {"Craft by Magic", "Cast in a Lacuna"}
     # Their forms open as windows over the page, not in place.

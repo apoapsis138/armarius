@@ -242,6 +242,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-guests": {
+      "active": "section-cov-guests",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(nothing)",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-cov-ahead": {
       "active": "section-cov-ahead",
       "keys": {
@@ -700,7 +710,7 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "FieldsDialog: Current Location: Leandro",
+        "m": "MenuScreen: Current Location, Stay as Guest",
         "slash": "(disabled)"
       }
     },

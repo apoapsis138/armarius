@@ -109,6 +109,31 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.35.0 — 2026-10-28
+
+### Pagina
+
+- A magus can stay as a guest at another covenant of the saga: Stay as
+  Guest, beside Current Location, says where, since when and until when,
+  the yearly fee (pawns of vis, pounds of silver, seasons of service or
+  none), whether he may use its library and has a laboratory there, and
+  the conditions of his hospitality. Arriving and leaving are written in
+  his Diary and the host's.
+- A host of a Rhine Tribunal fills in its Peripheral Code's terms: three
+  to seven years, three pawns of vis a year, no laboratory owed.
+- The host lists its guests (on Inhabitants, or a sketch covenant's
+  Overview while it has any), with whether this year's fee is due; Pay
+  the Fee hands the vis or silver over as Give does, or records the
+  service, in both Diaries.
+- While he stays, his casting counts the host's aura, and, with the use
+  of its library, its books are his to study and copy. Deleting the host
+  ends the stay, and importing him finds his host by name.
+
+### Glossa
+
+- Help for Stay as Guest (with House Jerbiton's code of hospitality) and
+  the Guests list, and a how-to: How to stay at another covenant.
+
 ## 3.34.1 — 2026-10-28
 
 ### Fundamenta

@@ -283,9 +283,11 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Craft by Magic",
         "Cast in a Lacuna",
     ]
-    # Where he is: the aura his casting counts (DE pp. 410-411).
+    # Where he is: the aura his casting counts (DE pp. 410-411), and his
+    # stay as a guest at another covenant.
     assert [i.label for i in menu_forms.placed(magus, "Current Location")] == [
-        "Current Location"
+        "Current Location",
+        "Stay as Guest",
     ]
     assert not actions.available("craft_by_magic", grog)
 

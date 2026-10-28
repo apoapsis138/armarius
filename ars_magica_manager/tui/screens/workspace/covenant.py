@@ -10,6 +10,7 @@ from typing import Any, ClassVar
 from .... import (
     catalog,
     covenant_diary,
+    guest_stays,
     hermetic_projects,
     menagerie,
     seasons,
@@ -48,6 +49,7 @@ from ....sections import (
     BEASTS_SECTION,
     CHARTER_SECTION,
     CLAUSES_SECTION,
+    GUESTS_SECTION,
     PROJECTS_SECTION,
 )
 from ..fields import FieldsDialog
@@ -842,6 +844,18 @@ class CovenantActions(WorkspaceBase):
                 self.saga, covenant, view.section_row(CLAUSES_SECTION)
             ),
             lambda _end: self._commit(CLAUSES_SECTION),
+        )
+
+    def action_pay_fee(self) -> None:
+        """More's Pay the Fee on the chosen guest."""
+        covenant = self.selected_covenant
+        view = self._covenant_sheet_view
+        if covenant is None or view is None:
+            return
+        run_steps(
+            self.app,
+            guest_stays.pay_form(self.saga, covenant, view.section_row(GUESTS_SECTION)),
+            lambda _end: self._commit(GUESTS_SECTION, "tab-cov-diary"),
         )
 
     # -- Covenant: Diary --

@@ -173,9 +173,9 @@
       Number of Laborers:           0
       Other People:                 0
       Total Inhabitants:            8
-
+                                                                                                      ▁▁
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Miscellaneous                                                                                   ▇▇
+    ▼ Miscellaneous
 
       Aging for Magi:    0                              Magic Servants:  0
       Aging for Mundane: 0                              Magic Teamsters: 0

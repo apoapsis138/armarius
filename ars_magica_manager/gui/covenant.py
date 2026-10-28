@@ -32,6 +32,7 @@ from .. import (
     boon_hook_text,
     catalog,
     giving,
+    guest_stays,
     hermetic_projects,
     manors,
     seasons,
@@ -61,7 +62,11 @@ from ..forms import world as world_forms
 from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
 from ..references import Fact
 from ..rules import library
-from ..sections import COV_CHARTER_LORDS_SECTION, COV_CHARTER_TERMS_SECTION
+from ..sections import (
+    COV_CHARTER_LORDS_SECTION,
+    COV_CHARTER_TERMS_SECTION,
+    GUESTS_SECTION,
+)
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
@@ -557,6 +562,9 @@ class CovenantPage(QWidget):
                 )
             )
         parts += relations(saga, covenant, p, self.run)
+        # A sketch lists its guests only while it has some.
+        if guest_stays.guests(saga, covenant):
+            parts.append(self._guests(covenant))
         parts.append(connections_section(saga, covenant, p, self.run))
         parts.append(
             text(
@@ -693,7 +701,42 @@ class CovenantPage(QWidget):
             {kind: inh.KIND_TITLES[kind] for kind in INHABITANT_KINDS},
             lambda kind: inhabitant_forms.inhabitant_ops(saga, covenant, kind),
         )
+        parts.append(self._guests(covenant))
         return scrolling_page(p, *parts)
+
+    def _guests(self, covenant: Covenant) -> QWidget:
+        """The magi staying at the covenant as its guests, with Edit (their
+        Stay as Guest) and Pay the Fee; the chosen one's terms go to the
+        inspector."""
+        saga = self.saga
+        grid = guest_stays.grid(saga, covenant)
+
+        def show(row: int) -> None:
+            self.inspect(
+                grid.rows[row][0],
+                "A guest",
+                guest_stays.detail_text(saga, covenant, row),
+            )
+
+        widget = table_section(
+            guest_stays.title(saga, covenant),
+            grid.table(),
+            guest_stays.ops(saga, covenant),
+            self.p,
+            self.run,
+            empty=grid.empty,
+            on_choose=show,
+            more=[
+                (
+                    guest_stays.PAY_TITLE,
+                    "vis",
+                    lambda row: guest_stays.pay_form(saga, covenant, row),
+                    lambda row: guest_stays.can_pay(saga, covenant, row),
+                )
+            ],
+        )
+        widget.setObjectName(GUESTS_SECTION)
+        return widget
 
     def _groups(
         self,

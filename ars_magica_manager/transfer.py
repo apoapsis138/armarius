@@ -724,6 +724,13 @@ def _plan_characters(job: _Import) -> None:
         old_id = character.id
         character.id = job.record_map[CHARACTER][old_id]
         character.covenant_id = job.link(COVENANT, character.covenant_id)
+        if character.stay is not None:
+            # A guest of a covenant this saga hasn't is a guest no more.
+            host = job.link(COVENANT, character.stay.host_id)
+            if host is None:
+                character.stay = None
+            else:
+                character.stay.host_id = host
         for held in character.virtues_flaws:
             held.vf_id = job.entry(held.vf_id)
         for known in character.spells_known:

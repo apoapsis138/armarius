@@ -3337,7 +3337,56 @@ A foreign realm's aura then counts as the realms' interactions say
 (DE pp. 410-411): a Magic magus's casting is lowered in a Divine or
 Infernal aura, and so on. The Casting Scores say he is away. His seasons,
 laboratory work, aging and warping stay at home. Set him back **At home**
-when he returns.
+when he returns. While he is a guest at another covenant
+([Stay as Guest](help:guest-stay)), **Where he is a guest** takes the
+place of At home, and counts that covenant's aura.
+
+## Stay as Guest
+<!-- help: guest-stay -->
+
+Magi are expected to take in visiting magi, even unannounced (DE p.
+518), and a magus copying from a library that isn't his own enjoys
+*scribal hospitality*, usually for a payment or a service (DE p. 381);
+guests count their stays in seasons, and are charged for their quills,
+vellum and ink (Covenants pp. 96-98). **Stay as Guest** (More on Casting
+Scores; on the desktop, a button under Current Location, at the top of
+the Hermetic Magic chapter) makes the magus a guest of another covenant
+of the saga:
+
+- **Staying at**: the host (any covenant but his own), or **Not a guest
+  anywhere** to end the stay.
+- **Since** and **Until the end of**: when the stay began, and the last
+  year of it (blank for open-ended).
+- **Fee**: pawns of vis, pounds of silver or seasons of service a year,
+  or no fee, and **How many**.
+- **May study and copy from its library** and **Has a laboratory
+  there**, and the **Conditions of hospitality** in words.
+
+A host of a Rhine Tribunal fills in its Peripheral Code's terms when it
+is chosen: at least three years and at most seven, three pawns of vis a
+year (a season's service may stand in for it), and no laboratory owed
+(Guardians of the Forests p. 20); a stay outside those years isn't
+saved. Elsewhere the books set no terms, and the troupe agrees them.
+
+While he stays, his casting counts the host's aura (unless Current
+Location says he is elsewhere), the Casting Scores say so, and, with the
+use of the library, its books join those he may study and copy in his
+season's plan. His seasons, laboratory, aging and warping stay with his
+own records. Starting and ending a stay are written in his Diary and the
+host's. The host lists him under [Guests](help:section-cov-guests),
+where **Pay the Fee** takes each year's.
+
+House Jerbiton keeps a code of courtesy between guest and host (Houses
+of Hermes: Societates p. 51): the guest announces himself, his business
+and when he will leave, brings a small gift, is good company, helps if
+trouble comes and leaves when asked; the host says plainly whether he
+offers hospitality, gives counsel on the region's dangers, food, wine
+and a bed, a gift in return (an uneven exchange is a debt of honour) and
+protection. Breaking it insults only Jerbiton magi. The app keeps no
+rules for it: give the gifts with [Give](help:give), and write the rest
+in the Diaries.
+
+**See also:** [How to stay at another covenant](help:guide-guest-stay)
 
 ## Certamen
 <!-- help: certamen-duel -->
