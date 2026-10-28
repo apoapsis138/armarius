@@ -176,7 +176,7 @@ OCCUPATION_NAMES = ("Agriculture", "Craft", "Service", "Trade")
 CLERICS = frozenset(
     {
         "vf_priest",
-        "vf_brother_priest",
+        "vf_brother_chaplain",
         "vf_eastern_priest",
         "vf_mendicant_friar",
         "vf_senior_clergy",

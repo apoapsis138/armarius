@@ -290,7 +290,7 @@ The Create a New Character form asks for a Name, a Type (magus, companion, Mythi
 - **A Grogs template** (a grog, while Grogs is in play; marked "(Grogs)"): one of the nineteen kinds of grog in Grogs, Chapter 7, such as The Advisor or The Street Thug. These are guidance rather than finished characters, so the app asks for the template's choices next (see [A Grogs template](help:grog-templates)) and the grog starts In Creation.
 - **A quick recipe** (marked "(DE quick)"): the Definitive Edition's Quick and Easy Virtues and Flaws, for a grog, a martial, learned, social or magical companion, or a magus. The app asks for the recipe's choices next (see [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)) and the character starts In Creation with those Virtues and Flaws.
 - **A Mythic Companion template** (a Mythic Companion; marked with its book, such as "(DE)" or "(RoP:D)"): one kind of Mythic Companion, such as the Faerie Doctor or the Zahid, with the Virtues and Flaws its book requires and its minimum Abilities. See [A Mythic Companion template](help:mythic-companion-templates).
-- **A supplement's companion** (a companion; marked with its book, such as "(RoP:D)"): a ready-made companion from a supplement, such as the Byzantine Priest. See [A supplement's companion](help:companion-sample-templates).
+- **A supplement's character** (a companion, grog or Mythic Companion; marked with its book, such as "(RoP:D)"): a ready-made character from a supplement, such as the Byzantine Priest or The Church's Anchoress. See [A supplement's character](help:companion-sample-templates).
 - **A Grogs template as a companion** (a companion, while Grogs is in play): see [A Grogs template as a companion](help:grog-template-companion).
 - **An animal template** (a grog, while Grogs is in play; marked "(Grogs, an animal)"): the book's sample Dog, Horse and Hawk (Grogs, Chapter 7: Horses & Hounds, page 137). See [Animal grogs](help:animal-grogs).
 
@@ -333,7 +333,7 @@ The Definitive Edition's Quick and Easy Virtues and Flaws (Chapter 3, page 47) a
 - **Magus**: a Major Personality or Story Flaw, The Gift and the Hermetic Magus Social Status, Deficient Form in a Form you are not interested in, a Minor Magical Focus that doesn't rely on that Form (typed in, such as Fire), Puissant and Affinity in one Technique that overlaps the Focus, and Puissant in one Form that overlaps it. The House's free Virtue is chosen on the worksheet.
 
 **Templar companion (The Church).** The Social Status is the character's rank
-in the Knights Templar: Brother Knight, Brother Sergeant, Brother-Priest,
+in the Knights Templar: Brother Knight, Brother Sergeant, Brother Chaplain,
 Templar Administrator, Templar Specialist, Templar Commander, or an associate
 (Confrere or Consoeur) or servant (The Church pp. 123-125; the Definitive
 Edition reprints them, pp. 73 and 111-112). "Renowned among the brothers"
@@ -384,15 +384,14 @@ The Definitive Edition's Perfectus is a Minor Social Status for an ordinary comp
 
 **See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)
 
-### A supplement's companion
+### A supplement's character
 <!-- help: companion-sample-templates -->
 
-A companion's Template list also has the ready-made companions the supplements in play print, marked with their book, such as Byzantine Priest (RoP:D), Mystic Nun (TC), Gilpatrick (A&A) or Rothiger (HMRE). Unlike the Definitive Edition's templates, which start In Play, these start **In Creation**, so the worksheet checks them against the rules.
+The Template list also has the ready-made characters the supplements in play print, marked with their book. A named one is listed by its role, then its name, so you can tell what it is for: Bachelor of Arts at Paris - Gilpatrick (A&A), Guild Master Clothier - Doolin (C&G), Hound of God - Rothiger (HMRE). One the book leaves unnamed is listed by its role alone, such as Mystic Nun (TC). Unlike the Definitive Edition's templates, which start In Play, these start **In Creation**, so the worksheet checks them against the rules.
 
-The Church also gives a Templar Commander and a Templar Brother-Priest
-(pp. 126-127), and two of the first Franciscans, Francis of Assisi and
-Brother Elias (pp. 131, 133), historical figures the storyguide may meet
-or play.
+- **Companions**: Art & Academe's Leonardo Fibonacci, Gilles de Corbeil, Brogo the Dwarf, Brother Julian and Gilpatrick; City & Guild's Julian, Obano, Doolin and Banco; The Church's Mystic Nun, Anne, the Imposter, a Templar Commander and Templar Brother-Priest (pp. 126-127), and the first Franciscans Francis of Assisi, Brother Elias and Clare of Assisi; and the companions of Realms of Power: The Divine and other books.
+- **Grogs**: The Church's grog templates, the Anchoress, the Beguine and the Priest's Wife (pp. 83-84), and a Franciscan Nun and Friar (p. 142), are on a grog's list and held to a grog's limits.
+- **For the storyguide**: a saint or an antagonist the book prints for the storyguide, such as Francis and Clare of Assisi, or The Church's diabolist abbot Father Tino of Gradara (p. 97, a Mythic Companion), is marked "for the storyguide". It is taken as the book prints it, so Use doesn't hold it to its type's limits.
 
 **You choose:**
 
@@ -402,7 +401,7 @@ or play.
 - **The book's Abilities**, ticked: the character's Abilities and specialties, put on the worksheet as xp (Native Language, a Virtue's own xp, Early Childhood, then Later Life). Where the book leaves a name to you, such as an Area Lore's area or a language, the form asks for it.
 - the **Social Status**, from the book's.
 
-**The app works out:** the line under the form gives the Virtue and Flaw points, and the xp a character has at the book's age against what its Abilities come to. Use refuses a choice that breaks a companion's limits (as for [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)); fewer Virtue points than Flaw points is allowed, since some books leave a companion a few points short for the player to fill. The character's age sets the year born, and its Personality Traits and Reputations come with it. The Biography notes the book's advice and where the app differs from the page, such as an older edition's Ability (Church Lore taken as Organization Lore: Church).
+**The app works out:** the line under the form gives the Virtue and Flaw points, and the xp a character has at the book's age against what its Abilities come to. Use refuses a choice that breaks its type's limits (a companion's, a grog's or a Mythic Companion's), except for a storyguide's character (as for [Quick and Easy Virtues and Flaws](help:quick-virtues-flaws)); fewer Virtue points than Flaw points is allowed, since some books leave a companion a few points short for the player to fill. The character's age sets the year born, and its Personality Traits and Reputations come with it. The Biography notes the book's advice and where the app differs from the page, such as an older edition's Ability (Church Lore taken as Organization Lore: Church).
 
 **See also:** [New Character](help:character-group-new), [Creation Worksheet](help:creation-worksheet), [A Grogs template as a companion](help:grog-template-companion)
 
@@ -413,7 +412,7 @@ Grogs says any of its grog templates can be played as a companion simply by addi
 
 It asks for the same choices as [A Grogs template](help:grog-templates), with two differences: the choices are held to a companion's limits rather than a grog's (Major Virtues and Flaws and up to ten points of Flaws are allowed), and Next refuses until a **Story Flaw** is among them: choose one under **Another Flaw**, such as Dark Secret or Visions. The character is made a companion, without the Loyal +1 a grog gets, and the Biography notes it.
 
-**See also:** [A Grogs template](help:grog-templates), [A supplement's companion](help:companion-sample-templates), [New Character](help:character-group-new)
+**See also:** [A Grogs template](help:grog-templates), [A supplement's character](help:companion-sample-templates), [New Character](help:character-group-new)
 
 ### Animal grogs
 <!-- help: animal-grogs -->

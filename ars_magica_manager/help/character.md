@@ -1209,7 +1209,7 @@ the Theban Tribunal's customs:
   explosion. The form shows the hand-held siphon's figures. The Diary
   records the batch.
 - **Paint an Icon**: someone in Holy Orders (Priest, Eastern Priest,
-  Brother-Priest or Senior Clergy) with Theology: Christian 3 or more
+  Brother Chaplain or Senior Clergy) with Theology: Christian 3 or more
   paints an eikon (pp. 133-134). Holy Orders are the ordained male clergy,
   sub-deacon and up (DE pp. 74, 500), so a monk counts only when he is
   also a priest, and a nun never. Its Aesthetic Quality is
@@ -2867,6 +2867,13 @@ nothing has nothing to change.
 
 A magus's House Virtue is marked Free and counts no points
 (Ars Magica Definitive Edition, Chapter 3: Characters, Hermetic Houses).
+
+The catalog lists a supplement's Virtues and Flaws only while its book is
+in play (Saga Content's Books in Play). Where a supplement prints a Virtue
+or Flaw the Definitive Edition also prints, such as Art & Academe's Failed
+Student or The Church's Brother-Priest (the DE's Brother Chaplain), the
+catalog has the Definitive Edition's alone, with its name, tier and text,
+and it is there whichever books are in play.
 
 A character with a Might score from a Virtue (Demonic Blood) takes no
 Virtue of another realm: not The Gift, True Faith, Faerie Blood or the

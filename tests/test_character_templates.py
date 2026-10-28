@@ -7,7 +7,7 @@ from dialog_openers import contract_saga, new_app, open_dialog
 from support import wait_until
 from textual.widgets import Input, Select
 
-from ars_magica_manager import catalog, creation, storage
+from ars_magica_manager import catalog, choice_templates, creation, storage
 from ars_magica_manager import character_templates as ct
 from ars_magica_manager import grog_templates as gt
 from ars_magica_manager.arts import ARTS
@@ -152,8 +152,10 @@ async def test_the_template_choice_follows_the_type_and_describes_the_template()
         assert offered == [t.name for t in ct.templates_for("grog")] + [
             f"{t.name} (Grogs)" for t in gt.templates(None)
         ] + [f"{t.name} (Grogs, an animal)" for t in gt.animal_templates(None)] + [
-            "Grog (DE quick)"
+            choice_templates.option_label(t)
+            for t in choice_templates.templates(None, "grog")
         ]
+        assert "Grog (DE quick)" in offered and "Anchoress (TC)" in offered
 
         select.value = "tpl_hunter"
         assert await wait_until(

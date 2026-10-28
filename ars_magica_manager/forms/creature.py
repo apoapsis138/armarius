@@ -13,7 +13,7 @@ from collections.abc import Callable
 from dataclasses import replace
 from typing import Any
 
-from .. import bestiary_book, creatures, places, storage
+from .. import bestiary_book, creatures, places, sourcebooks, storage
 from ..arts import ARTS, FORMS
 from ..commands import Confirm, Form, SectionOps, delete
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
@@ -375,11 +375,12 @@ def new_creature_fields(saga: Saga) -> list[DialogField]:
             "Start from the book",
             "select",
             None,
-            options=bestiary_book.options(),
+            options=bestiary_book.options(sourcebooks.saga_books(saga)),
             allow_blank=True,
             placeholder="(a blank creature)",
-            hint="One of the Definitive Edition's creatures, copied into the "
-            "saga to change as you like (DE pp. 428-492).",
+            hint="One of the Definitive Edition's creatures (DE pp. 428-492), "
+            "or of a book in play such as Lords of Men's animals, copied into "
+            "the saga to change as you like.",
         ),
         *fields,
     ]

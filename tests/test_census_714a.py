@@ -1,5 +1,5 @@
 """The census of Art & Academe's and City & Guild's Virtues, Flaws and
-Abilities against the catalogs.
+Abilities against the catalogs, and the two books' ready-made characters.
 
 Nearly every entry these two books print was reprinted in the Definitive
 Edition, so the catalog already has them (as DE entries, the DE winning
@@ -7,7 +7,9 @@ where the wording differs); the census adds only what the DE left out.
 """
 
 from ars_magica_manager import catalog, sourcebooks
-from ars_magica_manager.models import Character, VirtueFlawInstance
+from ars_magica_manager import choice_templates as ct
+from ars_magica_manager.forms import choice_templates as choice_forms
+from ars_magica_manager.models import Character, Saga, VirtueFlawInstance
 from ars_magica_manager.rules import creation_access
 
 #: Each book's Virtues and Flaws, by catalog id, with the printed page.
@@ -124,3 +126,57 @@ def test_the_herbalism_virtue_names_an_ability_the_catalog_has():
     holder = Character(id="h", name="H", type="companion")
     holder.virtues_flaws.append(VirtueFlawInstance(vf_id=virtue.id))
     assert creation_access.may_learn(holder, "Herbalism")
+
+
+#: The two books' ready-made characters, by template id: book, page and
+#: the name the Template list shows ("Role - Name").
+SAMPLES = {
+    "ct_leonardo_fibonacci": ("A&A", 15, "Mathematician of Pisa - Leonardo Fibonacci"),
+    "ct_gilles_de_corbeil": (
+        "A&A",
+        51,
+        "Physician to the King of France - Gilles de Corbeil",
+    ),
+    "ct_brother_julian": ("A&A", 85, "Dominican Friar - Brother Julian"),
+    "ct_gilpatrick": ("A&A", 98, "Bachelor of Arts at Paris - Gilpatrick"),
+    "ct_brogo_the_dwarf": ("A&A", 122, "Wandering Trouvère - Brogo the Dwarf"),
+    "ct_julian_apprentice_carpenter": ("C&G", 44, "Apprentice Carpenter - Julian"),
+    "ct_obano_journeyman_swordsmith": ("C&G", 47, "Journeyman Swordsmith - Obano"),
+    "ct_doolin_guild_master_clothier": ("C&G", 48, "Guild Master Clothier - Doolin"),
+    "ct_banco": ("C&G", 51, "Dean of the Goldsmiths' Guild - Banco"),
+}
+
+
+def test_the_two_books_characters_are_templates_named_by_role_then_name():
+    for template_id, (book, page, name) in SAMPLES.items():
+        template = ct.find(template_id)
+        assert template is not None, template_id
+        assert (template.book, template.page, template.kind) == (book, page, "sample")
+        assert template.name == name
+        assert template in ct.templates(None, "companion")
+        assert template not in ct.templates(
+            Saga(id="s", name="S", books_in_play=[]), "companion"
+        )
+
+
+def test_each_character_keeps_to_a_companions_limits_with_every_virtue_ticked():
+    for template_id in SAMPLES:
+        template = ct.find(template_id)
+        assert template is not None
+        values = {f"blank_{b}": "Rhine" for b in ct.blanks(template)}
+        chosen = ct.chosen(template, choice_forms.choices_from(template, values))
+        assert ct.limit_problem(template, chosen) is None, template_id
+
+
+def test_brogo_takes_enchanting_music_as_the_virtue_and_its_ability():
+    brogo = ct.find("ct_brogo_the_dwarf")
+    assert brogo is not None
+    enchanting = next(
+        vf for vf in brogo.virtues_flaws if vf["vf_id"] == "vf_enchanting_ability"
+    )
+    assert enchanting["params"] == {"ability": "music"}
+    names = [a["name"] for a in brogo.abilities]
+    assert "Enchanting: Music" in names
+    assert {"vf_curse_of_venus", "vf_dwarf", "vf_proud_major"} <= {
+        vf["vf_id"] for vf in brogo.virtues_flaws
+    }

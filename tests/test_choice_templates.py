@@ -362,7 +362,7 @@ def test_each_sample_names_only_what_the_catalogs_hold_and_keeps_to_its_limits()
     }
     names = {a.name for a in catalog.load_ability_catalog()}
     for template in SAMPLES:
-        assert template.type in ("companion", "mythic companion")
+        assert template.type in ("grog", "companion", "mythic companion")
         assert template.age > 0 and template.characteristics
         rows = ct.ability_rows(template)
         for name, _ in rows:

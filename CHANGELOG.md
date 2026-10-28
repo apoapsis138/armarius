@@ -109,6 +109,40 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.39.0 — 2026-10-28
+
+### Florilegium
+
+- Lords of Men's animals are in the Bestiary while that book is in play,
+  marked with their page: the pets (magpie, monkey, squirrel), the
+  hunting dogs (lymer, alaunt, greyhound, running dog, mastiff), the
+  horses (destrier, courser or rouncey, palfrey or jennet, hackney,
+  working pony) and the hawks (the gyrfalcon, with the Errata's Com -2,
+  and the peregrine, goshawk, merlin, lanner and sparrowhawk the book
+  makes from it).
+- The Church's Brother-Priest is the Definitive Edition's Brother
+  Chaplain, so the catalog now has only the Definitive Edition's. A
+  character saved with Brother-Priest opens with Brother Chaplain, and a
+  Brother Chaplain now counts as clergy wherever Brother-Priest did (Holy
+  Orders, a town's clerics, a holy man's standing).
+- The catalog's Virtues and Flaws from Art & Academe, Lords of Men, The
+  Church and City & Guild were checked against the Definitive Edition
+  (and the Errata), which they all now follow.
+
+### Gauntlet
+
+- Twelve more of the books' characters can start a new character: Art
+  & Academe's Leonardo Fibonacci, Gilles de Corbeil and Brogo the Dwarf;
+  City & Guild's Obano and Doolin; and The Church's Clare of Assisi, the
+  diabolist abbot Father Tino of Gradara, and its grog templates (the
+  Anchoress, the Beguine, the Priest's Wife, and a Franciscan Nun and
+  Friar), which are on a grog's list.
+- A book's named character is listed by its role, then its name, such
+  as "Guild Master Clothier - Doolin", so you can tell what it is for.
+- A saint or an antagonist the book prints for the storyguide (Francis
+  and Clare of Assisi, Father Tino) is marked "for the storyguide" and
+  taken as printed, without its type's limits.
+
 ## 3.38.1 — 2026-10-28
 
 ### Fundamenta

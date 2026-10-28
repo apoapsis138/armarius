@@ -25,7 +25,14 @@ that opens its own page, and a New card that adds one.
 **New Creature** can start from the book: **Start from the book** lists
 the Definitive Edition's 64 creatures (DE pp. 428-492), from the bear and
 the wolf to the elementals, the faerie knight, Baal-Peor and the angel
-Gabriel. The chosen one's whole stat block is copied into the saga under
+Gabriel. While Lords of Men is in play it also lists that book's animals,
+marked with its page, such as "LoM p. 55": the pets (magpie, monkey,
+squirrel, p. 45), the hunting dogs (lymer, alaunt, greyhound, running dog,
+mastiff, p. 50), the horses (destrier, courser or rouncey, palfrey or
+jennet, hackney, working pony, pp. 55-56) and the hawks (p. 59). The book
+prints only the gyrfalcon in full; the peregrine, goshawk, merlin, lanner
+and sparrowhawk are the gyrfalcon with the book's changes for each, and
+the gyrfalcon has the Errata's Com -2 (Errata p. 74). The chosen one's whole stat block is copied into the saga under
 the name you give (blank: the book's), to change as you like; only its
 name and where it is found are asked. A Tribunal book's pack brings the
 creatures its stat blocks describe; see [How to add a creature from a

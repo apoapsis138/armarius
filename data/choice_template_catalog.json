@@ -338,8 +338,6 @@
       ],
       "notes": "The House's free Virtue is chosen on the worksheet."
     },
-
-
     {
       "id": "ct_mc_devil_child",
       "name": "Devil Child",
@@ -3276,7 +3274,7 @@
     },
     {
       "id": "ct_anne_holy_hermit",
-      "name": "Anne, a Holy Hermit",
+      "name": "Holy Hermit - Anne",
       "type": "companion",
       "kind": "sample",
       "book": "TC",
@@ -3616,7 +3614,7 @@
     },
     {
       "id": "ct_brother_julian",
-      "name": "Brother Julian",
+      "name": "Dominican Friar - Brother Julian",
       "type": "companion",
       "kind": "sample",
       "book": "A&A",
@@ -3803,7 +3801,7 @@
     },
     {
       "id": "ct_gilpatrick",
-      "name": "Gilpatrick",
+      "name": "Bachelor of Arts at Paris - Gilpatrick",
       "type": "companion",
       "kind": "sample",
       "book": "A&A",
@@ -3963,7 +3961,7 @@
     },
     {
       "id": "ct_banco",
-      "name": "Banco, Dean of the Goldsmith's Guild",
+      "name": "Dean of the Goldsmiths' Guild - Banco",
       "type": "companion",
       "kind": "sample",
       "book": "C&G",
@@ -4148,7 +4146,7 @@
     },
     {
       "id": "ct_julian_apprentice_carpenter",
-      "name": "Julian, Apprentice Carpenter",
+      "name": "Apprentice Carpenter - Julian",
       "type": "companion",
       "kind": "sample",
       "book": "C&G",
@@ -4725,7 +4723,7 @@
     },
     {
       "id": "ct_kore",
-      "name": "Kore",
+      "name": "Infernal Wise Woman - Kore",
       "type": "companion",
       "kind": "sample",
       "book": "MoH",
@@ -4917,7 +4915,7 @@
     },
     {
       "id": "ct_rothiger",
-      "name": "Rothiger",
+      "name": "Hound of God - Rothiger",
       "type": "companion",
       "kind": "sample",
       "book": "HMRE",
@@ -5071,7 +5069,7 @@
     },
     {
       "id": "ct_arno",
-      "name": "Arno",
+      "name": "Benandante Smith - Arno",
       "type": "companion",
       "kind": "sample",
       "book": "HMRE",
@@ -5212,7 +5210,7 @@
     },
     {
       "id": "ct_aljilani_ag_ibrahim",
-      "name": "Aljilani ag Ibrahim",
+      "name": "Tuareg Raider - Aljilani ag Ibrahim",
       "type": "companion",
       "kind": "sample",
       "book": "BS&S",
@@ -5420,7 +5418,7 @@
       "statuses": [
         "vf_brother_knight",
         "vf_brother_sergeant",
-        "vf_brother_priest",
+        "vf_brother_chaplain",
         "vf_templar_administrator",
         "vf_templar_specialist",
         "vf_templar_commander",
@@ -5448,7 +5446,7 @@
       "notes": "A commander has the Brother-Knight Virtue's effects already, and Temporal Influence with his post. Templars may be Wealthy or Poor: here it measures their time and responsibilities, not their purse. To play stories about the Rule, take a Story Flaw; otherwise it is background.",
       "fixes": [
         "The Church pp. 123-125 prints these Virtues; the Definitive Edition pp. 73 and 111-112 reprints them and its wording wins: its Brother Knight and Brother Sergeant are the crusading orders' (The Church's Templar Brother-Knight also bars the Knight, Priest and Landed Noble Virtues, which the catalog does not check), its Commander is Templar Commander, and Templar Prestige gives Reputation 4 (The Church printed 3; the Errata, p. 78, also makes it 4).",
-        "Brother-Priest is The Church's own (p. 123); the Definitive Edition's Brother Chaplain is the generic version.",
+        "Brother-Priest (p. 123) is taken as the Definitive Edition's Brother Chaplain (DE p. 73), the same Status under the DE's name.",
         "Templar Office Holder (an office under the local commander) is not offered: it is a second Social Status taken with the rank, and a companion here takes one; add it on the sheet."
       ]
     },
@@ -5645,7 +5643,7 @@
         "quickness": 1
       },
       "statuses": [
-        "vf_brother_priest"
+        "vf_brother_chaplain"
       ],
       "virtues_flaws": [
         {
@@ -5772,14 +5770,15 @@
         "Raised from the Dead is the page's Realms of Power: The Divine (p. 36) Flaw, the catalog's Definitive Edition one.",
         "Student of the Divine is taken as Student of {realm} with realm 'divine'; Dominion Lore 2 is recorded as printed (the page does not say whether the Virtue's +2 is in it).",
         "Local Lore is taken as Area Lore: {area}; Church Lore as Organization Lore: Church; Latin as Dead Language: Latin; Theology as Theology: Christian; Native Language 5 as Living Language: {language}.",
-        "Warping Score 0 (4): the 4 points are not recorded."
+        "Warping Score 0 (4): the 4 points are not recorded.",
+        "Brother-Priest (p. 123) is taken as the Definitive Edition's Brother Chaplain (DE p. 73), the same Status under the DE's name."
       ],
       "more_virtues": 3,
       "more_flaws": 3
     },
     {
       "id": "ct_brother_elias",
-      "name": "Brother Elias Bonibarone",
+      "name": "Minister General of the Friars - Brother Elias Bonibarone",
       "type": "companion",
       "kind": "sample",
       "book": "TC",
@@ -5958,7 +5957,7 @@
     },
     {
       "id": "ct_francis_of_assisi",
-      "name": "Francis of Assisi",
+      "name": "Founder of the Little Brothers - Francis of Assisi",
       "type": "companion",
       "kind": "sample",
       "book": "TC",
@@ -6190,7 +6189,8 @@
         "Stamina -1 (1) and Warping Score 1 (0): the aging point and Warping are not recorded."
       ],
       "more_virtues": 0,
-      "more_flaws": 0
+      "more_flaws": 0,
+      "storyguide": true
     },
     {
       "id": "ct_dragon_born",
@@ -6377,6 +6377,2063 @@
       "fixes": [
         "A kudlak is taken as the kudlaki nightwalker tradition of Hedge Magic Revised Edition (Chapter 6), with the Versatile Phantasticum that tradition requires."
       ]
+    },
+    {
+      "id": "ct_leonardo_fibonacci",
+      "name": "Mathematician of Pisa - Leonardo Fibonacci",
+      "type": "companion",
+      "kind": "sample",
+      "book": "A&A",
+      "page": 15,
+      "concept": "A reclusive Pisan mathematician, schooled among Arab merchants, who turns Hindu numbers to practical reckoning.",
+      "age": 50,
+      "characteristics": {
+        "intelligence": 4,
+        "perception": 1,
+        "presence": -2,
+        "communication": 5,
+        "strength": -4,
+        "stamina": -1,
+        "dexterity": 1,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_gentleman_woman"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_academic_concentration_subject",
+          "params": {
+            "subject": "arithmetic"
+          }
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_free_expression",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_good_teacher",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "communication"
+          }
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "communication"
+          }
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "intelligence"
+          }
+        },
+        {
+          "vf_id": "vf_privileged_upbringing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_well_traveled",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_curse_of_venus",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_driven_major",
+          "params": {},
+          "note": "mathematics"
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Arcane"
+          }
+        },
+        {
+          "vf_id": "vf_poor_hearing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_poor_characteristic",
+          "params": {
+            "characteristic": "strength"
+          }
+        },
+        {
+          "vf_id": "vf_reclusive",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Living Language: Arabic",
+          "score": 5,
+          "specialty": "mathematical terms"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 7,
+          "specialty": "arithmetic"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "hostels"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "foreign merchants"
+        },
+        {
+          "name": "Area Lore: Bugia",
+          "score": 3,
+          "specialty": "merchant quarter"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "staying sober"
+        },
+        {
+          "name": "Living Language: Greek",
+          "score": 5,
+          "specialty": "mathematical terms"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "merchant guild dinners"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 5,
+          "specialty": "Arab merchants"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "accounting terminology"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 6,
+          "specialty": "Roman numeral terms"
+        },
+        {
+          "name": "Organization Lore: Merchant Guild",
+          "score": 3,
+          "specialty": "usury laws"
+        },
+        {
+          "name": "Area Lore: Pisa",
+          "score": 4,
+          "specialty": "merchant quarter"
+        },
+        {
+          "name": "Profession: Accountant",
+          "score": 5,
+          "specialty": "abacus calculations"
+        },
+        {
+          "name": "Profession: Scribe",
+          "score": 5,
+          "specialty": "binding"
+        },
+        {
+          "name": "Teaching",
+          "score": 1,
+          "specialty": "single student"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Driven in Mathematics",
+          3
+        ],
+        [
+          "Reclusive",
+          2
+        ],
+        [
+          "Humble",
+          2
+        ]
+      ],
+      "reputations": [],
+      "notes": "A historical man (1170-1250). His Liber abbaci is a tractatus on Artes Liberales (arithmetic), Quality 14.",
+      "fixes": [
+        "Sta -1 (1), Dex +1 (1) and Decrepitude 1 (0) carry aging points on the page; only the scores are recorded.",
+        "Great Communication (x2) and Great Intelligence are taken as Great (Characteristic); Poor Strength as Poor (Characteristic).",
+        "Driven sits in the Major Flaw group with Curse of Venus, so it is taken as Driven (Major).",
+        "Arabic, Greek and Italian are taken as Living Languages (Italian native); Latin as Dead Language: Latin; Bugia Lore and Pisa Lore as Area Lore; Merchant Guild Lore as Organization Lore."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_gilles_de_corbeil",
+      "name": "Physician to the King of France - Gilles de Corbeil",
+      "type": "companion",
+      "kind": "sample",
+      "book": "A&A",
+      "page": 51,
+      "concept": "The aged Benedictine archiater of Philip Augustus, trained at Salerno, still the great channel of its teaching to Paris.",
+      "age": 80,
+      "characteristics": {
+        "intelligence": 2,
+        "perception": -1,
+        "presence": -1,
+        "communication": 1,
+        "strength": -3,
+        "stamina": -3,
+        "dexterity": -2,
+        "quickness": -3
+      },
+      "statuses": [
+        "vf_magister_in_medicina"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_affinity_with_ability",
+          "params": {
+            "ability": "medicine"
+          }
+        },
+        {
+          "vf_id": "vf_book_learner",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_good_teacher",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_physician_of_salerno",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_protection",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "medicine"
+          }
+        },
+        {
+          "vf_id": "vf_ambitious_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enemies",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 7,
+          "specialty": "grammar"
+        },
+        {
+          "name": "Bargain",
+          "score": 1,
+          "specialty": "supplies"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 3,
+          "specialty": "restrictions on physicians"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "patrons"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 4,
+          "specialty": "phlebotomy"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 3,
+          "specialty": "Benedictines"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "French court"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "patients"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 5,
+          "specialty": "Norman"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "to the dying"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 4,
+          "specialty": "Campania"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 6,
+          "specialty": "verse"
+        },
+        {
+          "name": "Leadership",
+          "score": 5,
+          "specialty": "physicians"
+        },
+        {
+          "name": "Medicine",
+          "score": 13,
+          "specialty": "regimens"
+        },
+        {
+          "name": "Music",
+          "score": 2,
+          "specialty": "hymns"
+        },
+        {
+          "name": "Philosophiae",
+          "score": 6,
+          "specialty": "moral philosophy"
+        },
+        {
+          "name": "Profession: Apothecary",
+          "score": 4,
+          "specialty": "febrifuges"
+        },
+        {
+          "name": "Ride",
+          "score": 3,
+          "specialty": "long distance"
+        },
+        {
+          "name": "Teaching",
+          "score": 8,
+          "specialty": "Medicine"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 4,
+          "specialty": "morality"
+        },
+        {
+          "name": "Organization Lore: University of Paris",
+          "score": 4,
+          "specialty": "Faculty of Medicine"
+        }
+      ],
+      "native": "Living Language: French",
+      "traits": [
+        [
+          "Ambitious",
+          3
+        ],
+        [
+          "Humanist",
+          2
+        ],
+        [
+          "Kind-Hearted",
+          -1
+        ]
+      ],
+      "reputations": [
+        [
+          "Medical Authority (Academic)",
+          5
+        ],
+        [
+          "Physician to King of France (Local)",
+          3
+        ]
+      ],
+      "notes": "A historical man, born 1140; if the saga follows history he dies in 1224. Apparent age 78. He has researched some twenty formulae, mostly theriacs. Confidence Score 3 (9).",
+      "fixes": [
+        "Characteristics carry aging points on the page; only the scores are recorded. Decrepitude 3 (3) not recorded.",
+        "Ambitious is in the Flaw group with Enemies and Monastic Vows, and the Flaws match his nine points of Virtues, so it is taken as Ambitious (Major).",
+        "Medicine 13+2: the +2 is Puissant Medicine, so the score is 13.",
+        "French and Italian are taken as Living Languages (French native); Latin as Dead Language: Latin; Church Lore and University of Paris Lore as Organization Lore; Theology as Theology: Christian."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_brogo_the_dwarf",
+      "name": "Wandering Trouvère - Brogo the Dwarf",
+      "type": "companion",
+      "kind": "sample",
+      "book": "A&A",
+      "page": 122,
+      "concept": "A proud, gregarious dwarf trouvère from Tournai who entrances audiences across France and the Empire.",
+      "age": 30,
+      "characteristics": {
+        "intelligence": -2,
+        "perception": 1,
+        "presence": 0,
+        "communication": 4,
+        "strength": -1,
+        "stamina": -1,
+        "dexterity": 2,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_wanderer"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_death_prophecy",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_artistic_renown",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_affinity_with_ability",
+          "params": {
+            "ability": "enchanting: music"
+          }
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enchanting_ability",
+          "params": {
+            "ability": "music"
+          }
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "communication"
+          }
+        },
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "profession: trouvère"
+          }
+        },
+        {
+          "vf_id": "vf_curse_of_venus",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_dwarf",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_proud_major",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "grace"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "music"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "searching"
+        },
+        {
+          "name": "Bargain",
+          "score": 4,
+          "specialty": "benefactors"
+        },
+        {
+          "name": "Carouse",
+          "score": 3,
+          "specialty": "drinking songs"
+        },
+        {
+          "name": "Concentration",
+          "score": 2,
+          "specialty": "maintaining enchanting music"
+        },
+        {
+          "name": "Enchanting: Music",
+          "score": 7,
+          "specialty": "joviality"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "court"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "sponsors"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 5,
+          "specialty": "music terminology"
+        },
+        {
+          "name": "Living Language: German",
+          "score": 3,
+          "specialty": "music terminology"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "lying about his past"
+        },
+        {
+          "name": "Organization Lore: Order of Hermes",
+          "score": 1,
+          "specialty": "covenants"
+        },
+        {
+          "name": "Profession: Trouvère",
+          "score": 5,
+          "specialty": "adulterous love songs"
+        },
+        {
+          "name": "Music",
+          "score": 3,
+          "specialty": "lyre"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 4,
+          "specialty": "music"
+        },
+        {
+          "name": "Swim",
+          "score": 1,
+          "specialty": "diving"
+        }
+      ],
+      "native": "Living Language: French",
+      "traits": [
+        [
+          "Proud",
+          3
+        ],
+        [
+          "Gregarious",
+          2
+        ],
+        [
+          "Sly",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Trouvère (Artist)",
+          2
+        ]
+      ],
+      "notes": "The book offers him as a starting companion. His songs have Aesthetic Quality 12. Because of his pride he will probably draw an infernal muse once his Trouvère Reputation reaches 7.",
+      "fixes": [
+        "Enchanting Music is taken as Enchanting (Ability) with Music and the Ability Enchanting: Music; Affinity with Enchanting Music and Puissant Trouvère as Affinity and Puissant (Ability); Order of Hermes Lore as Organization Lore: Order of Hermes.",
+        "Proud is in the Flaw group with Curse of Venus and Dwarf, and the Flaws match his nine points of Virtues, so it is taken as Proud (Major).",
+        "Profession: Trouvère 5+2: the +2 is Puissant, so the score is 5.",
+        "French and German are taken as Living Languages (French native); Latin as Dead Language: Latin."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_obano_journeyman_swordsmith",
+      "name": "Journeyman Swordsmith - Obano",
+      "type": "companion",
+      "kind": "sample",
+      "book": "C&G",
+      "page": 47,
+      "concept": "A strong, scarred Aragonese journeyman, proud of his guild, who holds proof of his former master's crooked dealings.",
+      "age": 25,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 1,
+        "presence": -2,
+        "communication": 1,
+        "strength": 3,
+        "stamina": 3,
+        "dexterity": 1,
+        "quickness": -2
+      },
+      "statuses": [
+        "vf_journeyman"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_blackmail",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_disfigured",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_oversensitive",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Athletics",
+          "score": 2,
+          "specialty": "climbing"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "alertness"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "raw materials"
+        },
+        {
+          "name": "Brawl",
+          "score": 3,
+          "specialty": "dagger"
+        },
+        {
+          "name": "Carouse",
+          "score": 2,
+          "specialty": "guild feasts"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 4,
+          "specialty": "selling goods"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "customers"
+        },
+        {
+          "name": "Organization Lore: Swordsmiths' Guild",
+          "score": 2,
+          "specialty": "working hours"
+        },
+        {
+          "name": "Hunt",
+          "score": 2,
+          "specialty": "killing rats"
+        },
+        {
+          "name": "Intrigue",
+          "score": 2,
+          "specialty": "finding work"
+        },
+        {
+          "name": "Living Language: Spanish",
+          "score": 5,
+          "specialty": "slang"
+        },
+        {
+          "name": "Swim",
+          "score": 1,
+          "specialty": "annual bath"
+        },
+        {
+          "name": "Craft: Swordsmith",
+          "score": 5,
+          "specialty": "greatswords"
+        },
+        {
+          "name": "Teaching",
+          "score": 1,
+          "specialty": "advanced students"
+        },
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "craftsmen's shops"
+        }
+      ],
+      "native": "Living Language: Spanish",
+      "traits": [
+        [
+          "Brave",
+          2
+        ],
+        [
+          "Touchy",
+          2
+        ],
+        [
+          "Loyal",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "His Social Contacts find him work, little else.",
+      "fixes": [
+        "Swordsmith is taken as Craft: Swordsmith; Guild Lore as Organization Lore: Swordsmiths' Guild; Town Area Lore as Area Lore: {area} (the town is not named).",
+        "Spanish and French are taken as Living Languages (Spanish native, as he is from Aragon)."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_doolin_guild_master_clothier",
+      "name": "Guild Master Clothier - Doolin",
+      "type": "companion",
+      "kind": "sample",
+      "book": "C&G",
+      "page": 48,
+      "concept": "A restless Parisian master clothier, guided by a vagabond faerie, who dreams of dressing the magi for their grand meetings.",
+      "age": 35,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": -1,
+        "presence": 2,
+        "communication": 0,
+        "strength": -1,
+        "stamina": -1,
+        "dexterity": 3,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_guild_master"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_puissant_ability",
+          "params": {
+            "ability": "craft: clothier"
+          }
+        },
+        {
+          "vf_id": "vf_second_sight",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_afflicted_tongue",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_faerie_friend",
+          "params": {},
+          "note": "Argantael"
+        },
+        {
+          "vf_id": "vf_reckless",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Artes Liberales",
+          "score": 1,
+          "specialty": "grammar"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "inspecting goods"
+        },
+        {
+          "name": "Bargain",
+          "score": 3,
+          "specialty": "selling"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "dodge"
+        },
+        {
+          "name": "Carouse",
+          "score": 3,
+          "specialty": "staying sober"
+        },
+        {
+          "name": "Charm",
+          "score": 3,
+          "specialty": "first impressions"
+        },
+        {
+          "name": "Craft: Clothier",
+          "score": 6,
+          "specialty": "excellent quality blouses"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "guild funerals"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "guild inquisitors"
+        },
+        {
+          "name": "Living Language: French",
+          "score": 5,
+          "specialty": "guild lingo"
+        },
+        {
+          "name": "Organization Lore: Clothiers' Guild",
+          "score": 3,
+          "specialty": "defrocked members"
+        },
+        {
+          "name": "Intrigue",
+          "score": 3,
+          "specialty": "guild politics"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "Church ceremonies"
+        },
+        {
+          "name": "Leadership",
+          "score": 4,
+          "specialty": "reprimanding apprentices"
+        },
+        {
+          "name": "Second Sight",
+          "score": 2,
+          "specialty": "faeries"
+        },
+        {
+          "name": "Ride",
+          "score": 1,
+          "specialty": "in processions"
+        },
+        {
+          "name": "Teaching",
+          "score": 2,
+          "specialty": "female students"
+        },
+        {
+          "name": "Area Lore: Paris",
+          "score": 3,
+          "specialty": "street layout"
+        }
+      ],
+      "native": "Living Language: French",
+      "traits": [
+        [
+          "Reckless",
+          3
+        ],
+        [
+          "Loyal",
+          2
+        ],
+        [
+          "Brave",
+          -1
+        ]
+      ],
+      "reputations": [],
+      "notes": "A master in good standing for eight years, with his eyes on senior master; he makes excellent quality clothing.",
+      "fixes": [
+        "Clothier 6+2 is taken as Craft: Clothier 6 with Puissant (Ability) for the +2; Guild Lore as Organization Lore: Clothiers' Guild; Town Area Lore as Area Lore: Paris, where he lives.",
+        "French is taken as Living Language: French (native); Latin as Dead Language: Latin."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_anchoress",
+      "name": "Anchoress",
+      "type": "grog",
+      "kind": "sample",
+      "book": "TC",
+      "page": 83,
+      "concept": "A gossiping, meddlesome anchoress who chatters at her window and plays matchmaker, then does penance for her lies.",
+      "age": 32,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 1,
+        "presence": -1,
+        "communication": 3,
+        "strength": -1,
+        "stamina": 2,
+        "dexterity": -1,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_gossip",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_premonitions",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_busybody",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_palsied_hands",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "people"
+        },
+        {
+          "name": "Area Lore: {second_area}",
+          "score": 4,
+          "specialty": "family histories"
+        },
+        {
+          "name": "Awareness",
+          "score": 4,
+          "specialty": "secrets"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "women"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "calendar"
+        },
+        {
+          "name": "Concentration",
+          "score": 1,
+          "specialty": "conversation"
+        },
+        {
+          "name": "Craft: Spinning",
+          "score": 3,
+          "specialty": "working while talking"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "townsfolk"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 5,
+          "specialty": "women"
+        },
+        {
+          "name": "Living Language: Francien",
+          "score": 5,
+          "specialty": "conversation"
+        },
+        {
+          "name": "Guile",
+          "score": 3,
+          "specialty": "lies"
+        },
+        {
+          "name": "Intrigue",
+          "score": 4,
+          "specialty": "gossip"
+        },
+        {
+          "name": "Premonitions",
+          "score": 2,
+          "specialty": "visitors"
+        }
+      ],
+      "native": "Living Language: Francien",
+      "traits": [
+        [
+          "Meddlesome",
+          2
+        ],
+        [
+          "Sociable",
+          2
+        ],
+        [
+          "Pious",
+          1
+        ]
+      ],
+      "reputations": [
+        [
+          "Dedicated (Christians)",
+          2
+        ],
+        [
+          "Meddler (young people)",
+          1
+        ],
+        [
+          "Gossip (local townswomen)",
+          3
+        ]
+      ],
+      "notes": "One of the book's grog templates, for occasional stories or a player who isn't always there. Devotion: the Blessed Virgin Mary (Mother of Mercy) 0 (1 dp). Confidence 1 (3).",
+      "fixes": [
+        "[Area 1] Lore and [Area 2] Lore are taken as Area Lore: {area} and Area Lore: {second_area}; Church Lore as Organization Lore: Church; Francien as Living Language: Francien (native).",
+        "Her Devotion is not recorded as an Ability."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_beguine",
+      "name": "Beguine",
+      "type": "grog",
+      "kind": "sample",
+      "book": "TC",
+      "page": 83,
+      "concept": "A sociable young beguine of a Flemish cloth town who fled an arranged marriage and has friends among the town's wives.",
+      "age": 23,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 1,
+        "presence": 1,
+        "communication": 1,
+        "strength": -1,
+        "stamina": 0,
+        "dexterity": 1,
+        "quickness": 1
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "noble women in town"
+          }
+        },
+        {
+          "vf_id": "vf_social_contacts",
+          "params": {
+            "group": "merchants' wives in town"
+          }
+        },
+        {
+          "vf_id": "vf_continence",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_fragile_constitution",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_weak_characteristics",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 3,
+          "specialty": "home town"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "reading aloud"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "textiles"
+        },
+        {
+          "name": "Bargain",
+          "score": 1,
+          "specialty": "for food"
+        },
+        {
+          "name": "Organization Lore: Beguines",
+          "score": 2,
+          "specialty": "in home town"
+        },
+        {
+          "name": "Carouse",
+          "score": 1,
+          "specialty": "anecdotes"
+        },
+        {
+          "name": "Craft: Seamstress",
+          "score": 2,
+          "specialty": "linen"
+        },
+        {
+          "name": "Craft: Lacemaking",
+          "score": 3,
+          "specialty": "borders"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "clergy"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "saints"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "prayer"
+        },
+        {
+          "name": "Etiquette",
+          "score": 1,
+          "specialty": "nobility"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "merchants"
+        },
+        {
+          "name": "Living Language: Flemish",
+          "score": 5,
+          "specialty": "conversation"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 3,
+          "specialty": "prayer"
+        }
+      ],
+      "native": "Living Language: Flemish",
+      "traits": [
+        [
+          "Careful",
+          1
+        ],
+        [
+          "Dependable",
+          1
+        ],
+        [
+          "Generous",
+          2
+        ]
+      ],
+      "reputations": [],
+      "notes": "One of the book's grog templates. If she leaves the beguines her Social Status changes, and her Continence and mentor may give way to other Flaws. Confidence 1 (3).",
+      "fixes": [
+        "[Area] Lore is taken as Area Lore: {area}; Beguines Lore and Church Lore as Organization Lore; Flemish as Living Language: Flemish (native); Latin as Dead Language: Latin."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_priests_wife",
+      "name": "Priest's Wife",
+      "type": "grog",
+      "kind": "sample",
+      "book": "TC",
+      "page": 84,
+      "concept": "A practical Irish housewife who helps her husband tend his parishioners and is the local women's first confidante.",
+      "age": 28,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 2,
+        "presence": 2,
+        "communication": 1,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 1,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_craftsman"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_strong_willed",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_clear_thinker",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_offensive_to_being",
+          "params": {
+            "being": "animals"
+          }
+        },
+        {
+          "vf_id": "vf_soft_hearted",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: {area}",
+          "score": 4,
+          "specialty": "people"
+        },
+        {
+          "name": "Athletics",
+          "score": 3,
+          "specialty": "long walks"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "people with worries"
+        },
+        {
+          "name": "Bargain",
+          "score": 2,
+          "specialty": "food"
+        },
+        {
+          "name": "Brawl",
+          "score": 2,
+          "specialty": "dodge"
+        },
+        {
+          "name": "Carouse",
+          "score": 1,
+          "specialty": "singing"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "authority figures"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "festivals"
+        },
+        {
+          "name": "Craft: Alewife",
+          "score": 2,
+          "specialty": "taste"
+        },
+        {
+          "name": "Craft: Baking",
+          "score": 2,
+          "specialty": "bread"
+        },
+        {
+          "name": "Craft: Cookery",
+          "score": 3,
+          "specialty": "potage"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "clergy"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 3,
+          "specialty": "women"
+        },
+        {
+          "name": "Guile",
+          "score": 2,
+          "specialty": "fast-talk"
+        },
+        {
+          "name": "Profession: Housewife",
+          "score": 5,
+          "specialty": "comfort"
+        },
+        {
+          "name": "Living Language: Irish",
+          "score": 5,
+          "specialty": "giving advice"
+        },
+        {
+          "name": "Stealth",
+          "score": 1,
+          "specialty": "villages"
+        },
+        {
+          "name": "Swim",
+          "score": 2,
+          "specialty": "very cold water"
+        }
+      ],
+      "native": "Living Language: Irish",
+      "traits": [
+        [
+          "Careful",
+          2
+        ],
+        [
+          "Cheerful",
+          1
+        ],
+        [
+          "Practical",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "One of the book's grog templates, for a parish where priests may still marry. She may take another Minor Flaw and with it another Minor Virtue. Where a priest's wife is a scandal she takes Dark Secret and is a companion.",
+      "fixes": [
+        "Craftswoman is taken as the Craftsman Social Status; [Home area] Lore as Area Lore: {area}; Church Lore as Organization Lore: Church; Housewife as Profession: Housewife; Irish as Living Language: Irish (native).",
+        "Offensive to Animals is taken as Offensive to (Being) with animals."
+      ],
+      "more_virtues": 1,
+      "more_flaws": 1
+    },
+    {
+      "id": "ct_clare_of_assisi",
+      "name": "Leader of the Poor Sisters - Clare of Assisi",
+      "type": "companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 137,
+      "concept": "The young noblewoman who followed Francis into poverty and leads the Poor Sisters at San Damiano, renowned as a saint.",
+      "age": 26,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 2,
+        "presence": 0,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_senior_clergy"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_true_faith",
+          "params": {},
+          "note": "Faith Score 2, Faith Points 6"
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_intuition",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_premonitions",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_privileged_upbringing",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_compassionate_major",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_monastic_vows",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "athletic"
+          }
+        },
+        {
+          "vf_id": "vf_small_frame",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_motion_sickness",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: Assisi",
+          "score": 4,
+          "specialty": "people"
+        },
+        {
+          "name": "Area Lore: Italy",
+          "score": 2,
+          "specialty": "towns"
+        },
+        {
+          "name": "Awareness",
+          "score": 5,
+          "specialty": "the needy"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 2,
+          "specialty": "binding wounds",
+          "xp": 10
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "monasticism"
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "prayer"
+        },
+        {
+          "name": "Craft: Needlework",
+          "score": 2,
+          "specialty": "mending"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 2,
+          "specialty": "saints"
+        },
+        {
+          "name": "Etiquette",
+          "score": 3,
+          "specialty": "nuns and friars"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "the needy"
+        },
+        {
+          "name": "Profession: Housewife",
+          "score": 2,
+          "specialty": "cleaning"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "comforting"
+        },
+        {
+          "name": "Leadership",
+          "score": 3,
+          "specialty": "nuns"
+        },
+        {
+          "name": "Music",
+          "score": 1,
+          "specialty": "local folk songs"
+        },
+        {
+          "name": "Premonitions",
+          "score": 2,
+          "specialty": "sickness"
+        },
+        {
+          "name": "Teaching",
+          "score": 2,
+          "specialty": "nuns"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Compassionate",
+          3
+        ],
+        [
+          "Humble",
+          3
+        ],
+        [
+          "Passionate",
+          2
+        ]
+      ],
+      "reputations": [
+        [
+          "Saintly (Italy, France, Spain)",
+          3
+        ]
+      ],
+      "notes": "A historical saint, printed for the storyguide. True Faith Magic Resistance 20. If the saga follows history she falls ill in 1224 and dies in 1253.",
+      "fixes": [
+        "Compassionate sits in the Major Flaw group with Monastic Vows, so it is taken as Compassionate (Major).",
+        "Church Lore is taken as Organization Lore: Church; Housewife as Profession: Housewife; Italian as Living Language: Italian (native).",
+        "Ability Block (athletic) is kept as printed.",
+        "The page gives her 10 points of Virtues and 9 of Flaws; kept as printed, as a storyguide character."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0,
+      "storyguide": true
+    },
+    {
+      "id": "ct_franciscan_nun",
+      "name": "Franciscan Nun",
+      "type": "grog",
+      "kind": "sample",
+      "book": "TC",
+      "page": 142,
+      "concept": "A young lame Poor Sister who nurses the sick of the hospitals and leper colonies, with a healing touch against fever.",
+      "age": 20,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": 3,
+        "presence": 0,
+        "communication": 1,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 2,
+        "quickness": 0
+      },
+      "statuses": [
+        "vf_religious"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lesser_purifying_touch",
+          "params": {
+            "disease": "quotidian fever"
+          }
+        },
+        {
+          "vf_id": "vf_weakness",
+          "params": {},
+          "note": "babies"
+        },
+        {
+          "vf_id": "vf_continence",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_lame",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Area Lore: Central Italy",
+          "score": 3,
+          "specialty": "hospitals and leper colonies"
+        },
+        {
+          "name": "Awareness",
+          "score": 3,
+          "specialty": "babies"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "children"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 2,
+          "specialty": "sores"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 1,
+          "specialty": "Franciscans",
+          "xp": 5
+        },
+        {
+          "name": "Concentration",
+          "score": 3,
+          "specialty": "prayer"
+        },
+        {
+          "name": "Etiquette",
+          "score": 2,
+          "specialty": "urban poor"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 4,
+          "specialty": "poor townswomen"
+        },
+        {
+          "name": "Organization Lore: Franciscans",
+          "score": 2,
+          "specialty": "Poor Sisters"
+        },
+        {
+          "name": "Profession: Herbwife",
+          "score": 2,
+          "specialty": "sleep"
+        },
+        {
+          "name": "Profession: Washerwoman",
+          "score": 2,
+          "specialty": "woolen cloth"
+        },
+        {
+          "name": "Profession: Housewife",
+          "score": 2,
+          "specialty": "cooking"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "consolation"
+        },
+        {
+          "name": "Stealth",
+          "score": 2,
+          "specialty": "urban"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [],
+      "reputations": [],
+      "notes": "One of the book's grog templates for a Franciscan saga. The book gives her no Personality Traits.",
+      "fixes": [
+        "Church Lore is taken as Organization Lore: Church; Housewife as Profession: Housewife; Italian as Living Language: Italian (native)."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_franciscan_friar",
+      "name": "Franciscan Friar",
+      "type": "grog",
+      "kind": "sample",
+      "book": "TC",
+      "page": 142,
+      "concept": "A young, gregarious friar who walks the towns of Italy and Provence preaching, and has a way with wild beasts.",
+      "age": 18,
+      "characteristics": {
+        "intelligence": 1,
+        "perception": 2,
+        "presence": 1,
+        "communication": 2,
+        "strength": 0,
+        "stamina": 0,
+        "dexterity": 0,
+        "quickness": -1
+      },
+      "statuses": [
+        "vf_mendicant_friar"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_well_traveled",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_animal_ken",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ability_block",
+          "params": {
+            "abilities": "Martial"
+          }
+        },
+        {
+          "vf_id": "vf_pious",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_temperate",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Animal Handling",
+          "score": 1,
+          "specialty": "wild mammals"
+        },
+        {
+          "name": "Animal Ken",
+          "score": 3,
+          "specialty": "wild mammals"
+        },
+        {
+          "name": "Area Lore: Italy",
+          "score": 3,
+          "specialty": "towns"
+        },
+        {
+          "name": "Area Lore: Provence",
+          "score": 3,
+          "specialty": "towns"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 2,
+          "specialty": "reading aloud"
+        },
+        {
+          "name": "Awareness",
+          "score": 2,
+          "specialty": "poor people"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "children"
+        },
+        {
+          "name": "Chirurgy",
+          "score": 1,
+          "specialty": "broken bones"
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 2,
+          "specialty": "monasticism"
+        },
+        {
+          "name": "Concentration",
+          "score": 1,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Folk Ken",
+          "score": 2,
+          "specialty": "the poor"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 4,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Organization Lore: Franciscans",
+          "score": 2,
+          "specialty": ""
+        },
+        {
+          "name": "Living Language: Provençal",
+          "score": 3,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Teaching",
+          "score": 1,
+          "specialty": "children"
+        },
+        {
+          "name": "Theology: Christian",
+          "score": 2,
+          "specialty": "heaven"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Forgiving",
+          1
+        ],
+        [
+          "Gregarious",
+          2
+        ],
+        [
+          "Practical",
+          1
+        ]
+      ],
+      "reputations": [],
+      "notes": "One of the book's grog templates for a Franciscan saga.",
+      "fixes": [
+        "Church Lore and Franciscans Lore are taken as Organization Lore (the book gives Franciscans Lore no specialty); Theology as Theology: Christian; Italian and Provençal as Living Languages (Italian native); Latin as Dead Language: Latin."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0
+    },
+    {
+      "id": "ct_father_tino_of_gradara",
+      "name": "Diabolist Abbot - Father Tino of Gradara",
+      "type": "mythic companion",
+      "kind": "sample",
+      "book": "TC",
+      "page": 97,
+      "concept": "The aged, saintly-seeming Cistercian abbot who leads the secret Illuminati within his order, deluded by a demon into working for the end of the age.",
+      "age": 86,
+      "characteristics": {
+        "intelligence": 0,
+        "perception": -2,
+        "presence": 0,
+        "communication": 2,
+        "strength": -3,
+        "stamina": -3,
+        "dexterity": -2,
+        "quickness": -4
+      },
+      "statuses": [
+        "vf_senior_clergy"
+      ],
+      "virtues_flaws": [
+        {
+          "vf_id": "vf_diabolist",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_ceremony_ropi",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_debauchery",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_diablerie",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_educated",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_enticer_of_multitudes",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "communication"
+          }
+        },
+        {
+          "vf_id": "vf_great_characteristic",
+          "params": {
+            "characteristic": "communication"
+          }
+        },
+        {
+          "vf_id": "vf_improved_characteristics",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_incantation",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_inspirational",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_psychomachia",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_corrupted_abilities",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_diabolic_past",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_dark_secret",
+          "params": {},
+          "note": "Infernalist"
+        },
+        {
+          "vf_id": "vf_visions",
+          "params": {},
+          "note": "false"
+        },
+        {
+          "vf_id": "vf_palsied_hands",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_plagued_by_supernatural_entity",
+          "params": {}
+        },
+        {
+          "vf_id": "vf_witch_marks",
+          "params": {}
+        }
+      ],
+      "abilities": [
+        {
+          "name": "Awareness",
+          "score": 1,
+          "specialty": "strangers"
+        },
+        {
+          "name": "Artes Liberales",
+          "score": 5,
+          "specialty": "grammar"
+        },
+        {
+          "name": "Charm",
+          "score": 2,
+          "specialty": "persuade"
+        },
+        {
+          "name": "Civil and Canon Law",
+          "score": 2,
+          "specialty": "heresy"
+        },
+        {
+          "name": "Ceremony",
+          "score": 5,
+          "specialty": "debauchery"
+        },
+        {
+          "name": "Debauchery",
+          "score": 9,
+          "specialty": ""
+        },
+        {
+          "name": "Diablerie",
+          "score": 6,
+          "specialty": ""
+        },
+        {
+          "name": "Organization Lore: Church",
+          "score": 5,
+          "specialty": "politics"
+        },
+        {
+          "name": "Dominion Lore",
+          "score": 3,
+          "specialty": "angels"
+        },
+        {
+          "name": "Incantation",
+          "score": 6,
+          "specialty": ""
+        },
+        {
+          "name": "Infernal Lore",
+          "score": 4,
+          "specialty": "eschatology"
+        },
+        {
+          "name": "Dead Language: Latin",
+          "score": 5,
+          "specialty": "rituals"
+        },
+        {
+          "name": "Living Language: Italian",
+          "score": 5,
+          "specialty": "preaching"
+        },
+        {
+          "name": "Organization Lore: Cistercians",
+          "score": 8,
+          "specialty": "personalities"
+        },
+        {
+          "name": "Penetration",
+          "score": 4,
+          "specialty": ""
+        },
+        {
+          "name": "Psychomachia",
+          "score": 6,
+          "specialty": ""
+        },
+        {
+          "name": "Teaching",
+          "score": 5,
+          "specialty": "Infernal Abilities"
+        }
+      ],
+      "native": "Living Language: Italian",
+      "traits": [
+        [
+          "Inspiring",
+          3
+        ],
+        [
+          "Spiritual",
+          2
+        ],
+        [
+          "Charming",
+          1
+        ]
+      ],
+      "reputations": [
+        [
+          "Saint to be (Church)",
+          3
+        ]
+      ],
+      "notes": "For the storyguide: an antagonist, printed to bring a corrupt Cistercian order into the saga. Confidence 4 (8); Warping Score 5. He recruits with the Corruption Ability (Realms of Power: The Infernal p. 91) and is deluded by the demon Jaevert. When he preaches his face takes a soft, moonlit glow, and to those with True Faith his sweet scent smells of decay.",
+      "fixes": [
+        "Characteristics carry aging points on the page; only the scores are recorded. Decrepitude 3 (6) and Warping Score 5 (2) not recorded.",
+        "Ceremony is taken as the Infernal (Major) Ceremony of Realms of Power: The Infernal.",
+        "Corrupted Dominion Lore is taken as Dominion Lore (its corruption comes from Corrupted Abilities); Church Lore and Organization Lore: Cistercians as Organization Lore; Latin as Dead Language: Latin.",
+        "(False) Visions is taken as Visions, noted false; Dark Secret (Infernalist) as Dark Secret, noted.",
+        "The page gives him 13 points of Flaws, more than a Mythic Companion's 10; kept as printed, as a storyguide character."
+      ],
+      "more_virtues": 0,
+      "more_flaws": 0,
+      "storyguide": true
     }
   ]
 }

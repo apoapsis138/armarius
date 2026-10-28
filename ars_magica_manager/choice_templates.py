@@ -136,6 +136,9 @@ class ChoiceTemplateDef:
     notes: str = ""
     #: Where this entry differs from the page's text, and why.
     fixes: list[str] = field(default_factory=list)
+    #: A book's character printed for the storyguide (a saint, an
+    #: antagonist): kept as printed, so its type's limits aren't checked.
+    storyguide: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ChoiceTemplateDef:
@@ -185,7 +188,10 @@ def templates(saga: Saga | None, character_type: str) -> list[ChoiceTemplateDef]
 
 def option_label(template: ChoiceTemplateDef) -> str:
     """How New Character's Template list names `template`: a Mythic
-    Companion's with its book ("Zahid (RoP:D)")."""
+    Companion's with its book ("Zahid (RoP:D)"), and one printed for the
+    storyguide saying so."""
+    if template.storyguide:
+        return f"{template.name} ({template.book}, for the storyguide)"
     if template.kind in ("mythic", "sample"):
         return f"{template.name} ({template.book})"
     return template.name
@@ -523,7 +529,10 @@ def limit_problem(
 ) -> str | None:
     """Why `chosen` breaks the limits of `template`'s type, or None. A
     book's companion may keep the several Social Statuses the book gives
-    it (a Mamluk Emir is Emir, Mamluk and Muqta')."""
+    it (a Mamluk Emir is Emir, Mamluk and Muqta'). A storyguide's
+    character is taken as the book prints it."""
+    if template.storyguide:
+        return None
     if template.kind == "sample" and template.type == "companion":
         return _book_limits(
             "companion",

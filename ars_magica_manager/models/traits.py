@@ -32,6 +32,20 @@ class VirtueFlawInstance:
     ends_year: int | None = field(default=None, compare=False)
     ends_season: str = field(default="", compare=False)
 
+    @classmethod
+    def from_dict(cls, data: dict[str, Any]) -> VirtueFlawInstance:
+        """An instance as saved, a retired catalog id read as the entry
+        that replaced it."""
+        d = known_fields(cls, data)
+        d["vf_id"] = RETIRED_VF_IDS.get(d["vf_id"], d["vf_id"])
+        return cls(**d)
+
+
+#: Catalog Virtues and Flaws folded into another entry, by old id: a
+#: supplement's that the Definitive Edition prints under its own name
+#: (The Church's Brother-Priest is the DE's Brother Chaplain, DE p. 73).
+RETIRED_VF_IDS: dict[str, str] = {"vf_brother_priest": "vf_brother_chaplain"}
+
 
 def new_instance_id() -> str:
     """A fresh id for a VirtueFlawInstance or LabFeature."""

@@ -1,7 +1,10 @@
-"""The Definitive Edition's creatures (DE pp. 428-492) as stat blocks to
-pick in the Bestiary: each entry of data/bestiary_catalog.json is a
-template, copied into the saga when chosen (the Prototype pattern, as a
-character template is), never shared.
+"""The Definitive Edition's creatures (DE pp. 428-492), and the animals
+Lords of Men prints (its pets, hounds, horses and hawks, LoM pp. 45-59),
+as stat blocks to pick in the Bestiary: each entry of
+data/bestiary_catalog.json is a template, copied into the saga when chosen
+(the Prototype pattern, as a character template is), never shared. An
+entry with a "book" is that book's (a SOURCEBOOKS abbreviation) and is
+offered only while the book is in play; one without is the DE's.
 
 An entry gives the block in the Tribunal packs' notation (book_packs.
 builder): "characteristics" in the book's order, "virtues_flaws" (with the
@@ -19,7 +22,7 @@ from dataclasses import dataclass
 from functools import cache
 from typing import Any
 
-from . import DATA_DIR
+from . import DATA_DIR, sourcebooks
 from .book_packs.builder import (
     ability_from_block,
     characteristics,
@@ -36,27 +39,37 @@ from .models import (
     new_instance_id,
 )
 
-SOURCE = "Ars Magica Definitive Edition, Chapter 13: Bestiary, pp. 428-492"
+SOURCE = (
+    "Ars Magica Definitive Edition, Chapter 13: Bestiary, pp. 428-492; "
+    "Lords of Men pp. 45, 50, 55-56, 59 (Errata p. 74)"
+)
 #: The groups the Bestiary's picker lists the book's creatures under.
 GROUPS = ("Mundane Beasts", "Magic", "Faerie", "Infernal", "Divine")
 
 
 @dataclass(frozen=True)
 class BookCreature:
-    """One stat block of the book: its key, name, group and printed page,
-    and the entry it is built from."""
+    """One stat block of a book: its key, name, group, the book it is from
+    and its printed page, and the entry it is built from."""
 
     key: str
     name: str
     group: str
     page: int
     entry: dict[str, Any]
+    book: str = sourcebooks.CORE
+
+    def page_ref(self) -> str:
+        """Its page, with the book named unless it is the DE's."""
+        if self.book == sourcebooks.CORE:
+            return f"p. {self.page}"
+        return f"{self.book} p. {self.page}"
 
     def label(self) -> str:
         might = self.entry.get("might") or 0
         realm = self.entry.get("realm") or ""
         what = f"{realm} {might}" if realm else "mundane"
-        return f"{self.name} ({what}, p. {self.page})"
+        return f"{self.name} ({what}, {self.page_ref()})"
 
 
 @cache
@@ -70,8 +83,13 @@ def catalog() -> tuple[BookCreature, ...]:
         group = entry.get("group", "")
         if group not in GROUPS:
             raise ValueError(f"{entry.get('key')!r}: unknown group {group!r}")
+        book = entry.get("book") or sourcebooks.CORE
+        if book not in sourcebooks.SOURCEBOOKS:
+            raise ValueError(f"{entry.get('key')!r}: unknown book {book!r}")
         found.append(
-            BookCreature(entry["key"], entry["name"], group, int(entry["page"]), entry)
+            BookCreature(
+                entry["key"], entry["name"], group, int(entry["page"]), entry, book
+            )
         )
     return tuple(found)
 
@@ -80,9 +98,14 @@ def by_key(key: str) -> BookCreature | None:
     return next((c for c in catalog() if c.key == key), None)
 
 
-def options() -> list[tuple[str, str]]:
-    """(label, key) for a picker, group by group."""
-    return [(f"{c.group}: {c.label()}", c.key) for c in catalog()]
+def options(books: frozenset[str] | None = None) -> list[tuple[str, str]]:
+    """(label, key) for a picker, group by group: the creatures of the
+    books in play (`books`, as sourcebooks.saga_books; None: every book)."""
+    return [
+        (f"{c.group}: {c.label()}", c.key)
+        for c in sorted(catalog(), key=lambda c: GROUPS.index(c.group))
+        if sourcebooks.in_play(c.book, books)
+    ]
 
 
 def build(book: BookCreature) -> Creature:
@@ -115,7 +138,11 @@ def build(book: BookCreature) -> Creature:
         order=e.get("order") or "",
         hierarchy=e.get("hierarchy"),
         weakness=e.get("weakness") or "",
-        source=f"ArM5 DE p. {book.page}",
+        source=(
+            f"ArM5 DE p. {book.page}"
+            if book.book == sourcebooks.CORE
+            else f"{book.book} p. {book.page}"
+        ),
         detail=FULL,
     )
     block = e.get("block") or {}

@@ -1,5 +1,5 @@
 {
-  "attribution": "Creatures from Ars Magica Fifth Edition, Definitive Edition, Chapter 13 (pp. 428-492): stat blocks as printed, descriptions paraphrased. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+  "attribution": "Creatures from Ars Magica Fifth Edition, Definitive Edition, Chapter 13 (pp. 428-492), and Lords of Men (pp. 45, 50, 55-56, 59): stat blocks as printed, descriptions paraphrased. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
   "entries": [
     {
       "key": "bear",
@@ -7641,6 +7641,1511 @@
       ],
       "appearance": "A large golden-skinned man with blazing hair and a starlike white robe, bearing a burning greatsword.",
       "notes": "Sword and flames are natural, so not magically resisted. An angel charged with Hermetic magi: he draws them toward God or punishes the wicked, often posing as a magus; suits the Plagued by Angel Story Flaw. The book prints Divine Lore, Order of Hermes Lore and plain Theology; mapped here."
+    },
+    {
+      "key": "lom_magpie",
+      "name": "Magpie",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 45,
+      "size": -4,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          2,
+          -2,
+          1,
+          -8,
+          0,
+          3,
+          5
+        ],
+        "virtues_flaws": [
+          "Crafty",
+          "Mimicry",
+          "Timid",
+          "Vocal"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "flying"
+          ],
+          [
+            "Awareness",
+            4,
+            "predators"
+          ],
+          [
+            "Brawl",
+            4,
+            "dodge"
+          ],
+          [
+            "Music",
+            3,
+            "mimicry"
+          ],
+          [
+            "Stealth",
+            4,
+            "hiding"
+          ],
+          [
+            "Survival",
+            3,
+            "foraging"
+          ]
+        ],
+        "traits": {
+          "Mischievous": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          4,
+          9,
+          9,
+          -7
+        ],
+        [
+          "Dodge",
+          4,
+          null,
+          9,
+          null
+        ]
+      ],
+      "soak": 0,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A black-and-white magpie, kept as a pet even in monasteries and nunneries.",
+      "notes": "A mundane pet that its owner may train; also a template for a Magical Animal Companion. Qualities as Houses of Hermes: Mystery Cults p. 40."
+    },
+    {
+      "key": "lom_monkey",
+      "name": "Monkey",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 45,
+      "size": -3,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          2,
+          0,
+          -3,
+          -3,
+          -6,
+          0,
+          2,
+          3
+        ],
+        "virtues_flaws": [
+          "Crafty",
+          "Defensive Fighter",
+          "Skilled Climber",
+          "Timid"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "climbing"
+          ],
+          [
+            "Awareness",
+            4,
+            "food"
+          ],
+          [
+            "Brawl",
+            4,
+            "dodge"
+          ],
+          [
+            "Stealth",
+            4,
+            "hiding"
+          ],
+          [
+            "Survival",
+            3,
+            "foraging"
+          ]
+        ],
+        "traits": {
+          "Mischievous": 2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          3,
+          9,
+          8,
+          -5
+        ],
+        [
+          "Dodge",
+          3,
+          null,
+          8,
+          null
+        ]
+      ],
+      "soak": 0,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A small monkey, one of the unusual pets kept even by monks and nuns.",
+      "notes": "+3 to climbing rolls. A mundane pet that its owner may train; also a template for a Magical Animal Companion."
+    },
+    {
+      "key": "lom_squirrel",
+      "name": "Squirrel",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 45,
+      "size": -7,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          1,
+          0,
+          -3,
+          -5,
+          -12,
+          1,
+          3,
+          5
+        ],
+        "virtues_flaws": [
+          "Lightning Reflexes",
+          "Crafty",
+          "Defensive Fighter",
+          "Skilled Climber",
+          "Timid"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "climbing"
+          ],
+          [
+            "Awareness",
+            4,
+            "food"
+          ],
+          [
+            "Brawl",
+            4,
+            "dodge"
+          ],
+          [
+            "Stealth",
+            4,
+            "hiding"
+          ],
+          [
+            "Survival",
+            3,
+            "foraging"
+          ]
+        ],
+        "traits": {
+          "Timid": 3,
+          "Acquisitive": 2,
+          "Inquisitive": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Dodge",
+          5,
+          null,
+          10,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A squirrel, one of the unusual pets kept even by monks and nuns.",
+      "notes": "+3 to climbing rolls. A mundane pet that its owner may train; also a template for a Magical Animal Companion."
+    },
+    {
+      "key": "lom_lymer",
+      "name": "Hound, Lymer",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 50,
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          3,
+          -3,
+          0,
+          -4,
+          1,
+          2,
+          2
+        ],
+        "virtues_flaws": [
+          "Domesticated",
+          "Keen Sense of Smell",
+          "Pursuit Predator",
+          "Timid",
+          "Vocal"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Awareness",
+            4,
+            "deer"
+          ],
+          [
+            "Brawl",
+            3,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "deer"
+          ],
+          [
+            "Stealth",
+            4,
+            "stalking"
+          ]
+        ],
+        "traits": {
+          "Obedient": 3,
+          "Placid": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          2,
+          9,
+          7,
+          -3
+        ],
+        [
+          "Dodge",
+          2,
+          null,
+          5,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A heavy-jowled scent hound, kin to the bloodhound, trained from a pup to follow a faint trail in silence.",
+      "notes": "+2 to Hunt rolls. Vocal here means trained to be silent. Finds the quarry for the running dogs."
+    },
+    {
+      "key": "lom_alaunt",
+      "name": "Hound, Alaunt",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 50,
+      "size": -1,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          1,
+          1,
+          -2,
+          -4,
+          2,
+          1,
+          0,
+          0
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Aggressive",
+          "Domesticated",
+          "Grapple",
+          "Keen Sense of Smell",
+          "Pursuit Predator"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Awareness",
+            3,
+            "deer"
+          ],
+          [
+            "Brawl",
+            5,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "boar"
+          ]
+        ],
+        "traits": {
+          "Aggressive": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          0,
+          9,
+          7,
+          3
+        ],
+        [
+          "Dodge",
+          0,
+          null,
+          0,
+          null
+        ],
+        [
+          "Grapple",
+          0,
+          5,
+          5,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A strong hunting dog that grapples the quarry, fierce against boar.",
+      "notes": "Ferocity against boar. +2 to Hunt rolls. Grapple damage is special (DE p. 174)."
+    },
+    {
+      "key": "lom_greyhound",
+      "name": "Hound, Greyhound",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 50,
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          1,
+          -2,
+          -4,
+          -4,
+          0,
+          1,
+          5
+        ],
+        "virtues_flaws": [
+          "Domesticated",
+          "Fast Runner",
+          "Grapple",
+          "Keen Eyesight",
+          "Pursuit Predator"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Awareness",
+            3,
+            "deer"
+          ],
+          [
+            "Brawl",
+            3,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "deer"
+          ]
+        ],
+        "traits": {
+          "Persistent": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          5,
+          8,
+          10,
+          -3
+        ],
+        [
+          "Dodge",
+          5,
+          null,
+          8,
+          null
+        ],
+        [
+          "Grapple",
+          5,
+          4,
+          8,
+          null
+        ]
+      ],
+      "soak": 0,
+      "fatigue_levels": "OK, 0, -1, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A swift sight hound that runs the quarry down; the best come from Scotland, and all are costly.",
+      "notes": "+3 to running rolls and to sight rolls. Grapple damage is special (DE p. 174)."
+    },
+    {
+      "key": "lom_running_dog",
+      "name": "Hound, Running Dog",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 50,
+      "size": -2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          0,
+          3,
+          -2,
+          -4,
+          -4,
+          1,
+          0,
+          4
+        ],
+        "virtues_flaws": [
+          "Domesticated",
+          "Fast Runner",
+          "Keen Sense of Smell",
+          "Pack Animal",
+          "Pursuit Predator",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Awareness",
+            3,
+            "deer"
+          ],
+          [
+            "Brawl",
+            3,
+            "bite"
+          ],
+          [
+            "Hunt",
+            4,
+            "deer"
+          ]
+        ],
+        "traits": {
+          "Cooperative": 3,
+          "Loyal": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          4,
+          7,
+          9,
+          -3
+        ],
+        [
+          "Dodge",
+          4,
+          null,
+          7,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -1, -1, -3, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A pack hound, like a foxhound, that runs the quarry to exhaustion in pairs; the slow St. Hubert has the finest nose.",
+      "notes": "+3 to running rolls, +2 to Hunt rolls. The pack's leader has Com -3 and Leadership 5."
+    },
+    {
+      "key": "lom_mastiff",
+      "name": "Hound, Mastiff",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 50,
+      "size": -1,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          1,
+          1,
+          -4,
+          -4,
+          1,
+          2,
+          1,
+          1
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Aggressive",
+          "Domesticated",
+          "Keen Sense of Smell",
+          "Large Teeth"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "running"
+          ],
+          [
+            "Awareness",
+            3,
+            "intruders"
+          ],
+          [
+            "Brawl",
+            5,
+            "bite"
+          ]
+        ],
+        "traits": {
+          "Loyal": 3,
+          "Vicious": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Bite",
+          1,
+          11,
+          8,
+          4
+        ],
+        [
+          "Dodge",
+          1,
+          null,
+          6,
+          null
+        ]
+      ],
+      "soak": 1,
+      "fatigue_levels": "OK, 0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A big, fierce dog that defends its owner.",
+      "notes": "Ferocity when defending its owner. +3 to rolls using scent, +2 to Hunt rolls."
+    },
+    {
+      "key": "lom_destrier",
+      "name": "Horse, Noble Warhorse (Destrier)",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 55,
+      "size": 3,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          1,
+          1,
+          -4,
+          6,
+          3,
+          1,
+          0
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Improved Characteristics",
+          "Improved Characteristics",
+          "Long-Winded",
+          "Proud (Minor)",
+          "Domesticated",
+          "Fast Runner",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "in battle"
+          ],
+          [
+            "Awareness",
+            2,
+            "bad footing"
+          ],
+          [
+            "Brawl",
+            3,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Proud": 3,
+          "Loyal": 2,
+          "Brave": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          2,
+          7,
+          7,
+          7
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "The finest and rarest of warhorses, often Spanish, up to fifteen hands; the best tournament horses are destriers.",
+      "notes": "Ferocity when ridden in battle. Costs 50 to 140 pounds or more; many are aligned with a realm and have Might. Owning one is worth at least 1 xp in Reputation: Prudhomme."
+    },
+    {
+      "key": "lom_courser",
+      "name": "Horse, Warhorse (Courser or Rouncey)",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 55,
+      "size": 2,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -2,
+          0,
+          0,
+          -4,
+          4,
+          3,
+          1,
+          0
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Improved Characteristics",
+          "Long-Winded",
+          "Proud (Minor)",
+          "Domesticated",
+          "Fast Runner",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "in battle"
+          ],
+          [
+            "Awareness",
+            2,
+            "bad footing"
+          ],
+          [
+            "Brawl",
+            3,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Proud": 3,
+          "Loyal": 2,
+          "Brave": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          2,
+          7,
+          7,
+          5
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "The common combat-trained warhorse, fourteen to fifteen hands.",
+      "notes": "Ferocity when ridden in battle. A courser costs 10 to 20 pounds (16 is usual); unsuited to pack, work or travel. A rouncey, a squire's utility horse, lacks Ferocity and Confidence and costs 5 to 10 pounds."
+    },
+    {
+      "key": "lom_palfrey",
+      "name": "Horse, Riding Horse (Palfrey or Jennet)",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 56,
+      "size": 2,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -2,
+          -1,
+          0,
+          -4,
+          4,
+          3,
+          1,
+          1
+        ],
+        "virtues_flaws": [
+          "Improved Characteristics",
+          "Long-Winded",
+          "Domesticated",
+          "Fast Runner",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "distance riding"
+          ],
+          [
+            "Awareness",
+            2,
+            "escape routes"
+          ],
+          [
+            "Brawl",
+            1,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Skittish": 3,
+          "Brave": -2
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Hooves",
+          3,
+          5,
+          6,
+          5
+        ]
+      ],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "The usual riding horse, a little over fourteen hands and mostly mares; a lady's palfrey is a jennet.",
+      "notes": "Rides thirty miles a day or more on good roads; can be controlled in combat by a rider with Ride 3. Costs about 2 pounds. A jennet has Docile +1, Brave -3."
+    },
+    {
+      "key": "lom_hackney",
+      "name": "Horse, Draught Horse (Hackney)",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 56,
+      "size": 3,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -3,
+          -1,
+          0,
+          -4,
+          6,
+          4,
+          1,
+          -2
+        ],
+        "virtues_flaws": [
+          "Long-Winded",
+          "Noncombatant",
+          "Domesticated",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "stamina"
+          ],
+          [
+            "Awareness",
+            2,
+            "commands"
+          ],
+          [
+            "Brawl",
+            1,
+            "hooves"
+          ]
+        ],
+        "traits": {
+          "Placid": 2,
+          "Stubborn": 1,
+          "Brave": -2
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 0,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A big, slow workhorse of up to sixteen hands.",
+      "notes": "With a horse collar it works half again as well as an ox and pulls a laden cart alone. A pair costs as little as a pound; no noble would be seen on one. The book gives it no Soak."
+    },
+    {
+      "key": "lom_working_pony",
+      "name": "Horse, Working Pony (Fell or Icelandic)",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 56,
+      "size": 1,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -2,
+          1,
+          0,
+          -4,
+          2,
+          3,
+          2,
+          0
+        ],
+        "virtues_flaws": [
+          "Improved Characteristics",
+          "Long-Winded",
+          "Perfect Balance",
+          "Noncombatant",
+          "Domesticated",
+          "Herd Animal",
+          "Imposing Appearance",
+          "Tireless"
+        ],
+        "abilities": [
+          [
+            "Awareness",
+            2,
+            "footing"
+          ]
+        ],
+        "traits": {
+          "Brave": 2,
+          "Resilient": 1
+        },
+        "reputations": {}
+      },
+      "attacks": [],
+      "soak": 3,
+      "fatigue_levels": "OK, 0/0, -1/-1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A sturdy pony of northern England, Scotland or Iceland, sure-footed on mountain trails and moors.",
+      "notes": "A superb pack animal where no cart can go. About a pound in the north, far more in the south."
+    },
+    {
+      "key": "lom_gyrfalcon",
+      "name": "Hawk, Gyrfalcon",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -3,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -6,
+          -2,
+          1,
+          6
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Fast Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator",
+          "Extra Natural Weapons"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          8,
+          6,
+          12,
+          -4
+        ],
+        [
+          "Beak",
+          9,
+          6,
+          9,
+          -5
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "The largest and most prized falcon, wingspan past four feet, white, grey or dark brown with banded plumage.",
+      "notes": "Ferocity in a swooping attack. Init includes +3 for Fast Flyer. Natural weapons before Qualities: talons Init -1, Atk +2, Def +3, Dam +2; beak Init 0, Atk +3, Def +1, Dam +1. Lives in the cold north; an untrained bird costs 3 to 4 pounds. Com -2 by the Errata (p. 74). Size is a female's; males are a Size smaller."
+    },
+    {
+      "key": "lom_peregrine",
+      "name": "Hawk, Peregrine Falcon",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -4,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -8,
+          -2,
+          1,
+          7
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Fast Flyer",
+          "Keen Eyesight",
+          "Extra Natural Weapons",
+          "Ambush Predator"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            3,
+            "climbing flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ],
+          [
+            "Stealth",
+            3,
+            "ambush prey"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          7,
+          6,
+          14,
+          -6
+        ],
+        [
+          "Beak",
+          9,
+          6,
+          9,
+          -5
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A smaller falcon that hovers high and drops like a stone on its prey.",
+      "notes": "A stealthy attack on unsuspecting prey gains +3 to its attack and wins initiative. About a pound untrained. Otherwise as the gyrfalcon (LoM p. 59)."
+    },
+    {
+      "key": "lom_goshawk",
+      "name": "Hawk, Goshawk",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -3,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -6,
+          -2,
+          1,
+          6
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator",
+          "Extra Natural Weapons",
+          "Aggressive"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          5,
+          9,
+          12,
+          -4
+        ],
+        [
+          "Beak",
+          6,
+          9,
+          9,
+          -5
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "As big as a female gyrfalcon, flown from the fist with a graceful flight.",
+      "notes": "No Fast Flyer (Init -3) and Aggressive (+3 Attack). Won't attack prey larger than Size -2 unless trained to it. About a pound untrained. Otherwise as the gyrfalcon (LoM p. 59)."
+    },
+    {
+      "key": "lom_merlin",
+      "name": "Hawk, Merlin",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -5,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -10,
+          -2,
+          1,
+          8
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Fast Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator",
+          "Extra Natural Weapons"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          8,
+          6,
+          12,
+          -4
+        ],
+        [
+          "Beak",
+          11,
+          6,
+          11,
+          -9
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A small, very fast falcon.",
+      "notes": "Hunts prey up to partridge size (-6). Four untrained birds cost a pound. Otherwise as the gyrfalcon (LoM p. 59)."
+    },
+    {
+      "key": "lom_lanner",
+      "name": "Hawk, Lanner",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -4,
+      "cunning": true,
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -8,
+          -2,
+          1,
+          7
+        ],
+        "virtues_flaws": [
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Fast Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator",
+          "Extra Natural Weapons"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ],
+          [
+            "Leadership",
+            1,
+            ""
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          7,
+          6,
+          14,
+          -6
+        ],
+        [
+          "Beak",
+          9,
+          6,
+          9,
+          -5
+        ]
+      ],
+      "soak": -2,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "A falcon of North Africa and the Mediterranean, often used to teach falconry.",
+      "notes": "No Ferocity or Confidence, so easy to train. Taught to hunt in pairs: a trained pair attacks as a group with Talons Init +7, Atk +12, Def +14, Dam -6. A pair costs a pound untrained. Otherwise as the gyrfalcon (LoM p. 59)."
+    },
+    {
+      "key": "lom_sparrowhawk",
+      "name": "Hawk, Sparrowhawk",
+      "group": "Mundane Beasts",
+      "book": "LoM",
+      "page": 59,
+      "size": -4,
+      "cunning": true,
+      "confidence": [
+        1,
+        3
+      ],
+      "block": {
+        "characteristics": [
+          -1,
+          3,
+          -1,
+          -2,
+          -6,
+          -3,
+          1,
+          6
+        ],
+        "virtues_flaws": [
+          "Ferocity",
+          "Keen Vision",
+          "Fragile Constitution",
+          "Accomplished Flyer",
+          "Keen Eyesight",
+          "Pursuit Predator",
+          "Extra Natural Weapons"
+        ],
+        "abilities": [
+          [
+            "Athletics",
+            5,
+            "swift flight"
+          ],
+          [
+            "Awareness",
+            4,
+            "spotting prey"
+          ],
+          [
+            "Brawl",
+            2,
+            "talons"
+          ],
+          [
+            "Hunt",
+            4,
+            "game birds"
+          ],
+          [
+            "Survival",
+            3,
+            "cold climates"
+          ]
+        ],
+        "traits": {
+          "Fierce": 3
+        },
+        "reputations": {}
+      },
+      "attacks": [
+        [
+          "Talons",
+          5,
+          6,
+          12,
+          -4
+        ],
+        [
+          "Beak",
+          8,
+          6,
+          13,
+          -7
+        ]
+      ],
+      "soak": -3,
+      "fatigue_levels": "OK, 0/0, -1, -3, -5, Unconscious",
+      "powers": [],
+      "vis": [],
+      "appearance": "The commonest hawk of Mythic Europe, often caught wild.",
+      "notes": "No Fast Flyer (talons Init -3). Notoriously hard to raise: Aging rolls at -3, and an Aging roll every winter from its first year. Six untrained birds cost a pound. Otherwise as the gyrfalcon (LoM p. 59)."
     }
   ]
 }

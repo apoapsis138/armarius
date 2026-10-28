@@ -226,7 +226,7 @@ def make_greek_fire(
 HOLY_ORDERS = frozenset(
     {
         "vf_priest",
-        "vf_brother_priest",
+        "vf_brother_chaplain",
         "vf_eastern_priest",
         "vf_senior_clergy",
     }

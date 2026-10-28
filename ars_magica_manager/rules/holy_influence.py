@@ -188,7 +188,7 @@ def temper_scores(character: Character) -> dict[str, int]:
 #: and Inspirational (p. 38).
 STANDING = frozenset(
     {
-        "vf_brother_priest",
+        "vf_brother_chaplain",
         "vf_clerk",
         "vf_eastern_priest",
         "vf_mazdean_priest",

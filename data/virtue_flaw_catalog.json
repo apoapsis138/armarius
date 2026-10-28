@@ -762,17 +762,6 @@
       "description": "You are a member of a crusading order, but not a knight or a nobleman. You have sworn a lifelong vow of obedience, poverty, and chastity, but this may not be enforced as strictly for you as it would be for a brother knight. You are answerable only to your superiors in the order and the pope. Unless you are Poor, you may have high-quality weapons and armor, and two horses. You may also take Martial Abilities during character generation. You wear the distinctive symbol of your order on your surcoat, which is usually colored black or gray. This Virtue is only available to male characters."
     },
     {
-      "id": "vf_brother_priest",
-      "name": "Brother-Priest",
-      "type": "Virtue",
-      "category": "Social Status",
-      "tier": "Minor",
-      "cost": 1,
-      "source": "TC",
-      "summary": "Templar chaplain: as the Priest Virtue but answerable only to Templar superiors and the pope; may add clerical Virtues for Church rank.",
-      "description": "The character is a chaplain of the Poor Knights of the Temple of Solomon, which has the same implications as the Priest Minor Virtue (ArM5, page 47), except the character is answerable only to his superiors within the Templars and to the pope. You may take clerical Virtues to describe the character's rank within the Church hierarchy. The character wears the distinctive red cross of the Templars on his black robes. This Virtue is only available to male characters."
-    },
-    {
       "id": "vf_bureaucrat",
       "name": "Bureaucrat",
       "type": "Virtue",

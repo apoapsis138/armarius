@@ -1134,8 +1134,7 @@ class Character:
         }
         d["abilities"] = [Ability.from_dict(a) for a in d.get("abilities", [])]
         d["virtues_flaws"] = [
-            VirtueFlawInstance(**known_fields(VirtueFlawInstance, vf))
-            for vf in d.get("virtues_flaws", [])
+            VirtueFlawInstance.from_dict(vf) for vf in d.get("virtues_flaws", [])
         ]
         d["background"] = Background.from_dict(d.get("background") or {})
         d["description"] = Description.from_dict(d.get("description") or {})
