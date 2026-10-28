@@ -90,9 +90,9 @@ def _words(widget) -> str:
 def test_attributes_comes_first_and_the_charter_after_it(app):
     window, _ = _window()
     page = _page(window)
-    assert page.codex.chapters()[:3] == ["Attributes", "Charter", "People"]
-    assert "Boons" in _words(_chapter(page, "Attributes"))
-    assert "Clauses" not in _words(_chapter(page, "Attributes"))
+    assert page.codex.chapters()[:3] == ["Overview", "Charter", "People"]
+    assert "Boons" in _words(_chapter(page, "Overview"))
+    assert "Clauses" not in _words(_chapter(page, "Overview"))
 
 
 def test_the_charter_shows_its_seals_preamble_and_clauses(app):

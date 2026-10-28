@@ -1339,7 +1339,7 @@ def _has_reputation(facts: ActionFacts) -> bool:
 # A covenant's Hermetic Projects (Hermetic Projects).
 
 #: Where Begin Project is offered: the covenant's record and the
-#: sections of its Attributes tab.
+#: sections of its Overview tab.
 BEGIN_PROJECT_SECTIONS = (
     None,
     RECORD_SECTION[NodeKind.COVENANT],
@@ -1369,7 +1369,7 @@ def _staged(kind: str) -> Callable[[ActionFacts], bool]:
 
 
 def _begins_project(facts: ActionFacts) -> bool:
-    """Begin Project: on a full covenant's record or Attributes tab."""
+    """Begin Project: on a full covenant's record or Overview tab."""
     covenant = facts.selected_covenant
     return (
         facts.selected_kind == NodeKind.COVENANT
@@ -1486,7 +1486,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "house_acclaim": _keeps_acclaim,
     "reputation_roll": _has_reputation,
     # A covenant's Hermetic Projects: Begin Project on its record and its
-    # Attributes; a magus's tunnel on his Known Spells.
+    # Overview; a magus's tunnel on his Known Spells.
     "begin_project": _begins_project,
     "open_tunnel": _on_known_spells(tunnel_forms.offers),
     # A covenant's staged project, by its kind.

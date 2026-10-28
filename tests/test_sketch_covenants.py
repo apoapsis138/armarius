@@ -228,7 +228,7 @@ async def test_the_terminal_opens_a_sketch_on_its_overview_and_edits_the_chosen_
         workspace = await _open(pilot, app)
         view = workspace._covenant_sheet_view
         assert view.tab_ids == [
-            "tab-cov-overview",
+            "tab-cov-sketch",
             "tab-cov-charter",
             "tab-cov-diary",
             "tab-secrets",

@@ -109,6 +109,34 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.38.0 — 2026-10-28
+
+### Pagina
+
+- A covenant has a History chapter (a tab in the terminal, after the
+  Diary): everything dated that is written about it in one timeline,
+  oldest first. It reads the covenant's Diary, the diaries of its place,
+  of the places inside it and of the people and factions placed there,
+  and Ahead's one-off entries for it, without copying any of them. The
+  same event written in the same words in two records is one row naming
+  both.
+- The history is told in eras you name, each with the year it begins;
+  with none, it is told before and after the founding. What comes from
+  the current season on is listed last, under Now and ahead.
+- Edit changes an entry where it is written. Delete leaves an entry out
+  of the history (it stays where it is written); left-out entries are
+  hidden unless you choose to show them, and can be put back.
+- Chips above the history (a tick for each in the terminal) hide or show
+  each record's entries, to read one record's story on its own.
+- The covenant's Attributes chapter is now called Overview, and a Sketch
+  covenant's main tab in the terminal is called Sketch, as on the
+  desktop.
+
+### Insignia
+
+- The History chapters of covenants and Tribunals have a scroll for
+  their icon, so they no longer look like the Diary beside them.
+
 ## 3.37.0 — 2026-10-28
 
 ### Illuminatio

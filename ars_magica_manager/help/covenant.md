@@ -35,9 +35,9 @@ the Living Conditions, and the Aura, Loyalty and Covenant Season as
 medallions in the saga's set, stays in view above the chapters. The
 aura's medallion is in its realm's colour, and Loyalty's is teal above
 zero and rose below, whatever the season. The rail on the left lists the
-chapters: **Attributes**,
+chapters: **Overview**,
 **Charter**, **People**, **Covenfolk**, **Laboratories**, **Possessions**,
-**Treasury**, **Manors**, **Library**, **Seasons**, **Diary**, **Build**,
+**Treasury**, **Manors**, **Library**, **Seasons**, **Diary**, **History**, **Build**,
 [**Secrets**](help:tab-secrets) and **Manage**. The help
 below names two of them as the terminal's tabs: Covenfolk is the
 Inhabitants tab and Treasury the Economics tab. Click a row or card and
@@ -127,15 +127,12 @@ header
 <!-- /gui -->
 also shows the Build Points spent.
 
-## Overview tab
-<!-- help: tab-cov-overview -->
+## Sketch tab
+<!-- help: tab-cov-sketch -->
 
 A Line or Sketch covenant opens here, beside its Diary: who it is in the
 saga (typed in its Edit), its magi and their votes, What Matters, its
 attitude to each player covenant, the favours owed and its links.
-<!-- gui -->
-On the desktop this is the **Sketch** chapter.
-<!-- /gui -->
 A Line covenant has only its attitude, favours and links.
 
 **You type:** its magi (a line or a sketch each), how many more are
@@ -233,8 +230,8 @@ them all to choose from.
 **See also:** [Following a record's links](help:record-links),
 [Links](help:section-links)
 
-## Attributes tab
-<!-- help: tab-cov-attributes -->
+## Overview tab
+<!-- help: tab-cov-overview -->
 
 What the covenant is like: its description, its
 [Connections](help:section-connections), its Reputations, and its Boons
@@ -1601,6 +1598,69 @@ have come to light.
 **See also:** [Inhabitants tab](help:tab-cov-inhabitants) (Loyalty),
 [Possessions tab](help:tab-cov-possessions) (vis),
 [Advancing a season](help:advance-season), [How to manage the covenant](help:guide-covenant).
+
+## History tab
+<!-- help: tab-cov-history -->
+
+Everything dated that is written about the covenant, in one timeline,
+oldest first: its own [Diary](help:tab-cov-diary), the diaries of its
+place, of the places inside it and of the records placed there (a faction
+of its founders, say), and the saga's calendar entries for it that come
+once. Nothing is copied: each row names the record that keeps it, and
+changes there show here.
+
+**You type:** the eras, and what to leave out. Everything else is written
+on its own record.
+
+**The app works out:** the order, the era each entry falls in, and which
+entries are the same (the same date and words, kept by two records: one
+row naming both). Entries from the current season on are listed last,
+under Now and ahead.
+
+**See also:** [Diary tab](help:tab-cov-diary),
+[How to tell the covenant's history](help:guide-covenant-history).
+
+### History
+<!-- help: section-cov-history -->
+
+<!-- tui -->
+`a` writes a new entry in the covenant's Diary. `e` changes the chosen
+entry where it is written (in the Diary, a place's diary or Ahead's
+calendar). `d` leaves it out of the history; it stays where it is written.
+<!-- /tui -->
+<!-- gui -->
+**Add** writes a new entry in the covenant's Diary. **Edit** changes the
+chosen entry where it is written (in the Diary, a place's diary or
+Ahead's calendar). **Delete** leaves it out of the history; it stays where
+it is written.
+<!-- /gui -->
+An entry left out is known by its date and words, so if its words are
+changed later it comes back.
+<!-- gui -->
+The chips above the list, one for each record the history reads from,
+hide or show that record's entries: click one to read only the Founders'
+story, say. An entry another shown record keeps too still shows.
+<!-- /gui -->
+
+### What It Shows
+<!-- help: section-cov-history-view -->
+
+How many entries are left out of the history, and whose entries it isn't
+showing. Left-out entries are hidden until **Show what's left out** is
+ticked in this block's Edit; then they are listed at the history's foot,
+and Delete on one puts it back. The same Edit has a tick for each record
+the history reads from (on the desktop, the chips above the list do
+the same):
+untick one to hide its entries. Both are kept with the covenant.
+
+### Eras
+<!-- help: section-cov-eras -->
+
+The stretches of years the history is told in: each a name and the year
+it begins, running to the year before the next one begins. No two begin
+in the same year. With none, the history is told in two, before the
+covenant's founding and after it (and in one, with no year of founding).
+Entries before the first era are listed as Earlier.
 
 ## Build tab
 <!-- help: tab-cov-build -->

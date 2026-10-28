@@ -157,6 +157,33 @@ def edit_button(
     return button
 
 
+def chip_row(
+    label: str, chips: Sequence[tuple[str, bool, Callable[[], None]]], p: Palette
+) -> QWidget:
+    """A line of chips after an italic `label`: each its words, lit or not,
+    and what clicking it does (Ahead's Show, a history's records)."""
+    row = QWidget()
+    line = QHBoxLayout(row)
+    line.setContentsMargins(0, 0, 0, 0)
+    line.setSpacing(6)
+    line.addWidget(text(label, p["label"], serif(11, italic=True)))
+    for words, lit, on_click in chips:
+        chip = QPushButton(words)
+        chip.setObjectName("chip")
+        chip.setCheckable(True)
+        chip.setChecked(lit)
+        chip.setCursor(Qt.CursorShape.PointingHandCursor)
+        colour = p["heading"] if lit else p["label"]
+        chip.setStyleSheet(
+            f"color:{colour}; border:1px solid {colour}; border-radius:9px;"
+            " padding:1px 10px; background:transparent"
+        )
+        chip.clicked.connect(lambda _checked=False, act=on_click: act())
+        line.addWidget(chip)
+    line.addStretch(1)
+    return row
+
+
 def take_pressed() -> QPushButton | None:
     """The section button pressed last, forgotten once taken."""
     button = _pressed[0] if _pressed else None

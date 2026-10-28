@@ -386,6 +386,15 @@ AREA_TESTS: dict[str, tuple[str, ...]] = {
         "test_dialog_contracts_character.py",
     ),
     "ars_magica_manager/forms/tower_seasons.py": ("test_hermetic_projects.py",),
+    # A covenant's History tab: its timeline and eras, the Eras form's
+    # contract, its lists' flow and the covenant sheets.
+    "ars_magica_manager/forms/covenant_history.py": (
+        "test_covenant_history.py",
+        "test_dialog_contracts_covenant.py",
+        "test_list_flows.py",
+        "test_screens_covenant.py",
+        "test_gui_sheet.py",
+    ),
     # Saga Content's Mystery Cults: their tests, the forms' contracts, the
     # lists' flow and the Saga Content screens.
     "ars_magica_manager/mystery_cults.py": (

@@ -678,6 +678,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#manors-list": "Kohlergrund"},
     ),
+    "add covenant era": Contract(
+        prefill={"Era": "", "Begins in": ""},
+        edits={"Era": "The Founders' years", "Begins in": "1115"},
+        saved=lambda s: covenant(s).history["eras"][-1],
+        expected={"name": "The Founders' years", "year": 1115},
+        invalid=[{"Era": ""}, {"Begins in": ""}, {"Begins in": "soon"}],
+        shown={"#cov-eras-list": "The Founders' years"},
+    ),
+    "edit history view": Contract(
+        prefill={"Show what's left out": False},
+        edits={"Show what's left out": True},
+        saved=lambda s: covenant(s).history.get("show_left_out"),
+        expected=True,
+        shown={"#cov-history-view-text": "Nothing is left out"},
+    ),
     "edit manor check": Contract(
         prefill={"Agriculture source": Select.NULL, "Livestock source": Select.NULL},
         edits={"Agriculture source": "inc1"},

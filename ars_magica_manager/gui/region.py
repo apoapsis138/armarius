@@ -27,7 +27,7 @@ from .. import (
     town_court,
     towns,
 )
-from ..commands import Command, Refuse, SectionOps
+from ..commands import Act, Command, Refuse, SectionOps
 from ..forms import charter_strength as charter_strength_forms
 from ..forms import hunting as hunting_forms
 from ..forms import neighbour as neighbour_forms
@@ -72,6 +72,7 @@ from .themes import Palette
 from .widgets import (
     Codex,
     badge,
+    chip_row,
     edit_button,
     scrolling_page,
     serif,
@@ -502,6 +503,20 @@ class KindChapters:
         ]
         header = entry.header(saga, n) if entry.header is not None else ""
         widgets = [TextBlock(header, p), body] if header else [body]
+        toggles = entry.toggles(saga, n) if entry.toggles is not None else []
+        if toggles:
+            run = self.run
+            widgets.insert(
+                0,
+                chip_row(
+                    "Show",
+                    [
+                        (t.label, t.on, lambda flip=t.flip: run(Act(flip)))
+                        for t in toggles
+                    ],
+                    p,
+                ),
+            )
         return section(title, p, *widgets, buttons=buttons)
 
     def _ledger(

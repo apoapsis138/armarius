@@ -8,11 +8,8 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QGridLayout,
-    QHBoxLayout,
-    QPushButton,
     QVBoxLayout,
     QWidget,
 )
@@ -27,7 +24,7 @@ from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
 from .medallions import Medallion, beside
 from .themes import Palette
-from .widgets import ClickableCard, edit_button, serif, text
+from .widgets import ClickableCard, chip_row, edit_button, serif, text
 
 #: Seasons shown across: a year to a row.
 ACROSS = len(SEASONS)
@@ -37,33 +34,18 @@ Inspect = Callable[[str, str, str], None]
 
 def _chips(saga: Saga, p: Palette, run: Run) -> QWidget:
     """Show: a chip per kind of entry, the one shown lit."""
-    row = QWidget()
-    line = QHBoxLayout(row)
-    line.setContentsMargins(0, 0, 0, 0)
-    line.setSpacing(6)
-    line.addWidget(text("Show", p["label"], serif(11, italic=True)))
-    for show in ahead.SHOWS:
-        chip = QPushButton(show)
-        chip.setObjectName("chip")
-        chip.setCheckable(True)
-        chip.setChecked(show == saga.ahead_show)
-        chip.setCursor(Qt.CursorShape.PointingHandCursor)
-        colour = p["heading"] if show == saga.ahead_show else p["label"]
-        chip.setStyleSheet(
-            f"color:{colour}; border:1px solid {colour}; border-radius:9px;"
-            " padding:1px 10px; background:transparent"
-        )
 
-        def pick(_checked: bool = False, show: str = show) -> None:
-            def apply() -> None:
-                saga.ahead_show = show
+    def pick(show: str) -> Callable[[], None]:
+        def apply() -> None:
+            saga.ahead_show = show
 
-            run(Act(apply))
+        return lambda: run(Act(apply))
 
-        chip.clicked.connect(pick)
-        line.addWidget(chip)
-    line.addStretch(1)
-    return row
+    return chip_row(
+        "Show",
+        [(show, show == saga.ahead_show, pick(show)) for show in ahead.SHOWS],
+        p,
+    )
 
 
 def _edge(p: Palette, entry: ahead.Entry) -> str | None:

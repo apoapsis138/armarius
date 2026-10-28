@@ -50,6 +50,7 @@ from ..actions import NodeKind
 from ..commands import Form, SectionOps
 from ..covenants import boon_hook_problems
 from ..forms import covenant as covenant_forms
+from ..forms import covenant_history
 from ..forms import creation as creation_forms
 from ..forms import diary as diary_forms
 from ..forms import inhabitant as inhabitant_forms
@@ -204,7 +205,7 @@ class CovenantPage(QWidget):
             ]
         elif covenant is not None:
             chapters += [
-                ("Attributes", "key", lambda: self._attributes(covenant)),
+                ("Overview", "key", lambda: self._attributes(covenant)),
                 ("Charter", "charter", lambda: self._charter(covenant)),
             ]
         if covenant is None or covenant.detail == FULL:
@@ -232,6 +233,7 @@ class CovenantPage(QWidget):
         if covenant is not None and full:
             chapters += [
                 ("Diary", "year", lambda: self._diary(covenant)),
+                ("History", "history", lambda: self._history(covenant)),
                 ("Build", "covenant", lambda: self._build(covenant)),
             ]
         if covenant is not None:
@@ -939,6 +941,19 @@ class CovenantPage(QWidget):
             hermetic_projects.covenant_ops(saga, covenant),
             self.codex,
         ).chapter(hermetic_projects.projects_tab(saga, covenant))
+
+    def _history(self, covenant: Covenant) -> QWidget:
+        """Everything dated written about the covenant, in its eras
+        (forms.covenant_history)."""
+        saga = self.saga
+        return KindChapters(
+            saga,
+            manors.manors_of(covenant),
+            self.p,
+            self.run,
+            covenant_history.covenant_ops(saga, covenant),
+            self.codex,
+        ).chapter(covenant_history.TAB)
 
     def _library(self, covenant: Covenant) -> QWidget:
         """The books on their shelves, a summa as tall as its level."""

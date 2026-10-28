@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from typing import Any
+from typing import Any, TypedDict
 
 from ..arts import ART_BY_NAME
 from .common import SEASONS, known_fields, move_secrets
@@ -67,6 +67,52 @@ class CovenantDiaryEntry:
     build_points: int | None = None
     concerns: str = ""
     threat_id: str | None = None
+
+
+class HistoryEra(TypedDict):
+    """An era of a covenant's History tab: its name and the year it
+    begins; it runs to the next era's."""
+
+    name: str
+    year: int
+
+
+def history_from(data: object, covenant: str) -> dict[str, Any]:
+    """A covenant's saved History settings, checked: `eras` (HistoryEra
+    dicts), `left_out` (the keys of entries left out) and `show_left_out`
+    (whether they are listed) and `hidden_sources` (the records whose
+    entries it hides)."""
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise ValueError(f"{covenant!r}'s history should be a mapping, not {data!r}.")
+    eras: list[HistoryEra] = []
+    for era in data.get("eras") or []:
+        if not isinstance(era, dict) or not isinstance(era.get("year"), int):
+            raise ValueError(
+                f"{covenant!r}'s history has an era without a year: {era!r}."
+            )
+        eras.append(HistoryEra(name=str(era.get("name") or ""), year=era["year"]))
+    left_out = data.get("left_out") or []
+    if not isinstance(left_out, list):
+        raise ValueError(
+            f"{covenant!r}'s history should list what is left out, not {left_out!r}."
+        )
+    found: dict[str, Any] = {}
+    if eras:
+        found["eras"] = eras
+    if left_out:
+        found["left_out"] = [str(key) for key in left_out]
+    if data.get("show_left_out"):
+        found["show_left_out"] = True
+    hidden = data.get("hidden_sources") or []
+    if not isinstance(hidden, list):
+        raise ValueError(
+            f"{covenant!r}'s history should list the records it hides, not {hidden!r}."
+        )
+    if hidden:
+        found["hidden_sources"] = [str(key) for key in hidden]
+    return found
 
 
 #: A charter clause's status (Covenants p. 35: only breaking the charter
@@ -453,6 +499,10 @@ class Covenant:
     # Shaping the land (Transforming Mythic Europe pp. 54-77): the islands
     # it is raising by magic. Older saves load with none.
     land_projects: list[LandProject] = field(default_factory=list)
+    #: Its History tab's own settings (covenant_history.py): the eras it
+    #: is told in, and the entries left out of it. Older saves load with
+    #: none.
+    history: dict[str, Any] = field(default_factory=dict)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
@@ -533,6 +583,7 @@ class Covenant:
                 f"{d.get('name')!r}'s land projects should be a list, not {land!r}."
             )
         d["land_projects"] = [LandProject.from_dict(p) for p in land]
+        d["history"] = history_from(d.get("history"), str(d.get("name") or ""))
         return cls(**known_fields(cls, d))  # drops the retired `library_id`
 
 

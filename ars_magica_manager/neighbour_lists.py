@@ -41,6 +41,16 @@ class LedgerEntry:
 
 
 @dataclass(frozen=True)
+class Toggle:
+    """A chip above a list on the desktop: its words, whether it is lit,
+    and what clicking it does (`flip`, run as a step)."""
+
+    label: str
+    on: bool
+    flip: Callable[[], None]
+
+
+@dataclass(frozen=True)
 class KindList:
     """A list a kind shows: its section's id and title, its rows, and its
     Add, Edit and Delete. `info` is a row (by its key) in full, as markup
@@ -58,6 +68,9 @@ class KindList:
     #: Each row as an entry ruled off on the desktop's page, in the
     #: grid's order (a tomb's curses); None draws the grid as a table.
     ledger: Callable[[Saga, Neighbour], list[LedgerEntry]] | None = None
+    #: Chips above the list on the desktop, each turning part of it on or
+    #: off (a history's records); the terminal sets the same in a form.
+    toggles: Callable[[Saga, Neighbour], list[Toggle]] | None = None
 
 
 @dataclass(frozen=True)

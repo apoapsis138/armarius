@@ -151,6 +151,7 @@ from .covenant import CharterTemplate as CharterTemplate
 from .covenant import Covenant as Covenant
 from .covenant import CovenantCharter as CovenantCharter
 from .covenant import CovenantDiaryEntry as CovenantDiaryEntry
+from .covenant import HistoryEra as HistoryEra
 from .creature import BodyVis as BodyVis
 from .creature import Creature as Creature
 from .creature import CreatureAttack as CreatureAttack

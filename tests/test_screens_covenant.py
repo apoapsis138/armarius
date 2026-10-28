@@ -1,4 +1,4 @@
-"""The covenant sheet: saga time, the saga tree, Attributes, Boons & Hooks and Reputations."""
+"""The covenant sheet: saga time, the saga tree, Overview, Boons & Hooks and Reputations."""
 
 import re
 
@@ -63,7 +63,7 @@ from ars_magica_manager.tui.screens import (
 )
 
 _COVENANT_TABS = (
-    "tab-cov-attributes",
+    "tab-cov-overview",
     "tab-cov-charter",
     "tab-cov-inhabitants",
     "tab-cov-seasons",
@@ -72,12 +72,13 @@ _COVENANT_TABS = (
     "tab-cov-manors",
     "tab-cov-library",
     "tab-cov-diary",
+    "tab-cov-history",
     "tab-cov-build",
     "tab-secrets",
 )
 
 
-async def test_covenant_sheet_has_info_panel_and_seven_tabs():
+async def test_covenant_sheet_has_info_panel_and_its_tabs():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()
@@ -88,7 +89,7 @@ async def test_covenant_sheet_has_info_panel_and_seven_tabs():
 
         tabs = view.query_one(TabbedContent)
         assert [pane.id for pane in tabs.query(TabPane)] == list(_COVENANT_TABS)
-        assert tabs.active == "tab-cov-attributes"
+        assert tabs.active == "tab-cov-overview"
 
         left = strip_markup(view._info_left_text())
         right = strip_markup(view._info_right_text())
@@ -827,7 +828,7 @@ async def test_edit_and_remove_target_the_right_boon_or_hook_when_interleaved():
     assert cov.boons_hooks[1].params == {"detail": "A"}
 
 
-async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
+async def test_switching_back_to_the_overview_tab_focuses_its_first_section():
     storage.save_saga(_saga_with_configured_covenant())
 
     app = ArsMagicaManagerApp()
@@ -847,7 +848,7 @@ async def test_switching_back_to_the_attributes_tab_focuses_its_first_section():
         await wait_until(pilot, lambda: app.screen._active_section() == "tab-cov-diary")
         assert app.screen._active_section() == "tab-cov-diary"
 
-        tabbed.active = "tab-cov-attributes"
+        tabbed.active = "tab-cov-overview"
         await wait_until(
             pilot, lambda: app.screen._active_section() == "section-cov-description"
         )

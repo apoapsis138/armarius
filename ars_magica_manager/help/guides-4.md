@@ -990,7 +990,7 @@ A wolf hunt has five phases (Mythic Locations pp. 139-142).
 
 A Burning City, an Intangible Assassin or a Living Corpse is followed stage by stage (Hermetic Projects pp. 9-118).
 
-1. **Begin it.** Begin Project on the covenant's Attributes tab (or Add on its Projects tab), and choose the kind. It starts with its chapter's stages.
+1. **Begin it.** Begin Project on the covenant's Overview tab (or Add on its Projects tab), and choose the kind. It starts with its chapter's stages.
 2. **Show it.** With more than one project, choose it on the projects list and use Show Project: the tab then shows its facts and rules, its stages and their works.
 3. **Spend seasons on a stage.** Plan a magus's lab work as usual (inventing a spell, enchanting a device) and choose the stage under **Spent on a project's stage**. When the season is played, it is kept with that stage's works. Work done at the table is Added on the works list.
 4. **Use the chapter's own rules.** A Burning City's hazards are on Take Harm, and More's Warning Bell rolls the bell. An Intangible Assassin's tunnels are Open a Tunnel's; More's Gather a Connection and Lower an Aegis keep a connection and face the Aegis. A Living Corpse's More's Death Roll is the magus's death.

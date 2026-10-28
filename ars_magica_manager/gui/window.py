@@ -179,7 +179,6 @@ _OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)
 #: The chapters whose help is a tab named otherwise, by page and the
 #: chapter's name (folded): the terminal's tabs are cut differently.
 _CHAPTER_TABS = {
-    (COVENANT, "sketch"): "tab-cov-overview",
     (COVENANT, "people"): "tab-cov-inhabitants",
     (COVENANT, "covenfolk"): "tab-cov-inhabitants",
     (COVENANT, "treasury"): "tab-cov-economics",

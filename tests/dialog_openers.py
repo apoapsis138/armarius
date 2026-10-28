@@ -1527,6 +1527,13 @@ OPENERS: dict[str, Opener] = {
     "add covenant manor": Opener(
         "covenant", _built(lambda ws: ws._core_verb("section-manors", "add"))
     ),
+    "add covenant era": Opener(
+        "covenant", _built(lambda ws: ws._core_verb("section-cov-eras", "add"))
+    ),
+    "edit history view": Opener(
+        "covenant",
+        _built(lambda ws: ws._core_verb("section-cov-history-view", "edit")),
+    ),
     "edit manor check": Opener(
         "covenant", _built(lambda ws: ws._core_verb("section-manor-check", "edit"))
     ),

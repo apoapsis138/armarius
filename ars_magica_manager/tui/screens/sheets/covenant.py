@@ -45,6 +45,7 @@ from ....boon_hook_text import (
 from ....covenants import boon_hook_problems
 from ....forms import ahead as ahead_forms
 from ....forms import charter as charter_forms
+from ....forms import covenant_history
 from ....forms import land_shaping as land_forms
 from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
@@ -90,10 +91,11 @@ class CovenantSheetView(KindTabsView):
     """The covenant sheet mounted into WorkspaceScreen's detail pane.
 
     A permanent info panel (not inside any tab) above tabs mirroring the
-    covenant record sheet: Attributes, Charter (its Charter of Covenant,
+    covenant record sheet: Overview, Charter (its Charter of Covenant,
     and the Chartered Town Boon's town charter), Inhabitants, Seasons (who
     has planned what this season), Possessions, Economics, Manors,
-    Library, Diary, and Build (what its Build Points went on).
+    Library, Diary, History (everything dated written about it), and Build
+    (what its Build Points went on).
 
     The panel's saga-level values (Saga, Storyguide, Current Season,
     Current Year) are inherited from the Saga and shown dimmed/read-only;
@@ -104,10 +106,10 @@ class CovenantSheetView(KindTabsView):
         super().__init__(saga)
         self.covenant = covenant
         #: A Line or Sketch covenant: its magi, What Matters and attitudes
-        #: on one Overview, and only its Diary beside it.
+        #: on one Sketch tab, and only its Diary beside it.
         self.sketch = covenant.detail != FULL
         if self.sketch:
-            self.INITIAL_TAB = "tab-cov-overview"
+            self.INITIAL_TAB = "tab-cov-sketch"
             self.core_ops = world_forms.covenant_ops(saga, covenant)
         elif not covenant.played:
             self.core_ops = world_forms.record_ops(saga, covenant)
@@ -117,6 +119,7 @@ class CovenantSheetView(KindTabsView):
                 COV_AHEAD_SECTION: ahead_forms.ahead_ops(saga, covenant),
                 **town_charter.covenant_charter_ops(saga, covenant),
                 **manors.covenant_ops(saga, covenant),
+                **covenant_history.covenant_ops(saga, covenant),
             }
         self.core_ops.update(charter_forms.charter_ops(saga, covenant))
         self.core_ops.update(guest_stays.section_ops(saga, covenant))
@@ -196,7 +199,7 @@ class CovenantSheetView(KindTabsView):
     def creation_record(self) -> Covenant:
         return self.covenant
 
-    INITIAL_TAB = "tab-cov-attributes"
+    INITIAL_TAB = "tab-cov-overview"
     #: The Manors tab's check follows the covenant's sources of income.
     KIND_WATCHED = ("section-eco-income",)
 
@@ -213,14 +216,14 @@ class CovenantSheetView(KindTabsView):
         if self.sketch:
             with TabbedContent(initial=self.INITIAL_TAB):
                 yield self._tab(
-                    "Overview", "tab-cov-overview", self._scrolling(self._overview_tab)
+                    "Sketch", "tab-cov-sketch", self._scrolling(self._overview_tab)
                 )
                 yield self._tab("Charter", "tab-cov-charter", self._charter_tab)
                 yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
                 yield from self._secrets_tab(self.covenant)
             return
         with TabbedContent(initial=self.INITIAL_TAB):
-            yield self._tab("Attributes", "tab-cov-attributes", self._attributes_tab)
+            yield self._tab("Overview", "tab-cov-overview", self._attributes_tab)
             yield self._tab("Charter", "tab-cov-charter", self._charter_tab)
             yield self._tab("Inhabitants", "tab-cov-inhabitants", self._inhabitants_tab)
             yield self._tab("Seasons", "tab-cov-seasons", self._seasons_tab)
@@ -240,6 +243,11 @@ class CovenantSheetView(KindTabsView):
             )
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
+            yield self._tab(
+                "History",
+                covenant_history.TAB_ID,
+                partial(self._kind_tab, covenant_history.TAB),
+            )
             yield self._tab("Build", "tab-cov-build", self._scrolling(self._build_tab))
             yield from self._secrets_tab(self.covenant)
 
@@ -907,7 +915,7 @@ class CovenantSheetView(KindTabsView):
             return []
         # A covenant's Hermetic Projects tab, once one is begun.
         projects = [self._projects_tab] if self.shows_projects else []
-        return [manors.COVENANT_TAB, *projects]
+        return [manors.COVENANT_TAB, *projects, covenant_history.TAB]
 
     def stale(self) -> bool:
         """Whether a project was begun (or the last one deleted) since the
@@ -949,7 +957,7 @@ class CovenantSheetView(KindTabsView):
         if list_id == "cov-guests-list":
             event.stop()
             if self.sketch:
-                # A sketch's Overview has no details panel.
+                # A sketch's Sketch tab has no details panel.
                 return
             self.query_one("#inh-panel", Static).update(
                 guest_stays.detail_text(self.saga, self.covenant, event.data_index)

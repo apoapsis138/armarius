@@ -61,7 +61,7 @@ def _words(widget) -> str:
 
 def test_the_chapter_shows_once_a_project_is_begun(app):
     window, saga_id = _window(with_project=False)
-    page = _page(window, "Attributes")
+    page = _page(window, "Overview")
     assert "Projects" not in page.chapters()
     asked = answering(window, {"name": "The Spire"})
     section_buttons(page, "The Covenant")["Begin Project"].click()

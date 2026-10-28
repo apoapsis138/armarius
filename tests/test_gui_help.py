@@ -110,7 +110,7 @@ def test_a_chapter_named_otherwise_opens_help_on_its_tab(app):
 def test_the_covenants_attributes_and_charter_open_help_on_their_tabs(app):
     window = _window()
     window.open_covenant(window.saga.covenants[0].id)
-    for row, topic in ((0, "tab-cov-attributes"), (1, "tab-cov-charter")):
+    for row, topic in ((0, "tab-cov-overview"), (1, "tab-cov-charter")):
         window.page().codex.rail.setCurrentRow(row)
         window.help.click()
         assert _help(window).topic_id == topic

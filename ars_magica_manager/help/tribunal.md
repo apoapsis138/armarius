@@ -111,7 +111,7 @@ saga's World chapter. To delete one, use **Delete** in its page's
 nothing else about them changes.
 <!-- /gui -->
 
-**See also:** [Covenant sheet](help:covenant), [Sketch covenants](help:tab-cov-overview)
+**See also:** [Covenant sheet](help:covenant), [Sketch covenants](help:tab-cov-sketch)
 
 ## The Tribunal
 <!-- help: section-trib-info -->

@@ -340,14 +340,14 @@ A book's details show its value, a price guide and its subject's research bonuse
 <!-- help: guide-covenant-boons -->
 
 <!-- tui -->
-The [Attributes tab](help:tab-cov-attributes) (`1`) holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
+The [Overview tab](help:tab-cov-overview) (`1`) holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
 
 1. Press `a` on Boons or Hooks to choose one from the catalogue, then `e` to give its detail and description.
 2. The titles show the points the Boons cost and the Hooks provide; the app warns above the lists about Boons and Hooks that can't be taken together.
 3. Some Boons change figures elsewhere, such as the Aura in the top panel or the Buildings cost.
 <!-- /tui -->
 <!-- gui -->
-The [Attributes](help:tab-cov-attributes) chapter holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
+The [Overview](help:tab-cov-overview) chapter holds the covenant's description, [Reputations](help:section-cov-reputations), [Boons](help:section-cov-boons) and [Hooks](help:section-cov-hooks).
 
 1. Click **Add** on Boons or Hooks to choose one from the catalogue, then click its card and **Edit** to give its detail and description.
 2. Under each title are the points the Boons cost and the Hooks provide; the app warns above them about Boons and Hooks that can't be taken together.
@@ -358,12 +358,12 @@ The [Attributes](help:tab-cov-attributes) chapter holds the covenant's descripti
 <!-- help: guide-covenant-diary -->
 
 <!-- tui -->
-The [Diary tab](help:tab-cov-diary) (`9`) is the covenant's history.
+The [Diary tab](help:tab-cov-diary) (`9`) is the covenant's own record of what happened to it.
 
 1. Press `a` to add an entry with a Year, Season, Category and Name, and any pounds, vis or Loyalty points.
 <!-- /tui -->
 <!-- gui -->
-The [Diary](help:tab-cov-diary) chapter is the covenant's history.
+The [Diary](help:tab-cov-diary) chapter is the covenant's own record of what happened to it.
 
 1. Click **Add** to add an entry with a Year, Season, Category and Name, and any pounds, vis or Loyalty points.
 <!-- /gui -->
@@ -371,6 +371,23 @@ The [Diary](help:tab-cov-diary) chapter is the covenant's history.
 3. Only the Loyalty points change the sheet, through Actions and events on the Loyalty block.
 
 The app adds its own entries for vis harvests, vis moved in or out, and contested resources that went unsecured.
+
+### Telling the covenant's history
+<!-- help: guide-covenant-history -->
+
+<!-- tui -->
+The [History tab](help:tab-cov-history) (`0`) gathers everything dated about the covenant into one timeline: its Diary, the diaries of its place and the places and records inside it, and Ahead's one-off entries for it.
+<!-- /tui -->
+<!-- gui -->
+The [History](help:tab-cov-history) chapter gathers everything dated about the covenant into one timeline: its Diary, the diaries of its place and the places and records inside it, and Ahead's one-off entries for it.
+<!-- /gui -->
+
+1. **Place the covenant.** Its place (Edit Covenant) is what the History reads from: its diary, the diaries of the places inside it, and of the factions and people placed there.
+2. **Name its eras.** Add an era on the Eras list for each stretch of years worth a heading (The Founders' years, 1115; The breaking, 1200). Each runs to the next.
+3. **Prune it.** Where two records tell the same event in different words, choose the one you don't want and Delete it: it is left out of the history, and stays where it is written. Entries with the same date and words are shown as one row already.
+4. **Put one back.** Tick Show what's left out in the What It Shows block's Edit, and Delete on a left-out entry at the foot puts it back.
+5. **Read one record's story.** Hide the other records' entries: untick them in the What It Shows block's Edit, or, on the desktop, click their chips above the list.
+6. **Change an entry** with Edit: it opens the entry where it is written.
 
 ### The Seasons tab
 <!-- help: guide-covenant-seasons -->

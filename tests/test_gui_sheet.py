@@ -51,9 +51,11 @@ from ars_magica_manager.gui.widgets import (
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import (
     BondPower,
+    CovenantDiaryEntry,
     DiaryEntry,
     IncomeSource,
     Inhabitant,
+    Neighbour,
     SeasonPlan,
     VirtueFlawInstance,
 )
@@ -404,7 +406,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
     page = window.sheet_area.findChild(CovenantPage)
     assert page is not None
     assert page.codex.chapters() == [
-        "Attributes",
+        "Overview",
         "Charter",
         "People",
         "Covenfolk",
@@ -415,6 +417,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
         "Library",
         "Seasons",
         "Diary",
+        "History",
         "Build",
         "Secrets",
         "Manage",
@@ -550,7 +553,7 @@ def test_choosing_a_boon_or_an_inhabitant_shows_it_in_the_inspector(app):
     page = _covenant_page(saga)
     boon = next(
         card
-        for card in _chapter(page, "Attributes").findChildren(ClickableCard)
+        for card in _chapter(page, "Overview").findChildren(ClickableCard)
         if "Wealth" in _texts(card)
     )
     boon.clicked()
@@ -825,3 +828,34 @@ def test_a_save_writes_with_a_quill_and_the_treasury_counts_coins(app):
     assert window._saved_cue(page) == "coins"
     page.codex.open_chapter(page.codex.chapters()[0])
     assert window._saved_cue(page) == "quill"
+
+
+def test_a_covenants_history_chips_hide_and_show_a_records_entries(app):
+    """The History chapter has a chip per record it reads from; clicking
+    one hides that record's entries, and says so above the list."""
+    saga = _sample_saga_with_covenant()
+    covenant = saga.covenants[0]
+    covenant.place_id = "keep_site"
+    saga.neighbours.append(
+        Neighbour(
+            "keep_site",
+            "The Old Keep",
+            kind="place",
+            details={"diary": [{"year": 1100, "season": "", "text": "Walls rise"}]},
+        )
+    )
+    covenant.diary.append(CovenantDiaryEntry(1210, "Spring", "A quarrel"))
+    page = _covenant_page(saga)
+    chapter = _chapter(page, "History")
+    chips = {
+        c.text(): c
+        for c in chapter.findChildren(QPushButton)
+        if c.objectName() == "chip"
+    }
+    assert {"The Old Keep", f"{covenant.name}'s Diary"} <= set(chips)
+    assert all(c.isChecked() for c in chips.values())
+    chips["The Old Keep"].click()
+    assert covenant.history["hidden_sources"] == ["place:keep_site"]
+    app.processEvents()
+    page = page.window_.page()
+    assert "not showing The Old Keep" in _texts(_chapter(page, "History"))

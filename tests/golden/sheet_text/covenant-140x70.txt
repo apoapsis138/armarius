@@ -1,4 +1,4 @@
-===== tab-cov-attributes
+===== tab-cov-overview
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Keep
@@ -12,7 +12,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9
+   1 Overview  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 D
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -80,7 +80,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9
+   1 Overview  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 D
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -148,7 +148,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9
+   1 Overview  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 D
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -216,7 +216,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   1 Attributes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9
+   1 Overview  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 D
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -284,7 +284,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  butes  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary
+  rview  2 Charter  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -352,7 +352,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-  er  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secre
+  er  3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Bui
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -420,7 +420,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
+  itants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -488,7 +488,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
+  tants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -556,7 +556,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
+  tants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   (none recorded)
@@ -610,6 +610,74 @@
   ▌
 
 
+===== tab-cov-history
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Keep
+
+      Saga:                     Matrix                   Tribunal:                    Rhine
+      Storyguide:               (not set)                Current Season:              Spring
+      Year Founded:             (not set)                Current Year:                1220
+      Aegis of the Hearth:      0                        Aegis' Penetration:          0
+      Living Conditions (Magi): +1 (Spring)              Living Conditions (Mundane): +0 (Spring)
+      Aura:                     1 (base 0, +1 Boons)     Covenant Season:             Spring
+                                                         Aura Realm:                  Magic
+          Edit (e)          In Play
+
+  tants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ History (1)
+
+      1 entry from 1 record
+        When         What happened             Written in
+      Now and ahead  from Spring 1220
+      ○ Spring 1220  Elsbeth leaves for Paris  Ahead
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ What It Shows
+
+      Nothing is left out. Delete on an entry leaves it out.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Eras (0)
+
+      No eras of its own: the history is told before and after the founding. Add one to name a stretch
+      of years.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose an entry to see it in full.
+  ▌
+
+
 ===== tab-cov-build
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -624,7 +692,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
+  tants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -692,7 +760,7 @@
                                                          Aura Realm:                  Magic
           Edit (e)          In Play
 
-   3 Inhabitants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 Build  Secrets
+  tants  4 Seasons  5 Possessions  6 Economics  7 Manors  8 Library  9 Diary  0 History  Build  Secrets
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔

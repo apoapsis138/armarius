@@ -88,7 +88,7 @@ class TribunalPage(QWidget):
         self.ops = tribunal_forms.tribunal_ops(saga, tribunal)
         self.ops[BUSINESS_SECTION] = self._with_opening_card(self.ops[BUSINESS_SECTION])
         self.codex.add("Roster", "tribunal", self._roster())
-        self.codex.add("History", "year", self._history())
+        self.codex.add("History", "history", self._history())
         self.codex.add("Docket", "worksheet", self._docket())
         # Polemic (Transforming Mythic Europe), while its book is in play.
         if polemic_forms.tab_offered(saga):

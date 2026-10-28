@@ -492,6 +492,36 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-cov-history": {
+      "active": "section-cov-history",
+      "keys": {
+        "a": "FieldsDialog: Add a Diary Entry",
+        "e": "FieldsDialog: Edit a Calendar Entry",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-history-view": {
+      "active": "section-cov-history-view",
+      "keys": {
+        "a": "(disabled)",
+        "e": "FieldsDialog: What the History Shows",
+        "d": "(disabled)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-eras": {
+      "active": "section-cov-eras",
+      "keys": {
+        "a": "FieldsDialog: Add an Era",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-cov-build": {
       "active": "section-cov-build",
       "keys": {

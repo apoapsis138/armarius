@@ -557,7 +557,7 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
     assert view is not None, "no covenant sheet is currently shown"
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-attributes"
+    view.query_one(TabbedContent).active = "tab-cov-overview"
     await pilot.pause()
     collapsible = view.query_one(f"#{section_id}", Collapsible)
     await _focus_section(pilot, app, collapsible, section_id)

@@ -9,7 +9,7 @@ from typing import Any
 
 import pytest
 from support import build_all_tabs, wait_until
-from textual.widgets import Input, Select, TabPane, TextArea, Tree
+from textual.widgets import Checkbox, Input, Select, TabPane, TextArea, Tree
 
 from ars_magica_manager import battles, place_events, sieges, storage
 from ars_magica_manager import goods as gd
@@ -31,6 +31,7 @@ from ars_magica_manager.models import (
     CharterClause,
     ConstantEffect,
     Covenant,
+    CovenantDiaryEntry,
     CraftDevice,
     Creature,
     CreatureAttack,
@@ -1452,6 +1453,99 @@ async def _confirm_write(pilot, app) -> None:
     """Answer Write on the roll's question."""
     assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
     await pilot.press("y")
+
+
+# -- A covenant's History tab --
+
+
+def _history_saga() -> Saga:
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.diary = [
+        CovenantDiaryEntry(1200, "Autumn", "Trust breaks"),
+        CovenantDiaryEntry(1211, "Winter", "The last quarrel"),
+    ]
+    covenant.history = {
+        "eras": [
+            {"name": "The Founders", "year": 1115},
+            {"name": "The breaking", "year": 1200},
+        ]
+    }
+    return saga
+
+
+HISTORY_CASE = ListCase(
+    ("covenant", "cov1"),
+    "section-cov-history",
+    "cov-history-list",
+    lambda s: s.covenants[0].history.get("left_out", []),
+)
+ERAS_CASE = ListCase(
+    ("covenant", "cov1"),
+    "section-cov-eras",
+    "cov-eras-list",
+    lambda s: s.covenants[0].history["eras"],
+)
+
+
+async def test_a_covenants_history_and_eras_act_on_the_chosen_row():
+    """In one session on a covenant's History tab: d leaves the chosen
+    entry out of the history (asking first), which hides it; shown again
+    by the Left Out block, d on it puts it back; on Eras, e edits the chosen era and d asks before deleting it."""
+    storage.save_saga(_history_saga())
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        _workspace, view = await _open(pilot, app, HISTORY_CASE)
+        await _choose_row(pilot, view, HISTORY_CASE, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app).startswith(
+            "Leave The last quarrel out of the history?"
+        )
+        await pilot.press("y")
+        assert await wait_until(
+            pilot, lambda: _saved(HISTORY_CASE) == ["1211|Winter|The last quarrel"]
+        )
+        # Hidden now, until the Left Out block shows it, last: row 1 again.
+        rows = view.query_one("#cov-history-list", SelectableList)
+        assert [index for index, _ in rows._rows if index is not None] == [0]
+        view.query_one("#section-cov-history-view").focus_section()
+        await pilot.pause()
+        await _press(pilot, app, "e", FieldsDialog)
+        app.screen.query_one("#fld-show_left_out", Checkbox).value = True
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot,
+            lambda: (
+                len(
+                    [
+                        i
+                        for i, _ in view.query_one(
+                            "#cov-history-list", SelectableList
+                        )._rows
+                        if i is not None
+                    ]
+                )
+                == 2
+            ),
+        )
+        await _choose_row(pilot, view, HISTORY_CASE, 1)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Put The last quarrel back into the history?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: _saved(HISTORY_CASE) == [])
+
+        await _choose_row(pilot, view, ERAS_CASE, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        app.screen.query_one("#fld-name", Input).value = "The breaking of trust"
+        app.screen.query_one("#btn-save").press()
+        assert await wait_until(
+            pilot, lambda: _saved(ERAS_CASE)[1]["name"] == "The breaking of trust"
+        )
+        await _choose_row(pilot, view, ERAS_CASE, 0)
+        await _press(pilot, app, "d", ConfirmScreen)
+        assert _confirm_message(app) == "Delete The Founders?"
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: len(_saved(ERAS_CASE)) == 1)
 
 
 # -- A saga's own Abilities in House Rules (HoH:S pp. 103-106) --

@@ -5,7 +5,7 @@ devices; with the forms that add and edit them, and More's Stress Check
 and Conjure Levels on the tower.
 
 The tab shows only once a project is begun (Begin Project, on the
-Attributes tab). The rules are rules.hermetic_projects' (Hermetic
+Overview tab). The rules are rules.hermetic_projects' (Hermetic
 Projects pp. 36-41); the records models.hermetic_projects'.
 
 Pattern: the kind tabs' Strategy (neighbour_lists.KindTab), as the
@@ -657,7 +657,7 @@ def project_form(
 
 
 def begin_form(saga: Saga, covenant: Covenant) -> Command:
-    """Begin Project, on the Attributes tab: the first project shows the
+    """Begin Project, on the Overview tab: the first project shows the
     Projects tab."""
     return project_form(saga, covenant, None, BEGIN_PROJECT)
 

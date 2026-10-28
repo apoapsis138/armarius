@@ -282,6 +282,11 @@ CANON_SECTION = "section-char-canon"
 #: A covenant's Projects tab (hermetic_projects.py, Hermetic Projects): its
 #: projects, the shown one's tower, its works and its craft devices.
 PROJECTS_SECTION = "section-cov-projects"
+#: A covenant's History tab (covenant_history.py): its timeline and its
+#: eras.
+HISTORY_SECTION = "section-cov-history"
+ERAS_SECTION = "section-cov-eras"
+HISTORY_VIEW_SECTION = "section-cov-history-view"
 TOWER_SECTION = "section-cov-tower"
 PROJECT_WORKS_SECTION = "section-cov-tower-works"
 PROJECT_DEVICES_SECTION = "section-cov-tower-devices"
@@ -425,6 +430,9 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CANON_SECTION: frozenset({"add", "edit", "remove"}),
     # A covenant's Hermetic Projects.
     PROJECTS_SECTION: frozenset({"add", "edit", "remove"}),
+    HISTORY_SECTION: frozenset({"add", "edit", "remove"}),
+    ERAS_SECTION: frozenset({"add", "edit", "remove"}),
+    HISTORY_VIEW_SECTION: frozenset({"edit"}),
     TOWER_SECTION: frozenset({"edit"}),
     PROJECT_WORKS_SECTION: frozenset({"add", "edit", "remove"}),
     PROJECT_DEVICES_SECTION: frozenset({"add", "edit", "remove"}),

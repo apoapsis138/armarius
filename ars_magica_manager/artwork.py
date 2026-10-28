@@ -252,6 +252,7 @@ ICON_NAMES: dict[str, str] = {
     # Time and resources
     "season": "hourglass-medium",
     "year": "calendar",
+    "history": "scroll",
     "vis": "drop-half",
     "income": "coins",
     "give": "hand-arrow-up",
@@ -296,7 +297,7 @@ ICON_NAMES: dict[str, str] = {
 
 #: An app concept to an icon the app draws itself (drawn/), in place of
 #: a Phosphor one: a ruined covenant's broken turret (tools/draw_ruin.py),
-#: the key of a covenant's Attributes and the sealed charter of its
+#: the key of a covenant's Overview and the sealed charter of its
 #: Charter (tools/draw_charter_icons.py), and the faiths' icons
 #: (tools/draw_faith_icons.py).
 DRAWN_ICONS: dict[str, Path] = {

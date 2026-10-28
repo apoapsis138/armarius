@@ -240,7 +240,7 @@ NOT_ON_PAGES = frozenset(
         # A saga cult's degrees: the Degrees list's own button.
         "experiment_script",
         # A covenant's Hermetic Projects: the tower's and the projects
-        # list's own buttons, and Begin Project on the Attributes chapter.
+        # list's own buttons, and Begin Project on the Overview chapter.
         "tower_stress",
         "tower_conjure",
         "show_project",
