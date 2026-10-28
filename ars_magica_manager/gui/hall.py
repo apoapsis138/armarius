@@ -11,10 +11,7 @@ import math
 from collections.abc import Callable
 
 from PySide6.QtCore import (
-    Property,
-    QEasingCurve,
     QPointF,
-    QPropertyAnimation,
     QRectF,
     QSize,
     Qt,
@@ -37,7 +34,7 @@ from PySide6.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 from .. import artwork, hall, meeting
 from ..models import Case, Saga, Tribunal
-from . import heraldry, pictures
+from . import heraldry, motion, pictures
 from .themes import OPENING_CARD, Palette
 from .widgets import serif, text
 
@@ -45,6 +42,8 @@ from .widgets import serif, text
 #: and how long each arms takes to be hung on the opening card (ms).
 CALL_STEP = 450
 HANG_STEP = 160
+#: How long the opening card takes to fade in (ms).
+FADE_MS = 600
 
 
 #: Room above the hemicycle for the pennants (px), and the hall's height
@@ -472,27 +471,23 @@ class OpeningCard(QWidget):
         column.addSpacing(48)
         self.hanging = QTimer(self)
         self.hanging.timeout.connect(self._hang_next)
-        self.fade = QPropertyAnimation(self, b"opacity", self)
-        self.fade.setDuration(600)
-        self.fade.setStartValue(0.0)
-        self.fade.setEndValue(1.0)
-        self.fade.setEasingCurve(QEasingCurve.Type.OutCubic)
 
-    def _get_opacity(self) -> float:
-        return self._opacity
-
-    def _set_opacity(self, value: float) -> None:
+    def _fade(self, value: float) -> None:
         self._opacity = value
         self.update()
 
-    opacity = Property(float, _get_opacity, _set_opacity)
-
     def play(self) -> None:
+        """Fade the card in and hang the arms one by one; with no motion,
+        all at once."""
         self.raise_()
         self.show()
         self.setFocus()
-        self.fade.start()
-        self.hanging.start(HANG_STEP)
+        motion.tween(self, self._fade, FADE_MS, name="fade")
+        if motion.moving():
+            self.hanging.start(HANG_STEP)
+        else:
+            self.hung = len(self.card.arms)
+            self.update()
 
     def _hang_next(self) -> None:
         self.hung += 1

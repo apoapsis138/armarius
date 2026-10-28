@@ -29,6 +29,7 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QPixmap,
+    QShowEvent,
     QStandardItem,
     QStandardItemModel,
 )
@@ -118,7 +119,7 @@ from ..sections import (
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
-from . import marks, pictures
+from . import marks, motion, pictures
 from .bookmark import with_bookmark
 from .church import ledger as church_ledger
 from .editing import (
@@ -151,6 +152,7 @@ from .timeline import Calendar, legend, season_text
 from .widgets import (
     ROW_HEIGHT,
     XP_BAR,
+    XP_FROM,
     Card,
     ClickableCard,
     Codex,
@@ -540,11 +542,20 @@ def _item(words: str = "", *, font: QFont | None = None) -> QStandardItem:
     return item
 
 
+#: How far each experience bar reached when last drawn, by its table's
+#: memory and its row's name: what a bar that moved grows from.
+_XP_DRAWN: dict[tuple[str, str], float] = {}
+
+
 class XpTable(QTreeView):
     """Arts or Abilities as a table grouped under headings, the last column
     an experience bar to the next score. A row's `key` (an Art's name or
     an Ability's index) goes to `on_choose` when the row is chosen. Rows
-    are `row` pixels tall, with `icon`-pixel symbols."""
+    are `row` pixels tall, with `icon`-pixel symbols. Given a `memory`
+    (whose table this is, as "character id:Abilities"), a bar that has
+    moved since that table was last drawn grows to its new length when
+    the table is first shown: from where it was, or from nothing for a
+    score that went up."""
 
     def __init__(
         self,
@@ -554,14 +565,19 @@ class XpTable(QTreeView):
         *,
         row: int = ROW,
         icon: int = ART_SYMBOL,
+        memory: str = "",
     ) -> None:
         super().__init__()
         self.p, self.on_choose, self.row = p, on_choose, row
+        self.memory = memory
+        self.bars: list[tuple[str, QStandardItem, float]] = []
+        self.grows = False
         self.model_ = QStandardItemModel(0, len(columns))
         self.model_.setHorizontalHeaderLabels(list(columns))
         self.setModel(self.model_)
         self.setItemDelegate(TallRows(row))
-        self.setItemDelegateForColumn(len(columns) - 1, XpBarDelegate(p, row))
+        self.xp_bars = XpBarDelegate(p, row)
+        self.setItemDelegateForColumn(len(columns) - 1, self.xp_bars)
         self.setRootIsDecorated(False)
         self.setIndentation(10)
         self.setUniformRowHeights(True)
@@ -594,8 +610,16 @@ class XpTable(QTreeView):
         last.setData((fraction, bar), XP_BAR)
         (group or self.model_).appendRow([*cells, last])
         self.rows += 1
+        self.bars.append((cells[0].text(), last, fraction))
 
     def finish(self) -> None:
+        if self.memory:
+            for name, cell, fraction in self.bars:
+                drawn = _XP_DRAWN.get((self.memory, name))
+                _XP_DRAWN[(self.memory, name)] = fraction
+                if drawn is not None and drawn != fraction:
+                    cell.setData(drawn if fraction > drawn else 0.0, XP_FROM)
+                    self.grows = True
         self.expandAll()
         header = self.header()
         for column in range(self.model_.columnCount() - 1):
@@ -608,6 +632,16 @@ class XpTable(QTreeView):
 
     def sizeHintForRow(self, row: int) -> int:
         return self.row
+
+    def showEvent(self, event: QShowEvent) -> None:
+        super().showEvent(event)
+        if self.grows:
+            self.grows = False
+            motion.tween(self, self._grow, motion.SLOW, name="grow")
+
+    def _grow(self, value: float) -> None:
+        self.xp_bars.at = value
+        self.viewport().update()
 
     def _chosen(self, current: QModelIndex, _previous: QModelIndex) -> None:
         key = current.siblingAtColumn(0).data(Qt.ItemDataRole.UserRole)
@@ -1050,7 +1084,7 @@ class CharacterSheet(QWidget):
             )
 
         rows = cs.abilities_chapter_table(c)
-        self.ability_table = ability_view(rows, p, show)
+        self.ability_table = ability_view(rows, p, show, memory=f"{c.id}:Abilities")
         return scrolling_page(
             p,
             section(
@@ -1096,6 +1130,7 @@ class CharacterSheet(QWidget):
             p,
             lambda index: self._show_ability(chooser, index),
             category=lambda row: c.abilities[row.index].category,
+            memory=f"{c.id}:{tradition.id}",
         )
         effects = Chooser()
         effect_rows = tradition_text.effect_table(self.saga, c, tradition)
@@ -1371,7 +1406,12 @@ class CharacterSheet(QWidget):
         p, c = self.p, self.character
         views = []
         for title, arts in (("Technique", TECHNIQUES), ("Form", FORMS)):
-            table = XpTable([title, "Score", "Experience"], p, self._show_art)
+            table = XpTable(
+                [title, "Score", "Experience"],
+                p,
+                self._show_art,
+                memory=f"{c.id}:{title}",
+            )
             for row in cs.art_rows(c, arts):
                 name = _item(row.art, font=serif(12.5, italic=True))
                 symbol = artwork.art_symbol(row.art)
@@ -1927,6 +1967,7 @@ def ability_view(
     show: Callable[[object], None],
     *,
     category: Callable[[cs.AbilityRow], str] | None = None,
+    memory: str = "",
 ) -> XpTable:
     """Abilities as a table grouped by category, each with its mark,
     specialty, score and experience; choosing one calls `show` with its
@@ -1938,6 +1979,7 @@ def ability_view(
         show,
         row=ABILITY_ROW,
         icon=ABILITY_MARK,
+        memory=memory,
     )
     groups: dict[str, QStandardItem] = {}
     for row in rows:

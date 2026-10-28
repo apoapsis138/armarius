@@ -280,6 +280,8 @@ ICON_NAMES: dict[str, str] = {
     "theme": "palette",
     "sounds_on": "speaker-high",
     "sounds_off": "speaker-slash",
+    # Reduce motion: the sparkle, dimmed while movements are stilled.
+    "motion": "sparkle",
     "close": "x",
     # A record's Manage chapter, and its In Creation / In Play mode
     "manage": "archive",

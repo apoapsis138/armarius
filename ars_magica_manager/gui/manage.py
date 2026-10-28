@@ -6,7 +6,7 @@ toggle with the Creation Worksheet beside it, and its bookmark.
 The chapter is built from the core's list of what the record offers
 (menu_forms.manage_items), as each sheet is built from the core's text.
 Moving between the modes changes the page's palette (themes.for_mode);
-`fade_from` cross-fades the window from how it looked before.
+the window cross-fades from how it looked before (motion.fade_from).
 """
 
 from __future__ import annotations
@@ -14,10 +14,8 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass
 
-from PySide6.QtCore import QEasingCurve, QPropertyAnimation, Qt
-from PySide6.QtGui import QPixmap
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
-    QGraphicsOpacityEffect,
     QGridLayout,
     QLabel,
     QPushButton,
@@ -70,9 +68,6 @@ PRINT_DETAIL = (
     "choose US Letter or A4, and for a character short or full spells and a "
     "parchment or plain white page."
 )
-
-#: How long the palette takes to change between the modes, in ms.
-FADE = 450
 
 
 @dataclass(frozen=True)
@@ -221,24 +216,3 @@ class ModeToggle(QWidget):
             self.worksheet.clicked.connect(lambda _checked=False: worksheet(record.id))
             column.addWidget(self.worksheet, 0, Qt.AlignmentFlag.AlignRight)
         column.addStretch(1)
-
-
-def fade_from(host: QWidget, before: QPixmap, ms: int = FADE) -> QLabel:
-    """Lay `before` (how `host` looked) over `host` and fade it away, so
-    `host` seems to change into its new colours."""
-    cover = QLabel(host)
-    cover.setPixmap(before)
-    cover.setGeometry(host.rect())
-    cover.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
-    effect = QGraphicsOpacityEffect(cover)
-    cover.setGraphicsEffect(effect)
-    fade = QPropertyAnimation(effect, b"opacity", cover)
-    fade.setDuration(ms)
-    fade.setStartValue(1.0)
-    fade.setEndValue(0.0)
-    fade.setEasingCurve(QEasingCurve.Type.InOutQuad)
-    fade.finished.connect(cover.deleteLater)
-    cover.show()
-    cover.raise_()
-    fade.start()
-    return cover

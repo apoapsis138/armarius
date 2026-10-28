@@ -60,6 +60,27 @@ def gilt_leaf(painter: QPainter, rect: QRectF, p: Palette) -> None:
     corner_flourishes(painter, outer.adjusted(6, 6, -6, -6), p, 30)
 
 
+def sheen(painter: QPainter, rect: QRectF, at: float) -> None:
+    """A band of light across `rect`, slanting, `at` of the way from its
+    left edge to past its right (0 to 1): the gilt catching the light.
+    Nothing at the ends."""
+    if not 0 < at < 1:
+        return
+    width = max(rect.width() * 0.35, 60.0)
+    x = rect.left() - width + (rect.width() + 2 * width) * at
+    band = QLinearGradient(
+        QPointF(x, rect.top()), QPointF(x + width, rect.top() + width * 0.4)
+    )
+    light = QColor(PIGMENTS["gold-light"])
+    for stop, alpha in ((0.0, 0), (0.5, 70), (1.0, 0)):
+        light.setAlpha(alpha)
+        band.setColorAt(stop, light)
+    painter.save()
+    painter.setCompositionMode(QPainter.CompositionMode.CompositionMode_Screen)
+    painter.fillRect(rect, band)
+    painter.restore()
+
+
 def gilt_frame(painter: QPainter, rect: QRectF, p: Palette, gap: float = 5) -> None:
     """A burnished gold frame on `rect`, with a fine rule `gap` inside it."""
     painter.setRenderHint(QPainter.RenderHint.Antialiasing)

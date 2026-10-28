@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from PySide6.QtCore import QEasingCurve, QPointF, QPropertyAnimation, QRectF, Qt
+from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QFont,
     QFontMetricsF,
@@ -27,7 +27,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import title_page as tp
-from . import gilding, pictures
+from . import gilding, motion, pictures
 from .illumination import IlluminatedInitial
 from .ornaments import Headpiece, ShortRule, Tailpiece, corner_flourishes
 from .paper import Paper
@@ -158,16 +158,18 @@ class TitleScreen(Paper):
 
     def fade_in(self) -> None:
         """Fade the page in from the paper."""
+        if not motion.moving():
+            return
         effect = QGraphicsOpacityEffect(self)
         self.setGraphicsEffect(effect)
-        self._fade = QPropertyAnimation(effect, b"opacity", self)
-        self._fade.setDuration(FADE_MS)
-        self._fade.setStartValue(0.0)
-        self._fade.setEndValue(1.0)
-        self._fade.setEasingCurve(QEasingCurve.Type.OutCubic)
         # Drop the effect once faded in, so the page is drawn directly.
-        self._fade.finished.connect(lambda: self.setGraphicsEffect(None))  # type: ignore[arg-type]
-        self._fade.start()
+        motion.tween(
+            self,
+            effect.setOpacity,
+            FADE_MS,
+            name="fade",
+            done=lambda: self.setGraphicsEffect(None),  # type: ignore[arg-type]
+        )
 
     def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)

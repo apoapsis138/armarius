@@ -8,6 +8,8 @@ from ars_magica_manager import catalog, neighbour_filter, paths, storage
 
 # The desktop version's sounds stay silent under test (gui/sounds.py).
 os.environ["ARMARIUS_SOUNDS"] = "off"
+# ...and still: every movement ends at once (gui/motion.py).
+os.environ["ARMARIUS_MOTION"] = "off"
 
 
 def pytest_configure(config):

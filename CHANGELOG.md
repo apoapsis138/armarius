@@ -109,6 +109,26 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.33.0 — 2026-10-28
+
+### Illuminatio
+
+- The desktop's pages move a little, never in the way: the Inspector's
+  new item inks in on its gilt leaf as a sheen crosses it, a chosen
+  row's gold wash spreads from the left with its leaf after it, a
+  chapter fades in with a small slide, and an experience line that has
+  moved since you last saw it grows to its new length.
+- A wax seal is pressed on the page for a moment when the season
+  advances, and when a character, covenant or laboratory is moved to
+  In Play.
+- Reduce motion, the sparkle beside the speaker, stills every movement
+  (the title page, the opening card and the dials too). Until you
+  choose, it follows Windows' Animation effects setting.
+
+### Glossa
+
+- Help says what moves and how to reduce motion.
+
 ## 3.32.0 — 2026-10-28
 
 ### Pagina

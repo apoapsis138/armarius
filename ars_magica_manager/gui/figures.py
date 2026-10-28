@@ -16,7 +16,7 @@ import math
 import random
 from collections.abc import Callable, Mapping, Sequence
 
-from PySide6.QtCore import QEasingCurve, QEvent, QPointF, QRectF, Qt, QVariantAnimation
+from PySide6.QtCore import QEvent, QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QColor,
     QEnterEvent,
@@ -40,7 +40,7 @@ from ..models import Attitude
 from ..sheets import character as cs
 from ..sheets import covenant as cs_cov
 from ..sheets import laboratory as cs_lab
-from . import pictures
+from . import motion, pictures
 from .markup_html import to_html
 from .paper import lift, shade
 from .themes import Palette
@@ -66,12 +66,8 @@ class Dial(QWidget):
             else "the highest score"
         )
         self.setToolTip(f"{caption} {dial.score}: {points}")
-        self.wind = QVariantAnimation(self)
-        self.wind.setStartValue(0.0)
-        self.wind.setEndValue(dial.fraction if dial.points or not dial.span else 0.0)
-        self.wind.setDuration(WIND_MS)
-        self.wind.setEasingCurve(QEasingCurve.Type.OutCubic)
-        self.wind.valueChanged.connect(self._turn)
+        #: How far round the arc winds (0 to 1).
+        self.wound_to = dial.fraction if dial.points or not dial.span else 0.0
         self._wound = False
 
     def _turn(self, value: float) -> None:
@@ -82,7 +78,7 @@ class Dial(QWidget):
         super().showEvent(event)
         if not self._wound:
             self._wound = True
-            self.wind.start()
+            motion.tween(self, self._turn, WIND_MS, name="wind", end=self.wound_to)
 
     def _pen(self, colour: QColor | str, width: float) -> QPen:
         pen = QPen(QColor(colour), width)

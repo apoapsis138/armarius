@@ -15,6 +15,7 @@ from pathlib import Path
 
 from PySide6.QtCore import (
     QModelIndex,
+    QObject,
     QPersistentModelIndex,
     QPointF,
     QRectF,
@@ -33,6 +34,7 @@ from PySide6.QtGui import (
     QPaintEvent,
     QPen,
     QPixmap,
+    QResizeEvent,
     QStandardItem,
     QStandardItemModel,
 )
@@ -62,14 +64,17 @@ from .. import artwork
 from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
-from . import gilding, marks, pictures, sounds
+from . import gilding, marks, motion, pictures, sounds
 from .markup_html import cell_style, to_html
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, shade, translucent
-from .themes import HOVER_WASH, WASH, Palette, wash_style
+from .themes import HOVER_WASH, WASH, Palette
 
 #: The item-data role holding an experience bar's (fraction, text).
 XP_BAR = Qt.ItemDataRole.UserRole + 1
+#: Where an experience bar that moved since it was last drawn grows from
+#: (XpBarDelegate.at of the way to its new length).
+XP_FROM = Qt.ItemDataRole.UserRole + 2
 
 #: What the inspector shows beside a title: an SVG symbol, or a picture.
 Symbol = Path | QPixmap | None
@@ -383,6 +388,8 @@ class XpBarDelegate(TallRows):
     def __init__(self, p: Palette, height: int = ROW_HEIGHT) -> None:
         super().__init__(height)
         self.p = p
+        #: How far a bar with an XP_FROM has grown to its new length.
+        self.at = 1.0
 
     def paint(
         self,
@@ -395,6 +402,9 @@ class XpBarDelegate(TallRows):
             super().paint(painter, option, index)
             return
         fraction, words = bar
+        grown_from = index.data(XP_FROM)
+        if isinstance(grown_from, float):
+            fraction = grown_from + (fraction - grown_from) * self.at
         p = self.p
         cell = QRectF(option.rect).adjusted(8, 0, -8, 0)  # type: ignore[attr-defined]
         painter.save()
@@ -428,6 +438,35 @@ class XpBarDelegate(TallRows):
         painter.restore()
 
 
+class Spread(QObject):
+    """How far the gold wash has spread across a table's newly chosen row
+    (0 to 1, from the left), its leaf showing once the wash is most of the
+    way. Other chosen rows are washed in full."""
+
+    #: How far the wash spreads before the leaf begins to show.
+    LEAF = 0.6
+
+    def __init__(self, view: QAbstractItemView) -> None:
+        super().__init__(view)
+        self.view = view
+        self.chosen = QPersistentModelIndex()
+        self.at = 1.0
+
+    def reach(self, index: QModelIndex | QPersistentModelIndex) -> float:
+        current = self.view.currentIndex()
+        if index.row() != current.row() or index.parent() != current.parent():
+            return 1.0
+        chosen = QPersistentModelIndex(current.siblingAtColumn(0))
+        if chosen != self.chosen:
+            self.chosen = chosen
+            motion.tween(self, self._spread, motion.QUICK, name="spread")
+        return self.at
+
+    def _spread(self, value: float) -> None:
+        self.at = value
+        self.view.viewport().update()
+
+
 class RuledRows(QStyledItemDelegate):
     """A table's own delegate (`inner`) with the table ruled as a ledger:
     a hairline under every row and a gilt double rule under a heading,
@@ -440,10 +479,15 @@ class RuledRows(QStyledItemDelegate):
     MARGIN = 14
 
     def __init__(
-        self, inner: QStyledItemDelegate, p: Palette, *, margin: bool = True
+        self,
+        inner: QStyledItemDelegate,
+        p: Palette,
+        *,
+        margin: bool = True,
+        spread: Spread | None = None,
     ) -> None:
         super().__init__()
-        self.inner, self.p = inner, p
+        self.inner, self.p, self.spread = inner, p, spread
         self.margin = self.MARGIN if margin else 0
 
     def sizeHint(
@@ -467,9 +511,15 @@ class RuledRows(QStyledItemDelegate):
         heading = not index.flags() & Qt.ItemFlag.ItemIsSelectable
         view = option.widget  # type: ignore[attr-defined]
         width = view.viewport().width() if isinstance(view, QAbstractItemView) else 0
+        reach = 1.0
+        if chosen and not heading and self.spread is not None:
+            reach = self.spread.reach(index)
         if (chosen or under) and not heading:
             alpha = WASH if chosen else HOVER_WASH
-            painter.fillRect(rect, gilding.wash(p, 0, max(width, 1), alpha))
+            washed = rect.intersected(
+                QRectF(0, rect.top(), max(width, 1) * reach, rect.height())
+            )
+            painter.fillRect(washed, gilding.wash(p, 0, max(width, 1), alpha))
         plain = QStyleOptionViewItem(option)
         plain.state &= ~(  # type: ignore[attr-defined]
             QStyle.StateFlag.State_Selected
@@ -481,10 +531,13 @@ class RuledRows(QStyledItemDelegate):
         self.inner.paint(painter, plain, index)
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
-        if chosen and self.margin and index.column() == 0 and not heading:
+        leaf = (reach - Spread.LEAF) / (1 - Spread.LEAF)
+        if chosen and self.margin and index.column() == 0 and not heading and leaf > 0:
+            painter.setOpacity(leaf)
             gilding.margin_leaf(
                 painter, rect.left() + 7, rect.center().y(), p["heading"]
             )
+            painter.setOpacity(1.0)
         y = rect.bottom() + 0.5
         painter.setPen(QPen(shade(p["rule"], 170), 0.8))
         painter.drawLine(QPointF(rect.left(), y), QPointF(rect.right() + 1, y))
@@ -496,10 +549,37 @@ class RuledRows(QStyledItemDelegate):
         painter.restore()
 
 
+class InkingIn(QWidget):
+    """Laid over the inspector while a new item inks in: the bare leaf,
+    fading away to show the words on it (for the first part of `at`, 0
+    to 1), and a band of light crossing the gilt from left to right. It
+    takes no clicks."""
+
+    def __init__(self, inspector: QWidget, p: Palette) -> None:
+        super().__init__(inspector)
+        self.p, self.at = p, 1.0
+        self.setAttribute(Qt.WidgetAttribute.WA_TransparentForMouseEvents)
+        self.hide()
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        rect = QRectF(self.rect())
+        bare = 1 - min(1.0, self.at * 1.5)
+        if bare > 0:
+            painter.setOpacity(bare)
+            gilding.gilt_leaf(painter, rect, self.p)
+            painter.setOpacity(1.0)
+        gilding.sheen(painter, rect, self.at)
+        painter.end()
+
+
 class Inspector(QFrame):
     """The panel beside every chapter that shows what was last chosen: a
     symbol, a title, a line under it and the details (app markup) in the
-    serif, on a gilt leaf (gilding.gilt_leaf)."""
+    serif, on a gilt leaf (gilding.gilt_leaf). A new item inks in."""
+
+    #: How far a new item's title drifts up as it inks in, in pixels.
+    DRIFT = 4
 
     def __init__(self, p: Palette) -> None:
         super().__init__()
@@ -517,6 +597,7 @@ class Inspector(QFrame):
         self.symbol = QLabel()
         top.addWidget(self.symbol)
         self.title = text("", p["heading"], serif(17, bold=True), wrap=True)
+        self.title.setContentsMargins(0, 0, 0, self.DRIFT)
         top.addWidget(self.title, 1)
         column.addLayout(top)
         self.subtitle = text("", p["label"], serif(11.5, italic=True), wrap=True)
@@ -536,11 +617,34 @@ class Inspector(QFrame):
         area.setWidget(self.body)
         area.setStyleSheet("background:transparent")
         column.addWidget(area, 1)
+        self.ink = InkingIn(self, p)
 
     def paintEvent(self, event: QPaintEvent) -> None:
         painter = QPainter(self)
         gilding.gilt_leaf(painter, QRectF(self.rect()), self.p)
         painter.end()
+
+    def resizeEvent(self, event: QResizeEvent) -> None:
+        super().resizeEvent(event)
+        self.ink.setGeometry(self.rect())
+
+    def _ink_in(self) -> None:
+        """The new item inks in on the leaf, its title drifting up a few
+        pixels, as a sheen of light crosses the gilt."""
+        if not self.isVisible():
+            return
+        ink = self.ink
+        ink.setGeometry(self.rect())
+
+        def step(value: float) -> None:
+            ink.at = value
+            drift = round(self.DRIFT * (1 - min(1.0, value * 1.5)))
+            self.title.setContentsMargins(0, drift, 0, self.DRIFT - drift)
+            ink.update()
+
+        ink.show()
+        ink.raise_()
+        motion.tween(ink, step, motion.SLOW, name="ink", done=ink.hide)
 
     def show_item(
         self, title: str, subtitle: str, markup: str, symbol: Symbol = None
@@ -548,6 +652,7 @@ class Inspector(QFrame):
         """Show an item: `symbol` is an Art's or House's SVG, drawn small in
         the heading colour, or a picture already drawn (an Ability's mark),
         shown at its own size."""
+        self._ink_in()
         self.title.setText(title)
         self.subtitle.setText(subtitle)
         self.subtitle.setVisible(bool(subtitle))
@@ -609,6 +714,32 @@ class ClickableCard(Card):
             painter.drawRoundedRect(QRectF(self.rect()).adjusted(1, 1, -1, -1), 6, 6)
 
 
+class RailRows(QStyledItemDelegate):
+    """The chapter rail's rows, the chosen chapter's gold wash spreading
+    from the left (its border and colour come from the rail's style)."""
+
+    def __init__(self, rail: QAbstractItemView, p: Palette) -> None:
+        super().__init__(rail)
+        self.p, self.spread = p, Spread(rail)
+
+    def paint(
+        self,
+        painter: QPainter,
+        option: QStyleOptionViewItem,
+        index: QModelIndex | QPersistentModelIndex,
+    ) -> None:
+        if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
+            rect = QRectF(option.rect)  # type: ignore[attr-defined]
+            reach = self.spread.reach(index)
+            washed = QRectF(
+                rect.left(), rect.top(), rect.width() * reach, rect.height()
+            )
+            painter.fillRect(
+                washed, gilding.wash(self.p, rect.left(), rect.right(), WASH)
+            )
+        super().paint(painter, option, index)
+
+
 class Codex(QSplitter):
     """The Codex body every record's page shares: a rail of chapters on
     the left, the chosen chapter in the middle and the inspector, which
@@ -630,9 +761,10 @@ class Codex(QSplitter):
             "QListWidget#rail { background:transparent; border:none; }"
             f" QListWidget#rail::item {{ padding:8px 6px; color:{p['label']};"
             " border:none; }"
-            f" QListWidget#rail::item:selected {{ background:{wash_style(p)};"
+            " QListWidget#rail::item:selected { background:transparent;"
             f" color:{p['heading']}; border-left:3px solid {p['heading']}; }}"
         )
+        self.rail.setItemDelegate(RailRows(self.rail, p))
         self.pages = QStackedWidget()
         #: Chapters not drawn yet, by row: built when first turned to.
         self._later: dict[int, Callable[[], QWidget]] = {}
@@ -674,9 +806,12 @@ class Codex(QSplitter):
         return built
 
     def _turn_to(self, row: int) -> None:
-        if row >= 0:
-            self.chapter(row)
-        self.pages.setCurrentIndex(row)
+        def turn() -> QWidget | None:
+            page = self.chapter(row) if row >= 0 else None
+            self.pages.setCurrentIndex(row)
+            return page
+
+        motion.turn_page(self.pages, turn)
 
     def _turned(self, row: int) -> None:
         """A page turned for the chapter chosen (the chest opened for the
@@ -724,12 +859,15 @@ def table_style(view: QAbstractItemView, p: Palette) -> None:
     margin = view.selectionBehavior() == QAbstractItemView.SelectionBehavior.SelectRows
     inner = view.itemDelegate()
     assert isinstance(inner, QStyledItemDelegate)
-    view.setItemDelegate(RuledRows(inner, p, margin=margin))
+    spread = Spread(view)
+    view.setItemDelegate(RuledRows(inner, p, margin=margin, spread=spread))
     model = view.model()
     for column in range(model.columnCount() if model is not None else 0):
         own = view.itemDelegateForColumn(column)
         if isinstance(own, QStyledItemDelegate) and not isinstance(own, RuledRows):
-            view.setItemDelegateForColumn(column, RuledRows(own, p, margin=margin))
+            view.setItemDelegateForColumn(
+                column, RuledRows(own, p, margin=margin, spread=spread)
+            )
 
 
 def arts_heat_grid(

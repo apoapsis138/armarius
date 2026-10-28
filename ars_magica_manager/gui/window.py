@@ -67,7 +67,17 @@ from ..forms import saga as saga_forms
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
 from ..sheets import laboratory as ls
-from . import choices, gilding, pictures, print_sheet, printing, snapping, sounds
+from . import (
+    choices,
+    gilding,
+    medallions,
+    motion,
+    pictures,
+    print_sheet,
+    printing,
+    snapping,
+    sounds,
+)
 from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
 from .conflicts import FightPage, SiegePage
@@ -78,7 +88,7 @@ from .forms import ConfirmDialog, NoticeDialog, answer, run_steps, step_dialog
 from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
 from .help import HelpPage
 from .laboratory import LaboratoryPage
-from .manage import Moded, RecordControls, fade_from
+from .manage import Moded, RecordControls
 from .markup_html import plain
 from .medallions import SeasonHeadpiece
 from .menus import Placer
@@ -322,6 +332,11 @@ class MainWindow(QMainWindow):
         self.sound.setFlat(True)
         self.sound.clicked.connect(self.toggle_sounds)
         bar.addWidget(self.sound)
+        #: Reduce motion on or off (gui/motion.py); dimmed while it is on.
+        self.motion = QPushButton()
+        self.motion.setFlat(True)
+        self.motion.clicked.connect(self.toggle_motion)
+        bar.addWidget(self.motion)
         bar.addSpacing(10)
         self.controls = WindowButtons(self, self.palette_)
         bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
@@ -741,10 +756,34 @@ class MainWindow(QMainWindow):
             self.open_seasons()
             # The seal after the page's own turn, which it cuts short.
             sounds.play("seal")
+            self._press_season_seal()
             return
         self.redraw()
         sounds.play("seal")
+        self._press_season_seal()
         self.tell("Advance Season", end.message)
+
+    def _press_season_seal(self) -> None:
+        """The new season's wax seal, pressed on the page a moment."""
+        saga = self.saga
+        if saga is None:
+            return
+        season, year, p = saga.current_season, saga.current_year, self.palette_
+        motion.press_seal(
+            self.stack,
+            lambda g, c, r: medallions.wax_seal(g, c, r, season, year, p),
+        )
+
+    def _finished(self, record_id: str) -> None:
+        """A record moved to In Play: leave its worksheet, and press a seal
+        with its initial on its page."""
+        record = self._creation_record(record_id)
+        self._go_up()
+        initial = (record.name.strip()[:1] if record is not None else "") or "A"
+        motion.press_seal(
+            self.stack,
+            lambda g, c, r: medallions.member_seal(g, c, r, None, initial.upper()),
+        )
 
     def open_worksheet(self, record_id: str) -> None:
         """Open the Creation Worksheet of a character, covenant or
@@ -966,7 +1005,7 @@ class MainWindow(QMainWindow):
         self._draw_trail()
         self._draw_advance()
         if before is not None:
-            fade_from(self.stack, before)
+            motion.fade_from(self.stack, before, motion.MODE_FADE)
 
     # Drawing
 
@@ -1083,7 +1122,9 @@ class MainWindow(QMainWindow):
                 record,
                 p,
                 self.run,
-                played=lambda command: self.run(command, self._go_up),
+                played=lambda command: self.run(
+                    command, lambda: self._finished(record.id)
+                ),
             )
         character = saga.character(place.id)
         if character is None:
@@ -1384,6 +1425,21 @@ class MainWindow(QMainWindow):
         )
         self.sound.setAccessibleName("Sounds")
 
+    def toggle_motion(self) -> None:
+        motion.set_reduced(not motion.reduced())
+        self._draw_motion()
+
+    def _draw_motion(self) -> None:
+        still = motion.reduced()
+        p = self._applied
+        self.motion.setIcon(pictures.icon("motion", p["dim"] if still else p["label"]))
+        self.motion.setToolTip(
+            "Reduce motion is on: click to let the pages move again"
+            if still
+            else "Pages move a little: click to reduce motion"
+        )
+        self.motion.setAccessibleName("Reduce motion")
+
     def _apply_theme(self) -> None:
         p = self._applied = self.palette_
         body = self.stack.widget(0)
@@ -1405,3 +1461,4 @@ class MainWindow(QMainWindow):
         self.theme.setIcon(pictures.icon("theme", p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
         self._draw_sound()
+        self._draw_motion()

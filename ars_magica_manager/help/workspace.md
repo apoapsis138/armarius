@@ -184,6 +184,8 @@ While a saga is open, the headpiece band under the top bar carries the present s
 
 The speaker beside the theme turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the season advances, and a dull knock when an entry is refused. Plain button presses stay silent. The sounds play on Windows only.
 
+The pages move a little, never in your way: the Inspector's new item inks in on its gilt leaf as a sheen of light crosses it, a chosen row's gold wash spreads from the left with its leaf after it, a chapter fades in with a small slide, and an experience line that has moved since you last saw it (after Advance Season, or an edit) grows to its new length. A wax seal is pressed on the page for a moment when the season advances (the new season's seal) and when a record is moved to In Play (its initial). The sparkle beside the speaker is **Reduce motion**: click it and the pages change at once, with no seal; it shows dimmed while it is on, and the app remembers your choice. Until you choose, it follows Windows' own Animation effects setting.
+
 **See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started)
 
 # The saga

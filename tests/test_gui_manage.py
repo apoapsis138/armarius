@@ -22,7 +22,8 @@ from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
-from ars_magica_manager.gui.manage import ModeToggle, fade_from
+from ars_magica_manager.gui.manage import ModeToggle
+from ars_magica_manager.gui.motion import fade_from
 from ars_magica_manager.gui.paper import Paper
 from ars_magica_manager.gui.themes import DRAFTING, PALETTES
 from ars_magica_manager.gui.window import MainWindow

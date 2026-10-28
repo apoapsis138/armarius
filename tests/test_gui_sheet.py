@@ -127,7 +127,7 @@ def test_the_dials_wind_up_to_the_points_toward_the_next_score(app):
     sheet = _sheet(saga)
     warping = next(d for d in sheet.findChildren(Dial) if d.caption == "Warping")
     assert (warping.dial.score, warping.dial.points, warping.dial.span) == (2, 9, 15)
-    assert warping.wind.endValue() == pytest.approx(0.6)
+    assert warping.wound_to == pytest.approx(0.6)
 
 
 def test_choosing_a_casting_score_shows_its_terms_in_the_inspector(app):
