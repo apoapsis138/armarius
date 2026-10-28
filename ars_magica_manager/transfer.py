@@ -694,6 +694,11 @@ def _plan_covenants(job: _Import) -> None:
             if person.character_id:
                 # Unmatched: the entry stays, as a person with no sheet.
                 person.character_id = job.link(CHARACTER, person.character_id)
+        # A seal whose magus isn't here goes: a seal is a magus's, not a name.
+        charter = covenant.charter_of_covenant
+        for seal in charter.seals:
+            seal.character_id = job.link(CHARACTER, seal.character_id) or ""
+        charter.seals = [s for s in charter.seals if s.character_id]
         kept = []
         for possession in covenant.possessions:
             if possession.lab_id:

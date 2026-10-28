@@ -14,6 +14,7 @@ from ars_magica_manager import spells as spl
 from ars_magica_manager.models import (
     Book,
     Character,
+    CharterSeal,
     Covenant,
     DiaryEntry,
     EnchantedDevice,
@@ -324,6 +325,55 @@ def test_a_covenant_alone_or_with_its_members():
     assert sanctum.lab_id == lab.id
     assert len(target.books) == 3 and len(target.familiars) == 1
     assert target.enchanted_devices[0].maker_id == target.characters[1].id
+
+
+def test_charter_seals_follow_their_magi_to_new_ids():
+    source = _source()
+    charter = source.covenants[0].charter_of_covenant
+    charter.seals = [
+        CharterSeal("leandro", 1220, "Spring"),
+        CharterSeal("flavia", 1221),
+    ]
+    data = _roundtrip(source, source.covenants[0], with_members=True)
+    # The target already has a Leandro and a Flavia under these ids, so
+    # the imported magi are given new ones.
+    target = Saga(
+        id="dst",
+        name="Target Saga",
+        characters=[
+            Character(id="leandro", name="Someone Else", type="magus"),
+            Character(id="flavia", name="Another", type="magus"),
+        ],
+    )
+    transfer.apply(target, transfer.plan_import(target, data))
+    [keep] = target.covenants
+    leandro, flavia = target.characters[2:4]
+    assert "leandro" != leandro.id and "flavia" != flavia.id
+    seals = keep.charter_of_covenant.seals
+    assert [(s.character_id, s.year) for s in seals] == [
+        (leandro.id, 1220),
+        (flavia.id, 1221),
+    ]
+
+
+def test_a_seal_whose_magus_is_not_imported_is_dropped():
+    source = _source()
+    source.covenants[0].charter_of_covenant.seals = [
+        CharterSeal("leandro", 1220),
+        CharterSeal("flavia", 1221),
+    ]
+    data = _roundtrip(source, source.covenants[0])
+    # Flavia is here by name, Leandro isn't.
+    target = Saga(
+        id="dst",
+        name="Target Saga",
+        characters=[Character(id="flav", name="Flavia", type="magus")],
+    )
+    plan = transfer.plan_import(target, data)
+    assert "Character Leandro: not in this saga" in plan.dropped
+    transfer.apply(target, plan)
+    [keep] = target.covenants
+    assert [s.character_id for s in keep.charter_of_covenant.seals] == ["flav"]
 
 
 def test_an_export_file_is_written_and_read_back(tmp_path):

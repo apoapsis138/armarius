@@ -109,6 +109,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.34.1 — 2026-10-28
+
+### Fundamenta
+
+- Importing a covenant, a pack or a saga export keeps its Charter of
+  Covenant's seals when its magi are given new ids: each seal follows its
+  magus. A seal whose magus isn't brought in and isn't already in the
+  saga is left off, as the import's preview already says that magus is
+  missing.
+
 ## 3.34.0 — 2026-10-28
 
 ### Orbis
