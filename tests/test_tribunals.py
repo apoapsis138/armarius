@@ -7,7 +7,7 @@ from __future__ import annotations
 import os
 
 import pytest
-from support import everything_saga, screen_lines, wait_until
+from support import everything_saga, wait_until
 from textual.widgets import Collapsible, TabbedContent, Tree
 
 from ars_magica_manager import storage, transfer, tribunal_packages
@@ -28,6 +28,7 @@ from ars_magica_manager.tui.screens import (
     SelectableList,
     WorkspaceScreen,
 )
+from ars_magica_manager.tui.screens.prompts import MenuScreen
 
 
 def _old_save() -> dict:
@@ -506,8 +507,10 @@ async def test_the_docket_keys_act_on_the_chosen_case():
             pilot, lambda: workspace._active_section() == "section-trib-cases"
         )
         await pilot.press("down")
-        assert await wait_until(pilot, lambda: "m Withdraw" in screen_lines(app)[-1])
+        # More offers Withdraw and War's End for a chosen case.
         await pilot.press("m")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, MenuScreen))
+        await pilot.press("w")
         assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
         await pilot.press("y")
         assert await wait_until(

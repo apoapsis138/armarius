@@ -571,8 +571,9 @@ async def test_the_economics_forms_do_not_stretch_on_a_tall_terminal():
         await _open_eco_section(pilot, app, "income")
         await pilot.press("a")
         await pilot.pause()
-        # well short of the 70 rows (its title is ruled)
-        assert app.screen.query_one("#fields-dialog").region.height < 34
+        # well short of the 70 rows (its title is ruled); the source's
+        # "Relies on the covenfolk's work" tick takes one more row
+        assert app.screen.query_one("#fields-dialog").region.height < 36
 
 
 def _save_sagas(*names: str) -> None:

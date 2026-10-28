@@ -228,6 +228,8 @@ def test_the_sin_commands_are_offered_on_personality_traits():
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     labels = [item.label for item in menu_forms.placed(page, "Personality Traits")]
     assert labels == [
+        # A trait roll, with the Silver Cord's help for a familiar's master.
+        "Roll",
         "Confidence through Sin",
         "Infernal Influence",
         # Devotion and the saints sit beside them, for any person.

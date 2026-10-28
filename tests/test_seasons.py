@@ -70,7 +70,11 @@ def _xp(outcome: rules.Outcome) -> list[tuple[str, int]]:
 def test_grogs_are_not_planned_season_by_season():
     grog = Character(id="g", name="Hob", type="grog")
     assert not rules.is_planned(grog)
-    assert rules.activities_for(grog) == []
+    # Only a scribe's copying is planned for a grog (DE p. 380).
+    assert [a.key for a in rules.activities_for(grog)] == [
+        bs.COPY_BOOK,
+        bs.COPY_TEXTS,
+    ]
     plan = _plan(grog, rules.OTHER, details="Drill")
     assert "Grogs aren't planned" in rules.problems(grog, plan)[0]
 
@@ -133,6 +137,8 @@ def test_magi_and_companions_plan_every_activity_built_so_far():
         keys = [a.key for a in rules.activities_for(character)]
         assert keys == [
             rules.EXPOSURE,
+            # Life on campaign (Lords of Men p. 102).
+            rules.CAMPAIGNING,
             rules.PRACTICE,
             *study,
             *extra,

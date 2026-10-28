@@ -1176,6 +1176,7 @@ CONTRACTS: dict[str, Contract] = {
             "The altar's deity": "Mercury",
             "The beast sacrificed": "a white ram",
             "Pawns it stands in for": "2",
+            "Pay the vis still needed from": "not_now",
         },
         saved=lambda s: character(s).diary[-1].name,
         expected="Sacrifice to Mercury",

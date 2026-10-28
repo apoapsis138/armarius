@@ -17,6 +17,7 @@
   Manors:           50 (as entered; list them on his Manors tab)
   Income:           1000 pounds a year (20 a manor, LoM p. 72)
   Surplus:          100 pounds a year (LoM p. 32)
+  Coin in hand:     0 pounds
   Mercenary budget: 100 pounds a year
   Army:             50 knights, 50 serjeants, 500 infantry; 500 levies at home
   Affinity:         +5 to social rolls among the region's nobles, for mustering the local minor
@@ -47,7 +48,6 @@
 
         Siege               Castle          Besieger        Garrison   Defenses  Supplies  State
       ○ The Siege of Falk…  Burg Falkenst…  the Baron of …  10 groups  Standard  Standard  just begun
-
 
 
 

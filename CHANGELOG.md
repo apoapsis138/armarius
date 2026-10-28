@@ -109,6 +109,21 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.29.2 — 2026-10-28
+
+### Concilium
+
+- War's End is offered only with a case chosen on the docket.
+
+### Book of Hours
+
+- Hermetic Sacrifice saves with "Not now (pay it by hand)" chosen.
+
+### Fundamenta
+
+- The goldens regenerated for the walkthrough rounds' new commands, and
+  the tests brought up to date with them.
+
 ## 3.29.1 — 2026-10-27
 
 ### Illuminatio

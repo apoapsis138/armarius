@@ -279,11 +279,17 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
         "Add Canon Case",
         "Holy Orders",
     ]
-    assert labels == ["Reward or Punish", "Pension", *saints]
+    # Roll: a trait roll, with the Silver Cord's help for a familiar's master.
+    assert labels == ["Reward or Punish", "Pension", "Roll", *saints]
     magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == saints
+    assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == [
+        "Roll",
+        *saints,
+    ]
     assert [i.label for i in menu_forms.placed(magus, "Known Spells")] == [
         "Craft by Magic",
+        # Where he is: the aura his casting counts (DE pp. 410-411).
+        "Where He Is",
         "Cast in a Lacuna",
     ]
     assert not actions.available("craft_by_magic", grog)

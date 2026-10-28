@@ -617,8 +617,7 @@ def sacrifice_fields(saga: Saga, magus: Character) -> list[DialogField]:
             "Pay the vis still needed from",
             "select",
             vis_stores.CHARACTER,
-            options=[*vis_stores.PLACES, ("Not now (pay it by hand)", "")],
-            allow_blank=True,
+            options=[*vis_stores.PLACES, ("Not now (pay it by hand)", NOT_NOW)],
             hint="The rest of the Ritual's vis, of its Technique or Form.",
         ),
         DialogField(
@@ -629,7 +628,7 @@ def sacrifice_fields(saga: Saga, magus: Character) -> list[DialogField]:
             options=pairs(ARTS),
             allow_blank=True,
             placeholder="(the Ritual's Technique)",
-            show_if=lambda v: bool(v.get("pay_from")),
+            show_if=lambda v: _paying(v) != "",
         ),
     ]
 
@@ -671,8 +670,18 @@ def _pay_art(saga: Saga, magus: Character, values: dict[str, Any]) -> str:
     return "Vim"
 
 
+#: Hermetic Sacrifice's "pay the rest by hand".
+NOT_NOW = "not_now"
+
+
+def _paying(values: dict[str, Any]) -> str:
+    """Where the rest of the Ritual's vis comes from ("" for by hand)."""
+    where = str(values.get("pay_from") or "")
+    return "" if where == NOT_NOW else where
+
+
 def _short_of_vis(saga: Saga, magus: Character, values: dict[str, Any]) -> str:
-    where = values.get("pay_from") or ""
+    where = _paying(values)
     vis = _vis(saga, magus, values)
     if not where or vis is None or int(vis.total) <= 0:
         return ""
@@ -746,7 +755,7 @@ def apply_sacrifice(saga: Saga, magus: Character, values: dict[str, Any]) -> lis
         f"pawn(s) of vis.",
         f"The level {level} Ritual still needs {left} pawn(s) of vis.",
     ]
-    where = values.get("pay_from") or ""
+    where = _paying(values)
     if where and left > 0:
         art = _pay_art(saga, magus, values)
         vis_stores.pay(vis_stores.pool_of(saga, magus, where), {art: left})

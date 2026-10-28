@@ -496,6 +496,8 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             # A mystic's path and God's aid (The Church, RoP: The Divine).
             "Mystic Path",
             "Invoke God's Aid",
+            # A certamen duel, for a magus with a rival magus in the saga.
+            "Certamen",
             # A cleric's career (The Church).
             "Petition the Church",
             "Add Canon Case",

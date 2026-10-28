@@ -154,6 +154,7 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
         "Delete",
         "Craft by Magic",
         "Cast in a Lacuna",
+        "Where He Is",
     }
     if _saved(saga_id).spells_known:
         page.spell_view.selectRow(0)

@@ -1764,4 +1764,9 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     # Charter Strength (TME p. 36), on a charter's chosen lord.
     "draft_charter": _on_charter_lord,
     "seek_loophole": _on_charter_lord,
+    # War's End: on the docket, with a case chosen (the form refuses one
+    # that isn't a Wizard's War).
+    "war_end": lambda facts, section: (
+        section == CASES_SECTION and facts.chosen_row(section) is not None
+    ),
 }

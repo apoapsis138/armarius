@@ -68,7 +68,7 @@
         "a": "CovenantBoonHookPickerScreen: Add a Hook",
         "e": "FieldsDialog: Hook: Contested Resource",
         "d": "ConfirmScreen",
-        "m": "FieldsDialog: Begin Project",
+        "m": "MenuScreen: Suggest a Story, Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -288,7 +288,7 @@
         "a": "FieldsDialog: Add a Ship",
         "e": "notice: No Ships to edit.",
         "d": "notice: No Ships to remove.",
-        "m": "MenuScreen: Stress Check, Ship Combat, Sunk or Taken",
+        "m": "MenuScreen: Stress Check, Ship Combat, Sunk or Taken, Build a Ship",
         "slash": "(disabled)"
       }
     },
@@ -520,7 +520,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Petition the Church, Add Canon Case, Holy Orders",
+        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Invoke a Saint, Threaten a Saint, Devotion Points, Indulgence, Vigil or Fast, Mystic Path, Invoke God's Aid, Certamen, Petition the Church, Add Canon Case, Holy Orders",
         "slash": "(disabled)"
       }
     },
@@ -560,7 +560,7 @@
         "a": "FieldsDialog: Add a Personality Trait",
         "e": "FieldsDialog: Edit a Personality Trait",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Mystic Path, Invoke God's Aid",
+        "m": "MenuScreen: Roll, Mystic Path, Invoke God's Aid",
         "slash": "(disabled)"
       }
     },
@@ -570,7 +570,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: End of Session, Tournament, Reputation Roll",
+        "m": "MenuScreen: End of Session, Tournament, Melee Event, Reputation Roll",
         "slash": "(disabled)"
       }
     },
@@ -670,7 +670,7 @@
         "a": "(disabled)",
         "e": "(disabled)",
         "d": "(disabled)",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Where He Is: Leandro",
         "slash": "(disabled)"
       }
     },
@@ -690,7 +690,7 @@
         "a": "SpellChooserScreen: Add a spell Leandro knows",
         "e": "FieldsDialog: Mastery: Boundless Wealth of the Oceans",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Craft by Magic, Cast in a Lacuna",
+        "m": "MenuScreen: Craft by Magic, Cast in a Lacuna, Certamen",
         "slash": "(disabled)"
       }
     },
@@ -1174,7 +1174,7 @@
         "a": "FieldsDialog: Add a Personality Trait",
         "e": "FieldsDialog: Edit a Personality Trait",
         "d": "ConfirmScreen",
-        "m": "(disabled)",
+        "m": "FieldsDialog: Roll: Corax",
         "slash": "(disabled)"
       }
     },
@@ -1542,7 +1542,7 @@
         "a": "FieldsDialog: Add a Case",
         "e": "FieldsDialog: Edit Fengheld v. Keep",
         "d": "ConfirmScreen",
-        "m": "ConfirmScreen",
+        "m": "MenuScreen: Withdraw, War's End",
         "slash": "(disabled)"
       }
     },
