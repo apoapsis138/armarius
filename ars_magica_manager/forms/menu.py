@@ -49,6 +49,7 @@ from .. import (
     tribunals,
     world,
 )
+from .. import baraka as baraka_forms
 from .. import devotion as devotion_forms
 from .. import economics as eco
 from .. import familiars as fam
@@ -651,6 +652,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "patron_saint": ((NodeKind.CHARACTER, "Faith"),),
     "devotion_points": ((NodeKind.CHARACTER, "Faith"),),
     "act_of_piety": ((NodeKind.CHARACTER, "Faith"),),
+    "invoke_baraka": ((NodeKind.CHARACTER, "Faith"),),
+    "hajj": ((NodeKind.CHARACTER, "Faith"),),
     "holy_influence": ((NodeKind.CHARACTER, "Faith"),),
     "mystic_path": ((NodeKind.CHARACTER, "Faith"),),
     "spiritual_path": ((NodeKind.CHARACTER, "Faith"),),
@@ -1865,6 +1868,8 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "invoke_saint": _needs(_character, devotion_forms.invoke_form),
     "threaten_saint": _needs(_character, devotion_forms.threaten_form),
     "patron_saint": _needs(_character, devotion_forms.patron_form),
+    "invoke_baraka": _needs(_character, baraka_forms.baraka_form),
+    "hajj": _needs(_character, baraka_forms.hajj_form),
     "devotion_points": _needs(_character, devotion_forms.points_form),
     "act_of_piety": _needs(_character, devotion_forms.piety_form),
     # Holy influence and tempers (RoP: The Divine).

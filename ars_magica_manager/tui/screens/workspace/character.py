@@ -25,6 +25,7 @@ from .... import (
     traditions,
     world,
 )
+from .... import baraka as baraka_forms
 from .... import devotion as devotion_forms
 from .... import laboratories as lab_text
 from .... import mystic_paths as mystic_forms
@@ -1693,6 +1694,19 @@ class CharacterActions(WorkspaceBase):
         """More's Threaten a Saint: the roll and the Confidence spent."""
         self._byzantine_step(
             devotion_forms.threaten_form, FAITH_SECTION, "section-personality-traits"
+        )
+
+    def action_invoke_baraka(self) -> None:
+        """More's Invoke Baraka: the roll, kept in the Diary."""
+        self._byzantine_step(baraka_forms.baraka_form)
+
+    def action_hajj(self) -> None:
+        """More's The Hajj: Pious +3 and 3 Faith Points."""
+        self._byzantine_step(
+            baraka_forms.hajj_form,
+            FAITH_SECTION,
+            "section-personality-traits",
+            "section-char-info",
         )
 
     def action_patron_saint(self) -> None:

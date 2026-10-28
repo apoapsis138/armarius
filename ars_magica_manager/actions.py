@@ -450,6 +450,9 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("p", "patron_saint", "Patron Saint"),
     MenuItem("d", "devotion_points", "Devotion Points"),
     MenuItem("g", "act_of_piety", "Indulgence, Vigil or Fast"),
+    # A Muslim's baraka and the Hajj (RoP: The Divine).
+    MenuItem("b", "invoke_baraka", "Invoke Baraka"),
+    MenuItem("j", "hajj", "The Hajj"),
     # Holy influence and tempers (RoP: The Divine).
     MenuItem("h", "holy_influence", "Holy Influence"),
     # Mystic paths, God's aid, the Font and the Commanding Aura (The
@@ -1173,6 +1176,10 @@ def _keeps_faith(
     return rule
 
 
+def _rop_divine(saga: Saga) -> bool:
+    return sourcebooks.in_play("RoP:D", sourcebooks.saga_books(saga))
+
+
 def _exorcises(facts: ActionFacts) -> bool:
     """Perform an Exorcism: on Holy Orders, for a clergyman."""
     character = facts.selected_character
@@ -1418,10 +1425,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
         "act_of_piety", lambda s, _c: devotion_forms.the_church(s)
     ),
     # Holy influence and tempers (RoP: The Divine).
-    "holy_influence": _keeps_faith(
-        "holy_influence",
-        lambda s, _c: sourcebooks.in_play("RoP:D", sourcebooks.saga_books(s)),
-    ),
+    "holy_influence": _keeps_faith("holy_influence", lambda s, _c: _rop_divine(s)),
     # Mystic paths and God's aid in the Faith section; the Font and the
     # Commanding Aura where they act.
     "mystic_path": _keeps_faith("mystic_path", mystic_forms.offers_path),
@@ -1430,6 +1434,9 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
         "monistic_revelation", mystic_forms.offers_revelation
     ),
     "gods_aid": _keeps_faith("gods_aid", mystic_forms.offers_aid),
+    # A Muslim's baraka and the Hajj (RoP: The Divine pp. 103-108).
+    "invoke_baraka": _keeps_faith("invoke_baraka", lambda s, _c: _rop_divine(s)),
+    "hajj": _keeps_faith("hajj", lambda s, _c: _rop_divine(s)),
     # A clergyman's exorcism, on Holy Orders (The Church p. 34).
     "perform_exorcism": _exorcises,
     "font_of_knowledge": _walks_in_faith(mystic_forms.offers_font),

@@ -109,6 +109,22 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.32.0 — 2026-10-28
+
+### Pagina
+
+- A Muslim's Faith section offers Invoke Baraka: a holy forbear's
+  blessing, asked as a saint is invoked, at his shrine (the Qur'an
+  anywhere), with the book's Muslim modifiers and its eight forbears,
+  their Might, shrines and powers. A forbear is never threatened.
+- The Hajj gives a Muslim Pious +3 and 3 Faith Points; made again, it
+  restores them, never raising Pious above +3.
+
+### Glossa
+
+- Help pages for Invoke Baraka and the Hajj, and the faith how-to says
+  what a Muslim may do.
+
 ## 3.31.0 — 2026-10-28
 
 ### Pagina

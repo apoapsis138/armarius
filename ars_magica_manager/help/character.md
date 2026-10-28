@@ -4275,11 +4275,28 @@ Edit Religion sits beside the title, with what his faith lets him do:
 <!-- /gui -->
 
 - **A Christian:** [Invoke a Saint](help:devotion), Threaten a Saint (only after a saint has refused him), Patron Saint, Devotion Points (with a Devotion, or Pious enough to begin one) and Indulgence, Vigil or Fast (with The Church), [Mystic Path](help:mystic-path) (Pious and tied to the Divine) and its Spiritual Path or Monistic Revelation, [Invoke God's Aid](help:gods-aid) and [Holy Influence](help:holy-influence).
-- **A Muslim or a Jew:** Invoke God's Aid, and Holy Influence for one with spiritual authority (a rabbi over his community).
+- **A Muslim:** [Invoke Baraka](help:baraka) and [The Hajj](help:hajj), Invoke God's Aid, and Holy Influence for one with spiritual authority.
+- **A Jew:** Invoke God's Aid, and Holy Influence for one with spiritual authority (a rabbi over his community).
 - **A Mazdean:** invoking a yazata, as a Christian invokes a saint (Invoke a Saint, with The Cradle and the Crescent).
 - **A pagan:** the books give pagans no rite like the saints'. His faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), and his dealings with them are on the Abilities chapter (Ars Fabulosa, A Faerie Bargain, An Offer to Faerie).
 
 God's aid is never a grog's, nor one's with Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41).
+
+## Invoke Baraka
+<!-- help: baraka -->
+
+A Muslim seeks a holy forbear's blessing, his baraka, as a Christian invokes a saint (Realms of Power: The Divine pp. 103-105): Communication + Charm + the modifiers + a simple die, against 15 + the storyguide's simple die, rolled in secret. He must be at the forbear's shrine, usually his tomb (tick **At his shrine**); the Qur'an itself may be invoked anywhere. A forbear is never threatened.
+
+**The forbears** are the book's: the Qur'an (Might 100), Muhammad (100), Abraham (75), David (75; the book lists no powers for him), al-Husayn (75), Rabi'a al-'Adawiyya (50), al-Shafi'i (25) and Nur al-Din (25), each with where his baraka is sought and his powers.
+
+**The modifiers** (p. 103): his highest Muslim Personality Trait, + its value (the book doesn't say which traits are Muslim ones, so you choose; Pious is offered first); a Divine aura, +1 a level (the ritual prayer, a Muslim holiday and Ramadan each raise a Muslim Dominion aura by 1, pp. 107-108); his feast day, normally his birthday, +3; a pilgrimage made to his tomb or shrine +2; touching his relic +1, owning it +2; a donation +1 to +3; imminent peril +2; a recent sinful act -1 to -3; no zakat paid within a year -3; a miracle received within a month -5; an unfamiliar forbear -10; and choosing a specific miracle of his, rather than general aid, -5.
+
+**The Baraka** shows the total, the chance and the forbear's powers. **Pray** rolls it; the Diary records it.
+
+## The Hajj
+<!-- help: hajj -->
+
+The pilgrimage to Mecca every Muslim who is able makes once, in the first half of Dhu'l-Hijja (Realms of Power: The Divine p. 108). **Complete the Hajj** gives him Pious +3 and 3 Faith Points. Made again, it restores both, but never raises Pious above +3; a Pious already higher stays as it is. The Diary records it, with any notes. Play out the journey itself as a story (or plan its seasons as travel).
 
 ## Edit Religion
 <!-- help: religion -->

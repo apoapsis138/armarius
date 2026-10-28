@@ -28,6 +28,9 @@ of those actions.
   p. 97), or a grade or ordination already recorded. The orders are men's
   (The Church pp. 34-35), but the sheet records no sex, so that is left
   to the troupe.
+- A Muslim seeks a holy forbear's baraka at his shrine, as a saint
+  is invoked, and never threatens one; he may make the Hajj (RoP: The
+  Divine pp. 103-108; rules.baraka).
 - A Mazdean invokes a yazata as a Christian invokes a saint, and never
   threatens one (The Cradle and the Crescent p. 85).
 - The books give pagans no rite of their own like the saints': a pagan's
@@ -62,6 +65,8 @@ MYSTIC_PATH = "mystic_path"
 SPIRITUAL_PATH = "spiritual_path"
 MONISTIC_REVELATION = "monistic_revelation"
 GODS_AID = "gods_aid"
+INVOKE_BARAKA = "invoke_baraka"
+HAJJ = "hajj"
 HOLY_INFLUENCE = "holy_influence"
 
 
@@ -104,9 +109,10 @@ FAITHS: dict[str, Faith] = {
         MUSLIM,
         "crescent",
         False,
-        _ABRAHAMIC,
-        "A Muslim may ask God's aid; one with spiritual authority leads "
-        "others to virtue (RoP: The Divine pp. 41, 101-120).",
+        (INVOKE_BARAKA, HAJJ, *_ABRAHAMIC),
+        "A Muslim seeks a holy forbear's baraka at his shrine (the Qur'an "
+        "anywhere), makes the Hajj, and may ask God's aid (RoP: The Divine "
+        "pp. 41, 103-108).",
     ),
     JEWISH: Faith(
         JEWISH,

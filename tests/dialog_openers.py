@@ -1641,6 +1641,8 @@ OPENERS: dict[str, Opener] = {
     "invoke a saint": Opener("character", lambda ws: ws.action_invoke_saint()),
     "threaten a saint": Opener("character", lambda ws: _refused_then_threaten(ws)),
     "patron saint": Opener("character", lambda ws: ws.action_patron_saint()),
+    "invoke baraka": Opener("character", lambda ws: ws.action_invoke_baraka()),
+    "the hajj": Opener("character", lambda ws: ws.action_hajj()),
     "devotion points": Opener("character", lambda ws: ws.action_devotion_points()),
     "indulgence, vigil or fast": Opener(
         "character", lambda ws: ws.action_act_of_piety()

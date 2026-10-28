@@ -1050,6 +1050,21 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Confidence Points spent": "99"},
         live={"#fields-live": "Against 14"},
     ),
+    "invoke baraka": Contract(
+        prefill={"The forbear": "quran"},
+        edits={"Divine aura where he asks": "3"},
+        saved=lambda s: character(s).diary[-1].name.split(" of ")[-1],
+        expected="Khawass al-Qur'an (the Qur'an)",
+        invalid={"Divine aura where he asks": "x"},
+        live={"#fields-live": "never threatened"},
+    ),
+    "the hajj": Contract(
+        prefill={"Notes": ""},
+        edits={"Notes": "with the caravan from Damascus"},
+        saved=lambda s: character(s).background.faith_points,
+        expected=3,
+        live={"#fields-live": "Faith Points"},
+    ),
     "patron saint": Contract(
         prefill={"His patron saint": "-none-"},
         edits={

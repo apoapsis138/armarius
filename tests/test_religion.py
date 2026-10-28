@@ -83,7 +83,7 @@ def test_a_blank_religion_counts_as_christian():
                 "monistic_revelation",
             },
         ),
-        ("Muslim", {"gods_aid"}),
+        ("Muslim", {"invoke_baraka", "hajj", "gods_aid"}),
         ("Jewish", {"gods_aid"}),
         ("Mazdean", {"invoke_saint"}),
         ("Pagan", set()),
@@ -94,7 +94,8 @@ def test_each_faith_offers_its_own(religion, offered):
     person = _person(religion)
     may = {
         action
-        for action in faiths.FAITHS["Christian"].actions
+        for faith in faiths.FAITHS.values()
+        for action in faith.actions
         if faiths.may(person, action)
     }
     assert may == offered
@@ -158,7 +159,11 @@ def test_the_faith_section_offers_what_his_faith_allows():
         "Invoke God's Aid",
     ]
     person.background.religion = "Muslim"
-    assert [i.label for i in menu_forms.placed(page, "Faith")] == ["Invoke God's Aid"]
+    assert [i.label for i in menu_forms.placed(page, "Faith")] == [
+        "Invoke Baraka",
+        "The Hajj",
+        "Invoke God's Aid",
+    ]
     assert not available("invoke_saint", page)
 
 
