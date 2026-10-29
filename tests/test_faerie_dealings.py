@@ -3,7 +3,7 @@ pp. 25-29) and the Ars Fabulosa's bargaining powers (pp. 131-134)."""
 
 import random
 
-from ars_magica_manager import actions
+from ars_magica_manager import actions, deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import faerie_dealings as forms
@@ -323,10 +323,10 @@ def test_offer_form_spends_long_term_fatigue():
     assert who.diary[-1].name == forms.OFFER_TITLE
 
 
-def test_the_faerie_commands_are_offered_beside_abilities():
+def test_the_faerie_commands_are_offered_in_the_deeds_chapter():
     saga = _saga()
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
-    labels = [item.label for item in menu_forms.placed(page, "Abilities")]
+    labels = [item.label for item in menu_forms.placed(page, deeds.FAERIE)]
     assert {"Ars Fabulosa", "A Faerie Bargain", "An Offer to Faerie"} <= set(labels)
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert not actions.available("ars_fabulosa", plain)

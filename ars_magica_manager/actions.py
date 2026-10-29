@@ -22,6 +22,7 @@ from . import (
     arms,
     catalog,
     connections,
+    deeds,
     giving,
     guest_stays,
     hosting,
@@ -770,6 +771,8 @@ def available(action: str, facts: ActionFacts) -> bool:
         return False
     if not action_books.book_allows(action, facts.saga):
         return False
+    if action in deeds.DEEDS and _drafting(facts):
+        return False
     if action in CREATE_PLACES and facts.selected_kind not in CREATE_PLACES[action]:
         return False
     if action == "edit" and facts.selected_kind == NodeKind.SAGA:
@@ -781,6 +784,13 @@ def available(action: str, facts: ActionFacts) -> bool:
     if in_section is None:
         return True
     return in_section(facts, facts.active_section() or "")
+
+
+def _drafting(facts: ActionFacts) -> bool:
+    """Whether the record on show is In Creation: its deeds wait until it
+    is In Play."""
+    record = facts.creation_record()
+    return record is not None and record.in_creation
 
 
 # -- the actions that depend on the record on show --

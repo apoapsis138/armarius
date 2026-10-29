@@ -5,7 +5,7 @@ Oppositional Elements and aim (The Church pp. 15-19)."""
 import random
 from dataclasses import replace
 
-from ars_magica_manager import catalog, seasons
+from ars_magica_manager import catalog, deeds, seasons
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import lacuna as lacuna_forms
@@ -374,7 +374,9 @@ def test_more_offers_them_where_they_belong():
     assert available("cast_in_lacuna", replace(page, section="section-known-spells"))
     assert not available("cast_in_lacuna", replace(page, section="section-char-season"))
     assert available("pilgrimage", replace(page, section="section-char-season"))
-    assert "pilgrimage" in {i.action for i in menu_forms.placed(page, "This Season")}
+    assert "pilgrimage" in {
+        i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
+    }
     saga.books_in_play = ["DE"]
     assert not available("pilgrimage", replace(page, section="section-char-season"))
     assert not available(

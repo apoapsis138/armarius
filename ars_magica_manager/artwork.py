@@ -241,6 +241,8 @@ ICON_NAMES: dict[str, str] = {
     "tribunal": "users-three",
     # The Region beyond the covenants, and each kind of neighbour in it.
     "region": "shield",
+    # A character's Deeds chapter: renown won in play.
+    "deeds": "shield",
     "lord": "sword",
     "town": "coins",
     "church": "church",

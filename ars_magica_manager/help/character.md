@@ -303,8 +303,8 @@ On a grog who serves a covenant, More (`m`) here offers
 [Reward or Punish](help:grog-discipline) and [Pension](help:grog-pension).
 <!-- /tui -->
 <!-- gui -->
-On a grog who serves a covenant, **Reward or Punish** and **Pension** sit
-beside the Personality Traits' Add, Edit and Delete.
+On a grog who serves a covenant, **Reward or Punish** and **Pension** are
+in the [Deeds chapter](help:tab-deeds), under Covenfolk.
 <!-- /gui -->
 A grog's Loyal to Covenant begins within 3 of the covenant's Prevailing
 Loyalty (DE p. 185).
@@ -317,9 +317,10 @@ one of holy standing (clergy, a monk, True Faith, Temporal Influence,
 Inspirational, or Dominion Lore), [Holy Influence](help:holy-influence).
 <!-- /tui -->
 <!-- gui -->
-**Confidence through Sin** and **Infernal Influence**, beside Personality
-Traits' buttons, are there for a sinner (or one who knows Infernal Lore).
-**Holy Influence**, for one of holy standing.
+**Confidence through Sin** and **Infernal Influence**, in the [Deeds chapter](help:tab-deeds)
+under The Infernal, are there for a sinner (or one who knows Infernal
+Lore). **Holy Influence**, for one of holy standing, is in the Religion
+chapter.
 <!-- /gui -->
 
 **Sympathy Traits.** A Personality Trait can be a faerie **Sympathy Trait**: tick *Faerie
@@ -797,7 +798,8 @@ More (`m`) on [Reputations](help:section-reputations) offers **End of
 Session**:
 <!-- /tui -->
 <!-- gui -->
-**End of Session**, beside Reputations' buttons, opens a form for
+**End of Session**, in the [Deeds chapter](help:tab-deeds) under Session & Reputation, opens a
+form for
 <!-- /gui -->
 what a session of play gave the character. If they were played for a good
 part of it and contributed, each award ticked is a Confidence Point:
@@ -840,7 +842,8 @@ Diary.
 ## Melee Event
 <!-- help: melee-event -->
 
-**Melee Event** (More on Reputations) rolls the Melee Events Table for a
+**Melee Event** (More on Reputations; on the desktop, in the Deeds chapter
+under Knightly) rolls the Melee Events Table for a
 tournament's grand charge (Lords of Men p. 68): a stress die + his
 Prudhomme Reputation + any Confidence spent (either way), with a botch die
 more for each event he has already rolled in this melee. The result names
@@ -854,7 +857,8 @@ the fight itself, and taking the ransom, are played out. Ransoms he takes
 or leaves unpaid count on Tournament.
 
 Melee Event and Tournament are offered only while Lords of Men is among
-the saga's books in play, as is every action a supplement brings.
+the saga's books in play, as is every action a supplement brings. On the
+desktop, Tournament is in A Season's Work, under This Season on the Planning chapter.
 
 ## Labor Points from a Story
 <!-- help: labor-from-story -->
@@ -864,7 +868,8 @@ More (`m`) on [This Season](help:section-char-season) offers **Labor Points
 from a Story**:
 <!-- /tui -->
 <!-- gui -->
-**Labor Points from a Story**, beside This Season's buttons, opens a form
+**Labor Points from a Story**, in A Season's Work, under This Season on the Planning chapter,
+opens a form
 for
 <!-- /gui -->
 the Labor Points a story gives a craftsman or merchant when its central
@@ -1185,8 +1190,11 @@ With The Sundered Eagle in play, More (`m`) on a person's record offers the
 Theban Tribunal's customs:
 <!-- /tui -->
 <!-- gui -->
-With The Sundered Eagle in play, beside the Abilities chapter's buttons are
-the Theban Tribunal's customs:
+With The Sundered Eagle in play, the Theban Tribunal's customs are spread
+by what they are: Hermetic Letter and Invoke a Broken Oath in the
+[Deeds chapter](help:tab-deeds) under Tribunal & Order, Make Greek Fire in A
+Season's Work on the Planning chapter (it takes a season), and Paint an Icon, Venerate an Icon
+and A Mother's Curse in the Religion chapter's Faith:
 <!-- /gui -->
 
 - **Hermetic Letter**: a letter in the Theban magi's rhetorical style, a
@@ -1531,8 +1539,8 @@ More on one with Font of Knowledge offers it (DE p. 165; Antagonists p.
 109):
 <!-- /tui -->
 <!-- gui -->
-Beside the Abilities' buttons, for one with Font of Knowledge (DE p. 165;
-Antagonists p. 109):
+In the [Deeds chapter](help:tab-deeds) under Insight, for one with Font of
+Knowledge (DE p. 165; Antagonists p. 109):
 <!-- /gui -->
 Intelligence + Font of Knowledge + stress die against 6 + 3 for each time
 he has drawn on it today, failures counted. Succeeding, he attempts a task
@@ -1745,7 +1753,8 @@ More (`m`) on [This Season](help:section-char-season) offers **Invest Time
 or Money**:
 <!-- /tui -->
 <!-- gui -->
-**Invest Time or Money**, beside This Season's buttons, opens a form for
+**Invest Time or Money**, in A Season's Work, under This Season on the Planning chapter, opens a
+form for
 <!-- /gui -->
 what a character does with surplus Labor Points or money (City & Guild
 Chapter Seven). Anyone who works for Labor Points can **put money into the
@@ -2132,8 +2141,8 @@ On one who holds a Goetic Art, More (`m`) offers [Ars Goetia](help:ars-goetia)
 from his record or his tradition's chapter.
 <!-- /tui -->
 <!-- gui -->
-**Ars Goetia**, beside the Abilities chapter's buttons, works out a Goetic
-Art's total for one who holds one.
+**Ars Goetia**, in the [Deeds chapter](help:tab-deeds) under The Infernal, works out a
+Goetic Art's total for one who holds one.
 <!-- /gui -->
 
 <!-- tui -->
@@ -2151,9 +2160,10 @@ With Apprentices in play, on a Gifted character More (`m`) offers
 [The Gauntlet](help:gauntlet) and [Lose the Gift](help:lose-the-gift).
 <!-- /tui -->
 <!-- gui -->
-With Apprentices in play, **Turbulence** sits beside the Abilities chapter's
-buttons for a Gifted character, and **The Gauntlet** and **Lose the Gift**
-for an apprentice.
+With Apprentices in play, **Turbulence** is in the [Deeds chapter](help:tab-deeds) under
+Apprenticeship (and in A Season's Work on the Planning chapter) for a
+Gifted character,
+and **The Gauntlet** and **Lose the Gift** beside it for an apprentice.
 <!-- /gui -->
 
 
@@ -2168,8 +2178,8 @@ More (`m`) > **Disputatio**, on a character's sheet with Art & Academe in
 play, stages a schoolmen's debate with another character.
 <!-- /tui -->
 <!-- gui -->
-**Disputatio**, in the Abilities chapter of a character's page with Art &
-Academe in play, stages a schoolmen's debate with another character.
+**Disputatio**, in the [Deeds chapter](help:tab-deeds) under Scholarly with Art & Academe
+in play, stages a schoolmen's debate with another character.
 <!-- /gui -->
 Choose who they dispute with, whether they are the **Opponent** (who
 states first) or the **Respondent**, the **Subject** (Artes Liberales,
@@ -3526,7 +3536,7 @@ Houses of Hermes: Mystery Cults pp. 115, 120). Each is kept in the Diary.
 <!-- help: tmre-divination -->
 
 More on a Hermetic diviner's record (Divination & Augury, or Hermetic Dream
-Interpreter), beside the Abilities on the desktop. A divination answers one
+Interpreter); on the desktop, in the Deeds chapter under Insight. A divination answers one
 question as a Momentary Intellego spell of any Form would; its Ease Factor is
 that spell's level (The Mysteries Revised Edition pp. 59-60). It makes the Ease
 Factor or fails: it is not open-ended (p. 62).
@@ -3555,8 +3565,9 @@ point of a non-Magic aura); Roll rolls it and keeps it in the Diary.
 ## Astrology
 <!-- help: tmre-astrology -->
 
-More on the record of a magus with Planetary or Celestial Magic, a Periapt, or
-the Astrology method of divination. Each reckoning is a roll of Intelligence +
+More on the record (on the desktop, in the Deeds chapter under Insight) of a
+magus with Planetary or Celestial Magic, a Periapt, or the Astrology method of
+divination. Each reckoning is a roll of Intelligence +
 Artes Liberales (Astronomy), kept in the Diary.
 
 - **Daily Horoscope** (an hour) and **Nativity Horoscope** (a day), against 9:
@@ -3590,7 +3601,8 @@ one still paid (p. 49).
 ## House Acclaim
 <!-- help: house-acclaim -->
 
-More on a magus's Reputations, shown for a magus of House Bonisagus or
+More on a magus's Reputations (on the desktop, in the Deeds chapter under
+Session & Reputation), shown for a magus of House Bonisagus or
 House Flambeau, or anyone who already holds House Acclaim. It keeps the
 House's own Reputation, House Acclaim, which grows like an Ability: 5,
 15, 30 and 50 points reach 1 to 4. The first award starts it. Each award
@@ -3650,7 +3662,8 @@ and, once it is held, what it does.
 ## Reputation Roll
 <!-- help: reputation-roll -->
 
-More on a character's Reputations: has someone heard of one? A stress die
+More on a character's Reputations (on the desktop, in the Deeds chapter
+under Session & Reputation): has someone heard of one? A stress die
 + the Reputation's score (a bad one's size) equals or beats the Ease
 Factor for where the listener is: 0 in the same village, parish or
 covenant; 6 in the same town, diocese or Tribunal; 9 in the same county,
@@ -4337,7 +4350,7 @@ Edit Religion sits beside the title, with what his faith lets him do:
 - **A Muslim:** [Invoke Baraka](help:baraka) and [The Hajj](help:hajj), Invoke God's Aid, and Holy Influence for one with spiritual authority.
 - **A Jew:** Invoke God's Aid, and Holy Influence for one with spiritual authority (a rabbi over his community).
 - **A Mazdean:** invoking a yazata, as a Christian invokes a saint (Invoke a Saint, with The Cradle and the Crescent).
-- **A pagan:** the books give pagans no rite like the saints'. His faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), and his dealings with them are on the Abilities chapter (Ars Fabulosa, A Faerie Bargain, An Offer to Faerie).
+- **A pagan:** the books give pagans no rite like the saints'. His faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), and his dealings with them are in the Deeds chapter under Dealings with Faerie on the desktop (Ars Fabulosa, A Faerie Bargain, An Offer to Faerie), or More on his record in the terminal.
 
 God's aid is never a grog's, nor one's with Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41).
 
@@ -4433,6 +4446,36 @@ Any clergyman may exorcise (The Church p. 34). He spends at least one Confidence
 
 His grade (for one held before play; an Ordination season examines him for the next), birth diocese (where he is ordained; elsewhere needs its bishop's leave, p. 33), standing, benefice or office, and whether a botched examination bars him until a petition succeeds.
 
+## Deeds tab
+<!-- help: tab-deeds; gui -->
+
+What the character can do in play that the saga's books bring, gathered in
+one chapter instead of as buttons on the sections they touch. Each action
+sits under the interest it belongs to, beside a line saying what it does:
+
+- **Session & Reputation**: End of Session, Reputation Roll, House Acclaim.
+- **Knightly**: Melee Event.
+- **Scholarly**: Disputatio, Make a Ligature.
+- **Insight**: Font of Knowledge, Divination, Astrology.
+- **Tribunal & Order**: Hermetic Letter, Invoke a Broken Oath.
+- **Dealings with Faerie**: Ars Fabulosa, A Faerie Bargain, An Offer to
+  Faerie.
+- **The Infernal**: Confidence through Sin, Infernal Influence, Ars Goetia.
+- **Apprenticeship**: Turbulence, The Gauntlet, Lose the Gift.
+- **Covenfolk**: Reward or Punish, Pension.
+
+An action shows only while its book is in play and it fits the character
+(Disputatio needs someone to dispute with; The Gauntlet, an apprentice), so
+a header with nothing to offer is left out. What takes a season (a career,
+a season on the tourney circuit, Greek Fire, an apothecary's store) is
+in the Planning chapter's A Season's Work instead; the faith's
+actions are in the Religion chapter. While the character is In Creation the
+chapter only says its deeds wait until the character is In Play. A
+character kept as a statblock has no Deeds chapter.
+
+**See also:** [Planning tab](help:tab-planning),
+[How to find an action](help:guide-find-action)
+
 ## Planning tab
 <!-- help: tab-planning -->
 
@@ -4454,6 +4497,21 @@ update instead, applied in Winter.
 **See also:** [Planning a season](help:plan-season),
 [Advancing a season](help:advance-season),
 [A grog's year](help:grog-year), [Diary tab](help:tab-diary), [How to plan and run a season](help:guide-seasons)
+
+### A Season's Work
+<!-- help: section-char-season-work; gui -->
+
+Below This Season on the Planning chapter: the season-long work the saga's
+books bring, each button beside a line saying what it does. A season on
+the tourney circuit, Labor Points from a story, investing time or money,
+selling finished goods, an apothecary's store, Greek Fire, an artist's or
+a scholar's career, Turbulence, a grog's story experience, a pilgrimage
+and Philosophic Alchemy show here while their book is in play and they
+fit the character. This Season's own buttons keep to planning the season
+(Plan, Edit, Clear, and copying). The terminal offers the same in More on
+This Season.
+
+**See also:** [Deeds tab](help:tab-deeds), [Planning tab](help:tab-planning)
 
 ### This Season
 <!-- help: section-char-season -->

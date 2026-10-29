@@ -28,6 +28,7 @@ from .. import (
     creation,
     creatures,
     cult_transfer,
+    deeds,
     deletion,
     disputations,
     giving,
@@ -586,23 +587,25 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     ),
     # Beside the Abilities chapter's own buttons.
     "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
-    "disputatio": ((NodeKind.CHARACTER, "Abilities"),),
+    "disputatio": ((NodeKind.CHARACTER, deeds.SCHOLARLY),),
     "hedge_cast": ((NodeKind.CHARACTER, "Abilities"),),
     # Beside Health's Edit buttons.
     "take_harm": ((NodeKind.CHARACTER, "Health"),),
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
-    "end_session": ((NodeKind.CHARACTER, "Reputations"),),
-    "tourney_season": ((NodeKind.CHARACTER, "Reputations"),),
-    "melee_event": ((NodeKind.CHARACTER, "Reputations"),),
+    # The Deeds chapter's headers (deeds.INTERESTS), and This Season for
+    # the season-long ones.
+    "end_session": ((NodeKind.CHARACTER, deeds.SESSION),),
+    "tourney_season": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
+    "melee_event": ((NodeKind.CHARACTER, deeds.KNIGHTLY),),
     # Beside This Season's Plan, Edit and Clear.
-    "labor_story": ((NodeKind.CHARACTER, "This Season"),),
-    "grog_story_xp": ((NodeKind.CHARACTER, "This Season"),),
+    "labor_story": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
+    "grog_story_xp": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     "plan_copying": ((NodeKind.CHARACTER, "This Season"),),
     "clear_copying": ((NodeKind.CHARACTER, "This Season"),),
-    "invest_labor": ((NodeKind.CHARACTER, "This Season"),),
+    "invest_labor": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     "command_beast": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "discipline_grog": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "grog_pension": ((NodeKind.CHARACTER, "Personality Traits"),),
+    "discipline_grog": ((NodeKind.CHARACTER, deeds.COVENFOLK),),
+    "grog_pension": ((NodeKind.CHARACTER, deeds.COVENFOLK),),
     "craft_by_magic": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     "place_aging_points": ((NodeKind.CHARACTER, "Aging"),),
     "resolve_twilight": ((NodeKind.CHARACTER, "Aging"),),
@@ -622,43 +625,45 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     ),
     "research_bonuses": ((NodeKind.COVENANT, "Library"),),
     # A craftsman's sale of his finished goods, beside This Season's Plan.
-    "sell_goods": ((NodeKind.CHARACTER, "This Season"),),
+    "sell_goods": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     # Art & Academe: a ligature beside Disputatio, the apothecary's
     # store beside This Season's Plan.
-    "make_ligature": ((NodeKind.CHARACTER, "Abilities"),),
-    "apothecary_store": ((NodeKind.CHARACTER, "This Season"),),
-    # The Theban Tribunal's Byzantine customs, beside Disputatio.
-    "theban_letter": ((NodeKind.CHARACTER, "Abilities"),),
-    "invoke_oath": ((NodeKind.CHARACTER, "Abilities"),),
-    "make_greek_fire": ((NodeKind.CHARACTER, "Abilities"),),
-    "paint_icon": ((NodeKind.CHARACTER, "Abilities"),),
-    "venerate_icon": ((NodeKind.CHARACTER, "Abilities"),),
-    "mothers_curse": ((NodeKind.CHARACTER, "Abilities"),),
+    "make_ligature": ((NodeKind.CHARACTER, deeds.SCHOLARLY),),
+    "apothecary_store": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
+    # The Theban Tribunal's Byzantine customs: letters and oaths among the
+    # Deeds, Greek Fire's season on This Season, the icons and a mother's
+    # curse in Faith.
+    "theban_letter": ((NodeKind.CHARACTER, deeds.TRIBUNAL),),
+    "invoke_oath": ((NodeKind.CHARACTER, deeds.TRIBUNAL),),
+    "make_greek_fire": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
+    "paint_icon": ((NodeKind.CHARACTER, "Faith"),),
+    "venerate_icon": ((NodeKind.CHARACTER, "Faith"),),
+    "mothers_curse": ((NodeKind.CHARACTER, "Faith"),),
     # Sin, tarnish and the Goetic Arts (RoP: The Infernal): beside the
     # Personality Traits' buttons, and the Abilities chapter's.
-    "indulge_sin": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "infernal_influence": ((NodeKind.CHARACTER, "Personality Traits"),),
-    "ars_goetia": ((NodeKind.CHARACTER, "Abilities"),),
+    "indulge_sin": ((NodeKind.CHARACTER, deeds.INFERNAL),),
+    "infernal_influence": ((NodeKind.CHARACTER, deeds.INFERNAL),),
+    "ars_goetia": ((NodeKind.CHARACTER, deeds.INFERNAL),),
     # An apprentice's magic and the Gauntlet (Apprentices): beside the
     # Abilities chapter's buttons, This Season's, and Known Spells'.
     "turbulence": (
-        (NodeKind.CHARACTER, "Abilities"),
-        (NodeKind.CHARACTER, "This Season"),
+        (NodeKind.CHARACTER, deeds.APPRENTICESHIP),
+        (NodeKind.CHARACTER, deeds.SEASON_WORK),
     ),
-    "gauntlet": ((NodeKind.CHARACTER, "Abilities"),),
-    "lose_the_gift": ((NodeKind.CHARACTER, "Abilities"),),
+    "gauntlet": ((NodeKind.CHARACTER, deeds.APPRENTICESHIP),),
+    "lose_the_gift": ((NodeKind.CHARACTER, deeds.APPRENTICESHIP),),
     "learn_cantation": ((NodeKind.CHARACTER, "Known Spells"),),
     # Art & Academe's artists and scholars, beside Disputatio.
-    "artist_career": ((NodeKind.CHARACTER, "Abilities"),),
-    "scholar_career": ((NodeKind.CHARACTER, "Abilities"),),
+    "artist_career": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
+    "scholar_career": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     # Dealing with faeries (RoP: Faerie), beside the Abilities chapter's.
-    "ars_fabulosa": ((NodeKind.CHARACTER, "Abilities"),),
-    "faerie_bargain": ((NodeKind.CHARACTER, "Abilities"),),
-    "faerie_offer": ((NodeKind.CHARACTER, "Abilities"),),
+    "ars_fabulosa": ((NodeKind.CHARACTER, deeds.FAERIE),),
+    "faerie_bargain": ((NodeKind.CHARACTER, deeds.FAERIE),),
+    "faerie_offer": ((NodeKind.CHARACTER, deeds.FAERIE),),
     # The lacuna and the pilgrim (HoH:S, The Church): in Magic Outside
     # the Lab, and beside This Season's buttons.
     "cast_in_lacuna": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
-    "pilgrimage": ((NodeKind.CHARACTER, "This Season"),),
+    "pilgrimage": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     # Devotion and the saints, holy influence, the mystic paths and God's
     # aid (The Church, RoP: The Divine): in the Religion chapter's Faith
     # section, each where his faith offers it (rules.faiths). The Font
@@ -676,7 +681,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "spiritual_path": ((NodeKind.CHARACTER, "Faith"),),
     "monistic_revelation": ((NodeKind.CHARACTER, "Faith"),),
     "gods_aid": ((NodeKind.CHARACTER, "Faith"),),
-    "font_of_knowledge": ((NodeKind.CHARACTER, "Abilities"),),
+    "font_of_knowledge": ((NodeKind.CHARACTER, deeds.INSIGHT),),
     "commanding_aura": ((NodeKind.CHARACTER, "Health"),),
     # House Verditius's Hubris beside the Personality Traits' buttons.
     "verditius_hubris": ((NodeKind.CHARACTER, "Personality Traits"),),
@@ -687,13 +692,13 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "hermetic_sacrifice": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     "certamen_duel": ((NodeKind.CHARACTER, "Magic Outside the Lab"),),
     # Divination and Hermetic astrology beside the Abilities' buttons.
-    "tmre_divination": ((NodeKind.CHARACTER, "Abilities"),),
-    "tmre_astrology": ((NodeKind.CHARACTER, "Abilities"),),
+    "tmre_divination": ((NodeKind.CHARACTER, deeds.INSIGHT),),
+    "tmre_astrology": ((NodeKind.CHARACTER, deeds.INSIGHT),),
     # House Acclaim and Reputation rolls beside the Reputations' buttons.
-    "house_acclaim": ((NodeKind.CHARACTER, "Reputations"),),
-    "reputation_roll": ((NodeKind.CHARACTER, "Reputations"),),
+    "house_acclaim": ((NodeKind.CHARACTER, deeds.SESSION),),
+    "reputation_roll": ((NodeKind.CHARACTER, deeds.SESSION),),
     # Philosophic Alchemy's digestions.
-    "philosophic_alchemy": ((NodeKind.CHARACTER, "This Season"),),
+    "philosophic_alchemy": ((NodeKind.CHARACTER, deeds.SEASON_WORK),),
     # The Great Elixir's test.
     "great_elixir": ((NodeKind.CHARACTER, "Aging"),),
     # Gaining and losing Virtues and Flaws in play, beside their buttons.
@@ -799,6 +804,8 @@ _PLACED_CHECKS: dict[str, Callable[[Page], bool]] = {
 SPOT_SECTIONS: dict[str, str] = {
     "Faith": FAITH_SECTION,
     "Reputations": "section-reputations",
+    # The Deeds chapter's Reputation actions answer as on Reputations.
+    deeds.SESSION: "section-reputations",
     "Health": "section-char-health",
     "Aging": "section-aging",
 }

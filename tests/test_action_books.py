@@ -2,7 +2,7 @@
 
 from dataclasses import replace
 
-from ars_magica_manager import action_books, sourcebooks
+from ars_magica_manager import action_books, deeds, sourcebooks
 from ars_magica_manager.actions import MORE_MENU, NodeKind
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import Character, Saga
@@ -13,9 +13,11 @@ def _saga(books: list[str] | None) -> Saga:
     return Saga(id="s", name="S", characters=[knight], books_in_play=books)
 
 
-def _reputations(saga: Saga) -> set[str]:
+def _offered(saga: Saga) -> set[str]:
+    """What the knight's page offers in the Deeds and Planning chapters."""
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
-    return {item.action for item in menu_forms.placed(page, "Reputations")}
+    spots = (*deeds.INTERESTS, deeds.SEASON_WORK)
+    return {item.action for spot in spots for item in menu_forms.placed(page, spot)}
 
 
 def test_every_character_action_is_given_a_book_or_none():
@@ -49,16 +51,16 @@ def test_every_listed_action_and_book_is_known():
 
 
 def test_the_tournament_needs_lords_of_men():
-    offered = _reputations(_saga([]))
+    offered = _offered(_saga([]))
     assert "tourney_season" not in offered
     assert "melee_event" not in offered
     assert "end_session" in offered
-    offered = _reputations(_saga(["LoM"]))
+    offered = _offered(_saga(["LoM"]))
     assert {"tourney_season", "melee_event"} <= offered
 
 
 def test_every_book_in_play_offers_everything():
-    assert {"tourney_season", "melee_event"} <= _reputations(_saga(None))
+    assert {"tourney_season", "melee_event"} <= _offered(_saga(None))
 
 
 def test_house_acclaim_comes_with_either_houses_book():

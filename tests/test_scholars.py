@@ -5,7 +5,7 @@ sponsors and a maestro's magic (pp. 123-135)."""
 import random
 from dataclasses import replace
 
-from ars_magica_manager import seasons
+from ars_magica_manager import deeds, seasons
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import careers, scholar_seasons
@@ -613,6 +613,8 @@ def test_more_offers_the_careers():
     saga = _saga(brogo)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="b")
     assert available("artist_career", page) and available("scholar_career", page)
-    assert "artist_career" in {i.action for i in menu_forms.placed(page, "Abilities")}
+    assert "artist_career" in {
+        i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
+    }
     brogo.abilities = []
     assert not available("artist_career", page)

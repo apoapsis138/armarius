@@ -6,8 +6,8 @@ from dataclasses import replace
 
 import pytest
 
+from ars_magica_manager import deeds, labor, seasons
 from ars_magica_manager import economics as eco
-from ars_magica_manager import labor, seasons
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
@@ -264,7 +264,7 @@ def test_offered_on_this_season_for_one_who_works(action):
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m1")
     assert available(action, replace(page, section="section-char-season"))
     assert not available(action, replace(page, section="section-reputations"))
-    assert action in {i.action for i in menu_forms.placed(page, "This Season")}
+    assert action in {i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)}
     marco.abilities, marco.virtues_flaws = [], []
     assert not available(action, replace(page, section="section-char-season"))
 

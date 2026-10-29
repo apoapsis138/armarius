@@ -8,7 +8,7 @@ the Dark p. 118)."""
 
 from __future__ import annotations
 
-from ars_magica_manager import book_packs, choice_templates, sieges
+from ars_magica_manager import book_packs, choice_templates, deeds, sieges
 from ars_magica_manager.models import (
     Case,
     Character,
@@ -954,9 +954,9 @@ def test_the_desktop_places_reputations_health_and_aging_actions():
     page = menu.Page(saga, NodeKind.CHARACTER, covenant=covenant, character=magus)
     labels = {
         spot: [i.label for i in menu.placed(page, spot)]
-        for spot in ("Reputations", "Health", "Aging")
+        for spot in (deeds.SESSION, deeds.KNIGHTLY, "Health", "Aging")
     }
-    assert "Reputation Roll" in labels["Reputations"]
-    assert "Melee Event" in labels["Reputations"]
+    assert "Reputation Roll" in labels[deeds.SESSION]
+    assert "Melee Event" in labels[deeds.KNIGHTLY]
     assert labels["Health"] == ["Take Harm", "Recovery Roll"]
     assert "Place Aging Points" in labels["Aging"]

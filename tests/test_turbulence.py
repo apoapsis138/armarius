@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import random
 
-from ars_magica_manager import actions, seasons
+from ars_magica_manager import actions, deeds, seasons
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
@@ -310,6 +310,8 @@ def test_turbulence_is_offered_on_a_gifted_characters_record():
     saga = _saga()
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="e")
     assert actions.available("turbulence", page)
-    assert "Turbulence" in [i.label for i in menu_forms.placed(page, "Abilities")]
+    assert "Turbulence" in [
+        i.label for i in menu_forms.placed(page, deeds.APPRENTICESHIP)
+    ]
     saga.books_in_play = ["DE"]
     assert not actions.available("turbulence", page)

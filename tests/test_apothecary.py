@@ -7,7 +7,7 @@ from dataclasses import asdict, replace
 
 import pytest
 
-from ars_magica_manager import seasons
+from ars_magica_manager import deeds, seasons
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import apothecary as forms
@@ -321,7 +321,7 @@ def test_more_offers_the_ligature_and_the_store():
     assert available("make_ligature", page)
     assert available("apothecary_store", replace(page, section="section-char-season"))
     assert "apothecary_store" in {
-        i.action for i in menu_forms.placed(page, "This Season")
+        i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
     }
     saga.characters[0].abilities = []
     assert not available("make_ligature", page)

@@ -11,10 +11,10 @@ pytest.importorskip("PySide6")
 
 from gui_steps import answering, section_buttons
 from PySide6.QtCore import Qt
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import catalog, storage
+from ars_magica_manager import catalog, deeds, storage
 from ars_magica_manager.forms import ability as ability_forms
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
@@ -213,3 +213,17 @@ def test_gain_or_lose_in_play_sits_across_both_sides_and_keeps_the_diary(app):
 
 def _titles(page) -> list[str]:
     return [label.text() for label in page.findChildren(QLabel)]
+
+
+def test_the_deeds_chapter_sets_out_each_interest(app):
+    window, _ = _window()
+    page = _page(window)
+    assert "Deeds" in page.chapters()
+    page.open_chapter("Deeds")
+    shown = page.codex.pages.currentWidget()
+    titles = {label.text() for label in shown.findChildren(QLabel)}
+    assert deeds.SESSION in titles
+    buttons = {b.text().strip() for b in shown.findChildren(QPushButton)}
+    assert "End of Session" in buttons
+    page.open_chapter("Abilities")
+    assert "Turbulence" not in section_buttons(page, "Abilities")

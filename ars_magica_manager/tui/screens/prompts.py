@@ -679,7 +679,8 @@ class MenuScreen(ModalDialog[str | None]):
     """A short menu of actions (the workspace's More and New):
     each item has its own letter, shown in front of it. Pressing the letter,
     or Enter on the highlighted item, dismisses with that item's key; Escape
-    with None. `items` are (letter, key, label); labels are markup."""
+    with None. `items` are (letter, key, label); labels are markup. An item
+    with no letter is a header over the items after it, not chosen."""
 
     DEFAULT_CSS = """
     MenuScreen {
@@ -716,6 +717,8 @@ class MenuScreen(ModalDialog[str | None]):
             yield OptionList(
                 *(
                     Option(f"[b]{letter}[/]  {label}", id=key)
+                    if letter
+                    else Option(f"[dim]{label}[/]", disabled=True)
                     for letter, key, label in self.items
                 ),
                 id="menu-list",
@@ -727,7 +730,7 @@ class MenuScreen(ModalDialog[str | None]):
 
     def on_key(self, event: Key) -> None:
         for letter, key, _ in self.items:
-            if event.character == letter:
+            if letter and event.character == letter:
                 event.stop()
                 self.dismiss(key)
                 return

@@ -109,6 +109,42 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.45.0 — 2026-10-29
+
+### Pagina
+
+- **A Deeds chapter on the character sheet.** What a character can do in
+  play that the saga's books bring now has its own chapter instead of a
+  row of buttons on whichever section it touched. Each action sits under
+  an interest, beside a line saying what it does: Session & Reputation
+  (End of Session, Reputation Roll, House Acclaim), Knightly, Scholarly,
+  Insight (Font of Knowledge, Divination, Astrology), Tribunal & Order,
+  Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk. A
+  heading with nothing to offer the character is left out, and while a
+  character is In Creation the chapter says its deeds wait until they are
+  In Play.
+- **A Season's Work** on the Planning chapter, under This Season, gathers
+  the season-long work the books bring the same way: a season on the
+  tourney circuit, Labor Points, investing and selling, an apothecary's
+  store, Greek Fire, careers, Turbulence, a grog's story experience, a
+  pilgrimage and Philosophic Alchemy. This Season's own buttons keep to
+  planning the season.
+- The Reputations, Abilities and Personality Traits sections keep their
+  own Add, Edit and Delete and the Definitive Edition's actions. The
+  Sundered Eagle's icons and A Mother's Curse join the saints in the
+  Religion chapter.
+
+### Scriptorum
+
+- **More groups what it offers.** The terminal's More lists the
+  Definitive Edition's actions first, then each interest's under its
+  name, as the desktop's Deeds chapter does.
+
+### Glossa
+
+- Help for the Deeds chapter and A Season's Work, the moved actions' help
+  saying where they are now, and a new guide, How to find an action.
+
 ## 3.44.0 — 2026-10-29
 
 ### Florilegium

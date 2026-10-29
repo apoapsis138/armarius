@@ -9,6 +9,7 @@ import random
 
 import pytest
 
+from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
@@ -306,7 +307,7 @@ def test_more_offers_divination_and_astrology_to_those_with_them():
     augur.virtues_flaws.append(VirtueFlawInstance("vf_planetary_magic"))
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert available("tmre_astrology", page)
-    placed = {i.action for i in menu_forms.placed(page, "Abilities")}
+    placed = {i.action for i in menu_forms.placed(page, deeds.INSIGHT)}
     assert {"tmre_divination", "tmre_astrology"} <= placed
     plain = Character(id="p", name="Plain", type="magus")
     assert isinstance(forms.divination_form(saga, plain), Refuse)

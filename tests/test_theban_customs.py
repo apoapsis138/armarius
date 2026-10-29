@@ -9,7 +9,7 @@ from dataclasses import replace
 
 import pytest
 
-from ars_magica_manager import catalog, churches
+from ars_magica_manager import catalog, churches, deeds
 from ars_magica_manager import theban_customs as byzantine
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
@@ -326,6 +326,10 @@ def test_a_mothers_curse_is_a_lesser_malediction_on_one_area():
 # -- where they are offered --
 
 
+#: Where the customs are set out: Deeds, A Season's Work and Faith.
+_SPOTS = (deeds.TRIBUNAL, deeds.SEASON_WORK, "Faith")
+
+
 @pytest.mark.parametrize(
     "action",
     ["theban_letter", "invoke_oath", "make_greek_fire", "paint_icon", "mothers_curse"],
@@ -334,7 +338,9 @@ def test_the_customs_are_offered_on_a_character_with_the_sundered_eagle(action):
     saga = _saga()
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert available(action, page)
-    assert action in {i.action for i in menu_forms.placed(page, "Abilities")}
+    assert action in {
+        i.action for spot in _SPOTS for i in menu_forms.placed(page, spot)
+    }
     assert isinstance(menu_forms.command(page, action), Form)
     saga.books_in_play = []
     assert not available(action, replace(page))

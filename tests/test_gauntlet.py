@@ -7,7 +7,7 @@ from __future__ import annotations
 
 import random
 
-from ars_magica_manager import actions
+from ars_magica_manager import actions, deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import gauntlet as gf
@@ -200,7 +200,7 @@ def test_learning_a_cantation_needs_the_option():
 def test_the_commands_are_offered_to_an_apprentice():
     saga = _saga(cantations=True)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="a")
-    labels = [i.label for i in menu_forms.placed(page, "Abilities")]
+    labels = [i.label for i in menu_forms.placed(page, deeds.APPRENTICESHIP)]
     assert {"Turbulence", "The Gauntlet", "Lose the Gift"} <= set(labels)
     assert "Learn a Cantation" in [
         i.label for i in menu_forms.placed(page, "Known Spells")

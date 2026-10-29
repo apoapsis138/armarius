@@ -4,7 +4,7 @@ spells (pp. 121-123, Errata p. 56)."""
 
 import random
 
-from ars_magica_manager import actions, catalog
+from ars_magica_manager import actions, catalog, deeds
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.casting_text import known_spell_casting_lines
 from ars_magica_manager.commands import Form, Refuse
@@ -226,17 +226,10 @@ def test_the_influence_roll_spends_a_ceremonys_point():
 def test_the_sin_commands_are_offered_on_personality_traits():
     saga = _saga()
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
-    labels = [item.label for item in menu_forms.placed(page, "Personality Traits")]
-    assert labels == [
-        # A trait roll, with the Silver Cord's help for a familiar's master.
-        "Roll",
-        "Confidence through Sin",
-        "Infernal Influence",
-    ]
+    labels = [item.label for item in menu_forms.placed(page, deeds.INFERNAL)]
+    assert labels == ["Confidence through Sin", "Infernal Influence"]
     plain = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
-    plain_labels = [
-        item.label for item in menu_forms.placed(plain, "Personality Traits")
-    ]
+    plain_labels = [item.label for item in menu_forms.placed(plain, deeds.INFERNAL)]
     assert "Confidence through Sin" not in plain_labels
     assert "Infernal Influence" not in plain_labels
     assert not actions.available("ars_goetia", page)
@@ -322,7 +315,7 @@ def test_the_goetic_calculator_keeps_nothing():
     assert nicolai.diary == []
     assert isinstance(goetic_forms.goetic_form(saga, _sinner(saga)), Refuse)
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
-    assert "Ars Goetia" in [i.label for i in menu_forms.placed(page, "Abilities")]
+    assert "Ars Goetia" in [i.label for i in menu_forms.placed(page, deeds.INFERNAL)]
 
 
 def test_the_goetic_traditions_list_the_arts_effects():

@@ -39,6 +39,7 @@ from .... import (
     catalog,
     creation,
     creatures,
+    deeds,
     deletion,
     giving,
     help_text,
@@ -1171,12 +1172,12 @@ class WorkspaceBase(Screen[None]):
             if action is not None:
                 self._run_menu_item(by_action[action])
 
-        self.app.push_screen(
-            MenuScreen(
-                title, [(item.letter, item.action, item.label) for item in items]
-            ),
-            handle_choice,
-        )
+        rows: list[tuple[str, str, str]] = []
+        for interest, group in deeds.grouped([item.action for item in items]):
+            if interest is not None:
+                rows.append(("", "", interest))
+            rows += [(by_action[a].letter, a, by_action[a].label) for a in group]
+        self.app.push_screen(MenuScreen(title, rows), handle_choice)
 
     def action_more(self) -> None:
         self._run_menu("More", self._more_items())

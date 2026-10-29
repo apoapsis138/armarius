@@ -1019,7 +1019,7 @@ A character's faith decides what the [Religion tab](help:tab-religion) offers hi
 5. **A Muslim's own.** Invoke Baraka seeks a holy forbear's blessing at his shrine (the Qur'an anywhere), and The Hajj gives Pious +3 and 3 Faith Points (RoP: The Divine pp. 103-108).
 6. **Only with a Virtue or a trait.** Mystic Path needs a positive Pious trait and a tie to the Divine: True Faith, a Divine Supernatural Ability or Divine Warping (The Church p. 21). Invoke God's Aid needs one who may spend a Confidence Point: not a grog, nor Low Self-Esteem, unless he has True Faith (RoP: The Divine p. 41). Holy Influence needs spiritual authority: clergy, a monk, a rabbi, True Faith, Temporal Influence, Inspirational or Dominion Lore (pp. 38, 125).
 7. **The Church's sections.** With The Church in play a Christian has Petitions and the Canon Court; Add on each makes one (anyone may petition the Church, and the canon courts hear laymen and clergy alike, pp. 36, 46). Holy Orders and Ordinations are there for one with a clerical Social Status (Clerk, Priest, Religious, Senior Clergy, Mendicant Friar) or a grade on record, and Perform an Exorcism for a clergyman only (p. 34). Only a Christian may plan an Ordination season, which is how a layman begins.
-8. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with on the Abilities chapter's faerie actions.
+8. **A pagan.** The books give no rite of his own: his faith is in a magic spirit (a Spirit Votary, DE p. 58) or in faerie (Realms of Power: Faerie p. 134), dealt with by the faerie actions in his Deeds chapter, under Dealings with Faerie.
 
 **See also:** [Devotion and the Saints](help:devotion), [Mystic Paths](help:mystic-path), [Invoking God's Aid](help:gods-aid), [Holy Influence](help:holy-influence)
 
@@ -1110,6 +1110,42 @@ storyguide asks the fee each year.
    **Not a guest anywhere**.
 
 **See also:** [Stay as Guest](help:guest-stay), [Current Location](help:whereabouts)
+
+# How to find an action
+<!-- help: guide-find-action -->
+
+The sheet's sections keep their own Add, Edit and Delete and the Definitive
+Edition's actions (Take Harm on Health, Place Aging Points on Aging, Share
+Spell on Known Spells). What a supplement brings is found by what it is:
+
+<!-- gui -->
+1. **Done in a story?** Open the [Deeds chapter](help:tab-deeds) and look
+   under its interest: a tournament's Melee Event under Knightly, a
+   disputation under Scholarly, a grog's pension under Covenfolk.
+2. **Takes a season?** It is in A Season's Work, under This Season on the
+   Planning chapter: a career, a season on the tourney circuit, Greek Fire.
+3. **A matter of faith?** The Religion chapter's Faith: the saints, the
+   icons, a mother's curse.
+4. **Hermetic magic?** The Hermetic Magic chapter's Magic Outside the Lab.
+<!-- /gui -->
+<!-- tui -->
+1. **Press More (`m`)** on the character's record. Its actions are listed
+   with the Definitive Edition's first, then each interest's under its
+   name (Knightly, Scholarly, Covenfolk...).
+2. **Some live in their section**: End of Session and Melee Event in More
+   on Reputations, the season's work in More on This Season.
+<!-- /tui -->
+
+Nothing there? Its book may be out of play: Saga Content's Books chapter
+puts it back. Or it may not fit the character yet (The Gauntlet waits for
+an apprentice).
+
+<!-- gui -->
+**See also:** [Deeds tab](help:tab-deeds), [Planning tab](help:tab-planning)
+<!-- /gui -->
+<!-- tui -->
+**See also:** [Planning tab](help:tab-planning)
+<!-- /tui -->
 
 # How to draw up and keep a charter
 <!-- help: guide-charter -->

@@ -560,7 +560,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Character Info",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Traditions, Disputatio, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, Hermetic Letter, Invoke a Broken Oath, Make Greek Fire, A Mother's Curse, Turbulence, A Scholar's Career, An Offer to Faerie, Certamen",
+        "m": "MenuScreen: Traditions, Cast a Power, Export, Update from a File, In Creation / In Play, Demote, Go To, A Mother's Curse, Certamen, Scholarly, Disputatio, A Scholar's Career, Craft & Trade, Make Greek Fire, Tribunal & Order, Hermetic Letter, Invoke a Broken Oath, Dealings with Faerie, An Offer to Faerie, Apprenticeship, Turbulence",
         "slash": "(disabled)"
       }
     },
@@ -610,7 +610,7 @@
         "a": "FieldsDialog: Add a Reputation",
         "e": "FieldsDialog: Edit a Reputation",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: End of Session, Tournament, Melee Event, Reputation Roll",
+        "m": "MenuScreen: Session & Reputation, End of Session, Reputation Roll, Knightly, Tournament, Melee Event",
         "slash": "(disabled)"
       }
     },
@@ -910,7 +910,7 @@
         "a": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "e": "FieldsDialog: Plan Leandro's Season (Spring 1220)",
         "d": "notice: Nothing is planned for Leandro in Spring 1220.",
-        "m": "MenuScreen: Turbulence, Pilgrimage",
+        "m": "MenuScreen: Pilgrimage, Apprenticeship, Turbulence",
         "slash": "(disabled)"
       }
     },

@@ -46,7 +46,8 @@ def test_planning_and_clearing_a_characters_season(app):
     window = _window()
     window.show_character("char1")
     controls = section_buttons(window.page(), "This Season")
-    assert list(controls) == ["Plan", "Edit", "Clear", "Turbulence", "Pilgrimage"]
+    # The supplements' season-long work is in A Season's Work below.
+    assert list(controls) == ["Plan", "Edit", "Clear"]
     assert not controls["Edit"].isEnabled()  # nothing planned yet
     asked = answering(window, {"activity": "other", "details": "Hunting"})
     controls["Plan"].click()
@@ -54,7 +55,7 @@ def test_planning_and_clearing_a_characters_season(app):
     assert asked[0].windowTitle() == "Plan Leandro's Season (Spring 1220)"
     assert _plans() == [("char1", "other")]
     controls = section_buttons(window.page(), "This Season")
-    assert list(controls) == ["Edit", "Clear", "Turbulence", "Pilgrimage"]
+    assert list(controls) == ["Edit", "Clear"]
     assert controls["Clear"].isEnabled()
     asked = answering(window, True)
     controls["Clear"].click()

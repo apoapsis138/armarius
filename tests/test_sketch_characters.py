@@ -234,6 +234,7 @@ async def test_the_terminal_opens_a_sketch_on_its_statblock_and_promotes_it():
                 "Research",
                 "Inventory",
                 "Agents",
+                "Deeds",
                 "Planning",
                 "Diary",
                 "Secrets",

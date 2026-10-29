@@ -7,7 +7,7 @@ from dataclasses import replace
 
 import pytest
 
-from ars_magica_manager import seasons, selling
+from ars_magica_manager import deeds, seasons, selling
 from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.commands import Form, Refuse
 from ars_magica_manager.forms import menu as menu_forms
@@ -347,7 +347,9 @@ def test_selling_is_offered_to_a_craftsman_on_this_season():
     page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="c")
     assert available("sell_goods", replace(page, section="section-char-season"))
     assert not available("sell_goods", replace(page, section="section-reputations"))
-    assert "sell_goods" in {i.action for i in menu_forms.placed(page, "This Season")}
+    assert "sell_goods" in {
+        i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
+    }
     saga.character("c").abilities = []
     assert not available("sell_goods", replace(page, section="section-char-season"))
     assert isinstance(selling.sell_form(saga, saga.character("c")), Refuse)

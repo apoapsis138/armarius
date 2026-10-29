@@ -53,6 +53,7 @@ from .. import (
     catalog,
     connections,
     creation,
+    deeds,
     giving,
     marriages,
     portraits,
@@ -145,7 +146,7 @@ from .markup_html import plain, to_html
 from .medallions import Medallion
 from .menus import Placer
 from .ornaments import FleuronRule
-from .pages import card_grid, familiar_card
+from .pages import action_rows, card_grid, familiar_card
 from .research import research_chapter
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -201,6 +202,8 @@ CHAPTERS = (
     ("Research", "lab_text"),
     ("Inventory", "combat"),
     ("Agents", "faction"),
+    # What he does in play from the supplements, under his interests.
+    ("Deeds", "deeds"),
     ("Planning", "season"),
     ("Diary", "year"),
     ("Secrets", "secrets"),
@@ -707,6 +710,7 @@ class CharacterSheet(QWidget):
             "Agents": self._agents,
             "Religion": self._religion,
             "The Enigma": self._criamon,
+            "Deeds": self._deeds,
             "Planning": self._planning,
             "Diary": self._diary,
             "Secrets": lambda: secrets_chapter(character, palette, run),
@@ -1690,7 +1694,8 @@ class CharacterSheet(QWidget):
 
     def _planning(self) -> QWidget:
         """This Season: the plan and what it will give, with Plan, Edit
-        and Clear (a grog's Yearly Update instead)."""
+        and Clear (a grog's Yearly Update instead), then A Season's Work
+        and the Seasons Ahead."""
         saga, p, c = self.saga, self.p, self.character
         buttons = verb_buttons(
             season_forms.character_season_ops(saga, c),
@@ -1699,7 +1704,7 @@ class CharacterSheet(QWidget):
             p,
             nouns=season_forms.season_nouns(c),
         )
-        # Labor Points from a Story and Invest Time or Money.
+        # Plan Copying and Clear Copying.
         buttons += self.placer.buttons("This Season") if self.placer else []
         this_season = section(
             f"This Season ({saga.current_season} {saga.current_year})",
@@ -1710,8 +1715,9 @@ class CharacterSheet(QWidget):
                 saga, saga.current_season, saga.current_year, p, radius=20, now=True
             ),
         )
+        work = self._season_work()
         if not season_rules.is_planned(c):
-            return scrolling_page(p, this_season)
+            return scrolling_page(p, this_season, *work)
         chooser = Chooser()
         info = TextBlock(seasons.ahead_info(saga, c, None, "Click Edit"), p)
 
@@ -1732,7 +1738,48 @@ class CharacterSheet(QWidget):
                 nouns=season_forms.PLAN_NOUNS,
             ),
         )
-        return scrolling_page(p, this_season, ahead)
+        return scrolling_page(p, this_season, *work, ahead)
+
+    def _season_work(self) -> list[QWidget]:
+        """A Season's Work: the supplements' season-long actions, each
+        button beside a line on what it does (none: no section)."""
+        placed = self.placer.placed_buttons(deeds.SEASON_WORK) if self.placer else []
+        rows = [(button, deeds.SEASON_NOTES[item.action]) for item, button in placed]
+        return (
+            [section(deeds.SEASON_WORK, self.p, action_rows(rows, self.p))]
+            if rows
+            else []
+        )
+
+    def _deeds(self) -> QWidget:
+        """The actions the supplements bring for play, a section for each
+        interest (deeds.INTERESTS), each button beside a line on what it
+        does; while he is In Creation, only a line saying they wait."""
+        p, c = self.p, self.character
+        if c.in_creation:
+            return scrolling_page(
+                p,
+                TextBlock(
+                    f"[dim]{c.name}'s deeds open once the character is In Play.[/]",
+                    p,
+                ),
+            )
+        sections = []
+        for interest in deeds.INTERESTS:
+            placed = self.placer.placed_buttons(interest) if self.placer else []
+            rows = [(button, deeds.NOTES[item.action]) for item, button in placed]
+            if rows:
+                sections.append(section(interest, p, action_rows(rows, p)))
+        if not sections:
+            return scrolling_page(
+                p,
+                TextBlock(
+                    "[dim]Nothing here yet: the deeds the saga's books bring "
+                    "show here when they fit him.[/]",
+                    p,
+                ),
+            )
+        return scrolling_page(p, *sections)
 
     def _diary(self) -> QWidget:
         """The character's seasons as a calendar, a row per year, over the
@@ -1925,13 +1972,13 @@ def _criamon_chapter(
 def _left_out(saga: Saga, character: Character) -> set[str]:
     """The chapters the character's sheet doesn't have: Hermetic Magic but
     for a magus, the Statblock but for a Line or Sketch character, and
-    what only play needs (Inventory, Agents, Planning, Research) for those. A Line character
+    what only play needs (Inventory, Agents, Deeds, Planning, Research) for those. A Line character
     has no scores either."""
     left = set()
     if character.type != "magus":
         left |= {"Hermetic Magic", "Research"}
     if cs.has_statblock(character):
-        left |= {"Inventory", "Agents", "Planning", "Research"}
+        left |= {"Inventory", "Agents", "Deeds", "Planning", "Research"}
     else:
         left.add("Statblock")
     if character.detail == LINE:

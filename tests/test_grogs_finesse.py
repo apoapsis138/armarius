@@ -6,7 +6,7 @@ import random
 
 import pytest
 
-from ars_magica_manager import actions, economics
+from ars_magica_manager import actions, deeds, economics
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.casting_text import option_lines
 from ars_magica_manager.commands import Form, Refuse
@@ -267,17 +267,25 @@ def test_the_grog_commands_are_offered_on_a_grog_only():
     grog = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="g")
     labels = [item.label for item in menu_forms.placed(grog, "Personality Traits")]
     # Roll: a trait roll, with the Silver Cord's help for a familiar's master.
-    # The saints and the Church are on the Religion chapter's Faith.
-    assert labels == ["Reward or Punish", "Pension", "Roll"]
+    # The saints and the Church are on the Religion chapter's Faith; Reward
+    # or Punish and Pension in the Deeds chapter.
+    assert labels == ["Roll"]
+    assert [i.label for i in menu_forms.placed(grog, deeds.COVENFOLK)] == [
+        "Reward or Punish",
+        "Pension",
+    ]
     # A grog may pray to the saints, but can't spend Confidence on God's
     # aid; with no Pious trait he has no Devotions to keep.
+    # The Sundered Eagle's curse sits beside them: any mother may lay it.
     assert [i.label for i in menu_forms.placed(grog, "Faith")] == [
+        "A Mother's Curse",
         "Invoke a Saint",
         "Patron Saint",
         "Indulgence, Vigil or Fast",
     ]
     magus = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="m")
     assert [i.label for i in menu_forms.placed(magus, "Personality Traits")] == ["Roll"]
+    assert not menu_forms.placed(magus, deeds.COVENFOLK)
     assert not menu_forms.placed(magus, "Known Spells")
     assert [i.label for i in menu_forms.placed(magus, "Magic Outside the Lab")] == [
         "Craft by Magic",
