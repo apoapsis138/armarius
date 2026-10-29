@@ -109,6 +109,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.9 — 2026-10-29
+
+### Illuminatio
+
+- A covenant's History chapter has a quill for its icon, so it no longer
+  looks like the Diary's calendar beside it.
+
 ## 3.41.8 — 2026-10-29
 
 ### Fundamenta

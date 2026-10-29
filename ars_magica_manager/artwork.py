@@ -252,7 +252,7 @@ ICON_NAMES: dict[str, str] = {
     # Time and resources
     "season": "hourglass-medium",
     "year": "calendar",
-    "history": "scroll",
+    "history": "feather",
     "vis": "drop-half",
     "income": "coins",
     "give": "hand-arrow-up",
