@@ -32,7 +32,7 @@ from . import meeting as core
 from . import tribunals, world
 from .form_spec import DialogField
 from .markup import escape
-from .models import Book, Character, Meeting, Saga, Tribunal
+from .models import Book, Character, Covenant, Meeting, Saga, Tribunal
 from .tribunal_packages import normandy as package
 
 SOURCE = "The Lion and the Lily pp. 22-23, 33"
@@ -111,6 +111,165 @@ def _undo(saga: Saga, tribunal: Tribunal, meeting: Meeting) -> None:
     record.update(returned=[], moved={})
 
 
+def _return_fields(
+    saga: Saga, tribunal: Tribunal, year: int, held: bool, kept: dict[str, Any]
+) -> list[DialogField]:
+    """A tick for each lease that fell due: its book is back."""
+    found: list[DialogField] = []
+    for index, lease in package.due(tribunal, year) + [
+        (i, package.leases(tribunal)[i])
+        for i in kept.get("returned", [])
+        if held and 0 <= i < len(package.leases(tribunal))
+    ]:
+        book = package.book(saga, lease.get("book_id"))
+        covenant = saga.covenant(lease.get("covenant_id"))
+        if any(f.key == f"return_{index}" for f in found):
+            continue
+        found.append(
+            DialogField(
+                f"return_{index}",
+                f"Returned: {escape(book.name if book else '(gone)')}",
+                "check",
+                index in kept.get("returned", []) if held else True,
+                hint=f"Leased to {escape(covenant.name if covenant else '(gone)')} "
+                f"in {lease.get('year')}: it must be back before this meeting.",
+            )
+        )
+    return found
+
+
+def _given_books(
+    saga: Saga, tribunal: Tribunal, year: int
+) -> list[tuple[Book, Character]]:
+    """The books that can be given to the Library, with their writers: those
+    still to give, and those given at this meeting."""
+    return giftable(saga, tribunal) + [
+        (b, m)
+        for g in package.gifts(tribunal)
+        if g.get("held_at") == year
+        for b in [package.book(saga, g["book_id"])]
+        for m in [saga.character(g.get("magus_id"))]
+        if b is not None and m is not None
+    ]
+
+
+def _prize_books(saga: Saga, tribunal: Tribunal, year: int) -> list[Book]:
+    """The Library books that can be taken as a prize: those available, and
+    those already leased at this meeting."""
+    return package.available(saga, tribunal) + [
+        b
+        for e in package.leases(tribunal)
+        if e.get("held_at") == year
+        for b in [package.book(saga, e.get("book_id"))]
+        if b is not None
+    ]
+
+
+def _gift_fields(
+    saga: Saga,
+    tribunal: Tribunal,
+    year: int,
+    given: list[tuple[Book, Character]],
+    prizes: list[Book],
+) -> list[DialogField]:
+    """A book given to the Library and its giver's prize, as many times as
+    there are books to give."""
+    found: list[DialogField] = []
+    prize_options = [(escape(_label(saga, b)), b.id) for b in prizes]
+    this_gifts = [g for g in package.gifts(tribunal) if g.get("held_at") == year]
+    this_leases = [e for e in package.leases(tribunal) if e.get("held_at") == year]
+    gift_leases = [e for e in this_leases if e.get("how") == package.BY_GIFT]
+    # A lease for each book given: as many as there are to give.
+    for slot in range(max(1, len(given))):
+        gift = this_gifts[slot] if slot < len(this_gifts) else {}
+        prize = gift_leases[slot] if slot < len(gift_leases) else {}
+        shown = (
+            (lambda v: True)
+            if slot == 0
+            else (lambda v, s=slot: bool(v.get(f"gift_{s - 1}")))
+        )
+        found += [
+            DialogField(
+                f"gift_{slot}",
+                "Given to the Library" if slot == 0 else "And given",
+                "select",
+                gift.get("book_id"),
+                options=[
+                    (escape(f"{_label(saga, b)}, by {m.name}"), b.id) for b, m in given
+                ],
+                allow_blank=True,
+                placeholder="(no book given)",
+                hint="An original book a magus of the Tribunal wrote; it "
+                "goes to Confluensis.",
+                show_if=shown,
+            ),
+            DialogField(
+                f"prize_{slot}",
+                "Its giver's prize",
+                "select",
+                prize.get("book_id"),
+                options=prize_options,
+                allow_blank=True,
+                placeholder="(none chosen)",
+                hint="A Library book worth up to as many Build Points, "
+                "leased for seven years.",
+                show_if=lambda v, s=slot: bool(v.get(f"gift_{s}")),
+            ),
+        ]
+    return found
+
+
+def _won_fields(
+    saga: Saga,
+    tribunal: Tribunal,
+    year: int,
+    prizes: list[Book],
+    covenants: list[Covenant],
+    teams: dict[str, tuple[str, int | None]],
+) -> list[DialogField]:
+    """A book won at the Tourney and the covenant that won it, as many times
+    as the Library can lease."""
+    found: list[DialogField] = []
+    won_options = [(escape(_priced(saga, b)), b.id) for b in prizes]
+    this_leases = [e for e in package.leases(tribunal) if e.get("held_at") == year]
+    won_leases = [e for e in this_leases if e.get("how") == package.BY_TOURNEY]
+    # As many books won as the Library can lease; the teams' prize
+    # pawns limit them (validate).
+    for slot in range(max(1, len(prizes))):
+        lease = won_leases[slot] if slot < len(won_leases) else {}
+        shown = (
+            (lambda v: True)
+            if slot == 0
+            else (lambda v, s=slot: bool(v.get(f"won_{s - 1}")))
+        )
+        found += [
+            DialogField(
+                f"won_{slot}",
+                "Won at the Tourney" if slot == 0 else "And won",
+                "select",
+                lease.get("book_id"),
+                options=won_options,
+                allow_blank=True,
+                placeholder="(no book won)",
+                hint="Bought with the team's prize pawns: a pawn per 5 Build "
+                "Points (The Lion and the Lily p. 33).",
+                show_if=shown,
+            ),
+            DialogField(
+                f"winner_{slot}",
+                "Won by",
+                "select",
+                lease.get("covenant_id"),
+                options=[
+                    (escape(_team_label(c.name, teams[c.id][1])), c.id)
+                    for c in covenants
+                ],
+                show_if=lambda v, s=slot: bool(v.get(f"won_{s}")),
+            ),
+        ]
+    return found
+
+
 class Library(core.Step):
     """The leases taken back, the gifts and their givers' prizes, and the
     books won at the Tourney."""
@@ -127,129 +286,20 @@ class Library(core.Step):
     def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         year = _year(saga, meeting)
         held = self.key in meeting.get("done", [])
-        kept = _record(meeting)
-        found: list[DialogField] = []
-        for index, lease in package.due(tribunal, year) + [
-            (i, package.leases(tribunal)[i])
-            for i in kept.get("returned", [])
-            if held and 0 <= i < len(package.leases(tribunal))
-        ]:
-            book = package.book(saga, lease.get("book_id"))
-            covenant = saga.covenant(lease.get("covenant_id"))
-            if any(f.key == f"return_{index}" for f in found):
-                continue
-            found.append(
-                DialogField(
-                    f"return_{index}",
-                    f"Returned: {escape(book.name if book else '(gone)')}",
-                    "check",
-                    index in kept.get("returned", []) if held else True,
-                    hint=f"Leased to {escape(covenant.name if covenant else '(gone)')} "
-                    f"in {lease.get('year')}: it must be back before this meeting.",
-                )
-            )
-        given = giftable(saga, tribunal) + [
-            (b, m)
-            for g in package.gifts(tribunal)
-            if g.get("held_at") == year
-            for b in [package.book(saga, g["book_id"])]
-            for m in [saga.character(g.get("magus_id"))]
-            if b is not None and m is not None
-        ]
-        prizes = package.available(saga, tribunal) + [
-            b
-            for e in package.leases(tribunal)
-            if e.get("held_at") == year
-            for b in [package.book(saga, e.get("book_id"))]
-            if b is not None
-        ]
-        prize_options = [(escape(_label(saga, b)), b.id) for b in prizes]
-        won_options = [(escape(_priced(saga, b)), b.id) for b in prizes]
+        found = _return_fields(saga, tribunal, year, held, _record(meeting))
+        given = _given_books(saga, tribunal, year)
+        prizes = _prize_books(saga, tribunal, year)
+        covenants = tribunals.covenants_of(saga, tribunal)
         self.worths = {b.id: package.worth(saga, b) for b in prizes} | {
             b.id: package.worth(saga, b) for b, _m in given
         }
         self.costs = {b.id: package.book_pawns(saga, b) for b in prizes}
-        covenants = tribunals.covenants_of(saga, tribunal)
         self.teams = {
             c.id: (c.name, package.team_pawns(tribunal, year, c.name))
             for c in covenants
         }
-        this_gifts = [g for g in package.gifts(tribunal) if g.get("held_at") == year]
-        this_leases = [e for e in package.leases(tribunal) if e.get("held_at") == year]
-        gift_leases = [e for e in this_leases if e.get("how") == package.BY_GIFT]
-        won_leases = [e for e in this_leases if e.get("how") == package.BY_TOURNEY]
-        # A lease for each book given: as many as there are to give.
-        for slot in range(max(1, len(given))):
-            gift = this_gifts[slot] if slot < len(this_gifts) else {}
-            prize = gift_leases[slot] if slot < len(gift_leases) else {}
-            shown = (
-                (lambda v: True)
-                if slot == 0
-                else (lambda v, s=slot: bool(v.get(f"gift_{s - 1}")))
-            )
-            found += [
-                DialogField(
-                    f"gift_{slot}",
-                    "Given to the Library" if slot == 0 else "And given",
-                    "select",
-                    gift.get("book_id"),
-                    options=[
-                        (escape(f"{_label(saga, b)}, by {m.name}"), b.id)
-                        for b, m in given
-                    ],
-                    allow_blank=True,
-                    placeholder="(no book given)",
-                    hint="An original book a magus of the Tribunal wrote; it "
-                    "goes to Confluensis.",
-                    show_if=shown,
-                ),
-                DialogField(
-                    f"prize_{slot}",
-                    "Its giver's prize",
-                    "select",
-                    prize.get("book_id"),
-                    options=prize_options,
-                    allow_blank=True,
-                    placeholder="(none chosen)",
-                    hint="A Library book worth up to as many Build Points, "
-                    "leased for seven years.",
-                    show_if=lambda v, s=slot: bool(v.get(f"gift_{s}")),
-                ),
-            ]
-        # As many books won as the Library can lease; the teams' prize
-        # pawns limit them (validate).
-        for slot in range(max(1, len(prizes))):
-            lease = won_leases[slot] if slot < len(won_leases) else {}
-            shown = (
-                (lambda v: True)
-                if slot == 0
-                else (lambda v, s=slot: bool(v.get(f"won_{s - 1}")))
-            )
-            found += [
-                DialogField(
-                    f"won_{slot}",
-                    "Won at the Tourney" if slot == 0 else "And won",
-                    "select",
-                    lease.get("book_id"),
-                    options=won_options,
-                    allow_blank=True,
-                    placeholder="(no book won)",
-                    hint="Bought with the team's prize pawns: a pawn per 5 Build "
-                    "Points (The Lion and the Lily p. 33).",
-                    show_if=shown,
-                ),
-                DialogField(
-                    f"winner_{slot}",
-                    "Won by",
-                    "select",
-                    lease.get("covenant_id"),
-                    options=[
-                        (escape(_team_label(c.name, self.teams[c.id][1])), c.id)
-                        for c in covenants
-                    ],
-                    show_if=lambda v, s=slot: bool(v.get(f"won_{s}")),
-                ),
-            ]
+        found += _gift_fields(saga, tribunal, year, given, prizes)
+        found += _won_fields(saga, tribunal, year, prizes, covenants, self.teams)
         found.append(core._note_field(meeting, self.key))
         return found
 

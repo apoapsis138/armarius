@@ -108,6 +108,44 @@ def options(books: frozenset[str] | None = None) -> list[tuple[str, str]]:
     ]
 
 
+def _stat_block(creature: Creature, block: dict[str, Any]) -> None:
+    """The book's stat block onto `creature`: Characteristics, Virtues and
+    Flaws, Abilities, Personality Traits and Reputations."""
+    creature.characteristics = Characteristics(
+        **characteristics(*block.get("characteristics", [0] * 8))
+    )
+    creature.virtues_flaws = [
+        virtue_flaw_from_block(v if isinstance(v, str) else (v[0], v[1]))
+        for v in block.get("virtues_flaws", [])
+    ]
+    creature.abilities = [
+        ability_from_block(name, score, specialty or "")
+        for name, score, specialty in block.get("abilities", [])
+    ]
+    creature.personality_traits = [
+        ScoredTrait(n, s) for n, s in block.get("traits", {}).items()
+    ]
+    creature.reputations = [
+        ScoredTrait(n, s) for n, s in block.get("reputations", {}).items()
+    ]
+
+
+def _power(p: dict[str, Any]) -> CreaturePower:
+    """One of the book's powers, as the saga keeps it."""
+    return CreaturePower(
+        p["name"],
+        might_cost=int(p.get("might_cost") or 0),
+        init=int(p.get("init") or 0),
+        form=p.get("form") or "",
+        range=p.get("range") or "",
+        duration=p.get("duration") or "",
+        target=p.get("target") or "",
+        level=p.get("level"),
+        penetration_bonus=int(p.get("penetration_bonus") or 0),
+        description=p.get("does") or "",
+    )
+
+
 def build(book: BookCreature) -> Creature:
     """A new creature for the saga, a copy of the book's stat block."""
     e = book.entry
@@ -145,39 +183,8 @@ def build(book: BookCreature) -> Creature:
         ),
         detail=FULL,
     )
-    block = e.get("block") or {}
-    creature.characteristics = Characteristics(
-        **characteristics(*block.get("characteristics", [0] * 8))
-    )
-    creature.virtues_flaws = [
-        virtue_flaw_from_block(v if isinstance(v, str) else (v[0], v[1]))
-        for v in block.get("virtues_flaws", [])
-    ]
-    creature.abilities = [
-        ability_from_block(name, score, specialty or "")
-        for name, score, specialty in block.get("abilities", [])
-    ]
-    creature.personality_traits = [
-        ScoredTrait(n, s) for n, s in block.get("traits", {}).items()
-    ]
-    creature.reputations = [
-        ScoredTrait(n, s) for n, s in block.get("reputations", {}).items()
-    ]
+    _stat_block(creature, e.get("block") or {})
     creature.attacks = [CreatureAttack(*a) for a in e.get("attacks", [])]
-    creature.powers = [
-        CreaturePower(
-            p["name"],
-            might_cost=int(p.get("might_cost") or 0),
-            init=int(p.get("init") or 0),
-            form=p.get("form") or "",
-            range=p.get("range") or "",
-            duration=p.get("duration") or "",
-            target=p.get("target") or "",
-            level=p.get("level"),
-            penetration_bonus=int(p.get("penetration_bonus") or 0),
-            description=p.get("does") or "",
-        )
-        for p in e.get("powers", [])
-    ]
+    creature.powers = [_power(p) for p in e.get("powers", [])]
     creature.vis = [BodyVis(int(v[0]), v[1], v[2]) for v in e.get("vis", [])]
     return creature

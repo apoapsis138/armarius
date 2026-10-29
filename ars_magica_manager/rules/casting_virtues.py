@@ -86,6 +86,25 @@ def reminders(magus: Character) -> list[str]:
     """What the magus's Virtues and Flaws add when they apply at the moment
     of casting, a sentence each (plain text)."""
     has = lab_virtues.has
+    found = _total_reminders(magus) + _casting_reminders(magus)
+    found += [note(magus) for vf_id, note in NOTES.items() if has(magus, vf_id)]
+    found += common_magics.reminders(magus)
+    found += house_discoveries.reminders(magus)
+    found += fenicil.reminders(magus)
+    # House Bjornaer's form-changing rolls follow the breakthroughs', then
+    # House Mercere's Mutantum and Tamed Magic.
+    found += (
+        breakthroughs_moh.reminders(magus)
+        + bjornaer.reminders(magus)
+        + house_magic.reminders(magus)
+    )
+    return found
+
+
+def _total_reminders(magus: Character) -> list[str]:
+    """The Virtues and Flaws that add to, subtract from or halve a Casting
+    Total in some circumstance."""
+    has = lab_virtues.has
     found: list[str] = []
     if has(magus, SPECIAL_CIRCUMSTANCES):
         found.append(
@@ -149,6 +168,14 @@ def reminders(magus: Character) -> list[str]:
         found.append(
             "Short-Ranged Magic: Casting Totals halved unless touching the target."
         )
+    return found
+
+
+def _casting_reminders(magus: Character) -> list[str]:
+    """The Virtues and Flaws that change how a spell is cast: Fatigue spent,
+    a Focus, the tools, the dream and the sacrifice."""
+    has = lab_virtues.has
+    found: list[str] = []
     if has(magus, LIFE_BOOST):
         found.append(
             f"Life Boost: +{LIFE_BOOST_PER_LEVEL} to a Formulaic or Ritual Casting "
@@ -208,17 +235,6 @@ def reminders(magus: Character) -> list[str]:
             "in for 1 (a lamb) to 6 (a lion) pawns of a Ritual summoning that "
             "deity there (TMRE p. 117)."
         )
-    found += [note(magus) for vf_id, note in NOTES.items() if has(magus, vf_id)]
-    found += common_magics.reminders(magus)
-    found += house_discoveries.reminders(magus)
-    found += fenicil.reminders(magus)
-    # House Bjornaer's form-changing rolls follow the breakthroughs', then
-    # House Mercere's Mutantum and Tamed Magic.
-    found += (
-        breakthroughs_moh.reminders(magus)
-        + bjornaer.reminders(magus)
-        + house_magic.reminders(magus)
-    )
     return found
 
 

@@ -962,6 +962,14 @@ def blow_fields(saga: Saga, fight: Fight) -> list[DialogField]:
     ]
 
 
+def _is_casting(values: dict[str, Any]) -> bool:
+    return values.get("action") == rules.CAST
+
+
+def _is_spontaneous(values: dict[str, Any]) -> bool:
+    return _is_casting(values) and values.get("spell") == rules.SPONTANEOUS
+
+
 def _magic_fields(
     saga: Saga, who: rules.Unit | None, battle_casting: bool = False
 ) -> list[DialogField]:
@@ -969,10 +977,31 @@ def _magic_fields(
     level of a spontaneous one) or the device's effect, and the damage it
     does."""
     character = who.vanguard.character if who is not None else None
-    spells = rules.spells_of(saga, character)
     effects = rules.device_effects(saga, character)
-    casting = lambda v: v.get("action") == rules.CAST
-    spontaneous = lambda v: casting(v) and v.get("spell") == rules.SPONTANEOUS
+    return [
+        *_spell_fields(rules.spells_of(saga, character)),
+        *_charge_fields(),
+        *_cast_option_fields(battle_casting),
+        # Only a fighter holding a device is asked which: an empty list
+        # can't be drawn.
+        *_device_fields(effects),
+        *_aim_fields(),
+        *_connection_fields(),
+        DialogField(
+            "spell_damage",
+            "Damage",
+            "optint",
+            None,
+            show_if=lambda v: v.get("action") in (rules.CAST, rules.DEVICE),
+            hint="A damaging effect's +X: stress die + X against Soak + stress "
+            "die, with the right Form Bonus (DE p. 394). Blank: no damage.",
+        ),
+    ]
+
+
+def _spell_fields(spells: list[tuple[str, str]]) -> list[DialogField]:
+    """The spell cast, or the Arts and level of a spontaneous one, and the
+    requisites it is cast with."""
     return [
         DialogField(
             "spell",
@@ -980,7 +1009,7 @@ def _magic_fields(
             "select",
             spells[0][1] if spells else rules.SPONTANEOUS,
             options=[*spells, ("Spontaneous magic", rules.SPONTANEOUS)],
-            show_if=casting,
+            show_if=_is_casting,
             hint="Cast at the magus's place in the order (DE p. 397).",
         ),
         DialogField(
@@ -989,9 +1018,9 @@ def _magic_fields(
             "select",
             "Creo Ignem",
             options=pairs(rules.ART_PAIRS),
-            show_if=spontaneous,
+            show_if=_is_spontaneous,
         ),
-        DialogField("level", "Level", "int", 10, show_if=spontaneous),
+        DialogField("level", "Level", "int", 10, show_if=_is_spontaneous),
         DialogField(
             "requisite_technique",
             "Casting requisite (Technique)",
@@ -1000,7 +1029,7 @@ def _magic_fields(
             options=pairs(TECHNIQUES),
             allow_blank=True,
             placeholder="(none)",
-            show_if=casting,
+            show_if=_is_casting,
             hint="For what it is used on this time: the lowest Technique and "
             "Form among the spell's Arts and these count (DE p. 312).",
         ),
@@ -1012,8 +1041,14 @@ def _magic_fields(
             options=pairs(FORMS),
             allow_blank=True,
             placeholder="(none)",
-            show_if=casting,
+            show_if=_is_casting,
         ),
+    ]
+
+
+def _charge_fields() -> list[DialogField]:
+    """A mounted charge's shock and the target's saddle."""
+    return [
         DialogField(
             "horse_size",
             "The horse's Size",
@@ -1033,12 +1068,19 @@ def _magic_fields(
             placeholder="(an ordinary one, or on foot)",
             show_if=lambda v: v.get("action") == rules.CHARGE,
         ),
+    ]
+
+
+def _cast_option_fields(battle_casting: bool) -> list[DialogField]:
+    """Standing off amid a battle, and whether a spontaneous spell is
+    fatiguing."""
+    return [
         DialogField(
             "standing_off",
             "Standing off, not engaged",
             "check",
             False,
-            show_if=lambda v: casting(v) and battle_casting,
+            show_if=lambda v: _is_casting(v) and battle_casting,
             hint="Amid a battle: Concentration against 9 standing off, 12 "
             "engaged (Lords of Men p. 109).",
         ),
@@ -1047,28 +1089,34 @@ def _magic_fields(
             "Fatiguing",
             "check",
             True,
-            show_if=spontaneous,
+            show_if=_is_spontaneous,
             hint="Spend a Fatigue level for the stress die; otherwise the "
             "Casting Score alone, divided by five (DE p. 214).",
         ),
-        # Only a fighter holding a device is asked which: an empty list
-        # can't be drawn.
-        *(
-            [
-                DialogField(
-                    "effect",
-                    "Device and effect",
-                    "select",
-                    effects[0][1],
-                    options=effects,
-                    show_if=lambda v: v.get("action") == rules.DEVICE,
-                    hint="Used at Quickness + stress die, Penetration as "
-                    "enchanted (DE p. 259).",
-                )
-            ]
-            if effects
-            else []
-        ),
+    ]
+
+
+def _device_fields(effects: list[tuple[str, str]]) -> list[DialogField]:
+    """Which device's effect is used (nothing for a fighter with no device)."""
+    if not effects:
+        return []
+    return [
+        DialogField(
+            "effect",
+            "Device and effect",
+            "select",
+            effects[0][1],
+            options=effects,
+            show_if=lambda v: v.get("action") == rules.DEVICE,
+            hint="Used at Quickness + stress die, Penetration as "
+            "enchanted (DE p. 259).",
+        )
+    ]
+
+
+def _aim_fields() -> list[DialogField]:
+    """An indirect effect, aimed like a missile, and its size steps."""
+    return [
         DialogField(
             "indirect",
             "Indirect (aimed)",
@@ -1090,6 +1138,13 @@ def _magic_fields(
             ),
             hint="+6 to the aim for each step past a basic Individual (DE p. 223).",
         ),
+    ]
+
+
+def _connection_fields() -> list[DialogField]:
+    """An Arcane Connection to the target, and what knowing its name or
+    holding an image adds."""
+    return [
         DialogField(
             "arcane",
             "Arcane Connection",
@@ -1098,7 +1153,7 @@ def _magic_fields(
             options=pairs(penetration.ARCANE_CONNECTIONS),
             allow_blank=True,
             placeholder="(none)",
-            show_if=casting,
+            show_if=_is_casting,
             hint="Adds to the Penetration multiplier by how long it lasts (DE p. 219).",
         ),
         DialogField(
@@ -1106,7 +1161,7 @@ def _magic_fields(
             "Knows the target's name",
             "check",
             False,
-            show_if=lambda v: casting(v) and bool(v.get("arcane")),
+            show_if=lambda v: _is_casting(v) and bool(v.get("arcane")),
             hint="A nickname or birth name: +1 to the multiplier (DE p. 220; "
             "HoH:S p. 27).",
         ),
@@ -1115,17 +1170,8 @@ def _magic_fields(
             "Symbolic representation",
             "check",
             False,
-            show_if=lambda v: casting(v) and bool(v.get("arcane")),
+            show_if=lambda v: _is_casting(v) and bool(v.get("arcane")),
             hint="An image or model the caster made: +2 to the multiplier.",
-        ),
-        DialogField(
-            "spell_damage",
-            "Damage",
-            "optint",
-            None,
-            show_if=lambda v: v.get("action") in (rules.CAST, rules.DEVICE),
-            hint="A damaging effect's +X: stress die + X against Soak + stress "
-            "die, with the right Form Bonus (DE p. 394). Blank: no damage.",
         ),
     ]
 

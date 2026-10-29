@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.8 — 2026-10-29
+
+### Fundamenta
+
+- **The last of the sprawling functions are broken up, nothing new to see.**
+  The fight's odds, copying and translating books, importing books from a
+  file, the Bestiary's creature builder, the later-life checks, the casting
+  reminders and spell lines, the lab plan, Acclaim, work-of-art, study,
+  fight-magic and Normandy Library forms, the Description tab and the saga
+  page are each split into smaller pieces that do one thing. The guard
+  against sprawling functions now has nothing on its list. The app looks and
+  works exactly as it did.
+
 ## 3.41.7 — 2026-10-29
 
 ### Glossa

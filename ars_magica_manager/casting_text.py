@@ -372,65 +372,96 @@ def known_spell_casting_lines(
         virtues_flaws=magus.virtues_flaws,
         magus=magus,
     )
-    calm = " (none when calm)" if known.mastery_score else ""
     need = spell.level - total
     if spell.ritual:
-        # Cast while up to 10 short: 1, 2 or 3 levels as the total falls.
-        steps = []
-        for slack, levels in ((0, 1), (5, 2), (10, 3)):
-            cost = casting.fatigue_levels(levels, magus.virtues_flaws, "ritual")
-            steps.append(f"{max(need - slack, 0)}+ for {cost}")
-            if need - slack <= 0:
-                break
-        lines.append(
-            "Ritual, stress die: "
-            + ", ".join(steps)
-            + f" long-term Fatigue levels; {vis} pawn(s) of vis; {botch} botch "
-            + ("die" if botch == 1 else "dice")
-            + f"{calm}. Fatigue past unconsciousness becomes a wound."
-        )
-        tainted = vis_stores.infernal_stores(saga, magus, (spell.technique, spell.form))
-        if tainted and vis:
-            text = casting.infernal_vis_text(
-                saga,
-                vis,
-                aura_realm=realm,
-                aura=aura,
-                in_regio=home_in_regio(saga, magus),
-                mastery=known.mastery_score,
-                golden_cord=casting.golden_cord(saga, magus),
-                virtues_flaws=magus.virtues_flaws,
-                magus=magus,
-            )
-            lines.append(
-                problem(
-                    escape(
-                        f"With Infernal vis ({', '.join(p.name or p.art for p in tainted)}): "
-                        f"{text} (RoP: The Infernal p. 19)."
-                    )
-                )
-            )
-        if vis:
-            for note in vis_stores.casting_notes(
-                saga, magus, spell.technique, spell.form, vis
-            ):
-                lines.append(f"[dim]{escape(note)}[/]")
-    elif need <= 0:
-        lines.append(
-            "Formulaic: cast without Fatigue on any die, unless a stressed die "
-            f"botches ({botch} botch {'die' if botch == 1 else 'dice'}{calm})."
-        )
+        lines += _ritual_lines(saga, magus, known, spell, vis, botch, need, aura, realm)
     else:
-        short = _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
-        lines.append(
-            f"Formulaic: a die of {need}+ casts it; {max(need - 10, 1)}+ casts it "
-            f"for {short}."
-            if need > 10
-            else f"Formulaic: a die of {need}+ casts it without Fatigue; "
-            f"less still casts it for {short}, unless a stressed die botches."
-        )
+        lines.append(_formulaic_line(magus, known, need, botch))
     lines += _mastery_lines(magus, known, spell, abilities)
     lines += _adaptive_lines(saga, magus, known, spell)
+    return lines
+
+
+def _calm(known: KnownSpell) -> str:
+    """The note that a Mastered spell's botch dice are none when calm."""
+    return " (none when calm)" if known.mastery_score else ""
+
+
+def _formulaic_line(magus: Character, known: KnownSpell, need: int, botch: int) -> str:
+    """How a Formulaic spell is cast: the die that casts it with no Fatigue,
+    or for the Fatigue levels it costs."""
+    if need <= 0:
+        return (
+            "Formulaic: cast without Fatigue on any die, unless a stressed die "
+            f"botches ({botch} botch {'die' if botch == 1 else 'dice'}"
+            f"{_calm(known)})."
+        )
+    short = _levels(casting.fatigue_levels(1, magus.virtues_flaws, "formulaic"))
+    return (
+        f"Formulaic: a die of {need}+ casts it; {max(need - 10, 1)}+ casts it "
+        f"for {short}."
+        if need > 10
+        else f"Formulaic: a die of {need}+ casts it without Fatigue; "
+        f"less still casts it for {short}, unless a stressed die botches."
+    )
+
+
+def _ritual_lines(
+    saga: Saga,
+    magus: Character,
+    known: KnownSpell,
+    spell: Spell,
+    vis: int,
+    botch: int,
+    need: int,
+    aura: int,
+    realm: str,
+) -> list[str]:
+    """How a Ritual is cast: the dice that cast it for 1, 2 or 3 long-term
+    Fatigue levels, its vis and botch dice, the Infernal vis warning and the
+    notes of the vis the magus holds."""
+    calm = _calm(known)
+    lines: list[str] = []
+    # Cast while up to 10 short: 1, 2 or 3 levels as the total falls.
+    steps = []
+    for slack, levels in ((0, 1), (5, 2), (10, 3)):
+        cost = casting.fatigue_levels(levels, magus.virtues_flaws, "ritual")
+        steps.append(f"{max(need - slack, 0)}+ for {cost}")
+        if need - slack <= 0:
+            break
+    lines.append(
+        "Ritual, stress die: "
+        + ", ".join(steps)
+        + f" long-term Fatigue levels; {vis} pawn(s) of vis; {botch} botch "
+        + ("die" if botch == 1 else "dice")
+        + f"{calm}. Fatigue past unconsciousness becomes a wound."
+    )
+    tainted = vis_stores.infernal_stores(saga, magus, (spell.technique, spell.form))
+    if tainted and vis:
+        text = casting.infernal_vis_text(
+            saga,
+            vis,
+            aura_realm=realm,
+            aura=aura,
+            in_regio=home_in_regio(saga, magus),
+            mastery=known.mastery_score,
+            golden_cord=casting.golden_cord(saga, magus),
+            virtues_flaws=magus.virtues_flaws,
+            magus=magus,
+        )
+        lines.append(
+            problem(
+                escape(
+                    f"With Infernal vis ({', '.join(p.name or p.art for p in tainted)}): "
+                    f"{text} (RoP: The Infernal p. 19)."
+                )
+            )
+        )
+    if vis:
+        for note in vis_stores.casting_notes(
+            saga, magus, spell.technique, spell.form, vis
+        ):
+            lines.append(f"[dim]{escape(note)}[/]")
     return lines
 
 

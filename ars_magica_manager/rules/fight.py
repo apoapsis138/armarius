@@ -753,42 +753,38 @@ def _splash(chances: Odds, mine: Figures, theirs: Figures) -> None:
     )
 
 
-def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds:
-    """`who`'s blow at `target` with `action`, before the dice."""
-    mine = who.vanguard.figures(bare=action == GRAPPLE)
-    theirs = target.vanguard.figures()
-    if mine.attack is None:
-        return Odds(blocked=f"{who.name} has no attack and waits.")
+def _blocked(
+    saga: Saga, fight: Fight, who: Unit, target: Unit, action: str, mine: Figures
+) -> str:
+    """Why the blow can't be struck ("" if it can): a defender to strike
+    first, out of reach, or an invisible foe not yet located."""
     guards = defenders_of(saga, fight, target)
     if guards and action not in (SPLIT, BREAK_FREE):
         names = ", ".join(f.name for f in guards)
-        return Odds(
-            blocked=f"{target.name} is defended by {names}: strike them first "
-            "(DE p. 397)."
-        )
-    unreached = (
-        f"{who.name} can't reach {target.name} at range."
-        if fight.range > 0 and not mine.missile
-        else _invisible_block(saga, fight, who, target, action)
-    )
-    if unreached:
-        return Odds(blocked=unreached)
-    chances = Odds(attack=[Term("Attack", mine.attack)])
+        return f"{target.name} is defended by {names}: strike them first (DE p. 397)."
+    if fight.range > 0 and not mine.missile:
+        return f"{who.name} can't reach {target.name} at range."
+    return _invisible_block(saga, fight, who, target, action)
+
+
+def _attack_terms(
+    fight: Fight, who: Unit, action: str, mine: Figures, attack: int
+) -> list[Term]:
+    """What the attacker's Attack Total is made of."""
+    terms = [Term("Attack", attack)]
     bonus = who.bonus()
     if who.group is not None and who.group.bonus_to == "attack" and bonus:
-        chances.attack.append(
-            Term("Group bonus", bonus, f"Group bonus +{bonus} to Attack")
-        )
+        terms.append(Term("Group bonus", bonus, f"Group bonus +{bonus} to Attack"))
     ride = ride_bonus(who.vanguard)
     if ride:
-        chances.attack.append(Term("Mounted", ride, f"Mounted: +{ride} to Attack"))
+        terms.append(Term("Mounted", ride, f"Mounted: +{ride} to Attack"))
     if mine.missile and range_penalty(fight):
         penalty = range_penalty(fight)
-        chances.attack.append(
+        terms.append(
             Term("Range", penalty, f"{fight.range} range increments: {penalty}")
         )
     if action in (EXERTION, CHARGE):
-        chances.attack.append(
+        terms.append(
             Term(
                 action,
                 mine.ability,
@@ -798,19 +794,24 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
             )
         )
     if action == SCUFFLE and mine.damage != mine.bare_damage:
-        chances.attack.append(
+        terms.append(
             Term(
                 "Scuffling with a weapon",
                 SCUFFLE_PENALTY,
                 f"Scuffling with a weapon: {SCUFFLE_PENALTY}",
             )
         )
-    chances.defence = [
+    return terms
+
+
+def _defence_terms(target: Unit, mine: Figures, theirs: Figures) -> list[Term]:
+    """What the target's Defence Total is made of."""
+    terms = [
         Term("Defence", theirs.missile_defence if mine.missile else theirs.defence)
     ]
     their_bonus = target.bonus()
     if target.group is not None and target.group.bonus_to == "defence" and their_bonus:
-        chances.defence.append(
+        terms.append(
             Term(
                 "Group bonus",
                 their_bonus,
@@ -819,10 +820,17 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
         )
     their_ride = ride_bonus(target.vanguard)
     if their_ride:
-        chances.defence.append(
+        terms.append(
             Term("Mounted", their_ride, f"{target.name} mounted: +{their_ride}")
         )
-    _invisible_terms(saga, fight, who, target, chances, mine.missile)
+    return terms
+
+
+def _harm_terms(
+    chances: Odds, who: Unit, target: Unit, action: str, mine: Figures, theirs: Figures
+) -> None:
+    """The damage and the Soak, with Greek Fire's splash and a Form Bonus
+    against the blow's Form."""
     damage = mine.bare_damage if action in (SCUFFLE, GRAPPLE) else mine.damage or 0
     chances.damage = [Term("Damage", damage)]
     chances.soak = [Term("Soak", theirs.soak)]
@@ -834,6 +842,13 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
         chances.soak.append(
             Term(f"{form} Form Bonus", form_bonus, f"{form} Form Bonus +{form_bonus}")
         )
+
+
+def _action_need(
+    fight: Fight, chances: Odds, who: Unit, target: Unit, action: str
+) -> None:
+    """The special effects some actions need to succeed, and the blows that
+    can't be struck (a group that can't be split, a foe already held)."""
     if action in combat_groups.SPECIAL_EFFECTS:
         chances.need = combat_groups.SPECIAL_EFFECTS[action]
     elif action == SPLIT:
@@ -844,6 +859,24 @@ def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds
         held = grip_on(fight, target.id)
         if held is not None and held.by != who.id:
             chances.blocked = f"{target.name} is already held."
+
+
+def odds(saga: Saga, fight: Fight, who: Unit, target: Unit, action: str) -> Odds:
+    """`who`'s blow at `target` with `action`, before the dice."""
+    mine = who.vanguard.figures(bare=action == GRAPPLE)
+    theirs = target.vanguard.figures()
+    if mine.attack is None:
+        return Odds(blocked=f"{who.name} has no attack and waits.")
+    blocked = _blocked(saga, fight, who, target, action, mine)
+    if blocked:
+        return Odds(blocked=blocked)
+    chances = Odds(
+        attack=_attack_terms(fight, who, action, mine, mine.attack),
+        defence=_defence_terms(target, mine, theirs),
+    )
+    _invisible_terms(saga, fight, who, target, chances, mine.missile)
+    _harm_terms(chances, who, target, action, mine, theirs)
+    _action_need(fight, chances, who, target, action)
     return chances
 
 

@@ -72,7 +72,7 @@ from .. import sheet_text as st
 from .. import spells as spl
 from ..actions import NodeKind
 from ..arts import ART_ABBREVIATIONS, FORMS, TECHNIQUES
-from ..commands import Command, SectionOps
+from ..commands import Command, Form, SectionOps
 from ..forms import ability as ability_forms
 from ..forms import agents as agent_forms
 from ..forms import character as cf
@@ -859,61 +859,29 @@ class CharacterSheet(QWidget):
             ),
         )
 
+    def _edit_buttons(
+        self, forms: dict[str, Form], *names: str, label: str = "Edit"
+    ) -> dict[str, Callable[[], None]]:
+        """The Edit buttons for the forms `names`: one called `label`, or one
+        per form named for it."""
+        return {
+            (label if len(names) == 1 else name): (
+                lambda form=forms[name]: self.run(form)
+            )
+            for name in names
+        }
+
     def _description(self) -> QWidget:
         """Who the character is, in the book's type: facts with small-caps
         labels, prose with a rubricated initial, and traits, wounds and
         Fatigue drawn rather than listed."""
         saga, c, p = self.saga, self.character, self.p
         forms = cf.description_edits(saga, c)
-
-        def edits(*names: str, label: str = "Edit") -> dict[str, Callable[[], None]]:
-            """The Edit buttons for the forms `names`: one called `label`,
-            or one per form named for it."""
-            return {
-                (label if len(names) == 1 else name): (
-                    lambda form=forms[name]: self.run(form)
-                )
-                for name in names
-            }
-
         parts: list[QWidget] = [
             section("At a Glance", p, fact_grid(cs.glance_facts(saga, c), p, 6))
         ]
         if c.type == "magus":
-            sigil = c.hermetic.wizards_sigil
-            lineage: list[QWidget] = [fact_grid(cs.hermetic_facts(c), p)]
-            if sigil:
-                lineage.append(_sigil(sigil, p))
-            voting = sigils.sigil_text(saga, c)
-            if voting:
-                lineage.append(TextBlock(escape(voting), p))
-            lineage.append(TextBlock(lt.access_text(saga, c), p))
-            parts.append(
-                section(
-                    "Hermetic Background",
-                    p,
-                    *lineage,
-                    edits=edits("Hermetic Background"),
-                    buttons=self._texts_read(),
-                )
-            )
-            familiar = saga.familiar_of(c.id)
-            if familiar is not None:
-                parts.append(
-                    section(
-                        "Familiar",
-                        p,
-                        familiar_card(
-                            fs.familiar_card(saga, familiar), p, self.open_familiar
-                        ),
-                    )
-                )
-            elif self.placer is not None:
-                bind = self.placer.new_card(
-                    "Familiar", hint="Bind one: the familiar is shown here."
-                )
-                if bind is not None:
-                    parts.append(section("Familiar", p, card_grid([bind], 2)))
+            parts += self._hermetic_sections(forms)
         # One above the other: side by side, with their buttons, they are
         # wider than the chapter beside the inspector.
         parts.append(
@@ -936,6 +904,58 @@ class CharacterSheet(QWidget):
                 self._placed("Reputations"),
             )
         )
+        parts += self._biography_sections(forms)
+        parts += self._health_sections(forms)
+        parts.append(self._constant_effects())
+        if cover_forms.shown(c):
+            parts.append(self._covers())
+        return scrolling_page(p, *parts)
+
+    def _hermetic_sections(self, forms: dict[str, Form]) -> list[QWidget]:
+        """A magus's Hermetic Background, and his familiar (or the card to
+        bind one)."""
+        saga, c, p = self.saga, self.character, self.p
+        parts: list[QWidget] = []
+        sigil = c.hermetic.wizards_sigil
+        lineage: list[QWidget] = [fact_grid(cs.hermetic_facts(c), p)]
+        if sigil:
+            lineage.append(_sigil(sigil, p))
+        voting = sigils.sigil_text(saga, c)
+        if voting:
+            lineage.append(TextBlock(escape(voting), p))
+        lineage.append(TextBlock(lt.access_text(saga, c), p))
+        parts.append(
+            section(
+                "Hermetic Background",
+                p,
+                *lineage,
+                edits=self._edit_buttons(forms, "Hermetic Background"),
+                buttons=self._texts_read(),
+            )
+        )
+        familiar = saga.familiar_of(c.id)
+        if familiar is not None:
+            parts.append(
+                section(
+                    "Familiar",
+                    p,
+                    familiar_card(
+                        fs.familiar_card(saga, familiar), p, self.open_familiar
+                    ),
+                )
+            )
+        elif self.placer is not None:
+            bind = self.placer.new_card(
+                "Familiar", hint="Bind one: the familiar is shown here."
+            )
+            if bind is not None:
+                parts.append(section("Familiar", p, card_grid([bind], 2)))
+        return parts
+
+    def _biography_sections(self, forms: dict[str, Form]) -> list[QWidget]:
+        """Biographical Detail, connections, lineage and marriages."""
+        saga, c, p = self.saga, self.character, self.p
+        parts: list[QWidget] = []
         parts.append(
             section(
                 "Biographical Detail",
@@ -945,7 +965,7 @@ class CharacterSheet(QWidget):
                 prose(c.description.physical_description, p, initial=False),
                 _subheading("Biography", p),
                 prose(c.description.biography, p),
-                edits=edits("Biographical Detail"),
+                edits=self._edit_buttons(forms, "Biographical Detail"),
             )
         )
         parts.append(connections_section(saga, c, p, self.run))
@@ -959,6 +979,12 @@ class CharacterSheet(QWidget):
             )
             wed.setObjectName(marriages.CHARACTER_SECTION)
             parts.append(wed)
+        return parts
+
+    def _health_sections(self, forms: dict[str, Form]) -> list[QWidget]:
+        """Health (wounds and Fatigue) and Aging."""
+        saga, c, p = self.saga, self.character, self.p
+        parts: list[QWidget] = []
         health: list[QWidget] = [
             wound_track(cs.wound_track(c), p),
             _subheading("Fatigue", p),
@@ -970,7 +996,7 @@ class CharacterSheet(QWidget):
                 "Health",
                 p,
                 *health,
-                edits=edits("Wounds", "Fatigue"),
+                edits=self._edit_buttons(forms, "Wounds", "Fatigue"),
                 buttons=self._placed("Health"),
             )
         )
@@ -986,14 +1012,11 @@ class CharacterSheet(QWidget):
                 p,
                 *([fact_grid(aging, p, 4)] if aging else []),
                 *([prose(effects, p, initial=False)] if effects or not aging else []),
-                edits=edits("Aging"),
+                edits=self._edit_buttons(forms, "Aging"),
                 buttons=self._placed("Aging"),
             )
         )
-        parts.append(self._constant_effects())
-        if cover_forms.shown(c):
-            parts.append(self._covers())
-        return scrolling_page(p, *parts)
+        return parts
 
     def _placed(self, section_name: str) -> list[QWidget]:
         """The More menu's buttons placed beside `section_name`."""

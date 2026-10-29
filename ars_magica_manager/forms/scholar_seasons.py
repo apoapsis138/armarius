@@ -36,7 +36,43 @@ def _artwork_fields(
     art = (plan.artwork if plan else None) or ArtworkPlan()
     on = activity_is(CREATE_ART)
     ids = {vf.vf_id for vf in character.virtues_flaws}
-    found = [
+    found = _piece_fields(character, art, on)
+    if artistry.LIFE_LINKED in ids:
+        found.append(
+            DialogField(
+                "art_wound",
+                "Self-inflicted wound",
+                "select",
+                art.wound,
+                options=[(w or "(none)", w) for w in ART_WOUNDS],
+                show_if=on,
+                hint="Life-Linked Art: +1 Light, +3 Medium, +6 Heavy; it won't "
+                "heal until the piece is done (A&A p. 134).",
+            )
+        )
+    if artistry.MAESTRO in ids:
+        found += _maestro_fields(art, on)
+    if artistry.inclination_form(character):
+        found.append(
+            DialogField(
+                "art_instill",
+                "Instill an effect of level",
+                "int",
+                art.instill_level,
+                show_if=on,
+                hint=f"A Personal, constant {artistry.inclination_form(character)} "
+                "effect, no requisites; 0 for none (A&A p. 135).",
+            )
+        )
+    return found
+
+
+def _piece_fields(
+    character: Character, art: ArtworkPlan, on: ShowIf
+) -> list[DialogField]:
+    """The piece itself: its kind and Size, the assistants, the time and
+    overtime, a liberal art, an experiment and a muse."""
+    return [
         DialogField(
             "art_base",
             "Kind of piece",
@@ -107,62 +143,39 @@ def _artwork_fields(
             hint="+1 per 5 points a muse sacrifices (A&A p. 124).",
         ),
     ]
-    if artistry.LIFE_LINKED in ids:
-        found.append(
-            DialogField(
-                "art_wound",
-                "Self-inflicted wound",
-                "select",
-                art.wound,
-                options=[(w or "(none)", w) for w in ART_WOUNDS],
-                show_if=on,
-                hint="Life-Linked Art: +1 Light, +3 Medium, +6 Heavy; it won't "
-                "heal until the piece is done (A&A p. 134).",
-            )
-        )
-    if artistry.MAESTRO in ids:
-        found += [
-            DialogField(
-                "art_realm",
-                "His realm",
-                "select",
-                art.realm or None,
-                options=[(r, r) for r in REALMS],
-                allow_blank=True,
-                show_if=on,
-                hint="The realm the maestro is aligned with.",
-            ),
-            DialogField(
-                "art_aura",
-                "Aura where he works",
-                "int",
-                art.aura,
-                show_if=on,
-                hint="Its own realm's: + aura / 5, rounded up (A&A p. 124).",
-            ),
-            DialogField(
-                "art_aura_realm",
-                "Its realm",
-                "select",
-                art.aura_realm or None,
-                options=[(r, r) for r in REALMS],
-                allow_blank=True,
-                show_if=on,
-            ),
-        ]
-    if artistry.inclination_form(character):
-        found.append(
-            DialogField(
-                "art_instill",
-                "Instill an effect of level",
-                "int",
-                art.instill_level,
-                show_if=on,
-                hint=f"A Personal, constant {artistry.inclination_form(character)} "
-                "effect, no requisites; 0 for none (A&A p. 135).",
-            )
-        )
-    return found
+
+
+def _maestro_fields(art: ArtworkPlan, on: ShowIf) -> list[DialogField]:
+    """The realm a maestro is aligned with, and the aura where he works."""
+    return [
+        DialogField(
+            "art_realm",
+            "His realm",
+            "select",
+            art.realm or None,
+            options=[(r, r) for r in REALMS],
+            allow_blank=True,
+            show_if=on,
+            hint="The realm the maestro is aligned with.",
+        ),
+        DialogField(
+            "art_aura",
+            "Aura where he works",
+            "int",
+            art.aura,
+            show_if=on,
+            hint="Its own realm's: + aura / 5, rounded up (A&A p. 124).",
+        ),
+        DialogField(
+            "art_aura_realm",
+            "Its realm",
+            "select",
+            art.aura_realm or None,
+            options=[(r, r) for r in REALMS],
+            allow_blank=True,
+            show_if=on,
+        ),
+    ]
 
 
 def _scholar_fields(

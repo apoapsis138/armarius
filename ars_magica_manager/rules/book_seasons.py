@@ -510,6 +510,8 @@ def _book_id(saga: Saga, name: str) -> str:
 def _copy(
     saga: Saga, character: Character, plan: SeasonPlan, com: int
 ) -> tuple[list[str], BookWork | None]:
+    """Copying a summa or tractatus, or translating it into another
+    language."""
     book = _book(saga, plan.book_id)
     if book is None:
         return ["Choose the book."], None
@@ -523,44 +525,62 @@ def _copy(
             "the librarian's leave (Guardians of the Forests p. 55)."
         ], None
     source = language_score(character, book.language or "Latin")
+    if plan.activity == COPY_BOOK:
+        return _transcribe(saga, character, plan, book, source)
+    return _translate(saga, character, plan, book, source, com)
+
+
+def _transcribe(
+    saga: Saga, character: Character, plan: SeasonPlan, book: Book, source: int
+) -> tuple[list[str], BookWork | None]:
+    """Copying the book in its own language: a summa over the seasons, a
+    tractatus in one (or three copies, quickly)."""
     is_summa = book.type in SUMMA_TYPES
     is_art = bool(book.art)
     level = book.level or 0
     needed = (level if is_art else 5 * level) if is_summa else 1
-    if plan.activity == COPY_BOOK:
-        if source < 3:
-            return [f"Copying needs {book.language} at 3."], None
-        if (is_art or book.ability == PARMA) and ability_level(
-            character, "Magic Theory"
-        ) < 1:
-            return [
-                f"Copying a book on {book.art or PARMA} needs Magic Theory 1."
-            ], None
-        if supernatural_ability(book.ability) and not _can_copy_supernatural(
-            character, book.ability
-        ):
-            return [
-                f"Copying a book on {book.ability} needs it, or a Realm Lore, at 1."
-            ], None
-        scribe = ability_level(character, "Profession: Scribe") + texts_bonus(
-            saga, character, plan
-        )
-        quick = plan.quick
-        quality = (book.quality or 0) - (1 if quick else 0)
-        copy = _copy_of(saga, character, book, quality, book.language)
-        if not is_summa:
-            return [], BookWork(
-                points_gained=1, needed=1, made=copy, copies=3 if quick else 1
-            )
-        gained = (18 + 3 * scribe) if quick else (6 + scribe)
+    if source < 3:
+        return [f"Copying needs {book.language} at 3."], None
+    if (is_art or book.ability == PARMA) and ability_level(
+        character, "Magic Theory"
+    ) < 1:
+        return [f"Copying a book on {book.art or PARMA} needs Magic Theory 1."], None
+    if supernatural_ability(book.ability) and not _can_copy_supernatural(
+        character, book.ability
+    ):
+        return [
+            f"Copying a book on {book.ability} needs it, or a Realm Lore, at 1."
+        ], None
+    scribe = ability_level(character, "Profession: Scribe") + texts_bonus(
+        saga, character, plan
+    )
+    quick = plan.quick
+    quality = (book.quality or 0) - (1 if quick else 0)
+    copy = _copy_of(saga, character, book, quality, book.language)
+    if not is_summa:
         return [], BookWork(
-            points_before=project_points(saga, project_key(plan)),
-            points_gained=gained,
-            needed=needed,
-            made=copy,
-            copies=1,
+            points_gained=1, needed=1, made=copy, copies=3 if quick else 1
         )
-    # Translating.
+    gained = (18 + 3 * scribe) if quick else (6 + scribe)
+    return [], BookWork(
+        points_before=project_points(saga, project_key(plan)),
+        points_gained=gained,
+        needed=needed,
+        made=copy,
+        copies=1,
+    )
+
+
+def _translate(
+    saga: Saga,
+    character: Character,
+    plan: SeasonPlan,
+    book: Book,
+    source: int,
+    com: int,
+) -> tuple[list[str], BookWork | None]:
+    """Translating the book into another language, losing quality by how well
+    the translator knows both."""
     target = plan.language.strip()
     if not target or target.lower() == (book.language or "Latin").lower():
         return ["Choose the language to translate into."], None
@@ -584,12 +604,12 @@ def _copy(
         culture_lore=plan.culture_lore,
     )
     copy = _copy_of(saga, character, book, (book.quality or 0) - loss, target)
-    if not is_summa:
+    if book.type not in SUMMA_TYPES:
         return [], BookWork(points_gained=1, needed=1, made=copy, copies=1)
     return [], BookWork(
         points_before=project_points(saga, project_key(plan)),
         points_gained=max(1, com + source),
-        needed=level,
+        needed=book.level or 0,
         made=copy,
         copies=1,
     )

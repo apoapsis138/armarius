@@ -135,12 +135,24 @@ def _check(
 def later_life_checks(saga: Saga, record: Record) -> list[Check]:
     assert isinstance(record, Character)
     character = record
+    return [
+        *_budget_checks(saga, character),
+        *_learnable_checks(saga, character),
+        *_virtue_xp_checks(character),
+        *_free_score_checks(character),
+        *_cap_checks(saga, character),
+    ]
+
+
+def _budget_checks(saga: Saga, character: Character) -> list[Check]:
+    """Later Life xp spent against the years bought: not over, and (as
+    advice) not left unspent."""
     budget = later_life_budget(saga, character)
     used = spent(character, "later_life")
-    years = bought_years(saga, character)
     found = [
         _check(
-            f"Later Life xp: {years} years at {xp_a_year(character)}",
+            f"Later Life xp: {bought_years(saga, character)} years at "
+            f"{xp_a_year(character)}",
             used <= budget,
             f"{used} of {budget}"
             + (f", {used - budget} too many" if used > budget else ""),
@@ -152,6 +164,13 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 "Later Life xp spent", False, f"{budget - used} unspent", advice=True
             )
         )
+    return found
+
+
+def _learnable_checks(saga: Saga, character: Character) -> list[Check]:
+    """Later Life xp goes only on Abilities the character may learn, and a
+    Gifted non-magus learns one Supernatural Ability without its Virtue."""
+    found: list[Check] = []
     wrong = sorted(
         {
             x.target
@@ -191,6 +210,13 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 access.SOURCE,
             )
         )
+    return found
+
+
+def _virtue_xp_checks(character: Character) -> list[Check]:
+    """For each Virtue that grants xp: spent within it, none left over (as
+    advice), and only on what it names."""
+    found: list[Check] = []
     for vf_id, rule in access.virtue_xp(character).items():
         name = access.pool_name(vf_id)
         own = [x for x in entries(character, "virtue") if x.note == vf_id]
@@ -219,6 +245,13 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
             found.append(
                 _check(f"{name} xp only on what it names", False, ", ".join(bad))
             )
+    return found
+
+
+def _free_score_checks(character: Character) -> list[Check]:
+    """The free scores a Virtue grants: only those, at the right xp, and all
+    recorded (as advice)."""
+    found: list[Check] = []
     granted = free_score_abilities(character)
     for entry in entries(character, "free"):
         ok = entry.target in granted and entry.xp == FREE_SUPERNATURAL_XP
@@ -240,8 +273,13 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
                 advice=True,
             )
         )
-    # An animal's cap is read at its age scaled to a human lifespan, and
-    # the book leaves it to the storyguide: advice.
+    return found
+
+
+def _cap_checks(saga: Saga, character: Character) -> list[Check]:
+    """No Ability above the cap at creation. An animal's cap is read at its
+    age scaled to a human lifespan, and the book leaves it to the
+    storyguide: advice."""
     years = animal_grogs.cap_age(saga, character)
     animal = animal_grogs.is_animal(character)
     cap = access.character_ability_cap(character, years)
@@ -260,7 +298,7 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
         label = f"No Ability above {cap} at creation"
     if animal:
         label += f" (as a person of {years})"
-    found.append(
+    return [
         _check(
             label,
             not over,
@@ -268,5 +306,4 @@ def later_life_checks(saga: Saga, record: Record) -> list[Check]:
             animal_grogs.SOURCE if animal else access.CAP_SOURCE,
             advice=animal,
         )
-    )
-    return found
+    ]

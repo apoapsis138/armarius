@@ -449,6 +449,54 @@ def _supplement_title(activity: str, values: dict[str, Any]) -> str:
     return _pick(activity, values, _TITLE_KEYS) or ""
 
 
+def _initiation_plan_values(
+    character: Character, values: dict[str, Any]
+) -> dict[str, Any]:
+    """The plan values of an Initiation: its Virtue, its Ordeal and what the
+    Ordeal costs, the script (the hedge's, or the components chosen) and the
+    sacrifice made."""
+    found: dict[str, Any] = {}
+    virtue = values.get("mystery_virtue")
+    found["effect_params"] = dict(virtue.params) if virtue else {}
+    kind = values.get("ordeal_kind") or ""
+    found["ordeal_kind"] = kind
+    flaw = values.get("ordeal_flaw") if kind in (sw.GAIN_FLAW, sw.RAISE_FLAW) else None
+    found["device_id"] = flaw.vf_id if flaw else None
+    found["ordeal_params"] = dict(flaw.params) if flaw else {}
+    lost = _own_vf(
+        character,
+        values.get("ordeal_lost_virtue")
+        if kind == sw.LOSE_VIRTUE
+        else values.get("ordeal_raised_flaw")
+        if kind == sw.RAISE_FLAW
+        else None,
+    )
+    found["ordeal_lost_id"] = lost.vf_id if lost else None
+    found["ordeal_lost_params"] = dict(lost.params) if lost else {}
+    found["ordeal_condition"] = (values.get("ordeal_condition") or "").strip()
+    found["familiar_ever_bound"] = bool(values.get("familiar_ever_bound"))
+    found["script_variation"] = values.get("script_variation") or ""
+    found["variation_bonus"] = (
+        values.get("variation_bonus") or 0 if found["script_variation"] else 0
+    )
+    found["hedge_script"] = values.get("hedge_script") or ""
+    found["script_components"] = (
+        [] if found["hedge_script"] else list(values.get(script_forms.KEY) or [])
+    )
+    found["knows_power"] = bool(values.get("knows_power"))
+    found["sacrifice"] = values.get("sacrifice") or ""
+    vis_given = found["sacrifice"] == "vis"
+    found["sacrifice_art"] = (values.get("sacrifice_art") or "") if vis_given else ""
+    found["sacrifice_pawns"] = (
+        max(0, values.get("sacrifice_pawns") or 0) if vis_given else 0
+    )
+    experimental = bool(values.get("experimental_script"))
+    found["experimental_script"] = experimental
+    found["risk"] = values.get("script_risk") or 0 if experimental else 0
+    found["script_sympathy"] = values.get("script_sympathy") or 0 if experimental else 0
+    return found
+
+
 def _supplement_plan_values(
     character: Character, activity: str, values: dict[str, Any]
 ) -> dict[str, Any]:
@@ -466,50 +514,7 @@ def _supplement_plan_values(
     if activity == "produce_remedies":
         found["extra_vis"] = values.get("doses") or 0
     if activity == "undergo_initiation":
-        virtue = values.get("mystery_virtue")
-        found["effect_params"] = dict(virtue.params) if virtue else {}
-        kind = values.get("ordeal_kind") or ""
-        found["ordeal_kind"] = kind
-        flaw = (
-            values.get("ordeal_flaw") if kind in (sw.GAIN_FLAW, sw.RAISE_FLAW) else None
-        )
-        found["device_id"] = flaw.vf_id if flaw else None
-        found["ordeal_params"] = dict(flaw.params) if flaw else {}
-        lost = _own_vf(
-            character,
-            values.get("ordeal_lost_virtue")
-            if kind == sw.LOSE_VIRTUE
-            else values.get("ordeal_raised_flaw")
-            if kind == sw.RAISE_FLAW
-            else None,
-        )
-        found["ordeal_lost_id"] = lost.vf_id if lost else None
-        found["ordeal_lost_params"] = dict(lost.params) if lost else {}
-        found["ordeal_condition"] = (values.get("ordeal_condition") or "").strip()
-        found["familiar_ever_bound"] = bool(values.get("familiar_ever_bound"))
-        found["script_variation"] = values.get("script_variation") or ""
-        found["variation_bonus"] = (
-            values.get("variation_bonus") or 0 if found["script_variation"] else 0
-        )
-        found["hedge_script"] = values.get("hedge_script") or ""
-        found["script_components"] = (
-            [] if found["hedge_script"] else list(values.get(script_forms.KEY) or [])
-        )
-        found["knows_power"] = bool(values.get("knows_power"))
-        found["sacrifice"] = values.get("sacrifice") or ""
-        vis_given = found["sacrifice"] == "vis"
-        found["sacrifice_art"] = (
-            (values.get("sacrifice_art") or "") if vis_given else ""
-        )
-        found["sacrifice_pawns"] = (
-            max(0, values.get("sacrifice_pawns") or 0) if vis_given else 0
-        )
-        experimental = bool(values.get("experimental_script"))
-        found["experimental_script"] = experimental
-        found["risk"] = values.get("script_risk") or 0 if experimental else 0
-        found["script_sympathy"] = (
-            values.get("script_sympathy") or 0 if experimental else 0
-        )
+        found.update(_initiation_plan_values(character, values))
     if activity == "inspeximus":
         found["book_id"] = values.get("summa_id")
     if activity == "open_tradition_gift":
@@ -1378,20 +1383,8 @@ def study_fields(
     saga: Saga, character: Character, existing: SeasonPlan | None
 ) -> list[DialogField]:
     """The Activity, and the Source Quality, book or teacher it studies from."""
-    books = sourcebooks.saga_books(saga)
     gloss = attr(existing, "gloss", False)
-    # Glossing is Covenants': off the form with the book out of play, unless
-    # the plan already glosses.
-    hidden = (
-        set()
-        if gloss or sourcebooks.in_play(book_kinds.GLOSS.book, books)
-        else {"gloss"}
-    )
-    # Fields for a Virtue or Flaw only its holders see.
-    if not study_virtues.needs_presence(character):
-        hidden.add("art_present")
-    if not study_virtues.shows_insight(character):
-        hidden.add("insight_arts")
+    hidden = _hidden_study_fields(saga, character, bool(gloss))
     fields = [
         DialogField(
             "activity",
@@ -1420,6 +1413,35 @@ def study_fields(
                 "the storyguide's 5 to 10. Others: see the line above Save."
             ),
         ),
+        *_reading_fields(saga, character, existing, gloss),
+        _teacher_field(saga, character, existing),
+    ]
+    return [f for f in fields if f.key not in hidden]
+
+
+def _hidden_study_fields(saga: Saga, character: Character, gloss: bool) -> set[str]:
+    """The study fields left off the form: glossing with the book out of play
+    (unless the plan already glosses), and the fields for a Virtue or Flaw
+    only its holders see."""
+    hidden = (
+        set()
+        if gloss
+        or sourcebooks.in_play(book_kinds.GLOSS.book, sourcebooks.saga_books(saga))
+        else {"gloss"}
+    )
+    if not study_virtues.needs_presence(character):
+        hidden.add("art_present")
+    if not study_virtues.shows_insight(character):
+        hidden.add("insight_arts")
+    return hidden
+
+
+def _reading_fields(
+    saga: Saga, character: Character, existing: SeasonPlan | None, gloss: Any
+) -> list[DialogField]:
+    """What reading a book and studying vis ask: the book, glossing it, the
+    Art present and the Secondary Insight."""
+    return [
         DialogField(
             "book_id",
             "Book",
@@ -1466,37 +1488,43 @@ def study_fields(
                 season_rules.READ, season_rules.TAUGHT, season_rules.VIS_STUDY
             ),
         ),
-        DialogField(
-            "teacher_id",
-            "Teacher / master",
-            "select",
-            attr(existing, "teacher_id", None),
-            options=[
-                (escape(c.name), c.id)
-                for c in saga.characters
-                if c.id != character.id and c.type != "grog"
-            ]
-            + [
-                (escape(c.name), c.id)
-                for c in saga.characters
-                if c.id != character.id and c.type == "grog"
-            ],
-            allow_blank=True,
-            show_if=_activity_is(
-                season_rules.TAUGHT,
-                season_rules.TRAINED,
-                laboratory_seasons.ASSIST,
-                "undergo_initiation",
-                "record_lectures",
-                "make_wondrous_item",
-            ),
-            hint="A teacher plans Teach for the same season; the magus you "
-            "assist plans lab work. An Initiation's Mystagogue: none for a "
-            "self-initiation. A wondrous item's one assistant (half their "
-            "Craft).",
-        ),
     ]
-    return [f for f in fields if f.key not in hidden]
+
+
+def _teacher_field(
+    saga: Saga, character: Character, existing: SeasonPlan | None
+) -> DialogField:
+    """The teacher, master, Mystagogue or assisted magus: the other
+    characters, grogs last."""
+    return DialogField(
+        "teacher_id",
+        "Teacher / master",
+        "select",
+        attr(existing, "teacher_id", None),
+        options=[
+            (escape(c.name), c.id)
+            for c in saga.characters
+            if c.id != character.id and c.type != "grog"
+        ]
+        + [
+            (escape(c.name), c.id)
+            for c in saga.characters
+            if c.id != character.id and c.type == "grog"
+        ],
+        allow_blank=True,
+        show_if=_activity_is(
+            season_rules.TAUGHT,
+            season_rules.TRAINED,
+            laboratory_seasons.ASSIST,
+            "undergo_initiation",
+            "record_lectures",
+            "make_wondrous_item",
+        ),
+        hint="A teacher plans Teach for the same season; the magus you "
+        "assist plans lab work. An Initiation's Mystagogue: none for a "
+        "self-initiation. A wondrous item's one assistant (half their "
+        "Craft).",
+    )
 
 
 def _subject_fields(

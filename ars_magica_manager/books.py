@@ -897,24 +897,11 @@ def _whole_number(raw: str, label: str) -> int | None:
         raise ValueError(f"{label} {raw!r} isn't a whole number") from None
 
 
-def _book_from_row(row: dict[str, str]) -> Book:
-    """One CSV row as a Book, or ValueError saying what's wrong with it."""
-    name = row.get("name", "").strip()
-    if not name:
-        raise ValueError("no name")
-    raw_type = row.get("type", "").strip()
-    book_type = _TYPE_ALIASES.get(" ".join(raw_type.lower().split()))
-    if book_type is None:
-        raise ValueError(f"unknown type {raw_type!r}" if raw_type else "no type")
-    book = Book(
-        id="",
-        name=name,
-        type=book_type,
-        language=row.get("language", "").strip() or "Latin",
-        author=row.get("author", "").strip(),
-        description=row.get("description", "").strip(),
-        year_published=_whole_number(row.get("year_published", ""), "Year"),
-    )
+def _subject_from_row(row: dict[str, str], book: Book) -> None:
+    """What the row's book is about, onto `book`: a Tractatus's kind, the Art
+    or Ability a summa or tractatus treats, the spell of a Lab Text or
+    Casting Tablet; ValueError for what is missing or unknown."""
+    book_type = book.type
     art = row.get("art", "").strip()
     ability = row.get("ability", "").strip()
     if book_type == "Tractatus":
@@ -937,6 +924,12 @@ def _book_from_row(row: dict[str, str]) -> Book:
         book.spell_name = row.get("spell", "").strip()
         if not book.spell_name:
             raise ValueError("no spell")
+
+
+def _numbers_from_row(row: dict[str, str], book: Book) -> None:
+    """The row's Level and Quality, onto `book` ("var" leaves one to be set
+    later); ValueError for a missing, malformed or negative one."""
+    book_type = book.type
     level_raw, quality_raw = row.get("level", ""), row.get("quality", "")
     if has_level(book_type):
         variable = _is_variable(level_raw) and book_type not in SPELL_TYPES
@@ -951,6 +944,28 @@ def _book_from_row(row: dict[str, str]) -> Book:
             raise ValueError("no Quality")
     if (book.level or 0) < 0 or (book.quality or 0) < 0:
         raise ValueError("a negative Level or Quality")
+
+
+def _book_from_row(row: dict[str, str]) -> Book:
+    """One CSV row as a Book, or ValueError saying what's wrong with it."""
+    name = row.get("name", "").strip()
+    if not name:
+        raise ValueError("no name")
+    raw_type = row.get("type", "").strip()
+    book_type = _TYPE_ALIASES.get(" ".join(raw_type.lower().split()))
+    if book_type is None:
+        raise ValueError(f"unknown type {raw_type!r}" if raw_type else "no type")
+    book = Book(
+        id="",
+        name=name,
+        type=book_type,
+        language=row.get("language", "").strip() or "Latin",
+        author=row.get("author", "").strip(),
+        description=row.get("description", "").strip(),
+        year_published=_whole_number(row.get("year_published", ""), "Year"),
+    )
+    _subject_from_row(row, book)
+    _numbers_from_row(row, book)
     # Until add_imported_books binds it: the name of the codex the rows that
     # share it are bound in.
     book.codex_id = row.get("codex", "").strip() or None

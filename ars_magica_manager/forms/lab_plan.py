@@ -309,8 +309,17 @@ class LabPlanForm:
     def _design_fields(self) -> list[DialogField]:
         """The spell's design: its name and effect, its Arts, Range /
         Duration / Target and its level."""
+        return [
+            *self._spell_name_fields(),
+            *self._spell_arts_fields(),
+            *self._parameter_fields(),
+            *self._size_fields(),
+        ]
+
+    def _spell_name_fields(self) -> list[DialogField]:
+        """Which spell to start from, its name and its effect."""
         design, inventing = self.design, _doing(lab_seasons.INVENT)
-        found = [
+        return [
             DialogField(
                 "start_from",
                 "Start from",
@@ -340,6 +349,13 @@ class LabPlanForm:
                 design.description if design else "",
                 show_if=inventing,
             ),
+        ]
+
+    def _spell_arts_fields(self) -> list[DialogField]:
+        """The guideline, Technique, Form, requisites, base level and whether
+        the spell is a Ritual."""
+        design, inventing = self.design, _doing(lab_seasons.INVENT)
+        return [
             DialogField(
                 "guideline",
                 "Guideline",
@@ -410,6 +426,12 @@ class LabPlanForm:
                 "bolt that is gone at once is not.",
             ),
         ]
+
+    def _parameter_fields(self) -> list[DialogField]:
+        """Range, Duration and Target: each chosen, or named and sized when
+        it is another."""
+        design, inventing = self.design, _doing(lab_seasons.INVENT)
+        found: list[DialogField] = []
         for kind in KINDS:
             current = getattr(design, kind) if design else FIRST_STEPS[kind]
             chosen, other_name = self.parameter_choice(kind, current)
@@ -442,7 +464,13 @@ class LabPlanForm:
                     show_if=other,
                 ),
             ]
-        found += [
+        return found
+
+    def _size_fields(self) -> list[DialogField]:
+        """The size or extra magnitudes, a recurring spell's timing and the
+        Base effect."""
+        design, inventing = self.design, _doing(lab_seasons.INVENT)
+        found = [
             DialogField(
                 "extra_magnitudes",
                 "Size / extra magnitudes",
@@ -982,6 +1010,16 @@ class LabPlanForm:
         """What every kind of lab work shares: experimenting, a similar
         spell, Focus and specialty, days away, other modifiers and notes."""
         plan = self.existing
+        return [
+            *self._experiment_fields(plan),
+            *self._theory_fields(plan),
+            *self.virtue_fields(plan),
+            *self._closing_fields(plan),
+        ]
+
+    def _experiment_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """Experimenting, its risk and research goal, and the similar spell
+        known."""
         known = [
             (escape(spell.name), spell.id)
             for k in self.magus.spells_known
@@ -990,7 +1028,7 @@ class LabPlanForm:
         experimental = _doing(*lab_seasons.EXPERIMENTAL)
         researching = _doing(*lab_seasons.EXPERIMENTAL, ex.STABILIZE)
         stabilizing = _doing(ex.STABILIZE)
-        found = [
+        return [
             DialogField(
                 "experimenting",
                 "Experiment",
@@ -1043,6 +1081,11 @@ class LabPlanForm:
                 ),
             ),
         ]
+
+    def _theory_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """The Magical Focus, the Magic Theory Specialty and Chthonic Magic,
+        for the magus who has them."""
+        found: list[DialogField] = []
         if lab_seasons.has_focus(self.magus):
             found.append(self._focus_field(plan))
         specialty = lab_seasons.theory_specialty(self.magus)
@@ -1069,8 +1112,12 @@ class LabPlanForm:
                     "p. 123).",
                 )
             )
-        found += self.virtue_fields(plan)
-        found += [
+        return found
+
+    def _closing_fields(self, plan: SeasonPlan | None) -> list[DialogField]:
+        """Days away, the recreated experiment and stage, other modifiers, the
+        assistant and notes."""
+        return [
             DialogField(
                 "days_away",
                 "Days away",
@@ -1108,7 +1155,6 @@ class LabPlanForm:
                 show_if=_chosen,
             ),
         ]
-        return found
 
     # -- the choices --------------------------------------------------------
 

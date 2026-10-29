@@ -10,7 +10,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 from pathlib import Path
-from typing import Any
+from typing import Any, TypedDict, Unpack
 
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
@@ -70,6 +70,29 @@ from .widgets import (
 CARDS_ACROSS = 3
 
 Open = Callable[[str], None]
+
+
+def _ignore(_id: str) -> None:
+    """The opener a page uses when its window gave none."""
+
+
+class SagaHooks(TypedDict, total=False):
+    """What the window gives a saga page to open the things its cards name,
+    run a command and place the More menu's buttons; any left out does
+    nothing."""
+
+    open_content: Callable[[], None]
+    open_seasons: Callable[[], None]
+    placer: Placer | None
+    open_character: Open
+    open_laboratory: Open
+    open_tribunal: Open
+    open_neighbour: Open
+    open_creature: Open
+    open_familiar: Open
+    run: Callable[[Command], None]
+    open_fight: Open
+    open_siege: Open
 
 
 def divider(words: str, p: Palette) -> QWidget:
@@ -853,24 +876,24 @@ class SagaPage(QWidget):
         saga: Saga,
         p: Palette,
         open_covenant: Callable[[str | None], None],
-        open_content: Callable[[], None] = lambda: None,
-        open_seasons: Callable[[], None] = lambda: None,
-        placer: Placer | None = None,
-        open_character: Open = lambda _id: None,
-        open_laboratory: Open = lambda _id: None,
-        open_tribunal: Open = lambda _id: None,
-        open_neighbour: Open = lambda _id: None,
-        open_creature: Open = lambda _id: None,
-        open_familiar: Open = lambda _id: None,
-        run: Callable[[Command], None] = lambda _command: None,
-        open_fight: Open = lambda _id: None,
-        open_siege: Open = lambda _id: None,
+        **hooks: Unpack[SagaHooks],
     ) -> None:
         super().__init__()
+        open_content = hooks.get("open_content", lambda: None)
+        open_seasons = hooks.get("open_seasons", lambda: None)
+        open_character = hooks.get("open_character", _ignore)
+        open_laboratory = hooks.get("open_laboratory", _ignore)
+        open_tribunal = hooks.get("open_tribunal", _ignore)
+        open_neighbour = hooks.get("open_neighbour", _ignore)
+        open_creature = hooks.get("open_creature", _ignore)
+        open_familiar = hooks.get("open_familiar", _ignore)
+        run = hooks.get("run", lambda _command: None)
+        open_fight = hooks.get("open_fight", _ignore)
+        open_siege = hooks.get("open_siege", _ignore)
         self.saga, self.p = saga, p
         self.open_tribunal = open_tribunal
         self.open_neighbour = open_neighbour
-        self.placer = placer
+        self.placer = hooks.get("placer")
         self.open_covenant = open_covenant
         self.open_character, self.open_laboratory = open_character, open_laboratory
         column = QVBoxLayout(self)

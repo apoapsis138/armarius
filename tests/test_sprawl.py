@@ -1,8 +1,8 @@
 """A function that grows past a limit is hard to read and to test. This
 measures every function outside the Tribunal packs (long data, not logic) and
-fails when a new one passes a limit. The functions already past one are
-listed in `KNOWN`; splitting one removes its entry, and the test also fails
-for an entry that no longer needs to be there.
+fails when one passes a limit. A function that has to stay past one is
+listed in `KNOWN` with the reason; the test also fails for an entry that no
+longer needs to be there. The list is empty today.
 
 Lines are from `def` to the last line. Branches count each if, conditional
 expression, loop, except clause, match case and boolean operator, so a long
@@ -19,25 +19,8 @@ MAX_BRANCHES = 30
 MAX_PARAMS = 12
 LONG_NEEDS = 8
 
-KNOWN: set[str] = {
-    "bestiary_book.py::build",
-    "books.py::_book_from_row",
-    "casting_text.py::known_spell_casting_lines",
-    "fights.py::_magic_fields",
-    "forms/acclaim.py::acclaim_fields",
-    "forms/lab_plan.py::LabPlanForm._common_fields",
-    "forms/lab_plan.py::LabPlanForm._design_fields",
-    "forms/scholar_seasons.py::_artwork_fields",
-    "forms/season.py::_supplement_plan_values",
-    "forms/season.py::study_fields",
-    "gui/character_sheet.py::CharacterSheet._description",
-    "gui/pages.py::SagaPage.__init__",
-    "normandy_meeting.py::Library.fields",
-    "rules/book_seasons.py::_copy",
-    "rules/casting_virtues.py::reminders",
-    "rules/creation_later.py::later_life_checks",
-    "rules/fight.py::odds",
-}
+#: Functions allowed to stay past a limit, as `module::qualified name`.
+KNOWN: set[str] = set()
 
 _BRANCHES = (
     ast.If,

@@ -95,11 +95,38 @@ def _label(award: ac.Award) -> str:
     return f"{award.label} ({award.rule})"
 
 
+def _needs(of: str, amount: str) -> Callable[[dict[str, Any]], bool]:
+    """Shown when the chosen award is measured by `amount`."""
+
+    def show(values: dict[str, Any]) -> bool:
+        award = _chosen(of, values)
+        return award is not None and award.amount == amount
+
+    return show
+
+
+def _in_text(of: str) -> Callable[[dict[str, Any]], bool]:
+    """Shown when the chosen award can be set down in a folio."""
+
+    def show(values: dict[str, Any]) -> bool:
+        award = _chosen(of, values)
+        return award is not None and award.folio
+
+    return show
+
+
 def acclaim_fields(character: Character) -> list[DialogField]:
     """What happened, its figure, and for the rolls their numbers."""
     of = house(character)
+    return _award_fields(of) + (
+        _roll_fields() if of == ac.BONISAGUS else _deed_fields(character)
+    )
+
+
+def _award_fields(of: str) -> list[DialogField]:
+    """What happened (an award, and for a Bonisagus a roll), which award, its
+    figures, and whether it is in a folio."""
     table = _table(of)
-    held = ac.acclaim_of(character)
     bonisagus = of == ac.BONISAGUS
     whats = [("Research made public" if bonisagus else "A deed", AWARD)]
     if bonisagus:
@@ -107,22 +134,7 @@ def acclaim_fields(character: Character) -> list[DialogField]:
             ("An argument over a folio's contents (a roll)", FOLIO),
             ("Decode Trianoma's cipher (a roll)", CIPHER),
         ]
-
-    def needs(amount: str) -> Callable[[dict[str, Any]], bool]:
-        def show(values: dict[str, Any]) -> bool:
-            award = _chosen(of, values)
-            return award is not None and award.amount == amount
-
-        return show
-
-    def text(values: dict[str, Any]) -> bool:
-        award = _chosen(of, values)
-        return award is not None and award.folio
-
-    def ignoble(values: dict[str, Any]) -> bool:
-        return points(of, values) < 0
-
-    fields = [
+    return [
         DialogField("what", "What", "select", AWARD, options=whats),
         DialogField(
             "award",
@@ -140,7 +152,7 @@ def acclaim_fields(character: Character) -> list[DialogField]:
             ),
         ),
         *(
-            DialogField(key, amount, "optint", None, show_if=needs(amount))
+            DialogField(key, amount, "optint", None, show_if=_needs(of, amount))
             for amount, key in AMOUNT_KEYS.items()
             if any(a.amount == amount for a in table.values())
         ),
@@ -149,26 +161,32 @@ def acclaim_fields(character: Character) -> list[DialogField]:
             "In a folio (twice the points)",
             "check",
             False,
-            show_if=text,
+            show_if=_in_text(of),
         ),
     ]
-    if not bonisagus:
-        fields.append(
-            DialogField(
-                "place",
-                "His place",
-                "select",
-                "competed",
-                options=[
-                    (f"{label} ({worth:+d} xp)", key)
-                    for key, (label, worth) in ac.TOURNAMENT.items()
-                ],
-                show_if=lambda v: _what(AWARD)(v) and v.get("award") == TOURNAMENT,
-                hint="Competing is 1; a finalist 2 more, the champion 2 more "
-                "again; a dismal showing -3 (HoH:S p. 31).",
-            )
+
+
+def _deed_fields(character: Character) -> list[DialogField]:
+    """What only a deed asks: a tournament's place, Famous put in it, and the
+    bad Reputation an ignoble act starts."""
+    of = house(character)
+    held = ac.acclaim_of(character)
+    fields = [
+        DialogField(
+            "place",
+            "His place",
+            "select",
+            "competed",
+            options=[
+                (f"{label} ({worth:+d} xp)", key)
+                for key, (label, worth) in ac.TOURNAMENT.items()
+            ],
+            show_if=lambda v: _what(AWARD)(v) and v.get("award") == TOURNAMENT,
+            hint="Competing is 1; a finalist 2 more, the champion 2 more "
+            "again; a dismal showing -3 (HoH:S p. 31).",
         )
-    if held is None and not bonisagus and ac.has(character, ac.FAMOUS):
+    ]
+    if held is None and ac.has(character, ac.FAMOUS):
         fields.append(
             DialogField(
                 "famous",
@@ -178,63 +196,66 @@ def acclaim_fields(character: Character) -> list[DialogField]:
                 show_if=_what(AWARD),
             )
         )
-    if not bonisagus and (held is None or held.score == 0):
+    if held is None or held.score == 0:
         fields.append(
             DialogField(
                 "bad_name",
                 "The bad Reputation it starts",
                 "text",
                 "",
-                show_if=ignoble,
+                show_if=lambda values: points(of, values) < 0,
                 hint="House Acclaim is at 0, so an ignoble act starts a bad "
                 "Reputation by the ordinary rules (DE p. 386).",
             )
         )
-    if bonisagus:
-        fields += [
-            DialogField(
-                "style",
-                "His way of arguing",
-                "select",
-                LOUD,
-                options=[
-                    ("Loudly: Presence + Leadership", LOUD),
-                    ("Craftily: Communication + Artes Liberales", CRAFTY),
-                ],
-                show_if=_what(FOLIO),
-            ),
-            DialogField(
-                "opponent",
-                "The other magus's total",
-                "int",
-                0,
-                show_if=_what(FOLIO),
-                hint="His own stress roll with his House Acclaim; the higher "
-                "total wins.",
-            ),
-            DialogField(
-                "communication",
-                "The author's Communication",
-                "int",
-                0,
-                show_if=_what(CIPHER),
-            ),
-            DialogField(
-                "intrigue",
-                "The author's Intrigue",
-                "int",
-                0,
-                show_if=_what(CIPHER),
-            ),
-            DialogField(
-                "decoded_before",
-                "Decoded one before (+3)",
-                "check",
-                False,
-                show_if=_what(CIPHER),
-            ),
-        ]
     return fields
+
+
+def _roll_fields() -> list[DialogField]:
+    """A Bonisagus's two rolls: arguing over a folio and decoding Trianoma's
+    cipher."""
+    return [
+        DialogField(
+            "style",
+            "His way of arguing",
+            "select",
+            LOUD,
+            options=[
+                ("Loudly: Presence + Leadership", LOUD),
+                ("Craftily: Communication + Artes Liberales", CRAFTY),
+            ],
+            show_if=_what(FOLIO),
+        ),
+        DialogField(
+            "opponent",
+            "The other magus's total",
+            "int",
+            0,
+            show_if=_what(FOLIO),
+            hint="His own stress roll with his House Acclaim; the higher total wins.",
+        ),
+        DialogField(
+            "communication",
+            "The author's Communication",
+            "int",
+            0,
+            show_if=_what(CIPHER),
+        ),
+        DialogField(
+            "intrigue",
+            "The author's Intrigue",
+            "int",
+            0,
+            show_if=_what(CIPHER),
+        ),
+        DialogField(
+            "decoded_before",
+            "Decoded one before (+3)",
+            "check",
+            False,
+            show_if=_what(CIPHER),
+        ),
+    ]
 
 
 def _score(character: Character) -> int:
