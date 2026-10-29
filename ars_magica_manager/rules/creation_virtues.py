@@ -16,7 +16,7 @@ from .. import catalog
 from ..models import Character, Saga, TraditionDef, VirtueFlawDef
 from . import animal_grogs, realms, transylvania
 from . import creation_access as access
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import THE_GIFT
 
 SOURCE = (
@@ -476,8 +476,7 @@ def max_minor_flaws(character: Character) -> int:
 def _check(
     label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("virtues_flaws", label, status, detail, source)
+    return judged("virtues_flaws", label, ok, detail, source, advice=advice)
 
 
 def _count(count: int, limit: int) -> str:

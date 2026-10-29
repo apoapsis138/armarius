@@ -10,7 +10,6 @@ from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
 from ....form_spec import DialogField, attr, description_field, pairs
 from ....forms import spell as spell_forms
-from ....markup import escape
 from ....models import (
     SPELL_DURATIONS,
     SPELL_RANGES,
@@ -181,27 +180,6 @@ def _spell_problem(values: dict[str, Any]) -> str | None:
     if unknown:
         return f"Requisites must be Arts (e.g. Rego, Corpus), not {', '.join(unknown)}."
     return None
-
-
-def _spell_live(values: dict[str, Any]) -> str:
-    """The form's live line: the spell's shorthand and magnitude."""
-    if not values.get("technique") or not values.get("form"):
-        return "[dim]Choose a Technique and a Form.[/]"
-    probe = Spell(
-        id="",
-        name="",
-        technique=values["technique"],
-        form=values["form"],
-        level=values.get("level"),
-        requisites=spl.parse_requisites(values.get("requisites", "")),
-        ritual=bool(values.get("ritual")),
-    )
-    mag = spl.magnitude(probe)
-    text = f"[b]{escape(spl.shorthand(probe))}[/]"
-    text += "  General level" if mag is None else f"  magnitude {mag}"
-    if probe.ritual and mag is not None:
-        text += f"  ({spl.vis_cost(probe)} pawns, {spl.casting_time(probe)})"
-    return text
 
 
 def _mastery_dialog(

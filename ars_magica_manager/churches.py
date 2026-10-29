@@ -88,11 +88,6 @@ def is_eikon(relic: Relic) -> bool:
     return relic.get("kind") == customs.EIKON
 
 
-def eikons(neighbour: Neighbour) -> list[Relic]:
-    """The church's eikons, in the order of its list."""
-    return [r for r in relics(neighbour) if is_eikon(r)]
-
-
 def eikon_bonus(relic: Relic) -> int:
     """What venerating an eikon adds to invoking its saint (TSE p. 133)."""
     return customs.invocation_bonus(int(relic.get("quality") or 0))

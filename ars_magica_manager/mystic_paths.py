@@ -63,16 +63,6 @@ def _bullets(lines: list[str]) -> str:
     return "\n".join(f"{BULLET} {escape(line)}" for line in lines)
 
 
-def _diary(saga: Saga, character: Character, name: str, text: str, source: str) -> None:
-    diaries.write(
-        saga.current_year,
-        saga.current_season,
-        name,
-        f"{text} Rules: {source}.",
-        characters=[character],
-    )
-
-
 def _catalog(saga: Saga) -> list[VirtueFlawDef]:
     books = _books(saga)
     return [
@@ -207,7 +197,7 @@ def mystic_path_form(saga: Saga, character: Character | None) -> Command:
             if chosen
             else "He leaves the mystic's path."
         )
-        _diary(saga, who, PATH_TITLE, line, my.SOURCE)
+        diaries.write_ruled(saga, who, PATH_TITLE, line, my.SOURCE)
         return notes(escape(line))
 
     return Form(
@@ -453,7 +443,7 @@ def apply_spiritual(
             line = _gain(saga, character, virtue.id)
             my.claim(record)
             heading = f"Revelation: {record.name}"
-    _diary(saga, character, heading, line, my.SOURCE)
+    diaries.write_ruled(saga, character, heading, line, my.SOURCE)
     return notes(escape(line), f"Written in {escape(character.name)}'s Diary.")
 
 
@@ -623,7 +613,7 @@ def apply_revelation(
     rolled = f"{total} + {'a botch' if mine.botched else mine.value} against {against} + {theirs}"
     if mine.botched or total + mine.value < against + theirs:
         line = f"{rolled}: no Revelation; the Divine Gloom comes as usual."
-        _diary(saga, character, REVELATION_TITLE, line, my.SOURCE)
+        diaries.write_ruled(saga, character, REVELATION_TITLE, line, my.SOURCE)
         return notes(escape(line))
     choice = _choice(values)
     if choice == my.KEEP_MUNDANE:
@@ -643,7 +633,7 @@ def apply_revelation(
         my.note_revelation(character, f"{realm} Lore")
         what = f"his Dominion Lore serves for {realm} Lore in any roll."
     line = f"{rolled}: a Revelation: {what}"
-    _diary(saga, character, REVELATION_TITLE, line, my.SOURCE)
+    diaries.write_ruled(saga, character, REVELATION_TITLE, line, my.SOURCE)
     return notes(escape(line))
 
 
@@ -789,7 +779,7 @@ def apply_aid(
             else f"short of 9: no aid in {aim}."
         )
     line += f" A {spent} Point spent."
-    _diary(saga, character, "God's Aid", line, aid.SOURCE)
+    diaries.write_ruled(saga, character, "God's Aid", line, aid.SOURCE)
     return notes(escape(line))
 
 
@@ -879,7 +869,7 @@ def apply_font(
         line = f"{fok.total(character):+d} + {shown} against {ease}: he may use {name} at {fok.AS_IF_SCORE}."
     else:
         line = f"{fok.total(character):+d} + {shown} against {ease}: the Font is silent on {name}."
-    _diary(saga, character, FONT_TITLE, line, fok.SOURCE)
+    diaries.write_ruled(saga, character, FONT_TITLE, line, fok.SOURCE)
     return notes(escape(line))
 
 
@@ -976,7 +966,7 @@ def commanding_aura_form(saga: Saga, character: Character | None) -> Command:
             if withdrawn
             else "His penance done, his Commanding Aura returns."
         )
-        _diary(saga, who, AURA_TITLE, line, ds.SOURCE)
+        diaries.write_ruled(saga, who, AURA_TITLE, line, ds.SOURCE)
         return notes(escape(line))
 
     return Form(

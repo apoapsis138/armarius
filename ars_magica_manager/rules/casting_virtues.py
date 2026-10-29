@@ -323,10 +323,6 @@ def painful(magus: Character) -> bool:
     return lab_virtues.has(magus, PAINFUL)
 
 
-def slow_caster(magus: Character) -> bool:
-    return lab_virtues.has(magus, SLOW_CASTER)
-
-
 def life_linked_cost(level: int, total: int) -> int:
     """The Fatigue levels a Life-Linked Spontaneous spell costs past the
     usual one: one for each five points, or part, it falls short of the

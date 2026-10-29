@@ -26,7 +26,7 @@ from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Laboratory, Saga, Spell
 from . import animal_aging, childhood, lab, options
 from . import creation_access as access
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import DEFAULT_APPRENTICESHIP_AGE, age, aging_age
 from .creation_xp import entries, is_art, spent
 from .scores import ability_level
@@ -174,8 +174,7 @@ def spell_entries(character: Character, step: str = SPELLS_STEP):
 def _check(
     label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("apprenticeship", label, status, detail, source)
+    return judged("apprenticeship", label, ok, detail, source, advice=advice)
 
 
 def spell_checks(saga: Saga, character: Character, step: str) -> list[Check]:
@@ -414,8 +413,7 @@ def _g(
     *,
     advice: bool = False,
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("gauntlet", label, status, detail, source)
+    return judged("gauntlet", label, ok, detail, source, advice=advice)
 
 
 @check("gauntlet", CHARACTER_CHECKS)

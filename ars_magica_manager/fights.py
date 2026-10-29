@@ -44,7 +44,6 @@ from .rules import (
     battle,
     casting_virtues,
     combat_groups,
-    derived,
     magic_combat,
     penetration,
 )
@@ -1619,11 +1618,3 @@ def info(saga: Saga, fight: Fight) -> str:
         lines += [f"  {e.round}. {escape(e.text)}" for e in fight.log[-12:]]
     lines.append(f"[dim]{SOURCE}.[/]")
     return "\n".join(lines)
-
-
-def soak_of(fighter: rules.Fighter) -> int:
-    return (
-        int(derived.soak(fighter.character).total)
-        if fighter.character is not None
-        else fighter.combatant.soak
-    )

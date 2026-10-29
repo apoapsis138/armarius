@@ -234,12 +234,3 @@ def folk_charm_total(character: Character, aura: int = 0) -> int:
         + ability_level(character, "Faerie Lore")
         + aura
     )
-
-
-def folk_charm_text(character: Character) -> str:
-    return (
-        f"A folk charm ends a fitting faerie effect on {folk_charm_total(character)} "
-        "+ aura + stress die against its level, its best Sympathy Trait added "
-        "to Penetration; each use costs a Fatigue level and a Warping Point "
-        "(RoP: Faerie p. 105)."
-    )

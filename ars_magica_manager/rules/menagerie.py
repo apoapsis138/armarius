@@ -62,7 +62,6 @@ from ..models.menagerie import (
     BEST,
     CARNIVORE,
     FEMALE,
-    HERBIVORE,
     MALE,
     MENAGERIE,
     TRANSFORMED,
@@ -470,10 +469,6 @@ def birth_interval(size: int) -> int:
     """Hours between the dam's recovery rolls in labour: 2 for Size 0 or
     less, doubled for each Size above (p. 134)."""
     return 2 * 2 ** max(0, size)
-
-
-def is_herbivore(beast: Beast) -> bool:
-    return beast.diet == HERBIVORE
 
 
 # -- the owner's Reputation (p. 138) -------------------------------------------

@@ -21,7 +21,7 @@ from __future__ import annotations
 from .. import catalog
 from ..models import Ability, Character, Saga, TraditionDef, VirtueFlawInstance
 from . import creation_access as access
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import THE_GIFT
 from .creation_xp import entries, spent
 from .scores import ability_level
@@ -187,8 +187,7 @@ def opened_ability(name: str) -> Ability:
 def _check(
     label: str, ok: bool, detail: str, *, advice: bool = False, step: str = STEP
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check(step, label, status, detail, SOURCE)
+    return judged(step, label, ok, detail, SOURCE, advice=advice)
 
 
 @check("concept", CHARACTER_CHECKS)

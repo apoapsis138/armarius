@@ -20,6 +20,7 @@ from ....forms import goods as goods_forms
 from ....forms import importing as import_forms
 from ....forms import mystery_cults as cult_forms
 from ....forms import saga_content as content_forms
+from ....forms.saga_content import spell_live
 from ....markup import escape
 from ....models import (
     TEXT_LONGEVITY,
@@ -38,7 +39,6 @@ from ..forms import (
     _research_from_values,
     _spell_fields,
     _spell_from_values,
-    _spell_live,
     _spell_problem,
 )
 from ..pickers import (
@@ -140,7 +140,7 @@ class LibraryActions(WorkspaceBase):
                 title,
                 _spell_fields(spell),
                 validate=_spell_problem,
-                live=_spell_live,
+                live=spell_live,
             ),
             handle_result,
         )

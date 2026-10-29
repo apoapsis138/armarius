@@ -57,7 +57,6 @@ from .models import (
     Ordeal,
     Saga,
     ScoredTrait,
-    TraditionDef,
     VirtueFlawDef,
     VirtueFlawInstance,
 )
@@ -65,7 +64,6 @@ from .models.mystery_cults import (
     COMPONENT_KINDS,
     FLAW_KINDS,
     SAGA_CULT_PREFIX,
-    as_tradition,
 )
 from .rules import dice, mysteries
 from .rules.breakdown import Breakdown, Line
@@ -724,11 +722,6 @@ def finish_experiment(
     notes.append("The season itself is the Initiate's to plan.")
     changed(saga)
     return notes
-
-
-def tradition_of(cult: MysteryCult) -> TraditionDef:
-    """The cult as the tradition catalog offers it."""
-    return as_tradition(cult, catalog.load_virtue_flaw_catalog_by_id())
 
 
 def offers_experiment(saga: Saga, cult_row: int | None, degree_row: int | None) -> bool:

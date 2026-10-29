@@ -16,7 +16,7 @@ import re
 from .. import catalog
 from ..models import Character, Saga
 from . import creation_access as access
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Personality Traits, p. "
@@ -113,8 +113,7 @@ def reputation_virtues(character: Character) -> list[str]:
 def _check(
     label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("finish", label, status, detail, source)
+    return judged("finish", label, ok, detail, source, advice=advice)
 
 
 @check("finish", CHARACTER_CHECKS)

@@ -420,10 +420,6 @@ def stands(project: HermeticProject) -> bool:
     return height_levels(project) > 0
 
 
-def covenant_projects(covenant: Covenant) -> list[HermeticProject]:
-    return covenant.hermetic_projects
-
-
 def shown_project(covenant: Covenant) -> HermeticProject | None:
     """The project the Projects tab shows: the one chosen, else the first."""
     listed = covenant.hermetic_projects

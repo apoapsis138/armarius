@@ -840,10 +840,6 @@ def guardian_ease(aura: int, area_size: int) -> int:
     return aura * area_size
 
 
-def guardian_vis(aura: int) -> int:
-    return max(0, aura)
-
-
 #: The wound a guardian spirit takes when her locus is tamed or
 #: unnaturally destroyed (p. 106).
 LOCUS_WOUNDS: dict[str, str] = {

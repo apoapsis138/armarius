@@ -373,9 +373,3 @@ def loophole_form(
         help_id=LOOPHOLE_HELP,
         inspector="The Fine Print",
     )
-
-
-def covenant_neighbour(saga: Saga, covenant_id: str | None) -> Neighbour | None:
-    """A covenant's own charter as the town record the forms act on."""
-    covenant = next((c for c in saga.covenants if c.id == covenant_id), None)
-    return town_charter.charter_of(covenant) if covenant is not None else None

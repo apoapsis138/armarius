@@ -13,8 +13,23 @@ from .models import (
     CovenantDiaryEntry,
     DiaryEntry,
     Neighbour,
+    Saga,
     details_list,
 )
+
+
+def write_ruled(
+    saga: Saga, character: Character, name: str, text: str, source: str
+) -> None:
+    """`text` in the character's diary under `name`, the book rule it follows
+    cited after it."""
+    write(
+        saga.current_year,
+        saga.current_season,
+        name,
+        f"{text} Rules: {source}.",
+        characters=[character],
+    )
 
 
 def write(

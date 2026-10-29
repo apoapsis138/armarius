@@ -27,7 +27,7 @@ from .. import sourcebooks
 from ..markup import todo
 from ..models import Character, Saga, VirtueFlawInstance
 from . import animal_grogs
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import age
 from .derived import size
 
@@ -403,8 +403,7 @@ def points_text(
 def _check(
     label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("characteristics", label, status, detail, source)
+    return judged("characteristics", label, ok, detail, source, advice=advice)
 
 
 @check("characteristics", CHARACTER_CHECKS)

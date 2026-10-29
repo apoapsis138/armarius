@@ -44,7 +44,7 @@ from .. import catalog, sourcebooks
 from ..models import Character, DiaryEntry, Saga, SeasonRecordLine
 from . import creation_access as access
 from . import effects
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import age
 from .scores import ability_level, character_source
 
@@ -216,8 +216,7 @@ def gifted(character: Character) -> bool:
 def _check(
     step: str, label: str, ok: bool, detail: str, source: str, *, advice: bool = False
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check(step, label, status, detail, source)
+    return judged(step, label, ok, detail, source, advice=advice)
 
 
 @check("virtues_flaws", CHARACTER_CHECKS)

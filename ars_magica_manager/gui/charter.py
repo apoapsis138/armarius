@@ -12,7 +12,7 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 
 from PySide6.QtCore import QPointF, QRectF, Qt
-from PySide6.QtGui import QColor, QFont, QMouseEvent, QPainter, QPaintEvent, QPen
+from PySide6.QtGui import QColor, QFont, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import artwork
@@ -36,7 +36,7 @@ from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
 from .figures import fact_grid, prose
 from .medallions import empty_seal, member_seal
-from .ornaments import ledger_entry
+from .ruled_entry import RuledEntry
 from .themes import Palette
 from .widgets import badge, edit_button, serif, text
 
@@ -154,21 +154,15 @@ def _quiet(block: TextBlock) -> TextBlock:
     return block
 
 
-class ClauseEntry(QWidget):
+class ClauseEntry(RuledEntry):
     """One clause ruled off on the page: its number as a rubric in the
     margin (a § for one with a title), when it was agreed and its status,
     its words (struck through and dimmed when broken), and how it was
     broken or amended."""
 
     def __init__(self, saga: Saga, clause: CharterClause, p: Palette) -> None:
-        super().__init__()
-        self.p = p
-        self.chosen = False
-        self.clicked: Callable[[], None] = lambda: None
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 8, 10, 10)
-        row.setSpacing(12)
+        super().__init__(p)
+        row = self.ruled_row()
         broken = clause.status == CLAUSE_BROKEN
         numbered = cc.is_numbered(clause)
         number = text(
@@ -211,24 +205,6 @@ class ClauseEntry(QWidget):
                 note.setFont(serif(12))
                 column.addWidget(note)
         row.addLayout(column, 1)
-
-    def set_chosen(self, chosen: bool) -> None:
-        self.chosen = chosen
-        self.update()
-
-    def mousePressEvent(self, event: QMouseEvent) -> None:
-        self.clicked()
-        super().mousePressEvent(event)
-
-    def paintEvent(self, _event: QPaintEvent) -> None:
-        painter = QPainter(self)
-        ledger_entry(
-            painter,
-            QRectF(self.rect()).adjusted(12, 0, 0, 0),
-            self.p,
-            marked=self.chosen,
-        )
-        painter.end()
 
 
 def _choose_entries(

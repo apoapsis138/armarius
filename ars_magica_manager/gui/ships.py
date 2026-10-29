@@ -11,8 +11,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QMouseEvent, QPainter, QPaintEvent
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from .. import ships as ship_text
@@ -24,7 +23,7 @@ from ..possessions import KIND_TITLES
 from ..rules import ships as rules
 from .character_sheet import TextBlock, section
 from .editing import Chooser, RowVerb, Run, verb_buttons
-from .ornaments import ledger_entry
+from .ruled_entry import RuledEntry
 from .themes import Palette
 from .widgets import badge, edit_button, serif, text
 
@@ -40,18 +39,12 @@ def _quiet(block: TextBlock) -> TextBlock:
     return block
 
 
-class ShipEntry(QWidget):
+class ShipEntry(RuledEntry):
     """One ship ruled off on the page."""
 
     def __init__(self, shown: ship_text.Card, p: Palette) -> None:
-        super().__init__()
-        self.p = p
-        self.chosen = False
-        self.clicked: Callable[[], None] = lambda: None
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 8, 10, 10)
-        row.setSpacing(12)
+        super().__init__(p)
+        row = self.ruled_row()
         rubric = text("§", p["heading"], serif(20, bold=True))
         rubric.setFixedWidth(28)
         rubric.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
@@ -75,24 +68,6 @@ class ShipEntry(QWidget):
             note.setFont(serif(12, italic=True))
             column.addWidget(note)
         row.addLayout(column, 1)
-
-    def set_chosen(self, chosen: bool) -> None:
-        self.chosen = chosen
-        self.update()
-
-    def mousePressEvent(self, event: QMouseEvent) -> None:
-        self.clicked()
-        super().mousePressEvent(event)
-
-    def paintEvent(self, _event: QPaintEvent) -> None:
-        painter = QPainter(self)
-        ledger_entry(
-            painter,
-            QRectF(self.rect()).adjusted(12, 0, 0, 0),
-            self.p,
-            marked=self.chosen,
-        )
-        painter.end()
 
 
 def _chooses(entries: Sequence[ShipEntry], chooser: Chooser) -> None:

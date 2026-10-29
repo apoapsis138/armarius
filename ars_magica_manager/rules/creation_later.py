@@ -21,7 +21,7 @@ from ..models import Character, Saga
 from . import animal_grogs, childhood
 from . import creation_access as access
 from . import creation_packages as packages
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import later_life_ends, later_life_years
 from .creation_virtues import held_option
 from .creation_xp import entries, spent
@@ -128,8 +128,7 @@ def free_scores_missing(character: Character) -> list[str]:
 def _check(
     label: str, ok: bool, detail: str, source: str = SOURCE, *, advice: bool = False
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("later_life", label, status, detail, source)
+    return judged("later_life", label, ok, detail, source, advice=advice)
 
 
 @check("later_life", CHARACTER_CHECKS)

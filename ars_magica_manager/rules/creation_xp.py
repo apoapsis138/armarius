@@ -21,7 +21,7 @@ from dataclasses import dataclass
 from .. import sourcebooks
 from ..arts import ARTS
 from ..models import Character, CreationXp, Saga
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter Three: Characters, Early Childhood, p. 48"
@@ -303,8 +303,7 @@ def childhood_allows(target: str, character: Character | None = None) -> bool:
 def _check(
     label: str, ok: bool, detail: str, *, advice: bool = False, source: str = SOURCE
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check("childhood", label, status, detail, source)
+    return judged("childhood", label, ok, detail, source, advice=advice)
 
 
 @check("childhood", CHARACTER_CHECKS)

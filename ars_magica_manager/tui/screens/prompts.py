@@ -11,7 +11,7 @@ from typing import Any, ClassVar
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
-from textual.containers import Horizontal, Vertical, VerticalScroll
+from textual.containers import Horizontal, Vertical
 from textual.events import Key
 from textual.widgets import (
     Button,
@@ -33,6 +33,7 @@ from ...form_spec import DialogField, pairs
 from ...forms import ability as ability_forms
 from ...forms import diary as diary_forms
 from ...forms import laboratory as laboratory_forms
+from ...forms import menu as menu_forms
 from ...forms import saga_content as scf
 from ...forms import trait as trait_forms
 from ...forms import virtue as virtue_forms
@@ -62,7 +63,6 @@ from ...models import (
     ScoredTrait,
     VirtueFlawInstance,
 )
-from ...rules import lab_seasons
 from .fields import FieldsDialog, ModalDialog
 from .widgets import SelectableList
 
@@ -422,55 +422,10 @@ def _ritual_again_dialog(
     """Perform a Longevity Ritual again from its Lab Text: the
     vis to pay with and whose. Refuses what the rules do (the live line says
     what it will cost and restore). Builds (the Art, whose vis)."""
-
-    def check(values: dict[str, Any]):
-        return lab_seasons.ritual_again(
-            saga,
-            magus,
-            lab,
-            text,
-            values.get("vis_art") or "",
-            values.get("vis_from") or "laboratory",
-        )
-
-    def live(values: dict[str, Any]) -> str:
-        found, again = check(values)
-        if again is None:
-            return todo(escape(found[0]))
-        return (
-            f"{again.pawns} pawn(s) of {values['vis_art']} vis; "
-            f"{escape(again.subject.name)}'s aging rolls -{again.modifier}. "
-            "No season is taken."
-        )
-
-    def problem(values: dict[str, Any]) -> str | None:
-        found, _ = check(values)
-        return found[0] if found else None
-
+    problem, live = menu_forms.ritual_again_checks(saga, magus, lab, text)
     return FieldsDialog(
         "Perform the Longevity Ritual again",
-        [
-            DialogField("_text", "Lab Text", "info", text.name),
-            DialogField("_by", "Performed by", "info", magus.name),
-            DialogField(
-                "vis_art",
-                "Vis",
-                "select",
-                "Creo",
-                options=[(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
-            ),
-            DialogField(
-                "vis_from",
-                "Vis from",
-                "select",
-                "laboratory",
-                options=[
-                    ("The laboratory's raw vis", "laboratory"),
-                    (f"{magus.name}'s raw vis", "character"),
-                    ("The covenant's vis stores", "covenant"),
-                ],
-            ),
-        ],
+        menu_forms.ritual_again_fields(magus, text),
         save_label="Perform",
         validate=problem,
         live=live,
@@ -641,55 +596,6 @@ class AdvanceSeasonScreen(ModalDialog[bool]):
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         self.dismiss(event.button.id == "btn-advance")
-
-
-class InfoScreen(ModalDialog[None]):
-    """Read-only text (markup) under a title, scrolling if long; Enter or
-    Escape closes it."""
-
-    BINDINGS: ClassVar[list[BindingType]] = [
-        ("escape", "cancel", "Close"),
-        ("enter", "cancel", "Close"),
-    ]
-
-    DEFAULT_CSS = """
-    InfoScreen {
-        align: center middle;
-    }
-
-    #info-dialog {
-        width: 96;
-        max-width: 100%;
-        height: auto;
-        max-height: 100%;
-        padding: 1 2;
-    }
-
-    #info-scroll {
-        height: auto;
-        max-height: 32;
-    }
-
-    #info-text {
-        height: auto;
-    }
-    """
-
-    def __init__(self, title: str, text: str) -> None:
-        super().__init__()
-        self.info_title = title
-        self.text = text
-
-    def compose(self) -> ComposeResult:
-        with Vertical(id="info-dialog", classes="dialog-box"):
-            yield Label(self.info_title, id="info-title", classes="dialog-title")
-            with VerticalScroll(id="info-scroll"):
-                yield Static(self.text, id="info-text")
-            yield Button("Close", id="btn-close")
-
-    def on_button_pressed(self, event: Button.Pressed) -> None:
-        if event.button.id == "btn-close":
-            self.action_cancel()
 
 
 class ConfirmScreen(ModalDialog[bool]):

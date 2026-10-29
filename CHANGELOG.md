@@ -109,6 +109,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.3 — 2026-10-29
+
+### Fundamenta
+
+- **Less repeated code, nothing new to see.** Thirteen functions and a
+  dialog that nothing used are gone. Copies of the same code now share one
+  version: the pass/advice/warn line in the creation steps, the familiar's
+  ability form, the ritual-again form (in both front-ends), the diary
+  writer, and the click, paint and selection code of the six ledger entries
+  on the desktop. The app works exactly as it did.
+
 ## 3.41.2 — 2026-10-29
 
 ### Fundamenta

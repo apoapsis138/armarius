@@ -12,7 +12,7 @@ from __future__ import annotations
 from ..models import Character, Saga
 from . import creation_access as access
 from . import enchantment, powers
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 56-158"
 
@@ -60,9 +60,13 @@ TRAINING_VIRTUES = (
 def _check(
     label: str, ok: bool, detail: str, page: int, *, advice: bool = False
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check(
-        "finish", label, status, detail, f"{SOURCE.rsplit(', pp.', 1)[0]}, p. {page}"
+    return judged(
+        "finish",
+        label,
+        ok,
+        detail,
+        f"{SOURCE.rsplit(', pp.', 1)[0]}, p. {page}",
+        advice=advice,
     )
 
 

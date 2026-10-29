@@ -206,10 +206,6 @@ ORDERED_BY: tuple[tuple[str, str], ...] = (
 CELEBRATION_LOYALTY = 1
 
 
-def is_reward(kind: str) -> bool:
-    return kind in REWARDS
-
-
 def is_punishment(kind: str) -> bool:
     return kind in PUNISHMENTS
 

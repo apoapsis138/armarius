@@ -122,10 +122,6 @@ _CHARACTERISTICS = (
 )
 
 
-def is_nightwalker(character: Character) -> bool:
-    return any(vf.vf_id == NIGHTWALKER for vf in character.virtues_flaws)
-
-
 # ---------------------------------------------------------------------------
 # Straying
 

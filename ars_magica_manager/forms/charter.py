@@ -192,10 +192,6 @@ def _sealed_key(character_id: str) -> str:
     return f"sealed_{character_id}"
 
 
-def _until_label(standing: str | None) -> str:
-    return "Expelled in" if standing == STANDING_EXPELLED else "Probation ends"
-
-
 def seal_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """A tick, a season, a year and a standing for each of the covenant's
     magi (and any who sealed it and have left since); a probationary

@@ -1495,11 +1495,38 @@ def ritual_texts(saga: Saga, lab: Laboratory) -> list[Book]:
     ]
 
 
-def ritual_again_form(
+def ritual_again_fields(magus: Character, text: Book) -> list[DialogField]:
+    """The fields of the form that performs a Longevity Ritual again: the
+    text and who performs it, the Art of the vis and whose it is."""
+    return [
+        DialogField("_text", "Lab Text", "info", text.name),
+        DialogField("_by", "Performed by", "info", magus.name),
+        DialogField(
+            "vis_art",
+            "Vis",
+            "select",
+            "Creo",
+            options=[(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
+        ),
+        DialogField(
+            "vis_from",
+            "Vis from",
+            "select",
+            "laboratory",
+            options=[
+                ("The laboratory's raw vis", "laboratory"),
+                (f"{magus.name}'s raw vis", "character"),
+                ("The covenant's vis stores", "covenant"),
+            ],
+        ),
+    ]
+
+
+def ritual_again_checks(
     saga: Saga, magus: Character, lab: Laboratory, text: Book
-) -> Form:
-    """Perform a Longevity Ritual again from its Lab Text: the vis to pay
-    with and whose. It takes no season, so it is done at once."""
+) -> tuple[Callable[[dict[str, Any]], str | None], Callable[[dict[str, Any]], str]]:
+    """What the ritual-again form says as it is filled in: the reason it
+    can't be done (or None), and the live line with its cost."""
 
     def check(values: dict[str, Any]):
         return lab_seasons.ritual_again(
@@ -1511,6 +1538,10 @@ def ritual_again_form(
             values.get("vis_from") or "laboratory",
         )
 
+    def problem(values: dict[str, Any]) -> str | None:
+        found, _ = check(values)
+        return found[0] if found else None
+
     def live(values: dict[str, Any]) -> str:
         found, again = check(values)
         if again is None:
@@ -1521,9 +1552,15 @@ def ritual_again_form(
             "No season is taken."
         )
 
-    def problem(values: dict[str, Any]) -> str | None:
-        found, _ = check(values)
-        return found[0] if found else None
+    return problem, live
+
+
+def ritual_again_form(
+    saga: Saga, magus: Character, lab: Laboratory, text: Book
+) -> Form:
+    """Perform a Longevity Ritual again from its Lab Text: the vis to pay
+    with and whose. It takes no season, so it is done at once."""
+    problem, live = ritual_again_checks(saga, magus, lab, text)
 
     def apply(values: dict[str, Any]) -> Command | list[str]:
         found = seasons.perform_ritual_again(
@@ -1535,28 +1572,7 @@ def ritual_again_form(
 
     return Form(
         "Perform the Longevity Ritual again",
-        lambda: [
-            DialogField("_text", "Lab Text", "info", text.name),
-            DialogField("_by", "Performed by", "info", magus.name),
-            DialogField(
-                "vis_art",
-                "Vis",
-                "select",
-                "Creo",
-                options=[(art, art) for art in lab_seasons.LONGEVITY_VIS_ARTS],
-            ),
-            DialogField(
-                "vis_from",
-                "Vis from",
-                "select",
-                "laboratory",
-                options=[
-                    ("The laboratory's raw vis", "laboratory"),
-                    (f"{magus.name}'s raw vis", "character"),
-                    ("The covenant's vis stores", "covenant"),
-                ],
-            ),
-        ],
+        lambda: ritual_again_fields(magus, text),
         apply,
         validate=problem,
         live=live,

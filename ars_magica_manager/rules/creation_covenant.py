@@ -46,7 +46,14 @@ from ..models import (
 from . import base_covenants, covenfolk, creation_access, enchantment, realms, vis_kinds
 from . import library as book_rules
 from . import options as rule_options
-from .creation_base import COVENANT_CHECKS, LABORATORY_CHECKS, Check, Record, check
+from .creation_base import (
+    COVENANT_CHECKS,
+    LABORATORY_CHECKS,
+    Check,
+    Record,
+    check,
+    judged,
+)
 from .lab_stats import (
     LAB_SIZE_BUILD_POINTS,
     lab_base_safety,
@@ -425,8 +432,7 @@ def _c(
     *,
     advice: bool = False,
 ):
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check(step, label, status, detail, source)
+    return judged(step, label, ok, detail, source, advice=advice)
 
 
 INCOME_SOURCE = (

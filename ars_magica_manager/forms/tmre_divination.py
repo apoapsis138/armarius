@@ -54,16 +54,6 @@ def _bullets(lines: list[str]) -> str:
     return "\n".join(f"{BULLET} {escape(line)}" for line in lines)
 
 
-def _diary(saga: Saga, character: Character, name: str, text: str, source: str) -> None:
-    diaries.write(
-        saga.current_year,
-        saga.current_season,
-        name,
-        f"{text} Rules: {source}.",
-        characters=[character],
-    )
-
-
 def _chance(modifiers: int, ease: int) -> str:
     return f"{odds.stress_chance(modifiers, ease) * 100:.0f}%"
 
@@ -392,7 +382,7 @@ def apply_divination(
         if divination.kind in (td.SYMBOLIC, td.DREAM_CALLING)
         else td.SOURCE
     )
-    _diary(saga, character, DIVINATION_TITLE, " ".join(lines), source)
+    diaries.write_ruled(saga, character, DIVINATION_TITLE, " ".join(lines), source)
     return notes(*(escape(line) for line in lines))
 
 
@@ -677,7 +667,9 @@ def apply_astrology(
         (label for label, key in _reckonings(character) if key == what),
         ASTROLOGY_TITLE,
     )
-    _diary(saga, character, ASTROLOGY_TITLE, f"{reckoning}: {line}", source)
+    diaries.write_ruled(
+        saga, character, ASTROLOGY_TITLE, f"{reckoning}: {line}", source
+    )
     return notes(escape(f"{reckoning}: {line}"))
 
 

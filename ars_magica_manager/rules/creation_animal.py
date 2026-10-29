@@ -15,7 +15,7 @@ from . import animal_aging
 from . import animal_grogs as ag
 from . import creation_access as access
 from .creation_access import OPENS
-from .creation_base import CHARACTER_CHECKS, Check, Record, check
+from .creation_base import CHARACTER_CHECKS, Check, Record, check, judged
 from .creation_character import age
 from .derived import size
 
@@ -31,8 +31,7 @@ def _check(
     *,
     advice: bool = False,
 ) -> Check:
-    status = "pass" if ok else ("advice" if advice else "warn")
-    return Check(step, label, status, detail, source)
+    return judged(step, label, ok, detail, source, advice=advice)
 
 
 def _animal(record: Record) -> Character | None:

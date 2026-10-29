@@ -40,5 +40,4 @@ from .spells import _level_fill as _level_fill
 from .spells import _mastery_dialog as _mastery_dialog
 from .spells import _spell_fields as _spell_fields
 from .spells import _spell_from_values as _spell_from_values
-from .spells import _spell_live as _spell_live
 from .spells import _spell_problem as _spell_problem

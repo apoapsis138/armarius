@@ -40,6 +40,7 @@ from ..models import (
 from ..rules import creation_access as access
 from ..rules import familiar_seasons, scores
 from . import experimental_effects
+from .ability import ability_fields, ability_from, ability_problem
 from .character import (
     characteristics_fields,
     characteristics_from,
@@ -302,36 +303,6 @@ def natural_weapon_ops(familiar: Familiar) -> SectionOps:
 
 
 # -- Abilities --
-
-
-def ability_fields(ability: Ability | None) -> list[DialogField]:
-    """An Ability's total xp and Specialty (its name is the form's title)."""
-    return [
-        DialogField("xp", "XP", "int", attr(ability, "xp", 0)),
-        DialogField(
-            "specialty",
-            "Specialty",
-            "text",
-            attr(ability, "specialty", None) or "",
-            placeholder="e.g. Swords",
-        ),
-    ]
-
-
-def ability_problem(values: dict[str, Any]) -> str | None:
-    if values["xp"] < 0:
-        return "XP can't be negative."
-    return None
-
-
-def ability_from(name: str, category: str, values: dict[str, Any]) -> Ability:
-    return Ability(
-        name=name,
-        category=category,
-        xp=values["xp"],
-        specialty=values["specialty"] or None,
-        xp_table=access.ability_xp_table(name),
-    )
 
 
 def ability_form(

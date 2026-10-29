@@ -8,30 +8,23 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QMouseEvent, QPainter, QPaintEvent
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
 from ..tribunal_packages import LedgerCard
 from .character_sheet import TextBlock
 from .editing import Chooser
-from .ornaments import ledger_entry
+from .ruled_entry import RuledEntry
 from .themes import Palette
 from .widgets import badge, serif, text
 
 
-class LedgerRow(QWidget):
+class LedgerRow(RuledEntry):
     """One entry ruled off on the page."""
 
     def __init__(self, card: LedgerCard, p: Palette) -> None:
-        super().__init__()
-        self.p = p
-        self.chosen = False
-        self.clicked: Callable[[], None] = lambda: None
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 8, 10, 10)
-        row.setSpacing(12)
+        super().__init__(p)
+        row = self.ruled_row()
         mark = text(card.rubric, p["heading"], serif(18, bold=True))
         mark.setFixedWidth(40)
         mark.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
@@ -57,24 +50,6 @@ class LedgerRow(QWidget):
             note.setFont(serif(11.5))
             column.addWidget(note)
         row.addLayout(column, 1)
-
-    def set_chosen(self, chosen: bool) -> None:
-        self.chosen = chosen
-        self.update()
-
-    def mousePressEvent(self, event: QMouseEvent) -> None:
-        self.clicked()
-        super().mousePressEvent(event)
-
-    def paintEvent(self, _event: QPaintEvent) -> None:
-        painter = QPainter(self)
-        ledger_entry(
-            painter,
-            QRectF(self.rect()).adjusted(12, 0, 0, 0),
-            self.p,
-            marked=self.chosen,
-        )
-        painter.end()
 
 
 def ledger_rows(

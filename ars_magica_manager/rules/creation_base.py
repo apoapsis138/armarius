@@ -46,6 +46,21 @@ class Check:
     source: str
 
 
+def judged(
+    step: str,
+    label: str,
+    ok: bool,
+    detail: str,
+    source: str,
+    *,
+    advice: bool = False,
+) -> Check:
+    """A Check that passes when `ok`; otherwise it warns (a must is broken),
+    or, for a rule that is only a should (`advice`), advises."""
+    status: Status = "pass" if ok else ("advice" if advice else "warn")
+    return Check(step, label, status, detail, source)
+
+
 @dataclass(frozen=True)
 class Step:
     """A step of the Creation Worksheet."""

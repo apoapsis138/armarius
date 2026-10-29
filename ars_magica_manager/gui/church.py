@@ -8,14 +8,13 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QMouseEvent, QPainter, QPaintEvent
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QLabel, QVBoxLayout, QWidget
 
 from ..forms.church import Entry
 from .editing import Chooser
 from .markup_html import plain, to_html
-from .ornaments import ledger_entry
+from .ruled_entry import RuledEntry
 from .themes import Palette
 from .widgets import badge, serif, text
 
@@ -30,18 +29,12 @@ def _words(markup: str, p: Palette, size: float) -> QLabel:
     return label
 
 
-class LedgerEntry(QWidget):
+class LedgerEntry(RuledEntry):
     """One entry ruled off on the page; the chosen one is bracketed."""
 
     def __init__(self, entry: Entry, p: Palette) -> None:
-        super().__init__()
-        self.p = p
-        self.chosen = False
-        self.clicked: Callable[[], None] = lambda: None
-        self.setCursor(Qt.CursorShape.PointingHandCursor)
-        row = QHBoxLayout(self)
-        row.setContentsMargins(16, 8, 10, 10)
-        row.setSpacing(12)
+        super().__init__(p)
+        row = self.ruled_row()
         mark = text(entry.rubric, p["heading"], serif(18, bold=True))
         mark.setFixedWidth(40)
         mark.setAlignment(Qt.AlignmentFlag.AlignTop | Qt.AlignmentFlag.AlignRight)
@@ -65,24 +58,6 @@ class LedgerEntry(QWidget):
         if entry.note:
             column.addWidget(_words(entry.note, p, 11.5))
         row.addLayout(column, 1)
-
-    def set_chosen(self, chosen: bool) -> None:
-        self.chosen = chosen
-        self.update()
-
-    def mousePressEvent(self, event: QMouseEvent) -> None:
-        self.clicked()
-        super().mousePressEvent(event)
-
-    def paintEvent(self, _event: QPaintEvent) -> None:
-        painter = QPainter(self)
-        ledger_entry(
-            painter,
-            QRectF(self.rect()).adjusted(12, 0, 0, 0),
-            self.p,
-            marked=self.chosen,
-        )
-        painter.end()
 
 
 def ledger(
