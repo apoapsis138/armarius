@@ -3,7 +3,7 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
      Seasons
 
-      Now:   Spring 1220                                 Next Tribunal:   Summer 1225
+      Now:   Spring 1220                                 Next Tribunal:   Summer 1221
       Ahead: 2 years (to Winter 1221)                    Due this season: 1
           Edit (e)
 
@@ -20,7 +20,8 @@
       ○ Autumn 1220        Soest: St. Patroclus' fair (income …  Soest
       ○ Winter 1220        ■□□ The Hollow Crown: The ford floo…  The Hollow Cr…
       ○                    The world turns: the yearly step      the saga
-      ○ Summer 1221        The Drachenfels: Level 2 opens        The Drachenfe…
+      ○ Summer 1221        The Greater Alps Tribunal meets       Greater Alps
+      ○                    The Drachenfels: Level 2 opens        The Drachenfe…
       ○                    Midsummer rites                       your calendar
       ○ Autumn 1221        Soest: St. Patroclus' fair (income …  Soest
       ○ Winter 1221        The world turns: the yearly step      the saga
@@ -35,7 +36,6 @@
     ▼ Seasons Recorded (0)
 
       No seasons recorded yet: they're kept as seasons are applied (t).
-
 
 
 

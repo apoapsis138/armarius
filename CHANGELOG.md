@@ -109,6 +109,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.2 — 2026-10-29
+
+### Fundamenta
+
+- The checks that compare every screen's text and keys with a saved copy
+  now include the Greater Alps Tribunal's sheet and the three new books.
+
 ## 3.41.1 — 2026-10-29
 
 ### Fundamenta

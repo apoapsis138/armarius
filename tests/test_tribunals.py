@@ -108,6 +108,7 @@ def test_deleting_a_tribunal_names_and_frees_its_covenants():
         "thebes",
         "normandy",
         "transylvania",
+        "alps",
         "hibernia",
     ]
     assert {c.tribunal_id for c in saga.covenants} == {None}
@@ -493,6 +494,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
             (NodeKind.TRIBUNAL, "thebes"),
             (NodeKind.TRIBUNAL, "normandy"),
             (NodeKind.TRIBUNAL, "transylvania"),
+            (NodeKind.TRIBUNAL, "alps"),
             (NodeKind.TRIBUNAL, "hibernia"),
             (NodeKind.COVENANT, "lone"),
             (NodeKind.NEIGHBOUR_GROUP, "lords"),
@@ -505,7 +507,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")
         ]
-        assert region.children[5].allow_expand is False  # a line with nothing
+        assert region.children[6].allow_expand is False  # a line with nothing
 
 
 async def test_new_tribunal_opens_it_and_d_deletes_it():
@@ -532,7 +534,14 @@ async def test_new_tribunal_opens_it_and_d_deletes_it():
             pilot,
             lambda: (
                 [t.name for t in storage.load_saga("test_saga").tribunals]
-                == ["Rhine", "Theban", "Normandy", "Transylvania", "Hibernia"]
+                == [
+                    "Rhine",
+                    "Theban",
+                    "Normandy",
+                    "Transylvania",
+                    "Greater Alps",
+                    "Hibernia",
+                ]
             ),
         )
 
@@ -640,7 +649,7 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
-    assert any("Tribunals (5)" in title for title in titles)
+    assert any("Tribunals (6)" in title for title in titles)
 
 
 def test_choosing_a_ruling_a_gild_or_a_diary_entry_shows_it_in_the_inspector():

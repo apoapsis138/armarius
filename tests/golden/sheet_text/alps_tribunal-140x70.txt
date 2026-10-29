@@ -1,0 +1,680 @@
+===== tab-trib-roster
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Covenants (0)
+
+      No covenant belongs to it yet: choose it as a covenant's Tribunal in Edit Covenant.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Magi of Note (0)
+
+      No magi of note: its officers and the magi of its other covenants show here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-history
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  History: not written yet. Edit the Tribunal (e) to tell it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-docket
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Cases for 1221 (0)
+
+      No cases on the docket.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Rulings of Past Tribunals (0)
+
+      None decided yet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a case to read it.
+  ▌
+
+
+===== tab-trib-arguments
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Arguments (0)
+
+      No argument yet: Add one, then its polemic as a text.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ No argument chosen
+
+      Add an argument to follow its texts and its total.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Texts (0)
+
+      Add an argument first.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a text.
+  ▌
+
+
+===== tab-trib-meeting
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+   1 Roster  2 History  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  The Next Meeting: Summer 1221
+  Held at: the Icy North
+  Now:     Not yet opened: Edit (e) calls the roll and opens it
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Order of Business (3 days)
+
+        Step                       Day
+      ○ The roll call and proxies  The First Day
+      ○ Opening and the oaths
+      ○ Rulings and fines          The Third Day
+      ○ Treasury and vis
+      ○ Closing
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ The Vote
+
+      No case to vote on.
+
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Attendance (0 votes in the hall)
+
+      No covenant belongs to this Tribunal yet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  ▌
+  ▌  Choose a step to read what was entered at it.
+  ▌
+
+
+===== tab-trib-code
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  istory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9 Diary  0 Secre
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Greater Alps: Chairs and ostracism. A magus votes only if his covenant has bought him a chair,
+  registering 10 pawns of vis a year for his upkeep; at each meeting the magus most named on the sherds
+  is ostracised for 21 years, if one magus in four named him.
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Peripheral Code (0)
+
+      No rulings recorded: the Peripheral Code's rulings go here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-treasury
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  ory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9 Diary  0 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  Silver in hand: 0 pounds
+  Vis in hand:    none
+  Loans out:      none
+  Fines unpaid:   none
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Treasury (0)
+
+      Nothing in the treasury yet.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-ostracism
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  ory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9 Diary  0 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Ostracism (1)
+
+        Magus    Voted  Sherds    Exile               Why
+      ○ Leandro  1214   30 of 90  to 1235 (in exile)  Farmed vis from the aura
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-trib-diary
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  ory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9 Diary  0 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Diary (0)
+
+      Nothing written yet: each meeting's minutes go here.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+===== tab-secrets
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     Greater Alps
+
+      Customs:       Greater Alps: Chairs and            Praeco:              (not chosen)
+      ostracism                                          Presiding Quaesitor: (not chosen)
+      Meets every:   7 years                             Covenants:           0
+      Next meeting:  Summer 1221                         Magi:                0
+      Meeting place: the Icy North                       Your votes:          0 of 0
+      Cases:         none pending
+      In the Saga: not written yet. Edit the Tribunal to say.
+          Edit (e)
+
+  ory  3 Docket  4 Arguments  5 Meeting  6 Peripheral Code  7 Treasury  8 Ostracism  9 Diary  0 Secrets
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ Secrets
+
+      Nothing secret written yet: edit it to add what only you should know.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
