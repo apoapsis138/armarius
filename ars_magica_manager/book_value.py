@@ -20,6 +20,7 @@ from dataclasses import dataclass
 from . import book_kinds
 from .models import SUPERNATURAL_CATEGORIES, Book, Covenant, Saga
 from .rules import library, options
+from .rules.creation_access import ability_category
 from .rules.rounding import round_up
 
 SOURCE = "Covenants, Chapter Seven: Library, pp. 84-102"
@@ -80,7 +81,6 @@ def is_hermetic(book: Book) -> bool:
     among magi for vis. Any other book is a mundane one, bought for money."""
     if library.is_art_book(book.type, book.subject_kind):
         return True
-    from .rules.creation_access import ability_category
 
     kind = ability_category(book.ability) if book.ability else "General"
     return kind == "Arcane" or kind in SUPERNATURAL_CATEGORIES

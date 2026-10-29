@@ -101,6 +101,7 @@ from .common import SetChange as SetChange
 from .common import VirtueFlawTier as VirtueFlawTier
 from .common import VirtueFlawType as VirtueFlawType
 from .common import _validate_vf_tier_cost as _validate_vf_tier_cost
+from .common import as_character_type as as_character_type
 from .common import experimental_effects as experimental_effects
 from .common import known_fields as known_fields
 from .conflicts import CHARACTER_FIGHTER as CHARACTER_FIGHTER

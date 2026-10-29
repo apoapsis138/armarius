@@ -27,7 +27,6 @@ from __future__ import annotations
 
 import random
 from dataclasses import replace
-from typing import TYPE_CHECKING
 
 from ..models import (
     CHARGED,
@@ -45,6 +44,7 @@ from ..models import (
 )
 from . import (
     book_seasons,
+    dice,
     enchantment,
     experiment,
     house_magic,
@@ -57,13 +57,11 @@ from . import (
 )
 from . import hybrid_magic as hybrid
 from .breakdown import Line
+from .lab_work import LabWork, vis_pool, whose_vis
 from .rounding import round_up
 
 #: Halves what added levels give an effect's Penetration (DE p. 152).
 WEAK_MAGIC = "vf_weak_magic"
-
-if TYPE_CHECKING:
-    from .lab_seasons import LabWork
 
 _CH8 = "Ars Magica Definitive Edition, Chapter 8: Laboratory, {}, {}"
 SOURCE = _CH8.format("Enchantments", "pp. 252-260")
@@ -349,7 +347,6 @@ def _open_device(
 ) -> tuple[list[str], LabWork | None]:
     """Opening a device for enchantment: its Vim vis, and a pawn of each
     elder rune's Art when they are inscribed (its first season)."""
-    from .lab_seasons import LabWork
 
     limit = verditius.enchanting_vis_limit(magus)
     empty = lab.LabTotal(total=0, lines=[])
@@ -417,7 +414,6 @@ def _attune(
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Attuning an opened device as the magus's talisman."""
-    from .lab_seasons import LabWork
 
     empty = lab.LabTotal(total=0, lines=[])
     if not enchantment.is_opened(saga, device) and not device.pawns_opened:
@@ -473,7 +469,6 @@ def _investigate(
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Investigating a device for its hidden powers."""
-    from .lab_seasons import LabWork
 
     total = lab.lab_total(
         saga,
@@ -565,7 +560,6 @@ def _effect_work(
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
     """Instilling, a lesser enchantment or a charged item: one effect."""
-    from .lab_seasons import LabWork
 
     limit = verditius.enchanting_vis_limit(magus)
     effect = _instilled_by(magus, effect_of(device, plan))
@@ -722,7 +716,6 @@ def _vis_problem(
     pawns: int,
     limit: int,
 ) -> str:
-    from .lab_seasons import vis_pool, whose_vis
 
     if pawns and not split:
         return f"Choose the vis to pay with: {arts[0]} or {arts[1]}."
@@ -753,7 +746,6 @@ def investigate(
     """Roll the investigation: Lab Total + a stress die against each hidden
     power, weakest first, until one fails. Records the found effect ids on
     `work_` and returns notes. A die typed on the plan is used for one roll."""
-    from . import dice
 
     device = work_.device
     assert device is not None

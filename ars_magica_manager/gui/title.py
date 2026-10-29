@@ -168,6 +168,7 @@ class TitleScreen(Paper):
             effect.setOpacity,
             FADE_MS,
             name="fade",
+            # Qt takes None to remove an effect; its stub asks for one.
             done=lambda: self.setGraphicsEffect(None),  # type: ignore[arg-type]
         )
 

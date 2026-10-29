@@ -41,7 +41,6 @@ from dataclasses import dataclass
 from ..arts import ART_BY_NAME, ARTS, FORMS, TECHNIQUES
 from ..models import SUPERNATURAL_CATEGORIES, Character, VirtueFlawInstance
 from . import creation_access as access
-from .animal_grogs import restricted_choices
 from .breakdown import Line
 from .rounding import round_down, round_up
 
@@ -149,7 +148,7 @@ def restricted_to(character: Character) -> set[str] | None:
         return None
     chosen = _names(found.params.get("chosen", ""))
     if not chosen:
-        chosen = restricted_choices(
+        chosen = access.restricted_choices(
             character, [x.target for x in character.creation_xp]
         )
     if not chosen:

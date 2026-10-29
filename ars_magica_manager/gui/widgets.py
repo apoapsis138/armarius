@@ -433,7 +433,7 @@ class XpBarDelegate(TallRows):
         if isinstance(grown_from, float):
             fraction = grown_from + (fraction - grown_from) * self.at
         p = self.p
-        cell = QRectF(option.rect).adjusted(8, 0, -8, 0)  # type: ignore[attr-defined]
+        cell = QRectF(option.rect).adjusted(8, 0, -8, 0)
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         painter.setFont(serif(10.5, italic=True))
@@ -531,12 +531,12 @@ class RuledRows(QStyledItemDelegate):
         option: QStyleOptionViewItem,
         index: QModelIndex | QPersistentModelIndex,
     ) -> None:
-        p, rect = self.p, QRectF(option.rect)  # type: ignore[attr-defined]
-        state = option.state  # type: ignore[attr-defined]
+        p, rect = self.p, QRectF(option.rect)
+        state = option.state
         chosen = bool(state & QStyle.StateFlag.State_Selected)
         under = bool(state & QStyle.StateFlag.State_MouseOver)
         heading = not index.flags() & Qt.ItemFlag.ItemIsSelectable
-        view = option.widget  # type: ignore[attr-defined]
+        view = option.widget
         width = view.viewport().width() if isinstance(view, QAbstractItemView) else 0
         reach = 1.0
         if chosen and not heading and self.spread is not None:
@@ -548,13 +548,13 @@ class RuledRows(QStyledItemDelegate):
             )
             painter.fillRect(washed, gilding.wash(p, 0, max(width, 1), alpha))
         plain = QStyleOptionViewItem(option)
-        plain.state &= ~(  # type: ignore[attr-defined]
+        plain.state &= ~(
             QStyle.StateFlag.State_Selected
             | QStyle.StateFlag.State_HasFocus
             | QStyle.StateFlag.State_MouseOver
         )
         if index.column() == 0 and not heading:
-            plain.rect = option.rect.adjusted(self.margin, 0, 0, 0)  # type: ignore[attr-defined]
+            plain.rect = option.rect.adjusted(self.margin, 0, 0, 0)
         self.inner.paint(painter, plain, index)
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
@@ -755,8 +755,8 @@ class RailRows(QStyledItemDelegate):
         option: QStyleOptionViewItem,
         index: QModelIndex | QPersistentModelIndex,
     ) -> None:
-        if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
-            rect = QRectF(option.rect)  # type: ignore[attr-defined]
+        if option.state & QStyle.StateFlag.State_Selected:
+            rect = QRectF(option.rect)
             reach = self.spread.reach(index)
             washed = QRectF(
                 rect.left(), rect.top(), rect.width() * reach, rect.height()

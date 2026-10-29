@@ -23,6 +23,7 @@ def claim_taskbar_identity() -> None:
 
 
 def main() -> int:
+    # start-up: the data folder is settled before the app's modules load.
     from .. import paths
 
     # As main.py: the data folder is settled, then kept to.
@@ -34,6 +35,7 @@ def main() -> int:
     # Before any window exists: the taskbar reads the id when one opens.
     claim_taskbar_identity()
 
+    # start-up: the window and its pictures load once Qt is up.
     from . import pictures
     from .window import MainWindow
 

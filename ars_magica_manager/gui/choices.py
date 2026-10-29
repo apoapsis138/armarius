@@ -167,8 +167,8 @@ class InkSlipRows(QStyledItemDelegate):
     ) -> None:
         p = self.choices.p
         purple = murex(p)
-        row = QRectF(option.rect)  # type: ignore[attr-defined]
-        state = option.state  # type: ignore[attr-defined]
+        row = QRectF(option.rect)
+        state = option.state
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         margin = row.left() + MARGIN
@@ -183,7 +183,7 @@ class InkSlipRows(QStyledItemDelegate):
         painter.setPen(QPen(QColor(purple), 0.9))
         painter.drawLine(QPointF(margin, row.top()), QPointF(margin, row.bottom() + 1))
         # Upright, though the closed drop-down's choice is italic.
-        font = QFont(option.font)  # type: ignore[attr-defined]
+        font = QFont(option.font)
         font.setItalic(False)
         painter.setFont(font)
         painter.setPen(QColor(p["foreground"]))
@@ -207,26 +207,29 @@ class InkedChoices(QObject):
 
     def eventFilter(self, watched: QObject, event: QEvent) -> bool:
         if isinstance(watched, QComboBox) and not watched.isEditable():
-            paint = paint_choice
+            widget: QWidget = watched
         elif isinstance(watched, QAbstractSpinBox):
-            paint = paint_spin
+            widget = watched
         else:
             return False
         kind = event.type()
         if kind == QEvent.Type.Paint:
-            painter = QPainter(watched)
-            paint(painter, watched, self.p)  # type: ignore[arg-type]
+            painter = QPainter(widget)
+            if isinstance(widget, QComboBox):
+                paint_choice(painter, widget, self.p)
+            elif isinstance(widget, QAbstractSpinBox):
+                paint_spin(painter, widget, self.p)
             painter.end()
             return True
-        if kind == QEvent.Type.Polish and isinstance(watched, QComboBox):
-            self.rule(watched)
+        if kind == QEvent.Type.Polish and isinstance(widget, QComboBox):
+            self.rule(widget)
         elif kind in (
             QEvent.Type.Enter,
             QEvent.Type.Leave,
             QEvent.Type.FocusIn,
             QEvent.Type.FocusOut,
         ):
-            watched.update()
+            widget.update()
         return False
 
     def rule(self, combo: QComboBox) -> None:

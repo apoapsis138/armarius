@@ -108,7 +108,7 @@ def _slot_field(
 
 def _more_fields(saga: Saga, template: ct.ChoiceTemplateDef) -> list[DialogField]:
     """Pickers for other Virtues and Flaws of the player's own."""
-    who = Character(id="", name="", type=template.type)  # type: ignore[arg-type]
+    who = Character(id="", name="", type=template.type)
     by_id = catalog.load_virtue_flaw_catalog_by_id()
 
     def display(instance: VirtueFlawInstance) -> str:
@@ -354,7 +354,7 @@ def choice_template_steps(
         character = creation.add_character(
             saga,
             values["name"],
-            template.type,  # type: ignore[arg-type]
+            template.type,
             values["covenant_id"],
         )
         ct.apply(saga, character, template, choices)

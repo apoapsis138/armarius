@@ -24,6 +24,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 
+from .. import catalog
 from ..models import Character, Possession, VirtueFlawInstance, Wounds
 from . import armour as armour_rules
 from . import divine_state, effects
@@ -203,7 +204,6 @@ def primitive_armour(character: Character, armour: Possession) -> bool:
     Protection (and to Initiative, rules.combat)."""
     if not any(vf.vf_id == "vf_primitive_equipment" for vf in character.virtues_flaws):
         return False
-    from .. import catalog
 
     definition = catalog.load_armor_catalog_by_id().get(
         armour.gear_id or ""

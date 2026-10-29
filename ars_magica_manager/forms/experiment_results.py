@@ -13,6 +13,7 @@ from collections.abc import Callable
 from typing import Any
 
 from .. import research_text, seasons
+from .. import spells as spl
 from ..commands import Form
 from ..form_spec import DialogField, pairs
 from ..markup import escape
@@ -536,7 +537,6 @@ def _spell_forms(outcome: Outcome, count: int, then: Callable[[], Any]):
 
 def spell_values(values: dict[str, Any]) -> dict[str, Any]:
     """A spell form's values as the spell's own fields."""
-    from .. import spells as spl
 
     return {
         "name": values["name"],

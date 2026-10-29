@@ -11,7 +11,7 @@ learn them; Later life experience; Creation Ability cap by age.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from dataclasses import dataclass
 
 from .. import catalog
@@ -23,7 +23,7 @@ from ..models import (
     TraditionDef,
     VirtueFlawInstance,
 )
-from . import grog_aging, schools, xp
+from . import animal_grogs, grog_aging, schools, xp
 from .creation_character import THE_GIFT
 from .rounding import round_up
 
@@ -417,6 +417,23 @@ def granted_supernatural(character: Character) -> set[str]:
         for entry in catalog.load_ability_catalog()
         if entry.category in SUPERNATURAL_CATEGORIES and entry.name in names
     }
+
+
+def restricted_choices(character: Character, entries: Iterable[str]) -> list[str]:
+    """The Abilities xp went on that count against Restricted Learning's
+    five: all but the animal's own Language and a Virtue's Supernatural
+    Ability (`entries`: the creation xp targets)."""
+    granted = granted_supernatural(character)
+    found: list[str] = []
+    for name in entries:
+        if (
+            animal_grogs.own_language(character, name)
+            or name in granted
+            or name in found
+        ):
+            continue
+        found.append(name)
+    return found
 
 
 def may_learn(character: Character, name: str, *, apprenticed: bool = False) -> bool:

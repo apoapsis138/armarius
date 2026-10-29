@@ -13,6 +13,8 @@ from .. import catalog
 from ..models import Character, Saga
 from . import animal_aging
 from . import animal_grogs as ag
+from . import creation_access as access
+from .creation_access import OPENS
 from .creation_base import CHARACTER_CHECKS, Check, Record, check
 from .creation_character import age
 from .derived import size
@@ -135,7 +137,6 @@ def animal_virtues(saga: Saga, record: Record) -> list[Check]:
             ", ".join(wrong) or ", ".join(e.name for e in statuses) or "none",
         )
     )
-    from .creation_access import OPENS
 
     society = [
         by_id[vf_id].name
@@ -242,7 +243,7 @@ def animal_later_life(saga: Saga, record: Record) -> list[Check]:
         for x in character.creation_xp
         if x.step in ("youth", "later_life", "virtue")
     ]
-    chosen = ag.restricted_choices(character, targets)
+    chosen = access.restricted_choices(character, targets)
     found = []
     if any(vf.vf_id == ag.RESTRICTED_LEARNING for vf in character.virtues_flaws):
         found.append(

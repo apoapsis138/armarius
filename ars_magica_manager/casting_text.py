@@ -31,6 +31,7 @@ from .rules import (
 )
 from .rules import hybrid_magic as hybrid
 from .rules import lab as lab_rules
+from .rules.book_seasons import language_score
 from .rules.infernalists import hierarchy
 from .rules.realms import (
     away,
@@ -39,6 +40,7 @@ from .rules.realms import (
     present_aura,
     present_aura_kind,
 )
+from .rules.scores import ability_level
 
 
 def _levels(count: int) -> str:
@@ -277,8 +279,6 @@ TABLET_ARTES_LIBERALES, TABLET_LATIN = 1, 4
 def tablet_casting_line(saga: Saga, magus: Character, spell: Spell) -> str:
     """One magus casting a Casting Tablet's spell (markup): the Casting
     Total before the stress die and what each die gives, by DE's table."""
-    from .rules.book_seasons import language_score
-    from .rules.scores import ability_level
 
     name = escape(magus.name)
     if (

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import re
 from dataclasses import dataclass, fields
-from typing import Any, Literal, NotRequired, TypedDict
+from typing import Any, Literal, NotRequired, TypedDict, cast, get_args
 
 from ..totals import validate_modifier_type
 
@@ -14,6 +14,15 @@ from ..totals import validate_modifier_type
 CharacterType = Literal["magus", "companion", "mythic companion", "grog"]
 #: The character types that count as a companion (Covenant Inhabitants).
 COMPANION_TYPES: tuple[str, ...] = ("companion", "mythic companion")
+
+
+def as_character_type(value: str) -> CharacterType:
+    """`value` as a character type, or ValueError saying which is unknown."""
+    if value not in get_args(CharacterType):
+        raise ValueError(f"unknown character type {value!r}")
+    return cast(CharacterType, value)
+
+
 VirtueFlawType = Literal["Virtue", "Flaw"]
 #: A character catalog entry's type: Qualities and Inferiorities are the
 #: non-human counterparts of Virtues and Flaws (RoP:Magic magic characters,

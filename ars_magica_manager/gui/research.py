@@ -218,6 +218,7 @@ def research_chapter(
     the chosen season's roll on the chart. With `only`, just those goals,
     read only (a laboratory's view of its owner's research under way);
     with `run`, the goals can be added, edited and deleted."""
+    # cycle: character_sheet builds this chapter.
     from .character_sheet import TextBlock, section
 
     shown = list(character.breakthroughs if only is None else only)

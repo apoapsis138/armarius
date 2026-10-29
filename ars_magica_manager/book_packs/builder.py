@@ -56,6 +56,7 @@ from ..models import (
     Tribunal,
     TribunalDiaryEntry,
     VirtueFlawInstance,
+    as_character_type,
 )
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
@@ -482,7 +483,7 @@ class Builder:
         character = Character(
             id=self._character_id(name),
             name=name,
-            type=type,  # type: ignore[arg-type]
+            type=as_character_type(type),
             covenant_id=covenant.id if covenant else None,
             detail=detail,
             summary=summary,

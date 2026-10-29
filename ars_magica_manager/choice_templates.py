@@ -45,11 +45,13 @@ from .arts import FORMS, TECHNIQUES
 from .markup import escape
 from .models import (
     Character,
+    CharacterType,
     GrogTemplateDef,
     Saga,
     ScoredTrait,
     VirtueFlawDef,
     VirtueFlawInstance,
+    as_character_type,
     known_fields,
 )
 from .rules import creation_character as cc
@@ -110,7 +112,7 @@ class ChoiceTemplateDef:
 
     id: str
     name: str
-    type: str = "companion"
+    type: CharacterType = "companion"
     kind: str = "quick"
     book: str = "DE"
     page: int = 0
@@ -142,7 +144,12 @@ class ChoiceTemplateDef:
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> ChoiceTemplateDef:
-        return cls(**known_fields(cls, data))
+        template = cls(**known_fields(cls, data))
+        try:
+            as_character_type(template.type)
+        except ValueError as error:
+            raise ValueError(f"choice template {template.id!r}: {error}") from error
+        return template
 
 
 @dataclass
@@ -215,7 +222,7 @@ def slots(template: ChoiceTemplateDef, variant: int) -> list[dict[str, Any]]:
 
 
 def _blank(character_type: str) -> Character:
-    return Character(id="", name="", type=character_type)  # type: ignore[arg-type]
+    return Character(id="", name="", type=as_character_type(character_type))
 
 
 def _chooser(saga: Saga | None, character_type: str) -> VirtueFlawChooser:

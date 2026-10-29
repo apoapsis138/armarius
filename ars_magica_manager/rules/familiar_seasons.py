@@ -17,7 +17,6 @@ on his sheet (its Might and Size) before the season.
 from __future__ import annotations
 
 from collections.abc import Mapping
-from typing import TYPE_CHECKING
 
 from ..models import (
     CORD_SCORE_COSTS,
@@ -30,10 +29,8 @@ from ..models import (
 )
 from . import enchantment, lab
 from .breakdown import Line
+from .lab_work import LabWork, vis_pool, whose_vis
 from .rounding import round_up
-
-if TYPE_CHECKING:
-    from .lab_seasons import LabWork
 
 SOURCE = "Ars Magica Definitive Edition, Chapter 8: Laboratory, Familiars, pp. 265-268"
 BIND_SOURCE = (
@@ -176,7 +173,6 @@ def work(
     options: lab.LabOptions,
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a season of familiar work, or what it does."""
-    from .lab_seasons import LabWork, vis_pool, whose_vis
 
     familiar = saga.familiar_of(magus.id)
     if familiar is None:

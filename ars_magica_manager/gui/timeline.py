@@ -88,7 +88,7 @@ class SeasonDelegate(QStyledItemDelegate):
         index: QModelIndex | QPersistentModelIndex,
     ) -> None:
         p = self.p
-        cell = QRectF(option.rect)  # type: ignore[attr-defined]
+        cell = QRectF(option.rect)
         painter.save()
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         if index.column() == self.current:
@@ -123,7 +123,7 @@ class SeasonDelegate(QStyledItemDelegate):
                     round(pill.width()) - 6,
                 ),
             )
-        if option.state & QStyle.StateFlag.State_Selected:  # type: ignore[attr-defined]
+        if option.state & QStyle.StateFlag.State_Selected:
             painter.setPen(QPen(QColor(p["heading"]), 2))
             painter.setBrush(Qt.BrushStyle.NoBrush)
             painter.drawRoundedRect(cell.adjusted(2, 4, -2, -4), 7, 7)
@@ -390,5 +390,5 @@ class _CalendarDelegate(SeasonDelegate):
         index: QModelIndex | QPersistentModelIndex,
     ) -> None:
         if (index.row(), index.column()) == self.now:
-            painter.fillRect(option.rect, QColor(self.p["selection"]))  # type: ignore[attr-defined]
+            painter.fillRect(option.rect, QColor(self.p["selection"]))
         super().paint(painter, option, index)

@@ -199,7 +199,7 @@ def test_puissant_ability_shows_base_then_adjusted():
 
 #: Rules modules that hold no rule of their own (plumbing, or the app's
 #: own grouping of the rules' activities).
-_PLUMBING = {"__init__", "activity_groups", "breakdown", "effects"}
+_PLUMBING = {"__init__", "activity_groups", "breakdown", "effects", "lab_work"}
 
 
 def test_every_rules_module_cites_its_source():

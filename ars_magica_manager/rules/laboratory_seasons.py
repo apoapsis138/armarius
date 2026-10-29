@@ -24,7 +24,6 @@ assisting in someone else's (planned on the assistant's sheet).
 from __future__ import annotations
 
 import random
-from typing import TYPE_CHECKING
 
 from .. import catalog
 from ..models import (
@@ -37,9 +36,7 @@ from ..models import (
 )
 from . import dice, lab
 from .lab_stats import lab_characteristic_total, lab_free_virtues
-
-if TYPE_CHECKING:
-    from .lab_seasons import LabWork
+from .lab_work import LabWork
 
 SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Setting Up a Laboratory, p. "
@@ -156,7 +153,6 @@ def work(
 ) -> tuple[list[str], LabWork | None]:
     """The problems with a season of work on the laboratory, or what it
     does."""
-    from .lab_seasons import LabWork
 
     theory = magic_theory(magus)
     empty = lab.LabTotal(total=0, lines=[])

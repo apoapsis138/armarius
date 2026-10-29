@@ -115,6 +115,15 @@ def _legacy_bonus(virtues_flaws: Sequence[VirtueFlawInstance], ability: str) -> 
     return 0
 
 
+def ability_score(character: Character | Familiar, name: str) -> tuple[int, int]:
+    """An Ability's score and its fixed bonus (Puissant), 0 if absent."""
+    ability = next((a for a in character.abilities if a.name == name), None)
+    if ability is None:
+        return 0, 0
+    bonus, _ = ability_bonus(character.virtues_flaws, name)
+    return ability.level, bonus
+
+
 def ability_level(character: Character | Familiar, name: str) -> int:
     """The level of the Ability named `name`, 0 when it isn't held."""
     found = next((a for a in character.abilities if a.name == name), None)

@@ -5,7 +5,7 @@ app it only opens sagas, each after signing in."""
 from __future__ import annotations
 
 from pathlib import Path
-from typing import Any, ClassVar
+from typing import TYPE_CHECKING, Any, ClassVar, cast
 
 from textual.app import ComposeResult
 from textual.binding import Binding, BindingType
@@ -28,6 +28,9 @@ from .help import HelpContext, HelpScreen, shown_keys
 from .prompts import ConfirmScreen, MenuScreen, _sign_in_dialog
 from .widgets import BottomBar
 from .workspace import WorkspaceScreen
+
+if TYPE_CHECKING:
+    from ..app import ArsMagicaManagerApp
 
 _SAGA_ITEM_ID_PREFIX = "saga-"
 #: What loading a damaged or hand-edited saga file can raise.
@@ -257,4 +260,4 @@ class SagaPickerScreen(Screen[None]):
 
     def _set_player(self, player: Player | None) -> None:
         """Record who is signed in on the app (ArsMagicaManagerApp.player)."""
-        self.app.player = player  # type: ignore[attr-defined]
+        cast("ArsMagicaManagerApp", self.app).player = player

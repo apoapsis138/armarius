@@ -36,6 +36,7 @@ class Rhine:
 
 
 def assemble() -> Builder:
+    # start-up: a region's parts load when its pack is built, not at import.
     from . import (
         bestiary,
         covenants_east,

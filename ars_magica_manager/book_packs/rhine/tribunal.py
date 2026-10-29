@@ -15,6 +15,7 @@ from ...rules import rhine_ranks
 from ...tribunal_packages import rhine as rhine_package
 from ...tribunal_packages.rhine import KEY
 from ..builder import paragraphs
+from .history import ERAS, REGION_HISTORY
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -394,8 +395,6 @@ def _case_text(rhine: Rhine) -> None:
 
 
 def finish(rhine: Rhine) -> None:
-    from .history import ERAS, REGION_HISTORY
-
     b, tribunal = rhine.b, rhine.tribunal
     assert tribunal is not None
     # The mundane history, by era, in the Tribunal's own History.

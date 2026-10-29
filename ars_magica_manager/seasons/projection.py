@@ -68,8 +68,8 @@ class Projection:
         return pickle.loads(pickle.dumps(played.copy, pickle.HIGHEST_PROTOCOL))
 
     def _play_one(self) -> None:
-        # Imported here: advance's own imports reach the sheets' text,
-        # which reads projections.
+        # cycle: advance's own imports reach the sheets' text, which reads
+        # projections.
         from .advance import apply, resolve
 
         saga = self.copy

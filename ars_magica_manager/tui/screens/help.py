@@ -4,8 +4,6 @@ with ? (or F1) on the help for whatever has focus."""
 from __future__ import annotations
 
 import asyncio
-from collections.abc import Callable
-from dataclasses import dataclass, field
 from typing import ClassVar
 
 from textual.app import ComposeResult
@@ -18,6 +16,7 @@ from textual.widgets.option_list import Option, OptionDoesNotExist
 from ... import help_text as ht
 from ...markup import escape
 from .fields import ModalDialog
+from .help_context import HelpContext
 
 ABOUT, WHATS_NEW = ht.ABOUT, ht.WHATS_NEW
 whats_new_text = ht.whats_new_text
@@ -26,20 +25,6 @@ whats_new_text = ht.whats_new_text
 #: listed twice (THIS SCREEN and ALL PAGES).
 _HERE, _GUIDE, _REF, _ALL, _FOUND = "here:", "guide:", "ref:", "all:", "found:"
 _PREFIX = {"here": _HERE, "guide": _GUIDE, "ref": _REF, "all": _ALL, "found": _FOUND}
-
-
-@dataclass
-class HelpContext:
-    """What Help opens on: the topic ids for where focus is (most specific
-    first), where that is in words, and the keys that work there; and, from
-    a screen with places to go to, what opens one (Go there): it takes a
-    tab's or section's id, opens it once Help has closed, and says whether
-    the screen has it."""
-
-    ids: list[str] = field(default_factory=list)
-    where: str = ""
-    keys: list[str] = field(default_factory=list)
-    go_to: Callable[[str], bool] | None = None
 
 
 def shown_keys(screen: Screen, leave_out: tuple[str, ...] = ()) -> list[str]:

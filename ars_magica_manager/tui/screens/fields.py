@@ -26,6 +26,7 @@ from ... import form_spec as fs
 from ...commands import Picked
 from ...form_spec import DialogField
 from ...markup import escape
+from .help_context import HelpContext
 
 
 class ModalDialog[ResultT](ModalScreen[ResultT]):
@@ -64,12 +65,10 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         self.dismiss(self.CANCEL_RESULT)
 
     def help_context(self) -> Any:
-        """What Help opens on here (a screens.help.HelpContext), or None to
+        """What Help opens on here (a screens.help_context.HelpContext), or None to
         show the screen below's."""
         if self.help_id is None:
             return None
-        from .help import HelpContext  # help.py builds on this module
-
         return HelpContext([self.help_id])
 
     def _select_value(self, selector: str) -> str | None:
@@ -408,6 +407,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         elif spec.choose is not None:
             # The core's own steps, when the terminal has no screen of its
             # own for this field.
+            # cycle: steps builds on FieldsDialog.
             from .steps import run_steps
 
             run_steps(

@@ -45,6 +45,7 @@ from .lab_stats import (
 )
 from .realms import covenant_effective_aura
 from .rounding import round_down, round_up
+from .scores import ability_score
 
 HELP_SOURCE = "Ars Magica Definitive Edition, Help in the Laboratory, pp. 264-265"
 SOURCE = (
@@ -78,15 +79,6 @@ ACTIVITY_SOURCE = (
     "Ars Magica Definitive Edition, Chapter 8: Laboratory, Inventing Spells, Laboratory "
     "Texts, Longevity Rituals, Vis Extraction, Shape and Material, pp. 250-263, 282-285"
 )
-
-
-def ability_score(character: Character | Familiar, name: str) -> tuple[int, int]:
-    """An Ability's score and its fixed bonus (Puissant), 0 if absent."""
-    ability = next((a for a in character.abilities if a.name == name), None)
-    if ability is None:
-        return 0, 0
-    bonus, _ = scores.ability_bonus(character.virtues_flaws, name)
-    return ability.level, bonus
 
 
 def art_score(magus: Character, art: str) -> tuple[int, int]:

@@ -17,6 +17,7 @@ from .models.common import SEASONS
 from .rules import experiment, research
 from .rules.experiment import Extraordinary
 from .rules.lab import ability_score, botch_conditions
+from .sheet_text import goal_text
 from .tables import Table
 
 #: The Research Log's columns, as its header shows them.
@@ -242,7 +243,6 @@ def odds_lines(saga: Saga, character: Character, goal: Breakthrough) -> list[str
 def goal_panel(saga: Saga, character: Character, goal: Breakthrough) -> str:
     """A goal's details: where it stands, step by step, and the odds of its
     next season, then what it grants and what waits on it."""
-    from .sheet_text import goal_text
 
     title, *rest = goal_text(goal).split("\n")
     lines = [title, steps_line(goal), *odds_lines(saga, character, goal), *rest]

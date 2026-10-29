@@ -43,6 +43,7 @@ from dataclasses import dataclass
 from typing import Any
 
 from . import references, sourcebooks
+from .arts import ARTS
 from .commands import SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -56,6 +57,7 @@ from .models import (
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
 from .rules import aura_kinds, faerie_threshold, lunar, otherworlds, realms, senses
+from .rules.lab import ability_score
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
@@ -303,7 +305,6 @@ def parse_roll(words: str) -> Roll | None:
 
 
 def roll_total(character: Character, roll: Roll) -> int:
-    from .rules.lab import ability_score
 
     ability = next(
         (
@@ -860,11 +861,12 @@ def _effect_problem(values: dict[str, Any]) -> str | None:
             return "An aura can't be below 0."
         if target and realm_of(target, "") == "":
             return f"The aura's realm is one of {', '.join(REALMS)}."
-    if values.get("what") == "lab_total" and target:
-        from .arts import ARTS
-
-        if target.casefold() not in (a.casefold() for a in ARTS):
-            return "Name an Art for a lab bonus, or leave it blank for every one."
+    if (
+        values.get("what") == "lab_total"
+        and target
+        and target.casefold() not in (a.casefold() for a in ARTS)
+    ):
+        return "Name an Art for a lab bonus, or leave it blank for every one."
     return None
 
 

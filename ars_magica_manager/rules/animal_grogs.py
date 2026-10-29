@@ -363,18 +363,3 @@ def cap_age(saga: Saga, character: Character) -> int | None:
     if years is None or found is None:
         return years
     return round_down(years * animal_aging.HUMAN.lifespan / found.lifespan)
-
-
-def restricted_choices(character: Character, entries: Iterable[str]) -> list[str]:
-    """The Abilities xp went on that count against Restricted Learning's
-    five: all but the animal's own Language and a Virtue's Supernatural
-    Ability (`entries`: the creation xp targets)."""
-    from .creation_access import granted_supernatural
-
-    granted = granted_supernatural(character)
-    found: list[str] = []
-    for name in entries:
-        if own_language(character, name) or name in granted or name in found:
-            continue
-        found.append(name)
-    return found

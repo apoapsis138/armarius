@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.1 — 2026-10-29
+
+### Fundamenta
+
+- **Tidier code, nothing new to see.** The remaining workarounds that hid
+  problems from the checks are gone: all but one of the notes telling the
+  type checker to look away were stale or fixed at their cause, and the
+  enchanting, familiar and laboratory seasons no longer reach back into the
+  lab work they feed. Imports tucked inside functions to dodge a loop are
+  now at the top of their files or the shared code is moved down, and the
+  few that must stay say why. New checks fail if either habit comes back.
+  The app works exactly as it did.
+
 ## 3.41.0 — 2026-10-29
 
 ### Peregrinatio

@@ -13,7 +13,8 @@ from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
-from . import book_kinds, catalog, storage
+from . import book_kinds, book_value, casting_text, catalog, storage
+from . import enchanted_devices as ed
 from . import spells as spl
 from .arts import ART_LOOKUP
 from .csv_import import parse_rows, read_text_any, skipped_preview
@@ -719,8 +720,6 @@ def detail_text(saga: Saga, book: Book | None) -> str:
     lines += _codex_lines(saga, book)
     device = epitome_device(saga, book)
     if device is not None:
-        from . import enchanted_devices as ed
-
         lines.append(
             f"[b]Epitome:[/] {escape(device.name)} [dim]({escape(device.type)}, "
             f"{escape(ed.capacity_text(saga, device))})[/]"
@@ -758,7 +757,6 @@ def detail_text(saga: Saga, book: Book | None) -> str:
 def _value_lines(book: Book) -> list[str]:
     """The details panel's category of value and price guide (book_value),
     for a summa or tractatus with its numbers."""
-    from . import book_value
 
     kind = book_value.category(book)
     if kind is None:
@@ -777,7 +775,6 @@ def _tablet_lines(saga: Saga, book: Book) -> list[str]:
     spell = book_spell(saga, book)
     if spell is None or spell.level is None:
         return []
-    from . import casting_text
 
     magi = [c for c in readers(saga, book) if c.type == "magus"]
     if not magi:
@@ -790,7 +787,6 @@ def _tablet_lines(saga: Saga, book: Book) -> list[str]:
 def _research_lines(saga: Saga, book: Book) -> list[str]:
     """The details panel's research on the book's subject in the covenant
     library it is kept in, when it has a bonus or an encyclopedia."""
-    from . import book_value
 
     covenant = saga.covenant(covenant_of(saga, book))
     subject = book_value.subject_of(book)

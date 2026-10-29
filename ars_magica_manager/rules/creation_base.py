@@ -70,6 +70,7 @@ def _person(record: Record) -> bool:
 
 
 def _tradition_member(record: Record) -> bool:
+    # cycle: creation_tradition registers its checks here.
     from .creation_tradition import takes_training
 
     return takes_training(record)

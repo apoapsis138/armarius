@@ -43,8 +43,10 @@ from __future__ import annotations
 from ..arts import FORMS
 from ..models import Book, Character, SeasonPlan
 from . import hybrid_magic as hybrid
+from . import work_virtues
 from .breakdown import Line
 from .rounding import round_down, round_up
+from .scores import ability_score
 
 SOURCE = "Ars Magica Definitive Edition, Chapter Four: Virtues and Flaws, pp. 59-154"
 MYSTERIES_SOURCE = "The Mysteries Revised Edition, Chapter 6: Hermetic Astrology"
@@ -115,8 +117,6 @@ def horoscope_ability(magus: Character) -> str:
 def horoscope_score(magus: Character) -> int:
     """Intelligence + the horoscope's Ability; Artes Liberales counts as
     astronomy (Academic Concentration, rules.work_virtues)."""
-    from . import work_virtues
-    from .lab import ability_score
 
     ability = horoscope_ability(magus)
     score = magus.characteristics.intelligence + sum(ability_score(magus, ability))

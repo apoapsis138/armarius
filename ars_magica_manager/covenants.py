@@ -5,6 +5,7 @@ Boons/Hooks carry."""
 from __future__ import annotations
 
 from collections.abc import Mapping
+from typing import cast
 
 from .models import (
     BOON_HOOK_DETAIL,
@@ -89,7 +90,7 @@ def covenant_modifiers(
     `activity`, modifiers for that activity and general ones (no activity)
     both count. The covenant end of the shared lookup (rules.effects)."""
     return [
-        (effect.entry, effect.modifier)  # type: ignore[misc]
+        (cast(CovenantBoonHookDef, effect.entry), effect.modifier)
         for effect in effects.collect(
             [covenant_source(covenant, catalog_by_id)], applies_to, activity=activity
         )

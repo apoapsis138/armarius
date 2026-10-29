@@ -12,7 +12,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass, replace
 from dataclasses import field as dataclass_field
 from functools import cached_property, partial
-from typing import Any, ClassVar, NamedTuple
+from typing import TYPE_CHECKING, Any, ClassVar, NamedTuple, cast
 
 from textual.app import ComposeResult
 from textual.binding import ActiveBinding, Binding, BindingType
@@ -144,6 +144,10 @@ from ..widgets import (
     section_stop,
     sheet_focus_chain,
 )
+
+if TYPE_CHECKING:
+    from ...app import ArsMagicaManagerApp
+    from .screen import WorkspaceScreen
 
 
 def _creating(record: Character | Covenant | Laboratory) -> str:
@@ -698,7 +702,7 @@ class WorkspaceBase(Screen[None]):
 
     def on_unmount(self) -> None:
         # Back to the saga list: whoever signed in to this saga is signed out.
-        self.app.player = None  # type: ignore[attr-defined]
+        cast("ArsMagicaManagerApp", self.app).player = None
         storage.guard = None
         storage.saved_by = ""
         if self._session is not None:
@@ -1609,7 +1613,9 @@ class WorkspaceBase(Screen[None]):
             view = self._current_sheet_view()
             record = view.creation_record if view is not None else None
         if record is not None:
-            self.app.push_screen(CreationWorksheetScreen(self, record))  # type: ignore[arg-type]
+            self.app.push_screen(
+                CreationWorksheetScreen(cast("WorkspaceScreen", self), record)
+            )
 
     # -- scored-trait lists (Personality Traits, Reputations) --
 

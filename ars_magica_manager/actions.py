@@ -20,6 +20,7 @@ from typing import TYPE_CHECKING, NamedTuple, Protocol
 from . import (
     arms,
     catalog,
+    connections,
     giving,
     guest_stays,
     hosting,
@@ -42,7 +43,7 @@ from . import mystery_cults as cults_core
 from . import mystic_paths as mystic_forms
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
-from .forms import careers
+from .forms import careers, go_to
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
@@ -984,8 +985,6 @@ def _goes_to(facts: ActionFacts) -> bool:
     """Go To: on a record whose page names another record. On a
     character, covenant or laboratory, whose sections have More items of
     their own, only on the record itself or its Connections."""
-    from . import connections
-    from .forms import go_to
 
     record = facts.record_to_delete()
     if record is None or not go_to.has_targets(facts.saga, record):
