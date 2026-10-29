@@ -109,6 +109,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.7 — 2026-10-29
+
+### Glossa
+
+- **A shorter, up-to-date design document.** DESIGN.md now sets out how
+  Armarius is built today: one shared core with the terminal and desktop
+  on top, the design patterns the code uses and why each fits, how a saga
+  is saved and merged, seasons and the world's turn, creation, and which
+  screen conventions belong to both versions, to the terminal or to the
+  desktop. The old plan's out-of-date limits and pointers are gone.
+
 ## 3.41.6 — 2026-10-29
 
 ### Glossa
