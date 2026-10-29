@@ -168,20 +168,26 @@ def chip_row(
     line.setSpacing(6)
     line.addWidget(text(label, p["label"], serif(11, italic=True)))
     for words, lit, on_click in chips:
-        chip = QPushButton(words)
-        chip.setObjectName("chip")
+        chip = chip_button(words, p["heading"] if lit else p["label"], on_click)
         chip.setCheckable(True)
         chip.setChecked(lit)
-        chip.setCursor(Qt.CursorShape.PointingHandCursor)
-        colour = p["heading"] if lit else p["label"]
-        chip.setStyleSheet(
-            f"color:{colour}; border:1px solid {colour}; border-radius:9px;"
-            " padding:1px 10px; background:transparent"
-        )
-        chip.clicked.connect(lambda _checked=False, act=on_click: act())
         line.addWidget(chip)
     line.addStretch(1)
     return row
+
+
+def chip_button(words: str, colour: str, on_click: Callable[[], None]) -> QPushButton:
+    """An outlined pill, as `chip` draws, that does something when clicked
+    (a book's In play)."""
+    button = QPushButton(words)
+    button.setObjectName("chip")
+    button.setCursor(Qt.CursorShape.PointingHandCursor)
+    button.setStyleSheet(
+        f"color:{colour}; border:1px solid {colour}; border-radius:9px;"
+        " padding:1px 10px; background:transparent"
+    )
+    button.clicked.connect(lambda _checked=False: on_click())
+    return button
 
 
 def take_pressed() -> QPushButton | None:

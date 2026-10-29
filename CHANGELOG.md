@@ -109,6 +109,31 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.42.0 — 2026-10-29
+
+### Illuminatio
+
+- **Books in Play cards say what each book brings.** On Saga Content's
+  Books chapter, each card counts what its book adds to the saga: its
+  Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities,
+  spells, Shapes & Materials and Goods, and its optional rules, season
+  activities, kinds of book and traditions ("29 Virtues & Flaws, 45
+  spells, 1 kind of book"). A book the app has nothing from yet says so.
+- The books are grouped by book line: the core book first, then The
+  Order (Houses of Hermes, then The Order at Large), Realms of Power,
+  Tribunals, Mythic Europe, The Lands Beyond, Non-Hermetic Magic,
+  Scenarios and Transforming Mythic Europe, then the saga's own sources.
+- A book out of play is drawn faded.
+- Click a supplement's In play / Not in play chip to put it in or out of
+  play; the chapter's count follows and the saga is saved. Edit still
+  ticks many books at once.
+
+### Glossa
+
+- The House Rules help's paragraph on what the app works out for a
+  Virtue, Flaw, Boon or Hook had lost its opening words; it reads whole
+  again.
+
 ## 3.41.9 — 2026-10-29
 
 ### Illuminatio

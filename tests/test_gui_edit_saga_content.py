@@ -10,16 +10,18 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QLabel
+from PySide6.QtWidgets import QApplication, QLabel, QPushButton, QWidget
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import house_rules as hr
+from ars_magica_manager import saga_content as sc
 from ars_magica_manager import spells as spl
 from ars_magica_manager import storage
 from ars_magica_manager.forms import saga_content as scf
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.saga_content import SagaContentPage
+from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
 
 
@@ -139,3 +141,62 @@ def test_a_cult_its_degree_and_its_script_are_added(app):
     assert "The Silk Hall: +6" in [
         label.text() for label in _page(window).findChildren(QLabel)
     ]
+
+
+def _chip(page: SagaContentPage, book: str) -> QWidget:
+    """The in-play chip on `book`'s card (a button for a supplement, a
+    label for the core book)."""
+    badge = next(label for label in page.findChildren(QLabel) if label.text() == book)
+    card = badge.parentWidget()
+    assert card is not None
+    return next(
+        w
+        for w in card.findChildren(QWidget)
+        if w.objectName() == "chip" or (isinstance(w, QLabel) and w.text() == "Always")
+    )
+
+
+def _books_title(page: SagaContentPage) -> str:
+    return next(
+        label.text()
+        for label in page.findChildren(QLabel)
+        if label.text().startswith("Books in Play (")
+    )
+
+
+def test_a_books_chip_puts_it_in_or_out_of_play(app):
+    window, saga_id = _content("Books")
+    saga = window.saga
+    assert saga is not None
+    sc.set_books_in_play(saga, ["Covenants"])
+    storage.save_saga(saga)
+    window.redraw()
+    page = _page(window)
+    every = len(sc.every_book(saga))
+    assert _books_title(page) == f"Books in Play (2 of {every})"
+    core = _chip(page, "DE")
+    assert not isinstance(core, QPushButton)
+    assert "always in play" in core.toolTip()
+    chip = _chip(page, "RoP:F")
+    assert isinstance(chip, QPushButton) and chip.text() == "Not in play"
+    chip.click()
+    assert storage.load_saga(saga_id).books_in_play == ["Covenants", "RoP:F"]
+    page = _page(window)
+    assert page.codex.rail.currentItem().text() == "Books"
+    assert _books_title(page) == f"Books in Play (3 of {every})"
+    chip = _chip(page, "RoP:F")
+    assert chip.text() == "In play"
+    chip.click()
+    assert storage.load_saga(saga_id).books_in_play == ["Covenants"]
+
+
+#: Widgets the Books chapter builds for the sample saga (301: 47 cards,
+#: their group headings, the sources and traditions); raise a budget only
+#: deliberately.
+BOOKS_WIDGET_BUDGET = 310
+
+
+def test_the_books_chapter_stays_within_its_widget_budget(app):
+    page = SagaContentPage(_sample_saga_with_covenant(), SCRIPTORUM)
+    built = len(page._books().findChildren(QWidget))
+    assert built <= BOOKS_WIDGET_BUDGET, built

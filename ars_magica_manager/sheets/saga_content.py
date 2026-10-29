@@ -7,17 +7,22 @@ the desktop page can give each its own type.
 
 from __future__ import annotations
 
-from collections.abc import Sequence
+from collections import Counter
+from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
+from typing import Any
 
+from .. import book_kinds, sourcebooks, traditions
 from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
-from .. import sourcebooks, traditions
 from .. import spells as spl
 from ..models import AbilityDef, Saga, Spell
+from ..models.mystery_cults import is_saga_cult
 from ..references import Fact
+from ..rules import activities
+from ..rules import options as rule_options
 from .covenant import Table
 
 ALWAYS, IN_PLAY, OUT_OF_PLAY = "Always", "In play", "Not in play"
@@ -37,16 +42,125 @@ def header_facts(saga: Saga) -> list[Fact]:
 @dataclass(frozen=True)
 class BookCard:
     """A book the saga can have in play: its abbreviation, title, whether
-    it is in play, and whether it is one of the saga's own sources."""
+    it is in play, whether it is one of the saga's own sources, and what
+    it brings (brought), "" for nothing the app counts."""
 
     book: str
     title: str
     state: str
     own: bool
+    brings: str = ""
+
+
+#: A card's line for a book that brings nothing the app counts.
+NOTHING_COUNTED = "Nothing the app counts yet"
+
+#: The books each thing that names one cites, one book-set per thing.
+Cited = Callable[[Saga], Iterable[set[str]]]
+
+
+def _catalog(key: str, own: Callable[[Saga], Sequence[Any]]) -> Cited:
+    """A shared catalog's entries and the saga's own of that kind, by the
+    books their `source` cites; the catalog is listed once a call."""
+
+    def cited(saga: Saga) -> list[set[str]]:
+        entries = (*sc.CATALOGS[key].shared(), *own(saga))
+        return [sourcebooks.books_of(e.source) for e in entries]
+
+    return cited
+
+
+def _named(books: Callable[[], Iterable[str]]) -> Cited:
+    """A rules registry whose entries each name one book ("" the core)."""
+    return lambda _saga: [{book or sourcebooks.CORE} for book in books()]
+
+
+#: What a book can bring, each as (one, many, the books its entries cite),
+#: in the order a card lists them.
+BRINGS: tuple[tuple[str, str, Cited], ...] = (
+    (
+        "Virtue or Flaw",
+        "Virtues & Flaws",
+        _catalog("virtues_flaws", lambda s: s.custom_virtues_flaws),
+    ),
+    (
+        "Laboratory Virtue or Flaw",
+        "Laboratory Virtues & Flaws",
+        _catalog("lab_virtues_flaws", lambda s: s.custom_lab_virtues_flaws),
+    ),
+    (
+        "Boon or Hook",
+        "Boons & Hooks",
+        _catalog("boons_hooks", lambda s: s.custom_boons_hooks),
+    ),
+    ("Ability", "Abilities", _catalog("abilities", lambda s: s.custom_abilities)),
+    ("spell", "spells", _catalog("spells", lambda s: s.spells)),
+    (
+        "Shape or Material",
+        "Shapes & Materials",
+        _catalog("shapes_materials", lambda _s: ()),
+    ),
+    ("Good", "Goods", _catalog("goods", lambda s: s.custom_goods)),
+    (
+        "optional rule",
+        "optional rules",
+        _named(lambda: (o.book for o in rule_options.OPTIONS)),
+    ),
+    (
+        "season activity",
+        "season activities",
+        _named(
+            lambda: (a.book for a in activities.ACTIVITIES.values() if not a.hidden)
+        ),
+    ),
+    (
+        "kind of book",
+        "kinds of book",
+        _named(
+            lambda: (
+                k.book
+                for kinds in (
+                    book_kinds.OPUS_TYPES,
+                    book_kinds.PHYSICAL_FORMS,
+                    book_kinds.COLLECTIONS,
+                )
+                for k in kinds.values()
+            )
+        ),
+    ),
+    (
+        "tradition",
+        "traditions",
+        lambda _saga: [
+            sourcebooks.books_of(t.source)
+            for t in traditions.all_traditions()
+            if not is_saga_cult(t.id)
+        ],
+    ),
+)
+
+
+def brought(saga: Saga) -> dict[str, str]:
+    """What each book brings, in plain words ("27 Virtues & Flaws, 4
+    Abilities"), the zeros left out; a book bringing nothing counted is
+    missing. One pass over each catalog and registry for every book."""
+    counts: dict[str, Counter[int]] = {}
+    for index, (_one, _many, cited) in enumerate(BRINGS):
+        for books in cited(saga):
+            for book in books:
+                counts.setdefault(book, Counter())[index] += 1
+    return {
+        book: ", ".join(
+            f"{n} {BRINGS[i][0] if n == 1 else BRINGS[i][1]}"
+            for i, n in sorted(counted.items())
+        )
+        for book, counted in counts.items()
+    }
 
 
 def book_cards(saga: Saga) -> list[BookCard]:
     own = sourcebooks.saga_sources(saga)
+    brings = brought(saga)
     return [
         BookCard(
             book,
@@ -57,9 +171,44 @@ def book_cards(saga: Saga) -> list[BookCard]:
             if sc.is_in_play(saga, book)
             else OUT_OF_PLAY,
             book in own,
+            brings.get(book, ""),
         )
         for book in sc.every_book(saga)
     ]
+
+
+@dataclass(frozen=True)
+class BookGroup:
+    """A heading of the Books chapter and its cards; consecutive groups
+    with one `heading` (The Order) differ by `subheading`."""
+
+    heading: str
+    subheading: str
+    cards: tuple[BookCard, ...]
+
+
+def book_groups(saga: Saga, cards: Sequence[BookCard]) -> list[BookGroup]:
+    """`cards` (book_cards) grouped: the core book, the supplements in
+    sourcebooks.BOOK_GROUPS (a group with none of its books in the app
+    left out), any supplement no group names, then the saga's own
+    sources."""
+    by_book = {card.book: card for card in cards}
+    groups = [BookGroup("The Core Book", "", (by_book[sourcebooks.CORE],))]
+    grouped: set[str] = {sourcebooks.CORE}
+    for heading, subheading, books in sourcebooks.BOOK_GROUPS:
+        shown = tuple(by_book[b] for b in books if b in by_book)
+        grouped.update(books)
+        if shown:
+            groups.append(BookGroup(heading, subheading, shown))
+    rest = tuple(
+        by_book[b] for b in sourcebooks.SUPPLEMENTS if b not in grouped and b in by_book
+    )
+    if rest:
+        groups.append(BookGroup("Other Books", "", rest))
+    own = tuple(c for c in cards if c.own)
+    if own:
+        groups.append(BookGroup("The Saga's Own Sources", "", own))
+    return groups
 
 
 def sources_table(saga: Saga) -> Table:

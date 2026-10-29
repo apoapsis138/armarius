@@ -22,7 +22,7 @@ from .. import saga_content as sc
 from .. import sourcebooks, traditions
 from .. import spells as spl
 from ..arts import FORMS, TECHNIQUES
-from ..commands import Choice, Choose, Confirm, Form, Refuse, SectionOps
+from ..commands import Act, Choice, Choose, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, description_field, pairs
 from ..markup import escape
 from ..models import (
@@ -797,6 +797,25 @@ def books_form(saga: Saga) -> Form:
         )
 
     return Form("Books in play", lambda: books_fields(saga), apply)
+
+
+def toggle_book(saga: Saga, book: str) -> Act:
+    """Put one supplement or saga source in play, or out of it, leaving
+    the others as they are (a card's in-play chip); saved as the books
+    form is."""
+
+    def apply() -> None:
+        sc.set_books_in_play(
+            saga,
+            [
+                other
+                for other in sc.every_book(saga)
+                if other != sourcebooks.CORE
+                and sc.is_in_play(saga, other) != (other == book)
+            ],
+        )
+
+    return Act(apply)
 
 
 # ------------------------------------------------------------- traditions

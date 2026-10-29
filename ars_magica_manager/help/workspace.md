@@ -693,7 +693,11 @@ The sourcebooks the saga uses, and the saga's own sources.
 Every sourcebook, with whether it is in play. `e` opens the picker of books: tick the ones your troupe uses. The core book is always in play.
 <!-- /tui -->
 <!-- gui -->
-Every sourcebook as a card, with whether it is in play. **Edit** opens the picker of books: tick the ones your troupe uses. The core book is always in play.
+Every sourcebook as a card, with whether it is in play. The core book comes first, then the supplements under the book lines they belong to (The Order, with Houses of Hermes first and then The Order at Large; Realms of Power; Tribunals; Mythic Europe; The Lands Beyond; Non-Hermetic Magic; Scenarios; Transforming Mythic Europe), then the saga's own sources. A book line's books that the app doesn't have yet are left out until it does.
+
+Each card says what its book brings: how many Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, spells, Shapes & Materials and Goods it adds to the catalogs, and how many optional rules, season activities, kinds of book and traditions; a saga source counts the saga's own entries that cite it. A book the app has nothing from yet says so. A book out of play is drawn faded.
+
+Click a supplement's **In play** or **Not in play** chip to put it in play or take it out; the chapter's count changes with it and the saga is saved. The core book's **Always** chip can't be clicked: it is always in play. **Edit** opens the picker of books, to tick many at once. Click a card itself to see the book in the inspector.
 <!-- /gui -->
 
 While a book is out of play, everything it adds is switched off: the pickers leave out its Virtues, Flaws, spells and other entries; the season plan leaves out its activities (a plan already made keeps its activity); its optional rules are left off Edit Saga and count as off (the choice is kept for when the book comes back); and the library's book form leaves out its kinds of books and their fields (a book already using one keeps it). The Library tab's research bonuses need Covenants.
@@ -805,7 +809,7 @@ The Virtues, Flaws, Boons and Hooks made for this saga, and its own Abilities: h
 
 **The app works out** for an Ability: its Casting Total (Characteristic + Ability + aura + die, against the storyguide's Ease Factor), its Penetration (Casting Total - Ease Factor + Penetration bonus), its level as a spell (5 x its score, or its Casting Total when Accelerated) and its vis limit (up to its score in pawns, +1 and a botch die each), all Houses of Hermes: Societates p. 104; and who holds it. Renaming an Ability renames it on every character, familiar and creature holding it, and renames its Virtue.
 
-, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in its details, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
+**The app works out** for a Virtue, Flaw, Boon or Hook: the points from its type and tier (Free 0, Minor 1, Major 3; Flaws and Hooks give points rather than cost them), and, in its details, who holds the entry. An entry citing one of the saga's sources is offered only while that source is in play; one citing none always is.
 
 ### House Rules
 <!-- help: section-house-rules -->

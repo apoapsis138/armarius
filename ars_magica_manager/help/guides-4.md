@@ -716,7 +716,7 @@ A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, th
 2. In [Traditions Offered](help:section-traditions), below the books, press `e` and tick the traditions your saga uses. Each starts off, so the pickers stay short.
 <!-- /tui -->
 <!-- gui -->
-1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), click **Edit** in Books in Play and tick it.
+1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), click its card's **Not in play** chip (under Non-Hermetic Magic), or click **Edit** in Books in Play and tick it.
 2. In [Traditions Offered](help:section-traditions), below the books, click **Edit** and tick the traditions your saga uses. Each starts off, so the pickers stay short.
 <!-- /gui -->
 

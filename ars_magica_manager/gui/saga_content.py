@@ -15,6 +15,7 @@ from PySide6.QtCore import QModelIndex, QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import QFont, QIcon, QStandardItem, QStandardItemModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -52,6 +53,7 @@ from .widgets import (
     badge,
     cells_table,
     chip,
+    chip_button,
     filter_choice,
     level_box,
     scrolling_page,
@@ -136,35 +138,27 @@ class SagaContentPage(QWidget):
     # Chapters
 
     def _books(self) -> QWidget:
-        """Each book as a card marked in play or not, then the saga's own
-        sources."""
+        """The books as cards under their book line's heading, each saying
+        what it brings, then the saga's own sources."""
         p, saga = self.p, self.saga
-        tones = {
-            scs.ALWAYS: p["accent"],
-            scs.IN_PLAY: p["text-success"],
-            scs.OUT_OF_PLAY: p["dim"],
-        }
-        cards = []
-        for book in scs.book_cards(saga):
-            card = ClickableCard(p, pad=12, edge=tones[book.state])
-            top = QHBoxLayout()
-            top.addWidget(badge(book.book, tones[book.state], p))
-            top.addStretch(1)
-            top.addWidget(chip(book.state, tones[book.state]))
-            card.column.addLayout(top)
-            card.column.addWidget(
-                text(book.title, p["foreground"], serif(13.5, bold=True), wrap=True)
-            )
-            if book.own:
-                card.column.addWidget(
-                    text("The saga's own source", p["label"], serif(11, italic=True))
+        cards = scs.book_cards(saga)
+        groups = QWidget()
+        column = QVBoxLayout(groups)
+        column.setContentsMargins(0, 0, 0, 0)
+        column.setSpacing(8)
+        heading = ""
+        for group in scs.book_groups(saga, cards):
+            if group.heading != heading:
+                heading = group.heading
+                column.addWidget(
+                    text(heading, p["heading"], serif(13, caps=True, bold=True))
                 )
-            card.column.addStretch(1)
-            card.clicked = lambda book=book: self.inspect(
-                book.title, book.book, sc.book_detail(saga, book.book)
-            )
-            cards.append(card)
-        in_play = sum(1 for c in scs.book_cards(saga) if c.state != scs.OUT_OF_PLAY)
+            if group.subheading:
+                column.addWidget(
+                    text(group.subheading, p["label"], serif(12, italic=True))
+                )
+            column.addWidget(card_grid([self._book_card(b) for b in group.cards], 3))
+        in_play = sum(1 for c in cards if c.state != scs.OUT_OF_PLAY)
         sources_chooser = Chooser()
         sources = scs.sources_table(saga)
         self.sources = cells_table(
@@ -183,7 +177,7 @@ class SagaContentPage(QWidget):
             section(
                 f"Books in Play ({in_play} of {len(cards)})",
                 p,
-                card_grid(cards, 3),
+                groups,
                 edits={"Edit": lambda: self.run(scf.books_form(saga))},
             ),
             section(
@@ -196,6 +190,57 @@ class SagaContentPage(QWidget):
             ),
             self._traditions(),
         )
+
+    def _book_card(self, book: scs.BookCard) -> ClickableCard:
+        """A book's card: its abbreviation, whether it is in play (a
+        supplement's chip puts it in or out), its title and what it brings;
+        faded while out of play. Clicking it shows it in the inspector."""
+        p, saga = self.p, self.saga
+        tone = {
+            scs.ALWAYS: p["accent"],
+            scs.IN_PLAY: p["text-success"],
+            scs.OUT_OF_PLAY: p["dim"],
+        }[book.state]
+        card = ClickableCard(p, pad=12, edge=tone)
+        top = QHBoxLayout()
+        top.addWidget(badge(book.book, tone, p))
+        top.addStretch(1)
+        if book.state == scs.ALWAYS:
+            state = chip(book.state, tone)
+            state.setToolTip("The core book is always in play.")
+        else:
+            state = chip_button(
+                book.state, tone, lambda: self.run(scf.toggle_book(saga, book.book))
+            )
+            state.setToolTip(
+                "Click to take it out of play."
+                if book.state == scs.IN_PLAY
+                else "Click to put it in play."
+            )
+        top.addWidget(state)
+        card.column.addLayout(top)
+        card.column.addWidget(
+            text(book.title, p["foreground"], serif(13.5, bold=True), wrap=True)
+        )
+        if book.own:
+            card.column.addWidget(
+                text("The saga's own source", p["label"], serif(11, italic=True))
+            )
+        card.column.addWidget(
+            text(book.brings, p["label"], serif(11.5), wrap=True)
+            if book.brings
+            else text(scs.NOTHING_COUNTED, p["dim"], serif(11, italic=True), wrap=True)
+        )
+        card.column.addStretch(1)
+        card.clicked = lambda: self.inspect(
+            book.title, book.book, sc.book_detail(saga, book.book)
+        )
+        if book.state == scs.OUT_OF_PLAY:
+            # Faded in place of the lift's shadow: a card has one effect.
+            faded = QGraphicsOpacityEffect(card)
+            faded.setOpacity(0.45)
+            card.setGraphicsEffect(faded)
+        return card
 
     def _traditions(self) -> QWidget:
         """The traditions whose book is in play, and whether the saga

@@ -80,6 +80,56 @@ SOURCEBOOKS: dict[str, str] = {
     "TTT": "Thrice-Told Tales",
 }
 
+#: How Saga Content's Books chapter groups the supplements, in order, as
+#: (group, subgroup, books): the book lines redcap.org sorts the line
+#: into. A book the app doesn't have yet is listed by the abbreviation it
+#: will take and skipped until SOURCEBOOKS gains it, so adding one puts it
+#: in its group.
+BOOK_GROUPS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
+    ("The Order", "Houses of Hermes", ("HoH:TL", "HoH:MC", "HoH:S")),
+    (
+        "The Order",
+        "The Order at Large",
+        # SE: Semita Errabunda, not yet in the app.
+        ("TMRE", "Covenants", "Grogs", "App", "TtA", "SE", "MoH", "LoH", "HP", "GGHS"),
+    ),
+    ("Realms of Power", "", ("RoP:M", "RoP:F", "RoP:D", "RoP:I")),
+    (
+        "Tribunals",
+        "",
+        # Not yet in the app: ToH:I and ToH:R, the Third Edition's Tribunals
+        # of Hermes: Iberia and Rome; LoN, Lion of the North.
+        (
+            "GotF",
+            "L&L",
+            "TSE",
+            "F&F",
+            "AtD",
+            "TCI",
+            "HtM",
+            "D&B",
+            "SoI",
+            "ToH:I",
+            "ToH:R",
+            "LoN",
+            "B&S",
+            "SiS",
+        ),
+    ),
+    ("Mythic Europe", "", ("TC", "LoM", "C&G", "A&A", "ML", "MC")),
+    # Not yet in the app: LFI, Land of Fire and Ice; UT, Ultima Thule.
+    ("The Lands Beyond", "", ("TC&TC", "LotN", "BS&S", "LFI", "UT")),
+    ("Non-Hermetic Magic", "", ("HMRE", "AM", "RM")),
+    (
+        "Scenarios",
+        "",
+        # Not yet in the app: Ant, Antagonists; Nig, Nigrasaxa; BMoG, The
+        # Black Monks of Glastonbury.
+        ("Cal", "ToME", "TTT", "Ant", "Hooks", "ToP", "DI", "Nig", "BMoG"),
+    ),
+    ("Transforming Mythic Europe", "", ("TME",)),
+)
+
 #: Other spellings the catalogs use for the same books (the spell catalog and
 #: Boons & Hooks cite the core book as "ArM5").
 _ALIASES: dict[str, str] = {
