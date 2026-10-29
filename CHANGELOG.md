@@ -109,6 +109,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.6 — 2026-10-29
+
+### Glossa
+
+- **A shorter, up-to-date README.** The project's front page now says in a
+  few lines what Armarius does today (the sheets, the seasons, creation by
+  the book, the Saga World, the Tribunal packs and sharing), shows the
+  character and covenant sheets on the desktop and in the terminal, and
+  keeps the developer's commands apart from getting started.
+
 ## 3.41.5 — 2026-10-29
 
 ### Fundamenta
