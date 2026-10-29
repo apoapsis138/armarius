@@ -109,6 +109,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.4 — 2026-10-29
+
+### Fundamenta
+
+- **A guard against sprawling functions.** A new check fails when a function
+  grows past 120 lines, 30 branches or 12 parameters (long flat lists of
+  form fields are not counted for length). The 26 that are already past a
+  limit are listed, and the check also fails when one on the list has been
+  fixed, so the list can only shrink. The app works exactly as it did.
+
 ## 3.41.3 — 2026-10-29
 
 ### Fundamenta
