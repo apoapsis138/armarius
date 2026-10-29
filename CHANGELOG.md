@@ -109,6 +109,22 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.43.0 — 2026-10-29
+
+### Illuminatio
+
+- **A covenant's forms open in windows.** On the desktop, every form,
+  list to choose from and "Are you sure?" question on a covenant's page
+  now opens in a window of its own over the page, instead of taking the
+  place of the section. A button that asks several things opens its
+  windows one after another, and clicking another New while one is open
+  brings the open one forward. The other pages follow, one at a time.
+- Forms that open in a window are sized to fit what they hold: wide
+  enough for long labels with their fields beside them (Edit Loyalty's
+  fields no longer run off the right edge), and tall enough for text
+  boxes, hints and the summary under the fields (Travel, Use a Template
+  and Area Lore no longer scroll or cut off their hints).
+
 ## 3.42.0 — 2026-10-29
 
 ### Illuminatio

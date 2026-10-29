@@ -381,8 +381,8 @@ class MainWindow(QMainWindow):
         )
 
     def _step_open(self) -> bool:
-        """Whether a step (a form, a list or a question) is open in place
-        on the page."""
+        """Whether a step (a form, a list or a question) is open, in place
+        on the page or as a window over it."""
         return self._open is not None and shiboken6.isValid(self._open)
 
     def _help_key(self) -> None:
@@ -909,8 +909,8 @@ class MainWindow(QMainWindow):
         NoticeDialog(title, words, self.palette_, self).exec()
 
     def _bring_forward(self) -> None:
-        """Show the step open in place again: scrolled to, its first field
-        focused."""
+        """Show the step open again: scrolled to (in place) or raised (a
+        window), its first field focused."""
         dialog = self._open
         assert dialog is not None
         area = scroll_area_of(dialog)
@@ -924,10 +924,16 @@ class MainWindow(QMainWindow):
     def _present(self, dialog: QDialog) -> int:
         """Show a step and wait for it: in place on the page when it was
         made to be (editing.place_for), else as a window. While a step is
-        open in place, the page's other buttons and the menus wait."""
+        open in place, the page's other buttons and the menus wait; while
+        one is open either way, another button brings it forward (run)."""
         place = self._place
         if place is None or not getattr(dialog, "inline", False):
-            return dialog.exec()
+            # A form's own picker opens over it: the form is open again after.
+            under, self._open = self._open, dialog
+            try:
+                return dialog.exec()
+            finally:
+                self._open = under
         place.open(dialog, replace=not isinstance(dialog, ConfirmDialog))
         waiting = [
             button

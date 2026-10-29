@@ -154,6 +154,11 @@ class _Sheet(QDialog):
         self.error.show()
 
 
+#: The widest a form opened as a window grows to fit its labels, and the
+#: tallest it grows to fit its fields.
+WIDEST_WINDOW, TALLEST_WINDOW = 1100, 820
+
+
 class FieldsDialog(_Sheet):
     """A form from `fields`; `values` holds what it saved, after exec()
     returns Accepted. `validate` and `live` are commands.Form's."""
@@ -222,8 +227,28 @@ class FieldsDialog(_Sheet):
             area.setMinimumWidth(0)
             self._fit()
         else:
-            pictured = 140 if picture is not None else 0
-            self.resize(700, min(820, 170 + 44 * len(fields) + pictured))
+            self._size_window()
+
+    def _size_window(self) -> None:
+        """As a window: wide enough for the longest label and its field
+        beside it, and tall enough for every field and what is under
+        them (a wrapped hint, the live line or gloss), up to TALLEST_WINDOW,
+        past which the fields scroll."""
+        area, body = self.area, self.body
+        frame = 2 * area.frameWidth()
+        scrollbar = area.verticalScrollBar().sizeHint().width()
+        wide = body.sizeHint().width() + frame + scrollbar + 60
+        width = min(max(700, wide), WIDEST_WINDOW)
+        self.resize(width, self.height())
+        self.column.activate()
+        viewport = width - self.column.contentsMargins().left() * 2 - frame - scrollbar
+        fields = (
+            body.heightForWidth(viewport)
+            if body.hasHeightForWidth()
+            else body.sizeHint().height()
+        )
+        under = self.sizeHint().height() - area.sizeHint().height()
+        self.resize(width, min(TALLEST_WINDOW, under + fields + frame + 8))
 
     def _inspector(self, heading: str) -> InspectorFrame:
         """The live text boxed as a gloss at the foot of the page, under

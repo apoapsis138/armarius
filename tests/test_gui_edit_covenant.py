@@ -85,6 +85,8 @@ def test_adding_a_boon_chooses_it_from_the_catalog_then_names_it(app):
     section_buttons(_page(window), "Boons")["Add"].click()
     assert isinstance(asked[0], ChooseDialog) and isinstance(asked[1], FieldsDialog)
     assert asked[1].windowTitle() == "Boon: Wealth"
+    # A covenant's steps open as windows over the page, one after another.
+    assert not any(getattr(d, "inline", True) for d in asked)
     saved = _saved(window)
     assert [bh.vf_id for bh in saved.boons_hooks] == ["covbh_boon_major_wealth"]
     # Its card is the only Boon, so Delete acts on it; No keeps it.
@@ -93,7 +95,7 @@ def test_adding_a_boon_chooses_it_from_the_catalog_then_names_it(app):
     assert _saved(window).boons_hooks
     asked = answering(window, True)
     section_buttons(_page(window), "Boons")["Delete"].click()
-    assert isinstance(asked[0], ConfirmDialog)
+    assert isinstance(asked[0], ConfirmDialog) and not asked[0].inline
     assert asked[0].question == "Delete Wealth - a silver mine?"
     assert _saved(window).boons_hooks == []
 
@@ -121,9 +123,19 @@ def test_editing_loyalty_and_a_source_of_income(app):
         IncomeSource("s2", "Tolls", income=10),
     ]
     window = _window(saga)
-    answering(window, {"familiarity": "2"})
+    asked = answering(window, {"familiarity": "2"})
     section_buttons(_page(window), "Loyalty")["Edit"].click()
     assert _saved(window).loyalty.familiarity == 2
+    # Its window is wide enough for its long labels and the fields beside
+    # them, and tall enough that the fields need no scrolling.
+    loyalty = asked[0]
+    assert isinstance(loyalty, FieldsDialog) and loyalty.width() > 700
+    loyalty.show()
+    QApplication.processEvents()
+    assert loyalty.body.sizeHint().width() <= loyalty.area.viewport().width()
+    assert loyalty.height() < 820
+    assert loyalty.area.verticalScrollBar().maximum() == 0
+    loyalty.close()
     page = _page(window)
     controls = section_buttons(page, "Sources of Income")
     assert not controls["Edit"].isEnabled()  # two rows, none chosen

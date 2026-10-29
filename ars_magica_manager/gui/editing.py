@@ -10,7 +10,9 @@ Steps open in place (`place_for`): a form or a list to choose from takes
 the place of its section's body, under the section's title, and a
 question sits above the body. A button outside any section (a page's
 header) opens its steps in place of the part of the page it is in, and a
-menu's at the top of the page.
+menu's at the top of the page. A page marked with open_in_a_window (the
+covenant's) opens every step as a window over it instead, one window
+after another.
 """
 
 from __future__ import annotations
@@ -253,25 +255,29 @@ class InPlace:
         self.hidden = []
 
 
-#: The property that marks a button whose steps open as windows.
+#: The property that marks a button, or a page, whose steps open as
+#: windows.
 _IN_A_WINDOW = "opens-in-a-window"
 
 
-def open_in_a_window(button: QWidget) -> QWidget:
-    """Mark `button` so its steps open as windows over the page, not in
-    place (place_for); returns it."""
-    button.setProperty(_IN_A_WINDOW, True)
-    return button
+def open_in_a_window[W: QWidget](widget: W) -> W:
+    """Mark a button, or a whole page (every button on it, and its
+    menus), so the steps open as windows over the page, not in place
+    (place_for); returns it."""
+    widget.setProperty(_IN_A_WINDOW, True)
+    return widget
 
 
 def place_for(button: QWidget | None, page: QWidget) -> InPlace | None:
     """Where the steps of `button` (None: a menu's) open on `page`: in the
     section the button is in, else under the part of the chapter or page
     holding it, else at the top of the page. None if the page has no
-    layout to open them in, or the button's steps open as windows
-    (open_in_a_window). A step opened in a scrolling chapter scrolls
-    with it, so a form taller than the window can still be read."""
-    if button is not None and button.property(_IN_A_WINDOW):
+    layout to open them in, or the button or the page is marked to open
+    its steps as windows (open_in_a_window). A step opened in a scrolling
+    chapter scrolls with it, so a form taller than the window can still be read."""
+    if page.property(_IN_A_WINDOW) or (
+        button is not None and button.property(_IN_A_WINDOW)
+    ):
         return None
     widget = button
     while widget is not None and widget is not page:
