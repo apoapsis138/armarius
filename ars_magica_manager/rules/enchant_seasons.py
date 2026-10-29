@@ -26,7 +26,7 @@ Inventory tab (its components, effects and levels are entered there).
 from __future__ import annotations
 
 import random
-from dataclasses import replace
+from dataclasses import dataclass, replace
 
 from ..models import (
     CHARGED,
@@ -551,6 +551,162 @@ def _instilled_by(
     return effect
 
 
+@dataclass(frozen=True)
+class _Effect:
+    """One effect being worked on this season: what the three ways of
+    working it (charged, lesser, instilling) all need, once the checks they
+    share have passed."""
+
+    saga: Saga
+    magus: Character
+    plan: SeasonPlan
+    device: EnchantedDevice
+    effect: InstilledEffect
+    level: int
+    name: str
+    text: Book | None
+    total: lab.LabTotal
+    lab_total: int
+
+    def vis(self) -> tuple[int, tuple[str, str], dict[str, int]]:
+        """The pawns the effect takes, its Arts, and how the plan splits
+        them between the two Arts' vis."""
+        pawns = enchantment.vis_cost(self.device, self.effect)
+        arts = (self.effect.technique, self.effect.form)
+        art = self.plan.vis_art if self.plan.vis_art in arts else ""
+        split = (
+            enchantment.split_vis(arts, art, self.plan.other_vis, pawns) if art else {}
+        )
+        return pawns, arts, split
+
+    def vis_problem(self) -> str:
+        pawns, arts, split = self.vis()
+        return _vis_problem(
+            self.saga,
+            self.magus,
+            self.plan,
+            arts,
+            split,
+            pawns,
+            verditius.enchanting_vis_limit(self.magus),
+        )
+
+
+def _charged(work: _Effect) -> tuple[list[str], LabWork | None]:
+    """A charged item: a charge per 5 points of the Lab Total above the
+    level (the whole Lab Total when working from a Lab Text)."""
+    if work.lab_total < work.level:
+        return [
+            f"Lab Total {work.lab_total} is below {work.name}'s level "
+            f"{work.level}: no charges can be made."
+        ], None
+    points = work.lab_total if work.text is not None else work.lab_total - work.level
+    return [], LabWork(
+        None,
+        work.total,
+        work.level,
+        finished=True,
+        device=work.device,
+        effect=work.effect,
+        charges=max(1, round_up(points / 5)),
+    )
+
+
+def _lesser(work: _Effect) -> tuple[list[str], LabWork | None]:
+    """A lesser enchantment: the whole effect in one season, if the Lab Total
+    is twice its level."""
+    pawns, _arts, split = work.vis()
+    why = ""
+    if work.text is None and work.lab_total < 2 * work.level:
+        why = (
+            f"Lab Total {work.lab_total}: a lesser enchantment of level "
+            f"{work.level} needs {2 * work.level} (twice the level) to be made "
+            "in one season"
+        )
+        if not work.plan.experimenting:
+            return [f"{why}."], None
+    room = enchantment.capacity(work.saga, work.device)
+    if room is not None and pawns > room:
+        return [
+            f"{work.name} takes {pawns} pawns of vis; {work.device.name} holds {room}."
+        ], None
+    found = work.vis_problem()
+    if found:
+        return [found], None
+    return [], LabWork(
+        None,
+        work.total,
+        work.level,
+        points_gained=0 if why else work.level,
+        finished=not why,
+        vis_cost=split,
+        device=work.device,
+        effect=work.effect,
+        too_low=experiment.too_low(why) if why else "",
+    )
+
+
+def _instil(work: _Effect) -> tuple[list[str], LabWork | None]:
+    """Instilling in an invested device, over as many seasons as the effect
+    needs."""
+    device, effect, level = work.device, work.effect, work.level
+    _pawns, _arts, split = work.vis()
+    if effect.instilling_progress is None:
+        return [f"{work.name} is already instilled."], None
+    if device.talisman and enchantment.talisman_magus_id(device) not in (
+        None,
+        work.magus.id,
+    ):
+        return [f"No one else can instil effects in {device.name}, a talisman."], None
+    if not device.pawns_opened:
+        return [f"{device.name} has to be opened first."], None
+    if enchantment.pawns_used(device, effect) > device.pawns_opened:
+        return [
+            f"{device.name}'s effects take {enchantment.pawns_used(device, effect)} pawns; only "
+            f"{device.pawns_opened} were opened."
+        ], None
+    why = ""
+    if work.text is None and work.lab_total <= level:
+        why = (
+            f"Lab Total {work.lab_total} isn't above {work.name}'s level {level}: "
+            "it can't be instilled yet"
+        )
+        if not work.plan.experimenting:
+            return [f"{why}."], None
+    before = effect.instilling_progress
+    cost: dict[str, int] = {}
+    if before == 0:
+        found = work.vis_problem()
+        if found:
+            return [found], None
+        cost = split
+    gained = (
+        max(0, level - before)
+        if work.text is not None
+        else 0
+        if why
+        else lab.points_per_season(work.lab_total, level)
+        * EXPIRY_SPEED.get(effect.expiry, 1)
+    )
+    return [], LabWork(
+        None,
+        work.total,
+        level,
+        points_before=before,
+        points_gained=gained,
+        finished=not why and before + gained >= level,
+        vis_cost=cost,
+        device=device,
+        effect=effect,
+        too_low=experiment.too_low(why) if why else "",
+    )
+
+
+#: The ways of working one effect (Strategy, as a table); instilling is the
+#: way for any other activity.
+_EFFECT_WORK = {CHARGED_WORK: _charged, LESSER_WORK: _lesser}
+
+
 def _effect_work(
     saga: Saga,
     magus: Character,
@@ -559,9 +715,9 @@ def _effect_work(
     options: lab.LabOptions,
     device: EnchantedDevice,
 ) -> tuple[list[str], LabWork | None]:
-    """Instilling, a lesser enchantment or a charged item: one effect."""
+    """Instilling, a lesser enchantment or a charged item: one effect. The
+    checks all three share come first, then the way of working it."""
 
-    limit = verditius.enchanting_vis_limit(magus)
     effect = _instilled_by(magus, effect_of(device, plan))
     if effect is None:
         return ["Choose the effect (add it to the device on its Inventory tab)."], None
@@ -601,110 +757,10 @@ def _effect_work(
             f"Lab Total {lab_total} is below {name}'s level {level}: the Lab "
             "Text can't be used yet."
         ], None
-
-    if plan.activity == CHARGED_WORK:
-        if lab_total < level:
-            return [
-                f"Lab Total {lab_total} is below {name}'s level {level}: no "
-                "charges can be made."
-            ], None
-        return [], LabWork(
-            None,
-            total,
-            level,
-            finished=True,
-            device=device,
-            effect=effect,
-            # From a Lab Text: a charge per 5 points of the whole Lab Total.
-            charges=max(
-                1,
-                round_up((lab_total if text is not None else lab_total - level) / 5),
-            ),
-        )
-
-    pawns = enchantment.vis_cost(device, effect)
-    arts = (effect.technique, effect.form)
-    art = plan.vis_art if plan.vis_art in arts else ""
-    split = enchantment.split_vis(arts, art, plan.other_vis, pawns) if art else {}
-    if plan.activity == LESSER_WORK:
-        why = ""
-        if text is None and lab_total < 2 * level:
-            why = (
-                f"Lab Total {lab_total}: a lesser enchantment of level {level} "
-                f"needs {2 * level} (twice the level) to be made in one season"
-            )
-            if not plan.experimenting:
-                return [f"{why}."], None
-        room = enchantment.capacity(saga, device)
-        if room is not None and pawns > room:
-            return [
-                f"{name} takes {pawns} pawns of vis; {device.name} holds {room}."
-            ], None
-        found = _vis_problem(saga, magus, plan, arts, split, pawns, limit)
-        if found:
-            return [found], None
-        return [], LabWork(
-            None,
-            total,
-            level,
-            points_gained=0 if why else level,
-            finished=not why,
-            vis_cost=split,
-            device=device,
-            effect=effect,
-            too_low=experiment.too_low(why) if why else "",
-        )
-
-    # Instilling in an invested device.
-    if effect.instilling_progress is None:
-        return [f"{name} is already instilled."], None
-    if device.talisman and enchantment.talisman_magus_id(device) not in (
-        None,
-        magus.id,
-    ):
-        return [f"No one else can instil effects in {device.name}, a talisman."], None
-    if not device.pawns_opened:
-        return [f"{device.name} has to be opened first."], None
-    if enchantment.pawns_used(device, effect) > device.pawns_opened:
-        return [
-            f"{device.name}'s effects take {enchantment.pawns_used(device, effect)} pawns; only "
-            f"{device.pawns_opened} were opened."
-        ], None
-    why = ""
-    if text is None and lab_total <= level:
-        why = (
-            f"Lab Total {lab_total} isn't above {name}'s level {level}: it "
-            "can't be instilled yet"
-        )
-        if not plan.experimenting:
-            return [f"{why}."], None
-    before = effect.instilling_progress
-    cost: dict[str, int] = {}
-    if before == 0:
-        found = _vis_problem(saga, magus, plan, arts, split, pawns, limit)
-        if found:
-            return [found], None
-        cost = split
-    gained = (
-        max(0, level - before)
-        if text is not None
-        else 0
-        if why
-        else lab.points_per_season(lab_total, level)
-        * EXPIRY_SPEED.get(effect.expiry, 1)
+    work = _Effect(
+        saga, magus, plan, device, effect, level, name, text, total, lab_total
     )
-    return [], LabWork(
-        None,
-        total,
-        level,
-        points_before=before,
-        points_gained=gained,
-        finished=not why and before + gained >= level,
-        vis_cost=cost,
-        device=device,
-        effect=effect,
-        too_low=experiment.too_low(why) if why else "",
-    )
+    return _EFFECT_WORK.get(plan.activity, _instil)(work)
 
 
 def _vis_problem(

@@ -1087,6 +1087,82 @@ def _between_magi(saga: Saga, case: Case) -> bool:
     return by in magi and on in magi and by != on
 
 
+def _debated(values: dict[str, Any]) -> bool:
+    """Whether the hearing is a debate: not settled in private, nor left to
+    certamen."""
+    return not values.get("settled") and values.get("heard_by") != debate.BY_CERTAMEN
+
+
+def _proposal_fields(kept: dict[str, Any]) -> list[DialogField]:
+    """What a motion proposes, and which body it changes."""
+    return [
+        DialogField(
+            "proposal",
+            "Proposal",
+            "select",
+            kept.get("proposal") or "Clarification",
+            options=pairs(debate.PROPOSALS),
+            required=True,
+            hint="An Addition costs it 1 Argument Strength, an "
+            "Alteration of the Code 3.",
+        ),
+        DialogField(
+            "forum",
+            "Changes",
+            "select",
+            kept.get("forum") or debate.LOCAL,
+            options=[(words, value) for value, words in debate.PROPOSAL_FORUMS.items()],
+            required=True,
+            hint="A regional Tribunal changes only its Peripheral Code, "
+            "but may recommend the proposal to the next Grand Tribunal.",
+        ),
+    ]
+
+
+def _debate_fields(kept: dict[str, Any]) -> list[DialogField]:
+    """The rounds, the defence's testimony and the levels each side lost
+    (blank: rolled)."""
+    entered = kept.get("entered") and not kept.get("settled")
+    return [
+        DialogField(
+            "rounds",
+            "Rounds",
+            "int",
+            kept.get("rounds") or debate.DEFAULT_ROUNDS,
+            required=True,
+            hint=f"The praeco allows 1 to {debate.MAX_ROUNDS}; a side "
+            f"that loses {debate.KNOCKED_OUT} levels ends it.",
+            show_if=_debated,
+        ),
+        DialogField(
+            "defence_testimony",
+            "Defence testimony",
+            "area",
+            kept.get("defence_testimony", ""),
+            hint="One a line, as the case's Evidence is for the "
+            "prosecution: a peer's +3, an apprentice's +2, any other "
+            "+1, and +3 more if a Quaesitor examined it.",
+            show_if=_debated,
+        ),
+        DialogField(
+            "lost_for",
+            "Levels lost (for)",
+            "optint",
+            kept.get("lost", [None, None])[0] if entered else None,
+            hint="Leave both blank to roll the debate; for certamen on "
+            "one point, the Fatigue levels each lost in it.",
+            show_if=_debated,
+        ),
+        DialogField(
+            "lost_against",
+            "Levels lost (against)",
+            "optint",
+            kept.get("lost", [None, None])[1] if entered else None,
+            show_if=_debated,
+        ),
+    ]
+
+
 class Hearing(Step):
     """A charge or appeal debated between its prosecutor and defender, or
     a motion between one who speaks for it and one against: the speakers
@@ -1109,11 +1185,25 @@ class Hearing(Step):
 
     def fields(self, saga: Saga, tribunal: Tribunal, meeting: Meeting):
         case = self.case
-        motion = case.kind == "motion"
         kept = debate_of(meeting, case) or {}
         self.certamen_bar = debate.binding_certamen_bar(
             case.kind, case.charge, between_magi=_between_magi(saga, case)
         )
+        found: list[DialogField] = []
+        if case.kind != "motion":
+            found += self._how_heard_fields(kept)
+        found += self._speaker_fields(saga, tribunal, meeting, kept)
+        if case.kind == "motion":
+            found += _proposal_fields(kept)
+        argued = _polemic_words(saga, tribunal, case)
+        if argued:
+            found.append(DialogField("polemic", "Arguments", "info", argued))
+        found += _debate_fields(kept)
+        return [*found, _note_field(meeting, self.key)]
+
+    def _how_heard_fields(self, kept: dict[str, Any]) -> list[DialogField]:
+        """Whether the charge is settled in private, and if not, whether it
+        is debated or left to certamen (and who won it)."""
         heard_by = {
             key: label
             for key, label in debate.HEARD_BY.items()
@@ -1122,56 +1212,53 @@ class Hearing(Step):
         if kept.get("heard_by") == debate.BY_CERTAMEN:
             # A hearing already decided by certamen keeps its choice.
             heard_by[debate.BY_CERTAMEN] = debate.HEARD_BY[debate.BY_CERTAMEN]
+        return [
+            DialogField(
+                "settled",
+                "Settled in private",
+                "check",
+                bool(kept.get("settled")),
+                hint="Both sides accept the Presiding Quaesitor's ruling: "
+                "it is neither debated nor voted on.",
+            ),
+            DialogField(
+                "heard_by",
+                "Heard by",
+                "select",
+                kept.get("heard_by") or debate.BY_DEBATE,
+                options=[(label, key) for key, label in heard_by.items()],
+                required=True,
+                hint=(
+                    "Certamen in the debate's place binds a personal charge "
+                    "between two magi, however persuasive the loser"
+                    if not self.certamen_bar
+                    else "Not certamen in its place: " + escape(self.certamen_bar)
+                )
+                + " On one point of a case, certamen doesn't win the vote: "
+                "enter the Fatigue levels each lost.",
+                show_if=lambda v: not v.get("settled"),
+            ),
+            DialogField(
+                "certamen",
+                "Certamen won by",
+                "select",
+                kept.get("certamen") or None,
+                options=[("The prosecution", FOR), ("The defence", AGAINST)],
+                show_if=lambda v: (
+                    not v.get("settled") and v.get("heard_by") == debate.BY_CERTAMEN
+                ),
+            ),
+        ]
+
+    def _speaker_fields(
+        self, saga: Saga, tribunal: Tribunal, meeting: Meeting, kept: dict[str, Any]
+    ) -> list[DialogField]:
+        """For each side: who speaks, the skill they debate as (asked only
+        for a speaker with no scores) and the thesis they argue."""
+        case = self.case
+        motion = case.kind == "motion"
         skills = kept.get("skills") or ["", ""]
         found: list[DialogField] = []
-        if not motion:
-            found.append(
-                DialogField(
-                    "settled",
-                    "Settled in private",
-                    "check",
-                    bool(kept.get("settled")),
-                    hint="Both sides accept the Presiding Quaesitor's ruling: "
-                    "it is neither debated nor voted on.",
-                )
-            )
-
-        if not motion:
-            found += [
-                DialogField(
-                    "heard_by",
-                    "Heard by",
-                    "select",
-                    kept.get("heard_by") or debate.BY_DEBATE,
-                    options=[(label, key) for key, label in heard_by.items()],
-                    required=True,
-                    hint=(
-                        "Certamen in the debate's place binds a personal charge "
-                        "between two magi, however persuasive the loser"
-                        if not self.certamen_bar
-                        else "Not certamen in its place: " + escape(self.certamen_bar)
-                    )
-                    + " On one point of a case, certamen doesn't win the vote: "
-                    "enter the Fatigue levels each lost.",
-                    show_if=lambda v: not v.get("settled"),
-                ),
-                DialogField(
-                    "certamen",
-                    "Certamen won by",
-                    "select",
-                    kept.get("certamen") or None,
-                    options=[("The prosecution", FOR), ("The defence", AGAINST)],
-                    show_if=lambda v: (
-                        not v.get("settled") and v.get("heard_by") == debate.BY_CERTAMEN
-                    ),
-                ),
-            ]
-
-        def debated(values: dict[str, Any]) -> bool:
-            return not values.get("settled") and (
-                values.get("heard_by") != debate.BY_CERTAMEN
-            )
-
         for index, (side, key, label) in enumerate(
             (
                 (FOR, "prosecutor", "Speaks for it" if motion else "Prosecutor"),
@@ -1207,7 +1294,7 @@ class Hearing(Step):
                     required=True,
                     hint="No scores are written down for them: how well they debate.",
                     show_if=lambda v, key=key, lacking=lacking: (
-                        debated(v) and v.get(key) in lacking
+                        _debated(v) and v.get(key) in lacking
                     ),
                 ),
                 DialogField(
@@ -1220,80 +1307,10 @@ class Hearing(Step):
                     hint="A flawed or despised thesis starts the debate levels "
                     "down; one argued knowing it false loses the speaker's "
                     "Truthful Trait from each Defence Total.",
-                    show_if=debated,
+                    show_if=_debated,
                 ),
             ]
-        if motion:
-            found.append(
-                DialogField(
-                    "proposal",
-                    "Proposal",
-                    "select",
-                    kept.get("proposal") or "Clarification",
-                    options=pairs(debate.PROPOSALS),
-                    required=True,
-                    hint="An Addition costs it 1 Argument Strength, an "
-                    "Alteration of the Code 3.",
-                )
-            )
-            found.append(
-                DialogField(
-                    "forum",
-                    "Changes",
-                    "select",
-                    kept.get("forum") or debate.LOCAL,
-                    options=[
-                        (words, value)
-                        for value, words in debate.PROPOSAL_FORUMS.items()
-                    ],
-                    required=True,
-                    hint="A regional Tribunal changes only its Peripheral Code, "
-                    "but may recommend the proposal to the next Grand Tribunal.",
-                )
-            )
-        argued = _polemic_words(saga, tribunal, case)
-        if argued:
-            found.append(DialogField("polemic", "Arguments", "info", argued))
-        entered = kept.get("entered") and not kept.get("settled")
-        found += [
-            DialogField(
-                "rounds",
-                "Rounds",
-                "int",
-                kept.get("rounds") or debate.DEFAULT_ROUNDS,
-                required=True,
-                hint=f"The praeco allows 1 to {debate.MAX_ROUNDS}; a side "
-                f"that loses {debate.KNOCKED_OUT} levels ends it.",
-                show_if=debated,
-            ),
-            DialogField(
-                "defence_testimony",
-                "Defence testimony",
-                "area",
-                kept.get("defence_testimony", ""),
-                hint="One a line, as the case's Evidence is for the "
-                "prosecution: a peer's +3, an apprentice's +2, any other "
-                "+1, and +3 more if a Quaesitor examined it.",
-                show_if=debated,
-            ),
-            DialogField(
-                "lost_for",
-                "Levels lost (for)",
-                "optint",
-                kept.get("lost", [None, None])[0] if entered else None,
-                hint="Leave both blank to roll the debate; for certamen on "
-                "one point, the Fatigue levels each lost in it.",
-                show_if=debated,
-            ),
-            DialogField(
-                "lost_against",
-                "Levels lost (against)",
-                "optint",
-                kept.get("lost", [None, None])[1] if entered else None,
-                show_if=debated,
-            ),
-        ]
-        return [*found, _note_field(meeting, self.key)]
+        return found
 
     def validate(self, meeting: Meeting, values: dict[str, Any]):
         if values.get("settled"):

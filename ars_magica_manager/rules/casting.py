@@ -57,7 +57,7 @@ from __future__ import annotations
 
 from collections.abc import Sequence
 from dataclasses import dataclass
-from typing import Any
+from typing import Any, TypedDict, Unpack
 
 from ..arts import FORMS, TECHNIQUES
 from ..models import Character, Saga, Spell, VirtueFlawInstance
@@ -149,30 +149,36 @@ def _lowest(magus: Character, art: str, requisites: Sequence[str]) -> tuple[str,
     return min(scored, key=lambda pair: pair[1])
 
 
+class CastingTerms(TypedDict, total=False):
+    """The keyword terms of `casting_score`, all optional."""
+
+    aura: int
+    aura_realm: str
+    requisites: Sequence[str]
+    words: str
+    gestures: str
+    mastery: int
+    vis_pawns: int
+    ritual: bool
+    spontaneous: bool
+    fast: bool
+    ceremonial: bool
+    props: int
+    talisman: int
+    mastery_abilities: dict[str, int] | None
+    sordida_pawns: int
+    dedicated_pawns: int
+    aura_kind: str
+
+
 def casting_score(
     magus: Character,
     technique: str,
     form: str,
-    *,
-    aura: int = 0,
-    aura_realm: str = realms.HERMETIC,
-    requisites: Sequence[str] = (),
-    words: str = "Firm",
-    gestures: str = "Bold",
-    mastery: int = 0,
-    vis_pawns: int = 0,
-    ritual: bool = False,
-    spontaneous: bool = False,
-    fast: bool = False,
-    ceremonial: bool = False,
-    props: int = 0,
-    talisman: int = 0,
-    mastery_abilities: dict[str, int] | None = None,
-    sordida_pawns: int = 0,
-    dedicated_pawns: int = 0,
-    aura_kind: str = "",
+    **terms: Unpack[CastingTerms],
 ) -> Breakdown:
-    """The Casting Score, with its terms. `aura_kind` is the aura's kind
+    """The Casting Score, with its terms (the keywords of `CastingTerms`).
+    `aura_kind` is the aura's kind
     (rules.aura_kinds): a Magic aura aligned with one of the spell's Arts
     counts again (RoP: Magic p. 16). A Ritual or ceremonial casting
     uses loud words and exaggerated gestures at some point, so `words` and
@@ -183,33 +189,110 @@ def casting_score(
     vis option: +5 each instead of +2 (RoP: The Infernal p. 19).
     `dedicated_pawns` of them are dedicated vis of the spell's own
     Technique and Form: +4 each (RoP: Magic p. 122)."""
-    abilities = mastery_abilities or {}
-    ritual, ceremonial = _how_cast(magus, spontaneous, ritual, ceremonial)
+    requisites = terms.get("requisites", ())
+    spontaneous = terms.get("spontaneous", False)
+    words = terms.get("words", "Firm")
+    gestures = terms.get("gestures", "Bold")
+    ritual, ceremonial = _how_cast(
+        magus, spontaneous, terms.get("ritual", False), terms.get("ceremonial", False)
+    )
+    lines = [
+        *_art_lines(magus, technique, form, requisites),
+        *_body_lines(magus),
+        *_aura_lines(
+            magus,
+            (technique, form, *requisites),
+            terms.get("aura_realm", realms.HERMETIC),
+            terms.get("aura", 0),
+            terms.get("aura_kind", ""),
+            ritual,
+        ),
+        *_spoken_lines(
+            magus,
+            form,
+            words,
+            gestures,
+            ritual or ceremonial,
+            terms.get("mastery_abilities") or {},
+        ),
+        *_effort_lines(magus, terms, ritual, ceremonial),
+    ]
+    base = sum(line.amount or 0 for line in lines)
+    # Method Caster's bonus needs the method: firm words, bold gestures.
+    method = ritual or ceremonial or (words, gestures) == ("Firm", "Bold")
+    found = _modifiers(magus, technique, form, requisites, spontaneous, ritual, method)
+    combined = effects.combine(base, [e for e in found if e.amount is not None])
+    # A multiplier (Deficient Art) acts on the Casting Total, die included,
+    # so it's listed but left out of the score: see casting_total().
+    multipliers = [
+        Line(e.name, multiplier=e.modifier.multiplier, source="character")
+        for e in found
+        if e.modifier.multiplier is not None
+    ]
+    return Breakdown(
+        total=combined.total, lines=lines + combined.lines[1:] + multipliers
+    )
+
+
+def _art_lines(
+    magus: Character, technique: str, form: str, requisites: Sequence[str]
+) -> list[Line]:
+    """The Technique and the Form, each as its weakest same-kind requisite
+    when that is lower."""
     lines: list[Line] = []
     for art in (technique, form):
         name, score = _lowest(magus, art, requisites)
         label = art if name == art else f"{art} (requisite {name})"
         lines.append(Line(label, amount=score, source=SOURCE))
-    lines.append(Line("Stamina", amount=magus.characteristics.stamina, source=SOURCE))
+    return lines
+
+
+def _body_lines(magus: Character) -> list[Line]:
+    """Stamina, less what the magus carries, his Wounds and his Fatigue (DE
+    pp. 403-404)."""
+    lines = [Line("Stamina", amount=magus.characteristics.stamina, source=SOURCE)]
     load = carried_load(magus.inventory)
     enc = encumbrance(load, magus.characteristics.strength)
     if enc:
         lines.append(Line("Encumbrance", amount=-enc, source=SOURCE))
-    # Wounds and Fatigue take from every roll and total (DE pp. 403-404).
     wounded = wound_penalty(magus.wounds, magus.virtues_flaws)
     if wounded:
         lines.append(Line("Wounds", amount=wounded, source=SOURCE))
     tired = fatigue_penalty(magus.fatigue_level, magus.virtues_flaws)
     if tired:
         lines.append(Line("Fatigue", amount=tired, source=SOURCE))
+    return lines
+
+
+def _aura_lines(
+    magus: Character,
+    arts: Sequence[str],
+    aura_realm: str,
+    aura: int,
+    aura_kind: str,
+    ritual: bool,
+) -> list[Line]:
+    """The aura, and again when it is a Magic aura aligned with an Art."""
     label, amount = hybrid.aura_label(
         magus, aura_realm, aura, ritual=ritual, casting=True
     )
-    lines.append(Line(label, amount=amount, source=realms.SOURCE))
-    lines += aura_kinds.aligned_lines(
-        aura_kind, aura_realm, aura, (technique, form, *requisites)
-    )
-    whole = ritual or ceremonial
+    return [
+        Line(label, amount=amount, source=realms.SOURCE),
+        *aura_kinds.aligned_lines(aura_kind, aura_realm, aura, tuple(arts)),
+    ]
+
+
+def _spoken_lines(
+    magus: Character,
+    form: str,
+    words: str,
+    gestures: str,
+    whole: bool,
+    abilities: dict[str, int],
+) -> list[Line]:
+    """The words and gestures, with what Quiet and Still Casting take off
+    them, and an Afflicted Tongue."""
+    lines: list[Line] = []
     relief = {
         "casting_words": 5 * abilities.get(QUIET_CASTING, 0),
         "casting_gestures": 5 if abilities.get(STILL_CASTING) else 0,
@@ -233,16 +316,34 @@ def casting_score(
                 source=AFFLICTED_SOURCE,
             )
         )
+    return lines
+
+
+def _effort_lines(
+    magus: Character, terms: CastingTerms, ritual: bool, ceremonial: bool
+) -> list[Line]:
+    """What the casting adds or costs beyond the magus and the aura: the
+    spell's Mastery, fast casting or vis, a Ritual's learning, props and the
+    talisman."""
+    lines: list[Line] = []
+    mastery = terms.get("mastery", 0)
     if mastery:
         lines.append(Line("Spell Mastery", amount=mastery, source=MASTERY_SOURCE))
-    if fast:
+    vis_pawns = terms.get("vis_pawns", 0)
+    if terms.get("fast", False):
         lines.append(Line("Fast casting", amount=FAST_PENALTY, source=SOURCE))
     elif vis_pawns:
         lines += _vis_lines(
-            vis_pawns, sordida_pawns, ritual=ritual, dedicated=dedicated_pawns
+            vis_pawns,
+            terms.get("sordida_pawns", 0),
+            ritual=ritual,
+            dedicated=terms.get("dedicated_pawns", 0),
         )
     if ritual or ceremonial:
-        lines += _ritual_lines(magus, aura_realm, aura)
+        lines += _ritual_lines(
+            magus, terms.get("aura_realm", realms.HERMETIC), terms.get("aura", 0)
+        )
+    props = terms.get("props", 0)
     if ceremonial and props:
         lines.append(
             Line(
@@ -251,18 +352,29 @@ def casting_score(
                 source=SOURCE,
             )
         )
+    talisman = terms.get("talisman", 0)
     if talisman:
         lines.append(
             Line("Talisman attunement", amount=talisman, source=TALISMAN_SOURCE)
         )
-    base = sum(line.amount or 0 for line in lines)
+    return lines
+
+
+def _modifiers(
+    magus: Character,
+    technique: str,
+    form: str,
+    requisites: Sequence[str],
+    spontaneous: bool,
+    ritual: bool,
+    method: bool,
+) -> list[effects.Effect]:
+    """The Virtues and Flaws that change this casting's score."""
     kind = "spontaneous_total" if spontaneous else "casting_total"
     activity = None if spontaneous else ("ritual" if ritual else "formulaic")
     own = (technique.casefold(), form.casefold())
     used = (*own, *(r.casefold() for r in requisites))
-    # Method Caster's bonus needs the method: firm words, bold gestures.
-    method = whole or (words, gestures) == ("Firm", "Bold")
-    found = [
+    return [
         e
         for e in effects.collect([scores.character_source(magus.virtues_flaws)], kind)
         if e.modifier.activity in (None, activity)
@@ -274,17 +386,6 @@ def casting_score(
             in (used if e.modifier.multiplier is not None else own)
         )
     ]
-    combined = effects.combine(base, [e for e in found if e.amount is not None])
-    # A multiplier (Deficient Art) acts on the Casting Total, die included,
-    # so it's listed but left out of the score: see casting_total().
-    multipliers = [
-        Line(e.name, multiplier=e.modifier.multiplier, source="character")
-        for e in found
-        if e.modifier.multiplier is not None
-    ]
-    return Breakdown(
-        total=combined.total, lines=lines + combined.lines[1:] + multipliers
-    )
 
 
 def _ritual_lines(
@@ -721,24 +822,28 @@ def ritual_fatigue(levels_left: int, lost: int) -> tuple[int, str | None]:
     return taken, RITUAL_WOUNDS[min(more, len(RITUAL_WOUNDS)) - 1]
 
 
-def botch_dice(
-    *,
-    vis_pawns: int = 0,
-    aura_realm: str = realms.HERMETIC,
-    aura: int = 0,
-    in_regio: bool = False,
-    boundary_dice: int = 0,
-    fast: bool = False,
-    distracted: bool = False,
-    mastery: int = 0,
-    golden_cord: int = 0,
-    infernal_vis_pawns: int = 0,
-    dedicated_vis_pawns: int = 0,
-    saga: Saga | None = None,
-    virtues_flaws: Sequence[VirtueFlawInstance] = (),
-    magus: Character | None = None,
-) -> int:
-    """How many botch dice a stressed casting roll that shows 0 rolls.
+class BotchTerms(TypedDict, total=False):
+    """The keyword terms of `botch_dice`, all optional."""
+
+    vis_pawns: int
+    aura_realm: str
+    aura: int
+    in_regio: bool
+    boundary_dice: int
+    fast: bool
+    distracted: bool
+    mastery: int
+    golden_cord: int
+    infernal_vis_pawns: int
+    dedicated_vis_pawns: int
+    saga: Saga | None
+    virtues_flaws: Sequence[VirtueFlawInstance]
+    magus: Character | None
+
+
+def botch_dice(**terms: Unpack[BotchTerms]) -> int:
+    """How many botch dice a stressed casting roll that shows 0 rolls (the
+    keywords of `BotchTerms`).
     Infernal vis (counted in `vis_pawns` too) doubles them (DE p. 422); with
     the saga's harsher option, each pawn adds 3 instead (vis sordida), and
     no Virtue, Golden Cord or Mastery takes them below its pawns (RoP: The
@@ -754,21 +859,21 @@ def botch_dice(
     sites.boundary_botch_dice) while the aura is Magic, as casting is a
     roll the Magic aura helps (RoP: Magic p. 22).
     """
-    dedicated = max(0, min(dedicated_vis_pawns, vis_pawns))
-    dice = (
-        1
-        + vis_pawns
-        + dedicated
-        + (FAST_BOTCH_DICE if fast else 0)
-        + (1 if distracted else 0)
+    saga = terms.get("saga")
+    magus = terms.get("magus")
+    aura_realm = terms.get("aura_realm", realms.HERMETIC)
+    in_regio = terms.get("in_regio", False)
+    harsher = options.is_on(saga, "harsher_infernal_vis")
+    infernal = (
+        0 if hybrid.ignores_infernal_vis(magus) else terms.get("infernal_vis_pawns", 0)
     )
-    if hybrid.ignores_infernal_vis(magus):
-        infernal_vis_pawns = 0  # Chthonic Magic: no ill effects
-    if infernal_vis_pawns:
-        if options.is_on(saga, "harsher_infernal_vis"):
-            dice += 2 * infernal_vis_pawns  # +3 per pawn, 1 of it counted above
+    dice = _stress_dice(terms)
+    if infernal:
+        if harsher:
+            dice += 2 * infernal  # +3 per pawn, 1 of it counted above
         else:
             dice *= 2
+    aura = terms.get("aura", 0)
     if magus is not None:
         dice += hybrid.foreign_botch_dice(magus, aura_realm, aura, in_regio=in_regio)
     else:
@@ -776,18 +881,34 @@ def botch_dice(
             realms.HERMETIC, aura_realm, aura, in_regio=in_regio
         )
     if aura_realm == realms.HERMETIC:
-        dice += max(0, boundary_dice)
+        dice += max(0, terms.get("boundary_dice", 0))
     change, _ = scores.botch_dice_change(
-        virtues_flaws, ("casting", "casting_words", "casting_gestures")
+        terms.get("virtues_flaws", ()),
+        ("casting", "casting_words", "casting_gestures"),
     )
     dice = scores.with_botch_change(dice, change)
+    golden_cord = terms.get("golden_cord", 0)
     if golden_cord:
         dice = max(1, dice - golden_cord)  # the cord can't take it to 0
-    dice = max(0, dice - mastery)  # Mastery can
-    if infernal_vis_pawns and options.is_on(saga, "harsher_infernal_vis"):
+    dice = max(0, dice - terms.get("mastery", 0))  # Mastery can
+    if infernal and harsher:
         # Nothing takes vis sordida's botch dice below its pawns.
-        dice = max(dice, infernal_vis_pawns)
+        dice = max(dice, infernal)
     return dice
+
+
+def _stress_dice(terms: BotchTerms) -> int:
+    """The dice the casting itself brings: one, a die a pawn of vis (two for
+    dedicated vis), fast casting and a failed Concentration roll."""
+    vis_pawns = terms.get("vis_pawns", 0)
+    dedicated = max(0, min(terms.get("dedicated_vis_pawns", 0), vis_pawns))
+    return (
+        1
+        + vis_pawns
+        + dedicated
+        + (FAST_BOTCH_DICE if terms.get("fast", False) else 0)
+        + (1 if terms.get("distracted", False) else 0)
+    )
 
 
 def golden_cord(saga: Saga | None, magus: Character) -> int:

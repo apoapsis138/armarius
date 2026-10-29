@@ -109,6 +109,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.5 — 2026-10-29
+
+### Fundamenta
+
+- **The most tangled functions are broken up, nothing new to see.**
+  Enchanting an effect, the casting and botch-dice sums, the lab total, the
+  covenant's yearly accounts, a Tribunal hearing's form, familiar work and
+  the lab's one-season jobs are each split into smaller pieces that do one
+  thing. The app works exactly as it did, and the guard against sprawling
+  functions now lists nine fewer.
+
 ## 3.41.4 — 2026-10-29
 
 ### Fundamenta

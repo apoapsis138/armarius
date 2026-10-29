@@ -892,42 +892,63 @@ def _one_season_work(
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
-    pool = vis_pool(saga, magus, plan)
     if plan.activity == FIX_AC:
-        connection = connection_of(saga, plan)
-        if connection is None:
-            return [
-                "Choose the Arcane Connection to fix (they're kept on the "
-                "laboratory's Inventory tab)."
-            ], None
-        if connection.fixed:
-            return [f"The Arcane Connection to {connection.to} is already fixed."], None
-        if lapsed(connection, plan.season, plan.year):
-            return [
-                f"The Arcane Connection to {connection.to} is no longer active "
-                f"by {plan.season} {plan.year}: fixing needs it active as the "
-                "season starts (DE p. 250)."
-            ], None
-        if pool.get("vim", 0) < 1:
-            return [
-                f"Fixing an Arcane Connection takes 1 pawn of Vim vis; "
-                f"{whose_vis(magus, plan)} raw vis has none."
-            ], None
-        total = lab.LabTotal(total=0, lines=[])
-        return [], LabWork(None, total, 0, finished=True, vis_cost={"Vim": 1})
+        return _fix_connection(saga, magus, plan)
     if plan.activity == EXTRACT:
-        strength, realm = lab.lab_aura(saga, lab_)
-        if realm != "Magic":
-            return [
-                f"Vis is extracted only in a Magic aura; {lab_.name}'s is {realm}."
-            ], None
-        if strength <= 0:
-            return [
-                f"Vis is extracted only where there is a Magic aura; "
-                f"{lab_.name}'s is {strength} (DE p. 250)."
-            ], None
-        return _extraction(saga, magus, plan, lab_, days)
-    # A Longevity Ritual.
+        return _extract(saga, magus, plan, lab_, days)
+    return _longevity(saga, magus, plan, lab_, days)
+
+
+def _fix_connection(
+    saga: Saga, magus: Character, plan: SeasonPlan
+) -> tuple[list[str], LabWork | None]:
+    """Fixing an Arcane Connection: a pawn of Vim, while it is still active."""
+    pool = vis_pool(saga, magus, plan)
+    connection = connection_of(saga, plan)
+    if connection is None:
+        return [
+            "Choose the Arcane Connection to fix (they're kept on the "
+            "laboratory's Inventory tab)."
+        ], None
+    if connection.fixed:
+        return [f"The Arcane Connection to {connection.to} is already fixed."], None
+    if lapsed(connection, plan.season, plan.year):
+        return [
+            f"The Arcane Connection to {connection.to} is no longer active "
+            f"by {plan.season} {plan.year}: fixing needs it active as the "
+            "season starts (DE p. 250)."
+        ], None
+    if pool.get("vim", 0) < 1:
+        return [
+            f"Fixing an Arcane Connection takes 1 pawn of Vim vis; "
+            f"{whose_vis(magus, plan)} raw vis has none."
+        ], None
+    total = lab.LabTotal(total=0, lines=[])
+    return [], LabWork(None, total, 0, finished=True, vis_cost={"Vim": 1})
+
+
+def _extract(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory, days: int
+) -> tuple[list[str], LabWork | None]:
+    """Extracting vis: only in a Magic aura."""
+    strength, realm = lab.lab_aura(saga, lab_)
+    if realm != "Magic":
+        return [
+            f"Vis is extracted only in a Magic aura; {lab_.name}'s is {realm}."
+        ], None
+    if strength <= 0:
+        return [
+            f"Vis is extracted only where there is a Magic aura; "
+            f"{lab_.name}'s is {strength} (DE p. 250)."
+        ], None
+    return _extraction(saga, magus, plan, lab_, days)
+
+
+def _longevity(
+    saga: Saga, magus: Character, plan: SeasonPlan, lab_: Laboratory, days: int
+) -> tuple[list[str], LabWork | None]:
+    """A Longevity Ritual, for the magus or for someone else."""
+    pool = vis_pool(saga, magus, plan)
     subject = subject_of(saga, magus, plan)
     if subject is None:
         return ["Choose who the Longevity Ritual is for."], None
@@ -1388,6 +1409,51 @@ def _with_options(
     other modifier the troupe allows, and the Virtues and Flaws of
     rules.lab_virtues (Potent Magic, a Laboratory Horoscope... and the
     halvings, last)."""
+    extra = _chosen_lines(magus, plan, technique, form, saga, requisites)
+    if saga is not None:
+        extra += _helper_lines(saga, magus, plan, technique, form)
+    virtues, notes = lab_virtues.option_lines(
+        magus,
+        plan,
+        enchanting=plan.activity in _ENCHANTING,
+        talisman=_in_own_talisman(saga, magus, plan),
+        binding=plan.activity == familiar_seasons.BIND,
+        horoscope_score=lab_virtues.horoscope_score(magus),
+        faerie_work=_faerie_work(saga, plan),
+    )
+    extra += virtues
+    alchemy, why = common_magics.lab_lines(
+        magus,
+        enchanting=plan.activity in _ENCHANTING,
+        experimenting=plan.experimenting and plan.activity in EXPERIMENTAL,
+    )
+    extra += alchemy
+    notes += why
+    # House Bjornaer's Sensory Magic adds Heartbeast inventing its spells.
+    if plan.activity == INVENT:
+        sensory = bjornaer.sensory_line(
+            magus, plan.design or (the_spell(saga, plan) if saga is not None else None)
+        )
+        if sensory is not None:
+            extra.append(sensory)
+    # Philosophic Alchemy: tending a digestion distracts the other work.
+    if _tends_digestion(magus, plan):
+        extra.append(tmre_alchemy.tending_line(plan.days_away))
+    halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
+    return lab.with_lines(total, extra, halvings, notes)
+
+
+def _chosen_lines(
+    magus: Character,
+    plan: SeasonPlan,
+    technique: str,
+    form: str,
+    saga: Saga | None,
+    requisites: Sequence[str],
+) -> list[Line]:
+    """The terms the plan itself asks for: a Magical Focus, Magic Theory
+    Specialty, Chthonic Magic, a recreated experiment, another modifier, the
+    lab's Mastery and the Experimentation die."""
     extra: list[Line] = []
     focused = plan.focus or (
         plan.focus_by_arts and in_focus(magus, technique, form, requisites)
@@ -1442,65 +1508,42 @@ def _with_options(
                 source=experiment.SOURCE,
             )
         )
-    if saga is not None:
-        activity = _TOTAL_ACTIVITY.get(plan.activity) or _HELPER_ACTIVITY.get(
-            plan.activity
+    return extra
+
+
+def _helper_lines(
+    saga: Saga, magus: Character, plan: SeasonPlan, technique: str, form: str
+) -> list[Line]:
+    """What the assistants Leadership allows add, and a bound familiar's help."""
+    extra: list[Line] = []
+    activity = _TOTAL_ACTIVITY.get(plan.activity) or _HELPER_ACTIVITY.get(plan.activity)
+    experimenting = plan.experimenting and plan.activity in EXPERIMENTAL
+    helpers = laboratory_seasons.assistants(saga, magus, plan)
+    for helper in helpers[: lab.max_assistants(magus)]:
+        aid = lab.helper_lines(
+            helper, technique, form, activity, experimenting=experimenting
         )
-        experimenting = plan.experimenting and plan.activity in EXPERIMENTAL
-        helpers = laboratory_seasons.assistants(saga, magus, plan)
-        for helper in helpers[: lab.max_assistants(magus)]:
-            aid = lab.helper_lines(
-                helper, technique, form, activity, experimenting=experimenting
-            )
-            extra += aid
-            # An apprentice's uncontrolled Turbulence halves his aid
-            # (Apprentices p. 56).
-            extra += turbulence.halved_aid_lines(saga, helper, plan, aid)
-        # A bound familiar with Magic Theory helps too, besides the
-        # assistants Leadership allows (DE p. 265).
-        familiar = saga.familiar_of(magus.id)
-        if (
-            familiar is not None
-            and plan.activity not in _HELPER_ACTIVITY_SELF
-            and sum(lab.ability_score(familiar, "Magic Theory"))
-        ):
-            extra += lab.helper_lines(
-                familiar,
-                technique,
-                form,
-                activity,
-                experimenting=experimenting,
-                label="familiar",
-            )
-    virtues, notes = lab_virtues.option_lines(
-        magus,
-        plan,
-        enchanting=plan.activity in _ENCHANTING,
-        talisman=_in_own_talisman(saga, magus, plan),
-        binding=plan.activity == familiar_seasons.BIND,
-        horoscope_score=lab_virtues.horoscope_score(magus),
-        faerie_work=_faerie_work(saga, plan),
-    )
-    extra += virtues
-    alchemy, why = common_magics.lab_lines(
-        magus,
-        enchanting=plan.activity in _ENCHANTING,
-        experimenting=plan.experimenting and plan.activity in EXPERIMENTAL,
-    )
-    extra += alchemy
-    notes += why
-    # House Bjornaer's Sensory Magic adds Heartbeast inventing its spells.
-    if plan.activity == INVENT:
-        sensory = bjornaer.sensory_line(
-            magus, plan.design or (the_spell(saga, plan) if saga is not None else None)
+        extra += aid
+        # An apprentice's uncontrolled Turbulence halves his aid
+        # (Apprentices p. 56).
+        extra += turbulence.halved_aid_lines(saga, helper, plan, aid)
+    # A bound familiar with Magic Theory helps too, besides the
+    # assistants Leadership allows (DE p. 265).
+    familiar = saga.familiar_of(magus.id)
+    if (
+        familiar is not None
+        and plan.activity not in _HELPER_ACTIVITY_SELF
+        and sum(lab.ability_score(familiar, "Magic Theory"))
+    ):
+        extra += lab.helper_lines(
+            familiar,
+            technique,
+            form,
+            activity,
+            experimenting=experimenting,
+            label="familiar",
         )
-        if sensory is not None:
-            extra.append(sensory)
-    # Philosophic Alchemy: tending a digestion distracts the other work.
-    if _tends_digestion(magus, plan):
-        extra.append(tmre_alchemy.tending_line(plan.days_away))
-    halvings = lab_virtues.halving_lines(magus, plan, _design_range(saga, plan))
-    return lab.with_lines(total, extra, halvings, notes)
+    return extra
 
 
 #: Lab work that makes an enchanted device (Planetary Magic's horoscope).

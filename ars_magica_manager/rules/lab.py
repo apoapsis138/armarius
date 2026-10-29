@@ -21,6 +21,7 @@ from __future__ import annotations
 
 from collections.abc import Callable, Mapping, Sequence
 from dataclasses import dataclass, field, replace
+from typing import TypedDict, Unpack
 
 from .. import catalog
 from ..models import (
@@ -160,25 +161,31 @@ def _art_line(magus: Character, art: str) -> Line:
     return Line(label, amount=score + bonus, source=SOURCE)
 
 
+class LabTotalTerms(TypedDict, total=False):
+    """The keyword terms of `lab_total`, all optional."""
+
+    activity: str | None
+    assistants: Sequence[Character]
+    familiar: Familiar | None
+    days_missed: int
+    experimenting: bool
+    similar_spell_level: int | None
+    shape_material: int
+    from_lab_text: bool
+    others_text: bool
+    hermetic_text: bool
+
+
 def lab_total(
     saga: Saga,
     magus: Character,
     technique: str,
     form: str,
     lab: Laboratory,
-    *,
-    activity: str | None = None,
-    assistants: Sequence[Character] = (),
-    familiar: Familiar | None = None,
-    days_missed: int = 0,
-    experimenting: bool = False,
-    similar_spell_level: int | None = None,
-    shape_material: int = 0,
-    from_lab_text: bool = False,
-    others_text: bool = False,
-    hermetic_text: bool = True,
+    **terms: Unpack[LabTotalTerms],
 ) -> LabTotal:
-    """The Lab Total for `technique` + `form` in `lab`, for an `activity`
+    """The Lab Total for `technique` + `form` in `lab` (the keywords of
+    `LabTotalTerms`), for an `activity`
     (a totals.ACTIVITIES_BY_TYPE["lab_total"] key) or none. Experimenting
     adds the Experimentation Specialization (the die is rolled separately);
     working `from_lab_text` adds the Texts Specialization to the activity's
@@ -190,6 +197,10 @@ def lab_total(
     inventing or enchanting adds the magnitude of the highest similar spell
     known (`similar_spell_level`); enchanting adds shape and material
     bonuses, capped at Magic Theory."""
+    activity = terms.get("activity")
+    experimenting = terms.get("experimenting", False)
+    from_lab_text = terms.get("from_lab_text", False)
+    others_text = terms.get("others_text", False)
     covenant = saga.covenant(lab.covenant_id)
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     lab_catalog = catalog.load_lab_virtue_flaw_catalog_by_id()
@@ -204,9 +215,16 @@ def lab_total(
         _aura_line(saga, magus, lab, covenant, boons),
         *_aligned_lines(saga, lab, covenant, boons, technique, form),
         *_quality_lines(saga, lab, lab_catalog, applies),
-        *_helper_lines(magus, assistants, familiar, notes),
-        *_activity_lines(magus, activity, similar_spell_level, shape_material),
-        *_distraction_lines(days_missed, notes),
+        *_helper_lines(
+            magus, terms.get("assistants", ()), terms.get("familiar"), notes
+        ),
+        *_activity_lines(
+            magus,
+            activity,
+            terms.get("similar_spell_level"),
+            terms.get("shape_material", 0),
+        ),
+        *_distraction_lines(terms.get("days_missed", 0), notes),
     ]
     base = sum(line.amount or 0 for line in lines)
     found = _virtue_effects(
@@ -230,7 +248,11 @@ def lab_total(
         for e in found
         if e.modifier.multiplier is not None
     ]
-    if others_text and hermetic_text and hybrid.halves_hermetic_texts(magus):
+    if (
+        others_text
+        and terms.get("hermetic_text", True)
+        and hybrid.halves_hermetic_texts(magus)
+    ):
         multipliers.append(
             Line(
                 "Holy Magic, from a Hermetic Lab Text",

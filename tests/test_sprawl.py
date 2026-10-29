@@ -23,7 +23,6 @@ KNOWN: set[str] = {
     "bestiary_book.py::build",
     "books.py::_book_from_row",
     "casting_text.py::known_spell_casting_lines",
-    "economics.py::summarize",
     "fights.py::_magic_fields",
     "forms/acclaim.py::acclaim_fields",
     "forms/lab_plan.py::LabPlanForm._common_fields",
@@ -33,19 +32,11 @@ KNOWN: set[str] = {
     "forms/season.py::study_fields",
     "gui/character_sheet.py::CharacterSheet._description",
     "gui/pages.py::SagaPage.__init__",
-    "meeting.py::Hearing.fields",
     "normandy_meeting.py::Library.fields",
     "rules/book_seasons.py::_copy",
-    "rules/casting.py::botch_dice",
-    "rules/casting.py::casting_score",
     "rules/casting_virtues.py::reminders",
     "rules/creation_later.py::later_life_checks",
-    "rules/enchant_seasons.py::_effect_work",
-    "rules/familiar_seasons.py::work",
     "rules/fight.py::odds",
-    "rules/lab.py::lab_total",
-    "rules/lab_seasons.py::_one_season_work",
-    "rules/lab_seasons.py::_with_options",
 }
 
 _BRANCHES = (

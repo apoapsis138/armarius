@@ -185,71 +185,95 @@ def work(
             f"{plan.days_away} days away from the laboratory: no lab work is "
             "possible this season (more than 20)."
         ], None
-    pool = vis_pool(saga, magus, plan)
-
     if plan.activity == BIND:
-        if any(vf.vf_id == HEARTBEAST for vf in magus.virtues_flaws):
-            return ["Bjornaer magi cannot bind familiars (DE p. 234)."], None
-        if not plan.technique or not plan.form:
-            return ["Choose the Technique and Form the bond is made with."], None
-        bound = (familiar.binding_technique, familiar.binding_form)
-        if (
-            familiar.year_bound is not None
-            and all(bound)
-            and (plan.technique, plan.form) != bound
-        ):
-            return [
-                f"Strengthening the bond uses the Arts it was made with: "
-                f"{bound[0]} {bound[1]} (DE p. 267)."
-            ], None
-        total = lab.lab_total(
-            saga,
-            magus,
-            plan.technique,
-            plan.form,
-            lab_,
-            activity="bind_familiar",
-            days_missed=max(0, plan.days_away),
-            experimenting=plan.experimenting,
-        )
-        total = options(magus, plan, plan.technique, plan.form, total)
-        lab_total = int(total.total)
-        level = binding_level(familiar)
-        if lab_total < level:
-            return [
-                f"Lab Total {lab_total} is below the binding level {level} "
-                f"(25 + Might {familiar.magic_might} + 5 x Size {familiar.size})."
-            ], None
-        cords = cords_of(plan)
-        if any(not 0 <= c <= 5 for c in cords):
-            return ["Each cord is 0 to 5."], None
-        cord_points = sum(cord_cost(c) for c in cords)
-        if cord_points > lab_total:
-            return [
-                f"The cords cost {cord_points} points; the Lab Total is {lab_total}."
-            ], None
-        pawns = max(0, round_up(lab_total / 5) - familiar.vis_spent_binding)
-        short, split = _payment(
-            magus,
-            plan,
-            (plan.technique, plan.form),
-            pawns,
-            pool,
-            whose_vis(magus, plan),
-            what="The bond takes",
-        )
-        if short:
-            return [short], None
-        return [], LabWork(
-            None,
-            total,
-            level,
-            finished=True,
-            vis_cost=split,
-            familiar=familiar,
-        )
+        return _bind(saga, magus, plan, lab_, options, familiar)
+    return _empower(saga, magus, plan, lab_, options, familiar)
 
-    # Empowering the bond with a power.
+
+def _bind(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options: lab.LabOptions,
+    familiar: Familiar,
+) -> tuple[list[str], LabWork | None]:
+    """Binding the familiar, or strengthening the bond: one season, as many
+    times as the bond needs."""
+    pool = vis_pool(saga, magus, plan)
+    if any(vf.vf_id == HEARTBEAST for vf in magus.virtues_flaws):
+        return ["Bjornaer magi cannot bind familiars (DE p. 234)."], None
+    if not plan.technique or not plan.form:
+        return ["Choose the Technique and Form the bond is made with."], None
+    bound = (familiar.binding_technique, familiar.binding_form)
+    if (
+        familiar.year_bound is not None
+        and all(bound)
+        and (plan.technique, plan.form) != bound
+    ):
+        return [
+            f"Strengthening the bond uses the Arts it was made with: "
+            f"{bound[0]} {bound[1]} (DE p. 267)."
+        ], None
+    total = lab.lab_total(
+        saga,
+        magus,
+        plan.technique,
+        plan.form,
+        lab_,
+        activity="bind_familiar",
+        days_missed=max(0, plan.days_away),
+        experimenting=plan.experimenting,
+    )
+    total = options(magus, plan, plan.technique, plan.form, total)
+    lab_total = int(total.total)
+    level = binding_level(familiar)
+    if lab_total < level:
+        return [
+            f"Lab Total {lab_total} is below the binding level {level} "
+            f"(25 + Might {familiar.magic_might} + 5 x Size {familiar.size})."
+        ], None
+    cords = cords_of(plan)
+    if any(not 0 <= c <= 5 for c in cords):
+        return ["Each cord is 0 to 5."], None
+    cord_points = sum(cord_cost(c) for c in cords)
+    if cord_points > lab_total:
+        return [
+            f"The cords cost {cord_points} points; the Lab Total is {lab_total}."
+        ], None
+    pawns = max(0, round_up(lab_total / 5) - familiar.vis_spent_binding)
+    short, split = _payment(
+        magus,
+        plan,
+        (plan.technique, plan.form),
+        pawns,
+        pool,
+        whose_vis(magus, plan),
+        what="The bond takes",
+    )
+    if short:
+        return [short], None
+    return [], LabWork(
+        None,
+        total,
+        level,
+        finished=True,
+        vis_cost=split,
+        familiar=familiar,
+    )
+
+
+def _empower(
+    saga: Saga,
+    magus: Character,
+    plan: SeasonPlan,
+    lab_: Laboratory,
+    options: lab.LabOptions,
+    familiar: Familiar,
+) -> tuple[list[str], LabWork | None]:
+    """Empowering the bond with a power, instilled over as many seasons as
+    its level needs."""
+    pool = vis_pool(saga, magus, plan)
     power = power_of(familiar, plan)
     if power is None:
         return [

@@ -10,6 +10,7 @@ totals. Nothing here is stored; only what the user types lives in
 
 from __future__ import annotations
 
+from collections.abc import Mapping, Sequence
 from dataclasses import dataclass
 from typing import Any
 
@@ -23,10 +24,12 @@ from .models import (
     INCOME_TYPE_DEFAULTS,
     SANCTUM_USAGES,
     Covenant,
+    CovenantBoonHookDef,
     Economics,
     EnchantedDevice,
     IncomeSource,
     Laboratory,
+    Modifier,
     Saga,
 )
 from .rules import covenfolk, enchantment, grog_discipline, tme_books
@@ -352,71 +355,21 @@ def _magic_row(
     )
 
 
-def summarize(saga: Saga, covenant: Covenant) -> Summary:
+def _basis_texts(
+    covenant: Covenant,
+    people: int,
+    labs: int,
+    gear: int,
+    wage_multiplier: float,
+    rewarded_pay: float,
+    building_boons: Sequence[tuple[CovenantBoonHookDef, Modifier]],
+    writers: tuple[int, int, int],
+) -> dict[str, str]:
+    """The working shown beside each calculated row: what its Cost is made of.
+    `writers` are the magi, book craftspeople and scribe specialists."""
     eco = covenant.economics
-    people = covenfolk.inhabitant_points(saga, covenant)
-    labs = laboratory_points(saga, covenant)
-    gear = pos.gear_points(saga, covenant)
-    wage_multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
-    # Pay and a Half, and retirees' pensions or rent (Grogs pp. 23-26).
-    rewarded_pay = grog_discipline.wage_adjustment(saga, covenant, wage_multiplier)
-    magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
-    craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
-    book_crafts = sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
-    scribes = sum(
-        e.quantity
-        for e in covenfolk.entries_for_kind(saga, covenant, "specialist")
-        if is_book_specialist(e)
-    )
-    writers = magi + book_crafts + scribes
-
-    # Boons that add to the size, magnificence or quantity of the covenant's
-    # buildings or fortifications: +2 per Minor, +5 per Major, carried on the
-    # Boons themselves as covenant_expense/buildings modifiers (each instance
-    # counts, so a Boon taken twice adds twice).
-    boon_catalog = catalog.load_covenant_boon_hook_catalog_by_id()
-    building_boons = covenant_modifiers(
-        covenant, boon_catalog, "covenant_expense", "buildings"
-    )
-    building_surcharge = sum(m.amount or 0 for _, m in building_boons)
-
-    costs = {
-        "buildings": people / 10 + building_surcharge,
-        "consumables": people * 2 / 10,
-        "laboratories": labs / 10,
-        "provisions": people * 5 / 10,
-        # A pound for each penny paid daily to professional soldiers, and
-        # half Wages (1 point of covenfolk) for each pensioner.
-        "wages": people * 2 / 10 * wage_multiplier
-        + eco.soldier_pay
-        + (covenant.loyalty.pensioners * 2 / 10 / 2 if covenant.loyalty.pension else 0)
-        + rewarded_pay,
-        "weapons": gear / 320,
-        "writing": float(writers),
-    }
-    laborers, laborer_savings, craftsmen, craft_savings = _labor_savings(
-        saga, covenant, craftspeople, costs
-    )
-    # At a Prevailing Loyalty of -6 the savings that rely on covenfolk are
-    # halved; at +6 productivity rises by no set amount (only noted).
-    loyalty = inh.prevailing_loyalty(saga, covenant)
-    productivity = inh.productivity_note(loyalty)
-    if loyalty <= -inh.PRODUCTIVITY_LOYALTY:
-        laborer_savings *= PRODUCTIVITY_HALVED
-        craft_savings = {k: v * PRODUCTIVITY_HALVED for k, v in craft_savings.items()}
-    row_savings = {
-        key: craft_savings[key] + (laborer_savings if key == "provisions" else 0.0)
-        for key in costs
-    }
-
-    # Round every row's final Cost/Savings to a whole number here (the ratios
-    # above stay precise floats so the craft/laborer-limit math is exact); a
-    # Row's `first`/`savings` are always integers from this point on, so
-    # summing them can't drift from summing the already-rounded numbers.
-    cost = {k: round_away_from_zero(v) for k, v in costs.items()}
-    saved = {k: round_away_from_zero(v) for k, v in row_savings.items()}
-
-    basis = {
+    magi, book_crafts, scribes = writers
+    return {
         "buildings": f"{people} pts of inhabitants / 10"
         + (
             " + "
@@ -447,21 +400,18 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         "writing": f"{magi} magi + {book_crafts} book craftspeople"
         + (f" + {scribes} scribe specialist(s)" if scribes else ""),
     }
-    expenditure = [
-        Row(
-            key,
-            name,
-            rule,
-            cost[key],
-            saved[key],
-            eco.notes.get(key, ""),
-            basis[key],
-            note=f"x{wage_multiplier:g}" if key == "wages" else "",
-        )
-        for key, name, rule in _CALCULATED_ROWS
-    ] + [_typed_row(eco, *row) for row in _TYPED_EXPENDITURE_ROWS]
 
-    savings = [
+
+def _labor_rows(
+    eco: Economics,
+    laborers: int,
+    laborer_savings: float,
+    craftsmen: int,
+    craft_savings: Mapping[str, float],
+    productivity: str,
+) -> list[Row]:
+    """The Laborers and Craftspeople rows of the savings."""
+    return [
         Row(
             "laborers",
             "Laborers",
@@ -482,6 +432,119 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             eco.notes.get("craftspeople", ""),
             "Craftspeople with a field of work (Books saves nothing)"
             + (f"; {productivity}" if productivity else ""),
+        ),
+    ]
+
+
+def _income(saga: Saga, eco: Economics, loyalty: int) -> int:
+    """The year's income. A contested source gives nothing until it is
+    secured; one the covenfolk work for is halved with their productivity."""
+    return round_away_from_zero(
+        sum(
+            s.current_income
+            * (
+                PRODUCTIVITY_HALVED
+                if s.covenfolk_work and loyalty <= -inh.PRODUCTIVITY_LOYALTY
+                else 1
+            )
+            for s in eco.income_sources
+            if not s.contested or (s.secured_until or 0) >= saga.current_year
+        )
+    )
+
+
+def summarize(saga: Saga, covenant: Covenant) -> Summary:
+    """The covenant's year: what each row costs and saves, and the surplus or
+    deficit left."""
+    eco = covenant.economics
+    people = covenfolk.inhabitant_points(saga, covenant)
+    labs = laboratory_points(saga, covenant)
+    gear = pos.gear_points(saga, covenant)
+    wage_multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
+    # Pay and a Half, and retirees' pensions or rent (Grogs pp. 23-26).
+    rewarded_pay = grog_discipline.wage_adjustment(saga, covenant, wage_multiplier)
+    magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
+    craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
+    book_crafts = sum(e.quantity for e in craftspeople if e.field_of_work == "Books")
+    scribes = sum(
+        e.quantity
+        for e in covenfolk.entries_for_kind(saga, covenant, "specialist")
+        if is_book_specialist(e)
+    )
+
+    # Boons that add to the size, magnificence or quantity of the covenant's
+    # buildings or fortifications: +2 per Minor, +5 per Major, carried on the
+    # Boons themselves as covenant_expense/buildings modifiers (each instance
+    # counts, so a Boon taken twice adds twice).
+    boon_catalog = catalog.load_covenant_boon_hook_catalog_by_id()
+    building_boons = covenant_modifiers(
+        covenant, boon_catalog, "covenant_expense", "buildings"
+    )
+    building_surcharge = sum(m.amount or 0 for _, m in building_boons)
+
+    costs = {
+        "buildings": people / 10 + building_surcharge,
+        "consumables": people * 2 / 10,
+        "laboratories": labs / 10,
+        "provisions": people * 5 / 10,
+        # A pound for each penny paid daily to professional soldiers, and
+        # half Wages (1 point of covenfolk) for each pensioner.
+        "wages": people * 2 / 10 * wage_multiplier
+        + eco.soldier_pay
+        + (covenant.loyalty.pensioners * 2 / 10 / 2 if covenant.loyalty.pension else 0)
+        + rewarded_pay,
+        "weapons": gear / 320,
+        "writing": float(magi + book_crafts + scribes),
+    }
+    laborers, laborer_savings, craftsmen, craft_savings = _labor_savings(
+        saga, covenant, craftspeople, costs
+    )
+    # At a Prevailing Loyalty of -6 the savings that rely on covenfolk are
+    # halved; at +6 productivity rises by no set amount (only noted).
+    loyalty = inh.prevailing_loyalty(saga, covenant)
+    productivity = inh.productivity_note(loyalty)
+    if loyalty <= -inh.PRODUCTIVITY_LOYALTY:
+        laborer_savings *= PRODUCTIVITY_HALVED
+        craft_savings = {k: v * PRODUCTIVITY_HALVED for k, v in craft_savings.items()}
+    row_savings = {
+        key: craft_savings[key] + (laborer_savings if key == "provisions" else 0.0)
+        for key in costs
+    }
+
+    # Round every row's final Cost/Savings to a whole number here (the ratios
+    # above stay precise floats so the craft/laborer-limit math is exact); a
+    # Row's `first`/`savings` are always integers from this point on, so
+    # summing them can't drift from summing the already-rounded numbers.
+    cost = {k: round_away_from_zero(v) for k, v in costs.items()}
+    saved = {k: round_away_from_zero(v) for k, v in row_savings.items()}
+
+    basis = _basis_texts(
+        covenant,
+        people,
+        labs,
+        gear,
+        wage_multiplier,
+        rewarded_pay,
+        building_boons,
+        (magi, book_crafts, scribes),
+    )
+    expenditure = [
+        Row(
+            key,
+            name,
+            rule,
+            cost[key],
+            saved[key],
+            eco.notes.get(key, ""),
+            basis[key],
+            note=f"x{wage_multiplier:g}" if key == "wages" else "",
+        )
+        for key, name, rule in _CALCULATED_ROWS
+    ] + [_typed_row(eco, *row) for row in _TYPED_EXPENDITURE_ROWS]
+
+    savings = [
+        *_labor_rows(
+            eco, laborers, laborer_savings, craftsmen, craft_savings, productivity
         ),
         # Magic doing laborers' work shares their half of the Provisions
         # (Covenants p. 67).
@@ -508,20 +571,7 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
     # total.
     magic = next(r for r in savings if r.key == "magic")
     cost_savings = sum(saved.values()) + magic.savings + eco.emergency_savings
-    # A contested source gives nothing until it is secured; one the
-    # covenfolk work for is halved with their productivity.
-    income = round_away_from_zero(
-        sum(
-            s.current_income
-            * (
-                PRODUCTIVITY_HALVED
-                if s.covenfolk_work and loyalty <= -inh.PRODUCTIVITY_LOYALTY
-                else 1
-            )
-            for s in eco.income_sources
-            if not s.contested or (s.secured_until or 0) >= saga.current_year
-        )
-    )
+    income = _income(saga, eco, loyalty)
     total_expenditure = before - cost_savings
     surplus_deficit = income - total_expenditure
     emergency = next(r for r in savings if r.key == "emergency_savings")
