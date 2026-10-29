@@ -817,8 +817,8 @@ the other noteworthy deeds apart (see
 [Reputations](help:section-reputations)). The Diary records the session.
 
 <!-- tui -->
-**Tournament** (More, `m`, on Reputations) counts a season on the tourney
-circuit (Lords of Men pp. 64-69). Choose his Prudhomme Reputation (or start
+**Tournament** (More, `m`, on Reputations, while Lords of Men is in play)
+counts a season on the tourney circuit (Lords of Men pp. 64-69). Choose his Prudhomme Reputation (or start
 one: a Noble Reputation, at 1 when it is his first, the 1 a man gains
 entering feudal life, Lords of Men p. 25, else at 0) and tick what he did as a knight: riding at
 the head of a company, ransoming a well-matched opponent, a feat of daring
@@ -852,6 +852,9 @@ each event past the first). A botch is an accident. Tick **With a
 company** for a company's single roll. Each roll is written in his Diary;
 the fight itself, and taking the ransom, are played out. Ransoms he takes
 or leaves unpaid count on Tournament.
+
+Melee Event and Tournament are offered only while Lords of Men is among
+the saga's books in play, as is every action a supplement brings.
 
 ## Labor Points from a Story
 <!-- help: labor-from-story -->

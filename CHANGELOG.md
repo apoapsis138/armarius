@@ -109,6 +109,21 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.44.0 — 2026-10-29
+
+### Florilegium
+
+- **A supplement's actions leave with its book.** When a book is out of
+  play in Saga Content, the character sheet no longer offers the actions
+  it brings, on the desktop's section buttons or in the terminal's More
+  menu. Tournament and Melee Event now need Lords of Men. Labor Points and
+  selling goods need City & Guild, sin and Ars Goetia Realms of Power: The
+  Infernal, covers Houses of Hermes: Societates, spirits, dreams,
+  divination, astrology and alchemy The Mysteries, a Wizard's War tunnel
+  Hermetic Projects, and rewards, punishments and pensions for grogs
+  Grogs. Definitive Edition actions, Hubris among them, are always
+  offered.
+
 ## 3.43.0 — 2026-10-29
 
 ### Illuminatio

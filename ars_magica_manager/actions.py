@@ -18,6 +18,7 @@ from functools import partial
 from typing import TYPE_CHECKING, NamedTuple, Protocol
 
 from . import (
+    action_books,
     arms,
     catalog,
     connections,
@@ -767,6 +768,8 @@ def available(action: str, facts: ActionFacts) -> bool:
     delete and decides what More and New offer."""
     if not facts.player_may(action):
         return False
+    if not action_books.book_allows(action, facts.saga):
+        return False
     if action in CREATE_PLACES and facts.selected_kind not in CREATE_PLACES[action]:
         return False
     if action == "edit" and facts.selected_kind == NodeKind.SAGA:
@@ -887,27 +890,23 @@ def _binds_familiar(facts: ActionFacts) -> bool:
 
 
 def _disputes(facts: ActionFacts) -> bool:
-    """A character, with another to dispute with, when Art & Academe is in
-    play."""
+    """A character, with another to dispute with."""
     return (
         facts.selected_kind == NodeKind.CHARACTER
         and facts.on_record()
         and facts.selected_character is not None
         and len(facts.saga.characters) > 1
-        and sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
     )
 
 
 def _makes_ligature(facts: ActionFacts) -> bool:
-    """A character with Artes Liberales, Philosophiae or Medicine, when Art
-    & Academe is in play."""
+    """A character with Artes Liberales, Philosophiae or Medicine."""
     character = facts.selected_character
     return (
         facts.selected_kind == NodeKind.CHARACTER
         and facts.on_record()
         and character is not None
         and bool(philosophy.ligature_abilities(character))
-        and sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
     )
 
 
@@ -915,7 +914,7 @@ def _keeps_byzantine_custom(
     test: Callable[[Saga, Character], bool],
 ) -> Callable[[ActionFacts], bool]:
     """A Byzantine custom's More command: on a person's record (not an
-    animal's), with The Sundered Eagle in play, when `test` allows it."""
+    animal's), when `test` allows it."""
 
     def rule(facts: ActionFacts) -> bool:
         character = facts.selected_character
@@ -924,7 +923,6 @@ def _keeps_byzantine_custom(
             and facts.on_record()
             and character is not None
             and character.animal is None
-            and theban_customs.in_play(facts.saga)
             and test(facts.saga, character)
         )
 
@@ -1048,14 +1046,12 @@ def _works_goetia(facts: ActionFacts) -> bool:
 
 
 def _apprentices_character(facts: ActionFacts, *sections: str) -> Character | None:
-    """The character on show, from his record or one of `sections`,
-    while Apprentices is in play."""
+    """The character on show, from his record or one of `sections`."""
     character = facts.selected_character
     section = facts.active_section() or ""
     if (
         facts.selected_kind != NodeKind.CHARACTER
         or character is None
-        or not gauntlet_rules.in_play(facts.saga)
         or section not in ("", RECORD_SECTION[NodeKind.CHARACTER], *sections)
     ):
         return None
@@ -1098,14 +1094,13 @@ def _learns_cantation(facts: ActionFacts) -> bool:
 
 
 def _academe_person(facts: ActionFacts) -> Character | None:
-    """A person's record (not an animal's), with Art & Academe in play."""
+    """A person's record (not an animal's)."""
     character = facts.selected_character
     if (
         facts.selected_kind != NodeKind.CHARACTER
         or not facts.on_record()
         or character is None
         or character.animal is not None
-        or not sourcebooks.in_play("A&A", sourcebooks.saga_books(facts.saga))
     ):
         return None
     return character
@@ -1126,15 +1121,13 @@ def _studies(facts: ActionFacts) -> bool:
 
 
 def _faerie_dealer(facts: ActionFacts) -> Character | None:
-    """A person on show, from his record or a tradition's chapter, with
-    Realms of Power: Faerie in play."""
+    """A person on show, from his record or a tradition's chapter."""
     character = facts.selected_character
     section = facts.active_section() or ""
     if (
         facts.selected_kind != NodeKind.CHARACTER
         or character is None
         or character.animal is not None
-        or not sourcebooks.in_play("RoP:F", sourcebooks.saga_books(facts.saga))
         or not (
             section in ("", RECORD_SECTION[NodeKind.CHARACTER])
             or section.startswith(traditions.SECTION_PREFIX)
@@ -1160,26 +1153,23 @@ def _offers_to_faerie(facts: ActionFacts) -> bool:
 
 
 def _goes_on_pilgrimage(facts: ActionFacts, section: str) -> bool:
-    """Pilgrimage: on a person's This Season, with The Church in play
-    (any pilgrim, grogs too: The Church p. 16)."""
+    """Pilgrimage: on a person's This Season (any pilgrim, grogs too: The
+    Church p. 16)."""
     character = facts.selected_character
     return (
         section == "section-char-season"
         and character is not None
         and character.animal is None
-        and sourcebooks.in_play("TC", sourcebooks.saga_books(facts.saga))
     )
 
 
 def _casts_in_lacuna(facts: ActionFacts, section: str) -> bool:
-    """Cast in a Lacuna: on a magus's Known Spells, with Houses of Hermes:
-    Societates in play."""
+    """Cast in a Lacuna: on a magus's Known Spells."""
     character = facts.selected_character
     return (
         section == "section-known-spells"
         and character is not None
         and character.type == "magus"
-        and sourcebooks.in_play("HoH:S", sourcebooks.saga_books(facts.saga))
     )
 
 
