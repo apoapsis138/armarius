@@ -126,6 +126,7 @@ SHEETS = {
     "normandy_tribunal": "_tribunal_sheet_view",
     "transylvania_tribunal": "_tribunal_sheet_view",
     "hibernia_tribunal": "_tribunal_sheet_view",
+    "alps_tribunal": "_tribunal_sheet_view",
     "grand_tribunal": "_tribunal_sheet_view",
     "region": "_region_sheet_view",
     "neighbour": "_neighbour_sheet_view",

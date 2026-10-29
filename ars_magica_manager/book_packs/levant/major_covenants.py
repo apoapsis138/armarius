@@ -36,7 +36,7 @@ magi["umar"] (Sharaf al-Din 'Umar), ["amber"] (Amber the Golden),
 Bourne), ["rufus"] (Rufus de Clary) at Foothold; ["aurora"] (Aurora
 Borealis; her apprentice Macha named in her summary only, L2),
 ["spiral"] at the Embassy. The eight printed magi are given their
-converted ages (+20%, L11); Tau and Aurora keep the book's (L16) and
+printed ages, as are Tau and Aurora (L16), who
 are given generated stats here in stats(). Secrets in secrets= ('Umar's
 service to the Ayyubids, Esther's sales and her vis source, Rufus's
 hoard and his fear, the spies in Domus Pacis, the scrying devices in
@@ -332,7 +332,7 @@ def _aedes_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
         "Sharaf al-Din 'Umar",
         covenant=covenant,
         house=JERBITON,
-        age=86,
+        age=72,
         summary=paragraphs(
             "Head of Aedes Veritatis, filius of its founder Maryam "
             "al-Dimashqiyya. Hattin was a Muslim victory, but it killed "
@@ -368,7 +368,7 @@ def _aedes_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
         "Amber the Golden",
         covenant=covenant,
         house=TREMERE,
-        age=65,
+        age=54,
         summary=paragraphs(
             "Amber of Tremere, filia Catullus, came to Aedes Veritatis in "
             "1188, soon after Hattin and the Muslims' retaking of "
@@ -403,7 +403,7 @@ def _aedes_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
         "Wardat al-Quds",
         covenant=covenant,
         house=EX_MISCELLANEA,
-        age=40,
+        age=33,
         summary=paragraphs(
             "The Rose of Jerusalem, a sahira, the youngest magus of Aedes "
             "Veritatis and one of the few of the land's own sahirs to "
@@ -564,7 +564,7 @@ def _domus_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
         "Felix",
         covenant=covenant,
         house=GUERNICUS,
-        age=58,
+        age=48,
         summary=paragraphs(
             "Felix of Guernicus, filius Raymond, a quaesitor. He was born "
             "at Dar al-Salam to one of the covenfolk and was a guard in "
@@ -597,7 +597,7 @@ def _domus_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
         "Esther",
         covenant=covenant,
         house=VERDITIUS,
-        age=52,
+        age=43,
         summary=paragraphs(
             "Esther of Verditius, filia Enrico Bellini, the newest magus "
             "at Dar al-Salam, who joined in 1197 and has fast become its "
@@ -730,7 +730,7 @@ def _foothold(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "Guillaume de Bourne",
         covenant=covenant,
         house=FLAMBEAU,
-        age=52,
+        age=43,
         summary=paragraphs(
             "Guillaume de Bourne of Flambeau, filius Ignatia, a Flambeau "
             "of the old pattern, Ignem his strength and as much a soldier "
@@ -759,7 +759,7 @@ def _foothold(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "Rufus de Clary",
         covenant=covenant,
         house=TYTALUS,
-        age=54,
+        age=45,
         summary=paragraphs(
             "Rufus de Clary of Tytalus, filius Gilles de Clary, who "
             "speaks for Foothold at Tribunal. In debate he argues that "
@@ -931,7 +931,7 @@ def _embassy(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "Spiral",
         covenant=covenant,
         house=CRIAMON,
-        age=64,
+        age=53,
         summary=paragraphs(
             "Spiral of Criamon, filius Umberto, the Embassy's second "
             "magus. He wants the peace kept, but what he cares about most "

@@ -385,6 +385,57 @@ def test_the_levant_package_is_the_treaty_of_baghdad_as_a_note():
     ]
 
 
+def test_the_alps_package_counts_chairs_and_ostracises_by_the_sherds():
+    from ars_magica_manager.tribunal_packages import alps
+
+    saga = everything_saga()
+    tribunal = saga.tribunals[0]
+    tribunal.package = "alps"
+    package = tribunal_packages.of(tribunal)
+    assert tribunal_packages.label(package) == "Greater Alps: Chairs and ostracism"
+    covenant = saga.covenants[0]
+    covenant.tribunal_id = tribunal.id
+    alps.save_chairs(tribunal, covenant, 3)
+    magi = sum(
+        1 for c in saga.characters if c.covenant_id == covenant.id and c.type == "magus"
+    )
+    (column,) = package.columns
+    assert column.value(saga, tribunal, covenant) == f"3 of {magi}"
+    # One sherd in four must name him; the exile runs twenty-one years.
+    assert alps.ostracism_problem({"sherds": 10, "voters": 41}) is not None
+    assert alps.ostracism_problem({"sherds": 11, "voters": 41}) is None
+    assert alps.ostracism_problem({"sherds": 5, "voters": 4}) is not None
+    magus = next(
+        c for c in saga.characters if c.covenant_id == covenant.id and c.type == "magus"
+    )
+    alps.ostracised(tribunal).append(
+        {
+            "character_id": magus.id,
+            "year": saga.current_year,
+            "sherds": 30,
+            "voters": 90,
+        }
+    )
+    (entry,) = alps.ostracised(tribunal)
+    assert alps.until(entry) == saga.current_year + 21
+    ((label, says),) = tribunal_packages.magus_facts(saga, magus)
+    assert label == "Ostracised" and str(saga.current_year + 21) in says
+    grid = package.lists[0].grid(saga, tribunal)
+    assert grid.rows[0][2] == "30 of 90"
+    saga.books_in_play = ["SoI"]
+    assert "alps" in [p.key for p in tribunal_packages.offered(saga)]
+
+
+def test_the_stonehenge_and_novgorod_packages_are_notes():
+    saga = everything_saga()
+    tribunal = saga.tribunals[0]
+    for key, words in (("stonehenge", "Blackthorn"), ("novgorod", "Royal Embargo")):
+        tribunal.package = key
+        package = tribunal_packages.of(tribunal)
+        assert package.tabs == () and not package.columns
+        assert words in tribunal_sheet.customs_note(tribunal)
+
+
 def _export(saga: Saga) -> dict:
     return transfer.export_data(saga, saga.covenants[0])
 

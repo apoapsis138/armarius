@@ -36,6 +36,8 @@ SOURCEBOOKS: dict[str, str] = {
     "C&G": "City & Guild",
     "Cal": "Calebais: The Broken Covenant",
     "Covenants": "Covenants",
+    # A Fourth Edition Tribunal book, converted when a pack uses it.
+    "D&B": "The Dragon and the Bear: The Novgorod Tribunal",
     "DI": "Dies Irae",
     "F&F": "Faith & Flame: The Provençal Tribunal",
     "GGHS": "The Grand Grimoire of Hermetic Spells",
@@ -47,6 +49,8 @@ SOURCEBOOKS: dict[str, str] = {
     "HoH:TL": "Houses of Hermes: True Lineages",
     "Hooks": "Hooks",
     "HP": "Hermetic Projects",
+    # A Fourth Edition Tribunal book, converted when a pack uses it.
+    "HtM": "Heirs to Merlin: The Stonehenge Tribunal",
     "L&L": "The Lion and the Lily: The Normandy Tribunal",
     "LoH": "Legends of Hermes",
     "LotN": "Lands of the Nile",
@@ -61,6 +65,8 @@ SOURCEBOOKS: dict[str, str] = {
     "RoP:M": "Realms of Power: Magic",
     # Atlas Games' free web supplement to Blood and Sand (Fourth Edition).
     "SiS": "Secrets in Sand",
+    # A Fourth Edition Tribunal book, converted when a pack uses it.
+    "SoI": "Sanctuary of Ice: The Greater Alps Tribunal",
     "TC": "The Church",
     "TC&TC": "The Cradle and the Crescent",
     "TCI": "The Contested Isle: The Hibernian Tribunal",

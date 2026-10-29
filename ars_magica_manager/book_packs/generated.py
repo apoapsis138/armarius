@@ -182,6 +182,9 @@ TRIBUNALS = {
     "AtD": "Transylvanian Tribunal",
     "TCI": "Hibernian Tribunal",
     "B&S": "Levant Tribunal",
+    "SoI": "Greater Alps Tribunal",
+    "HtM": "Stonehenge Tribunal",
+    "D&B": "Novgorod Tribunal",
 }
 #: The language a book's magi learn their Art in, where it is not Latin.
 HERMETIC_LANGUAGES = {"TSE": "Classical Greek"}

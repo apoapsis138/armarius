@@ -18,9 +18,13 @@ through the same two functions.
 `middle_east(b)` builds the whole shared set in its order and returns it
 by key; a pack may instead call the functions one by one.
 
+The Mongols' stages in Russia and Poland are The Dragon and the Bear's
+(the Novgorod pack's), written into the shared record the same way.
+
 Sources: The Cradle and the Crescent, Blood and Sand: The Levant
-Tribunal and The Sundered Eagle (Atlas Games), content under CC-BY-SA
-4.0; the text here is a summary of them, not their words."""
+Tribunal, The Sundered Eagle and The Dragon and the Bear: The Novgorod
+Tribunal (Atlas Games), content under CC-BY-SA 4.0; the text here is a
+summary of them, not their words."""
 
 from __future__ import annotations
 
@@ -719,6 +723,14 @@ def mongol_conquest(b: Builder, *, place: Neighbour | None = None) -> Neighbour:
             "Baghdad in 1258, and are stopped only by Egypt's Mamluks in "
             "Syria in 1260. The Levant's magi know almost nothing of "
             "them yet.",
+            "In Russia and Poland, if history holds, they come twice: a "
+            "reconnaissance that breaks the princes on the Kalka in 1223, "
+            "and from 1237 a conquest that burns Ryazan, Vladimir, "
+            "Chernigov and Kiev, ravages Poland and Hungary, and lays the "
+            "Mongol yoke on Russia for two centuries. Their spirits run "
+            "ahead of them: since 1206 wingless thunder wyrms have raided "
+            "Slavic Arcadia in the Onslaught, and their spies and shamans "
+            "work among the princes long before the horde returns.",
         ),
         stages=[
             Builder.stage(
@@ -752,6 +764,52 @@ def mongol_conquest(b: Builder, *, place: Neighbour | None = None) -> Neighbour:
                 ignored="Balkh, Merv, Nishapur and Herat are sacked, "
                 "the shah's son is driven over the Indus, and Jebe and "
                 "Subadei ride north into Russia.",
+            ),
+            Builder.stage(
+                "The Kalka",
+                year=1223,
+                season="Spring",
+                clues="Refugee Cumans beg the Russian princes for help; "
+                "Mongol envoys come with gifts.",
+                ignored="Subadei, having bought off and then destroyed the "
+                "Cumans, draws the princes' host into a nine-day pursuit "
+                "and routes it on the Kalka: nine princes die, the Prince "
+                "of Kiev smothered under a carpet for the murdered envoys. "
+                "Then the Mongols ride home past the Volga Bulgars, and the "
+                "Russians forget them.",
+            ),
+            Builder.stage(
+                "The return",
+                year=1237,
+                season="Winter",
+                clues="Mongol spies along the steppe; the princes at war over Kiev.",
+                ignored="Great Bulgar is razed; in December the horde "
+                "enters Ryazan, then burns Vladimir and kills the Grand "
+                "Prince. Northern Russia submits in four months; Novgorod "
+                "is spared by the thaw.",
+            ),
+            Builder.stage(
+                "Kiev falls",
+                year=1240,
+                season="Winter",
+                ignored="Chernigov and Pereyaslavl are crushed, and on 6 "
+                "December Kiev is stormed and left a field of bones.",
+            ),
+            Builder.stage(
+                "Legnica and the Sajo",
+                year=1241,
+                season="Spring",
+                ignored="Two toumens sack Sandomierz and Krakow and destroy "
+                "Henry the Pious's army at Legnica; a day later Batu and "
+                "Subadei annihilate the Hungarian host on the Sajo.",
+            ),
+            Builder.stage(
+                "The horde turns back",
+                year=1242,
+                season="Winter",
+                ignored="Word of Ogedei's death recalls Subadei; Batu "
+                "withdraws to the Volga steppe, razing as he goes, and "
+                "rules Russia from Sarai.",
             ),
         ],
     )

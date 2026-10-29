@@ -38,9 +38,14 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   content on Project: Redcap](https://redcap.org/page/The_Contested_Isle:_the_Hibernian_Tribunal);
   *Blood and Sand: The Levant Tribunal* with its web supplement
   *Secrets in Sand*, from Atlas Games' open content release on
-  Project: Redcap; and *The Cradle and the Crescent*, the region book
+  Project: Redcap; *The Cradle and the Crescent*, the region book
   of Arabia, Mesopotamia, Persia and the Silk Road, from the same
-  release).
+  release; and three Fourth Edition Tribunal books from Atlas Games'
+  open content, listed on Project: Redcap's [Open Content Conversion
+  Tracker](https://redcap.org/page/Ars_Magica_Open_Content_Conversion_Tracker):
+  *Sanctuary of Ice: The Greater Alps Tribunal*, *Heirs to Merlin: The
+  Stonehenge Tribunal* and *The Dragon and the Bear: The Novgorod
+  Tribunal*).
 
 ### Attribution
 
@@ -57,7 +62,9 @@ Lily: The Normandy Tribunal*, *Faith & Flame: The Provençal
 Tribunal*, *The Sundered Eagle: The Theban Tribunal*, *Against the
 Dark: The Transylvanian Tribunal*, *The Contested Isle: The Hibernian
 Tribunal*, *Blood and Sand: The Levant Tribunal* with *Secrets in
-Sand*, and *The Cradle and the Crescent*. Where it is
+Sand*, *The Cradle and the Crescent*, *Sanctuary of Ice: The Greater
+Alps Tribunal*, *Heirs to Merlin: The Stonehenge Tribunal* and *The
+Dragon and the Bear: The Novgorod Tribunal*. Where it is
 recorded, each catalog entry's `source` field names its book. The spell
 catalog was built from [The Grand
 Grimoire](https://www.redcap.org/page/The_Grand_Grimoire) on Project:

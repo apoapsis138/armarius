@@ -21,6 +21,8 @@ KNOWN_BOOKS = {
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),
     *("RoP:I", "C&G", "LoM", "TC", "GotF", "L&L", "AtD", "TCI", "A&A"),
     *("F&F", "Grogs"),
+    # Sanctuary of Ice, the Greater Alps pack's book
+    "SoI",
     # Secrets in Sand, Blood and Sand's free web supplement
     "SiS",
     # Books only the index was read for
@@ -51,9 +53,9 @@ def test_catalog_counts_after_adding_the_supplements():
     # Crescent's four Solomonic breakthrough Virtues and Societates's Miles,
     # less The Church's Brother-Priest, which is the DE's Brother Chaplain.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1372
+    assert len(entries) == 1373
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 806, "Flaw": 479, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 807, "Flaw": 479, "Quality": 67, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

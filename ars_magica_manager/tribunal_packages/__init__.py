@@ -364,12 +364,15 @@ def entries(tribunal: Tribunal, key: str, name: str) -> list[dict[str, Any]]:
 
 # The packages register themselves as they are imported.
 from . import (  # noqa: F401
+    alps,
     grand,
     hibernia,
     levant,
     normandy,
+    novgorod,
     provence,
     rhine,
+    stonehenge,
     theban,
     transylvania,
 )

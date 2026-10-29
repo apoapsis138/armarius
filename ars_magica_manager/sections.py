@@ -127,7 +127,7 @@ TRIB_DIARY_SECTION = "section-trib-diary"
 #: The lists Tribunal packages add (tribunal_packages): the Rhine's
 #: Gilds, the Theban Tribunal's tokens and shards and its archai,
 #: Normandy's vis tenure and Tourney, Transylvania's five covenants,
-#: Hibernia's ambassadors and treaties.
+#: Hibernia's ambassadors and treaties, the Greater Alps's ostracism.
 GILDS_SECTION = "section-trib-gilds"
 TOKENS_SECTION = "section-trib-tokens"
 ARCHAI_SECTION = "section-trib-archai"
@@ -136,6 +136,7 @@ TOURNEY_SECTION = "section-trib-tourney"
 PRIVILEGES_SECTION = "section-trib-privileges"
 AMBASSADORS_SECTION = "section-trib-ambassadors"
 TREATIES_SECTION = "section-trib-treaties"
+OSTRACISM_SECTION = "section-trib-ostracism"
 #: The Grand Tribunal's delegates (tribunal_packages.grand).
 DELEGATES_SECTION = "section-trib-delegates"
 #: The Region's top panel, and the covenants the troupe doesn't play.
@@ -345,6 +346,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     PRIVILEGES_SECTION: frozenset({"add", "edit", "remove"}),
     AMBASSADORS_SECTION: frozenset({"add", "edit", "remove"}),
     TREATIES_SECTION: frozenset({"add", "edit", "remove"}),
+    OSTRACISM_SECTION: frozenset({"add", "edit", "remove"}),
     DELEGATES_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_LORDS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_CHURCH_SECTION: frozenset({"add", "edit", "remove"}),

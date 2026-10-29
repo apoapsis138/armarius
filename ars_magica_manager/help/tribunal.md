@@ -74,6 +74,28 @@ what the old ones recorded, hidden, and switching back shows it again.
   as a note on the Peripheral Code tab. The book's Tribunal of 1220
   ships as a content pack: see [How to start a saga from a Tribunal
   book](help:guide-book-packs).
+- **Greater Alps: Chairs and ostracism** (Sanctuary of Ice): a magus
+  votes only if his covenant has bought him a **chair**, registering ten
+  pawns of vis a year for his upkeep with the Quaesitores at least a year
+  before the meeting; one with none is a vagrant, a Low Crime. Each
+  covenant's form (Edit Covenant) sets its chairs, and the roster gains a
+  Chairs column beside its magi ("3 of 4"). At each meeting the magus
+  most named on the sherds is ostracised for twenty-one years, if one
+  magus in four named him: the sheet gains an Ostracism tab, and an
+  ostracised magus's sheet says until when. The book's Tribunal of 1220
+  ships as a content pack: see [How to start a saga from a Tribunal
+  book](help:guide-book-packs).
+- **Stonehenge: The meeting a year late** (Heirs to Merlin): since 1201
+  it meets a year behind the rest of the Order, always at Blackthorn; a
+  meeting may close and open again, holding two Tribunals, and the
+  Quaesitores have an unGifted Redcap cast their sigils. A rule, not a
+  list: it shows as a note on the Peripheral Code tab. The book's
+  Tribunal of 1220 ships as a content pack.
+- **Novgorod: The Royal Embargo** (The Dragon and the Bear): no member
+  may reveal himself to the Russian or Polish royal houses, and the
+  council decides where any new covenant in Slavic lands may settle. A
+  rule, not a list: it shows as a note on the Peripheral Code tab. The
+  book's Tribunal of 1220 ships as a content pack.
 - **Hibernia: Cathaigh and ambassadors** (The Contested Isle): a covenant is represented
   only while it shows its **cathach**, the trophy it took when it was
   founded. Each covenant's form (Edit Covenant) says what its cathach is,
@@ -806,6 +828,28 @@ logothete, the Chief Redcap, keeps the register of tokens and shards;
 and the sixteen archai, four from each phyle, serve seven years on the
 Judicial, Legislative and Conciliatory Boards and the Treasury Council,
 led by its tamias (treasurer). The Council is chosen at each meeting.
+
+## The Ostracism tab
+<!-- help: tab-trib-ostracism -->
+
+A Greater Alps Tribunal's record of the magi it has ostracised. Only a
+Tribunal following the Greater Alps customs has this tab.
+
+### Ostracism
+<!-- help: section-trib-ostracism -->
+
+Each ostracism the Tribunal has voted: the magus, the meeting that voted
+it, the sherds that named him of all those cast (blank ones too), when
+his exile ends and why. As the first business of each meeting every
+magus writes on a sherd the name of the one he most despises, or leaves
+it blank; the magus most named is ostracised, provided at least one
+sherd in four names him, and must leave the Greater Alps before the
+second full moon, for twenty-one years, or be Marched (Sanctuary of Ice
+p. 12). The form refuses a vote where fewer than a quarter of the
+sherds name him. Leave **Exile ends** blank for twenty-one years after
+the meeting; the exile ends the day before that year's Tribunal, so he
+may be ostracised again on his return. An exile still running shows in
+red, and on the magus's sheet. Add an ostracism, edit it or delete it.
 
 ## The Five Covenants tab
 <!-- help: tab-trib-privileges -->

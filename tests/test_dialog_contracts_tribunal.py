@@ -790,6 +790,16 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Office": ""},
         shown={"#trib-archai-list": "to 1232"},
     ),
+    "edit ostracism": Contract(
+        prefill={"Meeting (year)": "1214", "Sherds against him": "30"},
+        edits={"Sherds cast": "100", "Exile ends (year)": "1230"},
+        saved=lambda s: s.tribunal("alps").package_data["alps"]["ostracised"][0][
+            "until"
+        ],
+        expected=1230,
+        invalid={"Sherds cast": "200"},
+        shown={"#trib-ostracism-list": "to 1230"},
+    ),
     "add tribunal diary entry": Contract(
         prefill={"Year": "1220", "Entry": "", "Numbers": ""},
         edits={"Entry": "Gild dues raised", "Numbers": "12 votes"},

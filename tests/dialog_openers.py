@@ -1236,6 +1236,13 @@ OPENERS: dict[str, Opener] = {
             1,
         ),
     ),
+    "edit ostracism": Opener(
+        "alps_tribunal",
+        _pick(
+            lambda ws: ws._core_verb("section-trib-ostracism", "edit"),
+            "trib-ostracism-list",
+        ),
+    ),
     "add tribunal diary entry": Opener(
         "tribunal",
         _pick(lambda ws: ws._core_verb("section-trib-diary", "add"), "trib-diary"),

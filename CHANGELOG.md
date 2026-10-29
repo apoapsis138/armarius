@@ -109,6 +109,44 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.41.0 — 2026-10-29
+
+### Peregrinatio
+
+- Three more Tribunal packs from the Fourth Edition books, each converted
+  by the Definitive Edition's guide, with an assumptions page listing
+  every judgement call:
+  - **Sanctuary of Ice: the Greater Alps Tribunal**: six covenants with
+    their Boons, Hooks and chapters, about fifty magi (four converted
+    from their stat blocks, the rest generated), Cymena the Redcap and
+    Andru's familiar Crucifixo, the Tribunal of 1221 at the Icy North,
+    the lords, Church and towns of the Alps, its ghosts and barbegazi,
+    and eleven stories.
+  - **Heirs to Merlin: the Stonehenge Tribunal**: nine covenants and 49
+    magi with generated stats, the Redcaps of Mercer House, twenty
+    fallen covenants in the Diary, the places of legend, England and
+    Wales in 1220, and eleven stories.
+  - **The Dragon and the Bear: the Novgorod Tribunal**: four covenants
+    and 30 magi (nine converted), the trial of Pripet Maior on the
+    docket for 1221, the Russian princes, the Polish dukes and the
+    Baltic, the Slavic faeries and dragons with their powers repriced by
+    Realms of Power: Faerie, and ten stories. The Mongols' stages in
+    Russia and Poland are added to the record other packs share.
+- The Levant's converted magi now follow the same readings: their
+  printed ages, and Confidence at the Definitive Edition's baseline
+  rather than the old score.
+
+### Concilium
+
+- The Greater Alps Tribunal's customs: a Chairs column on the roster,
+  set on each covenant's form, and an Ostracism tab (twenty-one years'
+  exile, needing one sherd in four). Stonehenge and Novgorod have notes
+  on their customs.
+
+### Florilegium
+
+- Public Vis Source, a Minor Hermetic Virtue from Sanctuary of Ice.
+
 ## 3.40.0 — 2026-10-28
 
 ### Book of Hours

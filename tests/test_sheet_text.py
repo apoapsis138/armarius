@@ -56,6 +56,7 @@ SHEETS = {
     "normandy_tribunal",
     "transylvania_tribunal",
     "hibernia_tribunal",
+    "alps_tribunal",
     "region",
     "neighbour",
     "town",

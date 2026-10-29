@@ -108,12 +108,15 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
 
 
 from . import (  # noqa: F401
+    alps,
     cradle,
     hibernia,
     levant,
     normandy,
+    novgorod,
     provence,
     rhine,
+    stonehenge,
     theban,
     transylvania,
 )

@@ -5,32 +5,19 @@ Wardat al-Quds from Blood and Sand's chapter 6; and Luigi, Amber's cat,
 bound to her as her Familiar (L14), as Transylvania's Silexa is.
 
 Each block is written here as the book prints it, a `Fourth`, in the
-Fourth Edition's own names, and one plain function, `convert`, turns it
-into the StatBlock Builder.stats reads (an Adapter, though a function is
-all it needs), by the Definitive Edition's appendix and L11: age +20%,
-apparent age as printed; Characteristics and Arts unchanged; each Virtue
-and Flaw at the catalog's tier under its Fifth Edition name (a Flaw
-with both tiers in the catalog is Major at -2 or worse, Minor at -1),
-those with no Fifth Edition counterpart dropped; Abilities kept at their
-scores and renamed, a dropped Ability's experience moved to its
-replacement (Scribe to Artes Liberales at the best Scribe score, since a
-language now carries its letters; Disputatio and Divination: Astrology
-to Artes Liberales, Forgery to Guile, Read Lips to Awareness, Climb to
-Athletics, the weapon-and-shield Abilities into the one weapon Ability;
-Certamen, the Affinity Abilities and Verditius Magic dropped, as they are
-Virtues or gone); spells at the catalog's level and Art, and each one
-the catalog lacks swapped for a catalog spell of the same Technique,
-Form and level (L17; Eyes of the Past and of the Future, impossible now,
-for same-level Intellego spells); Twilight Points / 3 as Warping;
-Confidence 4 as 2 (5 points) and 3 as 1 (3 points); no rebalancing, and
-no House Virtue added beyond what a printed Virtue or Ability becomes.
-Each sheet's biography lists what the conversion did to it, with the
-block's equipment, sigils and Twilight scars. Longevity rituals are
-worked out again at a Definitive Edition Lab Total from the converted
-scores. 'Umar's spells are the catalog's Hermetic ones; his own Islamic
-spell, The Wrath of Allah, keeps its Islamic Range, Duration and Target
-(L12), and SiS's sample, Convocation of the Faithful, is the saga's own
-spell, as no printed magus knows it.
+Fourth Edition's own names, and `fourth.convert` turns it into the
+StatBlock Builder.stats reads, by the Definitive Edition readings that
+module lists (printed ages kept, Confidence at the Definitive Edition's
+baseline, Twilight Points / 3 as Warping), with the Levant's own swaps
+(L17; Eyes of the Past and of the Future, impossible now, for same-level
+Intellego spells). No House Virtue is added beyond what a printed Virtue
+or Ability becomes. Each sheet's biography lists what the conversion did
+to it, with the block's equipment, sigils and Twilight scars. Longevity
+rituals are worked out again at a Definitive Edition Lab Total from the
+converted scores. 'Umar's spells are the catalog's Hermetic ones; his own
+Islamic spell, The Wrath of Allah, keeps its Islamic Range, Duration and
+Target (L12), and SiS's sample, Convocation of the Faithful, is the
+saga's own spell, as no printed magus knows it.
 
 Wardat (L13 as revised): a maga of Ex Miscellanea in the Hermetic
 Sahirs (traditions ["trad_hermetic_sahirs"]), with its package (Sihr,
@@ -48,9 +35,7 @@ made is skipped."""
 from __future__ import annotations
 
 import math
-from collections.abc import Sequence
-from dataclasses import dataclass, field
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING
 
 from ... import storage
 from ...models import (
@@ -64,14 +49,9 @@ from ...models import (
 )
 from ...rules import creation_access as access
 from ...rules import lab
-from ...rules.xp import ability_xp, score_from_xp
-from ..builder import (
-    StatBlock,
-    _catalog_spells,
-    _spell_key,
-    _virtue_flaw,
-    characteristics,
-)
+from ...rules.xp import ability_xp
+from ..builder import _virtue_flaw, characteristics
+from ..fourth import Fourth, arts, convert
 
 if TYPE_CHECKING:
     from ...models import Character
@@ -79,200 +59,6 @@ if TYPE_CHECKING:
 
 SIS = "SiS"
 SAHIRS = "trad_hermetic_sahirs"
-AGE_FACTOR = 1.2
-#: The Fourth Edition's Confidence and the Definitive Edition's (Score,
-#: Points) for it (L11).
-CONFIDENCE = {4: (2, 5), 3: (1, 3), 2: (1, 3), 1: (1, 3), 0: (0, 0)}
-
-#: A Virtue or Flaw as the book prints it: (name, points) or (name,
-#: points, detail), the detail being what the book puts in brackets.
-Printed = tuple[Any, ...]
-
-
-@dataclass(frozen=True)
-class Fourth:
-    """A Fourth Edition stat block as the book prints it, in its names."""
-
-    age: int
-    apparent: int | None
-    characteristics: dict[str, int]
-    confidence: int
-    twilight: int
-    decrepitude: int
-    virtues: Sequence[Printed]
-    abilities: Sequence[tuple[str, int, str]]
-    arts: dict[str, int]
-    spells: Sequence[tuple[str, str, int]]
-    traits: dict[str, int]
-    reputations: dict[str, int] = field(default_factory=dict)
-    size: int = 0
-    notes: str = ""
-    #: Virtues the Definitive Edition gives with what the block prints
-    #: (the tradition's package), before the printed ones.
-    granted: Sequence[str | tuple[str, dict[str, str]]] = ()
-    traditions: Sequence[str] = ()
-
-
-# -- the conversion tables --
-
-#: A printed Virtue or Flaw's Fifth Edition name, where it was renamed.
-RENAMED: dict[str, str] = {
-    "Elementalist": "Elemental Magic",
-    "Jack of All Trades": "Jack-of-All-Trades",
-    "Well Traveled": "Well-Traveled",
-    "Obligations": "Dutybound",
-    "Obsession": "Obsessed",
-    "Driving Goal": "Driven",
-    "Veteran": "Warrior",
-    "Common Fear": "Fear",
-    "Terrors": "Fear",
-    "Secret Vis Source": "Personal Vis Source",
-    "Lack of Control": "Unpredictable Magic",
-    "Well Known": "Famous",
-    "Silent Magic": "Quiet Magic",
-    "Diabolic upbringing": "Diabolic Past",
-    "Plagued by Jinni": "Plagued by Supernatural Entity",
-    "Knack with Certamen": "Minor Magical Focus",
-    "Quaesitor": "Hermetic Prestige",
-    "Mage-Smith": "Verditius Magic",
-    "Magical Affinity": "Affinity with {art}",
-    "Affinity": "Affinity with {art}",
-    "Felines": "Special Circumstances",
-    "Cyclic Magic (+)": "Cyclic Magic (Positive)",
-    "Cyclic Magic (-)": "Cyclic Magic (Negative)",
-    "Feeble Communication": "Poor {characteristic}",
-}
-#: The parameter a renamed entry takes from the printed detail.
-PARAMETER = {
-    "Minor Magical Focus": "focus",
-    "Affinity with {art}": "art",
-    "Special Circumstances": "circumstance",
-    "Social Contacts": "group",
-    "Cyclic Magic (Positive)": "cycle",
-    "Cyclic Magic (Negative)": "cycle",
-    "Poor {characteristic}": "characteristic",
-}
-#: Printed Virtues and Flaws with no Fifth Edition counterpart, and why.
-DROPPED: dict[str, str] = {
-    "No Sigil": "the voting sigil is a token, not a Flaw now",
-    "Twilight Points": "its points are in the Warping",
-    "Old": "the age itself carries it",
-    "Decrepit": "the Decrepitude score carries it",
-    "Read Lips": "no Fifth Edition Virtue; the Ability went to Awareness",
-    "Outsider Trained in Order": "a sahir joins by the tradition, in Ex Miscellanea",
-    "Visual Eidetic Memory": "not in the catalog",
-    "Weak Parma Magica": "the catalog's Flawed Parma Magica is weak against "
-    "one Form, not when unaware",
-    "Bad Reputation": "kept as the Reputation it printed",
-    "Follower of Verditius": "folded into Verditius Magic",
-}
-#: Flaws the catalog has at both tiers.
-TWO_TIERS = {
-    "Obsessed",
-    "Driven",
-    "Vow",
-    "Overconfident",
-    "Oversensitive",
-    "Weakness",
-    "Wrathful",
-    "Proud",
-}
-#: How many copies a printed entry becomes (ArM4's -4 Feeble Communication
-#: is two steps of Poor Communication, to -5).
-COPIES = {"Feeble Communication": 2}
-
-#: A printed Ability's Fifth Edition name.
-ABILITIES: dict[str, str] = {
-    "Brawling": "Brawl",
-    "Hermes Lore": "Organization Lore: Order of Hermes",
-    "Hermetic Law": "Code of Hermes",
-    "Legend Lore": "Magic Lore",
-    "Occult Lore": "Infernal Lore",
-    "Levant Lore": "Area Lore: Levant Tribunal",
-    "Longshaft Weapon": "Great Weapon",
-    "Shield and Weapon": "Single Weapon",
-    "Weapon and Shield": "Single Weapon",
-    "Climb": "Athletics",
-    "Rabbinical Law": "Rabbinic Law",
-    "Civil & Canon Law": "Civil and Canon Law",
-    "Disputatio": "Artes Liberales",
-    "Divination: Astrology": "Artes Liberales",
-    "Forgery": "Guile",
-    "Read Lips": "Awareness",
-    "Craft: Armory": "Craft: Armorer",
-    "Craft: Clothiery": "Craft: Clothier",
-    "Craft: Jewelry-making": "Craft: Jeweler",
-    "Craft: Weapon-smithing": "Craft: Weaponsmith",
-}
-#: Printed Abilities that are one skill with their replacement, so the
-#: better score stands rather than the two adding up.
-SAME_SKILL = {"Shield and Weapon", "Weapon and Shield"}
-#: Printed Abilities the Definitive Edition has no place for.
-NO_ABILITY = {"Certamen", "Verditius Magic"}
-
-#: Printed spells the catalog has under another name.
-SPELL_RENAMES: dict[str, str] = {
-    "Parting the Waves": "Parting of the Waves",
-    "The Seven-League Stride": "Seven-League Stride",
-    "Confusion of the Numbed Will": "Confusion of the Numb Will",
-    "Transformation of the Ravenous Beast to a Torpid Toad": (
-        "Transformation Of The Ravenous Beast To The Torpid Toad"
-    ),
-    "Ear for the Distant Voice": "The Ear for Distant Voices",
-    "The Demon's Eternal Oblivion": "Demon's Eternal Oblivion",
-    "Sense the Lingering Magic": "Sense of the Lingering Magic",
-    "Mirror of Opposition (Corpus)": "Mirror of Opposition (Form)",
-    "Mirror of Opposition (Mentem)": "Mirror of Opposition (Form)",
-    "Mirror of Opposition (Vim)": "Mirror of Opposition (Form)",
-    "Wizard's Boost (Vim)": "Wizard's Boost (Form)",
-    "Wizard's Boost (Mentem)": "Wizard's Boost (Form)",
-}
-#: Each spell the catalog lacks, and the catalog spell of the same
-#: Technique, Form and level it becomes.
-SWAPS: dict[str, str] = {
-    # ArM4 core spells
-    "Breaking the Perpetual Drought": "Wizard's Flood",
-    "Full Health of Beast and Bird": "Flight Perfected",
-    "Subtle Shift of the Heart": "Distraction of the Magpie",
-    "Circle of the Faerie Stone": "Silvery Scales of the Knight",
-    "Heat of Hell's Impending Doom": "Rainbow Bridge",
-    "Emotion of Reversed Intentions": "My Old and Dear Friend",
-    # impossible now: Hermetic magic cannot see the past or the future
-    "Eyes of the Past": "The Ear for Distant Voices",
-    "Eyes of the Future": "Sight of the Blossom, Ears of the Oak",
-    # Wizard's Grimoire Revised
-    "Change the River's Path": "Chaos of the Angry Waves",
-    "Fulgurous Orb": "Catapult of the Mighty Winds",
-    "The Travelling Thistledown": "Embracing the Downy Arms of the Nephelae",
-    "Call Aeolus' Servants": "Movement Within the Sirocco",
-    "Prison of the Zephyrs": "Ward Against the Sirocco",
-    "Breath of Vulcan": "Self Immolation",
-    "Curse of the Attraction of the Fire": "Unified Flame",
-    "Blessing of Antaeus' Fortitude": "Stance of the Patient Tree",
-    "Gift of the Buoyant Gosling": "Cloak of Fins and Scales",
-    "Humility of the Vanquished Knight": "My Old and Dear Friend",
-    "Weighing the Turncoat's Silver": "Frosty Breath of the Spoken Lie",
-    "Mastering the Stolid Mundane": "Lay Your Burdens on Me",
-    "Beguile the Normal Mind": "Enchantment of my Lover's Eye",
-    "Sense the Magic Root": "Intuition of the Forest",
-    "Wizard's Sleeve of Practical Tools": "Breath of the Glassworker",
-    "Origin of the Ancient Object": "Eyes of the Treacherous Terrain",
-    "Gift of the Hero's Strength": "High Tree or Small Boulder",
-    "Mighty Fling of the Menacing Knight": "Jump of the Lynx",
-    "Enlarging the Distant Image": "Aura of the Ennobled Presence",
-    "Eyes of the Serpent": "Rise of the Feathery Body",
-    "Eyes of Flame": "Circle of Encompassing Flames",
-    "Pain of the Wizard's Gaze": "Bane of the Decrepit Body",
-    "Spectacle of Abject Terror": "Convince a Man he has an Enemy",
-    "Spell Analysis": "Impression of the Faded Sigil",
-    "Sense the Shadows of the Spheres": "Sense the Hour",
-    "Wizard's Focus": "Reveal the Lurking Watchers",
-    "Glimpse Through the Mystic Veil": "Piercing the Faerie Veil",
-    "Reveal the Gift": "See the Light of Magic",
-    "Warping the Magical Veil": "Clear Breath of the Consummate Liar",
-    "Hammer of Thaumaturgical Shattering": "Snipping the Thread of Power",
-    "Wizard's Wait": "The Patient Spell",
-}
 #: Swaps made otherwise for one magus: Felix already knows The Ear for
 #: Distant Voices, and Guillaume's Curse is the book's level 30, not
 #: 'Umar's 35.
@@ -361,171 +147,6 @@ CONVOCATION = Spell(
 )
 
 
-# -- the conversion --
-
-
-def _virtues(block: Fourth) -> tuple[list[Any], list[str]]:
-    """The block's Virtues and Flaws in Fifth Edition terms, and what was
-    renamed or dropped."""
-    entries: list[Any] = ["The Gift", "Hermetic Magus", *block.granted]
-    said: list[str] = []
-    for printed in block.virtues:
-        name, points, detail = (*printed, "")[:3]
-        points = int(points)
-        if name in DROPPED:
-            said.append(f"{name} dropped ({DROPPED[name]})")
-            continue
-        new = RENAMED.get(name, name)
-        if new in TWO_TIERS:
-            new = f"{new} ({'Major' if points <= -2 else 'Minor'})"
-        key = PARAMETER.get(RENAMED.get(name, name))
-        entry: Any = (new, {key: detail}) if key else new
-        entries.extend([entry] * COPIES.get(name, 1))
-        shown = new.replace("{art}", detail).replace("{characteristic}", detail)
-        line = shown if new.startswith(f"{name} (") else f"{name} as {shown}"
-        if detail and not key:
-            # The catalog entry takes no parameter: the detail is kept here.
-            said.append(f"{shown if new == name else line}: {detail}")
-        elif new != name:
-            said.append(line)
-    return entries, said
-
-
-def _abilities(block: Fourth) -> tuple[list[tuple[str, int, str]], list[str]]:
-    """The block's Abilities in Fifth Edition terms, merged where two
-    became one, and what moved. Printings of one skill (Scribe in each
-    language; a weapon Ability and its weapon-and-shield form) count once,
-    at the best score; any other Ability moved in adds its experience."""
-    same_skill = {ABILITIES[name] for name in SAME_SKILL}
-    moved: dict[str, int] = {}
-    best: dict[str, int] = {}
-    specialty: dict[str, str] = {}
-    said: list[str] = []
-    for name, score, spec in block.abilities:
-        if name in NO_ABILITY or name.startswith("Affinity "):
-            said.append(f"{name} {score} dropped")
-            continue
-        if name.startswith("Scribe "):
-            new, one_skill = "Artes Liberales", True
-        elif name.startswith("Speak "):
-            tongue = name.removeprefix("Speak ")
-            new = (
-                "Dead Language: Latin"
-                if tongue == "Latin"
-                else (f"Living Language: {tongue}")
-            )
-            one_skill = False
-        else:
-            new = ABILITIES.get(name, name)
-            one_skill = name in SAME_SKILL or name in same_skill
-        specialty.setdefault(new, spec)
-        moved.setdefault(new, 0)
-        best.setdefault(new, 0)
-        if one_skill:
-            best[new] = max(best[new], score)
-        else:
-            moved[new] += ability_xp(score)
-        if new != name and not name.startswith("Speak "):
-            said.append(f"{name} {score} to {new}")
-    abilities = [
-        (new, score_from_xp(ability_xp(best[new]) + moved[new], 5), spec)
-        for new, spec in specialty.items()
-    ]
-    return abilities, said
-
-
-def _spells(
-    key: str, block: Fourth
-) -> tuple[list[tuple[str, str, int | None, int]], list[str]]:
-    """The block's spells as the catalog has them, each rename and swap
-    named, and each spell whose catalog level or Art differs listed."""
-    known: list[tuple[str, str, int | None, int]] = []
-    seen: set[str] = set()
-    said: list[str] = []
-    changed: list[str] = []
-    printings = _catalog_spells()
-    for name, arts, level in block.spells:
-        swap = SECOND_SWAPS.get((key, name)) or SWAPS.get(name)
-        new = swap or SPELL_RENAMES.get(name, name)
-        if new in seen:
-            # The (Form) spells: one general spell for each printed Form.
-            continue
-        seen.add(new)
-        if swap:
-            said.append(f"{name} for {new}")
-        elif new != name and not new.endswith("(Form)"):
-            said.append(f"{name} as {new}")
-        found = printings.get(_spell_key(new))
-        if found and not swap:
-            spell = next((s for s in found if s.source == "DE"), found[0])
-            short = spell.technique[:2] + spell.form[:2]
-            if spell.level != level or short != arts[:4]:
-                now = "general" if spell.level is None else spell.level
-                changed.append(f"{name} {arts} {level} to {short} {now}")
-        known.append((new, arts, level, 0))
-    if changed:
-        said.append("At the catalog's level or Art: " + "; ".join(changed))
-    return known, said
-
-
-def convert(key: str, block: Fourth) -> tuple[StatBlock, int]:
-    """A Fourth Edition block as a Definitive Edition StatBlock (L11),
-    with the converted age; the biography lists what changed."""
-    age = round(block.age * AGE_FACTOR)
-    virtues, said_virtues = _virtues(block)
-    abilities, said_abilities = _abilities(block)
-    spells, said_spells = _spells(key, block)
-    warping = block.twilight // 3
-    confidence = CONFIDENCE[block.confidence]
-    lines = [
-        f"Converted from the Fourth Edition block by the Definitive "
-        f"Edition's appendix: age {block.age} + 20% = {age}"
-        + (f" (looks {block.apparent})" if block.apparent else "")
-        + f"; Twilight Points {block.twilight} / 3 = Warping {warping}; "
-        f"Confidence {block.confidence} = {confidence[0]} ({confidence[1]} "
-        "points). Characteristics and Arts as printed; no rebalancing.",
-    ]
-    if said_virtues:
-        lines.append("Virtues and Flaws: " + "; ".join(said_virtues) + ".")
-    if said_abilities:
-        lines.append("Abilities: " + "; ".join(said_abilities) + ".")
-    if said_spells:
-        lines.append("Spells: " + "; ".join(said_spells) + ".")
-    stat: StatBlock = {
-        "characteristics": dict(block.characteristics),
-        "size": block.size,
-        "confidence": confidence,
-        "decrepitude": (block.decrepitude, 0),
-        "warping": (warping, 0),
-        "virtues_flaws": virtues,
-        "abilities": abilities,
-        "arts": dict(block.arts),
-        "traits": dict(block.traits),
-        "reputations": dict(block.reputations),
-        "spells": spells,
-        "traditions": list(block.traditions),
-        "notes": "\n".join([block.notes.strip(), *lines]).strip(),
-    }
-    if block.apparent:
-        stat["apparent_age"] = block.apparent
-    return stat, age
-
-
-def _arts(cr: int, in_: int, mu: int, pe: int, re: int, *forms: int) -> dict[str, int]:
-    """Arts in the book's order: Techniques, then An Aq Au Co He Ig Im Me
-    Te Vi."""
-    names = ("Animal", "Aquam", "Auram", "Corpus", "Herbam", "Ignem")
-    names += ("Imaginem", "Mentem", "Terram", "Vim")
-    return {
-        "Creo": cr,
-        "Intellego": in_,
-        "Muto": mu,
-        "Perdo": pe,
-        "Rego": re,
-        **dict(zip(names, forms)),
-    }
-
-
 # -- the blocks, as printed --
 
 UMAR = Fourth(
@@ -582,7 +203,7 @@ UMAR = Fourth(
         ("Survival", 3, "desert"),
         ("Theology: Islam", 3, "magic"),
     ],
-    arts=_arts(15, 11, 9, 7, 21, 8, 14, 13, 16, 10, 16, 3, 6, 15, 10),
+    arts=arts(15, 11, 9, 7, 21, 8, 14, 13, 16, 10, 16, 3, 6, 15, 10),
     spells=[
         ("The Earth's Carbuncle", "ReTe", 15),
         ("Crest of the Earth Wave", "ReTe", 25),
@@ -705,7 +326,7 @@ AMBER = Fourth(
         ("Swim", 2, "rough water"),
         ("Theology: Islam", 1, "women"),
     ],
-    arts=_arts(11, 14, 15, 10, 11, 18, 7, 9, 17, 8, 11, 8, 12, 7, 9),
+    arts=arts(11, 14, 15, 10, 11, 18, 7, 9, 17, 8, 11, 8, 12, 7, 9),
     spells=[
         ("Peering into the Mortal Mind", "InMe", 30),
         ("Thoughts Within Babble", "InMe", 25),
@@ -821,7 +442,7 @@ FELIX = Fourth(
         ("Speak Latin", 5, "Hermetic usage"),
         ("Theology: Judaism", 2, "rituals"),
     ],
-    arts=_arts(6, 11, 5, 0, 3, 0, 0, 0, 6, 0, 0, 12, 11, 0, 2),
+    arts=arts(6, 11, 5, 0, 3, 0, 0, 0, 6, 0, 0, 12, 11, 0, 2),
     spells=[
         ("Eyes of the Past", "InIm", 20),
         ("Ear for the Distant Voice", "InIm", 20),
@@ -900,7 +521,7 @@ ESTHER = Fourth(
         ("Speak Latin", 5, "nuances"),
         ("Verditius Magic", 5, "Vim"),
     ],
-    arts=_arts(10, 11, 10, 10, 10, 5, 5, 5, 10, 7, 5, 9, 10, 10, 11),
+    arts=arts(10, 11, 10, 10, 10, 5, 5, 5, 10, 7, 5, 9, 10, 10, 11),
     spells=[
         ("Gather the Essence of the Beast", "MuVi", 15),
         ("Shroud Magic", "MuVi", 25),
@@ -993,7 +614,7 @@ GUILLAUME = Fourth(
         ("Survival", 3, "desert"),
         ("Swim", 3, "rough water"),
     ],
-    arts=_arts(12, 5, 8, 10, 5, 5, 5, 5, 12, 5, 19, 5, 7, 5, 5),
+    arts=arts(12, 5, 8, 10, 5, 5, 5, 5, 12, 5, 19, 5, 7, 5, 5),
     spells=[
         ("Ball of Abysmal Flame", "CrIg", 35),
         ("Arc of Fiery Ribbons", "CrIg", 25),
@@ -1037,6 +658,7 @@ GUILLAUME = Fourth(
 )
 
 RUFUS = Fourth(
+    tytalus=True,
     age=45,
     apparent=36,
     characteristics=characteristics(3, 2, 2, 1, -2, -1, -1, -1),
@@ -1083,7 +705,7 @@ RUFUS = Fourth(
         ("Speak French", 4, "Provencal"),
         ("Speak Latin", 5, "whispers"),
     ],
-    arts=_arts(8, 11, 5, 17, 5, 5, 5, 5, 16, 5, 5, 6, 12, 3, 8),
+    arts=arts(8, 11, 5, 17, 5, 5, 5, 5, 16, 5, 5, 6, 12, 3, 8),
     spells=[
         ("Trust of Childlike Faith", "PeMe", 10),
         ("Loss of But a Moment's Memory", "PeMe(In)", 10),
@@ -1174,7 +796,7 @@ SPIRAL = Fourth(
         ("Survival", 1, "desert"),
         ("Theology: Islam", 2, "magic"),
     ],
-    arts=_arts(12, 20, 15, 14, 15, 7, 3, 3, 14, 3, 5, 12, 13, 3, 23),
+    arts=arts(12, 20, 15, 14, 15, 7, 3, 3, 14, 3, 5, 12, 13, 3, 23),
     spells=[
         ("Sense the Lingering Magic", "InVi", 30),
         ("The Invisible Eye Revealed", "InVi", 30),
@@ -1357,7 +979,7 @@ def stats(levant: Levant) -> None:
         character = levant.magi.get(key)
         if character is None:
             continue
-        stat, age = convert(key, block)
+        stat, age = convert(key, block, SECOND_SWAPS)
         b.stats(character, stat, source=source)
         character.background.year_born = b.year - age
         _own_spells(character)

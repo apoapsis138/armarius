@@ -183,6 +183,7 @@ NODES: dict[str, tuple[str, ...]] = {
     "normandy_tribunal": ("tribunal", "normandy"),
     "transylvania_tribunal": ("tribunal", "transylvania"),
     "hibernia_tribunal": ("tribunal", "hibernia"),
+    "alps_tribunal": ("tribunal", "alps"),
     "region": ("region",),
     "neighbour": ("neighbour", "gottfried"),
     "town": ("neighbour", "soest"),
@@ -538,6 +539,26 @@ def everything_saga() -> Saga:
                                 "office": "Curantis",
                             },
                         ]
+                    }
+                },
+            ),
+            Tribunal(
+                id="alps",
+                name="Greater Alps",
+                next_year=1221,
+                meeting_place="the Icy North",
+                package="alps",
+                package_data={
+                    "alps": {
+                        "ostracised": [
+                            {
+                                "character_id": "mag1",
+                                "year": 1214,
+                                "sherds": 30,
+                                "voters": 90,
+                                "why": "Farmed vis from the aura",
+                            },
+                        ],
                     }
                 },
             ),

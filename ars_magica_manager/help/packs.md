@@ -358,8 +358,8 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 
 - **The first founding**: the Tribunal of the East is reckoned in 832, the timeline's year, though Chapter 2 puts it soon after 806.
 - **The meeting of 1214**: meetings fell in 1193, 1200, 1207 and 1214, and each renewal is voted at the last meeting before it falls due, so the 1214 meeting had nothing to renew; its Diary entry says so.
-- **Young founders**: Foothold's founders would have been 11 and 13 when it was founded in 1188; with the conversion's added fifth they are 20 and 22, just past Gauntlet, and 1188 is kept. Amber and Esther likewise join at 33 and 29, not 22 and 20.
-- **'Umar's age** is *Secrets in Sand*'s 72 before conversion; his summary has him taking over after Hattin without the book's age for it.
+- **Young founders**: at the book's ages Foothold's founders were 11 and 13 when it was founded in 1188, too young to have passed Gauntlet. The pack keeps both the printed ages and 1188, as the book gives them; change either in your saga if it matters. Amber and Esther join at 22 and 20.
+- **'Umar's age** is *Secrets in Sand*'s 72; his summary has him taking over after Hattin without the book's age for it.
 - **Head counts**: the book says four magi live at Aedes Veritatis and at Domus Pacis but names three, so each has one unnamed magus.
 - **The Embassy** is affiliated with Guernicus, which pays for it through Magvillus, though no Guernicus magus lives there, as the book has it.
 - **Kept as the book says**: the Romans destroying Alexandria's library early in the first century, and Tarsus as the Armenian king's seat.
@@ -367,7 +367,7 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 ### Converting the printed magi
 <!-- help: pack-assumptions-levant-conversion -->
 
-- **The eight printed magi** ('Umar, Amber, Felix, Esther, Guillaume, Rufus, Spiral and Wardat) are converted by the guide: age raised by a fifth (so 'Umar is 86, as he is 72 in the book), apparent age as printed; Characteristics and Arts unchanged; Twilight Points divided by three as Warping ('Umar 4); Confidence 4 becomes 2 and 3 becomes 1. Their Virtue and Flaw totals are kept as printed, even where they no longer balance, as these magi aren't in creation.
+- **The eight printed magi** ('Umar, Amber, Felix, Esther, Guillaume, Rufus, Spiral and Wardat) are converted by the guide: ages and apparent ages as printed (the guide's added fifth only sets the age a character is built from, and these are printed, not built); Characteristics and Arts unchanged; Twilight Points divided by three, rounded down, as Warping ('Umar 4); Confidence at the Definitive Edition's baseline, a Score of 1 and 3 Points, with 1 more for Rufus's Tytalus apprenticeship (DE p. 29), rather than the old score converted. Felix's Quaesitor Virtue is dropped: a quaesitor is an office of House Guernicus now, not a Virtue. Their Virtue and Flaw totals are kept as printed, even where they no longer balance, as these magi aren't in creation.
 - **Virtues and Flaws** take the catalog's tier; where it has both, a Flaw worth −2 or worse is Major. Renamed ones become their Definitive Edition names (Elementalist is Elemental Magic, Silent Magic Quiet Magic, Secret Vis Source Personal Vis Source); those with no new entry (No Sigil, Old, Outsider Trained in Order) are dropped. Each sheet's biography lists what changed.
 - **Abilities** keep their scores; dropped ones move to the nearest Definitive Edition Ability (Scribe and Disputatio to Artes Liberales, Forgery to Guile, Read Lips to Awareness), and Certamen is dropped.
 - **Spells** take the catalog's level and Art, so some move (Edge of the Razor, on Aedes Veritatis's swords too, from 5 to 20). A spell the catalog lacks is swapped for a catalog spell of the same Technique, Form and level; scrying the past or future, impossible now, becomes an Intellego spell of the same level. Each swap is in the biography.
@@ -379,9 +379,158 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 ### For every magus
 <!-- help: pack-assumptions-levant-shared -->
 
-- **Generated stats**: the 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age, at the book's age without the conversion's added fifth; each sheet says they are not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it. Arash, who swore the Treaty of Barcelona and not the Oath, has no House. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
+- **Generated stats**: the 30 other named magi, Tau, Aurora and Scipio among them, have stats built from the book's description with the core rules' experience for their age, at the book's age, as the printed magi are; each sheet says they are not an official write-up. Venti Rosa's four Redcaps without the Gift are generated without it. Arash, who swore the Treaty of Barcelona and not the Oath, has no House. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 - **Shared records**: the Order of Suleiman and its families, the jinn, the Nizaris, the caliph and the Ayyubid princes, Georgia, Iraq and Baghdad, the Fifth Crusade and the Mongols follow *The Cradle and the Crescent*'s account, and the Sultan of Rum and the Emperor of Trebizond the Theban pack's, so importing another pack that shares them updates them and never doubles them. The Levant pack adds only its own records beside them.
 - **Hedge factions and traditions**: the Order of Suleiman and its two families, the Nizaris and the Syrian Nizaris, and the Karaites name their tradition records; the jinn, the Islamic Tradition, the Bedouin, the Turcomans, the Druze and the other faiths have none.
+
+# Assumptions made for Sanctuary of Ice: The Greater Alps Tribunal
+<!-- help: pack-assumptions-alps -->
+
+The Greater Alps pack is built from *Sanctuary of Ice*, a Fourth Edition book, so its numbers had to be converted: the stats follow the Definitive Edition's Fourth Edition conversion guide where it applies, and where the guide is silent the pack made a judgement call, each one listed on this page. Where a Fifth Edition book describes the same thing it wins: Muscaria as Prima of Criamon and the Cave's twelve living magi (*Houses of Hermes: Mystery Cults*), and Andru, Carmine, the Steward and Valnastium's auras (*Houses of Hermes: Societates*). You can change any of it in your saga.
+
+### Inferred from the text
+<!-- help: pack-assumptions-alps-inferred -->
+
+- **The meeting**: *The Wizard's Grimoire* dates the Tribunal's rulings to 1165 and 1194, which puts its meetings in 1200, 1207 and 1214 and the next in **1221**. The book gives no season; it is **Autumn**, since the Liberalia is forgone in a Tribunal's year and the Quinquennial Games, which follow a meeting, fall in November. It meets at the Icy North motherhouse, which every covenant but Sinews of Knowledge prefers.
+- **The Praeco**: the book makes La, Prima of Criamon, Praeco; the Definitive Edition makes Muscaria Prima, so La has been ritually slain and is one of the spectral Primi, and the eldest living magus whose age is given, Constance of Valnastium (over 130, taken as 131), is Praeco.
+- **Vis given only as points** is 30 pawns and 5 a point (Fourth Edition core p. 206): Journeys End's +15 is 105 pawns a year, Valnastium's +19 is 125. Valnastium's printed 570 is taken for a slip (it is 19 × 30), noted on the covenant. The Cave keeps its printed 160, much of it hunted.
+- **Auras the book doesn't number** follow DE p. 418: a place of worship Divine 4, a cathedral or major monastery Divine 5, a town Divine 3; Heiligenblut's chapel of the Holy Blood Divine 6. An unnumbered magic site is Magic 3 (Tarragon Vale, Pilatus, the Temple of Mercury, Staubbach, the Trivia statue, Dachstein's regio) and an unnumbered faerie site Faerie 3 (the Rosegarten, Val Fanes, Vorarlberg). The Cave's nine regio levels run from Magic 5 on the first to 13 on the ninth.
+- **Chairs**: each covenant has as many chairs as the members the book gives it: the Cave 22, the Icy North 19, Journeys End 8, Sinews of Knowledge 6 (Ragoneda's Public Vis Source is her own), Valnastium 21; Tarragon Vale's are held in abeyance.
+- **Ages**, where the book gives none, are chosen from rank and standing: Philomena 140, Paxon 130, Circum Perfico and Pietro 120, Jacinta 118 (born in Pietro's village), Vincent 110, Yselt 100, Darius, Cato and Mary 90, Bronwyn 75, Gunther, Regina, Hubert, Angela, Sourdine and Carmine 70, Echo and Sabastien 65, Esther, Hagen, Viscus, Adrasteia, Rogitien, Carlo, Balbina and Grazia 60, Latrunculus, Siobhan, Giselle, Eginhard and Kalliope 55, Fortuito, Phalene, Capra and Kamilla 50, Cara 45, Sirocco 40, Charlotte 35, Katrina 32 and Pellam 30. Each sheet says the age is assumed.
+
+### Judgement calls
+<!-- help: pack-assumptions-alps-judgement -->
+
+- **The customs** are the Greater Alps package of their own: a Chairs column on the roster, set on each covenant's form, and an Ostracism tab, for twenty-one years, needing one sherd in four. It shares nothing with the Theban package.
+- **Rulings**: the book's undated customs (chairs and vagrancy, the yearly pawn, vis treaties, no new covenants, ostracism, amaranth, the Code's protected churches, flagrant spending, Pilate's ghost, the Bavarian Common, Tarragon Vale's estates) are undated rulings; three are dated from *The Wizard's Grimoire*: Snadstrich's sanctum (1165), Andru's pardon and Syrestis's fine (1194).
+- **Covenants, rebuilt rather than converted**: the five with statistics keep the book's site, season, founding, aura, members, library, vis and allies, and drop the old points; their Boons and Hooks are chosen from the *Covenants* catalog as lines on the record. Tarragon Vale is a sketch. One public covenant is left blank, and the roster's count covers it. Sinews of Knowledge's site is older than the Order; its Hermetic founding is 865.
+- **Chapters** are places linked to their covenants, their magi members of the covenant.
+- **The Larta** (Josephine, François and Chloe) are companions of Valnastium, not members of House Jerbiton, since the errata removes unGifted Jerbiton members. **Carmine** lives at Valnastium as Andru's wife and a specialist, not a member; their children are a note on her.
+- **The Steward**: *Houses of Hermes: Societates* gives House Jerbiton a Steward, not the book's two Secundi, and names none; Constance's Lesser Secundus is a note on her.
+- **Rulers the book doesn't name** are history's for 1220, marked so: Frederick II, Leopold VI of Austria, the duke of Bavaria (named as the Rhine pack names him, so the two packs share him), Thomas I of Savoy, and the bishops of Basel, Constance, Geneva and Regensburg and the archbishop of Salzburg. The lords' titles are the app's, so the Emperor is entered as a duke with his title in his name.
+- **Stories**: Athena's ostracism, the raids on the Bavarian Common and the Sicilian children's school are active; eight more are dormant.
+- **Left out**, as the app has no record for them: ghost rules, Taking the Cure, the crystal and spindle bonuses, amaranth's game effects, the Mythic Redcap and Larta templates, the Pietrine lineage package and Beloved Enemy, which are in summaries.
+
+### Where the book disagrees with itself
+<!-- help: pack-assumptions-alps-corrections -->
+
+- **Names**: Balbina filia Havelock, the fuller entry, though the member list says filius Seneca; Constance filia Frederich et Vortimer; Kamilla, not Kamillia; Charlotte filia Lupina; Crucifixo, as *Societates* spells Andru's cat.
+- **Angela filia Constance** is a member, the twelfth, though missing from the member list.
+- **Journeys End's aura** is the stat block's Faerie 8, not the text's 6; **Hera's Might** the block's 65, not the text's 45.
+- **Tarragon Vale** vanished 22 years ago (1198), not "over a decade" ago.
+- **Valnastium's members**: the book says 20 or 21 by tradition, about sixteen, and 12 magi; the pack names eight resident magi and Carmine, with seven unnamed.
+- **Mont Joux** keeps its 1220 name, though the book calls it Europe's tallest peak and later ages call it Mont Blanc.
+
+### Converting the printed magi
+<!-- help: pack-assumptions-alps-conversion -->
+
+- **The four printed magi** (Kentigern, Miklos, Ragoneda, Andru) are converted by the guide: ages and apparent ages as printed (Andru's 81 is fixed by *Societates* too); Characteristics and Arts unchanged; Twilight Points divided by three, rounded down, as Warping (Kentigern 3, Ragoneda 2, Andru 1, Miklos 0); Confidence at the Definitive Edition's baseline, a Score of 1 and 3 Points, with 1 more for Ragoneda's Tytalus apprenticeship (DE p. 29), not the old 4 to 7. Certamen is dropped, as it has no Ability now.
+- **Virtues and Flaws**: Kentigern's four Minor Magic Deficiencies are Deficient Form on Auram, Aquam, Terram and Ignem, and Ragoneda's two Major ones Deficient Form on Imaginem and Mentem (DE p. 125); an Affinity with something that isn't an Art (cloth, bones, sight illusions) is a Minor Magical Focus; Sidhe Blood is Faerie Blood; Quaesitor is an office, not a Virtue; Visual Eidetic Memory, Deep Sleeper and Weak Parma have no Definitive Edition entry and are dropped. **Public Vis Source** is the pack's own Minor Hermetic Virtue: 12 pawns a year, registered in the Code, which buys a chair and ends any charge of vagrancy.
+- **Spells**: catalog spells take the catalog's level. The magi's own spells are re-derived by the Definitive Edition's guidelines, the book's Near read as Voice and Far as Sight; each one's sheet gives the working. Where no guideline fits (Recreating the Inner Sea, Shower of Needles, the Hidden Skin of the Serpent, Time Unmans All Foes) or the book gives no description (the Finch Flourish, Haunt of the Living Ghost, and seven spells of Kentigern and Andru the catalog lacks), the printed level stands. Some rise a long way: Kentigern's creations of magical beasts are at the Definitive Edition's Base 50, so Call the Basilisk is 65 and the Foes of the Ibis 75.
+- **Longevity**: the printed modifiers are carried across (Kentigern 14, Ragoneda 13, Andru 14, Cymena 5); Ragoneda's own Lab Total reaches hers.
+- **Cymena** is a companion with the Definitive Edition's Redcap Virtue, which takes in the book's Redcap, Indenture and Whitlams; her devices are in her biography, not yet totalled against the Virtue's levels.
+- **Familiars**: Crucifixo is Andru's familiar, rebuilt by DE pp. 266-267 from Andru's Lab Total (59): cords of +2, +2 and +2 and 12 pawns of vis; his bond qualities are invested powers. Kentigern's faerie hound Tobias has no printed stats, so he is described in Kentigern's biography and has no familiar record.
+- **Creatures**: Hera, Jane (for the spectral Primi), the barbegazi and Crucifixo keep their printed Might; their powers are priced in Might at Definitive Edition levels, and Hera's and Jane's Confidence is the Definitive Edition's baseline.
+
+### For every magus
+<!-- help: pack-assumptions-alps-shared -->
+
+- **Generated stats**: the other named magi have stats built from the book's description with the core rules' experience for their age; each sheet says they are not an official write-up. A Virtue the book names but pays for with no Flaw is left off the generated sheet and kept in the summary: Gentle Gift (Rogitien, Sourdine), Subtle Magic (Sourdine), Muse and True Love (Carmine), Faerie Blood (Yselt, Charlotte), Faerie Magic (Siobhan), Hermetic Prestige (Athena), Inventive Genius (Philomena), Animal Ken (Grazia). The companions, Cymena aside, are sketches. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
+- **Shared records**: Basel and the duke of Bavaria are named as the Rhine pack names them, so importing both packs updates them and never doubles them.
+
+# Assumptions made for Heirs to Merlin: The Stonehenge Tribunal
+<!-- help: pack-assumptions-stonehenge -->
+
+The Stonehenge pack is built from *Heirs to Merlin*, a Fourth Edition book that prints no statistics at all, by design: nothing needed converting, and every magus is built from the book's description. Where a Fifth Edition book describes the same thing it wins: Ebroin as Primus of House Ex Miscellanea, Immanola's Final Twilight, Gwrhyr and Cad Gadu's regio (the Definitive Edition and *Houses of Hermes: Societates*). Where the book is silent the pack inferred a value or chose one, and this page lists each. You can change any of it in your saga.
+
+### Inferred from the text
+<!-- help: pack-assumptions-stonehenge-inferred -->
+
+- **The meeting**: the Tribunal meets a year behind the Order since 1201, and the Code dates a ruling to 1208, so meetings fell in 1201, 1208 and 1215; the next is in **1222**, at Blackthorn. The book gives no season; it is **Summer**.
+- **Seasons** the book doesn't state: Blackthorn Autumn, Cad Gadu Winter, Burnham Summer, Schola Pythagoranis Summer, Semitae Autumn. The book gives Ungulus Winter, Voluntas Summer turning to Autumn, and Libellus and Nigrasaxa Spring.
+- **Auras**: the book numbers none but Cad Gadu's top regio level (Magic 8, from *Societates*). Holy places follow DE p. 418: a cathedral or major abbey Divine 5, a town 3, a village 2. Covenant sites and places of legend take Magic 3 or Faerie 3 by their tales (Cad Gadu's middle level 5, Ungulus's "strong" aura 5, Mercer House's "weak" aura 1); places of no clear realm have none. **Stonehenge**, which the book calls one of the most magical places in Europe, takes the convention's Magic 3; raise it in your saga if you like.
+- **Ages** within the book's bands (young up to 30 years past Gauntlet, mature 20-70, old 50-100, ancient over 80): young magi 30 to 35, mature ones 50 to 90 (Julia 90, as she came in the civil war), old ones 95 to 110, ancient ones 130 to 150; Goliard about 90, Stephen Eruditus about 70, Grosseteste born 1170 and Berechiah 1162, as printed. Each sheet says the age is assumed.
+- **Native tongues**: Welsh at Blackthorn and Cad Gadu, Norman French for Julia, Desiderius and Ebroin, English elsewhere, and the book's hints for Scintilla, Sinead and Maximianus.
+
+### Judgement calls
+<!-- help: pack-assumptions-stonehenge-judgement -->
+
+- **The customs** are a notes-only Stonehenge package: the late cycle, the introductions, the two Tribunals at each meeting, the Quaesitores voting through Redcaps. The app's meeting already uses twelve magi from four covenants as its quorum.
+- **The roster**: nine covenants and the 49 named magi, Ebroin in Immanola's place; nothing unnamed is added.
+- **The covenants** are sketches with what the text gives; Libellus and Nigrasaxa have no place record, as the book puts them only near Cambridge. *Promises, Promises* and *Nigrasaxa*, which tell more of them, are not used.
+- **Cad Gadu** follows *Societates*: Ebroin is Primus and a member, Immanola entered Final Twilight in 1216 and is in the Diary, Gwrhyr is extremely old, of the Columbae, and on the Council of Four. Gharad, Culhwch and Findabair stay, as *Societates* doesn't say Ebroin dismissed them.
+- **The fallen covenants** are Diary entries with their dates; only those with a known site have a ruin: Sursum, Stellasper, Castrum Antiquum, Magnantrum and the Nameless Covenant.
+- **The Redcaps** are companions with House Mercere; **Mercer House** is a place, not a covenant. **The natural magicians** (Amabel, Richard Rufus, Grosseteste, Berechiah) are companion sketches with no tradition record.
+- **The mundane world**: the king, Llywelyn, the king of Scots, Hubert de Burgh, the 22 great nobles, Nicola de Hay and Falkes de Bréauté; the archbishops, bishops and legate; six great abbeys; eleven towns with their mayors; Oxford and Cambridge; the triumvirate and the Jews as factions. The sheriffs and royal justices are a list in the king's notes. The lords' titles are the app's, so kings are entered as dukes with their titles in their names.
+- **Shared records**: the king is named as the Normandy pack names him, *Henry III of England*, so importing both updates him and never doubles him. Ashenrise (Hibernia), Fudarus (Normandy) and Horsingas (Loch Leglean, which has no pack) are named in the text, not made as records.
+- **Stories**: Gwrhyr's land suit, Voluntas against Ungulus, the eastern covenants' vis, Schola's mundane entanglement and the Lincoln dispute are active; six more are dormant.
+- **Left out**: the legends told for their own sake (Bede's vision, Yonec, Peredur, Eadric Wilde), prices, the guides to peasant and noble life and the chapter on law; and there are no creatures, as the book prints none.
+
+### Where the book disagrees with itself
+<!-- help: pack-assumptions-stonehenge-corrections -->
+
+- **Talion** is of House Flambeau, as printed, though he lives at Tremere-founded Blackthorn and the book says nothing of why.
+- **Immanola's Primacy** is *Societates*'s eight decades, not the book's "fifty years ago".
+- **Astrolabe**: *Heirs to Merlin*'s Astrolabe of Schola Pythagoranis and *Sanctuary of Ice*'s Astrolabe, Andru's parens, are two magi; the Alps pack mentions only the second, in Andru's and Bronwyn's summaries.
+
+### For every magus
+<!-- help: pack-assumptions-stonehenge-shared -->
+
+- **Generated stats**: every magus has stats built from the book's description with the core rules' experience for their age; each sheet says they are not an official write-up. A Virtue the book names but pays for with no Flaw (Schola Pythagoranis's Gentle Gift) is left off the sheet and kept in the summary. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
+
+# Assumptions made for The Dragon and the Bear: The Novgorod Tribunal
+<!-- help: pack-assumptions-novgorod -->
+
+The Novgorod pack is built from *The Dragon and the Bear*, a Fourth Edition book, so its numbers had to be converted: the magi follow the Definitive Edition's Fourth Edition conversion guide, the faeries *Realms of Power: Faerie*, and where neither says the pack made a judgement call, each one listed on this page. No Fifth Edition book describes these covenants or magi; where one touches the Tribunal it wins (the Bjornaer Gathering of 1227, from *Guardians of the Forests*). You can change any of it in your saga.
+
+### Inferred from the text
+<!-- help: pack-assumptions-novgorod-inferred -->
+
+- **The meeting**: every seven years at Three Lakes; the book dates meetings to 1214 and 1221 but gives no season, so the next is **Summer 1221**.
+- **The Praeco**: the book names none. By the rule it is the eldest magus, **Miya Cossuri** of Pripet Maior (153), who seldom leaves her reed palace. Andrei Soitkchin presides as chief Quaesitor.
+- **Leczyca's fine** is dated **1190**, as the book says it was paid about thirty years before 1220.
+- **Auras** are the book's: Three Lakes and Leczyca Magic 4, Pripet Maior Magic 6, Thousand Caves Slavic Faerie 6. A Slavic faerie aura is entered as Faerie; the difference (the Volkhvy draw twice its strength, and pagans can work domestic magic in it) is in the place's summary. The Pripet Marsh, Lake Strukhalis and the Tatras, which the book doesn't number, are Faerie 3. Slavic Arcadia is a Rumoured place with its three worlds as levels, not an aura.
+- **Ages**: the printed ones are kept, and those the text gives (Miya 153, Casimi 152, Tomaszi 133, Boris 76, Ruprecht 69). The rest are chosen from what the text says of each: Olga 130, Vlachs 125, Lev 120, Nicollo and Otto 110, Pavel, Susan, Kasina and Frania 100, Georgi 95, Sanya 85, Lelya, Basyl and Yakim 45, Narina 42, Barchek 40. Each sheet says the age is assumed.
+
+### Judgement calls
+<!-- help: pack-assumptions-novgorod-judgement -->
+
+- **The customs** are a notes-only Novgorod package: the council's say over new covenants, the Royal Embargo, and the Rhine's claim on Poland.
+- **Rulings**: the settlement of new covenants (after 1039), the Royal Embargo (after 1132, later extended to Poland) and Leczyca's fine. The dismissed meeting of 1214 and the delegation of 1215-1216 are in the Diary with the rest of the Tribunal's history.
+- **The docket for 1221**: the charge against Pripet Maior for the raid of 1217, the charge that Thousand Caves meddles with mundanes, and Lelya Danichev's motion condemning the Order's treatment of the Volkhvy. Durenmar's border motion waits for the Grand Tribunal of 1228, as a story.
+- **Covenants, rebuilt rather than converted**: the four described keep the book's site, season, founding, aura, members, library summae, vis stores and supply, allies, enemies and items, and drop the old points; their Boons and Hooks are chosen from the *Covenants* catalog as lines on the record. The two covenants the book leaves blank are counted on the roster, not made.
+- **The roster**: the members the book lists, 30 magi, with Barchek Ocowski, the unGifted Redcap, among them. **Stolitzya the Swimmer** is a Bestiary creature living in the marsh, not a member. **Yannes Kolski** is a magus of no covenant, vanished in 1216; his chair at Leczyca is empty.
+- **The apprentices** (Mina Dankovna, Ratibor Peslav, Dankya Yostovna, Kassim ibn Fadal and Janek) and the girl **Stenya Vassanovna** are named in their masters' and covenants' summaries, not made as records.
+- **Volkhvy**: Rehamchi and Lelya Danichev are magi of Ex Miscellanea who also belong to the catalog's Volkhvy tradition. The Volkhvy are a hedge coven of that tradition, and the Slavic gods notes on it. **Batiba an Khatiba**'s Cuman shamanism has no tradition record and is not Hermetic magic, so he stays a sketch with no generated stats.
+- **The mundane world**: the princes and dukes the book names for 1220, the Metropolitan Matfey, Novgorod's Veche as its town's ruler, the crusading orders and the Baltic peoples. Four rulers the book doesn't name are history's, marked so: Ingvar of Ryazan, Mstislav Davydovich of Smolensk, Vsevolod Mstislavich of Novgorod and Archbishop Wincenty of Gniezno; Polotsk's prince in 1220 is too uncertain to name. The lords' titles are the app's, so princes are entered as dukes with their titles in their names. Swietopelk rules Pomerania, as the book has it; the Rhine pack keeps his predecessor Mestwin, so importing both gives two Pomeranian lords.
+- **Shared records**: Valdemar II of Denmark, the Teutonic Knights, the Knights of the Sword and the Cumans are named as the Rhine, Levant and Transylvania packs name them, so importing those packs updates them and never doubles them. **The Mongols** are the shared record the Cradle and Levant packs build; this book's stages (the Kalka in 1223, the return in 1237, Kiev in 1240, Legnica and the Sajo in 1241, the turn back in 1242) are written into it, so all three packs build it alike.
+- **Stories**: the trial of Pripet Maior, Mikhail of Turov's draining of the marsh, Malincka's race to finish her spell and the return of Hermes are under way; six more are dormant.
+- **Left out**, as the app has no record for them: the Volkhv Disciplines and Great Ritual, domestic magic, the Mongol shaman rules and the Fourth Edition heart-beast rule, which are in summaries; the Mongol trooper and general, as examples of mundane soldiers; and the three mystical artifacts of Appendix III (the Shield of Oleg, the Skull of Sviatoslav and the Ewer of Ioann), which have no place in the book's 1220.
+
+### Where the book disagrees with itself
+<!-- help: pack-assumptions-novgorod-corrections -->
+
+- **Pripet Maior's founding**: 993, the covenant's own entry, not the sidebar's 994.
+- **Stolitzya's Twilight**: over forty years ago, the fuller entry, not "some thirty".
+- **Thousand Caves' people**: 175 tribesfolk, its Inhabitants line; the 200 of its Size line is taken as its room.
+- **Pripet Maior's and Leczyca's size**: the rooms for 10 and 8 magi are capacity; 5 and 7 live there.
+- **Georgi and Malincka**: he led her to the valley in 1182, and the charter came in 1185.
+- **Pripet Maior** is the book's spelling; the Rhine pack's faerie trod leads to "Pripet Major".
+
+### Converting the printed magi and creatures
+<!-- help: pack-assumptions-novgorod-conversion -->
+
+- **The nine printed magi** (Andrei, Yury, Zashya, Malincka, Nastassia, Rehamchi, Yellina, Stanis, Yannes) are converted by the guide: ages as printed; Characteristics and Arts unchanged; Twilight Points divided by three, rounded down, as Warping; Confidence at the Definitive Edition's baseline, a Score of 1 and 3 Points (DE p. 29). Certamen is dropped, as it has no Ability now.
+- **Virtues and Flaws**: a Magical Affinity with an Art is Affinity with that Art, with anything else (weather, birds) a Minor Magical Focus; a Major Magical Deficiency in a Technique is Deficient Technique, in a Form Deficient Form; Follower of Bjornaer gives way to the House's Heartbeast, and Will Over Form to the Heartbeast Ability; Fury is Wrathful; Knack with Enigma is Affinity with Enigmatic Wisdom; Quaesitor is an office, not a Virtue. Visual Eidetic Memory, Deep Sleeper, Weak Parma, Faerie Enmity, Sense of Doom, the Fourth Edition Herbalism Virtue and Deft Art (the Definitive Edition's Deft Form covers only Forms) have no Definitive Edition entry and are dropped. Yury's total Deleterious Circumstances is the Definitive Edition's Minor Flaw, its strength in his notes.
+- **Spells**: six magi print no spells, only the Arts in which they know "all listed formulaics". They know the Definitive Edition's spells of those Arts within their Lab Total in their covenant's aura, mastered where the book says so (Andrei, Yury, Stanis, Yannes); Yellina knows those above level 10, as she casts the rest spontaneously. Catalog spells take the catalog's level; a spell the catalog lacks is swapped for one of the same Technique, Form and level (Tongue of the Beasts for Tongue of the Fishes, Tongue of the Birds for Hunter's Sense, the Immaculate Beast for Beast of Outlandish Size). **Malincka's four aura spells**, **Echo of the Firebird** and **Form of the Avenging Beast** are the magi's own at their printed levels; the book leaves open whether aura-making can truly work.
+- **Rehamchi's Volkhv magic**: his Disciplines, Pagan Conviction and his god Khors's bonuses are written in his biography as the book prints them, not converted.
+- **Longevity**: the printed modifiers are carried across; Yannes's has failed.
+- **Creatures**: the 21 beings of the Bestiary keep their Might (the lowest of a range) and Characteristics. Combat is worked out again with the Definitive Edition's weapons, the Ability at the score that gives the printed Attack; Soak is Stamina plus the old Soak beyond Stamina and Size. Each Faerie Power becomes a *Realms of Power: Faerie* power: Bless and Curse as Grant (Minor Virtue) and Grant (Minor or Major Flaw), Elfshot as Cause Sickness, Fear and Infatuation as Enthralling Sound, Possession as Enthrallment, Shapechange Other to Animal as Transform Victim, potions and enchanted objects as Craft Magical Trinket, the Control, Glamour and Healing powers as Focus Powers up to the old rating × 5 and never above the Might, and the shape-changes and invisibility as Personal Powers; their Might costs and Initiative follow its table (RoP:F pp. 54-61). The faeries have no Confidence. The dragons' fiery breath keeps its level as a Greater Power; the vampire's powers and Stolitzya's keep the book's levels and costs.
+
+### For every magus
+<!-- help: pack-assumptions-novgorod-shared -->
+
+- **Generated stats**: the other named magi have stats built from the book's description with the core rules' experience for their age; each sheet says they are not an official write-up. A Virtue the book names but pays for with no Flaw is left off the generated sheet and kept in the summary: Georgi's Gentle Gift, Barchek's Redcap Virtue, and the Popovich twins' shared proximity Virtue and Flaw. You can import them as sketches instead (see [How to start a saga from a sourcebook](help:guide-book-packs)).
 
 # Assumptions made for The Cradle and the Crescent
 <!-- help: pack-assumptions-cradle -->

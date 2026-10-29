@@ -941,6 +941,15 @@ def test_the_levant_pack_converts_its_printed_magi():
     assert umar.hermetic.house == "house_jerbiton"
     # Twilight Points become Warping, a third of them.
     assert umar.aging.warping_score == 4
+    # The printed age stands, and Confidence is the DE baseline, +1 for a
+    # Tytalus apprenticeship.
+    assert saga.current_year - (umar.background.year_born or 0) == 72
+    assert (umar.background.confidence_score, umar.background.confidence_points) == (
+        1,
+        3,
+    )
+    rufus = next(c for c in saga.characters if c.name == "Rufus de Clary")
+    assert rufus.background.confidence_score == 2
     assert [s.name for s in umar.invented_spells] == ["The Wrath of Allah"]
     assert len(umar.spells_known) == 39
 
@@ -1162,3 +1171,285 @@ def test_every_packs_hedge_factions_name_known_traditions():
     assert all(traditions.find(t) is not None for t in named.values()), named
     assert named[("hibernia", "The Céli Dé")] == "trad_celi_de"
     assert named[("provence", "The Sorginak Covens")] == "trad_sorginak"
+
+
+# -- Sanctuary of Ice --
+
+ALPS = book_packs.PACKS["alps"]
+
+
+def test_the_alps_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import alps as package
+
+    saga = ALPS.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == package.ALPS.key
+    assert (tribunal.next_year, tribunal.next_season, tribunal.meets_every) == (
+        1221,
+        "Autumn",
+        7,
+    )
+    assert tribunal.meeting_place == "The Covenant of the Icy North"
+    assert tribunal.covenants_total == 7 and (tribunal.magi_total or 0) >= 100
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name == "Constance"
+    assert quaesitor is not None and quaesitor.name == "Athena Alpina"
+    titles = {r.title: r.year for r in tribunal.rulings}
+    assert titles["Andru's pardon"] == 1194 and titles["A sanctum a season"] == 1165
+    # Every covenant but the blank seventh registers its chairs.
+    chairs = package.chairs(tribunal)
+    named = {c.name: chairs.get(c.id) for c in saga.covenants}
+    assert named["The Cave of Twisting Shadows"] == 22 and named["Valnastium"] == 21
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_the_alps_pack_converts_its_printed_magi_by_the_de_readings():
+    saga = ALPS.build()
+    by_name = {c.name: c for c in saga.characters}
+    ragoneda, kentigern = by_name["Ragoneda"], by_name["Kentigern"]
+    # Printed ages, Twilight / 3 as Warping, the DE Confidence (+1 Tytalus).
+    assert saga.current_year - (ragoneda.background.year_born or 0) == 56
+    assert ragoneda.aging.warping_score == 2 and kentigern.aging.warping_score == 3
+    assert ragoneda.background.confidence_score == 2
+    assert kentigern.background.confidence_score == 1
+    held = {v.vf_id for v in ragoneda.virtues_flaws}
+    assert {"vf_public_vis_source", "vf_deficient_form"} <= held
+    deficient = [v for v in kentigern.virtues_flaws if v.vf_id == "vf_deficient_form"]
+    assert sorted(v.params["form"] for v in deficient) == [
+        "Aquam",
+        "Auram",
+        "Ignem",
+        "Terram",
+    ]
+    # A magus's own spell is re-derived at the DE's level.
+    basilisk = next(
+        s for s in kentigern.invented_spells if s.name == "Call the Basilisk"
+    )
+    assert basilisk.level == 65 and basilisk.range == "Touch"
+    # Andru's familiar is rebuilt by the DE's rules.
+    andru = by_name["Andru"]
+    (familiar,) = [f for f in saga.familiars if f.character_id == andru.id]
+    assert (familiar.binding_lab_total, familiar.target_binding_level) == (59, 35)
+    # The Larta are companions with no House.
+    for name in ("Josephine", "François", "Chloe"):
+        assert by_name[name].type == "companion" and not by_name[name].hermetic.house
+
+
+def test_the_alps_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(ALPS)
+    assert _secrets_kept(data["saga"]) >= 4
+    assert data["book"] == "SoI" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_alps_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(ALPS).read_text(encoding="utf-8"))
+    built = book_packs.data(ALPS)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "tribunals"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_alps_pack_imports_clean_into_a_new_saga():
+    from ars_magica_manager.tribunal_packages import alps as package
+
+    data = book_packs.data(ALPS)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "Sanctuary of Ice: The Greater Alps Tribunal is now in play.",
+        packs.assumptions_note("Sanctuary of Ice: The Greater Alps Tribunal"),
+    ]
+    assert target.books_in_play is not None and "SoI" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+    (tribunal,) = target.tribunals
+    covenants = {c.id for c in target.covenants}
+    assert set(package.chairs(tribunal)) <= covenants
+
+
+# -- Heirs to Merlin --
+
+STONEHENGE = book_packs.PACKS["stonehenge"]
+
+
+def test_the_stonehenge_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import stonehenge as package
+
+    saga = STONEHENGE.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == package.STONEHENGE.key
+    assert (tribunal.next_year, tribunal.meeting_place) == (1222, "Blackthorn")
+    assert (tribunal.covenants_total, tribunal.magi_total) == (9, 49)
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name == "Talion"
+    assert quaesitor is not None and quaesitor.name == "Iudicium"
+    assert {r.year for r in tribunal.rulings if r.title == "Financial Matters"} == {
+        1208
+    }
+    titles = {e.title for e in tribunal.diary}
+    assert {"Immanola's Final Twilight", "The quorate meeting"} <= titles
+    # Cad Gadu as Houses of Hermes: Societates has it.
+    names = {c.name for c in saga.characters}
+    assert "Ebroin" in names and "Immanola" not in names
+    cad_gadu = next(c for c in saga.covenants if c.name == "Cad Gadu")
+    assert (cad_gadu.aura, cad_gadu.covenant_season) == (8, "Winter")
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_the_stonehenge_pack_generates_every_magus_and_shares_the_king():
+    data = book_packs.data(STONEHENGE)
+    sketches = data[packs.GENERATED]
+    magi = [c for c in data["saga"]["characters"] if c["type"] == "magus"]
+    assert len(magi) == 49 and len(sketches) == 49
+    assert "Henry III of England" in {n["name"] for n in data["saga"]["neighbours"]}
+
+
+def test_the_shipped_stonehenge_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(STONEHENGE).read_text(encoding="utf-8"))
+    built = book_packs.data(STONEHENGE)
+    assert packs.summary(shipped) == packs.summary(built)
+
+
+def test_the_stonehenge_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(STONEHENGE)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert target.books_in_play is not None
+    packs.after_import(target, data)
+    assert "HtM" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
+
+
+# -- The Dragon and the Bear --
+
+NOVGOROD = book_packs.PACKS["novgorod"]
+
+
+def test_the_novgorod_pack_holds_the_tribunal_of_1220():
+    from ars_magica_manager.tribunal_packages import novgorod as package
+
+    saga = NOVGOROD.build()
+    (tribunal,) = saga.tribunals
+    assert tribunal.package == package.NOVGOROD.key
+    assert (tribunal.next_year, tribunal.next_season) == (1221, "Summer")
+    assert tribunal.meeting_place == "Three Lakes"
+    assert (tribunal.covenants_total, tribunal.magi_total) == (6, 30)
+    praeco = saga.character(tribunal.praeco_id or "")
+    quaesitor = saga.character(tribunal.quaesitor_id or "")
+    assert praeco is not None and praeco.name == "Miya Cossuri"
+    assert quaesitor is not None and quaesitor.name == "Andrei Soitkchin"
+    assert {r.year for r in tribunal.rulings} == {1039, 1132, 1190}
+    assert {c.kind for c in tribunal.cases} == {"charge", "motion"}
+    assert len(tribunal.cases) == 3
+    auras = {c.name: (c.aura, c.aura_realm) for c in saga.covenants}
+    assert auras == {
+        "Three Lakes": (4, "Magic"),
+        "Thousand Caves": (6, "Faerie"),
+        "Pripet Maior": (6, "Magic"),
+        "Leczyca": (4, "Magic"),
+    }
+    names = {c.name for c in saga.characters}
+    assert "Stolitzya the Swimmer" not in names
+    assert "Stolitzya the Swimmer" in {c.name for c in saga.creatures}
+    keys = [(n.name, n.kind) for n in saga.neighbours]
+    assert len(keys) == len(set(keys))
+
+
+def test_the_novgorod_pack_converts_its_printed_magi_by_the_de_readings():
+    saga = NOVGOROD.build()
+    magi = {c.name: c for c in saga.characters}
+    andrei = magi["Andrei Soitkchin"]
+    assert 1220 - (andrei.background.year_born or 0) == 122
+    assert (
+        andrei.background.confidence_score,
+        andrei.background.confidence_points,
+    ) == (1, 3)
+    # Andrei prints no spells: he knows the listed ones of his Arts, mastered.
+    assert len(andrei.spells_known) > 20
+    assert all(k.mastery_score == 1 for k in andrei.spells_known)
+    malincka = magi["Malincka Capcek"]
+    own = {s.name: s.level for s in malincka.invented_spells}
+    assert own == {
+        "Charge the Magical Circle": 25,
+        "Read the Magic Sphere": 35,
+        "Plumb the Magical Scent": 20,
+        "Air of Friendly Magic": 30,
+    }
+    nastassia = magi["Nastassia Baramov"]
+    assert {s.name for s in nastassia.invented_spells} == {
+        "Form of the Avenging Beast",
+        "Echo of the Firebird",
+    }
+    assert magi["Rehamchi Danichev"].traditions == ["trad_volkhvy"]
+    assert magi["Lelya Danichev"].traditions == ["trad_volkhvy"]
+    # Batiba's shamanism is not Hermetic magic: he stays a sketch.
+    assert magi["Batiba an Khatiba"].detail != "full"
+
+
+def test_the_novgorod_pack_reprices_faerie_powers_by_rop_faerie():
+    saga = NOVGOROD.build()
+    creatures = {c.name: c for c in saga.creatures}
+    assert len(creatures) == 22
+    lord = creatures["Slavic Faerie Lord"]
+    powers = {p.name: p for p in lord.powers}
+    # Curse 10 on a Might 30 faerie: Grant (Major Flaw), 10 points, Init Qik - 20.
+    assert (powers["Curse"].might_cost, powers["Curse"].init) == (10, -18)
+    # Glamour 12 is a Focus Power capped at the Might: level 30.
+    assert powers["Glamour"].level == 30
+    assert creatures["Upiór (Vampire)"].realm == "Infernal"
+
+
+def test_the_novgorod_pack_adds_its_stages_to_the_shared_mongols():
+    data = book_packs.data(NOVGOROD)
+    (mongols,) = [
+        n for n in data["saga"]["neighbours"] if n["name"] == "The Mongol Conquest"
+    ]
+    titles = [s["title"] for s in mongols["details"]["stages"]]
+    assert {"The Kalka", "Kiev falls", "Legnica and the Sajo"} <= set(titles)
+    levant = book_packs.data(book_packs.PACKS["levant"])
+    (same,) = [
+        n for n in levant["saga"]["neighbours"] if n["name"] == "The Mongol Conquest"
+    ]
+    assert same["details"]["stages"] == mongols["details"]["stages"]
+
+
+def test_the_novgorod_pack_keeps_its_secrets_and_credit():
+    data = book_packs.data(NOVGOROD)
+    assert _secrets_kept(data["saga"]) >= 4
+    assert data["book"] == "D&B" and "Creative Commons" in data["source"]
+
+
+def test_the_shipped_novgorod_pack_is_up_to_date():
+    shipped = json.loads(book_packs.path_of(NOVGOROD).read_text(encoding="utf-8"))
+    built = book_packs.data(NOVGOROD)
+    assert packs.summary(shipped) == packs.summary(built)
+    for kind in ("covenants", "characters", "neighbours", "tribunals", "creatures"):
+        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
+            (r["name"], r.get("detail")) for r in built["saga"][kind]
+        }, kind
+
+
+def test_the_novgorod_pack_imports_clean_into_a_new_saga():
+    data = book_packs.data(NOVGOROD)
+    target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
+    transfer.apply(target, transfer.plan_import(target, data))
+    assert packs.after_import(target, data) == [
+        "The Dragon and the Bear: The Novgorod Tribunal is now in play.",
+        packs.assumptions_note("The Dragon and the Bear: The Novgorod Tribunal"),
+    ]
+    assert target.books_in_play is not None and "D&B" in target.books_in_play
+    assert len(target.characters) == len(data["saga"]["characters"])
+    ids = {n.id for n in target.neighbours}
+    for record in [*target.covenants, *target.neighbours]:
+        assert record.place_id is None or record.place_id in ids
