@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.40.0",
+  "app_version": "3.58.0",
   "kind": "pack",
   "name": "Blood and Sand: the Levant Tribunal",
   "from_saga": "Blood and Sand: the Levant Tribunal",
@@ -102,19 +102,19 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy: its secret war",
-            "id": "93b9665fee4d"
+            "id": "4779902ed06d"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "d5b7c69d3b8e"
+            "id": "4e9ca14e3f3a"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Buys its supplies and sells its stone here",
-            "id": "3ce07e10bcda"
+            "id": "25a98818a65d"
           }
         ],
         "unnamed_magi": 1,
@@ -122,6 +122,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -223,13 +224,13 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Ally",
-            "id": "545aed7d3ab3"
+            "id": "8acc89a38e3a"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "Eleven miles to the south",
-            "id": "3c5d3d83f9a6"
+            "id": "c9fb95baea2a"
           }
         ],
         "unnamed_magi": 1,
@@ -237,6 +238,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -338,19 +340,19 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy: the counter-Crusade's leader",
-            "id": "70db3b3e27c2"
+            "id": "d6c1451d7070"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "c5249ab245ed"
+            "id": "26a02c811ea9"
           },
           {
             "kind": "places",
             "target_id": "acre",
             "note": "Ten miles to the south-west",
-            "id": "c93f430cffba"
+            "id": "e5ae9891ceb9"
           }
         ],
         "unnamed_magi": 0,
@@ -358,6 +360,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -459,37 +462,37 @@
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Contact",
-            "id": "09d2d5d93685"
+            "id": "ee4cbe2fef37"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy",
-            "id": "9a4d7cf43bc3"
+            "id": "a5eaf20b887a"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy",
-            "id": "1f5ce6f9a7b4"
+            "id": "69949cdc0962"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Keeps the Treaty with his court",
-            "id": "f18542f45165"
+            "id": "0d056f9f902a"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "Keeps the Treaty with the Ayyubids",
-            "id": "4605c3264f05"
+            "id": "cf81778728e8"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "The Suhhar distrusts the Embassy",
-            "id": "6d65f8c61a14"
+            "id": "e19d8c4ec824"
           }
         ],
         "unnamed_magi": 0,
@@ -497,6 +500,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -599,6 +603,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -700,7 +705,7 @@
             "kind": "places",
             "target_id": "the_alans",
             "note": "Its neighbours",
-            "id": "779ca9218a47"
+            "id": "129c4028e2fc"
           }
         ],
         "unnamed_magi": 0,
@@ -708,6 +713,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -809,7 +815,7 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Ally: backs its call for war",
-            "id": "167dde57f818"
+            "id": "502980198569"
           }
         ],
         "unnamed_magi": 0,
@@ -825,6 +831,7 @@
         },
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -926,13 +933,13 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "Enemy: she broke its monopoly",
-            "id": "0742e129e4b5"
+            "id": "d6c9579c8bd2"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Trade rival",
-            "id": "616fda5d9ccc"
+            "id": "e4cda41fa437"
           }
         ],
         "unnamed_magi": 0,
@@ -940,6 +947,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -1042,6 +1050,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -1144,6 +1153,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -1246,6 +1256,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -1347,7 +1358,7 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Friends in the garrison",
-            "id": "7e87b1cb7f62"
+            "id": "b85ca46076a5"
           }
         ],
         "unnamed_magi": 0,
@@ -1355,6 +1366,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -1424,7 +1436,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "9a053e364dc6"
+            "id": "ed13d8d77392"
           },
           {
             "title": "The slaying of a Crusader magus",
@@ -1456,7 +1468,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "4d59da3d82e2"
+            "id": "5d4a8bfa3652"
           }
         ],
         "rulings": [
@@ -1465,77 +1477,77 @@
             "year": 1193,
             "says": "Made between the Order in the Levant and the caliph's court, with Salah al-Din's mages and their Ayyubid heirs, and forced on the Levant's magi at the meeting of 1193 by quaesitores from Magvillus. No magus may take any part in Crusade or jihad, for either side; the Order's fighting with the Muslims' mages is over; and a magus found meddling in the wars is severely punished. Aurora of Jerbiton made it, treating with the caliph, Salah al-Din and their mages from 1183. The Order of Suleiman as a body never signed it.",
             "case_id": "",
-            "id": "a3e3a22d6575"
+            "id": "3873670390af"
           },
           {
             "title": "The Treaty's term",
             "year": 1193,
             "says": "Muslim law lets a truce last ten years at most, so the Treaty lapses each decade unless the Tribunal renews it, and it is debated at every meeting. Each renewal is voted at the last meeting before the Treaty lapses; the present term runs to 1223, and its renewal is before the meeting of 1221.",
             "case_id": "",
-            "id": "9bddb939db05"
+            "id": "fb17d9e049ac"
           },
           {
             "title": "The Treaty renewed for 1203",
             "year": 1200,
             "says": "The meeting of 1200 renewed the Treaty for ten years from 1203.",
             "case_id": "",
-            "id": "dd90430abb1f"
+            "id": "33be33ed1408"
           },
           {
             "title": "The Treaty renewed for 1213",
             "year": 1207,
             "says": "The meeting of 1207 renewed the Treaty, by a narrow vote, for ten years from 1213.",
             "case_id": "",
-            "id": "697b227cbc21"
+            "id": "62275e598744"
           },
           {
             "title": "The chair",
             "year": null,
             "says": "The quaesitor who presides at a meeting of the Tribunal must be of House Guernicus; a quaesitor of any other House may not. Aurora of Jerbiton proposed the rule.",
             "case_id": "",
-            "id": "ce98fbe15a5c"
+            "id": "af53bdeb103d"
           },
           {
             "title": "The Praeco",
             "year": 1207,
             "says": "Fade and Wraith of Urbs Rubra, the eldest magi, had not been seen for years and could not be reached, so the quaesitores ruled that Tau of Flambeau be held the eldest, and Praeco.",
             "case_id": "",
-            "id": "3bb921c3c879"
+            "id": "2fbad9443d1f"
           },
           {
             "title": "The stone of Aedes Veritatis",
             "year": null,
             "says": "Some covenants asked whether Aedes Veritatis's sale of quarry stone to Damascus aided the war, since the stone might build walls. The quaesitores ruled the trade lawful: the stone is not magical, and was not made for war.",
             "case_id": "",
-            "id": "04fd5460620c"
+            "id": "e2f81b125e0d"
           },
           {
             "title": "Enchanted devices",
             "year": null,
             "says": "Selling enchanted devices to mundane lords is interference in mundane affairs, and forbidden.",
             "case_id": "",
-            "id": "b72f0c8a8f74"
+            "id": "2be182944159"
           },
           {
             "title": "The border with Thebes",
             "year": null,
             "says": "After 1204 Theban magi followed the Byzantine refugees east and Thebes claimed more of Asia Minor for them; Aurora and other quaesitores of both Tribunals settled the quarrel short of war. The Empire of Nicaea belongs to the Theban Tribunal and the Empire of Trebizond to the Levant. Both sides have agreed to differ, and many are unhappy with it.",
             "case_id": "",
-            "id": "dd5d8d288156"
+            "id": "de0c36374d35"
           },
           {
             "title": "The priests of the Pyramids",
             "year": 1178,
             "says": "Heliobus Magister of Bonisagus brought the twelve priests of Thoth and Anubis in their temple at Giza into House Ex Miscellanea, under the Code's protection, which ended the Hermetic raids on their temple.",
             "case_id": "",
-            "id": "fe096196a3b5"
+            "id": "1c43198bd18a"
           },
           {
             "title": "Sahirs in the Order",
             "year": null,
             "says": "A sahir may join the Order as any hedge wizard does, through House Ex Miscellanea, swearing the Oath and taking the Parma Magica.",
             "case_id": "",
-            "id": "481b0e2ce1e3"
+            "id": "3dfd2fab7115"
           }
         ],
         "treasury": [],
@@ -1547,7 +1559,7 @@
             "details": "The Order is founded in the west, far from the lands that will one day be the Levant Tribunal. At this time Baghdad, built five years before by the caliph al-Mansur, is the young capital of the 'Abbasids.",
             "changes": [],
             "margin": "",
-            "id": "579b9c41ff70"
+            "id": "c30683f6888c"
           },
           {
             "year": 802,
@@ -1556,7 +1568,7 @@
             "details": "Harun al-Rashid, caliph since 786, has been trading embassies with Charlemagne, a king with more friends in the Order than the quaesitores like to own. Through them the Order wins the caliph's leave for two covenants in his lands, and the first, Urbs Rubra, is raised among the rock-cut halls of Petra. Harun's reign is an age of wonders, when jinn and men in some places live side by side and trade with one another, and the caliph himself is said to take lessons in Hermetic magic.\n\nSecrets\nIf the storyguide wants it, the rumour is true: Harun learnt the Order's magic and passed it to mages of his court, and their pupils' pupils practise it still (see the Islamic Tradition's story seeds).",
             "changes": [],
             "margin": "",
-            "id": "1c9d9dd84e2d"
+            "id": "370ce34cd9cd"
           },
           {
             "year": 806,
@@ -1565,7 +1577,7 @@
             "details": "The second covenant by Harun's leave is made in caves high on two pale cliffs in the Alan country, north-east of the Black Sea. Its remoteness will keep it alive through every war to come.",
             "changes": [],
             "margin": "",
-            "id": "4dc9b12b234e"
+            "id": "08d074496707"
           },
           {
             "year": 809,
@@ -1574,7 +1586,7 @@
             "details": "Harun's sons fall to civil war over his throne, the Muslim world turns its eyes inward and later breaks into rival states, and the two covenants lose their friends at court. For almost three centuries the East is a quiet corner of the Order.",
             "changes": [],
             "margin": "",
-            "id": "3a738743fd83"
+            "id": "e1f477a39b14"
           },
           {
             "year": 817,
@@ -1583,7 +1595,7 @@
             "details": "The hedge wizards' House is admitted, the road by which the Levant's priests of the Pyramids and its sahirs will one day come into the Order.",
             "changes": [],
             "margin": "",
-            "id": "7c3e56d602f4"
+            "id": "17501368f077"
           },
           {
             "year": 832,
@@ -1592,7 +1604,7 @@
             "details": "The lands of Urbs Rubra and Urania are counted a Tribunal of the Order and named the Tribunal of the East, since the Order has reached no further in that direction. (Ch02 says only that this came soon after the covenants were founded; 832 is the timeline's year.)",
             "changes": [],
             "margin": "",
-            "id": "dcd38d7f4cf7"
+            "id": "3d5e72934098"
           },
           {
             "year": 848,
@@ -1601,7 +1613,7 @@
             "details": "The timeline marks the Sundering of House Tremere in the west; the East, cut off since Harun's death, plays no part.",
             "changes": [],
             "margin": "",
-            "id": "7465443e2e4e"
+            "id": "5e76ae6054f5"
           },
           {
             "year": 961,
@@ -1610,7 +1622,7 @@
             "details": "The timeline records the execution of Tasgillia, an event of the Order in the west that the book does not tell.",
             "changes": [],
             "margin": "",
-            "id": "83fadff90cda"
+            "id": "e475f3db29e0"
           },
           {
             "year": 969,
@@ -1619,7 +1631,7 @@
             "details": "The Isma'ili Fatimids, caliphs at Qayrawan since 909 on the strength of the mountain Berbers, send their general Jawhar to take Fustat and found Cairo beside it. Berber wizards march with them, working a magic no Muslim mage had met before, and the mages who stand against the invasion are wiped out. No magus of the Order ever meets them, and what their magic was is still unknown.",
             "changes": [],
             "margin": "",
-            "id": "3a77a9cb885e"
+            "id": "e70501324b40"
           },
           {
             "year": 1003,
@@ -1628,7 +1640,7 @@
             "details": "From 1003 to 1012 the Schism War tears the Order apart. The Tribunal of the East, still a forgotten backwater, has no recorded part in it.",
             "changes": [],
             "margin": "",
-            "id": "69ced77d822d"
+            "id": "cc273b23b3f3"
           },
           {
             "year": 1073,
@@ -1637,7 +1649,7 @@
             "details": "Magi raise a covenant on a crag of the Taurus in Lesser Armenia, one of the few founded between the East's first Tribunal and its second, and it grows rich on trade with covenants of the Roman Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "502ff1688c23"
+            "id": "c06239f14e4a"
           },
           {
             "year": 1098,
@@ -1646,7 +1658,7 @@
             "details": "With the First Crusade trapped inside Antioch, a southern French servant, Peter Bartholomew, tells its leaders that Saint Andrew has shown him in visions where the Lance that pierced Christ lies buried. They dig beneath the cathedral of St Peter, find it, carry it out against the besiegers and break the siege. It is a crusade of portents: comets, saints' ghosts at the head of the armies, visions on every side.",
             "changes": [],
             "margin": "",
-            "id": "dc0ccfe8e251"
+            "id": "473be8004972"
           },
           {
             "year": 1099,
@@ -1655,7 +1667,7 @@
             "details": "On 15 July the crusaders storm Jerusalem and slaughter its people, and Godfrey rules it as Defender of the Holy Sepulchre; a Fatimid army is beaten in August. The sorcerers of Jerusalem had cursed the siege engines and strengthened the walls, but the Muslims' mages are few, scattered and leaderless, and they cannot hold against the Hermetic magi who have come with the armies: Flambeau, Tremere and Tytalus above all, some for their faith, some for plunder, and some Flambeau to avenge a founder they believe Muslim wizards murdered. Arnulf, the new Latin patriarch, finds a relic of the True Cross buried at the Holy Sepulchre.\n\nSecrets\nEver since, the night of 15 July has been a night of the dead in Jerusalem: an Infernal aura of 5 replaces the Divine ones, and the dead of 1099 throng the streets until dawn.",
             "changes": [],
             "margin": "",
-            "id": "4729cb27bc6d"
+            "id": "2efc67e37c03"
           },
           {
             "year": 1099,
@@ -1664,7 +1676,7 @@
             "details": "Just after the Crusade, Flambeau magi found a fortress hidden in the Sinai as a refuge for the Order and a school of war for their House's young.",
             "changes": [],
             "margin": "",
-            "id": "14a7c8a0339a"
+            "id": "5d7b5aa33bed"
           },
           {
             "year": 1101,
@@ -1673,7 +1685,7 @@
             "details": "The crusaders carry the Lance into battle until 1101, when it is lost in Asia Minor; what became of it no one knows. The same year Redcaps found Venti Rosa, a covenant that is a caravan, carrying the Order's messages from covenant to covenant across the East.",
             "changes": [],
             "margin": "",
-            "id": "c1bb5db4f79c"
+            "id": "540387ab335f"
           },
           {
             "year": 1112,
@@ -1682,7 +1694,7 @@
             "details": "Maryam al-Dimashqiyya, a young Jerbiton maga of Damascus, raises a fortress on a mountain five miles east of the city for magi who have chosen to fight their Hermetic brothers on the Muslims' side. She names it the House of Truth; in Arabic, Bayt al-Haqq, it means too the house of what is right.",
             "changes": [],
             "margin": "",
-            "id": "0ba29acf3074"
+            "id": "62e4c195eaef"
           },
           {
             "year": 1129,
@@ -1691,7 +1703,7 @@
             "details": "After the Crusade, Verditius magi come for the spoils, Criamon to sit with the East's mystics, Jerbiton for its wealth and learning, and the newcomers stake out covenants and lands over the old covenants' protests. The Grand Tribunal of 1129 recognises the refounded Tribunal and, as the Order now holds covenants across the eastern lands, names it the Levant Tribunal. Recognition brings no order. For decades magi meddle openly in the wars, clash again and again with the Muslims' mages, and fight one another in Wizard Wars over the land's riches; some, sickened by their sodales' cruelty, take the Muslims' side. Crusading magi excuse their breaches of the Code as the price of keeping the Order in the East, counter-crusaders theirs as shielding the Muslims, and the quaesitores, some of them as deep in it as anyone, cannot rule the Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "94dc9d1197da"
+            "id": "632acb877707"
           },
           {
             "year": 1144,
@@ -1700,7 +1712,7 @@
             "details": "On Christmas Eve Zangi, atabeg of Mosul, takes Edessa and ends the first of the Latin states, with Muslim magi at his side. As Zangi, Nur al-Din and Salah al-Din unite the Muslims, mages gather to their banners.",
             "changes": [],
             "margin": "",
-            "id": "ac83ffada391"
+            "id": "30558faa0d09"
           },
           {
             "year": 1148,
@@ -1709,7 +1721,7 @@
             "details": "The Second Crusade, led by Louis VII and Conrad III, turns on Damascus, Jerusalem's ally, and fails. Some Latins of the Levant sold their comrades for a chest of gold, but the city's sorcerers had enchanted the coins, and when the traitors came to spend them they were brass.",
             "changes": [],
             "margin": "",
-            "id": "7f034bbdff13"
+            "id": "59d5b6d7e0df"
           },
           {
             "year": 1148,
@@ -1718,7 +1730,7 @@
             "details": "Ruth of Bonisagus and Pariah of Criamon pitch a camp of tents by the Great Pyramid at Giza. (One of the book's two covenants at the pyramids; see the Pyramids (II), 1178.)",
             "changes": [],
             "margin": "",
-            "id": "84ab7592b677"
+            "id": "19c718d16d20"
           },
           {
             "year": 1169,
@@ -1727,7 +1739,7 @@
             "details": "Aurora Borealis of Jerbiton arrives with Tau of Flambeau and founds Domus Pacis in a khan north of Jerusalem, where magi and the land's other wizards may meet and trade knowledge. In Egypt the Kurd Shirkuh becomes the Fatimid caliph's vizier and dies within the year, and his nephew Salah al-Din takes his place.",
             "changes": [],
             "margin": "",
-            "id": "2c62f577e346"
+            "id": "af92b97acdcf"
           },
           {
             "year": 1174,
@@ -1736,7 +1748,7 @@
             "details": "Nur al-Din, the Muslims' champion in Syria since he took Damascus in 1154, dies, and Salah al-Din begins to bring the Muslim Levant under his own rule. Some say the prophet al-Khidr taught Nur al-Din words of power that won him whatever he asked and carried him great distances in an instant.\n\nSecrets\nKhidr may also have taught him long life and foresight: the storyguide may decide he feigned his death, foreseeing Salah al-Din's destiny, and still works unseen for Islam.",
             "changes": [],
             "margin": "",
-            "id": "52460653b188"
+            "id": "d117a53d7220"
           },
           {
             "year": 1177,
@@ -1745,7 +1757,7 @@
             "details": "One of the twelve priests of Thoth and Anubis, hidden in a regio among the pyramids and the Sphinx since ancient times, dies, and as always a Gifted stranger is drawn to take the empty place. This time it is Heliobus Magister, a respected Bonisagus researcher, who arrives as Hermetic magi begin raiding the temple for its magic.",
             "changes": [],
             "margin": "",
-            "id": "6445db82abf4"
+            "id": "0236860cf60d"
           },
           {
             "year": 1178,
@@ -1754,7 +1766,7 @@
             "details": "Heliobus brings the priesthood into House Ex Miscellanea and under the Code's protection, and the raids stop. (The book's second covenant at the pyramids; it may stand instead of the first, or beside it.)",
             "changes": [],
             "margin": "",
-            "id": "4148fa85f1c6"
+            "id": "e0e901896fa5"
           },
           {
             "year": 1183,
@@ -1763,7 +1775,7 @@
             "details": "Seeing the danger Salah al-Din's rise means for the Order, Aurora approaches him, the caliph and their mages, travels to Baghdad to sketch a treaty, and offers it to the quaesitores of Magvillus, who seize on the chance to bring the Tribunal to heel.",
             "changes": [],
             "margin": "",
-            "id": "9d58fc00006a"
+            "id": "3e662049aa06"
           },
           {
             "year": 1187,
@@ -1772,7 +1784,7 @@
             "details": "Salah al-Din destroys the Latin army at Hattin on 4 July and takes Jerusalem and most of the Latin states. Muslim mages working with him kill many Hermetic magi on the field and later lend magical artillery against the Latin castles, and by the year's end several of the great crusading covenants are gone. The survivors accuse the counter-crusaders of helping the Muslims, but nothing is ever proved. The relic of the True Cross is lost to Salah al-Din on the field.",
             "changes": [],
             "margin": "",
-            "id": "bad32578ae49"
+            "id": "d43f5953e08f"
           },
           {
             "year": 1187,
@@ -1781,7 +1793,7 @@
             "details": "Maryam al-Dimashqiyya and most of Aedes Veritatis's magi die at Hattin, though their side has won. Heloise of Criamon, the one left, defers to Maryam's wish, and her young filius Sharaf al-Din 'Umar takes the covenant; Heloise later goes, saying only that it was time, and is not seen again. At Petra the crusaders abandon their castle, leaving Urbs Rubra undisturbed.",
             "changes": [],
             "margin": "",
-            "id": "5760cea796d9"
+            "id": "48cc24e6653c"
           },
           {
             "year": 1188,
@@ -1790,7 +1802,7 @@
             "details": "Two young magi from France, the Flambeau Guillaume de Bourne and the Tytalus Rufus de Clary, plant a covenant on a hill north-east of Acre to keep the Order a lasting foothold on the coast. Amber of Tremere, rejecting her House's support for the Crusades, joins 'Umar at Aedes Veritatis. (By the book's ages Guillaume and Rufus were barely magi; the pack keeps the year.)",
             "changes": [],
             "margin": "",
-            "id": "40d3a918622e"
+            "id": "9ff064f7d51a"
           },
           {
             "year": 1192,
@@ -1799,7 +1811,7 @@
             "details": "After the Third Crusade retakes Acre and Richard I sells Cyprus to Guy of Lusignan, Richard and Salah al-Din agree on 2 September a three-year truce that leaves the coast to the Latins and Jerusalem to the Muslims. In Baghdad, Aurora's talks between the Order and the Muslims' rulers and mages draw to a close.",
             "changes": [],
             "margin": "",
-            "id": "f32ce6612bc3"
+            "id": "00dc41f9bcab"
           },
           {
             "year": 1193,
@@ -1808,7 +1820,7 @@
             "details": "Salah al-Din dies at Damascus on 4 March, and his sons and brother divide his empire.",
             "changes": [],
             "margin": "",
-            "id": "583aec406720"
+            "id": "a53d54e00ec1"
           },
           {
             "year": 1193,
@@ -1817,7 +1829,7 @@
             "details": "Quaesitores from Magvillus made the Tribunal accept the Treaty Aurora had negotiated, ending the Order's war with the Muslims' mages. Crusading magi could no longer excuse breaches of the Code as defence, nor counter-Crusaders as protecting the Muslims.",
             "changes": [],
             "margin": "",
-            "id": "c5866d807b2f"
+            "id": "81b1b351abec"
           },
           {
             "year": 1193,
@@ -1826,7 +1838,7 @@
             "details": "With the Treaty accepted, Aurora is invited to become a quaesitor, and accepts. She moves to Baghdad to keep the Treaty and founds the Hermetic Embassy there, near the caliph's palace, paid for by Magvillus; soon afterwards she becomes an archmaga.",
             "changes": [],
             "margin": "",
-            "id": "18ee3dad66d8"
+            "id": "bf9558769e9f"
           },
           {
             "year": 1195,
@@ -1835,7 +1847,7 @@
             "details": "The Order's most recent Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "97509c5f7dd5"
+            "id": "8ef1d1ad66c2"
           },
           {
             "year": 1197,
@@ -1844,7 +1856,7 @@
             "details": "Esther of Verditius, an Englishwoman, comes to Domus Pacis and soon makes it a channel for trade between the Levant and the Roman Tribunal, breaking al-Arama's hold on the trade.",
             "changes": [],
             "margin": "",
-            "id": "78e7b70d09a8"
+            "id": "82e25a172c76"
           },
           {
             "year": 1200,
@@ -1853,7 +1865,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1203.",
             "changes": [],
             "margin": "",
-            "id": "18f65accec7e"
+            "id": "f2a63506b64b"
           },
           {
             "year": 1203,
@@ -1862,7 +1874,7 @@
             "details": "The renewal voted in 1200 takes effect: the Treaty runs another ten years.",
             "changes": [],
             "margin": "",
-            "id": "f0269b3de63f"
+            "id": "5403cfb8879f"
           },
           {
             "year": 1204,
@@ -1871,7 +1883,7 @@
             "details": "The Fourth Crusade takes Constantinople on 12 April and founds a Latin empire; few of its knights ever reach the Levant. Greek states rise at Nicaea and Trebizond, Theban magi follow the refugees east, and Thebes claims the border lands for them. War between the two Tribunals is averted by Aurora and quaesitores of both, who give Nicaea to Thebes and Trebizond to the Levant. (The book does not date the settlement.)",
             "changes": [],
             "margin": "",
-            "id": "b3147faff5c3"
+            "id": "0ad67f428956"
           },
           {
             "year": 1207,
@@ -1880,7 +1892,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1213, barely. With Fade and Wraith out of reach, the quaesitores ruled Tau of Flambeau the eldest, and the Tribunal has met at Domus Pacis since.",
             "changes": [],
             "margin": "",
-            "id": "e786d08ac2b4"
+            "id": "42764324db20"
           },
           {
             "year": 1213,
@@ -1889,7 +1901,7 @@
             "details": "The renewal won, barely, in 1207 takes effect. At his induction into the Order, Arash, apprentice of Rachel of Criamon, refuses the Oath of Hermes after a crisis of the spirit and swears the Treaty of Barcelona instead. Magi threaten him, and House Criamon spirits him away to Baghdad.",
             "changes": [],
             "margin": "",
-            "id": "21b050650d7f"
+            "id": "8435194db622"
           },
           {
             "year": 1214,
@@ -1898,7 +1910,7 @@
             "details": "The Treaty was not due until 1223, and is renewed only at the last meeting before it lapses, so this meeting had nothing to renew; the debate went on all the same.",
             "changes": [],
             "margin": "",
-            "id": "9167457ce0e2"
+            "id": "956bcb8c7545"
           },
           {
             "year": 1215,
@@ -1907,7 +1919,7 @@
             "details": "Felix, born to covenfolk at Domus Pacis, whose Gift showed itself only at twenty-eight while he was a guard there, becomes a magus of Guernicus. His parens Raymond is killed soon after in a fight with a hedge wizard that lames Felix, who takes up Raymond's watch on House Criamon and the Kabbalists. (The book says five years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "2483f00fd937"
+            "id": "0a62c29ee831"
           },
           {
             "year": 1218,
@@ -1916,7 +1928,7 @@
             "details": "The crusaders strike at Egypt, the heart of Muslim power, and besiege Damietta. Al-Kamil offers them every old Latin land west of the Jordan and a thirty-year truce if they will leave Egypt, and they refuse. The war strains the Treaty of Baghdad as nothing has since 1193.",
             "changes": [],
             "margin": "",
-            "id": "4d36533ea6bc"
+            "id": "791a90a9c17d"
           },
           {
             "year": 1219,
@@ -1925,7 +1937,7 @@
             "details": "Damietta falls to the Crusade. Two young magi, David of Tremere and Xydas of Bonisagus, found the True Cross in the city, with a few grogs and friends in the garrison, and call on the Order to join them. In Syria al-Mu'azzam pulls down Jerusalem's walls, so that the crusaders cannot hold the city if they take it.",
             "changes": [],
             "margin": "",
-            "id": "22d173f17229"
+            "id": "1c3078476be7"
           }
         ],
         "package_data": {},
@@ -1962,13 +1974,13 @@
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "One of the five families",
-            "id": "1194e97848ad"
+            "id": "2b96fd51c041"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "One of the five families",
-            "id": "1413c5c20627"
+            "id": "4c06a20d072c"
           }
         ],
         "arms": {},
@@ -2052,13 +2064,13 @@
             "kind": "places",
             "target_id": "jinnistan",
             "note": "Their homes",
-            "id": "fa0e95f16f37"
+            "id": "b560ed31945d"
           },
           {
             "kind": "places",
             "target_id": "the_mountains_of_qaf",
             "note": "Their homeland's wall",
-            "id": "e6b0bf1c5022"
+            "id": "9a3a1d2edc2b"
           }
         ],
         "arms": {},
@@ -2417,7 +2429,7 @@
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Their head",
-            "id": "042c34e20ee0"
+            "id": "54a8224a333e"
           }
         ],
         "arms": {},
@@ -2652,7 +2664,7 @@
             "kind": "creatures",
             "target_id": "abd_al_misbah_the_servant_of_the_lamp",
             "note": "the marid of the lamp, wherever the lamp has gone",
-            "id": "f7b1c9e5e907"
+            "id": "a3464d126a02"
           }
         ],
         "arms": {},
@@ -2684,7 +2696,7 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Its leading member",
-            "id": "f88b112bf1c6"
+            "id": "5635f53ae339"
           }
         ],
         "arms": {},
@@ -2883,7 +2895,7 @@
             "kind": "creatures",
             "target_id": "al_qatil_the_slayer",
             "note": "the ghul who sells his sword to any army",
-            "id": "6cfdd4be88a6"
+            "id": "d305bc31e9fd"
           }
         ],
         "arms": {},
@@ -3235,7 +3247,7 @@
             "kind": "creatures",
             "target_id": "amirat_al_jabal_lady_emir_of_the_mountain",
             "note": "the marida who watches over the mountains' jinn",
-            "id": "e5b6fee3ab08"
+            "id": "181546854c31"
           }
         ],
         "arms": {},
@@ -3395,7 +3407,7 @@
             "kind": "creatures",
             "target_id": "naddaha",
             "note": "the spiked crone who lurks by wells",
-            "id": "a2b7c69f3346"
+            "id": "1d08965466bb"
           }
         ],
         "arms": {},
@@ -3810,37 +3822,37 @@
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Amber's familiar",
-            "id": "899f6dbe16ae"
+            "id": "6a1b23a03b78"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "a ghost who answers Wardat's summons",
-            "id": "3b5e303804f3"
+            "id": "b8277b4de925"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit who answers Wardat's summons",
-            "id": "116ba2bf67eb"
+            "id": "12f62420c1b0"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon Wardat can summon but not command",
-            "id": "55652cf3638f"
+            "id": "44d87211e644"
           },
           {
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to Wardat's service",
-            "id": "51f994649763"
+            "id": "0e4354794865"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to Wardat's service",
-            "id": "96c99667ecb3"
+            "id": "c6c1adad1221"
           }
         ],
         "arms": {},
@@ -4014,19 +4026,19 @@
             "kind": "places",
             "target_id": "acre",
             "note": "The kingdom's capital since 1187",
-            "id": "b12070757685"
+            "id": "babcae567e31"
           },
           {
             "kind": "places",
             "target_id": "the_papal_legate",
             "note": "Claims the Crusade's conquests for the Church",
-            "id": "2010ab67cc27"
+            "id": "4a6d2faba023"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "John of Brienne fights in it",
-            "id": "f2059be59563"
+            "id": "2b00432107e4"
           }
         ],
         "arms": {},
@@ -4056,13 +4068,13 @@
             "kind": "places",
             "target_id": "tripoli",
             "note": "His county's capital",
-            "id": "db2df38827c1"
+            "id": "bc67bfa290f1"
           },
           {
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "Held by the same man, Bohemond IV",
-            "id": "c4e15c0e58f1"
+            "id": "cfe7348654e1"
           }
         ],
         "arms": {},
@@ -4092,13 +4104,13 @@
             "kind": "places",
             "target_id": "antioch",
             "note": "His capital, retaken in 1219",
-            "id": "ea2b53dfe9c5"
+            "id": "4bbeb323e3d3"
           },
           {
             "kind": "places",
             "target_id": "count_of_tripoli",
             "note": "Held by the same man, Bohemond IV",
-            "id": "151f32dd49f5"
+            "id": "999244c0465c"
           }
         ],
         "arms": {},
@@ -4128,13 +4140,13 @@
             "kind": "places",
             "target_id": "nicosia",
             "note": "His capital",
-            "id": "c13f84909307"
+            "id": "58bdd775755d"
           },
           {
             "kind": "places",
             "target_id": "famagusta",
             "note": "His island's rising port",
-            "id": "5edcf8ef857a"
+            "id": "ecf5a11c98fb"
           }
         ],
         "arms": {},
@@ -4164,13 +4176,13 @@
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "His uncle, who twice put him out of Antioch",
-            "id": "5cc0c4736e7b"
+            "id": "174f19d7ff69"
           },
           {
             "kind": "places",
             "target_id": "tarsus",
             "note": "His seat, where Constantine is favoured",
-            "id": "58c93963b1ad"
+            "id": "938eb81f7790"
           }
         ],
         "arms": {},
@@ -4202,7 +4214,7 @@
             "kind": "covenants",
             "target_id": "urania",
             "note": "Lies in their lands",
-            "id": "01d646e5ee58"
+            "id": "4a3864171de2"
           }
         ],
         "arms": {},
@@ -4232,25 +4244,25 @@
             "kind": "places",
             "target_id": "damascus",
             "note": "His capital",
-            "id": "dea95aabfee7"
+            "id": "59a20dbf3ea7"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "His; he razed it in 1219",
-            "id": "31b8ff0df370"
+            "id": "356534d045f0"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "His brother and rival, head of the family",
-            "id": "ac0540e81f81"
+            "id": "89f0d89e240c"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Buys its quarry stone",
-            "id": "6e8c1fd4f822"
+            "id": "334ed24754ec"
           }
         ],
         "arms": {},
@@ -4307,13 +4319,13 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "The sect they belong to",
-            "id": "cc5204122c84"
+            "id": "3811e86242ee"
           },
           {
             "kind": "places",
             "target_id": "the_old_man_of_the_mountain",
             "note": "Their chief",
-            "id": "47aa263612bc"
+            "id": "8824a9166993"
           }
         ],
         "arms": {},
@@ -4418,13 +4430,13 @@
             "kind": "places",
             "target_id": "chastel_p_lerin",
             "note": "Its castle",
-            "id": "f59f005bb757"
+            "id": "6bd38887a2fa"
           },
           {
             "kind": "places",
             "target_id": "tortosa",
             "note": "Its castle",
-            "id": "41d09f3b1611"
+            "id": "bfbd678616f9"
           }
         ],
         "arms": {},
@@ -4456,13 +4468,13 @@
             "kind": "places",
             "target_id": "krak_des_chevaliers",
             "note": "Its castle",
-            "id": "4bdce7c49857"
+            "id": "dc8a31bb091e"
           },
           {
             "kind": "places",
             "target_id": "marqab",
             "note": "Its castle",
-            "id": "540de6bce98b"
+            "id": "c27e1bce2f4e"
           }
         ],
         "arms": {},
@@ -4494,7 +4506,7 @@
             "kind": "places",
             "target_id": "montfort",
             "note": "Its castle",
-            "id": "9bc8171dceac"
+            "id": "cd996a723f11"
           }
         ],
         "arms": {},
@@ -4793,13 +4805,13 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Leads it as the Pope's legate",
-            "id": "750aa8aba3d5"
+            "id": "591730072d77"
           },
           {
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "Quarrels with John of Brienne",
-            "id": "6b772230d376"
+            "id": "c3e382b7c943"
           }
         ],
         "arms": {},
@@ -4828,7 +4840,7 @@
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "The king chooses the patriarch",
-            "id": "ec5f1e63644a"
+            "id": "42a2199e77f7"
           }
         ],
         "arms": {},
@@ -5225,25 +5237,25 @@
             "kind": "places",
             "target_id": "the_syrian_nizaris",
             "note": "Another Shi'i branch",
-            "id": "8620c0e41cb5"
+            "id": "1c8c40c8a8e4"
           },
           {
             "kind": "places",
             "target_id": "the_nusayris",
             "note": "Their splinter",
-            "id": "827294d4bec5"
+            "id": "86875e41728b"
           },
           {
             "kind": "places",
             "target_id": "the_druze",
             "note": "Another Shi'i branch",
-            "id": "a6eb74f5bb3a"
+            "id": "f2dd8bee0d40"
           },
           {
             "kind": "places",
             "target_id": "the_bedouin",
             "note": "Many are Twelvers",
-            "id": "a29b5951ccbf"
+            "id": "88a4acdf9236"
           }
         ],
         "arms": {},
@@ -5304,91 +5316,91 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Brings the renewal",
-            "id": "e5d19ce82a61"
+            "id": "831b7cc4d23e"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Hosts the vote; for renewal",
-            "id": "7c30d127414b"
+            "id": "63a68ba802e5"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "For renewal",
-            "id": "919e557ca66e"
+            "id": "c489b85c941b"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Leads the vote against",
-            "id": "92ce6f995eac"
+            "id": "e4ace89e2c2a"
           },
           {
             "kind": "covenants",
             "target_id": "para_belli",
             "note": "Against renewal",
-            "id": "21106f0a4555"
+            "id": "c8889ae67a64"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "Against renewal",
-            "id": "8d022f83fde2"
+            "id": "120a84705902"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "Twelve votes",
-            "id": "d115a2b2ab7c"
+            "id": "2af3662f2e54"
           },
           {
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Its maker",
-            "id": "9bf9d05ec47d"
+            "id": "dc7618080c79"
           },
           {
             "kind": "characters",
             "target_id": "scipio",
             "note": "In the chair",
-            "id": "0ad4f08ef443"
+            "id": "f27a522b93d1"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "The Praeco, the host",
-            "id": "4a3c72cc1873"
+            "id": "f98eae32dee8"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Speaks against",
-            "id": "414f83f43aa0"
+            "id": "acda154a5f93"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Holds twelve votes",
-            "id": "ea7f331c9095"
+            "id": "8b08a25e34aa"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "The other party",
-            "id": "44b517eb595c"
+            "id": "75a91b929231"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Strains the peace",
-            "id": "71cc48409ef7"
+            "id": "e5b531a096f9"
           },
           {
             "kind": "places",
             "target_id": "the_islamic_tradition",
             "note": "Suspected of meddling",
-            "id": "16c60f44a45e"
+            "id": "c55c96e1765d"
           }
         ],
         "arms": {},
@@ -5459,55 +5471,55 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Wages it",
-            "id": "6e39fd21a4f0"
+            "id": "e818799a6734"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Its target",
-            "id": "2e4daa704067"
+            "id": "fdb07c311511"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Full of both sides' spies",
-            "id": "871249f0c1a7"
+            "id": "c0ae06b0ba10"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Troubled by both",
-            "id": "3e76e378eae8"
+            "id": "18ab447f9a77"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Leads it",
-            "id": "1e70e3dd851d"
+            "id": "a11513132685"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "Fights beside 'Umar",
-            "id": "6c747a6a0ee8"
+            "id": "df3d1ba6fa5e"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "Fights too",
-            "id": "8f876aa4d4f3"
+            "id": "3266b69cbfcc"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "Its target",
-            "id": "3245366dfad0"
+            "id": "a24c4cb005fa"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Its target",
-            "id": "9fc7db512731"
+            "id": "0dcef1522178"
           }
         ],
         "arms": {},
@@ -5579,55 +5591,55 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "The servant",
-            "id": "cabec9c2addb"
+            "id": "fc7eb5e9fd95"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "His friend, unknowing",
-            "id": "9eb95895a0dc"
+            "id": "4d6f8e9e6867"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "His sodalis",
-            "id": "ce100a885804"
+            "id": "38f7a3d0fee3"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "A quaesitor who may find out",
-            "id": "c1f90be86141"
+            "id": "5f2efaee7188"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "His covenant",
-            "id": "f523adb475be"
+            "id": "d2966275dbd3"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Wants him Renounced",
-            "id": "9432944a5f8b"
+            "id": "eb5ee71e8d11"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "One of the sultans he serves",
-            "id": "f59471ff566e"
+            "id": "40301096d99d"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_damascus",
             "note": "His sultan at Damascus",
-            "id": "bdb0a8ea25e9"
+            "id": "260873a2668f"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Where he plays the emir",
-            "id": "a0c356020233"
+            "id": "79e86f7a05d4"
           }
         ],
         "arms": {},
@@ -5689,37 +5701,37 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The trader",
-            "id": "f41d2d612777"
+            "id": "939d4be05de0"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Quaesitor under her roof",
-            "id": "4a9014a5db01"
+            "id": "622510746285"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Her covenant's head",
-            "id": "2e3d0e46baf0"
+            "id": "3c706d7248d2"
           },
           {
             "kind": "characters",
             "target_id": "hildegard",
             "note": "Al-Arama's",
-            "id": "a52091920feb"
+            "id": "4a89ea573a57"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her covenant",
-            "id": "80374b9094cf"
+            "id": "79f88a2a51c6"
           },
           {
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Her rival in trade",
-            "id": "a17783f27723"
+            "id": "d449f1060d79"
           }
         ],
         "arms": {},
@@ -5781,19 +5793,19 @@
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "The blackmailer",
-            "id": "3f0579b0eee2"
+            "id": "386899078f13"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "His sodalis",
-            "id": "281e060491db"
+            "id": "4e97e2c6e7d7"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "His covenant",
-            "id": "ff850d25ac77"
+            "id": "8a9ef624283f"
           }
         ],
         "arms": {},
@@ -5855,37 +5867,37 @@
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "The rebel",
-            "id": "6a1670b2d89e"
+            "id": "285ea397cb68"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her friend",
-            "id": "1b1f72076262"
+            "id": "9e10491393ac"
           },
           {
             "kind": "characters",
             "target_id": "david",
             "note": "A Tremere of the Levant",
-            "id": "c5ee1fa22ef2"
+            "id": "795f67c44ce6"
           },
           {
             "kind": "characters",
             "target_id": "xerxes",
             "note": "A Tremere of the Levant",
-            "id": "024e17ba6afa"
+            "id": "57bad992036e"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Her familiar",
-            "id": "81a2debd4c13"
+            "id": "8f5e54e8870d"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Her covenant",
-            "id": "c091b945b86b"
+            "id": "995d5d49b95a"
           }
         ],
         "arms": {},
@@ -5947,31 +5959,31 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Failing",
-            "id": "5381e66eaad3"
+            "id": "92be82eb1b62"
           },
           {
             "kind": "characters",
             "target_id": "spiral",
             "note": "Her unfit heir",
-            "id": "ae008d3af950"
+            "id": "cb974a928528"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Her covenant",
-            "id": "e33846aef402"
+            "id": "c9adb27ff19b"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her first covenant",
-            "id": "bc56ec5c116a"
+            "id": "be67909b36f3"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Her counterpart",
-            "id": "4ddb5e6bf1c8"
+            "id": "3d2626996c8e"
           }
         ],
         "arms": {},
@@ -6033,31 +6045,31 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "The eldest",
-            "id": "47c43feb9ae5"
+            "id": "7f64c84d10f3"
           },
           {
             "kind": "characters",
             "target_id": "wraith",
             "note": "Praeco by right",
-            "id": "ca79fa862522"
+            "id": "59d51cb414da"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Praeco by ruling",
-            "id": "d2a11e48adc9"
+            "id": "8418789e4467"
           },
           {
             "kind": "covenants",
             "target_id": "urbs_rubra",
             "note": "Shut by its jinn",
-            "id": "fb8693d3f28c"
+            "id": "1f8a93ded974"
           },
           {
             "kind": "places",
             "target_id": "petra",
             "note": "The Red City",
-            "id": "d50ebf3c158a"
+            "id": "776a1b0dbff2"
           }
         ],
         "arms": {},
@@ -6119,19 +6131,19 @@
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "The kingmaker",
-            "id": "19a3de8b6839"
+            "id": "c793c3be570a"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "His twelve votes",
-            "id": "7e79a1f12359"
+            "id": "a8052427a559"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The hidden temple",
-            "id": "832957810887"
+            "id": "f4a7e9d1f55b"
           }
         ],
         "arms": {},
@@ -6193,25 +6205,25 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Made the peace",
-            "id": "9810d82d593e"
+            "id": "368e7f3670df"
           },
           {
             "kind": "places",
             "target_id": "asia_minor",
             "note": "The border",
-            "id": "7dfadd1605e8"
+            "id": "b350800e8742"
           },
           {
             "kind": "places",
             "target_id": "emperor_of_trebizond",
             "note": "The Levant's side",
-            "id": "5f654cdf27b4"
+            "id": "e4cac4d589c5"
           },
           {
             "kind": "places",
             "target_id": "sultan_of_rum",
             "note": "Rules between",
-            "id": "c97c130159a0"
+            "id": "3345b8a15a67"
           }
         ],
         "arms": {},
@@ -6263,25 +6275,25 @@
             "kind": "characters",
             "target_id": "arash",
             "note": "Outside the Order",
-            "id": "1d76069c076a"
+            "id": "046f9e425120"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Watches the Kabbalists",
-            "id": "325e763db09d"
+            "id": "5eb2eb12dd3e"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "His neighbour in Baghdad",
-            "id": "886522d80175"
+            "id": "a91219485eb8"
           },
           {
             "kind": "places",
             "target_id": "baghdad",
             "note": "Where he hides",
-            "id": "6df21540102a"
+            "id": "8396961a8f00"
           }
         ],
         "arms": {},
@@ -6343,31 +6355,31 @@
             "kind": "characters",
             "target_id": "david",
             "note": "Sends the call",
-            "id": "5afe962ee836"
+            "id": "c7b4803a01d3"
           },
           {
             "kind": "characters",
             "target_id": "xydas",
             "note": "His sodalis",
-            "id": "c2c8f0c7f357"
+            "id": "4b18e3e54e84"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "The covenant",
-            "id": "137a94ef9654"
+            "id": "cba1c6be3f31"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Its fortunes",
-            "id": "db06f3cbd1f6"
+            "id": "ec7abebdb20f"
           },
           {
             "kind": "places",
             "target_id": "damietta",
             "note": "Its city",
-            "id": "9f80df293ce4"
+            "id": "c5abde9ba027"
           }
         ],
         "arms": {},
@@ -6429,37 +6441,37 @@
             "kind": "characters",
             "target_id": "ruth",
             "note": "Would open them",
-            "id": "3c3ae40df076"
+            "id": "5bb1fd46e7ac"
           },
           {
             "kind": "characters",
             "target_id": "pariah",
             "note": "Would open them",
-            "id": "9ce118c5b49d"
+            "id": "4732e4ae46c6"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Below, in the regio",
-            "id": "d53809731b0e"
+            "id": "37ffc0a48795"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_i",
             "note": "The diggers",
-            "id": "1d4c54e4e70a"
+            "id": "44941efc0f78"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "The hidden temple",
-            "id": "dfa22dd48c38"
+            "id": "b91859d1068a"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The pyramids",
-            "id": "a993c804f6f0"
+            "id": "c825694f034e"
           }
         ],
         "arms": {},
@@ -6707,6 +6719,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -7003,6 +7016,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -7421,6 +7435,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -7884,6 +7899,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -8270,6 +8286,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -8758,6 +8775,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -8779,13 +8797,13 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her close friend",
-            "id": "cfa7a227a292"
+            "id": "21550d2e134b"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "her familiar, Luigi",
-            "id": "95bbc0e51533"
+            "id": "b50868561ebd"
           }
         ],
         "agents": [],
@@ -9110,6 +9128,7 @@
         "traditions": [
           "trad_hermetic_sahirs"
         ],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -9315,6 +9334,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -9336,31 +9356,31 @@
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to her service",
-            "id": "76f80998cdc3"
+            "id": "4dea05c696b7"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to her service",
-            "id": "a9a7242b29b5"
+            "id": "21ac1defeb41"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "her grandmother's ghost, whom she summons",
-            "id": "f26c1b8ac492"
+            "id": "121cb3421921"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit she summons",
-            "id": "a65d56b2f01f"
+            "id": "9a31b51ba7eb"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon she can summon but not command",
-            "id": "568f0867c756"
+            "id": "d956713c9d8c"
           }
         ],
         "agents": [],
@@ -9656,6 +9676,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -10033,6 +10054,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -10054,7 +10076,7 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Came to the Levant with her",
-            "id": "f291c2be9132"
+            "id": "4c015c0a44d7"
           }
         ],
         "agents": [],
@@ -10438,6 +10460,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -10709,6 +10732,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11100,6 +11124,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -11449,6 +11474,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11470,7 +11496,7 @@
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Enemies: she broke its monopoly",
-            "id": "a15fd3bbce56"
+            "id": "a19a5d26320c"
           }
         ],
         "agents": [],
@@ -11804,6 +11830,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -12147,6 +12174,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -12500,6 +12528,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -12837,6 +12866,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13174,6 +13204,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -13500,6 +13531,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13862,6 +13894,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -14257,6 +14290,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14548,6 +14582,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -14967,6 +15002,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14988,7 +15024,7 @@
             "kind": "characters",
             "target_id": "wraith",
             "note": "His wife",
-            "id": "54cd5ae5affb"
+            "id": "b25dba503821"
           }
         ],
         "agents": [],
@@ -15265,6 +15301,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -15684,6 +15721,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -15705,7 +15743,7 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "Her husband",
-            "id": "b4ae4e788363"
+            "id": "b953035024aa"
           }
         ],
         "agents": [],
@@ -15976,6 +16014,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -16296,6 +16335,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -16549,6 +16589,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -16819,6 +16860,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17075,6 +17117,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -17298,6 +17341,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17550,6 +17594,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -17759,6 +17804,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18044,6 +18090,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -18327,6 +18374,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18348,7 +18396,7 @@
             "kind": "characters",
             "target_id": "leo",
             "note": "His firm friend",
-            "id": "29c0c6f10fcc"
+            "id": "2b8b1b263f32"
           }
         ],
         "agents": [],
@@ -18630,6 +18678,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -18919,6 +18968,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18940,7 +18990,7 @@
             "kind": "characters",
             "target_id": "tiberius",
             "note": "His firm friend",
-            "id": "013171519fdd"
+            "id": "835bdfd1366a"
           }
         ],
         "agents": [],
@@ -19174,6 +19224,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -19383,6 +19434,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -19638,6 +19690,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -19829,6 +19882,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20077,6 +20131,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -20268,6 +20323,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20552,6 +20608,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -20887,6 +20944,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21147,6 +21205,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -21482,6 +21541,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21760,6 +21820,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -22037,6 +22098,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22296,6 +22358,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -22537,6 +22600,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22558,7 +22622,7 @@
             "kind": "characters",
             "target_id": "hergar",
             "note": "Her parens",
-            "id": "24972fb19b91"
+            "id": "5562c44bd067"
           }
         ],
         "agents": [],
@@ -22797,6 +22861,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -23012,6 +23077,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23033,7 +23099,7 @@
             "kind": "characters",
             "target_id": "hildegard",
             "note": "His parens",
-            "id": "537f87bc507b"
+            "id": "c6f009be2c6e"
           }
         ],
         "agents": [],
@@ -23170,6 +23236,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -23296,6 +23363,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23447,6 +23515,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -23571,6 +23640,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23851,6 +23921,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -24048,6 +24119,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24069,7 +24141,7 @@
             "kind": "characters",
             "target_id": "sarah",
             "note": "His twin sister",
-            "id": "963b0988b4d8"
+            "id": "751310d80a8b"
           }
         ],
         "agents": [],
@@ -24215,6 +24287,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -24339,6 +24412,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24360,7 +24434,7 @@
             "kind": "characters",
             "target_id": "simon",
             "note": "Her twin brother",
-            "id": "08873d051c44"
+            "id": "dd946ea20188"
           }
         ],
         "agents": [],
@@ -24490,6 +24564,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -24614,6 +24689,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24880,6 +24956,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -25157,6 +25234,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -25428,6 +25506,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -25710,6 +25789,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -25974,6 +26054,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26315,6 +26396,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26377,6 +26459,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26501,6 +26584,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26563,6 +26647,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26687,6 +26772,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26749,6 +26835,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26873,6 +26960,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26935,6 +27023,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27059,6 +27148,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27121,6 +27211,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27245,6 +27336,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27307,6 +27399,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27431,6 +27524,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27493,6 +27587,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27617,6 +27712,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27679,6 +27775,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27803,6 +27900,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27865,6 +27963,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27989,6 +28088,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28051,6 +28151,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -28175,6 +28276,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28237,6 +28339,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -28361,6 +28464,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28617,6 +28721,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -28820,6 +28925,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29061,6 +29167,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29252,6 +29359,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29542,6 +29650,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29721,6 +29830,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29742,7 +29852,7 @@
             "kind": "places",
             "target_id": "baghdad",
             "note": "Lives among its Jews",
-            "id": "155ef7841ef1"
+            "id": "aeec516c6fa4"
           }
         ],
         "agents": [],
@@ -31083,7 +31193,7 @@
             "attack": 5,
             "defense": 2,
             "damage": 10,
-            "id": "8df3e6eb56c5"
+            "id": "467adbaf05ea"
           }
         ],
         "soak": 31,
@@ -31156,7 +31266,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "97b88fc5aa29"
+            "id": "fd39d0d2c567"
           },
           {
             "name": "Dread of the Heights",
@@ -31170,7 +31280,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fills a crowd with terror, so that it flees or cowers; one person she may merely make wary. CrMe 30 (Base 5, +2 Voice, +1 Diameter, +2 Group), for the book's Fear 10.",
-            "id": "f5b2f779c300"
+            "id": "a21b2aa82eb4"
           },
           {
             "name": "Shape of the Crag",
@@ -31184,7 +31294,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns her, or someone she touches, into any lifeless thing, from a pebble to a cliff, up to 14 steps of Size from the true one; she still sees and speaks in that shape, a victim does not. An unwilling victim resists on a Stamina stress roll of 9+. Others notice the disguise only if their Per + Awareness beats her Int + 14. MuCo(Te) 30, for the book's Shapechange to Object 14.",
-            "id": "0077cad3ee12"
+            "id": "1a57e048cc96"
           },
           {
             "name": "Strength Beyond Nature",
@@ -31198,7 +31308,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 6 to Strength for one roll.",
-            "id": "b7ba292540fd"
+            "id": "f98f6b7ebf61"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -31212,7 +31322,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls from her mountains up to 10 lesser jinn of Might up to 30 each and no more than 100 in all, who come within 10 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "0c2ec69e3f8b"
+            "id": "139f3a146528"
           },
           {
             "name": "The Jinni's Road",
@@ -31226,7 +31336,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 10 miles off, on Int + 10 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 12 people along. As the Leap of Homecoming, ReCo 35.",
-            "id": "acab116b3502"
+            "id": "f80e985c5760"
           }
         ],
         "vis": [
@@ -31234,13 +31344,13 @@
             "pawns": 10,
             "art": "Terram",
             "where": "in her body",
-            "id": "4e9623cdf9bd"
+            "id": "1517ddbf61a7"
           },
           {
             "pawns": 10,
             "art": "Ignem",
             "where": "in her body",
-            "id": "065461b11310"
+            "id": "2108a5e52e42"
           }
         ],
         "equipment": "",
@@ -31355,7 +31465,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 7,
-            "id": "c74d2b905a08"
+            "id": "1f15ed65ee54"
           }
         ],
         "soak": 11,
@@ -31519,7 +31629,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Aquam effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "df227d2088e7"
+            "id": "baf806d02bfd"
           },
           {
             "name": "Command of Auram",
@@ -31533,7 +31643,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Auram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "9d14891138fe"
+            "id": "ad2574146ae3"
           },
           {
             "name": "Command of Ignem",
@@ -31547,7 +31657,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Ignem effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. Creo Ignem effects reach a magnitude higher and Perdo Ignem ones a magnitude lower, as befits a creature of fire.",
-            "id": "9bb4f4f6bfad"
+            "id": "76f2b08db409"
           },
           {
             "name": "Command of Terram",
@@ -31561,7 +31671,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 60 (the book's rating of 12), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "3be2b5b4814a"
+            "id": "b42af66323f1"
           },
           {
             "name": "Unseen",
@@ -31575,7 +31685,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "No mortal sense can find him; he may show himself and vanish again at will while it lasts. Second Sight, angels and demons see through it, and magic can find him. As the Veil of Invisibility, PeIm 20, for the book's Invisibility 6.",
-            "id": "59b1bd43f75d"
+            "id": "1e63c1af5b14"
           },
           {
             "name": "Strength Beyond Nature",
@@ -31589,7 +31699,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Strength for one roll. Once it was 8: his strength has drained with his Might.",
-            "id": "c1b1bfbcc9bf"
+            "id": "7142d1c346a7"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -31603,7 +31713,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls to his side up to 12 lesser jinn of Might up to 7 each and no more than 120 in all, who come within 8 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "56ee80922c0f"
+            "id": "c36aa15b60ed"
           },
           {
             "name": "The Jinni's Road",
@@ -31617,7 +31727,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 12 miles off, on Int + 12 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 3 people along. As the Leap of Homecoming, ReCo 35.",
-            "id": "a2b5f7251a84"
+            "id": "eb02624fde69"
           }
         ],
         "vis": [
@@ -31625,7 +31735,7 @@
             "pawns": 15,
             "art": "Ignem",
             "where": "in his body",
-            "id": "c899012653bb"
+            "id": "5e258b6df4c4"
           }
         ],
         "equipment": "",
@@ -31748,7 +31858,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 5,
-            "id": "7a4f689e25f8"
+            "id": "30bc32f5652c"
           },
           {
             "name": "Long sword",
@@ -31756,7 +31866,7 @@
             "attack": 15,
             "defense": 11,
             "damage": 11,
-            "id": "101eeeb930a8"
+            "id": "d279f5cc7b67"
           },
           {
             "name": "Long sword and round shield",
@@ -31764,7 +31874,7 @@
             "attack": 15,
             "defense": 13,
             "damage": 11,
-            "id": "165ca9b1f9c8"
+            "id": "9192a83b1b9e"
           }
         ],
         "soak": 10,
@@ -31837,7 +31947,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs anger in someone near him, adding 1 to rolls on a trait of anger; he may hold the power for several passions. The book's Psychomachia (Anger) 3.",
-            "id": "e071d3f6cf23"
+            "id": "f3a0e70de1c9"
           },
           {
             "name": "Beast Shape",
@@ -31851,7 +31961,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of any living thing, a man among them, within 4 steps of his own Size, keeping his speech; to see through a human disguise others must beat his Int + 4 with Per + Awareness. MuCo(An) 20 (Base 10, +2 Sun), for the book's Shapechange to Animal 4; worked on another (Touch, +5 levels and 1 more Might) it allows a Stamina stress roll of 9+.",
-            "id": "f3050aea3eeb"
+            "id": "ffb015631a0e"
           },
           {
             "name": "Ghul's Quickness",
@@ -31865,7 +31975,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Dexterity or 1 to Quickness for one roll.",
-            "id": "aca3000bf32b"
+            "id": "ac6627aed0c7"
           },
           {
             "name": "The Second Blow",
@@ -31879,7 +31989,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His own power, the ghul's legend made real: after he calls on it, the next blow that wounds him undoes, instead, the wounds of the last blow that struck him. It lasts for that one blow. The book allowed it twice a day; now each use costs its Might.",
-            "id": "31c62bd842f5"
+            "id": "8a24a97c8764"
           }
         ],
         "vis": [
@@ -31887,19 +31997,19 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in his body",
-            "id": "4c0945ec09b9"
+            "id": "03fd7d00fdc7"
           },
           {
             "pawns": 2,
             "art": "Terram",
             "where": "in his sword",
-            "id": "d3a4893b9a86"
+            "id": "c5eb06e80bd6"
           },
           {
             "pawns": 2,
             "art": "Herbam",
             "where": "in his shield",
-            "id": "63ef422909a7"
+            "id": "b806a64976b9"
           }
         ],
         "equipment": "Long sword, round shield, partial chain mail.",
@@ -31967,7 +32077,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 5,
-            "id": "2c283fad5565"
+            "id": "81e433df3387"
           },
           {
             "name": "Grapple (the spiked embrace)",
@@ -31975,7 +32085,7 @@
             "attack": 8,
             "defense": 8,
             "damage": null,
-            "id": "586e3f26bd63"
+            "id": "ca97b4f625dd"
           }
         ],
         "soak": 8,
@@ -32027,7 +32137,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each time she asks something of her victim, he must make a Stamina roll of 12+ or do it unquestioning; a cynic may add to the roll and a kindly soul take away. She asks for a drink first, and then to be held. ReMe 30 at 2 Might points, as the book prices it.",
-            "id": "942bdcf09130"
+            "id": "3c2a0e0d9983"
           }
         ],
         "vis": [
@@ -32035,7 +32145,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in her larynx",
-            "id": "9d060a9c40b2"
+            "id": "93894ff23697"
           }
         ],
         "equipment": "",
@@ -32148,7 +32258,7 @@
             "attack": 5,
             "defense": 6,
             "damage": -1,
-            "id": "1fe7b623592e"
+            "id": "2129e8f1fc65"
           }
         ],
         "soak": 1,
@@ -32193,19 +32303,19 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in his left eye",
-            "id": "daa39879a86f"
+            "id": "ce102b166d5e"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his right eye",
-            "id": "9fd61f581d3d"
+            "id": "208bba0aaaa2"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his brain",
-            "id": "00ec770d0ee5"
+            "id": "4736683d5419"
           }
         ],
         "equipment": "",
@@ -32651,7 +32761,7 @@
     "hidden_catalogs": [],
     "hidden_entries": {},
     "rule_options": {},
-    "traditions": [],
+    "traditions_off": [],
     "season_plans": [],
     "keep_season_records": true,
     "unplanned_magi": "exposure",
@@ -32705,6 +32815,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32829,6 +32940,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32891,6 +33003,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33015,6 +33128,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33036,7 +33150,7 @@
           "kind": "places",
           "target_id": "baghdad",
           "note": "Lives among its Jews",
-          "id": "155ef7841ef1"
+          "id": "aeec516c6fa4"
         }
       ],
       "agents": [],
@@ -33084,6 +33198,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33208,6 +33323,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33229,7 +33345,7 @@
           "kind": "characters",
           "target_id": "aurora_borealis",
           "note": "Came to the Levant with her",
-          "id": "f291c2be9132"
+          "id": "4c015c0a44d7"
         }
       ],
       "agents": [],
@@ -33277,6 +33393,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33401,6 +33518,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33463,6 +33581,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33587,6 +33706,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33608,7 +33728,7 @@
           "kind": "characters",
           "target_id": "wraith",
           "note": "His wife",
-          "id": "54cd5ae5affb"
+          "id": "b25dba503821"
         }
       ],
       "agents": [],
@@ -33656,6 +33776,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33780,6 +33901,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33801,7 +33923,7 @@
           "kind": "characters",
           "target_id": "fade",
           "note": "Her husband",
-          "id": "b4ae4e788363"
+          "id": "b953035024aa"
         }
       ],
       "agents": [],
@@ -33849,6 +33971,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33973,6 +34096,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34035,6 +34159,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34159,6 +34284,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34221,6 +34347,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34345,6 +34472,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34407,6 +34535,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34531,6 +34660,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34593,6 +34723,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34717,6 +34848,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34738,7 +34870,7 @@
           "kind": "characters",
           "target_id": "leo",
           "note": "His firm friend",
-          "id": "29c0c6f10fcc"
+          "id": "2b8b1b263f32"
         }
       ],
       "agents": [],
@@ -34786,6 +34918,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34910,6 +35043,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34931,7 +35065,7 @@
           "kind": "characters",
           "target_id": "tiberius",
           "note": "His firm friend",
-          "id": "013171519fdd"
+          "id": "835bdfd1366a"
         }
       ],
       "agents": [],
@@ -34979,6 +35113,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35103,6 +35238,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35165,6 +35301,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35289,6 +35426,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35351,6 +35489,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35475,6 +35614,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35537,6 +35677,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35661,6 +35802,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35723,6 +35865,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35847,6 +35990,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35909,6 +36053,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36033,6 +36178,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36095,6 +36241,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36219,6 +36366,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36240,7 +36388,7 @@
           "kind": "characters",
           "target_id": "hergar",
           "note": "Her parens",
-          "id": "24972fb19b91"
+          "id": "5562c44bd067"
         }
       ],
       "agents": [],
@@ -36288,6 +36436,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36412,6 +36561,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36433,7 +36583,7 @@
           "kind": "characters",
           "target_id": "hildegard",
           "note": "His parens",
-          "id": "537f87bc507b"
+          "id": "c6f009be2c6e"
         }
       ],
       "agents": [],
@@ -36481,6 +36631,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36605,6 +36756,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36667,6 +36819,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36791,6 +36944,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36853,6 +37007,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36977,6 +37132,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36998,7 +37154,7 @@
           "kind": "characters",
           "target_id": "sarah",
           "note": "His twin sister",
-          "id": "963b0988b4d8"
+          "id": "751310d80a8b"
         }
       ],
       "agents": [],
@@ -37046,6 +37202,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37170,6 +37327,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37191,7 +37349,7 @@
           "kind": "characters",
           "target_id": "simon",
           "note": "Her twin brother",
-          "id": "08873d051c44"
+          "id": "dd946ea20188"
         }
       ],
       "agents": [],
@@ -37239,6 +37397,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37363,6 +37522,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37425,6 +37585,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37549,6 +37710,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37611,6 +37773,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37735,6 +37898,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37797,6 +37961,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37921,6 +38086,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37983,6 +38149,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38107,6 +38274,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38169,6 +38337,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38293,6 +38462,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,

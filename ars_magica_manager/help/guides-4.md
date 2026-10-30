@@ -513,6 +513,8 @@ More books follow in later versions.
 2. The form asks what to bring: untick the parts you don't want, such as the mundane world or the history; the Tribunal (if the pack has one) and its covenants always come (see [Choosing what a pack imports](help:import-pack)).
 3. Preview, then import. A covenant, character, place or neighbour the saga already has one of the same name of is kept as it is, so importing over a saga that already holds part of the Tribunal doubles nothing.
 
+A pack is a copy: a saga keeps what it imported and never reads the pack's file again, so a corrected pack in a new version of the app changes new sagas and new imports, not the sagas you have. Importing the corrected pack over a saga adds what the saga doesn't have and leaves what it has, your edits included, so a correction to a record it already holds doesn't come through, and a Tribunal it already has keeps its own Code, cases and Diary. A record the new pack has renamed comes in beside the old one: the preview lists what is added, so check it first.
+
 ### What a pack puts where
 <!-- help: guide-book-packs-where -->
 

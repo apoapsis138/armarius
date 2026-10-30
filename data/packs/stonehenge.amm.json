@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.40.0",
+  "app_version": "3.58.0",
   "kind": "pack",
   "name": "Heirs to Merlin: the Stonehenge Tribunal",
   "from_saga": "Heirs to Merlin: the Stonehenge Tribunal",
@@ -103,6 +103,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -205,6 +206,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -307,6 +309,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -409,6 +412,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -511,6 +515,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -613,6 +618,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -715,6 +721,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -817,6 +824,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -918,7 +926,7 @@
             "kind": "places",
             "target_id": "wilton",
             "note": "Its village",
-            "id": "3d2529620172"
+            "id": "cf36ed14454b"
           }
         ],
         "unnamed_magi": 0,
@@ -926,6 +934,7 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
@@ -971,21 +980,21 @@
             "year": 1208,
             "says": "No covenant may put more than a reasonable amount of magically made silver into circulation in a year: two pounds for each resident, magus or mundane. Blackthorn, Burnham, Voluntas and others had made so much silver late last century that its value halved in twenty years; the Tribunal judged it interference with the mundanes. A move to punish those responsible failed easily. Gold, not used as coin in England, is not covered, but magi now know that making too much of a thing lowers its worth.",
             "case_id": "",
-            "id": "e05ba5d9c981"
+            "id": "b0171ba18fd3"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "Immanola, Prima of Ex Miscellanea and then the eldest magus, was barred from the office as likely to favour her own House, at Blackthorn's urging; Talion of Blackthorn has held it since, and the Tribunal meets at Blackthorn. The other covenants dislike it, but none has acted.",
             "case_id": "",
-            "id": "64de68f7dc39"
+            "id": "f34ce71fc3f7"
           },
           {
             "title": "The meeting a year late",
             "year": 1201,
             "says": "The Tribunal meets a year after the rest of the Order, from the quorate meeting of 1201.",
             "case_id": "",
-            "id": "5c6526c1bc71"
+            "id": "b2fc4749f29f"
           }
         ],
         "treasury": [],
@@ -997,7 +1006,7 @@
             "details": "After the war on Damhan-Allaidh, Pralix founds the Ordo Miscellanea at Cad Gadu in North Wales.",
             "changes": [],
             "margin": "",
-            "id": "47650db0a7e0"
+            "id": "4cfb660e8c51"
           },
           {
             "year": 817,
@@ -1006,7 +1015,7 @@
             "details": "The Ordo Miscellanea joins the Order as House Ex Miscellanea, and the Stonehenge Tribunal is born. The Nameless Covenant of House Diedne is founded on Anglesey.",
             "changes": [],
             "margin": "",
-            "id": "088d3438b15b"
+            "id": "86d36f83fd93"
           },
           {
             "year": 818,
@@ -1015,7 +1024,7 @@
             "details": "Magi of House Tremere found Blackthorn in the Black Mountains of south Wales.",
             "changes": [],
             "margin": "",
-            "id": "2a306c0b63e2"
+            "id": "84316eacc77d"
           },
           {
             "year": 820,
@@ -1024,7 +1033,7 @@
             "details": "Flavia of Jerbiton founds Rosalba in the Yorkshire Dales.",
             "changes": [],
             "margin": "",
-            "id": "02b880e7d1cc"
+            "id": "aadcb1c52bcf"
           },
           {
             "year": 821,
@@ -1033,7 +1042,7 @@
             "details": "Concordia, an attempt to weld the traditions of Ex Miscellanea together, is founded in the Lake District; it falls apart from its own tensions in 823.",
             "changes": [],
             "margin": "",
-            "id": "dd56ddcf7ce3"
+            "id": "e3035d48d863"
           },
           {
             "year": 852,
@@ -1042,7 +1051,7 @@
             "details": "A covenant in a Roman fort on Hadrian's Wall, which lasts until 1030 or 1031 and then vanishes without trace.",
             "changes": [],
             "margin": "",
-            "id": "f3f6d50d9630"
+            "id": "22a181db7930"
           },
           {
             "year": 863,
@@ -1051,7 +1060,7 @@
             "details": "Pralix disappears returning from a visit to her old domus magna (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "3ae5c46156c0"
+            "id": "b95c0b00d86d"
           },
           {
             "year": 866,
@@ -1060,7 +1069,7 @@
             "details": "A covenant on the Isle of Man that lasts six months.",
             "changes": [],
             "margin": "",
-            "id": "0764180dee29"
+            "id": "403903f3abd5"
           },
           {
             "year": 873,
@@ -1069,7 +1078,7 @@
             "details": "Diana of Tremere of Blackthorn and William of Jerbiton of Rosalba fight a Wizard's War.",
             "changes": [],
             "margin": "",
-            "id": "1a8bb45c0b57"
+            "id": "cb3c0999bc4f"
           },
           {
             "year": 875,
@@ -1078,7 +1087,7 @@
             "details": "A covenant in north Cornwall, which lasts until 931: Tytalus diabolism is found there, and King Athelstan destroys it.",
             "changes": [],
             "margin": "",
-            "id": "bd988b318a6f"
+            "id": "c327babbebe8"
           },
           {
             "year": 893,
@@ -1087,7 +1096,7 @@
             "details": "Newly Gauntleted magi found Occulta in the East Anglian fens; it fails to find resources and collapses in 897, its magi joining other covenants.",
             "changes": [],
             "margin": "",
-            "id": "3847fad3b3f3"
+            "id": "0f9b439992e5"
           },
           {
             "year": 896,
@@ -1096,7 +1105,7 @@
             "details": "A covenant in London, which lasts until about 952.",
             "changes": [],
             "margin": "",
-            "id": "fd72671155cb"
+            "id": "9ddea080b9ae"
           },
           {
             "year": 899,
@@ -1105,7 +1114,7 @@
             "details": "Blackthorn destroys Rosalba; its ruins are lost, and their defences are still active.",
             "changes": [],
             "margin": "",
-            "id": "873d1b73966c"
+            "id": "3afb0b0bd566"
           },
           {
             "year": 915,
@@ -1114,7 +1123,7 @@
             "details": "An undistinguished covenant in the Pennines that never has much of a summer and dies in 1100, unable to recruit.",
             "changes": [],
             "margin": "",
-            "id": "a4a847b0a980"
+            "id": "4f3717036302"
           },
           {
             "year": 938,
@@ -1123,7 +1132,7 @@
             "details": "A second covenant on the Isle of Man, destroyed within a year.",
             "changes": [],
             "margin": "",
-            "id": "b73ace04f7c1"
+            "id": "3b8d6a82ad7a"
           },
           {
             "year": 946,
@@ -1132,7 +1141,7 @@
             "details": "A covenant in Kent, destroyed by House Diedne in 1008.",
             "changes": [],
             "margin": "",
-            "id": "aa5df8be5c69"
+            "id": "b583ade1301c"
           },
           {
             "year": 984,
@@ -1141,7 +1150,7 @@
             "details": "Magi of House Flambeau found Ungulus, \"the Claw\", in the Lake District.",
             "changes": [],
             "margin": "",
-            "id": "f3345ab47389"
+            "id": "f7628f21b998"
           },
           {
             "year": 998,
@@ -1150,7 +1159,7 @@
             "details": "An early victim of the Schism War, too poor to repel a Diedne assault in 1003.",
             "changes": [],
             "margin": "",
-            "id": "b1ec3b2db115"
+            "id": "79b097dec254"
           },
           {
             "year": 1011,
@@ -1159,7 +1168,7 @@
             "details": "The Diedne covenant on Anglesey falls in the Schism War; its records are struck from the Code.",
             "changes": [],
             "margin": "",
-            "id": "b95f2a49ba1a"
+            "id": "2d2a2a43335e"
           },
           {
             "year": 1014,
@@ -1168,7 +1177,7 @@
             "details": "A covenant in caves near Blackthorn, which lasts until 1062.",
             "changes": [],
             "margin": "",
-            "id": "cb3fc7258c49"
+            "id": "5ad860d840cb"
           },
           {
             "year": 1025,
@@ -1177,7 +1186,7 @@
             "details": "A Criamon covenant on the Isles of Scilly, destroyed in a storm in 1163.",
             "changes": [],
             "margin": "",
-            "id": "5afebd7438a8"
+            "id": "21e478f442dd"
           },
           {
             "year": 1060,
@@ -1186,7 +1195,7 @@
             "details": "Gruffydd ap Llewelyn, who besieged Blackthorn from 1058 to 1062, sacks Cad Gadu; Diedne were suspected, though it is now thought coincidence. Cad Gadu is refounded in its regio's higher levels in 1065.",
             "changes": [],
             "margin": "",
-            "id": "f0259576fd87"
+            "id": "9169fda61753"
           },
           {
             "year": 1062,
@@ -1195,7 +1204,7 @@
             "details": "Blackthorn takes Tagelyn's caves and moves into them; Tagelyn's survivors flee to Hibernia and found Ashenrise.",
             "changes": [],
             "margin": "",
-            "id": "11997b552f9b"
+            "id": "6f4e1d897669"
           },
           {
             "year": 1066,
@@ -1204,7 +1213,7 @@
             "details": "Founded in the East Anglian fens to drive William the Conqueror from England; it breaks the Code so blatantly that it is Marched whole and destroyed in 1068.",
             "changes": [],
             "margin": "",
-            "id": "7df5ea6fa85a"
+            "id": "9d83f7434042"
           },
           {
             "year": 1083,
@@ -1213,7 +1222,7 @@
             "details": "Norman magi found Voluntas in the north.",
             "changes": [],
             "margin": "",
-            "id": "50f44a366e7c"
+            "id": "21a6ecf3cb2f"
           },
           {
             "year": 1100,
@@ -1222,7 +1231,7 @@
             "details": "Blackthorn claims Lux Draconis's property, the start of its enmity with Voluntas.",
             "changes": [],
             "margin": "",
-            "id": "8b2765a12ac9"
+            "id": "8f81d83b3b46"
           },
           {
             "year": 1104,
@@ -1231,7 +1240,7 @@
             "details": "A covenant on the North York Moors, which lasts until 1107.",
             "changes": [],
             "margin": "",
-            "id": "045159acb982"
+            "id": "85c22a3e4ba6"
           },
           {
             "year": 1111,
@@ -1240,7 +1249,7 @@
             "details": "A covenant in a cave under Salisbury Plain, which disintegrates in 1187.",
             "changes": [],
             "margin": "",
-            "id": "c21a55a3c4cf"
+            "id": "3de5e0efca5a"
           },
           {
             "year": 1133,
@@ -1249,7 +1258,7 @@
             "details": "Nature magi found Natura Antiqua in the East Anglian fens; Geoffrey de Mandeville destroys it in the civil war, in 1143.",
             "changes": [],
             "margin": "",
-            "id": "12303f9d8110"
+            "id": "988ecb5c075f"
           },
           {
             "year": 1141,
@@ -1258,7 +1267,7 @@
             "details": "Burnham is founded in the far north-east, with a grant of immunity from King Stephen.",
             "changes": [],
             "margin": "",
-            "id": "d2e5e61c3a45"
+            "id": "a2c9574e3114"
           },
           {
             "year": 1151,
@@ -1267,7 +1276,7 @@
             "details": "The wandering covenant Semitae first appears at a meeting, led by Gerfallon of Criamon.",
             "changes": [],
             "margin": "",
-            "id": "3e5d0892bfbd"
+            "id": "835c83dc462a"
           },
           {
             "year": 1154,
@@ -1276,7 +1285,7 @@
             "details": "Flumen of Tremere of Blackthorn leads the Wild Hunt into iron-bound caves near Blackthorn and shuts it in.",
             "changes": [],
             "margin": "",
-            "id": "5a29d859b6db"
+            "id": "14ca0fd2e52f"
           },
           {
             "year": 1160,
@@ -1285,7 +1294,7 @@
             "details": "A third try at a Manx covenant, destroyed by a dragon within six months; one magus is let go home with the message, \"Don't come back.\"",
             "changes": [],
             "margin": "",
-            "id": "da656fe5f193"
+            "id": "04026bc82572"
           },
           {
             "year": 1182,
@@ -1294,7 +1303,7 @@
             "details": "Jerbiton magi found Schola Pythagoranis at Cambridge.",
             "changes": [],
             "margin": "",
-            "id": "35afaed625eb"
+            "id": "9f3564b37bd7"
           },
           {
             "year": 1187,
@@ -1303,7 +1312,7 @@
             "details": "Flumen of Blackthorn passes into Final Twilight, and his filia Goliard takes his place; Magnantrum falls apart the same year.",
             "changes": [],
             "margin": "",
-            "id": "5e72e475eb73"
+            "id": "f581cff36ed8"
           },
           {
             "year": 1194,
@@ -1312,7 +1321,7 @@
             "details": "Blackthorn hosts, Voluntas and Burnham stay away and Semitae cannot be found: the meeting is not quorate, and Stonehenge sends no one to the Grand Tribunal of 1195.",
             "changes": [],
             "margin": "",
-            "id": "13851eb4f1e3"
+            "id": "b12fa0e1ee24"
           },
           {
             "year": 1195,
@@ -1321,7 +1330,7 @@
             "details": "Trutina the Quaesitor joins Burnham, and attends every meeting after.",
             "changes": [],
             "margin": "",
-            "id": "233e1383117b"
+            "id": "a586fea75ef0"
           },
           {
             "year": 1200,
@@ -1330,7 +1339,7 @@
             "details": "No one attends the meeting of 1200.",
             "changes": [],
             "margin": "",
-            "id": "5f2826fd4beb"
+            "id": "89f8a04a278a"
           },
           {
             "year": 1201,
@@ -1339,7 +1348,7 @@
             "details": "Maximianus of Bonisagus founds Nigrasaxa; with Voluntas, Schola Pythagoranis and Ungulus he calls a second meeting, quorate, at Blackthorn. The Tribunal meets a year late from now on, and the Redcaps' network is reorganised.",
             "changes": [],
             "margin": "",
-            "id": "d069aa64bbb2"
+            "id": "8dcf5310739c"
           },
           {
             "year": 1208,
@@ -1348,7 +1357,7 @@
             "details": "The meeting rules that no covenant may circulate more than two pounds of magical silver a resident a year.",
             "changes": [],
             "margin": "",
-            "id": "768e09292597"
+            "id": "94933986815a"
           },
           {
             "year": 1210,
@@ -1357,7 +1366,7 @@
             "details": "Stephen Eruditus of Jerbiton founds Libellus with six young magi.",
             "changes": [],
             "margin": "",
-            "id": "22c7916aee40"
+            "id": "76de06003a94"
           },
           {
             "year": 1216,
@@ -1366,7 +1375,7 @@
             "details": "Immanola, who has sat twelve years gazing into a pool at Cad Gadu, is declared to have entered Final Twilight; House Ex Miscellanea elects Ebroin Primus (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "05a9c7c362e0"
+            "id": "87c5a0fc82b5"
           },
           {
             "year": 1220,
@@ -1375,7 +1384,7 @@
             "details": "William Fireheart of Flambeau, of Ungulus, loses a Wizard's War to a magus of Fudarus in the Normandy Tribunal, ending Ungulus's line of Flambeau magi.",
             "changes": [],
             "margin": "",
-            "id": "90c972053086"
+            "id": "4642aefcfb19"
           }
         ],
         "package_data": {},
@@ -3992,7 +4001,7 @@
             "kind": "characters",
             "target_id": "berechiah_ben_natronai_hanakdan",
             "note": "A natural magician",
-            "id": "1999e8b0a635"
+            "id": "4ec1e53c891b"
           }
         ],
         "arms": {},
@@ -4033,25 +4042,25 @@
             "kind": "characters",
             "target_id": "gwrhyr",
             "note": "The island's owner",
-            "id": "de91cc24587d"
+            "id": "19fbdbd7162c"
           },
           {
             "kind": "characters",
             "target_id": "culhwch",
             "note": "His adopted filius",
-            "id": "97f279021f6f"
+            "id": "2040c826a1d0"
           },
           {
             "kind": "characters",
             "target_id": "ebroin",
             "note": "Not yet told",
-            "id": "9284562b2620"
+            "id": "314279de57fb"
           },
           {
             "kind": "covenants",
             "target_id": "cad_gadu",
             "note": "The covenant at risk",
-            "id": "06805747cd51"
+            "id": "4c8326718652"
           }
         ],
         "arms": {},
@@ -4081,13 +4090,13 @@
             "kind": "covenants",
             "target_id": "voluntas",
             "note": "Encroaching",
-            "id": "0d1cf51ec525"
+            "id": "d5ab97ddd956"
           },
           {
             "kind": "covenants",
             "target_id": "ungulus",
             "note": "The covenant at risk",
-            "id": "4184c2207e86"
+            "id": "40d72e0771fa"
           }
         ],
         "arms": {},
@@ -4117,19 +4126,19 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "One of the three",
-            "id": "bd1185b17cfd"
+            "id": "c22cda381989"
           },
           {
             "kind": "covenants",
             "target_id": "libellus",
             "note": "One of the three",
-            "id": "b0f3064c7fd1"
+            "id": "c9c3271be51e"
           },
           {
             "kind": "covenants",
             "target_id": "nigrasaxa",
             "note": "One of the three",
-            "id": "4169c49c9d8f"
+            "id": "513de7572f66"
           }
         ],
         "arms": {},
@@ -4159,7 +4168,7 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "The covenant",
-            "id": "2c0c3f3410ca"
+            "id": "14def212c8ae"
           }
         ],
         "arms": {},
@@ -4189,19 +4198,19 @@
             "kind": "neighbours",
             "target_id": "nicola_de_hay",
             "note": "A party",
-            "id": "e8c2ee269649"
+            "id": "11039cf65951"
           },
           {
             "kind": "neighbours",
             "target_id": "william_longespee_earl_of_salisbury",
             "note": "A party",
-            "id": "0d332f0e994d"
+            "id": "cb123326eabe"
           },
           {
             "kind": "neighbours",
             "target_id": "falkes_de_br_aut",
             "note": "A party",
-            "id": "d1ed86642fc6"
+            "id": "b5692d34ad57"
           }
         ],
         "arms": {},
@@ -4232,7 +4241,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "Its target",
-            "id": "2acec6766c67"
+            "id": "1f5d4a6598ce"
           }
         ],
         "arms": {},
@@ -4287,7 +4296,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "The accused",
-            "id": "71313866c70a"
+            "id": "d4fb0be5b0bf"
           }
         ],
         "arms": {},
@@ -4318,7 +4327,7 @@
             "kind": "covenants",
             "target_id": "burnham",
             "note": "The covenant",
-            "id": "9eb35076cfb8"
+            "id": "92f711633d4f"
           }
         ],
         "arms": {},
@@ -4373,7 +4382,7 @@
             "kind": "characters",
             "target_id": "junius",
             "note": "The maker",
-            "id": "7b1aa5b34cfe"
+            "id": "7c637ae7c40a"
           }
         ],
         "arms": {},
@@ -4593,6 +4602,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -5012,6 +5022,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -5265,6 +5276,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -5630,6 +5642,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -5883,6 +5896,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -6191,6 +6205,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -6447,6 +6462,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -6748,6 +6764,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -7004,6 +7021,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -7245,6 +7263,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -7501,6 +7520,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -7692,6 +7712,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -7923,6 +7944,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -8187,6 +8209,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -8425,6 +8448,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -8610,6 +8634,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -8858,6 +8883,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -9079,6 +9105,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -9327,6 +9354,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -9616,6 +9644,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -9869,6 +9898,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -10098,6 +10128,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -10344,6 +10375,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -10603,6 +10635,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -10848,6 +10881,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -11039,6 +11073,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11270,6 +11305,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -11659,6 +11695,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11892,6 +11929,7 @@
         "traditions": [
           "trad_columbae"
         ],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -12281,6 +12319,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -12512,6 +12551,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -12771,6 +12811,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13016,6 +13057,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -13195,6 +13237,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13447,6 +13490,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -13729,6 +13773,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13975,6 +14020,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -14136,6 +14182,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14377,6 +14424,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -14538,6 +14586,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14786,6 +14835,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -14983,6 +15033,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -15236,6 +15287,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -15397,6 +15449,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -15646,6 +15699,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -15807,6 +15861,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -16053,6 +16108,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -16214,6 +16270,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -16462,6 +16519,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -16857,6 +16915,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17103,6 +17162,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -17264,6 +17324,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17512,6 +17573,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -17697,6 +17759,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17950,6 +18013,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -18111,6 +18175,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18360,6 +18425,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -18521,6 +18587,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18774,6 +18841,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -18935,6 +19003,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -19181,6 +19250,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -19342,6 +19412,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -19594,6 +19665,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -19899,6 +19971,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20151,6 +20224,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -20441,6 +20515,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20693,6 +20768,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -20884,6 +20960,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21137,6 +21214,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -21340,6 +21418,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21593,6 +21672,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -21952,6 +22032,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22198,6 +22279,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -22383,6 +22465,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22636,6 +22719,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -22950,6 +23034,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23202,6 +23287,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -23425,6 +23511,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23663,6 +23750,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -24001,6 +24089,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24247,6 +24336,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -24636,6 +24726,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24867,6 +24958,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -25262,6 +25354,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -25517,6 +25610,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -25813,6 +25907,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26066,6 +26161,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26336,6 +26432,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26595,6 +26692,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -26878,6 +26976,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27124,6 +27223,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27359,6 +27459,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27607,6 +27708,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -27798,6 +27900,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28051,6 +28154,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -28365,6 +28469,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28611,6 +28716,7 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -28889,6 +28995,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28951,6 +29058,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29075,6 +29183,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29137,6 +29246,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29261,6 +29371,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29323,6 +29434,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29447,6 +29559,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29509,6 +29622,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29633,6 +29747,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29695,6 +29810,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -29819,6 +29935,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29881,6 +29998,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -30005,6 +30123,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30067,6 +30186,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -30191,6 +30311,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30253,6 +30374,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -30377,6 +30499,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30398,7 +30521,7 @@
             "kind": "neighbours",
             "target_id": "the_bishop_of_hereford",
             "note": "The bishop he serves",
-            "id": "5d58546db0d7"
+            "id": "8fe01c4c9883"
           }
         ],
         "agents": [],
@@ -30446,6 +30569,7 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
@@ -30570,6 +30694,7 @@
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30626,7 +30751,7 @@
     "hidden_catalogs": [],
     "hidden_entries": {},
     "rule_options": {},
-    "traditions": [],
+    "traditions_off": [],
     "season_plans": [],
     "keep_season_records": true,
     "unplanned_magi": "exposure",
@@ -30680,6 +30805,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -30804,6 +30930,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -30866,6 +30993,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -30990,6 +31118,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31052,6 +31181,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -31176,6 +31306,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31238,6 +31369,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -31362,6 +31494,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31424,6 +31557,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -31548,6 +31682,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31610,6 +31745,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -31734,6 +31870,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31796,6 +31933,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -31920,6 +32058,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -31982,6 +32121,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32106,6 +32246,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32168,6 +32309,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32292,6 +32434,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32354,6 +32497,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32478,6 +32622,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32540,6 +32685,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32664,6 +32810,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32726,6 +32873,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -32850,6 +32998,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -32912,6 +33061,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33036,6 +33186,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33098,6 +33249,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33222,6 +33374,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33286,6 +33439,7 @@
       "traditions": [
         "trad_columbae"
       ],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33410,6 +33564,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33472,6 +33627,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33596,6 +33752,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33658,6 +33815,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33782,6 +33940,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -33844,6 +34003,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -33968,6 +34128,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34030,6 +34191,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34154,6 +34316,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34216,6 +34379,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34340,6 +34504,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34402,6 +34567,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34526,6 +34692,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34588,6 +34755,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34712,6 +34880,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34774,6 +34943,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -34898,6 +35068,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -34960,6 +35131,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35084,6 +35256,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35146,6 +35319,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35270,6 +35444,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35332,6 +35507,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35456,6 +35632,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35518,6 +35695,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35642,6 +35820,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35704,6 +35883,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -35828,6 +36008,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -35890,6 +36071,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36014,6 +36196,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36076,6 +36259,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36200,6 +36384,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36262,6 +36447,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36386,6 +36572,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36448,6 +36635,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36572,6 +36760,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36634,6 +36823,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36758,6 +36948,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -36820,6 +37011,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -36944,6 +37136,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37006,6 +37199,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37130,6 +37324,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37192,6 +37387,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37316,6 +37512,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37378,6 +37575,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37502,6 +37700,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37564,6 +37763,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37688,6 +37888,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37750,6 +37951,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -37874,6 +38076,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -37936,6 +38139,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38060,6 +38264,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38122,6 +38327,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38246,6 +38452,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38308,6 +38515,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38432,6 +38640,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38494,6 +38703,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38618,6 +38828,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38680,6 +38891,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38804,6 +39016,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -38866,6 +39079,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -38990,6 +39204,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -39052,6 +39267,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -39176,6 +39392,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -39238,6 +39455,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -39362,6 +39580,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -39424,6 +39643,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -39548,6 +39768,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -39610,6 +39831,7 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
@@ -39734,6 +39956,7 @@
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,

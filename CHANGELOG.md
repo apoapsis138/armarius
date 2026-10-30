@@ -93,6 +93,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Peregrinatio III | Faith & Flame | 2.95.0 | The Provence Tribunal pack |
 | Peregrinatio IV | The Sundered Eagle | 2.99.0 | The Bestiary in the packs, and the Theban Tribunal pack |
 | Peregrinatio V | Against the Dark | 2.102.0 | The Transylvanian Tribunal pack, with its oppida and five legal covenants |
+| Peregrinatio VI | The Contested Isle | 2.105.0 | The Hibernian Tribunal pack |
+| Peregrinatio VII | Blood and Sand | 2.127.0 | The Levant Tribunal pack, with its web companion Secrets in Sand |
+| Peregrinatio VIII | The Cradle and the Crescent | 3.0.0 | The first region pack, outside any Tribunal |
+| Peregrinatio IX | Sanctuary of Ice | 3.41.0 | The Greater Alps Tribunal pack |
+| Peregrinatio X | Heirs to Merlin | 3.41.0 | The Stonehenge Tribunal pack |
+| Peregrinatio XI | The Dragon and the Bear | 3.41.0 | The Novgorod Tribunal pack |
 
 ## Major versions
 
@@ -108,6 +114,21 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 3.58.1 — 2026-10-30
+
+### Peregrinatio
+
+- **The shipped packs reviewed.** Every pack was rebuilt and compared with
+  the one shipped, and nothing was added, removed or renamed. The Cradle
+  and the Crescent's Mongol Conquest now carries the stages in Russia and
+  Poland it shares with the Novgorod pack, and The Sundered Eagle's Sibyl
+  has Divination as a Supernatural Ability. Sagas you already have are
+  unchanged: a pack is a copy.
+- **Help on importing a pack again.** The book packs guide says what a
+  newer copy of a pack adds and what it leaves alone.
+- **Editions VI to XI.** The six packs since Against the Dark now have
+  their editions on this page.
 
 ## 3.58.0 — 2026-10-30
 

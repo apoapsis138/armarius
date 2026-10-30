@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.28.0",
+  "app_version": "3.58.0",
   "kind": "pack",
   "name": "Against the Dark: the Transylvanian Tribunal",
   "from_saga": "Against the Dark: the Transylvanian Tribunal",
@@ -10,6 +10,9 @@
     "covenant": {},
     "neighbour": {},
     "creature": {}
+  },
+  "stubs": {
+    "covenant": {}
   },
   "saga": {
     "id": "export",
@@ -141,19 +144,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.\nOnly Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "evredika",
@@ -247,19 +258,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "Oeagrus keeps the mummified arm of Orpheus and means to remake the god by grafting his scattered limbs onto his own body.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "seuthopolis",
@@ -363,19 +382,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "The town's charter from Diocletian is a clever forgery.\nRumour, perhaps true, says the Red Library also holds magic items, seized in investigations and never destroyed, that cast some of the Red Spells; the House might argue they are lawful to own, and lawful to use on hedge wizards, the Orders of Odin and Solomon, and Renounced magi, whom the Code does not protect.\nSaturnino thinks gathering the Red and Black Libraries was a grave mistake.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "tablinum",
@@ -479,19 +506,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "The Empty Laboratory's void window is a vis source the residents do not know of: now and then frost forms on its sill that can be gathered as Mentem vis before it melts, 2 pawns a season. The ghost knows.\nNestor keeps most of the Curators' necklaces hidden and carries only the one for the most visited levels; his real laboratory is in a level of its own.\nThe Dungeon's excess: either infernalists with their own Arcane Connections use it to hide their cult's paraphernalia, coming and going by Leap of Homecoming, or Hell has got in, and possessed exhibits are summoning more demons into the hall.\nTheodore once told Nestor many exhibits should be destroyed, and lately told Demetrius the Order has outlived its purpose.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "old_histria",
@@ -585,19 +620,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "shrouded_bay",
@@ -680,19 +723,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "lycaneon",
@@ -826,19 +877,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.\nA rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.\nLycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "the_scholomance",
@@ -952,19 +1011,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.\nA snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.\nA shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.\nA friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.\nSebastian's name echoes the dragon king A\u017eevastjepan's; see Sebastian.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "coeris",
@@ -1047,19 +1114,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge (see the Gate's place).\nThe Night Contingency for taking Coeris is closely kept and probably salted with false information.\nJanus is a lycanthrope and Tatiana a Keeper of the Silence of the Temple (see their summaries).\nPoena may learn she has a wasting illness that will cloud her judgement, and quietly have possible successors weighed before a decisive certamen at the next Decennial.\nShould Poena die suddenly, Monica is Prima pro tempore while the councillors are summoned, and may use the time to finish Poena's schemes and push a few of her own.\nPoena plans to hold the Order's great chess competition at the Tribunal site in two years, for the House's prestige.",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "kezd_v_lasz",
@@ -1163,19 +1238,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "the_zenodochia",
@@ -1269,19 +1352,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       },
       {
         "id": "leviathan",
@@ -1364,19 +1455,27 @@
         "arms": {},
         "charter": {},
         "manors": {},
+        "interests_off": [],
         "charter_of_covenant": {
           "name": "",
           "preamble": "",
           "year": null,
           "season": "",
           "ratified": false,
+          "notarized_by": "",
+          "notarized_year": null,
+          "notarized_season": "",
+          "reviewed": false,
+          "template": "",
+          "probation_seasons": null,
           "clauses": [],
           "seals": []
         },
         "secrets": "",
         "hermetic_projects": [],
         "project_shown": "",
-        "land_projects": []
+        "land_projects": [],
+        "history": {}
       }
     ],
     "tribunals": [
@@ -1426,7 +1525,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "fdaaaf26378e"
+            "id": "7f809d8252f4"
           },
           {
             "title": "Harco and the Tribunal's Redcaps",
@@ -1458,7 +1557,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "a67b65c27477"
+            "id": "11781be00f43"
           },
           {
             "title": "A Portal from Old Histria to Venice",
@@ -1490,7 +1589,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "91916803e3d5"
+            "id": "b38f4817754c"
           },
           {
             "title": "Whether Laniena is lawful",
@@ -1522,7 +1621,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "afb523d7a9a2"
+            "id": "1c78d76017b9"
           },
           {
             "title": "Murat of Terezin's secret",
@@ -1554,7 +1653,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "6be483d09ed2"
+            "id": "8719d4e754b0"
           },
           {
             "title": "Gigas and Evredika's vis",
@@ -1586,7 +1685,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "036088ce5915"
+            "id": "9e3d48a71e40"
           },
           {
             "title": "The papal legate and the Scholomance",
@@ -1618,7 +1717,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "2519d60a2a37"
+            "id": "08c85eb18489"
           }
         ],
         "rulings": [
@@ -1627,210 +1726,210 @@
             "year": 848,
             "says": "After the Sundering a Grand Tribunal capped the Tribunal at five named covenants: Coeris, Domostron, Asclepius, Diodorus and Pannonia. All five have since moved or changed how they admit members, but in law they still stand, and no new covenant can be added. A body of outsiders that joins the Tribunal enters Pannonia. The Tremere do not ask for the limit to be lifted, lest it stir old fears, and no one else gains by asking.",
             "case_id": "",
-            "id": "4f45200a243d"
+            "id": "1282a4b0aa6a"
           },
           {
             "title": "Privileges",
             "year": null,
             "says": "Every resident magus holds a privilege: a written agreement with the Praeco, on the Tribunal's behalf, that sets the magus's place in Transylvanian society. A Quaesitor witnesses it and it is read into the Peripheral Code at a meeting. There are five broad kinds, one for each legal covenant, but each is bargained for, and terms may be added later as reward or punishment. A magus may leave the Tribunal freely, returning what he was paid for unfinished work; one who goes with great items, much vis or other treasures is pursued by the Tremere.",
             "case_id": "",
-            "id": "7e444a1ac614"
+            "id": "7362d68b68a6"
           },
           {
             "title": "Cives (Coeris)",
             "year": null,
             "says": "Every Tremere belongs to Coeris, and may resign and rejoin at will. Other magi may be made cives as a mark of the Tribunal's esteem. A cives may draw on House Tremere's aid, send a Tremere proxy to the House's Decennial, stand for any office including Praeco, raise apprentices, move between oppida (if not Tremere), and wear black or grey at meetings; where cives are the larger group of an oppidum they choose its aedile from the others. In return a cives must live as the Tremere admire: cooperate, work usefully, muster for war and pay taxes.",
             "case_id": "",
-            "id": "8afc596c9893"
+            "id": "53e5c2170ba9"
           },
           {
             "title": "Socii (Domostron)",
             "year": null,
             "says": "The socii are allies of other Houses treated much as if they were Tremere: nearly all the Quaesitores, Redcaps and dedicated hoplites, who are socii unless they are cives. They may hold any office but Praeco, raise an apprentice, draw dedicated resources and crisis taxes for their work, and wear designs like Decorations; where they are the larger group they name three candidates for aedile and the Praeco picks one. They must do their duty or renegotiate, give no one a fair cause for Wizard's War (as the Praeco judges), ask leave to found an oppidum, stand in as aediles when none can be found, and wear their badges at meetings.",
             "case_id": "",
-            "id": "00171169a421"
+            "id": "27425894117b"
           },
           {
             "title": "Coloniae (Asclepius)",
             "year": null,
             "says": "The coloniae are young magi from other Tribunals settled under close terms to open up neglected corners of the land. They are promised aid in war or disaster, the resources named in their privilege and a share of new ones found. They may not choose their aedile, seek any office but aedile, call themselves archmagi, take apprentices without leave, invite other magi in (save Quaesitores, Redcaps and hoplites), behave scandalously, or wear what looks like a Decoration they have not earned. At meetings they go unshod (sandals and slippers are now allowed) and may eat no aphrodisiac, from shellfish and truffles to carrots and pepper.",
             "case_id": "",
-            "id": "3873b54c561e"
+            "id": "bb1a8846c7cd"
           },
           {
             "title": "Hospites (Diodorus)",
             "year": null,
             "says": "The hospites, the Tribunal's guests, are magi hired to practise a skill for House Tremere, and most live at Lycaneon. They are paid fairly, use what their task is given, escape many taxes, are protected if War is declared on them, and are not called to Wizard's Marches. They must ask leave before seeking office, taking an apprentice, binding a familiar, making a talisman, founding or changing oppidum, voting for a particular aedile, or wearing what looks like a Decoration; a privilege may grant some of these in advance, for less pay.",
             "case_id": "",
-            "id": "f5c0f4698732"
+            "id": "8a180f77c276"
           },
           {
             "title": "Foederati (Pannonia)",
             "year": null,
             "says": "The foederati are magi of covenants that left neighbouring Tribunals for shelter here, and each keeps the customs written into its privilege, offensive to the Tremere or not, so long as it breaks neither the Code nor the Tribunal's peace. They keep the resources they held when they joined, train apprentices (the eldest is taken on as a foederatus too), move oppidum with notice and may stand for any office. They need leave to drop the duties their privilege names, which only the Praeco and the magus together can change, to use the title archmagus, found oppida, invite magi in, or trade vis or items with outsiders other than the socii. Should Pannonia ever lack outsiders, some magi of other covenants join it automatically, so it never lapses.",
             "case_id": "",
-            "id": "21702312898d"
+            "id": "9a23e0aca8b4"
           },
           {
             "title": "The leaders of the legal covenants",
             "year": null,
             "says": "To keep the Tribunal whole after the Sundering, Tremere granted concessions to the other covenants' leaders, now paid by the Tribunal. Asclepius's members elect a leader each year, who is invited to Coeris for the Triumph of Asclepius: sixteen pawns of vis, three pounds of pure gold, six books of his choosing copied from a certain library, a fine dinner and lesser tokens, in return for minor duties to the other leaders that take about two seasons. Magi of any covenant, and non-residents, may hold it. The hospites elect their leader every seven years, with the Praeco's approval, for a smaller yearly payment. Domostron is led by the senior Quaesitor and Pannonia by the Orphic cult of the south, whose members long ago sold their concessions to the chief Mercere.",
             "case_id": "",
-            "id": "e7c63960f3a4"
+            "id": "389cee301882"
           },
           {
             "title": "Oppida",
             "year": null,
             "says": "Every magus must belong to an oppidum in some sense, and keep broadly aware of what its other members are doing. An oppidum must have at least two members, at least one of them cives, and may not be made up wholly of one House, so in practice each has a Tremere and someone who is not.",
             "case_id": "",
-            "id": "5fdb094b2e3d"
+            "id": "d516e21cafd6"
           },
           {
             "title": "Aediles",
             "year": null,
             "says": "Each oppidum has an aedile, the odd member set there to keep House Tremere from corruption and the others from treason; where cives and non-cives are equal in number it has two. Aediles have no set duties, but may demand an urgent audience with the Praeco and the chief Quaesitor, and the Quaesitores treat an aedile's disappearance, or War declared on one, gravely.",
             "case_id": "",
-            "id": "6a61af386636"
+            "id": "46ba2ea17d5e"
           },
           {
             "title": "Decorations",
             "year": null,
             "says": "The Tribunal honours service with five Decorations, worn as jewellery or embroidery on a magus's robes, never awarded twice to the same magus; a higher one replaces a lower. The Laurel goes to the magus who leads a campaign against a foe that could destroy the Order (no one now wears it); the Myrtle to the general of a lesser campaign of more than one magical battle; the Oak to one who plans such a campaign without fighting in it; the Grass to a magus who saves other magi from death, first given to the defenders of covenants against the Diedne; and the Parsley for the killing blow on a magus the Tribunal has cast out.",
             "case_id": "",
-            "id": "ddc6ca8ac07f"
+            "id": "3d2e9855e6eb"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "The Praeco is chosen by vote, not by age, and needs the Prima of Tremere's approval to take office and her goodwill to keep it. He has wider powers than Praecones elsewhere, ceded by the House slowly and reversibly. The Praeco appoints the Tribunal's envoys and asks magi to settle when the Prima wants an oppidum founded.",
             "case_id": "",
-            "id": "9452c1b002d5"
+            "id": "a7ff322f3c3b"
           },
           {
             "title": "Taxes and stipends",
             "year": null,
             "says": "The Praeco gathers taxes for the projects each meeting assigns him, and the cives, socii, coloniae and some foederati must give reasonable aid to them. A large vis source is reserved for his use, once meant for the upkeep of the meeting site's wards, which the Quaesitores now see to. He also collects the stipends the Peripheral Code sets for the Redcaps and Quaesitores, and his Redcaps deliver them, so the Tremere can see what is claimed without spying and no one can call it a bribe from the House.",
             "case_id": "",
-            "id": "b588450d19cd"
+            "id": "8378d25e48d1"
           },
           {
             "title": "Promissory notes",
             "year": null,
             "says": "Before he could tax, the Praeco borrowed against his reserved vis by issuing notes promising payment, and he still issues them for trade and diplomacy. Old notes never redeemed pass from hand to hand as a currency of great value. Forging one is a crime, held to be fraud aimed at robbing a magus of the vis that is his power.",
             "case_id": "",
-            "id": "e28aedf5a0ed"
+            "id": "c1d316896c63"
           },
           {
             "title": "Annual emergency Tribunals",
             "year": null,
             "says": "Elsewhere the Quaesitores call emergency Tribunals when they must; in Transylvania House Guernicus calls one every year at the Tribunal site, to give swifter justice and accept newly trained apprentices sooner. A group of Tremere advocates holds proxies for every Transylvanian Tremere, so the vote always suits the House, which uses these meetings to keep its allies content and often concedes more than the votes require.",
             "case_id": "",
-            "id": "5adeef7c3430"
+            "id": "5f12fe4d56b7"
           },
           {
             "title": "Wizard's War",
             "year": null,
             "says": "Magi keep their right under the Code to declare War, but the Tribunal strongly prefers that wizards fight wizards only in Marches voted at an emergency Tribunal. Quarrels go first to mediation by the Quaesitores or the Prima's people, and then to certamen; private Wars are very rare.",
             "case_id": "",
-            "id": "cd35dd49e7cc"
+            "id": "4ca85d41394c"
           },
           {
             "title": "Certamen in place of War",
             "year": null,
             "says": "A challenge to certamen says the challenger would kill his rival if he were less civilised. The winner is treated as having spared a life he could have taken, the loser lives by his mercy, and the winner has the right to strike the loser once in the face. Certamen rules are otherwise the Definitive Edition's.",
             "case_id": "",
-            "id": "52c7e0f8ce83"
+            "id": "45bc398d420b"
           },
           {
             "title": "Certamen for love",
             "year": null,
             "says": "Most duels are fought for love, as sport or over small matters. Before two witnesses the Tribunal could question, the duellists declare that it is for love, the stake, how it is won if not by yielding (first sound blow, first wound or unconsciousness are common), forgiveness in advance for any hurt, and that the loser yields. They may not strike a blow at the end, use vis, gamble basely, wager an officer's duties, duel naked or drunk, use spells or items (or let onlookers) to sway the result, couple during the duel, or challenge one worn down by an earlier duel.",
             "case_id": "",
-            "id": "1354259edf02"
+            "id": "f0ed505f53d2"
           },
           {
             "title": "Dealings with outsiders",
             "year": null,
             "says": "Many oppida may not make treaties with foreign covenants or Tribunals. Trading arrangements with outsiders need either a place in the Peripheral Code or the Praeco's approval, witnessed by a Quaesitor; the Praeco's appointees speak for the Tribunal abroad.",
             "case_id": "",
-            "id": "ef7afe5917f4"
+            "id": "840e4389ff1d"
           },
           {
             "title": "Settlers and Gifted children",
             "year": null,
             "says": "No magus may bring a Gifted child into the Tribunal or invite a magus to settle. He may instead ask the Praeco to do it, which lets the Tremere govern how many magi live here.",
             "case_id": "",
-            "id": "97eeaef25844"
+            "id": "4772ced9ee41"
           },
           {
             "title": "Sales of vis and enchanted items",
             "year": null,
             "says": "Only the Praeco, the Prima of Tremere, the socii and their agents may sell vis or enchanted items to outsiders. Old Histria is the registry for every such sale in the Tribunal; the goods need not go there, as matching letters notarised by a Quaesitor suffice. The Praeco's people may bid for anything of interest, and buyers of common vis may consult the list of notes kept by the master of the vis trade at Old Histria.",
             "case_id": "",
-            "id": "f0bde8acc8dd"
+            "id": "5223fa1a1d84"
           },
           {
             "title": "Magical animals",
             "year": null,
             "says": "Magical animals may not be exported without licence, which lets House Tremere, ever seeking breeding stock for war, buy first on exports and bid alongside on imports. Selling through the Redcaps is lawful but recorded.",
             "case_id": "",
-            "id": "30c5ca96771f"
+            "id": "681b99b82b02"
           },
           {
             "title": "One name to a Tremere",
             "year": null,
             "says": "No two Tremere magi in the Tribunal may share a name, so that the House's records can tell each apart; a maga who arrives bearing a name already held may have to defend it by certamen.",
             "case_id": "",
-            "id": "d8aae87e3a07"
+            "id": "14b20d91c09b"
           },
           {
             "title": "Amaranth",
             "year": null,
             "says": "Amaranth, a faerie flower whose vis gives magi pleasant visions, addiction and Warping, is destroyed wherever it is found in Transylvania.",
             "case_id": "",
-            "id": "8b4d9ae21023"
+            "id": "3979051e1270"
           },
           {
             "title": "Lictors",
             "year": null,
             "says": "Lictors, magi sworn to long service as hoplites, guard the Quaesitores and follow their orders. They may call on any cives, socius, foederatus or colonus for reasonable aid, the Tribunal judging afterwards what was reasonable for the danger. All belong to one legal covenant and so wear the same red and silver sash, pinned with a winged silver brooch, the astraea, each with its own variation. Carrying a copy of a lictor's badge is a serious crime.",
             "case_id": "",
-            "id": "1d731cfad103"
+            "id": "6113ac9a5a92"
           },
           {
             "title": "The zenodochia",
             "year": null,
             "says": "The Tribunal keeps safehouses for sick or wounded magi along its roads, and wants them used. Taking vis from one is a Low Crime, though a magus who cannot repay is usually let work off the debt for the Tribunal; damaging or destroying one on purpose is a High Crime, while one who repairs accidental damage unasked is not prosecuted. Items and casting tablets must stay; vis and supplies used must be replaced.",
             "case_id": "",
-            "id": "e7c0d12307c1"
+            "id": "b5e363e2a3ba"
           },
           {
             "title": "The Curantis",
             "year": null,
             "says": "Each meeting elects a Curantis to serve until the next, usually the single candidate the elders agree on beforehand; no one may serve two terms running. He tours the zenodochia for about a season a year, repairs them, must build at least one new one in his term, and has a Quaesitor's powers in cases touching them. He is paid generously in vis and may draw on the Tribunal's stores. His Notary, chosen by the previous Curantis and often a Redcap, serves as his aedile.",
             "case_id": "",
-            "id": "7f7648b4540c"
+            "id": "685f35ecdb04"
           },
           {
             "title": "The Curator of Tablinum",
             "year": null,
             "says": "The Curator, who keeps the museum oppidum of Tablinum, holds office for life. The Transylvania Chronicle kept there is the authoritative record of the Tribunal's history and its rulings.",
             "case_id": "",
-            "id": "5ee79fd1e931"
+            "id": "ba1ca77462ef"
           },
           {
             "title": "Mercere votes",
             "year": null,
             "says": "By the terms of their covenant with the Tribunal, only Gifted Mercere vote at its meetings; in exchange the Tribunal lets the families of unGifted Redcaps grow as large as they like.",
             "case_id": "",
-            "id": "935801a577c9"
+            "id": "52c828d771f6"
           },
           {
             "title": "Hedge wizards and Laniena",
             "year": null,
             "says": "The Code's Join or Die provision applies to Gifted hedge wizards. The Tribunal's policy lets Laniena train Gifted children as Fectores, hunters who are not Hermetic magi, on the ground that trainees are outside the Order and so outside the Code; once trained, each is offered the Order's protection. Laniena knows it lasts only on sufferance, since the High Crime of depriving a magus of his magic could be charged whenever the Tremere wished.",
             "case_id": "",
-            "id": "2ae97c20aa2b"
+            "id": "30372afdd21f"
           }
         ],
         "treasury": [],
@@ -1842,7 +1941,7 @@
             "details": "The Order is founded. The Transylvania Chronicle, kept in Tablinum's exhibit hall, begins its record with this year, though sceptics note how little it says of House Tremere's beginnings.",
             "changes": [],
             "margin": "",
-            "id": "423c568ac635"
+            "id": "c32fd7c0e8eb"
           },
           {
             "year": 780,
@@ -1851,7 +1950,7 @@
             "details": "In the Order's first years the Founder Tremere fights a band of Theban magi at the Shipka Pass, the best road through Bulgaria's mountains. A regio lies beside the battlefield: some say Tremere knew of it and laid his ambush from it, others that a Twilight born of the fight's strain made it. For long afterwards House Tremere and the Theban covenants meet there to reflect and to sign their treaties. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "b5219c750843"
+            "id": "1ae1d443b120"
           },
           {
             "year": 803,
@@ -1860,7 +1959,7 @@
             "details": "Khan Krum the Conqueror adds the lands of Hungary and Transylvania to the First Bulgarian Empire.",
             "changes": [],
             "margin": "",
-            "id": "207e728f8a2e"
+            "id": "0266e195e0d8"
           },
           {
             "year": 810,
@@ -1869,7 +1968,7 @@
             "details": "Early in the ninth century, when dragon raids flare up in defiance of the Pax Draconis, the Founder Tremere takes the shape of Fetillusclaviceps, the Roman dragon who made the peace, and puts down the rebels. He never speaks of it, and whatever record of his reasons existed was lost in the Sundering. (The book gives no exact year.)",
             "changes": [],
             "margin": "",
-            "id": "5bd271653baf"
+            "id": "d4eadbb1b801"
           },
           {
             "year": 814,
@@ -1878,7 +1977,7 @@
             "details": "Krum, who had beaten two Byzantine emperors in battle and laid siege to Constantinople, dies suddenly, and no one knows quite how.",
             "changes": [],
             "margin": "",
-            "id": "faec4b2e9661"
+            "id": "af21e453ab00"
           },
           {
             "year": 848,
@@ -1887,7 +1986,7 @@
             "details": "Tremere's bid to master the Order ends in the Sundering. No longer trusting his domus magna at what is now Lycaneon, he moves his seat, and its name, to Coeris in Maramures, where the Covenant of Asclepius then stood; Lycaneon stays the House's manufactory. His successor Albanus turns the Order's anger at Tremere's memory into a means of binding the House together. A Grand Tribunal caps the Tribunal at five named covenants, Coeris, Domostron, Asclepius, Diodorus and Pannonia, which still exist in law though every one has since moved or changed its membership. To keep the others from seceding, Tremere grants concessions to their leaders, and the covenants bind one another by contract; the Triumph of Asclepius is still paid from them.",
             "changes": [],
             "margin": "",
-            "id": "4649d95e335c"
+            "id": "2585554650e6"
           },
           {
             "year": 850,
@@ -1896,7 +1995,7 @@
             "details": "The maga Akilina comes upon a place in the Danube delta where many regiones lie one over another, the future site of Tablinum. (The book says only the middle of the ninth century.)",
             "changes": [],
             "margin": "",
-            "id": "fbc3ce2f3380"
+            "id": "cccdd077020c"
           },
           {
             "year": 878,
@@ -1905,7 +2004,7 @@
             "details": "In the years after the Sundering Tablinum is founded as a storehouse for artifacts, with Akilina its first Curator. Since the Tribunal may hold only five covenants, it has no official standing and no recognised residents until the custom of oppida spreads, when it remakes itself as an oppidum with Curators who live there. Its founders are said to have walked a ritual path through the regiones, fixing an Arcane Connection to each level and destroying the path behind them.",
             "changes": [],
             "margin": "",
-            "id": "ca5e68790e94"
+            "id": "29eb9ffe3188"
           },
           {
             "year": 886,
@@ -1914,7 +2013,7 @@
             "details": "Boris I, the first Christian khan of Bulgaria, baptised Michael, welcomes the mission of Saints Cyril and Methodius, from which the Bulgarian Church takes its descent.",
             "changes": [],
             "margin": "",
-            "id": "01207c8a2a7a"
+            "id": "ac613e246a96"
           },
           {
             "year": 900,
@@ -1923,7 +2022,7 @@
             "details": "Akilina names her apprentice Potitus her successor and resigns. The first Curator to make his home at Tablinum, he opens what had been a closed storehouse to study. By this year the Chronicle already mentions its regiones and the Arcane Connections that reach them.",
             "changes": [],
             "margin": "",
-            "id": "6e94dee7ab20"
+            "id": "b0093cc7f426"
           },
           {
             "year": 917,
@@ -1932,7 +2031,7 @@
             "details": "Tablinum's first Curator disappears and is presumed dead.",
             "changes": [],
             "margin": "",
-            "id": "5619f9d56dae"
+            "id": "8f976bf0e4da"
           },
           {
             "year": 926,
@@ -1941,7 +2040,7 @@
             "details": "Symeon, son of Boris and the first Bulgarian ruler to style himself tsar rather than khan, makes the Bulgarian Church autonomous. By the peace of 927 the patriarch of Constantinople accepts its independence, and it soon has a patriarch of its own.",
             "changes": [],
             "margin": "",
-            "id": "792941a81c59"
+            "id": "92dc54f5c9ee"
           },
           {
             "year": 946,
@@ -1950,7 +2049,7 @@
             "details": "Potitus appoints Tiberia, a Tremere general, as his successor, and for a short time the two share the office; Potitus's term ends in 948. In the same year the hermit, healer and mystic Ivan Rilski dies; his body, still uncorrupted, now lies at Tarnovo, and he is Bulgaria's patron saint.",
             "changes": [],
             "margin": "",
-            "id": "d86e52022f1d"
+            "id": "f7c282e3c6ed"
           },
           {
             "year": 1001,
@@ -1959,7 +2058,7 @@
             "details": "The Cult of Orpheus had worshipped in the Rhodope mountains for decades as an informal cult, and when it joined the Order its sacred sites there became Hermetic ground. In this year Evredika, named for Eurydice in the Bulgarian tongue, becomes a formal oppidum.",
             "changes": [],
             "margin": "",
-            "id": "2ff85acea508"
+            "id": "c1c787ee3995"
           },
           {
             "year": 1005,
@@ -1968,7 +2067,7 @@
             "details": "During the Schism War the Tremere generals plan a network of tiny hidden hospitals, the zenodochia, reasoning that one hospital oppidum would be found and destroyed in time, while a web of small ones could not be, and that no single captured magus would know more than a few of them. Hundreds are planned; many are never built. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "48989d2c2062"
+            "id": "6dadcee80479"
           },
           {
             "year": 1007,
@@ -1977,7 +2076,7 @@
             "details": "Tiberia is killed in the Schism War. Anatolus, also a Tremere general, succeeds her, the first Curator of Tablinum chosen by the Tribunal rather than by the one before. He becomes known for strange battle magic, said to come from Tablinum's halls.",
             "changes": [],
             "margin": "",
-            "id": "6c6044b94ba7"
+            "id": "4c8ca10b4a21"
           },
           {
             "year": 1008,
@@ -1986,7 +2085,7 @@
             "details": "Norsius of House Tremere, more scholar than soldier, founds Primum Responsans, better known by its Hungarian name Kezd\u00f6 V\u00e1lasz, to guard the Tribunal's borders in the Schism War. Taking Trajan's Wall as his model, he builds a few forts in magic auras near the frontier, each with two magi who study between alarms; his own first fort stands in the ruins of Sarmizegethusa, Decebalus's palace. The war never reaches Transylvania, and the forts are never tested. Later his filius Gasparus spreads the forts across the whole Tribunal and has each pair of magi move to a new one after every Tribunal meeting.",
             "changes": [],
             "margin": "",
-            "id": "743faa980eea"
+            "id": "730f8ab7b876"
           },
           {
             "year": 1018,
@@ -1995,7 +2094,7 @@
             "details": "The First Bulgarian Empire, founded by Asparukh's Bulgars, falls to Byzantine rule. The Bulgarian Church loses its independence, is reduced to an archbishopric at Ohrid and filled with Greek clergy. In the same year the Curator Anatolus dies in a Wizard's War, and Tablinum has no Curator for two years.",
             "changes": [],
             "margin": "",
-            "id": "c92029ee5cc6"
+            "id": "db1e60e550d4"
           },
           {
             "year": 1020,
@@ -2004,7 +2103,7 @@
             "details": "Silus becomes Curator of Tablinum.",
             "changes": [],
             "margin": "",
-            "id": "8bf86fcd6619"
+            "id": "d3d1989f3388"
           },
           {
             "year": 1027,
@@ -2013,7 +2112,7 @@
             "details": "Silus is accused of infernalism and Marched. His successor Justius is said to have taken apart a number of infernal exhibits and driven demons out of many of Tablinum's regio levels during his long tenure.",
             "changes": [],
             "margin": "",
-            "id": "5e9d085158e2"
+            "id": "7383695c6d37"
           },
           {
             "year": 1080,
@@ -2022,7 +2121,7 @@
             "details": "Scribonius becomes Curator of Tablinum and writes the first catalogue of its exhibits to claim completeness.",
             "changes": [],
             "margin": "",
-            "id": "3725d730369d"
+            "id": "917de432a0ba"
           },
           {
             "year": 1091,
@@ -2031,7 +2130,7 @@
             "details": "The Trpimirovi\u0107 line of Croatian kings ends in a feeble quarrel between brothers, and the nobles of the north invite Ladislaus I of Hungary to rule. Croatia has been a vassal principality of Hungary ever since.",
             "changes": [],
             "margin": "",
-            "id": "9521cc5d62b0"
+            "id": "61627a6f4ad1"
           },
           {
             "year": 1092,
@@ -2040,7 +2139,7 @@
             "details": "A Church council in Hungary rules that a village with a church may not move far from it, beginning the end of the Magyars' wandering villages.",
             "changes": [],
             "margin": "",
-            "id": "84193b0d9b43"
+            "id": "44e7c99d2e1e"
           },
           {
             "year": 1095,
@@ -2049,7 +2148,7 @@
             "details": "The Order had long known of a phantom castle in the Carpathians; this year Jeremiah of Tremere solves the secret of its regio and becomes the first magus to enter the tower. One inhabitant waits there, and he has not aged since.",
             "changes": [],
             "margin": "",
-            "id": "bb23e7cf10a6"
+            "id": "e1e7bd179568"
           },
           {
             "year": 1100,
@@ -2058,7 +2157,7 @@
             "details": "King Coloman the Learned of Hungary decrees that, as witches do not exist, no one may be tried for witchcraft. The Quaesitors look into it as discreetly as they can but find no magus behind it, and the law still stands. (The book says only the eleventh century; Coloman reigned from 1095 to 1116.)",
             "changes": [],
             "margin": "",
-            "id": "ac29d19bb86c"
+            "id": "2b4b8a95030d"
           },
           {
             "year": 1102,
@@ -2067,7 +2166,7 @@
             "details": "Scribonius resigns as Curator, quits House Tremere and joins House Jerbiton in the Theban Tribunal. His successor Calpurnius greatly enlarges Tablinum's Faerie collection.",
             "changes": [],
             "margin": "",
-            "id": "b95398e66dc5"
+            "id": "b47fc4683178"
           },
           {
             "year": 1120,
@@ -2076,7 +2175,7 @@
             "details": "The vampire of a dead magus hunts out dhampirs, has them trained and then kills them to make more vampires, the latest of the infiltrations that have dogged House Tremere. The famed hunter Murat of Terezin comes to Coeris and with the young Radomir of Tremere clears every vampire from the House; Murat kills the nest's master himself. The two ask the Tribunal for an oppidum to train hunters, and once Murat joins House Ex Miscellanea the Praeco agrees. Working from old initiation scripts a Gnostic scholar took down while spying on a talt\u00f3s clan, they learn after years of trials to Open the Gifted to the Hunters' Arts; Radomir calls them interfectores, soon shortened to Fectores. Laniena begins as part of the Scholomance and later moves to the Aggtelek caves. House Tremere now forbids its magi to take a dhampir as apprentice. (The book says about a hundred years ago.)\n\nSecrets\nMurat of Terezin was himself a dhampir, and became a vampire when he died. He survives as a kukudhi, a vampire passing as a man, living far from Laniena with his fourth mortal wife and fathering dhampirs. Only Murat the Younger knows, and lets him be for the hunters his children give Laniena.",
             "changes": [],
             "margin": "",
-            "id": "5c127854db80"
+            "id": "d15f063364a0"
           },
           {
             "year": 1125,
@@ -2085,7 +2184,7 @@
             "details": "Thirty years after Jeremiah's entry Coeris claims the ghostly tower and makes it a mansio for the Redcaps of the Tribunal's north. Within a few years it is training Redcaps, and soon after mundanes of use to House Tremere.",
             "changes": [],
             "margin": "",
-            "id": "008bc3977367"
+            "id": "1d329de4d737"
           },
           {
             "year": 1137,
@@ -2094,7 +2193,7 @@
             "details": "Magi studying at Tablinum report meeting Akilina, or someone who claims to be her, in the maze of its regiones, two centuries after she vanished. Scribonius, the former Curator, dies this year.",
             "changes": [],
             "margin": "",
-            "id": "c147cc7eb601"
+            "id": "78a20730ce5b"
           },
           {
             "year": 1164,
@@ -2103,7 +2202,7 @@
             "details": "Stefan Nemanja, a Serbian prince of modest beginnings and then a Byzantine vassal, helps the emperor in his war on Hungary.",
             "changes": [],
             "margin": "",
-            "id": "31c3821ff5d0"
+            "id": "44bf1694b137"
           },
           {
             "year": 1165,
@@ -2112,7 +2211,7 @@
             "details": "Fetillusclaviceps, keeper of the Pax Draconis, is seen for the last time. He had shown himself only half a dozen times in three centuries, never to a magus, and his lair has never been found. (The book says only more than fifty years before 1220.)\n\nSecrets\nSome Tremere wonder whether the later sightings were the dragon at all, or magi of their own House repeating the Founder's disguise.",
             "changes": [],
             "margin": "",
-            "id": "a34e5acb92ef"
+            "id": "df01ef2cca56"
           },
           {
             "year": 1167,
@@ -2121,7 +2220,7 @@
             "details": "Stefan Nemanja turns on his Byzantine overlord and beats an imperial army at the Battle of Pantino.",
             "changes": [],
             "margin": "",
-            "id": "50e326b6d4d8"
+            "id": "2dd4c578406b"
           },
           {
             "year": 1170,
@@ -2130,7 +2229,7 @@
             "details": "Nestor succeeds Calpurnius as Curator of Tablinum, an office held for life, and becomes known for his research into regiones.",
             "changes": [],
             "margin": "",
-            "id": "0d1dbdd65d1a"
+            "id": "d2fd9b893878"
           },
           {
             "year": 1171,
@@ -2139,7 +2238,7 @@
             "details": "Nemanja allies with Venice, Hungary and German princes to throw off Byzantine rule, but Serbian feuds, a Venetian mutiny and plague wreck the campaign. Manuel Komnenos invades Ra\u0161ka, besieges Ras and carries Nemanja to Constantinople in chains; against all expectation the two become friends, and Nemanja returns as the emperor's strategos and the sole lawful ruler of the Serbs.",
             "changes": [],
             "margin": "",
-            "id": "05ee2fbeb709"
+            "id": "fa252e34daa5"
           },
           {
             "year": 1185,
@@ -2148,7 +2247,7 @@
             "details": "Three brothers, Teodor Petar, Ivan Asen and Kaloyan, lead the Bulgarians out of Byzantine rule and found the Second Bulgarian Empire. Their origins are a mystery, perhaps Bulgarian, perhaps Vlach or Cuman, and their inherited gift for swaying crowds troubles the Order. Cuman tribes shelter the rebel princes after their first army is beaten and supply the core of the next.",
             "changes": [],
             "margin": "",
-            "id": "608966dc9d0a"
+            "id": "a38dc829b74f"
           },
           {
             "year": 1190,
@@ -2157,7 +2256,7 @@
             "details": "Barbarossa died in 1189 and most of his German nobles went home, but a faithful few stay for the siege of Acre. Ill and neglected by the French and English Hospitallers, crusaders from Bremen and L\u00fcbeck found a hospital order for Germans, backed by Duke Friedrich of Swabia, and Pope Celestine III approves it. (The book says some twenty years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "5a7d52f693f6"
+            "id": "2400be45a59e"
           },
           {
             "year": 1195,
@@ -2166,7 +2265,7 @@
             "details": "Stefan Nemanja retires and hands Serbia to his second son, Stefan, passing over the eldest, Vukan.",
             "changes": [],
             "margin": "",
-            "id": "6ca6ec5da790"
+            "id": "4c3d072b3e54"
           },
           {
             "year": 1197,
@@ -2175,7 +2274,7 @@
             "details": "Kaloyan begins his reign and restores the Bulgarian Empire; his Cuman bride seals an alliance with the nomads that must be renewed by rite each summer. New German crusaders reach the Holy Land and find the Teutonic hospital flourishing.",
             "changes": [],
             "margin": "",
-            "id": "e8623fa0cec8"
+            "id": "f3c6420d2ef0"
           },
           {
             "year": 1198,
@@ -2184,7 +2283,7 @@
             "details": "Seeing the crusader kingdom's border forts badly manned, the newcomers decide the Teutonic brothers, former knights, can fight as well as nurse, and the pope gives the Order a new charter as a military order.",
             "changes": [],
             "margin": "",
-            "id": "c72c86c85916"
+            "id": "f6d7dabed451"
           },
           {
             "year": 1199,
@@ -2193,7 +2292,7 @@
             "details": "Nemanja dies, and holy oil begins to flow from his tomb, so the people call him the Myrrh-flowing.",
             "changes": [],
             "margin": "",
-            "id": "0572e0d6cce6"
+            "id": "33f2af97d246"
           },
           {
             "year": 1200,
@@ -2202,7 +2301,7 @@
             "details": "Less than a year after his death the Eastern Church canonises Stefan Nemanja. Stefan II accuses his first wife, Eudocia Angelina, daughter of Emperor Alexios Angelos and mother of five of his children, of adultery and drives her from Serbia. About this time Hungary stops exporting slaves, probably as part of the king's plan to people the kingdom's edges.",
             "changes": [],
             "margin": "",
-            "id": "71bb22cab494"
+            "id": "92ce53ad4a83"
           },
           {
             "year": 1202,
@@ -2211,7 +2310,7 @@
             "details": "Crusaders raid and destroy Zadar, Croatia's richest port and a possession of the King of Hungary, and little is done to dislodge the Venetians.",
             "changes": [],
             "margin": "",
-            "id": "a250a8035dd8"
+            "id": "345ce5488d35"
           },
           {
             "year": 1203,
@@ -2220,7 +2319,7 @@
             "details": "Pope Innocent III names the Archbishop of Tarnovo primate of all Bulgaria and Wallachia, tying the Asens' church to Rome, though Ohrid stays Orthodox. Soon after the violence at Zadar, House Tremere builds a zenodochium in a regio within a magical lacuna in the city and staffs it with a skilled surgeon and his assistants. Some months later the House loses touch with them, and the regio itself seems to vanish.",
             "changes": [],
             "margin": "",
-            "id": "3c2059c059ab"
+            "id": "a37d5b2ca6f6"
           },
           {
             "year": 1204,
@@ -2229,7 +2328,7 @@
             "details": "Constantinople falls to the Latins, and the Latin Church soon controls much of the city; the magi of Thebes learn what crusading armies can do. Two months later Adulio of House Tremere, just out of his apprenticeship, joins Kezd\u00f6 V\u00e1lasz to keep the same fate from Transylvania. In Serbia Vukan's resentment breaks into civil war against his brother Stefan II, who wins but cannot take any of the lost Byzantine lands. A loyal Croatian noble wrests Zadar back from the crusaders.",
             "changes": [],
             "margin": "",
-            "id": "2e8ea6f7ab40"
+            "id": "135f86cc55ac"
           },
           {
             "year": 1205,
@@ -2238,7 +2337,7 @@
             "details": "Tsar Kaloyan captures Emperor Baldwin of the Latin Empire, who is held in the tower above Tarnovo's Frankish quarter that still bears his name. Venice takes Dubrovnik, which pays it tribute and harbours its galleys, and regains Zadar, this time by a treaty that makes the Venetians overseers rather than occupiers; the townsfolk see through it.",
             "changes": [],
             "margin": "",
-            "id": "c774be4c4a9a"
+            "id": "dfddbdc89d78"
           },
           {
             "year": 1206,
@@ -2247,7 +2346,7 @@
             "details": "Nemanja's relics are carried from Mount Athos to the monastery of Studenica.",
             "changes": [],
             "margin": "",
-            "id": "76a2744c0cc7"
+            "id": "d87da78211d7"
           },
           {
             "year": 1207,
@@ -2256,7 +2355,7 @@
             "details": "Kaloyan's reign ends. In Germany the Landgrave of Thuringia (the book calls him margrave) holds a contest for the crown of poetry, on the terms that every losing singer must die; Henry of Ofterdingen loses to Wolfram von Eschenbach and is let go to fetch the one bard he says is better, Klingsohr.",
             "changes": [],
             "margin": "",
-            "id": "81992d1a5f99"
+            "id": "24fc1620fed3"
           },
           {
             "year": 1208,
@@ -2265,7 +2364,7 @@
             "details": "Sava, Nemanja's youngest son, who had left family politics for the monks of Mount Athos, comes back to Studenica and begins to organise the Serbian Orthodox Church.",
             "changes": [],
             "margin": "",
-            "id": "b265237e36f9"
+            "id": "41f367128bbb"
           },
           {
             "year": 1210,
@@ -2274,7 +2373,7 @@
             "details": "Hermann von Salza is elected hochmeister of the Teutonic Order. About this time Simium, headmaster of the Scholomance, begins writing to Polyaigos in the Theban Tribunal, a covenant that also prepares pupils before apprenticeship; an exchange is talked of, but old enmity between Thebes and Transylvania stands in its way. (The book says within the last ten years or so.)",
             "changes": [],
             "margin": "",
-            "id": "3aec74c21807"
+            "id": "7bf2fb2079b4"
           },
           {
             "year": 1211,
@@ -2283,7 +2382,7 @@
             "details": "Straight after a marriage contract between King Andrew II and Landgrave Hermann of Thuringia for their children, Hermann von Salza's Order is invited to Transylvania (the book also credits a King Bela, and makes Hermann of Thuringia head of the Salza family). Andrew gives it the Burzenland, free of taxes and dues, keeping the right to mint and half the gold and silver mined, and charges it to hold the Carpathian passes against the Cumans. Brother Theoderich commands the mission; Saxon settlers follow in numbers, and the Knights begin five castles, Marienburg, Kronstadt, Rosenau, Schwarzenburg and Kreuzburg.",
             "changes": [],
             "margin": "",
-            "id": "7452ef036dc9"
+            "id": "64ba2a951300"
           },
           {
             "year": 1215,
@@ -2292,7 +2391,7 @@
             "details": "Macrobius, filius of Gasparus and leader of Kezd\u00f6 V\u00e1lasz, is torn apart by an angry griffin he met by chance in the Prokletije, the Accursed Mountains. His filius Essedarius, the fourth leader in Norsius's line, takes command. Leona, his partner, was not with him; she hunts the beast down and still hunts griffins in her grief.",
             "changes": [],
             "margin": "",
-            "id": "068b5b22aa2f"
+            "id": "516f93faf5bb"
           },
           {
             "year": 1216,
@@ -2301,7 +2400,7 @@
             "details": "A Tremere necromancer serving as a hoplite finds the burial ground of the ancient Thracian kings close to Seuthopolis, their old capital. Tremere's necromancers rejoice and House Verditius wants a dig too, since the Thracians honoured smith gods; Benilda, wary of cheerful necromancers, bars the way.",
             "changes": [],
             "margin": "",
-            "id": "ee02b3703214"
+            "id": "abc4e0913283"
           },
           {
             "year": 1217,
@@ -2310,7 +2409,7 @@
             "details": "A papal legate crowns Stefan II king of all the Serbian and coastal lands, and most Serbian dioceses take up the Latin rite, though Kotor and Ston keep the Greek. Andrew II of Hungary sets out on crusade.",
             "changes": [],
             "margin": "",
-            "id": "d9518d47ccaa"
+            "id": "677e6edfbf27"
           },
           {
             "year": 1218,
@@ -2319,7 +2418,7 @@
             "details": "Poena becomes Prima of House Tremere, and Monica Ierne takes the post of legata, the House's field commander. The former Primus is given charge of the Burning Acorns Vexillation, which hunts surviving Diedne, a post that lets him roam as he pleases. Ivan Asen II takes the Bulgarian throne at Tarnovo and marries a daughter of the King of Hungary. Andrew II comes home from crusade to a hostile nobility (the book dates his return to 1222).",
             "changes": [],
             "margin": "",
-            "id": "ed3ee5df9628"
+            "id": "05777cbe4b80"
           },
           {
             "year": 1219,
@@ -2328,7 +2427,7 @@
             "details": "At Sava's request the patriarch of the Greek Church makes the Serbian Church self-governing and consecrates Sava its archbishop. Sava's Nomocanon becomes the book of church law for all the Slav churches.",
             "changes": [],
             "margin": "",
-            "id": "c854df7dc98f"
+            "id": "d7f5316a6a52"
           }
         ],
         "package_data": {
@@ -2821,13 +2920,13 @@
             "kind": "creatures",
             "target_id": "upokorituma",
             "note": "an a\u017edaja that sinks river boats on the upper Danube",
-            "id": "699bbaf308ae"
+            "id": "7c5b6269b2d6"
           },
           {
             "kind": "creatures",
             "target_id": "costache",
             "note": "a giant kept chained in a barrel in some king's palace",
-            "id": "17ec437e6f4a"
+            "id": "a44b781ffb48"
           }
         ],
         "arms": {},
@@ -3358,13 +3457,13 @@
             "kind": "creatures",
             "target_id": "broukolak",
             "note": "the Bulgarian demon that wears a corpse",
-            "id": "64c31f0b045c"
+            "id": "7022ca5c72bd"
           },
           {
             "kind": "creatures",
             "target_id": "zuban_a_four_eyed_dog",
             "note": "a four-eyed dog, born to hunt vampires",
-            "id": "c8ed4daaf91d"
+            "id": "90f30877bc06"
           }
         ],
         "arms": {},
@@ -3548,7 +3647,7 @@
             "kind": "creatures",
             "target_id": "saint_ivan_rilski",
             "note": "the patron saint of Bulgaria",
-            "id": "dfd11df66200"
+            "id": "30ddd8721730"
           }
         ],
         "arms": {},
@@ -3588,7 +3687,7 @@
             "kind": "creatures",
             "target_id": "minor_vila",
             "note": "a template for the white ladies of the Tribunal",
-            "id": "bbbaf8a13d70"
+            "id": "299127340e7f"
           }
         ],
         "arms": {},
@@ -3643,13 +3742,13 @@
             "kind": "creatures",
             "target_id": "nicoleta_a_giant_s_mother",
             "note": "a giant's mother on her hidden horse farm",
-            "id": "afaef4cdfd5f"
+            "id": "74c2b2281ee1"
           },
           {
             "kind": "creatures",
             "target_id": "fet_frumos_a_faerie_horse",
             "note": "the faerie horse starved on Nicoleta's farm",
-            "id": "bdf89b95ce85"
+            "id": "06e6dbc69be6"
           }
         ],
         "arms": {},
@@ -5158,37 +5257,37 @@
             "kind": "creatures",
             "target_id": "human_like_vampire",
             "note": "the commonest vampire, wearing a dead villager's shape",
-            "id": "afcb819df4de"
+            "id": "b3f4055c1b92"
           },
           {
             "kind": "creatures",
             "target_id": "bestial_vampire",
             "note": "the boneless wolf-shaped vampire",
-            "id": "65b9a353d739"
+            "id": "622d2597aa34"
           },
           {
             "kind": "creatures",
             "target_id": "incorporeal_vampire",
             "note": "the unseen vampire that haunts a dead man's kin",
-            "id": "cb356e32203b"
+            "id": "8239c08171c4"
           },
           {
             "kind": "creatures",
             "target_id": "gadja",
             "note": "the formless sack the young vampire becomes",
-            "id": "b1453c860bba"
+            "id": "f13fd810cd4e"
           },
           {
             "kind": "creatures",
             "target_id": "vampire_snake",
             "note": "a snake turned vampire",
-            "id": "07a27e026b0e"
+            "id": "a936e58d5075"
           },
           {
             "kind": "creatures",
             "target_id": "vampire_tree",
             "note": "a hanging tree turned vampire",
-            "id": "62965210dd52"
+            "id": "8ff14769e86e"
           }
         ],
         "arms": {},
@@ -5531,7 +5630,7 @@
             "kind": "creatures",
             "target_id": "georghe_and_ladislau",
             "note": "two giant brothers forever quarrelling over a fence",
-            "id": "9245915bb70d"
+            "id": "2b02e24410ec"
           }
         ],
         "arms": {},
@@ -6220,7 +6319,7 @@
             "kind": "creatures",
             "target_id": "silexa",
             "note": "",
-            "id": "3e4b1498921e"
+            "id": "79756e21fd91"
           }
         ],
         "arms": {},
@@ -6260,7 +6359,7 @@
             "kind": "covenants",
             "target_id": "coeris",
             "note": "Coeris's refuge, beneath the oppidum",
-            "id": "98a1ebcedd0a"
+            "id": "343644001f16"
           }
         ],
         "arms": {},
@@ -6601,13 +6700,13 @@
             "kind": "characters",
             "target_id": "thietmar",
             "note": "A storm wizard",
-            "id": "581c7732ef38"
+            "id": "b1270911b921"
           },
           {
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "Twice attacked its tower",
-            "id": "9ce7f650a068"
+            "id": "e0fc567ba530"
           }
         ],
         "arms": {},
@@ -6664,25 +6763,25 @@
             "kind": "covenants",
             "target_id": "laniena",
             "note": "Trains them",
-            "id": "fd7fd0e88e01"
+            "id": "92a91e5e12cf"
           },
           {
             "kind": "characters",
             "target_id": "lexander",
             "note": "Drills the Fectores",
-            "id": "7109f48ce9a9"
+            "id": "b8cc7f0970ae"
           },
           {
             "kind": "characters",
             "target_id": "murat_the_younger",
             "note": "Teaches them the Ban Art; Hermetic Fector",
-            "id": "f3cd490f441d"
+            "id": "c8de4e403543"
           },
           {
             "kind": "characters",
             "target_id": "bendis",
             "note": "The ablest non-Hermetic Fector",
-            "id": "a6e1d1e5461b"
+            "id": "cb87c7250278"
           }
         ],
         "arms": {},
@@ -6819,7 +6918,7 @@
             "kind": "characters",
             "target_id": "tibor_of_bor_a",
             "note": "A dhampir hunter",
-            "id": "2988f730ce2d"
+            "id": "bb64428900ed"
           }
         ],
         "arms": {},
@@ -6903,7 +7002,7 @@
             "kind": "characters",
             "target_id": "ludmilla",
             "note": "Leads a coven",
-            "id": "7e9e6466f249"
+            "id": "c102a0ba5aed"
           }
         ],
         "arms": {},
@@ -7111,97 +7210,97 @@
             "kind": "creatures",
             "target_id": "danaslepih",
             "note": "A zmaj of the war",
-            "id": "7f1d487f6a03"
+            "id": "d929a1c195f6"
           },
           {
             "kind": "creatures",
             "target_id": "upokorituma",
             "note": "An a\u017edaja of the war",
-            "id": "e25240bf926e"
+            "id": "8f43480ed344"
           },
           {
             "kind": "creatures",
             "target_id": "georghe_and_ladislau",
             "note": "Giants the war could drive to rampage",
-            "id": "95462872c34b"
+            "id": "b248e466a6a1"
           },
           {
             "kind": "characters",
             "target_id": "leontine_adiran",
             "note": "Argues with an old zmaj",
-            "id": "232760d749f7"
+            "id": "43f88a0ae684"
           },
           {
             "kind": "characters",
             "target_id": "dominic_of_tytalus",
             "note": "Took the column",
-            "id": "6096dbd650bb"
+            "id": "85c1fcfea542"
           },
           {
             "kind": "characters",
             "target_id": "lexander",
             "note": "Abandons Laniena",
-            "id": "f02a5b57672e"
+            "id": "c9a3d7efae77"
           },
           {
             "kind": "characters",
             "target_id": "poena",
             "note": "Must be warned",
-            "id": "8853293fee02"
+            "id": "ab16313efc87"
           },
           {
             "kind": "characters",
             "target_id": "monica_ierne",
             "note": "The House's field commander",
-            "id": "748838390400"
+            "id": "bcbcfcbd7aa0"
           },
           {
             "kind": "characters",
             "target_id": "sebastian",
             "note": "Perhaps the dragon king",
-            "id": "07597556ea8d"
+            "id": "cd4c814e7c9d"
           },
           {
             "kind": "covenants",
             "target_id": "old_histria",
             "note": "Leontine's zmaj attacks it",
-            "id": "39fbf4b50738"
+            "id": "60860c93b1b8"
           },
           {
             "kind": "covenants",
             "target_id": "laniena",
             "note": "The first to fall",
-            "id": "c1ce6265f8d8"
+            "id": "dc05be2db3eb"
           },
           {
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "Its pupils sent south",
-            "id": "f52ac4d90824"
+            "id": "e7695d0dfe9e"
           },
           {
             "kind": "covenants",
             "target_id": "coeris",
             "note": "Where the column may lie",
-            "id": "c203aa87c19b"
+            "id": "6296de6c17e4"
           },
           {
             "kind": "covenants",
             "target_id": "lycaneon",
             "note": "A mountain oppidum to defend",
-            "id": "c3ac64aa483b"
+            "id": "7c851db3a401"
           },
           {
             "kind": "covenants",
             "target_id": "kezd_v_lasz",
             "note": "Its old forts could be used to frame it",
-            "id": "d67f8709d568"
+            "id": "e345386126aa"
           },
           {
             "kind": "places",
             "target_id": "the_bran_pass",
             "note": "The scholars' road",
-            "id": "00e665b5f0e2"
+            "id": "7f7cd5431503"
           }
         ],
         "arms": {},
@@ -7273,13 +7372,13 @@
             "kind": "places",
             "target_id": "the_burzenland",
             "note": "The knights' grant",
-            "id": "4661dfcf0efc"
+            "id": "8aee2b7fc40a"
           },
           {
             "kind": "places",
             "target_id": "kronstadt_castle",
             "note": "Their central castle",
-            "id": "ff61389aa2af"
+            "id": "327d4e8615f3"
           }
         ],
         "arms": {},
@@ -7341,13 +7440,13 @@
             "kind": "covenants",
             "target_id": "tablinum",
             "note": "Said to hide the Refuge",
-            "id": "e2f2a86233a6"
+            "id": "7096f93cae00"
           },
           {
             "kind": "places",
             "target_id": "hungary",
             "note": "The horde's target",
-            "id": "70164cac3e68"
+            "id": "22ca4beff705"
           }
         ],
         "arms": {},
@@ -7409,7 +7508,7 @@
             "kind": "places",
             "target_id": "bosnia",
             "note": "The Patarians' land",
-            "id": "de872ee9a122"
+            "id": "7df48849b492"
           }
         ],
         "arms": {},
@@ -7481,19 +7580,19 @@
             "kind": "places",
             "target_id": "the_valley_of_the_thracian_kings",
             "note": "The burial ground",
-            "id": "3f08892fbd5c"
+            "id": "97d067894e36"
           },
           {
             "kind": "covenants",
             "target_id": "seuthopolis",
             "note": "Guards the valley",
-            "id": "6fdaac1b8e09"
+            "id": "9c563e6a7d9c"
           },
           {
             "kind": "characters",
             "target_id": "benilda",
             "note": "Blocks the dig",
-            "id": "9a370437dab9"
+            "id": "85aa1fc40c70"
           }
         ],
         "arms": {},
@@ -7555,19 +7654,19 @@
             "kind": "covenants",
             "target_id": "lycaneon",
             "note": "The hollow mountain",
-            "id": "489b19f9cbbd"
+            "id": "169e437d3845"
           },
           {
             "kind": "characters",
             "target_id": "zalmoxis",
             "note": "Taken for the god",
-            "id": "9c0542112078"
+            "id": "43f0aed1cada"
           },
           {
             "kind": "places",
             "target_id": "maramures",
             "note": "The cults' mountains",
-            "id": "4acaf2656670"
+            "id": "b0d31829824c"
           }
         ],
         "arms": {},
@@ -7629,13 +7728,13 @@
             "kind": "characters",
             "target_id": "tatiana",
             "note": "Born a Szekler",
-            "id": "7c55d977dd6f"
+            "id": "e90e3b28cbfb"
           },
           {
             "kind": "covenants",
             "target_id": "laniena",
             "note": "Holds talt\u00f3s initiation scripts",
-            "id": "31988d88d8ed"
+            "id": "07220166493a"
           }
         ],
         "arms": {},
@@ -7707,31 +7806,31 @@
             "kind": "characters",
             "target_id": "poena",
             "note": "The Prima",
-            "id": "39a8fafc25ff"
+            "id": "c864de687c02"
           },
           {
             "kind": "characters",
             "target_id": "monica_ierne",
             "note": "The legata and heir",
-            "id": "3fcb65127432"
+            "id": "ad9809ca39c2"
           },
           {
             "kind": "characters",
             "target_id": "horatius",
             "note": "A compromise candidate",
-            "id": "bb1f6026d8a4"
+            "id": "ab9396e557e4"
           },
           {
             "kind": "characters",
             "target_id": "janus",
             "note": "Will never stand",
-            "id": "4c0a5f2cbe7f"
+            "id": "7c0fa48890d5"
           },
           {
             "kind": "covenants",
             "target_id": "coeris",
             "note": "The Prima's seat",
-            "id": "68e72ce0db6d"
+            "id": "65eeba719883"
           }
         ],
         "arms": {},
@@ -7793,25 +7892,25 @@
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "The school he hunts",
-            "id": "f760335e4c93"
+            "id": "549511aeb2e0"
           },
           {
             "kind": "characters",
             "target_id": "simium_arileins",
             "note": "The headmaster",
-            "id": "bf9a5029d02a"
+            "id": "62b2315a6e7e"
           },
           {
             "kind": "characters",
             "target_id": "sebastian",
             "note": "The caretaker",
-            "id": "41725d2cc0b4"
+            "id": "08c9819414db"
           },
           {
             "kind": "places",
             "target_id": "the_burzenland",
             "note": "Where he lodges",
-            "id": "0c21fec86904"
+            "id": "523f2fe2e75b"
           }
         ],
         "arms": {},
@@ -7842,7 +7941,7 @@
             "kind": "creatures",
             "target_id": "danaslepih",
             "note": "a blind zmaj guarding a horse-chestnut grove",
-            "id": "d27bca5f0be6"
+            "id": "36c9109ebe24"
           }
         ],
         "arms": {},
@@ -8067,7 +8166,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -8112,10 +8212,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -8362,9 +8464,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -8386,7 +8495,7 @@
             "kind": "characters",
             "target_id": "murat_the_younger",
             "note": "Sodalis and constant rival; wants Murat's scripts",
-            "id": "df629d106fbd"
+            "id": "9740ae04b40c"
           }
         ],
         "agents": [],
@@ -8699,10 +8808,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -8947,9 +9058,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -9012,10 +9130,12 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [],
@@ -9126,9 +9246,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -9463,10 +9590,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -9837,9 +9966,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -10150,10 +10286,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -10380,9 +10518,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -10643,7 +10788,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -10688,10 +10834,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -10936,9 +11084,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11253,10 +11408,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -11523,9 +11680,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -11822,10 +11986,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -12096,9 +12262,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -12400,10 +12573,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -12688,9 +12863,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -12712,7 +12894,7 @@
             "kind": "characters",
             "target_id": "caledonia",
             "note": "Lictor on her team",
-            "id": "755195aab610"
+            "id": "8730c7ae1d55"
           }
         ],
         "agents": [],
@@ -12999,10 +13181,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -13219,9 +13403,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13433,7 +13624,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -13478,10 +13670,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -13668,9 +13862,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -13692,7 +13893,7 @@
             "kind": "characters",
             "target_id": "caledonia",
             "note": "Lictor on her team",
-            "id": "20969f9cdf33"
+            "id": "a2448326dbe4"
           }
         ],
         "agents": [],
@@ -13974,10 +14175,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -14262,9 +14465,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14511,7 +14721,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -14590,10 +14801,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -14926,9 +15139,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -14950,13 +15170,13 @@
             "kind": "characters",
             "target_id": "theodora",
             "note": "His apprentice, raised at Tablinum",
-            "id": "3d898f2dec21"
+            "id": "a4b3736d4a11"
           },
           {
             "kind": "characters",
             "target_id": "theodore",
             "note": "His apprentice, raised at Tablinum",
-            "id": "61ae6b116de7"
+            "id": "8ec78b73da75"
           }
         ],
         "agents": [],
@@ -15249,10 +15469,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -15463,9 +15685,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -15712,7 +15941,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -15755,10 +15985,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -15989,9 +16221,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -16013,7 +16252,7 @@
             "kind": "characters",
             "target_id": "theodore",
             "note": "Her twin",
-            "id": "24d340bf0ce5"
+            "id": "103d2960fb85"
           }
         ],
         "agents": [],
@@ -16245,7 +16484,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -16306,10 +16546,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -16546,9 +16788,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -16866,10 +17115,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -17178,9 +17429,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -17523,10 +17781,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -17731,9 +17991,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18001,7 +18268,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -18044,10 +18312,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -18382,9 +18652,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -18645,7 +18922,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -18692,10 +18970,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -18916,9 +19196,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -19202,10 +19489,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -19438,9 +19727,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -19733,10 +20029,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -20001,9 +20299,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20264,7 +20569,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -20289,10 +20595,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -20579,9 +20887,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -20835,7 +21150,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -20878,10 +21194,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -21100,9 +21418,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21395,10 +21720,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -21609,9 +21936,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -21872,7 +22206,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -21917,10 +22252,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -22131,9 +22468,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22394,7 +22738,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -22421,10 +22766,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -22623,9 +22970,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -22904,10 +23258,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -23169,9 +23525,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -23473,10 +23836,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -23753,9 +24118,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24009,7 +24381,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -24052,10 +24425,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -24282,9 +24657,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24347,10 +24729,12 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [],
@@ -24461,9 +24845,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24526,10 +24917,12 @@
         "abilities": [],
         "virtues_flaws": [],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [],
@@ -24640,9 +25033,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -24903,7 +25303,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -24944,10 +25345,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -25244,9 +25647,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -25479,7 +25889,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -25520,10 +25931,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -25716,9 +26129,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26013,10 +26433,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -26319,9 +26741,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -26589,7 +27018,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -26632,10 +27062,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -26878,9 +27310,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27148,7 +27587,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -27211,10 +27651,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -27545,9 +27987,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -27844,10 +28293,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -28060,9 +28511,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28323,7 +28781,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -28386,10 +28845,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -28618,9 +29079,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -28888,7 +29356,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -28931,10 +29400,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -29225,9 +29696,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -29568,10 +30046,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -29986,9 +30466,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30010,7 +30497,7 @@
             "kind": "creatures",
             "target_id": "silexa",
             "note": "her familiar, Silexa",
-            "id": "5e0a81e1abac"
+            "id": "7986303b152a"
           }
         ],
         "agents": [],
@@ -30263,7 +30750,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -30290,10 +30778,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -30612,9 +31102,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -30636,7 +31133,7 @@
             "kind": "characters",
             "target_id": "leona",
             "note": "Fort partner",
-            "id": "d0fabae53980"
+            "id": "11341b4c6b61"
           }
         ],
         "agents": [],
@@ -30889,7 +31386,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -30934,10 +31432,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -31308,9 +31808,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -31571,7 +32078,8 @@
           {
             "vf_id": "vf_minor_magical_focus",
             "params": {
-              "focus": "certamen"
+              "focus": "certamen",
+              "arts": ""
             },
             "id": "",
             "temporary": false,
@@ -31616,10 +32124,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -31846,9 +32356,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -31870,7 +32387,7 @@
             "kind": "characters",
             "target_id": "neculai",
             "note": "Fort partner, resented",
-            "id": "0e951f171964"
+            "id": "772df65ab703"
           }
         ],
         "agents": [],
@@ -32141,10 +32658,12 @@
           }
         ],
         "traditions": [],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [
@@ -32383,9 +32902,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -32407,7 +32933,7 @@
             "kind": "characters",
             "target_id": "leona",
             "note": "Sent to watch over her",
-            "id": "a9e8803e9de6"
+            "id": "2954bf68938f"
           }
         ],
         "agents": [],
@@ -32646,10 +33172,12 @@
         "traditions": [
           "trad_storm_wizards"
         ],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [],
@@ -32792,9 +33320,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -33099,10 +33634,12 @@
         "traditions": [
           "trad_hunters"
         ],
+        "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
         "constant_effects": [],
         "covers": [],
+        "campaign_seasons": [],
         "bound_beings": [],
         "tradition_pools": {},
         "spells_known": [],
@@ -33275,9 +33812,16 @@
         "formulas": [],
         "formula_designs": [],
         "ordeals": [],
+        "quests": [],
+        "away_place_id": "",
+        "away_aura": null,
+        "away_realm": "",
+        "stay": null,
+        "stirpes": [],
         "refused_vendettas": [],
         "advanced": {},
         "in_creation": false,
+        "interests_off": [],
         "creation_xp": [],
         "creation_conditions": {
           "lab_seasons": 0,
@@ -35564,6 +36108,9 @@
         "weakness": "Abhorrent Material (Serbian spruce)",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 0,
@@ -35707,7 +36254,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "62058f48bcf4"
+            "id": "d0459cc27fbd"
           }
         ],
         "soak": 7,
@@ -35773,7 +36320,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Hardens his claws for a day, adding +4 to their Damage.",
-            "id": "d3aaa19a5c19"
+            "id": "48293d0c3fc3"
           },
           {
             "name": "February's Frosty Bite",
@@ -35787,7 +36334,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cold so fierce it burns, striking a target he can see for +10 damage.",
-            "id": "b56dbdbf4eeb"
+            "id": "b6e1bf24e21a"
           },
           {
             "name": "Flight of the Raven",
@@ -35801,7 +36348,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: gives him wings strong enough to fly.",
-            "id": "f9c62d59c30d"
+            "id": "95bb0b565529"
           }
         ],
         "vis": [
@@ -35809,7 +36356,7 @@
             "pawns": 4,
             "art": "Vim",
             "where": "one in each of his four biggest fangs",
-            "id": "c9f5d3f022b7"
+            "id": "0f4173987ccc"
           }
         ],
         "equipment": "",
@@ -35836,6 +36383,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 1,
           "perception": 0,
@@ -36071,7 +36621,7 @@
             "attack": 17,
             "defense": 9,
             "damage": 13,
-            "id": "91932efa213a"
+            "id": "5abaecbe7cc6"
           }
         ],
         "soak": 9,
@@ -36151,7 +36701,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: five more heads, six in all, each able to talk and bite. Lost or hurt heads do not grow back. Bought as three Personal Powers and Improved Powers.",
-            "id": "6f32ae36efd8"
+            "id": "053ad69412cd"
           },
           {
             "name": "Assuming the Horse-chestnut",
@@ -36165,7 +36715,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Becomes a horse-chestnut tree, upright if he rears onto his hind legs first, or a fallen trunk if he lies down.",
-            "id": "2e2958707a3e"
+            "id": "cb1123f0c421"
           },
           {
             "name": "The Field Made Fallow",
@@ -36179,7 +36729,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch of his claw withers a field: as many as ten thousand plants at once.",
-            "id": "61dc27c44c9c"
+            "id": "4a2c83af7de0"
           },
           {
             "name": "The Captive Encased in Bark",
@@ -36193,7 +36743,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His breath, from nostrils almost touching the victim, turns a person into a smaller horse-chestnut.",
-            "id": "b78fc124114b"
+            "id": "ccf817934c0d"
           },
           {
             "name": "Inquiry of the Leafy Sentinel",
@@ -36207,7 +36757,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lets him talk with trees and bushes.",
-            "id": "c1483bd49c9f"
+            "id": "64010a928c40"
           }
         ],
         "vis": [
@@ -36215,7 +36765,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in the five largest scales along his back",
-            "id": "de6167b86726"
+            "id": "408d7bff6c4a"
           }
         ],
         "equipment": "",
@@ -36242,6 +36792,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": -2,
           "perception": -1,
@@ -36359,7 +36912,7 @@
             "attack": 13,
             "defense": 6,
             "damage": 17,
-            "id": "2f6916c59811"
+            "id": "d4b7738e3db5"
           },
           {
             "name": "Long Sword & Heater Shield (mounted)",
@@ -36367,7 +36920,7 @@
             "attack": 15,
             "defense": 8,
             "damage": 17,
-            "id": "b349af7e5bc1"
+            "id": "26b9bc472ade"
           },
           {
             "name": "Lance & Heater Shield (mounted)",
@@ -36375,7 +36928,7 @@
             "attack": 14,
             "defense": 4,
             "damage": 16,
-            "id": "6bd5b7af7dec"
+            "id": "5effc3285eba"
           }
         ],
         "soak": 12,
@@ -36448,7 +37001,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In a moment he shrinks to Size +2 or grows back to +4, his arms and armour with him. The book prints no Init.",
-            "id": "61be54512269"
+            "id": "c1f903f51649"
           }
         ],
         "vis": [
@@ -36456,7 +37009,7 @@
             "pawns": 3,
             "art": "Corpus",
             "where": "one in each ear and one in the nose",
-            "id": "7d654f5e97c0"
+            "id": "74b854d49c28"
           }
         ],
         "equipment": "Full chainmail, heater shield, long sword.",
@@ -36483,6 +37036,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 2,
           "perception": 2,
@@ -36598,7 +37154,7 @@
             "attack": 8,
             "defense": -1,
             "damage": 7,
-            "id": "76ba75d9363e"
+            "id": "ec3371da7da8"
           }
         ],
         "soak": 3,
@@ -36706,7 +37262,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Everyone in the building is gripped by curiosity and goes poking into every passage, room and locked door.",
-            "id": "c156b65a3422"
+            "id": "0597cd8151a3"
           },
           {
             "name": "Flee like a Bird",
@@ -36720,7 +37276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Wings of the Soaring Wind: once let out, he flies off through a window.",
-            "id": "6c895bf7957d"
+            "id": "54d14c06f6d9"
           },
           {
             "name": "The Shock of Consequence",
@@ -36734,7 +37290,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Freezes up to ten people where they stand; he uses it on his rescuers the moment he is free, scolds them and makes off with something valuable.",
-            "id": "a687488eb439"
+            "id": "bb8d907c08a6"
           }
         ],
         "vis": [
@@ -36742,7 +37298,7 @@
             "pawns": 4,
             "art": "Mentem",
             "where": "in his tongue",
-            "id": "89448c9a4a53"
+            "id": "dd5ab57559c9"
           }
         ],
         "equipment": "",
@@ -36769,6 +37325,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 2,
           "perception": 0,
@@ -36902,7 +37461,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 1,
-            "id": "e6853b575871"
+            "id": "20a2fa558802"
           },
           {
             "name": "Brawl (as a wheel)",
@@ -36910,7 +37469,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 6,
-            "id": "84540e988ecd"
+            "id": "2a81c0d2d404"
           },
           {
             "name": "Brawl (as a flaming wheel)",
@@ -36918,7 +37477,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 26,
-            "id": "d7f04ae532b2"
+            "id": "76f8906305c4"
           }
         ],
         "soak": 2,
@@ -37005,7 +37564,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns her into a great stony cartwheel that runs her foes down, adding +5 to her Brawl damage.",
-            "id": "949424659578"
+            "id": "f8a28c806ba5"
           },
           {
             "name": "A Mother's Fury",
@@ -37019,7 +37578,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wraps her in flames that do +20 damage to whoever she touches, if they penetrate.",
-            "id": "285c8614c382"
+            "id": "5eb8006ad3fa"
           }
         ],
         "vis": [
@@ -37027,7 +37586,7 @@
             "pawns": 6,
             "art": "Ignem",
             "where": "in her two tusks",
-            "id": "ea7f9c3f669d"
+            "id": "dfc0b2b4a22b"
           }
         ],
         "equipment": "",
@@ -37054,6 +37613,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 3,
           "perception": 1,
@@ -37181,7 +37743,7 @@
             "attack": 9,
             "defense": 4,
             "damage": 5,
-            "id": "d9d19ac966d7"
+            "id": "cd9be422b1ff"
           }
         ],
         "soak": 2,
@@ -37247,7 +37809,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: he can fly (Realms of Power: Faerie).",
-            "id": "2e5207ba6465"
+            "id": "47d6c939f552"
           }
         ],
         "vis": [
@@ -37255,7 +37817,7 @@
             "pawns": 2,
             "art": "Auram",
             "where": "one in each front hoof",
-            "id": "46b0727403a2"
+            "id": "7ac3270930a2"
           }
         ],
         "equipment": "Fitting tack and harness.",
@@ -37282,6 +37844,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": -2,
           "perception": 0,
@@ -37389,7 +37954,7 @@
             "attack": 8,
             "defense": 10,
             "damage": 4,
-            "id": "6a91780a4b7e"
+            "id": "47e1b3424cf3"
           }
         ],
         "soak": 2,
@@ -37469,7 +38034,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "4ed1249af4d4"
+            "id": "baa64b4d8671"
           }
         ],
         "vis": [
@@ -37477,7 +38042,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "in grave dirt",
-            "id": "4b20acc76bf9"
+            "id": "8aa26f086ccd"
           }
         ],
         "equipment": "",
@@ -37504,6 +38069,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": -3,
           "perception": 2,
@@ -37621,7 +38189,7 @@
             "attack": 13,
             "defense": 10,
             "damage": 7,
-            "id": "8fa51057507c"
+            "id": "f61b509cfd7f"
           }
         ],
         "soak": 9,
@@ -37701,7 +38269,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Squeezes its boneless body through the smallest crack, or hides where nothing so big could fit.",
-            "id": "b9d4cf2ac052"
+            "id": "9a1ac80baf01"
           },
           {
             "name": "Transform into Animal",
@@ -37715,7 +38283,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of a wolf for the day (a Personal Power).",
-            "id": "a61e2dd26bf4"
+            "id": "507581816244"
           },
           {
             "name": "Sap the Life",
@@ -37729,7 +38297,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "01c122233496"
+            "id": "3e7542a5498f"
           }
         ],
         "vis": [
@@ -37737,7 +38305,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in its eyes",
-            "id": "a1aa06d7a74f"
+            "id": "c7638d7d7042"
           }
         ],
         "equipment": "",
@@ -37764,6 +38332,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 1,
           "perception": 0,
@@ -37891,7 +38462,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "b7b5e3fbfe60"
+            "id": "96e7ac583f6d"
           },
           {
             "name": "Thrown Knife",
@@ -37899,7 +38470,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 7,
-            "id": "70e10af13717"
+            "id": "2db759cdf7ba"
           }
         ],
         "soak": 0,
@@ -37993,7 +38564,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An image it can see and hear through and steer as it likes, usually the dead one's likeness, kept until it has no more use for it.",
-            "id": "2999016b5e4b"
+            "id": "ffca2f4b72ca"
           },
           {
             "name": "Sap the Life",
@@ -38007,7 +38578,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "8b223e326f4f"
+            "id": "683ce5af6e18"
           },
           {
             "name": "Ghost Touch",
@@ -38021,7 +38592,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Focus Power: moves loose objects, 5 pounds for 1 point and double for each point more; thrown, an object does +5 damage a point, and every physical attack must penetrate. The cost varies with the weight.",
-            "id": "f0ad2ca5ad55"
+            "id": "2ca0567c2ec3"
           }
         ],
         "vis": [
@@ -38029,7 +38600,7 @@
             "pawns": 1,
             "art": "Ignem",
             "where": "in the object its Ghost Touch is moving",
-            "id": "fe3371513ecd"
+            "id": "6f1e3c8c20c3"
           }
         ],
         "equipment": "",
@@ -38056,6 +38627,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 2,
@@ -38171,7 +38745,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 4,
-            "id": "d7675e747caa"
+            "id": "d946a24914bb"
           }
         ],
         "soak": 3,
@@ -38251,7 +38825,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps a beast from running away as it rolls up to feed.",
-            "id": "436a385726c8"
+            "id": "b8dcb70ad460"
           },
           {
             "name": "Sap the Life",
@@ -38265,7 +38839,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "a715360ef10d"
+            "id": "f5d1f6e0cee1"
           }
         ],
         "vis": [
@@ -38273,7 +38847,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "in the jelly of blood inside it",
-            "id": "ff070d5d660b"
+            "id": "72411c59f1ed"
           }
         ],
         "equipment": "",
@@ -38300,6 +38874,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": -1,
           "perception": -2,
@@ -38389,7 +38966,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -5,
-            "id": "6b09c8c9c082"
+            "id": "4bd12e5dda8b"
           }
         ],
         "soak": 0,
@@ -38462,7 +39039,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Medium Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "95b1fe86aed9"
+            "id": "6ab51b60be11"
           }
         ],
         "vis": [
@@ -38470,7 +39047,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its tongue",
-            "id": "307aca76cc2d"
+            "id": "b178e04227d8"
           }
         ],
         "equipment": "",
@@ -38497,6 +39074,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": -3,
           "perception": -1,
@@ -38634,7 +39214,7 @@
             "attack": 9,
             "defense": 2,
             "damage": 12,
-            "id": "845ad95b9122"
+            "id": "d16da5a6b954"
           },
           {
             "name": "Grapple",
@@ -38642,7 +39222,7 @@
             "attack": 8,
             "defense": 1,
             "damage": null,
-            "id": "af7af4537d99"
+            "id": "f8604b9beee5"
           }
         ],
         "soak": 15,
@@ -38729,7 +39309,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "30e8edecc190"
+            "id": "9c680785bc55"
           }
         ],
         "vis": [
@@ -38737,7 +39317,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "in its bark",
-            "id": "818c3480898a"
+            "id": "daf03ada0f72"
           }
         ],
         "equipment": "",
@@ -38764,6 +39344,9 @@
         "weakness": "Protected Group (those born on a Saturday)",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 0,
@@ -38837,7 +39420,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 4,
-            "id": "fa6b6e66b652"
+            "id": "9b89c6cda00b"
           },
           {
             "name": "Teeth",
@@ -38845,7 +39428,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 7,
-            "id": "dd018a27727a"
+            "id": "4d3e4e02d8fe"
           },
           {
             "name": "Spittle",
@@ -38853,7 +39436,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 10,
-            "id": "98f82185bbaf"
+            "id": "0940b9f34c08"
           }
         ],
         "soak": 14,
@@ -38926,7 +39509,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Reveals its true horror (Realms of Power: The Infernal).",
-            "id": "8aed2b56b17d"
+            "id": "8dc4f46505db"
           },
           {
             "name": "Form of Man",
@@ -38940,7 +39523,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wears the dead man's face (Realms of Power: The Infernal).",
-            "id": "202a41225871"
+            "id": "ae238f9bc51e"
           },
           {
             "name": "Contagious Obsession",
@@ -38954,7 +39537,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A point for each victim (Realms of Power: The Infernal).",
-            "id": "b243e8f21bc2"
+            "id": "e3ff278ddf31"
           },
           {
             "name": "Obsession",
@@ -38968,7 +39551,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: the Obsession Trait Fear.",
-            "id": "03ca15336c08"
+            "id": "787609c446c9"
           },
           {
             "name": "Burning Spittle",
@@ -38982,7 +39565,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Spits liquid fire as far as five paces: +10 damage if it penetrates, and whatever parries it is eaten away and ruined.",
-            "id": "597eaddcb408"
+            "id": "1f93d92436c2"
           }
         ],
         "vis": [
@@ -38990,7 +39573,7 @@
             "pawns": 4,
             "art": "Corpus",
             "where": "in its teeth (the book gives no Art)",
-            "id": "d29868f68b74"
+            "id": "03e40e67e3e2"
           }
         ],
         "equipment": "",
@@ -39017,6 +39600,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 0,
@@ -39087,7 +39673,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 3,
-            "id": "f2253d221c71"
+            "id": "2e6307dbbdfd"
           }
         ],
         "soak": 0,
@@ -39167,7 +39753,7 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in a long fair hair",
-            "id": "19e41e347aa0"
+            "id": "438ed6ecafb2"
           }
         ],
         "equipment": "",
@@ -39194,6 +39780,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 2,
           "perception": 1,
@@ -39440,7 +40029,7 @@
             "attack": 11,
             "defense": 13,
             "damage": 6,
-            "id": "7035bbfbedd2"
+            "id": "89cc34e8b88d"
           }
         ],
         "soak": 11,
@@ -39548,7 +40137,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries things as though she had hands, with Strength 5; doing anything but carrying needs concentration (a Personal Power).",
-            "id": "2ac96f94c585"
+            "id": "0bee58991cad"
           }
         ],
         "vis": [
@@ -39556,7 +40145,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in her heart",
-            "id": "0735d68d3584"
+            "id": "0c1c7aa82aea"
           }
         ],
         "equipment": "",
@@ -39583,6 +40172,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 2,
@@ -39778,7 +40370,7 @@
             "attack": 7,
             "defense": 9,
             "damage": -3,
-            "id": "1c2d51cc7a7b"
+            "id": "72b017d94000"
           }
         ],
         "soak": 3,
@@ -39865,7 +40457,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A faerie that hears his bark loses 5 Might if it penetrates; his Slow Power means he must bark for two rounds first.",
-            "id": "0ea15199dc8d"
+            "id": "bdb15d0aeeec"
           }
         ],
         "vis": [
@@ -39873,7 +40465,7 @@
             "pawns": 1,
             "art": "Intellego",
             "where": "in his eyes",
-            "id": "c2b5eaf4087d"
+            "id": "cb119bfada8d"
           }
         ],
         "equipment": "",
@@ -39900,6 +40492,9 @@
         "weakness": "",
         "faerie_role": "",
         "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
         "characteristics": {
           "intelligence": 0,
           "perception": 0,
@@ -39955,7 +40550,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaves the target wholly mute until the saint chooses to lift it.",
-            "id": "e2116dfd9306"
+            "id": "be3f34317446"
           }
         ],
         "vis": [],
@@ -40411,7 +41006,7 @@
     "hidden_catalogs": [],
     "hidden_entries": {},
     "rule_options": {},
-    "traditions": [],
+    "traditions_off": [],
     "season_plans": [],
     "keep_season_records": true,
     "unplanned_magi": "exposure",
@@ -40428,6 +41023,7 @@
     "medallions": "stained_glass",
     "world_turns": [],
     "ruling_templates": null,
+    "charter_templates": [],
     "lab_projects": [],
     "custom_virtues_flaws": [],
     "custom_lab_virtues_flaws": [],
@@ -40464,10 +41060,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -40609,9 +41207,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -40633,7 +41238,7 @@
           "kind": "characters",
           "target_id": "murat_the_younger",
           "note": "Sodalis and constant rival; wants Murat's scripts",
-          "id": "df629d106fbd"
+          "id": "9740ae04b40c"
         }
       ],
       "agents": [],
@@ -40681,10 +41286,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -40826,9 +41433,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -40891,10 +41505,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -41036,9 +41652,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -41101,10 +41724,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -41246,9 +41871,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -41311,10 +41943,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -41456,9 +42090,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -41521,10 +42162,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -41656,9 +42299,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -41721,10 +42371,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -41856,9 +42508,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -41921,10 +42580,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -42056,9 +42717,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -42080,7 +42748,7 @@
           "kind": "characters",
           "target_id": "caledonia",
           "note": "Lictor on her team",
-          "id": "755195aab610"
+          "id": "8730c7ae1d55"
         }
       ],
       "agents": [],
@@ -42128,10 +42796,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -42263,9 +42933,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -42328,10 +43005,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -42463,9 +43142,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -42487,7 +43173,7 @@
           "kind": "characters",
           "target_id": "caledonia",
           "note": "Lictor on her team",
-          "id": "20969f9cdf33"
+          "id": "a2448326dbe4"
         }
       ],
       "agents": [],
@@ -42535,10 +43221,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -42670,9 +43358,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -42735,10 +43430,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -42870,9 +43567,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -42894,13 +43598,13 @@
           "kind": "characters",
           "target_id": "theodora",
           "note": "His apprentice, raised at Tablinum",
-          "id": "3d898f2dec21"
+          "id": "a4b3736d4a11"
         },
         {
           "kind": "characters",
           "target_id": "theodore",
           "note": "His apprentice, raised at Tablinum",
-          "id": "61ae6b116de7"
+          "id": "8ec78b73da75"
         }
       ],
       "agents": [],
@@ -42948,10 +43652,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -43083,9 +43789,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -43148,10 +43861,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -43283,9 +43998,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -43307,7 +44029,7 @@
           "kind": "characters",
           "target_id": "theodore",
           "note": "Her twin",
-          "id": "24d340bf0ce5"
+          "id": "103d2960fb85"
         }
       ],
       "agents": [],
@@ -43355,10 +44077,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -43490,9 +44214,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -43555,10 +44286,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -43690,9 +44423,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -43755,10 +44495,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -43890,9 +44632,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -43955,10 +44704,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -44100,9 +44851,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -44165,10 +44923,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -44310,9 +45070,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -44375,10 +45142,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -44520,9 +45289,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -44585,10 +45361,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -44730,9 +45508,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -44795,10 +45580,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -44909,9 +45696,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -44974,10 +45768,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -45109,9 +45905,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -45174,10 +45977,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -45309,9 +46114,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -45374,10 +46186,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -45509,9 +46323,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -45574,10 +46395,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -45709,9 +46532,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -45774,10 +46604,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -45899,9 +46731,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -45964,10 +46803,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -46109,9 +46950,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -46174,10 +47022,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -46319,9 +47169,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -46384,10 +47241,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -46519,9 +47378,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -46584,10 +47450,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -46719,9 +47587,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -46784,10 +47659,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -46919,9 +47796,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -46984,10 +47868,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -47119,9 +48005,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -47184,10 +48077,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -47329,9 +48224,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -47394,10 +48296,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -47519,9 +48423,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -47584,10 +48495,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -47719,9 +48632,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -47784,10 +48704,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -47919,9 +48841,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -47984,10 +48913,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -48129,9 +49060,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -48153,7 +49091,7 @@
           "kind": "characters",
           "target_id": "leona",
           "note": "Fort partner",
-          "id": "d0fabae53980"
+          "id": "11341b4c6b61"
         }
       ],
       "agents": [],
@@ -48201,10 +49139,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -48346,9 +49286,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -48411,10 +49358,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -48556,9 +49505,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -48580,7 +49536,7 @@
           "kind": "characters",
           "target_id": "neculai",
           "note": "Fort partner, resented",
-          "id": "0e951f171964"
+          "id": "772df65ab703"
         }
       ],
       "agents": [],
@@ -48628,10 +49584,12 @@
       "abilities": [],
       "virtues_flaws": [],
       "traditions": [],
+      "sihr_realm": "",
       "tradition_effects": [],
       "powers": [],
       "constant_effects": [],
       "covers": [],
+      "campaign_seasons": [],
       "bound_beings": [],
       "tradition_pools": {},
       "spells_known": [],
@@ -48773,9 +49731,16 @@
       "formulas": [],
       "formula_designs": [],
       "ordeals": [],
+      "quests": [],
+      "away_place_id": "",
+      "away_aura": null,
+      "away_realm": "",
+      "stay": null,
+      "stirpes": [],
       "refused_vendettas": [],
       "advanced": {},
       "in_creation": false,
+      "interests_off": [],
       "creation_xp": [],
       "creation_conditions": {
         "lab_seasons": 0,
@@ -48797,7 +49762,7 @@
           "kind": "characters",
           "target_id": "leona",
           "note": "Sent to watch over her",
-          "id": "a9e8803e9de6"
+          "id": "2954bf68938f"
         }
       ],
       "agents": [],

@@ -1251,6 +1251,10 @@ a covenant whose place is left out sits nowhere until you place it.
 Starting a saga from a pack brings everything, and asks which of its
 stories to begin in the same way.
 
+Importing a pack again, or a newer copy of it, leaves every record the
+saga already has as it is and adds the rest: see [Adding a book to a saga
+you already have](help:guide-book-packs-add).
+
 **See also:** [Content packs](help:export-pack), [Import Data](help:import-data), [How to import and export](help:guide-import-export)
 
 # Import Spells

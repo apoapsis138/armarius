@@ -5,11 +5,14 @@ in play."""
 from __future__ import annotations
 
 import json
+import re
+from dataclasses import asdict
+from typing import Any
 
-from ars_magica_manager import book_packs, packs, sourcebooks, transfer
+from ars_magica_manager import book_packs, catalog, packs, sourcebooks, transfer
 from ars_magica_manager.book_packs import builder
 from ars_magica_manager.forms import creation as creation_forms
-from ars_magica_manager.models import Saga
+from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.models.common import split_secrets
 from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
@@ -137,17 +140,51 @@ def test_the_pack_keeps_its_secrets_apart():
     assert data["book"] == "GotF" and "Creative Commons" in data["source"]
 
 
-def test_the_shipped_rhine_pack_is_up_to_date():
-    """data/packs/rhine.amm.json is what the module builds (rebuild it
-    with tools/build_packs.py after changing the module)."""
-    shipped = json.loads(book_packs.path_of(RHINE).read_text(encoding="utf-8"))
-    built = book_packs.data(RHINE)
-    assert shipped["name"] == built["name"] and shipped["book"] == built["book"]
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
+#: The ids storage hands a sub-record: new at every build.
+RANDOM_ID = re.compile(r"\b[0-9a-f]{12}\b")
+
+
+def _without_random_ids(value: Any) -> Any:
+    """`value` with the random id each build gives a sub-record blanked."""
+    if isinstance(value, dict):
+        return {
+            RANDOM_ID.sub("", key): _without_random_ids(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [_without_random_ids(item) for item in value]
+    return RANDOM_ID.sub("", value) if isinstance(value, str) else value
+
+
+def _content(data: dict[str, Any]) -> dict[str, Any]:
+    """What a pack holds, read through the models so a field added since
+    it was written reads as its default on both sides of a comparison."""
+    saga = Saga.from_dict(data["saga"], lab_feature_names=catalog.lab_feature_names())
+    sketches = {
+        key: asdict(Character.from_dict(dict(sketch)))
+        for key, sketch in (data.get(packs.GENERATED) or {}).items()
+    }
+    return _without_random_ids(
+        {
+            "name": data["name"],
+            "book": data.get("book"),
+            "links": data.get("links"),
+            "saga": asdict(saga),
+            "generated": sketches,
+        }
+    )
+
+
+def test_every_shipped_pack_is_what_its_module_builds():
+    """data/packs holds what book_packs builds, so a fix to a book's module
+    can't sit unshipped: rebuild with tools/build_packs.py."""
+    stale = [
+        key
+        for key, pack in book_packs.PACKS.items()
+        if _content(transfer.read(book_packs.path_of(pack)))
+        != _content(json.loads(json.dumps(book_packs.data(pack))))
+    ]
+    assert not stale, f"rebuild with tools/build_packs.py: {stale}"
 
 
 def test_the_rhine_pack_imports_clean_into_a_new_saga():
@@ -469,16 +506,6 @@ def test_the_normandy_pack_keeps_its_secrets_and_credit():
     assert data["book"] == "L&L" and "Creative Commons" in data["source"]
 
 
-def test_the_shipped_normandy_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(NORMANDY).read_text(encoding="utf-8"))
-    built = book_packs.data(NORMANDY)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
-
-
 def test_the_normandy_pack_imports_clean_into_a_new_saga():
     data = book_packs.data(NORMANDY)
     target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
@@ -547,16 +574,6 @@ def test_the_provence_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(PROVENCE)
     assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "F&F" and "Creative Commons" in data["source"]
-
-
-def test_the_shipped_provence_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(PROVENCE).read_text(encoding="utf-8"))
-    built = book_packs.data(PROVENCE)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
 
 
 def test_the_provence_pack_imports_clean_into_a_new_saga():
@@ -641,16 +658,6 @@ def test_the_theban_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(THEBAN)
     assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "TSE" and "Creative Commons" in data["source"]
-
-
-def test_the_shipped_theban_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(THEBAN).read_text(encoding="utf-8"))
-    built = book_packs.data(THEBAN)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
 
 
 def test_the_theban_pack_imports_clean_into_a_new_saga():
@@ -746,16 +753,6 @@ def test_the_transylvania_pack_keeps_its_secrets_and_credit():
     assert data["book"] == "AtD" and "Creative Commons" in data["source"]
 
 
-def test_the_shipped_transylvania_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(TRANSYLVANIA).read_text(encoding="utf-8"))
-    built = book_packs.data(TRANSYLVANIA)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
-
-
 def test_the_transylvania_pack_imports_clean_into_a_new_saga():
     from ars_magica_manager.tribunal_packages import transylvania as package
 
@@ -840,16 +837,6 @@ def test_the_hibernia_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(HIBERNIA)
     assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "TCI" and "Creative Commons" in data["source"]
-
-
-def test_the_shipped_hibernia_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(HIBERNIA).read_text(encoding="utf-8"))
-    built = book_packs.data(HIBERNIA)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
 
 
 def test_the_hibernia_pack_imports_clean_into_a_new_saga():
@@ -976,16 +963,6 @@ def test_the_levant_pack_keeps_its_secrets_and_credit():
     assert "Secrets in Sand" in data["source"]
 
 
-def test_the_shipped_levant_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(LEVANT).read_text(encoding="utf-8"))
-    built = book_packs.data(LEVANT)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
-
-
 def test_the_levant_pack_imports_clean_into_a_new_saga():
     data = book_packs.data(LEVANT)
     target = Saga(id="dst", name="Target", books_in_play=["Covenants"])
@@ -1082,19 +1059,6 @@ def test_the_cradle_pack_keeps_its_secrets_and_credit():
     assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "TC&TC" and "Creative Commons" in data["source"]
     assert "The Cradle and the Crescent" in data["source"]
-
-
-def test_the_shipped_cradle_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(CRADLE).read_text(encoding="utf-8"))
-    built = book_packs.data(CRADLE)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "books", "creatures"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
-    assert {c["name"]: c["aura"] for c in shipped["saga"]["covenants"]} == {
-        c["name"]: c["aura"] for c in built["saga"]["covenants"]
-    }
 
 
 def test_the_cradle_pack_imports_clean_into_a_new_saga():
@@ -1243,16 +1207,6 @@ def test_the_alps_pack_keeps_its_secrets_and_credit():
     assert data["book"] == "SoI" and "Creative Commons" in data["source"]
 
 
-def test_the_shipped_alps_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(ALPS).read_text(encoding="utf-8"))
-    built = book_packs.data(ALPS)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "tribunals"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
-
-
 def test_the_alps_pack_imports_clean_into_a_new_saga():
     from ars_magica_manager.tribunal_packages import alps as package
 
@@ -1310,12 +1264,6 @@ def test_the_stonehenge_pack_generates_every_magus_and_shares_the_king():
     magi = [c for c in data["saga"]["characters"] if c["type"] == "magus"]
     assert len(magi) == 49 and len(sketches) == 49
     assert "Henry III of England" in {n["name"] for n in data["saga"]["neighbours"]}
-
-
-def test_the_shipped_stonehenge_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(STONEHENGE).read_text(encoding="utf-8"))
-    built = book_packs.data(STONEHENGE)
-    assert packs.summary(shipped) == packs.summary(built)
 
 
 def test_the_stonehenge_pack_imports_clean_into_a_new_saga():
@@ -1428,16 +1376,6 @@ def test_the_novgorod_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(NOVGOROD)
     assert _secrets_kept(data["saga"]) >= 4
     assert data["book"] == "D&B" and "Creative Commons" in data["source"]
-
-
-def test_the_shipped_novgorod_pack_is_up_to_date():
-    shipped = json.loads(book_packs.path_of(NOVGOROD).read_text(encoding="utf-8"))
-    built = book_packs.data(NOVGOROD)
-    assert packs.summary(shipped) == packs.summary(built)
-    for kind in ("covenants", "characters", "neighbours", "tribunals", "creatures"):
-        assert {(r["name"], r.get("detail")) for r in shipped["saga"][kind]} == {
-            (r["name"], r.get("detail")) for r in built["saga"][kind]
-        }, kind
 
 
 def test_the_novgorod_pack_imports_clean_into_a_new_saga():
