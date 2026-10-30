@@ -39,6 +39,7 @@ from PySide6.QtGui import (
     QStandardItemModel,
 )
 from PySide6.QtWidgets import (
+    QAbstractButton,
     QAbstractItemView,
     QComboBox,
     QFrame,
@@ -168,6 +169,32 @@ def chip_row(
         line.addWidget(chip)
     line.addStretch(1)
     return row
+
+
+class ToggleSwitch(QAbstractButton):
+    """A small drawn switch, on or off: a tradition offered or not. Greyed
+    out while disabled."""
+
+    def __init__(self, on: bool, p: Palette, on_click: Callable[[], None]) -> None:
+        super().__init__()
+        self.p = p
+        self.setCheckable(True)
+        self.setChecked(on)
+        self.setFixedSize(34, 18)
+        self.setCursor(Qt.CursorShape.PointingHandCursor)
+        self.clicked.connect(lambda _checked=False: on_click())
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        painter.setRenderHint(QPainter.RenderHint.Antialiasing)
+        track = QColor(self.p["text-success" if self.isChecked() else "dim"])
+        if not self.isEnabled():
+            track.setAlpha(90)
+        painter.setPen(Qt.PenStyle.NoPen)
+        painter.setBrush(track)
+        painter.drawRoundedRect(QRectF(0, 1, 34, 16), 8, 8)
+        painter.setBrush(QColor(self.p["background"]))
+        painter.drawEllipse(QRectF(20 if self.isChecked() else 2, 3, 12, 12))
 
 
 def chip_button(
@@ -615,7 +642,8 @@ class Inspector(QFrame):
         self.setMinimumWidth(280)
         column = QVBoxLayout(self)
         column.setContentsMargins(26, 22, 26, 26)
-        top = QHBoxLayout()
+        top = self.top = QHBoxLayout()
+        self.action: QWidget | None = None
         self.symbol = QLabel()
         top.addWidget(self.symbol)
         self.title = text("", p["heading"], serif(17, bold=True), wrap=True)
@@ -669,12 +697,23 @@ class Inspector(QFrame):
         motion.tween(ink, step, motion.SLOW, name="ink", done=ink.hide)
 
     def show_item(
-        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
+        self,
+        title: str,
+        subtitle: str,
+        markup: str,
+        symbol: Symbol = None,
+        action: QWidget | None = None,
     ) -> None:
         """Show an item: `symbol` is an Art's or House's SVG, drawn small in
         the heading colour, or a picture already drawn (an Ability's mark),
-        shown at its own size."""
+        shown at its own size; `action` goes at the top right (a switch)."""
         self._ink_in()
+        if self.action is not None:
+            self.action.setParent(None)
+            self.action.deleteLater()
+        self.action = action
+        if action is not None:
+            self.top.addWidget(action, 0, Qt.AlignmentFlag.AlignTop)
         self.title.setText(title)
         self.subtitle.setText(subtitle)
         self.subtitle.setVisible(bool(subtitle))
@@ -849,9 +888,14 @@ class Codex(QSplitter):
         self.rail.setCurrentRow(self.chapters().index(name))
 
     def inspect(
-        self, title: str, subtitle: str, markup: str, symbol: Symbol = None
+        self,
+        title: str,
+        subtitle: str,
+        markup: str,
+        symbol: Symbol = None,
+        action: QWidget | None = None,
     ) -> None:
-        self.inspector.show_item(title, subtitle, markup, symbol)
+        self.inspector.show_item(title, subtitle, markup, symbol, action)
 
 
 def table_style(view: QAbstractItemView, p: Palette) -> None:

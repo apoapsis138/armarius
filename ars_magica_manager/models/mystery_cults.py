@@ -17,6 +17,7 @@ from typing import Any
 
 from .common import known_fields
 from .definitions import (
+    MYSTERY_CULT,
     TRADITION_REALMS,
     AbilityDef,
     InitiationRule,
@@ -341,6 +342,7 @@ def as_tradition(
         name=cult.name,
         source=cult.source,
         realm=cult.realm,
+        category=MYSTERY_CULT,
         description=cult.description,
         abilities=[cult.lore] if cult.lore else [],
         virtues=[d.virtue_id for d in cult.degrees if d.virtue_id],

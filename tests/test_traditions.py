@@ -10,6 +10,7 @@ from ars_magica_manager.models import (
     Saga,
     TraditionDef,
 )
+from ars_magica_manager.models.definitions import TRADITION_CATEGORIES
 from ars_magica_manager.rules import activities
 from ars_magica_manager.rules import creation_access as access
 from ars_magica_manager.sheets import character as cs
@@ -188,3 +189,33 @@ def test_every_traditions_chapter_works_out_for_a_new_member():
         assert ct.xp_budget(c) >= 0 and ct.level_budget(c) >= 0, tradition.id
         ct.missing_virtues(c)
         ct.targets(c)
+
+
+def test_every_tradition_has_a_category_and_says_its_realm_only_when_new():
+    shown = {t.id: t for t in traditions.all_traditions()}
+    assert all(t.category in TRADITION_CATEGORIES for t in shown.values())
+    line = {i: traditions.type_line(t) for i, t in shown.items()}
+    assert line["trad_vitkir"] == "Hedge Tradition"
+    assert line["trad_ascetics"] == "Holy Tradition"
+    assert line["trad_luciferans"] == "Infernal Tradition"
+    assert line["trad_ollamhain"] == "Faerie Tradition"
+    assert line["trad_lector_priests"] == "Ancient Tradition · Faerie"
+    assert line["trad_bouda"] == "Hedge Tradition · Faerie"
+    assert line["trad_children_of_olympos"] == "Mystery Cult · Faerie"
+    assert line["trad_sahirs"] == "Rival Tradition · Magic, Faerie, Divine or Infernal"
+    assert line["trad_hermetic_sahirs"] == "Ex Miscellanea Tradition · Magic or Faerie"
+
+
+def test_initiation_scripts_alone_dont_make_a_mystery_cult():
+    folk = traditions.find("trad_folk_witches")
+    assert folk is not None and folk.initiation is not None
+    assert folk.category == "Hedge Tradition"
+
+
+def test_a_tradition_cites_only_the_books_it_is_in():
+    sources = {t.id: t.source for t in traditions.all_traditions()}
+    assert sources["trad_debterah"] == "LotN"
+    assert sources["trad_bedouin_hakima"] == "TC&TC"
+    assert sources["trad_imhergi"] == sources["trad_bouda"] == "BS&S"
+    assert sources["trad_wordsmiths"] == "TCI"
+    assert sources["trad_caerflorons_line"] == "LoH"

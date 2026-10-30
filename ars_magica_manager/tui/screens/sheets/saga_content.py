@@ -31,6 +31,7 @@ from ....sections import (
     SPELL_SECTION,
     TRADITIONS_SECTION,
 )
+from ....sheets import saga_content as scs
 from ..widgets import SelectableList, SheetSection, TableHeader
 from .base import SheetView
 from .lists import HouseRulesView, PlayersView, SpellListView
@@ -168,7 +169,7 @@ class SagaContentSheetView(SheetView):
                     )
             yield self._panel(
                 (BOOKS_SECTION, SOURCES_SECTION),
-                lambda: sc.book_detail(saga, None),
+                lambda: scs.book_text(saga, None),
                 id="content-books-info",
             )
 
@@ -427,7 +428,7 @@ class SagaContentSheetView(SheetView):
         texts = {
             "content-books-list": (
                 "#content-books-info",
-                lambda: sc.book_detail(self.saga, self.selected_book()),
+                lambda: scs.book_text(self.saga, self.selected_book()),
             ),
             "content-sources-list": (
                 "#content-books-info",

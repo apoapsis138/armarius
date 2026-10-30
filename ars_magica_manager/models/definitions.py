@@ -480,6 +480,24 @@ class HouseDef:
         return cls(**known_fields(cls, data))
 
 
+HEDGE_TRADITION = "Hedge Tradition"
+MYSTERY_CULT = "Mystery Cult"
+#: What kind of tradition one is, cutting across the books. Each term is
+#: the books' own: House Ex Miscellanea's traditions (HoH:S), Mystery Cults
+#: (TMRE, HoH:MC), hedge traditions (HMRE), faerie wizardry (RoP:F pp.
+#: 135-136), holy traditions (RoP:D p. 47), infernal traditions (RoP:I),
+#: rival traditions (RM pp. 6, 8) and ancient magic (AM).
+TRADITION_CATEGORIES: tuple[str, ...] = (
+    "Ex Miscellanea Tradition",
+    MYSTERY_CULT,
+    HEDGE_TRADITION,
+    "Faerie Tradition",
+    "Holy Tradition",
+    "Infernal Tradition",
+    "Rival Tradition",
+    "Ancient Tradition",
+)
+
 #: The realms a non-Hermetic tradition's magic can belong to.
 TRADITION_REALMS: tuple[str, ...] = ("Magic", "Faerie", "Divine", "Infernal")
 #: Whether a tradition's members have The Gift: all, some or none.
@@ -944,6 +962,13 @@ class TraditionDef:
     #: The book(s) it's from (sourcebooks), as on the other catalogs.
     source: str = "HMRE"
     realm: str = "Magic"
+    #: What kind of tradition it is (TRADITION_CATEGORIES), cutting across
+    #: the books; set by hand from them, not worked out from its rules.
+    category: str = HEDGE_TRADITION
+    #: Other realms its magic can belong to, by version or practitioner
+    #: (`realm` is the usual one, which the rules read), and why.
+    other_realms: list[str] = field(default_factory=list)
+    realm_note: str = ""
     description: str = ""
     #: The sheet chapter's title; the tradition's name when blank.
     chapter: str = ""
@@ -1009,6 +1034,11 @@ class TraditionDef:
         if self.realm not in TRADITION_REALMS:
             raise ValueError(
                 f"Unknown realm {self.realm!r}; must be one of {TRADITION_REALMS}"
+            )
+        if self.category not in TRADITION_CATEGORIES:
+            raise ValueError(
+                f"Unknown category {self.category!r}; must be one of "
+                f"{TRADITION_CATEGORIES}"
             )
 
     @property

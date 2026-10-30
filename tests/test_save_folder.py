@@ -86,7 +86,7 @@ async def test_the_picker_moves_the_saves_and_reads_the_new_folder(tmp_path):
         assert await wait_until(
             pilot, lambda: "(chosen in the app)" in str(folder_line.render())
         )
-        assert "Mythic" in "\n".join(screen_lines(app))
+        assert await wait_until(pilot, lambda: "Mythic" in "\n".join(screen_lines(app)))
     assert (new / paths.SAGAS / "mythic.json").is_file()
     assert not (old / paths.SAGAS / "mythic.json").exists()
     assert paths.data_dir() == new

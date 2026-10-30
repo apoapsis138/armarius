@@ -708,8 +708,11 @@ Every sourcebook as a card, with whether it is in play. The core book comes firs
 
 Each card says what its book brings: how many Virtues & Flaws, Laboratory Virtues & Flaws, Boons & Hooks, Abilities, spells, Shapes & Materials and Goods it adds to the catalogs, and how many optional rules, season activities, kinds of book and traditions; a saga source counts the saga's own entries that cite it. A book the app has nothing from yet says so. A book out of play is drawn faded.
 
-Click a supplement's **In play** or **Not in play** chip to put it in play or take it out; the chapter's count changes with it and the saga is saved. The core book's **Always** chip can't be clicked: it is always in play. **Edit** opens the picker of books, to tick many at once. Click a card itself to see the book in the inspector.
+Click a supplement's **In play** or **Not in play** chip to put it in play or take it out; the chapter's count changes with it and the saga is saved. The core book's **Always** chip can't be clicked: it is always in play. **Edit** opens the picker of books, to tick many at once. 
+Click a card itself to see the book in the inspector.
 <!-- /gui -->
+
+A book's details give a short overview of it, how much it holds, and its special rules: its optional rules by name, and for a supplement its season activities, kinds of book and traditions. A saga source's give what it holds and what cites it.
 
 While a book is out of play, everything it adds is switched off: the pickers leave out its Virtues, Flaws, spells and other entries; the season plan leaves out its activities (a plan already made keeps its activity); its optional rules are left off Edit Saga and count as off (the choice is kept for when the book comes back); and the library's book form leaves out its kinds of books and their fields (a book already using one keeps it). The Library tab's research bonuses need Covenants.
 
@@ -739,8 +742,10 @@ The non-Hermetic magical traditions (Hedge Magic Revised Edition's six, and thos
 Each tradition's row says whether it is offered; one whose book is out of play is dimmed, marked "(book not in play)". `e` opens a tick for each tradition of the books in play: untick the ones the saga doesn't offer.
 <!-- /tui -->
 <!-- gui -->
-Each book has a heading, with a chip saying whether the saga offers All, Some or None of its traditions: click it to offer them all, or, when all are offered, none. Under it each tradition is a chip of its own, filled while offered: click it to offer that one or stop. Hover over a tradition for its details. A book out of play has its traditions greyed out and nothing to click (**Book not in play**): put the book in play on Books in Play to offer them.
+The **Traditions** chapter has a heading for each book, saying whether the saga offers All, Some or None of its traditions, with a switch: flip it to offer them all, or, when all are offered, none. Under it each tradition is a card of two lines: its name and switch, then what kind of tradition it is. Flip the switch to offer that one or stop; click the card to see in the Inspector what it is and what it adds, with a switch at the top right. A book out of play has its cards greyed out and their switches off: put the book in play on Books in Play to offer them.
 <!-- /gui -->
+
+A tradition's kind is one of Hedge Tradition, Ex Miscellanea Tradition, Mystery Cult, Faerie Tradition, Holy Tradition, Infernal Tradition, Rival Tradition or Ancient Tradition. Its realm follows only when that is new information: a Holy Tradition is Divine and most others are Magic, so "Ancient Tradition · Faerie" names a realm and "Hedge Tradition" doesn't. A tradition whose magic can belong to several realms lists them.
 
 Turning a tradition off, or taking its book out of play, stops it being offered; characters who already belong to it keep their chapter, and the choice is kept for when the book comes back. A saga from before traditions were offered by default offers every tradition of its books in play, as a new one does.
 

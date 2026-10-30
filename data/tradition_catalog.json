@@ -6,6 +6,7 @@
       "name": "Elementalists",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Learned natural philosophers, physicians and theurgists who work the four elements through Techniques of Summoning, Controlling, Divining and Refining, each of a medicinal, philosophical or theurgical type. They gather in societies such as the Apostles of Apollonius, the Ikhwan as-Safa' and the Tulab Ibn Sina, each of which favors two Techniques and all four Forms.",
       "chapter": "Elementalist Magic",
       "abilities": [
@@ -222,6 +223,7 @@
       "name": "Folk Witches",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Village wise-women and their covens, who curse, heal, fly, scry and change shape through incantations, fetishes and potions brewed in a kitchen laboratory. They may be Gifted or unGifted, and gather at the eight sabbats of the year.",
       "chapter": "Folk Witch Magic",
       "abilities": [
@@ -649,6 +651,7 @@
       "name": "Gruagachan",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Pictish wizards of the Scottish Highlands, whose Techniques Give and Take and Forms Blessing, Curse, Shape and Vision work spells of blessing, cursing, transformation and illusion, and who enchant tattoos. Their branches include the Norse trollsynir and the Slavic kolduni.",
       "chapter": "Gruagach Magic",
       "abilities": [
@@ -1694,6 +1697,7 @@
       "name": "Learned Magicians",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Scholarly mathematici trained at Bologna and elsewhere, who cast charms and make amulets and chartae with the Techniques Tueor, Succurro and Vulnero and the Forms Fortunam, Magicam and Salutem, aided by astrology. Mythic alchemists and cunning-folk are variant branches.",
       "chapter": "Learned Magic",
       "abilities": [
@@ -2807,6 +2811,7 @@
       "name": "Nightwalkers",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "UnGifted folk such as the benandanti, the Hounds of God, kresniki, kudlaki and taltós, whose spirits leave their sleeping bodies to fight the fertility battles that decide the harvest. Their powers come from Virtues, not Arts.",
       "chapter": "Nightwalking",
       "abilities": [
@@ -2915,6 +2920,7 @@
       "name": "Vitkir",
       "source": "HMRE",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Norse rune wizards who carve the 24 runes of the Elder Futhark into scripts whose effects are true, natural changes that last as long as the inscription. Every vitki has The Gift, and their runes advance as Accelerated Abilities.",
       "chapter": "Rune Magic",
       "abilities": [
@@ -5040,6 +5046,7 @@
       "name": "Ollamhain",
       "source": "RoP:F",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Irish poets, sages and performers who claim kinship with the Fair Folk and hide faerie rites in their songs and poems, often played on enchanted harps handed down in families. They excel at the Method Enchantment and the Powers Beguile, Dream and Portage.",
       "chapter": "Faerie Rites",
       "abilities": [
@@ -5799,6 +5806,7 @@
       "name": "Volkhvy",
       "source": "RoP:F",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Russian pagan faerie wizards beyond the reach of the Church, whose great communal rites call on their faerie gods for glamours and blessings suited to a harsh wilderness. They excel at the Method Evocation, at Ceremony, and at the Powers Conjure and Grant.",
       "chapter": "Faerie Rites",
       "abilities": [
@@ -6360,6 +6368,7 @@
       "name": "Wise Folk",
       "source": "RoP:F",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Faerie-touched wise men and wise women living on the edge of village life, sought out in trouble and feared for their powers. They keep the supernatural at bay, protect those in their care, and heal or harm as they judge fit, through the Method Empathy and the Powers Ware, Weal and Woe.",
       "chapter": "Faerie Rites",
       "abilities": [
@@ -7227,6 +7236,7 @@
       "name": "Borrowers",
       "source": "RoP:F",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Wandering traders in exotic goods who make their living selling novelties to faeries in return for faerie blessings, through the Ars Fabulosa: Summoning, Bonding, Captivating and Dismissing. They take children bargained away from faeries as apprentices.",
       "chapter": "Ars Fabulosa",
       "abilities": [
@@ -7340,6 +7350,7 @@
       "name": "Faerie Doctors",
       "source": "RoP:F; DE",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Go-betweens for peasants and the fae in Saxon lands (also called lybmen), who keep local faerie tales alive, mediate disputes, cure blights and diseases by Curse-Throwing and find water and lost things by Dowsing. Taught from birth by a relative, they finish training when they gain a faerie companion.",
       "chapter": "Faerie Doctors",
       "abilities": [
@@ -7420,6 +7431,7 @@
       "name": "Homunculus Wizards",
       "source": "RoP:F",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Faerie-aligned wizards whose power comes from a homunculus, a tiny faerie between Magic and Faerie bound to them at birth, which gives them a faerie version of The Gift. They can learn Supernatural Abilities and even be Opened to the Hermetic Arts.",
       "chapter": "Homunculus Wizard",
       "abilities": [],
@@ -7451,8 +7463,10 @@
     {
       "id": "trad_caerflorons_line",
       "name": "Caerfloron's Line",
-      "source": "LoH; RoP:F",
+      "source": "LoH",
       "realm": "Faerie",
+      "category": "Ex Miscellanea Tradition",
+      "hermetic": "house",
       "description": "Ex Miscellanea magi descended from Caerfloron, Homunculus Wizards whose manikin is made from a Mandrake of Virtue taken on a single visit to Hérisson's Garden at the start of training. Like plants they draw on daylight and need no food, drink or air.",
       "chapter": "Homunculus Wizard",
       "abilities": [
@@ -7489,8 +7503,9 @@
     {
       "id": "trad_wordsmiths",
       "name": "Wordsmiths",
-      "source": "TCI; C&G",
+      "source": "TCI",
       "realm": "Faerie",
+      "category": "Faerie Tradition",
       "description": "Irish storytellers and poets touched by a realm, usually Faerie, who craft wondrous tales and poems: told aloud, the tale works its magic for the one person it was made for.",
       "chapter": "Wondrous Tales",
       "abilities": [
@@ -7538,6 +7553,7 @@
       "name": "Ascetics",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Holy men and women of any faith who starve the flesh to feed the soul, live by a strict rule, see through illusion to the spirits beyond, and drive out evil. The book's generic holy tradition.",
       "abilities": [
         "Adjuration",
@@ -7633,6 +7649,7 @@
       "name": "Cantores",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "A mostly Christian tradition that worships through song: its singers bless and move their hearers and call down divine signs through Holy Music.",
       "abilities": [
         "Blessing",
@@ -7723,6 +7740,7 @@
       "name": "Sufis",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Muslim mystics gathered in tariqas under a shaykh, seeking God through communal ecstatic meditation, chant and dance.",
       "abilities": [
         "Ceremony",
@@ -7824,6 +7842,7 @@
       "name": "Ba'al Shem",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Itinerant Jewish folk healers and charm-makers who serve their communities for pay with blessings and amulets (seggulot), their chief craft.",
       "abilities": [
         "Adjuration",
@@ -7970,6 +7989,7 @@
       "name": "Kabbalists",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Jewish mystics who contemplate the Sefirot and the divine names, learn the True Names of angels through Merkavah, and in their communities may awaken a golem.",
       "abilities": [
         "Ceremony",
@@ -8153,6 +8173,7 @@
       "name": "Sol Invictus",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "A Holy Societas of the Order, long tied to House Jerbiton, that teaches holy magic and fights the faerie and the wicked with curses and prayer.",
       "abilities": [
         "Cursing",
@@ -8251,6 +8272,7 @@
       "name": "Priory of Saint Nerius",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "A monastic Holy Societas of magi under vows, keepers of the Neriusian Portal ritual that opens a private regio.",
       "abilities": [
         "Holy Magic",
@@ -8341,6 +8363,7 @@
       "name": "Zoroastrians",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "A Holy Societas of Zoroastrian Magoi who blend holy magic with the prayers and wonders of the old Persian faith.",
       "abilities": [
         "Invocation",
@@ -8429,6 +8452,7 @@
       "name": "Karaites",
       "source": "RoP:D",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "A Holy Societas of Jewish magi who design all their magic with Holy Magic and keep strict purity, taking Gifted apprentices only from within their faith.",
       "abilities": [
         "Craft Amulets",
@@ -8522,6 +8546,7 @@
       "name": "Céli Dé",
       "source": "TCI",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "The 'clients of God': Irish monks and anchorites under strict vows who pray, fast and labour, calling on God through Invocation and Purity.",
       "abilities": [
         "Invocation",
@@ -8544,7 +8569,7 @@
       "working_seasons": 2,
       "working_xp": 0,
       "social_status": "",
-      "hermetic": "societas",
+      "hermetic": "house",
       "notes": "A companion or Mythic Companion member must take Vows, gets Educated as a free Minor Virtue, may not take Ceremony or Wealthy (Poor is common), and must take Purity and Transcendence unless he has True Faith (then, once vowed, he learns the favored Abilities without the Virtues). Two seasons a year are free for study; two go on devotions and work.",
       "training": {
         "gift": "optional",
@@ -8612,6 +8637,7 @@
       "name": "Mobeds",
       "source": "TC&TC",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "The hereditary male priesthood of the Mazdean faith (ervad, mobed, dastur), keepers of sacred fires and purity rites. Full mobeds invoke God to command spirits and work wonders; few have The Gift, many have True Faith.",
       "abilities": [
         "Invocation",
@@ -8783,6 +8809,7 @@
       "name": "Hesychasts",
       "source": "TSE",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Orthodox monks (and perhaps some nuns) who seek stillness and the vision of divine light through ceaseless prayer, either as hermits or within the monastic offices.",
       "abilities": [
         "Meditation",
@@ -8871,6 +8898,7 @@
       "name": "Society of Cyprian and Justina",
       "source": "TSE",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Repentant magicians who turn their learning to God's service under the patron saints of converted sorcerers; the natural home for Gifted converts and magi.",
       "abilities": [
         "Holy Magic",
@@ -8958,6 +8986,7 @@
       "name": "Kassalan Exorcists",
       "source": "LotN",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Nubian exorcists of the Mortuary Society who lay the restless dead with wards and rites sprinkled with Kassalan Dust, and strip ghosts of their power.",
       "abilities": [
         "Second Sight",
@@ -9006,6 +9035,7 @@
       "name": "Luciferans",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A misguided tradition hidden inside the Church, mostly in Germany, Austria and Bohemia, who worship Lucifer as a wronged bearer of light and work maleficia through debauched rites.",
       "abilities": [
         "Debauchery",
@@ -9110,6 +9140,7 @@
       "name": "Strigae",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "Night witches of a demon-usurped pagan cult, who ride out by night, take revenge on rivals and usually work in threes, meeting in ceremonies of thirteen.",
       "abilities": [
         "Debauchery",
@@ -9216,6 +9247,7 @@
       "name": "Witch-Hammers",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A misguided tradition of witch-hunters who believe they serve God while they torture confessions, burn the accused and strip power from rival demons and infernalists.",
       "abilities": [
         "Ablating",
@@ -9419,6 +9451,7 @@
       "name": "Dark Gnostics",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A corrupt tradition of dualist heretics who hold the material world evil and serve its rulers knowingly, working entrancing and illusory maleficia.",
       "abilities": [
         "Diablerie",
@@ -9485,6 +9518,7 @@
       "name": "Dread Host",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A corrupt tradition of necromancers who raise and bind the restless dead and aim to become Infernal ghosts themselves.",
       "abilities": [
         "Binding",
@@ -9622,6 +9656,7 @@
       "name": "Mulhidun",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A corrupt cult north of Mosul whose sorcerers summon, drain, bind and command demons, using the four Goetic Arts.",
       "abilities": [
         "Ablating",
@@ -9947,6 +9982,7 @@
       "name": "Damhadh-Duidsan",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A Hermetic societas of Gaelic wizards of giant stock who write in Ogam and draw on infernal shapechanging, curses and drained life.",
       "abilities": [
         "Consumption",
@@ -10014,6 +10050,7 @@
       "name": "Ordo Vagorum",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "The Goliards: wandering clerks and players, partly Redcaps, who mock the Church in song and lead others into hedonism, taught maleficia by their archprimates.",
       "chapter": "Ordo Vagorum (Goliards)",
       "abilities": [
@@ -10125,6 +10162,7 @@
       "name": "Witches of Thessaly",
       "source": "RoP:I",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A Hermetic societas of Thessalian magi and the wild witches, the Daughters of Erictho, who summon and command spirits and curse; the magi claim their powers are Magic or Faerie.",
       "abilities": [
         "Chthonic Magic",
@@ -10335,6 +10373,7 @@
       "name": "Cailleach Phiseogach",
       "source": "TCI",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "Irish Infernal witches, always women, built as Diabolist Mythic Companions with the standing of a wise woman; they bind spirits and curse with spoken maleficia.",
       "abilities": [
         "Incantation",
@@ -10402,6 +10441,7 @@
       "name": "Stringla",
       "source": "TSE",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "Greek witches in covens of thirteen, each coven taught and protected by a disembodied Watcher demon; kin to the Strigae, with the same favored Abilities.",
       "abilities": [
         "Ceremony",
@@ -10510,6 +10550,7 @@
       "name": "Paulicians",
       "source": "TSE",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "A dualist heretical sect of Constantinople, Philippopolis and Thessaloniki, outwardly ascetic; its inner circle works Infernal powers against Christians and Jews.",
       "abilities": [
         "Ceremony",
@@ -10625,6 +10666,7 @@
       "name": "Ba'al Ov",
       "source": "RoP:D",
       "realm": "Infernal",
+      "category": "Infernal Tradition",
       "description": "Jewish necromancers who call up, command and bind spirits of the dead with the Infernal Goetic Arts, using corpses and skulls in place of circles.",
       "abilities": [
         "Summoning",
@@ -10854,6 +10896,7 @@
       "name": "Beast Masters",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Magi Ex Miscellanea who call animals to them with a cry or whistle and keep a close bond with the beasts of one kind.",
       "chapter": "Summon Animals",
       "abilities": [
@@ -10918,6 +10961,7 @@
       "name": "Tempestaria",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Saxon weather witches of the House who whistle up winds from a breeze to a hurricane, and must use their tools for every spell.",
       "chapter": "Whistle Up the Wind",
       "abilities": [
@@ -11015,6 +11059,7 @@
       "name": "Nemthengacha",
       "source": "DE",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Celtic and Scandinavian magi Ex Miscellanea, the 'poison-tongues', who turn a listener against a friend, kinsman or lord with a few words of conversation.",
       "chapter": "Embitterment",
       "abilities": [
@@ -11130,6 +11175,7 @@
       "name": "Scinnfolk",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Gifted cunning folk who joined the Order without taking up Hermetic magic: members of House Ex Miscellanea built as Gifted Companions, who bless and blight the fertility of people, beasts and crops.",
       "chapter": "Control Fertility",
       "abilities": [
@@ -11192,6 +11238,7 @@
       "name": "Columbae",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "British magi who brought Ring and Circle into Hermetic magic. They draw marked circles that keep out a chosen kind of thing, and must mark the targets of all their spells.",
       "chapter": "Warding",
       "abilities": [
@@ -11478,6 +11525,7 @@
       "name": "Donatores Requietis Aeternae",
       "source": "HoH:S",
       "realm": "Divine",
+      "category": "Ex Miscellanea Tradition",
       "description": "Ghost-layers of House Ex Miscellanea who loudly banish every spirit of a named realm from a place, and cannot cast on consecrated ground.",
       "chapter": "Banishing",
       "abilities": [
@@ -11558,6 +11606,7 @@
       "name": "Pharmacopoeians",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Healers descended from the herbalist Crateuas, the Root-Cutters, who brew healing draughts, poisons and tonics, and swear to preserve life.",
       "chapter": "Mythic Herbalism",
       "abilities": [
@@ -11686,6 +11735,7 @@
       "name": "Lineage of Pralix",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Magi who study and preserve other hedge traditions and bring them into the Order. Their Comprehend Magic lets them see and analyse any magic they meet.",
       "chapter": "Comprehend Magic",
       "abilities": [
@@ -11803,6 +11853,7 @@
       "name": "Rustic Magi (Rusticani)",
       "source": "HoH:S; MoH; TtA",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Craftsman magi who cast by making things: each spell is worked into an object of their craft, and they can make charged items in days instead of a season.",
       "chapter": "Craft Magic",
       "abilities": [
@@ -11850,6 +11901,9 @@
       "name": "Hermetic Sahirs",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
+      "other_realms": ["Faerie"],
+      "realm_note": "Most of the jinn these magi deal with are of the Magic realm; some specialize in Faerie jinn (Houses of Hermes: Societates, p. 134).",
       "description": "Muslim magi of Iberia who summon jinn and bind them by bargain to serve for a time.",
       "chapter": "Sihr",
       "abilities": [
@@ -11925,6 +11979,7 @@
       "name": "Seirenes",
       "source": "HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "A women's tradition of singing magae whose songs command those who hear them; every spell they cast is sung.",
       "chapter": "Siren Song",
       "abilities": [
@@ -11971,6 +12026,7 @@
       "name": "Hermetic Sorginak",
       "source": "F&F",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "A few Basque magi descended from a coven that worked with two Bonisagus brothers. Each keeps one sorgina power, and casts Hermetic spells with potions, Euskara incantations and fetishes.",
       "chapter": "Sorginak Magic",
       "abilities": [
@@ -12041,6 +12097,7 @@
       "name": "Gorgiastic Cathars",
       "source": "F&F",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "A handful of Provençal magi, a theurgic Cathar mystery cult descended from House Criamon. Each has a tutelary spirit, a Genius, and seeks Twilight as an escape from eternal recurrence.",
       "chapter": "Gorgiastic Cathars",
       "abilities": [
@@ -12068,6 +12125,9 @@
       "name": "Sahirs (Suhhar Sulayman)",
       "source": "TC&TC",
       "realm": "Magic",
+      "category": "Rival Tradition",
+      "other_realms": ["Faerie", "Divine", "Infernal"],
+      "realm_note": "A sahir's Sihr is usually of the Magic realm; versions aligned to the other realms exist (The Cradle and the Crescent, p. 47).",
       "description": "The sahirs of the Islamic lands, who summon a spirit (usually a jinni with Sihr) and cast through it with five Solomonic arts: Alchemy, Astrology, Physic, Storytelling and Travel. Gifted or unGifted, they belong to the Suhhar Sulayman and its houses of wisdom.",
       "chapter": "Solomonic Magic",
       "abilities": [
@@ -13412,6 +13472,7 @@
       "name": "Nizari Mustajibs",
       "source": "TC&TC",
       "realm": "Magic",
+      "category": "Rival Tradition",
       "description": "Renegade sahirs of the Nizari Isma'ilis, who summon only with Sihr and favour Solomonic Storytelling. Gifted mustajibs are Opened to every art; the unGifted are initiated at Alamut.",
       "chapter": "Solomonic Magic",
       "abilities": [
@@ -14780,6 +14841,7 @@
       "name": "Soban Alchemists",
       "source": "LotN",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "The alchemists of Soba in Nubia, who each brew a Sovereign Reagent of their own and spend a dose to give or take one property of lifeless matter. They serve the city's Ministry.",
       "abilities": [
         "Soban Alchemy",
@@ -14840,6 +14902,7 @@
       "name": "Cult of Dedun",
       "source": "LotN",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "A Nubian Mystery Cult of undying sorcerers who gather courts of royal corpses, rising from Adherent to Altar Priest, Temple Priest and at last Undying One.",
       "abilities": [
         "Organization Lore: Cult of Dedun",
@@ -14943,6 +15006,7 @@
       "name": "Lector Priests",
       "source": "LotN",
       "realm": "Faerie",
+      "category": "Ancient Tradition",
       "description": "Egypt's ritual readers, faerie rite wizards who read one-effect scrolls in a state of purity within a Faerie aura, and make amulets and seals that last only for a time.",
       "abilities": [
         "Evocation",
@@ -15006,6 +15070,7 @@
       "name": "Settuten (Berber)",
       "source": "BS&S",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "The Berber settuten, witches of the moon god Ayyur, whose amulets dissolve and undo: matter, bonds between people, distance, a spirit's hold on a place, and The Gift itself. Almost all are women.",
       "chapter": "Settut Magic",
       "abilities": [
@@ -15183,6 +15248,7 @@
       "name": "Settuten (Tuareg)",
       "source": "BS&S",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "The Tuareg settuten, witches of the moon god Ayyur, whose amulets dissolve and undo: matter, bonds between people, distance, a spirit's hold on a place, and The Gift itself. Almost all are women.",
       "chapter": "Settut Magic",
       "abilities": [
@@ -15358,8 +15424,9 @@
     {
       "id": "trad_imhergi",
       "name": "Imhergi and Ngagef",
-      "source": "BS&S; HMRE",
+      "source": "BS&S",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Berber tattoo magicians: the male imhergi ('sun magicians') and the female ngagef cosmeticians, cunning-folk learned magicians who draw their charms as temporary tattoos or chalk signs, and make lasting tattoos in place of amulets.",
       "chapter": "Learned Magic",
       "abilities": [
@@ -16403,6 +16470,7 @@
       "name": "Inenden",
       "source": "BS&S",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "The Tuareg's outcast craftsmen, smiths, woodcarvers, saddlers and jewellers, some of whom make wondrous items for one named customer each.",
       "abilities": [
         "Craft: Woodcarver",
@@ -16449,8 +16517,9 @@
     {
       "id": "trad_bouda",
       "name": "Bouda (folk witches)",
-      "source": "BS&S; HMRE",
+      "source": "BS&S",
       "realm": "Faerie",
+      "category": "Hedge Tradition",
       "description": "A Moroccan clan of hyena-witches, usually men: Faerie-aligned folk witches who curse, entrance and heal, take the shape of the hyena, and work wood and iron magically.",
       "chapter": "Folk Witch Magic",
       "abilities": [
@@ -16752,8 +16821,9 @@
     {
       "id": "trad_bedouin_hakima",
       "name": "Bedouin Hakima",
-      "source": "TC&TC; HMRE",
+      "source": "TC&TC",
       "realm": "Faerie",
+      "category": "Hedge Tradition",
       "description": "The wise women and soothsayers (hakima, kahina) of the Bedouin tribes: Faerie-aligned folk witches who heal people and beasts, entrance, find water and see the hidden, and lead their tribe's Muru'a cult.",
       "chapter": "Folk Witch Magic",
       "abilities": [
@@ -17090,6 +17160,7 @@
       "name": "Murabitin",
       "source": "BS&S",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "The holy men of the Maghreb (murabit, agurram): scholars, dream readers, shrine keepers and amulet makers, a mystic tradition of the Divine whom the Order counts as hedge wizards.",
       "abilities": [
         "Blessing",
@@ -17206,6 +17277,7 @@
       "name": "Sorginak",
       "source": "F&F",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Basque witches who serve the goddess Mari. They are folk witches with their own twists: Hex in place of Cursing, incantations spoken in Euskara, monthly akelarre gatherings, and darker Inner Mysteries (Goetic Arts, Ecstatic Magic, a chthonic magic taught by Mari). Gifted or unGifted; male witches (sorgin) are rare.",
       "chapter": "Sorginak Magic",
       "abilities": [
@@ -17453,6 +17525,7 @@
       "name": "The Forest Paths",
       "source": "GotF",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "A way of gaining supernatural (and, for magi, Hermetic) Virtues by a pact with a great forest's spirit. The walker reaches communion with the genius locus, takes a Flaw as Sacrifice, serves on a Quest, and then receives a Virtue as the Fruit. Open to magi, Gifted or unGifted companions and, rarely, mundanes.",
       "chapter": "Forest Paths",
       "abilities": [
@@ -17590,6 +17663,7 @@
       "name": "Branchidae",
       "source": "TtA",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "A Gifted bloodline of House Ex Miscellanea, descended from Branchos, who serve the faerie oracle of Apollo at Didyma. They interpret an oracle's visions into written prophecies that help whoever reads them.",
       "chapter": "Branchidae",
       "abilities": [],
@@ -17625,6 +17699,7 @@
       "name": "Corrguineach",
       "source": "TtA; HoH:S",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Irish magi of House Ex Miscellanea who summon, bargain with and command elemental spirits. They are the Hermetic Sahirs' tradition moved to Hibernia, with Sihr as their tradition Art.",
       "chapter": "Corrguineach",
       "abilities": [
@@ -17692,6 +17767,7 @@
       "name": "Children of Olympos",
       "source": "TSE",
       "realm": "Faerie",
+      "category": "Mystery Cult",
       "description": "Lucian the Scholar's Hermetic league in the Theban Tribunal, whose members channel the Greek gods (powerful faeries) in ecstatic rites, taking on a god's traits and, with the Olympian Pact, its powers.",
       "chapter": "Elysian Ecstasy",
       "abilities": [
@@ -17745,6 +17821,7 @@
       "name": "Amazon Sorceresses",
       "source": "RM",
       "realm": "Magic",
+      "category": "Rival Tradition",
       "description": "Gifted women of Amazonia who sing incantations and rites in the unwritten Amazonian Chant, pairing three Vowels with five Consonants. Their spells reach targets by relationship rather than distance, must be aimed, and may be resisted; rites are made permanent with the sacrifice of magical animals.",
       "chapter": "Amazon Magic",
       "abilities": [
@@ -18712,6 +18789,7 @@
       "name": "Augustan Brotherhood",
       "source": "RM",
       "realm": "Magic",
+      "category": "Rival Tradition",
       "description": "Court wizards in Virgil's tradition who serve noble patrons while secretly working for an emperor of their choosing. They divine with the Aeneid (Sortes Virgilianae), lay slow Vigilo rites that ward a place until a trigger, and awaken crafted animations.",
       "chapter": "Virgilian Magic",
       "abilities": [
@@ -19493,6 +19571,7 @@
       "name": "Muspelli",
       "source": "RM; DI",
       "realm": "Magic",
+      "category": "Rival Tradition",
       "description": "Pagan sorcerers sworn to one of the imprisoned jotnar. The patron Opens their Gift to six Supernatural Abilities, and in giant form (the etin-mod) they work hours-long utiseta rituals that enlarge those powers and wear down the auras that bind the giants.",
       "chapter": "Trolldomur",
       "abilities": [
@@ -20459,6 +20538,7 @@
       "name": "Soqotran Sorcerers",
       "source": "RM",
       "realm": "Magic",
+      "category": "Rival Tradition",
       "description": "The ruling caste of Soqotra: Gifted sorcerers of four tribes, each bound to a spirit ally and casting by incense ceremonies fed with vis from their tribe's sacred trees. Aloe heals and restores, Cinnabar protects, Myrrh grants traits, Olibanum commands.",
       "chapter": "Soqotran Magic",
       "abilities": [
@@ -21019,6 +21099,7 @@
       "name": "Canaanite Necromancers",
       "source": "AM",
       "realm": "Magic",
+      "category": "Ancient Tradition",
       "description": "The lost necromancers of Canaan and En-Dor, whose single Supernatural Ability reaches the dead wherever they are not in Heaven. Their ghosts and clay tablets survive, and a necromancer can help a magus integrate the art.",
       "chapter": "Canaanite Necromancy",
       "abilities": [
@@ -21055,6 +21136,7 @@
       "name": "Defixio Cults",
       "source": "AM",
       "realm": "Magic",
+      "category": "Ancient Tradition",
       "description": "The five ancient cults of the curse tablet, each tied to a Technique and Form: Ceres (Creo Mentem), Hecate (Perdo Corpus or Animal), Minerva (Rego Corpus or Animal), Pluto (Rego Mentem) and Proserpina (Muto Mentem). Their lore makes defixiones that strike a named target from afar.",
       "chapter": "Defixio Magic",
       "abilities": [
@@ -21087,9 +21169,10 @@
     },
     {
       "id": "trad_heronic_mechanici",
-      "name": "Heronic Mechanici",
+      "name": "Heronic Mechanicians",
       "source": "AM",
       "realm": "Magic",
+      "category": "Ancient Tradition",
       "description": "Gifted followers of Heron of Alexandria who build mechanica: devices of natural philosophy, not enchantment, that simulate one Creo, Rego, Perdo or Muto effect on Auram, Aquam, Ignem, Mentem or Terram, and animae, mechanical simulacra of living creatures.",
       "chapter": "Mechanica of Heron",
       "abilities": [
@@ -21177,6 +21260,7 @@
       "name": "Hyperborean Hymnists",
       "source": "AM",
       "realm": "Magic",
+      "category": "Ancient Tradition",
       "description": "Reciters of the hymns Apollo taught the sun people of Hyperborea. Each hymn is a Supernatural Ability whose points hold Powers infused through seasons of contemplation, used at will with no roll; choirs sing one-off effects together, and relics hold Powers.",
       "chapter": "Hyperborean Hymns",
       "abilities": [
@@ -21567,6 +21651,7 @@
       "name": "Storm Wizards",
       "source": "AtD",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "A handful of solitary, Gifted hermits of the Transylvanian peaks, said to be carried off as babies by giants, who raise, steer, ride and fight with storms. They harvest unmelting magical ice (Auram vis) from mountain sites and end their training by killing a giant and eating its heart.",
       "chapter": "Storm Wizard Magic",
       "abilities": [
@@ -21705,6 +21790,7 @@
       "name": "Hunters",
       "source": "AtD",
       "realm": "Magic",
+      "category": "Hedge Tradition",
       "description": "Balkan vampire hunters marked by birth (sabotnici, glogove) or by a vampire parent (dhampiri, vampirdzhia), who hold scraps of the old taltós Hunters' Arts: Scry to track a foe, Ban to ward against it and Slay to kill it, each worked only against a Foe Art they know. They need not be Gifted and learn the Arts as Virtues, with no master to Open them.",
       "chapter": "Hunters' Arts",
       "abilities": [
@@ -21853,6 +21939,7 @@
       "name": "Fectores",
       "source": "AtD",
       "realm": "Magic",
+      "category": "Ex Miscellanea Tradition",
       "description": "Gifted hunters trained at the Tremere oppidum of Laniena, who are Opened to all three Hunters' Arts (Scry, Ban, Slay) and three Foe Arts, and serve House Tremere's war on supernatural foes, usually as Gifted companions of House Ex Miscellanea.",
       "chapter": "Hunters' Arts",
       "abilities": [
@@ -22035,6 +22122,7 @@
       "name": "Franciscans",
       "source": "TC",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "The Little Brothers and Poor Sisters who follow Francis of Assisi in poverty, preaching and service. A few, guided by more experienced Franciscans, grow holy powers; outsiders may see a Holy Tradition, though no Franciscan would call it one.",
       "abilities": [
         "Intervention",
@@ -22164,6 +22252,7 @@
       "name": "Cult of Mercury",
       "source": "F&F",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "What is left of the old Roman Cult of Mercury, centred on Aedes Mercurii in Provence: pagan priests of the Order, guarding the old rites and the lost secrets of Mercurian ritual magic, at odds with the Neo-Mercurians and the Mithraians alike.",
       "abilities": [
         "Mystery Cult Lore: Cult of Mercury"
@@ -22205,6 +22294,7 @@
       "name": "Legion of Mithras",
       "source": "TMRE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "Heroic defenders of the Order, many of them Hoplites, keeping a Christianised Mithraic mystery: loyalty, bravery, honesty and duty, in ranks under a quasi-military command.",
       "abilities": [
         "Mystery Cult Lore: Legion of Mithras"
@@ -22244,6 +22334,7 @@
       "name": "Knights of the Green Stone",
       "source": "TMRE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "Magi who live as knights errant and minnesingers, questing for the Stone of Creation that fell from Heaven: poets, lovers and chivalrous warriors, most of them Jerbiton and Tytalus.",
       "abilities": [
         "Mystery Cult Lore: Green Stone",
@@ -22287,6 +22378,7 @@
       "name": "Matres et Matrones",
       "source": "F&F",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "A Mystery Cult for the advancement of women, rooted in the folk witches of south-western France, the cult of Mary Magdalene and the Black Madonna, and the memory of Eleanor of Aquitaine; the Praeco Dama of Merinita is said to lead it.",
       "abilities": [
         "Organization Lore: Matres and Matrones"
@@ -22318,6 +22410,7 @@
       "name": "House Verditius (Mystery Cult)",
       "source": "HoH:MC; DE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "The Mystery Cult of House Verditius: four Minor and four Major Inner Mysteries, learned in any order from a fellow of the House, each Script sacrificing items and time, and Hubris growing with every one.",
       "abilities": [
         "Mystery Cult Lore: Verditius"
@@ -22512,6 +22605,7 @@
       "name": "Clesrada",
       "source": "TCI",
       "realm": "Faerie",
+      "category": "Mystery Cult",
       "description": "The feats of arms of the Ulster heroes, part weapon-play, part juggling, part magic, taught by Scáthach and now only by her daughter Úathach at the Mercere House of Leth Cuinn. Each cles is a Faerie power gained by its own Initiation, and any warrior, Gifted or not, may learn them.",
       "chapter": "Clesrada",
       "abilities": [
@@ -22753,8 +22847,9 @@
     {
       "id": "trad_debterah",
       "name": "Debterah",
-      "source": "LotN; RoP:D",
+      "source": "LotN",
       "realm": "Divine",
+      "category": "Holy Tradition",
       "description": "Ethiopia's lay deacons of the Church and the Falasha, a holy societas who teach noble children, cast horoscopes, make protective amulets and drive out evil spirits with The Magic Star Book.",
       "abilities": [
         "Adjuration",
@@ -22861,6 +22956,7 @@
       "name": "House Merinita (Mystery Cult)",
       "source": "HoH:MC; DE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "The Mystery Cult of House Merinita: the Outer Mystery of Faerie Magic, then Inner Mysteries in three schools (Arcadian, Folk and Illusion) and the Founder's own Binding the Gift, learned through the House's lineages; the Nature Mysteries, from their own Outer Mystery, Nature Lore, lie outside them.",
       "abilities": [
         "Mystery Cult Lore: Merinita",
@@ -23094,6 +23190,7 @@
       "name": "House Bjornaer (Mystery Cult)",
       "source": "HoH:MC; DE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "The Mystery Cult of House Bjornaer: the heartbeast awakened by the Ritual of Twelve Years, the House Mysteries Clan Ilfetu Initiates, the clans' own Mysteries, and the inner heartbeast a Great Beast ancestor teaches, refined afterwards by the magus alone.",
       "abilities": [
         "Mystery Cult Lore: Bjornaer"
@@ -23484,6 +23581,7 @@
       "name": "House Criamon (Mystery Cult)",
       "source": "HoH:MC; DE",
       "realm": "Magic",
+      "category": "Mystery Cult",
       "description": "The Mystery Cult of House Criamon: the Enigma, and the paths toward its answer, each of five stations reached by following an avenue with a guide: the Paths of the Body, of Seeming, of Strife and of Walking Backwards, and the Primi's Path of the Mirror.",
       "abilities": [
         "Mystery Cult Lore: Criamon",

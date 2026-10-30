@@ -109,6 +109,39 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.52.0 — 2026-10-30
+
+### Illuminatio
+
+- **Traditions have a chapter of their own on Saga Content, as cards.** Each
+  book has a heading with a switch for all its traditions, and each
+  tradition is a card with its name, a switch and what kind of tradition
+  it is. Click a card for what it is and what it adds, with a switch at
+  the Inspector's top right. Saga Content opens faster for it: the chapter
+  is drawn when first turned to.
+- **The Books inspector says what a book is.** Click a book for a short
+  overview, how much it holds and its special rules: optional rules,
+  seasons, kinds of book and traditions. A saga source shows what cites it.
+
+### Hedge Magic
+
+- Every tradition has a kind: Ex Miscellanea, Hedge, Mystery Cult, Faerie,
+  Holy, Infernal, Rival or Ancient. Its realm follows only when that is
+  new information, as in "Ancient Tradition · Faerie"; one whose magic can
+  belong to several realms lists them.
+- Corrections from the books: Céli Dé and Caerfloron's Line are House Ex
+  Miscellanea traditions, the Heronic Mechanicians have their book's name,
+  and six traditions now cite only the book they are in, so they no longer
+  stay offered through a book that merely lends them rules.
+
+### Florilegium
+
+- A spell's Source column shows the saga source it cites, not just "Saga".
+
+### Glossa
+
+- The help for Books in Play and Traditions Offered says what changed.
+
 ## 3.51.0 — 2026-10-30
 
 ### Hedge Magic

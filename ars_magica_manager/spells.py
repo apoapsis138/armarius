@@ -223,6 +223,14 @@ OWN_SOURCE = "__own__"
 OUT_OF_PLAY_SOURCE = "__out__"
 
 
+def source_label(saga: Saga, spell: Spell) -> str:
+    """A spell's Source column: its book, or for the saga's own the saga
+    source it cites, else "Saga"."""
+    if not is_own(saga, spell):
+        return spell.source
+    return spell.source if spell.source in sourcebooks.saga_sources(saga) else "Saga"
+
+
 def source_text(spell: Spell) -> str:
     """Where a spell is printed: "Magi of Hermes, p. 56"."""
     title = sourcebooks.titles(spell.source)
@@ -356,7 +364,7 @@ def row_label(saga: Saga, spell: Spell) -> str:
     """One list row (markup), lined up with `table_header`."""
     level = "Gen" if spell.level is None else str(spell.level)
     rdt = rdt_text(spell)
-    source = "Saga" if is_own(saga, spell) else spell.source
+    source = source_label(saga, spell)
     row = (
         f"{escape(fit(spell.name, _NAME_WIDTH))} {escape(fit(arts(spell), _ARTS_WIDTH))}"
         f"{level:>{_LEVEL_WIDTH}}  {escape(fit(rdt, _RDT_WIDTH))} "

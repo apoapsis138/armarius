@@ -12,12 +12,13 @@ from collections.abc import Callable, Iterable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .. import book_kinds, sourcebooks, traditions
+from .. import book_kinds, book_overviews, sourcebooks, traditions
 from .. import house_rules as hr
 from .. import own_abilities as oa
 from .. import players as pl
 from .. import saga_content as sc
 from .. import spells as spl
+from ..markup import escape
 from ..models import AbilityDef, Saga, Spell
 from ..models.mystery_cults import is_saga_cult
 from ..references import Fact
@@ -163,6 +164,73 @@ def brought(saga: Saga) -> dict[str, str]:
     }
 
 
+def _special_rules(book: str) -> list[str]:
+    """What a book adds beyond its catalog entries, as lines (markup): its
+    optional rules, and for a supplement its seasons, kinds of book and
+    traditions, by name. The core book's seasons are the game's own."""
+    named = [
+        (
+            "Optional rules",
+            [
+                o.label
+                for o in rule_options.OPTIONS
+                if (o.book or sourcebooks.CORE) == book
+            ],
+        ),
+    ]
+    if book != sourcebooks.CORE:
+        kinds = (
+            *book_kinds.OPUS_TYPES.values(),
+            *book_kinds.PHYSICAL_FORMS.values(),
+            *book_kinds.COLLECTIONS.values(),
+        )
+        named += [
+            (
+                "Season activities",
+                [
+                    a.label
+                    for a in activities.ACTIVITIES.values()
+                    if a.book == book and not a.hidden
+                ],
+            ),
+            ("Kinds of book", [k.name for k in kinds if k.book == book]),
+            (
+                "Traditions",
+                [
+                    t.name
+                    for t in traditions.all_traditions()
+                    if not is_saga_cult(t.id) and book in sourcebooks.books_of(t.source)
+                ],
+            ),
+        ]
+    return [
+        f"[b]{label}:[/] {escape(', '.join(names))}" for label, names in named if names
+    ]
+
+
+def book_text(saga: Saga, book: str | None) -> str:
+    """A book's details (markup): whether it is in play, what it is, how
+    much it holds and its special rules. A saga source: what cites it."""
+    head = sc.book_detail(saga, book)
+    if book is None:
+        return head
+    holds = brought(saga).get(book, NOTHING_COUNTED)
+    if book in sourcebooks.saga_sources(saga):
+        cited = ", ".join(e.name for e in hr.citing(saga, book))
+        lines = [head, f"[b]Holds:[/] {escape(holds)}"]
+        return "\n".join(
+            lines + ([f"[b]Cited by:[/] {escape(cited)}"] if cited else [])
+        )
+    return "\n".join(
+        [
+            head,
+            escape(book_overviews.overview(book)),
+            f"[b]Holds:[/] {escape(holds)}",
+            *_special_rules(book),
+        ]
+    )
+
+
 def book_cards(saga: Saga) -> list[BookCard]:
     own = sourcebooks.saga_sources(saga)
     brings = brought(saga)
@@ -234,11 +302,13 @@ BOOK_OUT = "Book not in play"
 
 @dataclass(frozen=True)
 class TraditionRow:
-    """A tradition under its book: whether the saga offers it."""
+    """A tradition under its book: what kind it is (traditions.type_line)
+    and whether the saga offers it."""
 
     id: str
     name: str
     on: bool
+    kind: str
 
 
 @dataclass(frozen=True)
@@ -267,7 +337,9 @@ def tradition_groups(saga: Saga) -> list[TraditionGroup]:
     groups: dict[str, list[TraditionRow]] = {}
     for t in traditions.listed(saga):
         groups.setdefault(traditions.book_of(t, saga), []).append(
-            TraditionRow(t.id, t.name, traditions.is_on(saga, t.id))
+            TraditionRow(
+                t.id, t.name, traditions.is_on(saga, t.id), traditions.type_line(t)
+            )
         )
     return [
         TraditionGroup(
@@ -380,7 +452,7 @@ def spell_rows(saga: Saga, spells: Sequence[Spell]) -> list[SpellRow]:
             spell.level,
             spl.rdt_text(spell),
             spell.ritual,
-            "Saga" if spl.is_own(saga, spell) else spell.source,
+            spl.source_label(saga, spell),
         )
         for spell in spells
     ]

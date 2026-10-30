@@ -22,6 +22,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.themes import SCRIPTORUM
+from ars_magica_manager.gui.widgets import ClickableCard, ToggleSwitch
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.sheets import saga_content as scs
 
@@ -192,11 +193,10 @@ def test_a_books_chip_puts_it_in_or_out_of_play(app):
     assert storage.load_saga(saga_id).books_in_play == ["Covenants"]
 
 
-#: Widgets the Books chapter builds for the sample saga (438: 47 book
-#: cards and their group headings, the sources, and the traditions as a
-#: chip each under their book's heading); raise a budget only
-#: deliberately.
-BOOKS_WIDGET_BUDGET = 445
+#: Widgets the Books chapter builds for the sample saga (47 book cards
+#: and their group headings, and the sources); the traditions are
+#: drawn on their own chapter. Raise a budget only deliberately.
+BOOKS_WIDGET_BUDGET = 310
 
 
 def test_the_books_chapter_stays_within_its_widget_budget(app):
@@ -205,41 +205,75 @@ def test_the_books_chapter_stays_within_its_widget_budget(app):
     assert built <= BOOKS_WIDGET_BUDGET, built
 
 
-def _chip_button(page: SagaContentPage, words: str) -> QPushButton:
+def _tradition_card(page: SagaContentPage, name: str) -> ClickableCard:
     return next(
-        b
-        for b in page.findChildren(QPushButton)
-        if b.objectName() == "chip" and b.text() == words
+        card
+        for card in page.findChildren(ClickableCard)
+        if any(label.text() == name for label in card.findChildren(QLabel))
     )
 
 
-def test_traditions_are_offered_by_book_or_one_by_one(app):
-    window, saga_id = _content("Books")
+def test_traditions_are_cards_offered_by_book_or_one_by_one(app):
+    window, saga_id = _content("Traditions")
     saga = window.saga
     assert saga is not None
     sc.set_books_in_play(saga, ["HMRE"])
     storage.save_saga(saga)
     window.redraw()
     page = _page(window)
-    # No Edit beside the section: the chips are its controls.
+    assert page.codex.rail.currentItem().text() == "Traditions"
+    # No Edit beside the section: the switches are its controls.
     with pytest.raises(AssertionError, match="with buttons"):
         section_buttons(page, "Traditions Offered")
     hedge = [
         t.id for t in traditions.listed(saga) if traditions.book_of(t, saga) == "HMRE"
     ]
-    # Hedge Magic's heading offers all of them: clicking it offers none.
-    # The headings' chips come in tradition_groups' order.
-    playing = [g.book for g in scs.tradition_groups(saga) if g.in_play]
+    # The headings' switches come first in each group, in tradition_groups'
+    # order: Hedge Magic's offers all of them, so clicking it offers none.
+    groups = scs.tradition_groups(saga)
     headings = [
-        b for b in page.findChildren(QPushButton) if b.text() == scs.ALL_OFFERED
+        s
+        for s in page.findChildren(ToggleSwitch)
+        if "of them" in s.toolTip() or "its traditions" in s.toolTip()
     ]
-    heading = headings[playing.index("HMRE")]
-    heading.click()
+    headings[[g.book for g in groups].index("HMRE")].click()
     assert storage.load_saga(saga_id).traditions_off == hedge
     page = _page(window)
-    _chip_button(page, "Vitkir").click()
+    card = _tradition_card(page, "Vitkir")
+    # Two lines: the name and its switch, then its kind.
+    assert [lb.text() for lb in card.findChildren(QLabel)] == [
+        "Vitkir",
+        "Hedge Tradition",
+    ]
+    card.findChild(ToggleSwitch).click()
     assert "trad_vitkir" not in storage.load_saga(saga_id).traditions_off
-    # A book out of play: its traditions greyed out, with nothing to click.
+    # A book out of play: its cards greyed out, their switches dead.
     page = _page(window)
-    assert not any(b.text() == "Ascetics" for b in page.findChildren(QPushButton))
-    assert any(label.text() == "Ascetics" for label in page.findChildren(QLabel))
+    assert not _tradition_card(page, "Ascetics").findChild(ToggleSwitch).isEnabled()
+
+
+def test_a_traditions_inspector_shows_it_with_a_switch_of_its_own(app):
+    window, saga_id = _content("Traditions")
+    page = _page(window)
+    card = _tradition_card(page, "Vitkir")
+    card.clicked()
+    inspector = page.codex.inspector
+    assert inspector.title.text() == "Vitkir"
+    assert inspector.subtitle.text() == "Hedge Tradition"
+    assert "Adds:" in plain(inspector.body.text()) or "Adds" in inspector.body.text()
+    switch = inspector.action
+    assert isinstance(switch, ToggleSwitch) and switch.isChecked()
+    switch.click()
+    assert storage.load_saga(saga_id).traditions_off == ["trad_vitkir"]
+    # The page is drawn again with the tradition still in the inspector.
+    page = _page(window)
+    assert page.codex.inspector.title.text() == "Vitkir"
+    action = page.codex.inspector.action
+    assert isinstance(action, ToggleSwitch) and not action.isChecked()
+
+
+def test_the_traditions_are_drawn_only_when_turned_to(app):
+    page = SagaContentPage(_sample_saga_with_covenant(), SCRIPTORUM)
+    assert not page.findChildren(ToggleSwitch)
+    page.codex.open_chapter("Traditions")
+    assert page.findChildren(ToggleSwitch)

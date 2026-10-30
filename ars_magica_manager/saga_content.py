@@ -282,8 +282,26 @@ def tradition_detail(saga: Saga, index: int | None) -> str:
     return tradition_text(saga, shown[index])
 
 
+def _tradition_adds(tradition: TraditionDef) -> str:
+    """What a tradition adds, in plain words ("35 Abilities and Arts, 1
+    Virtue"), the zeros left out."""
+
+    def counted(number: int, one: str, many: str) -> str:
+        return f"{number} {one if number == 1 else many}"
+
+    scripts = tradition.initiation.scripts if tradition.initiation else []
+    parts = [
+        (len(tradition.abilities), "Ability or Art", "Abilities and Arts"),
+        (len(tradition.virtues), "Virtue", "Virtues"),
+        (len(tradition.activities), "season of its own", "seasons of its own"),
+        (len(scripts), "Initiation Script", "Initiation Scripts"),
+    ]
+    return ", ".join(counted(*part) for part in parts if part[0])
+
+
 def tradition_text(saga: Saga, tradition: TraditionDef) -> str:
-    """A tradition's details: what it is, and whether it is offered."""
+    """A tradition's details: what it is, what it adds, and whether it is
+    offered."""
     book = traditions.book_of(tradition, saga)
     if not is_in_play(saga, book):
         offered = (
@@ -294,11 +312,16 @@ def tradition_text(saga: Saga, tradition: TraditionDef) -> str:
         offered = "Offered: characters can join it."
     else:
         offered = "Not offered: turn it on to let characters join it."
+    adds = _tradition_adds(tradition)
+    note = tradition.realm_note
     return "\n".join(
         [
             f"[b]{escape(tradition.name)}[/] "
-            f"({escape(sourcebooks.titles(tradition.source))}, {tradition.realm})",
+            f"({escape(sourcebooks.titles(tradition.source))}, "
+            f"{traditions.type_line(tradition)})",
             escape(tradition.description),
+            *([escape(note)] if note else []),
+            *([f"[b]Adds:[/] {escape(adds)}"] if adds else []),
             offered,
         ]
     )

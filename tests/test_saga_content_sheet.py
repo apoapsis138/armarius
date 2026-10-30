@@ -5,7 +5,7 @@ from __future__ import annotations
 
 from screen_helpers import _sample_saga_with_covenant
 
-from ars_magica_manager import catalog, sourcebooks
+from ars_magica_manager import book_overviews, catalog, sourcebooks
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 from ars_magica_manager import saga_content as sc
@@ -266,3 +266,39 @@ def test_move_to_source_moves_the_ticked_house_rules():
     assert [e.source for _, e in hr.all_entries(saga)] == ["", "HR"]
     # With no source to move to, there is nothing to do.
     assert isinstance(scf.move_to_source(_saga()), Refuse)
+
+
+def test_a_spells_source_column_names_its_saga_source():
+    saga = _sourced_saga()
+    spark = next(s for s in saga.spells if s.name == "Spark")
+    plain = spl.add_own_spell(saga, "Plain", "Creo", "Ignem")
+    rows = {r.name: r.source for r in scs.spell_rows(saga, [spark, plain])}
+    assert rows == {"Spark": "HR", "Plain": "Saga"}
+    assert spl.row_label(saga, spark).rstrip().endswith("HR")
+
+
+def test_every_book_has_a_short_overview_entry():
+    assert set(book_overviews.OVERVIEWS) == set(sourcebooks.SOURCEBOOKS)
+    too_long = [b for b, v in book_overviews.OVERVIEWS.items() if len(v.split()) > 60]
+    assert too_long == []
+    assert book_overviews.overview("MC") == book_overviews.NONE_YET
+
+
+def test_a_books_details_say_what_it_is_holds_and_adds():
+    saga = _saga()
+    text = scs.book_text(saga, "Covenants")
+    assert book_overviews.overview("Covenants") in text
+    assert "[b]Holds:[/] " in text and "Boons & Hooks" in text
+    assert "[b]Optional rules:[/] Extended book Quality" in text
+    assert "[b]Kinds of book:[/] Commentary" in text
+    # The core book lists its optional rules, not the game's own seasons.
+    core = scs.book_text(saga, sourcebooks.CORE)
+    assert "Optional rules" in core and "Season activities" not in core
+    assert "No overview yet." in scs.book_text(saga, "MC")
+
+
+def test_a_saga_sources_details_say_what_cites_it():
+    saga = _sourced_saga()
+    text = scs.book_text(saga, "HR")
+    assert "[b]Cited by:[/] Ours, Spark, Salt, The Ours" in text
+    assert "1 spell" in text and "overview" not in text

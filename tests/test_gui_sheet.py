@@ -677,6 +677,7 @@ def test_saga_content_opens_from_the_saga_page_with_its_chapters(app):
     assert window.crumb_names() == ["Sagas", saga.name, "Saga Content"]
     assert page.chapters() == [
         "Books",
+        "Traditions",
         "Catalogs",
         "Goods",
         "House Rules",

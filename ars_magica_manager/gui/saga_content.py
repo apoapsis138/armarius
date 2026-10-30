@@ -46,7 +46,6 @@ from .editing import (
     verb_buttons,
 )
 from .figures import fact_grid
-from .markup_html import to_html
 from .mystery_cults import CultsChapter
 from .pages import card_grid, page_header
 from .themes import Palette
@@ -57,6 +56,7 @@ from .widgets import (
     ClickableCard,
     Codex,
     Symbol,
+    ToggleSwitch,
     badge,
     cells_table,
     chip,
@@ -73,6 +73,7 @@ from .widgets import (
 
 CHAPTERS = (
     ("Books", "library"),
+    ("Traditions", "magic"),
     ("Catalogs", "lab_text"),
     ("Goods", "silver"),
     ("House Rules", "magic"),
@@ -80,6 +81,9 @@ CHAPTERS = (
     ("Spells", "enchanted_item"),
     ("Players", "players"),
 )
+
+#: The chapters too long to draw every time the page opens.
+LATER = ("Goods", "Traditions")
 
 #: The spell table's columns.
 SPELL_COLUMNS = ["Spell", "Arts", "Level", "Range/Duration/Target", "Ritual", "Source"]
@@ -97,6 +101,10 @@ def _none(words: str, p: Palette) -> QLabel:
 class SagaContentPage(QWidget):
     """The saga's content in the Codex layout; choosing anything shows it
     in the inspector."""
+
+    #: The tradition whose inspector switch was clicked: shown again when
+    #: the page is redrawn.
+    reopen = ""
 
     def __init__(
         self, saga: Saga, p: Palette, run: Run = lambda _command: None
@@ -122,6 +130,7 @@ class SagaContentPage(QWidget):
         self.inspector = self.codex.inspector
         builders = {
             "Books": self._books,
+            "Traditions": self._traditions,
             "Catalogs": self._catalogs,
             "Goods": self._goods,
             "House Rules": self._house_rules,
@@ -130,9 +139,10 @@ class SagaContentPage(QWidget):
             "Players": self._players,
         }
         for name, concept in CHAPTERS:
-            # The Goods ledger is long: drawn when first turned to.
+            # The Goods ledger and the traditions' cards are long: drawn
+            # when first turned to.
             build = builders[name]
-            self.codex.add(name, concept, build if name == "Goods" else build())
+            self.codex.add(name, concept, build if name in LATER else build())
         outer.addWidget(self.codex, 1)
 
     def chapters(self) -> list[str]:
@@ -196,7 +206,6 @@ class SagaContentPage(QWidget):
                     scf.source_ops(saga), sources_chooser, self.run, p
                 ),
             ),
-            self._traditions(),
         )
 
     def _book_card(self, book: scs.BookCard) -> ClickableCard:
@@ -241,7 +250,7 @@ class SagaContentPage(QWidget):
         )
         card.column.addStretch(1)
         card.clicked = lambda: self.inspect(
-            book.title, book.book, sc.book_detail(saga, book.book)
+            book.title, book.book, scs.book_text(saga, book.book)
         )
         if book.state == scs.OUT_OF_PLAY:
             # Faded in place of the lift's shadow: a card has one effect.
@@ -251,16 +260,10 @@ class SagaContentPage(QWidget):
         return card
 
     def _traditions(self) -> QWidget:
-        """Every tradition under its book's heading: the heading's chip
-        offers all of the book's traditions or none, each tradition's chip
-        that one; a book out of play greys its traditions out."""
+        """Every tradition as a card under its book's heading: the
+        heading's switch offers all of the book's traditions or none, each
+        card's that one; a book out of play greys its cards out."""
         p, saga = self.p, self.saga
-        tones = {
-            scs.ALL_OFFERED: p["text-success"],
-            scs.SOME_OFFERED: p["accent"],
-            scs.NONE_OFFERED: p["dim"],
-            scs.BOOK_OUT: p["dim"],
-        }
         body = QWidget()
         column = QVBoxLayout(body)
         column.setContentsMargins(0, 0, 0, 0)
@@ -271,64 +274,86 @@ class SagaContentPage(QWidget):
                 text(group.title, p["heading"], serif(13, caps=True, bold=True))
             )
             head.addStretch(1)
-            if group.in_play:
-                state = chip_button(
-                    group.state,
-                    tones[group.state],
-                    lambda book=group.book: self.run(
-                        scf.toggle_tradition_book(saga, book)
-                    ),
-                )
-                state.setToolTip(
-                    "Click to offer none of them."
-                    if group.state == scs.ALL_OFFERED
-                    else "Click to offer all of them."
-                )
-            else:
-                state = chip(group.state, tones[group.state])
-                state.setToolTip(
-                    f"Put {group.title} in play on Books in Play to offer its"
-                    " traditions."
-                )
-            head.addWidget(state)
-            column.addLayout(head)
-            chips = card_grid(
-                [self._tradition_chip(group, row) for row in group.rows], 3
+            head.addWidget(text(group.state, p["label"], serif(11, italic=True)))
+            switch = ToggleSwitch(
+                group.state == scs.ALL_OFFERED,
+                p,
+                lambda book=group.book: self.run(scf.toggle_tradition_book(saga, book)),
             )
+            switch.setEnabled(group.in_play)
+            switch.setToolTip(
+                f"Put {group.title} in play on Books in Play to offer its traditions."
+                if not group.in_play
+                else "Click to offer none of them."
+                if group.state == scs.ALL_OFFERED
+                else "Click to offer all of them."
+            )
+            head.addWidget(switch)
+            column.addLayout(head)
+            cards = card_grid([self._tradition_card(group, r) for r in group.rows], 3)
             if not group.in_play:
-                faded = QGraphicsOpacityEffect(chips)
+                faded = QGraphicsOpacityEffect(cards)
                 faded.setOpacity(0.45)
-                chips.setGraphicsEffect(faded)
-            column.addWidget(chips)
-        return section(sc.traditions_title(saga), p, body)
+                cards.setGraphicsEffect(faded)
+            column.addWidget(cards)
+        return scrolling_page(p, section(sc.traditions_title(saga), p, body))
 
-    def _tradition_chip(
+    def _tradition_switch(
+        self, group: scs.TraditionGroup, row: scs.TraditionRow, again: bool = False
+    ) -> ToggleSwitch:
+        """The switch that offers a tradition or stops; greyed out while
+        its book is out of play. With `again`, the inspector shows the
+        tradition again once the page is redrawn."""
+        saga = self.saga
+
+        def toggle() -> None:
+            if again:
+                SagaContentPage.reopen = row.id
+            self.run(scf.toggle_tradition(saga, row.id))
+
+        switch = ToggleSwitch(row.on and group.in_play, self.p, toggle)
+        switch.setEnabled(group.in_play)
+        switch.setToolTip(
+            f"Put {group.title} in play on Books in Play to offer it."
+            if not group.in_play
+            else "Click to stop offering it."
+            if row.on
+            else "Click to offer it."
+        )
+        return switch
+
+    def _tradition_card(
         self, group: scs.TraditionGroup, row: scs.TraditionRow
-    ) -> QWidget:
-        """A tradition as a chip with its name, lit while the saga offers
-        it: clicking it offers it or stops; greyed out, and not clickable,
-        while its book is out of play. Its tooltip gives its details."""
+    ) -> ClickableCard:
+        """A tradition in two lines: its name and switch, then its kind.
+        Clicking it shows it in the inspector, with a switch of its own."""
         p, saga = self.p, self.saga
+        card = ClickableCard(
+            p, pad=8, edge=p["text-success"] if row.on and group.in_play else p["dim"]
+        )
+        card.column.setSpacing(2)
+        top = QHBoxLayout()
+        top.addWidget(
+            text(row.name, p["foreground"], serif(12.5, bold=True), wrap=True), 1
+        )
+        top.addWidget(self._tradition_switch(group, row))
+        card.column.addLayout(top)
+        card.column.addWidget(
+            text(row.kind, p["label"], serif(11, italic=True), wrap=True)
+        )
         tradition = traditions.find(row.id)
-        details = (
-            to_html(sc.tradition_text(saga, tradition), p)
-            if tradition is not None
-            else ""
-        )
-        if not group.in_play:
-            label = chip(row.name, p["dim"])
-            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
-            label.setToolTip(details)
-            return label
-        button = chip_button(
-            row.name,
-            p["text-success"] if row.on else p["label"],
-            lambda: self.run(scf.toggle_tradition(saga, row.id)),
-            filled=p["background"] if row.on else "",
-        )
-        hint = "Click to stop offering it." if row.on else "Click to offer it."
-        button.setToolTip(f"{details}<br><br>{hint}")
-        return button
+        if tradition is not None:
+            card.clicked = lambda: self.codex.inspect(
+                row.name,
+                row.kind,
+                sc.tradition_text(saga, tradition),
+                None,
+                self._tradition_switch(group, row, again=True),
+            )
+        if SagaContentPage.reopen == row.id:
+            SagaContentPage.reopen = ""
+            card.clicked()
+        return card
 
     def _catalogs(self) -> QWidget:
         p, saga = self.p, self.saga

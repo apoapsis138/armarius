@@ -161,6 +161,28 @@ def book_of(tradition: TraditionDef, saga: Saga | None) -> str:
     return (playing or found or ["HMRE"])[0]
 
 
+#: The realm each category already says, which a type line leaves out;
+#: Magic, the usual one, goes unsaid everywhere.
+_CATEGORY_REALMS: dict[str, str] = {
+    "Holy Tradition": "Divine",
+    "Infernal Tradition": "Infernal",
+    "Faerie Tradition": "Faerie",
+}
+
+
+def type_line(tradition: TraditionDef) -> str:
+    """A tradition's kind, with its realm only when that is new information
+    ("Ancient Tradition · Faerie", "Hedge Tradition")."""
+    realms = [tradition.realm, *tradition.other_realms]
+    if len(realms) > 1:
+        return f"{tradition.category} · {', '.join(realms[:-1])} or {realms[-1]}"
+    if tradition.realm == "Magic":
+        return tradition.category
+    if _CATEGORY_REALMS.get(tradition.category) == tradition.realm:
+        return tradition.category
+    return f"{tradition.category} · {tradition.realm}"
+
+
 def listed(saga: Saga | None) -> list[TraditionDef]:
     """Every non-Hermetic tradition, its book in play or not, by book in
     the Books chapter's order (catalog order within a book). The saga's
