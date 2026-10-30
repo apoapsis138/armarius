@@ -43,6 +43,7 @@ from PySide6.QtWidgets import (
     QAbstractItemView,
     QComboBox,
     QFrame,
+    QGridLayout,
     QHBoxLayout,
     QHeaderView,
     QLabel,
@@ -320,6 +321,10 @@ def display_name(name: str, p: Palette, size: int = 34) -> QLabel:
     return GiltName(name or "(unnamed)", p, size)
 
 
+#: Cards to a row of a page.
+CARDS_ACROSS = 3
+
+
 class Card(QFrame):
     """A panel lying on the page, with a soft shadow and a flourish in
     each corner; `edge` colours its left border (a Virtue's green)."""
@@ -340,12 +345,30 @@ class Card(QFrame):
         self.column.setContentsMargins(pad, pad - 2, pad, pad)
         self.column.setSpacing(6)
 
+    def set_edge(self, edge: str) -> None:
+        """Colour its left border anew (it was given one when made)."""
+        assert self.edge is not None
+        self.setStyleSheet(self.styleSheet().replace(self.edge, edge))
+        self.edge = edge
+
     def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
         frame = QRectF(self.rect()).adjusted(3 if self.edge else 0, 0, 0, 0)
         corner_flourishes(
             QPainter(self), frame, self.p, 8 if self.height() < 80 else 12
         )
+
+
+def card_grid(cards: Sequence[QWidget], across: int = CARDS_ACROSS) -> QWidget:
+    box = QWidget()
+    grid = QGridLayout(box)
+    grid.setContentsMargins(0, 0, 0, 0)
+    grid.setSpacing(14)
+    for i, card in enumerate(cards):
+        grid.addWidget(card, i // across, i % across)
+    for column in range(across):
+        grid.setColumnStretch(column, 1)
+    return box
 
 
 def badge(words: str, colour: str, p: Palette) -> QLabel:

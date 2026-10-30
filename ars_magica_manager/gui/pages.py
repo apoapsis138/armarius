@@ -54,9 +54,11 @@ from .menus import Placer
 from .ornaments import FleuronButton, ShortRule
 from .themes import Palette
 from .widgets import (
+    CARDS_ACROSS,
     Card,
     ClickableCard,
     Codex,
+    card_grid,
     chapter_title,
     display_name,
     edit_button,
@@ -65,9 +67,6 @@ from .widgets import (
     serif,
     text,
 )
-
-#: How many cards a row holds.
-CARDS_ACROSS = 3
 
 Open = Callable[[str], None]
 
@@ -106,18 +105,6 @@ def divider(words: str, p: Palette) -> QWidget:
     label = text(words, p["label"], serif(12, italic=True))
     label.setAlignment(Qt.AlignmentFlag.AlignHCenter)
     column.addWidget(label)
-    return box
-
-
-def card_grid(cards: Sequence[QWidget], across: int = CARDS_ACROSS) -> QWidget:
-    box = QWidget()
-    grid = QGridLayout(box)
-    grid.setContentsMargins(0, 0, 0, 0)
-    grid.setSpacing(14)
-    for i, card in enumerate(cards):
-        grid.addWidget(card, i // across, i % across)
-    for column in range(across):
-        grid.setColumnStretch(column, 1)
     return box
 
 

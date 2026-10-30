@@ -146,6 +146,52 @@ SEASON_NOTES: dict[str, str] = {
 }
 
 
+#: Each interest in a line, for its card.
+SUMMARIES: dict[str, str] = {
+    SESSION: "What every character does: closing a session and finding out "
+    "who has heard of them.",
+    KNIGHTLY: "Tournaments, from the melee to a season on the circuit.",
+    SCHOLARLY: "Debate, learned charms and a scholar's working life.",
+    INSIGHT: "Answers drawn from faith, signs and the stars.",
+    MYSTERY_CULTS: "Finding new Initiation Scripts for a cult.",
+    CRAFT: "Making, selling and earning a living by a trade.",
+    TRIBUNAL: "Formal letters, and oaths called to account.",
+    FAERIE: "Summoning faeries and striking bargains with them.",
+    INFERNAL: "Sin, temptation and the Goetic Arts.",
+    APPRENTICESHIP: "A Gifted child's training, from Turbulence to the Gauntlet.",
+    COVENFOLK: "Grogs' stories, rewards and retirement.",
+}
+
+#: Who each interest is for and what it holds, for its inspector.
+ABOUT: dict[str, str] = {
+    SESSION: "Every character in play has these, so this interest is always on.",
+    KNIGHTLY: "For knights, and for the patrons who host them. Leave it off "
+    "for someone who will never ride in the lists.",
+    SCHOLARLY: "For schoolmen and anyone trained at the schools: disputing "
+    "with another character, tying ligatures, and a career from a place at "
+    "a school onward.",
+    INSIGHT: "For those who look for knowledge beyond study: borrowing an "
+    "Ability through Font of Knowledge, a divination, or an astrological "
+    "reckoning.",
+    MYSTERY_CULTS: "For a Mystagogue, who tests a new Initiation Script by "
+    "having an Initiate carry it out.",
+    CRAFT: "For craftsmen, merchants and artists: Labor Points, sales, an "
+    "apothecary's store, an artist's Reputation and Greek Fire. All of it "
+    "sits on Planning, not on Deeds.",
+    TRIBUNAL: "For those who live by the Order's customs: letters in the "
+    "Theban magi's rhetorical style, and calling on the spirit that "
+    "witnessed a broken oath.",
+    FAERIE: "For summoners and anyone who bargains with the Faerie Realm, "
+    "from the Ars Fabulosa to spending a fable point on the story itself.",
+    INFERNAL: "For those who deal with the Infernal, knowingly or not: "
+    "gaining Confidence from a sin, leading others into temptation, and "
+    "pitting a Goetic Art against a spirit's Might.",
+    APPRENTICESHIP: "For an apprentice and the parens who teaches them: the "
+    "untrained Gift lashing out, the final test, and failing an apprentice.",
+    COVENFOLK: "For the covenant's grogs and those who look after them: a "
+    "story's experience, a reward or punishment, and a pension.",
+}
+
 #: The interests a character may turn off: all but Session & Reputation,
 #: which every character in play has.
 OPTIONAL: tuple[str, ...] = tuple(i for i in INTERESTS if i != SESSION)
@@ -178,6 +224,11 @@ def hidden(off: list[str], action: str) -> bool:
     """Whether `action` is left out for a character with the interests
     `off` turned off."""
     return INTEREST_OF.get(action) in off and INTEREST_OF.get(action) != SESSION
+
+
+def members(name: str) -> list[str]:
+    """The actions of the interest `name`."""
+    return [action for action, tag in INTEREST_OF.items() if tag == name]
 
 
 def interest(action: str) -> str | None:

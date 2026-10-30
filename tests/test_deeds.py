@@ -102,3 +102,53 @@ def test_old_saves_load_with_every_interest_ticked_and_bad_ones_are_refused():
 def test_the_worksheet_reviews_interests_before_the_finishing_touches():
     keys = [step.key for step in creation_base.CHARACTER_STEPS]
     assert keys.index("interests") == keys.index("finish") - 1
+
+
+def test_every_interest_has_its_words_and_every_action_a_name():
+    assert set(deeds.SUMMARIES) == set(deeds.ABOUT) == set(deeds.INTERESTS)
+    for action in deeds.INTEREST_OF:
+        assert interests._name(action)
+
+
+def test_a_card_counts_what_the_sagas_books_bring(monkeypatch):
+    monkeypatch.setattr(
+        interests.action_books,
+        "book_allows",
+        lambda action, _saga: (
+            action
+            not in ("sell_goods", "labor_story", "invest_labor", "make_greek_fire")
+            and action not in ("melee_event", "tourney_season")
+        ),
+    )
+    cards = {c.title: c for c in interests.interest_cards(None)}
+    craft = cards[deeds.CRAFT]
+    assert craft.count == "2 actions, 4 more with other books"
+    assert "On Planning, in A Season's Work" in craft.detail
+    assert "On the Deeds chapter" not in craft.detail
+    assert "With City & Guild: " in craft.detail
+    knightly = cards[deeds.KNIGHTLY]
+    assert knightly.count == "Its books aren't in play" and not knightly.usable
+
+
+def test_an_action_on_both_pages_shows_on_both_and_counts_once(monkeypatch):
+    monkeypatch.setattr(
+        interests.action_books, "book_allows", lambda _action, _saga: True
+    )
+    card = next(
+        c for c in interests.interest_cards(None) if c.title == deeds.APPRENTICESHIP
+    )
+    assert card.count == "3 actions"
+    assert card.detail.count("[b]Turbulence[/]") == 2
+
+
+def test_session_and_reputation_is_a_card_with_no_switch():
+    card = interests.interest_cards(None)[0]
+    assert card.title == deeds.SESSION
+    assert card.key == "" and card.fixed == interests.ALWAYS_ON
+
+
+def test_the_terminals_ticks_say_what_each_interest_is():
+    knight = Character.from_dict({"id": "k", "name": "K", "type": "grog"})
+    form = interests.interests_form(None, knight)
+    fields = {f.label: f for f in form.fields()}
+    assert fields[deeds.INSIGHT].hint == deeds.SUMMARIES[deeds.INSIGHT]

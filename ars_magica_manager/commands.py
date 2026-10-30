@@ -31,6 +31,22 @@ from .markup import escape
 
 
 @dataclass(frozen=True)
+class FormCard:
+    """A form's check field drawn as a card: `key` is the field's ("" for a
+    choice that can't be changed, which `fixed` then names), `summary` and
+    `count` its lines, `detail` (markup) what its inspector shows. A card
+    that isn't `usable` is faded and can't be switched, and keeps its value."""
+
+    key: str
+    title: str
+    summary: str
+    count: str
+    detail: str
+    usable: bool = True
+    fixed: str = ""
+
+
+@dataclass(frozen=True)
 class Form:
     """A form of `fields`; `apply` gets its values when it is saved.
     `validate` (the values -> an error, or None) can refuse a save the
@@ -54,6 +70,11 @@ class Form:
     #: form's foot under this heading, saying what the choices so far will
     #: do, rather than a bare line.
     inspector: str = ""
+    #: When set, a front-end with the room draws the form's check fields
+    #: as these cards beside an inspector, under the line `cards_lead`; the
+    #: values it gives `apply` are the fields' all the same.
+    cards: Callable[[], list[FormCard]] | None = None
+    cards_lead: str = ""
 
 
 @dataclass(frozen=True)

@@ -84,7 +84,15 @@ from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .forms import NoticeDialog, answer, run_steps, step_dialog
-from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
+from .frame import (
+    APP_NAME,
+    MAXIMISE,
+    DragStrip,
+    Grips,
+    TopStrip,
+    WindowButtons,
+    native_frame_event,
+)
 from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls
@@ -306,7 +314,7 @@ class MainWindow(QMainWindow):
         bar = QHBoxLayout()
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
-        self.drag = DragStrip(self, self.palette_, "Armarius")
+        self.drag = DragStrip(self, self.palette_, APP_NAME)
         bar.addWidget(self.drag, 1)
         #: Advance Season, while a saga is open: its date, and a click
         #: plays the season out (advance_forms).
@@ -407,9 +415,7 @@ class MainWindow(QMainWindow):
         self, eventType: QByteArray | bytes | bytearray | memoryview, message: int
     ) -> tuple[bool, int]:
         """Windows Snap for the drawn title bar (snapping.py)."""
-        raw = eventType.data() if isinstance(eventType, QByteArray) else eventType
-        kind = bytes(raw)
-        result = snapping.native_event(self, kind, int(message))
+        result = native_frame_event(self, eventType, message)
         if result is not None:
             return True, result
         return super().nativeEvent(eventType, message)  # pyright: ignore[reportReturnType]

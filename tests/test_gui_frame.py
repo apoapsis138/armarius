@@ -15,8 +15,12 @@ from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
+from ars_magica_manager.commands import Confirm, Form
+from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import pictures
+from ars_magica_manager.gui.forms import ChooseDialog, NoticeDialog, step_dialog
 from ars_magica_manager.gui.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
+from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
 
 
@@ -101,3 +105,37 @@ def test_other_systems_leave_native_messages_to_qt(app):
     assert snapping.native_event(window, b"xcb_generic_event_t", 0) is None
     snapping.make_snappable(window)
     assert window.windowFlags() & Qt.WindowType.FramelessWindowHint
+
+
+def _popups() -> list:
+    p = PALETTES[0]
+    form = Form("A Form", lambda: [DialogField("a", "A", "text")], lambda _v: None)
+    return [
+        step_dialog(form, p, None),
+        step_dialog(Confirm("Sure?", lambda: None), p, None),
+        ChooseDialog("A List", [], p),
+        NoticeDialog("A Notice", "Done.", p),
+    ]
+
+
+def test_every_popup_has_the_apps_title_bar(app):
+    for popup in _popups():
+        assert popup.windowFlags() & Qt.WindowType.FramelessWindowHint
+        assert popup.drag.title == "Armarius"
+        assert CLOSE in popup.window_buttons.buttons
+
+
+def test_a_popups_close_button_cancels_it(app):
+    popup = _popups()[0]
+    popup.show()
+    popup.window_buttons.buttons[CLOSE].click()
+    assert popup.result() == 0 and not popup.isVisible()
+
+
+def test_forms_and_lists_maximise_and_questions_do_not(app):
+    form, confirm, choose, notice = _popups()
+    assert MAXIMISE in form.window_buttons.buttons
+    assert MAXIMISE in choose.window_buttons.buttons
+    assert MAXIMISE not in confirm.window_buttons.buttons
+    assert MAXIMISE not in notice.window_buttons.buttons
+    assert not confirm.drag.maximises

@@ -4484,17 +4484,33 @@ take it up: untick it in [Interests](help:interests) on the Manage chapter.
 
 <!-- tui -->
 More (`m`) on a person's record offers **Interests**:
+a tick for each kind of deed the saga's books bring, with a line on what
+it is: Knightly, Scholarly, Insight, Mystery Cults, Craft & Trade, Tribunal
+& Order, Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk.
 <!-- /tui -->
 <!-- gui -->
-**Interests**, in a person's Manage chapter, opens
+**Interests**, in a person's Manage chapter, opens a window of cards, one
+for each kind of deed: Knightly, Scholarly, Insight, Mystery Cults, Craft &
+Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship
+and Covenfolk. A card says what the interest is and how many actions it
+adds in this saga, counting those whose book is in play, so one may read
+"2 actions, 4 more with other books". Click a card to see it in the
+Inspector: who it is for, each action with a line on what it does, whether
+that action is on the Deeds chapter or on Planning in A Season's Work, and
+which book the others wait for. Each card's switch, and the Inspector's,
+turns the interest off or on; Save keeps your choices and Cancel leaves
+things as they were.
+
+A card whose books aren't in play is faded and its switch is locked. The
+character's choice is kept, so the interest comes back as you left it when
+a book arrives.
 <!-- /gui -->
-a tick for each kind of deed the saga's books bring: Knightly, Scholarly,
-Insight, Mystery Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The
-Infernal, Apprenticeship and Covenfolk. Untick the ones the character
-won't take up, a magus's Knightly or a blacksmith's Scholarly, and their
-actions leave the sheet: the Deeds chapter's heading, A Season's Work and
-More alike. Session & Reputation (End of Session and the Reputation rolls)
-is every character's and can't be unticked.
+
+Turn off the ones the character won't take up, a magus's Knightly or a
+blacksmith's Scholarly, and their actions leave the sheet: the Deeds
+chapter's heading, A Season's Work and More alike. Session & Reputation
+(End of Session and the Reputation rolls) is every character's and is
+always on.
 
 Everything starts ticked, so nothing goes missing until you say so; a new
 character's Creation Worksheet has a Review Interests step for it. Ticking

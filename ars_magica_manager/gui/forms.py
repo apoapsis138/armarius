@@ -21,8 +21,14 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from PySide6.QtCore import QRectF, Qt
-from PySide6.QtGui import QColor, QMouseEvent, QPainter, QPaintEvent, QPen
+from PySide6.QtCore import QByteArray, QEvent, QRectF, Qt
+from PySide6.QtGui import (
+    QColor,
+    QPainter,
+    QPaintEvent,
+    QPen,
+    QShowEvent,
+)
 from PySide6.QtWidgets import (
     QAbstractItemView,
     QCheckBox,
@@ -30,6 +36,7 @@ from PySide6.QtWidgets import (
     QDialog,
     QFileDialog,
     QFormLayout,
+    QGraphicsOpacityEffect,
     QHBoxLayout,
     QLabel,
     QLineEdit,
@@ -52,6 +59,7 @@ from ..commands import (
     ChooseFile,
     Confirm,
     Form,
+    FormCard,
     Picked,
     Refuse,
     filter_values,
@@ -59,12 +67,29 @@ from ..commands import (
     passes,
 )
 from ..form_spec import DialogField, FieldError, ListEditor
-from . import heraldry, sounds
+from . import heraldry, snapping, sounds
+from .frame import (
+    APP_NAME,
+    CLOSE,
+    MAXIMISE,
+    DragStrip,
+    Grips,
+    WindowButtons,
+    native_frame_event,
+)
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, InspectorFrame, corner_flourishes
 from .paper import Paper
 from .themes import Palette
-from .widgets import filter_choice, serif, text
+from .widgets import (
+    ClickableCard,
+    Inspector,
+    ToggleSwitch,
+    card_grid,
+    filter_choice,
+    serif,
+    text,
+)
 
 #: Shows a step's dialog and waits: Accepted or Rejected. The window's
 #: `ask`, which tests replace to answer without showing anything.
@@ -79,24 +104,24 @@ def _shown_text(value: object) -> str:
 
 
 class _Page(Paper):
-    """A dialog's sheet of paper, with a flourish in each corner; ruled
-    round its edge when it is a window of its own (`edged`)."""
-
-    edged = False
+    """A dialog's sheet of paper, ruled round its edge, with a flourish in
+    each corner."""
 
     def paintEvent(self, event: QPaintEvent) -> None:
         super().paintEvent(event)
         painter = QPainter(self)
-        if self.edged:
-            painter.setPen(QPen(QColor(self.p["rule"]), 1))
-            painter.drawRect(QRectF(self.rect()).adjusted(0.5, 0.5, -0.5, -0.5))
+        painter.setPen(QPen(QColor(self.p["rule"]), 1))
+        painter.drawRect(QRectF(self.rect()).adjusted(0.5, 0.5, -0.5, -0.5))
         corner_flourishes(painter, QRectF(self.rect()), self.p, 18)
 
 
 class _Sheet(QDialog):
-    """A dialog on paper: its title over a hedera rule, a body, an error
-    line and its buttons (Cancel, then the action), as a window over the
-    page."""
+    """A dialog on paper, as a window over the page: the app's title bar
+    (frame.py, in place of the system's), its title over a hedera rule, a
+    body, an error line and its buttons (Cancel, then the action)."""
+
+    #: The title bar's buttons; a window that can maximise also resizes.
+    controls: tuple[str, ...] = (MAXIMISE, CLOSE)
 
     def __init__(
         self,
@@ -107,14 +132,20 @@ class _Sheet(QDialog):
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle(plain(title))
+        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
         self.p = p
         page = self.page = _Page(p)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(page)
-        self.column = QVBoxLayout(page)
+        sheet = QVBoxLayout(page)
+        sheet.setContentsMargins(0, 0, 0, 0)
+        sheet.setSpacing(0)
+        sheet.addLayout(self._title_bar())
+        self.column = QVBoxLayout()
         self.column.setSpacing(8)
-        self.column.setContentsMargins(26, 20, 26, 18)
+        self.column.setContentsMargins(26, 6, 26, 18)
+        sheet.addLayout(self.column, 1)
         self.heading = text(plain(title), p["heading"], serif(17, bold=True))
         self.column.addWidget(self.heading)
         self.column.addWidget(FleuronRule(p))
@@ -124,6 +155,43 @@ class _Sheet(QDialog):
         self.cancel.clicked.connect(self.reject)
         self.save = QPushButton(action)
         self.save.setDefault(True)
+
+    def _title_bar(self) -> QHBoxLayout:
+        """The app's name in the middle (drag it to move the window) and
+        the window's own buttons, as the main window has."""
+        maximises = MAXIMISE in self.controls
+        bar = QHBoxLayout()
+        bar.setContentsMargins(12, 4, 8, 0)
+        self.drag = DragStrip(self, self.p, APP_NAME, maximises)
+        bar.addWidget(self.drag, 1)
+        self.window_buttons = WindowButtons(self, self.p, kinds=self.controls)
+        bar.addWidget(self.window_buttons, 0, Qt.AlignmentFlag.AlignTop)
+        if maximises:
+            self.grips = Grips(self)
+        return bar
+
+    def showEvent(self, event: QShowEvent) -> None:
+        snapping.make_snappable(self)
+        super().showEvent(event)
+
+    def nativeEvent(
+        self, eventType: QByteArray | bytes | bytearray | memoryview, message: int
+    ) -> tuple[bool, int]:
+        """Fills the screen's work area when maximised (snapping.py)."""
+        result = native_frame_event(self, eventType, message)
+        if result is not None:
+            return True, result
+        return super().nativeEvent(eventType, message)  # pyright: ignore[reportReturnType]
+
+    def changeEvent(self, event: QEvent) -> None:
+        """Maximise turns to restore (and back) as the window does."""
+        if event.type() == QEvent.Type.WindowStateChange:
+            snapping.make_snappable(self)
+            if MAXIMISE in self.controls:
+                button = self.window_buttons.buttons[MAXIMISE]
+                button.update()
+                button.setToolTip("Restore" if self.isMaximized() else "Maximise")
+        super().changeEvent(event)
 
     def finish(self) -> None:
         """Put the error line and the buttons under the body."""
@@ -766,8 +834,114 @@ class ChooseDialog(_Sheet):
         self.accept()
 
 
+class CardsDialog(_Sheet):
+    """A form's check fields as `cards` (commands.FormCard) beside an
+    inspector: each card's switch sets its field, and clicking a card shows
+    it in the inspector, with a switch of its own. `values` holds what it
+    saved, after exec() returns Accepted, as FieldsDialog's does."""
+
+    def __init__(
+        self,
+        title: str,
+        fields: list[DialogField],
+        cards: list[FormCard],
+        lead: str,
+        p: Palette,
+        parent: QWidget | None = None,
+        *,
+        save_label: str = "Save",
+        cancel_label: str = "Cancel",
+    ) -> None:
+        super().__init__(title, p, save_label, parent)
+        self.cancel.setText(cancel_label)
+        self.values: dict[str, Any] = {f.key: bool(f.value) for f in fields}
+        #: The card in the inspector, by its title.
+        self.chosen = ""
+        self.switches: dict[str, ToggleSwitch] = {}
+        self.cards = {card.title: self._card(card) for card in cards}
+        self.column.addWidget(text(lead, p["label"], serif(12, italic=True), wrap=True))
+        self.inspector = Inspector(p)
+        self.inspector.setFixedWidth(400)
+        grid = QVBoxLayout()
+        grid.addWidget(card_grid(list(self.cards.values()), 2))
+        grid.addStretch(1)
+        body = QHBoxLayout()
+        body.setSpacing(14)
+        body.addLayout(grid, 1)
+        body.addWidget(self.inspector)
+        self.column.addLayout(body, 1)
+        self.save.clicked.connect(self.accept)
+        self.finish()
+        self.resize(WIDEST_WINDOW + 100, TALLEST_WINDOW)
+        self.choose(cards[0])
+
+    def _on(self, card: FormCard) -> bool:
+        """Whether `card` shows as on: a card that isn't usable never does,
+        though its field keeps its value."""
+        return card.usable and self.values.get(card.key, True)
+
+    def _switch(self, card: FormCard) -> QWidget:
+        """`card`'s switch, or the words that stand for one on a card that
+        can't change."""
+        if card.fixed:
+            return text(card.fixed, self.p["label"], serif(11, italic=True))
+        switch = ToggleSwitch(self._on(card), self.p, lambda: self._toggle(card))
+        switch.setEnabled(card.usable)
+        return switch
+
+    def _card(self, card: FormCard) -> ClickableCard:
+        p = self.p
+        drawn = ClickableCard(
+            p, pad=8, edge=p["text-success"] if self._on(card) else p["dim"]
+        )
+        drawn.column.setSpacing(2)
+        top = QHBoxLayout()
+        top.addWidget(text(card.title, p["foreground"], serif(12.5, bold=True)), 1)
+        switch = self._switch(card)
+        if isinstance(switch, ToggleSwitch):
+            self.switches[card.title] = switch
+        top.addWidget(switch)
+        drawn.column.addLayout(top)
+        drawn.column.addWidget(
+            text(card.summary, p["foreground"], serif(11.5), wrap=True)
+        )
+        drawn.column.addWidget(
+            text(card.count, p["label"], serif(11, italic=True), wrap=True)
+        )
+        drawn.column.addStretch(1)
+        drawn.clicked = lambda: self.choose(card)
+        if not card.usable:
+            # Faded in place of the lift's shadow: a card has one effect.
+            faded = QGraphicsOpacityEffect(drawn)
+            faded.setOpacity(0.5)
+            drawn.setGraphicsEffect(faded)
+        return drawn
+
+    def _toggle(self, card: FormCard) -> None:
+        """Flip `card`'s field, and both of its switches to match."""
+        self.values[card.key] = not self.values[card.key]
+        on = self._on(card)
+        drawn = self.cards[card.title]
+        drawn.set_edge(self.p["text-success" if on else "dim"])
+        self.switches[card.title].setChecked(on)
+        action = self.inspector.action
+        if self.chosen == card.title and isinstance(action, ToggleSwitch):
+            action.setChecked(on)
+
+    def choose(self, card: FormCard) -> None:
+        """Show `card` in the inspector and outline it."""
+        self.chosen = card.title
+        for title, drawn in self.cards.items():
+            drawn.set_chosen(title == card.title)
+        self.inspector.show_item(
+            card.title, card.count, card.detail, None, self._switch(card)
+        )
+
+
 class ConfirmDialog(_Sheet):
     """A yes-or-no question; Accepted means yes."""
+
+    controls = (CLOSE,)
 
     def __init__(
         self,
@@ -813,14 +987,12 @@ class NoticeDialog(_Sheet):
     """A message on paper with an OK button: what a step refused, or the
     notes after it."""
 
+    controls = (CLOSE,)
+
     def __init__(
         self, title: str, words: str, p: Palette, parent: QWidget | None = None
     ) -> None:
         super().__init__(title, p, "OK", parent)
-        # Paper all over: no system title bar, ruled round, and moved by
-        # dragging the paper.
-        self.setWindowFlags(Qt.WindowType.Dialog | Qt.WindowType.FramelessWindowHint)
-        self.page.edged = True
         # A long title ("Spend Agency Experience: Sir Konrad von Elster")
         # breaks after its action, so the name stays whole on the line
         # below, and wraps rather than being cut off at the paper's edge.
@@ -842,12 +1014,6 @@ class NoticeDialog(_Sheet):
         self.finish()
         self.setMinimumWidth(420)
 
-    def mousePressEvent(self, event: QMouseEvent) -> None:
-        handle = self.windowHandle()
-        if event.button() == Qt.MouseButton.LeftButton and handle is not None:
-            handle.startSystemMove()
-        event.accept()
-
 
 # -- running steps --
 
@@ -865,6 +1031,17 @@ def step_dialog(
     """The dialog that asks `step` (None: a list with nothing in it)."""
     if isinstance(step, ChooseFile):
         return file_dialog(step, parent)
+    if isinstance(step, Form) and step.cards is not None:
+        return CardsDialog(
+            step.title,
+            step.fields(),
+            step.cards(),
+            step.cards_lead,
+            p,
+            parent,
+            save_label=step.save_label,
+            cancel_label=step.cancel_label,
+        )
     if isinstance(step, Form):
         return FieldsDialog(
             step.title,
@@ -905,7 +1082,7 @@ def answer(step: Step, dialog: QDialog) -> object:
     """Run `step`'s apply with what its (accepted) dialog holds: the next
     step, or what the steps end with."""
     if isinstance(step, Form):
-        assert isinstance(dialog, FieldsDialog)
+        assert isinstance(dialog, FieldsDialog | CardsDialog)
         return step.apply(dialog.values)
     if isinstance(step, Choose):
         assert isinstance(dialog, ChooseDialog)

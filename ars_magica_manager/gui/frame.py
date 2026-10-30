@@ -1,7 +1,8 @@
-"""The window's own frame, in place of the system's title bar: the
+"""The windows' own frame, in place of the system's title bar: the
 minimise, maximise and close glyphs drawn on the paper, a strip that
 moves the window (a double-click maximises it), and thin grips along the
-edges and corners that resize it.
+edges and corners that resize it. The main window and every popup
+(forms.py) are framed this way.
 
 Moving and resizing go through the system (QWindow.startSystemMove and
 startSystemResize), and snapping.py gives the window back the styles
@@ -10,7 +11,7 @@ Windows snaps by, so it still snaps to the screen's edges and halves.
 
 from __future__ import annotations
 
-from PySide6.QtCore import QEvent, QObject, QPoint, QPointF, QRectF, Qt
+from PySide6.QtCore import QByteArray, QEvent, QObject, QPoint, QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QFont, QMouseEvent, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import (
     QAbstractButton,
@@ -18,14 +19,27 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from . import pictures
+from . import pictures, snapping
 from .themes import Palette
 
+#: The name over the middle of every window's title bar.
+APP_NAME = "Armarius"
 MINIMISE, MAXIMISE, CLOSE = "minimise", "maximise", "close"
 #: The width of a resizing grip along an edge, in pixels.
 GRIP = 6
 #: The height of the strip that moves the window over the title page.
 STRIP = 40
+
+
+def native_frame_event(
+    window: QWidget,
+    event_type: QByteArray | bytes | bytearray | memoryview,
+    message: int,
+) -> int | None:
+    """`window`'s answer to a native message for its drawn title bar
+    (snapping.py), or None to leave it to Qt."""
+    raw = event_type.data() if isinstance(event_type, QByteArray) else event_type
+    return snapping.native_event(window, bytes(raw), int(message))
 
 
 def toggle_maximised(window: QWidget) -> None:
@@ -98,19 +112,28 @@ class GlyphButton(QAbstractButton):
 
 
 class WindowButtons(QWidget):
-    """Minimise, maximise and close for `window`."""
+    """Minimise, maximise and close for `window`, or those of them `kinds`
+    names."""
 
-    def __init__(self, window: QWidget, p: Palette, height: int = 28) -> None:
+    def __init__(
+        self,
+        window: QWidget,
+        p: Palette,
+        height: int = 28,
+        kinds: tuple[str, ...] = (MINIMISE, MAXIMISE, CLOSE),
+    ) -> None:
         super().__init__()
         row = QHBoxLayout(self)
         row.setContentsMargins(0, 0, 0, 0)
         row.setSpacing(0)
         self.buttons: dict[str, GlyphButton] = {}
-        for kind, act in (
-            (MINIMISE, window.showMinimized),
-            (MAXIMISE, lambda: toggle_maximised(window)),
-            (CLOSE, window.close),
-        ):
+        acts = {
+            MINIMISE: window.showMinimized,
+            MAXIMISE: lambda: toggle_maximised(window),
+            CLOSE: window.close,
+        }
+        for kind in kinds:
+            act = acts[kind]
             button = GlyphButton(kind, p, height)
             button.clicked.connect(act)
             row.addWidget(button)
@@ -125,12 +148,16 @@ class WindowButtons(QWidget):
 class DragStrip(QWidget):
     """Space that moves `window` when dragged and maximises it (or
     restores it) when double-clicked, with `title` over the middle of the
-    window (or of the strip, when the window's middle is off it)."""
+    window (or of the strip, when the window's middle is off it). A window
+    that can't be maximised passes `maximises` False."""
 
-    def __init__(self, window: QWidget, p: Palette, title: str = "") -> None:
+    def __init__(
+        self, window: QWidget, p: Palette, title: str = "", maximises: bool = True
+    ) -> None:
         super().__init__()
         self.window_ = window
         self.title = title
+        self.maximises = maximises
         self.p = p
         self.setFont(QFont(pictures.DISPLAY, 13))
 
@@ -162,7 +189,7 @@ class DragStrip(QWidget):
         event.accept()
 
     def mouseDoubleClickEvent(self, event: QMouseEvent) -> None:
-        if event.button() == Qt.MouseButton.LeftButton:
+        if event.button() == Qt.MouseButton.LeftButton and self.maximises:
             toggle_maximised(self.window_)
         event.accept()
 

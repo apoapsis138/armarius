@@ -109,6 +109,30 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.53.0 — 2026-10-30
+
+### Illuminatio
+
+- **Interests is a window of cards.** Each interest has a card saying what
+  it is and how many actions it adds in this saga, counting those whose
+  book is in play. Click a card and the Inspector says who it is for, what
+  each action does, whether it is on the Deeds chapter or on Planning, and
+  which book the others wait for. A card whose books aren't in play is
+  faded and locked, and keeps the character's choice. Session & Reputation
+  has a card too, always on.
+- **Every popup has the app's title bar** in place of the Windows one:
+  forms, lists, questions and notices alike. Forms and lists can maximise
+  and resize; questions and notices just close. Choosing a file or folder
+  still uses the Windows window.
+
+### Scriptorum
+
+- The Interests form says in a line what each interest is.
+
+### Glossa
+
+- Help for Interests and for how windows work follows these changes.
+
 ## 3.52.0 — 2026-10-30
 
 ### Illuminatio
