@@ -307,6 +307,7 @@ def test_a_form_in_a_window_grows_as_fields_are_shown(app):
     QApplication.processEvents()
     assert dialog.height() > short + 200
     assert dialog.area.verticalScrollBar().maximum() == 0
+    dialog.set_value("more", False)
     dialog.close()
 
 

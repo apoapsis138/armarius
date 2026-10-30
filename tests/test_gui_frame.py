@@ -18,7 +18,12 @@ from PySide6.QtWidgets import QApplication
 from ars_magica_manager.commands import Confirm, Form
 from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.gui import pictures
-from ars_magica_manager.gui.forms import ChooseDialog, NoticeDialog, step_dialog
+from ars_magica_manager.gui.forms import (
+    ChooseDialog,
+    FieldsDialog,
+    NoticeDialog,
+    step_dialog,
+)
 from ars_magica_manager.gui.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
@@ -139,3 +144,45 @@ def test_forms_and_lists_maximise_and_questions_do_not(app):
     assert MAXIMISE not in confirm.window_buttons.buttons
     assert MAXIMISE not in notice.window_buttons.buttons
     assert not confirm.drag.maximises
+
+
+def _form(cancel_label: str = "Cancel") -> FieldsDialog:
+    fields = [DialogField("a", "A", "text", value="old")]
+    return FieldsDialog("A Form", fields, PALETTES[0], cancel_label=cancel_label)
+
+
+def test_a_form_asks_before_losing_changes_and_not_otherwise(app):
+    form = _form()
+    asked = []
+    form.ask = lambda question: asked.append(question) or 0
+    form.show()
+    form.reject()
+    assert asked == [] and not form.isVisible()
+
+    form = _form()
+    form.ask = lambda question: asked.append(question) or 0
+    form.inputs["a"].setText("new")
+    form.show()
+    form.window_buttons.buttons[CLOSE].click()
+    assert len(asked) == 1 and form.isVisible()
+    form.ask = lambda _question: 1
+    form.reject()
+    assert not form.isVisible()
+
+
+def test_a_forms_save_never_asks(app):
+    form = _form()
+    form.ask = lambda _question: pytest.fail("asked")
+    form.inputs["a"].setText("new")
+    form.show()
+    form.try_save()
+    assert form.values == {"a": "new"}
+
+
+def test_a_calculators_close_never_asks(app):
+    form = _form("Close")
+    form.ask = lambda _question: pytest.fail("asked")
+    form.inputs["a"].setText("new")
+    form.show()
+    form.reject()
+    assert not form.isVisible()

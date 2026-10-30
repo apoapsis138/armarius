@@ -21,6 +21,7 @@ from textual.widgets import (
     Static,
     TextArea,
 )
+from textual.widgets.button import ButtonVariant
 
 from ... import form_spec as fs
 from ...commands import Picked
@@ -75,6 +76,83 @@ class ModalDialog[ResultT](ModalScreen[ResultT]):
         """The chosen value of the Select at `selector`, or None if blank."""
         value = self.query_one(selector, Select).value
         return value if isinstance(value, str) else None
+
+
+class ConfirmScreen(ModalDialog[bool]):
+    """A Yes/No confirmation, e.g. before deleting something. Dismisses with
+    True for Yes, False for No / Escape. No is focused by default so a stray
+    Enter can't delete; `y` and `n` answer directly. `message` is shown as
+    markup, so escape any user text in it."""
+
+    BINDINGS: ClassVar[list[BindingType]] = [
+        ("n", "no", "No"),
+        ("y", "yes", "Yes"),
+    ]
+
+    DEFAULT_CSS = """
+    ConfirmScreen {
+        align: center middle;
+    }
+
+    #confirm-dialog {
+        width: 60;
+        height: auto;
+        padding: 1 2;
+    }
+
+    #confirm-message {
+        height: auto;
+        margin-bottom: 1;
+    }
+
+    #confirm-buttons {
+        width: 100%;
+        height: auto;
+    }
+    """
+
+    def __init__(
+        self,
+        message: str,
+        *,
+        yes_label: str = "Yes",
+        yes_variant: ButtonVariant = "error",
+        safe_answer: bool = False,
+    ) -> None:
+        """`safe_answer` is the answer a stray key should give: False (No) for
+        the usual "Delete X?"; True when No is the risky choice, which also
+        focuses Yes and makes Escape answer Yes."""
+        super().__init__()
+        self.message = message
+        self.yes_label = yes_label
+        self.yes_variant: ButtonVariant = yes_variant
+        self.safe_answer = safe_answer
+
+    def compose(self) -> ComposeResult:
+        with Vertical(id="confirm-dialog", classes="dialog-box"):
+            yield Static(self.message, id="confirm-message")
+            with Horizontal(id="confirm-buttons"):
+                yield Button(self.yes_label, id="btn-yes", variant=self.yes_variant)
+                yield Button("No", id="btn-no")
+
+    def on_mount(self) -> None:
+        self.query_one("#btn-yes" if self.safe_answer else "#btn-no", Button).focus()
+
+    def action_cancel(self) -> None:
+        """Escape: the answer a stray key should give."""
+        self.dismiss(self.safe_answer)
+
+    def action_escape(self) -> None:
+        self.action_cancel()
+
+    def action_yes(self) -> None:
+        self.dismiss(True)
+
+    def action_no(self) -> None:
+        self.dismiss(False)
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        self.dismiss(event.button.id == "btn-yes")
 
 
 class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
@@ -342,6 +420,7 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         values = self.current_values()
         self._filled_from = {f.key: values.get(f.key) for f in self.fields if f.fills}
         self._react()
+        self._opened_with = self.current_values()
 
     def on_resize(self) -> None:
         self._refit()
@@ -498,6 +577,28 @@ class FieldsDialog[ResultT = dict[str, Any]](ModalDialog[ResultT | None]):
         self._picked[key] = None
         focused.label = self._picker_label(spec)
         self._react()
+
+    def action_cancel(self) -> None:
+        """Cancel, or ask first if that would lose changes (a calculator's
+        Close has none to lose)."""
+        unsaved = (
+            self.cancel_label == "Cancel" and self.current_values() != self._opened_with
+        )
+        if not unsaved:
+            super().action_cancel()
+            return
+
+        def answered(leave: bool | None) -> None:
+            if leave:
+                super(FieldsDialog, self).action_cancel()
+
+        self.app.push_screen(
+            ConfirmScreen(
+                "Leave without saving? Your changes won't be kept.",
+                yes_label="Discard Changes",
+            ),
+            answered,
+        )
 
     def on_button_pressed(self, event: Button.Pressed) -> None:
         if event.button.id == "btn-cancel":

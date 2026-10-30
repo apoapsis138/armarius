@@ -109,6 +109,31 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.54.0 — 2026-10-30
+
+### Illuminatio
+
+- **Interests cards fade when turned off**, and lift again when turned on.
+
+### Pagina
+
+- **Religion is an interest.** Turn it off and the Religion chapter leaves
+  the sheet, for a character whose faith will never come up. Its card
+  counts what the books and the character's own faith offer, and the
+  Inspector lists what belongs to other faiths. A Church career keeps it
+  on, and brings the chapter back if one begins.
+
+### Fundamenta
+
+- **Every form asks before losing unsaved changes**, on the desktop and in
+  the terminal: Cancel, the close button or Esc asks first if anything has
+  changed. A form with Close instead of Cancel doesn't ask.
+
+### Glossa
+
+- Help for Interests, the Religion chapter and how windows work follows
+  these changes.
+
 ## 3.53.0 — 2026-10-30
 
 ### Illuminatio

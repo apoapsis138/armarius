@@ -81,6 +81,9 @@ def close_qt_windows():
     if app is None:
         return
     for window in QApplication.topLevelWidgets():
+        # A form left with changes would otherwise stop to ask.
+        if hasattr(window, "unsaved"):
+            window.unsaved = lambda: False
         window.close()
         window.deleteLater()
     QCoreApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)

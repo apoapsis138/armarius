@@ -4331,6 +4331,8 @@ A character's faith and what it lets him do, and his career in the Church. The t
 
 **The app works out:** what his faith offers him and whether he may take it, each examination's total and result, what an ordination brings (the grade, a Faith Point, the Social Status and a Reputation), what still stands between him and the priesthood, and each petition's total, who may grant it and whether it is granted.
 
+A character with no use for it can leave this chapter off: see [Interests](help:interests).
+
 **See also:** [Which faith actions can he take?](help:guide-religion), [Virtues & Flaws tab](help:tab-vf), [Planning tab](help:tab-planning)
 
 ### Faith
@@ -4485,21 +4487,23 @@ take it up: untick it in [Interests](help:interests) on the Manage chapter.
 <!-- tui -->
 More (`m`) on a person's record offers **Interests**:
 a tick for each kind of deed the saga's books bring, with a line on what
-it is: Knightly, Scholarly, Insight, Mystery Cults, Craft & Trade, Tribunal
-& Order, Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk.
+it is: Knightly, Scholarly, Insight, Religion, Mystery Cults, Craft & Trade,
+Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk.
 <!-- /tui -->
 <!-- gui -->
 **Interests**, in a person's Manage chapter, opens a window of cards, one
-for each kind of deed: Knightly, Scholarly, Insight, Mystery Cults, Craft &
-Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship
+for each kind of deed: Knightly, Scholarly, Insight, Religion, Mystery
+Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship
 and Covenfolk. A card says what the interest is and how many actions it
 adds in this saga, counting those whose book is in play, so one may read
 "2 actions, 4 more with other books". Click a card to see it in the
 Inspector: who it is for, each action with a line on what it does, whether
 that action is on the Deeds chapter or on Planning in A Season's Work, and
 which book the others wait for. Each card's switch, and the Inspector's,
-turns the interest off or on; Save keeps your choices and Cancel leaves
-things as they were.
+turns the interest off or on, and a card turned off fades. Save keeps
+your choices. Leaving with changes unsaved, by Cancel, the close button or
+Esc, asks first: Discard Changes leaves things as they were, and Keep
+Editing goes back to the window.
 
 A card whose books aren't in play is faded and its switch is locked. The
 character's choice is kept, so the interest comes back as you left it when
@@ -4511,6 +4515,15 @@ blacksmith's Scholarly, and their actions leave the sheet: the Deeds
 chapter's heading, A Season's Work and More alike. Session & Reputation
 (End of Session and the Reputation rolls) is every character's and is
 always on.
+
+Turning off **Religion** takes the whole [Religion chapter](help:tab-religion)
+off the sheet, with Pilgrimage on Planning, for a character whose faith
+will never come up; their religion stays on their Biography. Its count goes
+by the character's faith as well as the books, as in "15 actions for a
+Christian", and the Inspector lists those of other faiths. A Church career
+(orders, a clerical Social Status, a petition or a canon case) keeps it on:
+the switch gives way to "On for a Church career", and if a character with
+Religion off takes up a career, the chapter comes back.
 
 Everything starts ticked, so nothing goes missing until you say so; a new
 character's Creation Worksheet has a Review Interests step for it. Ticking

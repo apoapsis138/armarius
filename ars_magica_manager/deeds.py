@@ -12,10 +12,14 @@ not the book it comes from: the book decides only whether it is offered
 
 from __future__ import annotations
 
+from .models import Character
+from .rules import faiths
+
 SESSION = "Session & Reputation"
 KNIGHTLY = "Knightly"
 SCHOLARLY = "Scholarly"
 INSIGHT = "Insight"
+RELIGION = "Religion"
 MYSTERY_CULTS = "Mystery Cults"
 CRAFT = "Craft & Trade"
 TRIBUNAL = "Tribunal & Order"
@@ -30,6 +34,7 @@ INTERESTS: tuple[str, ...] = (
     KNIGHTLY,
     SCHOLARLY,
     INSIGHT,
+    RELIGION,
     MYSTERY_CULTS,
     CRAFT,
     TRIBUNAL,
@@ -53,6 +58,23 @@ INTEREST_OF: dict[str, str] = {
     "font_of_knowledge": INSIGHT,
     "tmre_divination": INSIGHT,
     "tmre_astrology": INSIGHT,
+    "invoke_saint": RELIGION,
+    "threaten_saint": RELIGION,
+    "patron_saint": RELIGION,
+    "devotion_points": RELIGION,
+    "act_of_piety": RELIGION,
+    "mystic_path": RELIGION,
+    "spiritual_path": RELIGION,
+    "monistic_revelation": RELIGION,
+    "gods_aid": RELIGION,
+    "holy_influence": RELIGION,
+    "invoke_baraka": RELIGION,
+    "hajj": RELIGION,
+    "paint_icon": RELIGION,
+    "venerate_icon": RELIGION,
+    "mothers_curse": RELIGION,
+    "perform_exorcism": RELIGION,
+    "pilgrimage": RELIGION,
     "experiment_script": MYSTERY_CULTS,
     "make_greek_fire": CRAFT,
     "artist_career": CRAFT,
@@ -120,6 +142,26 @@ NOTES: dict[str, str] = {
 #: The actions the Deeds chapter sets out.
 DEEDS: tuple[str, ...] = tuple(NOTES)
 
+#: What each action on the Religion chapter does, in a line.
+RELIGION_NOTES: dict[str, str] = {
+    "invoke_saint": "Asking a saint for aid, or a yazata for a Mazdean.",
+    "threaten_saint": "Threatening a saint who has refused an invocation.",
+    "patron_saint": "Choosing a patron saint.",
+    "devotion_points": "Points earned through a Devotion.",
+    "act_of_piety": "An indulgence, a vigil or a fast.",
+    "mystic_path": "Taking up a mystic path.",
+    "spiritual_path": "The next step on a contemplative's Spiritual Path.",
+    "monistic_revelation": "A monistic mystic's revelation after an Ascent.",
+    "gods_aid": "Asking for God's aid.",
+    "holy_influence": "Influence over others through holy standing.",
+    "invoke_baraka": "Seeking a holy forbear's blessing.",
+    "hajj": "Completing the pilgrimage to Mecca.",
+    "paint_icon": "Painting an icon, in the Theban Tribunal's custom.",
+    "venerate_icon": "Venerating an icon, in the Theban Tribunal's custom.",
+    "mothers_curse": "A mother's curse, in the Theban Tribunal's custom.",
+    "perform_exorcism": "A clergyman's exorcism, under Holy Orders.",
+}
+
 #: The Planning chapter's section of the supplements' season-long work,
 #: below This Season (whose own buttons keep to planning the season).
 SEASON_WORK = "A Season's Work"
@@ -153,6 +195,7 @@ SUMMARIES: dict[str, str] = {
     KNIGHTLY: "Tournaments, from the melee to a season on the circuit.",
     SCHOLARLY: "Debate, learned charms and a scholar's working life.",
     INSIGHT: "Answers drawn from faith, signs and the stars.",
+    RELIGION: "The Religion chapter: a character's faith and what it offers.",
     MYSTERY_CULTS: "Finding new Initiation Scripts for a cult.",
     CRAFT: "Making, selling and earning a living by a trade.",
     TRIBUNAL: "Formal letters, and oaths called to account.",
@@ -173,6 +216,9 @@ ABOUT: dict[str, str] = {
     INSIGHT: "For those who look for knowledge beyond study: borrowing an "
     "Ability through Font of Knowledge, a divination, or an astrological "
     "reckoning.",
+    RELIGION: "For the devout, and for anyone whose faith shapes their "
+    "play. Turned off, the Religion chapter leaves the sheet, which suits a "
+    "character whose faith will never come up.",
     MYSTERY_CULTS: "For a Mystagogue, who tests a new Initiation Script by "
     "having an Initiate carry it out.",
     CRAFT: "For craftsmen, merchants and artists: Labor Points, sales, an "
@@ -218,6 +264,13 @@ UNDERTAKING_NOTES: dict[str, str] = {
     "hunt": "A hunt on the road, once the party has found a hunting spot.",
     "area_lore": "Seeking along the road: Intelligence + Area Lore.",
 }
+
+
+def interests_off(character: Character) -> list[str]:
+    """The interests that are off for `character`: those turned off, but
+    never Religion once there is a Church career."""
+    on = (RELIGION,) if faiths.church_career(character) else ()
+    return [i for i in character.interests_off if i not in on]
 
 
 def hidden(off: list[str], action: str) -> bool:

@@ -839,7 +839,7 @@ async def test_the_characteristics_form_shows_points_as_they_are_typed():
         # Fits the screen with the live lines showing.
         region = app.screen.query_one("#fields-dialog").region
         assert region.bottom <= 45 and region.right <= 120
-        await pilot.press("escape")
+        await pilot.press("escape", "y")
         assert await wait_until(pilot, lambda: app.screen is workspace)
         # A character In Play has no budget to show.
         workspace.app.push_screen(_characteristics_dialog(workspace.saga, playing))

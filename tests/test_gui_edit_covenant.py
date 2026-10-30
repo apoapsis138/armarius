@@ -135,7 +135,7 @@ def test_editing_loyalty_and_a_source_of_income(app):
     assert loyalty.body.sizeHint().width() <= loyalty.area.viewport().width()
     assert loyalty.height() < 820
     assert loyalty.area.verticalScrollBar().maximum() == 0
-    loyalty.close()
+    loyalty.hide()
     page = _page(window)
     controls = section_buttons(page, "Sources of Income")
     assert not controls["Edit"].isEnabled()  # two rows, none chosen

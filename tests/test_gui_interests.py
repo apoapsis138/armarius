@@ -10,7 +10,12 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtWidgets import QApplication
+from PySide6.QtWidgets import (
+    QApplication,
+    QDialog,
+    QGraphicsDropShadowEffect,
+    QGraphicsOpacityEffect,
+)
 
 from ars_magica_manager import action_books, deeds
 from ars_magica_manager.forms import interests
@@ -75,3 +80,63 @@ def test_a_card_with_no_book_is_locked_and_keeps_the_choice(app, monkeypatch):
         assert not dialog.switches[name].isChecked()
     answer(form, dialog)
     assert character.interests_off == [deeds.FAERIE]
+
+
+def test_a_card_fades_when_turned_off_and_lifts_when_turned_on(app, monkeypatch):
+    _form, dialog, _c = _open(monkeypatch)
+    card = dialog.cards[deeds.KNIGHTLY]
+    dialog.switches[deeds.KNIGHTLY].click()
+    assert isinstance(card.graphicsEffect(), QGraphicsOpacityEffect)
+    dialog.switches[deeds.KNIGHTLY].click()
+    assert isinstance(card.graphicsEffect(), QGraphicsDropShadowEffect)
+
+
+def test_a_card_already_off_opens_faded(app, monkeypatch):
+    _form, dialog, _c = _open(monkeypatch, off=[deeds.KNIGHTLY])
+    card = dialog.cards[deeds.KNIGHTLY]
+    assert isinstance(card.graphicsEffect(), QGraphicsOpacityEffect)
+
+
+def _asked(dialog, answer_with: int) -> list:
+    questions = []
+
+    def ask(question) -> int:
+        questions.append(question)
+        return answer_with
+
+    dialog.ask = ask
+    return questions
+
+
+def test_leaving_with_no_changes_asks_nothing(app, monkeypatch):
+    _form, dialog, _c = _open(monkeypatch)
+    questions = _asked(dialog, QDialog.DialogCode.Rejected)
+    dialog.switches[deeds.KNIGHTLY].click()
+    dialog.switches[deeds.KNIGHTLY].click()
+    dialog.show()
+    dialog.reject()
+    assert questions == [] and not dialog.isVisible()
+
+
+def test_leaving_with_changes_can_keep_editing_or_discard(app, monkeypatch):
+    _form, dialog, character = _open(monkeypatch)
+    dialog.switches[deeds.KNIGHTLY].click()
+    dialog.show()
+    questions = _asked(dialog, QDialog.DialogCode.Rejected)
+    dialog.close()
+    assert dialog.isVisible()
+    assert questions[0].cancel.text() == "Keep Editing"
+    _asked(dialog, QDialog.DialogCode.Accepted)
+    dialog.cancel.click()
+    assert not dialog.isVisible()
+    assert dialog.result() == QDialog.DialogCode.Rejected
+    assert character.interests_off == []
+
+
+def test_saving_asks_nothing(app, monkeypatch):
+    _form, dialog, _c = _open(monkeypatch)
+    questions = _asked(dialog, QDialog.DialogCode.Rejected)
+    dialog.switches[deeds.KNIGHTLY].click()
+    dialog.show()
+    dialog.save.click()
+    assert questions == [] and dialog.result() == QDialog.DialogCode.Accepted

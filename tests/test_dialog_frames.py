@@ -5,7 +5,9 @@ dimmed screen."""
 import pytest
 from support import wait_until
 
+from ars_magica_manager.form_spec import DialogField
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
+from ars_magica_manager.tui.screens.fields import FieldsDialog
 from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
 
@@ -42,3 +44,34 @@ async def test_escape_still_gives_the_safe_answer():
             await pilot.press("escape")
             assert await wait_until(pilot, lambda s=screen: app.screen is not s)
     assert answers == [False, True]
+
+
+async def test_cancelling_a_form_with_changes_asks_first():
+    app = ArsMagicaManagerApp()
+    answers = []
+    async with app.run_test(size=(120, 45)) as pilot:
+        dialog = FieldsDialog("A Form", [DialogField("a", "A", "text", value="old")])
+        app.push_screen(dialog, answers.append)
+        assert await wait_until(pilot, lambda: app.screen is dialog)
+        await pilot.pause()
+        dialog.query_one("Input").value = "new"
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("n")
+        assert await wait_until(pilot, lambda: app.screen is dialog)
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: answers == [None])
+
+
+async def test_cancelling_a_form_with_no_changes_just_leaves():
+    app = ArsMagicaManagerApp()
+    answers = []
+    async with app.run_test(size=(120, 45)) as pilot:
+        dialog = FieldsDialog("A Form", [DialogField("a", "A", "text", value="old")])
+        app.push_screen(dialog, answers.append)
+        assert await wait_until(pilot, lambda: app.screen is dialog)
+        await pilot.pause()
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: answers == [None])

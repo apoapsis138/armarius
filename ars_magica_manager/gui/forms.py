@@ -79,7 +79,7 @@ from .frame import (
 )
 from .markup_html import plain, to_html
 from .ornaments import FleuronRule, InspectorFrame, corner_flourishes
-from .paper import Paper
+from .paper import Paper, lift
 from .themes import Palette
 from .widgets import (
     ClickableCard,
@@ -155,6 +155,29 @@ class _Sheet(QDialog):
         self.cancel.clicked.connect(self.reject)
         self.save = QPushButton(action)
         self.save.setDefault(True)
+        self.ask: Ask = lambda dialog: dialog.exec()
+
+    def unsaved(self) -> bool:
+        """Whether leaving now would lose changes: a window that tracks
+        them says so, and Cancel, the X and Esc then ask first."""
+        return False
+
+    def reject(self) -> None:
+        if self.unsaved() and not self._discards():
+            return
+        super().reject()
+
+    def _discards(self) -> bool:
+        """Ask whether to leave without saving."""
+        question = ConfirmDialog(
+            "Leave without saving? Your changes won't be kept.",
+            self.p,
+            self,
+            yes_label="Discard Changes",
+            title="Unsaved Changes",
+        )
+        question.cancel.setText("Keep Editing")
+        return self.ask(question) == QDialog.DialogCode.Accepted
 
     def _title_bar(self) -> QHBoxLayout:
         """The app's name in the middle (drag it to move the window) and
@@ -236,7 +259,8 @@ class FieldsDialog(_Sheet):
         self.cancel.setText(cancel_label)
         self.picture = picture
         self.fields = fields
-        self.ask: Ask = ask or (lambda dialog: dialog.exec())
+        if ask is not None:
+            self.ask = ask
         self.validate, self.live = validate, live
         self.values: dict[str, Any] = {}
         self.inputs: dict[str, QWidget] = {}
@@ -275,6 +299,10 @@ class FieldsDialog(_Sheet):
         self.finish()
         self._update_shown()
         self._size_window()
+        #: What a window that keeps something opened with; a calculator's
+        #: Close (any other label) has nothing to lose.
+        self.cancels = cancel_label == "Cancel"
+        self.opened_with = self._as_they_stand()
 
     def _size_window(self, *, grow: bool = False) -> None:
         """Wide enough for the longest label and its field
@@ -467,6 +495,12 @@ class FieldsDialog(_Sheet):
             self._put(widget, value)
         finally:
             widget.blockSignals(False)
+
+    def _as_they_stand(self) -> dict[str, Any]:
+        return form_spec.current_values(self._readable(), self.read)
+
+    def unsaved(self) -> bool:
+        return self.cancels and self._as_they_stand() != self.opened_with
 
     def _readable(self) -> list[DialogField]:
         return [spec for spec in self.fields if spec.key in self.inputs]
@@ -851,10 +885,14 @@ class CardsDialog(_Sheet):
         *,
         save_label: str = "Save",
         cancel_label: str = "Cancel",
+        ask: Ask | None = None,
     ) -> None:
         super().__init__(title, p, save_label, parent)
         self.cancel.setText(cancel_label)
+        if ask is not None:
+            self.ask = ask
         self.values: dict[str, Any] = {f.key: bool(f.value) for f in fields}
+        self.opened_with = dict(self.values)
         #: The card in the inspector, by its title.
         self.chosen = ""
         self.switches: dict[str, ToggleSwitch] = {}
@@ -874,6 +912,9 @@ class CardsDialog(_Sheet):
         self.finish()
         self.resize(WIDEST_WINDOW + 100, TALLEST_WINDOW)
         self.choose(cards[0])
+
+    def unsaved(self) -> bool:
+        return self.values != self.opened_with
 
     def _on(self, card: FormCard) -> bool:
         """Whether `card` shows as on: a card that isn't usable never does,
@@ -910,12 +951,19 @@ class CardsDialog(_Sheet):
         )
         drawn.column.addStretch(1)
         drawn.clicked = lambda: self.choose(card)
-        if not card.usable:
-            # Faded in place of the lift's shadow: a card has one effect.
-            faded = QGraphicsOpacityEffect(drawn)
-            faded.setOpacity(0.5)
-            drawn.setGraphicsEffect(faded)
+        if not self._on(card):
+            self._shade(drawn, False)
         return drawn
+
+    def _shade(self, drawn: ClickableCard, on: bool) -> None:
+        """A card off is faded in place of the lift's shadow: a card has
+        one effect."""
+        if on:
+            lift(drawn, self.p)
+            return
+        faded = QGraphicsOpacityEffect(drawn)
+        faded.setOpacity(0.5)
+        drawn.setGraphicsEffect(faded)
 
     def _toggle(self, card: FormCard) -> None:
         """Flip `card`'s field, and both of its switches to match."""
@@ -923,6 +971,7 @@ class CardsDialog(_Sheet):
         on = self._on(card)
         drawn = self.cards[card.title]
         drawn.set_edge(self.p["text-success" if on else "dim"])
+        self._shade(drawn, on)
         self.switches[card.title].setChecked(on)
         action = self.inspector.action
         if self.chosen == card.title and isinstance(action, ToggleSwitch):
@@ -1041,6 +1090,7 @@ def step_dialog(
             parent,
             save_label=step.save_label,
             cancel_label=step.cancel_label,
+            ask=ask,
         )
     if isinstance(step, Form):
         return FieldsDialog(

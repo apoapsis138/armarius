@@ -3,9 +3,8 @@ while its book is in play.
 
 An action listed here needs one of its books among the saga's books in
 play (`sourcebooks.saga_books`); one not listed is the Definitive
-Edition's, or spans books in a way its own rule decides (the faith actions,
-which the Religion chapter offers by religion, and a tradition's casting,
-which Traditions Offered decides). `actions.available` asks this before the
+Edition's, or spans books in a way its own rule decides (a tradition's
+casting, which Traditions Offered decides). `actions.available` asks this before the
 action's own rule, so a rule never has to remember its book.
 
 The book for each action is the one its rules module cites."""
@@ -74,6 +73,17 @@ ACTION_BOOKS: dict[str, tuple[str, ...]] = {
     "experiment_script": ("TMRE",),
     # House Acclaim: Bonisagus in True Lineages, Flambeau in Societates.
     "house_acclaim": ("HoH:TL", "HoH:S"),
+    # The saints, Devotions, mystic paths and God's aid: each action's rule
+    # asks the same books, and rules.faiths whether his religion has it.
+    "invoke_saint": ("RoP:D", "TC", "TSE", "TCI", "TC&TC"),
+    "threaten_saint": ("RoP:D",),
+    "patron_saint": ("RoP:D", "TC", "TSE", "TCI", "TC&TC"),
+    "devotion_points": ("TC",),
+    "act_of_piety": ("TC",),
+    "mystic_path": ("TC",),
+    "spiritual_path": ("TC",),
+    "monistic_revelation": ("TC",),
+    "gods_aid": ("RoP:D",),
     # Hermetic Projects: a Wizard's War tunnel.
     "open_tunnel": ("HP",),
     # Grogs: rewards, punishments and pensions for the covenfolk.
@@ -116,17 +126,7 @@ NO_BOOK: frozenset[str] = frozenset(
         # Traditions and their casting: Traditions Offered decides by book.
         "edit_traditions",
         "hedge_cast",
-        # The faith actions: the Religion chapter offers each by religion
-        # from The Church or Realms of Power: The Divine (rules.faiths).
-        "invoke_saint",
-        "threaten_saint",
-        "patron_saint",
-        "devotion_points",
-        "act_of_piety",
-        "mystic_path",
-        "spiritual_path",
-        "monistic_revelation",
-        "gods_aid",
+        # Each by what the character holds (rules.faiths).
         "font_of_knowledge",
         "commanding_aura",
     }

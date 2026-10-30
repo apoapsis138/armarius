@@ -180,6 +180,12 @@ def may_hold_orders(character: Character) -> bool:
     )
 
 
+def church_career(character: Character) -> bool:
+    """Whether he has a Church career on his sheet: orders, or a petition
+    or canon case; his Religion chapter stays on whatever his interests."""
+    return clergy.has_church_tab(character) or may_hold_orders(character)
+
+
 def may_keep_devotions(character: Character) -> bool:
     """A Devotion held, or a positive Pious trait (or the Pious Flaw) to
     begin one (The Church pp. 12-13)."""

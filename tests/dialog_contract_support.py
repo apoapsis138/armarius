@@ -39,6 +39,7 @@ from textual.widgets import (
 from ars_magica_manager import storage
 from ars_magica_manager.models import Possession, Saga, VirtueFlawInstance
 from ars_magica_manager.tui.screens import SelectableList
+from ars_magica_manager.tui.screens.prompts import ConfirmScreen
 
 SAGA_ID = contract_saga().id
 
@@ -240,6 +241,10 @@ async def _close(pilot, app, dialog, button: Button) -> None:
     assert await wait_until(pilot, lambda: app.screen is not dialog), (
         f"still open: {error_text(dialog)!r}"
     )
+    # A Cancel with changes asks first.
+    if button.id == "btn-cancel" and isinstance(app.screen, ConfirmScreen):
+        app.screen.action_yes()
+        assert await wait_until(pilot, lambda: dialog not in app.screen_stack)
     await pilot.pause()
 
 

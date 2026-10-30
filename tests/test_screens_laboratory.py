@@ -893,7 +893,7 @@ async def test_editing_an_empty_lab_list_or_cancelling_changes_nothing():
             pilot, app, "section-lab-specialties", FieldsDialog
         )
         app.screen.query_one("#fld-source", Input).value = "Changed"
-        await pilot.press("escape")
+        await pilot.press("escape", "y")
         await pilot.pause()
         assert isinstance(app.screen, WorkspaceScreen)
 

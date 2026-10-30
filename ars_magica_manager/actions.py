@@ -775,7 +775,7 @@ def available(action: str, facts: ActionFacts) -> bool:
     if action in deeds.DEEDS and _drafting(facts):
         return False
     character = facts.selected_character
-    if character is not None and deeds.hidden(character.interests_off, action):
+    if character is not None and deeds.hidden(deeds.interests_off(character), action):
         return False
     if action in CREATE_PLACES and facts.selected_kind not in CREATE_PLACES[action]:
         return False

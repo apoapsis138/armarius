@@ -9,8 +9,10 @@ import pytest
 
 from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.commands import FormCard
 from ars_magica_manager.forms import interests
 from ars_magica_manager.forms import menu as menu_forms
+from ars_magica_manager.forms import religion as religion_forms
 from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.rules import creation_base
 
@@ -24,7 +26,7 @@ def test_every_deed_has_an_interest_and_sits_under_it():
 def test_every_interest_is_listed_and_names_no_section():
     assert set(deeds.INTEREST_OF.values()) <= set(deeds.INTERESTS)
     for action, interest in deeds.INTEREST_OF.items():
-        assert action in menu_forms.PLACES, action
+        assert action in menu_forms.PLACES or action in deeds.RELIGION_NOTES, action
         assert interest not in ("Abilities", "Reputations"), action
 
 
@@ -104,6 +106,17 @@ def test_the_worksheet_reviews_interests_before_the_finishing_touches():
     assert keys.index("interests") == keys.index("finish") - 1
 
 
+def _person(religion: str = "") -> Character:
+    person = Character.from_dict({"id": "k", "name": "K", "type": "grog"})
+    person.background.religion = religion
+    return person
+
+
+def _religion_card(person: Character) -> FormCard:
+    cards = interests.interest_cards(None, person)
+    return next(c for c in cards if c.title == deeds.RELIGION)
+
+
 def test_every_interest_has_its_words_and_every_action_a_name():
     assert set(deeds.SUMMARIES) == set(deeds.ABOUT) == set(deeds.INTERESTS)
     for action in deeds.INTEREST_OF:
@@ -120,7 +133,7 @@ def test_a_card_counts_what_the_sagas_books_bring(monkeypatch):
             and action not in ("melee_event", "tourney_season")
         ),
     )
-    cards = {c.title: c for c in interests.interest_cards(None)}
+    cards = {c.title: c for c in interests.interest_cards(None, _person())}
     craft = cards[deeds.CRAFT]
     assert craft.count == "2 actions, 4 more with other books"
     assert "On Planning, in A Season's Work" in craft.detail
@@ -135,14 +148,16 @@ def test_an_action_on_both_pages_shows_on_both_and_counts_once(monkeypatch):
         interests.action_books, "book_allows", lambda _action, _saga: True
     )
     card = next(
-        c for c in interests.interest_cards(None) if c.title == deeds.APPRENTICESHIP
+        c
+        for c in interests.interest_cards(None, _person())
+        if c.title == deeds.APPRENTICESHIP
     )
     assert card.count == "3 actions"
     assert card.detail.count("[b]Turbulence[/]") == 2
 
 
 def test_session_and_reputation_is_a_card_with_no_switch():
-    card = interests.interest_cards(None)[0]
+    card = interests.interest_cards(None, _person())[0]
     assert card.title == deeds.SESSION
     assert card.key == "" and card.fixed == interests.ALWAYS_ON
 
@@ -152,3 +167,41 @@ def test_the_terminals_ticks_say_what_each_interest_is():
     form = interests.interests_form(None, knight)
     fields = {f.label: f for f in form.fields()}
     assert fields[deeds.INSIGHT].hint == deeds.SUMMARIES[deeds.INSIGHT]
+
+
+def test_religions_count_goes_by_the_faith(monkeypatch):
+    monkeypatch.setattr(
+        interests.action_books, "book_allows", lambda _action, _saga: True
+    )
+    assert _religion_card(_person()).count == "15 actions for a Christian"
+    muslim = _religion_card(_person("Muslim"))
+    assert muslim.count == "9 actions for a Muslim"
+    assert "[dim]For other faiths: Invoke a Saint," in muslim.detail
+    assert "[b]The Hajj[/]" in muslim.detail
+    assert _religion_card(_person("Other")).count.endswith("for their faith")
+
+
+def test_religion_off_hides_the_chapter_but_not_for_a_church_career(monkeypatch):
+    monkeypatch.setattr(religion_forms.devotion_forms, "invokes", lambda _saga: True)
+    person = _person()
+    assert religion_forms.shows(None, person)
+    person.interests_off = [deeds.RELIGION]
+    assert not religion_forms.shows(None, person)
+    assert deeds.interests_off(person) == [deeds.RELIGION]
+    person.church.petitions.append(object())
+    assert religion_forms.shows(None, person)
+    assert deeds.interests_off(person) == []
+
+
+def test_a_church_career_locks_the_religion_card_and_keeps_the_choice(monkeypatch):
+    person = _person()
+    person.interests_off = [deeds.RELIGION]
+    person.church.petitions.append(object())
+    card = _religion_card(person)
+    assert card.fixed == interests.CHURCH_CAREER and not card.key
+    assert "Church career keeps this on" in card.detail
+    form = interests.interests_form(None, person)
+    values = {f.key: f.value for f in form.fields()}
+    assert not any("religion" in key for key in values)
+    form.apply(values)
+    assert person.interests_off == [deeds.RELIGION]

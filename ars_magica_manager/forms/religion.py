@@ -13,8 +13,8 @@ from __future__ import annotations
 
 from typing import Any
 
+from .. import deeds, sourcebooks
 from .. import devotion as devotion_forms
-from .. import sourcebooks
 from ..commands import Form, SectionOps
 from ..markup import escape
 from ..models import Character, Saga
@@ -36,11 +36,15 @@ def _books(saga: Saga) -> frozenset[str] | None:
 
 def shows(saga: Saga, character: Character) -> bool:
     """Whether the sheet has the Religion chapter: a person (not an
-    animal) while a book that gives the faiths their rites is in play, or
-    one with a Church career already recorded."""
+    animal) while a book that gives the faiths their rites is in play and
+    the Religion interest is on, or one with a Church career already
+    recorded."""
     if character.animal is not None:
         return False
-    return devotion_forms.invokes(saga) or cl.has_church_tab(character)
+    if cl.has_church_tab(character):
+        return True
+    on = deeds.RELIGION not in deeds.interests_off(character)
+    return on and devotion_forms.invokes(saga)
 
 
 def church_shown(saga: Saga, character: Character) -> bool:
