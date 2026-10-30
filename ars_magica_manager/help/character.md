@@ -2254,6 +2254,14 @@ reads the aura by that realm, for the total and the botch dice, and the
 Summoning rule says what that version changes in the bargain. The
 Solomonic arts stay Magic: the book aligns only Sihr.
 
+A sahir may have another summoning art in place of Sihr: (Faerie) Summoning,
+as most yatus do, the Goetic Summoning or Elementalist Summoning. The
+Summoning rule lists each one they have, read by that art's realm. With
+**Yatu Magic**, all their magic counts as Magic or Faerie, whichever suits
+the aura best, for its total and its botch dice, and an aligned Sihr may
+use its own realm too; they gain no Warping from living in Magic or Faerie
+auras (The Cradle and the Crescent, pp. 30-31).
+
 <!-- tui -->
 **You type:** `a` adds one of the tradition's Arts or Abilities, `e` sets
 its XP and Specialty, and `d` deletes it. More's **Traditions** (`m`, `t`)

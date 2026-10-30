@@ -146,7 +146,9 @@ def cast(
         vis_pawns=pawns,
         aura=aura,
         aura_realm=realm,
-        realm=hc.power_realm(character, tradition, rule),
+        realm=hc.power_realm(
+            character, tradition, rule, casting.uses, aura=aura, aura_realm=realm
+        ),
     )
     # A familiar's Golden Cord takes dice off any magic, never to none (DE
     # p. 267).

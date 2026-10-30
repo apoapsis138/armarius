@@ -43,6 +43,11 @@ COVENANT_AURA_SOURCE = "Covenants, Chapter Two: Boons & Hooks, Aura, p. 8"
 
 #: Hermetic magic's realm.
 HERMETIC = "Magic"
+FAERIE = "Faerie"
+INFERNAL = "Infernal"
+#: Attunes a sahir to Magic and Faerie auras (The Cradle and the Crescent
+#: pp. 30-31).
+YATU_MAGIC = "vf_yatu_magic"
 
 #: The table above: (power realm, aura realm) -> multiple of the aura. A
 #: half is 0.5 (rounded down after multiplying); 0 is "no effect".

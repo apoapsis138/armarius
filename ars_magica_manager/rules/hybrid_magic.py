@@ -372,12 +372,15 @@ def attuned(character: Character) -> frozenset[str]:
     """The realms whose auras the character is at home in: those their
     supernatural powers come from. Magic for anyone opened to the Hermetic
     Arts or holding a supernatural Ability (most are Magical); a hybrid
-    style's realms; each hedge tradition's realm."""
+    style's realms; each hedge tradition's realm; Magic and Faerie for
+    Yatu Magic (The Cradle and the Crescent pp. 30-31)."""
     found: set[str] = set()
     if character.type == "magus" or any(a.xp > 0 for a in character.arts.values()):
         found.add(realms.HERMETIC)
     for style in styles(character):
         found.update(style.no_warping)
+    if realms.YATU_MAGIC in _ids(character):
+        found.update((realms.HERMETIC, realms.FAERIE))
     for ability_ in character.abilities:
         if ability_.level > 0 and _supernatural(ability_.name):
             found.add(ABILITY_REALMS.get(ability_.name, realms.HERMETIC))

@@ -248,15 +248,53 @@ SIHR_VERSIONS: dict[str, str] = {
 }
 
 
-def power_realm(
-    character: Character, tradition: TraditionDef, rule: CastingRule
+#: The other summoning arts a sahir may roll in place of Sihr that belong
+#: to a realm of their own (The Cradle and the Crescent pp. 31-32). (Spirit)
+#: Summoning has Faerie and Magic versions too; the Infernal is the usual.
+SUMMONING_REALMS: dict[str, str] = {
+    "(Faerie) Summoning": realms.FAERIE,
+    "Summoning": realms.INFERNAL,
+}
+
+
+def _own_realm(
+    character: Character,
+    tradition: TraditionDef,
+    rule: CastingRule,
+    uses: Sequence[str],
 ) -> str:
-    """The realm a casting's aura is read for: the tradition's, or for a
-    roll of Sihr the sahir's own version of it (The Cradle and the Crescent
-    p. 47). The book aligns only Sihr, so his Solomonic arts stay Magic."""
-    if character.sihr_realm and SIHR in rule.scores:
-        return character.sihr_realm
+    """The realm of what a casting rolls: the tradition's, for a roll of
+    Sihr the sahir's own version of it, or a summoning art's own. The book
+    aligns only Sihr, so the Solomonic arts stay the tradition's."""
+    held = {a.name for a in character.abilities}
+    for name in uses or [s for s in rule.scores if s in held]:
+        if name == SIHR and character.sihr_realm:
+            return character.sihr_realm
+        if name in SUMMONING_REALMS:
+            return SUMMONING_REALMS[name]
     return tradition.realm
+
+
+def power_realm(
+    character: Character,
+    tradition: TraditionDef,
+    rule: CastingRule,
+    uses: Sequence[str] = (),
+    *,
+    aura: int = 0,
+    aura_realm: str = realms.HERMETIC,
+) -> str:
+    """The realm a casting's aura is read for. Yatu Magic treats all the
+    sahir's effects as Magic or Faerie, whichever suits the aura best (The
+    Cradle and the Crescent pp. 30-31); the books don't say what it does
+    to an aligned Sihr, so its own realm is one more to choose from."""
+    own = _own_realm(character, tradition, rule, uses)
+    if not any(vf.vf_id == realms.YATU_MAGIC for vf in character.virtues_flaws):
+        return own
+    return max(
+        (own, realms.HERMETIC, realms.FAERIE),
+        key=lambda realm: realms.aura_modifier(realm, aura_realm, aura),
+    )
 
 
 def aura_modifier(
@@ -300,7 +338,12 @@ def casting_score(
         Line(
             f"Aura ({aura_realm} {aura})",
             amount=aura_modifier(
-                tradition, aura, aura_realm, power_realm(character, tradition, rule)
+                tradition,
+                aura,
+                aura_realm,
+                power_realm(
+                    character, tradition, rule, uses, aura=aura, aura_realm=aura_realm
+                ),
             ),
             source=realms.SOURCE,
         )

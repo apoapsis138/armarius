@@ -12132,6 +12132,9 @@
       "chapter": "Solomonic Magic",
       "abilities": [
         "Sihr",
+        "(Faerie) Summoning",
+        "Summoning",
+        "Elementalist Summoning",
         "Solomonic Alchemy",
         "Solomonic Astrology",
         "Solomonic Physic",
@@ -12177,7 +12180,10 @@
           "name": "Summoning",
           "kind": "ability",
           "scores": [
-            "Sihr"
+            "Sihr",
+            "(Faerie) Summoning",
+            "Summoning",
+            "Elementalist Summoning"
           ],
           "characteristic": "Presence",
           "die": "stress",

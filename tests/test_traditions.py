@@ -10,11 +10,13 @@ from ars_magica_manager.models import (
     Character,
     Saga,
     TraditionDef,
+    VirtueFlawInstance,
 )
 from ars_magica_manager.models.definitions import TRADITION_CATEGORIES
 from ars_magica_manager.rules import activities
 from ars_magica_manager.rules import creation_access as access
 from ars_magica_manager.rules import hedge_casting as hc
+from ars_magica_manager.rules import hybrid_magic as hybrid
 from ars_magica_manager.sheets import character as cs
 
 
@@ -284,3 +286,58 @@ def test_a_bad_realm_of_sihr_is_reported_on_load():
         Character.from_dict(
             {"id": "c", "name": "C", "type": "grog", "sihr_realm": "Elsewhere"}
         )
+
+
+def _yatu(realm: str = "") -> Character:
+    yatu = _sahir(realm)
+    yatu.virtues_flaws.append(VirtueFlawInstance("vf_yatu_magic"))
+    return yatu
+
+
+def test_yatu_magic_reads_every_effect_by_the_better_of_magic_or_faerie():
+    tradition, naranj = _rule("Naranj")
+    best = lambda who, realm: hc.power_realm(
+        who, tradition, naranj, aura=4, aura_realm=realm
+    )
+    assert best(_yatu(), "Magic") == "Magic"
+    assert best(_yatu(), "Faerie") == "Faerie"
+    # In a Divine aura, Magic's -3 x the aura beats Faerie's -4 x (DE p. 545).
+    assert best(_yatu(), "Divine") == "Magic"
+    assert best(_sahir(), "Faerie") == "Magic"
+
+
+def test_a_yatus_aligned_sihr_takes_the_best_of_three():
+    tradition, rule = _rule("Summoning")
+    pick = lambda realm: hc.power_realm(
+        _yatu("Divine"), tradition, rule, ["Sihr"], aura=4, aura_realm=realm
+    )
+    assert pick("Faerie") == "Faerie"
+    # In Infernal and Divine auras its own Divine Sihr does best.
+    assert pick("Divine") == "Divine"
+    assert pick("Infernal") == "Divine"
+
+
+def test_yatu_magics_choice_sets_the_botch_dice():
+    tradition, rule = _rule("Naranj")
+    yatu = _yatu()
+    realm = hc.power_realm(yatu, tradition, rule, aura=3, aura_realm="Faerie")
+    assert hc.botch_dice(tradition, rule, aura=3, aura_realm="Faerie", realm=realm) == 1
+
+
+def test_yatu_magic_gives_no_warping_from_magic_or_faerie_auras():
+    assert not hybrid.warps_from_aura(_yatu(), "Magic")
+    assert not hybrid.warps_from_aura(_yatu(), "Faerie")
+    assert hybrid.warps_from_aura(_sahir(), "Faerie")
+    assert hybrid.warps_from_aura(_yatu(), "Infernal")
+
+
+def test_a_sahirs_summoning_rolls_any_summoning_art_by_its_realm():
+    tradition, rule = _rule("Summoning")
+    sahir = _sahir()
+    sahir.abilities = [Ability("(Faerie) Summoning", "Supernatural", xp=30)]
+    assert [c.uses for c in hc.castings(sahir, tradition, rule)] == [
+        ("(Faerie) Summoning",)
+    ]
+    assert hc.power_realm(sahir, tradition, rule, ["(Faerie) Summoning"]) == "Faerie"
+    assert hc.power_realm(sahir, tradition, rule, ["Summoning"]) == "Infernal"
+    assert hc.power_realm(sahir, tradition, rule, ["Elementalist Summoning"]) == "Magic"

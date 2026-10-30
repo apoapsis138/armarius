@@ -109,6 +109,18 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.56.0 — 2026-10-30
+
+### Hedge Magic
+
+- **Yatu Magic works.** All of a sahir's magic reads the aura as Magic or
+  Faerie, whichever suits it best, for its total and botch dice, and an
+  aligned Sihr may use its own realm too; they gain no Warping from living
+  in Magic or Faerie auras.
+- A sahir can summon with another summoning art in place of Sihr: (Faerie)
+  Summoning, as most yatus do, the Goetic Summoning or Elementalist
+  Summoning, each read by its own realm.
+
 ## 3.55.0 — 2026-10-30
 
 ### Hedge Magic
