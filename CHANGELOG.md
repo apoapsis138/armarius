@@ -109,6 +109,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.54.1 — 2026-10-30
+
+### Fundamenta
+
+- **A crash now leaves a trace.** If the desktop app closes itself without a word, `crash.log` in your data folder records where it was, and `tools/read_crash.py` reads the Windows crash report in plain words beside it. The crash seen after saving a Specialty couldn't be reproduced and is not fixed.
+
 ## 3.54.0 — 2026-10-30
 
 ### Illuminatio

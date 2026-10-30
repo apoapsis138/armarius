@@ -39,7 +39,7 @@ A saga file that the app can't read is still listed, marked "can't be read", so 
 Under the list, **Save folder** shows the folder the sagas are read from and what chose it: the default, chosen in the app, set by the ARMARIUS_DATA environment variable (or the older ARS_MAGICA_MANAGER_DATA), or a folder the app fell back to because the chosen one couldn't be used.
 <!-- /tui -->
 <!-- gui -->
-The line under the page's title names the folder the sagas are read from.
+The line under the page's title names the folder the sagas are read from. If the app ever closes itself without a word, `crash.log` in that folder records where it was; the file stays empty until then.
 <!-- /gui -->
 The default is Armarius at the top of your OneDrive. The app was called Ars Magica Manager before: the first time Armarius starts, it renames the default Ars Magica Manager folder to Armarius and says so (a folder you chose stays where it is, and when both folders exist nothing is merged and Armarius is used).
 
