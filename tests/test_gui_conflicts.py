@@ -21,6 +21,7 @@ from ars_magica_manager.commands import Form
 from ars_magica_manager.gui import medallions as drawn
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.conflicts import FightPage, SiegeBody, SiegePage
+from ars_magica_manager.gui.editing import place_for
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.widgets import ClickableCard
 from ars_magica_manager.gui.window import MainWindow
@@ -122,6 +123,8 @@ def test_the_conflicts_chapter_opens_a_fight_and_a_siege(app):
     card.clicked()
     assert isinstance(window.page(), FightPage)
     assert window.crumb_names()[-1] == "The Fray at Testford"
+    # A fight's and a siege's steps open as windows over the page.
+    assert place_for(None, window.page()) is None
     window.go(window.trail[:2])
     page = window.page()
     assert page is not None
@@ -134,6 +137,7 @@ def test_the_conflicts_chapter_opens_a_fight_and_a_siege(app):
     card.clicked()
     assert isinstance(window.page(), SiegePage)
     assert window.crumb_names()[-1] == "The Siege of Testburg"
+    assert place_for(None, window.page()) is None
     assert window.menu_page() is None
 
 

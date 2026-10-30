@@ -11,7 +11,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering, section_buttons
+from gui_steps import answering, buttons, section_buttons
 from PySide6.QtCore import QTimer
 from PySide6.QtWidgets import QApplication, QScrollArea
 from screen_helpers import _sample_saga_with_covenant
@@ -26,7 +26,7 @@ from ars_magica_manager.gui.familiar import FamiliarPage
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import Neighbour, VirtueFlawInstance
+from ars_magica_manager.models import Neighbour, Tribunal, VirtueFlawInstance
 
 
 @pytest.fixture(scope="module")
@@ -160,6 +160,31 @@ def test_a_creature_and_a_neighbour_open_their_steps_as_windows(app):
             "Add"
         ].click()
         assert asked and not getattr(asked[0], "inline", True), name
+
+
+def test_the_saga_pages_open_their_steps_as_windows(app):
+    """The saga's own page, its Seasons and Saga Content pages and a
+    Tribunal's page open every step as a window (Saga Management's Edit
+    Saga among them), not in place."""
+    saga = _sample_saga_with_covenant()
+    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
+    window = _window(saga)
+    for show in (
+        lambda: window.open_saga(saga.id),
+        window.open_content,
+        window.open_seasons,
+        lambda: window.open_tribunal("rhine"),
+    ):
+        show()
+        page = window.page()
+        assert page is not None
+        assert place_for(None, page) is None, type(page).__name__
+    window.open_saga(saga.id)
+    page = window.page()
+    page.codex.open_chapter("Saga Management")  # type: ignore[union-attr]
+    asked = answering(window, None)
+    next(b for b in buttons(page, "Edit Saga")).click()
+    assert asked and not getattr(asked[0], "inline", True)
 
 
 def test_no_chapter_scrolls_sideways_at_1280_wide(app):

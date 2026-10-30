@@ -38,7 +38,14 @@ from ..models import Saga, Spell
 from ..sheets import saga_content as scs
 from . import pictures
 from .character_sheet import TextBlock, section
-from .editing import Chooser, Run, choose_cards, choose_rows, verb_buttons
+from .editing import (
+    Chooser,
+    Run,
+    choose_cards,
+    choose_rows,
+    open_in_a_window,
+    verb_buttons,
+)
 from .figures import fact_grid
 from .mystery_cults import CultsChapter
 from .pages import card_grid, page_header
@@ -88,12 +95,14 @@ def _none(words: str, p: Palette) -> QLabel:
 
 class SagaContentPage(QWidget):
     """The saga's content in the Codex layout; choosing anything shows it
-    in the inspector."""
+    in the inspector.
+    Its buttons' forms, lists and questions open as windows over it."""
 
     def __init__(
         self, saga: Saga, p: Palette, run: Run = lambda _command: None
     ) -> None:
         super().__init__()
+        open_in_a_window(self)
         self.saga, self.p = saga, p
         self.run = run
         outer = QVBoxLayout(self)

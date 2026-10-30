@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.48.0 — 2026-10-30
+
+### Illuminatio
+
+- **The saga's pages open their forms in windows.** The saga's own page
+  (The Region, Conflicts, Seasons and Saga Management), the Seasons
+  page, Saga Content, a Tribunal's page, and a fight's and a siege's
+  pages now open every form, list to choose from and "Are you sure?"
+  question in a window of its own over the page. Only a character's
+  sheet and the Creation Worksheet still open forms in place.
+- A long form such as Export Pack's list of ticks scrolls inside its
+  window, with its Export button always in sight.
+
 ## 3.47.0 — 2026-10-30
 
 ### Illuminatio

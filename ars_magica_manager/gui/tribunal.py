@@ -50,7 +50,7 @@ from ..tribunal_packages.rhine import gild_tree
 from . import marks, print_sheet
 from .bookmark import with_bookmark
 from .character_sheet import TextBlock, secrets_chapter, section
-from .editing import Chooser, RowVerb, Run, verb_buttons
+from .editing import Chooser, RowVerb, Run, open_in_a_window, verb_buttons
 from .figures import fact_grid, prose
 from .hall import GrandHall, OpeningCard
 from .ledger_rows import ledger_rows
@@ -66,7 +66,8 @@ def _none(words: str, p: Palette) -> QLabel:
 
 
 class TribunalPage(QWidget):
-    """A Tribunal in the Codex layout."""
+    """A Tribunal in the Codex layout.
+    Its buttons' forms, lists and questions open as windows over it."""
 
     def __init__(
         self,
@@ -77,6 +78,7 @@ class TribunalPage(QWidget):
         controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
+        open_in_a_window(self)
         self.saga, self.tribunal, self.p, self.run = saga, tribunal, p, run
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)

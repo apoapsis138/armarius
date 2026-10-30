@@ -21,8 +21,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
-from ars_magica_manager.gui.editing import scroll_area_of
-from ars_magica_manager.gui.forms import FieldsDialog
+from ars_magica_manager.gui.forms import TALLEST_WINDOW, FieldsDialog
 from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
@@ -325,10 +324,10 @@ def test_more_import_reads_a_file_chosen_in_the_open_window(app, tmp_path):
     ]
 
 
-def test_a_long_form_from_saga_management_scrolls_with_the_chapter(app):
-    """Export Pack, with a tick for each of many covenants, opens in the
-    chapter in place of its buttons, so the chapter scrolls to its last
-    tick and its Export button."""
+def test_a_long_form_from_saga_management_scrolls_in_its_window(app):
+    """Export Pack, with a tick for each of many covenants, opens in a
+    window no taller than the screen allows, its ticks scrolling inside it
+    above its Export button; the chapter's buttons stay where they are."""
     saga = _sample_saga_with_covenant()
     first = saga.covenants[0]
     saga.covenants += [
@@ -342,15 +341,22 @@ def test_a_long_form_from_saga_management_scrolls_with_the_chapter(app):
 
     def look() -> None:
         form = next(d for d in window.findChildren(FieldsDialog) if d.isVisible())
-        area = scroll_area_of(form)
-        seen["scrolls"] = area is not None and area.verticalScrollBar().maximum() > 0
-        seen["buttons hidden"] = "Export Saga" not in _buttons(window)
+        seen["window"] = form.isWindow()
+        seen["fits"] = form.height() <= TALLEST_WINDOW
+        seen["scrolls"] = form.area.verticalScrollBar().maximum() > 0
+        seen["export shown"] = form.save.isVisible()
+        seen["buttons stay"] = "Export Saga" in _buttons(window)
         form.reject()
 
     QTimer.singleShot(0, look)
     _buttons(window)["Export Pack"].click()
-    assert seen == {"scrolls": True, "buttons hidden": True}
-    assert "Export Saga" in _buttons(window)
+    assert seen == {
+        "window": True,
+        "fits": True,
+        "scrolls": True,
+        "export shown": True,
+        "buttons stay": True,
+    }
     window.close()
 
 
