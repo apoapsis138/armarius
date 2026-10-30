@@ -96,6 +96,7 @@ from ..models import (
 from ..rules import covenfolk, creation_tradition, lab_seasons
 from ..rules import creation as creation_rules
 from ..rules import creation_covenant as cov_creation
+from ..rules import hedge_casting as hc
 from ..sections import FAITH_SECTION, LAB_TEXTS_SECTION
 from . import acclaim as acclaim_forms
 from . import apothecary as apothecary_forms
@@ -1354,13 +1355,33 @@ def character_traditions_fields(saga: Saga, character: Character) -> list[Dialog
         t for t in traditions.of(character) if not traditions.is_on(saga, t.id)
     ]
     return [
+        *_sihr_realm_field(character),
+        *(
+            DialogField(
+                TRADITION_KEY + t.id,
+                f"{t.name} ({t.source})",
+                "check",
+                t.id in character.traditions,
+            )
+            for t in choices
+        ),
+    ]
+
+
+def _sihr_realm_field(character: Character) -> list[DialogField]:
+    """The realm of a sahir's Sihr, for one who has the Ability: Magic is
+    its most common form (The Cradle and the Crescent p. 47)."""
+    if not any(a.name == hc.SIHR for a in character.abilities):
+        return []
+    return [
         DialogField(
-            TRADITION_KEY + t.id,
-            f"{t.name} ({t.source})",
-            "check",
-            t.id in character.traditions,
+            "sihr_realm",
+            "Realm of Sihr",
+            "select",
+            character.sihr_realm or "Magic",
+            options=pairs(("Magic", *hc.SIHR_VERSIONS)),
+            hint="Reads the aura for summoning; the Solomonic arts stay Magic.",
         )
-        for t in choices
     ]
 
 
@@ -1380,6 +1401,9 @@ def apply_character_traditions(
         for key in values
         if key.startswith(TRADITION_KEY)
     }
+    if "sihr_realm" in values:
+        realm = values["sihr_realm"]
+        character.sihr_realm = "" if realm == "Magic" else realm
     kept = [i for i in character.traditions if i not in listed]
     joined = [i for i in chosen if i not in character.traditions]
     character.traditions = kept + [i for i in chosen if i not in kept]

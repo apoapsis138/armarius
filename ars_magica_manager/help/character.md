@@ -2247,6 +2247,13 @@ they play: Techniques, Forms, Runes, then the tradition's other Abilities.
 These leave the Abilities chapter while the character belongs to the
 tradition.
 
+A sahir's Sihr is usually of the Magic realm, and versions of the other
+realms exist (The Cradle and the Crescent, p. 47). One with the Sihr
+Ability chooses its realm on the **Traditions** form. Their summoning then
+reads the aura by that realm, for the total and the botch dice, and the
+Summoning rule says what that version changes in the bargain. The
+Solomonic arts stay Magic: the book aligns only Sihr.
+
 <!-- tui -->
 **You type:** `a` adds one of the tradition's Arts or Abilities, `e` sets
 its XP and Specialty, and `d` deletes it. More's **Traditions** (`m`, `t`)

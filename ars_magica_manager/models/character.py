@@ -18,6 +18,7 @@ from .common import (
     move_secrets,
 )
 from .criamon import Enigma
+from .definitions import TRADITION_REALMS
 from .holdings import Possession
 from .laboratory import DiaryEntry
 from .philosophy import Formula
@@ -985,6 +986,9 @@ class Character:
     #: The non-Hermetic traditions the character belongs to
     #: (tradition_catalog.json ids); each has its own chapter of the sheet.
     traditions: list[str] = field(default_factory=list)
+    #: The realm of a sahir's Sihr when not Magic, its usual one (The
+    #: Cradle and the Crescent p. 47): "Faerie", "Divine" or "Infernal".
+    sihr_realm: str = ""
     #: What the character knows or made of their traditions' magic.
     tradition_effects: list[TraditionEffect] = field(default_factory=list)
     #: The supernatural powers its Virtues grant (rules.powers).
@@ -1137,6 +1141,12 @@ class Character:
         Such a being no longer ages nor gains Warping (TMRE p. 44)."""
         transformed = self.alchemy is not None and self.alchemy.immortal_age is not None
         return transformed or self.magic_might > 0
+
+    def __post_init__(self) -> None:
+        if self.sihr_realm and self.sihr_realm not in TRADITION_REALMS:
+            raise ValueError(
+                f"{self.name!r}: unknown realm of Sihr {self.sihr_realm!r}."
+            )
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Character:

@@ -4,6 +4,7 @@ chapter, and hedge Arts on the Art xp table."""
 import pytest
 
 from ars_magica_manager import catalog, traditions
+from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import (
     Ability,
     Character,
@@ -13,6 +14,7 @@ from ars_magica_manager.models import (
 from ars_magica_manager.models.definitions import TRADITION_CATEGORIES
 from ars_magica_manager.rules import activities
 from ars_magica_manager.rules import creation_access as access
+from ars_magica_manager.rules import hedge_casting as hc
 from ars_magica_manager.sheets import character as cs
 
 
@@ -219,3 +221,66 @@ def test_a_tradition_cites_only_the_books_it_is_in():
     assert sources["trad_imhergi"] == sources["trad_bouda"] == "BS&S"
     assert sources["trad_wordsmiths"] == "TCI"
     assert sources["trad_caerflorons_line"] == "LoH"
+
+
+def _sahir(realm: str = "") -> Character:
+    sahir = Character(id="s", name="Tariq", type="companion", sihr_realm=realm)
+    sahir.traditions = ["trad_sahirs"]
+    sahir.abilities = [Ability("Sihr", "Supernatural", xp=30)]
+    return sahir
+
+
+def _rule(name: str):
+    tradition = traditions.find("trad_sahirs")
+    assert tradition is not None
+    return tradition, next(r for r in tradition.casting if r.name == name)
+
+
+def test_a_sahirs_sihr_reads_the_aura_by_its_own_realm():
+    # DE p. 545: Magic takes 3 x a Divine aura; Divine powers take nothing
+    # from a Magic aura, and Faerie adds half of one.
+    tradition, rule = _rule("Summoning")
+    aura = {"aura": 4, "aura_realm": "Magic"}
+    plain = hc.casting_score(_sahir(), tradition, rule, ["Sihr"], **aura)
+    faerie = hc.casting_score(_sahir("Faerie"), tradition, rule, ["Sihr"], **aura)
+    divine = hc.casting_score(_sahir("Divine"), tradition, rule, ["Sihr"], **aura)
+    assert plain.total - faerie.total == 4 - 2
+    assert plain.total - divine.total == 4
+    assert hc.power_realm(_sahir("Infernal"), tradition, rule) == "Infernal"
+
+
+def test_a_sahirs_solomonic_arts_stay_magic():
+    tradition, rule = _rule("Naranj")
+    assert hc.power_realm(_sahir("Infernal"), tradition, rule) == "Magic"
+
+
+def test_an_aligned_sihr_changes_the_botch_dice_and_says_what_it_changes():
+    tradition, rule = _rule("Summoning")
+    realm = hc.power_realm(_sahir("Faerie"), tradition, rule)
+    assert (
+        hc.botch_dice(tradition, rule, aura=3, aura_realm="Divine", realm=realm)
+        == 1 + 3
+    )
+    assert hc.botch_dice(tradition, rule, aura=3, aura_realm="Faerie", realm=realm) == 1
+    assert hc.botch_dice(tradition, rule, aura=3, aura_realm="Faerie") == 1 + 3
+
+
+def test_the_traditions_form_sets_the_realm_of_sihr_for_one_who_has_it():
+    saga = Saga(id="s", name="S")
+    sahir = _sahir()
+    fields = {f.key: f for f in menu_forms.character_traditions_fields(saga, sahir)}
+    assert fields["sihr_realm"].value == "Magic"
+    menu_forms.apply_character_traditions(sahir, {"sihr_realm": "Faerie"})
+    assert sahir.sihr_realm == "Faerie"
+    menu_forms.apply_character_traditions(sahir, {"sihr_realm": "Magic"})
+    assert sahir.sihr_realm == ""
+    other = Character(id="o", name="O", type="companion")
+    keys = [f.key for f in menu_forms.character_traditions_fields(saga, other)]
+    assert "sihr_realm" not in keys
+
+
+def test_a_bad_realm_of_sihr_is_reported_on_load():
+    with pytest.raises(ValueError, match="realm of Sihr"):
+        Character.from_dict(
+            {"id": "c", "name": "C", "type": "grog", "sihr_realm": "Elsewhere"}
+        )

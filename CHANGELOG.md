@@ -109,6 +109,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.55.0 — 2026-10-30
+
+### Hedge Magic
+
+- **A sahir's Sihr can belong to another realm.** One with the Sihr Ability
+  chooses its realm on the Traditions form: Magic, as most are, or Faerie,
+  Divine or Infernal. Their summoning then reads the aura by that realm,
+  for its total and its botch dice, and the Summoning rule says what that
+  version changes in the bargain. The Solomonic arts stay Magic.
+
 ## 3.54.1 — 2026-10-30
 
 ### Fundamenta

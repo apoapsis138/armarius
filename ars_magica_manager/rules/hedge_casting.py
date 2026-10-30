@@ -224,8 +224,46 @@ def characteristic_for(rule: CastingRule, uses: Sequence[str]) -> str:
     return rule.characteristic
 
 
-def aura_modifier(tradition: TraditionDef, aura: int, aura_realm: str) -> int:
-    return realms.aura_modifier(tradition.realm, aura_realm, aura)
+#: The Ability a sahir summons with, whose realm is his own to have.
+SIHR = "Sihr"
+
+#: What a version of Sihr in another realm changes in the bargain (The
+#: Cradle and the Crescent p. 47; its Summoning Total reads the aura by that
+#: realm, DE p. 545).
+SIHR_VERSIONS: dict[str, str] = {
+    "Faerie": (
+        "Bargaining adds his best good Reputation and takes off his worst bad "
+        "one; no other bad Reputation counts against the Ease Factor."
+    ),
+    "Divine": (
+        "No foreign aura takes from his Summoning Total, but he can offer no "
+        "vis: the Bargaining Ease Factor is always up by twice the magnitude "
+        "of the jinni's Might."
+    ),
+    "Infernal": (
+        "A failed bargain doesn't free the jinni: he can hold it and try "
+        "again for a Fatigue level each, the Ease Factor down 1 after a day, "
+        "2 after a season and 3 after a year."
+    ),
+}
+
+
+def power_realm(
+    character: Character, tradition: TraditionDef, rule: CastingRule
+) -> str:
+    """The realm a casting's aura is read for: the tradition's, or for a
+    roll of Sihr the sahir's own version of it (The Cradle and the Crescent
+    p. 47). The book aligns only Sihr, so his Solomonic arts stay Magic."""
+    if character.sihr_realm and SIHR in rule.scores:
+        return character.sihr_realm
+    return tradition.realm
+
+
+def aura_modifier(
+    tradition: TraditionDef, aura: int, aura_realm: str, realm: str = ""
+) -> int:
+    """What the aura does; `realm` in place of the tradition's own."""
+    return realms.aura_modifier(realm or tradition.realm, aura_realm, aura)
 
 
 def casting_score(
@@ -261,7 +299,9 @@ def casting_score(
     lines.append(
         Line(
             f"Aura ({aura_realm} {aura})",
-            amount=aura_modifier(tradition, aura, aura_realm),
+            amount=aura_modifier(
+                tradition, aura, aura_realm, power_realm(character, tradition, rule)
+            ),
             source=realms.SOURCE,
         )
     )
@@ -367,6 +407,7 @@ def botch_dice(
     aura: int = 0,
     aura_realm: str = realms.HERMETIC,
     in_regio: bool = False,
+    realm: str = "",
 ) -> int:
     """How many botch dice a stressed casting with the rule rolls when its
     die shows 0: none for a lab total or a rule without a stress die. Most
@@ -384,7 +425,7 @@ def botch_dice(
             1
             + vis_pawns
             + realms.extra_botch_dice(
-                tradition.realm, aura_realm, aura, in_regio=in_regio
+                realm or tradition.realm, aura_realm, aura, in_regio=in_regio
             )
         )
     return dice + rule.botch_extra

@@ -189,7 +189,10 @@ def _shared_terms(
     if rule.best_of:
         best = max(rule.best_of, key=lambda n: hc.score(character, n))
         parts.append(f"{escape(best)} {hc.score(character, best):+d}")
-    parts.append(f"aura ({realm} {aura}) {hc.aura_modifier(tradition, aura, realm):+d}")
+    modifier = hc.aura_modifier(
+        tradition, aura, realm, hc.power_realm(character, tradition, rule)
+    )
+    parts.append(f"aura ({realm} {aura}) {modifier:+d}")
     applies = "lab" if rule.lab else "casting"
     for _, being in hw.bound(character, tradition.id):
         if being.applies_to == applies and being.bonus:
@@ -233,6 +236,9 @@ def rule_part(
         lines.append(f"Botch dice: {escape(botch)}.")
     if rule.notes:
         lines.append(f"[dim]{escape(rule.notes)}[/]")
+    own = hc.power_realm(character, tradition, rule)
+    if own != tradition.realm:
+        lines.append(f"[b]{own} Sihr:[/] {escape(hc.SIHR_VERSIONS[own])}")
     return CastingPart(escape(rule.name), "\n".join(table), "\n".join(lines))
 
 

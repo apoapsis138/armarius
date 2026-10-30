@@ -140,7 +140,13 @@ def cast(
         vis_pawns=pawns,
     )
     botch_dice = hc.botch_dice(
-        tradition, rule, level=level, vis_pawns=pawns, aura=aura, aura_realm=realm
+        tradition,
+        rule,
+        level=level,
+        vis_pawns=pawns,
+        aura=aura,
+        aura_realm=realm,
+        realm=hc.power_realm(character, tradition, rule),
     )
     # A familiar's Golden Cord takes dice off any magic, never to none (DE
     # p. 267).
