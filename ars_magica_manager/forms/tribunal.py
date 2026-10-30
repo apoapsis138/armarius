@@ -65,9 +65,7 @@ def tribunal_field(saga: Saga, tribunal_id: str | None) -> DialogField:
         options=[(escape(label), ident) for label, ident in tribunals.options(saga)],
         allow_blank=True,
         placeholder="(no Tribunal)",
-        hint="New Tribunal, in the New menu, adds one to choose."
-        if not saga.tribunals
-        else "",
+        hint="New Tribunal adds one to choose." if not saga.tribunals else "",
     )
 
 

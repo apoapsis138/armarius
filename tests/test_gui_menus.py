@@ -94,7 +94,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     window = _window(_sample_saga_with_covenant())
     assert window.page().chapters() == [  # type: ignore[union-attr]
         "The Troupe",
-        "The World",
+        "The Covenants",
         "The Region",
         "The Bestiary",
         "Conflicts",
@@ -104,15 +104,14 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     ]
     # The Troupe gathers what is already made, so it makes nothing.
     assert list(_new(window)) == []
-    _saga_chapter(window, "The World")
+    _saga_chapter(window, "The Covenants")
     assert list(_new(window)) == [
         "New Covenant",
-        "New Tribunal",
         "New Character",
         "New Laboratory",
     ]
     _saga_chapter(window, "The Region")
-    assert list(_new(window)) == ["New Neighbour"]
+    assert list(_new(window)) == ["New Tribunal", "New Neighbour"]
     _saga_chapter(window, "The Bestiary")
     assert list(_new(window)) == ["New Creature"]
     _saga_chapter(window, "Seasons")
@@ -127,7 +126,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
 def test_new_makes_a_record_and_opens_its_creation_worksheet(app):
     window = _window(_sample_saga_with_covenant())
     asked = answering(window, None)
-    _saga_chapter(window, "The World")
+    _saga_chapter(window, "The Covenants")
     _new(window)["New Covenant"].on_click()
     assert asked[0].windowTitle() == "Create a New Covenant"
     assert [c.name for c in storage.load_saga("test_saga").covenants] == [

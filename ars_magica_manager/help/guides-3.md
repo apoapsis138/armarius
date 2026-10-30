@@ -30,7 +30,7 @@ The saga is saved as soon as it is made, and every change after that is saved as
 3. Back on the saga node, press `e` (the footer calls it Edit Saga).
 <!-- /tui -->
 <!-- gui -->
-1. [The saga's page](help:saga) has four chapters, listed in the rail on the left: The World, Seasons, Rules and Content, and Saga Management.
+1. [The saga's page](help:saga) has eight chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Bestiary, Conflicts, Seasons, Rules and Content, and Saga Management.
 2. In **Rules and Content**, click the **Saga Content** card. On its **Books** chapter, click **Edit** on Books in Play and tick the books your troupe uses (or click one card's **In play** chip to switch just that book): catalog pickers then hide Virtues, spells and other entries from books not in play, and everything a supplement adds (its activities, optional rules and kinds of books) switches off with it. See [Saga Content](help:saga-content).
 3. Click the saga's name in the trail to go back to its page, open its **Saga Management** chapter and click **Edit Saga**.
 <!-- /gui -->
@@ -49,7 +49,7 @@ You can come back to Edit Saga at any time.
 1. With the saga node chosen, press `n` (New). A menu offers New Covenant, New Character and New Laboratory; press `v` for New Covenant.
 <!-- /tui -->
 <!-- gui -->
-1. On the saga's page, open **The World** and click the **New Covenant** card at the end of the Covenants.
+1. On the saga's page, open **The Covenants** and click the **New Covenant** card at the end of the Covenants.
 <!-- /gui -->
 2. Type a Name and, if you like, a one-line note under Notes. Choose its Season (Spring unless you say otherwise; Spring or Winter, Summer or Autumn set what each inhabitant counts for) and its Aura realm (Magic; the creation rules assume a Magic aura, and a Faerie aura is a Hook). Then choose Create. The covenant starts at the creation baseline's aura of 3.
 <!-- tui -->

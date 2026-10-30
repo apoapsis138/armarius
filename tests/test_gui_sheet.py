@@ -419,7 +419,7 @@ def test_a_saga_opens_at_its_covenants_and_the_trail_leads_back(app):
     window.load(saga)
     assert window.sheet_area.findChild(SagaPage) is not None
     assert window.crumb_names() == ["Sagas", saga.name]
-    # The World, the chapter on show, leads with the covenants.
+    # The Troupe, the chapter on show, leads with the troupe's covenant.
     covenant = next(
         c for c in window.findChildren(ClickableCard) if c.isVisibleTo(window)
     )

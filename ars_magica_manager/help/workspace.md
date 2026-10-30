@@ -147,7 +147,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The World** shows its covenants and Tribunals as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The Covenants** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its Tribunals and neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -195,12 +195,12 @@ The pages move a little, never in your way: the Inspector's new item inks in on 
 The top node of the tree. It shows the saga's own details and what it holds.
 <!-- /tui -->
 <!-- gui -->
-The saga's page, opened from its card on the Sagas page. It has seven chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The World** shows its
-Covenants, Tribunals, Unassigned Characters and Unassigned Laboratories as cards, each
-heading ending in a blank card (New Covenant, New Tribunal, New Character, New
+The saga's page, opened from its card on the Sagas page. It has eight chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The Covenants** shows its
+Covenants, Unassigned Characters and Unassigned Laboratories as cards, each
+heading ending in a blank card (New Covenant, New Character, New
 Laboratory) that makes one more. A covenant's card shows its aura with its Boons and
 Hooks counted (each Aura Boon adds 1, Definitive Edition p. 183), the same total its
-page shows. **The Region** holds its neighbours and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Seasons** sets the date (Set Date) and
+page shows. **The Region** holds its Tribunals, each a card with a New Tribunal card after them, and its neighbours, and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Conflicts** lists its fights and sieges (see [Conflicts](help:conflicts)). **Seasons** sets the date (Set Date) and
 opens the seasons played; **Rules and Content** opens Saga Content; and
 **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
 magus or in their laboratory.
@@ -241,12 +241,12 @@ On the desktop, the books in play are counted on the Saga Content card in Rules 
 The saga page's first chapter, so the characters you play are a click away rather than inside their covenant's People.
 
 - **Player Characters**: every character whose Biographical Detail, in their Description chapter, names their **Player** (or who is **Played by** one of the saga's [players](help:players-access)), by covenant: the troupe's covenants first, then the others, then those who belong to none. Click one to open their sheet.
-- **Troupe Covenants**: the covenants the troupe plays, marked ✦ as on The World.
+- **Troupe Covenants**: the covenants the troupe plays, marked ✦ as on The Covenants.
 - **Bookmarked**: anything else you bookmarked, by kind: characters, covenants, laboratories, familiars, Tribunals, neighbours and creatures. A bookmarked page that is a player character or a troupe covenant is shown once, above.
 
 To bookmark a page, open it and click the ribbon at the right of its header, below its buttons: a faint outline becomes a filled ribbon. Click it again to take the bookmark out. Bookmarks belong to whoever reads the saga, so they are kept on this computer, saga by saga, and are not saved in the saga file: another computer, or someone who opens the same saga, has their own. A bookmarked record that is deleted drops off the chapter.
 
-**The app works out:** who is a player character, from their Player; the cards' figures, as on The World.
+**The app works out:** who is a player character, from their Player; the cards' figures, as on The Covenants.
 
 ### More on the saga
 <!-- help: saga-more -->
@@ -259,7 +259,7 @@ To bookmark a page, open it and click the ribbon at the right of its header, bel
 New (`n`) on the saga offers New Covenant, New Character, New Laboratory and, while a magus has no familiar, Bind Familiar.
 <!-- /tui -->
 <!-- gui -->
-Set Date is in the Seasons chapter, and Import, Export Saga and Host for Players in Saga Management. The New cards on The World make a covenant, character or laboratory.
+Set Date is in the Seasons chapter, and Import, Export Saga and Host for Players in Saga Management. The New cards on The Covenants make a covenant, character or laboratory, and those on The Region a Tribunal or neighbour.
 <!-- /gui -->
 
 **See also:** [The workspace](help:workspace), [Advance Season](help:advance-season), [Import Data](help:import-data), [Creation Worksheet](help:creation-worksheet), [Getting started](help:guide-getting-started)
@@ -273,7 +273,7 @@ The Characters node under a covenant, or Unassigned Characters under the saga. I
 **You type:** nothing here. `n` (New) offers New Character, with this covenant already chosen, and Bind Familiar while a magus has no familiar.
 <!-- /tui -->
 <!-- gui -->
-A covenant's People chapter, or Unassigned Characters on the saga's The World, shows the characters as cards; click one to open their sheet.
+A covenant's People chapter, or Unassigned Characters in the saga's The Covenants chapter, shows the characters as cards; click one to open their sheet.
 
 **You type:** nothing here. The **New Character** card at the end of the cards makes one, with this covenant already chosen. A familiar is bound on its magus's page (or in their laboratory).
 <!-- /gui -->
@@ -451,7 +451,7 @@ The Laboratories node under a covenant, or Unassigned Laboratories under the sag
 **You type:** nothing here. `n` (New) offers New Laboratory, with this covenant already chosen.
 <!-- /tui -->
 <!-- gui -->
-A covenant's Laboratories chapter, or Unassigned Laboratories on the saga's The World, shows the laboratories as cards; click one to open its page. A card's Aura is the one its Lab Totals use: its covenant's (Boons and Hooks counted), or its own place's, with the lab's own modifier.
+A covenant's Laboratories chapter, or Unassigned Laboratories in the saga's The Covenants chapter, shows the laboratories as cards; click one to open its page. A card's Aura is the one its Lab Totals use: its covenant's (Boons and Hooks counted), or its own place's, with the lab's own modifier.
 
 **You type:** nothing here. The **New Laboratory** card at the end of the cards makes one, with this covenant already chosen.
 <!-- /gui -->

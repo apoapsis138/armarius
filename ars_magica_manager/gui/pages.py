@@ -479,20 +479,41 @@ def stories_part(saga: Saga, p: Palette, run: Callable[[Command], None]) -> QWid
     return part
 
 
+def _tribunals_parts(
+    saga: Saga, p: Palette, open_tribunal: Open, new: QWidget | None
+) -> list[QWidget]:
+    """The Tribunals' heading and cards, ending in the New card."""
+    courts: list[QWidget] = [
+        tribunal_card(saga, t, p, open_tribunal) for t in saga.tribunals
+    ]
+    listed = with_new(courts, new)
+    return [
+        chapter_title(f"Tribunals ({len(courts)})", p),
+        card_grid(listed, 2)
+        if listed
+        else text("None.", p["dim"], serif(12.5, italic=True)),
+    ]
+
+
 def region_chapter(
     saga: Saga,
     p: Palette,
     open_neighbour: Open,
     new: QWidget | None,
+    open_tribunal: Open,
+    new_tribunal: QWidget | None,
     run: Callable[[Command], None] = lambda _command: None,
 ) -> QWidget:
-    """The Region: its facts (Threat due with a leaf that opens the
-    threat), then each group's neighbours the filter lets through as
-    cards, the filter's quiet drop-downs at the right of the first
-    group's heading, and the New card that adds one; then the troupe's
-    open stories."""
+    """The Region: its Tribunals as cards, ending in the New card that
+    adds one; its facts (Threat due with a leaf that opens the threat),
+    then each group's neighbours the filter lets through as cards, the
+    filter's quiet drop-downs at the right of the first group's heading,
+    and the New card that adds one; then the troupe's open stories."""
     facts = _region_facts(saga, p, open_neighbour)
-    parts: list[QWidget] = [chapter_title(region_sheet.neighbours_title(saga), p)]
+    parts: list[QWidget] = [
+        *_tribunals_parts(saga, p, open_tribunal, new_tribunal),
+        chapter_title(region_sheet.neighbours_title(saga), p),
+    ]
     groups = QWidget()
     holder = QVBoxLayout(groups)
     holder.setContentsMargins(0, 0, 0, 0)
@@ -853,10 +874,10 @@ def troupe_chapter(
 
 class SagaPage(QWidget):
     """A saga as a Codex: The Troupe (its player characters, the troupe's
-    covenants and what the reader has bookmarked), The World (its covenants,
-    and the characters and laboratories that belong to none, each list
-    ending in a New card), The Region (its neighbours), The Bestiary (its
-    creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management."""
+    covenants and what the reader has bookmarked), The Covenants (its
+    covenants, and the characters and laboratories that belong to none,
+    each list ending in a New card), The Region (its Tribunals and
+    neighbours), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management."""
 
     def __init__(
         self,
@@ -902,7 +923,7 @@ class SagaPage(QWidget):
             "creature": open_creature,
         }
         self.codex.add("The Troupe", "troupe", troupe_chapter(saga, p, opens))
-        self.codex.add("The World", "covenant", self._world())
+        self.codex.add("The Covenants", "covenant", self._covenants())
         # The Region and The Bestiary are built when first opened: a
         # pack's Tribunal brings hundreds of neighbours and dozens of
         # creatures, too many cards to draw each time the saga opens.
@@ -910,7 +931,13 @@ class SagaPage(QWidget):
             "The Region",
             "region",
             lambda: region_chapter(
-                saga, p, self.open_neighbour, self._new("Neighbours"), run
+                saga,
+                p,
+                self.open_neighbour,
+                self._new("Neighbours"),
+                self.open_tribunal,
+                self._new("Tribunals"),
+                run,
             ),
         )
         self.codex.add(
@@ -939,15 +966,12 @@ class SagaPage(QWidget):
     def _buttons(self, spot: str) -> list[QPushButton]:
         return self.placer.buttons(spot) if self.placer else []
 
-    def _world(self) -> QWidget:
+    def _covenants(self) -> QWidget:
         p, saga = self.p, self.saga
         figures = ov.covenant_cards(saga)
         troupe = sum(f.played for f in figures)
         covenants: list[QWidget] = [
             covenant_card(f, p, self.open_covenant) for f in figures
-        ]
-        courts: list[QWidget] = [
-            tribunal_card(saga, t, p, self.open_tribunal) for t in saga.tribunals
         ]
         people = [
             person_card(saga, c, p, self.open_character) for c in ov.members(saga, None)
@@ -956,7 +980,6 @@ class SagaPage(QWidget):
         parts: list[QWidget] = []
         for title, cards, across in (
             ("Covenants", covenants, 2),
-            ("Tribunals", courts, 2),
             ("Unassigned Characters", people, CARDS_ACROSS),
             ("Unassigned Laboratories", labs, 2),
         ):

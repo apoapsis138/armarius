@@ -85,7 +85,7 @@ covenants. A covenant you make is played; a sketch covenant usually isn't.
 Every list of covenants puts the player covenants first, each marked
 with ✦, above the others.
 <!-- gui -->
-On the World page their cards carry gold corners, and a divider stands
+On The Covenants their cards carry gold corners, and a divider stands
 before the rest.
 <!-- /gui -->
 

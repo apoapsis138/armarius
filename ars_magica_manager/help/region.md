@@ -1,12 +1,12 @@
 # The Region
 <!-- help: region -->
 
-The Region is the saga's world beyond the troupe's covenants: the
-covenants the troupe doesn't play, and the neighbours (the lords and
-towns, the Church, the universities, the factions and the threats
-around them), each with its attitude toward the troupe.
-
 <!-- tui -->
+The Region is the saga's world beyond the troupe's covenants: the
+Tribunals, the covenants the troupe doesn't play, and the neighbours
+(the lords and towns, the Church, the universities, the factions and
+the threats around them), each with its attitude toward the troupe.
+
 In the navigation tree The Region sits under the troupe's covenants.
 Each Tribunal is listed there, with the covenants the troupe doesn't
 play under the Tribunal they belong to (a covenant with no Tribunal sits
@@ -19,9 +19,16 @@ Press `n` (New) here, or on the saga, and choose **New Tribunal** or
 choice in Edit Covenant.
 <!-- /tui -->
 <!-- gui -->
-On the saga's page, The Region chapter shows each group's neighbours as
-cards, each opening its own page, and a New card that adds one. The
-Tribunals and the covenants are in The World.
+The Region is the saga's world beyond the troupe's covenants: the
+Tribunals and the neighbours (the lords and towns, the Church, the
+universities, the factions and the threats around them), each with its
+attitude toward the troupe.
+
+On the saga's page, The Region chapter opens with the Tribunals as
+cards, each opening its own page, and a New card that adds one. Under
+them come the Region's facts, then each group's neighbours as cards,
+with their own New card. The covenants are in The Covenants, whether
+the troupe plays them or not.
 
 A group with more than a dozen neighbours shows its first twelve and a
 **Show more** card that draws the rest; a Tribunal book brings hundreds,

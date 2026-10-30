@@ -128,7 +128,7 @@ Tribunal afterwards, and nothing else about them changes.
 <!-- /tui -->
 <!-- gui -->
 Add a Tribunal with the **New Tribunal** card under Tribunals in the
-saga's World chapter. To delete one, use **Delete** in its page's
+saga's Region chapter. To delete one, use **Delete** in its page's
 **Manage** chapter: its covenants belong to no Tribunal afterwards, and
 nothing else about them changes.
 <!-- /gui -->

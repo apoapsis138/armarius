@@ -649,6 +649,10 @@ def test_the_desktop_shows_a_tribunal_and_lists_them_on_the_saga():
     ]
     saga_page = SagaPage(saga, PALETTES[0], lambda _id: None)
     titles = [label.text() for label in saga_page.findChildren(QLabel)]
+    assert not any("Tribunals (6)" in title for title in titles)
+    # The Region is built when first opened, and leads with the Tribunals.
+    saga_page.codex.open_chapter("The Region")
+    titles = [label.text() for label in saga_page.findChildren(QLabel)]
     assert any("Tribunals (6)" in title for title in titles)
 
 

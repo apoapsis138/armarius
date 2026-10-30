@@ -109,6 +109,18 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.57.0 — 2026-10-30
+
+### Illuminatio
+
+- On the desktop, the saga's chapter The World is now **The Covenants**: the
+  covenants, then the characters and laboratories that belong to none.
+- **The Tribunals moved to the top of The Region**, with their New Tribunal
+  card, above the Region's facts and neighbours.
+- The help says so, counts the saga page's eight chapters, and the Tribunal
+  choice on a covenant's form no longer points to a New menu the desktop
+  doesn't have.
+
 ## 3.56.0 — 2026-10-30
 
 ### Hedge Magic
