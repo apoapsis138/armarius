@@ -229,16 +229,19 @@ class FieldsDialog(_Sheet):
         else:
             self._size_window()
 
-    def _size_window(self) -> None:
+    def _size_window(self, *, grow: bool = False) -> None:
         """As a window: wide enough for the longest label and its field
         beside it, and tall enough for every field and what is under
         them (a wrapped hint, the live line or gloss), up to TALLEST_WINDOW,
-        past which the fields scroll."""
+        past which the fields scroll. `grow`: never smaller than it is now,
+        so a window widened by hand stays so, and kept on the screen."""
         area, body = self.area, self.body
         frame = 2 * area.frameWidth()
         scrollbar = area.verticalScrollBar().sizeHint().width()
         wide = body.sizeHint().width() + frame + scrollbar + 60
         width = min(max(700, wide), WIDEST_WINDOW)
+        if grow:
+            width = max(width, self.width())
         self.resize(width, self.height())
         self.column.activate()
         viewport = width - self.column.contentsMargins().left() * 2 - frame - scrollbar
@@ -248,7 +251,14 @@ class FieldsDialog(_Sheet):
             else body.sizeHint().height()
         )
         under = self.sizeHint().height() - area.sizeHint().height()
-        self.resize(width, min(TALLEST_WINDOW, under + fields + frame + 8))
+        tall = min(TALLEST_WINDOW, under + fields + frame + 8)
+        if not grow:
+            self.resize(width, tall)
+        elif tall > self.height():
+            self.resize(width, tall)
+            screen = self.screen().availableGeometry()
+            if self.isVisible() and self.frameGeometry().bottom() > screen.bottom():
+                self.move(self.x(), max(screen.top(), screen.bottom() - self.height()))
 
     def _inspector(self, heading: str) -> InspectorFrame:
         """The live text boxed as a gloss at the foot of the page, under
@@ -436,6 +446,9 @@ class FieldsDialog(_Sheet):
             self.picture_label.setVisible(drawn is not None)
         if self.inline and hasattr(self, "area"):
             self._fit()
+        elif hasattr(self, "area"):
+            # Fields shown as others are chosen (Lab Work's) need more room.
+            self._size_window(grow=True)
 
     def _fit(self) -> None:
         """In place, be as tall as the fields shown now."""

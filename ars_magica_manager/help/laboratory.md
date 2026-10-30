@@ -722,8 +722,8 @@ description, Technique or Form, up to the magus's Magic Theory (DE p.
 258); change it when the troupe reads the bonuses otherwise.
 
 <!-- gui -->
-On the desktop it is a form that opens in place of the Planning list, from
-its **Plan** or **New Spell**.
+On the desktop it is a form that opens in a window of its own, from the
+Planning list's **Plan** or **New Spell**.
 <!-- /gui -->
 Its title names the work, the magus, the laboratory and the season. As you
 type, it shows the Lab Total and when the work will be done, worked out under

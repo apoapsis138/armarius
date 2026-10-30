@@ -290,6 +290,26 @@ def test_a_form_draws_its_fields_and_refuses_what_does_not_parse(app):
     }
 
 
+def test_a_form_in_a_window_grows_as_fields_are_shown(app):
+    """A form opened as a window is as tall as the fields it shows, and
+    grows when a choice shows more of them (as Lab Work's does)."""
+    more = [
+        DialogField(f"n{i}", f"Note {i}", "area", "", show_if=lambda v: v["more"])
+        for i in range(3)
+    ]
+    dialog = FieldsDialog(
+        "Grow", [DialogField("more", "More", "check", False), *more], PALETTES[0]
+    )
+    dialog.show()
+    QApplication.processEvents()
+    short = dialog.height()
+    dialog.set_value("more", True)
+    QApplication.processEvents()
+    assert dialog.height() > short + 200
+    assert dialog.area.verticalScrollBar().maximum() == 0
+    dialog.close()
+
+
 def test_a_drop_down_is_an_inked_blank_with_a_purple_bookmark(app):
     window = MainWindow(saga_ids=[])
     dialog = FieldsDialog(

@@ -234,7 +234,7 @@ To take over a laboratory that has no owner (one left by a magus who died or mov
 2. To invent a spell, fill in the [design](help:invent-spell-design). **Start from** picks any spell as the template, the magus's own known spells first for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)); **New spell** clears the design. Type the Name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out below them.
 <!-- /tui -->
 <!-- gui -->
-**Plan** and **New Spell** open the lab work form in place of the list (see [Invent Spell screen](help:invent-spell)), titled with the work, the magus, the laboratory and the season. It plans every kind of lab work.
+**Plan** and **New Spell** open the lab work form in a window of its own (see [Invent Spell screen](help:invent-spell)), titled with the work, the magus, the laboratory and the season. It plans every kind of lab work.
 
 1. Choose the **Lab work** (see [Lab work](help:invent-spell-activity)). The form shows only the fields that work needs.
 2. To invent a spell, fill in the [design](help:invent-spell-design). **Start from** picks any spell as the template, the magus's own known spells first for a variant of one of theirs (see [Starting from a spell](help:invent-spell-start)); **New Spell** asks for it first, or "A new spell (a blank design)". Type the Spell name, Effect, Technique, Form, Requisites, Base level and Ritual, and choose the Range, Duration and Target. The level is worked out in the line under the fields.

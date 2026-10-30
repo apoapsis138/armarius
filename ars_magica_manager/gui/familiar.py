@@ -35,7 +35,7 @@ from .character_sheet import (
     trait_section,
     vf_card,
 )
-from .editing import Chooser, Run, choose_cards, verb_buttons
+from .editing import Chooser, Run, choose_cards, open_in_a_window, verb_buttons
 from .figures import (
     CordFigure,
     Seal,
@@ -76,7 +76,8 @@ def _none(words: str, p: Palette) -> QLabel:
 
 class FamiliarPage(QWidget):
     """A familiar in the Codex layout; choosing anything shows it in the
-    inspector."""
+    inspector.
+    Its buttons' forms, lists and questions open as windows over it."""
 
     def __init__(
         self,
@@ -87,6 +88,7 @@ class FamiliarPage(QWidget):
         controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
+        open_in_a_window(self)
         self.saga, self.familiar, self.p = saga, familiar, p
         self.run = run
         self.edits = ff.edits(familiar)

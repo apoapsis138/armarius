@@ -61,7 +61,7 @@ from .character_sheet import (
     section,
     side_by_side,
 )
-from .editing import Chooser, RowVerb, Run, follower, verb_buttons
+from .editing import Chooser, RowVerb, Run, follower, open_in_a_window, verb_buttons
 from .figures import fact_grid, prose
 from .heraldry import arms_section
 from .manage import RecordControls
@@ -104,7 +104,8 @@ def _column(words: str, p: Palette) -> QWidget:
 
 
 class NeighbourPage(QWidget):
-    """A neighbour in the Codex layout."""
+    """A neighbour in the Codex layout.
+    Its buttons' forms, lists and questions open as windows over it."""
 
     def __init__(
         self,
@@ -115,6 +116,7 @@ class NeighbourPage(QWidget):
         controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
+        open_in_a_window(self)
         self.saga, self.neighbour, self.p, self.run = saga, neighbour, p, run
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)

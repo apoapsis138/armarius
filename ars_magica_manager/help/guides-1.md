@@ -98,7 +98,7 @@ The laboratory's **Lab work** list works the same way, with its own Types: Inven
 <!-- gui -->
 1. On the covenant's page, choose **Laboratories** in the rail and click the magus's laboratory.
 2. Choose **Seasons** in the rail. Its **Planning** list shows the owner's seasons from the current one on, with "nothing planned" against a free season. Click the season.
-3. Click **Plan** to plan lab work for that season, or **New Spell** to invent a spell: it first asks for a spell to start from (any spell, the magus's own known spells first), or "A new spell (a blank design)"; the form's **Start from** changes it later. Either opens the lab work form (see [Invent Spell screen](help:invent-spell)) in place of the list.
+3. Click **Plan** to plan lab work for that season, or **New Spell** to invent a spell: it first asks for a spell to start from (any spell, the magus's own known spells first), or "A new spell (a blank design)"; the form's **Start from** changes it later. Either opens the lab work form (see [Invent Spell screen](help:invent-spell)) in a window of its own; it grows as the lab work you choose asks for more.
 4. Choose the **Lab work** first, from its list grouped by Type (see [Finding an activity](help:guide-seasons-find)); the form then asks only for what that work needs. The line under the fields shows the Lab Total and when the work is done, updated as you type.
 5. Click **Schedule**. For work that takes several seasons, the app also plans the following seasons it is projected to need.
 

@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.47.0 — 2026-10-30
+
+### Illuminatio
+
+- **Laboratory, familiar, creature and neighbour forms open in windows.**
+  As on a covenant's page, every form, list to choose from and "Are you
+  sure?" question on these pages now opens in a window of its own over
+  the page, instead of taking the place of the section.
+- A form in a window grows when a choice shows more of its fields: Lab
+  Work starts with only the Lab work to choose, and its window grows to
+  fit what that work asks for. A window you have widened by hand keeps
+  its size.
+
 ## 3.46.0 — 2026-10-29
 
 ### Pagina

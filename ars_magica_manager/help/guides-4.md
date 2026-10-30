@@ -60,7 +60,7 @@ Binding the familiar is a season of lab work, planned in the magus's laboratory.
 <!-- /tui -->
 <!-- gui -->
 1. Open the laboratory's page and its **Seasons** chapter. The Planning section at the top lists the owner's seasons.
-2. Click the season, then **Plan**. The lab work form opens in place.
+2. Click the season, then **Plan**. The lab work form opens in a window.
 <!-- /gui -->
 3. In **Lab work**, choose **Bind or strengthen a familiar**.
 4. Choose the **Technique** and **Form** the bond is made with (strengthening it later uses the same two, DE p. 267), and type the **Golden cord**, **Silver cord** and **Bronze cord** scores you want, each 0 to 5. The Arts must suit the animal or its powers (DE p. 266): once both are chosen, the line under the form gives the book's Suggested Familiars for each and says whether either names the familiar's kind (its Species line). That is advice, since a bird suits Auram and any magical animal Vim; the app binds with any pair.
