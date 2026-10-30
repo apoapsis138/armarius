@@ -12,7 +12,10 @@ not the book it comes from: the book decides only whether it is offered
 
 from __future__ import annotations
 
-from .models import Character
+from collections.abc import Callable
+from dataclasses import dataclass
+
+from .models import Character, Covenant
 from .rules import faiths
 
 SESSION = "Session & Reputation"
@@ -20,6 +23,9 @@ KNIGHTLY = "Knightly"
 SCHOLARLY = "Scholarly"
 INSIGHT = "Insight"
 RELIGION = "Religion"
+AGENTS = "Agents"
+RESEARCH = "Research"
+HERMETIC_MYSTERIES = "Hermetic Mysteries"
 MYSTERY_CULTS = "Mystery Cults"
 CRAFT = "Craft & Trade"
 TRIBUNAL = "Tribunal & Order"
@@ -35,6 +41,9 @@ INTERESTS: tuple[str, ...] = (
     SCHOLARLY,
     INSIGHT,
     RELIGION,
+    AGENTS,
+    RESEARCH,
+    HERMETIC_MYSTERIES,
     MYSTERY_CULTS,
     CRAFT,
     TRIBUNAL,
@@ -75,6 +84,16 @@ INTEREST_OF: dict[str, str] = {
     "mothers_curse": RELIGION,
     "perform_exorcism": RELIGION,
     "pilgrimage": RELIGION,
+    "impress_agent": AGENTS,
+    "spend_agency_xp": AGENTS,
+    "set_agent_task": AGENTS,
+    "resolve_agent_task": AGENTS,
+    "spirits_and_names": HERMETIC_MYSTERIES,
+    "dream_working": HERMETIC_MYSTERIES,
+    "hermetic_sacrifice": HERMETIC_MYSTERIES,
+    "philosophic_alchemy": HERMETIC_MYSTERIES,
+    "great_elixir": HERMETIC_MYSTERIES,
+    "learn_cantation": APPRENTICESHIP,
     "experiment_script": MYSTERY_CULTS,
     "make_greek_fire": CRAFT,
     "artist_career": CRAFT,
@@ -162,6 +181,28 @@ RELIGION_NOTES: dict[str, str] = {
     "perform_exorcism": "A clergyman's exorcism, under Holy Orders.",
 }
 
+#: What each action on the Agents chapter does, in a line.
+AGENT_NOTES: dict[str, str] = {
+    "impress_agent": "Winning over someone not yet impressed.",
+    "spend_agency_xp": "Spending Agency experience on an agent's Bond.",
+    "set_agent_task": "Giving a bonded agent a task.",
+    "resolve_agent_task": "Rolling how an agent's task turned out.",
+}
+
+#: What each such action on the Hermetic Magic chapter does, in a line.
+HERMETIC_NOTES: dict[str, str] = {
+    "spirits_and_names": "Working with spirits and their names, in Magic "
+    "Outside the Lab.",
+    "dream_working": "Magic worked through dreams, on a known spell.",
+    "hermetic_sacrifice": "A sacrifice that strengthens a known spell.",
+    "learn_cantation": "An apprentice learning a cantation, on Known Spells.",
+}
+
+#: What each such action under Aging does, in a line.
+AGING_NOTES: dict[str, str] = {
+    "great_elixir": "Testing an enchanted Great Elixir.",
+}
+
 #: The Planning chapter's section of the supplements' season-long work,
 #: below This Season (whose own buttons keep to planning the season).
 SEASON_WORK = "A Season's Work"
@@ -196,6 +237,9 @@ SUMMARIES: dict[str, str] = {
     SCHOLARLY: "Debate, learned charms and a scholar's working life.",
     INSIGHT: "Answers drawn from faith, signs and the stars.",
     RELIGION: "The Religion chapter: a character's faith and what it offers.",
+    AGENTS: "People who work on a character's behalf.",
+    RESEARCH: "A magus's original research.",
+    HERMETIC_MYSTERIES: "Spirits, dreams, sacrifice and alchemy.",
     MYSTERY_CULTS: "Finding new Initiation Scripts for a cult.",
     CRAFT: "Making, selling and earning a living by a trade.",
     TRIBUNAL: "Formal letters, and oaths called to account.",
@@ -219,6 +263,12 @@ ABOUT: dict[str, str] = {
     RELIGION: "For the devout, and for anyone whose faith shapes their "
     "play. Turned off, the Religion chapter leaves the sheet, which suits a "
     "character whose faith will never come up.",
+    AGENTS: "For those who run a network of informants and servants. "
+    "Turned off, the Agents chapter leaves the sheet.",
+    RESEARCH: "For a magus who pushes the limits of Hermetic magic. Turned "
+    "off, the Research chapter leaves the sheet.",
+    HERMETIC_MYSTERIES: "For a magus initiated into the deeper magics The "
+    "Mysteries describes, from spirit names to the Great Elixir.",
     MYSTERY_CULTS: "For a Mystagogue, who tests a new Initiation Script by "
     "having an Initiate carry it out.",
     CRAFT: "For craftsmen, merchants and artists: Labor Points, sales, an "
@@ -236,6 +286,105 @@ ABOUT: dict[str, str] = {
     "untrained Gift lashing out, the final test, and failing an apprentice.",
     COVENFOLK: "For the covenant's grogs and those who look after them: a "
     "story's experience, a reward or punishment, and a pension.",
+}
+
+
+@dataclass(frozen=True)
+class Gate[R]:
+    """What an interest that has a chapter or section of its own hides, and
+    what keeps it on whatever was chosen: `kept_on` asks the record, `fixed`
+    stands where the card's switch would be and `why` heads its inspector."""
+
+    chapter: str
+    kept_on: Callable[[R], bool]
+    fixed: str
+    why: str
+
+
+#: A character's interests with chapters of their own.
+CHARACTER_GATES: dict[str, Gate[Character]] = {
+    RELIGION: Gate(
+        "Religion",
+        faiths.church_career,
+        "On for a Church career",
+        "Their Church career keeps this on: its Holy Orders, Petitions and "
+        "Canon Court are on the Religion chapter.",
+    ),
+    AGENTS: Gate(
+        "Agents",
+        lambda character: bool(character.agents),
+        "On while they have agents",
+        "Their agents keep this on: they are on the Agents chapter.",
+    ),
+    RESEARCH: Gate(
+        "Research",
+        lambda character: bool(character.breakthroughs),
+        "On while research is under way",
+        "Their research keeps this on: its goals and log are on the Research chapter.",
+    ),
+}
+
+#: The interests only a magus has.
+MAGI_ONLY: tuple[str, ...] = (RESEARCH, HERMETIC_MYSTERIES)
+
+MANORS = "Manors"
+SHIPS = "Ships"
+
+#: A covenant's interests, in the order its window lists them.
+COVENANT_INTERESTS: tuple[str, ...] = (MANORS, SHIPS)
+
+#: A covenant's interests with chapters or sections of their own.
+COVENANT_GATES: dict[str, Gate[Covenant]] = {
+    MANORS: Gate(
+        "Manors",
+        lambda covenant: any(covenant.manors.values()),
+        "On while it has manors",
+        "Its manors keep this on: they are on the Manors chapter.",
+    ),
+    SHIPS: Gate(
+        "Ships",
+        lambda covenant: any(p.kind == "ship" for p in covenant.possessions),
+        "On while it has ships",
+        "Its ships keep this on: they are listed under Possessions.",
+    ),
+}
+
+#: Each covenant interest's actions, by where they are.
+COVENANT_ACTIONS: dict[str, tuple[str, dict[str, str]]] = {
+    MANORS: (
+        "On the Manors chapter",
+        {
+            "buy_manor": "Adding a manor at its price.",
+            "assart": "Clearing new land on a manor.",
+            "winter_roll": "How an establishment comes through the winter.",
+            "settle_inheritance": "Settling an inheritance.",
+            "hunt_on_manor": "A day's hunt on the chosen manor.",
+            "area_lore_on_manor": "Seeking on the chosen manor: Area Lore.",
+        },
+    ),
+    SHIPS: (
+        "On Possessions, under Ships",
+        {
+            "build_ship": "A new ship for the covenant.",
+            "ship_stress": "A check against a storm, fire or attack.",
+            "ship_combat": "One ship against another.",
+            "ship_fate": "What became of a ship after a fight or a storm.",
+        },
+    ),
+}
+
+#: Each covenant interest in a line, for its card.
+COVENANT_SUMMARIES: dict[str, str] = {
+    MANORS: "Land, tenants and the seasons of a manor.",
+    SHIPS: "A covenant's fleet, at sea and in battle.",
+}
+
+#: Who each covenant interest is for, for its inspector.
+COVENANT_ABOUT: dict[str, str] = {
+    MANORS: "For a covenant that holds land and answers for the people on "
+    "it. Leave it off for one that lives apart from the mundane world.",
+    SHIPS: "For a covenant on the coast or a river, with vessels of its own. "
+    "Leave it off for one that will never put to sea.",
 }
 
 #: The interests a character may turn off: all but Session & Reputation,
@@ -268,9 +417,29 @@ UNDERTAKING_NOTES: dict[str, str] = {
 
 def interests_off(character: Character) -> list[str]:
     """The interests that are off for `character`: those turned off, but
-    never Religion once there is a Church career."""
-    on = (RELIGION,) if faiths.church_career(character) else ()
-    return [i for i in character.interests_off if i not in on]
+    never one its record keeps on (CHARACTER_GATES)."""
+    gates = CHARACTER_GATES
+    return [
+        i
+        for i in character.interests_off
+        if i not in gates or not gates[i].kept_on(character)
+    ]
+
+
+def covenant_interests_off(covenant: Covenant) -> list[str]:
+    """The interests that are off for `covenant`, as interests_off."""
+    gates = COVENANT_GATES
+    return [
+        i
+        for i in covenant.interests_off
+        if i not in gates or not gates[i].kept_on(covenant)
+    ]
+
+
+def chapters_off(character: Character) -> set[str]:
+    """The chapters `character`'s interests leave off the sheet."""
+    off = interests_off(character)
+    return {g.chapter for i, g in CHARACTER_GATES.items() if i in off}
 
 
 def hidden(off: list[str], action: str) -> bool:

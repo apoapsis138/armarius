@@ -1814,6 +1814,14 @@ def _character(page: Page) -> Character | None:
     return page.character
 
 
+def _interests_command(page: Page) -> Command:
+    if page.character is not None:
+        return interests_forms.interests_form(page.saga, page.character)
+    if page.covenant is not None:
+        return interests_forms.covenant_interests_form(page.saga, page.covenant)
+    return Refuse("Interests", "That isn't available here.")
+
+
 def _laboratory(page: Page) -> Laboratory | None:
     return page.laboratory
 
@@ -1962,7 +1970,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "monistic_revelation": _needs(_character, mystic_forms.monistic_revelation_form),
     "gods_aid": _needs(_character, mystic_forms.gods_aid_form),
     "font_of_knowledge": _needs(_character, mystic_forms.font_form),
-    "edit_interests": _needs(_character, interests_forms.interests_form),
+    "edit_interests": _interests_command,
     "experiment_script": _needs(_character, cult_forms.mystagogue_experiment),
     "commanding_aura": _needs(_character, mystic_forms.commanding_aura_form),
     # House Verditius's Hubris and vendettas.

@@ -1191,8 +1191,9 @@ def _interests_budget(saga: Saga, record: Record) -> str:
         "In play, the Deeds chapter and A Season's Work offer the actions the "
         "saga's books bring, under the interest each belongs to. Untick the "
         "ones this character won't take up (Knightly for a scholar, "
-        "Scholarly for a blacksmith) to leave their actions off the sheet; "
-        "the Manage chapter changes them later.\n"
+        "Scholarly for a blacksmith) to leave their actions off the sheet. "
+        + interests_forms.REMINDER.format("the character")
+        + "\n"
         + interests_forms.interests_text(_character(record))
     )
 
@@ -1208,6 +1209,32 @@ def _interests_actions(saga: Saga, record: Record) -> list[Action]:
 
 
 PANELS[("character", "interests")] = Panel(_interests_budget, _interests_actions)
+
+
+def _covenant_interests_budget(saga: Saga, record: Record) -> str:
+    return (
+        "A covenant's sheet can leave out what it will never take up: its "
+        "Manors chapter, for one that holds no land, or its Ships, for one "
+        "that will never put to sea. "
+        + interests_forms.REMINDER.format("the covenant")
+        + "\n"
+        + interests_forms.covenant_interests_text(_covenant(record))
+    )
+
+
+def _covenant_interests_actions(saga: Saga, record: Record) -> list[Action]:
+    covenant = _covenant(record)
+    return [
+        Action(
+            "Edit Interests",
+            lambda: interests_forms.covenant_interests_form(saga, covenant),
+        )
+    ]
+
+
+PANELS[("covenant", "interests")] = Panel(
+    _covenant_interests_budget, _covenant_interests_actions
+)
 
 
 # -- Equipment: what the character carries (DE p. 44, step 11) --

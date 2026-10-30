@@ -112,6 +112,8 @@ COVENANT_STEPS: tuple[Step, ...] = (
     Step("power", "Baseline"),
     Step("build_points", "Resources"),
     Step("boons_hooks", "Boons & Hooks"),
+    # Which interests its sheet offers (deeds.COVENANT_INTERESTS).
+    Step("interests", "Review Interests"),
     Step("finish", "Review"),
 )
 LABORATORY_STEPS: tuple[Step, ...] = (

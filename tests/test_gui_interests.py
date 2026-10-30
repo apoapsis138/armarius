@@ -48,7 +48,8 @@ def _open(monkeypatch, off=(), books=("LoM",)) -> tuple:
 
 def test_a_card_for_every_interest_and_the_first_in_the_inspector(app, monkeypatch):
     _form, dialog, _c = _open(monkeypatch)
-    assert list(dialog.cards) == list(deeds.INTERESTS)
+    expected = [i for i in deeds.INTERESTS if i not in deeds.MAGI_ONLY]
+    assert list(dialog.cards) == expected
     assert dialog.inspector.title.text() == deeds.SESSION
     assert deeds.SESSION not in dialog.switches
 

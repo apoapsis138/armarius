@@ -31,6 +31,7 @@ from .. import (
     artwork,
     boon_hook_text,
     catalog,
+    deeds,
     giving,
     guest_stays,
     hermetic_projects,
@@ -226,15 +227,17 @@ class CovenantPage(QWidget):
             chapters += [
                 ("Possessions", "vis", lambda: self._possessions(covenant)),
                 ("Treasury", "income", lambda: self._treasury(covenant)),
-                ("Manors", "place", lambda: self._manors(covenant)),
-                ("Library", "library", lambda: self._library(covenant)),
             ]
+            if deeds.MANORS not in deeds.covenant_interests_off(covenant):
+                chapters.append(
+                    ("Manors", "place", lambda: self._manors(covenant)),
+                )
             # A covenant's Hermetic Projects, once one is begun: after Manors.
             if hermetic_projects.has_projects(covenant):
-                chapters.insert(
-                    [name for name, _, _ in chapters].index("Manors") + 1,
+                chapters.append(
                     ("Projects", "covenant", lambda: self._projects(covenant)),
                 )
+            chapters.append(("Library", "library", lambda: self._library(covenant)))
         if full:
             chapters.append(("Seasons", "season", self._seasons))
         if covenant is not None and full:
@@ -831,7 +834,11 @@ class CovenantPage(QWidget):
         return scrolling_page(
             self.p,
             # The ships are ledger entries of their own (gui.ships).
-            ships_section(saga, covenant, self.p, self.run, self.inspect),
+            *(
+                []
+                if deeds.SHIPS in deeds.covenant_interests_off(covenant)
+                else [ships_section(saga, covenant, self.p, self.run, self.inspect)]
+            ),
             *self._every_kind(
                 cvs.possession_groups(saga, covenant),
                 {

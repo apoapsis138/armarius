@@ -1980,7 +1980,7 @@ def _left_out(saga: Saga, character: Character) -> set[str]:
         left.add("Religion")
     if cs.has_statblock(character) or not criamon_rules.has_enigma_tab(character):
         left.add("The Enigma")
-    return left
+    return left | deeds.chapters_off(character)
 
 
 def characteristic_cards(

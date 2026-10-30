@@ -4502,13 +4502,13 @@ take it up: untick it in [Interests](help:interests) on the Manage chapter.
 <!-- tui -->
 More (`m`) on a person's record offers **Interests**:
 a tick for each kind of deed the saga's books bring, with a line on what
-it is: Knightly, Scholarly, Insight, Religion, Mystery Cults, Craft & Trade,
-Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk.
+it is: Knightly, Scholarly, Insight, Religion, Agents, Research, Hermetic
+Mysteries, Mystery Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship and Covenfolk.
 <!-- /tui -->
 <!-- gui -->
 **Interests**, in a person's Manage chapter, opens a window of cards, one
-for each kind of deed: Knightly, Scholarly, Insight, Religion, Mystery
-Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship
+for each kind of deed: Knightly, Scholarly, Insight, Religion, Agents,
+Research, Hermetic Mysteries, Mystery Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The Infernal, Apprenticeship
 and Covenfolk. A card says what the interest is and how many actions it
 adds in this saga, counting those whose book is in play, so one may read
 "2 actions, 4 more with other books". Click a card to see it in the
@@ -4539,6 +4539,17 @@ Christian", and the Inspector lists those of other faiths. A Church career
 (orders, a clerical Social Status, a petition or a canon case) keeps it on:
 the switch gives way to "On for a Church career", and if a character with
 Religion off takes up a career, the chapter comes back.
+
+**Agents** and **Research** work the same way, each hiding its chapter: an
+agent on record, or research under way, keeps it on. Research and Hermetic
+Mysteries are for magi, so other characters don't see them.
+
+**A covenant has Interests too**, on its own Manage chapter (More on its
+record in the terminal), and its Creation Worksheet has a Review Interests
+step for them. **Manors** hides the Manors chapter and **Ships** the Ships
+list on Possessions, for a covenant that will never take them up; a manor
+or a ship on record keeps them on. Hermetic Projects need no card: their
+chapter waits until a project begins.
 
 Everything starts ticked, so nothing goes missing until you say so; a new
 character's Creation Worksheet has a Review Interests step for it. Ticking

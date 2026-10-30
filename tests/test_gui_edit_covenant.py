@@ -239,3 +239,11 @@ def test_add_on_the_magi_takes_in_a_magus_of_the_saga(app):
     assert window.saga is not None
     saved = storage.load_saga(window.saga.id)
     assert saved.character("mag2").covenant_id == "cov1"
+
+
+def test_a_covenants_interests_take_manors_off_its_page(app):
+    saga = _sample_saga_with_covenant()
+    saga.covenants[0].interests_off = ["Manors"]
+    window = _window(saga)
+    assert "Manors" not in _page(window).chapters()
+    assert "Possessions" in _page(window).chapters()

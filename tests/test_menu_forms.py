@@ -101,6 +101,7 @@ def test_each_page_offers_what_applies_there():
         "Import",
         "Set Up Research Library",
         "Export",
+        "Interests",
         "Update from a File",
         "In Creation / In Play",
         "Demote",

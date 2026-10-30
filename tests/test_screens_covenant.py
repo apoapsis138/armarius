@@ -14,6 +14,7 @@ from screen_helpers import (
     _plain_title,
     _saga_with_bare_laboratory,
     _saga_with_configured_covenant,
+    _sample_saga_with_covenant,
     _select,
     _select_bh_row,
     _select_character,
@@ -22,6 +23,7 @@ from screen_helpers import (
     _wait_for_picker_ready,
 )
 from support import (
+    build_all_tabs,
     close_worksheet,
     menu,
     picker_labels,
@@ -43,7 +45,7 @@ from textual.widgets import (
     Tree,
 )
 
-from ars_magica_manager import storage
+from ars_magica_manager import manors, storage
 from ars_magica_manager.models import (
     Character,
     Covenant,
@@ -52,6 +54,7 @@ from ars_magica_manager.models import (
     Tribunal,
     VirtueFlawInstance,
 )
+from ars_magica_manager.models.holdings import POSSESSION_KINDS
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     AdvanceSeasonScreen,
@@ -1330,3 +1333,21 @@ async def test_reputation_keys_work_from_the_list_without_a_picker():
         await pilot.press("e")
         await pilot.pause()
         assert isinstance(app.screen, FieldsDialog)
+
+
+async def test_a_covenants_interests_leave_manors_and_ships_off_its_sheet():
+    saga = _sample_saga_with_covenant()
+    saga.covenants[0].interests_off = ["Manors", "Ships"]
+    storage.save_saga(saga)
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        await _select_covenant(pilot, app)
+        view = app.screen._covenant_sheet_view
+        await build_all_tabs(pilot, view)
+        assert not view.query("#" + manors.COVENANT_TAB.tab_id)
+        assert not view.query_one("#section-pos-ship").display
+        others = [k for k in POSSESSION_KINDS if k != "ship"]
+        assert all(view.query_one(f"#section-pos-{k}").display for k in others)
+        assert not view.stale()
+        view.covenant.interests_off = []
+        assert view.stale()

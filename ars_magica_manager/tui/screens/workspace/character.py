@@ -1778,7 +1778,16 @@ class CharacterActions(WorkspaceBase):
         self._byzantine_step(cult_forms.mystagogue_experiment)
 
     def action_edit_interests(self) -> None:
-        """More's Interests: the kinds of deed his More offers."""
+        """More's Interests: the kinds of deed a person's More offers, or
+        what a covenant's sheet leaves out."""
+        covenant = self.selected_covenant
+        if self.selected_character is None and covenant is not None:
+            run_steps(
+                self.app,
+                interests_forms.covenant_interests_form(self.saga, covenant),
+                lambda _end: self._commit(),
+            )
+            return
         self._byzantine_step(interests_forms.interests_form)
 
     def action_font_of_knowledge(self) -> None:

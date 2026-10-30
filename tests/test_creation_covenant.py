@@ -341,7 +341,7 @@ async def test_the_covenant_worksheet_lists_what_build_points_went_on():
             pilot, app, (NodeKind.COVENANT, "cov1"), "_covenant_sheet_view"
         )
         steps = screen.query_one("#ws-steps", OptionList)
-        assert steps.option_count == 4
+        assert steps.option_count == 5
         steps.highlighted = 1
         assert await wait_until(pilot, lambda: screen.step == "build_points")
         assert await wait_until(

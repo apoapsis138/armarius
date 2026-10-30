@@ -20,6 +20,7 @@ from .... import (
     arms,
     book_value,
     catalog,
+    deeds,
     guest_stays,
     hermetic_projects,
     manors,
@@ -129,6 +130,8 @@ class CovenantSheetView(KindTabsView):
             covenant
         )
         self._projects_tab = hermetic_projects.projects_tab(saga, covenant)
+        #: The interests it had off when the sheet was built.
+        self._interests_off = deeds.covenant_interests_off(covenant)
         # The shown project's kind picks the tab's sections (a Menagerie's).
         self._projects_kind = hermetic_projects.shown_kind(covenant)
         if self.shows_projects:
@@ -236,11 +239,12 @@ class CovenantSheetView(KindTabsView):
                     partial(self._kind_tab, self._projects_tab),
                 )
             yield self._tab("Economics", "tab-cov-economics", self._economics_tab)
-            yield self._tab(
-                "Manors",
-                manors.COVENANT_TAB.tab_id,
-                partial(self._kind_tab, manors.COVENANT_TAB),
-            )
+            if deeds.MANORS not in self._interests_off:
+                yield self._tab(
+                    "Manors",
+                    manors.COVENANT_TAB.tab_id,
+                    partial(self._kind_tab, manors.COVENANT_TAB),
+                )
             yield self._tab("Library", "tab-cov-library", self._library_tab)
             yield self._tab("Diary", "tab-cov-diary", self._diary_tab)
             yield self._tab(
@@ -641,7 +645,10 @@ class CovenantSheetView(KindTabsView):
                 for kind in POSSESSION_KINDS:
                     with SheetSection(
                         title=self._pos_title(kind), id=f"section-pos-{kind}"
-                    ):
+                    ) as section:
+                        section.display = (
+                            kind != "ship" or deeds.SHIPS not in self._interests_off
+                        )
                         header = TableHeader(pos.table_header(kind))
                         rows = SelectableList(
                             self._pos_rows(kind), id=f"pos-{kind}-list", group="pos"
@@ -915,7 +922,8 @@ class CovenantSheetView(KindTabsView):
             return []
         # A covenant's Hermetic Projects tab, once one is begun.
         projects = [self._projects_tab] if self.shows_projects else []
-        return [manors.COVENANT_TAB, *projects, covenant_history.TAB]
+        held = [] if deeds.MANORS in self._interests_off else [manors.COVENANT_TAB]
+        return [*held, *projects, covenant_history.TAB]
 
     def stale(self) -> bool:
         """Whether a project was begun (or the last one deleted) since the
@@ -923,9 +931,11 @@ class CovenantSheetView(KindTabsView):
         project of another kind is shown, with sections of its own."""
         if self.sketch:
             return False
-        return self.shows_projects != hermetic_projects.has_projects(
-            self.covenant
-        ) or self._projects_kind != hermetic_projects.shown_kind(self.covenant)
+        return (
+            self.shows_projects != hermetic_projects.has_projects(self.covenant)
+            or self._projects_kind != hermetic_projects.shown_kind(self.covenant)
+            or self._interests_off != deeds.covenant_interests_off(self.covenant)
+        )
 
     def on_selectable_list_chosen(self, event: SelectableList.Chosen) -> None:
         """A Boon or Hook row was chosen: fill the details panel. (Reputations

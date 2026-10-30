@@ -25,6 +25,12 @@ from ars_magica_manager.models import (
 )
 
 CONTRACTS: dict[str, Contract] = {
+    "covenant interests": Contract(
+        prefill={"Manors": True, "Ships": True},
+        edits={"Ships": False},
+        saved=lambda s: s.covenants[0].interests_off,
+        expected=["Ships"],
+    ),
     "power level": Contract(
         prefill={"Power Level": Select.NULL},
         edits={

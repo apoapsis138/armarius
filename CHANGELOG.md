@@ -109,6 +109,36 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.58.0 — 2026-10-30
+
+### Pagina
+
+- **More Interests for a character.** Agents and Research are cards that
+  take their chapters off the sheet, and an agent on record or research
+  under way keeps them on. Hermetic Mysteries gathers The Mysteries' spirits,
+  dreams, sacrifice and alchemy. Research and Hermetic Mysteries are for
+  magi, so other characters don't see them. Learn a Cantation joins
+  Apprenticeship.
+- **A covenant has Interests too**, on its Manage chapter: Manors takes the
+  Manors chapter off its sheet and Ships its list of ships, and a manor or
+  a ship on record keeps them on.
+
+### Gauntlet
+
+- **A covenant's Creation Worksheet has a Review Interests step**, before
+  its Review. Both worksheets remind you that interests can change at any
+  time, as the character or covenant grows.
+
+### Illuminatio
+
+- The Interests window scrolls its cards when there are many, keeping the
+  Inspector beside them.
+
+### Glossa
+
+- Help for Interests, the creation guides and the worksheets follow these
+  changes.
+
 ## 3.57.0 — 2026-10-30
 
 ### Illuminatio

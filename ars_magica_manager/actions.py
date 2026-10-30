@@ -894,7 +894,11 @@ def _experiments(facts: ActionFacts) -> bool:
 
 
 def _has_interests(facts: ActionFacts) -> bool:
-    """Interests: on a person's full record, the one sheet with Deeds."""
+    """Interests: on a person's full record, the one sheet with Deeds, or
+    a full covenant's."""
+    covenant = facts.selected_covenant
+    if facts.selected_kind == NodeKind.COVENANT:
+        return facts.on_record() and covenant is not None and covenant.detail == FULL
     character = facts.selected_character
     return (
         facts.selected_kind == NodeKind.CHARACTER

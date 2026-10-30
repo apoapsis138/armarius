@@ -939,7 +939,7 @@ The rail on the left lists the steps:
 <!-- /gui -->
 
 - a character: Concept, Virtues and Flaws, Characteristics, Early Childhood (Pre-adult Life for an [animal grog](help:animal-grogs)), Later Life, Tradition Training (a hedge tradition's member), Apprenticeship and Years past Gauntlet (magi only), Equipment and Review Interests (not an animal), and Finishing Touches;
-- a covenant: Baseline, Resources, Boons & Hooks, and Review;
+- a covenant: Baseline, Resources, Boons & Hooks, Review Interests, and Review;
 - a laboratory: Setting Up, and Review.
 
 Each step is marked by how its checks stand:

@@ -17,18 +17,26 @@ from ..actions import MORE_MENU
 from ..commands import Form, FormCard, notes
 from ..deeds import OPTIONAL
 from ..form_spec import DialogField
-from ..models import Character, Saga
+from ..models import Character, Covenant, Saga
 from ..rules import faiths
 
 TITLE = "Interests"
 HELP = "interests"
+#: The reminder a worksheet and these windows give.
+REMINDER = (
+    "You can change these at any time, on the Manage chapter, as {}'s "
+    "interests grow and change."
+)
 LEAD = (
     "The kinds of deed this character takes up. Unticked interests leave the "
-    "sheet; choose a card to see what it adds."
-)
+    "sheet; choose a card to see what it adds. "
+) + REMINDER.format("the character")
+COVENANT_LEAD = (
+    "What this covenant takes up. Unticked interests leave its sheet; choose "
+    "a card to see what it adds. "
+) + REMINDER.format("the covenant")
 #: Where a card that can't be turned off has a switch.
 ALWAYS_ON = "Always on"
-CHURCH_CAREER = "On for a Church career"
 #: Who a faith's actions are counted for.
 _FOR = {
     faiths.CHRISTIAN: "a Christian",
@@ -74,8 +82,11 @@ def _detail(
     parts = [deeds.ABOUT[interest]]
     for heading, notes_of in (
         ("On the Religion chapter", deeds.RELIGION_NOTES),
+        ("On the Agents chapter", deeds.AGENT_NOTES),
+        ("On the Hermetic Magic chapter", deeds.HERMETIC_NOTES),
         ("On the Deeds chapter", deeds.NOTES),
         ("On Planning, in A Season's Work", deeds.SEASON_NOTES),
+        ("Under Aging", deeds.AGING_NOTES),
     ):
         lines = [f"[b]{_name(a)}[/]: {notes_of[a]}" for a in ready if a in notes_of]
         if lines:
@@ -107,28 +118,105 @@ def _card(saga: Saga, character: Character, interest: str) -> FormCard:
         reader = _FOR.get(faiths.religion(character), "their faith")
     detail = _detail(interest, ready, waiting, others)
     fixed = "" if interest in OPTIONAL else ALWAYS_ON
-    if interest == deeds.RELIGION and faiths.church_career(character):
-        fixed = CHURCH_CAREER
-        detail = (
-            "[$label]Their Church career keeps this on: its Holy Orders, "
-            f"Petitions and Canon Court are on the Religion chapter.[/]\n\n{detail}"
-        )
+    gate = deeds.CHARACTER_GATES.get(interest)
+    if gate is not None and gate.kept_on(character):
+        fixed = gate.fixed
+        detail = f"[$label]{gate.why}[/]\n\n{detail}"
     return FormCard(
         "" if fixed else _key(interest),
         interest,
         deeds.SUMMARIES[interest],
-        _count(len(ready), len(waiting), reader),
+        _count(len(ready), len(waiting), reader)
+        if members
+        else f"The {interest} chapter",
         detail,
-        usable=bool(ready or others),
+        usable=bool(ready or others) or gate is not None,
         fixed=fixed,
     )
+
+
+def _has(character: Character, interest: str) -> bool:
+    """Whether the interest applies to him at all."""
+    return character.type == "magus" or interest not in deeds.MAGI_ONLY
 
 
 def interest_cards(saga: Saga, character: Character) -> list[FormCard]:
     """A card for each interest, counting what the saga's books bring and,
     for Religion, what the character's faith offers; whether an action also
     fits the character changes in play, so it isn't counted."""
-    return [_card(saga, character, interest) for interest in deeds.INTERESTS]
+    return [
+        _card(saga, character, interest)
+        for interest in deeds.INTERESTS
+        if _has(character, interest)
+    ]
+
+
+def _covenant_card(saga: Saga, covenant: Covenant, interest: str) -> FormCard:
+    heading, notes_of = deeds.COVENANT_ACTIONS[interest]
+    ready = [a for a in notes_of if action_books.book_allows(a, saga)]
+    lines = [f"[b]{_name(a)}[/]: {notes_of[a]}" for a in ready]
+    detail = f"{deeds.COVENANT_ABOUT[interest]}\n\n[$label]{heading}[/]\n" + (
+        "\n".join(lines)
+    )
+    gate = deeds.COVENANT_GATES[interest]
+    fixed = gate.fixed if gate.kept_on(covenant) else ""
+    if fixed:
+        detail = f"[$label]{gate.why}[/]\n\n{detail}"
+    return FormCard(
+        "" if fixed else _key(interest),
+        interest,
+        deeds.COVENANT_SUMMARIES[interest],
+        _count(len(ready), len(notes_of) - len(ready)),
+        detail,
+        usable=bool(ready) or bool(fixed),
+        fixed=fixed,
+    )
+
+
+def covenant_interests_text(covenant: Covenant) -> str:
+    """The interests it has turned off, in words."""
+    off = deeds.covenant_interests_off(covenant)
+    if not off:
+        return "Every interest is ticked."
+    return "Turned off: " + ", ".join(off) + "."
+
+
+def covenant_interests_form(saga: Saga, covenant: Covenant) -> Form:
+    """A tick for each interest the covenant may turn off."""
+    gates = deeds.COVENANT_GATES
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                _key(i),
+                i,
+                "check",
+                value=i not in covenant.interests_off,
+                hint=deeds.COVENANT_SUMMARIES[i],
+            )
+            for i in deeds.COVENANT_INTERESTS
+            if not gates[i].kept_on(covenant)
+        ]
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        # An interest with no field here (kept on) stays as it was chosen.
+        covenant.interests_off = [
+            i
+            for i in deeds.COVENANT_INTERESTS
+            if not values.get(_key(i), i not in covenant.interests_off)
+        ]
+        return notes(f"{covenant.name}: {covenant_interests_text(covenant)}")
+
+    return Form(
+        TITLE,
+        fields,
+        apply,
+        help_id=HELP,
+        cards=lambda: [
+            _covenant_card(saga, covenant, i) for i in deeds.COVENANT_INTERESTS
+        ],
+        cards_lead=COVENANT_LEAD,
+    )
 
 
 def interests_text(character: Character) -> str:
@@ -152,7 +240,11 @@ def interests_form(saga: Saga, character: Character) -> Form:
                 hint=deeds.SUMMARIES[i],
             )
             for i in OPTIONAL
-            if not (i == deeds.RELIGION and faiths.church_career(character))
+            if _has(character, i)
+            and not (
+                i in deeds.CHARACTER_GATES
+                and deeds.CHARACTER_GATES[i].kept_on(character)
+            )
         ]
 
     def apply(values: dict[str, Any]) -> list[str]:

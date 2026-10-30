@@ -18,6 +18,7 @@ from textual.widgets import (
 from .... import books as bk
 from .... import (
     casting_text,
+    deeds,
     lineage,
     marriages,
     seasons,
@@ -234,6 +235,8 @@ class CharacterSheetView(SheetView):
         #: row chosen in one of its Church lists (its section and the row's
         #: index).
         self._religion_shown = self._religion_layout()
+        #: The chapters his interests left off when the sheet was built.
+        self._chapters_off = deeds.chapters_off(character)
         self._church_chosen: tuple[str, int] | None = None
         #: Whether the sheet was built with The Enigma (a Criamon magus),
         #: and the row chosen in one of its lists.
@@ -274,7 +277,7 @@ class CharacterSheetView(SheetView):
                 # A Criamon magus's path and stigmata.
                 if self._enigma_shown:
                     yield self._tab("The Enigma", "tab-criamon", self._criamon_tab)
-                if not sketch:
+                if not sketch and "Research" not in self._chapters_off:
                     yield self._tab("Research", "tab-research", self._research_tab)
             if scores:
                 for tradition in traditions.of(character):
@@ -285,7 +288,8 @@ class CharacterSheetView(SheetView):
                     )
             if not sketch:
                 yield self._tab("Inventory", "tab-inventory", self._inventory_tab)
-                yield self._tab("Agents", "tab-agents", self._agents_tab)
+                if "Agents" not in self._chapters_off:
+                    yield self._tab("Agents", "tab-agents", self._agents_tab)
                 yield self._tab(
                     "Planning", "tab-planning", self._scrolling(self._planning_tab)
                 )
@@ -1025,7 +1029,11 @@ class CharacterSheetView(SheetView):
         enigma = criamon_rules.has_enigma_tab(self.character) and not (
             cs.has_statblock(self.character)
         )
-        return wanted != self._religion_shown or enigma != self._enigma_shown
+        return (
+            wanted != self._religion_shown
+            or enigma != self._enigma_shown
+            or deeds.chapters_off(self.character) != self._chapters_off
+        )
 
     def _religion_tab(self) -> ComposeResult:
         """His Faith, then (a Christian with The Church in play) Holy

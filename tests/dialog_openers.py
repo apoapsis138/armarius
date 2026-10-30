@@ -1788,6 +1788,7 @@ OPENERS: dict[str, Opener] = {
     "invoke god's aid": Opener("character", lambda ws: _open_mystic(ws, "aid")),
     "font of knowledge": Opener("character", lambda ws: _open_mystic(ws, "font")),
     "interests": Opener("character", lambda ws: ws.action_edit_interests()),
+    "covenant interests": Opener("covenant", lambda ws: ws.action_edit_interests()),
     "commanding aura": Opener("character", lambda ws: _open_mystic(ws, "aura")),
     # House Verditius's Hubris and vendettas.
     "hubris": Opener("character", lambda ws: _open_hubris(ws)),

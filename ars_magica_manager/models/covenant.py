@@ -486,6 +486,8 @@ class Covenant:
     #: they describe, kept as a lord neighbour keeps them (manors.py);
     #: empty for none.
     manors: dict[str, Any] = field(default_factory=dict)
+    #: The interests turned off (deeds.COVENANT_INTERESTS); none by default.
+    interests_off: list[str] = field(default_factory=list)
     #: Its Charter of Covenant: the magi's oath, clauses and seals
     #: (covenant_charter.py); empty for none. Older saves load without one.
     charter_of_covenant: CovenantCharter = field(default_factory=CovenantCharter)
@@ -546,6 +548,13 @@ class Covenant:
         if not isinstance(held, dict):
             raise ValueError(f"A covenant's manors should be a mapping, not {held!r}.")
         d["manors"] = dict(held)
+        off = d.get("interests_off") or []
+        if not isinstance(off, list) or not all(isinstance(x, str) for x in off):
+            raise ValueError(
+                f"{d.get('name') or 'A covenant'}: interests_off must be a list "
+                "of interest names."
+            )
+        d["interests_off"] = off
         d["inhabitants"] = [
             Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
         ]
