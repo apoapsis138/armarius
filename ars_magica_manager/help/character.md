@@ -4473,8 +4473,33 @@ actions are in the Religion chapter. While the character is In Creation the
 chapter only says its deeds wait until the character is In Play. A
 character kept as a statblock has no Deeds chapter.
 
+A whole interest can be left off the sheet for a character who will never
+take it up: untick it in [Interests](help:interests) on the Manage chapter.
+
 **See also:** [Planning tab](help:tab-planning),
-[How to find an action](help:guide-find-action)
+[Interests](help:interests), [How to find an action](help:guide-find-action)
+
+## Interests
+<!-- help: interests -->
+
+<!-- tui -->
+More (`m`) on a person's record offers **Interests**:
+<!-- /tui -->
+<!-- gui -->
+**Interests**, in a person's Manage chapter, opens
+<!-- /gui -->
+a tick for each kind of deed the saga's books bring: Knightly, Scholarly,
+Insight, Craft & Trade, Tribunal & Order, Dealings with Faerie, The
+Infernal, Apprenticeship and Covenfolk. Untick the ones the character
+won't take up, a magus's Knightly or a blacksmith's Scholarly, and their
+actions leave the sheet: the Deeds chapter's heading, A Season's Work and
+More alike. Session & Reputation (End of Session and the Reputation rolls)
+is every character's and can't be unticked.
+
+Everything starts ticked, so nothing goes missing until you say so; a new
+character's Creation Worksheet has a Review Interests step for it. Ticking
+an interest doesn't offer what the rules don't: An Artist's Career still
+needs a Craft or Profession, and every action still needs its book in play.
 
 ## Planning tab
 <!-- help: tab-planning -->

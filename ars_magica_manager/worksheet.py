@@ -33,6 +33,7 @@ from .forms import character as cf
 from .forms import covenant as covf
 from .forms import device as device_forms
 from .forms import inhabitant as inhf
+from .forms import interests as interests_forms
 from .forms import lab_item as item_forms
 from .forms import laboratory as labf
 from .forms import library as library_forms
@@ -1180,6 +1181,33 @@ def _finish_actions(saga: Saga, record: Record) -> list[Action]:
 
 
 PANELS[("character", "finish")] = Panel(_finish_budget, _finish_actions)
+
+
+# -- Review Interests: the kinds of deed the character takes up --
+
+
+def _interests_budget(saga: Saga, record: Record) -> str:
+    return (
+        "In play, the Deeds chapter and A Season's Work offer the actions the "
+        "saga's books bring, under the interest each belongs to. Untick the "
+        "ones this character won't take up (Knightly for a scholar, "
+        "Scholarly for a blacksmith) to leave their actions off the sheet; "
+        "the Manage chapter changes them later.\n"
+        + interests_forms.interests_text(_character(record))
+    )
+
+
+def _interests_actions(saga: Saga, record: Record) -> list[Action]:
+    character = _character(record)
+    return [
+        Action(
+            "Edit Interests",
+            lambda: interests_forms.interests_form(saga, character),
+        )
+    ]
+
+
+PANELS[("character", "interests")] = Panel(_interests_budget, _interests_actions)
 
 
 # -- Equipment: what the character carries (DE p. 44, step 11) --

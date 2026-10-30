@@ -46,6 +46,7 @@ Moded = Character | Covenant | Laboratory
 ICONS: dict[str, str] = {
     "export_record": "export",
     "update_record": "update",
+    "edit_interests": "deeds",
     DELETE_RECORD: "delete",
 }
 

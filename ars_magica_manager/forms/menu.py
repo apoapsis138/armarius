@@ -120,6 +120,7 @@ from . import hook_stories as hook_story_forms
 from . import hosting as hosting_forms
 from . import hubris as hubris_forms
 from . import importing as import_forms
+from . import interests as interests_forms
 from . import lacuna as lacuna_forms
 from . import land_shaping as land_forms
 from . import library as library_forms
@@ -494,6 +495,10 @@ MANAGE: dict[str, str] = {
     "update_record": "Read an export of it over it, for example after working "
     "on it elsewhere: shows what would change first, and keeps its place in "
     "this saga.",
+    "edit_interests": "Tick the kinds of deed this character takes up: an "
+    "interest left unticked (Knightly for a magus, Scholarly for a "
+    "blacksmith) takes its actions off the Deeds chapter, A Season's Work "
+    "and More.",
     "promote": "Write more of it down: a line becomes a sketch with a "
     "statblock, and a sketch a full record, In Creation, keeping everything "
     "it had.",
@@ -1930,6 +1935,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "monistic_revelation": _needs(_character, mystic_forms.monistic_revelation_form),
     "gods_aid": _needs(_character, mystic_forms.gods_aid_form),
     "font_of_knowledge": _needs(_character, mystic_forms.font_form),
+    "edit_interests": _needs(_character, interests_forms.interests_form),
     "commanding_aura": _needs(_character, mystic_forms.commanding_aura_form),
     # House Verditius's Hubris and vendettas.
     "verditius_hubris": _needs(_character, hubris_forms.hubris_form),

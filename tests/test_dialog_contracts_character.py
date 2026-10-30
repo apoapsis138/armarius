@@ -1145,6 +1145,12 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"What he asks God's aid in": ""},
         live={"#fields-live": "Communication + Dominion Lore"},
     ),
+    "interests": Contract(
+        prefill={"Knightly": True, "Scholarly": True},
+        edits={"Knightly": False},
+        saved=lambda s: character(s).interests_off,
+        expected=["Knightly"],
+    ),
     "font of knowledge": Contract(
         prefill={"Times drawn on today": "0"},
         edits={"The untrained Ability": "Hunt", "Times drawn on today": "1"},

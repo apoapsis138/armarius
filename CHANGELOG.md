@@ -109,6 +109,30 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.46.0 — 2026-10-29
+
+### Pagina
+
+- **Interests: leave off what a character won't do.** A person's Manage
+  chapter (More on the record in the terminal) has Interests, a tick for
+  each kind of deed the books bring: Knightly, Scholarly, Insight, Craft &
+  Trade, Tribunal & Order, Dealings with Faerie, The Infernal,
+  Apprenticeship and Covenfolk. Untick one, a magus's Knightly or a
+  blacksmith's Scholarly, and its actions leave the Deeds chapter, A
+  Season's Work and More. Everything starts ticked, saves made before
+  this included, and Session & Reputation is always there.
+
+### Gauntlet
+
+- **Review Interests** is a new step of a character's Creation Worksheet,
+  before Finishing Touches, for unticking the interests a new character
+  won't take up.
+
+### Glossa
+
+- Help for Interests, and the creation guide, the Deeds help and How to
+  find an action say where to change them.
+
 ## 3.45.0 — 2026-10-29
 
 ### Pagina

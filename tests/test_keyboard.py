@@ -475,6 +475,7 @@ async def test_more_on_a_record_offers_export_and_its_mode():
             "Disputatio",
             "Cast a Power",
             "Export",
+            "Interests",
             "Update from a File",
             "In Creation / In Play",
             "Demote",

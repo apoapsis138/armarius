@@ -141,6 +141,17 @@ SEASON_NOTES: dict[str, str] = {
 }
 
 
+#: The interests a character may turn off: all but Session & Reputation,
+#: which every character in play has.
+OPTIONAL: tuple[str, ...] = tuple(i for i in INTERESTS if i != SESSION)
+
+
+def hidden(off: list[str], action: str) -> bool:
+    """Whether `action` is left out for a character with the interests
+    `off` turned off."""
+    return INTEREST_OF.get(action) in off and INTEREST_OF.get(action) != SESSION
+
+
 def interest(action: str) -> str | None:
     """The interest `action` belongs to, if any."""
     return INTEREST_OF.get(action)

@@ -1137,7 +1137,8 @@ Spell on Known Spells). What a supplement brings is found by what it is:
 <!-- /tui -->
 
 Nothing there? Its book may be out of play: Saga Content's Books chapter
-puts it back. Or it may not fit the character yet (The Gauntlet waits for
+puts it back. Its interest may be unticked: [Interests](help:interests)
+ticks it again. Or it may not fit the character yet (The Gauntlet waits for
 an apprentice).
 
 <!-- gui -->

@@ -237,7 +237,7 @@ def test_the_equipment_step_advises_recording_gear():
 
     saga, grete = _grete()
     keys = [s.key for s in steps_for(grete)]
-    assert keys[-2:] == ["equipment", "finish"]
+    assert keys[-3:] == ["equipment", "interests", "finish"]
     found = creation_rules.checks(saga, grete, "equipment")
     assert [c.status for c in found] == ["advice"]
     grete.inventory.append(Possession(id="staff", kind="item", name="Staff"))

@@ -69,6 +69,7 @@ def test_each_page_offers_what_applies_there():
     assert more == [
         "Lab Texts Read",
         "Export",
+        "Interests",
         "Update from a File",
         "In Creation / In Play",
         "Demote",

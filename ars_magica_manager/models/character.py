@@ -961,6 +961,17 @@ class LabTextAccess:
     via: str = ""
 
 
+def _interests_off(data: dict[str, Any]) -> list[str]:
+    """A saved character's turned-off interests, checked as they load."""
+    off = data.get("interests_off") or []
+    if not isinstance(off, list) or not all(isinstance(x, str) for x in off):
+        raise ValueError(
+            f"{data.get('name') or 'A character'}: interests_off must be a list "
+            "of interest names."
+        )
+    return list(off)
+
+
 @dataclass
 class Character:
     id: str
@@ -1080,6 +1091,9 @@ class Character:
     #: the Creation Worksheet is offered. New records start In Creation;
     #: older saves load In Play (False).
     in_creation: bool = False
+    #: The interests (deeds.INTERESTS) the player has turned off, whose
+    #: actions the sheet then leaves out. Older saves load with none off.
+    interests_off: list[str] = field(default_factory=list)
     #: Where the starting xp went, step by step.
     creation_xp: list[CreationXp] = field(default_factory=list)
     #: Years past Gauntlet and pre-play aging.
@@ -1188,7 +1202,10 @@ class Character:
             d["animal"] = AnimalForm.from_dict(d["animal"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
         d["investments"] = [Investment.from_dict(i) for i in d.get("investments", [])]
-        d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
+        d.update(
+            links=[Link(**known_fields(Link, x)) for x in d.get("links", [])],
+            interests_off=_interests_off(d),
+        )
         d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
         d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
         if d.get("alchemy") is not None:

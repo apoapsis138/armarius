@@ -104,6 +104,8 @@ CHARACTER_STEPS: tuple[Step, ...] = (
     Step("apprenticeship", "Apprenticeship", _magus),
     Step("gauntlet", "Years past Gauntlet", _magus),
     Step("equipment", "Equipment", _person),
+    # Which interests' deeds the sheet offers in play (deeds.INTERESTS).
+    Step("interests", "Review Interests", _person),
     Step("finish", "Finishing Touches"),
 )
 COVENANT_STEPS: tuple[Step, ...] = (

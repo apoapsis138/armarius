@@ -5,10 +5,14 @@ from __future__ import annotations
 
 from dataclasses import replace
 
+import pytest
+
 from ars_magica_manager import deeds
 from ars_magica_manager.actions import NodeKind, available
+from ars_magica_manager.forms import interests
 from ars_magica_manager.forms import menu as menu_forms
 from ars_magica_manager.models import Character, Saga
+from ars_magica_manager.rules import creation_base
 
 
 def test_every_deed_has_an_interest_and_sits_under_it():
@@ -55,3 +59,46 @@ def test_the_reputations_section_keeps_only_its_own_buttons():
     assert "tourney_season" in {
         i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
     }
+
+
+def test_an_unticked_interest_hides_its_actions_but_never_the_session():
+    saga = _knight(False)
+    page = menu_forms.page_for(saga, NodeKind.CHARACTER, character_id="k")
+    assert menu_forms.placed(page, deeds.KNIGHTLY)
+    saga.characters[0].interests_off = [deeds.KNIGHTLY, deeds.SESSION]
+    assert not menu_forms.placed(page, deeds.KNIGHTLY)
+    assert "tourney_season" not in {
+        i.action for i in menu_forms.placed(page, deeds.SEASON_WORK)
+    }
+    assert [i.action for i in menu_forms.placed(page, deeds.SESSION)] == ["end_session"]
+
+
+def test_the_interests_form_turns_interests_off_and_on():
+    saga = _knight(False)
+    knight = saga.characters[0]
+    form = interests.interests_form(saga, knight)
+    values = {f.key: f.value for f in form.fields()}
+    assert all(values.values())
+    assert len(values) == len(deeds.OPTIONAL)
+    values[next(k for k in values if "knightly" in k)] = False
+    assert form.apply(values) == ["Sir Hugo: Turned off: Knightly."]
+    assert knight.interests_off == [deeds.KNIGHTLY]
+    assert form.apply({k: True for k in values}) == [
+        "Sir Hugo: Every interest is ticked."
+    ]
+
+
+def test_old_saves_load_with_every_interest_ticked_and_bad_ones_are_refused():
+    assert (
+        Character.from_dict({"id": "k", "name": "K", "type": "grog"}).interests_off
+        == []
+    )
+    with pytest.raises(ValueError, match="interests_off"):
+        Character.from_dict(
+            {"id": "k", "name": "K", "type": "grog", "interests_off": "Knightly"}
+        )
+
+
+def test_the_worksheet_reviews_interests_before_the_finishing_touches():
+    keys = [step.key for step in creation_base.CHARACTER_STEPS]
+    assert keys.index("interests") == keys.index("finish") - 1

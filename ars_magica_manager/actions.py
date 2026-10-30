@@ -345,6 +345,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("i", "import_data", "Import"),
     MenuItem("b", "research_bonuses", "Set Up Research Library"),
     MenuItem("x", "export_record", "Export"),
+    # Which interests' deeds a character's sheet offers (deeds).
+    MenuItem("w", "edit_interests", "Interests"),
     MenuItem("x", "export_saga", "Export Saga"),
     MenuItem("y", "export_cult", "Export a Cult"),
     MenuItem("k", "export_pack", "Export Pack"),
@@ -773,6 +775,9 @@ def available(action: str, facts: ActionFacts) -> bool:
         return False
     if action in deeds.DEEDS and _drafting(facts):
         return False
+    character = facts.selected_character
+    if character is not None and deeds.hidden(character.interests_off, action):
+        return False
     if action in CREATE_PLACES and facts.selected_kind not in CREATE_PLACES[action]:
         return False
     if action == "edit" and facts.selected_kind == NodeKind.SAGA:
@@ -874,6 +879,18 @@ def _gives_silver(facts: ActionFacts) -> bool:
     purse = silver_purse(facts)
     return (
         purse is not None and giving.blocked(facts.saga, giving.SILVER, purse) is None
+    )
+
+
+def _has_interests(facts: ActionFacts) -> bool:
+    """Interests: on a person's full record, the one sheet with Deeds."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and character.animal is None
+        and character.detail == FULL
     )
 
 
@@ -1398,6 +1415,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "hedge_cast": _casts_hedge_magic,
     "give_silver": _gives_silver,
     "export_record": _exports_record,
+    "edit_interests": _has_interests,
     "update_record": _updates_record,
     "create_familiar": _binds_familiar,
     "delete_record": _deletes_record,

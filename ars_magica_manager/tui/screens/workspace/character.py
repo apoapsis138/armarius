@@ -56,6 +56,7 @@ from ....forms import grogs as grog_forms
 from ....forms import hedge_cast as hedge_cast_forms
 from ....forms import holy_influence as holy_influence_forms
 from ....forms import hubris as hubris_forms
+from ....forms import interests as interests_forms
 from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
 from ....forms import pilgrimage as pilgrimage_forms
@@ -1770,6 +1771,10 @@ class CharacterActions(WorkspaceBase):
     def action_gods_aid(self) -> None:
         """More's Invoke God's Aid: the prayer's roll and the point spent."""
         self._byzantine_step(mystic_forms.gods_aid_form, "section-char-info")
+
+    def action_edit_interests(self) -> None:
+        """More's Interests: the kinds of deed his More offers."""
+        self._byzantine_step(interests_forms.interests_form)
 
     def action_font_of_knowledge(self) -> None:
         """More's Font of Knowledge: the roll, kept in the Diary."""
