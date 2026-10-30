@@ -71,7 +71,7 @@ from ..sections import (
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
-from .ahead import ahead_section
+from .ahead import ahead_section, undertakings_section
 from .bookmark import with_bookmark
 from .character_sheet import (
     TextBlock,
@@ -401,11 +401,6 @@ class CovenantPage(QWidget):
                 edits={
                     "Edit Description": lambda: self.run(
                         covenant_forms.description_form(covenant)
-                    ),
-                    # A covenant's Hermetic Projects: the first shows their
-                    # chapter.
-                    hermetic_projects.BEGIN_PROJECT: lambda: self.run(
-                        hermetic_projects.begin_form(self.saga, covenant)
                     ),
                 },
             ),
@@ -1055,7 +1050,11 @@ class CovenantPage(QWidget):
             else []
         )
         ahead = (
-            [ahead_section(saga, p, self.run, self.inspect, covenant)]
+            [
+                ahead_section(saga, p, self.run, self.inspect, covenant),
+                # Begin Project, Travel and the hunt: Undertakings.
+                undertakings_section(saga, p, self.run, covenant),
+            ]
             if covenant is not None
             else []
         )

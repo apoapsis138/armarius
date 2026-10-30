@@ -4456,6 +4456,7 @@ sits under the interest it belongs to, beside a line saying what it does:
 - **Knightly**: Melee Event.
 - **Scholarly**: Disputatio, Make a Ligature.
 - **Insight**: Font of Knowledge, Divination, Astrology.
+- **Mystery Cults**: Experiment on a Script, for a Mystagogue.
 - **Tribunal & Order**: Hermetic Letter, Invoke a Broken Oath.
 - **Dealings with Faerie**: Ars Fabulosa, A Faerie Bargain, An Offer to
   Faerie.
@@ -4488,7 +4489,7 @@ More (`m`) on a person's record offers **Interests**:
 **Interests**, in a person's Manage chapter, opens
 <!-- /gui -->
 a tick for each kind of deed the saga's books bring: Knightly, Scholarly,
-Insight, Craft & Trade, Tribunal & Order, Dealings with Faerie, The
+Insight, Mystery Cults, Craft & Trade, Tribunal & Order, Dealings with Faerie, The
 Infernal, Apprenticeship and Covenfolk. Untick the ones the character
 won't take up, a magus's Knightly or a blacksmith's Scholarly, and their
 actions leave the sheet: the Deeds chapter's heading, A Season's Work and

@@ -135,9 +135,10 @@ already there; **New Spell** starts inventing a spell in that season (or the
 current one), first asking for a spell to start from (any spell, the
 magus's own known spells first) or a blank design;
 **Clear** clears the season's plan, with any later seasons scheduled to
-continue it, after asking. Beside them, **Bind Familiar** is there while the
-owner has no familiar, and **Perform Ritual** while the laboratory has a
-Longevity Ritual's Lab Text (see [Lab Texts](help:section-lab-texts)).
+continue it, after asking. Below, in **A Season's Work**, **Bind Familiar**
+is there while the owner has no familiar, and **Perform Ritual** while the
+laboratory has a Longevity Ritual's Lab Text (see [Lab
+Texts](help:section-lab-texts)), each beside a line saying what it does.
 
 **The app works out:** whether each plan can be done (a row that can't says
 so in red, and the inspector says why when it is clicked), the Lab Total of

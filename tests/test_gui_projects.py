@@ -1,5 +1,6 @@
 """The desktop covenant's Projects chapter (Hermetic Projects): shown only
-once a project is begun (Begin Project, on the Attributes chapter), after
+once a project is begun (Begin Project, in the Seasons chapter's
+Undertakings), after
 Manors; the tower's facts, its works and craft devices as ledger
 entries, and Stress Check and Conjure Levels as the tower's buttons
 (answered without showing the dialogs, gui_steps.answering)."""
@@ -15,7 +16,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering, section_buttons
+from gui_steps import answering, buttons, section_buttons
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from test_hermetic_projects import tower_saga
 from test_menagerie import menagerie_saga
@@ -63,8 +64,12 @@ def test_the_chapter_shows_once_a_project_is_begun(app):
     window, saga_id = _window(with_project=False)
     page = _page(window, "Overview")
     assert "Projects" not in page.chapters()
+    assert "Begin Project" not in section_buttons(page, "The Covenant")
+    # Begin Project is one of the Seasons chapter's Undertakings.
+    page = _page(window, "Seasons")
+    (begin,) = buttons(page, "Begin Project")
     asked = answering(window, {"name": "The Spire"})
-    section_buttons(page, "The Covenant")["Begin Project"].click()
+    begin.click()
     assert [type(d) for d in asked] == [FieldsDialog]
     assert [
         p.name for p in storage.load_saga(saga_id).covenants[0].hermetic_projects

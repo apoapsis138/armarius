@@ -18,7 +18,7 @@ from typing import Any
 
 from .. import mystery_cults as mc
 from .. import world
-from ..commands import Confirm, Form, Refuse, SectionOps
+from ..commands import Choice, Choose, Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, attr, pairs
 from ..markup import escape, fit
 from ..models import (
@@ -1210,7 +1210,11 @@ def _open_to_experiment(
 
 
 def _experiment_fields(
-    saga: Saga, cult: MysteryCult, degree: CultDegree, guides: list[Character]
+    saga: Saga,
+    cult: MysteryCult,
+    degree: CultDegree,
+    guides: list[Character],
+    guide: Character | None = None,
 ) -> list[DialogField]:
     return [
         DialogField(
@@ -1224,7 +1228,7 @@ def _experiment_fields(
             "mystagogue",
             "Mystagogue",
             "select",
-            guides[0].id,
+            (guide or guides[0]).id,
             options=[
                 (
                     f"{escape(c.name)} ({cult.characteristic[:3]} "
@@ -1578,6 +1582,7 @@ def experiment_form(
     cult: Chosen,
     row: int | None,
     rng: Callable[[], random.Random] = random.Random,
+    guide: Character | None = None,
 ) -> Form | Refuse:
     """More's Experiment on a Script, on the chosen degree (one with no
     Script, or one whose Script won't do for a Mystagogue): the chart and
@@ -1644,11 +1649,41 @@ def experiment_form(
 
     return Form(
         f"{title}: {escape(degree.name)}",
-        lambda: _experiment_fields(saga, cult_found, degree, guides),
+        lambda: _experiment_fields(saga, cult_found, degree, guides, guide),
         apply,
         validate=experiment_problem(saga, cult_found),
         live=experiment_live(saga, cult_found),
         inspector="The Experiment",
         save_label="Roll",
         help_id=CULT_DEGREES_SECTION,
+    )
+
+
+def mystagogue_experiment(
+    saga: Saga,
+    character: Character,
+    rng: Callable[[], random.Random] = random.Random,
+) -> Command:
+    """Experiment on a Script from the Mystagogue's own Deeds: his cult
+    (asked first when he leads several), its first degree open to an
+    experiment chosen, and he the Mystagogue (TMRE p. 18)."""
+    title = "Experiment on a Script"
+    found = mc.experiments_for(saga, character)
+    if not found:
+        return Refuse(
+            title,
+            f"{escape(character.name)} leads no cult with a degree open to an "
+            f"experiment ({T} p. 18).",
+        )
+
+    def start(chosen: tuple[int, int]) -> Command:
+        cult_row, degree_row = chosen
+        return experiment_form(saga, lambda: cult_row, degree_row, rng, guide=character)
+
+    if len(found) == 1:
+        return start(found[0])
+    return Choose(
+        f"{title}: which cult?",
+        lambda: [Choice(escape(saga.custom_cults[c].name), (c, d)) for c, d in found],
+        start,
     )

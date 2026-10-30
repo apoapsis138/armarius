@@ -158,7 +158,8 @@ Press `e` (or Edit) to change them, and to write what the Tribunal is
 like in the saga.
 <!-- /tui -->
 <!-- gui -->
-**Edit Tribunal** changes them, and what the Tribunal is like in the saga.
+**Edit**, beside the Tribunal's name at the top of its page, changes them,
+and what the Tribunal is like in the saga.
 <!-- /gui -->
 
 ## Roster tab

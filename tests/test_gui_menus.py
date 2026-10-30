@@ -11,7 +11,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering, section_buttons
+from gui_steps import answering, buttons, section_buttons
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import QApplication, QLabel, QPushButton
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
@@ -22,10 +22,12 @@ from ars_magica_manager.gui import window as window_module
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.covenant import CovenantPage
 from ars_magica_manager.gui.forms import TALLEST_WINDOW, FieldsDialog
+from ars_magica_manager.gui.region import NeighbourPage
+from ars_magica_manager.gui.tribunal import TribunalPage
 from ars_magica_manager.gui.widgets import NewCard
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
-from ars_magica_manager.models import VirtueFlawInstance
+from ars_magica_manager.models import Neighbour, Tribunal, VirtueFlawInstance
 
 
 @pytest.fixture(scope="module")
@@ -379,10 +381,11 @@ def test_the_laboratorys_planning_binds_its_owners_familiar(app):
     window.open_laboratory("lab1")
     page = window.page()
     page.codex.open_chapter("Seasons")
-    planning = section_buttons(page, "Planning")
-    assert "Bind Familiar" in planning
+    # In A Season's Work, the lab work besides the plan.
+    assert "Bind Familiar" not in section_buttons(page, "Planning")
+    (bind,) = buttons(page, "Bind Familiar")
     asked = answering(window, {"name": "Ashwing"})
-    planning["Bind Familiar"].click()
+    bind.click()
     assert asked[0].windowTitle() == "Bind a New Familiar"
     saga = window.saga
     assert saga is not None
@@ -466,3 +469,20 @@ def test_a_verb_with_nothing_to_act_on_is_not_offered(app):
     gear = section_buttons(window.page(), "Personal Gear")
     assert not gear["Add"].isHidden()
     assert gear["Edit"].isHidden() and gear["Delete"].isHidden()
+
+
+def test_the_tribunal_and_neighbour_pages_edit_from_their_header(app):
+    saga = _sample_saga_with_covenant()
+    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
+    saga.neighbours.append(Neighbour(id="mark", name="Count of Mark", kind="lord"))
+    window = _window(saga)
+    window.open_tribunal("rhine")
+    page = window.page()
+    assert isinstance(page, TribunalPage)
+    assert page.edit_tribunal.toolTip() == "Edit Tribunal"
+    assert not buttons(page, "Edit Tribunal")
+    window.open_neighbour("mark")
+    page = window.page()
+    assert isinstance(page, NeighbourPage)
+    assert page.edit_neighbour.toolTip() == "Edit Neighbour"
+    assert not buttons(page, "Edit Neighbour")

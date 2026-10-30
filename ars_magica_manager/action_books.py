@@ -71,6 +71,7 @@ ACTION_BOOKS: dict[str, tuple[str, ...]] = {
     "tmre_astrology": ("TMRE",),
     "philosophic_alchemy": ("TMRE",),
     "great_elixir": ("TMRE",),
+    "experiment_script": ("TMRE",),
     # House Acclaim: Bonisagus in True Lineages, Flambeau in Societates.
     "house_acclaim": ("HoH:TL", "HoH:S"),
     # Hermetic Projects: a Wizard's War tunnel.

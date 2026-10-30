@@ -16,6 +16,7 @@ SESSION = "Session & Reputation"
 KNIGHTLY = "Knightly"
 SCHOLARLY = "Scholarly"
 INSIGHT = "Insight"
+MYSTERY_CULTS = "Mystery Cults"
 CRAFT = "Craft & Trade"
 TRIBUNAL = "Tribunal & Order"
 FAERIE = "Dealings with Faerie"
@@ -29,6 +30,7 @@ INTERESTS: tuple[str, ...] = (
     KNIGHTLY,
     SCHOLARLY,
     INSIGHT,
+    MYSTERY_CULTS,
     CRAFT,
     TRIBUNAL,
     FAERIE,
@@ -51,6 +53,7 @@ INTEREST_OF: dict[str, str] = {
     "font_of_knowledge": INSIGHT,
     "tmre_divination": INSIGHT,
     "tmre_astrology": INSIGHT,
+    "experiment_script": MYSTERY_CULTS,
     "make_greek_fire": CRAFT,
     "artist_career": CRAFT,
     "sell_goods": CRAFT,
@@ -91,6 +94,8 @@ NOTES: dict[str, str] = {
     "Momentary Intellego spell would.",
     "tmre_astrology": "An astrological reckoning: Intelligence + Artes "
     "Liberales (Astronomy).",
+    "experiment_script": "As Mystagogue, a rite to find a new Initiation "
+    "Script, checked once the Initiate has carried it out.",
     "theban_letter": "Composing or reading a letter in the Theban magi's "
     "rhetorical style.",
     "invoke_oath": "The injured party calls on the spirit that witnessed "
@@ -144,6 +149,29 @@ SEASON_NOTES: dict[str, str] = {
 #: The interests a character may turn off: all but Session & Reputation,
 #: which every character in play has.
 OPTIONAL: tuple[str, ...] = tuple(i for i in INTERESTS if i != SESSION)
+
+
+#: The laboratory's lab work besides the plan, under its Planning.
+LAB_NOTES: dict[str, str] = {
+    "create_familiar": "Bind the owner's familiar: a season's lab work, "
+    "while he has none.",
+    "perform_ritual": "Perform a Longevity Ritual from one of the "
+    "laboratory's Lab Texts.",
+}
+
+#: The Seasons chapters' Undertakings (a covenant's and the saga's): what
+#: the troupe sets out to do besides the seasons' plans.
+UNDERTAKINGS = "Undertakings"
+
+#: What each undertaking does, in a line.
+UNDERTAKING_NOTES: dict[str, str] = {
+    "begin_project": "Begin a great work of Hermetic Projects: a Great "
+    "Tower, a Menagerie, or a project followed stage by stage.",
+    "travel": "Work out a journey: the days, the cost and the arrival, "
+    "written in each traveller's Diary.",
+    "hunt": "A hunt on the road, once the party has found a hunting spot.",
+    "area_lore": "Seeking along the road: Intelligence + Area Lore.",
+}
 
 
 def hidden(off: list[str], action: str) -> bool:

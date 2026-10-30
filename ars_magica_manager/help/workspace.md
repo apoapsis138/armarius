@@ -562,6 +562,16 @@ More (`m`) > **Travel** (on the desktop, the **Travel** button) works out
 a journey's days, cost and Fatigue, and can set the travellers out: see
 [Travel](help:travel).
 
+## Undertakings
+<!-- help: section-undertakings; gui -->
+
+Below Ahead on the Seasons page and on a covenant's Seasons chapter: what
+the troupe sets out to do besides the seasons' plans, each button beside a
+line saying what it does. [Travel](help:travel) works out a journey, and
+The Hunt and Area Lore hunt and seek along the road. On a covenant,
+**Begin Project** starts one of its great works of Hermetic Projects (see
+[Hermetic Projects](help:tab-cov-projects)).
+
 ## Travel
 <!-- help: travel -->
 
@@ -570,8 +580,8 @@ On Ahead (the Seasons page's or a covenant's), More (`m`) > **Travel**
 works out a journey.
 <!-- /tui -->
 <!-- gui -->
-On Ahead (the Seasons page's or a covenant's), **Travel** works out a
-journey.
+In Undertakings, below Ahead on the Seasons page and a covenant's Seasons
+chapter, **Travel** works out a journey.
 <!-- /gui -->
 Choose **From** and **To** (the saga's covenants, towns and places: they
 only name the journey), then how the distance is **Measured**:
@@ -626,7 +636,8 @@ calendar, so it shows on Ahead (a season is taken as 13 weeks: a journey
 of 91 days or more arrives a season later). Set Out needs someone named
 in Who goes and a journey it can work out.
 
-**The Hunt** and **Area Lore** sit beside Travel on Ahead, for the road.
+**The Hunt** and **Area Lore** sit beside Travel (on the desktop, in
+Undertakings), for the road.
 A hunt on the road first needs a hunting spot: the party's best
 Intelligence + Area Lore against 6 (City & Guild p. 83). With no
 huntsman named, the hunters quest and lay the relay themselves. Game
@@ -864,10 +875,10 @@ The cult's Lore, realm and founding. Initiation is the Mystagogue's Presence (or
 
 Each degree's name, the Mystery Virtue it teaches, its Script's bonus and its Target. Almost any Virtue may be Initiated, save those of birth or circumstance (TMRE p. 13). The saga's own Virtues are offered too. A Virtue that names something (an Art, an Ability) names it on the degree. The Target is 15 for a Minor Virtue and 21 for a Major one when a Mystagogue has the Virtue, and 18 and 30 when no one in the cult does (DE pp. 387-388). An Ordeal from an earlier Initiation lowers the next three Targets by 3/2/1, 6/4/2 or 9/6/3, never below 9.
 
-**Experiment on a Script**, for a degree with no Script yet, or whose Script can't reach the Target for one of the cult's Mystagogues (TMRE p. 18), asks for the Virtue, the Mystagogue (someone with the Lore at 1 or more), the Initiate (the Mystagogue herself, or someone else, which is harder), the bonus the proposed rite's components would give, the Flaw of its Ordeal, if it has one, and a risk of 0 to +3. It refuses a degree whose Script already reaches the Target for that Mystagogue and Initiate. Roll throws a stress die + the risk on the Extraordinary Results chart, then the validity roll: a simple die + risk + Intelligence + Lore against 9 + the bonus, or 15 + it on another Initiate. The rite's Ordeal Flaw is suffered whatever follows, even when the rite fails. A Disaster ends it: a second form asks for the Major Flaw the Mystagogue and the Initiate each gain. If the rite still stands, a second form asks for the storyguide's sympathy (-5 to +5) and what the chart's results become: each side effect, minor flaw or minor benefit a Personality Trait with its score ("Devoted to the cult +1"), each major flaw an extra Ordeal Flaw with no bonus, each major benefit a Virtue, and a modified effect the different Virtue it Initiates in place of the degree's own. The Initiation Total is then the Characteristic + Lore + bonus + sympathy + risk against the Target, which the Initiate's past Ordeals lower, never below 9 (TMRE p. 14). If it succeeds, the degree gets its Script (the rite as proposed with its Ordeal, the sympathy, the extra Ordeal Flaws, Virtues and Personality Traits, without the risk), replacing a Script that fell short, and the Initiate gains the Virtue (or the one Initiated instead), the extra Virtues, the Personality Traits and the Ordeal Flaws; the largest of these is kept as his Ordeal. The Initiate's season isn't planned for him. A failed rite's Quests and Ordeals can't count again (TMRE p. 19).
+**Experiment on a Script** is the Mystagogue's to make, so it is on her own sheet: in the Deeds chapter under Mystery Cults (More on her record in the terminal). It is there while she leads a cult with a degree that has no Script yet, or whose Script can't reach the Target for one of the cult's Mystagogues (TMRE p. 18); with several such cults it asks which first. It asks for the Virtue, the Mystagogue (her, unless you choose another with the Lore at 1 or more), the Initiate (the Mystagogue herself, or someone else, which is harder), the bonus the proposed rite's components would give, the Flaw of its Ordeal, if it has one, and a risk of 0 to +3. It refuses a degree whose Script already reaches the Target for that Mystagogue and Initiate. Roll throws a stress die + the risk on the Extraordinary Results chart, then the validity roll: a simple die + risk + Intelligence + Lore against 9 + the bonus, or 15 + it on another Initiate. The rite's Ordeal Flaw is suffered whatever follows, even when the rite fails. A Disaster ends it: a second form asks for the Major Flaw the Mystagogue and the Initiate each gain. If the rite still stands, a second form asks for the storyguide's sympathy (-5 to +5) and what the chart's results become: each side effect, minor flaw or minor benefit a Personality Trait with its score ("Devoted to the cult +1"), each major flaw an extra Ordeal Flaw with no bonus, each major benefit a Virtue, and a modified effect the different Virtue it Initiates in place of the degree's own. The Initiation Total is then the Characteristic + Lore + bonus + sympathy + risk against the Target, which the Initiate's past Ordeals lower, never below 9 (TMRE p. 14). If it succeeds, the degree gets its Script (the rite as proposed with its Ordeal, the sympathy, the extra Ordeal Flaws, Virtues and Personality Traits, without the risk), replacing a Script that fell short, and the Initiate gains the Virtue (or the one Initiated instead), the extra Virtues, the Personality Traits and the Ordeal Flaws; the largest of these is kept as his Ordeal. The Initiate's season isn't planned for him. A failed rite's Quests and Ordeals can't count again (TMRE p. 19).
 
 <!-- tui -->
-`a` adds a degree, `e` edits the chosen one and `d` deletes it (and its Script) after asking. More's **Experiment on a Script** (`m`) acts on the chosen degree.
+`a` adds a degree, `e` edits the chosen one and `d` deletes it (and its Script) after asking.
 <!-- /tui -->
 
 ### The Script

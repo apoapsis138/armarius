@@ -1,8 +1,8 @@
 """The desktop Saga Content page's Mystery Cults chapter: the saga's own
 cults, the chosen cult's facts and what it is, its degrees and the chosen
 degree's Script, each a ledger of entries ruled off on the page, with the
-chosen entry in the inspector and each section's Add, Edit and Delete (and
-the degrees' Experiment on a Script).
+chosen entry in the inspector and each section's Add, Edit and Delete. A
+Mystagogue's Experiment on a Script is on her own Deeds chapter.
 
 What it says and what its buttons do are forms/mystery_cults.py's, as on
 the terminal's Mystery Cults tab.
@@ -227,14 +227,6 @@ class CultsChapter(QWidget):
         body, _ = _ledger(entries, p, chooser, self._choose_degree, self.inspect)
         if self.choice.degree is not None:
             chooser.choose(self.choice.degree)
-        more = [
-            (
-                "Experiment on a Script",
-                "secrets",
-                lambda row: cf.experiment_form(saga, self.chosen_cult, row),
-                lambda row: cf.offers_experiment(saga, self.chosen_cult, row),
-            )
-        ]
         return section(
             cf.degrees_title(saga, self.chosen_cult),
             p,
@@ -246,7 +238,6 @@ class CultsChapter(QWidget):
                 chooser,
                 self.run,
                 p,
-                more=more,
             ),
         )
 

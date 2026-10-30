@@ -124,6 +124,7 @@ from . import interests as interests_forms
 from . import lacuna as lacuna_forms
 from . import land_shaping as land_forms
 from . import library as library_forms
+from . import mystery_cults as cult_forms
 from . import neighbour as neighbour_forms
 from . import pilgrimage as pilgrimage_forms
 from . import season as season_forms
@@ -239,8 +240,6 @@ NOT_ON_PAGES = frozenset(
         "build_ship",
         # A cleric's career: Holy Orders' own button.
         "perform_exorcism",
-        # A saga cult's degrees: the Degrees list's own button.
-        "experiment_script",
         # A covenant's Hermetic Projects: the tower's and the projects
         # list's own buttons, and Begin Project on the Overview chapter.
         "tower_stress",
@@ -581,7 +580,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     ),
     "create_familiar": (
         (NodeKind.CHARACTER, "Familiar"),
-        (NodeKind.LABORATORY, "Planning"),
+        (NodeKind.LABORATORY, deeds.SEASON_WORK),
     ),
     "restore": (),
     # On each source of income's row.
@@ -623,7 +622,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
     "boost_spell": ((NodeKind.CHARACTER, "Known Spells"),),
-    "perform_ritual": ((NodeKind.LABORATORY, "Planning"),),
+    "perform_ritual": ((NodeKind.LABORATORY, deeds.SEASON_WORK),),
     "give_silver": (
         (NodeKind.CHARACTER, "Personal Gear"),
         (NodeKind.COVENANT, "Wealth"),
@@ -649,6 +648,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "indulge_sin": ((NodeKind.CHARACTER, deeds.INFERNAL),),
     "infernal_influence": ((NodeKind.CHARACTER, deeds.INFERNAL),),
     "ars_goetia": ((NodeKind.CHARACTER, deeds.INFERNAL),),
+    # A Mystagogue's experiment on a Script (TMRE p. 18).
+    "experiment_script": ((NodeKind.CHARACTER, deeds.MYSTERY_CULTS),),
     # An apprentice's magic and the Gauntlet (Apprentices): beside the
     # Abilities chapter's buttons, This Season's, and Known Spells'.
     "turbulence": (
@@ -1936,6 +1937,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "gods_aid": _needs(_character, mystic_forms.gods_aid_form),
     "font_of_knowledge": _needs(_character, mystic_forms.font_form),
     "edit_interests": _needs(_character, interests_forms.interests_form),
+    "experiment_script": _needs(_character, cult_forms.mystagogue_experiment),
     "commanding_aura": _needs(_character, mystic_forms.commanding_aura_form),
     # House Verditius's Hubris and vendettas.
     "verditius_hubris": _needs(_character, hubris_forms.hubris_form),

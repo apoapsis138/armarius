@@ -12,7 +12,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from gui_steps import answering, section_buttons
+from gui_steps import answering, buttons, section_buttons
 from PySide6.QtWidgets import QApplication
 from screen_helpers import _sample_saga_with_covenant
 
@@ -86,8 +86,9 @@ def test_lab_work_and_a_new_spell_from_the_laboratory(app):
     window = _window()
     window.open_laboratory("lab1")
     controls = section_buttons(window.page(), "Planning")
-    # Bind Familiar too, while its owner has no familiar.
-    assert list(controls) == ["New Spell", "Plan", "Clear", "Bind Familiar"]
+    # Bind Familiar is in A Season's Work below, while its owner has none.
+    assert list(controls) == ["New Spell", "Plan", "Clear"]
+    assert len(buttons(window.page(), "Bind Familiar")) == 1
     answering(window, {"activity": lab_seasons.EXTRACT})
     controls["Plan"].click()
     assert _plans() == [("char1", lab_seasons.EXTRACT)]

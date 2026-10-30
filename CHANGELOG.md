@@ -109,6 +109,34 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.50.0 — 2026-10-30
+
+### Illuminatio
+
+- **Undertakings.** A covenant's Seasons chapter has a section of what
+  the troupe sets out to do besides the seasons' plans, each button
+  beside a line saying what it does: Begin Project (no longer beside the
+  covenant's description), Travel, and The Hunt and Area Lore on the road
+  (no longer on the Ahead header). The saga's Seasons page has the same
+  for Travel and the road.
+- **A Season's Work on the laboratory.** Bind Familiar and Perform Ritual
+  leave the Planning header for their own section under it, each with its
+  line.
+- **Edit at the top of the page.** A Tribunal's and a neighbour's Edit sits
+  beside the name at the top of the page, as a character's and a
+  covenant's do, instead of on two of their sections.
+
+### Pagina
+
+- **Experiment on a Script is the Mystagogue's.** It moves from Saga
+  Content's cult degrees to the Mystagogue's own Deeds chapter, under a new
+  interest, Mystery Cults, as The Mysteries has the experiment played out
+  with her rolls (pp. 18-20). With several cults it asks which first.
+
+### Glossa
+
+- Help for Undertakings and the moved buttons.
+
 ## 3.49.0 — 2026-10-30
 
 ### Illuminatio

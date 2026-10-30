@@ -119,16 +119,20 @@ class NeighbourPage(QWidget):
         outer = QVBoxLayout(self)
         outer.setContentsMargins(18, 12, 12, 8)
         outer.setSpacing(10)
+        header = page_header(
+            neighbour.name,
+            region_sheet.card_subtitle(neighbour),
+            p,
+            neighbours.icon_concept(neighbour),
+        )
+        # The record's own Edit, as on a character's or covenant's page.
+        self.edit_neighbour = edit_button("Edit", p, self._edit)
+        self.edit_neighbour.setToolTip("Edit Neighbour")
+        layout = header.layout()
+        assert layout is not None
+        layout.addWidget(self.edit_neighbour)
         outer.addWidget(
-            with_bookmark(
-                page_header(
-                    neighbour.name,
-                    region_sheet.card_subtitle(neighbour),
-                    p,
-                    neighbours.icon_concept(neighbour),
-                ),
-                controls.bookmark(p) if controls else None,
-            )
+            with_bookmark(header, controls.bookmark(p) if controls else None)
         )
         outer.addWidget(
             fact_grid(
@@ -186,18 +190,15 @@ class NeighbourPage(QWidget):
                         2,
                         follow=follower(self.run),
                     ),
-                    edits={
-                        "Edit Neighbour": self._edit,
-                        **(
-                            {
-                                threshold_forms.TITLE: lambda: self.run(
-                                    threshold_forms.threshold_form(saga, n)
-                                )
-                            }
-                            if threshold_forms.offers(saga, n)
-                            else {}
-                        ),
-                    },
+                    edits=(
+                        {
+                            threshold_forms.TITLE: lambda: self.run(
+                                threshold_forms.threshold_form(saga, n)
+                            )
+                        }
+                        if threshold_forms.offers(saga, n)
+                        else {}
+                    ),
                 )
             )
         return self.kinds.chapter(tab, head)
@@ -218,7 +219,6 @@ class NeighbourPage(QWidget):
                     serif(12.5, italic=True),
                     wrap=True,
                 ),
-                edits={"Edit Neighbour": self._edit},
             ),
             *(
                 [arms_section(self.neighbour, p, self.run)]

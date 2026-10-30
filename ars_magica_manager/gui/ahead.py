@@ -14,7 +14,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import ahead
+from .. import ahead, deeds, hermetic_projects
 from ..commands import Act
 from ..forms import ahead as ahead_forms
 from ..forms import hunting as hunting_forms
@@ -23,6 +23,7 @@ from ..models import SEASONS, Covenant, Saga, season_order
 from .character_sheet import section
 from .editing import Chooser, Run, verb_buttons
 from .medallions import Medallion, beside
+from .pages import action_rows
 from .themes import Palette
 from .widgets import ClickableCard, chip_row, edit_button, serif, text
 
@@ -140,27 +141,6 @@ def ahead_section(
             )
         )
     buttons = verb_buttons(ahead_forms.ahead_ops(saga, covenant), chooser, run, p)
-    # Travel, the calculator: it records nothing.
-    buttons.append(
-        edit_button(
-            "Travel", p, lambda: run(travel_forms.travel(saga, covenant)), "more"
-        )
-    )
-    # The hunt and Area Lore on the road.
-    buttons += [
-        edit_button(
-            hunting_forms.HUNT_TITLE,
-            p,
-            lambda: run(hunting_forms.hunt_on_journey(saga, covenant)),
-            "more",
-        ),
-        edit_button(
-            hunting_forms.AREA_LORE_TITLE,
-            p,
-            lambda: run(hunting_forms.area_lore_on_journey(saga, covenant)),
-            "more",
-        ),
-    ]
     return section(
         ahead.title(saga, covenant),
         p,
@@ -168,3 +148,53 @@ def ahead_section(
         edits={"Looking ahead": lambda: run(ahead_forms.looking_form(saga))},
         buttons=buttons,
     )
+
+
+def undertakings_section(
+    saga: Saga, p: Palette, run: Run, covenant: Covenant | None = None
+) -> QWidget:
+    """Undertakings (for `covenant`, or the whole saga): what the troupe
+    sets out to do besides the seasons' plans, each button beside a line
+    on what it does. A covenant begins its Hermetic Projects here; anyone
+    works out a journey, and hunts and seeks along the road."""
+    notes = deeds.UNDERTAKING_NOTES
+    rows: list[tuple[QWidget, str]] = []
+    if covenant is not None:
+        rows.append(
+            (
+                edit_button(
+                    hermetic_projects.BEGIN_PROJECT,
+                    p,
+                    lambda: run(hermetic_projects.begin_form(saga, covenant)),
+                    "more",
+                ),
+                notes["begin_project"],
+            )
+        )
+    rows += [
+        (
+            edit_button(
+                "Travel", p, lambda: run(travel_forms.travel(saga, covenant)), "more"
+            ),
+            notes["travel"],
+        ),
+        (
+            edit_button(
+                hunting_forms.HUNT_TITLE,
+                p,
+                lambda: run(hunting_forms.hunt_on_journey(saga, covenant)),
+                "more",
+            ),
+            notes["hunt"],
+        ),
+        (
+            edit_button(
+                hunting_forms.AREA_LORE_TITLE,
+                p,
+                lambda: run(hunting_forms.area_lore_on_journey(saga, covenant)),
+                "more",
+            ),
+            notes["area_lore"],
+        ),
+    ]
+    return section(deeds.UNDERTAKINGS, p, action_rows(rows, p))

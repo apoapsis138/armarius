@@ -1784,8 +1784,7 @@ def _cults_saga() -> Saga:
 async def test_mystery_cults_lists_act_on_the_chosen_rows():
     """In one session: the degrees follow the chosen cult; e and d on the
     degrees act on the chosen degree; the Script follows the chosen degree,
-    and d removes its chosen component after asking; More offers
-    Experiment on a Script only for a degree with no Script."""
+    and d removes its chosen component after asking."""
     storage.save_saga(_cults_saga())
     cults = ListCase(
         ("saga_content",),
@@ -1807,7 +1806,7 @@ async def test_mystery_cults_lists_act_on_the_chosen_rows():
     )
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 70)) as pilot:
-        workspace, view = await _open(pilot, app, cults)
+        _workspace, view = await _open(pilot, app, cults)
         await _choose_row(pilot, view, cults, 1)
         degree_rows = view.query_one(f"#{degrees.list_id}", SelectableList)
         assert await wait_until(pilot, lambda: "Weaver" in str(degree_rows._rows))
@@ -1820,13 +1819,6 @@ async def test_mystery_cults_lists_act_on_the_chosen_rows():
         assert await wait_until(pilot, lambda: _saved(degrees)[1] == "Weaver [new]")
 
         await _choose_row(pilot, view, degrees, 2)
-        # More has one item there: m opens it.
-        await _press(pilot, app, "m", FieldsDialog)
-        assert "Experiment on a Script: Reader" in str(
-            app.screen.query_one("#fields-title").render()
-        )
-        await pilot.press("escape")
-        assert await wait_until(pilot, lambda: app.screen is workspace)
         await _press(pilot, app, "d", ConfirmScreen)
         assert _confirm_message(app) == "Delete the degree Reader and its Script?"
         await pilot.press("y")

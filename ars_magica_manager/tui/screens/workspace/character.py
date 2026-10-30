@@ -59,6 +59,7 @@ from ....forms import hubris as hubris_forms
 from ....forms import interests as interests_forms
 from ....forms import lacuna as lacuna_forms
 from ....forms import menu as menu_forms
+from ....forms import mystery_cults as cult_forms
 from ....forms import pilgrimage as pilgrimage_forms
 from ....forms import season as season_forms
 from ....forms import sin as sin_forms
@@ -1771,6 +1772,10 @@ class CharacterActions(WorkspaceBase):
     def action_gods_aid(self) -> None:
         """More's Invoke God's Aid: the prayer's roll and the point spent."""
         self._byzantine_step(mystic_forms.gods_aid_form, "section-char-info")
+
+    def action_experiment_script(self) -> None:
+        """More's Experiment on a Script on a Mystagogue's record."""
+        self._byzantine_step(cult_forms.mystagogue_experiment)
 
     def action_edit_interests(self) -> None:
         """More's Interests: the kinds of deed his More offers."""

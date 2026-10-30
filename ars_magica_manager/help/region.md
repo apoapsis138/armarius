@@ -172,6 +172,9 @@ needs), then a plain form:
 
 Edit can also change its kind.
 <!-- gui -->
+On the desktop, **Edit** sits beside the neighbour's name at the top of
+its page.
+
 Click a row in any of its lists (a lord's castles, a town's guilds, a
 threat's stages...) to read it in full in the Inspector.
 <!-- /gui -->
@@ -1421,8 +1424,8 @@ Minor Breakthrough of 30 points (p. 37).
 ### Cross the Threshold
 <!-- help: cross-threshold -->
 
-**Cross the Threshold** (More on the place's record; on the desktop beside
-Edit Neighbour) counts the points a set of circumstances gathers: choose
+**Cross the Threshold** (More on the place's record; on the desktop on the
+Regio chapter) counts the points a set of circumstances gathers: choose
 the level they start from, who leads the crossing (his faerie Virtues and
 Flaws come from his sheet), the border, the time, his emotion and life
 change, a work of art, Spirit Away, an Arcadian Travel charm's total and

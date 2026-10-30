@@ -8,7 +8,7 @@ from typing import Any
 
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
-from ars_magica_manager import commands, form_spec
+from ars_magica_manager import commands, deeds, form_spec
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
@@ -437,7 +437,7 @@ def test_a_familiar_is_bound_on_the_magus_or_in_their_laboratory():
     saga = _sample_saga_with_covenant()
     magus = _page(saga, NodeKind.CHARACTER, character_id="char1")
     lab = _page(saga, NodeKind.LABORATORY, laboratory_id="lab1")
-    assert _labels(menu_forms.placed(lab, "Planning")) == ["Bind Familiar"]
+    assert _labels(menu_forms.placed(lab, deeds.SEASON_WORK)) == ["Bind Familiar"]
     step = menu_forms.command(lab, "create_familiar")
     assert isinstance(step, commands.Form)
     chosen = {f.key: f.value for f in step.fields()}
@@ -450,7 +450,7 @@ def test_a_familiar_is_bound_on_the_magus_or_in_their_laboratory():
     assert menu_forms.placed(magus, "Familiar") == []
     saga.characters[0].type = "magus"
     saga.laboratories[0].owner_id = None
-    assert menu_forms.placed(lab, "Planning") == []
+    assert menu_forms.placed(lab, deeds.SEASON_WORK) == []
 
 
 def test_every_new_and_more_action_has_a_place_on_the_page():
@@ -478,7 +478,7 @@ def test_the_actions_moved_to_their_sections_leave_more():
         "lab_text_access", NodeKind.CHARACTER, "Hermetic Background"
     )
     assert menu_forms.lives_at("improve", NodeKind.COVENANT, "Income")
-    assert menu_forms.lives_at("perform_ritual", NodeKind.LABORATORY, "Planning")
+    assert menu_forms.lives_at("perform_ritual", NodeKind.LABORATORY, deeds.SEASON_WORK)
     # Restore has no place: Add on the Magi and Companions brings them back.
     assert menu_forms.PLACES["restore"] == ()
 

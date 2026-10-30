@@ -131,8 +131,9 @@ def test_a_cult_its_degree_and_its_script_are_added(app):
     section_buttons(_page(window), "Degrees")["Add"].click()
     degrees = storage.load_saga(saga_id).custom_cults[0].degrees
     assert [(d.name, d.virtue_id) for d in degrees] == [("Spinner", "vf_second_sight")]
+    # A Mystagogue's experiment is on her own Deeds chapter, not here.
     controls = section_buttons(_page(window), "Degrees")
-    assert "Experiment on a Script" in controls
+    assert "Experiment on a Script" not in controls
 
     answering(window, {"name": "The Silk Hall", "place": True, "quests": 1})
     section_buttons(_page(window), "Spinner: no Script yet")["Add"].click()

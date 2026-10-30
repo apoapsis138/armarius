@@ -26,7 +26,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, giving, lab_planning, research_text, seasons, vis
+from .. import artwork, deeds, giving, lab_planning, research_text, seasons, vis
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import laboratories as labs
@@ -68,7 +68,7 @@ from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
 from .manage import RecordControls
 from .markup_html import plain
 from .menus import Placer
-from .pages import card_grid
+from .pages import action_rows, card_grid
 from .research import research_chapter
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
@@ -841,6 +841,7 @@ class LaboratoryPage(QWidget):
             p,
             chapter_title("Seasons", p),
             self._planning(),
+            *self._season_work(),
             legend(p),
             self.calendar,
             section(
@@ -879,11 +880,18 @@ class LaboratoryPage(QWidget):
                 self.run,
                 p,
                 nouns=lab_plan_forms.NOUNS,
-            )
-            # The lab work done at once besides the plan: binding the
-            # owner's familiar, or performing a Longevity Ritual again.
-            + (self.placer.buttons("Planning") if self.placer else []),
+            ),
         )
+
+    def _season_work(self) -> list[QWidget]:
+        """A Season's Work: the lab work besides the plan (binding the
+        owner's familiar, a Longevity Ritual again), each button beside a
+        line on what it does (none: no section)."""
+        placed = self.placer.placed_buttons(deeds.SEASON_WORK) if self.placer else []
+        rows = [(button, deeds.LAB_NOTES[item.action]) for item, button in placed]
+        if not rows:
+            return []
+        return [section(deeds.SEASON_WORK, self.p, action_rows(rows, self.p))]
 
 
 def _first_line(words: str) -> str:

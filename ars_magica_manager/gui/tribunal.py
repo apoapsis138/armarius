@@ -58,7 +58,15 @@ from .manage import RecordControls
 from .pages import symbol_label
 from .polemic import ArgumentsChapter
 from .themes import Palette
-from .widgets import Codex, display_name, scrolling_page, serif, table_view, text
+from .widgets import (
+    Codex,
+    display_name,
+    edit_button,
+    scrolling_page,
+    serif,
+    table_view,
+    text,
+)
 
 
 def _none(words: str, p: Palette) -> QLabel:
@@ -306,6 +314,10 @@ class TribunalPage(QWidget):
             if f.label not in ("Next meeting", "Meeting place")
         ]
         row.addWidget(fact_grid(facts, p, 2))
+        # The record's own Edit, as on a character's or covenant's page.
+        self.edit_tribunal = edit_button("Edit", p, self._edit)
+        self.edit_tribunal.setToolTip("Edit Tribunal")
+        row.addWidget(self.edit_tribunal, 0, Qt.AlignmentFlag.AlignTop)
         return box
 
     def _roster(self) -> QWidget:
@@ -320,7 +332,7 @@ class TribunalPage(QWidget):
             said.append(_none(tribunal_sheet.MORE_UNDER_HISTORY, p))
         return scrolling_page(
             p,
-            section("In the Saga", p, *said, edits={"Edit Tribunal": self._edit}),
+            section("In the Saga", p, *said),
             self._grid(
                 tribunal_sheet.roster_title(saga, t),
                 tribunal_sheet.roster_grid(saga, t),
@@ -352,7 +364,6 @@ class TribunalPage(QWidget):
                 prose(history, p)
                 if history
                 else _none("Not written yet: edit the Tribunal to tell it.", p),
-                edits={"Edit Tribunal": self._edit},
             ),
         )
 

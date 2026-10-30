@@ -111,8 +111,6 @@ from .sections import (
     COV_AHEAD_SECTION,
     COV_CHARTER_LORDS_SECTION,
     CREATURE_INFO_SECTION,
-    CULT_DEGREES_SECTION,
-    CULTS_SECTION,
     DEVICE_SECTIONS,
     ESTABLISHMENTS_SECTION,
     FAIRS_SECTION,
@@ -523,7 +521,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     # A cleric's career (The Church).
     MenuItem("x", "perform_exorcism", "Perform an Exorcism"),
     # Saga Content's Mystery Cults.
-    MenuItem("x", "experiment_script", "Experiment on a Script"),
+    MenuItem("y", "experiment_script", "Experiment on a Script"),
     # A covenant's Hermetic Projects: the tower's stress check and rituals,
     # the project shown, beginning one; a magus's Wizard's War tunnel.
     MenuItem("s", "tower_stress", "Stress Check"),
@@ -624,7 +622,6 @@ MORE_SECTIONS: dict[str, str] = {
     # A cleric's career: the exorcism on Holy Orders.
     "perform_exorcism": ORDERS_SECTION,
     # Saga Content's Mystery Cults.
-    "experiment_script": CULT_DEGREES_SECTION,
     # A covenant's Hermetic Projects: the tower's, and the projects list's.
     "tower_stress": "section-cov-tower",
     "tower_conjure": "section-cov-tower",
@@ -879,6 +876,18 @@ def _gives_silver(facts: ActionFacts) -> bool:
     purse = silver_purse(facts)
     return (
         purse is not None and giving.blocked(facts.saga, giving.SILVER, purse) is None
+    )
+
+
+def _experiments(facts: ActionFacts) -> bool:
+    """Experiment on a Script: a Mystagogue of one of the saga's cults with
+    a degree open to an experiment."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and bool(cults_core.experiments_for(facts.saga, character))
     )
 
 
@@ -1416,6 +1425,8 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "give_silver": _gives_silver,
     "export_record": _exports_record,
     "edit_interests": _has_interests,
+    # Experiment on a Script, on a Mystagogue's record (TMRE p. 18).
+    "experiment_script": _experiments,
     "update_record": _updates_record,
     "create_familiar": _binds_familiar,
     "delete_record": _deletes_record,
@@ -1848,16 +1859,6 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
         and facts.selected_kind == NodeKind.COVENANT
         and facts.selected_covenant is not None
         and sourcebooks.in_play("TME", sourcebooks.saga_books(facts.saga))
-    ),
-    # Experiment on a Script, for a cult's degree with no Script yet, or one
-    # whose Script won't do for a Mystagogue (TMRE p. 18).
-    "experiment_script": lambda facts, section: (
-        section == CULT_DEGREES_SECTION
-        and cults_core.offers_experiment(
-            facts.saga,
-            facts.chosen_row(CULTS_SECTION),
-            facts.chosen_row(CULT_DEGREES_SECTION),
-        )
     ),
     # Charter Strength (TME p. 36), on a charter's chosen lord.
     "draft_charter": _on_charter_lord,

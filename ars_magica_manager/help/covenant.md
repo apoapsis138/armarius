@@ -1070,7 +1070,7 @@ the effect last clicked once (see
 ## Projects tab
 <!-- help: tab-cov-projects -->
 
-A covenant's great works (Hermetic Projects): a Great Tower (pp. 36-41), a Menagerie (pp. 119-142), or one followed stage by stage, a Burning City, an Intangible Assassin or a Living Corpse (pp. 9-28, 77-118). The tab shows once a project is begun: Begin Project, beside Edit Description on the Attributes tab (More on the covenant in the terminal). Deleting the last project hides it again.
+A covenant's great works (Hermetic Projects): a Great Tower (pp. 36-41), a Menagerie (pp. 119-142), or one followed stage by stage, a Burning City, an Intangible Assassin or a Living Corpse (pp. 9-28, 77-118). The tab shows once a project is begun: Begin Project, in Undertakings on the Seasons chapter (More on the covenant in the terminal). Deleting the last project hides it again.
 
 **See also:** [Possessions tab](help:tab-cov-possessions), [Economics tab](help:tab-cov-economics)
 

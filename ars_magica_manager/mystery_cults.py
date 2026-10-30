@@ -724,6 +724,23 @@ def finish_experiment(
     return notes
 
 
+def experiments_for(saga: Saga, character: Character) -> list[tuple[int, int]]:
+    """The cults `character` may experiment in as Mystagogue, each as (its
+    row, the row of its first degree open to an experiment): one with no
+    Script, or one whose Script won't do for a Mystagogue (TMRE p. 18)."""
+    found = []
+    for row, cult in enumerate(saga.custom_cults):
+        if character not in mystagogues(saga, cult):
+            continue
+        degree = next(
+            (d for d in range(len(cult.degrees)) if offers_experiment(saga, row, d)),
+            None,
+        )
+        if degree is not None:
+            found.append((row, degree))
+    return found
+
+
 def offers_experiment(saga: Saga, cult_row: int | None, degree_row: int | None) -> bool:
     """Whether Experiment on a Script can act on the degree at `degree_row`
     of the cult at `cult_row` (the first cult when none is chosen): one with

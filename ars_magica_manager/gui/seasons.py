@@ -15,7 +15,7 @@ from PySide6.QtWidgets import QVBoxLayout, QWidget
 from .. import seasons, world_turns
 from ..forms import advance as advance_forms
 from ..models import Saga, SeasonRecord
-from .ahead import ahead_section
+from .ahead import ahead_section, undertakings_section
 from .character_sheet import TextBlock
 from .editing import Run
 from .medallions import Medallion, beside
@@ -102,6 +102,7 @@ class SeasonsPage(QWidget):
         return scrolling_page(
             p,
             ahead_section(saga, p, self.run, self.codex.inspect),
+            undertakings_section(saga, p, self.run),
             table_section(
                 world_turns.turns_title(saga),
                 world_turns.turns_grid(saga).table(),
