@@ -43,7 +43,6 @@ from .editing import (
     Run,
     choose_cards,
     choose_rows,
-    open_in_a_window,
     verb_buttons,
 )
 from .figures import fact_grid
@@ -95,14 +94,12 @@ def _none(words: str, p: Palette) -> QLabel:
 
 class SagaContentPage(QWidget):
     """The saga's content in the Codex layout; choosing anything shows it
-    in the inspector.
-    Its buttons' forms, lists and questions open as windows over it."""
+    in the inspector."""
 
     def __init__(
         self, saga: Saga, p: Palette, run: Run = lambda _command: None
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.p = saga, p
         self.run = run
         outer = QVBoxLayout(self)

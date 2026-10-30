@@ -38,7 +38,7 @@ Each magus, companion and Mythic Companion has one plan per season, wherever it 
 <!-- gui -->
 1. On the saga's page, click the covenant's card, then the character's card in the **People** chapter. Their sheet opens.
 2. Choose **Planning** in the rail on the left. The **This Season** section names the season, or says "Nothing planned".
-3. Click **Plan** (or **Edit**, once a plan is made). The Plan Season form opens in place of the section, titled with the character's name and the season.
+3. Click **Plan** (or **Edit**, once a plan is made). The Plan Season form opens in a window, titled with the character's name and the season.
 <!-- /gui -->
 4. Choose the **Activity**: it opens a list grouped by Type (Study, Writing & books, Work & trade and so on). Narrow it with **Type** or **Book**, or type part of the name, then choose one; the character's recent activities are at the top. See [Finding an activity](help:guide-seasons-find). The form then shows only the fields that activity needs, such as **Experience in**, a **Book**, a **Teacher / master** or a **Source Quality**. Leave **Stress die (blank: rolled)** empty to let the app roll when the season is applied.
 5. Watch the line above Save: it shows what the season will give, or what is wrong with the plan. Save refuses a plan that breaks a rule until it is fixed.

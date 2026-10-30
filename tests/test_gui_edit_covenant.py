@@ -86,7 +86,7 @@ def test_adding_a_boon_chooses_it_from_the_catalog_then_names_it(app):
     assert isinstance(asked[0], ChooseDialog) and isinstance(asked[1], FieldsDialog)
     assert asked[1].windowTitle() == "Boon: Wealth"
     # A covenant's steps open as windows over the page, one after another.
-    assert not any(getattr(d, "inline", True) for d in asked)
+    assert all(d.isWindow() for d in asked)
     saved = _saved(window)
     assert [bh.vf_id for bh in saved.boons_hooks] == ["covbh_boon_major_wealth"]
     # Its card is the only Boon, so Delete acts on it; No keeps it.
@@ -95,7 +95,7 @@ def test_adding_a_boon_chooses_it_from_the_catalog_then_names_it(app):
     assert _saved(window).boons_hooks
     asked = answering(window, True)
     section_buttons(_page(window), "Boons")["Delete"].click()
-    assert isinstance(asked[0], ConfirmDialog) and not asked[0].inline
+    assert isinstance(asked[0], ConfirmDialog) and asked[0].isWindow()
     assert asked[0].question == "Delete Wealth - a silver mine?"
     assert _saved(window).boons_hooks == []
 

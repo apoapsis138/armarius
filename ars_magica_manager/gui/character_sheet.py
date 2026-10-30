@@ -357,14 +357,13 @@ def section(
     emblem: QWidget | None = None,
 ) -> Section:
     """A titled part of a chapter; `edits` (label -> what clicking it
-    does) and `buttons` sit beside the title, and their steps open in
-    place, under it (editing.place_for). Past SIDE_BUTTONS of them, the
+    does) and `buttons` sit beside the title, and their steps open as
+    windows over the page. Past SIDE_BUTTONS of them, the
     rest go on a row of their own under the title, so a narrow window
     never scrolls sideways. `emblem` (a season's medallion) goes before
     the title, and the buttons then stay level with the title's words."""
     box = Section()
     column = box.column
-    box.body = list(widgets)
     controls = [
         edit_button(words, p, on_click) for words, on_click in (edits or {}).items()
     ] + list(buttons)
@@ -1345,14 +1344,8 @@ class CharacterSheet(QWidget):
     def _hermetic(self) -> QWidget:
         p, saga, c = self.p, self.saga, self.character
         spells = Chooser()
-        moving = (
-            self.placer.buttons("Current Location", window=True) if self.placer else []
-        )
-        others = (
-            self.placer.buttons("Magic Outside the Lab", window=True)
-            if self.placer
-            else []
-        )
+        moving = self.placer.buttons("Current Location") if self.placer else []
+        others = self.placer.buttons("Magic Outside the Lab") if self.placer else []
         parts: list[QWidget] = [
             *(
                 [

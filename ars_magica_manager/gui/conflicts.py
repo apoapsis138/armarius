@@ -43,7 +43,6 @@ from ..rules import options as rule_options
 from ..rules import siege as siege_rules
 from . import gilding, heraldry, illumination, pictures
 from . import medallions as drawn
-from .editing import open_in_a_window
 from .illumination import gold
 from .ornaments import gloss_box, ledger_entry
 from .paper import shade
@@ -696,12 +695,10 @@ class FightBody(QWidget):
 
 
 class FightPage(QWidget):
-    """A fight's page: the drawn leaf and the buttons that play it.
-    Its buttons' forms, lists and questions open as windows over it."""
+    """A fight's page: the drawn leaf and the buttons that play it."""
 
     def __init__(self, saga: Saga, fight: Fight, p: Palette, run: Run) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.fight, self.p, self.run = saga, fight, p, run
         column = QVBoxLayout(self)
         column.setContentsMargins(18, 12, 12, 8)
@@ -1424,12 +1421,10 @@ class SiegeBody(QWidget):
 
 
 class SiegePage(QWidget):
-    """A siege's page: the drawn leaf and the buttons that play it.
-    Its buttons' forms, lists and questions open as windows over it."""
+    """A siege's page: the drawn leaf and the buttons that play it."""
 
     def __init__(self, saga: Saga, siege: Siege, p: Palette, run: Run) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.siege, self.p, self.run = saga, siege, p, run
         column = QVBoxLayout(self)
         column.setContentsMargins(18, 12, 12, 8)

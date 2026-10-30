@@ -91,7 +91,6 @@ from .editing import (
     Run,
     choose_cards,
     give_verb,
-    open_in_a_window,
     verb_buttons,
 )
 from .figures import (
@@ -166,8 +165,7 @@ def _choose_cards_by(
 
 class CovenantPage(QWidget):
     """A covenant in the Codex layout. Choosing a person or a laboratory
-    opens their page; choosing anything else shows it in the inspector.
-    Its buttons' forms, lists and questions open as windows over it."""
+    opens their page; choosing anything else shows it in the inspector."""
 
     def __init__(
         self,
@@ -182,7 +180,6 @@ class CovenantPage(QWidget):
         placer: Placer | None = None,
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.p = saga, p
         self.run = run
         self.controls = controls

@@ -38,7 +38,6 @@ from PySide6.QtWidgets import (
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
-    QSizePolicy,
     QSplitter,
     QVBoxLayout,
     QWidget,
@@ -96,9 +95,8 @@ class _Page(Paper):
 
 class _Sheet(QDialog):
     """A dialog on paper: its title over a hedera rule, a body, an error
-    line and its buttons (Cancel, then the action). `inline`: drawn in
-    place on the page (editing.InPlace) rather than as a window, a smaller
-    title with no rule, sized to its contents."""
+    line and its buttons (Cancel, then the action), as a window over the
+    page."""
 
     def __init__(
         self,
@@ -106,32 +104,20 @@ class _Sheet(QDialog):
         p: Palette,
         action: str,
         parent: QWidget | None,
-        *,
-        inline: bool = False,
     ) -> None:
         super().__init__(parent)
         self.setWindowTitle(plain(title))
-        self.p, self.inline = p, inline
-        if inline:
-            self.setWindowFlags(Qt.WindowType.Widget)
-            self.setSizePolicy(QSizePolicy.Policy.Preferred, QSizePolicy.Policy.Maximum)
+        self.p = p
         page = self.page = _Page(p)
         outer = QVBoxLayout(self)
         outer.setContentsMargins(0, 0, 0, 0)
         outer.addWidget(page)
         self.column = QVBoxLayout(page)
         self.column.setSpacing(8)
-        if inline:
-            self.column.setContentsMargins(20, 14, 20, 14)
-            self.heading = text(
-                plain(title), p["heading"], serif(14, bold=True, caps=True)
-            )
-            self.column.addWidget(self.heading)
-        else:
-            self.column.setContentsMargins(26, 20, 26, 18)
-            self.heading = text(plain(title), p["heading"], serif(17, bold=True))
-            self.column.addWidget(self.heading)
-            self.column.addWidget(FleuronRule(p))
+        self.column.setContentsMargins(26, 20, 26, 18)
+        self.heading = text(plain(title), p["heading"], serif(17, bold=True))
+        self.column.addWidget(self.heading)
+        self.column.addWidget(FleuronRule(p))
         self.error = text("", p["text-error"], serif(12, italic=True), wrap=True)
         self.error.hide()
         self.cancel = QPushButton("Cancel")
@@ -173,13 +159,12 @@ class FieldsDialog(_Sheet):
         validate: Callable[[dict[str, Any]], str | None] | None = None,
         live: Callable[[dict[str, Any]], str] | None = None,
         save_label: str = "Save",
-        inline: bool = False,
         ask: Ask | None = None,
         picture: Callable[[dict[str, Any]], Any] | None = None,
         inspector: str = "",
         cancel_label: str = "Cancel",
     ) -> None:
-        super().__init__(title, p, save_label, parent, inline=inline)
+        super().__init__(title, p, save_label, parent)
         self.cancel.setText(cancel_label)
         self.picture = picture
         self.fields = fields
@@ -221,16 +206,10 @@ class FieldsDialog(_Sheet):
         self.save.clicked.connect(self.try_save)
         self.finish()
         self._update_shown()
-        if inline:
-            # As tall as its fields: the chapter scrolls, not the form.
-            area.setVerticalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
-            area.setMinimumWidth(0)
-            self._fit()
-        else:
-            self._size_window()
+        self._size_window()
 
     def _size_window(self, *, grow: bool = False) -> None:
-        """As a window: wide enough for the longest label and its field
+        """Wide enough for the longest label and its field
         beside it, and tall enough for every field and what is under
         them (a wrapped hint, the live line or gloss), up to TALLEST_WINDOW,
         past which the fields scroll. `grow`: never smaller than it is now,
@@ -444,20 +423,9 @@ class FieldsDialog(_Sheet):
                     heraldry.pixmap(drawn, 96, self.p["accent"])
                 )
             self.picture_label.setVisible(drawn is not None)
-        if self.inline and hasattr(self, "area"):
-            self._fit()
-        elif hasattr(self, "area"):
+        if hasattr(self, "area"):
             # Fields shown as others are chosen (Lab Work's) need more room.
             self._size_window(grow=True)
-
-    def _fit(self) -> None:
-        """In place, be as tall as the fields shown now."""
-        self.form.activate()
-        width = self.area.viewport().width()
-        tall = self.body.heightForWidth(width) if self.body.hasHeightForWidth() else -1
-        if tall < 0:
-            tall = self.body.sizeHint().height()
-        self.area.setFixedHeight(tall + 2 * self.area.frameWidth() + 4)
 
     def try_save(self) -> None:
         """Save if every field parses and `validate` allows it, else say
@@ -626,8 +594,6 @@ class _ListField(QWidget):
         self.value = items
         self._show(chosen)
         self.form._changed(self.spec)()
-        if self.form.inline and hasattr(self.form, "area"):
-            self.form._fit()
 
 
 class ChooseDialog(_Sheet):
@@ -643,11 +609,10 @@ class ChooseDialog(_Sheet):
         parent: QWidget | None = None,
         *,
         empty: str = "Nothing to choose from.",
-        inline: bool = False,
         others: Callable[[], list[Choice]] | None = None,
         step: Choose | None = None,
     ) -> None:
-        super().__init__(title, p, "Choose", parent, inline=inline)
+        super().__init__(title, p, "Choose", parent)
         self.offered = choices
         self.choices = choices
         self.chosen: Any = None
@@ -695,10 +660,7 @@ class ChooseDialog(_Sheet):
         self.save.clicked.connect(self.try_save)
         self.finish()
         self.refilter("")
-        if inline:
-            split.setMinimumHeight(320)
-        else:
-            self.resize(760 if not details.isHidden() else 520, 620)
+        self.resize(760 if not details.isHidden() else 520, 620)
 
     def _add_filters(self, step: Choose, choices: list[Choice]) -> None:
         """A row of drop-downs over the list, one per filter, each "any"
@@ -814,10 +776,9 @@ class ConfirmDialog(_Sheet):
         parent: QWidget | None = None,
         *,
         yes_label: str = "Delete",
-        inline: bool = False,
         title: str = "",
     ) -> None:
-        super().__init__(title or "Are you sure?", p, yes_label, parent, inline=inline)
+        super().__init__(title or "Are you sure?", p, yes_label, parent)
         words = QLabel(to_html(question, p))
         words.setTextFormat(Qt.TextFormat.RichText)
         words.setWordWrap(True)
@@ -829,8 +790,7 @@ class ConfirmDialog(_Sheet):
         self.save.setDefault(False)
         self.cancel.setDefault(True)
         self.finish()
-        if not inline:
-            self.resize(460, 200)
+        self.resize(460, 200)
 
 
 #: The longest notice title kept on one line.
@@ -900,7 +860,6 @@ def step_dialog(
     p: Palette,
     parent: QWidget | None,
     *,
-    inline: bool = False,
     ask: Ask | None = None,
 ) -> QDialog | None:
     """The dialog that asks `step` (None: a list with nothing in it)."""
@@ -915,7 +874,6 @@ def step_dialog(
             validate=step.validate,
             live=step.live,
             save_label=step.save_label,
-            inline=inline,
             ask=ask,
             picture=step.picture,
             inspector=step.inspector,
@@ -931,7 +889,6 @@ def step_dialog(
             p,
             parent,
             empty=step.empty,
-            inline=inline,
             others=step.others,
             step=step,
         )
@@ -940,7 +897,6 @@ def step_dialog(
         p,
         parent,
         yes_label=step.yes_label,
-        inline=inline,
         title=step.title,
     )
 

@@ -21,12 +21,11 @@ from ars_magica_manager import familiars as fam
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
-from ars_magica_manager.gui.editing import Section, place_for
 from ars_magica_manager.gui.familiar import FamiliarPage
 from ars_magica_manager.gui.forms import ChooseDialog, ConfirmDialog, FieldsDialog
 from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.window import MainWindow
-from ars_magica_manager.models import Neighbour, Tribunal, VirtueFlawInstance
+from ars_magica_manager.models import Neighbour, VirtueFlawInstance
 
 
 @pytest.fixture(scope="module")
@@ -107,10 +106,10 @@ def test_a_laboratory_virtue_is_deleted_and_adding_offers_the_catalog(app):
     assert isinstance(asked[0], ChooseDialog)
     assert asked[0].windowTitle() == "Add a Laboratory Virtue"
     # A laboratory's steps open as windows over the page.
-    assert not asked[0].inline
+    assert asked[0].isWindow()
     asked = answering(window, True)
     virtues["Delete"].click()
-    assert isinstance(asked[0], ConfirmDialog) and not asked[0].inline
+    assert isinstance(asked[0], ConfirmDialog) and asked[0].isWindow()
     assert asked[0].question.startswith("Delete Auspicious Shape?")
     assert storage.load_saga(saga.id).laboratories[0].virtues_flaws == []
 
@@ -128,7 +127,7 @@ def test_a_familiar_adds_a_virtue_from_the_catalog(app):
 
     def ask(dialog):
         # A familiar's steps open as windows over the page.
-        assert isinstance(dialog, ChooseDialog) and not dialog.inline
+        assert isinstance(dialog, ChooseDialog) and dialog.isWindow()
         offered.extend(dialog.shown())
         dialog.choose(offered[0])
         dialog.try_save()
@@ -141,8 +140,7 @@ def test_a_familiar_adds_a_virtue_from_the_catalog(app):
 
 
 def test_a_creature_and_a_neighbour_open_their_steps_as_windows(app):
-    """Every button on a creature's or a neighbour's page opens its steps
-    as windows, not in place."""
+    """A creature's and a neighbour's buttons open their steps as windows."""
     saga = _sample_saga_with_covenant()
     saga.creatures = [aeolus()]
     saga.neighbours = [Neighbour(id="n1", name="The Bishop")]
@@ -154,37 +152,24 @@ def test_a_creature_and_a_neighbour_open_their_steps_as_windows(app):
         show()
         page = window.page()
         assert page is not None
-        assert place_for(None, page) is None, name
         asked = answering(window, None)
         section_buttons(page, "Diary" if name == "neighbour" else "Abilities")[
             "Add"
         ].click()
-        assert asked and not getattr(asked[0], "inline", True), name
+        assert asked and asked[0].isWindow(), name
 
 
-def test_the_saga_pages_open_their_steps_as_windows(app):
-    """The saga's own page, its Seasons and Saga Content pages and a
-    Tribunal's page open every step as a window (Saga Management's Edit
-    Saga among them), not in place."""
+def test_saga_management_opens_edit_saga_as_a_window(app):
+    """A chapter's own buttons (Saga Management's Edit Saga) open their
+    steps as windows too."""
     saga = _sample_saga_with_covenant()
-    saga.tribunals.append(Tribunal(id="rhine", name="Rhine"))
     window = _window(saga)
-    for show in (
-        lambda: window.open_saga(saga.id),
-        window.open_content,
-        window.open_seasons,
-        lambda: window.open_tribunal("rhine"),
-    ):
-        show()
-        page = window.page()
-        assert page is not None
-        assert place_for(None, page) is None, type(page).__name__
     window.open_saga(saga.id)
     page = window.page()
     page.codex.open_chapter("Saga Management")  # type: ignore[union-attr]
     asked = answering(window, None)
     next(b for b in buttons(page, "Edit Saga")).click()
-    assert asked and not getattr(asked[0], "inline", True)
+    assert asked and asked[0].isWindow()
 
 
 def test_no_chapter_scrolls_sideways_at_1280_wide(app):
@@ -218,10 +203,11 @@ def test_no_chapter_scrolls_sideways_at_1280_wide(app):
     assert wide == []
 
 
-def test_a_step_opens_in_place_in_its_section_and_closes_after(app):
-    """Without a test answering it, Add's form opens inside its section,
-    in place of the list, and the page's other buttons wait until it is
-    saved."""
+def test_a_step_opens_as_a_window_and_saves(app):
+    """Without a test answering it, Add's form opens as a window of its
+    own over the page, waits for it, and saves what it holds; a second
+    button pressed while it is open brings it forward rather than opening
+    another."""
     saga = _sample_saga_with_covenant()
     magus = _magus(saga)
     magus.personality_traits = []
@@ -236,28 +222,19 @@ def test_a_step_opens_in_place_in_its_section_and_closes_after(app):
 
     def answer() -> None:
         form = next(d for d in window.findChildren(FieldsDialog) if d.isVisible())
-        section = form.parentWidget()
-        seen["in section"] = isinstance(section, Section)
-        seen["window"] = form.isWindow()
-        seen["list hidden"] = all(w.isHidden() for w in section.body)
-        seen["others wait"] = not section_buttons(page, "Reputations")[
-            "Add"
-        ].isEnabled()
+        seen["window"] = form.isWindow() and form.isModal()
+        section_buttons(page, "Reputations")["Add"].click()
+        seen["one open"] = [
+            d for d in window.findChildren(FieldsDialog) if d.isVisible()
+        ] == [form]
         form.set_value("name", "Proud")
         form.set_value("score", "1")
         form.try_save()
 
     QTimer.singleShot(0, answer)
     section_buttons(page, "Personality Traits")["Add"].click()
-    assert seen == {
-        "in section": True,
-        "window": False,
-        "list hidden": True,
-        "others wait": True,
-    }
+    assert seen == {"window": True, "one open": True}
+    assert window._open is None
     saved = _magus(storage.load_saga(saga.id)).personality_traits
     assert [(t.name, t.score) for t in saved] == [("Proud", 1)]
-    page = window.page()
-    assert isinstance(page, CharacterSheet)
-    assert section_buttons(page, "Reputations")["Add"].isEnabled()
     window.close()

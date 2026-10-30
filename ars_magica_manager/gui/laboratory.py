@@ -62,7 +62,6 @@ from .editing import (
     Run,
     choose_cards,
     give_verb,
-    open_in_a_window,
     verb_buttons,
 )
 from .figures import CompassRose, aura_seal, bar_list, fact_grid, trait_list
@@ -173,8 +172,7 @@ _LAB_TEXT_FILTERS: dict[str, lt.Filter] = {}
 
 
 class LaboratoryPage(QWidget):
-    """One laboratory in the Codex layout.
-    Its buttons' forms, lists and questions open as windows over it."""
+    """One laboratory in the Codex layout."""
 
     def __init__(
         self,
@@ -187,7 +185,6 @@ class LaboratoryPage(QWidget):
         open_owner: Callable[[], None] | None = None,
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.lab, self.p = saga, lab, palette
         #: Opens the magus whose sanctum it is.
         self.open_owner = open_owner

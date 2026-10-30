@@ -49,7 +49,6 @@ from ..sheets import region as region_sheet
 from ..sheets import saga_content as scs
 from ..sheets import tribunal as tribunal_sheet
 from . import pictures
-from .editing import open_in_a_window
 from .figures import fact_grid
 from .menus import Placer
 from .ornaments import FleuronButton, ShortRule
@@ -870,8 +869,7 @@ class SagaPage(QWidget):
     covenants and what the reader has bookmarked), The World (its covenants,
     and the characters and laboratories that belong to none, each list
     ending in a New card), The Region (its neighbours), The Bestiary (its
-    creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management.
-    Its buttons' forms, lists and questions open as windows over it."""
+    creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management."""
 
     def __init__(
         self,
@@ -881,7 +879,6 @@ class SagaPage(QWidget):
         **hooks: Unpack[SagaHooks],
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         open_content = hooks.get("open_content", lambda: None)
         open_seasons = hooks.get("open_seasons", lambda: None)
         open_character = hooks.get("open_character", _ignore)

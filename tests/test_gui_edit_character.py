@@ -159,7 +159,7 @@ def test_editing_the_arts_and_a_known_spells_mastery(app):
     # Their forms open as windows over the page, not in place.
     asked = answering(window, None)
     others["Craft by Magic"].click()
-    assert len(asked) == 1 and not getattr(asked[0], "inline", True)
+    assert len(asked) == 1 and asked[0].isWindow()
     page = _page(window)
     spells = section_buttons(page, "Known Spells")
     if _saved(saga_id).spells_known:

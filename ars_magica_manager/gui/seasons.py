@@ -17,7 +17,7 @@ from ..forms import advance as advance_forms
 from ..models import Saga, SeasonRecord
 from .ahead import ahead_section
 from .character_sheet import TextBlock
-from .editing import Run, open_in_a_window
+from .editing import Run
 from .medallions import Medallion, beside
 from .pages import page_header
 from .themes import Palette
@@ -33,8 +33,7 @@ AHEAD = "Ahead"
 
 class SeasonsPage(QWidget):
     """`saga`'s seasons; `played`, the season just advanced, comes first
-    with the line saying what advancing did.
-    Its buttons' forms, lists and questions open as windows over it."""
+    with the line saying what advancing did."""
 
     def __init__(
         self,
@@ -44,7 +43,6 @@ class SeasonsPage(QWidget):
         run: Run = lambda _command: None,
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.p, self.run = saga, p, run
         records = list(reversed(saga.season_records))
         outer = QVBoxLayout(self)

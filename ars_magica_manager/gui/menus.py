@@ -21,7 +21,6 @@ from ..commands import Command
 from ..forms import menu as menu_forms
 from ..forms.menu import Page
 from ..models import Saga
-from .editing import open_in_a_window
 from .markup_html import plain
 from .themes import Palette
 from .widgets import NewCard, edit_button
@@ -118,11 +117,8 @@ class Placer:
     def items(self, spot: str) -> list[MenuItem]:
         return [] if self.page is None else menu_forms.placed(self.page, spot)
 
-    def placed_buttons(
-        self, spot: str, *, window: bool = False
-    ) -> list[tuple[MenuItem, QPushButton]]:
-        """The actions at `spot`, each as a section button; `window`: their
-        steps open as windows over the page, not in place."""
+    def placed_buttons(self, spot: str) -> list[tuple[MenuItem, QPushButton]]:
+        """The actions at `spot`, each as a section button."""
         page = self.page
         if page is None:
             return []
@@ -134,13 +130,11 @@ class Placer:
                 _choose(page, item.action, self.run, self.show),
                 ICONS.get(item.action, "edit"),
             )
-            if window:
-                open_in_a_window(button)
             placed.append((item, button))
         return placed
 
-    def buttons(self, spot: str, *, window: bool = False) -> list[QPushButton]:
-        return [button for _, button in self.placed_buttons(spot, window=window)]
+    def buttons(self, spot: str) -> list[QPushButton]:
+        return [button for _, button in self.placed_buttons(spot)]
 
     def new_card(
         self,

@@ -82,9 +82,8 @@ from .bestiary import CreaturePage
 from .character_sheet import CharacterSheet
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
-from .editing import InPlace, place_for, scroll_area_of
 from .familiar import FamiliarPage
-from .forms import ConfirmDialog, NoticeDialog, answer, run_steps, step_dialog
+from .forms import NoticeDialog, answer, run_steps, step_dialog
 from .frame import MAXIMISE, DragStrip, Grips, TopStrip, WindowButtons
 from .help import HelpPage
 from .laboratory import LaboratoryPage
@@ -107,7 +106,6 @@ from .themes import (
 )
 from .title import TitleScreen
 from .tribunal import TribunalPage
-from .widgets import take_pressed
 from .worksheet import WorksheetPage
 
 (
@@ -262,11 +260,9 @@ class MainWindow(QMainWindow):
         #: The chapter each page was last left on, to open it there again
         #: (for this sitting only).
         self._chapters: dict[Place, str] = {}
-        #: Shows a step and waits for it (in place; a test answers it).
+        #: Shows a step as a window and waits for it (a test answers it).
         self.ask: Callable[[QDialog], int] = self._present
-        #: Where the running button's steps open (editing.place_for), and
-        #: the step open there now.
-        self._place: InPlace | None = None
+        #: The step open now.
         self._open: QDialog | None = None
         self._help_from: QWidget | None = None
         #: The season just advanced, for the Seasons page to show first.
@@ -381,8 +377,7 @@ class MainWindow(QMainWindow):
         )
 
     def _step_open(self) -> bool:
-        """Whether a step (a form, a list or a question) is open, in place
-        on the page or as a window over it."""
+        """Whether a step (a form, a list or a question) is open."""
         return self._open is not None and shiboken6.isValid(self._open)
 
     def _help_key(self) -> None:
@@ -394,7 +389,7 @@ class MainWindow(QMainWindow):
             self.open_help()
 
     def back(self) -> None:
-        """Esc: cancel the step open in place, else go back up the trail
+        """Esc: cancel the step open, else go back up the trail
         to the page above (from Help, the page it was opened on)."""
         if self.title is not None:
             return
@@ -830,26 +825,18 @@ class MainWindow(QMainWindow):
         if self.saga is None:
             return
         if self._step_open():
-            take_pressed()
             self._bring_forward()
             return
         title = _title(command)
         page = self.page()
-        pressed = take_pressed()
-        self._place = place_for(pressed, page) if page is not None else None
         step: object = command
-        try:
-            while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
-                if isinstance(step, Act):
-                    step = step.apply()
-                    continue
-                answered, step = self._answer(step)
-                if not answered:
-                    return
-        finally:
-            if self._place is not None:
-                self._place.close()
-            self._place = None
+        while isinstance(step, Form | Choose | Confirm | ChooseFile | Act):
+            if isinstance(step, Act):
+                step = step.apply()
+                continue
+            answered, step = self._answer(step)
+            if not answered:
+                return
         if isinstance(step, Go):
             # Opening another record changes nothing, so nothing is saved.
             self.open_ref(step.ref)
@@ -892,7 +879,6 @@ class MainWindow(QMainWindow):
             step,
             self.palette_,
             self,
-            inline=self._place is not None,
             ask=lambda shown: self.ask(shown),
         )
         if dialog is None:
@@ -909,56 +895,24 @@ class MainWindow(QMainWindow):
         NoticeDialog(title, words, self.palette_, self).exec()
 
     def _bring_forward(self) -> None:
-        """Show the step open again: scrolled to (in place) or raised (a
-        window), its first field focused."""
+        """Raise the step open again, its first field focused."""
         dialog = self._open
         assert dialog is not None
-        area = scroll_area_of(dialog)
-        if area is not None:
-            area.ensureWidgetVisible(dialog, 0, 40)
         dialog.raise_()
+        dialog.activateWindow()
         first = _first_input(dialog)
         if first is not None:
             first.setFocus()
 
     def _present(self, dialog: QDialog) -> int:
-        """Show a step and wait for it: in place on the page when it was
-        made to be (editing.place_for), else as a window. While a step is
-        open in place, the page's other buttons and the menus wait; while
-        one is open either way, another button brings it forward (run)."""
-        place = self._place
-        if place is None or not getattr(dialog, "inline", False):
-            # A form's own picker opens over it: the form is open again after.
-            under, self._open = self._open, dialog
-            try:
-                return dialog.exec()
-            finally:
-                self._open = under
-        place.open(dialog, replace=not isinstance(dialog, ConfirmDialog))
-        waiting = [
-            button
-            for button in self.findChildren(QPushButton)
-            if button.isEnabled()
-            and not dialog.isAncestorOf(button)
-            and (button.objectName() == "edit" or button.menu() is not None)
-        ]
-        for button in waiting:
-            button.setEnabled(False)
-        first = _first_input(dialog)
-        if first is not None:
-            first.setFocus()
-        fit = getattr(dialog, "_fit", None)
-        if fit is not None:
-            # Wrapped hints know their height only once drawn at width.
-            QTimer.singleShot(0, fit)
-        self._open = dialog
+        """Show a step as a window over the page and wait for it. While it
+        is open, another button brings it forward (run)."""
+        # A form's own picker opens over it: the form is open again after.
+        under, self._open = self._open, dialog
         try:
             return dialog.exec()
         finally:
-            self._open = None
-            for button in waiting:
-                if shiboken6.isValid(button):
-                    button.setEnabled(True)
+            self._open = under
 
     def redraw(self) -> None:
         """Build the page on show again, at the chapter and scroll place it

@@ -1,31 +1,23 @@
-"""A section's Add, Edit and Delete buttons on the desktop, which row
-Edit and Delete act on, and where their steps open.
+"""A section's Add, Edit and Delete buttons on the desktop, and which
+row Edit and Delete act on.
 
 The buttons run a commands.SectionOps' steps through the window. The row
 is the one last clicked in the section (a `Chooser`); with none clicked
 yet, the only row there is. Edit and Delete stay greyed out until there
 is a row to act on, as the terminal says "choose a row first".
 
-Steps open in place (`place_for`): a form or a list to choose from takes
-the place of its section's body, under the section's title, and a
-question sits above the body. A button outside any section (a page's
-header) opens its steps in place of the part of the page it is in, and a
-menu's at the top of the page. A page marked with open_in_a_window (the
-covenant's) opens every step as a window over it instead, one window
-after another.
+Every step (a form, a list to choose from, a question) opens as a window
+over the page, one after another when a button asks several things.
 """
 
 from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-import shiboken6
 from PySide6.QtCore import QModelIndex, QSortFilterProxyModel
 from PySide6.QtWidgets import (
     QAbstractItemView,
-    QBoxLayout,
     QPushButton,
-    QScrollArea,
     QVBoxLayout,
     QWidget,
 )
@@ -206,7 +198,7 @@ def choose_rows(
 
 class Section(QWidget):
     """A titled part of a chapter (character_sheet.section): its title row,
-    then its body, where its buttons' steps open in place."""
+    then its body."""
 
     def __init__(self) -> None:
         super().__init__()
@@ -214,98 +206,3 @@ class Section(QWidget):
         # Room above the title, so it sits apart from the section above.
         self.column.setContentsMargins(0, 10, 0, 0)
         self.column.setSpacing(6)
-        self.body: list[QWidget] = []
-
-
-class InPlace:
-    """Where a button's steps open in place: under `anchor` (a section's
-    title, or a part of the page) in `layout`, hiding `body` while a form
-    or a list is open."""
-
-    def __init__(
-        self, layout: QBoxLayout, index: int, body: Sequence[QWidget] = ()
-    ) -> None:
-        self.layout, self.index, self.body = layout, index, list(body)
-        self.hidden: list[QWidget] = []
-        self.step: QWidget | None = None
-
-    def open(self, step: QWidget, *, replace: bool) -> None:
-        """Show `step` here, in place of the body if `replace`."""
-        self.close()
-        if replace:
-            self.hidden = [widget for widget in self.body if not widget.isHidden()]
-            for widget in self.hidden:
-                widget.hide()
-        self.layout.insertWidget(self.index, step)
-        step.show()
-        self.step = step
-        area = scroll_area_of(step)
-        if area is not None:
-            area.ensureWidgetVisible(step, 0, 40)
-
-    def close(self) -> None:
-        """Take the step away and show the body again."""
-        if self.step is not None and _alive(self.step):
-            self.layout.removeWidget(self.step)
-            self.step.hide()
-        self.step = None
-        for widget in self.hidden:
-            if _alive(widget):
-                widget.show()
-        self.hidden = []
-
-
-#: The property that marks a button, or a page, whose steps open as
-#: windows.
-_IN_A_WINDOW = "opens-in-a-window"
-
-
-def open_in_a_window[W: QWidget](widget: W) -> W:
-    """Mark a button, or a whole page (every button on it, and its
-    menus), so the steps open as windows over the page, not in place
-    (place_for); returns it."""
-    widget.setProperty(_IN_A_WINDOW, True)
-    return widget
-
-
-def place_for(button: QWidget | None, page: QWidget) -> InPlace | None:
-    """Where the steps of `button` (None: a menu's) open on `page`: in the
-    section the button is in, else under the part of the chapter or page
-    holding it, else at the top of the page. None if the page has no
-    layout to open them in, or the button or the page is marked to open
-    its steps as windows (open_in_a_window). A step opened in a scrolling
-    chapter scrolls with it, so a form taller than the window can still be read."""
-    if page.property(_IN_A_WINDOW) or (
-        button is not None and button.property(_IN_A_WINDOW)
-    ):
-        return None
-    widget = button
-    while widget is not None and widget is not page:
-        if isinstance(widget, Section):
-            return InPlace(widget.column, 1, widget.body)
-        parent = widget.parentWidget()
-        layout = None
-        if parent is not None and (parent is page or _scrolled(parent)):
-            layout = parent.layout()
-        if isinstance(layout, QBoxLayout):
-            return InPlace(layout, layout.indexOf(widget) + 1, [widget])
-        widget = parent
-    layout = page.layout()
-    return InPlace(layout, 0) if isinstance(layout, QBoxLayout) else None
-
-
-def _scrolled(widget: QWidget) -> bool:
-    """Whether `widget` is what a scroll area scrolls: a chapter's body."""
-    area = scroll_area_of(widget)
-    return area is not None and area.widget() is widget
-
-
-def scroll_area_of(widget: QWidget) -> QScrollArea | None:
-    parent = widget.parentWidget()
-    while parent is not None and not isinstance(parent, QScrollArea):
-        parent = parent.parentWidget()
-    return parent
-
-
-def _alive(widget: QWidget) -> bool:
-    return shiboken6.isValid(widget)

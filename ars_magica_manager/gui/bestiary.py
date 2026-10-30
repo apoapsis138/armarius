@@ -40,7 +40,7 @@ from .character_sheet import (
     section,
     trait_section,
 )
-from .editing import Chooser, Run, follower, open_in_a_window, verb_buttons
+from .editing import Chooser, Run, follower, verb_buttons
 from .figures import fact_grid, fatigue_ladder, prose, wound_track
 from .manage import RecordControls
 from .pages import page_header
@@ -70,8 +70,7 @@ def _none(words: str, p: Palette) -> QWidget:
 
 class CreaturePage(QWidget):
     """A creature in the Codex layout; choosing a power or an Ability
-    shows it in the inspector.
-    Its buttons' forms, lists and questions open as windows over it."""
+    shows it in the inspector."""
 
     def __init__(
         self,
@@ -82,7 +81,6 @@ class CreaturePage(QWidget):
         controls: RecordControls | None = None,
     ) -> None:
         super().__init__()
-        open_in_a_window(self)
         self.saga, self.creature, self.p, self.run = saga, creature, p, run
         self.ops = creature_forms.creature_ops(saga, creature)
         outer = QVBoxLayout(self)

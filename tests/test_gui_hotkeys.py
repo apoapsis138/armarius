@@ -104,7 +104,9 @@ def test_typed_keys_type_in_a_field(app):
     window.close()
 
 
-def test_esc_cancels_a_form_open_in_place_and_q_waits(app):
+def test_esc_cancels_a_form_window_and_q_waits(app):
+    """A form is a window of its own, so it takes the keys: q off its
+    fields quits nothing, and Esc cancels it, leaving the page as it was."""
     window = _window(app)
     window.show_character(_magus_id(window))
     page = window.page()
@@ -116,9 +118,9 @@ def test_esc_cancels_a_form_open_in_place_and_q_waits(app):
     def answer() -> None:
         form = next(d for d in window.findChildren(FieldsDialog) if d.isVisible())
         form.setFocus()  # off its fields, where q would type
-        _press(window, Qt.Key.Key_Q)
+        QTest.keyClick(form, Qt.Key.Key_Q)
         seen["open after q"] = form.isVisible() and window.isVisible()
-        _press(window, Qt.Key.Key_Escape)
+        QTest.keyClick(form, Qt.Key.Key_Escape)
 
     QTimer.singleShot(0, answer)
     section_buttons(page, "Personality Traits")["Add"].click()

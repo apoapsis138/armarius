@@ -140,11 +140,6 @@ def chapter_title(
     return box
 
 
-#: The section button pressed last, so the window can open the steps it
-#: starts in place, beside it (see editing.place_for).
-_pressed: list[QPushButton] = []
-
-
 def edit_button(
     words: str, p: Palette, on_click: Callable[[], None], concept: str = "edit"
 ) -> QPushButton:
@@ -152,7 +147,6 @@ def edit_button(
     button = QPushButton(pictures.icon(concept, p["label"], 14), f" {words}")
     button.setObjectName("edit")
     button.setCursor(Qt.CursorShape.PointingHandCursor)
-    button.pressed.connect(lambda: _pressed.__setitem__(slice(None), [button]))
     button.clicked.connect(lambda _checked=False: on_click())
     return button
 
@@ -187,13 +181,6 @@ def chip_button(words: str, colour: str, on_click: Callable[[], None]) -> QPushB
         " padding:1px 10px; background:transparent"
     )
     button.clicked.connect(lambda _checked=False: on_click())
-    return button
-
-
-def take_pressed() -> QPushButton | None:
-    """The section button pressed last, forgotten once taken."""
-    button = _pressed[0] if _pressed else None
-    _pressed.clear()
     return button
 
 
@@ -237,7 +224,6 @@ class NewCard(QFrame):
         row.addLayout(column, 1)
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
-        _pressed[:] = []
         self.on_click()
         super().mousePressEvent(event)
 

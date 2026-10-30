@@ -109,6 +109,19 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.49.0 — 2026-10-30
+
+### Illuminatio
+
+- **Every desktop form opens in a window.** A character's sheet and the
+  Creation Worksheet now open their forms, lists to choose from and
+  "Are you sure?" questions in a window of their own over the page, as
+  every other page does since 3.43.0-3.48.0. No form takes the place of
+  a section any more.
+- With a form open, its window takes the keys: Esc cancels it, and
+  pressing a page's button brings the open form forward instead of
+  opening a second one.
+
 ## 3.48.0 — 2026-10-30
 
 ### Illuminatio

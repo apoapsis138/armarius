@@ -2993,7 +2993,6 @@ and the aura his casting counts there; its button sets it
 Raw Vis, holds the rest of what he can do with his magic: Craft by
 Magic, Certamen, and Cast in a Lacuna, Spirits and Names, Dream
 Working, Hermetic Sacrifice and Open a Tunnel when he can use them.
-Each of these buttons opens its form in a window of its own.
 <!-- /gui -->
 
 **You type:** the XP in each Art, the raw vis the magus holds, and the
