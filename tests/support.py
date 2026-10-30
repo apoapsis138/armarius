@@ -5,7 +5,7 @@ import re
 from textual.content import Content
 from textual.widgets import OptionList
 
-from ars_magica_manager import catalog
+from ars_magica_manager import catalog, traditions
 from ars_magica_manager.models import (
     CHARGED,
     SKETCH,
@@ -59,6 +59,15 @@ from ars_magica_manager.models import (
     VirtueFlawInstance,
 )
 from ars_magica_manager.rules.xp import ability_xp
+
+
+def offer_only(saga: Saga, *offered: str) -> Saga:
+    """Make `saga` offer just the traditions `offered`, every other one
+    turned off (a saga offers every tradition of its books by default)."""
+    for tradition in traditions.all_traditions():
+        if tradition.id not in offered:
+            traditions.set_on(saga, tradition.id, False)
+    return saga
 
 
 def literate() -> list[Ability]:
@@ -390,7 +399,6 @@ def everything_saga() -> Saga:
     return Saga(
         id="test_saga",
         name="Matrix",
-        traditions=["trad_vitkir"],
         covenants=[covenant, sketch],
         calendar=[
             CalendarEntry(

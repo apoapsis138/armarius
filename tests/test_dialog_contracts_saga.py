@@ -8,6 +8,7 @@ from dialog_contract_support import Contract, all_sagas, run_contract
 from textual.widgets import Select
 
 from ars_magica_manager import armies, catalog
+from ars_magica_manager import house_rules as hr
 from ars_magica_manager import players as pl
 
 CONTRACTS: dict[str, Contract] = {
@@ -419,6 +420,14 @@ CONTRACTS: dict[str, Contract] = {
         ],
         shown={"#content-goods-info": "Coin, 50% 1,210"},
     ),
+    "move to source": Contract(
+        prefill={"Move to": "HR", "Ours (Character, no source)": False},
+        edits={"Ours (Character, no source)": True},
+        saved=lambda s: [(e.name, e.source) for _, e in hr.all_entries(s)],
+        expected=[("Ours", "HR")],
+        # Nothing ticked: nothing to move.
+        invalid={"Ours (Character, no source)": False},
+    ),
     "edit saga source": Contract(
         prefill={"Abbreviation": "HR", "Title": "House rules"},
         edits={"Abbreviation": "OHR", "Title": "Our house rules"},
@@ -442,13 +451,15 @@ CONTRACTS: dict[str, Contract] = {
         expected={},
     ),
     "edit traditions offered": Contract(
-        prefill={"Vitkir (HMRE)": True, "Folk Witches (HMRE)": False},
-        edits={"Folk Witches (HMRE)": True},
-        saved=lambda s: s.traditions,
-        expected=["trad_folk_witches", "trad_vitkir"],
+        # Every tradition of the books in play is offered until turned off.
+        prefill={"Vitkir (HMRE)": True, "Folk Witches (HMRE)": True},
+        edits={"Folk Witches (HMRE)": False},
+        saved=lambda s: s.traditions_off,
+        expected=["trad_folk_witches"],
         shown={
             "#section-traditions": (
-                f"Traditions Offered (2 of {len(catalog.load_tradition_catalog())})"
+                f"Traditions Offered ({len(catalog.load_tradition_catalog()) - 1}"
+                f" of {len(catalog.load_tradition_catalog())})"
             )
         },
     ),

@@ -16,13 +16,14 @@ from screen_helpers import _sample_saga_with_covenant
 from ars_magica_manager import house_rules as hr
 from ars_magica_manager import saga_content as sc
 from ars_magica_manager import spells as spl
-from ars_magica_manager import storage
+from ars_magica_manager import storage, traditions
 from ars_magica_manager.forms import saga_content as scf
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.markup_html import plain
 from ars_magica_manager.gui.saga_content import SagaContentPage
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.sheets import saga_content as scs
 
 
 @pytest.fixture(scope="module")
@@ -191,13 +192,54 @@ def test_a_books_chip_puts_it_in_or_out_of_play(app):
     assert storage.load_saga(saga_id).books_in_play == ["Covenants"]
 
 
-#: Widgets the Books chapter builds for the sample saga (301: 47 cards,
-#: their group headings, the sources and traditions); raise a budget only
+#: Widgets the Books chapter builds for the sample saga (438: 47 book
+#: cards and their group headings, the sources, and the traditions as a
+#: chip each under their book's heading); raise a budget only
 #: deliberately.
-BOOKS_WIDGET_BUDGET = 310
+BOOKS_WIDGET_BUDGET = 445
 
 
 def test_the_books_chapter_stays_within_its_widget_budget(app):
     page = SagaContentPage(_sample_saga_with_covenant(), SCRIPTORUM)
     built = len(page._books().findChildren(QWidget))
     assert built <= BOOKS_WIDGET_BUDGET, built
+
+
+def _chip_button(page: SagaContentPage, words: str) -> QPushButton:
+    return next(
+        b
+        for b in page.findChildren(QPushButton)
+        if b.objectName() == "chip" and b.text() == words
+    )
+
+
+def test_traditions_are_offered_by_book_or_one_by_one(app):
+    window, saga_id = _content("Books")
+    saga = window.saga
+    assert saga is not None
+    sc.set_books_in_play(saga, ["HMRE"])
+    storage.save_saga(saga)
+    window.redraw()
+    page = _page(window)
+    # No Edit beside the section: the chips are its controls.
+    with pytest.raises(AssertionError, match="with buttons"):
+        section_buttons(page, "Traditions Offered")
+    hedge = [
+        t.id for t in traditions.listed(saga) if traditions.book_of(t, saga) == "HMRE"
+    ]
+    # Hedge Magic's heading offers all of them: clicking it offers none.
+    # The headings' chips come in tradition_groups' order.
+    playing = [g.book for g in scs.tradition_groups(saga) if g.in_play]
+    headings = [
+        b for b in page.findChildren(QPushButton) if b.text() == scs.ALL_OFFERED
+    ]
+    heading = headings[playing.index("HMRE")]
+    heading.click()
+    assert storage.load_saga(saga_id).traditions_off == hedge
+    page = _page(window)
+    _chip_button(page, "Vitkir").click()
+    assert "trad_vitkir" not in storage.load_saga(saga_id).traditions_off
+    # A book out of play: its traditions greyed out, with nothing to click.
+    page = _page(window)
+    assert not any(b.text() == "Ascetics" for b in page.findChildren(QPushButton))
+    assert any(label.text() == "Ascetics" for label in page.findChildren(QLabel))

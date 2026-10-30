@@ -11,7 +11,7 @@ from __future__ import annotations
 import re
 from typing import Any
 
-from .. import catalog
+from .. import catalog, sourcebooks
 from .. import goods as gd
 from .. import saga_content as sc
 from ..commands import Confirm, Form, Refuse, SectionOps
@@ -21,6 +21,7 @@ from ..models import COMMODITY, COMMON, GoodDef, GoodPurity, Purity, Saga
 from ..models.goods import PRICE_PATTERN
 from ..sections import GOODS_SECTION
 from ..tables import Table
+from .saga_content import source_field
 
 CG = "C&G"
 #: A source's towns, in brackets after its region.
@@ -129,7 +130,7 @@ def rows(saga: Saga) -> list[tuple[int | None, str]]:
         if _group(saga, good) != group:
             group = _group(saga, good)
             found.append((None, f"[b]{_HEADINGS[group]}[/]"))
-        cells = [good.name, good.sold_by]
+        cells = [_name(saga, good), good.sold_by]
         line = "".join(escape(fit(c, w)) for c, w in zip(cells, WIDTHS, strict=True))
         for printed, width in zip(_shown_prices(good), PRICE_WIDTHS, strict=True):
             shown = printed.replace(" (fake)", " fake")
@@ -158,7 +159,7 @@ def table(saga: Saga) -> Table:
             keys.append(None)
         cells.append(
             [
-                escape(good.name),
+                escape(_name(saga, good)),
                 _class(good),
                 escape(good.sold_by),
                 *(_price_cell(p, short=False) for p in _shown_prices(good)),
@@ -166,6 +167,13 @@ def table(saga: Saga) -> Table:
         )
         keys.append(n)
     return Table(list(COLUMNS), cells, keys, markup=True, stretch=0)
+
+
+def _name(saga: Saga, good: GoodDef) -> str:
+    """A good's name in the list, marked while its saga source is out of
+    play."""
+    out = sourcebooks.own_source_out(saga, good.source)
+    return f"{good.name} (not in play)" if out else good.name
 
 
 def _class_text(good: GoodDef) -> str:
@@ -337,6 +345,15 @@ def info(saga: Saga, index: int | None, *, wide: bool) -> str:
         )
     if good.note:
         lines.append(f"[i]{escape(good.note)}[/]")
+    if own and good.source:
+        lines.append(
+            f"[$label]Source:[/] {escape(sourcebooks.titles(good.source))}"
+            + (
+                " [dim](not in play)[/]"
+                if sourcebooks.own_source_out(saga, good.source)
+                else ""
+            )
+        )
     if good.description:
         lines.append(escape(good.description))
     if good.kind == COMMODITY:
@@ -361,7 +378,7 @@ _PRICE_HINT = (
 )
 
 
-def fields(existing: GoodDef | None) -> list[DialogField]:
+def fields(saga: Saga, existing: GoodDef | None) -> list[DialogField]:
     """A good of the saga's own: a commodity priced a tun or ton by
     quality, or a common good priced each."""
     kind = existing.kind if existing is not None else COMMODITY
@@ -443,6 +460,7 @@ def fields(existing: GoodDef | None) -> list[DialogField]:
             placeholder="e.g. Cologne; the Low Countries",
             hint="Places, separated by semicolons.",
         ),
+        *source_field(saga, existing.source if existing else ""),
         description_field(existing.description if existing else ""),
     ]
 
@@ -478,6 +496,7 @@ def _made(saga: Saga, existing: GoodDef | None, values: dict[str, Any]) -> GoodD
     )
     ident = existing.id if existing is not None else gd.new_good_id(saga, name)
     description = values.get("description") or ""
+    source = values.get("source") or ""
     if values.get("kind") == COMMON:
         pence = float(values["pence"])
         return GoodDef(
@@ -488,6 +507,7 @@ def _made(saga: Saga, existing: GoodDef | None, values: dict[str, Any]) -> GoodD
             prices=("", gd.coins(pence), "", ""),
             pence=(pence, pence),
             sources=sources,
+            source=source,
             description=description,
         )
     pure = values.get("pure_price")
@@ -507,6 +527,7 @@ def _made(saga: Saga, existing: GoodDef | None, values: dict[str, Any]) -> GoodD
         if pure is not None
         else None,
         sources=sources,
+        source=source,
         description=description,
     )
 
@@ -532,7 +553,7 @@ def ops(saga: Saga) -> SectionOps:
 
         return Form(
             "Add a Good" if existing is None else f"Edit {escape(existing.name)}",
-            lambda: fields(existing),
+            lambda: fields(saga, existing),
             apply,
             validate=lambda values: problem(saga, existing, values),
             save_label="Add" if existing is None else "Save",

@@ -39,6 +39,7 @@ from . import book_value as bv
 from . import devotion as devotion_forms
 from . import familiars as fam
 from . import goods as gd
+from . import house_rules as hr
 from . import inhabitants as inh
 from . import lab_texts as lt
 from . import mystery_cults as cults_core
@@ -395,6 +396,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "set_agent_task", "Set a Task"),
     MenuItem("r", "resolve_agent_task", "Resolve the Task"),
     MenuItem("p", "add_purity", "Add a Purity"),
+    MenuItem("s", "move_to_source", "Move to Source"),
     MenuItem("j", "plan_journey", "Travel"),
     MenuItem("l", "labor_story", "Labor Points from a Story"),
     # A grog's story experience, counted against the yearly update.
@@ -1663,6 +1665,16 @@ def _adds_purity(facts: ActionFacts, section: str) -> bool:
     return row is not None and 0 <= row < len(listed) and gd.takes_purities(listed[row])
 
 
+def _moves_to_source(facts: ActionFacts, section: str) -> bool:
+    """Move to Source, offered on House Rules once the saga has a source
+    of its own and an entry to move."""
+    return (
+        section == HOUSE_RULES_SECTION
+        and bool(facts.saga.sources)
+        and bool(hr.all_entries(facts.saga))
+    )
+
+
 def _grog_season(facts: ActionFacts, section: str) -> bool:
     character = facts.selected_character
     return (
@@ -1799,6 +1811,7 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
         lambda _c, agent: agent_rules.recruited(agent)
     ),
     "add_purity": _adds_purity,
+    "move_to_source": _moves_to_source,
     "plan_journey": _plans_journey,
     "break_clause": _breaks_clause,
     "censure_clause": _censures_clause,

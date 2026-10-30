@@ -249,11 +249,15 @@ def is_own(saga: Saga, spell: Spell) -> bool:
 
 
 def out_of_play(saga: Saga, spell: Spell) -> str:
-    """Why the saga leaves a catalog spell out ("book not in play", "hidden
-    in this saga"), or "" if it's in play. The saga's own spells always
-    are."""
+    """Why the saga leaves a spell out ("book not in play", "hidden in this
+    saga", "source not in play"), or "" if it's in play. The saga's own
+    spells are, unless they cite one of its own sources out of play."""
     if is_own(saga, spell):
-        return ""
+        return (
+            "source not in play"
+            if sourcebooks.own_source_out(saga, spell.source)
+            else ""
+        )
     if not sourcebooks.in_play(spell.source, sourcebooks.saga_books(saga)):
         return "book not in play"
     if catalog.hidden(spell):

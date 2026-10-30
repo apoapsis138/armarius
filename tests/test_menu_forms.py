@@ -68,6 +68,8 @@ def test_each_page_offers_what_applies_there():
     assert "Edit Fatigue" not in more
     assert more == [
         "Lab Texts Read",
+        # Join a tradition: the saga offers every tradition of its books.
+        "Traditions",
         "Export",
         "Interests",
         "Update from a File",

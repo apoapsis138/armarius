@@ -12,7 +12,6 @@ from textual.widget import Widget
 from textual.widgets import Static, TabbedContent, TabPane
 
 from .... import saga_content as sc
-from .... import traditions
 from ....boon_hook_text import counted
 from ....forms import goods as goods_forms
 from ....forms import mystery_cults as cult_forms
@@ -174,9 +173,7 @@ class SagaContentSheetView(SheetView):
             )
 
     def _traditions_title(self) -> str:
-        shown = traditions.in_play(self.saga)
-        on = sum(1 for t in shown if traditions.is_on(self.saga, t.id))
-        return f"Traditions Offered ({on} of {len(shown)})"
+        return sc.traditions_title(self.saga)
 
     def _book_row(self, book: str) -> str:
         return sc.book_row(self.saga, book)

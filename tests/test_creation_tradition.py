@@ -1,5 +1,7 @@
 """Creating a hedge tradition's member: the Tradition Training step."""
 
+from support import offer_only
+
 from ars_magica_manager import creation, worksheet
 from ars_magica_manager.forms import worksheet as wf
 from ars_magica_manager.models import Character, CreationXp, Saga, VirtueFlawInstance
@@ -10,9 +12,7 @@ from ars_magica_manager.rules import creation_virtues as cv
 
 
 def _saga(*offered: str) -> Saga:
-    saga = Saga(id="s", name="S")
-    saga.traditions = list(offered)
-    return saga
+    return offer_only(Saga(id="s", name="S"), *offered)
 
 
 def _member(tradition: str, *vf_ids: str, kind: str = "companion") -> Character:
@@ -118,7 +118,7 @@ def test_the_worksheet_offers_the_tradition_on_concept():
     assert "vf_folk_witch" in {vf.vf_id for vf in witch.virtues_flaws}
 
 
-def test_an_old_saga_offers_nothing():
+def test_a_saga_offering_no_tradition_offers_nothing():
     saga = _saga()
     companion = Character(id="c", name="A", type="companion")
     labels = [

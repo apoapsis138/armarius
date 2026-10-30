@@ -111,11 +111,10 @@ class Saga:
     #: The optional rules the troupe has turned on (rules.options keys);
     #: an option not listed is off, its default.
     rule_options: dict[str, bool] = field(default_factory=dict)
-    #: The non-Hermetic traditions the troupe has turned on
-    #: (tradition_catalog.json ids): only these are offered, and only
-    #: while their book is in play. Off until turned on, so a saga lists
-    #: just the traditions it uses.
-    traditions: list[str] = field(default_factory=list)
+    #: The non-Hermetic traditions the troupe has turned off
+    #: (tradition_catalog.json ids): every other one is offered while its
+    #: book is in play, so a book put in play brings its traditions on.
+    traditions_off: list[str] = field(default_factory=list)
     #: Season plans not yet applied; a plan is removed when its
     #: season is applied.
     season_plans: list[SeasonPlan] = field(default_factory=list)
@@ -290,6 +289,9 @@ class Saga:
                     book.owner_id = library.get("covenant_id")
         # The saga's marriages.
         d["marriages"] = [Marriage.from_dict(m) for m in d.get("marriages") or []]
+        # Older saves listed the traditions turned on, each off until
+        # turned on; they move to the default, every one on.
+        d.pop("traditions", None)
         saga = cls(**known_fields(cls, d))
         _link_vis_store_locations(saga)
         _key_lab_text_access_by_author(saga)

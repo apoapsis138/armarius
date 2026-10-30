@@ -4,10 +4,9 @@ tradition's chapter of the sheet.
 
 A tradition is a catalog record (tradition_catalog.json, a Type Object):
 characters name the traditions they belong to, and the tradition says
-which Arts and Abilities are its own. The troupe turns each tradition on
-for the saga (Saga.traditions); it is offered only while it is on and its
-book is in play, so a saga lists just the traditions it uses. A
-character's chapter shows whatever the saga's switches say, so turning a
+which Arts and Abilities are its own. A tradition is offered while its
+book is in play unless the troupe turns it off (Saga.traditions_off), so
+a book put in play brings its traditions on. A character's chapter shows whatever the saga's switches say, so turning a
 tradition off never hides what a character already has.
 """
 
@@ -112,8 +111,9 @@ def in_play(saga: Saga | None) -> list[TraditionDef]:
 
 
 def is_on(saga: Saga | None, tradition_id: str) -> bool:
-    """Whether the troupe has turned the tradition on (its book aside)."""
-    return saga is not None and tradition_id in saga.traditions
+    """Whether the troupe offers the tradition (its book aside): every one
+    is, unless turned off."""
+    return saga is not None and tradition_id not in saga.traditions_off
 
 
 def offered(saga: Saga | None) -> list[TraditionDef]:
@@ -138,15 +138,44 @@ def joinable(saga: Saga | None, character: Character) -> list[TraditionDef]:
 
 def set_on(saga: Saga, tradition_id: str, on: bool) -> None:
     """Turn a tradition on or off for the saga, keeping catalog order."""
-    chosen = set(saga.traditions)
+    off = set(saga.traditions_off)
     if on:
-        chosen.add(tradition_id)
+        off.discard(tradition_id)
     else:
-        chosen.discard(tradition_id)
+        off.add(tradition_id)
     order = [t.id for t in all_traditions()]
-    known = [i for i in order if i in chosen]
+    known = [i for i in order if i in off]
     # An id the catalog no longer has stays, at the end, for when it returns.
-    saga.traditions = known + sorted(chosen - set(order))
+    saga.traditions_off = known + sorted(off - set(order))
+
+
+def book_of(tradition: TraditionDef, saga: Saga | None) -> str:
+    """The book a tradition is listed under: the first its record cites
+    that the saga has in play, else the first it cites (Hedge Magic,
+    Revised Edition when it cites none). A tradition is offered through
+    any of its books, so it is greyed out only when none is in play."""
+    books = sourcebooks.saga_books(saga)
+    cited = [sourcebooks.first_book(part) for part in tradition.source.split(";")]
+    found = [book for book in cited if book is not None]
+    playing = [book for book in found if sourcebooks.in_play(book, books)]
+    return (playing or found or ["HMRE"])[0]
+
+
+def listed(saga: Saga | None) -> list[TraditionDef]:
+    """Every non-Hermetic tradition, its book in play or not, by book in
+    the Books chapter's order (catalog order within a book). The saga's
+    own Mystery Cults aren't among them."""
+    shown = [t for t in all_traditions() if not is_saga_cult(t.id)]
+    under = {t.id: book_of(t, saga) for t in shown}
+    books = sourcebooks.in_order(under.values())
+    return [t for book in books for t in shown if under[t.id] == book]
+
+
+def set_book_on(saga: Saga, book: str, on: bool) -> None:
+    """Turn every tradition listed under `book` on or off."""
+    for tradition in listed(saga):
+        if book_of(tradition, saga) == book:
+            set_on(saga, tradition.id, on)
 
 
 def of(character: Character) -> list[TraditionDef]:

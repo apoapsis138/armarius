@@ -5,7 +5,7 @@ step's buttons, and Move to In Play."""
 from __future__ import annotations
 
 import pytest
-from support import screen_lines, strip_markup, wait_until
+from support import offer_only, screen_lines, strip_markup, wait_until
 from textual.widgets import Button, OptionList, Select, Static, Tree
 
 from ars_magica_manager import storage
@@ -793,7 +793,7 @@ async def test_concept_adds_the_house_virtue_asking_which_when_there_is_a_choice
 
 async def test_a_hedge_wizard_chooses_a_tradition_and_trains():
     saga = _saga("companion")
-    saga.traditions = ["trad_vitkir"]
+    offer_only(saga, "trad_vitkir")
     vitki = saga.characters[0]
     vitki.virtues_flaws = [VirtueFlawInstance("vf_the_gift")]
     storage.save_saga(saga)

@@ -18,7 +18,7 @@ from typing import Any
 from . import catalog, sourcebooks, traditions
 from . import house_rules as hr
 from .markup import escape, fit, markdown_text
-from .models import Saga, SagaSource
+from .models import Saga, SagaSource, TraditionDef
 
 
 @dataclass(frozen=True)
@@ -118,8 +118,9 @@ def add_source(saga: Saga, values: dict[str, Any]) -> SagaSource:
 
 
 def update_source(saga: Saga, source: SagaSource, values: dict[str, Any]) -> None:
-    """Change a source; a new abbreviation is carried to the entries citing
-    it and to the books in play."""
+    """Change a source; a new abbreviation is carried to everything citing
+    it (hr.recite: House Rules, spells, goods, cults) and to the books in
+    play."""
     old = source.abbreviation
     new = values["abbreviation"].strip()
     source.title = (values.get("title") or "").strip()
@@ -132,7 +133,7 @@ def update_source(saga: Saga, source: SagaSource, values: dict[str, Any]) -> Non
 
 
 def remove_source(saga: Saga, source: SagaSource) -> None:
-    """Remove a source no entry cites (see hr.citing)."""
+    """Remove a source nothing cites (see hr.citing)."""
     saga.sources.remove(source)
     if saga.books_in_play is not None:
         saga.books_in_play = [b for b in saga.books_in_play if b != source.abbreviation]
@@ -238,42 +239,67 @@ def book_detail(saga: Saga, book: str | None) -> str:
     return "\n".join(lines)
 
 
+def traditions_title(saga: Saga) -> str:
+    """The section's title: how many traditions of the books in play the
+    saga offers."""
+    shown = traditions.in_play(saga)
+    on = sum(1 for t in shown if traditions.is_on(saga, t.id))
+    return f"Traditions Offered ({on} of {len(shown)})"
+
+
 def traditions_header() -> str:
     return f"  {'On':<8} {'Book':<{_ABBR_WIDTH}} Tradition"
 
 
 def tradition_rows(saga: Saga) -> list[str]:
-    """One row per non-Hermetic tradition whose book is in play (markup):
-    whether the troupe has turned it on (traditions.in_play's order)."""
+    """One row per non-Hermetic tradition, by book (traditions.listed's
+    order), with whether the saga offers it (markup); a book out of play
+    has its traditions dimmed."""
     rows = []
-    for tradition in traditions.in_play(saga):
+    for tradition in traditions.listed(saga):
+        book = traditions.book_of(tradition, saga)
+        abbreviation = escape(fit(book, _ABBR_WIDTH))
+        if not is_in_play(saga, book):
+            rows.append(
+                f"[dim]{'-':<8} {abbreviation} {escape(tradition.name)}"
+                "  (book not in play)[/]"
+            )
+            continue
         on = traditions.is_on(saga, tradition.id)
         mark = _column("yes", 8) if on else _dim("no", 8)
-        rows.append(
-            f"{mark} {escape(fit(tradition.source, _ABBR_WIDTH))} "
-            f"{escape(tradition.name)}"
-        )
+        rows.append(f"{mark} {abbreviation} {escape(tradition.name)}")
     return rows
 
 
 def tradition_detail(saga: Saga, index: int | None) -> str:
-    """The chosen tradition: what it is, and whether it is offered."""
-    shown = traditions.in_play(saga)
+    """The chosen tradition (an index into traditions.listed)."""
+    shown = traditions.listed(saga)
     if index is None or index >= len(shown):
         return (
             "[dim]Choose a tradition for its details; e picks the traditions "
             "this saga offers.[/]"
         )
-    tradition = shown[index]
-    on = traditions.is_on(saga, tradition.id)
+    return tradition_text(saga, shown[index])
+
+
+def tradition_text(saga: Saga, tradition: TraditionDef) -> str:
+    """A tradition's details: what it is, and whether it is offered."""
+    book = traditions.book_of(tradition, saga)
+    if not is_in_play(saga, book):
+        offered = (
+            f"Not offered while {sourcebooks.title_of(book, saga) or book} is "
+            "out of play: put it in play on Books in Play."
+        )
+    elif traditions.is_on(saga, tradition.id):
+        offered = "Offered: characters can join it."
+    else:
+        offered = "Not offered: turn it on to let characters join it."
     return "\n".join(
         [
             f"[b]{escape(tradition.name)}[/] "
             f"({escape(sourcebooks.titles(tradition.source))}, {tradition.realm})",
             escape(tradition.description),
-            "Offered: characters can join it."
-            if on
-            else "Not offered: turn it on to let characters join it.",
+            offered,
         ]
     )
 

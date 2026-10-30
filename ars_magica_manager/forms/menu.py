@@ -202,6 +202,8 @@ NOT_ON_PAGES = frozenset(
         "resolve_agent_task",
         # The desktop draws it as the Goods list's own button.
         "add_purity",
+        # The desktop draws it as House Rules' own button.
+        "move_to_source",
         # The desktop draws it as Ahead's own button.
         "plan_journey",
         # The desktop draws them as the Charter's and Clauses' own buttons.

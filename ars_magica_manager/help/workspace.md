@@ -717,32 +717,32 @@ While a book is out of play, everything it adds is switched off: the pickers lea
 <!-- help: section-saga-sources -->
 
 <!-- tui -->
-Sources of the saga's own, such as a house-rules list or a fan supplement, that its House Rules can cite. `a` adds one: an Abbreviation (short, like a book's, and not one a sourcebook already uses) and a Title. A new source starts in play, and it is put in or out of play with the books above.
+Sources of the saga's own, such as a house-rules list or a fan supplement, that its House Rules, spells, goods and Mystery Cults can cite, so that a whole set of homebrew goes in or out of play at once (see [How to keep homebrew in a source](help:guide-homebrew-source)). `a` adds one: an Abbreviation (short, like a book's, and not one a sourcebook already uses) and a Title. A new source starts in play, and it is put in or out of play with the books above.
 <!-- /tui -->
 <!-- gui -->
-Sources of the saga's own, such as a house-rules list or a fan supplement, that its House Rules can cite. **Add** adds one: an Abbreviation (short, like a book's, and not one a sourcebook already uses) and a Title. A new source starts in play, and it is put in or out of play with the books above.
+Sources of the saga's own, such as a house-rules list or a fan supplement, that its House Rules, spells, goods and Mystery Cults can cite, so that a whole set of homebrew goes in or out of play at once (see [How to keep homebrew in a source](help:guide-homebrew-source)). **Add** adds one: an Abbreviation (short, like a book's, and not one a sourcebook already uses) and a Title. A new source starts in play, and it is put in or out of play with the books above.
 <!-- /gui -->
 
 <!-- tui -->
-`e` edits a source; a new abbreviation is carried to the House Rules that cite it. `d` won't delete a source a House Rule still cites: the message names them.
+`e` edits a source; a new abbreviation is carried to everything that cites it. `d` won't delete a source anything still cites (a House Rule, a spell, a good or a cult): the message names them. Its Entries column counts them all, and its card under Books in Play says what it brings.
 <!-- /tui -->
 <!-- gui -->
-**Edit** edits the source last clicked; a new abbreviation is carried to the House Rules that cite it. **Delete** won't delete a source a House Rule still cites: the message names them.
+**Edit** edits the source last clicked; a new abbreviation is carried to everything that cites it. **Delete** won't delete a source anything still cites (a House Rule, a spell, a good or a cult): the message names them. Its Entries column counts them all, and its card under Books in Play says what it brings.
 <!-- /gui -->
 
 ### Traditions Offered
 <!-- help: section-traditions -->
 
-The non-Hermetic magical traditions whose book is in play (Hedge Magic Revised Edition's six, and those of the Realms of Power, Societates, the Tribunal and regional books, Rival Magic and Ancient Magic), and whether the saga offers each. Every tradition starts off, so the lists stay short: turn on only the ones your saga uses. A character can join a tradition the saga offers, which gives them [a chapter](help:tradition-chapter) for its Arts and Abilities.
+The non-Hermetic magical traditions (Hedge Magic Revised Edition's six, and those of the Realms of Power, Societates, the Tribunal and regional books, Rival Magic and Ancient Magic), listed by book in the order of Books in Play, and whether the saga offers each. Every tradition of a book in play is offered until you turn it off, so a book put in play brings its traditions with it; turn off the ones your saga doesn't use. A tradition citing two books is listed under the first of them in play. A character can join a tradition the saga offers, which gives them [a chapter](help:tradition-chapter) for its Arts and Abilities.
 
 <!-- tui -->
-`e` opens a tick for each tradition: tick the ones the saga offers.
+Each tradition's row says whether it is offered; one whose book is out of play is dimmed, marked "(book not in play)". `e` opens a tick for each tradition of the books in play: untick the ones the saga doesn't offer.
 <!-- /tui -->
 <!-- gui -->
-**Edit** opens a tick for each tradition: tick the ones the saga offers.
+Each book has a heading, with a chip saying whether the saga offers All, Some or None of its traditions: click it to offer them all, or, when all are offered, none. Under it each tradition is a chip of its own, filled while offered: click it to offer that one or stop. Hover over a tradition for its details. A book out of play has its traditions greyed out and nothing to click (**Book not in play**): put the book in play on Books in Play to offer them.
 <!-- /gui -->
 
-Turning a tradition off, or taking its book out of play, stops it being offered; characters who already belong to it keep their chapter, and the choice is kept for when the book comes back.
+Turning a tradition off, or taking its book out of play, stops it being offered; characters who already belong to it keep their chapter, and the choice is kept for when the book comes back. A saga from before traditions were offered by default offers every tradition of its books in play, as a new one does.
 
 ## Catalogs tab
 <!-- help: tab-content-catalogs -->
@@ -802,6 +802,8 @@ A good's details show its class and page, its prices, how it is sold, its puriti
 **Add** adds a good of the saga's own: a commodity, priced a tun or ton by quality (its class, how it is sold, its four prices and, if it is priced by purity, its pure price), or a common good, priced each in pence (12 to the shilling, 240 to the pound, p. 143), with where it is bought and a description. **Edit** edits one of the saga's own goods; a catalog good is read-only. **Hide** deletes one of the saga's own goods, or hides a catalog good after a confirmation: the Catalogs chapter's Hidden Entries offers it again, and Catalogs can switch the whole Goods catalog off. **Add a Purity** (for a good priced by purity) adds a purity by its name and metal content, its price worked out as you type, and removes one the saga added.
 <!-- /gui -->
 
+A good of the saga's own can cite one of the saga's sources (its **Source**, once the saga has one): while that source is out of play the good is marked "(not in play)".
+
 ## House Rules tab
 <!-- help: tab-content-house-rules -->
 
@@ -826,10 +828,10 @@ The Virtues, Flaws, Boons and Hooks made for this saga, and its own Abilities: h
 <!-- help: section-house-rules -->
 
 <!-- tui -->
-The list of the saga's own entries, with the details panel below it.
+The list of the saga's own entries, with the details panel below it. Once the saga has a source of its own, More's **Move to Source** (`m`, then `s`) makes several entries cite one source, or none, at once: choose the source, then tick the entries (each listed with the source it cites now).
 <!-- /tui -->
 <!-- gui -->
-The list of the saga's own entries; the Inspector shows the one last clicked in full.
+The list of the saga's own entries; the Inspector shows the one last clicked in full. Once the saga has a source of its own, **Move to Source** makes several entries cite one source, or none, at once: choose the source, then tick the entries (each listed with the source it cites now).
 <!-- /gui -->
 
 ### What house rules don't do
@@ -863,6 +865,8 @@ Each cult the saga has invented: its Lore, realm, founder and how many degrees i
 `a` adds a cult, `e` edits the chosen one and `d` deletes it after asking. Choosing a cult shows its degrees and Scripts below.
 <!-- /tui -->
 
+Once the saga has a source of its own, a cult can cite one (its **Source**): while that source is out of play, no Initiation season can follow the cult's Scripts. Its members keep their Lore and Virtues.
+
 ### The chosen cult
 <!-- help: section-content-cult -->
 
@@ -895,7 +899,7 @@ On a degree with no Script, `a` writes one. Otherwise `a` adds a component (its 
 ## Spells tab
 <!-- help: tab-content-spells -->
 
-Every spell the saga knows: the catalog's spells from the books in play, and the saga's own. Spells from books out of play, or hidden on the Catalogs tab, are left out until the Source filter asks for them; they are marked "(not in play)", and a magus who already knows one keeps it, marked the same way on their Known Spells.
+Every spell the saga knows: the catalog's spells from the books in play, and the saga's own. Spells from books out of play, or hidden on the Catalogs tab, are left out until the Source filter asks for them, and so is a spell of the saga's own whose Source (one of the saga's own sources, chosen in its form once the saga has one) is out of play; they are marked "(not in play)", and a magus who already knows one keeps it, marked the same way on their Known Spells.
 <!-- tui -->
 The list stretches down to a details panel that shows the chosen spell in full.
 <!-- /tui -->

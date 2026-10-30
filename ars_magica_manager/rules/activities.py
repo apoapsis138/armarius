@@ -719,7 +719,7 @@ ACTIVITIES[tradition_seasons.OPEN] = Activity(
 def _tradition_book(tradition: TraditionDef) -> tuple[str, str]:
     """The book a tradition's own seasons come from (the first its record
     cites) and their citation."""
-    book = next(iter(sourcebooks.books_of(tradition.source.split(";")[0])), "HMRE")
+    book = sourcebooks.first_book(tradition.source) or "HMRE"
     if book == "HMRE":
         return book, HEDGE_SOURCE
     title = sourcebooks.SOURCEBOOKS.get(book, book)

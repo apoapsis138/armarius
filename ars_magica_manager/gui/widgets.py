@@ -170,15 +170,18 @@ def chip_row(
     return row
 
 
-def chip_button(words: str, colour: str, on_click: Callable[[], None]) -> QPushButton:
+def chip_button(
+    words: str, colour: str, on_click: Callable[[], None], *, filled: str = ""
+) -> QPushButton:
     """An outlined pill, as `chip` draws, that does something when clicked
-    (a book's In play)."""
+    (a book's In play); `filled`, the words' colour on a pill filled with
+    `colour` (a tradition the saga offers)."""
     button = QPushButton(words)
     button.setObjectName("chip")
     button.setCursor(Qt.CursorShape.PointingHandCursor)
     button.setStyleSheet(
-        f"color:{colour}; border:1px solid {colour}; border-radius:9px;"
-        " padding:1px 10px; background:transparent"
+        f"color:{filled or colour}; border:1px solid {colour}; border-radius:9px;"
+        f" padding:1px 10px; background:{colour if filled else 'transparent'}"
     )
     button.clicked.connect(lambda _checked=False: on_click())
     return button

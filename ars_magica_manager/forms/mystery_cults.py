@@ -49,6 +49,7 @@ from ..sections import (
     CULT_SCRIPT_SECTION,
     CULTS_SECTION,
 )
+from .saga_content import source_field
 
 T = mc.TMRE
 #: Who-may-join choices.
@@ -558,6 +559,7 @@ def _cult_fields(saga: Saga, existing: MysteryCult | None) -> list[DialogField]:
             hint="A cult is a faction in the Order's politics too: its members' "
             "covenants lean by it at a Tribunal.",
         ),
+        *source_field(saga, attr(existing, "source", "")),
         *_attitude_fields(saga, existing),
     ]
 
@@ -612,6 +614,7 @@ def _apply_cult(
     cult.founded = values.get("founded")
     cult.description = values.get("description") or ""
     cult.agenda = values.get("agenda") or ""
+    cult.source = values.get("source") or ""
     for covenant in world.player_covenants(saga):
         key = f"attitude_{covenant.id}"
         if key not in values:

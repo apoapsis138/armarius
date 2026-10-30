@@ -109,6 +109,45 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.51.0 — 2026-10-30
+
+### Hedge Magic
+
+- **Every tradition of a book in play is offered until you turn it off.**
+  A book put in play brings its traditions with it; sagas saved before
+  now offer every tradition of their books in play too.
+- Traditions Offered lists every tradition by book, in the order of
+  Books in Play; one whose book is out of play is greyed out (dimmed on
+  the terminal), and a tradition from two books sits under the one in
+  play.
+
+### Illuminatio
+
+- On the desktop, Traditions Offered has a heading per book with a chip
+  that offers all of its traditions or none, and each tradition is a
+  chip of its own, filled while offered: click it to switch that one.
+  Hover over a tradition for its details. The section has no Edit
+  button any more; the terminal keeps its tick list.
+- House Rules has a **Move to Source** button.
+
+### Florilegium
+
+- **Saga Sources for everything of the saga's own.** Spells, goods and
+  Mystery Cults can cite one of the saga's sources, as House Rules do,
+  chosen from the same drop-down: a spell citing a source out of play
+  leaves the spell lists, a cult's Scripts leave Initiation, and a good
+  is marked "(not in play)".
+- Renaming a source carries to everything citing it, Delete refuses a
+  source anything still cites, and the source's counts include them all.
+- **Move to Source** (More on the terminal) makes several House Rules
+  cite one source, or none, at once.
+
+### Glossa
+
+- A new how-to, How to keep homebrew in a source; the help for
+  Traditions Offered, Saga Sources, House Rules, goods, spells and cults
+  says what changed.
+
 ## 3.50.0 — 2026-10-30
 
 ### Illuminatio

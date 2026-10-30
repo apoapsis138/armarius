@@ -713,11 +713,11 @@ A hedge wizard belongs to a non-Hermetic tradition, such as the folk witches, th
 
 <!-- tui -->
 1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), press `e` in Books in Play and tick it.
-2. In [Traditions Offered](help:section-traditions), below the books, press `e` and tick the traditions your saga uses. Each starts off, so the pickers stay short.
+2. Its traditions are offered at once. To keep the pickers short, open [Traditions Offered](help:section-traditions), below the books, press `e` and untick the traditions your saga doesn't use.
 <!-- /tui -->
 <!-- gui -->
 1. Put Hedge Magic Revised Edition in play: on [Saga Content](help:section-books-in-play), click its card's **Not in play** chip (under Non-Hermetic Magic), or click **Edit** in Books in Play and tick it.
-2. In [Traditions Offered](help:section-traditions), below the books, click **Edit** and tick the traditions your saga uses. Each starts off, so the pickers stay short.
+2. Its traditions are offered at once. To keep the pickers short, click the chips of the ones your saga doesn't use in [Traditions Offered](help:section-traditions), below the books, or the book's heading chip to offer none and then the few you want.
 <!-- /gui -->
 
 ### Joining it
@@ -744,6 +744,47 @@ A new hedge wizard is made on the [Creation Worksheet](help:creation-worksheet):
 Each Art's score comes from its XP on the table its book gives it: most hedge Arts and the vitkir's runes advance on the Art table, as Hermetic Arts do, and a Difficult Art (Elementalist Fire, the gruagach's Give and Take, the learned magicians' Techniques) on the Ability table. The [chapter](help:tradition-chapter) works out the rest: each power's Casting Score and Lab Total, the tradition's Magical Defenses, its gatherings' bonuses (a folk witch's sabbat) and the guidelines for its effects; More's [Cast a Power](help:hedge-cast) rolls a casting there and then. At creation, Tradition Training spends the apprenticeship the book gives, and the ten years of it that a folk witch spends from about age ten are left out of Later Life, as a magus's are (Hedge Magic RE p. 34). Sorginak and bouda train as folk witches do (Faith and Flame pp. 93-94; Between Sand and Sea p. 119), and settuten for ten years from 7 to 12, which the app takes as 10 (Between Sand and Sea pp. 95-96). The Bedouin hakima's book gives no years, so none are left out.
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)
+
+
+# How to keep homebrew in a source
+<!-- help: guide-homebrew-source -->
+
+A saga source is a book of your own: a house-rules list, a fan supplement, or a book the app doesn't have yet. Whatever cites it goes in and out of play with it, as a supplement's entries do, so a set of homebrew can be tried and set aside without deleting anything.
+
+### Making the source
+<!-- help: guide-homebrew-source-make -->
+
+<!-- tui -->
+1. On [Saga Content](help:tab-content-books), go to Saga Sources and press `a`. Give it a short Abbreviation (HR, say) and a Title.
+2. It starts in play, and appears among the books in Books in Play.
+<!-- /tui -->
+<!-- gui -->
+1. On [Saga Content](help:tab-content-books)'s Books chapter, click **Add** in Saga Sources. Give it a short Abbreviation (HR, say) and a Title.
+2. It starts in play, with a card under The Saga's Own Sources in Books in Play.
+<!-- /gui -->
+
+### Putting entries in it
+<!-- help: guide-homebrew-source-cite -->
+
+Once the saga has a source, the forms for its own entries have a **Source**: House Rules (Virtues, Flaws, Boons, Hooks and Abilities), its own spells, its own goods and its Mystery Cults. Choose the source there as you add or edit each one.
+
+<!-- tui -->
+To move House Rules you already made, press `m` (More) on House Rules and choose **Move to Source**: choose the source, tick the entries and save.
+<!-- /tui -->
+<!-- gui -->
+To move House Rules you already made, click **Move to Source** on House Rules: choose the source, tick the entries and save.
+<!-- /gui -->
+
+### Taking it out of play
+<!-- help: guide-homebrew-source-play -->
+
+Take the source out of play as you would a book, in [Books in Play](help:section-books-in-play). The pickers then leave out its House Rules, the spell lists its spells and Initiation its cults' Scripts, and its goods are marked "(not in play)". What characters, covenants and laboratories already hold stays. Put it back in play and everything returns.
+
+A source can't be deleted while anything cites it: the message names what does. Renaming its abbreviation carries to all of them.
+
+Library books, creatures and Lab Texts are the saga's records, not catalog entries, so they don't cite a source.
+
+**See also:** [Saga Sources](help:section-saga-sources), [House Rules](help:section-house-rules), [Books in Play](help:section-books-in-play)
 
 
 # How to hold a Tribunal

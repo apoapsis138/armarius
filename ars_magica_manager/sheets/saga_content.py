@@ -129,6 +129,11 @@ BRINGS: tuple[tuple[str, str, Cited], ...] = (
         ),
     ),
     (
+        "Mystery Cult",
+        "Mystery Cults",
+        lambda saga: [sourcebooks.books_of(c.source) for c in saga.custom_cults],
+    ),
+    (
         "tradition",
         "traditions",
         lambda _saga: [
@@ -221,16 +226,58 @@ def sources_table(saga: Saga) -> Table:
     )
 
 
-def traditions_table(saga: Saga) -> Table:
-    """The non-Hermetic traditions whose book is in play, and whether the
-    saga offers each."""
-    return Table(
-        ["Tradition", "Book", "Offered"],
-        [
-            [t.name, t.source, "Yes" if traditions.is_on(saga, t.id) else "No"]
-            for t in traditions.in_play(saga)
-        ],
-    )
+#: A book heading's chip: whether the saga offers its traditions.
+ALL_OFFERED, SOME_OFFERED, NONE_OFFERED = "All offered", "Some offered", "None offered"
+#: A heading's chip while its book is out of play.
+BOOK_OUT = "Book not in play"
+
+
+@dataclass(frozen=True)
+class TraditionRow:
+    """A tradition under its book: whether the saga offers it."""
+
+    id: str
+    name: str
+    on: bool
+
+
+@dataclass(frozen=True)
+class TraditionGroup:
+    """A book's traditions: its title, whether it is in play (its
+    traditions greyed out when not) and how many the saga offers."""
+
+    book: str
+    title: str
+    in_play: bool
+    rows: tuple[TraditionRow, ...]
+
+    @property
+    def state(self) -> str:
+        if not self.in_play:
+            return BOOK_OUT
+        on = sum(row.on for row in self.rows)
+        if on == len(self.rows):
+            return ALL_OFFERED
+        return SOME_OFFERED if on else NONE_OFFERED
+
+
+def tradition_groups(saga: Saga) -> list[TraditionGroup]:
+    """Every non-Hermetic tradition under its book, in the Books chapter's
+    order, books out of play too."""
+    groups: dict[str, list[TraditionRow]] = {}
+    for t in traditions.listed(saga):
+        groups.setdefault(traditions.book_of(t, saga), []).append(
+            TraditionRow(t.id, t.name, traditions.is_on(saga, t.id))
+        )
+    return [
+        TraditionGroup(
+            book,
+            sourcebooks.title_of(book, saga) or book,
+            sc.is_in_play(saga, book),
+            tuple(rows),
+        )
+        for book, rows in groups.items()
+    ]
 
 
 def catalogs_table(saga: Saga) -> Table:

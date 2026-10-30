@@ -211,6 +211,9 @@ class MysteryCult:
     #: none).
     agenda: str = ""
     attitudes: list[Attitude] = field(default_factory=list)
+    #: The saga source it comes from (Saga.sources), "" for none: offered to
+    #: join only while that source is in play (older saves load with none).
+    source: str = ""
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> MysteryCult:
@@ -336,7 +339,7 @@ def as_tradition(
     return TraditionDef(
         id=cult.id,
         name=cult.name,
-        source="",
+        source=cult.source,
         realm=cult.realm,
         description=cult.description,
         abilities=[cult.lore] if cult.lore else [],

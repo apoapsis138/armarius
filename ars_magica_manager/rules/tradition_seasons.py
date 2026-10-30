@@ -38,7 +38,7 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
-from .. import catalog
+from .. import catalog, sourcebooks
 from ..models import (
     SUPERNATURAL_CATEGORIES,
     Character,
@@ -426,7 +426,7 @@ def script_options(saga: Saga, initiate: Character) -> list[tuple[str, str]]:
     """The hedge Scripts an Initiation season may follow: those of the
     traditions the Initiate or anyone in the saga belongs to (the
     Mystagogue must be one of them), save the Forest Paths' kind, which
-    has no Initiation Total."""
+    has no Initiation Total, and a saga cult whose source is out of play."""
     cults = _saga_cults()
     held = {
         tradition_id
@@ -438,6 +438,10 @@ def script_options(saga: Saga, initiate: Character) -> list[tuple[str, str]]:
     for tradition in catalog.load_tradition_catalog():
         rule = tradition.initiation
         if tradition.id not in held or rule is None or rule.roll_less:
+            continue
+        if is_saga_cult(tradition.id) and sourcebooks.own_source_out(
+            saga, tradition.source
+        ):
             continue
         for script in rule.scripts:
             found.append(

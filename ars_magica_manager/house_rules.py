@@ -248,10 +248,21 @@ def update(saga: Saga, kind: str, entry: Entry, values: dict[str, Any]) -> Entry
 
 
 def recite(saga: Saga, old: str, new: str) -> None:
-    """Make the entries citing the saga source `old` cite `new`."""
+    """Make everything of the saga's own citing the saga source `old` cite
+    `new`: its House Rules, spells, goods and Mystery Cults."""
     for kind, entry in all_entries(saga):
         if entry.source == old:
             _replace(saga, kind, entry, source=new)
+    for other in (*saga.spells, *saga.custom_goods, *saga.custom_cults):
+        if other.source == old:
+            other.source = new
+
+
+def cite(saga: Saga, kind: str, entry: Entry, source: str) -> Entry:
+    """Make one House Rule cite the saga source `source` ("" for none)."""
+    changed = _replace(saga, kind, entry, source=source)
+    catalog.use_saga(saga)
+    return changed
 
 
 def _replace(saga: Saga, kind: str, entry: Entry, **changes: Any) -> Entry:
@@ -262,9 +273,19 @@ def _replace(saga: Saga, kind: str, entry: Entry, **changes: Any) -> Entry:
     return changed
 
 
-def citing(saga: Saga, source: str) -> list[Entry]:
-    """The user-made entries that cite the saga source `source`."""
-    return [entry for _, entry in all_entries(saga) if entry.source == source]
+def citing(saga: Saga, source: str) -> list[Any]:
+    """Everything of the saga's own that cites the saga source `source`:
+    its House Rules, spells, goods and Mystery Cults (each with a `name`)."""
+    return [
+        entry
+        for entry in (
+            *(e for _, e in all_entries(saga)),
+            *saga.spells,
+            *saga.custom_goods,
+            *saga.custom_cults,
+        )
+        if entry.source == source
+    ]
 
 
 def remove(saga: Saga, kind: str, entry: Entry) -> None:

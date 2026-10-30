@@ -15,6 +15,7 @@ os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 from gui_steps import answering, section_buttons
 from PySide6.QtWidgets import QApplication, QPushButton, QTableView
 from screen_helpers import _sample_saga_with_covenant
+from support import offer_only
 
 from ars_magica_manager import creation, storage
 from ars_magica_manager.gui import pictures
@@ -188,7 +189,7 @@ def test_move_to_in_play_leaves_the_worksheet_for_the_record(app):
 
 def test_a_companion_joins_a_tradition_and_gains_its_training_step(app):
     saga = _sample_saga_with_covenant()
-    saga.traditions = ["trad_vitkir"]
+    offer_only(saga, "trad_vitkir")
     character = _new_companion(saga)
     character.virtues_flaws.append(VirtueFlawInstance("vf_the_gift"))
     window = _window(saga)

@@ -78,9 +78,10 @@ def _rdt_field(
     ]
 
 
-def spell_fields(spell: Spell | None) -> list[DialogField]:
+def spell_fields(spell: Spell | None, saga: Saga | None = None) -> list[DialogField]:
     """A spell of the saga's own: its Arts, level, Range/Duration/Target,
-    ritual, base level (which fills in the level), source and description."""
+    ritual, base level (which fills in the level), the saga source it
+    cites (source_field) and description."""
     return [
         DialogField("name", "Name", "text", attr(spell, "name", ""), required=True),
         DialogField(
@@ -140,13 +141,7 @@ def spell_fields(spell: Spell | None) -> list[DialogField]:
             "fills in Level (add any size or requisite magnitudes yourself).",
             fills=level_fill,
         ),
-        DialogField(
-            "source",
-            "Source",
-            "text",
-            attr(spell, "source", ""),
-            placeholder="e.g. a house rule, or a book",
-        ),
+        *source_field(saga, attr(spell, "source", "")),
         description_field(attr(spell, "description", "")),
     ]
 
@@ -184,7 +179,7 @@ def spell_from_values(spell: Spell, values: dict[str, Any]) -> None:
     spell.target = spell_rdt(values, "target")
     spell.ritual = bool(values.get("ritual"))
     spell.base_level = values.get("base_level")
-    spell.source = values.get("source", "")
+    spell.source = values.get("source") or ""
     spell.description = values.get("description", "")
     spell.details_missing = False
 
@@ -249,7 +244,7 @@ def spell_ops(saga: Saga, listed: Callable[[], Sequence[Spell]]) -> SectionOps:
 
         return Form(
             "Add a Spell" if spell is None else f"Edit {escape(spell.name)}",
-            lambda: spell_fields(spell),
+            lambda: spell_fields(spell, saga),
             apply,
             validate=spell_problem,
             live=spell_live,
@@ -433,7 +428,7 @@ def house_rule_fields(saga: Saga, existing: HouseRule | None) -> list[DialogFiel
             + " are picked from a list; anything else is typed.",
             show_if=lambda values: kind(values) in hr.ASKING_KINDS,
         ),
-        *house_rule_source_field(saga, chosen),
+        *source_field(saga, chosen.source if chosen is not None else ""),
         description_field(chosen.description if chosen else ""),
     ]
 
@@ -528,21 +523,26 @@ def ability_live(built: dict[str, Any]) -> str:
     )
 
 
-def house_rule_source_field(saga: Saga, entry: hr.Entry | None) -> list[DialogField]:
-    """The saga source a user-made entry cites, when the saga has any
-    (Saga Content's Saga Sources): out of play with it, like a book."""
-    if not saga.sources:
+def source_field(saga: Saga | None, current: str) -> list[DialogField]:
+    """The saga source an entry of the saga's own cites (a House Rule, a
+    spell, a good, a Mystery Cult), when the saga has any (Saga Content's
+    Saga Sources): out of play with it, like a book. One citing a book
+    keeps it among the choices."""
+    own = saga.sources if saga is not None else []
+    options = [
+        (f"{s.title or s.abbreviation} ({s.abbreviation})", s.abbreviation) for s in own
+    ]
+    if current and current not in {s.abbreviation for s in own}:
+        options.insert(0, (f"{sourcebooks.titles(current)} ({current})", current))
+    if not options:
         return []
     return [
         DialogField(
             "source",
             "Source",
             "select",
-            (entry.source if entry is not None else "") or None,
-            options=[
-                (f"{s.title or s.abbreviation} ({s.abbreviation})", s.abbreviation)
-                for s in saga.sources
-            ],
+            current or None,
+            options=options,
             allow_blank=True,
             placeholder="(none: always in play)",
             hint="Out of play with its source, like an entry from a book.",
@@ -589,6 +589,61 @@ def house_rule_ops(saga: Saga) -> SectionOps:
         remove=remove,
         rows=lambda: [entry.name for _, entry in hr.all_entries(saga)],
     )
+
+
+#: A Move to Source form's tick for a House Rule is keyed by this and its
+#: index in hr.all_entries.
+MOVE_KEY = "move-"
+
+
+def move_to_source(saga: Saga) -> Form | Refuse:
+    """Make several House Rules cite one of the saga's sources (or none) at
+    once: the source, then a tick for each entry, by its source now."""
+    title = "Move to Source"
+    entries = hr.all_entries(saga)
+    if not saga.sources:
+        return Refuse(title, "The saga has no source of its own: add one first.")
+    if not entries:
+        return Refuse(title, "The saga has no House Rules to move.")
+
+    def fields() -> list[DialogField]:
+        return [
+            DialogField(
+                "source",
+                "Move to",
+                "select",
+                saga.sources[0].abbreviation,
+                options=[
+                    (f"{s.title or s.abbreviation} ({s.abbreviation})", s.abbreviation)
+                    for s in saga.sources
+                ],
+                allow_blank=True,
+                placeholder="(no source: always in play)",
+            ),
+            *(
+                DialogField(
+                    f"{MOVE_KEY}{n}",
+                    f"{entry.name} ({hr.KIND_SHORT[kind]}, "
+                    f"{entry.source or 'no source'})",
+                    "check",
+                    False,
+                )
+                for n, (kind, entry) in enumerate(entries)
+            ),
+        ]
+
+    def validate(values: dict[str, Any]) -> str | None:
+        if not any(values.get(f"{MOVE_KEY}{n}") for n in range(len(entries))):
+            return "Tick at least one entry to move."
+        return None
+
+    def apply(values: dict[str, Any]) -> None:
+        source = values.get("source") or ""
+        for n, (kind, entry) in enumerate(entries):
+            if values.get(f"{MOVE_KEY}{n}"):
+                hr.cite(saga, kind, entry, source)
+
+    return Form(title, fields, apply, validate=validate, save_label="Move")
 
 
 # ----------------------------------------------------------------- players
@@ -825,9 +880,10 @@ TRADITION_KEY = "tradition-"
 
 
 def traditions_fields(saga: Saga) -> list[DialogField]:
-    """A tick for each non-Hermetic tradition whose book is in play, ticked
-    while the saga offers it."""
-    shown = traditions.in_play(saga)
+    """A tick for each non-Hermetic tradition whose book is in play, by
+    book, ticked while the saga offers it."""
+    playing = {t.id for t in traditions.in_play(saga)}
+    shown = [t for t in traditions.listed(saga) if t.id in playing]
     if not shown:
         return [
             DialogField(
@@ -854,6 +910,29 @@ def apply_traditions(saga: Saga, values: dict[str, Any]) -> None:
     for key, ticked in values.items():
         if key.startswith(TRADITION_KEY):
             traditions.set_on(saga, key.removeprefix(TRADITION_KEY), bool(ticked))
+
+
+def toggle_tradition(saga: Saga, tradition_id: str) -> Act:
+    """Offer a tradition, or stop offering it (its chip)."""
+    return Act(
+        lambda: traditions.set_on(
+            saga, tradition_id, not traditions.is_on(saga, tradition_id)
+        )
+    )
+
+
+def toggle_tradition_book(saga: Saga, book: str) -> Act:
+    """Offer every tradition listed under `book`, or, when all already
+    are, none of them (its heading's chip)."""
+
+    def apply() -> None:
+        under = [
+            t for t in traditions.listed(saga) if traditions.book_of(t, saga) == book
+        ]
+        every = all(traditions.is_on(saga, t.id) for t in under)
+        traditions.set_book_on(saga, book, not every)
+
+    return Act(apply)
 
 
 def traditions_form(saga: Saga) -> Form:

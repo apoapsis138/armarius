@@ -10,11 +10,13 @@ from .... import spells as spl
 from ....arts import FORMS, TECHNIQUES
 from ....form_spec import DialogField, attr, description_field, pairs
 from ....forms import spell as spell_forms
+from ....forms.saga_content import source_field
 from ....models import (
     SPELL_DURATIONS,
     SPELL_RANGES,
     SPELL_TARGETS,
     KnownSpell,
+    Saga,
     Spell,
 )
 from ....rules import spell_levels
@@ -58,7 +60,7 @@ def _rdt_field(
     ]
 
 
-def _spell_fields(spell: Spell | None) -> list[DialogField]:
+def _spell_fields(spell: Spell | None, saga: Saga | None = None) -> list[DialogField]:
     return [
         DialogField("name", "Name", "text", attr(spell, "name", ""), required=True),
         DialogField(
@@ -118,13 +120,7 @@ def _spell_fields(spell: Spell | None) -> list[DialogField]:
             "fills in Level (add any size or requisite magnitudes yourself).",
             fills=_level_fill,
         ),
-        DialogField(
-            "source",
-            "Source",
-            "text",
-            attr(spell, "source", ""),
-            placeholder="e.g. a house rule, or a book",
-        ),
+        *source_field(saga, attr(spell, "source", "")),
         description_field(attr(spell, "description", "")),
     ]
 
@@ -161,7 +157,7 @@ def _spell_from_values(spell: Spell, values: dict[str, Any]) -> None:
     spell.target = _spell_rdt(values, "target")
     spell.ritual = bool(values.get("ritual"))
     spell.base_level = values.get("base_level")
-    spell.source = values.get("source", "")
+    spell.source = values.get("source") or ""
     spell.description = values.get("description", "")
     spell.details_missing = False
 

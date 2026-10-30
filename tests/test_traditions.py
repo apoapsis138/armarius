@@ -50,25 +50,45 @@ def test_an_unknown_realm_is_rejected():
         TraditionDef(id="t", name="T", realm="Elsewhere")
 
 
-def test_a_tradition_is_offered_only_once_turned_on_and_with_its_book():
-    saga = Saga(id="s", name="S")
-    assert traditions.offered(saga) == []
-    traditions.set_on(saga, "trad_vitkir", True)
-    assert [t.id for t in traditions.offered(saga)] == ["trad_vitkir"]
-    saga.books_in_play = []  # the core book only
-    assert traditions.offered(saga) == []
-    # Taking the book out keeps the switch for when it comes back.
-    assert saga.traditions == ["trad_vitkir"]
-    saga.books_in_play = None
+def test_a_tradition_is_offered_while_its_book_is_in_play_unless_turned_off():
+    saga = Saga(id="s", name="S", books_in_play=["HMRE"])
+    offered = [t.id for t in traditions.offered(saga)]
+    assert "trad_vitkir" in offered
+    assert all(
+        traditions.book_of(t, saga) in ("DE", "HMRE") for t in traditions.offered(saga)
+    )
     traditions.set_on(saga, "trad_vitkir", False)
-    assert saga.traditions == []
+    assert "trad_vitkir" not in [t.id for t in traditions.offered(saga)]
+    saga.books_in_play = []  # the core book only
+    assert "trad_elementalists" not in [t.id for t in traditions.offered(saga)]
+    # Taking the book out keeps the switch for when it comes back.
+    assert saga.traditions_off == ["trad_vitkir"]
+    traditions.set_on(saga, "trad_vitkir", True)
+    assert saga.traditions_off == []
 
 
 def test_switches_keep_catalog_order():
     saga = Saga(id="s", name="S")
-    traditions.set_on(saga, "trad_vitkir", True)
-    traditions.set_on(saga, "trad_elementalists", True)
-    assert saga.traditions == ["trad_elementalists", "trad_vitkir"]
+    traditions.set_on(saga, "trad_vitkir", False)
+    traditions.set_on(saga, "trad_elementalists", False)
+    assert saga.traditions_off == ["trad_elementalists", "trad_vitkir"]
+
+
+def test_a_books_traditions_are_listed_under_it_in_the_books_order():
+    saga = Saga(id="s", name="S", books_in_play=["HMRE"])
+    books = [traditions.book_of(t, saga) for t in traditions.listed(saga)]
+    # Grouped: each book's traditions together, the core book's first.
+    assert books[0] == "DE"
+    assert len(set(books)) == len(
+        [b for i, b in enumerate(books) if b not in books[:i]]
+    )
+    traditions.set_book_on(saga, "HMRE", False)
+    under = [
+        t for t in traditions.listed(saga) if traditions.book_of(t, saga) == "HMRE"
+    ]
+    assert saga.traditions_off == [t.id for t in under]
+    traditions.set_book_on(saga, "HMRE", True)
+    assert saga.traditions_off == []
 
 
 def test_a_members_tradition_abilities_leave_the_abilities_chapter():
@@ -113,9 +133,14 @@ def test_an_accelerated_ability_advances_on_the_art_table():
     assert activities.subject_factor("ability:Athletics") == 5
 
 
-def test_older_saves_load_with_no_traditions():
+def test_older_saves_load_with_every_tradition_on():
     saga = Saga.from_dict({"id": "s", "name": "S"})
-    assert saga.traditions == []
+    assert saga.traditions_off == []
+    # An older save listed the traditions turned on: it moves to the new
+    # default, every one on.
+    old = Saga.from_dict({"id": "s", "name": "S", "traditions": ["trad_vitkir"]})
+    assert old.traditions_off == []
+    assert traditions.is_on(old, "trad_elementalists")
     c = Character.from_dict({"id": "c", "name": "C", "type": "grog"})
     assert c.traditions == []
     assert Ability.from_dict({"name": "Athletics", "xp": 5}).xp_table == "ability"

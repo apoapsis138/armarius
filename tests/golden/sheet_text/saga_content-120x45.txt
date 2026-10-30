@@ -29,12 +29,12 @@
       (none recorded)                                                             ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 93)
+    ▼ Traditions Offered (93 of 93)
 
         On       Book       Tradition
-      ○ no       HMRE       Elementalists
-      ○ no       HMRE       Folk Witches
-      ○ no       HMRE       Gruagachan                                          ▇▇
+      ○ yes      DE         Nemthengacha
+      ○ yes      HoH:MC     House Verditius (Mystery Cult)
+      ○ yes      HoH:MC     House Merinita (Mystery Cult)                       ▇▇
 
   ▌
   ▌  Choose a book or source for its details; e picks the books.

@@ -29,23 +29,23 @@
       (none recorded)
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (1 of 93)
+    ▼ Traditions Offered (93 of 93)
 
         On       Book       Tradition
-      ○ no       HMRE       Elementalists
-      ○ no       HMRE       Folk Witches
-      ○ no       HMRE       Gruagachan                                                                ▇▇
-      ○ no       HMRE       Learned Magicians
-      ○ no       HMRE       Nightwalkers
-      ○ yes      HMRE       Vitkir
-      ○ no       RoP:F      Ollamhain
-      ○ no       RoP:F      Volkhvy
-      ○ no       RoP:F      Wise Folk
-      ○ no       RoP:F      Borrowers
-      ○ no       RoP:F; DE  Faerie Doctors
-      ○ no       RoP:F      Homunculus Wizards
-      ○ no       LoH; RoP:F Caerfloron's Line
-      ○ no       TCI; C&G   Wordsmiths
+      ○ yes      DE         Nemthengacha
+      ○ yes      HoH:MC     House Verditius (Mystery Cult)
+      ○ yes      HoH:MC     House Merinita (Mystery Cult)                                             ▇▇
+      ○ yes      HoH:MC     House Bjornaer (Mystery Cult)
+      ○ yes      HoH:MC     House Criamon (Mystery Cult)
+      ○ yes      HoH:S      Beast Masters
+      ○ yes      HoH:S      Tempestaria
+      ○ yes      HoH:S      Scinnfolk
+      ○ yes      HoH:S      Columbae
+      ○ yes      HoH:S      Donatores Requietis Aeternae
+      ○ yes      HoH:S      Pharmacopoeians
+      ○ yes      HoH:S      Lineage of Pralix
+      ○ yes      HoH:S      Rustic Magi (Rusticani)
+      ○ yes      HoH:S      Hermetic Sahirs
 
 
 

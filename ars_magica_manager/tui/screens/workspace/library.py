@@ -137,7 +137,7 @@ class LibraryActions(WorkspaceBase):
         self.app.push_screen(
             FieldsDialog(
                 title,
-                _spell_fields(spell),
+                _spell_fields(spell, self.saga),
                 validate=_spell_problem,
                 live=spell_live,
             ),
@@ -455,6 +455,15 @@ class LibraryActions(WorkspaceBase):
             self.app,
             goods_forms.add_purity(self.saga, view.section_row(GOODS_SECTION)),
             lambda _end: self._commit(GOODS_SECTION),
+        )
+
+    def action_move_to_source(self) -> None:
+        """More's Move to Source on House Rules: several entries into one of
+        the saga's sources at once."""
+        run_steps(
+            self.app,
+            content_forms.move_to_source(self.saga),
+            lambda _end: self._commit(HOUSE_RULES_SECTION),
         )
 
     def _show_catalog_entry(self) -> None:

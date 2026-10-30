@@ -268,6 +268,18 @@ def _open_saga_source(ws) -> None:
     ws._saga_source_form(ws.saga.sources[0])
 
 
+def _move_to_source(ws) -> None:
+    """Move to Source, with a saga source and a House Rule to move, made in
+    memory (saved only with the move)."""
+    if not ws.saga.sources:
+        ws.saga.sources.append(SagaSource("HR", "House rules"))
+    if not hr.all_entries(ws.saga):
+        hr.add(
+            ws.saga, hr.CHARACTER, {"name": "Ours", "type": "Virtue", "tier": "Minor"}
+        )
+    ws.action_move_to_source()
+
+
 def _filter_neighbours(ws) -> None:
     """Filter Neighbours, the Region already narrowed to the
     Siebengebirge, from its Lords and Towns."""
@@ -1592,6 +1604,7 @@ OPENERS: dict[str, Opener] = {
     "edit spell": Opener("saga_content", lambda ws: ws._spell_form(ws.saga.spells[0])),
     "add saga source": Opener("saga_content", lambda ws: ws._saga_source_form(None)),
     "edit saga source": Opener("saga_content", _open_saga_source),
+    "move to source": Opener("saga_content", _move_to_source),
     "edit catalog": Opener("saga_content", lambda ws: ws._catalog_form("spells")),
     "hide catalog entry": Opener("saga_content", lambda ws: ws._hide_catalog_entry()),
     "add good": Opener("saga_content", _open_good),

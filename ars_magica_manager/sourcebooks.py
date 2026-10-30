@@ -143,6 +143,16 @@ _ALIASES: dict[str, str] = {
 SUPPLEMENTS: tuple[str, ...] = tuple(b for b in SOURCEBOOKS if b != CORE)
 
 
+def in_order(books: Iterable[str]) -> list[str]:
+    """`books` in the Books chapter's order: the core book, then the book
+    lines (BOOK_GROUPS), then any other supplement, then the rest (a
+    saga's own sources) as given."""
+    given = list(dict.fromkeys(books))
+    order = [CORE, *(b for _, _, line in BOOK_GROUPS for b in line), *SUPPLEMENTS]
+    rank = {book: i for i, book in reversed(list(enumerate(order)))}
+    return sorted(given, key=lambda b: (rank.get(b, len(order)), given.index(b)))
+
+
 def books_of(source: str) -> set[str]:
     """The books a `source` cites, as SOURCEBOOKS abbreviations
     ("ArM5; Covenants" -> {"DE", "Covenants"})."""
@@ -151,6 +161,12 @@ def books_of(source: str) -> set[str]:
         for book in source.split(";")
         if book.strip()
     }
+
+
+def first_book(source: str) -> str | None:
+    """The first book a `source` cites ("RoP:F; HMRE" -> "RoP:F"), as a
+    SOURCEBOOKS abbreviation; None if it cites none."""
+    return next(iter(books_of(source.split(";")[0])), None)
 
 
 def titles(source: str) -> str:
@@ -231,6 +247,17 @@ def summary(books_in_play: Iterable[str] | None, sources: Iterable[str] = ()) ->
     if own_count:
         text += f" + {own_count} saga source{'s' if own_count != 1 else ''}"
     return text
+
+
+def own_source_out(saga: Saga | None, source: str) -> bool:
+    """Whether `source` is one of the saga's own sources and out of play:
+    what takes the saga's own spells, goods and Mystery Cults citing it out
+    of play (a book they cite doesn't)."""
+    return (
+        bool(source)
+        and source in saga_sources(saga)
+        and not in_play(source, saga_books(saga))
+    )
 
 
 def source_problem(abbreviation: str, taken: Iterable[str]) -> str:
