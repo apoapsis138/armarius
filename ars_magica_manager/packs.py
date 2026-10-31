@@ -602,6 +602,69 @@ def stories(data: dict[str, Any], saga: Saga | None = None) -> list[dict[str, An
     ]
 
 
+#: The pack key listing the stories whose version in the pack replaces
+#: the saga's own (take_story_fields).
+TAKE_STORIES = "take_stories"
+
+
+def take_key(neighbour_id: str) -> str:
+    """The import form's key for taking the pack's version of a story."""
+    return f"take_{neighbour_id}"
+
+
+def _stages(record: dict[str, Any]) -> list[Any]:
+    return without_random_ids((record.get("details") or {}).get("stages") or [])
+
+
+def differing_stories(data: dict[str, Any], saga: Saga) -> list[dict[str, Any]]:
+    """The pack's stories the saga already has one of the same name of,
+    told differently."""
+    held = {n.name.casefold(): n for n in saga.neighbours if n.kind == threats.THREAT}
+    found = []
+    for story in _held(data, "neighbours"):
+        own = held.get(str(story.get("name") or "").casefold())
+        if (
+            story.get("kind") == threats.THREAT
+            and own is not None
+            and _stages(story) != _stages(asdict(own))
+        ):
+            found.append(story)
+    return found
+
+
+def take_story_fields(data: dict[str, Any], saga: Saga) -> list[DialogField]:
+    """A choice for each story the saga and the pack tell differently: left
+    unticked, the saga keeps its own."""
+    return [
+        DialogField(
+            take_key(story["id"]),
+            f"Use this book's {escape(str(story.get('name')))}",
+            "check",
+            False,
+            hint="The saga already has this story, told differently. Ticked, "
+            f"this book's {len(_stages(story))} stages replace its own.",
+        )
+        for story in differing_stories(data, saga)
+    ]
+
+
+def _take_stories(saga: Saga, data: dict[str, Any]) -> None:
+    """Replace the saga's telling of each story the importer chose."""
+    chosen = set(data.get(TAKE_STORIES) or [])
+    for story in _held(data, "neighbours"):
+        if story["id"] not in chosen:
+            continue
+        for neighbour in saga.neighbours:
+            if neighbour.name == story.get("name") and neighbour.kind == story.get(
+                "kind"
+            ):
+                neighbour.summary = str(story.get("summary") or "")
+                neighbour.details = {
+                    **neighbour.details,
+                    **deepcopy(story.get("details") or {}),
+                }
+
+
 def story_fields(
     data: dict[str, Any],
     saga: Saga | None = None,
@@ -652,6 +715,8 @@ def import_fields(data: dict[str, Any], saga: Saga | None = None) -> list[Dialog
         )
     if any(f.key == "world" for f in fields):
         fields += story_fields(data, saga, show_if=_with_world)
+        if saga is not None:
+            fields += take_story_fields(data, saga)
     return fields
 
 
@@ -690,6 +755,11 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     if VARIANTS in data:
         return choose_variants(data, values)
     data = _dormant(data, values)
+    taken = [
+        n["id"] for n in _held(data, "neighbours") if values.get(take_key(n["id"]))
+    ]
+    if taken:
+        data = {**data, TAKE_STORIES: taken}
     out = ("people", GENERATED, "places", "world", "bestiary", "code", "history")
     left = {key for key in out if key in values and not values.get(key)}
     if not left:
@@ -989,6 +1059,7 @@ def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     if not isinstance(book, str):
         return []
     title = sourcebooks.title_of(book)
+    _take_stories(saga, data)
     found = _follow_overlays(saga)
     if VARIANTS in data:
         stem = str(data.get("key") or "")

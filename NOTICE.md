@@ -32,7 +32,8 @@ adaptations are also available on their own under CC BY-SA 4.0. They are:
   *The Lion and the Lily: The Normandy Tribunal*; *Faith & Flame: The
   Provençal Tribunal*; *The Sundered Eagle: The Theban Tribunal*,
   from its [open content on Project: Redcap](https://redcap.org/page/The_Sundered_Eagle:_the_Theban_Tribunal);
-  *Through the Aegis: Developed Covenants*; *Magi of Hermes*; *Legends of Hermes*;
+  *Through the Aegis: Developed Covenants*; *Magi of Hermes*; *Legends of Hermes*; *Lands of the Nile*;
+  *Between Sand and Sea*;
   *Against the Dark: The Transylvanian Tribunal*, from its [open
   content on Project: Redcap](https://redcap.org/page/Against_the_Dark_Open_Content);
   *The Contested Isle: The Hibernian Tribunal*, from its [open

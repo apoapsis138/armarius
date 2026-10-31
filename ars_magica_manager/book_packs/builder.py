@@ -940,6 +940,24 @@ class Builder:
             "turned": turned,
         }
 
+    def absorb(self, keep: str, drop: str) -> None:
+        """Merge two parts' records of one place: `drop`'s words go on
+        `keep`, whatever sat in it or pointed at it moves there, and it
+        goes. With the same name twice, the later record is the one dropped."""
+        places = [n for n in self.saga.neighbours if n.kind == PLACE]
+        kept = next(n for n in places if n.name == keep)
+        gone = next(n for n in reversed(places) if n.name == drop and n is not kept)
+        kept.summary = paragraphs(kept.summary, gone.summary)
+        kept.secrets = paragraphs(kept.secrets, gone.secrets).strip()
+        for record in (*self.saga.neighbours, *self.saga.creatures):
+            if record.place_id == gone.id:
+                record.place_id = kept.id
+        for record in (*self.saga.neighbours, *self.saga.creatures):
+            for link in record.links:
+                if link.target_id == gone.id:
+                    link.target_id = kept.id
+        self.saga.neighbours.remove(gone)
+
     # -- the Bestiary --
 
     def creature(

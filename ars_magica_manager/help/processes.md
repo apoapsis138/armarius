@@ -1243,6 +1243,10 @@ ticked. A story left unticked comes in **dormant**: listed among the
 Region's Threats as Dormant, it reaches no stage and nothing of it
 comes due until **Begin This Story** in its More starts it.
 
+If the saga already has one of the pack's stories, told differently, as
+the Fifth Crusade is in the Cradle and Nile packs, a **Use this book's**
+tick asks which to keep. Left unticked, the saga keeps its own.
+
 The line under the ticks says what the pack brings with the ticks as they
 are. **Preview** then shows the import as above. What a left-out part
 held is matched by name to this saga's own (a covenant's place, a

@@ -382,3 +382,33 @@ def test_legends_of_hermes_imports_with_its_stories_asleep():
     transfer.apply(target, transfer.plan_import(target, data))
     held = [n for n in target.neighbours if n.kind == "threat"]
     assert len(held) == 34 and all(threats.is_dormant(n) for n in held)
+
+
+def test_the_nile_and_africa_packs_share_their_spirits_when_both_come_in():
+    saga = Saga(id="dst", name="Target")
+    for name in ("nile", "africa"):
+        data = transfer.read(packs.SHIPPED_DIR / f"{name}.amm.json")
+        assert not data["saga"]["tribunals"] and not data["saga"]["covenants"]
+        transfer.apply(saga, transfer.plan_import(saga, data))
+    names = [n.name for n in saga.neighbours]
+    for shared in ("The Great Hunger", "The Hope", "The Pact of 1225"):
+        assert names.count(shared) == 1
+    assert "Er Rif" not in names and "The Rif" in names
+
+
+def test_a_story_told_differently_is_the_importer_s_choice():
+    saga = Saga(id="dst", name="Target")
+    packs.start_from(saga, packs.SHIPPED_DIR / "cradle.amm.json")
+    crusade = next(n for n in saga.neighbours if n.name == "The Fifth Crusade")
+    before = len(crusade.details["stages"])
+    data = transfer.read(packs.SHIPPED_DIR / "nile.amm.json")
+    story = next(n for n in data["saga"]["neighbours"] if n["name"] == crusade.name)
+    fields = {f.key: f for f in packs.import_fields(data, saga)}
+    assert fields[packs.take_key(story["id"])].value is False
+    kept = packs.narrow(data, {})
+    transfer.apply(saga, transfer.plan_import(saga, kept))
+    packs.after_import(saga, kept)
+    assert len(crusade.details["stages"]) == before
+    taken = packs.narrow(data, {packs.take_key(story["id"]): True})
+    packs.after_import(saga, taken)
+    assert len(crusade.details["stages"]) == len(story["details"]["stages"])

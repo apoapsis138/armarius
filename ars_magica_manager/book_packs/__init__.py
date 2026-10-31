@@ -124,12 +124,14 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
 
 
 from . import (  # noqa: F401
+    africa,
     alps,
     cradle,
     hibernia,
     legends_of_hermes,
     levant,
     magi_of_hermes,
+    nile,
     normandy,
     novgorod,
     overlays,

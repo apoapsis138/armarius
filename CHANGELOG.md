@@ -115,6 +115,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.60.0 — 2026-10-31
+
+### Peregrinatio
+
+- **Lands of the Nile.** Egypt, Nubia and Ethiopia as a region pack: their towns, churches, peoples, monuments, creatures and stories, the Cult of Dedun, and Siwa Oasis, Ikhmindi and Adulis as sites for a covenant.
+- **Between Sand and Sea.** Mythic Africa from the Atlantic to Siwa: its peoples, coasts and desert, the Tuareg and settuten, the monstrous races and jnun, Carthage's gods and a bestiary. The two packs import together and share one Great Hunger, Hope and pact of 1225.
+- **A choice over stories told differently.** If a saga already has a story from a pack, told another way, as the Fifth Crusade is, the import asks which to keep.
+
 ## 3.59.0 — 2026-10-31
 
 ### Peregrinatio

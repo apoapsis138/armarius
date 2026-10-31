@@ -527,6 +527,11 @@ A supplement such as *Through the Aegis* sits on top of the Tribunal packs, so a
 
 Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If the Theban pack's sketch of Marcus Tauros is in the saga, the printed Marcus replaces it; without this pack the sketch stays.
 
+### Africa and the Nile
+<!-- help: guide-book-packs-africa -->
+
+*Lands of the Nile* and *Between Sand and Sea* are region packs with no Tribunal, as *The Cradle and the Crescent* is. They can be imported together: they share the Great Hunger, the Hope and the pact of 1225, and those come in once. Their stories come in dormant, except the Fifth Crusade.
+
 ### Legends of Hermes
 <!-- help: guide-book-packs-legends -->
 

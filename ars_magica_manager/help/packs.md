@@ -599,3 +599,13 @@ The pack follows the book: every printed block is here, at the ages it gives. Th
 <!-- help: pack-assumptions-legends_of_hermes -->
 
 The pack follows the book: it has no Tribunal, because its stories can be set anywhere, and where the book leaves a location open the record leaves it blank, with the book's guidance in its notes. The five legends' stories come in dormant, to begin when you want them. Treasures, books and vis are described in the record of the place or person holding them, because a book in the app needs a covenant to own it. A name the book doesn't give, such as the Field of Copper Urchins or the Heirs of Cupressa, is the pack's own. Where the book contradicts itself, the record says so and gives both.
+
+# Assumptions made for Lands of the Nile
+<!-- help: pack-assumptions-nile -->
+
+The pack holds no Tribunal: these lands lie outside the Order. The book reflects what the thirteenth century believed about Egypt, and says so: its monuments, its tomb traps and its account of Islam are the setting's, not history. Its three covenant sites, Siwa Oasis, Ikhmindi and Adulis, are places, because a pact keeps covenants out of Africa until 1225. Tomb wards, curses, traps and the treasure hunters' game are the book's examples, in words, and aren't working rules yet. The Fifth Crusade follows this book's account in this pack. Where the book contradicts itself, the record says so and gives both.
+
+# Assumptions made for Between Sand and Sea
+<!-- help: pack-assumptions-africa -->
+
+The pack holds no Tribunal: Africa lies outside the Order. It covers the Atlantic to Siwa, and the book says plainly that this is Africa as thirteenth-century people imagined it, not history; its peoples and faiths are the setting's. A figure the book misprints is noted where it's used. The Painted Dog's Strength of -3 is worked out from its Bite, because the printed figure is unreadable. Where the book contradicts itself, the record says so and gives both.
