@@ -102,6 +102,7 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
             )
         )
         fields += packs.start_story_fields(found)
+        fields += packs.start_overlay_fields(found, packs.shipped_overlays())
     if saga is not None:
         fields.append(
             DialogField(

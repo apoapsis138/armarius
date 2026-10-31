@@ -115,6 +115,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.59.0 — 2026-10-31
+
+### Peregrinatio
+
+- **Through the Aegis on top of the Tribunal packs.** The Northern Seas, Jardin, Didyma, Longmist and Collem Leonis, with every magus, book, ship and vis source they print. It's a file of its own: a saga without it matches the Tribunal book exactly, and turning it on adds the covenants and takes its version where the books differ. It stays on, so a Tribunal pack imported later takes its part too.
+- **Magi of Hermes.** Fifteen magi at every age the book prints. The import asks for a base year and an age for each, or leave them out, and works out the year of birth. Conscientia joins Durenmar, and the printed Marcus replaces the Theban pack's.
+- **Legends of Hermes.** Conciatta, Fortunata, Hérisson, Hermanus and Thomae: their sites, guardians, treasures and stories, the stories dormant until you begin them.
+- **Faeborchless,** the Dancing Shield Feat, joins the Virtues.
+
 ## 3.58.1 — 2026-10-30
 
 ### Peregrinatio

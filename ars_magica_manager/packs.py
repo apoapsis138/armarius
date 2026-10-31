@@ -14,8 +14,10 @@ of it, without doubling anything.
 from __future__ import annotations
 
 import json
+import re
 from collections.abc import Callable
-from dataclasses import dataclass
+from copy import deepcopy
+from dataclasses import asdict, dataclass
 from pathlib import Path
 from typing import Any
 
@@ -468,6 +470,121 @@ GROUPS: tuple[Group, ...] = (
 )
 
 
+#: The pack keys of a book of magi printed at several ages:
+#: {character id: [{"label", "age", "character"}]}, {character id: the
+#: covenant the book ties them to}, and {character id: the name of the
+#: sketch a Tribunal pack holds them as}.
+VARIANTS, HOMES, REPLACES = "variants", "homes", "replaces"
+#: The import form's key for the year a book of magi's ages count from.
+BASE_YEAR = "base_year"
+#: The import form's choice that leaves a magus out.
+LEAVE_OUT = ""
+
+
+def variant_key(character_id: str) -> str:
+    """The import form's key for which age a magus comes in at."""
+    return f"variant_{character_id}"
+
+
+def variant_fields(data: dict[str, Any], saga: Saga | None) -> list[DialogField]:
+    """Who comes in from a book of magi, and at which age: the base year,
+    then a choice for each magus, starting on the pack's own age."""
+    year = saga.current_year if saga is not None else 1220
+    fields = [
+        DialogField(
+            BASE_YEAR,
+            "Base year",
+            "int",
+            year,
+            hint="Each magus's year of birth is this year less the age chosen.",
+            required=True,
+        )
+    ]
+    names = {c["id"]: c for c in _held(data, "characters")}
+    for key, versions in data[VARIANTS].items():
+        held = names[key]
+        age = _age(held, data)
+        fields.append(
+            DialogField(
+                variant_key(key),
+                escape(str(held.get("name"))),
+                "select",
+                next((v["label"] for v in versions if v["age"] == age), LEAVE_OUT),
+                options=[
+                    ("Leave out", LEAVE_OUT),
+                    *((f"{v['label']} (age {v['age']})", v["label"]) for v in versions),
+                ],
+            )
+        )
+    return fields
+
+
+def _age(character: dict[str, Any], data: dict[str, Any]) -> int:
+    """The age a pack's magus starts on."""
+    return int(data.get("year") or 1220) - int(
+        character["background"].get("year_born") or 1220
+    )
+
+
+def choose_variants(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
+    """`data` with each magus at the age chosen, born that many years before
+    the base year, and those left out gone."""
+    year = int(values.get(BASE_YEAR) or 1220)
+    chosen = []
+    for held in _held(data, "characters"):
+        versions = data[VARIANTS].get(held["id"], [])
+        label = values.get(variant_key(held["id"]), LEAVE_OUT)
+        version = next((v for v in versions if v["label"] == label), None)
+        if version is None:
+            continue
+        character = deepcopy(version["character"])
+        character["background"]["year_born"] = year - int(version["age"])
+        chosen.append(character)
+    return {**data, "saga": {**data["saga"], "characters": chosen}}
+
+
+def _replace_sketches(saga: Saga, data: dict[str, Any]) -> list[str]:
+    """Each magus who comes in as printed takes over the record a Tribunal
+    pack brought for them, generated stats and all, keeping its place in
+    the saga."""
+    found = []
+    for character_id, name in (data.get(REPLACES) or {}).items():
+        held = next(
+            (c for c in _held(data, "characters") if c["id"] == character_id), None
+        )
+        sketch = next((c for c in saga.characters if c.name == name), None)
+        if held is None or sketch is None:
+            continue
+        printed = Character.from_dict(
+            {
+                **deepcopy(held),
+                "id": sketch.id,
+                "covenant_id": sketch.covenant_id,
+                "links": asdict(sketch)["links"],
+            }
+        )
+        saga.characters[saga.characters.index(sketch)] = printed
+        found += notes(escape(f"{name} now has the book's printed statistics."))
+    return found
+
+
+def _settle_homes(saga: Saga) -> None:
+    """Each magus a book of magi ties to a covenant joins it, once both are
+    in the saga, whichever came first."""
+    if not saga.overlays:
+        return
+    covenants = {c.name: c.id for c in saga.covenants}
+    for path in sorted(SHIPPED_DIR.glob(f"*{transfer.SUFFIX}")):
+        if path.name.removesuffix(transfer.SUFFIX) not in saga.overlays:
+            continue
+        data = transfer.read(path)
+        names = {c["id"]: c["name"] for c in _held(data, "characters")}
+        for character_id, home in (data.get(HOMES) or {}).items():
+            for character in saga.characters:
+                if character.name == names[character_id] and home in covenants:
+                    character.covenant_id = character.covenant_id or covenants[home]
+
+
 def story_key(neighbour_id: str, prefix: str = "") -> str:
     """The import form's key for beginning one of the pack's stories."""
     return f"{prefix}story_{neighbour_id}"
@@ -516,6 +633,8 @@ def import_fields(data: dict[str, Any], saga: Saga | None = None) -> list[Dialog
     """Import a Content Pack: a tick for each group the pack holds any
     of, all ticked, then one for each of its stories the saga doesn't
     have, to begin. A group the pack has nothing of isn't asked about."""
+    if VARIANTS in data:
+        return variant_fields(data, saga)
     fields = []
     for group in GROUPS:
         number = group.count(data)
@@ -568,6 +687,8 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     the generated stats unticked, each magus the pack stats by inference
     comes in as the book's sketch instead. A story left unticked comes
     in dormant."""
+    if VARIANTS in data:
+        return choose_variants(data, values)
     data = _dormant(data, values)
     out = ("people", GENERATED, "places", "world", "bestiary", "code", "history")
     left = {key for key in out if key in values and not values.get(key)}
@@ -622,6 +743,197 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
 SHIPPED_DIR = DATA_DIR / "packs"
 
 
+# -- overlays: a supplement on top of the Tribunal packs --
+
+#: The pack key holding an overlay's sections, one for each Tribunal pack
+#: it touches: {"tribunal": name, "pack": a pack of the records it adds,
+#: "changes": [the fields it overwrites]}.
+OVERLAY = "overlay"
+#: The saga's lists an overlay can overwrite a record of, and each list's
+#: record class.
+OVERLAY_KINDS: dict[str, Any] = {
+    "tribunals": Tribunal,
+    "covenants": Covenant,
+    "characters": Character,
+    "neighbours": Neighbour,
+    "creatures": Creature,
+}
+#: The ids a sub-record is given, new at every build.
+RANDOM_ID = re.compile(r"\b[0-9a-f]{12}\b")
+
+
+def without_random_ids(value: Any) -> Any:
+    """`value` with each build's random sub-record ids blanked, so two
+    builds of one pack compare equal."""
+    if isinstance(value, dict):
+        return {
+            RANDOM_ID.sub("", key): without_random_ids(item)
+            for key, item in value.items()
+        }
+    if isinstance(value, list):
+        return [without_random_ids(item) for item in value]
+    return RANDOM_ID.sub("", value) if isinstance(value, str) else value
+
+
+def is_overlay(data: dict[str, Any]) -> bool:
+    return isinstance(data.get(OVERLAY), list)
+
+
+def _sections(saga: Saga, data: dict[str, Any]) -> list[dict[str, Any]]:
+    """The overlay's sections for the Tribunals `saga` has."""
+    held = {t.name.strip().casefold() for t in saga.tribunals}
+    return [s for s in data[OVERLAY] if s["tribunal"].strip().casefold() in held]
+
+
+def _record(saga: Saga, change: dict[str, Any]) -> Any:
+    """The saga's record a change is to, or None."""
+    return next(
+        (
+            r
+            for r in getattr(saga, change["list"])
+            if r.name == change["name"] and getattr(r, "kind", "") == change["kind"]
+        ),
+        None,
+    )
+
+
+def _untouched(record: Any, change: dict[str, Any]) -> bool:
+    """Whether the saga still has the pack's value there, so overwriting
+    it loses nothing the user wrote."""
+    return without_random_ids(asdict(record)[change["field"]]) == without_random_ids(
+        change["was"]
+    )
+
+
+def change_key(section: dict[str, Any], index: int) -> str:
+    """The import form's key for one overwrite."""
+    return f"change_{storage.slugify(section['tribunal'])}_{index}"
+
+
+def overlay_fields(data: dict[str, Any], saga: Saga) -> list[DialogField]:
+    """A tick for each overwrite this saga could take: ticked if the
+    saga still has the pack's value, unticked if it has been edited."""
+    fields = []
+    for section in _sections(saga, data):
+        for index, change in enumerate(section["changes"]):
+            record = _record(saga, change)
+            if record is None:
+                continue
+            fields.append(
+                DialogField(
+                    change_key(section, index),
+                    f"Overwrite {escape(change['name'])}: "
+                    f"{escape(change['field'].replace('_', ' '))}",
+                    "check",
+                    _untouched(record, change),
+                    hint="Unticked: you have changed this since it was imported."
+                    if not _untouched(record, change)
+                    else "",
+                )
+            )
+    return fields
+
+
+def _apply_section(
+    saga: Saga, section: dict[str, Any], values: dict[str, Any] | None
+) -> int:
+    """Add a section's records and make its overwrites, those ticked in
+    `values` (all, with none given). The number of records added."""
+    plan = transfer.plan_import(saga, section["pack"])
+    transfer.apply(saga, plan)
+    for index, change in enumerate(section["changes"]):
+        if values is not None and not values.get(change_key(section, index)):
+            continue
+        record = _record(saga, change)
+        if record is None:
+            continue
+        records = getattr(saga, change["list"])
+        rebuilt = OVERLAY_KINDS[change["list"]].from_dict(
+            {**asdict(record), change["field"]: change["value"]}
+        )
+        records[records.index(record)] = rebuilt
+    return len(plan.covenants) + len(plan.characters) + len(plan.neighbours)
+
+
+def apply_overlay(
+    saga: Saga, data: dict[str, Any], values: dict[str, Any] | None = None
+) -> list[str]:
+    """Turn a supplement on: its book in play, remembered on the saga so a
+    Tribunal pack added later takes its part too, and its sections applied
+    to the Tribunals the saga has. The notes to show."""
+    book = str(data.get("book") or "")
+    if book not in saga.overlays:
+        saga.overlays.append(book)
+    sourcebooks.put_in_play(saga, book)
+    found = _sections(saga, data)
+    for section in found:
+        _apply_section(saga, section, values)
+    names = ", ".join(s["tribunal"] for s in found) or "no Tribunal yet"
+    return notes(
+        escape(
+            f"{data.get('name')} is on, for {names}. A Tribunal pack added "
+            "later takes its part too."
+        )
+    )
+
+
+def shipped_overlays() -> list[dict[str, Any]]:
+    """The overlays shipped with the app."""
+    found = []
+    for path in sorted(SHIPPED_DIR.glob(f"*{transfer.SUFFIX}")):
+        try:
+            data = transfer.read(path)
+        except OSError, ValueError:
+            continue
+        if is_overlay(data):
+            found.append(data)
+    return found
+
+
+def _follow_overlays(saga: Saga) -> list[str]:
+    """After a Tribunal pack comes in, each overlay the saga has on takes
+    effect on it."""
+    if not saga.overlays:
+        return []
+    found: list[str] = []
+    for data in shipped_overlays():
+        if data.get("book") in saga.overlays:
+            found += apply_overlay(saga, data)
+    return found
+
+
+def overlay_key(data: dict[str, Any]) -> str:
+    """Start from a pack's key for turning a supplement on."""
+    return f"overlay_{storage.slugify(str(data.get('book')))}"
+
+
+def start_overlay_fields(
+    found: list[PackChoice], overlays: list[dict[str, Any]]
+) -> list[DialogField]:
+    """Start from a pack's tick for each supplement that adds to the
+    chosen pack."""
+    fields = []
+    for overlay in overlays:
+        tribunals = {s["tribunal"] for s in overlay[OVERLAY]}
+        paths = {
+            path
+            for _label, path, data in found
+            if {t.get("name") for t in _held(data, "tribunals")} & tribunals
+        }
+        fields.append(
+            DialogField(
+                overlay_key(overlay),
+                f"With {escape(str(overlay.get('name')))}",
+                "check",
+                False,
+                hint="Adds its covenants to this Tribunal and takes its version "
+                "wherever it differs from the Tribunal's book.",
+                show_if=lambda values, paths=paths: values.get("pack") in paths,
+            )
+        )
+    return fields
+
+
 #: A pack offered by Start from a pack: (label, path, its data). The data
 #: is read once, when the packs are listed, and reused for their stories.
 PackChoice = tuple[str, str, dict[str, Any]]
@@ -639,7 +951,11 @@ def available(*folders: Path) -> list[PackChoice]:
                 data = transfer.read(path)
             except OSError, ValueError:
                 continue
-            if data.get("kind") == PACK:
+            if (
+                data.get("kind") == PACK
+                and not is_overlay(data)
+                and VARIANTS not in data
+            ):
                 found.append((choice_label(data, path.stem), str(path), data))
     return found
 
@@ -673,7 +989,13 @@ def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     if not isinstance(book, str):
         return []
     title = sourcebooks.title_of(book)
-    found = []
+    found = _follow_overlays(saga)
+    if VARIANTS in data:
+        stem = str(data.get("key") or "")
+        if stem and stem not in saga.overlays:
+            saga.overlays.append(stem)
+        found += _replace_sketches(saga, data)
+    _settle_homes(saga)
     if sourcebooks.put_in_play(saga, book):
         found += notes(escape(f"{title} is now in play."))
     if data.get(ASSUMPTIONS):
@@ -714,6 +1036,8 @@ def start_choices(values: dict[str, Any]) -> dict[str, Any]:
     pack's are shown, so only theirs are in `values`)."""
     found = {}
     for key, value in values.items():
+        if key.startswith("overlay_"):
+            found[key] = value
         head, _, rest = key.partition("_")
         if head.startswith("pack") and head[4:].isdigit() and rest.startswith("story_"):
             found[rest] = value
@@ -732,6 +1056,8 @@ def start_from(
     data = _dormant(data, values or {})
     plan = transfer.plan_import(saga, data)
     transfer.apply(saga, plan)
-    return notes(escape(f"Started from {plan.name}: {summary(data)}.")) + after_import(
-        saga, data
-    )
+    found = notes(escape(f"Started from {plan.name}: {summary(data)}."))
+    for overlay in shipped_overlays():
+        if (values or {}).get(overlay_key(overlay)):
+            found += apply_overlay(saga, overlay)
+    return found + after_import(saga, data)

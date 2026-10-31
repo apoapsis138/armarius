@@ -100,6 +100,9 @@ class Saga:
     #: load as, means every book. The core book is always in play. See
     #: sourcebooks.
     books_in_play: list[str] | None = None
+    #: The supplements turned on, by book: each overwrites the Tribunal
+    #: packs it touches, now and when they are imported later.
+    overlays: list[str] = field(default_factory=list)
     #: The saga's own sources, which its user-made entries can cite.
     sources: list[SagaSource] = field(default_factory=list)
     #: Shared catalogs the saga doesn't offer at all (saga_catalogs keys):

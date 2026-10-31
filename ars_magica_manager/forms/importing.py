@@ -272,6 +272,8 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
     """Import a Content Pack: which of its parts to bring in (its
     Tribunals and covenants always come), then the preview to confirm.
     A pack with nothing to leave out goes straight to the preview."""
+    if packs.is_overlay(data):
+        return _import_overlay(saga, data)
     fields = packs.import_fields(data, saga)
     if not fields:
         return _confirm_import(saga, transfer.plan_import(saga, data), data)
@@ -292,6 +294,29 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
         apply,
         live=live,
         save_label="Preview",
+        help_id="import-pack",
+    )
+
+
+def _import_overlay(saga: Saga, data: dict[str, Any]) -> Command:
+    """Turn a supplement on: which of its overwrites to take, each ticked
+    unless the record has been changed since it was imported, then done.
+    With nothing to overwrite it asks only to confirm."""
+    fields = packs.overlay_fields(data, saga)
+    name = escape(str(data.get("name")))
+    if not fields:
+        return Confirm(
+            f"Turn on {name}? It adds to the Tribunals this saga has, and to any "
+            "added later.",
+            lambda: packs.apply_overlay(saga, data),
+            yes_label="Import",
+            title=TITLE,
+        )
+    return Form(
+        f"Import {name}",
+        lambda: fields,
+        lambda values: packs.apply_overlay(saga, data, values),
+        save_label="Import",
         help_id="import-pack",
     )
 

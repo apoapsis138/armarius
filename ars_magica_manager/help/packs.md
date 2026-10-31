@@ -577,3 +577,25 @@ The Cradle and the Crescent pack is built from *The Cradle and the Crescent*, a 
 
 - **Shared records**: the Order of Suleiman with its Stone and River families, the jinn, the Nizaris, the caliph and the Ayyubid princes, Georgia, Greater Armenia, Iraq, Baghdad and Mosul, the Fifth Crusade and the Mongols follow this book, and are built exactly as the Levant pack builds them (the Sultan of Rum and the Emperor of Trebizond as the Theban pack does). Importing both packs into one saga never doubles them: a record the saga already holds is kept as it is, and the second pack's links go to it. The one record placed differently is the **Pit of Harut and Marut**, which this pack puts in Iraq and the Levant pack beneath the ruins of Babel: the saga keeps it where the first pack imported put it.
 - **Hermetic dates** (the Order of Hermes's founding, the Schism War, the Grand Tribunal of 1195 and the like) are left to the Order of Hermes's own packs; this pack's history is the Order of Suleiman's.
+
+# Through the Aegis on top of the Tribunal packs
+<!-- help: pack-overlay-through-the-aegis -->
+
+*Through the Aegis* is an overlay: it isn't in any Tribunal pack, so a saga without it matches the Tribunal book exactly. Importing it adds The Northern Seas to Normandy, Jardin to Provence, Didyma to the Theban Tribunal, Longmist and Clan Mac Tire to Hibernia, and Collem Leonis to the Rhine, for whichever of those Tribunals the saga has, and takes Through the Aegis's version wherever the two books differ:
+
+- **Provence**: Bellaquin fell in 1202 and Lariander in 1209, and Tolosa Paratge's war had begun by 1214.
+- **Theban**: Didyma joins the Kretan phyle, Nestor, Io and Kaia are Polyaigos's magi, Catella trained in Constantinople, and Miletos lies inside Nicaea.
+- **Hibernia**: Cú Chonnacht leads Clan Mac Tire, and Tir na nÓg is an island of the Fomórach.
+- **Rhine**: the ruling of 780 gives covenants a veto on new foundations, the Sauerland lies near Dortmund, and Julia's sigil adds one to Fengheld's proxies.
+
+Lore follows Through the Aegis, then the Tribunal book, then the Definitive Edition; mechanics follow the Definitive Edition.
+
+# Assumptions made for Magi of Hermes
+<!-- help: pack-assumptions-magi_of_hermes -->
+
+The pack follows the book: every printed block is here, at the ages it gives. The book prints no dates, so a magus's year of birth comes from the base year you choose. A spell printed at another level or Arts than the catalog's spell of that name stays the magus's own spell, as printed. Fatigue, wound tables and casting totals aren't entered, because the app works them out. Companions, familiars, talismans and enchanted items are in the biography of the block that has them. Where the book contradicts itself from block to block, the block stands as printed. Persephone's printed Warping points are read as totals.
+
+# Assumptions made for Legends of Hermes
+<!-- help: pack-assumptions-legends_of_hermes -->
+
+The pack follows the book: it has no Tribunal, because its stories can be set anywhere, and where the book leaves a location open the record leaves it blank, with the book's guidance in its notes. The five legends' stories come in dormant, to begin when you want them. Treasures, books and vis are described in the record of the place or person holding them, because a book in the app needs a covenant to own it. A name the book doesn't give, such as the Field of Copper Urchins or the Heirs of Cupressa, is the pack's own. Where the book contradicts itself, the record says so and gives both.

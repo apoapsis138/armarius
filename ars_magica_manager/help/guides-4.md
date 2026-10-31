@@ -515,6 +515,23 @@ More books follow in later versions.
 
 A pack is a copy: a saga keeps what it imported and never reads the pack's file again, so a corrected pack in a new version of the app changes new sagas and new imports, not the sagas you have. Importing the corrected pack over a saga adds what the saga doesn't have and leaves what it has, your edits included, so a correction to a record it already holds doesn't come through, and a Tribunal it already has keeps its own Code, cases and Diary. A record the new pack has renamed comes in beside the old one: the preview lists what is added, so check it first.
 
+### Turning on a supplement
+<!-- help: guide-book-packs-overlay -->
+
+A supplement such as *Through the Aegis* sits on top of the Tribunal packs, so a saga without it matches the Tribunal book. Import its file from `data/packs` the same way, or tick **With Through the Aegis** on New Saga. It adds to each Tribunal the saga has and overwrites records where the two books differ; a form lists each overwrite, unticked if you have changed that record yourself. It stays on, so a Tribunal pack imported later takes its part too. See [Through the Aegis on top of the Tribunal packs](help:pack-overlay-through-the-aegis).
+
+### Bringing in the Magi of Hermes
+<!-- help: guide-book-packs-magi -->
+
+*Magi of Hermes* is a pack of fifteen magi with no Tribunal. Each is printed at Gauntlet and every fifteen years after, and all of those ages come with the pack. Import it the same way, and the form asks for a **Base year**, which starts on the saga's year, and an age for each magus, or **Leave out**. A magus's year of birth is the base year less the age you choose, so pick the age they have at that year.
+
+Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If the Theban pack's sketch of Marcus Tauros is in the saga, the printed Marcus replaces it; without this pack the sketch stays.
+
+### Legends of Hermes
+<!-- help: guide-book-packs-legends -->
+
+*Legends of Hermes* is a pack with no Tribunal: the sites, guardians and treasures of Conciatta, Fortunata, Hérisson, Hermanus and Thomae, with their stories dormant. Import it into any saga and begin a story from its More when you want it.
+
 ### What a pack puts where
 <!-- help: guide-book-packs-where -->
 

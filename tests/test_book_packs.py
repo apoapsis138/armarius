@@ -5,12 +5,11 @@ in play."""
 from __future__ import annotations
 
 import json
-import re
 from dataclasses import asdict
 from typing import Any
 
 from ars_magica_manager import book_packs, catalog, packs, sourcebooks, transfer
-from ars_magica_manager.book_packs import builder
+from ars_magica_manager.book_packs import builder, overlays
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.models.common import split_secrets
@@ -140,22 +139,6 @@ def test_the_pack_keeps_its_secrets_apart():
     assert data["book"] == "GotF" and "Creative Commons" in data["source"]
 
 
-#: The ids storage hands a sub-record: new at every build.
-RANDOM_ID = re.compile(r"\b[0-9a-f]{12}\b")
-
-
-def _without_random_ids(value: Any) -> Any:
-    """`value` with the random id each build gives a sub-record blanked."""
-    if isinstance(value, dict):
-        return {
-            RANDOM_ID.sub("", key): _without_random_ids(item)
-            for key, item in value.items()
-        }
-    if isinstance(value, list):
-        return [_without_random_ids(item) for item in value]
-    return RANDOM_ID.sub("", value) if isinstance(value, str) else value
-
-
 def _content(data: dict[str, Any]) -> dict[str, Any]:
     """What a pack holds, read through the models so a field added since
     it was written reads as its default on both sides of a comparison."""
@@ -164,7 +147,7 @@ def _content(data: dict[str, Any]) -> dict[str, Any]:
         key: asdict(Character.from_dict(dict(sketch)))
         for key, sketch in (data.get(packs.GENERATED) or {}).items()
     }
-    return _without_random_ids(
+    return packs.without_random_ids(
         {
             "name": data["name"],
             "book": data.get("book"),
@@ -185,6 +168,10 @@ def test_every_shipped_pack_is_what_its_module_builds():
         != _content(json.loads(json.dumps(book_packs.data(pack))))
     ]
     assert not stale, f"rebuild with tools/build_packs.py: {stale}"
+    for overlay in overlays.OVERLAYS.values():
+        shipped = packs.without_random_ids(transfer.read(overlays.path_of(overlay)))
+        built = packs.without_random_ids(json.loads(json.dumps(overlays.data(overlay))))
+        assert shipped[packs.OVERLAY] == built[packs.OVERLAY], overlay.key
 
 
 def test_the_rhine_pack_imports_clean_into_a_new_saga():
@@ -212,6 +199,37 @@ def test_the_rhine_pack_imports_clean_into_a_new_saga():
 def test_a_saga_with_every_book_in_play_stays_so():
     saga = Saga(id="s", name="S")
     assert not sourcebooks.put_in_play(saga, "GotF") and saga.books_in_play is None
+
+
+def test_through_the_aegis_covenants_are_in_their_tribunals():
+    """Each developed covenant is a full record in its Tribunal's pack,
+    with its magi's printed stats."""
+    for key, name, magus in (
+        ("provence", "Jardin", "Joia du Lua"),
+        ("theban", "Didyma", "Nikola"),
+        ("hibernia", "Longmist", "Conchobor Crosach"),
+        ("rhine", "Collem Leonis", "Ferra of Bonisagus"),
+    ):
+        saga = book_packs.PACKS[key].assemble(("TtA",)).saga
+        covenant = next(c for c in saga.covenants if c.name == name)
+        character = next(c for c in saga.characters if c.name.startswith(magus))
+        assert covenant.detail == "Full" and covenant.tribunal_id
+        assert character.covenant_id == covenant.id
+        assert character.detail == "Full" and character.abilities
+
+
+def test_through_the_aegis_stays_out_of_the_tribunal_packs_until_it_is_on():
+    """A Tribunal pack matches its own book; the overlay overwrites it."""
+    alone = book_packs.PACKS["provence"].build()
+    assert "Jardin" not in {c.name for c in alone.covenants}
+    (tribunal,) = alone.tribunals
+    falls = {e.title: e.year for e in tribunal.diary}
+    assert falls["Bellaquin falls"] == 1200
+    assert falls["Montgey and the fall of Lariander"] == 1211
+    (with_it,) = book_packs.PACKS["provence"].assemble(("TtA",)).saga.tribunals
+    falls = {e.title: e.year for e in with_it.diary}
+    assert falls["Bellaquin falls"] == 1202
+    assert falls["Montgey and the fall of Lariander"] == 1209
 
 
 def test_new_saga_offers_the_shipped_packs_first():
@@ -504,6 +522,22 @@ def test_the_normandy_pack_keeps_its_secrets_and_credit():
     data = book_packs.data(NORMANDY)
     assert _secrets_kept(data["saga"]) >= 10
     assert data["book"] == "L&L" and "Creative Commons" in data["source"]
+
+
+def test_the_northern_seas_sail_with_the_normandy_pack():
+    """Through the Aegis's flotilla: a covenant with no site of its own, the
+    Hook that says it moves, six ships, and stat blocks as printed."""
+    saga = NORMANDY.assemble(("TtA",)).saga
+    fleet = next(c for c in saga.covenants if c.name == "The Northern Seas")
+    assert fleet.place_id is None and fleet.aura == 0
+    assert "covbh_hook_minor_erratically_mobile" in {
+        held.vf_id for held in builder.boons_hooks_from(fleet.what_matters)
+    }
+    assert len([p for p in fleet.possessions if p.kind == "ship"]) == 6
+    carles = next(c for c in saga.characters if c.name == "Carles Magnus")
+    assert carles.covenant_id == fleet.id and carles.detail == "Full"
+    assert (carles.characteristics.presence, carles.characteristics.strength) == (2, 0)
+    assert any(f.character_id == carles.id for f in saga.familiars)
 
 
 def test_the_normandy_pack_imports_clean_into_a_new_saga():

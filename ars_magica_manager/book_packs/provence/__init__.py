@@ -1,8 +1,8 @@
 """Faith & Flame: the Provençal Tribunal, as of 1220, in paraphrase.
 Built in parts: the Tribunal itself and its Code, docket and ruined
 covenants; then each region's land, covenants, magi, libraries, vis and
-mundane world; Val-Negra; the saga's stories; the history; and last the
-generated stats.
+mundane world; Val-Negra; Jardin, from Through the Aegis; the saga's
+stories; the history; and last the generated stats.
 
 Source: Faith & Flame: The Provençal Tribunal (Atlas Games), content
 under CC-BY-SA 4.0; the text here is a summary of it, not its words."""
@@ -57,10 +57,16 @@ PARTS = (
 )
 
 
-def assemble() -> Builder:
+#: The parts each supplement adds, run only when asked for, so the pack
+#: on its own stays as its book has it.
+SUPPLEMENTS = {"TtA": ("jardin",)}
+
+
+def assemble(supplements: tuple[str, ...] = ()) -> Builder:
     import importlib
 
-    parts = [importlib.import_module(f"{__name__}.{name}") for name in PARTS]
+    names = (*PARTS, *(n for book in supplements for n in SUPPLEMENTS[book]))
+    parts = [importlib.import_module(f"{__name__}.{name}") for name in names]
     provence = Provence(Builder(NAME, source="F&F"))
     for part in parts:
         part.build(provence)
@@ -79,4 +85,4 @@ def build() -> Saga:
     return assemble().saga
 
 
-register(BookPack("provence", "F&F", NAME, assemble, SOURCE))
+register(BookPack("provence", "F&F", NAME, assemble, SOURCE, tuple(SUPPLEMENTS)))

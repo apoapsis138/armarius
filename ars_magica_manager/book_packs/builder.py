@@ -48,6 +48,7 @@ from ..models import (
     MasteryAbility,
     NamedDescription,
     Neighbour,
+    Possession,
     Ruling,
     Saga,
     ScoredTrait,
@@ -188,6 +189,31 @@ def characteristics(
     }
 
 
+def arts_from(printed: str) -> dict[str, int]:
+    """The Arts of a stat block as a book prints them ("Cr 10, In 9, ..."),
+    for its "arts"; a bonus after a score ("Pe 12+3") is the Puissant Art's
+    and is left to the Virtue."""
+    found = {}
+    for entry in printed.replace(";", ",").split(","):
+        abbreviation, score = entry.split()
+        found[ART_LOOKUP[abbreviation.lower()]] = int(score.split("+")[0])
+    return found
+
+
+def add_possession(
+    covenant: Covenant, kind: str, name: str, **fields: Any
+) -> Possession:
+    """A Possession of a covenant, of a kind of POSSESSION_KINDS."""
+    possession = Possession(
+        id=storage.generate_unique_id(name, [p.id for p in covenant.possessions]),
+        kind=kind,
+        name=name,
+        **fields,
+    )
+    covenant.possessions.append(possession)
+    return possession
+
+
 def wound_ranges(size: int) -> str:
     """The wound ranges for a Size, as the book's blocks print them."""
     step = 5 + size
@@ -230,6 +256,13 @@ class Builder:
         #: Each generated magus's sketch, by id, as the book gives them
         #: (book_packs.generated): the pack offers it in place of the
         #: generated stats.
+        #: A magus printed at several ages: {character id: [{"label", "age",
+        #: "character"}]} (packs.VARIANTS).
+        self.variants: dict[str, list[dict[str, Any]]] = {}
+        #: {character id: the covenant the book ties them to} (packs.HOMES).
+        self.homes: dict[str, str] = {}
+        #: {character id: the sketch a Tribunal pack has} (packs.REPLACES).
+        self.replaces: dict[str, str] = {}
         self.sketches: dict[str, Character] = {}
 
     # -- ids --
@@ -1191,13 +1224,24 @@ class Builder:
             (s for s in printings if s.source == source),
             printings[0] if printings else None,
         )
+        short = arts.split("(")[0].strip()
+        if (
+            found is not None
+            and source in OWN_PRINTINGS
+            and found.source != source
+            and (
+                (level is not None and found.level not in (None, level))
+                or found.technique != ART_LOOKUP[short[:2].lower()]
+                or found.form != ART_LOOKUP[short[2:4].lower()]
+            )
+        ):
+            found = None
         if found is None:
             requisites = (
                 [a.strip() for a in arts.split("(")[1].rstrip(")").split(",")]
                 if "(" in arts
                 else []
             )
-            short = arts.split("(")[0].strip()
             spell = Spell(
                 id=storage.generate_unique_id(
                     f"spell {name}", [s.id for s in character.invented_spells]
@@ -1216,6 +1260,10 @@ class Builder:
             found.id, mastery_score=mastery, mastery_xp=ability_xp(mastery)
         )
 
+
+#: Books whose stat blocks keep a spell at its printed level and Arts as
+#: the magus's own spell, where the catalog's spell of that name differs.
+OWN_PRINTINGS = ("TtA", "MoH", "LoH")
 
 #: A stat block as a book prints it, in the book's scores:
 #: "characteristics" {name: score}, "aging_points" {name: points} (the

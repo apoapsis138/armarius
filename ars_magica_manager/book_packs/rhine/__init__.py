@@ -35,10 +35,13 @@ class Rhine:
     world: dict[str, Neighbour] = field(default_factory=dict)
 
 
-def assemble() -> Builder:
+def assemble(supplements: tuple[str, ...] = ()) -> Builder:
+    """The pack, with Through the Aegis's part if `supplements` names it,
+    so the pack on its own stays as its book has it."""
     # start-up: a region's parts load when its pack is built, not at import.
     from . import (
         bestiary,
+        collem_leonis,
         covenants_east,
         covenants_west,
         gorge,
@@ -64,9 +67,13 @@ def assemble() -> Builder:
     bestiary.build(rhine)
     stats_gorge.build(rhine)
     history.build(rhine)
+    if "TtA" in supplements:
+        collem_leonis.build(rhine)
     tribunal.finish(rhine)
     stats_magi.peregrinatores(rhine)
     stats_sketched.build(rhine)
+    if "TtA" in supplements:
+        collem_leonis.stats(rhine)
     return rhine.b
 
 
@@ -74,4 +81,4 @@ def build() -> Saga:
     return assemble().saga
 
 
-register(BookPack("rhine", "GotF", NAME, assemble, SOURCE))
+register(BookPack("rhine", "GotF", NAME, assemble, SOURCE, ("TtA",)))

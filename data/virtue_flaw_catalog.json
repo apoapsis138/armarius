@@ -1937,6 +1937,17 @@
       "description": "The magus can use additional Creo Corpus and Perdo Corpus guidelines (an Integration breakthrough from the folk witches). Ritual spells of Momentary Duration truly restore Fatigue levels; with other Durations the restored levels return as Long-Term Fatigue when the spell ends."
     },
     {
+      "id": "vf_faeborchless",
+      "name": "Faeborchless",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "TtA",
+      "summary": "Thrown shield or weapon defends as many characters as your Single or Great Weapon; Dex + Ability vs 9, a failure loses it.",
+      "description": "The Dancing Shield Feat, a Cles learned from a faerie. The character throws his shield or weapon so that it defends a number of characters equal to his Single or Great Weapon Ability. He makes a Dexterity + that Ability check against Ease Factor 9. On a success they are defended and it returns to his hands; on a failure he must go and fetch it, and may be left defenseless. Through the Aegis p. 111."
+    },
+    {
       "id": "vf_fast_caster_runes",
       "name": "Fast Caster (Runes)",
       "type": "Virtue",

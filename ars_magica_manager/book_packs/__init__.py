@@ -48,8 +48,10 @@ class BookPack:
     key: str
     book: str
     name: str
-    assemble: Callable[[], Builder]
+    assemble: Callable[..., Builder]
     source: str
+    #: The supplements that add to this pack (book_packs.overlays).
+    supplements: tuple[str, ...] = ()
 
     def build(self) -> Saga:
         return self.assemble().saga
@@ -81,9 +83,16 @@ def data(pack: BookPack) -> dict[str, Any]:
     )
     held = {c["id"] for c in found["saga"]["characters"]}
     sketches = {i: asdict(c) for i, c in b.sketches.items() if i in held}
-    extra = {packs.GENERATED: sketches} if sketches else {}
+    extra: dict[str, Any] = {packs.GENERATED: sketches} if sketches else {}
+    if b.variants:
+        extra |= {
+            packs.VARIANTS: b.variants,
+            packs.HOMES: b.homes,
+            packs.REPLACES: b.replaces,
+        }
     return {
         **found,
+        "key": pack.key,
         "book": pack.book,
         "source": pack.source,
         packs.ASSUMPTIONS: assumptions_topic(pack),
@@ -104,16 +113,26 @@ def path_of(pack: BookPack, folder: Path = PACKS_DIR) -> Path:
 def write_all(folder: Path = PACKS_DIR) -> list[Path]:
     """Build every registered pack and write it to `folder`."""
     folder.mkdir(parents=True, exist_ok=True)
-    return [packs.write(path_of(pack, folder), data(pack)) for pack in PACKS.values()]
+    written = [
+        packs.write(path_of(pack, folder), data(pack)) for pack in PACKS.values()
+    ]
+    written += [
+        packs.write(folder / overlays.path_of(o).name, overlays.data(o))
+        for o in overlays.OVERLAYS.values()
+    ]
+    return written
 
 
 from . import (  # noqa: F401
     alps,
     cradle,
     hibernia,
+    legends_of_hermes,
     levant,
+    magi_of_hermes,
     normandy,
     novgorod,
+    overlays,
     provence,
     rhine,
     stonehenge,

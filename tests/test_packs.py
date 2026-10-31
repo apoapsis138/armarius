@@ -8,7 +8,7 @@ from pathlib import Path
 
 from support import everything_saga, menu
 
-from ars_magica_manager import packs, storage, transfer
+from ars_magica_manager import packs, storage, threats, transfer
 from ars_magica_manager.commands import Refuse
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import saga as saga_forms
@@ -293,3 +293,92 @@ def test_the_new_saga_form_reads_each_pack_once(monkeypatch):
     monkeypatch.setattr(packs, "SHIPPED_DIR", storage.exports_dir() / "none")
     creation_forms.saga_fields(None)
     assert sorted(p.name for p in reads) == ["other.amm.json", "rhine.amm.json"]
+
+
+def test_an_overlay_adds_to_its_tribunal_and_remembers_the_rest():
+    overlay = transfer.read(packs.SHIPPED_DIR / "through_the_aegis.amm.json")
+    assert packs.is_overlay(overlay)
+    saga = Saga(id="dst", name="Target")
+    packs.start_from(saga, packs.SHIPPED_DIR / "provence.amm.json")
+    assert "Jardin" not in {c.name for c in saga.covenants}
+    packs.apply_overlay(saga, overlay)
+    assert "Jardin" in {c.name for c in saga.covenants}
+    assert "Didyma" not in {c.name for c in saga.covenants}
+    packs.start_from(saga, packs.SHIPPED_DIR / "theban.amm.json")
+    assert "Didyma" in {c.name for c in saga.covenants}
+    assert saga.overlays == ["TtA"]
+
+
+def test_an_overlay_is_not_offered_as_a_pack_to_start_from():
+    found = packs.available(packs.SHIPPED_DIR)
+    assert not any(packs.is_overlay(data) for _label, _path, data in found)
+
+
+def _magi_of_hermes() -> dict:
+    return transfer.read(packs.SHIPPED_DIR / "magi_of_hermes.amm.json")
+
+
+def test_every_magus_of_hermes_comes_with_every_printed_age():
+    data = _magi_of_hermes()
+    assert len(data[packs.VARIANTS]) == 15
+    assert sum(len(v) for v in data[packs.VARIANTS].values()) == 72
+    assert all(v[0]["label"] == "Gauntlet" for v in data[packs.VARIANTS].values())
+
+
+def test_the_age_chosen_and_the_base_year_set_the_year_of_birth():
+    data = _magi_of_hermes()
+    saga = Saga(id="dst", name="Target", current_year=1240)
+    fields = packs.import_fields(data, saga)
+    assert fields[0].key == packs.BASE_YEAR and fields[0].value == 1240
+    names = {c["name"]: c["id"] for c in data["saga"]["characters"]}
+    key = names["Hugh of Flambeau"]
+    versions = data[packs.VARIANTS][key]
+    values = {packs.BASE_YEAR: 1240, packs.variant_key(key): "+15"}
+    chosen = packs.narrow(data, values)
+    (hugh,) = chosen["saga"]["characters"]
+    age = next(v["age"] for v in versions if v["label"] == "+15")
+    assert hugh["background"]["year_born"] == 1240 - age
+
+
+def test_marcus_replaces_his_theban_sketch_only_when_this_pack_comes_in():
+    saga = Saga(id="dst", name="Target")
+    packs.start_from(saga, packs.SHIPPED_DIR / "theban.amm.json")
+    sketch = next(c for c in saga.characters if c.name == "Marcus Tauros")
+    data = _magi_of_hermes()
+    key = next(
+        c["id"] for c in data["saga"]["characters"] if c["name"] == "Marcus Tauros"
+    )
+    chosen = packs.narrow(data, {packs.BASE_YEAR: 1220, packs.variant_key(key): "+30"})
+    transfer.apply(saga, transfer.plan_import(saga, chosen))
+    packs.after_import(saga, chosen)
+    marcus = [c for c in saga.characters if c.name == "Marcus Tauros"]
+    assert len(marcus) == 1 and marcus[0].id == sketch.id
+    assert any(a.name == "Enigmatic Wisdom" for a in marcus[0].abilities)
+
+
+def test_a_magus_joins_the_covenant_the_book_ties_them_to_whichever_comes_first():
+    data = _magi_of_hermes()
+    key = next(
+        c["id"]
+        for c in data["saga"]["characters"]
+        if c["name"].startswith("Conscientia")
+    )
+    chosen = packs.narrow(data, {packs.BASE_YEAR: 1220, packs.variant_key(key): "+15"})
+    saga = Saga(id="dst", name="Target")
+    transfer.apply(saga, transfer.plan_import(saga, chosen))
+    packs.after_import(saga, chosen)
+    conscientia = next(c for c in saga.characters if c.name.startswith("Conscientia"))
+    assert conscientia.covenant_id is None
+    packs.start_from(saga, packs.SHIPPED_DIR / "rhine.amm.json")
+    conscientia = next(c for c in saga.characters if c.name.startswith("Conscientia"))
+    durenmar = next(c for c in saga.covenants if c.name == "Durenmar")
+    assert conscientia.covenant_id == durenmar.id
+
+
+def test_legends_of_hermes_imports_with_its_stories_asleep():
+    data = transfer.read(packs.SHIPPED_DIR / "legends_of_hermes.amm.json")
+    assert not data["saga"]["tribunals"] and not data["saga"]["covenants"]
+    target = Saga(id="dst", name="Target")
+    transfer.apply(target, transfer.plan_import(target, data))
+    held = [n for n in target.neighbours if n.kind == "threat"]
+    assert len(held) == 34 and all(threats.is_dormant(n) for n in held)

@@ -57,10 +57,16 @@ PARTS = (
 )
 
 
-def assemble() -> Builder:
+#: The parts each supplement adds, run only when asked for, so the pack
+#: on its own stays as its book has it.
+SUPPLEMENTS = {"TtA": ("didyma",)}
+
+
+def assemble(supplements: tuple[str, ...] = ()) -> Builder:
     import importlib
 
-    parts = [importlib.import_module(f"{__name__}.{name}") for name in PARTS]
+    names = (*PARTS, *(n for book in supplements for n in SUPPLEMENTS[book]))
+    parts = [importlib.import_module(f"{__name__}.{name}") for name in names]
     theban = Theban(Builder(NAME, source="TSE"))
     for part in parts:
         part.build(theban)
@@ -98,4 +104,4 @@ def build() -> Saga:
     return assemble().saga
 
 
-register(BookPack("theban", "TSE", NAME, assemble, SOURCE))
+register(BookPack("theban", "TSE", NAME, assemble, SOURCE, tuple(SUPPLEMENTS)))
