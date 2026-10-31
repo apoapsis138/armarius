@@ -99,6 +99,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Peregrinatio IX | Sanctuary of Ice | 3.41.0 | The Greater Alps Tribunal pack |
 | Peregrinatio X | Heirs to Merlin | 3.41.0 | The Stonehenge Tribunal pack |
 | Peregrinatio XI | The Dragon and the Bear | 3.41.0 | The Novgorod Tribunal pack |
+| Peregrinatio XII | Through the Aegis | 3.59.0 | Developed covenants, laid over the Tribunal packs a saga holds |
+| Peregrinatio XIII | Magi of Hermes | 3.59.0 | Its magi at every age, to join a Tribunal if it is loaded |
+| Peregrinatio XIV | Legends of Hermes | 3.59.0 | Its magi and their lost legacies |
+| Peregrinatio XV | Lands of the Nile | 3.60.0 | Egypt, Nubia and Ethiopia as a region pack, with its tombs |
+| Peregrinatio XVI | Between Sand and Sea | 3.60.0 | Mythic Africa as a region pack |
+| Peregrinatio XVII | Land of Fire and Ice | 3.61.0 | Iceland as a region pack, with The Icelandic Wars |
+| Peregrinatio XVIII | Antagonists | 3.61.0 | Ten recurring opponents for any saga, and templates from them |
 
 ## Major versions
 
@@ -114,6 +121,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 3.64.2 — 2026-10-31
+
+### Glossa
+
+- What's New lists the finished rounds of book packs as Peregrinatio XII to XVIII.
 
 ## 3.64.1 — 2026-10-31
 
