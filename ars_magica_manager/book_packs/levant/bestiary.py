@@ -18,12 +18,9 @@ Keys: creatures["amirat_al_jabal"], ["abd_al_misbah"], ["al_qatil"],
 and ["sharif"]. Al-Khidr is east.py's shared creatures["al_khidr"], not
 remade here.
 
-The conversion: Might as printed; Characteristics, Abilities (renamed to
-the Definitive Edition's) and personality as printed; combat worked out
-again from the Definitive Edition's weapons (Init Qik + weapon, Attack
-Dex + Ability + weapon, Defense Qik + Ability + weapon, Damage Str +
-weapon), Soak as Stamina plus the protection the old Soak gave beyond
-Stamina and Size. Each power is priced in Might points: a rated power
+The conversion: Characteristics, Abilities (renamed to the Definitive
+Edition's) and personality as printed; each attack and Soak is entered
+at the book's totals for `fourth.reconvert`. Each power is priced in Might points: a rated power
 becomes an effect at a Definitive Edition level (the old rating x 5
 where the book gave that rule, a guideline's level elsewhere) costing its
 magnitude in Might, or 1 point a magnitude for the elemental controls,
@@ -215,8 +212,8 @@ def _jinn(levant: Levant) -> None:
             ],
             "traits": {"Patient": 6, "Brave": 6, "Motherly": 3, "Distracted": 3},
         },
-        attacks=[b.attack("Stony fist", -3, 5, 2, 10)],
-        soak=31,
+        attacks=[b.attack("Stony fist", 8, 8, -1, 23)],
+        soak=35,
         fatigue_levels=FATIGUE,
         powers=[
             _control(levant, "Terram", 10, -3),
@@ -307,8 +304,8 @@ def _jinn(levant: Levant) -> None:
             ],
             "traits": {"Bitter": 6, "Miserable": 5, "Brave": 5},
         },
-        attacks=[b.attack("Fist", 4, 11, 12, 7)],
-        soak=11,
+        attacks=[b.attack("Fist", 16, 13, 12, 15)],
+        soak=14,
         fatigue_levels=FATIGUE,
         powers=[
             _control(levant, "Aquam", 10, 4),
@@ -386,11 +383,11 @@ def _jinn(levant: Levant) -> None:
             "traits": {"Murderous": 6, "Brave": 5, "Evil": 5},
         },
         attacks=[
-            b.attack("Fist", 4, 9, 8, 5),
-            b.attack("Long sword", 6, 15, 11, 11),
-            b.attack("Long sword and round shield", 6, 15, 13, 11),
+            b.attack("Fist", 10, 12, 10, 5),
+            b.attack("Long sword", 14, 13, 15, 9),
+            b.attack("Long sword and round shield", 13, 14, 18, 9),
         ],
-        soak=10,
+        soak=12,
         fatigue_levels=FATIGUE,
         equipment="Long sword, round shield, partial chain mail.",
         powers=[
@@ -484,8 +481,8 @@ def _naddaha(levant: Levant) -> None:
             "traits": {"Cruel": 5},
         },
         attacks=[
-            b.attack("Fist", 3, 8, 8, 5),
-            b.attack("Grapple (the spiked embrace)", 3, 8, 8, None),
+            b.attack("Fist", 8, 8, 8, 5),
+            b.attack("Grapple (the spiked embrace)", 9, 9, 9, None),
         ],
         soak=8,
         fatigue_levels=FATIGUE,
@@ -551,8 +548,8 @@ def _luigi(levant: Levant) -> None:
             ],
             "traits": {"Curious": 4, "Independent": 2, "Cruel to enemies": 1},
         },
-        attacks=[b.attack("Claws and teeth", 2, 5, 6, -1)],
-        soak=1,
+        attacks=[b.attack("Claws and teeth", 5, 5, 7, -3)],
+        soak=-2,
         fatigue_levels=FATIGUE,
         vis=[
             BodyVis(1, "Animal", "in his left eye"),

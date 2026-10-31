@@ -4,15 +4,13 @@ Ice prints, converted from the Fourth Edition (A19).
 Hera, the Cave's ghost autocrat (Magic Might 65, the block's figure, not
 the text's 45); Jane, the Fifth Primus, for the spectral Primi (Magic
 Might 75 in a pool all the Primi share); the barbegazi, the snow gnomes
-(Faerie Might 20); and Crucifixo, Andru's cat, whose Familiar record
+(Faerie Might 5, as the dwarf of RoP:F pp. 96-97; 20 as printed); and Crucifixo, Andru's cat, whose Familiar record
 stats_magi.py rebuilds by the Definitive Edition's rules.
 
-The conversion: Might and Characteristics as printed; Abilities renamed
-to the Definitive Edition's; Confidence at the Definitive Edition's
-baseline for important creatures (a Score of 1 and 3 Points, DE p. 426),
-not the old 9; each power priced in Might points at a Definitive Edition
-level, a magnitude a point, its Init the creature's Quickness less its
-cost. Beings the book names with no stats (Mircalla, the Tatzelwurmli,
+The conversion, by fourth.py's rules for creatures: Characteristics as
+printed; Abilities renamed to the Definitive Edition's; Confidence at the
+Definitive Edition's baseline for important creatures (a Score of 1 and 3
+Points, DE p. 426), not the old 9. Beings the book names with no stats (Mircalla, the Tatzelwurmli,
 Pilate's ghost, the Dachstein giants, the Fanes, the blizzard demons,
 the folly spirits, the basilisks) are in their places' summaries.
 
@@ -221,23 +219,25 @@ def _barbegazi(alps: Alps) -> None:
         fatigue_levels="OK, -1, -5, Incapacitated",
         powers=[
             b.power(
-                "Command of the Snows",
-                1,
-                1,
+                "Bury in Snow",
+                3,
+                -1,
                 "Auram",
-                level=40,
-                does="Works any non-Ritual Auram effect up to level 40 (the "
-                "book's Control Auram 8), at 1 Might point a magnitude: above "
-                "all, instant snowstorms that bury them and their enemies.",
+                rtd=("Voice", "Diameter", "Group"),
+                level=25,
+                does="A snowstorm that buries the gnomes and their enemies: "
+                "the book's Control Auram 8, fixed as a Greater Power, as "
+                "their Might follows their role.",
             ),
             b.power(
-                "Command of the Mountain",
-                1,
-                1,
+                "Shake the Mountain",
+                3,
+                -1,
                 "Terram",
-                level=40,
-                does="Works any non-Ritual Terram effect up to level 40 (the "
-                "book's Control Terram 8), at 1 Might point a magnitude.",
+                rtd=("Voice", "Momentary", "Group"),
+                level=25,
+                does="Brings snow and rock down on those below: the book's "
+                "Control Terram 8, fixed as a Greater Power.",
             ),
             b.power(
                 "Faerie Gifts",

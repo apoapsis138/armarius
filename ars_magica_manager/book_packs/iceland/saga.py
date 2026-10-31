@@ -39,6 +39,7 @@ from ..builder import (
 from ..fourth import Fourth, convert
 
 S = Builder.stage
+AREA = "Iceland"
 DATED = "Fixed dates"
 TRACK = "A track"
 BONISAGUS = "house_bonisagus"
@@ -467,6 +468,7 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
                 "-5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated. LFI p. 83."
             ),
         ),
+        area=AREA,
     )
     b.stats(peter, _without(stat, "The Gift", "Hermetic Magus"))
     brighde = b.magus(
@@ -527,6 +529,7 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
                 "-3, -5, Incapacitated. LFI p. 84."
             ),
         ),
+        area=AREA,
     )
     b.stats(brighde, _without(stat, "Hermetic Magus"))
     _founders(b)

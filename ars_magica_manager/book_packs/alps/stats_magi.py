@@ -6,7 +6,7 @@ Four magi: Kentigern (p. 47), Miklos (p. 60), Ragoneda (p. 71) and Andru
 converted by `fourth.convert` with the readings that module lists:
 printed ages kept, Confidence at the Definitive Edition's baseline (DE
 p. 29; Ragoneda +1 for her Tytalus apprenticeship), Twilight Points / 3
-as Warping, Certamen dropped as no Ability now. Kentigern's four Minor
+as Warping, Certamen's experience moved to Penetration. Kentigern's four Minor
 Magic Deficiencies are Deficient Form on Auram, Aquam, Terram and Ignem
 (DE p. 125), Ragoneda's two Major ones Deficient Form on Imaginem and
 Mentem. A 4e Affinity with a subject that is not an Art (cloth, bones,
@@ -47,6 +47,9 @@ from ..generated import Profile, apply
 if TYPE_CHECKING:
     from ...models import Character
     from .state import Alps
+
+#: The Area Lore that takes a block's Legend Lore.
+AREA = "Greater Alps Tribunal"
 
 KENTIGERN = Fourth(
     age=99,
@@ -836,7 +839,7 @@ def stats(alps: Alps) -> None:
         character = alps.magi.get(key)
         if character is None:
             continue
-        stat, age = convert(key, block)
+        stat, age = convert(key, block, area=AREA)
         b.stats(character, stat)
         character.background.year_born = b.year - age
         _own_spells(character)
@@ -915,7 +918,7 @@ CYMENA: StatBlock = {
         "baseline, not the old 3. Her Redcap, Indenture and Whitlams Virtues "
         "fold into the Definitive Edition's Redcap (DE p. 105), which gives "
         "Well-Traveled; Climb is Athletics, Disguise and Guile are Guile, "
-        "Storytelling is Charm, Scribe Latin is Artes Liberales.\n"
+        "Storytelling is Living Language, Scribe Latin is Artes Liberales.\n"
         "Her devices: a warm copper triangle pin (CrIg 6, constant) that also "
         "gives her Eyes of the Cat once a day (MuCo(An) 10); a golden "
         "lickstone, a small plate that clings to the palate and hides itself, "

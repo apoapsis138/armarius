@@ -28,6 +28,7 @@ from ...models import Character, Covenant, Creature, Neighbour, Saga, Tribunal
 from ...rules.sites import PLACE
 from .. import BookPack, east, register
 from ..builder import Builder
+from ..fourth import reconvert
 
 NAME = "Blood and Sand: the Levant Tribunal"
 SOURCE = (
@@ -140,6 +141,11 @@ def assemble() -> Builder:
         stats = getattr(part, "stats", None)
         if stats is not None:
             stats(levant)
+    reconvert(
+        levant.b.saga,
+        {"Naddaha": 15},
+        orders={"Lucius": ("Tempter", None)},
+    )
     return levant.b
 
 

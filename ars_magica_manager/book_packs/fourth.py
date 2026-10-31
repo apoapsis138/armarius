@@ -11,15 +11,23 @@ The readings every Fourth Edition pack shares:
   character is built from, and these are printed, not built.
 - Characteristics and Arts as printed; no rebalancing.
 - Virtues and Flaws at the catalog's tier under their Fifth Edition
-  names (a Flaw with both tiers in the catalog is Major at -2 or worse,
-  Minor at -1); those with no Fifth Edition counterpart dropped, and
+  names (a Personality Flaw with both tiers in the catalog is Major at
+  -2 or worse, Minor at -1; a Story Flaw is Major, DE p. 537); those with no Fifth Edition counterpart dropped, and
   Quaesitor, an office of House Guernicus rather than a Virtue (DE pp.
   67-68), dropped with the office noted.
-- Abilities kept at their scores and renamed; a dropped Ability's
-  experience moved to its replacement. Certamen has no Ability now (DE p.
-  537), so its points are dropped.
-- Spells at the catalog's level and Art; each one the catalog lacks
-  swapped for a catalog spell of the same Technique, Form and level. A
+- Abilities kept at their scores and renamed. A 4e total is a fifth of
+  the 5e total for the same score, so the experience of a removed Ability
+  goes, at 5e cost, to its replacement (DE p. 538), with no cap on what
+  that buys: Certamen, which has no Ability now (DE p. 537), to
+  Penetration; Legend Lore to Area Lore, where DE puts legends (DE p.
+  159); Disputatio to Teaching; a storyteller's Ability to his best
+  Living Language (DE p. 168). An Affinity Ability's points go to the Art
+  it served, at the same cost, as 4e prices Abilities as 5e prices Arts.
+- A Talent DE keeps as a Supernatural Ability brings its Virtue
+  (Curse-Throwing, Hex, Shapeshifter).
+- Spells at the catalog's level and Art. A spell the catalog lacks stays,
+  as the magus's own at its printed level; only what Hermetic magic can no
+  longer do is swapped, for a spell of the same level (DE p. 538). A
   magus whose book lists no spells, only the Arts he knows "all listed
   formulaics" in, knows the Definitive Edition's spells of those Arts
   within his Lab Total (`listed`), mastered where the book says so.
@@ -32,11 +40,19 @@ The readings every Fourth Edition pack shares:
 from __future__ import annotations
 
 from collections.abc import Mapping, Sequence
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
-from ..rules.xp import ability_xp, score_from_xp
-from .builder import StatBlock, _catalog_spells, _spell_key
+from ..models import Creature, CreatureAttack, Saga
+from ..rules.xp import (
+    ABILITY_FACTOR,
+    ART_FACTOR,
+    ability_xp,
+    art_xp,
+    score_from_xp,
+)
+from .builder import StatBlock, _catalog_spells, _spell_key, paragraphs
+from .builder import _ability as block_ability
 
 #: The Definitive Edition's Confidence: (Score, Points) for an important
 #: character, and with Self-Confident (DE pp. 29, 107).
@@ -189,6 +205,8 @@ TWO_TIERS = {
     "Proud",
     "True Love",
 }
+#: Flaws with both tiers that are Story Flaws, so Major (DE p. 537).
+STORY_FLAWS = {"True Love"}
 #: How many copies a printed entry becomes (ArM4's -4 Feeble Communication
 #: is two steps of Poor Communication, to -5).
 COPIES = {"Feeble Communication": 2}
@@ -198,7 +216,6 @@ ABILITIES: dict[str, str] = {
     "Brawling": "Brawl",
     "Hermes Lore": "Organization Lore: Order of Hermes",
     "Hermetic Law": "Code of Hermes",
-    "Legend Lore": "Magic Lore",
     "Occult Lore": "Infernal Lore",
     "Levant Lore": "Area Lore: Levant Tribunal",
     "Longshaft Weapon": "Great Weapon",
@@ -207,7 +224,7 @@ ABILITIES: dict[str, str] = {
     "Climb": "Athletics",
     "Rabbinical Law": "Rabbinic Law",
     "Civil & Canon Law": "Civil and Canon Law",
-    "Disputatio": "Artes Liberales",
+    "Disputatio": "Teaching",
     "Divination: Astrology": "Artes Liberales",
     "Forgery": "Guile",
     "Read Lips": "Awareness",
@@ -223,8 +240,6 @@ ABILITIES: dict[str, str] = {
     "Play": "Music",
     "Play Lute": "Music",
     "Sing": "Music",
-    "Storyteller": "Charm",
-    "Storytelling": "Charm",
     "Boating": "Profession: Boatman",
     "Wagoneering": "Profession: Teamster",
     "Theology": "Theology: Christian",
@@ -237,12 +252,31 @@ ABILITIES: dict[str, str] = {
     "Herbalism": "Profession: Herbalist",
     "Clan History": "Organization Lore: the Kama clans",
     "Theology: Slavic": "Theology: Pagan",
+    "Certamen": "Penetration",
+    "Verditius Magic": "Magic Theory",
+    "Visions": "Premonitions",
+    "Curse": "Curse-Throwing",
 }
 #: Printed Abilities that are one skill with their replacement, so the
 #: better score stands rather than the two adding up.
 SAME_SKILL = {"Shield and Weapon", "Weapon and Shield"}
-#: Printed Abilities the Definitive Edition has no place for.
-NO_ABILITY = {"Certamen", "Verditius Magic", "Magic Affinity", "Visions"}
+#: The printed Abilities that are a storyteller's, which DE puts in Living
+#: Language.
+STORYTELLING = {"Storyteller", "Storytelling"}
+#: What a printed Affinity served, where that is not an Art's own name.
+AFFINITY_ARTS = {
+    "birds": "Animal",
+    "bones": "Corpus",
+    "cloth": "Herbam",
+    "emotions": "Mentem",
+    "felines": "Animal",
+    "illusions of sight": "Imaginem",
+    "weather": "Auram",
+}
+#: The Arts an Affinity with the elements may serve: its magus's best.
+ELEMENTS = ("Aquam", "Auram", "Ignem", "Terram")
+#: Abilities that come with the Supernatural Virtue of the same name.
+VIRTUE_ABILITIES = {"Curse-Throwing", "Hex", "Shapeshifter"}
 
 #: Printed spells the catalog has under another name.
 SPELL_RENAMES: dict[str, str] = {
@@ -271,56 +305,258 @@ SPELL_RENAMES: dict[str, str] = {
     "Circular Ward Against Faeries": "Circular Ward Against Faerie Spirits",
     "Ward Against Faeries of the Water": "Ward Against Faeries of the Waters",
 }
-#: Each spell the catalog lacks, and the catalog spell of the same
-#: Technique, Form and level it becomes.
+#: Printed spells Hermetic magic can no longer cast, as it cannot see the
+#: past or the future (DE p. 537), and the spell of the same Technique,
+#: Form and level each becomes.
 SWAPS: dict[str, str] = {
-    # ArM4 core spells
-    "Breaking the Perpetual Drought": "Wizard's Flood",
-    "Full Health of Beast and Bird": "Flight Perfected",
-    "Subtle Shift of the Heart": "Distraction of the Magpie",
-    "Circle of the Faerie Stone": "Silvery Scales of the Knight",
-    "Heat of Hell's Impending Doom": "Rainbow Bridge",
-    "Emotion of Reversed Intentions": "My Old and Dear Friend",
-    # impossible now: Hermetic magic cannot see the past or the future
     "Eyes of the Past": "The Ear for Distant Voices",
     "Eyes of the Future": "Sight of the Blossom, Ears of the Oak",
-    # Wizard's Grimoire Revised
-    "Change the River's Path": "Chaos of the Angry Waves",
-    "Fulgurous Orb": "Catapult of the Mighty Winds",
-    "The Travelling Thistledown": "Embracing the Downy Arms of the Nephelae",
-    "Call Aeolus' Servants": "Movement Within the Sirocco",
-    "Prison of the Zephyrs": "Ward Against the Sirocco",
-    "Breath of Vulcan": "Self Immolation",
-    "Curse of the Attraction of the Fire": "Unified Flame",
-    "Blessing of Antaeus' Fortitude": "Stance of the Patient Tree",
-    "Gift of the Buoyant Gosling": "Cloak of Fins and Scales",
-    "Humility of the Vanquished Knight": "My Old and Dear Friend",
-    "Weighing the Turncoat's Silver": "Frosty Breath of the Spoken Lie",
-    "Mastering the Stolid Mundane": "Lay Your Burdens on Me",
-    "Beguile the Normal Mind": "Enchantment of my Lover's Eye",
-    "Sense the Magic Root": "Intuition of the Forest",
-    "Wizard's Sleeve of Practical Tools": "Breath of the Glassworker",
-    "Origin of the Ancient Object": "Eyes of the Treacherous Terrain",
-    "Gift of the Hero's Strength": "High Tree or Small Boulder",
-    "Mighty Fling of the Menacing Knight": "Jump of the Lynx",
-    "Enlarging the Distant Image": "Aura of the Ennobled Presence",
-    "Eyes of the Serpent": "Rise of the Feathery Body",
-    "Eyes of Flame": "Circle of Encompassing Flames",
-    "Pain of the Wizard's Gaze": "Bane of the Decrepit Body",
-    "Spectacle of Abject Terror": "Convince a Man he has an Enemy",
-    "Spell Analysis": "Impression of the Faded Sigil",
-    "Sense the Shadows of the Spheres": "Sense the Hour",
-    "Wizard's Focus": "Reveal the Lurking Watchers",
-    "Glimpse Through the Mystic Veil": "Piercing the Faerie Veil",
-    "Reveal the Gift": "See the Light of Magic",
-    "Warping the Magical Veil": "Clear Breath of the Consummate Liar",
-    "Hammer of Thaumaturgical Shattering": "Snipping the Thread of Power",
-    "Wizard's Wait": "The Patient Spell",
-    "Eyes of the Owl": "Eyes of the Cat",
-    # ArM4 core spells the Novgorod magi know
-    "Tongue of the Beasts": "Tongue of the Fishes",
-    "Tongue of the Birds": "Hunter's Sense",
-    "The Immaculate Beast": "Beast of Outlandish Size",
+}
+
+
+#: A printed spell the catalog lacks, designed by the Definitive Edition's
+#: guidelines: level, Range, Duration, Target and the working. General spells
+#: and those the guidelines have no place for keep the printed level.
+SPELL_DESIGNS: dict[str, tuple[int, str, str, str, str]] = {
+    "Beguile the Normal Mind": (
+        20,
+        "Eye",
+        "Sun",
+        "Individual",
+        "Base 5, +1 Eye, +2 Sun",
+    ),
+    "Blessing of Antaeus' Fortitude": (
+        35,
+        "Personal",
+        "Sun",
+        "Individual",
+        "Base 25, +2 Sun",
+    ),
+    "Breaking the Perpetual Drought": (
+        30,
+        "Touch",
+        "Sun",
+        "Boundary",
+        "Base 3, +1 Touch, +2 Sun, +4 Boundary",
+    ),
+    "Breath of Vulcan": (
+        35,
+        "Voice",
+        "Momentary",
+        "Room",
+        "Base 15, +2 Voice, +2 Room",
+    ),
+    "Call Aeolus' Servants": (
+        25,
+        "Voice",
+        "Sun",
+        "Room",
+        "Base 3, +2 Voice, +2 Sun, +2 Room",
+    ),
+    "Change the River's Path": (
+        30,
+        "Voice",
+        "Concentration",
+        "Part",
+        "Base 5, +2 Voice, +1 Conc, +1 Part, +1 size",
+    ),
+    "Circle of the Faerie Stone": (
+        30,
+        "Voice",
+        "Sun",
+        "Individual",
+        "Base 3, +2 Voice, +2 Sun, +3 size",
+    ),
+    "Emotion of Reversed Intentions": (
+        20,
+        "Eye",
+        "Sun",
+        "Individual",
+        "Base 5, +1 Eye, +2 Sun",
+    ),
+    "Enlarging the Distant Image": (
+        10,
+        "Sight",
+        "Concentration",
+        "Individual",
+        "Base 2, +3 Sight, +1 Conc",
+    ),
+    "Eyes of Flame": (
+        25,
+        "Eye",
+        "Momentary",
+        "Individual",
+        "Base 15, +1 Eye, +1 blinding",
+    ),
+    "Eyes of the Owl": (
+        5,
+        "Touch",
+        "Sun",
+        "Individual",
+        "Base 2, +1 Touch, +2 Sun, as Eyes of the Cat",
+    ),
+    "Eyes of the Serpent": (
+        10,
+        "Eye",
+        "Concentration",
+        "Individual",
+        "Base 4, +1 Eye, +1 Conc",
+    ),
+    "Fulgurous Orb": (
+        35,
+        "Voice",
+        "Momentary",
+        "Room",
+        "Base 20, +2 Voice, +1 thunderclap",
+    ),
+    "Full Health of Beast and Bird": (
+        25,
+        "Touch",
+        "Momentary",
+        "Individual",
+        "Base 20, +1 Touch, Ritual",
+    ),
+    "Gift of the Buoyant Gosling": (
+        20,
+        "Sight",
+        "Sun",
+        "Individual",
+        "Base 3, +3 Sight, +2 Sun",
+    ),
+    "Gift of the Hero's Strength": (
+        20,
+        "Touch",
+        "Sun",
+        "Individual",
+        "Base 5, +1 Touch, +2 Sun",
+    ),
+    "Glimpse Through the Mystic Veil": (
+        20,
+        "Personal",
+        "Concentration",
+        "Vision",
+        "Base 3, +1 Conc, +4 Vision, as Piercing the Faerie Veil",
+    ),
+    "Heat of Hell's Impending Doom": (
+        30,
+        "Touch",
+        "Concentration",
+        "Boundary",
+        "Base 3, +1 Touch, +1 Conc, +4 Boundary, +1 unnatural, Ritual",
+    ),
+    "Humility of the Vanquished Knight": (
+        20,
+        "Eye",
+        "Sun",
+        "Individual",
+        "Base 5, +1 Eye, +2 Sun",
+    ),
+    "Mastering the Stolid Mundane": (
+        35,
+        "Eye",
+        "Concentration",
+        "Individual",
+        "Base 25, +1 Eye, +1 Conc",
+    ),
+    "Mighty Fling of the Menacing Knight": (
+        20,
+        "Voice",
+        "Momentary",
+        "Individual",
+        "Base 10, +2 Voice",
+    ),
+    "Origin of the Ancient Object": (
+        15,
+        "Touch",
+        "Concentration",
+        "Individual",
+        "Base 5, +1 Touch, +1 Conc",
+    ),
+    "Pain of the Wizard's Gaze": (
+        25,
+        "Sight",
+        "Concentration",
+        "Individual",
+        "Base 5, +3 Sight, +1 Conc",
+    ),
+    "Prison of the Zephyrs": (
+        25,
+        "Voice",
+        "Sun",
+        "Individual",
+        "Base 5, +2 Voice, +2 Sun",
+    ),
+    "Reveal the Gift": (20, "Voice", "Momentary", "Individual", "Base 10, +2 Voice"),
+    "Sense the Magic Root": (
+        10,
+        "Touch",
+        "Momentary",
+        "Individual",
+        "Base 5, +1 Touch",
+    ),
+    "Sense the Shadows of the Spheres": (
+        20,
+        "Personal",
+        "Special",
+        "Individual",
+        "Ritual at the least level",
+    ),
+    "Spectacle of Abject Terror": (
+        20,
+        "Voice",
+        "Sun",
+        "Individual",
+        "Base 4, +2 Voice, +2 Sun",
+    ),
+    "Subtle Shift of the Heart": (
+        10,
+        "Eye",
+        "Sun",
+        "Individual",
+        "Base 3, +1 Eye, +2 Sun",
+    ),
+    "The Immaculate Beast": (
+        15,
+        "Touch",
+        "Sun",
+        "Individual",
+        "Base 4, +1 Touch, +2 Sun",
+    ),
+    "The Travelling Thistledown": (
+        20,
+        "Touch",
+        "Sun",
+        "Individual",
+        "Base 5, +1 Touch, +2 Sun",
+    ),
+    "Tongue of the Beasts": (
+        20,
+        "Touch",
+        "Concentration",
+        "Individual",
+        "as Tongue of the Fishes",
+    ),
+    "Tongue of the Birds": (
+        25,
+        "Personal",
+        "Sun",
+        "Hearing",
+        "Base 4, +2 Sun, +3 Hearing",
+    ),
+    "Weighing the Turncoat's Silver": (
+        20,
+        "Eye",
+        "Momentary",
+        "Individual",
+        "Base 15, +1 Eye, as Posing the Silent Question",
+    ),
+    "Wizard's Sleeve of Practical Tools": (
+        15,
+        "Touch",
+        "Sun",
+        "Individual",
+        "Base 3, +1 Touch, +2 Sun, +1 metal",
+    ),
 }
 
 
@@ -342,7 +578,8 @@ def _virtues(block: Fourth) -> tuple[list[Any], list[str]]:
         if new == "Deficient Form" and detail in TECHNIQUE_NAMES:
             new = "Deficient Technique"
         if new in TWO_TIERS:
-            new = f"{new} ({'Major' if points <= -2 else 'Minor'})"
+            major = points <= -2 or new in STORY_FLAWS
+            new = f"{new} ({'Major' if major else 'Minor'})"
         key = PARAMETER.get(RENAMED.get(name, name)) or PARAMETER.get(new)
         if new == "Deficient Technique":
             key = "technique"
@@ -362,20 +599,52 @@ def _virtues(block: Fourth) -> tuple[list[Any], list[str]]:
     return entries, said
 
 
-def _abilities(block: Fourth) -> tuple[list[tuple[str, int, str]], list[str]]:
+def _affinity_art(name: str, specialty: str, block: Fourth) -> str:
+    """The Art a printed Affinity Ability served, or "" for any other."""
+    if name == "Magic Affinity":
+        served = specialty
+    elif name.startswith("Affinity "):
+        served = name.removeprefix("Affinity ")
+    else:
+        return ""
+    if served.lower() == "elements":
+        return max(ELEMENTS, key=lambda art: block.arts.get(art, 0))
+    return AFFINITY_ARTS.get(served.lower(), served.capitalize())
+
+
+def _tongue(block: Fourth) -> str:
+    """The block's best living language, as a Fifth Edition Ability."""
+    spoken = [
+        (score, name.removeprefix("Speak "))
+        for name, score, _ in block.abilities
+        if name.startswith("Speak ") and name != "Speak Latin"
+    ]
+    return f"Living Language: {max(spoken)[1]}"
+
+
+def _abilities(
+    block: Fourth, area: str
+) -> tuple[list[tuple[str, int, str]], dict[str, int], dict[str, int], list[str]]:
     """The block's Abilities in Fifth Edition terms, merged where two
-    became one, and what moved. Printings of one skill (Scribe in each
-    language; a weapon Ability and its weapon-and-shield form) count once,
-    at the best score; any other Ability moved in adds its experience."""
+    became one; the experience past each new score; the Art points its
+    Affinities give; and what moved. Printings of one skill (Scribe in
+    each language; a weapon Ability and its weapon-and-shield form) count
+    once, at the best score; any other Ability moved in adds its
+    experience. `area` is the pack's Area Lore, for Legend Lore."""
     same_skill = {ABILITIES[name] for name in SAME_SKILL}
     moved: dict[str, int] = {}
     best: dict[str, int] = {}
     specialty: dict[str, str] = {}
+    art_points: dict[str, int] = {}
     said: list[str] = []
     for name, score, spec in block.abilities:
-        if name in NO_ABILITY or name.startswith("Affinity "):
-            said.append(f"{name} {score} dropped")
+        art = _affinity_art(name, spec, block)
+        if art:
+            points = ability_xp(score) // ABILITY_FACTOR
+            art_points[art] = art_points.get(art, 0) + points
+            said.append(f"{name} {score} to {art}, {points} xp")
             continue
+        one_skill = False
         if name.startswith("Scribe "):
             new, one_skill = "Artes Liberales", True
         elif name.startswith("Speak "):
@@ -385,7 +654,10 @@ def _abilities(block: Fourth) -> tuple[list[tuple[str, int, str]], list[str]]:
                 if tongue == "Latin"
                 else (f"Living Language: {tongue}")
             )
-            one_skill = False
+        elif name == "Legend Lore":
+            new, spec = f"Area Lore: {area}", "legends"
+        elif name in STORYTELLING:
+            new = _tongue(block)
         else:
             new = ABILITIES.get(name, name)
             one_skill = name in SAME_SKILL or name in same_skill
@@ -398,11 +670,15 @@ def _abilities(block: Fourth) -> tuple[list[tuple[str, int, str]], list[str]]:
             moved[new] += ability_xp(score)
         if new != name and not name.startswith("Speak "):
             said.append(f"{name} {score} to {new}")
-    abilities = [
-        (new, score_from_xp(ability_xp(best[new]) + moved[new], 5), spec)
-        for new, spec in specialty.items()
-    ]
-    return abilities, said
+    abilities: list[tuple[str, int, str]] = []
+    spare: dict[str, int] = {}
+    for new, spec in specialty.items():
+        total = ability_xp(best[new]) + moved[new]
+        score = score_from_xp(total, ABILITY_FACTOR)
+        abilities.append((new, score, spec))
+        if total > ability_xp(score):
+            spare[new] = total - ability_xp(score)
+    return abilities, spare, art_points, said
 
 
 def _spells(
@@ -433,7 +709,10 @@ def _spells(
             if spell.level != level or short != arts[:4]:
                 now = "general" if spell.level is None else spell.level
                 changed.append(f"{name} {arts} {level} to {short} {now}")
-        known.append((new, arts, level, block.mastery))
+        design = SPELL_DESIGNS.get(new)
+        if design and design[0] != level:
+            changed.append(f"{name} {arts} {level} to level {design[0]}")
+        known.append((new, arts, design[0] if design else level, block.mastery))
     if changed:
         said.append("At the catalog's level or Art: " + "; ".join(changed))
     return known, said
@@ -443,12 +722,18 @@ def convert(
     key: str,
     block: Fourth,
     second_swaps: Mapping[tuple[str, str], str] | None = None,
+    *,
+    area: str,
 ) -> tuple[StatBlock, int]:
     """A Fourth Edition block as a Definitive Edition StatBlock, with its
     age; the biography lists what changed. `second_swaps` are a pack's
-    swaps made otherwise for one magus, by (key, printed spell)."""
+    swaps made otherwise for one magus, by (key, printed spell); `area`
+    is the pack's Area Lore, which takes the block's Legend Lore."""
     virtues, said_virtues = _virtues(block)
-    abilities, said_abilities = _abilities(block)
+    abilities, spare, art_points, said_abilities = _abilities(block, area)
+    held = {v if isinstance(v, str) else v[0] for v in virtues}
+    virtues += sorted({n for n, _, _ in abilities} & VIRTUE_ABILITIES - held)
+    arts, spare_art = _with_art_points(block.arts, art_points)
     spells, said_spells = _spells(key, block, second_swaps or {})
     warping = block.twilight // 3
     score, points = confidence(block, virtues)
@@ -477,7 +762,10 @@ def convert(
         "warping": (warping, 0),
         "virtues_flaws": virtues,
         "abilities": abilities,
-        "arts": dict(block.arts),
+        "arts": arts,
+        "spare_xp": spare,
+        "spare_art_xp": spare_art,
+        "spell_designs": SPELL_DESIGNS,
         "traits": dict(block.traits),
         "reputations": dict(block.reputations),
         "spells": spells,
@@ -487,6 +775,21 @@ def convert(
     if block.apparent:
         stat["apparent_age"] = block.apparent
     return stat, block.age
+
+
+def _with_art_points(
+    printed: Mapping[str, int], points: Mapping[str, int]
+) -> tuple[dict[str, int], dict[str, int]]:
+    """Arts with `points` of experience added, and what is left past each
+    new score."""
+    scores = dict(printed)
+    spare: dict[str, int] = {}
+    for art, gained in points.items():
+        total = art_xp(scores.get(art, 0)) + gained
+        scores[art] = score_from_xp(total, ART_FACTOR)
+        if total > art_xp(scores[art]):
+            spare[art] = total - art_xp(scores[art])
+    return scores, spare
 
 
 def arts(cr: int, in_: int, mu: int, pe: int, re: int, *forms: int) -> dict[str, int]:
@@ -547,3 +850,272 @@ def listed(
                 )
             )
     return sorted(found, key=lambda s: (s[1][:4], s[2], s[0]))
+
+
+# -- creatures --
+#
+# DE pp. 537-538 say only that combat was rewritten, so these rules are the
+# app's own, measured on creatures printed in both editions (the lion,
+# Medieval Bestiary Revised p. 37 and DE p. 434; the bear, the wolf, the
+# griffin). The 4e sheet (ArM4 p. 261) puts Size into Soak and Damage and
+# takes it from Defense; 5e carries it in Strength, Quickness and the wound
+# ranges (DE p. 437), and gives beasts the combat skill 4e left implicit.
+
+#: What a printed Attack lacks beside a 5e one: the measured gap, wolf +7,
+#: lion +8, bear +9, griffin +10.
+ATTACK_GAP = 8
+#: The combat Ability a creature's printed Attack may give, a 5e beast's
+#: range (DE pp. 429-435; the adult griffon, Legends of Hermes p. 134).
+COMBAT_SKILL = (3, 8)
+#: Improved Damage, RoP:M p. 40, and how many times a creature takes it.
+IMPROVED_DAMAGE = 3
+MOST_IMPROVED = 4
+#: Old Protection kept whole, and the Stamina that counts whole for Soak.
+WHOLE_PROTECTION = 4
+WHOLE_STAMINA = 8
+#: The Realms whose powers are priced by the RoP tables: RoP:M p. 36 and
+#: RoP:F p. 55 agree. The Infernal keeps a printed cost.
+PRICED_REALMS = ("Magic", "Faerie")
+
+
+@dataclass(frozen=True)
+class Weapon:
+    """A Definitive Edition weapon's modifiers (DE pp. 408-409, 440)."""
+
+    ability: str
+    init: int
+    attack: int
+    defense: int
+    damage: int
+    natural: bool = False
+
+
+WEAPONS: dict[str, Weapon] = {
+    "Fist": Weapon("Brawl", 0, 0, 0, 0, True),
+    "Kick": Weapon("Brawl", -1, 0, -1, 3, True),
+    "Teeth": Weapon("Brawl", 0, 3, 1, 1, True),
+    "Large teeth": Weapon("Brawl", 0, 4, 1, 3, True),
+    "Claws": Weapon("Brawl", -1, 2, 3, 2, True),
+    "Large claws": Weapon("Brawl", 0, 5, 3, 4, True),
+    "Hooves": Weapon("Brawl", 2, 2, 2, 1, True),
+    "Large horns": Weapon("Brawl", 2, 3, 2, 3, True),
+    "Dagger": Weapon("Brawl", 0, 2, 0, 3),
+    "Club": Weapon("Single Weapon", 1, 2, 1, 3),
+    "Axe": Weapon("Single Weapon", 1, 4, 0, 6),
+    "Long sword": Weapon("Single Weapon", 2, 4, 1, 6),
+    "Long sword and round shield": Weapon("Single Weapon", 2, 4, 3, 6),
+    "Lance": Weapon("Single Weapon", 2, 4, 0, 5),
+    "Short spear": Weapon("Single Weapon", 2, 2, 0, 5),
+    "Great sword": Weapon("Great Weapon", 2, 5, 2, 9),
+    "Long spear": Weapon("Great Weapon", 3, 3, 1, 7),
+    "Warhammer": Weapon("Great Weapon", 0, 6, 0, 12),
+    "Composite bow": Weapon("Bows", -2, 4, 0, 7),
+    "Stone": Weapon("Thrown Weapon", 0, 1, 0, 2),
+}
+#: The weapon an attack's printed name means, the first word found, or the
+#: fist. A large creature's claws and teeth are the large ones.
+WEAPON_WORDS: tuple[tuple[str, str], ...] = (
+    ("shield", "Long sword and round shield"),
+    ("long sword", "Long sword"),
+    ("longsword", "Long sword"),
+    ("great sword", "Great sword"),
+    ("greatsword", "Great sword"),
+    ("long spear", "Long spear"),
+    ("lance", "Lance"),
+    ("spear", "Short spear"),
+    ("bow", "Composite bow"),
+    ("warhammer", "Warhammer"),
+    ("axe", "Axe"),
+    ("club", "Club"),
+    ("dagger", "Dagger"),
+    ("rock", "Stone"),
+    ("boulder", "Stone"),
+    ("kick", "Hooves"),
+    ("hoof", "Hooves"),
+    ("gore", "Large horns"),
+    ("horn", "Large horns"),
+    ("maul", "Large claws"),
+    ("claw", "Claws"),
+    ("talon", "Claws"),
+    ("bite", "Teeth"),
+    ("teeth", "Teeth"),
+    ("beak", "Teeth"),
+)
+LARGER = {"Claws": "Large claws", "Teeth": "Large teeth"}
+#: Printed attacks that are powers, not weapons: left for their power.
+NOT_WEAPONS = ("breath", "molten", "spiritual form")
+
+
+def weapon_of(name: str, size: int) -> Weapon:
+    """The Definitive Edition weapon a printed attack's name means."""
+    lowered = name.lower()
+    found = next((w for word, w in WEAPON_WORDS if word in lowered), "Fist")
+    if size > 0:
+        found = LARGER.get(found, found)
+    return WEAPONS[found]
+
+
+def soak_of(old_protection: int, stamina: int) -> int:
+    """Soak from a Stamina and the Protection the old Soak held: 4e Soak ran
+    higher, so past +4 of Protection half counts, and past +8 of Stamina half
+    (a giant's Sta +20 has no 5e equivalent; RoP:M pp. 86-87 tops out near
+    Soak +14)."""
+    whole = min(old_protection, WHOLE_PROTECTION)
+    protection = whole + (old_protection - whole + 1) // 2
+    return (
+        min(stamina, WHOLE_STAMINA) + max(stamina - WHOLE_STAMINA, 0) // 2 + protection
+    )
+
+
+def rebuild_combat(creature: Creature, *, printed: bool = True) -> None:
+    """Works a creature's Combat and Soak out again from the Fourth Edition
+    totals it holds: a combat Ability from its printed Attack, or a higher
+    score the block has, and the DE formulas for the totals. `printed` is False for a record whose Damage
+    and Soak an earlier reading already took Size out of."""
+    traits = creature.characteristics
+    size, qik = creature.size, traits.quickness
+    if size < 0:
+        # 5e builds smallness into Quickness (DE p. 437); 4e put it in Defense.
+        qik -= size
+        creature.characteristics = replace(traits, quickness=qik)
+    said: list[str] = []
+    skills = {a.name: score_from_xp(a.xp, ABILITY_FACTOR) for a in creature.abilities}
+    rebuilt: list[CreatureAttack] = []
+    wanted: dict[str, int] = {}
+    for line in creature.attacks:
+        if line.attack is None or any(w in line.name.lower() for w in NOT_WEAPONS):
+            continue
+        weapon = weapon_of(line.name, size)
+        worked = line.attack + ATTACK_GAP - traits.dexterity - weapon.attack
+        worked = max(COMBAT_SKILL[0], min(COMBAT_SKILL[1], worked))
+        wanted[weapon.ability] = max(wanted.get(weapon.ability, 0), worked)
+    for line in creature.attacks:
+        if line.attack is None or any(w in line.name.lower() for w in NOT_WEAPONS):
+            rebuilt.append(line)
+            continue
+        weapon = weapon_of(line.name, size)
+        skill = max(skills.get(weapon.ability, 0), wanted[weapon.ability])
+        improved = 0
+        if printed and weapon.natural and line.damage is not None:
+            beyond = line.damage - traits.strength - size - weapon.damage
+            improved = min(max(beyond, 0) // IMPROVED_DAMAGE, MOST_IMPROVED)
+        rebuilt.append(
+            replace(
+                line,
+                init=qik + weapon.init,
+                attack=traits.dexterity + skill + weapon.attack,
+                defense=qik + skill + weapon.defense,
+                damage=None
+                if line.damage is None
+                else traits.strength + weapon.damage + improved * IMPROVED_DAMAGE,
+            )
+        )
+        said.append(
+            f"{line.name} Init {line.init:+d}, Attack {line.attack:+d}, Defense "
+            f"{line.defense:+d}, Damage "
+            + ("n/a" if line.damage is None else f"{line.damage:+d}")
+        )
+    protection = creature.soak - traits.stamina - (size if printed else 0)
+    if creature.can_be_wounded and (creature.soak or creature.attacks):
+        said.append(f"Soak {creature.soak:+d}")
+        creature.soak = soak_of(max(protection, 0), traits.stamina)
+    creature.attacks = rebuilt
+    held = {a.name: a for a in creature.abilities}
+    for ability, score in wanted.items():
+        if ability not in held:
+            creature.abilities.append(block_ability(ability, score, ""))
+        elif skills[ability] < score:
+            held[ability].xp = ability_xp(score)
+    if said:
+        creature.notes = paragraphs(
+            creature.notes, f"As printed in Fourth Edition: {'; '.join(said)}."
+        ).strip()
+
+
+def reprice_powers(creature: Creature) -> None:
+    """Prices a creature's powers by the table for its Realm (RoP:M p. 36,
+    RoP:F p. 55): a formulaic or Personal power of a known level costs half
+    its magnitude, with Init Qik less the same, a Focus Power keeps its cost
+    of a point a magnitude with Init Qik less the magnitude, and a power
+    printed at no cost stays free, as Improved Powers makes a constant one
+    (RoP:M p. 41). An Infernal power keeps its printed cost."""
+    if creature.realm not in PRICED_REALMS:
+        return
+    qik = creature.characteristics.quickness
+    for power in creature.powers:
+        if power.level is None:
+            continue
+        magnitude = max(1, power.level // 5)
+        if "non-Ritual" in power.description or "Focus Power" in power.description:
+            power.init = qik - magnitude
+            continue
+        half = (magnitude + 1) // 2
+        power.init = qik - half
+        if power.might_cost and power.might_cost != half:
+            power.description = (
+                f"{power.description} Fourth Edition: {power.might_cost} points."
+            ).strip()
+            power.might_cost = half
+
+
+@dataclass(frozen=True)
+class Kin:
+    """What a creature takes from its Fifth Edition kin: its Stamina, and
+    its Soak, or None to work Soak out again from that Stamina."""
+
+    stamina: int
+    soak: int | None
+    source: str
+
+
+def take_kin(creature: Creature, like: Kin) -> None:
+    """A creature with its kin's Stamina and Soak, saying so."""
+    if like.soak is None:
+        held = soak_of(0, creature.characteristics.stamina)
+        creature.soak = max(creature.soak - held + soak_of(0, like.stamina), 0)
+    else:
+        creature.soak = like.soak
+    creature.characteristics = replace(creature.characteristics, stamina=like.stamina)
+    creature.notes = paragraphs(creature.notes, f"Stamina and Soak as {like.source}.")
+
+
+def reconvert(
+    saga: Saga,
+    might: Mapping[str, int],
+    *,
+    kin: Mapping[str, Kin] | None = None,
+    printed: bool = True,
+    forms: Mapping[str, str] | None = None,
+    orders: Mapping[str, tuple[str, int | None]] | None = None,
+    designs: Mapping[tuple[str, str], tuple[int, tuple[str, str, str]]] | None = None,
+) -> None:
+    """Every creature of a Fourth Edition pack in Definitive Edition terms.
+    `might` holds the Might of each creature set by the standing rule: a
+    unique being keeps its printed score, a creature with 5e kin takes the
+    kin's, a demon RoP:I p. 30, a dragon RoP:M p. 74, a faerie RoP:F p. 47,
+    and anything else its role and power on the chart of RoP:M p. 34. A
+    power never raises it. `forms` are Might Forms this conversion sets,
+    `orders` a demon's order and Hierarchy (RoP:I p. 30), and `designs` a
+    power's level, Range, Duration and Target by the guidelines, by
+    (creature, power)."""
+    for creature in saga.creatures:
+        new = might.get(creature.name)
+        if new is not None and new != creature.might:
+            creature.notes = paragraphs(
+                creature.notes, f"Might {creature.might} as printed."
+            )
+            creature.might = new
+        rebuild_combat(creature, printed=printed)
+        like = (kin or {}).get(creature.name)
+        if like is not None:
+            take_kin(creature, like)
+        creature.might_form = (forms or {}).get(creature.name, creature.might_form)
+        order = (orders or {}).get(creature.name)
+        if order is not None:
+            creature.order, creature.hierarchy = order
+        for power in creature.powers:
+            design = (designs or {}).get((creature.name, power.name))
+            if design is not None:
+                power.level = design[0]
+                power.range, power.duration, power.target = design[1]
+        reprice_powers(creature)

@@ -26,6 +26,7 @@ from ..builder import secrets as hidden
 from ..fourth import Fourth, convert
 
 S = Builder.stage
+AREA = "Iceland"
 #: The Definitive Edition's Confidence for an important creature.
 CONFIDENCE = (1, 3)
 TROLL_FATIGUE = "OK, 0, 0, 0, -1, -3, -5, Unconscious"
@@ -109,7 +110,7 @@ def _mundane(
 ) -> Character:
     """A mundane the book gives a block: converted, without the Gift and
     the Hermetic Virtue the conversion gives a magus."""
-    stat, age = convert(name, block)
+    stat, age = convert(name, block, area=AREA)
     stat["virtues_flaws"] = []
     person = b.magus(
         name,

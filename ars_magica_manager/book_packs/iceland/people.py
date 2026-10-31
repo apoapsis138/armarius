@@ -745,9 +745,11 @@ def _creatures(b: Builder) -> None:
         block={
             "characteristics": characteristics(-3, -1, -2, -2, 6, 4, -1, -2),
             "abilities": [
+                ("Curse-Throwing", 7, ""),
                 ("Shapeshifter", 5, ""),
                 ("Living Language: Jotunn", 5, ""),
             ],
+            "virtues_flaws": ["Curse-Throwing", "Shapeshifter"],
             "traits": {"Aggressive": 2, "Territorial": 2},
         },
         attacks=[
@@ -758,26 +760,6 @@ def _creatures(b: Builder) -> None:
         soak=15,
         fatigue_levels=TROLL_FATIGUE,
         powers=[
-            b.power(
-                "Shapeshift",
-                1,
-                -3,
-                "Corpus",
-                rtd=PERSONAL,
-                does="Every troll changes shape as if with the Shapeshift Talent "
-                "at 5; the book gives +7 on the roll, from Intelligence -3 and "
-                "Speak Jotunn 5. Each change costs 1 Might; going back to troll "
-                "form costs none.",
-            ),
-            b.power(
-                "Curse",
-                2,
-                -4,
-                "Vim",
-                does="CrVi. Most trolls can curse an opponent, few with any "
-                "cunning, as if with the Curse Talent at 7; the book gives +9 "
-                "on the roll, from Intelligence -3 and Speak Jotunn 5.",
-            ),
             b.power(
                 "Hex",
                 0,
@@ -817,7 +799,11 @@ def _creatures(b: Builder) -> None:
             "trolls are always hostile to humans. Both are kept; the storyguide "
             "chooses.",
             wound_ranges(2),
-            "Converted: combat totals and Soak as printed, the old Fatigue "
+            "Few trolls have the wit to use their curses strategically. The "
+            "book's Shapeshift 5 and Curse 7 are the Abilities here, as the "
+            "Talents they were. Hex stays a power: an aura of bad luck, not "
+            "the Definitive Edition's Hex.",
+            "Converted: the old Fatigue "
             "column (+9) left out; a Rock has no Defense (n/a), shown as 0. The "
             "book prints no combat Abilities. Fatigue as printed, four levels at "
             "0 or better. Speak Jotunn 5 is read from the powers. Might Form "
@@ -860,7 +846,7 @@ def _creatures(b: Builder) -> None:
             "and those who specialise in magic have high Potency scores.",
             "Personality traits as for the clan.",
             wound_ranges(6),
-            "Converted: combat totals and Soak as printed, the old Fatigue "
+            "Converted: the old Fatigue "
             "column (+25) left out; Soak 26 is before armor, and a Boulder has "
             "no Defense (n/a), shown as 0. The book prints no combat Abilities. "
             "Native Jotunn taken as 5. Might Form Corpus is this pack's reading, "

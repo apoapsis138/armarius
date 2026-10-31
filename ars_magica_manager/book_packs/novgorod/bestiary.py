@@ -2,15 +2,10 @@
 vampire, and Stolitzya the Swimmer, converted from the Fourth Edition
 (N13).
 
-The conversion: Might as printed (where the book gives a range, its
-lower end, the range in the notes); Characteristics as printed (a
-"varies" entered as 0); Size as printed. Combat is worked out again from
-the Definitive Edition's weapons (Storyguide Screen p. 4; DE pp.
-172-176): Init Qik + weapon, Attack Dex + Ability + weapon, Defense Qik
-+ Ability + weapon, Damage Str + weapon, the Ability at the score that
-gives the printed Attack with the new weapon (at least 1, at most 10);
-Soak is Stamina plus the protection the old Soak gave beyond Stamina and
-Size. The faeries have no Confidence (RoP:F p. 54).
+The conversion, by fourth.py's rules for creatures: Might on the Scale of
+RoP:F p. 47, or the role the creature plays; Characteristics and Size as
+printed (a "varies" entered as 0); Combat and Soak worked out again. The
+faeries have no Confidence (RoP:F p. 54).
 
 Each printed Faerie Power becomes a Realms of Power: Faerie power (pp.
 54-61): one with an exemplar there takes it (Bless as Grant (Minor
@@ -48,28 +43,37 @@ from typing import TYPE_CHECKING
 
 from ...models import BodyVis
 from ..builder import Builder, characteristics, paragraphs, wound_ranges
+from ..fourth import Kin, rebuild_combat, reprice_powers, take_kin, weapon_of
 
 if TYPE_CHECKING:
     from ...models import CreatureAttack, CreaturePower
     from ..records import Records
 
-#: The Definitive Edition's weapons: (Ability, Init, Attack, Defense,
-#: Damage), Storyguide Screen p. 4.
-WEAPONS: dict[str, tuple[str, int, int, int, int]] = {
-    "Fist": ("Brawl", 0, 0, 0, 0),
-    "Teeth": ("Brawl", 0, 3, 1, 1),
-    "Large teeth": ("Brawl", 0, 4, 1, 3),
-    "Claws": ("Brawl", -1, 2, 3, 2),
-    "Large claws": ("Brawl", 0, 5, 3, 4),
-    "Large horns": ("Brawl", 2, 3, 2, 3),
-    "Club": ("Single Weapon", 1, 2, 1, 3),
-    "Great sword": ("Great Weapon", 2, 5, 2, 9),
-    "Long sword and round shield": ("Single Weapon", 2, 4, 3, 6),
-    "Lance": ("Single Weapon", 2, 4, 0, 5),
-    "Composite bow": ("Bows", -2, 4, 0, 7),
+#: Creatures that take their 5e kin's Stamina and Soak.
+KIN = {
+    "three_headed_giant": Kin(3, 3, "the faerie giant, RoP:F p. 98"),
+    "vampire": Kin(4, 14, "the broukolak, Against the Dark p. 121"),
 }
-#: The most and least an Ability worked back from a printed Attack is.
-SKILL = (1, 10)
+#: Printed Damage where it is more than Strength + Size + weapon.
+PRINTED_DAMAGE = {
+    ("polevik", "Grapple and strangle"): 6,
+    ("vodyanoi", "Grapple"): 8,
+    ("rusalka", "Grapple"): 5,
+    ("domovoi", "Claws"): 4,
+    ("dvorovoi", "Brawl"): 6,
+    ("bannik", "Claw"): 4,
+    ("ovinnik", "Claws"): 4,
+    ("totem_bear", "Maul"): 17,
+    ("totem_bear", "Tackle (knocks down)"): 15,
+    ("strukis", "Bite"): 15,
+    ("firebird", "Talons"): 10,
+    ("semargl", "Bite"): 10,
+    ("strzyga", "Strangle"): 8,
+    ("marauding_dragon", "Claw and bite"): 50,
+    ("sorcerous_dragon", "Claw and bite"): 50,
+    ("onslaught_dragon", "Bite (swallows)"): 25,
+    ("onslaught_dragon", "Claws"): 30,
+}
 FATIGUE = "OK, 0, -1, -3, -5, Unconscious"
 LARGE_FATIGUE = "OK, 0/0, -1/-1, -3/-3, -5, Unconscious"
 SMALL_FATIGUE = "OK, -1, -3, -5, Unconscious"
@@ -87,8 +91,8 @@ class Kind:
     form: str
     size: int
     chars: tuple[int, int, int, int, int, int, int, int]
-    #: (weapon from WEAPONS, the book's name for the attack, printed Atk).
-    attacks: tuple[tuple[str, str, int], ...]
+    #: (the book's name for the attack, printed Atk).
+    attacks: tuple[tuple[str, int], ...]
     old_soak: int
     fatigue: str
     #: (Faerie Power, rating) as printed.
@@ -106,30 +110,21 @@ class Kind:
     extra: tuple[str, ...] = field(default_factory=tuple)
 
 
-def _combat(
-    b: Builder, kind: Kind
-) -> tuple[list[CreatureAttack], list[tuple[str, int, str]], int]:
-    """The attacks, the Abilities they use and the Soak, worked out again."""
-    _int, _per, _pre, _com, strength, stamina, dex, qik = kind.chars
-    attacks: list[CreatureAttack] = []
-    skills: dict[str, int] = {}
-    for weapon, label, printed in kind.attacks:
-        ability, init, atk, dfn, dam = WEAPONS[weapon]
-        score = max(SKILL[0], min(SKILL[1], printed - dex - atk))
-        score = max(score, skills.get(ability, 0))
-        skills[ability] = score
-        attacks.append(
-            b.attack(
-                label,
-                qik + init,
-                dex + score + atk,
-                qik + score + dfn,
-                strength + dam,
-            )
+def _attacks(b: Builder, kind: Kind) -> list[CreatureAttack]:
+    """The attacks at their printed Attack, for `fourth.rebuild_combat`."""
+    strength, size = kind.chars[4], kind.size
+    return [
+        b.attack(
+            label,
+            0,
+            printed,
+            0,
+            PRINTED_DAMAGE.get(
+                (kind.key, label), strength + size + weapon_of(label, size).damage
+            ),
         )
-    soak = stamina + max(0, kind.old_soak - stamina - kind.size)
-    abilities = [(name, score, "") for name, score in skills.items()]
-    return attacks, abilities, soak
+        for label, printed in kind.attacks
+    ]
 
 
 # -- the faerie powers, by Realms of Power: Faerie --
@@ -403,7 +398,6 @@ EXEMPLARS: dict[
 
 
 def _kind(b: Builder, records: Records, kind: Kind) -> None:
-    attacks, abilities, soak = _combat(b, kind)
     qik = kind.chars[7]
     powers = [_power(b, name, rating, kind.might, qik) for name, rating in kind.powers]
     for line in kind.extra:
@@ -418,22 +412,17 @@ def _kind(b: Builder, records: Records, kind: Kind) -> None:
         cunning=kind.cunning,
         block={
             "characteristics": characteristics(*kind.chars),
-            "abilities": abilities,
             "traits": kind.traits,
         },
-        attacks=attacks,
-        soak=soak,
+        attacks=_attacks(b, kind),
+        soak=kind.old_soak,
         fatigue_levels=kind.fatigue,
         powers=powers,
         vis=[BodyVis(pawns, art, "in its body") for pawns, art in kind.vis],
         appearance=kind.appearance,
         notes=paragraphs(
             kind.notes,
-            (
-                f"Might {kind.might_range} in the book; the lowest is entered. "
-                if kind.might_range
-                else ""
-            )
+            (f"Might {kind.might_range} in the book. " if kind.might_range else "")
             + "Slavic faeries wax and wane with the seasons, by as much as a "
             "quarter: the Gold Court's in summer, the White Court's in "
             "winter. " + wound_ranges(kind.size),
@@ -467,14 +456,14 @@ KINDS: tuple[Kind, ...] = (
         "faerie_lord",
         "Slavic Faerie Lord",
         "p. 84",
-        30,
+        35,
         "Auram",
         1,
         (3, 3, 2, 0, 2, 2, 1, 2),
         (
-            ("Long sword and round shield", "Faerie sword and shield", 10),
-            ("Lance", "Faerie lance", 10),
-            ("Composite bow", "Faerie bow", 9),
+            ("Faerie sword and shield", 10),
+            ("Faerie lance", 10),
+            ("Faerie bow", 9),
         ),
         15,
         FATIGUE,
@@ -510,11 +499,11 @@ KINDS: tuple[Kind, ...] = (
         "leshy",
         "Leshy",
         "p. 85",
-        30,
+        20,
         "Herbam",
         0,
         (2, 1, 0, 1, 0, 3, 1, 0),
-        (("Club", "Club", 5),),
+        (("Club", 5),),
         5,
         FATIGUE,
         (
@@ -542,11 +531,11 @@ KINDS: tuple[Kind, ...] = (
         "polevik",
         "Polevik",
         "p. 85",
-        20,
+        10,
         "Herbam",
         0,
         (1, 1, 1, -1, 2, 1, 1, 3),
-        (("Fist", "Grapple and strangle", 5),),
+        (("Grapple and strangle", 5),),
         3,
         FATIGUE,
         (
@@ -576,11 +565,11 @@ KINDS: tuple[Kind, ...] = (
         "vodyanoi",
         "Vodyanoi",
         "p. 86",
-        15,
+        10,
         "Aquam",
         0,
         (0, 1, 0, 1, 3, 3, 1, 2),
-        (("Fist", "Grapple", 7),),
+        (("Grapple", 7),),
         5,
         FATIGUE,
         (
@@ -613,7 +602,7 @@ KINDS: tuple[Kind, ...] = (
         "Aquam",
         0,
         (0, 0, 1, 1, 1, 1, 0, 1),
-        (("Fist", "Grapple", 5),),
+        (("Grapple", 5),),
         5,
         FATIGUE,
         (
@@ -642,7 +631,7 @@ KINDS: tuple[Kind, ...] = (
         "Mentem",
         -1,
         (-1, 1, -1, -2, 0, 1, 2, 3),
-        (("Claws", "Claws", 4),),
+        (("Claws", 4),),
         3,
         SMALL_FATIGUE,
         (
@@ -676,7 +665,7 @@ KINDS: tuple[Kind, ...] = (
         "Animal",
         -1,
         (-1, 2, 0, -2, 2, 2, 1, 2),
-        (("Fist", "Brawl", 4),),
+        (("Brawl", 4),),
         4,
         SMALL_FATIGUE,
         (
@@ -709,7 +698,7 @@ KINDS: tuple[Kind, ...] = (
         "Aquam",
         -2,
         (-2, 0, -3, -3, 0, 1, 2, 3),
-        (("Claws", "Claw", 4),),
+        (("Claw", 4),),
         2,
         TINY_FATIGUE,
         (
@@ -735,7 +724,7 @@ KINDS: tuple[Kind, ...] = (
         "Ignem",
         -3,
         (0, 1, -2, -3, 0, 1, 2, 2),
-        (("Claws", "Claws", 4),),
+        (("Claws", 4),),
         3,
         "OK, -5, Unconscious",
         (
@@ -792,7 +781,7 @@ KINDS: tuple[Kind, ...] = (
         "Animal",
         3,
         (1, 3, 2, -3, 6, 7, 1, 1),
-        (("Large claws", "Maul", 13), ("Fist", "Tackle (knocks down)", 7)),
+        (("Maul", 13), ("Tackle (knocks down)", 7)),
         30,
         LARGE_FATIGUE,
         (
@@ -823,7 +812,7 @@ KINDS: tuple[Kind, ...] = (
         "Aquam",
         3,
         (4, 3, 2, 2, 3, 2, 1, 0),
-        (("Large teeth", "Bite", 8),),
+        (("Bite", 8),),
         9,
         LARGE_FATIGUE,
         (
@@ -863,7 +852,7 @@ KINDS: tuple[Kind, ...] = (
         "Ignem",
         -2,
         (4, 3, 0, 0, 1, 3, 3, 5),
-        (("Claws", "Talons", 10),),
+        (("Talons", 10),),
         5,
         TINY_FATIGUE,
         (
@@ -897,7 +886,7 @@ KINDS: tuple[Kind, ...] = (
         "Animal",
         1,
         (2, 3, 0, 0, 3, 4, 2, 2),
-        (("Teeth", "Bite", 7),),
+        (("Bite", 7),),
         7,
         FATIGUE,
         (
@@ -951,7 +940,7 @@ KINDS: tuple[Kind, ...] = (
         "Corpus",
         1,
         (1, 1, 0, -1, 2, 2, 1, 1),
-        (("Fist", "Strangle", 6),),
+        (("Strangle", 6),),
         5,
         FATIGUE,
         (
@@ -981,7 +970,7 @@ KINDS: tuple[Kind, ...] = (
         "Ignem",
         5,
         (-1, 2, 0, 0, 8, 8, -2, -3),
-        (("Large claws", "Claw and bite", 15),),
+        (("Claw and bite", 15),),
         20,
         "OK/OK, 0/0, -1/-1, -3/-3, -5/-5, Unconscious",
         (("Fear", 20),),
@@ -1006,7 +995,7 @@ KINDS: tuple[Kind, ...] = (
         "Vim",
         4,
         (2, 3, 2, 1, 6, 6, -1, -2),
-        (("Large claws", "Claw and bite", 15),),
+        (("Claw and bite", 15),),
         15,
         "OK, 0/0, -1/-1, -3/-3, -5/-5, Unconscious",
         (
@@ -1041,7 +1030,7 @@ KINDS: tuple[Kind, ...] = (
         "Terram",
         3,
         (-1, 4, -3, -3, 4, 4, -1, -2),
-        (("Great sword", "Greatsword", 12),),
+        (("Greatsword", 12),),
         10,
         LARGE_FATIGUE,
         (
@@ -1072,7 +1061,7 @@ KINDS: tuple[Kind, ...] = (
         "Auram",
         5,
         (2, 3, 3, 1, 7, 8, 0, 0),
-        (("Large teeth", "Bite (swallows)", 12), ("Large claws", "Claws", 12)),
+        (("Bite (swallows)", 12), ("Claws", 12)),
         20,
         "OK/OK, 0/0, -1/-1, -3/-3, -5/-5, Unconscious",
         (
@@ -1105,6 +1094,12 @@ def build(records: Records) -> None:
         _kind(b, records, kind)
     _vampire(records)
     _stolitzya(records)
+    for key, creature in records.creatures.items():
+        rebuild_combat(creature, printed=key != "stolitzya")
+        if key in KIN:
+            take_kin(creature, KIN[key])
+        if key == "stolitzya":
+            reprice_powers(creature)
 
 
 def _vampire(records: Records) -> None:
@@ -1114,11 +1109,11 @@ def _vampire(records: Records) -> None:
         "vampire",
         "Upiór (Vampire)",
         "p. 95",
-        10,
+        20,
         "Corpus",
         0,
         chars,
-        (("Teeth", "Bite", 4), ("Fist", "Strangle", 5)),
+        (("Bite", 4), ("Strangle", 5)),
         5,
         "",
         (),
@@ -1127,7 +1122,6 @@ def _vampire(records: Records) -> None:
         "",
         "",
     )
-    attacks, abilities, soak = _combat(b, kind)
     qik = chars[7]
 
     def power(name: str, cost: int, form: str, level: int, does: str) -> CreaturePower:
@@ -1137,15 +1131,14 @@ def _vampire(records: Records) -> None:
         "Upiór (Vampire)",
         page="p. 95",
         realm="Infernal",
-        might=10,
+        might=20,
         form="Corpus",
         block={
             "characteristics": characteristics(*chars),
-            "abilities": abilities,
             "traits": {"Murderous": 5},
         },
-        attacks=attacks,
-        soak=soak,
+        attacks=_attacks(b, kind),
+        soak=kind.old_soak,
         fatigue_levels="OK, 0, -1, -3, -5, falls to dust",
         powers=[
             power(
@@ -1205,8 +1198,9 @@ def _vampire(records: Records) -> None:
             "water or otherwise scattered, when it takes a stress die x 10 "
             "days to come back, losing Might the while. Perdo Vim made for "
             "the purpose destroys its Might outright.",
-            "Converted: the powers keep the book's levels and Might costs, "
-            "Init Qik less the cost.",
+            "Converted: Might 20 as the Vessel of Iniquity (Against the Dark "
+            "p. 121), 10 to 15 as printed; the powers keep the book's levels "
+            "and Might costs, Init Qik less the cost.",
         ),
     )
 

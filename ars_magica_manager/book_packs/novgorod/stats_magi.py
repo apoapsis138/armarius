@@ -8,7 +8,7 @@ Rehamchi Danichev (p. 129), Yellina Ozwry (p. 134), Stanis Chechenko (p.
 it, a `fourth.Fourth`, and converted by `fourth.convert` with the
 readings that module lists: printed ages kept, Confidence at the
 Definitive Edition's baseline (DE p. 29), Twilight Points / 3 as
-Warping, Certamen dropped as no Ability now. A 4e Magical Affinity with
+Warping, Certamen's experience moved to Penetration. A 4e Magical Affinity with
 an Art is Affinity with that Art; with something else (weather, birds) a
 Minor Magical Focus. A Major Magical Deficiency in a Technique is
 Deficient Technique. Follower of Bjornaer gives way to the House's
@@ -45,6 +45,9 @@ from ..generated import Profile, apply
 if TYPE_CHECKING:
     from ...models import Character
     from ..records import Records
+
+#: The Area Lore that takes a block's Legend Lore.
+AREA = "Novgorod Tribunal"
 
 ANDREI = Fourth(
     age=122,
@@ -826,7 +829,7 @@ def stats(records: Records) -> None:
                     above=above,
                 ),
             )
-        stat, age = convert(key, block)
+        stat, age = convert(key, block, area=AREA)
         b.stats(character, stat)
         character.background.year_born = b.year - age
         _own_spells(character)

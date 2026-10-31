@@ -1243,6 +1243,9 @@ class Builder:
             _ability(name, score, specialty)
             for name, score, specialty in block.get("abilities", [])
         ]
+        spare = block.get("spare_xp", {})
+        for ability in c.abilities:
+            ability.xp += spare.get(ability.name, 0)
         # The hedge traditions the character belongs to (catalog ids); a
         # block that names none keeps those the sketch gave.
         if "traditions" in block:
@@ -1260,8 +1263,9 @@ class Builder:
                 b if b.tradition else replace(b, tradition=first)
                 for b in block["bound_beings"]
             ]
+        spare_art = block.get("spare_art_xp", {})
         c.arts = {
-            art.lower(): ArtScore(xp=art_xp(score))
+            art.lower(): ArtScore(xp=art_xp(score) + spare_art.get(art, 0))
             for art, score in block.get("arts", {}).items()
         }
         if "traits" in block:
@@ -1275,6 +1279,12 @@ class Builder:
             self._known_spell(c, entry, source or self.source)
             for entry in block.get("spells", [])
         ]
+        designs = block.get("spell_designs", {})
+        for spell in c.invented_spells:
+            design = designs.get(spell.name)
+            if design is not None:
+                spell.level, spell.range, spell.duration, spell.target = design[:4]
+                spell.description = f"{spell.description} ({design[4]})"
         masteries = block.get("masteries", {})
         for (name, *_), known in zip(block.get("spells", []), c.spells_known):
             known.mastery_abilities = [
@@ -1359,20 +1369,6 @@ def hide_holdings(saga: Saga) -> None:
                 record.secrets = paragraphs(record.secrets, *held).strip()
 
 
-#: What a creature entered at its printed Fourth Edition figures says.
-UNCONVERTED = (
-    "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until "
-    "conversion rules for creatures are settled."
-)
-
-
-def mark_unconverted(saga: Saga) -> None:
-    """Say so on every creature a Fourth Edition book's pack holds at its
-    printed figures."""
-    for creature in saga.creatures:
-        creature.notes = paragraphs(UNCONVERTED, creature.notes).strip()
-
-
 #: Books whose stat blocks keep a spell at its printed level and Arts as
 #: the magus's own spell, where the catalog's spell of that name differs.
 OWN_PRINTINGS = ("TtA", "MoH", "LoH")
@@ -1383,6 +1379,8 @@ OWN_PRINTINGS = ("TtA", "MoH", "LoH")
 #: "warping" as (score, points), "apparent_age", "virtues_flaws" [name or
 #: (name, {param: value}); "Name (Minor)" picks a tier the catalog has
 #: both of], "abilities" [(name, score, specialty)], "arts" {art: score},
+#: "spare_xp" and "spare_art_xp" {name: xp past the score}, "spell_designs"
+#: {spell name: (level, Range, Duration, Target, the working)},
 #: "traits" and "reputations" {name: score}, "spells" [(name, "CrIg" or
 #: "CrIg(Co)", level, mastery)] (the pack's own book's printing first),
 #: "masteries" {spell name: [Mastery Ability names]}, "traditions"

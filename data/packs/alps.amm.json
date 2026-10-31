@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.61.1",
   "kind": "pack",
   "name": "Sanctuary of Ice: the Greater Alps Tribunal",
   "from_saga": "Sanctuary of Ice: the Greater Alps Tribunal",
@@ -258,19 +258,19 @@
             "kind": "places",
             "target_id": "the_rorschach_chapter",
             "note": "A chapter of the covenant",
-            "id": "92fdac8e2c84"
+            "id": "a38c74a26cfe"
           },
           {
             "kind": "places",
             "target_id": "juno_s_spire",
             "note": "A chapter of the covenant",
-            "id": "1ff8691470c9"
+            "id": "32dc59005e3e"
           },
           {
             "kind": "places",
             "target_id": "the_tower_of_ashes",
             "note": "A chapter of the covenant",
-            "id": "7efef049555c"
+            "id": "fa3d0c98e8bf"
           }
         ],
         "unnamed_magi": 9,
@@ -754,31 +754,31 @@
             "kind": "places",
             "target_id": "valnastium_s_vienna_chapter",
             "note": "A chapter of the covenant",
-            "id": "86ee01497da8"
+            "id": "2c642fe12ba3"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_constance_chapter",
             "note": "A chapter of the covenant",
-            "id": "eae69777d88d"
+            "id": "475b8477adb0"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_saint_gallen_chapter",
             "note": "A chapter of the covenant",
-            "id": "8a8bee479fb9"
+            "id": "80b22ecc1999"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_geneva_chapter",
             "note": "A chapter of the covenant",
-            "id": "d657aa634cf8"
+            "id": "bae8407f5796"
           },
           {
             "kind": "neighbours",
             "target_id": "the_abbey_of_saint_gallen",
             "note": "Ally",
-            "id": "57db0d42dc26"
+            "id": "1f001b0efa34"
           }
         ],
         "unnamed_magi": 7,
@@ -836,98 +836,98 @@
             "year": null,
             "says": "A magus votes at the Tribunal only if his covenant has bought him a chair: it declares a permanent vis source, has the Quaesitores assess it, and pledges ten pawns a year of it to his upkeep, at least a year before the meeting if he is to vote. The vis is not paid to anyone; the pledge shows the covenant will not poach from its neighbours. Vis distilled from an aura (\"farming\") does not count. A magus with no chair is a vagrant, a Low Crime, though a chair registered at any time protects him from its punishments. A chair belongs to the covenant, whose council fills it when its magus leaves.",
             "case_id": "",
-            "id": "546c95329b0f"
+            "id": "d47484913cd7"
           },
           {
             "title": "The yearly pawn",
             "year": null,
             "says": "Each covenant pays a pawn of vis a year to the senior members of Houses Guernicus and Mercere in the Tribunal. It began as a tradition and entered the Code; it was once a pawn for each magus.",
             "case_id": "",
-            "id": "ba6ddce3c966"
+            "id": "395964185c08"
           },
           {
             "title": "Vis treaties",
             "year": null,
             "says": "Gifts of vis exchanged so often between two covenants that both sides want the supply guaranteed are ratified as treaties and entered in the Code; they are delivered in Frustration Week. A treaty's income may pay for a chair, but vis owed away may not.",
             "case_id": "",
-            "id": "a83f963bd035"
+            "id": "4e42e9da93f2"
           },
           {
             "title": "No new covenants",
             "year": null,
             "says": "No new covenant may be founded unless it can show that, after its costs, it can spend ten pawns a year on each magus from sources no one else has claimed, and a pawn for the Quaesitores and Redcaps. None has been allowed for centuries; the Tribunal grows by chapters instead.",
             "case_id": "",
-            "id": "7cda77520fdf"
+            "id": "d613a5d2bd48"
           },
           {
             "title": "Ostracism",
             "year": null,
             "says": "As the first business of each meeting every magus writes on a sherd the name of the magus he most despises, or leaves it blank. If at least one magus in four named the one with the most sherds, that magus must leave the Greater Alps before the second full moon, for twenty-one years, or be Marched. The exile ends the day before a Tribunal. An ostracised Praeco is replaced by the next eldest, with no second vote; an ostracised chief Quaesitor by his deputy. An ostracised magus may hand the sigils he carries, his own aside, to another magus.",
             "case_id": "",
-            "id": "751f63f90037"
+            "id": "dc79628aaf3a"
           },
           {
             "title": "Amaranth",
             "year": null,
             "says": "All amaranth, the faerie flower that addicts magi, is to be destroyed. The traffic goes on, around Ingolstadt above all; the neighbouring Tribunals have not banned it, and the Grand Tribunal has never been asked.",
             "case_id": "",
-            "id": "b32cf90d1aa0"
+            "id": "fdab9c13fa66"
           },
           {
             "title": "Churches the Code protects",
             "year": null,
             "says": "The city of Constance and the monasteries of the Great and Little Saint Bernard passes, vital to the Redcaps and favoured by House Jerbiton, are named in the Code as places where even minor violence is judged interference with the Church.",
             "case_id": "",
-            "id": "6852d35decf6"
+            "id": "d55a1ef584eb"
           },
           {
             "title": "Flagrant spending",
             "year": null,
             "says": "Covenants may not draw attention to themselves by making goods from vis to sell. The ruling was aimed at Sinews of Knowledge, which was ordered to stop its trade.",
             "case_id": "",
-            "id": "817fe0166b39"
+            "id": "e246a2c75721"
           },
           {
             "title": "Pilate's ghost",
             "year": null,
             "says": "No magus may harvest vis from the ghost of Pontius Pilate on Mount Pilatus. The meeting that made the ruling also sent its condolences to the sodales of the magi crushed by the avalanche that spoiled the first attempt.",
             "case_id": "",
-            "id": "f4b6577d04be"
+            "id": "f15a7fa13ec1"
           },
           {
             "title": "The Bavarian Common",
             "year": null,
             "says": "After the Sundering of Tremere destroyed the covenant of Highest Aspiration, several covenants raced to claim its resources. An emergency meeting gave its vis sources to the Quaesitores to harvest and divide among the covenants each year, and disbanded every rival chapter house in Bavaria but the Icy North's. The Common supports two chairs, for the quaesitor and the hoplite who keep it.",
             "case_id": "",
-            "id": "ddbc3da444b8"
+            "id": "cb060c5e0e82"
           },
           {
             "title": "The estates of Tarragon Vale",
             "year": null,
             "says": "No estate of Tarragon Vale's vanished magi may be settled without proof of their deaths; until then the Quaesitores keep the covenant's vis income, spending only what its Aegis and its Shrouded Glen need. The heirs have pressed the matter at a meeting, and the Quaesitores' position was upheld pending further evidence.",
             "case_id": "",
-            "id": "48df44bc5ad5"
+            "id": "96f5278ac318"
           },
           {
             "title": "A sanctum a season",
             "year": 1165,
             "says": "Snadstrich of Ex Miscellanea, of no covenant, was said to have moved her sanctum seven times in one year. The Tribunal ruled that a magus may not establish a new sanctum more than once a season (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "13a2fa3978f2"
+            "id": "ca32f57c53fc"
           },
           {
             "title": "Andru's pardon",
             "year": 1194,
             "says": "A faerie lord took grogs and covenfolk of Valnastium to use as pieces in a great game of his; its magi rescued them, killing many faeries. Andru argued that every magus may defend his property, servants included, and that the rescue was self-defence; the Tribunal narrowly accepted it and pardoned him (The Wizard's Grimoire; Sanctuary of Ice calls it a just war on one of the faerie kings of Val Fanes, and gossip says Andru claimed a summer prince's crown in it).",
             "case_id": "",
-            "id": "f0d79597664a"
+            "id": "59179d9eaa0d"
           },
           {
             "title": "Syrestis's fine",
             "year": 1194,
             "says": "Syrestis of Bjornaer, visiting covenants of the Greater Alps, killed livestock and game in his animal shapes, harming his hosts' relations with their neighbours. Both the Rhine and the Greater Alps heard the case: the Rhine fined him three pawns, the Greater Alps ten. A quaesitor ruled that he must pay the Greater Alps, where the crimes were done, and owed the Rhine nothing (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "d11e80f63288"
+            "id": "92a0f238c099"
           }
         ],
         "treasury": [],
@@ -939,7 +939,7 @@
             "details": "The Grand Tribunal of 865 awards the site of the dead god's priesthood, sealed by House Guernicus since the Sundering, to Sancia filia Sabrina, who founds the Longevity Project there.",
             "changes": [],
             "margin": "",
-            "id": "6629f9d2123b"
+            "id": "9d3c796d73ba"
           },
           {
             "year": 1165,
@@ -948,7 +948,7 @@
             "details": "The meeting rules on Snadstrich's seven sancta in a year.",
             "changes": [],
             "margin": "",
-            "id": "a27ef56aa8f5"
+            "id": "5b9700bc042b"
           },
           {
             "year": 1194,
@@ -957,7 +957,7 @@
             "details": "The meeting narrowly accepts Andru's defence of Valnastium's rescue of its servants from a faerie lord, and fines Syrestis of Bjornaer ten pawns.",
             "changes": [],
             "margin": "",
-            "id": "47200085f5e9"
+            "id": "6db7347ded9f"
           },
           {
             "year": 1198,
@@ -966,7 +966,7 @@
             "details": "The four magi of Tarragon Vale and its covenfolk vanish without a trace. The Quaesitores begin keeping its vis.",
             "changes": [],
             "margin": "",
-            "id": "cdf9e5115642"
+            "id": "6619494643c5"
           },
           {
             "year": 1206,
@@ -975,7 +975,7 @@
             "details": "The Primus of Guernicus appoints Athena Alpina, trained in the Roman Tribunal, chief Quaesitor of the Alps.",
             "changes": [],
             "margin": "",
-            "id": "2493d3486e34"
+            "id": "1ce5e4934a75"
           },
           {
             "year": 1214,
@@ -984,7 +984,7 @@
             "details": "At the meeting Athena is forced to send away one of her hoplites, a Tremere maga.",
             "changes": [],
             "margin": "",
-            "id": "0e91c8d45a6f"
+            "id": "017a57c04f29"
           },
           {
             "year": 1215,
@@ -993,7 +993,7 @@
             "details": "A magical accident in Sicily brings about the birth of two dozen Gifted children at once.",
             "changes": [],
             "margin": "",
-            "id": "9540a8ef422c"
+            "id": "8e1df2c10d06"
           },
           {
             "year": 1217,
@@ -1002,7 +1002,7 @@
             "details": "Kentigern of Ex Miscellanea, newly retrained at Magvillus, joins the Quaesitores at the Icy North motherhouse.",
             "changes": [],
             "margin": "",
-            "id": "6114915a624c"
+            "id": "86e5ae106669"
           }
         ],
         "package_data": {
@@ -3121,7 +3121,7 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "Its leader",
-            "id": "7cbbca55db71"
+            "id": "77c5889bced7"
           }
         ],
         "arms": {},
@@ -3153,13 +3153,13 @@
             "kind": "characters",
             "target_id": "constance",
             "note": "A leading member",
-            "id": "f95688d54fbb"
+            "id": "7aaf1171e3c6"
           },
           {
             "kind": "characters",
             "target_id": "angela",
             "note": "A member",
-            "id": "54bd442a626d"
+            "id": "e7aa16bd343d"
           }
         ],
         "arms": {},
@@ -3191,7 +3191,7 @@
             "kind": "characters",
             "target_id": "pietro",
             "note": "Its founder",
-            "id": "9aa7f6d1223d"
+            "id": "200166df63d5"
           }
         ],
         "arms": {},
@@ -3307,19 +3307,19 @@
             "kind": "characters",
             "target_id": "athena_alpina",
             "note": "The magus at risk",
-            "id": "f35411952c06"
+            "id": "0b56bdcd87e9"
           },
           {
             "kind": "characters",
             "target_id": "cato",
             "note": "Her deputy",
-            "id": "604dcfd4a2e0"
+            "id": "756b3a44fdf0"
           },
           {
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Who must not succeed her",
-            "id": "faf134155d61"
+            "id": "0f9d82dd72ae"
           }
         ],
         "arms": {},
@@ -3360,13 +3360,13 @@
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Hunts the raiders",
-            "id": "0e9a824b151e"
+            "id": "f4f397ae73cd"
           },
           {
             "kind": "characters",
             "target_id": "katrina",
             "note": "Hunts the raiders",
-            "id": "8476ce333189"
+            "id": "770690b4f930"
           }
         ],
         "arms": {},
@@ -3407,7 +3407,7 @@
             "kind": "covenants",
             "target_id": "the_covenant_of_the_icy_north",
             "note": "Offers the chair",
-            "id": "7e0c75b98774"
+            "id": "641489c7ae6b"
           }
         ],
         "arms": {},
@@ -3438,13 +3438,13 @@
             "kind": "covenants",
             "target_id": "tarragon_vale",
             "note": "The vanished covenant",
-            "id": "ccd93181f644"
+            "id": "462176299fd6"
           },
           {
             "kind": "characters",
             "target_id": "cymena",
             "note": "Lives at the site",
-            "id": "7842d7146ac0"
+            "id": "80cc82ea5b99"
           }
         ],
         "arms": {},
@@ -3475,7 +3475,7 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "The likely Prima",
-            "id": "b84bb79a711f"
+            "id": "60c30f5af568"
           }
         ],
         "arms": {},
@@ -3506,7 +3506,7 @@
             "kind": "characters",
             "target_id": "philomena",
             "note": "An amaranth halfling",
-            "id": "b85433236dd4"
+            "id": "6a22cac41d2b"
           }
         ],
         "arms": {},
@@ -3537,7 +3537,7 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The petrified maga",
-            "id": "da4aae2e5a44"
+            "id": "f1b350ada943"
           }
         ],
         "arms": {},
@@ -3568,7 +3568,7 @@
             "kind": "covenants",
             "target_id": "the_covenant_where_journeys_end",
             "note": "Searches for it",
-            "id": "902a4996f574"
+            "id": "dca9f815b96c"
           }
         ],
         "arms": {},
@@ -3599,7 +3599,7 @@
             "kind": "characters",
             "target_id": "kentigern",
             "note": "Suspects a magus makes basilisks",
-            "id": "99fc47b072a0"
+            "id": "918481be6e96"
           }
         ],
         "arms": {},
@@ -3654,13 +3654,13 @@
             "kind": "covenants",
             "target_id": "sinews_of_knowledge",
             "note": "The covenant",
-            "id": "3eddb58ce937"
+            "id": "4d8c5be9ce49"
           },
           {
             "kind": "characters",
             "target_id": "ragoneda",
             "note": "Its liaison to a trading partner",
-            "id": "4cefdb74a774"
+            "id": "185f13a33700"
           }
         ],
         "arms": {},
@@ -12363,7 +12363,7 @@
             "xp": 210
           },
           "animal": {
-            "xp": 465
+            "xp": 501
           },
           "aquam": {
             "xp": 0
@@ -12423,6 +12423,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 45,
+            "specialty": "Mentem",
+            "xp_table": "ability"
+          },
+          {
             "name": "Civil and Canon Law",
             "category": "Academic",
             "xp": 75,
@@ -12474,7 +12481,7 @@
           {
             "name": "Area Lore: Greater Alps Tribunal",
             "category": "General",
-            "xp": 50,
+            "xp": 80,
             "specialty": "traditional exchanges",
             "xp_table": "ability"
           },
@@ -12514,13 +12521,6 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 30,
-            "specialty": "quarry",
-            "xp_table": "ability"
-          },
-          {
             "name": "Magic Theory",
             "category": "Arcane",
             "xp": 50,
@@ -12546,13 +12546,6 @@
             "category": "Arcane",
             "xp": 140,
             "specialty": "Perdo",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 15,
-            "specialty": "Animal",
             "xp_table": "ability"
           },
           {
@@ -13021,7 +13014,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "A quaesitor, an office of House Guernicus he holds though he is of Ex Miscellanea. Equipment: a bought longevity charm (-14), a light crossbow, a longsword, and padded leather riding clothes, weightless, warm in the sky and as quilted armour (Protection 2); the covenant's quaesitorial blindfold, which helps detect deceit and reason clearly, borrowed until his own spells are better; he is weighing a self-loading crossbow as his talisman. He knows a greater Soothe the Pains of the Beast that heals six wound levels (DE: heal all wounds, Base 35, +1 Touch = CrAn 40, Ritual).\nHis familiar is Tobias, a faerie hound who leads his pack, can command other animals, can cast Soothe the Pains of the Beast with his tongue, carries Animal vis on his collar, and through the bond gave Kentigern flight by running and immunity to wind chill. The book prints no stats for him (it points to the Fourth Edition's Faeries), so he has no familiar record here.\nHis Deficiencies leave only Auram biting: the book's Auram totals, such as True Sight of the Air's +34, use the whole score, and Deficient Form halves them.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 99 as printed (looks 58); Twilight Points 9 / 3 = Warping 3; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 6. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Visual Eidetic Memory dropped (not in the catalog); Affinity as Affinity with Animal; Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Susceptible to Divine Power as Susceptibility to Divine Power; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form.\nAbilities: Brawling 1 to Brawl; Certamen 3 dropped; Greater Alpine Tribunal Lore 4 to Area Lore: Greater Alps Tribunal; Hermetic Law 3 to Code of Hermes; Legend Lore 3 to Magic Lore; Magic Affinity 8 dropped; Occult Lore 1 to Infernal Lore; Order of Hermes Lore 4 to Organization Lore: Order of Hermes; Scribe Latin 5 to Artes Liberales.\nSpells: Soothe the Pains of the Beast as Soothe Pains of the Beast; Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Eyes of the Past for The Ear for Distant Voices; Scales of Magical Weight as Scales of the Magical Weight; Sense of Lingering Magic as Sense of the Lingering Magic; At the catalog's level or Art: Circle of Beast Warding ReAn 25 to ReAn 5; Ward Against the Beasts of Legend ReAn 30 to ReAn general; Veil of Invisibility PeIm 10 to PeIm 20; Perception of the Conflicting Motives InIm 25 to InMe 15.",
+          "biography": "A quaesitor, an office of House Guernicus he holds though he is of Ex Miscellanea. Equipment: a bought longevity charm (-14), a light crossbow, a longsword, and padded leather riding clothes, weightless, warm in the sky and as quilted armour (Protection 2); the covenant's quaesitorial blindfold, which helps detect deceit and reason clearly, borrowed until his own spells are better; he is weighing a self-loading crossbow as his talisman. He knows a greater Soothe the Pains of the Beast that heals six wound levels (DE: heal all wounds, Base 35, +1 Touch = CrAn 40, Ritual).\nHis familiar is Tobias, a faerie hound who leads his pack, can command other animals, can cast Soothe the Pains of the Beast with his tongue, carries Animal vis on his collar, and through the bond gave Kentigern flight by running and immunity to wind chill. The book prints no stats for him (it points to the Fourth Edition's Faeries), so he has no familiar record here.\nHis Deficiencies leave only Auram biting: the book's Auram totals, such as True Sight of the Air's +34, use the whole score, and Deficient Form halves them.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 99 as printed (looks 58); Twilight Points 9 / 3 = Warping 3; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 6. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Visual Eidetic Memory dropped (not in the catalog); Affinity as Affinity with Animal; Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Susceptible to Divine Power as Susceptibility to Divine Power; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form; Minor Magic Deficiency as Deficient Form.\nAbilities: Brawling 1 to Brawl; Certamen 3 to Penetration; Greater Alpine Tribunal Lore 4 to Area Lore: Greater Alps Tribunal; Hermetic Law 3 to Code of Hermes; Legend Lore 3 to Area Lore: Greater Alps Tribunal; Magic Affinity 8 to Animal, 36 xp; Occult Lore 1 to Infernal Lore; Order of Hermes Lore 4 to Organization Lore: Order of Hermes; Scribe Latin 5 to Artes Liberales.\nSpells: Soothe the Pains of the Beast as Soothe Pains of the Beast; Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Eyes of the Past for The Ear for Distant Voices; Scales of Magical Weight as Scales of the Magical Weight; Sense of Lingering Magic as Sense of the Lingering Magic; At the catalog's level or Art: Circle of Beast Warding ReAn 25 to ReAn 5; Ward Against the Beasts of Legend ReAn 30 to ReAn general; Veil of Invisibility PeIm 10 to PeIm 20; Perception of the Conflicting Motives InIm 25 to InMe 15.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -19010,7 +19003,7 @@
             "xp": 45
           },
           "herbam": {
-            "xp": 78
+            "xp": 93
           },
           "ignem": {
             "xp": 0
@@ -19032,7 +19025,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 105,
+            "xp": 90,
             "specialty": "music",
             "xp_table": "ability"
           },
@@ -19041,6 +19034,13 @@
             "category": "General",
             "xp": 105,
             "specialty": "nobility",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 30,
+            "specialty": "Creo",
             "xp_table": "ability"
           },
           {
@@ -19062,6 +19062,13 @@
             "category": "General",
             "xp": 75,
             "specialty": "for magi",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 45,
+            "specialty": "with older magi",
             "xp_table": "ability"
           },
           {
@@ -19095,7 +19102,7 @@
           {
             "name": "Area Lore: Greater Alps Tribunal",
             "category": "General",
-            "xp": 30,
+            "xp": 35,
             "specialty": "fashion",
             "xp_table": "ability"
           },
@@ -19118,20 +19125,6 @@
             "category": "General",
             "xp": 5,
             "specialty": "who wears what and why",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Teaching",
-            "category": "General",
-            "xp": 30,
-            "specialty": "pretending to listen",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 5,
-            "specialty": "Spanish",
             "xp_table": "ability"
           },
           {
@@ -19278,7 +19271,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_true_love",
+            "vf_id": "vf_true_love_major",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19556,7 +19549,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: anything a dashing young troubadour, safely married, might have. His mandolin, won in Arcadia, works like Aura of Rightful Authority and lets him speak with living things, but only through a song's lyrics; a flute like it, which commands the elements, is said to be hidden somewhere. A pet spider that can look like a puppy, which he means to make his familiar before it dies of age. His Non-combatant flaw is defined as being unable to harm others by combat magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 40 as printed (looks 28); Twilight Points 2 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Sidhe Blood as Faerie Blood; Magic Affinity as Minor Magical Focus; Well-traveled as Well-Traveled; True Love (Minor): Lyndsay of Journeys End; Weak Parma dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Non-combatant as Noncombatant; Dependant as Dependent: his children; Cyclic Magic (-) as Cyclic Magic (Negative); Deep Sleeper dropped (not in the catalog); Obsession as Obsessed (Minor): a hopeless romantic.\nAbilities: Certamen 3 dropped; Disputatio 2 to Artes Liberales; Greater Alpine Tribunal Lore 3 to Area Lore: Greater Alps Tribunal; Hermetic Law 1 to Code of Hermes; House Jerbiton Lore 1 to Organization Lore: House Jerbiton; Lectio 3 to Teaching; Legend Lore 1 to Magic Lore; Magic Affinity 5 dropped; Order of Hermes Lore 2 to Organization Lore: Order of Hermes; Play 5 to Music; Scribe Latin 5 to Artes Liberales.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Aura of Ennobled Presence as Aura of the Ennobled Presence; At the catalog's level or Art: The Gentle Beast ReAn 20 to ReAn 25.",
+          "biography": "Equipment: anything a dashing young troubadour, safely married, might have. His mandolin, won in Arcadia, works like Aura of Rightful Authority and lets him speak with living things, but only through a song's lyrics; a flute like it, which commands the elements, is said to be hidden somewhere. A pet spider that can look like a puppy, which he means to make his familiar before it dies of age. His Non-combatant flaw is defined as being unable to harm others by combat magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 40 as printed (looks 28); Twilight Points 2 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Sidhe Blood as Faerie Blood; Magic Affinity as Minor Magical Focus; Well-traveled as Well-Traveled; True Love (Major): Lyndsay of Journeys End; Weak Parma dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Non-combatant as Noncombatant; Dependant as Dependent: his children; Cyclic Magic (-) as Cyclic Magic (Negative); Deep Sleeper dropped (not in the catalog); Obsession as Obsessed (Minor): a hopeless romantic.\nAbilities: Certamen 3 to Penetration; Disputatio 2 to Teaching; Greater Alpine Tribunal Lore 3 to Area Lore: Greater Alps Tribunal; Hermetic Law 1 to Code of Hermes; House Jerbiton Lore 1 to Organization Lore: House Jerbiton; Lectio 3 to Teaching; Legend Lore 1 to Area Lore: Greater Alps Tribunal; Magic Affinity 5 to Herbam, 15 xp; Order of Hermes Lore 2 to Organization Lore: Order of Hermes; Play 5 to Music; Scribe Latin 5 to Artes Liberales.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Aura of Ennobled Presence as Aura of the Ennobled Presence; At the catalog's level or Art: The Gentle Beast ReAn 20 to ReAn 25.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -19706,7 +19699,7 @@
             "kind": "characters",
             "target_id": "sourdine",
             "note": "His contact at Valnastium",
-            "id": "b3a4bea0be0b"
+            "id": "7f55b86c9a25"
           }
         ],
         "agents": [],
@@ -24024,7 +24017,7 @@
             "xp": 21
           },
           "corpus": {
-            "xp": 465
+            "xp": 543
           },
           "herbam": {
             "xp": 21
@@ -24049,7 +24042,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 225,
+            "xp": 105,
             "specialty": "geometry",
             "xp_table": "ability"
           },
@@ -24082,6 +24075,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 80,
+            "specialty": "Creo",
+            "xp_table": "ability"
+          },
+          {
             "name": "Charm",
             "category": "General",
             "xp": 5,
@@ -24103,6 +24103,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 170,
+            "specialty": "apprentices",
+            "xp_table": "ability"
+          },
+          {
             "name": "Etiquette",
             "category": "General",
             "xp": 30,
@@ -24112,7 +24119,7 @@
           {
             "name": "Faerie Lore",
             "category": "Arcane",
-            "xp": 15,
+            "xp": 20,
             "specialty": "Danu",
             "xp_table": "ability"
           },
@@ -24133,7 +24140,7 @@
           {
             "name": "Area Lore: Greater Alps Tribunal",
             "category": "General",
-            "xp": 30,
+            "xp": 35,
             "specialty": "what magi want",
             "xp_table": "ability"
           },
@@ -24163,20 +24170,6 @@
             "category": "General",
             "xp": 30,
             "specialty": "grogs",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Teaching",
-            "category": "General",
-            "xp": 30,
-            "specialty": "apprentices",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 5,
-            "specialty": "Normandy",
             "xp_table": "ability"
           },
           {
@@ -24212,13 +24205,6 @@
             "category": "Arcane",
             "xp": 140,
             "specialty": "Corpus",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 50,
-            "specialty": "bone magic",
             "xp_table": "ability"
           },
           {
@@ -24400,7 +24386,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_eyes_of_the_cat",
+            "spell_id": "spell_eyes_of_the_owl",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -24542,6 +24528,24 @@
             "base_level": null,
             "source": "SoI",
             "page": "71",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_eyes_of_the_owl",
+            "name": "Eyes of the Owl",
+            "technique": "Muto",
+            "form": "Corpus",
+            "level": 5,
+            "description": "From the stat block in Sanctuary of Ice: The Greater Alps Tribunal. (Base 2, +1 Touch, +2 Sun, as Eyes of the Cat)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SoI",
+            "page": "",
             "experimental_effects": [],
             "details_missing": false
           },
@@ -24703,7 +24707,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: few devices yet, since she has been building her Arts. Her talisman is a bone spindle, opened for every shape and material bonus and enchanted to snap human and animal limbs. A pet marmot with some magical abilities; no familiar yet. Her longevity potion (-13) has washed her body to her sigil's bone colour, which may return when the potion fails. Her Public Vis Source came after her Gauntlet, and buys her a chair of her own.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 56 as printed (looks 28); Twilight Points 7 / 3 = Warping 2; Confidence 2 (3 points), the Definitive Edition's baseline, +1 for a Tytalus apprenticeship, not the old 6. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Incredible Intelligence as Great Intelligence; Purifying Touch as Lesser Purifying Touch; Magic Affinity as Minor Magical Focus; Secret Vis Source as Personal Vis Source: Corpus; Strong-willed as Strong-Willed; Susceptible to Divine Power as Susceptibility to Divine Power; Major Magic Deficiency as Deficient Form; Major Magic Deficiency as Deficient Form; Public vis source as Public Vis Source.\nAbilities: Boating 2 to Profession: Boatman; Brawling 1 to Brawl; Certamen 3 dropped; Disputatio 7 to Artes Liberales; Greater Alpine Tribunal Lore 3 to Area Lore: Greater Alps Tribunal; Hermetic Law 1 to Code of Hermes; Lectio 3 to Teaching; Legend Lore 1 to Magic Lore; Magic Affinity 12 dropped; Occult Lore 3 to Infernal Lore; Order of Hermes Lore 2 to Organization Lore: Order of Hermes; Scribe Latin 5 to Artes Liberales.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Eyes of the Owl for Eyes of the Cat; Easing the Strain of Childbirth as Ease the Suffering of Childbirth; Leap of Homecoming as The Leap of Homecoming; Seven League Stride as Seven-League Stride; At the catalog's level or Art: Preternatural Growth and Shrinking MuCo 20 to MuCo 15; Easing the Strain of Childbirth MuCo 20 to MuCo 15; Grip of the Choking Hand PeCo 15 to PeCo 25; Rise of the Feathery Body ReCo 5 to ReCo 10; Seven League Stride ReCo 35 to ReCo 30.",
+          "biography": "Equipment: few devices yet, since she has been building her Arts. Her talisman is a bone spindle, opened for every shape and material bonus and enchanted to snap human and animal limbs. A pet marmot with some magical abilities; no familiar yet. Her longevity potion (-13) has washed her body to her sigil's bone colour, which may return when the potion fails. Her Public Vis Source came after her Gauntlet, and buys her a chair of her own.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 56 as printed (looks 28); Twilight Points 7 / 3 = Warping 2; Confidence 2 (3 points), the Definitive Edition's baseline, +1 for a Tytalus apprenticeship, not the old 6. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Incredible Intelligence as Great Intelligence; Purifying Touch as Lesser Purifying Touch; Magic Affinity as Minor Magical Focus; Secret Vis Source as Personal Vis Source: Corpus; Strong-willed as Strong-Willed; Susceptible to Divine Power as Susceptibility to Divine Power; Major Magic Deficiency as Deficient Form; Major Magic Deficiency as Deficient Form; Public vis source as Public Vis Source.\nAbilities: Boating 2 to Profession: Boatman; Brawling 1 to Brawl; Certamen 3 to Penetration; Disputatio 7 to Teaching; Greater Alpine Tribunal Lore 3 to Area Lore: Greater Alps Tribunal; Hermetic Law 1 to Code of Hermes; Lectio 3 to Teaching; Legend Lore 1 to Area Lore: Greater Alps Tribunal; Magic Affinity 12 to Corpus, 78 xp; Occult Lore 3 to Infernal Lore; Order of Hermes Lore 2 to Organization Lore: Order of Hermes; Scribe Latin 5 to Artes Liberales.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Easing the Strain of Childbirth as Ease the Suffering of Childbirth; Leap of Homecoming as The Leap of Homecoming; Seven League Stride as Seven-League Stride; At the catalog's level or Art: Preternatural Growth and Shrinking MuCo 20 to MuCo 15; Easing the Strain of Childbirth MuCo 20 to MuCo 15; Grip of the Choking Hand PeCo 15 to PeCo 25; Rise of the Feathery Body ReCo 5 to ReCo 10; Seven League Stride ReCo 35 to ReCo 30.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -25221,7 +25225,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Converted from the Fourth Edition block (p. 76): age 48 as printed, looks in her late twenties; Confidence at the Definitive Edition's baseline, not the old 3. Her Redcap, Indenture and Whitlams Virtues fold into the Definitive Edition's Redcap (DE p. 105), which gives Well-Traveled; Climb is Athletics, Disguise and Guile are Guile, Storytelling is Charm, Scribe Latin is Artes Liberales.\nHer devices: a warm copper triangle pin (CrIg 6, constant) that also gives her Eyes of the Cat once a day (MuCo(An) 10); a golden lickstone, a small plate that clings to the palate and hides itself, holding the Seven-League Stride 24 times a day (ReCo 35), which the Rorschach magi let her trade for the Leap of Homecoming she has no use for, living at home; and a copper leaf in each boot, each a pawn of Rego vis, which lets her reroll any die that would give blisters or a turned ankle. She has not had them totalled against the Redcap Virtue's 50 levels and two a year since. Boots of an Alpine dragonette's skin, which she killed herself. A longevity potion, -5.",
+          "biography": "Converted from the Fourth Edition block (p. 76): age 48 as printed, looks in her late twenties; Confidence at the Definitive Edition's baseline, not the old 3. Her Redcap, Indenture and Whitlams Virtues fold into the Definitive Edition's Redcap (DE p. 105), which gives Well-Traveled; Climb is Athletics, Disguise and Guile are Guile, Storytelling is Living Language, Scribe Latin is Artes Liberales.\nHer devices: a warm copper triangle pin (CrIg 6, constant) that also gives her Eyes of the Cat once a day (MuCo(An) 10); a golden lickstone, a small plate that clings to the palate and hides itself, holding the Seven-League Stride 24 times a day (ReCo 35), which the Rorschach magi let her trade for the Leap of Homecoming she has no use for, living at home; and a copper leaf in each boot, each a pawn of Rego vis, which lets her reroll any die that would give blisters or a turned ankle. She has not had them totalled against the Redcap Virtue's 50 levels and two a year since. Boots of an Alpine dragonette's skin, which she killed herself. A longevity potion, -5.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -25436,7 +25440,7 @@
             "xp": 325
           },
           "mentem": {
-            "xp": 210
+            "xp": 225
           },
           "terram": {
             "xp": 21
@@ -25449,14 +25453,14 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 225,
+            "xp": 215,
             "specialty": "logic",
             "xp_table": "ability"
           },
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 5,
+            "xp": 10,
             "specialty": "hiking",
             "xp_table": "ability"
           },
@@ -25489,6 +25493,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 125,
+            "specialty": "Mentem",
+            "xp_table": "ability"
+          },
+          {
             "name": "Charm",
             "category": "General",
             "xp": 15,
@@ -25514,6 +25525,13 @@
             "category": "General",
             "xp": 180,
             "specialty": "while plotting",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 80,
+            "specialty": "Mentem",
             "xp_table": "ability"
           },
           {
@@ -25554,14 +25572,14 @@
           {
             "name": "Guile",
             "category": "General",
-            "xp": 50,
+            "xp": 55,
             "specialty": "documents",
             "xp_table": "ability"
           },
           {
             "name": "Area Lore: Greater Alps Tribunal",
             "category": "General",
-            "xp": 50,
+            "xp": 125,
             "specialty": "magi",
             "xp_table": "ability"
           },
@@ -25601,24 +25619,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Teaching",
-            "category": "General",
-            "xp": 50,
-            "specialty": "Mentem",
-            "xp_table": "ability"
-          },
-          {
             "name": "Legerdemain",
             "category": "General",
             "xp": 5,
             "specialty": "detecting",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 75,
-            "specialty": "the local region",
             "xp_table": "ability"
           },
           {
@@ -25650,13 +25654,6 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 50,
-            "specialty": "Muto",
-            "xp_table": "ability"
-          },
-          {
             "name": "Philosophiae",
             "category": "Academic",
             "xp": 30,
@@ -25666,7 +25663,7 @@
           {
             "name": "Music",
             "category": "General",
-            "xp": 5,
+            "xp": 10,
             "specialty": "comedy",
             "xp_table": "ability"
           },
@@ -25694,7 +25691,7 @@
           {
             "name": "Living Language: Greek",
             "category": "General",
-            "xp": 50,
+            "xp": 55,
             "specialty": "magi",
             "xp_table": "ability"
           },
@@ -25782,7 +25779,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_true_love",
+            "vf_id": "vf_true_love_major",
             "params": {},
             "id": "",
             "temporary": false,
@@ -26284,7 +26281,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "He learnt most of his spells from books Valnastium's library trades for, and avoids inventing his own. He knows Eyes of the Cat in a form the book changes to Near, Sun or Year and Group. He does not brew his own longevity potion (-14). He borrows the House's devices, which come to it when a magus dies with no sodalis of his master's master: masks of Disguise of the New Visage or Image Phantom for his agents, and the Standard of the Shadowy Men, carried against the Fanes, with group Seven-League Stride, invisibility and grog-strengthening enchantments. He will not use Enslave the Mortal Mind or its like. His relic is a flake of Saint Cyprian's fingerbone sewn into white silk, to which he wrongly credits his luck. His talisman is a flame-red wedding veil (HoH:S p. 52; Sanctuary of Ice makes it Carmine's sigil, kept by him, as his gold and amethyst ring is kept by her). He and Carmine married by the Greek rite with pagan Hermetic symbols, which they keep quiet.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 81 as printed (looks 35); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 7. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Visual Eidetic Memory dropped (not in the catalog); Great Intelligence as Great Intelligence; Magic Affinity as Minor Magical Focus; True Love (Minor): Carmine; Relic: the fingerbone of Saint Cyprian; Susceptible to Divine Power as Susceptibility to Divine Power; Driving Goal as Driven (Minor): to reconcile the Church and the Order; Dutybound: religious; Enemy as Enemies: Yselt of Journeys End.\nAbilities: Brawling 1 to Brawl; Certamen 5 dropped; Climb 1 to Athletics; Disputatio 3 to Artes Liberales; Forgery 1 to Guile; Greater Alpine Tribunal Lore 4 to Area Lore: Greater Alps Tribunal; Hermetic Law 3 to Code of Hermes; House Jerbiton Lore 8 to Organization Lore: House Jerbiton; Lectio 4 to Teaching; Legend Lore 5 to Magic Lore; Magic Affinity 5 dropped; Occult Lore 2 to Infernal Lore; Order of Hermes Lore 4 to Organization Lore: Order of Hermes; Play Lute 1 to Music; Scribe Latin 7 to Artes Liberales; Sing 1 to Music; Storyteller 1 to Charm; Theology 3 to Theology: Christian.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Aura of Ennobled Presence as Aura of the Ennobled Presence; Circular Ward Against Faeries as Circular Ward Against Faerie Spirits; At the catalog's level or Art: Eyes of the Cat MuCo 15 to MuCo 5; Thaumaturgical Transformation of Plants to Iron MuHe(Te) 15 to MuHe 20; Image Phantom MuIm 25 to MuIm 20; The Captive Voice ReIm 15 to ReIm 30; Haunt of the Living Ghost ReIm 35 to CrIm 35; Gift of Reason CrMe 25 to CrMe 35; Circular Ward Against Demons ReVi 35 to ReVi general; Circular Ward Against Faeries ReVi 35 to ReVi general; Opening the Intangible Tunnel ReVi 35 to ReVi general; Watching Ward ReVi 30 to ReVi general.",
+          "biography": "He learnt most of his spells from books Valnastium's library trades for, and avoids inventing his own. He knows Eyes of the Cat in a form the book changes to Near, Sun or Year and Group. He does not brew his own longevity potion (-14). He borrows the House's devices, which come to it when a magus dies with no sodalis of his master's master: masks of Disguise of the New Visage or Image Phantom for his agents, and the Standard of the Shadowy Men, carried against the Fanes, with group Seven-League Stride, invisibility and grog-strengthening enchantments. He will not use Enslave the Mortal Mind or its like. His relic is a flake of Saint Cyprian's fingerbone sewn into white silk, to which he wrongly credits his luck. His talisman is a flame-red wedding veil (HoH:S p. 52; Sanctuary of Ice makes it Carmine's sigil, kept by him, as his gold and amethyst ring is kept by her). He and Carmine married by the Greek rite with pagan Hermetic symbols, which they keep quiet.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 81 as printed (looks 35); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 7. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Visual Eidetic Memory dropped (not in the catalog); Great Intelligence as Great Intelligence; Magic Affinity as Minor Magical Focus; True Love (Major): Carmine; Relic: the fingerbone of Saint Cyprian; Susceptible to Divine Power as Susceptibility to Divine Power; Driving Goal as Driven (Minor): to reconcile the Church and the Order; Dutybound: religious; Enemy as Enemies: Yselt of Journeys End.\nAbilities: Brawling 1 to Brawl; Certamen 5 to Penetration; Climb 1 to Athletics; Disputatio 3 to Teaching; Forgery 1 to Guile; Greater Alpine Tribunal Lore 4 to Area Lore: Greater Alps Tribunal; Hermetic Law 3 to Code of Hermes; House Jerbiton Lore 8 to Organization Lore: House Jerbiton; Lectio 4 to Teaching; Legend Lore 5 to Area Lore: Greater Alps Tribunal; Magic Affinity 5 to Mentem, 15 xp; Occult Lore 2 to Infernal Lore; Order of Hermes Lore 4 to Organization Lore: Order of Hermes; Play Lute 1 to Music; Scribe Latin 7 to Artes Liberales; Sing 1 to Music; Storyteller 1 to Living Language: Greek; Theology 3 to Theology: Christian.\nSpells: Chirurgeon's Healing Touch as The Chirurgeon's Healing Touch; Aura of Ennobled Presence as Aura of the Ennobled Presence; Circular Ward Against Faeries as Circular Ward Against Faerie Spirits; At the catalog's level or Art: Eyes of the Cat MuCo 15 to MuCo 5; Thaumaturgical Transformation of Plants to Iron MuHe(Te) 15 to MuHe 20; Image Phantom MuIm 25 to MuIm 20; The Captive Voice ReIm 15 to ReIm 30; Haunt of the Living Ghost ReIm 35 to CrIm 35; Gift of Reason CrMe 25 to CrMe 35; Circular Ward Against Demons ReVi 35 to ReVi general; Circular Ward Against Faeries ReVi 35 to ReVi general; Opening the Intangible Tunnel ReVi 35 to ReVi general; Watching Ward ReVi 30 to ReVi general.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -26464,13 +26461,13 @@
             "kind": "characters",
             "target_id": "carmine",
             "note": "His wife",
-            "id": "20b47ec1f3a3"
+            "id": "bcfae0f47500"
           },
           {
             "kind": "creatures",
             "target_id": "crucifixo",
             "note": "his familiar, Crucifixo",
-            "id": "e1015b4c6c74"
+            "id": "cfecc99093f3"
           }
         ],
         "agents": [],
@@ -30688,7 +30685,7 @@
             "kind": "characters",
             "target_id": "andru",
             "note": "Her husband",
-            "id": "8a3099cb1659"
+            "id": "0d2542ce2069"
           }
         ],
         "agents": [],
@@ -31580,10 +31577,10 @@
           {
             "name": "Fist, in her magical gloves",
             "init": 1,
-            "attack": -1,
-            "defense": 1,
+            "attack": 7,
+            "defense": 7,
             "damage": 0,
-            "id": "21a6671cb3ad"
+            "id": "7ce05157bdf8"
           }
         ],
         "soak": 0,
@@ -31753,13 +31750,20 @@
             "xp": 105,
             "specialty": "covenfolk",
             "xp_table": "ability"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 105,
+            "specialty": null,
+            "xp_table": "ability"
           }
         ],
         "powers": [
           {
             "name": "Mementos",
             "might_cost": 0,
-            "init": 1,
+            "init": 0,
             "form": "Terram",
             "range": "Touch",
             "duration": "Concentration",
@@ -31768,12 +31772,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Handles the things she loved in life as if alive. Her gloves make it needless, but most strong ghosts have it.",
-            "id": "5a2aa563ee0e"
+            "id": "ab2ab25ccb09"
           },
           {
             "name": "Unquiet Spirit",
-            "might_cost": 1,
-            "init": 0,
+            "might_cost": 3,
+            "init": -2,
             "form": "Terram",
             "range": "Voice",
             "duration": "Momentary",
@@ -31781,14 +31785,14 @@
             "level": 25,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Flings things with her thoughts: in the Cave, up to 250 pounds as far as 100 paces, lighter things falling straight down at the edge of its reach; landing one precisely is a targeting roll, +2 to hit a man-sized target with a small object. ReTe with Animal, Aquam, Corpus or Herbam requisites for what she throws.",
-            "id": "be61f2e03cfa"
+            "description": "Flings things with her thoughts: in the Cave, up to 250 pounds as far as 100 paces, lighter things falling straight down at the edge of its reach; landing one precisely is a targeting roll, +2 to hit a man-sized target with a small object. ReTe with Animal, Aquam, Corpus or Herbam requisites for what she throws. Fourth Edition: 1 points.",
+            "id": "67192d17b9e5"
           }
         ],
         "vis": [],
         "equipment": "Pale grey leather gloves that let her handle things; an elaborate galena chatelaine whose keys, material, magical, spectral and illusory, open every lock in the covenant and more.",
         "appearance": "Tall and lean, dark-haired and speckled with grey, with very dark eyes; her magic is so strong that, when she wishes, she seems entirely solid. She may look any age from her life.",
-        "notes": "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until conversion rules for creatures are settled.\n\nThe Cave's autocrat, appointed by Criamon himself, who bound her to the place of her death, poisoned, to care for his children until the Enigma is solved; she is no genius loci. She cares chiefly for the Enigma's completion, which is easy to forget, as it so often means seeing to everyone's comfort; those who know it bargain with her better. She can be hurt only by Mentem or Vim magic, and will never possess anyone, which breaks her faith.\n\nConverted: the block's Destiny (to serve the final Criamon magus) has no Definitive Edition Virtue and is kept here; Craft (many) 3 is left out; Forgery 6 is Guile, the better of the two; Confidence 9 is the Definitive Edition's baseline. The text gives her Might as 45 adjusted by the aura; the block's 65 stands (A19).",
+        "notes": "The Cave's autocrat, appointed by Criamon himself, who bound her to the place of her death, poisoned, to care for his children until the Enigma is solved; she is no genius loci. She cares chiefly for the Enigma's completion, which is easy to forget, as it so often means seeing to everyone's comfort; those who know it bargain with her better. She can be hurt only by Mentem or Vim magic, and will never possess anyone, which breaks her faith.\n\nConverted: the block's Destiny (to serve the final Criamon magus) has no Definitive Edition Virtue and is kept here; Craft (many) 3 is left out; Forgery 6 is Guile, the better of the two; Confidence 9 is the Definitive Edition's baseline. The text gives her Might as 45 adjusted by the aura; the block's 65 stands (A19).\n\nAs printed in Fourth Edition: Fist, in her magical gloves Init +1, Attack -1, Defense +1, Damage +0.",
         "source": "Sanctuary of Ice: The Greater Alps Tribunal p. 37",
         "detail": "Full",
         "place_id": "the_axis_magica",
@@ -31890,8 +31894,8 @@
         "powers": [
           {
             "name": "Poltergeist",
-            "might_cost": 3,
-            "init": -5,
+            "might_cost": 2,
+            "init": -4,
             "form": "Terram",
             "range": "Voice",
             "duration": "Concentration",
@@ -31899,8 +31903,8 @@
             "level": 15,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Moves things of extraordinary weight anywhere in the aura, a Might point a magnitude of Target; she seems to touch what she moves. Nothing in the aura less than a year can be moved, though she can push it with other things.",
-            "id": "bcc687c74378"
+            "description": "Moves things of extraordinary weight anywhere in the aura, a Might point a magnitude of Target; she seems to touch what she moves. Nothing in the aura less than a year can be moved, though she can push it with other things. Fourth Edition: 3 points.",
+            "id": "d083a8ca24b1"
           },
           {
             "name": "The Primi's Magic",
@@ -31914,13 +31918,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts any spontaneous spell up to level 25 and any formulaic spell she knows up to level 60, at 1 Might point a magnitude; she earns no Twilight. Points spent come back to the Primi when a new Primus joins them. She knows every Vim and Mentem spell of the core rules to level 60 and many spells to level 25 of other Forms.",
-            "id": "f346c65b10d5"
+            "id": "2abf499b5b7d"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "",
-        "notes": "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until conversion rules for creatures are settled.\n\nThe youngest of the past Primi who knew Criamon in life, looking about thirty: friendly and approachable, she often offers to tutor outsiders who come to the Cave. Some Criamon believe the Primi will vanish in order shortly before a new Criamon takes the Founder's place, and that Jane will be the last to go. Her block stands for every spectral Primus: their 75 Might is one pool, so points one spends are gone from all.\n\nSanctuary of Ice makes the slain Primi genii loci bound to the Axis Magica, harmed only by Vim magic and never truly in solid form; Houses of Hermes: Mystery Cults calls them ghosts of past Primi who serve in place of a library and will one day enter the Hypostasis. The block is recorded as printed, with Confidence at the Definitive Edition's baseline. She never possesses anyone: the Primi think taking on matter like swimming through sewage.",
+        "notes": "The youngest of the past Primi who knew Criamon in life, looking about thirty: friendly and approachable, she often offers to tutor outsiders who come to the Cave. Some Criamon believe the Primi will vanish in order shortly before a new Criamon takes the Founder's place, and that Jane will be the last to go. Her block stands for every spectral Primus: their 75 Might is one pool, so points one spends are gone from all.\n\nSanctuary of Ice makes the slain Primi genii loci bound to the Axis Magica, harmed only by Vim magic and never truly in solid form; Houses of Hermes: Mystery Cults calls them ghosts of past Primi who serve in place of a library and will one day enter the Hypostasis. The block is recorded as printed, with Confidence at the Definitive Edition's baseline. She never possesses anyone: the Primi think taking on matter like swimming through sewage.",
         "source": "Sanctuary of Ice: The Greater Alps Tribunal p. 38",
         "detail": "Full",
         "place_id": "the_axis_magica",
@@ -31934,7 +31938,7 @@
         "many": true,
         "how_many": "Bands, in tunnels under the snow of high peaks",
         "realm": "Faerie",
-        "might": 20,
+        "might": 5,
         "might_form": "Terram",
         "might_pool": null,
         "order": "",
@@ -31949,11 +31953,11 @@
           "intelligence": 2,
           "perception": 4,
           "strength": 2,
-          "stamina": 5,
+          "stamina": 3,
           "presence": -1,
           "communication": 0,
           "dexterity": 3,
-          "quickness": 2
+          "quickness": 4
         },
         "cunning": false,
         "size": -2,
@@ -31987,7 +31991,7 @@
         ],
         "reputations": [],
         "attacks": [],
-        "soak": 15,
+        "soak": 6,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -32010,32 +32014,32 @@
         "abilities": [],
         "powers": [
           {
-            "name": "Command of the Snows",
-            "might_cost": 1,
+            "name": "Bury in Snow",
+            "might_cost": 3,
             "init": 1,
             "form": "Auram",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": 40,
+            "range": "Voice",
+            "duration": "Diameter",
+            "target": "Group",
+            "level": 25,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Works any non-Ritual Auram effect up to level 40 (the book's Control Auram 8), at 1 Might point a magnitude: above all, instant snowstorms that bury them and their enemies.",
-            "id": "88ba49e397e7"
+            "description": "A snowstorm that buries the gnomes and their enemies: the book's Control Auram 8, fixed as a Greater Power, as their Might follows their role.",
+            "id": "3961430a9466"
           },
           {
-            "name": "Command of the Mountain",
-            "might_cost": 1,
+            "name": "Shake the Mountain",
+            "might_cost": 3,
             "init": 1,
             "form": "Terram",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": 40,
+            "range": "Voice",
+            "duration": "Momentary",
+            "target": "Group",
+            "level": 25,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Works any non-Ritual Terram effect up to level 40 (the book's Control Terram 8), at 1 Might point a magnitude.",
-            "id": "9337a736c6eb"
+            "description": "Brings snow and rock down on those below: the book's Control Terram 8, fixed as a Greater Power.",
+            "id": "b245afa9c639"
           },
           {
             "name": "Faerie Gifts",
@@ -32049,7 +32053,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enchants small objects, as the Fourth Edition's Faeries describes: the cheese one gave a poor girl of Lucerne turned to gold.",
-            "id": "94cf9fb77b42"
+            "id": "7d8e306cb9df"
           }
         ],
         "vis": [
@@ -32057,12 +32061,12 @@
             "pawns": 2,
             "art": "Terram",
             "where": "one pawn in each great foot; its Art is whatever the gnome was doing when killed",
-            "id": "8f8234e8c7c8"
+            "id": "940bfe1faa90"
           }
         ],
         "equipment": "",
         "appearance": "Small blue gnomes, always male, with icicles in their beards and huge feet they use as skis or to dig through snow.",
-        "notes": "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until conversion rules for creatures are settled.\n\nThey keep above the tree line and sleep through the summer, and live through much of western Europe in tunnels on peaks that are always snow-capped; their name probably means icicle beards. They shun melee, fighting with the weather. Mundane cold and metal weapons cannot hurt them; the block's Soak +10 is Stamina plus 10. Carlo of Journeys End has their features.\n\nThe Lucerne girl's tale: sent to beg from her uncle for her sick mother, she was refused even the rind of his cheese, and met a barbegazi who gave her healing herbs and a cheese that became gold; that night an avalanche buried the uncle and filled his fields with stones.",
+        "notes": "They keep above the tree line and sleep through the summer, and live through much of western Europe in tunnels on peaks that are always snow-capped; their name probably means icicle beards. They shun melee, fighting with the weather. Mundane cold and metal weapons cannot hurt them; the block's Soak +10 is Stamina plus 10. Carlo of Journeys End has their features.\n\nThe Lucerne girl's tale: sent to beg from her uncle for her sick mother, she was refused even the rind of his cheese, and met a barbegazi who gave her healing herbs and a cheese that became gold; that night an avalanche buried the uncle and filled his fields with stones.\n\nMight 20 as printed.\n\nAs printed in Fourth Edition: Soak +15.\n\nStamina and Soak as the dwarf, RoP:F p. 96.",
         "source": "Sanctuary of Ice: The Greater Alps Tribunal p. 105",
         "detail": "Full",
         "place_id": "mount_pilatus",
@@ -32121,11 +32125,11 @@
         "attacks": [
           {
             "name": "Claws and teeth",
-            "init": 5,
-            "attack": 5,
-            "defense": 7,
-            "damage": -3,
-            "id": "45ac3af7a67a"
+            "init": 2,
+            "attack": 13,
+            "defense": 14,
+            "damage": -1,
+            "id": "699bb3160a60"
           }
         ],
         "soak": 0,
@@ -32180,7 +32184,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 5,
+            "xp": 180,
             "specialty": "with cats",
             "xp_table": "ability"
           },
@@ -32359,12 +32363,12 @@
             "pawns": 1,
             "art": "Mentem",
             "where": "in his body",
-            "id": "5d2e8a1f9708"
+            "id": "8e8745029c29"
           }
         ],
         "equipment": "",
         "appearance": "A small aristocratic black cat (Houses of Hermes: Societates p. 52; Sanctuary of Ice spells him Crucifixio).",
-        "notes": "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until conversion rules for creatures are settled.\n\nAndru's familiar, of the Black Lineage: so many Valnastium magi have kept black cats as familiars that a magical strain of them lives in the valley. He could talk before he was bound, and is not the lineage's most senior cat, though his tie to the Primus will speed his rise. His Scribe Latin 5 (he reads, but cannot write) is Artes Liberales and Latin here. The book's Size 0 is kept.\n\nRebuilt by the Definitive Edition's familiar rules (DE pp. 266-267) from Andru's Lab Total, not copied from the Fourth Edition bond. The book's cords were Gold +2, Silver +2, Bronze 0; the Lab Total buys +2 for the bronze cord too. Its bond qualities are invested powers: Mental Communication (CrMe, DE's own example), an invisibility like the Veil of Invisibility (PeIm 20, +10 for unlimited use), and making people love cats and wish to serve them as princes (CrMe, as Panic of the Trembling Heart, 15, +10 for unlimited use). He could talk before the binding, so the book's Attunement of Speech is not needed.",
+        "notes": "Andru's familiar, of the Black Lineage: so many Valnastium magi have kept black cats as familiars that a magical strain of them lives in the valley. He could talk before he was bound, and is not the lineage's most senior cat, though his tie to the Primus will speed his rise. His Scribe Latin 5 (he reads, but cannot write) is Artes Liberales and Latin here. The book's Size 0 is kept.\n\nRebuilt by the Definitive Edition's familiar rules (DE pp. 266-267) from Andru's Lab Total, not copied from the Fourth Edition bond. The book's cords were Gold +2, Silver +2, Bronze 0; the Lab Total buys +2 for the bronze cord too. Its bond qualities are invested powers: Mental Communication (CrMe, DE's own example), an invisibility like the Veil of Invisibility (PeIm 20, +10 for unlimited use), and making people love cats and wish to serve them as princes (CrMe, as Panic of the Trembling Heart, 15, +10 for unlimited use). He could talk before the binding, so the book's Attunement of Speech is not needed.\n\nAs printed in Fourth Edition: Claws and teeth Init +5, Attack +5, Defense +7, Damage -3; Soak +0.",
         "source": "Sanctuary of Ice: The Greater Alps Tribunal p. 86",
         "detail": "Full",
         "place_id": "valnastium",
@@ -40703,7 +40707,7 @@
           "kind": "characters",
           "target_id": "andru",
           "note": "Her husband",
-          "id": "8a3099cb1659"
+          "id": "0d2542ce2069"
         }
       ],
       "agents": [],

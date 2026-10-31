@@ -38,6 +38,8 @@ from ...rules.xp import ABILITY_FACTOR, ability_xp, score_from_xp
 from ..builder import Builder, StatBlock, characteristics, paragraphs
 from ..fourth import Fourth, convert
 
+#: The Area Lore that takes a block's Legend Lore.
+AREA = "Iceland"
 #: A person's Fatigue and Body levels, as the blocks print them.
 FATIGUE = "OK, 0, -1, -3, -5, Unconscious"
 BODY = "OK, 0, -1, -3, -5, Incapacitated"
@@ -72,13 +74,11 @@ SPENT_ON = {
     "Empathy": "Folk Ken",
     "Gruagach Lore": "Organization Lore: Gruagachan",
     "Mimicry": "Guile",
-    "Visions": "Premonitions",
     "Weather Sense": "Wilderness Sense",
 }
 #: Printed arcane powers no catalog Ability fits: named in the notes and
 #: left off the Abilities list.
 POWERS = {
-    "Curse",
     "Decay",
     "Enthrall",
     "Galdor Wisdom",
@@ -113,10 +113,9 @@ def _combat(lines: list[Combat], soak: str) -> str:
 def _spend(stat: StatBlock, printed: Sequence[tuple[str, int, str]]) -> list[str]:
     """Spends each `SPENT_ON` Ability's whole experience on its catalog
     Ability, a new one taking the printed specialty, and says so. What
-    buys no further score goes in the block's "spare_xp", for `_top_up`:
-    a block holds only scores."""
+    buys no further score joins the block's "spare_xp"."""
     entries = {name: (score, spec) for name, score, spec in stat["abilities"]}
-    spare: dict[str, int] = {}
+    spare: dict[str, int] = dict(stat["spare_xp"])
     said: list[str] = []
     for name, score, specialty in printed:
         new = SPENT_ON.get(name)
@@ -164,7 +163,7 @@ def _sheet(key: str, block: Fourth, *, hermetic: bool = False) -> StatBlock:
             if name not in POWERS and name not in SPENT_ON
         ],
     )
-    stat, _ = convert(key, renamed)
+    stat, _ = convert(key, renamed, area=AREA)
     spent = _spend(stat, block.abilities)
     if not hermetic:
         stat["virtues_flaws"] = stat["virtues_flaws"][2:]
@@ -229,9 +228,7 @@ def _person(
         secrets=secrets,
     )
     stat = _sheet(key, block)
-    person = b.stats(person, stat, source="LFI")
-    _top_up(person, stat)
-    return person
+    return b.stats(person, stat, source="LFI")
 
 
 def build(b: Builder) -> None:

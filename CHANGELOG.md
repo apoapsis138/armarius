@@ -115,6 +115,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.62.0 — 2026-10-31
+
+### Peregrinatio
+
+- Every Fourth Edition creature, in the Greater Alps, Land of Fire & Ice, the Levant and Novgorod, is converted to the Definitive Edition, so the unconverted notices are gone. Each record's notes keep what the book printed.
+- Might now follows a creature's role in a campaign: unique beings keep theirs, a creature with a 5e relative takes the relative's, and others use the Realms of Power charts. The Barbegazi drop to Might 5, with their snowstorm a fixed power.
+- Combat and Soak are worked out again from the Definitive Edition's weapons, calibrated on beasts printed in both editions, and powers are priced by the Realms of Power tables. Giants take their clan's Form, and demons their order and Hierarchy.
+- The packs' Fourth Edition characters are converted again: removed Abilities now pass on all their experience (Certamen to Penetration, Disputatio to Teaching, Legend Lore to Area Lore, Storytelling to a Living Language, an Affinity to its Art), and Talents become their Virtues and Abilities.
+- A spell the catalog lacks now stays the magus's own, designed by the Definitive Edition's guidelines, in place of being swapped for an unrelated one. Only magic that is impossible now is swapped.
+
 ## 3.61.1 — 2026-10-31
 
 ### Peregrinatio

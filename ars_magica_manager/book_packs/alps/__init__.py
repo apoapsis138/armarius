@@ -22,7 +22,8 @@ from __future__ import annotations
 
 from ...models import Saga
 from .. import BookPack, register
-from ..builder import Builder, mark_unconverted
+from ..builder import Builder
+from ..fourth import Kin, reconvert
 from . import bestiary, covenants, places, stats_magi, stories, tribunal, world
 from .state import Alps
 
@@ -51,7 +52,11 @@ def assemble() -> Builder:
         stats = getattr(part, "stats", None)
         if stats is not None:
             stats(alps)
-    mark_unconverted(alps.b.saga)
+    reconvert(
+        alps.b.saga,
+        {"Barbegazi": 5},
+        kin={"Barbegazi": Kin(3, 6, "the dwarf, RoP:F p. 96")},
+    )
     return alps.b
 
 

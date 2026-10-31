@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.61.1",
   "kind": "pack",
   "name": "The Dragon and the Bear: the Novgorod Tribunal",
   "from_saga": "The Dragon and the Bear: the Novgorod Tribunal",
@@ -498,7 +498,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1e039bba821a"
+            "id": "702d5ea7fd91"
           },
           {
             "title": "Meddling with mundanes at Thousand Caves",
@@ -530,7 +530,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "6ea7b930465e"
+            "id": "a62bd52de581"
           },
           {
             "title": "Lelya Danichev's motion on the Volkhvy",
@@ -562,7 +562,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "6e17b136f4ce"
+            "id": "7c1e9dbe090f"
           }
         ],
         "rulings": [
@@ -571,21 +571,21 @@
             "year": 1039,
             "says": "The Tribunal's council has formal authority over the settlement of every new covenant in the Slavic lands. Pushed through after the fall of Grand Silesia, when the Rhine's first attempt to move the border was only narrowly defeated at Grand Tribunal; it has been used several times since to eject trespassing bands of foreign magi, and some now say it has slowed the Tribunal's growth.",
             "case_id": "",
-            "id": "da5a3e806350"
+            "id": "00ed860444fe"
           },
           {
             "title": "The Royal Embargo",
             "year": 1132,
             "says": "No member of the Tribunal may reveal himself to any member of the Russian royal house. Made after the death of Mstislav the Great, when every alliance with a prince had ended in disaster; Yury Beslav of Three Lakes shaped it. Later extended to the Polish royal house. Leczyca and Pavel Chedyav resent it.",
             "case_id": "",
-            "id": "d793c48ea310"
+            "id": "69b49b92857c"
           },
           {
             "title": "Leczyca's fine",
             "year": 1190,
             "says": "Leczyca was found guilty of serious breaches of the Royal Embargo for giving Silesian nobles magically gained word of German raids, and paid a heavy fine in vis. The book dates it about thirty years before 1220.",
             "case_id": "",
-            "id": "c44bbd854dbc"
+            "id": "ede9fcf1c1c6"
           }
         ],
         "treasury": [],
@@ -597,7 +597,7 @@
             "details": "With Princess Olga driving off the Volkhvy, a Byzantine expedition under Michael of Amastris tries to found a covenant in the Drevlianian lands. Two magi are lost in Arcadia, one is killed by Volkhvy and one stoned in Kiev.",
             "changes": [],
             "margin": "",
-            "id": "e11ef3a31ed8"
+            "id": "8d212b297e62"
           },
           {
             "year": 962,
@@ -606,7 +606,7 @@
             "details": "Sviatoslav, a pagan who cares only for war, lets Olga's policy lapse; the Volkhvy return in force and Michael flees to Constantinople before they strike.",
             "changes": [],
             "margin": "",
-            "id": "8b49aee9d44d"
+            "id": "90d9feaefb70"
           },
           {
             "year": 992,
@@ -615,7 +615,7 @@
             "details": "The Theban Tribunal founds Rodnya on the Dnieper, about eighty miles south of Kiev.",
             "changes": [],
             "margin": "",
-            "id": "ccb77e6c6174"
+            "id": "28aff87c16cc"
           },
           {
             "year": 993,
@@ -624,7 +624,7 @@
             "details": "The Rhine founds Grand Silesia between the Oder and the Warta, heavily backed by Crintera; Transylvania founds Pripet Maior in the Pripet marshes (the book's sidebar says 994).",
             "changes": [],
             "margin": "",
-            "id": "502b7717157d"
+            "id": "aa00c8f9c9ed"
           },
           {
             "year": 1006,
@@ -633,7 +633,7 @@
             "details": "Ordered by Thebes to join a strike on a Carpathian covenant, the quaesitor Patrick of Dunderry refuses and denounces the order as diabolical madness; Rodnya backs him, and the three covenants begin a quiet reconciliation.",
             "changes": [],
             "margin": "",
-            "id": "a1992cd72ca5"
+            "id": "bb8a60a2aa33"
           },
           {
             "year": 1008,
@@ -642,7 +642,7 @@
             "details": "The three covenants shed their sponsors and declare themselves a Tribunal; the Grand Tribunal after the Schism War ratifies it.",
             "changes": [],
             "margin": "",
-            "id": "bf76789c673a"
+            "id": "06666d9c531f"
           },
           {
             "year": 1009,
@@ -651,7 +651,7 @@
             "details": "Attacked by Thebans and Transylvanians alike, Rodnya is abandoned; Patrick leads its magi north. Grand Silesia is damaged and its refugees flee to Pripet Maior.",
             "changes": [],
             "margin": "",
-            "id": "3206b0bb54a1"
+            "id": "aa7eb3ddbc24"
           },
           {
             "year": 1012,
@@ -660,7 +660,7 @@
             "details": "Between lakes Onega, Beloe and Ilmen, equidistant from Novgorod, Beloozero and Ladoga.",
             "changes": [],
             "margin": "",
-            "id": "f5bc1a3c9ef2"
+            "id": "c936ead5d835"
           },
           {
             "year": 1039,
@@ -669,7 +669,7 @@
             "details": "Resettled in 1013, Grand Silesia is destroyed by anti-pagan knights when Casimir the Restorer returns to power; the Rhine makes its first attempt on the border.",
             "changes": [],
             "margin": "",
-            "id": "1bc91624d57a"
+            "id": "e28fb4b3e315"
           },
           {
             "year": 1052,
@@ -678,7 +678,7 @@
             "details": "Once Casimir has driven the Czechs from Silesia, Grand Silesia's survivors found Leczyca between the Vistula and the Warta; many stay at Pripet Maior, the root of its bond with House Bjornaer.",
             "changes": [],
             "margin": "",
-            "id": "08bd56600306"
+            "id": "0a4493a72b94"
           },
           {
             "year": 1053,
@@ -687,7 +687,7 @@
             "details": "The Tribunal drops 'New' from its name and takes Novgorod's.",
             "changes": [],
             "margin": "",
-            "id": "759053303c4b"
+            "id": "6b1bcd3c3e43"
           },
           {
             "year": 1069,
@@ -696,7 +696,7 @@
             "details": "Vseslav of Polotsk, a prince and a Volkhv, takes Kiev; the Tribunal, as in 1054, chooses to do nothing, and he is soon driven out. He dies in 1101, having written his dangerous lore in six great tomes of black serpent skin.",
             "changes": [],
             "margin": "",
-            "id": "c8432aa76488"
+            "id": "5cf1a9e73c80"
           },
           {
             "year": 1132,
@@ -705,7 +705,7 @@
             "details": "After the death of Mstislav the Great the Tribunal forbids its members to reveal themselves to the Russian royal house.",
             "changes": [],
             "margin": "",
-            "id": "ec9c3872049b"
+            "id": "abf5f7c1f398"
           },
           {
             "year": 1147,
@@ -714,7 +714,7 @@
             "details": "Roslav of Pripet Maior is summoned to Crintera to become Primus of House Bjornaer, which he is for almost thirty years.",
             "changes": [],
             "margin": "",
-            "id": "a96f6a86ca46"
+            "id": "beff89ef3179"
           },
           {
             "year": 1185,
@@ -723,7 +723,7 @@
             "details": "On the urging of Malincka Capcek, the Tribunal grants a charter for a covenant in a gorge of the western Urals; Nastassia Baramov passes her Gauntlet at Three Lakes the day before.",
             "changes": [],
             "margin": "",
-            "id": "e088f5cf855d"
+            "id": "34153d5d5f82"
           },
           {
             "year": 1190,
@@ -732,7 +732,7 @@
             "details": "Leczyca pays a heavy vis fine for aiding Silesian nobles against German raids.",
             "changes": [],
             "margin": "",
-            "id": "a3ecc7e417e8"
+            "id": "1d0ca821a538"
           },
           {
             "year": 1194,
@@ -741,7 +741,7 @@
             "details": "The oldest covenant of the Tribunal marks two hundred years.",
             "changes": [],
             "margin": "",
-            "id": "7bf100e5ed9c"
+            "id": "d87e28e3a0ba"
           },
           {
             "year": 1206,
@@ -750,7 +750,7 @@
             "details": "The Criamon Yannes Kolski of Leczyca spends at least two weeks in Twilight, prophesying; his words, the Yannes Discourse, are kept at Leczyca. He never works magic again.",
             "changes": [],
             "margin": "",
-            "id": "074fbc7320ad"
+            "id": "7b55dc30098d"
           },
           {
             "year": 1212,
@@ -759,7 +759,7 @@
             "details": "A special council finds that no apprentice has passed a Gauntlet at Three Lakes in thirty-five years; four apprentices are taken in the five years after.",
             "changes": [],
             "margin": "",
-            "id": "18bdb72a1acf"
+            "id": "5468ab961026"
           },
           {
             "year": 1214,
@@ -768,7 +768,7 @@
             "details": "Thousand Caves and Pripet Maior trade accusations; Malincka speaks for hours on how the Volkhvy temper auras. The Quaesitores confer in private, then dismiss the meeting, announcing a delegation to both covenants. They are also asked whether Yannes Kolski has passed into Final Twilight.",
             "changes": [],
             "margin": "",
-            "id": "80e79bc6bf21"
+            "id": "90af29eb5d00"
           },
           {
             "year": 1215,
@@ -777,7 +777,7 @@
             "details": "A quaesitorial delegation backed by magi of every covenant visits Pripet Maior and Thousand Caves over 1215 and 1216, and finds both in breach of the Code.",
             "changes": [],
             "margin": "",
-            "id": "6b8decdb5441"
+            "id": "057da8ba4360"
           },
           {
             "year": 1216,
@@ -786,7 +786,7 @@
             "details": "After a disruptive visit to Thousand Caves, Yannes Kolski is lost near Vladimir-in-Suzdalia while its magi escort him back.",
             "changes": [],
             "margin": "",
-            "id": "ab8031598422"
+            "id": "bac027d53b2d"
           },
           {
             "year": 1217,
@@ -795,7 +795,7 @@
             "details": "Pripet Maior strikes Thousand Caves without declaring Wizard's War. It fails: the local animals stay loyal, two attackers fall into Twilight, and Otto Rattstein drives off Casimi Ljech as he is about to kill Nastassia Baramov.",
             "changes": [],
             "margin": "",
-            "id": "b06702d751e2"
+            "id": "754b363f3aa9"
           },
           {
             "year": 1218,
@@ -804,7 +804,7 @@
             "details": "Zashya Miyovna complains of Pripet Maior to the elders at Crintera, who summon Pripet to judgement but promise nothing to make it come.",
             "changes": [],
             "margin": "",
-            "id": "fb3610309da3"
+            "id": "606fff969000"
           }
         ],
         "package_data": {},
@@ -2476,19 +2476,19 @@
             "kind": "characters",
             "target_id": "casimi_ljech",
             "note": "Led the raid",
-            "id": "215aac3415ef"
+            "id": "6d34620ba87f"
           },
           {
             "kind": "characters",
             "target_id": "andrei_soitkchin",
             "note": "Must judge it",
-            "id": "9cbd91ae39ce"
+            "id": "50c761a0b077"
           },
           {
             "kind": "characters",
             "target_id": "lelya_danichev",
             "note": "Wants an apology",
-            "id": "fcff85e5e06d"
+            "id": "b4097ec6b5b0"
           }
         ],
         "arms": {},
@@ -2539,13 +2539,13 @@
             "kind": "places",
             "target_id": "mikhail_of_turov",
             "note": "Means to drain the marsh",
-            "id": "3662e706daca"
+            "id": "c22334d9d9fd"
           },
           {
             "kind": "covenants",
             "target_id": "pripet_maior",
             "note": "Its marsh",
-            "id": "2937b3b11753"
+            "id": "f958d642469d"
           }
         ],
         "arms": {},
@@ -2586,7 +2586,7 @@
             "kind": "characters",
             "target_id": "malincka_capcek",
             "note": "Her spell",
-            "id": "28c87ee47b5a"
+            "id": "2e1716e8fda3"
           }
         ],
         "arms": {},
@@ -2627,19 +2627,19 @@
             "kind": "characters",
             "target_id": "rehamchi_danichev",
             "note": "Half believes",
-            "id": "5fd21e9fd107"
+            "id": "7e5057b1394a"
           },
           {
             "kind": "characters",
             "target_id": "basyl_karrimichi",
             "note": "Sees visions",
-            "id": "893e6800c03b"
+            "id": "0d64ff5d500c"
           },
           {
             "kind": "places",
             "target_id": "the_cult_of_hermes",
             "note": "Its cult",
-            "id": "417cc873c972"
+            "id": "1d931bcffe11"
           }
         ],
         "arms": {},
@@ -2681,7 +2681,7 @@
             "kind": "characters",
             "target_id": "yannes_kolski",
             "note": "Vanished",
-            "id": "82913fa4581c"
+            "id": "dae27182d85f"
           }
         ],
         "arms": {},
@@ -2723,7 +2723,7 @@
             "kind": "creatures",
             "target_id": "stolitzya_the_swimmer",
             "note": "The Swimmer",
-            "id": "1283e14225ee"
+            "id": "70095768e738"
           }
         ],
         "arms": {},
@@ -2765,19 +2765,19 @@
             "kind": "characters",
             "target_id": "zashya_miyovna",
             "note": "Her secret",
-            "id": "9a1a0add7a1e"
+            "id": "551af322daac"
           },
           {
             "kind": "characters",
             "target_id": "nastassia_baramov",
             "note": "Her granddaughter",
-            "id": "a97d358a5e58"
+            "id": "2439b6cab126"
           },
           {
             "kind": "characters",
             "target_id": "miya_cossuri",
             "note": "Her mother",
-            "id": "ad64d4a1e450"
+            "id": "53725a8e6d16"
           }
         ],
         "arms": {},
@@ -2819,7 +2819,7 @@
             "kind": "covenants",
             "target_id": "leczyca",
             "note": "In the Rhine's sights",
-            "id": "9be69d381c5e"
+            "id": "a47d685e819b"
           }
         ],
         "arms": {},
@@ -2917,7 +2917,7 @@
             "xp": 78
           },
           "intellego": {
-            "xp": 406
+            "xp": 416
           },
           "muto": {
             "xp": 55
@@ -2975,6 +2975,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 215,
+            "specialty": "Intellego",
+            "xp_table": "ability"
+          },
+          {
             "name": "Civil and Canon Law",
             "category": "Academic",
             "xp": 50,
@@ -2989,9 +2996,9 @@
             "xp_table": "ability"
           },
           {
-            "name": "Artes Liberales",
-            "category": "Academic",
-            "xp": 105,
+            "name": "Teaching",
+            "category": "General",
+            "xp": 50,
             "specialty": "debate",
             "xp_table": "ability"
           },
@@ -3045,17 +3052,17 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 75,
-            "specialty": "Intellego",
-            "xp_table": "ability"
-          },
-          {
             "name": "Ride",
             "category": "General",
             "xp": 30,
             "specialty": "speed",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Artes Liberales",
+            "category": "Academic",
+            "xp": 75,
+            "specialty": "copying",
             "xp_table": "ability"
           },
           {
@@ -3462,7 +3469,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Chief Quaesitor, an office of House Guernicus. Rheumatism and a leg weakened in Twilight. His Cloak of Silken Steel, made by Nicollo decades ago, is a formal robe of dark blue and grey silk that turns violence like supple mail: Protection 10, no Load. The book has him master every listed spell of InMe, InIm, PeIm, ReCo, ReIm, ReMe and ReVi, with enhanced truth, lie-detection and compulsion spells of his own, and defensive spells of invisibility, teleportation and mind domination.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 122 as printed; Twilight Points 16 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Magical Affinity as Affinity with Intellego; Strong-willed as Strong-Willed; Visual Eidetic Memory dropped (not in the catalog); Weak Parma Magica dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Non-combatant as Noncombatant.\nAbilities: Certamen 7 dropped; Disputatio 4 to Artes Liberales; Hermes Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 6 to Code of Hermes; Magic Affinity 4 dropped; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales.",
+          "biography": "Chief Quaesitor, an office of House Guernicus. Rheumatism and a leg weakened in Twilight. His Cloak of Silken Steel, made by Nicollo decades ago, is a formal robe of dark blue and grey silk that turns violence like supple mail: Protection 10, no Load. The book has him master every listed spell of InMe, InIm, PeIm, ReCo, ReIm, ReMe and ReVi, with enhanced truth, lie-detection and compulsion spells of his own, and defensive spells of invisibility, teleportation and mind domination.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 122 as printed; Twilight Points 16 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Magical Affinity as Affinity with Intellego; Strong-willed as Strong-Willed; Visual Eidetic Memory dropped (not in the catalog); Weak Parma Magica dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Non-combatant as Noncombatant.\nAbilities: Certamen 7 to Penetration; Disputatio 4 to Teaching; Hermes Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 6 to Code of Hermes; Magic Affinity 4 to Intellego, 10 xp; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -4274,7 +4281,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 140,
+            "xp": 135,
             "specialty": "music",
             "xp_table": "ability"
           },
@@ -4300,9 +4307,16 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 105,
+            "specialty": "Mentem",
+            "xp_table": "ability"
+          },
+          {
             "name": "Charm",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "first impressions",
             "xp_table": "ability"
           },
@@ -4318,6 +4332,13 @@
             "category": "General",
             "xp": 30,
             "specialty": "inventing spells",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 30,
+            "specialty": "teaching",
             "xp_table": "ability"
           },
           {
@@ -4377,13 +4398,6 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 30,
-            "specialty": "Mentem",
-            "xp_table": "ability"
-          },
-          {
             "name": "Ride",
             "category": "General",
             "xp": 30,
@@ -4414,7 +4428,7 @@
           {
             "name": "Living Language: Russian",
             "category": "General",
-            "xp": 75,
+            "xp": 125,
             "specialty": "Novgorod dialect",
             "xp_table": "ability"
           },
@@ -4829,7 +4843,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Balding, rheumatic and short-sighted. His Deleterious Circumstances, worsened from major to total in Twilight, is the Definitive Edition's Minor Flaw here, though his magic fails altogether when he is alone. His quarterstaff is enchanted to stony hardness (Damage +6), his fur robes to strength and resistance (Protection +5). The book has him master every listed spell of InCo, InIm, InMe, ReCo, ReIm and ReMe, and abhor flashy destructive magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 117 as printed; Twilight Points 20 / 3 = Warping 6; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Well Traveled as Well-Traveled; Deep Sleeper dropped (not in the catalog).\nAbilities: Brawling 3 to Brawl; Certamen 5 dropped; Disputatio 3 to Artes Liberales; Hermes Lore 5 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Scribe Bulgar 3 to Artes Liberales; Scribe Latin 6 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales; Storytelling 4 to Charm; Wagoneering 3 to Profession: Teamster.",
+          "biography": "Balding, rheumatic and short-sighted. His Deleterious Circumstances, worsened from major to total in Twilight, is the Definitive Edition's Minor Flaw here, though his magic fails altogether when he is alone. His quarterstaff is enchanted to stony hardness (Damage +6), his fur robes to strength and resistance (Protection +5). The book has him master every listed spell of InCo, InIm, InMe, ReCo, ReIm and ReMe, and abhor flashy destructive magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 117 as printed; Twilight Points 20 / 3 = Warping 6; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Well Traveled as Well-Traveled; Deep Sleeper dropped (not in the catalog).\nAbilities: Brawling 3 to Brawl; Certamen 5 to Penetration; Disputatio 3 to Teaching; Hermes Lore 5 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Scribe Bulgar 3 to Artes Liberales; Scribe Latin 6 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales; Storytelling 4 to Living Language: Russian; Wagoneering 3 to Profession: Teamster.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -5811,13 +5825,13 @@
             "xp": 435
           },
           "animal": {
-            "xp": 378
+            "xp": 399
           },
           "aquam": {
             "xp": 105
           },
           "auram": {
-            "xp": 325
+            "xp": 340
           },
           "corpus": {
             "xp": 406
@@ -5866,7 +5880,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 140,
+            "xp": 105,
             "specialty": "music",
             "xp_table": "ability"
           },
@@ -5882,6 +5896,13 @@
             "category": "General",
             "xp": 50,
             "specialty": "dodge",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 180,
+            "specialty": "Animal",
             "xp_table": "ability"
           },
           {
@@ -5903,6 +5924,13 @@
             "category": "General",
             "xp": 105,
             "specialty": "spells",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 50,
+            "specialty": "teaching",
             "xp_table": "ability"
           },
           {
@@ -5948,16 +5976,9 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 75,
-            "specialty": "Animal",
-            "xp_table": "ability"
-          },
-          {
             "name": "Music",
             "category": "General",
-            "xp": 75,
+            "xp": 80,
             "specialty": "solo",
             "xp_table": "ability"
           },
@@ -6310,7 +6331,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Swan heart-beast, not battle-worthy, its shape hidden. Claustrophobic; short of breath. Her Cloak of Silken Feathers, Nicollo's gift, is snow-white silk stitched with tiny diamonds: Protection 4, and at a word it becomes a feather mantle that merges with her swan's plumage. The book has her extremely powerful in CrAu, CrAn, MuAu and MuAn, with Aquam and Corpus requisites, knowing few formulaics outside them; she can work enhanced versions of most combat CrAu spells.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 119 as printed; Twilight Points 15 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 2. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Magic Affinity as Minor Magical Focus; Magical Affinity as Affinity with Animal; Major Magical Deficiency as Deficient Technique; Common Fear as Fear; Cyclic Magic (-) as Cyclic Magic (Negative).\nAbilities: Brawling 4 to Brawl; Certamen 6 dropped; Disputatio 4 to Artes Liberales; Hermes Lore 3 to Organization Lore: Order of Hermes; Magic Affinity 6 dropped; Magic Affinity 5 dropped; Play Harp 4 to Music; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 5 to Artes Liberales; Sing 3 to Music; Will Over Form 6 to Heartbeast.",
+          "biography": "Swan heart-beast, not battle-worthy, its shape hidden. Claustrophobic; short of breath. Her Cloak of Silken Feathers, Nicollo's gift, is snow-white silk stitched with tiny diamonds: Protection 4, and at a word it becomes a feather mantle that merges with her swan's plumage. The book has her extremely powerful in CrAu, CrAn, MuAu and MuAn, with Aquam and Corpus requisites, knowing few formulaics outside them; she can work enhanced versions of most combat CrAu spells.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 119 as printed; Twilight Points 15 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 2. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Magic Affinity as Minor Magical Focus; Magical Affinity as Affinity with Animal; Major Magical Deficiency as Deficient Technique; Common Fear as Fear; Cyclic Magic (-) as Cyclic Magic (Negative).\nAbilities: Brawling 4 to Brawl; Certamen 6 to Penetration; Disputatio 4 to Teaching; Hermes Lore 3 to Organization Lore: Order of Hermes; Magic Affinity 6 to Animal, 21 xp; Magic Affinity 5 to Auram, 15 xp; Play Harp 4 to Music; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 5 to Artes Liberales; Sing 3 to Music; Will Over Form 6 to Heartbeast.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -8860,7 +8881,7 @@
             "xp": 21
           },
           "vim": {
-            "xp": 171
+            "xp": 192
           }
         },
         "abilities": [
@@ -8893,6 +8914,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 65,
+            "specialty": "Intellego",
+            "xp_table": "ability"
+          },
+          {
             "name": "Concentration",
             "category": "General",
             "xp": 50,
@@ -8921,10 +8949,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
+            "name": "Area Lore: Novgorod Tribunal",
+            "category": "General",
             "xp": 15,
-            "specialty": "Slavic gods",
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -8946,13 +8974,6 @@
             "category": "Arcane",
             "xp": 75,
             "specialty": "Ignem",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 15,
-            "specialty": "Intellego",
             "xp_table": "ability"
           },
           {
@@ -9089,13 +9110,13 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_tongue_of_the_fishes",
+            "spell_id": "spell_tongue_of_the_beasts",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_beast_of_outlandish_size",
+            "spell_id": "spell_the_immaculate_beast",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -9179,7 +9200,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_my_old_and_dear_friend",
+            "spell_id": "spell_emotion_of_reversed_intentions",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -9210,6 +9231,60 @@
           }
         ],
         "invented_spells": [
+          {
+            "id": "spell_tongue_of_the_beasts",
+            "name": "Tongue of the Beasts",
+            "technique": "Intellego",
+            "form": "Animal",
+            "level": 20,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (as Tongue of the Fishes)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_the_immaculate_beast",
+            "name": "The Immaculate Beast",
+            "technique": "Muto",
+            "form": "Animal",
+            "level": 15,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (Base 4, +1 Touch, +2 Sun)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_emotion_of_reversed_intentions",
+            "name": "Emotion of Reversed Intentions",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
           {
             "id": "spell_charge_the_magical_circle",
             "name": "Charge the Magical Circle",
@@ -9314,7 +9389,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Higher Purpose: to unite the Order of Hermes and mundanes. Driven: to invent a blended theory of Volkhv and Hermetic magic. Liver-spotted, stiff in the hips. Her Twilights gave her more Vim and an insight into Volkhv magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 70 as printed; Twilight Points 12 / 3 = Warping 4; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Magical Affinity as Affinity with Vim; Great Characteristic as Great Intelligence; Major Magical Deficiency as Deficient Technique; Driving Goal as Driven (Minor).\nAbilities: Brawling 2 to Brawl; Certamen 4 dropped; Hermes Lore 3 to Organization Lore: Order of Hermes; Legend Lore 2 to Magic Lore; Magic Affinity 6 dropped; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 3 to Artes Liberales.\nSpells: Tongue of the Beasts for Tongue of the Fishes; The Immaculate Beast for Beast of Outlandish Size; Ward Against Faeries of the Water as Ward Against Faeries of the Waters; Eyes of the Past for The Ear for Distant Voices; Emotion of Reversed Intentions for My Old and Dear Friend; At the catalog's level or Art: Soothe the Ferocious Bear ReAn 5 to ReAn 10; Ward Against Faeries of the Water ReAq 15 to ReAq general; Gentle Touch of the Purified Body CrCo 15 to CrCo 20; Sight of the True Form InCo 20 to InCo general; Hunt for the Wild Herb InHe 15 to InHe 5.",
+          "biography": "Higher Purpose: to unite the Order of Hermes and mundanes. Driven: to invent a blended theory of Volkhv and Hermetic magic. Liver-spotted, stiff in the hips. Her Twilights gave her more Vim and an insight into Volkhv magic.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 70 as printed; Twilight Points 12 / 3 = Warping 4; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Magical Affinity as Affinity with Vim; Great Characteristic as Great Intelligence; Major Magical Deficiency as Deficient Technique; Driving Goal as Driven (Minor).\nAbilities: Brawling 2 to Brawl; Certamen 4 to Penetration; Hermes Lore 3 to Organization Lore: Order of Hermes; Legend Lore 2 to Area Lore: Novgorod Tribunal; Magic Affinity 6 to Vim, 21 xp; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 3 to Artes Liberales.\nSpells: Ward Against Faeries of the Water as Ward Against Faeries of the Waters; Eyes of the Past for The Ear for Distant Voices; At the catalog's level or Art: Soothe the Ferocious Bear ReAn 5 to ReAn 10; Ward Against Faeries of the Water ReAq 15 to ReAq general; Gentle Touch of the Purified Body CrCo 15 to CrCo 20; Sight of the True Form InCo 20 to InCo general; Hunt for the Wild Herb InHe 15 to InHe 5.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -9528,7 +9603,7 @@
             "xp": 36
           },
           "animal": {
-            "xp": 136
+            "xp": 146
           },
           "aquam": {
             "xp": 21
@@ -9602,6 +9677,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 45,
+            "specialty": "Ignem",
+            "xp_table": "ability"
+          },
+          {
             "name": "Concentration",
             "category": "General",
             "xp": 15,
@@ -9630,10 +9712,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
+            "name": "Area Lore: Novgorod Tribunal",
+            "category": "General",
             "xp": 30,
-            "specialty": "beasts",
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -9647,13 +9729,6 @@
             "name": "Parma Magica",
             "category": "Arcane",
             "xp": 30,
-            "specialty": "Ignem",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 15,
             "specialty": "Ignem",
             "xp_table": "ability"
           },
@@ -9782,7 +9857,7 @@
         "tradition_pools": {},
         "spells_known": [
           {
-            "spell_id": "spell_flight_perfected",
+            "spell_id": "spell_full_health_of_beast_and_bird",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -9794,19 +9869,19 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_tongue_of_the_fishes",
+            "spell_id": "spell_tongue_of_the_beasts",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_hunter_s_sense",
+            "spell_id": "spell_tongue_of_the_birds",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_beast_of_outlandish_size",
+            "spell_id": "spell_the_immaculate_beast",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -9886,6 +9961,78 @@
         ],
         "invented_spells": [
           {
+            "id": "spell_full_health_of_beast_and_bird",
+            "name": "Full Health of Beast and Bird",
+            "technique": "Creo",
+            "form": "Animal",
+            "level": 25,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (Base 20, +1 Touch, Ritual)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_tongue_of_the_beasts",
+            "name": "Tongue of the Beasts",
+            "technique": "Intellego",
+            "form": "Animal",
+            "level": 20,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (as Tongue of the Fishes)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_tongue_of_the_birds",
+            "name": "Tongue of the Birds",
+            "technique": "Intellego",
+            "form": "Animal",
+            "level": 25,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (Base 4, +2 Sun, +3 Hearing)",
+            "requisites": [],
+            "range": "Personal",
+            "duration": "Sun",
+            "target": "Hearing",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_the_immaculate_beast",
+            "name": "The Immaculate Beast",
+            "technique": "Muto",
+            "form": "Animal",
+            "level": 15,
+            "description": "From the stat block in The Dragon and the Bear: The Novgorod Tribunal. (Base 4, +1 Touch, +2 Sun)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "D&B",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
             "id": "spell_form_of_the_avenging_beast",
             "name": "Form of the Avenging Beast",
             "technique": "Muto",
@@ -9955,7 +10102,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Eagle heart-beast, battle-worthy, its shape hidden; as an Avenging Beast or under Echo of the Firebird it gains Soak +15. The book's Tongue of the Birds is an extended-range version. A devotee of Khors and of Hermes.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 54 as printed; Twilight Points 4 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Magic Affinity as Minor Magical Focus; Fury as Wrathful (Major): abuse of animals; Major Magical Deficiency as Deficient Form; Obsession as Obsessed (Minor): the Firebird.\nAbilities: Brawling 3 to Brawl; Certamen 3 dropped; Hermes Lore 3 to Organization Lore: Order of Hermes; Legend Lore 3 to Magic Lore; Magic Affinity 4 dropped; Scribe Latin 4 to Artes Liberales; Scribe Cyrillic 3 to Artes Liberales; Will Over Form 3 to Heartbeast.\nSpells: Full Health of Beast and Bird for Flight Perfected; Tongue of the Beasts for Tongue of the Fishes; Tongue of the Birds for Hunter's Sense; The Immaculate Beast for Beast of Outlandish Size; At the catalog's level or Art: Soothe the Ferocious Bear ReAn 5 to ReAn 10; The Gentle Beast ReAn 20 to ReAn 25; Preternatural Growth and Shrinking MuCo 20 to MuCo 15; Rise of the Feathery Body ReCo 5 to ReCo 10; Prison of Flames MuIg 15 to MuIg 20.",
+          "biography": "Eagle heart-beast, battle-worthy, its shape hidden; as an Avenging Beast or under Echo of the Firebird it gains Soak +15. The book's Tongue of the Birds is an extended-range version. A devotee of Khors and of Hermes.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 54 as printed; Twilight Points 4 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Magic Affinity as Minor Magical Focus; Fury as Wrathful (Major): abuse of animals; Major Magical Deficiency as Deficient Form; Obsession as Obsessed (Minor): the Firebird.\nAbilities: Brawling 3 to Brawl; Certamen 3 to Penetration; Hermes Lore 3 to Organization Lore: Order of Hermes; Legend Lore 3 to Area Lore: Novgorod Tribunal; Magic Affinity 4 to Animal, 10 xp; Scribe Latin 4 to Artes Liberales; Scribe Cyrillic 3 to Artes Liberales; Will Over Form 3 to Heartbeast.\nSpells: At the catalog's level or Art: Tongue of the Birds InAn 30 to level 25; Soothe the Ferocious Bear ReAn 5 to ReAn 10; The Gentle Beast ReAn 20 to ReAn 25; Preternatural Growth and Shrinking MuCo 20 to MuCo 15; Rise of the Feathery Body ReCo 5 to ReCo 10; Prison of Flames MuIg 15 to MuIg 20.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -10351,10 +10498,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
+            "name": "Area Lore: Novgorod Tribunal",
+            "category": "General",
             "xp": 105,
-            "specialty": "Slavic",
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -10527,7 +10674,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "A Volkhv, priest of Khors, with Pagan Conviction 6. His Fourth Edition Disciplines are kept here as the book prints them, not converted: Spirit Touch 6, Healing 7, Shapeshift 6, Weatherworking 9, Animal Magic 8, Remove Curse 10, Prophecy 7, Sun Magic 11 and Earth Magic 6; Khors gives him +5 Sun Magic, +3 Spirit Touch, +3 to the Great Ritual and +3 to shift into a golden horse, and -5 Earth Magic. His Volkhv Magic Resistance is his Conviction, 3 more at noon and 3 less at midnight; in Communion it adds the aura, and his Communion Total against fire, heat and Ignem; he takes the better of it or his Parma, not both. Nastassia found his swallow heart-beast. Bad teeth, a limp. Shortspear, round shield and a fur hauberk. The book prints no Confidence for him.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 71 as printed; Twilight Points 3 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 0. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Volkhv dropped (the Volkhvy tradition record carries the priest's magic); Emerged Latent Magical Ability dropped (his heart-beast is described, not a Virtue); Cyclic Magic (+) as Cyclic Magic (Positive); Herbalism dropped (a Fourth Edition Virtue; the Ability is kept); Cyclic Magic (-) as Cyclic Magic (Negative); Susceptible to Divine Power as Susceptibility to Divine Power.\nAbilities: Brawling 3 to Brawl; Clan History 5 to Organization Lore: the Kama clans; Climb 2 to Athletics; Herbalism 4 to Profession: Herbalist; Hermes Lore 2 to Organization Lore: Order of Hermes; Scribe Latin 2 to Artes Liberales; Shield and Weapon 3 to Single Weapon; Sing 5 to Music; Theology: Slavic 5 to Theology: Pagan; Legend Lore 6 to Magic Lore.\nSpells: At the catalog's level or Art: Soothe the Ferocious Bear ReAn 5 to ReAn 10; Gentle Touch of the Purified Body CrCo 15 to CrCo 20; Hunt for the Wild Herb InHe 15 to InHe 5.",
+          "biography": "A Volkhv, priest of Khors, with Pagan Conviction 6. His Fourth Edition Disciplines are kept here as the book prints them, not converted: Spirit Touch 6, Healing 7, Shapeshift 6, Weatherworking 9, Animal Magic 8, Remove Curse 10, Prophecy 7, Sun Magic 11 and Earth Magic 6; Khors gives him +5 Sun Magic, +3 Spirit Touch, +3 to the Great Ritual and +3 to shift into a golden horse, and -5 Earth Magic. His Volkhv Magic Resistance is his Conviction, 3 more at noon and 3 less at midnight; in Communion it adds the aura, and his Communion Total against fire, heat and Ignem; he takes the better of it or his Parma, not both. Nastassia found his swallow heart-beast. Bad teeth, a limp. Shortspear, round shield and a fur hauberk. The book prints no Confidence for him.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 71 as printed; Twilight Points 3 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 0. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Volkhv dropped (the Volkhvy tradition record carries the priest's magic); Emerged Latent Magical Ability dropped (his heart-beast is described, not a Virtue); Cyclic Magic (+) as Cyclic Magic (Positive); Herbalism dropped (a Fourth Edition Virtue; the Ability is kept); Cyclic Magic (-) as Cyclic Magic (Negative); Susceptible to Divine Power as Susceptibility to Divine Power.\nAbilities: Brawling 3 to Brawl; Clan History 5 to Organization Lore: the Kama clans; Climb 2 to Athletics; Herbalism 4 to Profession: Herbalist; Hermes Lore 2 to Organization Lore: Order of Hermes; Scribe Latin 2 to Artes Liberales; Shield and Weapon 3 to Single Weapon; Sing 5 to Music; Theology: Slavic 5 to Theology: Pagan; Legend Lore 6 to Area Lore: Novgorod Tribunal.\nSpells: At the catalog's level or Art: Soothe the Ferocious Bear ReAn 5 to ReAn 10; Gentle Touch of the Purified Body CrCo 15 to CrCo 20; Hunt for the Wild Herb InHe 15 to InHe 5.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -13335,7 +13482,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 105,
+            "xp": 125,
             "specialty": "astronomy",
             "xp_table": "ability"
           },
@@ -13351,6 +13498,13 @@
             "category": "General",
             "xp": 50,
             "specialty": "dodge",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 180,
+            "specialty": "Aquam",
             "xp_table": "ability"
           },
           {
@@ -13427,13 +13581,6 @@
             "name": "Parma Magica",
             "category": "Arcane",
             "xp": 105,
-            "specialty": "Aquam",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 75,
             "specialty": "Aquam",
             "xp_table": "ability"
           },
@@ -13871,7 +14018,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Otter heart-beast, battle-worthy, its shape hidden. Afflictions: a limp, failing sight, deafness (she reads lips by a minor InCo spell), dementia and long-term memory loss; her dementia counts against her in spontaneous magic and in controlling a Twilight. A Twilight gave her Clumsy Magic and the next turned it to Chaotic Magic; she is near Final Twilight. The book has her know every listed Animal spell and every listed MuCo, InCo, MuHe and MuAq spell, and any formulaic her Technique + Form beats by ten levels, casting level 10 and less spontaneously.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 139 as printed; Twilight Points 21 / 3 = Warping 7; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Herbalism dropped (a Fourth Edition Virtue; the Ability is kept).\nAbilities: Brawling 4 to Brawl; Certamen 6 dropped; Boating 5 to Profession: Boatman; Herbalism 7 to Profession: Herbalist; Hermetic Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Lectio 6 to Teaching; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales; Will Over Form 6 to Heartbeast.",
+          "biography": "Otter heart-beast, battle-worthy, its shape hidden. Afflictions: a limp, failing sight, deafness (she reads lips by a minor InCo spell), dementia and long-term memory loss; her dementia counts against her in spontaneous magic and in controlling a Twilight. A Twilight gave her Clumsy Magic and the next turned it to Chaotic Magic; she is near Final Twilight. The book has her know every listed Animal spell and every listed MuCo, InCo, MuHe and MuAq spell, and any formulaic her Technique + Form beats by ten levels, casting level 10 and less spontaneously.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 139 as printed; Twilight Points 21 / 3 = Warping 7; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Follower of Bjornaer dropped (House Bjornaer's Heartbeast Virtue, which the Definitive Edition gives every member, takes its place); Herbalism dropped (a Fourth Edition Virtue; the Ability is kept).\nAbilities: Brawling 4 to Brawl; Certamen 6 to Penetration; Boating 5 to Profession: Boatman; Herbalism 7 to Profession: Herbalist; Hermetic Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Lectio 6 to Teaching; Scribe Latin 5 to Artes Liberales; Scribe Cyrillic 4 to Artes Liberales; Will Over Form 6 to Heartbeast.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -16679,7 +16826,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 140,
+            "xp": 105,
             "specialty": "rhetoric",
             "xp_table": "ability"
           },
@@ -16688,6 +16835,13 @@
             "category": "General",
             "xp": 30,
             "specialty": "dagger",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 190,
+            "specialty": "Rego",
             "xp_table": "ability"
           },
           {
@@ -16709,6 +16863,13 @@
             "category": "General",
             "xp": 30,
             "specialty": "lab work",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 50,
+            "specialty": "debate",
             "xp_table": "ability"
           },
           {
@@ -16771,13 +16932,6 @@
             "name": "Parma Magica",
             "category": "Arcane",
             "xp": 105,
-            "specialty": "Rego",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 50,
             "specialty": "Rego",
             "xp_table": "ability"
           },
@@ -17214,7 +17368,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "His patron is the Count of Leczyca. A stooped back, rheumatism, fretful bouts. A Twilight turned his minor Creo deficiency major. His lance, longsword and dagger carry an enhanced Razor's Edge (Damage +6), his shield and half chain mail subtle ReTe spells that lighten them. The book has him master every listed spell of Rego and Perdo with Corpus and Mentem, for political influence and battlefield destruction.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 101 as printed; Twilight Points 17 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Deft Art dropped (the Definitive Edition's Deft Form covers a Form only, not a Technique); Major Magical Deficiency as Deficient Technique; Faerie Enmity dropped (not in the catalog); Common Fear as Fear: cats.\nAbilities: Brawling 3 to Brawl; Certamen 7 dropped; Disputatio 4 to Artes Liberales; Hermes Lore 5 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Longshaft Weapons 4 to Great Weapon; Play Lute 5 to Music; Scribe Latin 5 to Artes Liberales; Shield and Weapon 4 to Single Weapon; Theology 3 to Theology: Christian.",
+          "biography": "His patron is the Count of Leczyca. A stooped back, rheumatism, fretful bouts. A Twilight turned his minor Creo deficiency major. His lance, longsword and dagger carry an enhanced Razor's Edge (Damage +6), his shield and half chain mail subtle ReTe spells that lighten them. The book has him master every listed spell of Rego and Perdo with Corpus and Mentem, for political influence and battlefield destruction.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 101 as printed; Twilight Points 17 / 3 = Warping 5; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Deft Art dropped (the Definitive Edition's Deft Form covers a Form only, not a Technique); Major Magical Deficiency as Deficient Technique; Faerie Enmity dropped (not in the catalog); Common Fear as Fear: cats.\nAbilities: Brawling 3 to Brawl; Certamen 7 to Penetration; Disputatio 4 to Teaching; Hermes Lore 5 to Organization Lore: Order of Hermes; Hermetic Law 4 to Code of Hermes; Longshaft Weapons 4 to Great Weapon; Play Lute 5 to Music; Scribe Latin 5 to Artes Liberales; Shield and Weapon 4 to Single Weapon; Theology 3 to Theology: Christian.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -20585,7 +20739,7 @@
           {
             "name": "Artes Liberales",
             "category": "Academic",
-            "xp": 275,
+            "xp": 210,
             "specialty": "geometry",
             "xp_table": "ability"
           },
@@ -20604,6 +20758,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 155,
+            "specialty": "Mentem",
+            "xp_table": "ability"
+          },
+          {
             "name": "Civil and Canon Law",
             "category": "Academic",
             "xp": 105,
@@ -20615,6 +20776,13 @@
             "category": "General",
             "xp": 105,
             "specialty": "spells",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Teaching",
+            "category": "General",
+            "xp": 105,
+            "specialty": "debate",
             "xp_table": "ability"
           },
           {
@@ -20667,13 +20835,6 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 105,
-            "specialty": "Mentem",
-            "xp_table": "ability"
-          },
-          {
             "name": "Philosophiae",
             "category": "Academic",
             "xp": 140,
@@ -20706,6 +20867,13 @@
             "category": "Academic",
             "xp": 50,
             "specialty": "the Bible",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Premonitions",
+            "category": "Supernatural",
+            "xp": 180,
+            "specialty": "the serpent from the east",
             "xp_table": "ability"
           }
         ],
@@ -21094,7 +21262,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Afflictions: dementia, a limp, trouble speaking and greater trouble understanding speech, epilepsy. His longevity potion has failed. His great Twilight of 1206 gave him Unpredictable and Painful Magic; he has not worked magic since, and the storyguide may make it useless or wholly uncontrollable. The book has him master every listed spell of Intellego and Muto with Corpus, Imaginem, Mentem and Vim. Visions 8 has no Ability now; the Virtue stays.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 127 as printed; Twilight Points 23 / 3 = Warping 7; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 0. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Great Intelligence as Great Intelligence; Knack with Enigma as Affinity with Enigmatic Wisdom; Poor Communication as Poor Communication; Sense of Doom dropped (not in the catalog).\nAbilities: Brawling 2 to Brawl; Certamen 4 dropped; Disputatio 6 to Artes Liberales; Hermes Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Occult Lore 4 to Infernal Lore; Scribe Latin 6 to Artes Liberales; Theology 4 to Theology: Christian; Visions 8 dropped.",
+          "biography": "Afflictions: dementia, a limp, trouble speaking and greater trouble understanding speech, epilepsy. His longevity potion has failed. His great Twilight of 1206 gave him Unpredictable and Painful Magic; he has not worked magic since, and the storyguide may make it useless or wholly uncontrollable. The book has him master every listed spell of Intellego and Muto with Corpus, Imaginem, Mentem and Vim. Visions 8 has no Ability now; the Virtue stays.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 127 as printed; Twilight Points 23 / 3 = Warping 7; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 0. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Great Intelligence as Great Intelligence; Knack with Enigma as Affinity with Enigmatic Wisdom; Poor Communication as Poor Communication; Sense of Doom dropped (not in the catalog).\nAbilities: Brawling 2 to Brawl; Certamen 4 to Penetration; Disputatio 6 to Teaching; Hermes Lore 6 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Occult Lore 4 to Infernal Lore; Scribe Latin 6 to Artes Liberales; Theology 4 to Theology: Christian; Visions 8 to Premonitions.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -21279,7 +21447,7 @@
         "many": false,
         "how_many": "",
         "realm": "Faerie",
-        "might": 30,
+        "might": 35,
         "might_form": "Auram",
         "might_pool": null,
         "order": "",
@@ -21335,29 +21503,29 @@
           {
             "name": "Faerie sword and shield",
             "init": 4,
-            "attack": 10,
-            "defense": 10,
+            "attack": 13,
+            "defense": 13,
             "damage": 8,
-            "id": "64686d349f9c"
+            "id": "a72212a2af6e"
           },
           {
             "name": "Faerie lance",
             "init": 4,
-            "attack": 10,
-            "defense": 7,
+            "attack": 13,
+            "defense": 10,
             "damage": 7,
-            "id": "9ddad7bacdee"
+            "id": "ce10d96c8d1a"
           },
           {
             "name": "Faerie bow",
             "init": 0,
-            "attack": 9,
-            "defense": 6,
+            "attack": 13,
+            "defense": 10,
             "damage": 9,
-            "id": "8db0ecba1392"
+            "id": "947cbb91b399"
           }
         ],
-        "soak": 14,
+        "soak": 10,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -21381,14 +21549,14 @@
           {
             "name": "Single Weapon",
             "category": "Martial",
-            "xp": 75,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           },
           {
             "name": "Bows",
             "category": "Martial",
-            "xp": 50,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -21406,7 +21574,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "63a3e5bf35da"
+            "id": "be7ca506a31f"
           },
           {
             "name": "Change of Size",
@@ -21420,7 +21588,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 5)",
-            "id": "34cd66ea1a8e"
+            "id": "2fd437b9b392"
           },
           {
             "name": "Control of Auram",
@@ -21434,7 +21602,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4b5d01e11852"
+            "id": "0fab4b38ad88"
           },
           {
             "name": "Control of Aquam",
@@ -21448,7 +21616,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "378fbb5a5dbb"
+            "id": "17770d316e40"
           },
           {
             "name": "Curse",
@@ -21462,7 +21630,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "afa13de61a96"
+            "id": "8c06b9bd579f"
           },
           {
             "name": "Elfshot",
@@ -21476,21 +21644,21 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cause Sickness: an unseen dart that strikes a serious illness into its victim. RoP:F p. 58 (the book's Elfshot 10)",
-            "id": "8199428e1a34"
+            "id": "f8a697148826"
           },
           {
             "name": "Glamour",
-            "might_cost": 6,
-            "init": -4,
+            "might_cost": 7,
+            "init": -5,
             "form": "Imaginem",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 30,
+            "level": 35,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 30 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a3f67e77482c"
+            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 35 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "4ac73c20f4d2"
           },
           {
             "name": "Healing",
@@ -21504,7 +21672,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo Corpus effect that heals up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "013c0f6cfb26"
+            "id": "dbb22548ff17"
           },
           {
             "name": "Shapechange to Animal",
@@ -21518,13 +21686,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 10)",
-            "id": "f06190d323e8"
+            "id": "0dfe70fe14e8"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "A knight of a faerie court, in full faerie mail (Protection 9 here, the book's 13) with weapons of glamour better than any smith's.",
-        "notes": "The book's example lord, sworn to Stribog, god of the winds; Might 30 to 35. Faerie Lords are the Slavic Seelie and Unseelie, each with a pagan god for patron, living in courts that mirror a prince's: the Gold Court of the sun and summer, the White Court of winter and decay, whose lords are beautiful as snowflakes and appallingly lethal. Courts come in opposed pairs (a sun court on a peak, a winter court in a gorge), with auras of 6 to 8 and a gate to Arcadia near. Animal princes are lords of this kind.\n\nMight 30-35 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.",
+        "notes": "The book's example lord, sworn to Stribog, god of the winds; Might 30 to 35. Faerie Lords are the Slavic Seelie and Unseelie, each with a pagan god for patron, living in courts that mirror a prince's: the Gold Court of the sun and summer, the White Court of winter and decay, whose lords are beautiful as snowflakes and appallingly lethal. Courts come in opposed pairs (a sun court on a peak, a winter court in a gorge), with auras of 6 to 8 and a gate to Arcadia near. Animal princes are lords of this kind.\n\nMight 30-35 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.\n\nAs printed in Fourth Edition: Faerie sword and shield Init +0, Attack +10, Defense +0, Damage +9; Faerie lance Init +0, Attack +10, Defense +0, Damage +8; Faerie bow Init +0, Attack +9, Defense +0, Damage +10; Soak +15.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 84",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -21538,7 +21706,7 @@
         "many": true,
         "how_many": "Many",
         "realm": "Faerie",
-        "might": 30,
+        "might": 20,
         "might_form": "Herbam",
         "might_pool": null,
         "order": "",
@@ -21584,10 +21752,10 @@
           {
             "name": "Club",
             "init": 1,
-            "attack": 5,
-            "defense": 3,
+            "attack": 11,
+            "defense": 9,
             "damage": 3,
-            "id": "8a0459dbe62a"
+            "id": "aac5865e14b7"
           }
         ],
         "soak": 5,
@@ -21614,7 +21782,7 @@
           {
             "name": "Single Weapon",
             "category": "Martial",
-            "xp": 15,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -21632,7 +21800,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 6)",
-            "id": "8ed462bd963a"
+            "id": "b7fd615f03e7"
           },
           {
             "name": "Change of Size",
@@ -21646,7 +21814,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 4)",
-            "id": "5bbe045c4a3c"
+            "id": "23a3da3c29c2"
           },
           {
             "name": "Control Animals",
@@ -21660,21 +21828,21 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 20 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "1bae9a00be5b"
+            "id": "de914da97f71"
           },
           {
             "name": "Control Fertility",
-            "might_cost": 6,
-            "init": -6,
+            "might_cost": 4,
+            "init": -4,
             "form": "Herbam",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 30,
+            "level": 20,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 30 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "dcff29674e3d"
+            "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 20 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "319fc8acec3e"
           },
           {
             "name": "Curse",
@@ -21688,21 +21856,21 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 6)",
-            "id": "060deed13cc6"
+            "id": "3cee0c53e1ae"
           },
           {
             "name": "Glamour",
-            "might_cost": 6,
-            "init": -6,
+            "might_cost": 4,
+            "init": -4,
             "form": "Imaginem",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 30,
+            "level": 20,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 30 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "3e437184ce63"
+            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 20 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "d1d827ba1bec"
           },
           {
             "name": "Shapechange to Animal",
@@ -21716,7 +21884,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 7)",
-            "id": "9817948184f9"
+            "id": "94623fdabd5e"
           },
           {
             "name": "Transform Victim into an Animal",
@@ -21730,7 +21898,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns one who hears it into a land animal, chosen when the faerie was made. RoP:F p. 60 (the book's Shapechange Other to Animal 7)",
-            "id": "bb5f35d53f80"
+            "id": "b9de0df87445"
           }
         ],
         "vis": [
@@ -21738,12 +21906,12 @@
             "pawns": 15,
             "art": "Herbam",
             "where": "in its body",
-            "id": "800aa2fffcad"
+            "id": "194a757c1ab5"
           }
         ],
         "equipment": "",
         "appearance": "A small, balding man with a long beard, bushy brows, emerald eyes and cheeks blue from his azure blood; his size changes to match the trees about him, from Size -4 to +4.",
-        "notes": "Forest guardians, often mighty, each with a carefully kept territory: masters of size and shape, not malicious but mischievous, fond of leading travellers astray and of bargains, and respectful of those who see through their tricks. Presence, Strength and Quickness vary with his size; the club's damage too.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
+        "notes": "Forest guardians, often mighty, each with a carefully kept territory: masters of size and shape, not malicious but mischievous, fond of leading travellers astray and of bargains, and respectful of those who see through their tricks. Presence, Strength and Quickness vary with his size; the club's damage too.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nAs printed in Fourth Edition: Club Init +0, Attack +5, Defense +0, Damage +3; Soak +5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 85",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -21757,7 +21925,7 @@
         "many": true,
         "how_many": "Many",
         "realm": "Faerie",
-        "might": 20,
+        "might": 10,
         "might_form": "Herbam",
         "might_pool": null,
         "order": "",
@@ -21813,10 +21981,10 @@
           {
             "name": "Grapple and strangle",
             "init": 3,
-            "attack": 5,
-            "defense": 7,
-            "damage": 2,
-            "id": "1c2cf6f80a66"
+            "attack": 9,
+            "defense": 11,
+            "damage": 5,
+            "id": "c62a1be36c32"
           }
         ],
         "soak": 3,
@@ -21843,7 +22011,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 50,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -21861,35 +22029,35 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 8)",
-            "id": "ae97957a7d6b"
+            "id": "9fdaa58890a8"
           },
           {
             "name": "Control of Herbam",
-            "might_cost": 4,
-            "init": -1,
+            "might_cost": 2,
+            "init": 1,
             "form": "Herbam",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 20,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Herbam effect up to level 20 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "254ac858fcfd"
+            "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Herbam effect up to level 10 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "a17e8930a050"
           },
           {
             "name": "Control Fertility",
-            "might_cost": 4,
-            "init": -1,
+            "might_cost": 2,
+            "init": 1,
             "form": "Herbam",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 20,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 20 (the book's rating of 16), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "41098cbeda9f"
+            "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 10 (the book's rating of 16), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "f09799c7ac69"
           },
           {
             "name": "Curse",
@@ -21903,21 +22071,21 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 8)",
-            "id": "fadb0998d43d"
+            "id": "9085d787a010"
           },
           {
             "name": "Healing",
-            "might_cost": 4,
-            "init": -1,
+            "might_cost": 2,
+            "init": 1,
             "form": "Corpus",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 20,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Creo Corpus effect that heals up to level 20 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "818b74dc65d9"
+            "description": "A Focus Power: any non-Ritual Creo Corpus effect that heals up to level 10 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "51c6c5ba2af7"
           }
         ],
         "vis": [
@@ -21925,12 +22093,12 @@
             "pawns": 7,
             "art": "Herbam",
             "where": "in its body",
-            "id": "e1b7bf2cfffd"
+            "id": "2e00b8308006"
           }
         ],
         "equipment": "",
         "appearance": "Most are women, more or less human by season: bright green in spring, deep green in summer, auburn or gold in autumn, white or grey in winter; grass may grow for hair, the skin may be fresh earth and the eyes glittering stones.",
-        "notes": "Field spirits, asked for their blessing at every sowing, capricious and dangerous if offended; in south Russia some are worshipped as minor gods. Once a polevik's grip draws blood she keeps it and the initiative until a round in which she wounds no one and is wounded, her Attack +5 to +10 the while. In a blossoming field she heals a wound level a round. Iron does not trouble her: the plough and sickle have accustomed her to it.\n\nMight 20 and more in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
+        "notes": "Field spirits, asked for their blessing at every sowing, capricious and dangerous if offended; in south Russia some are worshipped as minor gods. Once a polevik's grip draws blood she keeps it and the initiative until a round in which she wounds no one and is wounded, her Attack +5 to +10 the while. In a blossoming field she heals a wound level a round. Iron does not trouble her: the plough and sickle have accustomed her to it.\n\nMight 20 and more in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nAs printed in Fourth Edition: Grapple and strangle Init +0, Attack +5, Defense +0, Damage +6; Soak +3.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 85",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -21944,7 +22112,7 @@
         "many": true,
         "how_many": "Many",
         "realm": "Faerie",
-        "might": 15,
+        "might": 10,
         "might_form": "Aquam",
         "might_pool": null,
         "order": "",
@@ -21990,10 +22158,10 @@
           {
             "name": "Grapple",
             "init": 2,
-            "attack": 7,
-            "defense": 8,
-            "damage": 3,
-            "id": "eb078fe6200c"
+            "attack": 9,
+            "defense": 10,
+            "damage": 6,
+            "id": "66f4c13f1564"
           }
         ],
         "soak": 5,
@@ -22020,7 +22188,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 105,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -22028,31 +22196,31 @@
         "powers": [
           {
             "name": "Control Person",
-            "might_cost": 3,
-            "init": -1,
+            "might_cost": 2,
+            "init": 0,
             "form": "Mentem",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 15,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 15 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4e66cec399c5"
+            "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 10 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "325d8f05a19e"
           },
           {
             "name": "Control of Aquam",
-            "might_cost": 3,
-            "init": -1,
+            "might_cost": 2,
+            "init": 0,
             "form": "Aquam",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 15,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 15 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "f42ee9c2649a"
+            "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 10 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "11aca83f5550"
           },
           {
             "name": "Curse",
@@ -22066,7 +22234,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 10)",
-            "id": "729217a328d5"
+            "id": "0a785da0d10c"
           },
           {
             "name": "Dread",
@@ -22080,21 +22248,21 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 5)",
-            "id": "a706e8e3755b"
+            "id": "90c2ba9be4d0"
           },
           {
             "name": "Glamour",
-            "might_cost": 3,
-            "init": -1,
+            "might_cost": 2,
+            "init": 0,
             "form": "Imaginem",
             "range": "",
             "duration": "",
             "target": "",
-            "level": 15,
+            "level": 10,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 15 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "aa4a46cf6633"
+            "description": "A Focus Power: any non-Ritual Imaginem effect up to level 10 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
+            "id": "7ffe92777b24"
           },
           {
             "name": "Infatuation",
@@ -22108,7 +22276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 5)",
-            "id": "209ab43587ae"
+            "id": "e09571dbd7d7"
           },
           {
             "name": "Shapechange to Animal",
@@ -22122,7 +22290,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 5)",
-            "id": "895af4dcc48c"
+            "id": "fa82056778e6"
           }
         ],
         "vis": [
@@ -22130,18 +22298,18 @@
             "pawns": 6,
             "art": "Aquam",
             "where": "in its body",
-            "id": "86f70416da05"
+            "id": "6f4e146ea226"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "in its body",
-            "id": "1a846d628295"
+            "id": "6e4ad30bd139"
           }
         ],
         "equipment": "",
         "appearance": "Bloated, unkempt men or women with mossy, dripping hair and green skin; or beguiling beauties; or dog-headed, horned and tailed.",
-        "notes": "Water spirits, the most vicious of the common faeries, faerie born or risen from the drowned; known in Poland as topielec. Any water deep enough to drown in may hold one. It grapples to immobilize, then drags its victim under in a contest of Strength; its combat totals fall by 1 for every ten paces from its home water, where it heals a wound and a Fatigue level a round. Many keep palaces in a regio, served by the drowned.\n\nMight 15-25 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
+        "notes": "Water spirits, the most vicious of the common faeries, faerie born or risen from the drowned; known in Poland as topielec. Any water deep enough to drown in may hold one. It grapples to immobilize, then drags its victim under in a contest of Strength; its combat totals fall by 1 for every ten paces from its home water, where it heals a wound and a Fatigue level a round. Many keep palaces in a regio, served by the drowned.\n\nMight 15-25 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nAs printed in Fourth Edition: Grapple Init +0, Attack +7, Defense +0, Damage +8; Soak +5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 86",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -22211,10 +22379,10 @@
           {
             "name": "Grapple",
             "init": 1,
-            "attack": 5,
-            "defense": 6,
-            "damage": 1,
-            "id": "cde49829eeb5"
+            "attack": 8,
+            "defense": 9,
+            "damage": 4,
+            "id": "eca0f5a2fbf7"
           }
         ],
         "soak": 5,
@@ -22241,7 +22409,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 75,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -22259,7 +22427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 10 (the book's rating of 7), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a7761426d8a7"
+            "id": "8b34f1045e41"
           },
           {
             "name": "Control Fertility",
@@ -22273,7 +22441,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 10 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "bb019376934c"
+            "id": "fe71146056de"
           },
           {
             "name": "Curse",
@@ -22287,7 +22455,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 6)",
-            "id": "d0434d6cebc9"
+            "id": "e637abf780c2"
           },
           {
             "name": "Dread",
@@ -22301,7 +22469,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 3)",
-            "id": "4272c4541232"
+            "id": "a61b956415e2"
           },
           {
             "name": "Infatuation",
@@ -22315,7 +22483,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 4)",
-            "id": "612c29099ce4"
+            "id": "cea022290301"
           }
         ],
         "vis": [
@@ -22323,18 +22491,18 @@
             "pawns": 4,
             "art": "Aquam",
             "where": "in its body",
-            "id": "04cc7f21820e"
+            "id": "64bc8148cb6e"
           },
           {
             "pawns": 3,
             "art": "Perdo",
             "where": "in its body",
-            "id": "f7f500423513"
+            "id": "1c92bbdd97ab"
           }
         ],
         "equipment": "",
         "appearance": "Always a woman, bloated and distorted or a comely maiden.",
-        "notes": "Nymphs and dryads of water and wood, capricious and untrustworthy, some risen from drowned pagans; barren women seek their blessing. Each is bound to a water or a corner of wood, even a single tree (her Control is of Herbam then, and her vis), heals a wound and a Fatigue level a round there, and in water attacks as a vodyanoi does.\n\nMight 10-15 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
+        "notes": "Nymphs and dryads of water and wood, capricious and untrustworthy, some risen from drowned pagans; barren women seek their blessing. Each is bound to a water or a corner of wood, even a single tree (her Control is of Herbam then, and her vis), heals a wound and a Fatigue level a round there, and in water attacks as a vodyanoi does.\n\nMight 10-15 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nAs printed in Fourth Edition: Grapple Init +0, Attack +5, Defense +0, Damage +5; Soak +5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 87",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -22367,7 +22535,7 @@
           "presence": -1,
           "communication": -2,
           "dexterity": 2,
-          "quickness": 3
+          "quickness": 4
         },
         "cunning": false,
         "size": -1,
@@ -22403,11 +22571,11 @@
         "attacks": [
           {
             "name": "Claws",
-            "init": 2,
-            "attack": 5,
-            "defense": 7,
-            "damage": 2,
-            "id": "9c4f84b0d614"
+            "init": 3,
+            "attack": 12,
+            "defense": 15,
+            "damage": 5,
+            "id": "d4645e93152c"
           }
         ],
         "soak": 4,
@@ -22434,7 +22602,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 5,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -22452,7 +22620,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "84cd266d3a95"
+            "id": "aad9e279f4df"
           },
           {
             "name": "Change of Size",
@@ -22466,7 +22634,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 2)",
-            "id": "390f342ca70b"
+            "id": "5dc3b67a4774"
           },
           {
             "name": "Curse",
@@ -22480,7 +22648,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "abbd03b44bdf"
+            "id": "0ff936ab2c19"
           },
           {
             "name": "Unseen",
@@ -22494,7 +22662,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 5)",
-            "id": "ca2d87126aa7"
+            "id": "99a0dcd9d1f8"
           },
           {
             "name": "Insubstantial Form",
@@ -22508,7 +22676,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "448aa44126a3"
+            "id": "7aacb8e33616"
           },
           {
             "name": "Prophecy",
@@ -22522,7 +22690,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "4354b649db12"
+            "id": "c93969b66fdc"
           },
           {
             "name": "Shapechange to Object",
@@ -22536,13 +22704,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "e69df0c3d892"
+            "id": "4640863d405b"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "A small, graceful man or woman covered in fine, glossy brown hair, even on palms and soles, sometimes with horns or a tail. Rarely seen, often heard; it is bad luck to see one.",
-        "notes": "House spirits under the stove or in the cellar, who keep the home and its luck for courtesy and a share of food and milk, warn of danger and opportunity, and grow fierce in a family feud. A good domovoi is more than a match for any number of zluidni, the small, spiteful, misshapen dark faeries that curse, glamour and possess in petty malice. Iron does not trouble it.\n\nMight 10-15 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-4, Medium to 8, Heavy to 12, Incapacitated to 16, Dead from 17.",
+        "notes": "House spirits under the stove or in the cellar, who keep the home and its luck for courtesy and a share of food and milk, warn of danger and opportunity, and grow fierce in a family feud. A good domovoi is more than a match for any number of zluidni, the small, spiteful, misshapen dark faeries that curse, glamour and possess in petty malice. Iron does not trouble it.\n\nMight 10-15 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-4, Medium to 8, Heavy to 12, Incapacitated to 16, Dead from 17.\n\nAs printed in Fourth Edition: Claws Init +0, Attack +4, Defense +0, Damage +4; Soak +3.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 87",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -22575,7 +22743,7 @@
           "presence": 0,
           "communication": -2,
           "dexterity": 1,
-          "quickness": 2
+          "quickness": 3
         },
         "cunning": false,
         "size": -1,
@@ -22611,11 +22779,11 @@
         "attacks": [
           {
             "name": "Brawl",
-            "init": 2,
-            "attack": 4,
-            "defense": 5,
-            "damage": 2,
-            "id": "9ab0a06cf3d4"
+            "init": 3,
+            "attack": 9,
+            "defense": 11,
+            "damage": 5,
+            "id": "1de4061cf3d4"
           }
         ],
         "soak": 5,
@@ -22642,7 +22810,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -22660,7 +22828,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "1bdc242444f5"
+            "id": "ecbfa4ac3dea"
           },
           {
             "name": "Change of Size",
@@ -22674,7 +22842,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 2)",
-            "id": "a5ee7823c03c"
+            "id": "0e0416465903"
           },
           {
             "name": "Speech with Animal",
@@ -22688,7 +22856,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4079f75dcae7"
+            "id": "3d213bdbdde4"
           },
           {
             "name": "Control Fertility",
@@ -22702,7 +22870,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "2fbed19bef26"
+            "id": "62e32817d57d"
           },
           {
             "name": "Curse",
@@ -22716,7 +22884,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "23f5b5d137e9"
+            "id": "7108608ac939"
           },
           {
             "name": "Infatuation",
@@ -22730,7 +22898,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 6)",
-            "id": "2038a2b3f7f0"
+            "id": "14f733c11495"
           },
           {
             "name": "Shapechange to Animal",
@@ -22744,7 +22912,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 4)",
-            "id": "c216da93932a"
+            "id": "5fa52fe1a932"
           },
           {
             "name": "Shapechange to Object",
@@ -22758,13 +22926,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 4)",
-            "id": "da93cdcbaa68"
+            "id": "5671a97d8682"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "A small, gnarled man or woman, often strikingly disfigured, a nose to the chin; or half beast, like the animals it guards; or a gatepost.",
-        "notes": "Spirits of courtyard, farmyard and pasture, good guardians of sheep and cattle but less tractable than the domovoi, and lusty, prone to seducing mortals; the Slavs fool them with dolls and scarecrows.\n\nMight 8-12 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-4, Medium to 8, Heavy to 12, Incapacitated to 16, Dead from 17.",
+        "notes": "Spirits of courtyard, farmyard and pasture, good guardians of sheep and cattle but less tractable than the domovoi, and lusty, prone to seducing mortals; the Slavs fool them with dolls and scarecrows.\n\nMight 8-12 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-4, Medium to 8, Heavy to 12, Incapacitated to 16, Dead from 17.\n\nAs printed in Fourth Edition: Brawl Init +0, Attack +4, Defense +0, Damage +6; Soak +4.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 88",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -22797,7 +22965,7 @@
           "presence": -3,
           "communication": -3,
           "dexterity": 2,
-          "quickness": 3
+          "quickness": 5
         },
         "cunning": false,
         "size": -2,
@@ -22833,11 +23001,11 @@
         "attacks": [
           {
             "name": "Claw",
-            "init": 2,
-            "attack": 5,
-            "defense": 7,
-            "damage": 2,
-            "id": "3ef724f91c11"
+            "init": 4,
+            "attack": 12,
+            "defense": 16,
+            "damage": 5,
+            "id": "b3501878d2bf"
           }
         ],
         "soak": 4,
@@ -22864,7 +23032,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 5,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -22882,7 +23050,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 5 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "823bebdc1292"
+            "id": "bfc42d3b2ac7"
           },
           {
             "name": "Insubstantial Form",
@@ -22896,7 +23064,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "d0c36714e493"
+            "id": "34321315a0a3"
           },
           {
             "name": "Unseen",
@@ -22910,7 +23078,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 4)",
-            "id": "9e9338172e45"
+            "id": "026d24a5546a"
           },
           {
             "name": "Prophecy",
@@ -22924,13 +23092,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "7d0c91863f06"
+            "id": "27b9e358a143"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "Small and seldom seen.",
-        "notes": "Spirits of the bath-house (in the north, the sauna), who keep the fire lit and the cistern full, caulk the walls and fetch wood, but insist on their turn: every fourth bath is theirs, and an intruder is cruelly clawed. They prophesy, vaguely.\n\nMight 5-10 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-3, Medium to 6, Heavy to 9, Incapacitated to 12, Dead from 13.",
+        "notes": "Spirits of the bath-house (in the north, the sauna), who keep the fire lit and the cistern full, caulk the walls and fetch wood, but insist on their turn: every fourth bath is theirs, and an intruder is cruelly clawed. They prophesy, vaguely.\n\nMight 5-10 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-3, Medium to 6, Heavy to 9, Incapacitated to 12, Dead from 13.\n\nAs printed in Fourth Edition: Claw Init +0, Attack +4, Defense +0, Damage +4; Soak +2.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 88",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -22963,7 +23131,7 @@
           "presence": -2,
           "communication": -3,
           "dexterity": 2,
-          "quickness": 2
+          "quickness": 5
         },
         "cunning": false,
         "size": -3,
@@ -22999,11 +23167,11 @@
         "attacks": [
           {
             "name": "Claws",
-            "init": 1,
-            "attack": 5,
-            "defense": 6,
-            "damage": 2,
-            "id": "3d25fedf0050"
+            "init": 4,
+            "attack": 12,
+            "defense": 16,
+            "damage": 5,
+            "id": "45d3c5f89a55"
           }
         ],
         "soak": 6,
@@ -23030,7 +23198,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 5,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -23048,7 +23216,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "e91dadfa861b"
+            "id": "d2eaf1352724"
           },
           {
             "name": "Curse",
@@ -23062,7 +23230,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "0419945cf919"
+            "id": "26637f579c61"
           },
           {
             "name": "Elfshot",
@@ -23076,7 +23244,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cause Sickness: an unseen dart that strikes a serious illness into its victim. RoP:F p. 58 (the book's Elfshot 5)",
-            "id": "7be2627ccebc"
+            "id": "d000db29c0ed"
           },
           {
             "name": "Shapechange to Animal",
@@ -23090,7 +23258,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 4)",
-            "id": "3188f9a082be"
+            "id": "9bfe90d1e748"
           }
         ],
         "vis": [
@@ -23098,12 +23266,12 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in its body",
-            "id": "2329665aeb2c"
+            "id": "0019a3839a1c"
           }
         ],
         "equipment": "",
         "appearance": "A large, mangy, lazy black cat lounging about the barn.",
-        "notes": "Barn guardians, the most dangerous of the house spirits: angered, they can burn down the barns they keep. Their scratches fester: twice the usual wound penalty to Chirurgy and recovery rolls.\n\nMight 8-12 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-2, Medium to 4, Heavy to 6, Incapacitated to 8, Dead from 9.",
+        "notes": "Barn guardians, the most dangerous of the house spirits: angered, they can burn down the barns they keep. Their scratches fester: twice the usual wound penalty to Chirurgy and recovery rolls.\n\nMight 8-12 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-2, Medium to 4, Heavy to 6, Incapacitated to 8, Dead from 9.\n\nAs printed in Fourth Edition: Claws Init +0, Attack +4, Defense +0, Damage +4; Soak +3.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 89",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -23136,7 +23304,7 @@
           "presence": -2,
           "communication": 0,
           "dexterity": 0,
-          "quickness": -1
+          "quickness": 3
         },
         "cunning": false,
         "size": -4,
@@ -23170,7 +23338,7 @@
         ],
         "reputations": [],
         "attacks": [],
-        "soak": 4,
+        "soak": 0,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -23204,7 +23372,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "3e6983368ebf"
+            "id": "f49ec19d1a77"
           },
           {
             "name": "Control of Ignem",
@@ -23218,7 +23386,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 5 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ff55cff64bd9"
+            "id": "c2ff757673f5"
           },
           {
             "name": "Control Fertility",
@@ -23232,7 +23400,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 5 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "b2f827b9041e"
+            "id": "dbcaf8915aab"
           },
           {
             "name": "Curse",
@@ -23246,7 +23414,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "500325ec2209"
+            "id": "86d0f80c4eae"
           },
           {
             "name": "Prophecy",
@@ -23260,7 +23428,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "56888644f74b"
+            "id": "6d30baf04cbd"
           }
         ],
         "vis": [
@@ -23268,12 +23436,12 @@
             "pawns": 3,
             "art": "Intellego",
             "where": "in its body",
-            "id": "6e2e6f8e54ee"
+            "id": "52682bca6cf0"
           }
         ],
         "equipment": "",
         "appearance": "A small, brightly coloured snake basking on the warm stones by the hearth.",
-        "notes": "Lithuanian house snakes, sacred to the sun goddess Saule, found only in Lithuanian auras and regiones. They do no housework but are prized for their wisdom and luck; keeping one pleases Saule. Ill-treated, or if the house turns from the old gods, it leaves and takes the family's luck. Iron does not trouble it. (The book's Strength is missing; -2 is taken.)\n\nMight 5-10 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-1, Medium to 2, Heavy to 3, Incapacitated to 4, Dead from 5.",
+        "notes": "Lithuanian house snakes, sacred to the sun goddess Saule, found only in Lithuanian auras and regiones. They do no housework but are prized for their wisdom and luck; keeping one pleases Saule. Ill-treated, or if the house turns from the old gods, it leaves and takes the family's luck. Iron does not trouble it. (The book's Strength is missing; -2 is taken.)\n\nMight 5-10 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-1, Medium to 2, Heavy to 3, Incapacitated to 4, Dead from 5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 89",
         "detail": "Full",
         "place_id": "the_baltic_coast",
@@ -23343,21 +23511,21 @@
           {
             "name": "Maul",
             "init": 1,
-            "attack": 13,
-            "defense": 11,
-            "damage": 10,
-            "id": "b24f149b1bc7"
+            "attack": 14,
+            "defense": 12,
+            "damage": 13,
+            "id": "f682b3bc674d"
           },
           {
             "name": "Tackle (knocks down)",
             "init": 1,
-            "attack": 8,
-            "defense": 8,
-            "damage": 6,
-            "id": "ed98fe0f6bec"
+            "attack": 9,
+            "defense": 9,
+            "damage": 12,
+            "id": "dbbf0e92c6bd"
           }
         ],
-        "soak": 27,
+        "soak": 19,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -23381,7 +23549,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 140,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -23399,7 +23567,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "70bd53388bc3"
+            "id": "d380e3a0dc8d"
           },
           {
             "name": "Control Animals",
@@ -23413,7 +23581,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "e00c307aa389"
+            "id": "30445f78e524"
           },
           {
             "name": "Control of Herbam",
@@ -23427,7 +23595,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Herbam effect up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "52f6e5601e5d"
+            "id": "bf9cd9d36e06"
           },
           {
             "name": "Control Fertility",
@@ -23441,7 +23609,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 15 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ecdcffd2885e"
+            "id": "755d951eb812"
           },
           {
             "name": "Curse",
@@ -23455,7 +23623,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 10)",
-            "id": "b0e5d57f9d0e"
+            "id": "4d89844763af"
           },
           {
             "name": "Prophecy",
@@ -23469,7 +23637,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 10)",
-            "id": "9cf64c8cf140"
+            "id": "16e27fe9d385"
           },
           {
             "name": "Shapechange to Object",
@@ -23483,7 +23651,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "f31f1a7630d3"
+            "id": "54b1e3490e90"
           }
         ],
         "vis": [
@@ -23491,18 +23659,18 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in its body",
-            "id": "a92265b7bb58"
+            "id": "5e92e9d23b4d"
           },
           {
             "pawns": 3,
             "art": "Vim",
             "where": "in its body",
-            "id": "96cd2d3591aa"
+            "id": "02589c825d4c"
           }
         ],
         "equipment": "",
         "appearance": "A bear larger than any mundane one, that speaks plainly if not eloquently.",
-        "notes": "The book's example of a clan's totem beast: every clan has its animal mascots, and most pagan villages one or more such beasts, intelligent and able to speak, whom the villagers consult, honour and may worship; their coming is an omen. A tackle that wounds knocks its target down.\n\nMight 15-20 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.",
+        "notes": "The book's example of a clan's totem beast: every clan has its animal mascots, and most pagan villages one or more such beasts, intelligent and able to speak, whom the villagers consult, honour and may worship; their coming is an omen. A tackle that wounds knocks its target down.\n\nMight 15-20 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.\n\nAs printed in Fourth Edition: Maul Init +0, Attack +13, Defense +0, Damage +17; Tackle (knocks down) Init +0, Attack +7, Defense +0, Damage +15; Soak +30.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 90",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -23572,10 +23740,10 @@
           {
             "name": "Bite",
             "init": 0,
-            "attack": 8,
-            "defense": 4,
-            "damage": 6,
-            "id": "b2b4500929ef"
+            "attack": 13,
+            "defense": 9,
+            "damage": 12,
+            "id": "c3e36edb9844"
           }
         ],
         "soak": 6,
@@ -23602,7 +23770,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -23620,7 +23788,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "085eadd4b4b7"
+            "id": "5c7b10b84414"
           },
           {
             "name": "Brew Faerie Potions",
@@ -23634,7 +23802,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a potion of glamour that lets its drinker use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Brew Faerie Potions 5)",
-            "id": "c3e6969b360c"
+            "id": "950266d376fb"
           },
           {
             "name": "Change of Size",
@@ -23648,7 +23816,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 6)",
-            "id": "36cd610f7106"
+            "id": "cb832526ab4d"
           },
           {
             "name": "Human Speech",
@@ -23662,7 +23830,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: speaks and understands the tongues of men; its spare levels made it cost nothing. RoP:F p. 61 (the book's Communication with Humans 10)",
-            "id": "81c5d4e181d9"
+            "id": "0d52feaff30a"
           },
           {
             "name": "Control Animals",
@@ -23676,7 +23844,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "3ec0322b5d5b"
+            "id": "b4a57315f483"
           },
           {
             "name": "Control Person",
@@ -23690,7 +23858,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a696c1e4e5d5"
+            "id": "be9d86288be1"
           },
           {
             "name": "Control of Aquam",
@@ -23704,7 +23872,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "91a9e78d213c"
+            "id": "f5c9a5814782"
           },
           {
             "name": "Curse",
@@ -23718,7 +23886,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "cb076a18e5f8"
+            "id": "bd4caa155412"
           },
           {
             "name": "Enchant Objects",
@@ -23732,7 +23900,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a trinket of glamour that lets its holder use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Enchant Objects 5)",
-            "id": "725de86bf4ed"
+            "id": "9a1a577c9ff6"
           },
           {
             "name": "Glamour",
@@ -23746,7 +23914,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "11186a80011b"
+            "id": "898ef0aeb972"
           },
           {
             "name": "Prophecy",
@@ -23760,7 +23928,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 10)",
-            "id": "dd2fd9203ffc"
+            "id": "729ea9b519ee"
           },
           {
             "name": "Human Shape",
@@ -23774,7 +23942,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a human shape (Base 10, +2 Sun) (the book's Shapechange to Human 5)",
-            "id": "0d14fff0b806"
+            "id": "43856b2e81d3"
           }
         ],
         "vis": [
@@ -23782,24 +23950,24 @@
             "pawns": 15,
             "art": "Aquam",
             "where": "in its body",
-            "id": "11917f60555a"
+            "id": "4a24de3c329d"
           },
           {
             "pawns": 5,
             "art": "Mentem",
             "where": "in its body",
-            "id": "a6df35ba6d69"
+            "id": "00529226d409"
           },
           {
             "pawns": 5,
             "art": "Intellego",
             "where": "in its body",
-            "id": "0607a3758e73"
+            "id": "28267ac52b83"
           }
         ],
         "equipment": "",
         "appearance": "A vast pike that can take the shape of a great faerie lord.",
-        "notes": "King of fish and lord of the water faeries, worshipped most near Lake Strukhalis in Poland: a magical faerie beast that can be a lord, not a lord that can be a beast. His rule over the world's fish fails for one hour a year, when he sleeps and dreams prophecies. Knowledge flows to him down every Slavic stream and lake, but he is a miser greedy for slaves, and whoever enters his palace is likely to be kept. Immersed, he heals two wound and Fatigue levels a round.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.",
+        "notes": "King of fish and lord of the water faeries, worshipped most near Lake Strukhalis in Poland: a magical faerie beast that can be a lord, not a lord that can be a beast. His rule over the world's fish fails for one hour a year, when he sleeps and dreams prophecies. Knowledge flows to him down every Slavic stream and lake, but he is a miser greedy for slaves, and whoever enters his palace is likely to be kept. Immersed, he heals two wound and Fatigue levels a round.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.\n\nAs printed in Fourth Edition: Bite Init +0, Attack +8, Defense +0, Damage +15; Soak +9.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 90",
         "detail": "Full",
         "place_id": "lake_strukhalis",
@@ -23832,7 +24000,7 @@
           "presence": 0,
           "communication": 0,
           "dexterity": 3,
-          "quickness": 5
+          "quickness": 7
         },
         "cunning": true,
         "size": -2,
@@ -23868,11 +24036,11 @@
         "attacks": [
           {
             "name": "Talons",
-            "init": 4,
-            "attack": 10,
-            "defense": 13,
-            "damage": 3,
-            "id": "22ccd2b8886c"
+            "init": 6,
+            "attack": 13,
+            "defense": 18,
+            "damage": 12,
+            "id": "e7cf84674508"
           }
         ],
         "soak": 7,
@@ -23899,7 +24067,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 75,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -23917,7 +24085,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "49e703ecfd9d"
+            "id": "8f3f000ec800"
           },
           {
             "name": "Control of Ignem",
@@ -23931,7 +24099,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 50 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "fa449e5a766e"
+            "id": "3eba6e7d17b8"
           },
           {
             "name": "Curse",
@@ -23945,7 +24113,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "64237e147116"
+            "id": "f3bd47a74661"
           },
           {
             "name": "Faerie Road",
@@ -23959,7 +24127,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power: is at once in any place it knows, as the Leap of Homecoming (ReCo 35) (the book's Travel 21)",
-            "id": "fac4ce9edb0a"
+            "id": "8ac54c9eb359"
           }
         ],
         "vis": [
@@ -23967,12 +24135,12 @@
             "pawns": 30,
             "art": "Ignem",
             "where": "in its body",
-            "id": "66122326f2eb"
+            "id": "195f72fddabe"
           }
         ],
         "equipment": "",
         "appearance": "A cassowary of fire; one feather from its wing lights a feast hall brighter than the sun, yet hurts no one who looks at it.",
-        "notes": "The most famous, most potent and most elusive of the legendary Slavic beasts, dwelling in the garden of the sun in the uttermost East and eating golden apples and fruits bright as gems. It shows no true intelligence but is a cunning thief of bright, sweet things, found only in strong regiones near Arcadia, and so powerful it can open a gate to Arcadia at need, which makes it hard to catch and harder to keep. Nastassia Baramov's obsession; sacred to Dazhdbog.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-3, Medium to 6, Heavy to 9, Incapacitated to 12, Dead from 13.",
+        "notes": "The most famous, most potent and most elusive of the legendary Slavic beasts, dwelling in the garden of the sun in the uttermost East and eating golden apples and fruits bright as gems. It shows no true intelligence but is a cunning thief of bright, sweet things, found only in strong regiones near Arcadia, and so powerful it can open a gate to Arcadia at need, which makes it hard to catch and harder to keep. Nastassia Baramov's obsession; sacred to Dazhdbog.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-3, Medium to 6, Heavy to 9, Incapacitated to 12, Dead from 13.\n\nAs printed in Fourth Edition: Talons Init +0, Attack +10, Defense +0, Damage +10; Soak +5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 91",
         "detail": "Full",
         "place_id": "slavic_arcadia",
@@ -24032,10 +24200,10 @@
           {
             "name": "Bite",
             "init": 2,
-            "attack": 7,
-            "defense": 5,
-            "damage": 4,
-            "id": "50dfc4ea1a86"
+            "attack": 14,
+            "defense": 11,
+            "damage": 9,
+            "id": "b46f0a4d3e36"
           }
         ],
         "soak": 6,
@@ -24062,7 +24230,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 15,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -24080,7 +24248,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "e50c06b9ce82"
+            "id": "6139ad2efe68"
           },
           {
             "name": "Speech with Animal",
@@ -24094,7 +24262,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 30 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4ed336f5a717"
+            "id": "8cb8833d7424"
           },
           {
             "name": "Control of Auram",
@@ -24108,7 +24276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 30 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "e1a3f28daa74"
+            "id": "ba393f001c13"
           },
           {
             "name": "Curse",
@@ -24122,7 +24290,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "519f8d40b1f1"
+            "id": "71beb1320afb"
           },
           {
             "name": "Dread",
@@ -24136,7 +24304,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 10)",
-            "id": "87945095344c"
+            "id": "48b4f241dc2e"
           },
           {
             "name": "Insubstantial Form",
@@ -24150,7 +24318,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "7912323c4a34"
+            "id": "21c5183df351"
           },
           {
             "name": "Faerie Road",
@@ -24164,7 +24332,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power: is at once in any place it knows, as the Leap of Homecoming (ReCo 35) (the book's Travel 28)",
-            "id": "ae7b6d509899"
+            "id": "c3631ad0f979"
           }
         ],
         "vis": [
@@ -24172,18 +24340,18 @@
             "pawns": 10,
             "art": "Animal",
             "where": "in its body",
-            "id": "e5c9c60f054a"
+            "id": "a8c7e0c2e861"
           },
           {
             "pawns": 10,
             "art": "Auram",
             "where": "in its body",
-            "id": "9fef97230b59"
+            "id": "06beb0eab072"
           }
         ],
         "equipment": "",
         "appearance": "A dog with an eagle's wings and tail, feathered from head to tail.",
-        "notes": "The strangest of the chimaeric beasts: swift, voracious and cunning, a servant of the gods whose duty is a mystery, perhaps their messenger, as Hermes was.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.",
+        "notes": "The strangest of the chimaeric beasts: swift, voracious and cunning, a servant of the gods whose duty is a mystery, perhaps their messenger, as Hermes was.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.\n\nAs printed in Fourth Edition: Bite Init +0, Attack +7, Defense +0, Damage +10; Soak +7.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 91",
         "detail": "Full",
         "place_id": "slavic_arcadia",
@@ -24274,7 +24442,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 2)",
-            "id": "d14917965035"
+            "id": "86365a129e32"
           },
           {
             "name": "Prophecy",
@@ -24288,13 +24456,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 3)",
-            "id": "d371af6d19a3"
+            "id": "7d46ec11b5b1"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "No body at all.",
-        "notes": "Revenants common in Poland: pagan souls that never reached Arcadia, or Christians badly buried or killed by evil faeries. They seldom speak clearly, but send their kin prophetic or maddening dreams, or warnings of coming tragedy. The pagan dead, the dziadys, are ritually feasted four times a year.\n\nMight 5-15 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
+        "notes": "Revenants common in Poland: pagan souls that never reached Arcadia, or Christians badly buried or killed by evil faeries. They seldom speak clearly, but send their kin prophetic or maddening dreams, or warnings of coming tragedy. The pagan dead, the dziadys, are ritually feasted four times a year.\n\nMight 5-15 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 92",
         "detail": "Full",
         "place_id": "the_kingdom_of_poland",
@@ -24354,10 +24522,10 @@
           {
             "name": "Strangle",
             "init": 1,
-            "attack": 6,
-            "defense": 6,
-            "damage": 2,
-            "id": "afa1035c0198"
+            "attack": 9,
+            "defense": 9,
+            "damage": 5,
+            "id": "97a94b422f97"
           }
         ],
         "soak": 4,
@@ -24384,7 +24552,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 75,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -24402,7 +24570,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 10 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "aa5b6d0262c8"
+            "id": "a6bc064c391f"
           },
           {
             "name": "Curse",
@@ -24416,7 +24584,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "dbd10813e8c6"
+            "id": "d28f8b731543"
           },
           {
             "name": "Dread",
@@ -24430,7 +24598,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 8)",
-            "id": "fce13bf4d7f8"
+            "id": "f8e644645119"
           },
           {
             "name": "Glamour",
@@ -24444,7 +24612,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 10 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "5e5c40f81823"
+            "id": "15abd68d20c0"
           },
           {
             "name": "Possession",
@@ -24458,7 +24626,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthrallment: takes complete control of a person for a day by meeting his eye. RoP:F p. 58 (the book's Possession 10)",
-            "id": "38363e5fbb6e"
+            "id": "6a75e51b5a22"
           }
         ],
         "vis": [
@@ -24466,18 +24634,18 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its body",
-            "id": "c8e75e9ad9b7"
+            "id": "cb8834203338"
           },
           {
             "pawns": 2,
             "art": "Vim",
             "where": "in its body",
-            "id": "717c562b2983"
+            "id": "f02f0fd602c4"
           }
         ],
         "equipment": "",
         "appearance": "Looks human; born with two full sets of teeth.",
-        "notes": "A Polish changeling with two spirits, human and faerie; baptism touches only the human one. It may live and die a normal life; then, the soul gone to judgement, the faerie spirit sends the body out as a strangler at the crossroads, gaining Might from its victims' last breaths. It has two hearts: killed or incapacitated, it rises at once, whole, and must be killed again.\n\nMight 10-15 in the book; the lowest is entered. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.",
+        "notes": "A Polish changeling with two spirits, human and faerie; baptism touches only the human one. It may live and die a normal life; then, the soul gone to judgement, the faerie spirit sends the body out as a strangler at the crossroads, gaining Might from its victims' last breaths. It has two hearts: killed or incapacitated, it rises at once, whole, and must be killed again.\n\nMight 10-15 in the book. Slavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-6, Medium to 12, Heavy to 18, Incapacitated to 24, Dead from 25.\n\nAs printed in Fourth Edition: Strangle Init +0, Attack +6, Defense +0, Damage +8; Soak +5.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 92",
         "detail": "Full",
         "place_id": "the_kingdom_of_poland",
@@ -24537,13 +24705,13 @@
           {
             "name": "Claw and bite",
             "init": -3,
-            "attack": 13,
-            "defense": 10,
-            "damage": 12,
-            "id": "9263f4c82fbe"
+            "attack": 11,
+            "defense": 8,
+            "damage": 24,
+            "id": "dbe2c3cf454f"
           }
         ],
-        "soak": 15,
+        "soak": 14,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -24567,7 +24735,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 275,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -24585,7 +24753,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 20)",
-            "id": "d8b09bf10930"
+            "id": "d3ce5cec7c37"
           },
           {
             "name": "Fiery Breath",
@@ -24599,7 +24767,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cone of fire thirty to forty paces long and five wide at its end: +35 damage to all within it, which metal armour does not stop. The book's CrIg 35, priced as a Greater Power.",
-            "id": "19f0b4d3166f"
+            "id": "cfb1f8f9eb44"
           }
         ],
         "vis": [
@@ -24607,30 +24775,30 @@
             "pawns": 10,
             "art": "Animal",
             "where": "in its body",
-            "id": "bbb2fef4f81b"
+            "id": "4d26827ffd09"
           },
           {
             "pawns": 10,
             "art": "Ignem",
             "where": "in its body",
-            "id": "9e87c4d5f499"
+            "id": "2a7624f95898"
           },
           {
             "pawns": 10,
             "art": "Perdo",
             "where": "in its body",
-            "id": "59ea6150e44b"
+            "id": "4034be1e745e"
           },
           {
             "pawns": 5,
             "art": "Vim",
             "where": "in its body",
-            "id": "0e92f0feb80e"
+            "id": "e17a52ed545a"
           }
         ],
         "equipment": "",
         "appearance": "A four-limbed, fire-breathing serpent with bat wings, Size +5 or more.",
-        "notes": "The dragons of the northern Carpathians are the worst monsters of the Slavic lands, faerie, unlike most of Europe's, which are of Magic; magi burn to know whether the two are kin. This kind is strong, hungry and resilient, but not clever: the one Krakus killed at Krakow, by an alchemical trick, as arms could not.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-10, Medium to 20, Heavy to 30, Incapacitated to 40, Dead from 41.",
+        "notes": "The dragons of the northern Carpathians are the worst monsters of the Slavic lands, faerie, unlike most of Europe's, which are of Magic; magi burn to know whether the two are kin. This kind is strong, hungry and resilient, but not clever: the one Krakus killed at Krakow, by an alchemical trick, as arms could not.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-10, Medium to 20, Heavy to 30, Incapacitated to 40, Dead from 41.\n\nAs printed in Fourth Edition: Claw and bite Init +0, Attack +15, Defense +0, Damage +50; Soak +20.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 93",
         "detail": "Full",
         "place_id": "the_tatra_mountains",
@@ -24700,10 +24868,10 @@
           {
             "name": "Claw and bite",
             "init": -2,
-            "attack": 14,
-            "defense": 11,
-            "damage": 10,
-            "id": "9bbcd3fa1a11"
+            "attack": 12,
+            "defense": 9,
+            "damage": 22,
+            "id": "17512058065d"
           }
         ],
         "soak": 11,
@@ -24730,7 +24898,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 275,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -24748,7 +24916,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a potion of glamour that lets its drinker use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Brew Faerie Potions 5)",
-            "id": "4a6894161403"
+            "id": "6f0e74b1fbc0"
           },
           {
             "name": "Change of Size",
@@ -24762,7 +24930,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 6)",
-            "id": "a401df16c4ed"
+            "id": "a70cc6c1522e"
           },
           {
             "name": "Control Person",
@@ -24776,7 +24944,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ed2b1cb0328d"
+            "id": "5dd531aeffe1"
           },
           {
             "name": "Control of Ignem",
@@ -24790,7 +24958,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "53d9c9a08796"
+            "id": "8d34b8e79dc5"
           },
           {
             "name": "Control of Auram",
@@ -24804,7 +24972,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "61b015206a15"
+            "id": "17d28a30c949"
           },
           {
             "name": "Dread",
@@ -24818,7 +24986,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 10)",
-            "id": "dca809fd080a"
+            "id": "a38353d6b9c6"
           },
           {
             "name": "Glamour",
@@ -24832,7 +25000,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 50 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "2acee29ca061"
+            "id": "c34cddb82d6d"
           },
           {
             "name": "Infatuation",
@@ -24846,7 +25014,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 10)",
-            "id": "6ca3a9d8f8c0"
+            "id": "1431ef3f4673"
           },
           {
             "name": "Unseen",
@@ -24860,7 +25028,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 5)",
-            "id": "d10bcbe4e1f6"
+            "id": "b4f1649ee78f"
           },
           {
             "name": "Human Shape",
@@ -24874,7 +25042,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a human shape (Base 10, +2 Sun) (the book's Shapechange to Human 6)",
-            "id": "b72aedaa95fc"
+            "id": "8ca30fb95c6a"
           },
           {
             "name": "Shapechange to Object",
@@ -24888,7 +25056,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "a466a1f4b98e"
+            "id": "cfdca067359d"
           },
           {
             "name": "Fiery Breath",
@@ -24902,7 +25070,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cone of fire thirty to forty paces long and five wide at its end: +35 damage to all within it, which metal armour does not stop. The book's CrIg 35, priced as a Greater Power.",
-            "id": "0b081af5ed18"
+            "id": "7291e42fb322"
           }
         ],
         "vis": [
@@ -24910,24 +25078,24 @@
             "pawns": 5,
             "art": "Ignem",
             "where": "in its body",
-            "id": "a684c055398a"
+            "id": "64230f7e51a2"
           },
           {
             "pawns": 15,
             "art": "Perdo",
             "where": "in its body",
-            "id": "7543f539eb39"
+            "id": "646ea1dfa8dd"
           },
           {
             "pawns": 15,
             "art": "Vim",
             "where": "in its body",
-            "id": "ea00b60b6e20"
+            "id": "b1222059933b"
           }
         ],
         "equipment": "",
         "appearance": "A four-limbed, fire-breathing serpent with bat wings, Size +4 or less, often in a man's shape.",
-        "notes": "The subtler kind of Slavic dragon: still dangerous in body, but intelligent, magically gifted and vicious. Its size changes never take it above +4.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.",
+        "notes": "The subtler kind of Slavic dragon: still dangerous in body, but intelligent, magically gifted and vicious. Its size changes never take it above +4.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.\n\nAs printed in Fourth Edition: Claw and bite Init +0, Attack +15, Defense +0, Damage +50; Soak +15.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 93",
         "detail": "Full",
         "place_id": "the_tatra_mountains",
@@ -24956,7 +25124,7 @@
           "intelligence": -1,
           "perception": 4,
           "strength": 4,
-          "stamina": 4,
+          "stamina": 3,
           "presence": -3,
           "communication": -3,
           "dexterity": -1,
@@ -25000,10 +25168,10 @@
             "attack": 12,
             "defense": 8,
             "damage": 13,
-            "id": "c9c1fc47ee36"
+            "id": "017cfc0d3966"
           }
         ],
-        "soak": 7,
+        "soak": 3,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -25045,7 +25213,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Herbam up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "62b6cfb79ba0"
+            "id": "f1169e7de4b4"
           },
           {
             "name": "Control of Terram",
@@ -25059,7 +25227,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Terram effect up to level 15 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "950c973f5cde"
+            "id": "004e7714f3f5"
           },
           {
             "name": "Dread",
@@ -25073,7 +25241,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 8)",
-            "id": "3666e3f8100a"
+            "id": "f51ae20e7b01"
           },
           {
             "name": "Shapechange to Object",
@@ -25087,7 +25255,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "0d786f5308dd"
+            "id": "d1e06847fe0c"
           }
         ],
         "vis": [
@@ -25095,18 +25263,18 @@
             "pawns": 6,
             "art": "Terram",
             "where": "in its body",
-            "id": "7cd56a7ae79d"
+            "id": "53071b59b163"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "in its body",
-            "id": "2889b3eec389"
+            "id": "20a3a1b5b4ae"
           }
         ],
         "equipment": "",
         "appearance": "A huge, three-headed brute.",
-        "notes": "The book's example of the ogres and giants the Poles call dziwozony and the Russians norka: huge, very strong, dim, and vulnerable to Christian rites and relics, not much troubled by iron. Many rule earth, are proof against weapons, melt into rock, earth, water or mud and move through it, and can smell a mortal's nationality. They come as siblings with ever more heads, three, six, nine, about five Might a head. In its own terrain it heals a wound and a Fatigue level a round, even when slain.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.",
+        "notes": "The book's example of the ogres and giants the Poles call dziwozony and the Russians norka: huge, very strong, dim, and vulnerable to Christian rites and relics, not much troubled by iron. Many rule earth, are proof against weapons, melt into rock, earth, water or mud and move through it, and can smell a mortal's nationality. They come as siblings with ever more heads, three, six, nine, about five Might a head. In its own terrain it heals a wound and a Fatigue level a round, even when slain.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.\n\nAs printed in Fourth Edition: Greatsword Init +0, Attack +12, Defense +0, Damage +16; Soak +10.\n\nStamina and Soak as the faerie giant, RoP:F p. 98.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 94",
         "detail": "Full",
         "place_id": "the_tatra_mountains",
@@ -25168,19 +25336,19 @@
             "init": 0,
             "attack": 12,
             "defense": 9,
-            "damage": 10,
-            "id": "b9b6555af96f"
+            "damage": 19,
+            "id": "4cdce40da9d0"
           },
           {
             "name": "Claws",
             "init": 0,
             "attack": 13,
             "defense": 11,
-            "damage": 11,
-            "id": "a734ed160a60"
+            "damage": 23,
+            "id": "e87fe8f591b3"
           }
         ],
-        "soak": 15,
+        "soak": 14,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -25222,7 +25390,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "dc5597cb54c8"
+            "id": "009488c3607e"
           },
           {
             "name": "Control of Auram",
@@ -25236,7 +25404,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 40 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "328f9f5ff07b"
+            "id": "700ff388a306"
           },
           {
             "name": "Control of Aquam",
@@ -25250,7 +25418,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 40 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4401ec91466f"
+            "id": "5c221a6ae3dd"
           },
           {
             "name": "Dread",
@@ -25264,7 +25432,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 12)",
-            "id": "498be181e32d"
+            "id": "f6cb13a11ae5"
           },
           {
             "name": "Glamour",
@@ -25278,7 +25446,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "060e821bbb2a"
+            "id": "835cec20cf20"
           }
         ],
         "vis": [
@@ -25286,30 +25454,30 @@
             "pawns": 10,
             "art": "Auram",
             "where": "in its body",
-            "id": "05035d5da235"
+            "id": "b363a3378acd"
           },
           {
             "pawns": 10,
             "art": "Aquam",
             "where": "in its body",
-            "id": "187924cd3e8e"
+            "id": "9ad0c6ffa4bc"
           },
           {
             "pawns": 10,
             "art": "Perdo",
             "where": "in its body",
-            "id": "9cde39a8a87a"
+            "id": "badac2913787"
           },
           {
             "pawns": 10,
             "art": "Vim",
             "where": "in its body",
-            "id": "4b22a04d66dd"
+            "id": "5d4b05cd9254"
           }
         ],
         "equipment": "",
         "appearance": "A wingless serpent that flies, with massive jaws, mane and horns, gold, silver or ebony, four limbs and terrible claws; it brings thunder and lightning, not flame.",
-        "notes": "The spirits of the Mongols, come since 1206 to ravage the dreams of the Slavs: they swarm through Slavic Earth and the clan lands of Slavic Hell, have laid three princedoms waste, and gnaw at the roots of the World Tree. Whoever its bite wounds must roll a die + Size of 6+ or be swallowed, to cut his way out of the throat (Soak 12) or the stomach (Soak 15), whose acids do 20 a round. It also speaks with plants and people.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-10, Medium to 20, Heavy to 30, Incapacitated to 40, Dead from 41.",
+        "notes": "The spirits of the Mongols, come since 1206 to ravage the dreams of the Slavs: they swarm through Slavic Earth and the clan lands of Slavic Hell, have laid three princedoms waste, and gnaw at the roots of the World Tree. Whoever its bite wounds must roll a die + Size of 6+ or be swallowed, to cut his way out of the throat (Soak 12) or the stomach (Soak 15), whose acids do 20 a round. It also speaks with plants and people.\n\nSlavic faeries wax and wane with the seasons, by as much as a quarter: the Gold Court's in summer, the White Court's in winter. Wound ranges: Light 1-10, Medium to 20, Heavy to 30, Incapacitated to 40, Dead from 41.\n\nAs printed in Fourth Edition: Bite (swallows) Init +0, Attack +12, Defense +0, Damage +25; Claws Init +0, Attack +12, Defense +0, Damage +30; Soak +20.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 100",
         "detail": "Full",
         "place_id": "slavic_arcadia",
@@ -25323,7 +25491,7 @@
         "many": true,
         "how_many": "Many",
         "realm": "Infernal",
-        "might": 10,
+        "might": 20,
         "might_form": "Corpus",
         "might_pool": null,
         "order": "",
@@ -25338,7 +25506,7 @@
           "intelligence": 1,
           "perception": 1,
           "strength": 2,
-          "stamina": 2,
+          "stamina": 4,
           "presence": -3,
           "communication": 1,
           "dexterity": 1,
@@ -25369,21 +25537,21 @@
           {
             "name": "Bite",
             "init": 2,
-            "attack": 5,
-            "defense": 4,
+            "attack": 12,
+            "defense": 11,
             "damage": 3,
-            "id": "69a7111f7059"
+            "id": "b1f532fc67e1"
           },
           {
             "name": "Strangle",
             "init": 2,
-            "attack": 5,
-            "defense": 6,
+            "attack": 9,
+            "defense": 10,
             "damage": 2,
-            "id": "6f8939471f2b"
+            "id": "840c73eef9e1"
           }
         ],
-        "soak": 5,
+        "soak": 14,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -25407,7 +25575,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 50,
+            "xp": 180,
             "specialty": null,
             "xp_table": "ability"
           }
@@ -25425,7 +25593,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ReMe 15).",
-            "id": "0a267c0981c6"
+            "id": "ef8e126ed032"
           },
           {
             "name": "Shape of the Furred Slinker",
@@ -25439,7 +25607,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Becomes a rat (MuCo 25).",
-            "id": "f81ad85fc0d3"
+            "id": "3843f5a49f0d"
           },
           {
             "name": "Broom of the Winds",
@@ -25453,7 +25621,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ReAu 15).",
-            "id": "a15058ba39f2"
+            "id": "bdd43fee1907"
           },
           {
             "name": "The Iron Grasp",
@@ -25467,7 +25635,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 to its grip: Strength, and the strangle's Attack and Damage (MuCo 15).",
-            "id": "90ab346b32cb"
+            "id": "4aedd3a2c432"
           }
         ],
         "vis": [
@@ -25475,24 +25643,24 @@
             "pawns": 1,
             "art": "Perdo",
             "where": "diabolically tainted",
-            "id": "9d8d4a1ff44c"
+            "id": "ad7469cd5661"
           },
           {
             "pawns": 1,
             "art": "Vim",
             "where": "diabolically tainted",
-            "id": "794f2f268e47"
+            "id": "aabe0ae70bbf"
           },
           {
             "pawns": 1,
             "art": "Corpus",
             "where": "diabolically tainted",
-            "id": "eafc49001288"
+            "id": "801fc98a2a13"
           }
         ],
         "equipment": "",
         "appearance": "",
-        "notes": "Called zmory, upiory or martwiec in Poland, oboroten in Russia: not made by biting but by an Infernal pact, giving up the soul for a semblance of undeath; the damned rises a few nights after burial to hunt. It kills by strangling more than by biting. A bite or strangle that wounds keeps its grip (a Strength contest to break), taking a wound a round, while it uses its powers. Infernal Might 10 to 15 when new, more for the old, who trade Might to their patrons for better gifts.\n\nSpent Might returns after a day's rest in its sanctuary. Its permanent Might rises a point of experience for each mortal it kills and falls one for each night it does not; at zero its soul goes to Hell. Beaten to no wound levels it falls to grave dust and rises at the next dusk unless the dust is thrown in water or otherwise scattered, when it takes a stress die x 10 days to come back, losing Might the while. Perdo Vim made for the purpose destroys its Might outright.\n\nConverted: the powers keep the book's levels and Might costs, Init Qik less the cost.",
+        "notes": "Called zmory, upiory or martwiec in Poland, oboroten in Russia: not made by biting but by an Infernal pact, giving up the soul for a semblance of undeath; the damned rises a few nights after burial to hunt. It kills by strangling more than by biting. A bite or strangle that wounds keeps its grip (a Strength contest to break), taking a wound a round, while it uses its powers. Infernal Might 10 to 15 when new, more for the old, who trade Might to their patrons for better gifts.\n\nSpent Might returns after a day's rest in its sanctuary. Its permanent Might rises a point of experience for each mortal it kills and falls one for each night it does not; at zero its soul goes to Hell. Beaten to no wound levels it falls to grave dust and rises at the next dusk unless the dust is thrown in water or otherwise scattered, when it takes a stress die x 10 days to come back, losing Might the while. Perdo Vim made for the purpose destroys its Might outright.\n\nConverted: Might 20 as the Vessel of Iniquity (Against the Dark p. 121), 10 to 15 as printed; the powers keep the book's levels and Might costs, Init Qik less the cost.\n\nAs printed in Fourth Edition: Bite Init +0, Attack +4, Defense +0, Damage +3; Strangle Init +0, Attack +5, Defense +0, Damage +2; Soak +5.\n\nStamina and Soak as the broukolak, Against the Dark p. 121.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 95",
         "detail": "Full",
         "place_id": "the_russian_principalities",
@@ -25596,10 +25764,10 @@
             "attack": 11,
             "defense": 8,
             "damage": 10,
-            "id": "59857fae7ecd"
+            "id": "84b0a22bfdbe"
           }
         ],
-        "soak": 31,
+        "soak": 19,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -25631,8 +25799,8 @@
         "powers": [
           {
             "name": "Man into Sprat",
-            "might_cost": 7,
-            "init": -10,
+            "might_cost": 4,
+            "init": -7,
             "form": "Corpus",
             "range": "Sight",
             "duration": "Sun",
@@ -25640,13 +25808,13 @@
             "level": 35,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Turns a man as far off as she can see into a fish of about Size -3. The book's MuCo 35, Penetration 30.",
-            "id": "8ab368457df1"
+            "description": "Turns a man as far off as she can see into a fish of about Size -3. The book's MuCo 35, Penetration 30. Fourth Edition: 7 points.",
+            "id": "775950b757c6"
           },
           {
             "name": "Steel Shell",
-            "might_cost": 8,
-            "init": -11,
+            "might_cost": 4,
+            "init": -7,
             "form": "Animal",
             "range": "Personal",
             "duration": "Sun",
@@ -25654,13 +25822,13 @@
             "level": 40,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Her last defence: her shell becomes a gleaming steel dome (+15 Soak), her head drawn in under her horny forelimbs, and she sinks into deep water. The book's MuAn 40.",
-            "id": "e5b743c7f90e"
+            "description": "Her last defence: her shell becomes a gleaming steel dome (+15 Soak), her head drawn in under her horny forelimbs, and she sinks into deep water. The book's MuAn 40. Fourth Edition: 8 points.",
+            "id": "2d34b8143c7e"
           },
           {
             "name": "Dominion of the Swamp",
-            "might_cost": 8,
-            "init": -11,
+            "might_cost": 4,
+            "init": -7,
             "form": "Herbam",
             "range": "Voice",
             "duration": "Diameter",
@@ -25668,8 +25836,8 @@
             "level": 40,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Whips plants and water within 300 yards into a maelstrom: +5 damage to everyone in it who fails a stress die + Dex + Swim or Athletics of 6+, and the same roll to do anything but hold position. The book's ReHe(Aq) 40.",
-            "id": "470c59d4da91"
+            "description": "Whips plants and water within 300 yards into a maelstrom: +5 damage to everyone in it who fails a stress die + Dex + Swim or Athletics of 6+, and the same roll to do anything but hold position. The book's ReHe(Aq) 40. Fourth Edition: 8 points.",
+            "id": "9b5b8d016bc7"
           },
           {
             "name": "Speech",
@@ -25683,13 +25851,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She can still speak human tongues at will, though her attention is hard to hold. The book's ReAn 5.",
-            "id": "e9391b67f242"
+            "id": "489430f512b1"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "A great black-backed turtle grown so vast her shell looks like a sunken island, her encrusted beak and head as big as a house.",
-        "notes": "Pripet Maior's founder, a near-legendary Bjornaer who went into Final Twilight over forty years ago (the book also says thirty) and stayed in her heart-beast, augmented by Muto and steeped in magic by a century and a half of longevity potions; most of Pripet's magi were her apprentices and believe her queen of the marsh's heart. Susan of Wicklow says she saw her about fifteen years ago; whether she lives is the troupe's to decide.\n\nHer bite swallows a man of Size 0 or less who takes a wound unless he rolls Size against 6+, one higher for each wound past the first: a round dazed in her throat (Soak 12) unless he makes a stress die + Int of 9+, then +30 damage a round from the stones in her stomach (Soak 20). Given a hundred feet of open water she rams people, banks or floating islands, her bow wave swamping all near, as Mighty Torrent of Water; surfacing under a foe she can shatter a boat or tear an island apart, and is very hard to hurt.\n\nHer last Arts, for resistance only: Cr 24, In 29, Mu 37, Pe 26, Re 29, An 34, Aq 30, Au 16, Co 33, He 24, Ig 6, Im 13, Me 19, Te 26, Vi 31.\n\nConverted: the book prints totals of Attack +20 to +25 and Damage +30 to +45 on its old scale; here Brawl 10 with her jaws (Large teeth) gives the totals shown, and her Soak is her Stamina and the old Soak beyond Stamina and Size. Her powers keep the book's levels at a magnitude a Might point, Init Qik less the cost (the Alps pack's reading for the Magic realm). Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.",
+        "notes": "Pripet Maior's founder, a near-legendary Bjornaer who went into Final Twilight over forty years ago (the book also says thirty) and stayed in her heart-beast, augmented by Muto and steeped in magic by a century and a half of longevity potions; most of Pripet's magi were her apprentices and believe her queen of the marsh's heart. Susan of Wicklow says she saw her about fifteen years ago; whether she lives is the troupe's to decide.\n\nHer bite swallows a man of Size 0 or less who takes a wound unless he rolls Size against 6+, one higher for each wound past the first: a round dazed in her throat (Soak 12) unless he makes a stress die + Int of 9+, then +30 damage a round from the stones in her stomach (Soak 20). Given a hundred feet of open water she rams people, banks or floating islands, her bow wave swamping all near, as Mighty Torrent of Water; surfacing under a foe she can shatter a boat or tear an island apart, and is very hard to hurt.\n\nHer last Arts, for resistance only: Cr 24, In 29, Mu 37, Pe 26, Re 29, An 34, Aq 30, Au 16, Co 33, He 24, Ig 6, Im 13, Me 19, Te 26, Vi 31.\n\nConverted: the book prints totals of Attack +20 to +25 and Damage +30 to +45 on its old scale; here Brawl 10 with her jaws (Large teeth) gives the totals shown, and her Soak is her Stamina and the old Soak beyond Stamina and Size. Her powers keep the book's levels at a magnitude a Might point, Init Qik less the cost (the Alps pack's reading for the Magic realm). Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.\n\nAs printed in Fourth Edition: Bite (swallows) Init -3, Attack +11, Defense +8, Damage +10; Soak +31.",
         "source": "The Dragon and the Bear: The Novgorod Tribunal p. 136",
         "detail": "Full",
         "place_id": "the_great_pripet_marsh",

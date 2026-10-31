@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.61.1",
   "kind": "pack",
   "name": "Blood and Sand: the Levant Tribunal",
   "from_saga": "Blood and Sand: the Levant Tribunal",
@@ -102,19 +102,19 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy: its secret war",
-            "id": "67acfc42c3d4"
+            "id": "7a63feed78c1"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "2db5bdb793fe"
+            "id": "3295418e348c"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Buys its supplies and sells its stone here",
-            "id": "2e706e8026c9"
+            "id": "590865fc77f4"
           }
         ],
         "unnamed_magi": 1,
@@ -228,13 +228,13 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Ally",
-            "id": "52f7d12a7363"
+            "id": "63d719f1db3e"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "Eleven miles to the south",
-            "id": "89c7ded9eec7"
+            "id": "362493a48d9a"
           }
         ],
         "unnamed_magi": 1,
@@ -348,19 +348,19 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy: the counter-Crusade's leader",
-            "id": "80be8a10e30e"
+            "id": "2b3223972c96"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "a69e5ad1a5ff"
+            "id": "85f1338fa66d"
           },
           {
             "kind": "places",
             "target_id": "acre",
             "note": "Ten miles to the south-west",
-            "id": "bee8357341ef"
+            "id": "01d1626ced77"
           }
         ],
         "unnamed_magi": 0,
@@ -474,37 +474,37 @@
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Contact",
-            "id": "10fc208a1b61"
+            "id": "e6af2138e011"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy",
-            "id": "20129d6b1371"
+            "id": "c8b8059c2123"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy",
-            "id": "3886ed8d11ef"
+            "id": "92b3c9437d8a"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Keeps the Treaty with his court",
-            "id": "fd2724104fba"
+            "id": "79ad5d862083"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "Keeps the Treaty with the Ayyubids",
-            "id": "ad1a87f5bbe0"
+            "id": "32f877617fc3"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "The Suhhar distrusts the Embassy",
-            "id": "1b338a264359"
+            "id": "26edbe2d0874"
           }
         ],
         "unnamed_magi": 0,
@@ -725,7 +725,7 @@
             "kind": "places",
             "target_id": "the_alans",
             "note": "Its neighbours",
-            "id": "6d287a6b582c"
+            "id": "be196ac4e4f3"
           }
         ],
         "unnamed_magi": 0,
@@ -839,7 +839,7 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Ally: backs its call for war",
-            "id": "58726a8c3431"
+            "id": "235e26c6b14d"
           }
         ],
         "unnamed_magi": 0,
@@ -961,13 +961,13 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "Enemy: she broke its monopoly",
-            "id": "a789e6ed7489"
+            "id": "9ae8a61698d6"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Trade rival",
-            "id": "b53405fd2eb5"
+            "id": "4cbb884610a6"
           }
         ],
         "unnamed_magi": 0,
@@ -1402,7 +1402,7 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Friends in the garrison",
-            "id": "6954e6962218"
+            "id": "3c18cff391ef"
           }
         ],
         "unnamed_magi": 0,
@@ -1484,7 +1484,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "6f95d4eaa9e8"
+            "id": "e796978ce8fb"
           },
           {
             "title": "The slaying of a Crusader magus",
@@ -1516,7 +1516,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "ac6a2af6abd7"
+            "id": "96b774b5ecf2"
           }
         ],
         "rulings": [
@@ -1525,77 +1525,77 @@
             "year": 1193,
             "says": "Made between the Order in the Levant and the caliph's court, with Salah al-Din's mages and their Ayyubid heirs, and forced on the Levant's magi at the meeting of 1193 by quaesitores from Magvillus. No magus may take any part in Crusade or jihad, for either side; the Order's fighting with the Muslims' mages is over; and a magus found meddling in the wars is severely punished. Aurora of Jerbiton made it, treating with the caliph, Salah al-Din and their mages from 1183. The Order of Suleiman as a body never signed it.",
             "case_id": "",
-            "id": "a7214bf2d70e"
+            "id": "abac14ded7c5"
           },
           {
             "title": "The Treaty's term",
             "year": 1193,
             "says": "Muslim law lets a truce last ten years at most, so the Treaty lapses each decade unless the Tribunal renews it, and it is debated at every meeting. Each renewal is voted at the last meeting before the Treaty lapses; the present term runs to 1223, and its renewal is before the meeting of 1221.",
             "case_id": "",
-            "id": "57e243ab7c85"
+            "id": "cba2be057f88"
           },
           {
             "title": "The Treaty renewed for 1203",
             "year": 1200,
             "says": "The meeting of 1200 renewed the Treaty for ten years from 1203.",
             "case_id": "",
-            "id": "0502b44aee00"
+            "id": "42ef604204ca"
           },
           {
             "title": "The Treaty renewed for 1213",
             "year": 1207,
             "says": "The meeting of 1207 renewed the Treaty, by a narrow vote, for ten years from 1213.",
             "case_id": "",
-            "id": "e62838e85a1a"
+            "id": "d0a82536e689"
           },
           {
             "title": "The chair",
             "year": null,
             "says": "The quaesitor who presides at a meeting of the Tribunal must be of House Guernicus; a quaesitor of any other House may not. Aurora of Jerbiton proposed the rule.",
             "case_id": "",
-            "id": "ea246eec50f2"
+            "id": "5558cf431b54"
           },
           {
             "title": "The Praeco",
             "year": 1207,
             "says": "Fade and Wraith of Urbs Rubra, the eldest magi, had not been seen for years and could not be reached, so the quaesitores ruled that Tau of Flambeau be held the eldest, and Praeco.",
             "case_id": "",
-            "id": "e36a8107adcc"
+            "id": "491fdf28ddb6"
           },
           {
             "title": "The stone of Aedes Veritatis",
             "year": null,
             "says": "Some covenants asked whether Aedes Veritatis's sale of quarry stone to Damascus aided the war, since the stone might build walls. The quaesitores ruled the trade lawful: the stone is not magical, and was not made for war.",
             "case_id": "",
-            "id": "b90780044819"
+            "id": "e1afc5090203"
           },
           {
             "title": "Enchanted devices",
             "year": null,
             "says": "Selling enchanted devices to mundane lords is interference in mundane affairs, and forbidden.",
             "case_id": "",
-            "id": "cfb577cd1845"
+            "id": "28885b15dcc9"
           },
           {
             "title": "The border with Thebes",
             "year": null,
             "says": "After 1204 Theban magi followed the Byzantine refugees east and Thebes claimed more of Asia Minor for them; Aurora and other quaesitores of both Tribunals settled the quarrel short of war. The Empire of Nicaea belongs to the Theban Tribunal and the Empire of Trebizond to the Levant. Both sides have agreed to differ, and many are unhappy with it.",
             "case_id": "",
-            "id": "f1f8f99c80f7"
+            "id": "41d935c6fc1f"
           },
           {
             "title": "The priests of the Pyramids",
             "year": 1178,
             "says": "Heliobus Magister of Bonisagus brought the twelve priests of Thoth and Anubis in their temple at Giza into House Ex Miscellanea, under the Code's protection, which ended the Hermetic raids on their temple.",
             "case_id": "",
-            "id": "b28fa62e6130"
+            "id": "e082b8b14671"
           },
           {
             "title": "Sahirs in the Order",
             "year": null,
             "says": "A sahir may join the Order as any hedge wizard does, through House Ex Miscellanea, swearing the Oath and taking the Parma Magica.",
             "case_id": "",
-            "id": "c691764ff496"
+            "id": "6bf2f7bd52bf"
           }
         ],
         "treasury": [],
@@ -1607,7 +1607,7 @@
             "details": "The Order is founded in the west, far from the lands that will one day be the Levant Tribunal. At this time Baghdad, built five years before by the caliph al-Mansur, is the young capital of the 'Abbasids.",
             "changes": [],
             "margin": "",
-            "id": "0250c9ad438a"
+            "id": "48afba03320f"
           },
           {
             "year": 802,
@@ -1616,7 +1616,7 @@
             "details": "Harun al-Rashid, caliph since 786, has been trading embassies with Charlemagne, a king with more friends in the Order than the quaesitores like to own. Through them the Order wins the caliph's leave for two covenants in his lands, and the first, Urbs Rubra, is raised among the rock-cut halls of Petra. Harun's reign is an age of wonders, when jinn and men in some places live side by side and trade with one another, and the caliph himself is said to take lessons in Hermetic magic.\n\nSecrets\nIf the storyguide wants it, the rumour is true: Harun learnt the Order's magic and passed it to mages of his court, and their pupils' pupils practise it still (see the Islamic Tradition's story seeds).",
             "changes": [],
             "margin": "",
-            "id": "5700c449db6b"
+            "id": "e4efbb616cc0"
           },
           {
             "year": 806,
@@ -1625,7 +1625,7 @@
             "details": "The second covenant by Harun's leave is made in caves high on two pale cliffs in the Alan country, north-east of the Black Sea. Its remoteness will keep it alive through every war to come.",
             "changes": [],
             "margin": "",
-            "id": "d837be68f022"
+            "id": "4c223f985af1"
           },
           {
             "year": 809,
@@ -1634,7 +1634,7 @@
             "details": "Harun's sons fall to civil war over his throne, the Muslim world turns its eyes inward and later breaks into rival states, and the two covenants lose their friends at court. For almost three centuries the East is a quiet corner of the Order.",
             "changes": [],
             "margin": "",
-            "id": "2bc057c2d4a3"
+            "id": "7e2e6f8a1c1b"
           },
           {
             "year": 817,
@@ -1643,7 +1643,7 @@
             "details": "The hedge wizards' House is admitted, the road by which the Levant's priests of the Pyramids and its sahirs will one day come into the Order.",
             "changes": [],
             "margin": "",
-            "id": "cc06fc21552a"
+            "id": "0d369c5f20bb"
           },
           {
             "year": 832,
@@ -1652,7 +1652,7 @@
             "details": "The lands of Urbs Rubra and Urania are counted a Tribunal of the Order and named the Tribunal of the East, since the Order has reached no further in that direction. (Ch02 says only that this came soon after the covenants were founded; 832 is the timeline's year.)",
             "changes": [],
             "margin": "",
-            "id": "25780f363115"
+            "id": "91f32500b07f"
           },
           {
             "year": 848,
@@ -1661,7 +1661,7 @@
             "details": "The timeline marks the Sundering of House Tremere in the west; the East, cut off since Harun's death, plays no part.",
             "changes": [],
             "margin": "",
-            "id": "25317659f02e"
+            "id": "371c901dd416"
           },
           {
             "year": 961,
@@ -1670,7 +1670,7 @@
             "details": "The timeline records the execution of Tasgillia, an event of the Order in the west that the book does not tell.",
             "changes": [],
             "margin": "",
-            "id": "eb6923730ddf"
+            "id": "d7ac0b58cefa"
           },
           {
             "year": 969,
@@ -1679,7 +1679,7 @@
             "details": "The Isma'ili Fatimids, caliphs at Qayrawan since 909 on the strength of the mountain Berbers, send their general Jawhar to take Fustat and found Cairo beside it. Berber wizards march with them, working a magic no Muslim mage had met before, and the mages who stand against the invasion are wiped out. No magus of the Order ever meets them, and what their magic was is still unknown.",
             "changes": [],
             "margin": "",
-            "id": "b6a352f1c230"
+            "id": "39e37a498a96"
           },
           {
             "year": 1003,
@@ -1688,7 +1688,7 @@
             "details": "From 1003 to 1012 the Schism War tears the Order apart. The Tribunal of the East, still a forgotten backwater, has no recorded part in it.",
             "changes": [],
             "margin": "",
-            "id": "2324f293a8b6"
+            "id": "2fe15cd88640"
           },
           {
             "year": 1073,
@@ -1697,7 +1697,7 @@
             "details": "Magi raise a covenant on a crag of the Taurus in Lesser Armenia, one of the few founded between the East's first Tribunal and its second, and it grows rich on trade with covenants of the Roman Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "52fd342233ca"
+            "id": "ce413dc55724"
           },
           {
             "year": 1098,
@@ -1706,7 +1706,7 @@
             "details": "With the First Crusade trapped inside Antioch, a southern French servant, Peter Bartholomew, tells its leaders that Saint Andrew has shown him in visions where the Lance that pierced Christ lies buried. They dig beneath the cathedral of St Peter, find it, carry it out against the besiegers and break the siege. It is a crusade of portents: comets, saints' ghosts at the head of the armies, visions on every side.",
             "changes": [],
             "margin": "",
-            "id": "58cfaebb3776"
+            "id": "2dc4987ac980"
           },
           {
             "year": 1099,
@@ -1715,7 +1715,7 @@
             "details": "On 15 July the crusaders storm Jerusalem and slaughter its people, and Godfrey rules it as Defender of the Holy Sepulchre; a Fatimid army is beaten in August. The sorcerers of Jerusalem had cursed the siege engines and strengthened the walls, but the Muslims' mages are few, scattered and leaderless, and they cannot hold against the Hermetic magi who have come with the armies: Flambeau, Tremere and Tytalus above all, some for their faith, some for plunder, and some Flambeau to avenge a founder they believe Muslim wizards murdered. Arnulf, the new Latin patriarch, finds a relic of the True Cross buried at the Holy Sepulchre.\n\nSecrets\nEver since, the night of 15 July has been a night of the dead in Jerusalem: an Infernal aura of 5 replaces the Divine ones, and the dead of 1099 throng the streets until dawn.",
             "changes": [],
             "margin": "",
-            "id": "8fe7e1bd944b"
+            "id": "b25aa02d4505"
           },
           {
             "year": 1099,
@@ -1724,7 +1724,7 @@
             "details": "Just after the Crusade, Flambeau magi found a fortress hidden in the Sinai as a refuge for the Order and a school of war for their House's young.",
             "changes": [],
             "margin": "",
-            "id": "4efc4a825630"
+            "id": "a9c03526593e"
           },
           {
             "year": 1101,
@@ -1733,7 +1733,7 @@
             "details": "The crusaders carry the Lance into battle until 1101, when it is lost in Asia Minor; what became of it no one knows. The same year Redcaps found Venti Rosa, a covenant that is a caravan, carrying the Order's messages from covenant to covenant across the East.",
             "changes": [],
             "margin": "",
-            "id": "6780ec6523c5"
+            "id": "92990161a1b0"
           },
           {
             "year": 1112,
@@ -1742,7 +1742,7 @@
             "details": "Maryam al-Dimashqiyya, a young Jerbiton maga of Damascus, raises a fortress on a mountain five miles east of the city for magi who have chosen to fight their Hermetic brothers on the Muslims' side. She names it the House of Truth; in Arabic, Bayt al-Haqq, it means too the house of what is right.",
             "changes": [],
             "margin": "",
-            "id": "035695d87508"
+            "id": "8bb30493cb74"
           },
           {
             "year": 1129,
@@ -1751,7 +1751,7 @@
             "details": "After the Crusade, Verditius magi come for the spoils, Criamon to sit with the East's mystics, Jerbiton for its wealth and learning, and the newcomers stake out covenants and lands over the old covenants' protests. The Grand Tribunal of 1129 recognises the refounded Tribunal and, as the Order now holds covenants across the eastern lands, names it the Levant Tribunal. Recognition brings no order. For decades magi meddle openly in the wars, clash again and again with the Muslims' mages, and fight one another in Wizard Wars over the land's riches; some, sickened by their sodales' cruelty, take the Muslims' side. Crusading magi excuse their breaches of the Code as the price of keeping the Order in the East, counter-crusaders theirs as shielding the Muslims, and the quaesitores, some of them as deep in it as anyone, cannot rule the Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "91f0c00a6423"
+            "id": "57d6ac0a2635"
           },
           {
             "year": 1144,
@@ -1760,7 +1760,7 @@
             "details": "On Christmas Eve Zangi, atabeg of Mosul, takes Edessa and ends the first of the Latin states, with Muslim magi at his side. As Zangi, Nur al-Din and Salah al-Din unite the Muslims, mages gather to their banners.",
             "changes": [],
             "margin": "",
-            "id": "7b480d1365a8"
+            "id": "15e8808000b2"
           },
           {
             "year": 1148,
@@ -1769,7 +1769,7 @@
             "details": "The Second Crusade, led by Louis VII and Conrad III, turns on Damascus, Jerusalem's ally, and fails. Some Latins of the Levant sold their comrades for a chest of gold, but the city's sorcerers had enchanted the coins, and when the traitors came to spend them they were brass.",
             "changes": [],
             "margin": "",
-            "id": "6f3dc0a0e9e2"
+            "id": "01a27b0ec9cc"
           },
           {
             "year": 1148,
@@ -1778,7 +1778,7 @@
             "details": "Ruth of Bonisagus and Pariah of Criamon pitch a camp of tents by the Great Pyramid at Giza. (One of the book's two covenants at the pyramids; see the Pyramids (II), 1178.)",
             "changes": [],
             "margin": "",
-            "id": "1e786daa62f0"
+            "id": "01f205dfa869"
           },
           {
             "year": 1169,
@@ -1787,7 +1787,7 @@
             "details": "Aurora Borealis of Jerbiton arrives with Tau of Flambeau and founds Domus Pacis in a khan north of Jerusalem, where magi and the land's other wizards may meet and trade knowledge. In Egypt the Kurd Shirkuh becomes the Fatimid caliph's vizier and dies within the year, and his nephew Salah al-Din takes his place.",
             "changes": [],
             "margin": "",
-            "id": "39f342c83378"
+            "id": "fbb707751c50"
           },
           {
             "year": 1174,
@@ -1796,7 +1796,7 @@
             "details": "Nur al-Din, the Muslims' champion in Syria since he took Damascus in 1154, dies, and Salah al-Din begins to bring the Muslim Levant under his own rule. Some say the prophet al-Khidr taught Nur al-Din words of power that won him whatever he asked and carried him great distances in an instant.\n\nSecrets\nKhidr may also have taught him long life and foresight: the storyguide may decide he feigned his death, foreseeing Salah al-Din's destiny, and still works unseen for Islam.",
             "changes": [],
             "margin": "",
-            "id": "cf458480f147"
+            "id": "1ce514ec1ce0"
           },
           {
             "year": 1177,
@@ -1805,7 +1805,7 @@
             "details": "One of the twelve priests of Thoth and Anubis, hidden in a regio among the pyramids and the Sphinx since ancient times, dies, and as always a Gifted stranger is drawn to take the empty place. This time it is Heliobus Magister, a respected Bonisagus researcher, who arrives as Hermetic magi begin raiding the temple for its magic.",
             "changes": [],
             "margin": "",
-            "id": "5f1a2524877b"
+            "id": "16467489014b"
           },
           {
             "year": 1178,
@@ -1814,7 +1814,7 @@
             "details": "Heliobus brings the priesthood into House Ex Miscellanea and under the Code's protection, and the raids stop. (The book's second covenant at the pyramids; it may stand instead of the first, or beside it.)",
             "changes": [],
             "margin": "",
-            "id": "c002bdbf822e"
+            "id": "047730f4f2dc"
           },
           {
             "year": 1183,
@@ -1823,7 +1823,7 @@
             "details": "Seeing the danger Salah al-Din's rise means for the Order, Aurora approaches him, the caliph and their mages, travels to Baghdad to sketch a treaty, and offers it to the quaesitores of Magvillus, who seize on the chance to bring the Tribunal to heel.",
             "changes": [],
             "margin": "",
-            "id": "6320fe3e958e"
+            "id": "b4828724e2ca"
           },
           {
             "year": 1187,
@@ -1832,7 +1832,7 @@
             "details": "Salah al-Din destroys the Latin army at Hattin on 4 July and takes Jerusalem and most of the Latin states. Muslim mages working with him kill many Hermetic magi on the field and later lend magical artillery against the Latin castles, and by the year's end several of the great crusading covenants are gone. The survivors accuse the counter-crusaders of helping the Muslims, but nothing is ever proved. The relic of the True Cross is lost to Salah al-Din on the field.",
             "changes": [],
             "margin": "",
-            "id": "e219959497a6"
+            "id": "58a791cb2ed3"
           },
           {
             "year": 1187,
@@ -1841,7 +1841,7 @@
             "details": "Maryam al-Dimashqiyya and most of Aedes Veritatis's magi die at Hattin, though their side has won. Heloise of Criamon, the one left, defers to Maryam's wish, and her young filius Sharaf al-Din 'Umar takes the covenant; Heloise later goes, saying only that it was time, and is not seen again. At Petra the crusaders abandon their castle, leaving Urbs Rubra undisturbed.",
             "changes": [],
             "margin": "",
-            "id": "fa2ef82c616c"
+            "id": "2798c964ba5f"
           },
           {
             "year": 1188,
@@ -1850,7 +1850,7 @@
             "details": "Two young magi from France, the Flambeau Guillaume de Bourne and the Tytalus Rufus de Clary, plant a covenant on a hill north-east of Acre to keep the Order a lasting foothold on the coast. Amber of Tremere, rejecting her House's support for the Crusades, joins 'Umar at Aedes Veritatis. (By the book's ages Guillaume and Rufus were barely magi; the pack keeps the year.)",
             "changes": [],
             "margin": "",
-            "id": "9c97d852e5c1"
+            "id": "f3a8a3d3aa44"
           },
           {
             "year": 1192,
@@ -1859,7 +1859,7 @@
             "details": "After the Third Crusade retakes Acre and Richard I sells Cyprus to Guy of Lusignan, Richard and Salah al-Din agree on 2 September a three-year truce that leaves the coast to the Latins and Jerusalem to the Muslims. In Baghdad, Aurora's talks between the Order and the Muslims' rulers and mages draw to a close.",
             "changes": [],
             "margin": "",
-            "id": "ef56d32f3c1e"
+            "id": "ce279e770398"
           },
           {
             "year": 1193,
@@ -1868,7 +1868,7 @@
             "details": "Salah al-Din dies at Damascus on 4 March, and his sons and brother divide his empire.",
             "changes": [],
             "margin": "",
-            "id": "f8d6737b4933"
+            "id": "84c7249228c2"
           },
           {
             "year": 1193,
@@ -1877,7 +1877,7 @@
             "details": "Quaesitores from Magvillus made the Tribunal accept the Treaty Aurora had negotiated, ending the Order's war with the Muslims' mages. Crusading magi could no longer excuse breaches of the Code as defence, nor counter-Crusaders as protecting the Muslims.",
             "changes": [],
             "margin": "",
-            "id": "aa4ef417c297"
+            "id": "1a8ff1934424"
           },
           {
             "year": 1193,
@@ -1886,7 +1886,7 @@
             "details": "With the Treaty accepted, Aurora is invited to become a quaesitor, and accepts. She moves to Baghdad to keep the Treaty and founds the Hermetic Embassy there, near the caliph's palace, paid for by Magvillus; soon afterwards she becomes an archmaga.",
             "changes": [],
             "margin": "",
-            "id": "29218af249c1"
+            "id": "7cb9765d5cec"
           },
           {
             "year": 1195,
@@ -1895,7 +1895,7 @@
             "details": "The Order's most recent Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "b6cd304e691c"
+            "id": "a20e6dfb2fe4"
           },
           {
             "year": 1197,
@@ -1904,7 +1904,7 @@
             "details": "Esther of Verditius, an Englishwoman, comes to Domus Pacis and soon makes it a channel for trade between the Levant and the Roman Tribunal, breaking al-Arama's hold on the trade.",
             "changes": [],
             "margin": "",
-            "id": "2b56b0070d0d"
+            "id": "f400d3dbc029"
           },
           {
             "year": 1200,
@@ -1913,7 +1913,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1203.",
             "changes": [],
             "margin": "",
-            "id": "05aabcd519a6"
+            "id": "9d2b24732b66"
           },
           {
             "year": 1203,
@@ -1922,7 +1922,7 @@
             "details": "The renewal voted in 1200 takes effect: the Treaty runs another ten years.",
             "changes": [],
             "margin": "",
-            "id": "e81e3c134625"
+            "id": "43603abea985"
           },
           {
             "year": 1204,
@@ -1931,7 +1931,7 @@
             "details": "The Fourth Crusade takes Constantinople on 12 April and founds a Latin empire; few of its knights ever reach the Levant. Greek states rise at Nicaea and Trebizond, Theban magi follow the refugees east, and Thebes claims the border lands for them. War between the two Tribunals is averted by Aurora and quaesitores of both, who give Nicaea to Thebes and Trebizond to the Levant. (The book does not date the settlement.)",
             "changes": [],
             "margin": "",
-            "id": "992d5d2cfaa0"
+            "id": "1a24bcad3a3d"
           },
           {
             "year": 1207,
@@ -1940,7 +1940,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1213, barely. With Fade and Wraith out of reach, the quaesitores ruled Tau of Flambeau the eldest, and the Tribunal has met at Domus Pacis since.",
             "changes": [],
             "margin": "",
-            "id": "6aed82ea935a"
+            "id": "402c2752a92c"
           },
           {
             "year": 1213,
@@ -1949,7 +1949,7 @@
             "details": "The renewal won, barely, in 1207 takes effect. At his induction into the Order, Arash, apprentice of Rachel of Criamon, refuses the Oath of Hermes after a crisis of the spirit and swears the Treaty of Barcelona instead. Magi threaten him, and House Criamon spirits him away to Baghdad.",
             "changes": [],
             "margin": "",
-            "id": "edcf53ff91cc"
+            "id": "b532e8ea37e7"
           },
           {
             "year": 1214,
@@ -1958,7 +1958,7 @@
             "details": "The Treaty was not due until 1223, and is renewed only at the last meeting before it lapses, so this meeting had nothing to renew; the debate went on all the same.",
             "changes": [],
             "margin": "",
-            "id": "e66e64514e56"
+            "id": "5b0b7b774639"
           },
           {
             "year": 1215,
@@ -1967,7 +1967,7 @@
             "details": "Felix, born to covenfolk at Domus Pacis, whose Gift showed itself only at twenty-eight while he was a guard there, becomes a magus of Guernicus. His parens Raymond is killed soon after in a fight with a hedge wizard that lames Felix, who takes up Raymond's watch on House Criamon and the Kabbalists. (The book says five years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "d6001f21dbbe"
+            "id": "08b09d7b316b"
           },
           {
             "year": 1218,
@@ -1976,7 +1976,7 @@
             "details": "The crusaders strike at Egypt, the heart of Muslim power, and besiege Damietta. Al-Kamil offers them every old Latin land west of the Jordan and a thirty-year truce if they will leave Egypt, and they refuse. The war strains the Treaty of Baghdad as nothing has since 1193.",
             "changes": [],
             "margin": "",
-            "id": "c95c0d310c6a"
+            "id": "663e39504351"
           },
           {
             "year": 1219,
@@ -1985,7 +1985,7 @@
             "details": "Damietta falls to the Crusade. Two young magi, David of Tremere and Xydas of Bonisagus, found the True Cross in the city, with a few grogs and friends in the garrison, and call on the Order to join them. In Syria al-Mu'azzam pulls down Jerusalem's walls, so that the crusaders cannot hold the city if they take it.",
             "changes": [],
             "margin": "",
-            "id": "2fe19f0c4c82"
+            "id": "22768f4f674a"
           }
         ],
         "package_data": {},
@@ -2022,13 +2022,13 @@
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "One of the five families",
-            "id": "d38f41e34d3c"
+            "id": "feb75f7cd37a"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "One of the five families",
-            "id": "8a025d8716db"
+            "id": "fc2edc5e5d19"
           }
         ],
         "arms": {},
@@ -2112,13 +2112,13 @@
             "kind": "places",
             "target_id": "jinnistan",
             "note": "Their homes",
-            "id": "3458196f7d96"
+            "id": "5621da435649"
           },
           {
             "kind": "places",
             "target_id": "the_mountains_of_qaf",
             "note": "Their homeland's wall",
-            "id": "fe228a7e9bfd"
+            "id": "00724b235361"
           }
         ],
         "arms": {},
@@ -2477,7 +2477,7 @@
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Their head",
-            "id": "0b01c1334127"
+            "id": "a74e13188cf2"
           }
         ],
         "arms": {},
@@ -2712,7 +2712,7 @@
             "kind": "creatures",
             "target_id": "abd_al_misbah_the_servant_of_the_lamp",
             "note": "the marid of the lamp, wherever the lamp has gone",
-            "id": "2b82af18a882"
+            "id": "be13d16ceb99"
           }
         ],
         "arms": {},
@@ -2744,7 +2744,7 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Its leading member",
-            "id": "fcf7762ef7e1"
+            "id": "275a991e142d"
           }
         ],
         "arms": {},
@@ -2943,7 +2943,7 @@
             "kind": "creatures",
             "target_id": "al_qatil_the_slayer",
             "note": "the ghul who sells his sword to any army",
-            "id": "70d81fcfeea3"
+            "id": "eaff49f8c823"
           }
         ],
         "arms": {},
@@ -3295,7 +3295,7 @@
             "kind": "creatures",
             "target_id": "amirat_al_jabal_lady_emir_of_the_mountain",
             "note": "the marida who watches over the mountains' jinn",
-            "id": "14d758bbc09c"
+            "id": "58767a2fefd2"
           }
         ],
         "arms": {},
@@ -3455,7 +3455,7 @@
             "kind": "creatures",
             "target_id": "naddaha",
             "note": "the spiked crone who lurks by wells",
-            "id": "c12584b2db47"
+            "id": "f1388ba211fe"
           }
         ],
         "arms": {},
@@ -3870,37 +3870,37 @@
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Amber's familiar",
-            "id": "50fcda955654"
+            "id": "98a43a8b1c4f"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "a ghost who answers Wardat's summons",
-            "id": "39b5f3034eb5"
+            "id": "c3bd136c0e32"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit who answers Wardat's summons",
-            "id": "55a1bfb6ee10"
+            "id": "9945a4fd7dbf"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon Wardat can summon but not command",
-            "id": "d033dce719e7"
+            "id": "437eb4a1576d"
           },
           {
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to Wardat's service",
-            "id": "34dc2c3283fe"
+            "id": "ea4fcff71fef"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to Wardat's service",
-            "id": "08198fa0e210"
+            "id": "ffcb3b70ba23"
           }
         ],
         "arms": {},
@@ -4074,19 +4074,19 @@
             "kind": "places",
             "target_id": "acre",
             "note": "The kingdom's capital since 1187",
-            "id": "2bb6c3485242"
+            "id": "c2e2449c44b0"
           },
           {
             "kind": "places",
             "target_id": "the_papal_legate",
             "note": "Claims the Crusade's conquests for the Church",
-            "id": "f7383c10f7c9"
+            "id": "2e395aa5e201"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "John of Brienne fights in it",
-            "id": "766ee656a4a2"
+            "id": "d1741076a4e6"
           }
         ],
         "arms": {},
@@ -4116,13 +4116,13 @@
             "kind": "places",
             "target_id": "tripoli",
             "note": "His county's capital",
-            "id": "4cd81fe445df"
+            "id": "b5a06944dbc0"
           },
           {
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "Held by the same man, Bohemond IV",
-            "id": "295dd95d1930"
+            "id": "8424ff2c6826"
           }
         ],
         "arms": {},
@@ -4152,13 +4152,13 @@
             "kind": "places",
             "target_id": "antioch",
             "note": "His capital, retaken in 1219",
-            "id": "c5c9bc569c98"
+            "id": "f5b95a2283fd"
           },
           {
             "kind": "places",
             "target_id": "count_of_tripoli",
             "note": "Held by the same man, Bohemond IV",
-            "id": "92954814fd19"
+            "id": "76f52a29b377"
           }
         ],
         "arms": {},
@@ -4188,13 +4188,13 @@
             "kind": "places",
             "target_id": "nicosia",
             "note": "His capital",
-            "id": "b3cb14b7c613"
+            "id": "d6ff0155abec"
           },
           {
             "kind": "places",
             "target_id": "famagusta",
             "note": "His island's rising port",
-            "id": "d922b3df2ba2"
+            "id": "699fecd559ed"
           }
         ],
         "arms": {},
@@ -4224,13 +4224,13 @@
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "His uncle, who twice put him out of Antioch",
-            "id": "1b1668107469"
+            "id": "f2adc9f32180"
           },
           {
             "kind": "places",
             "target_id": "tarsus",
             "note": "His seat, where Constantine is favoured",
-            "id": "bf96f04022fc"
+            "id": "0571d9998057"
           }
         ],
         "arms": {},
@@ -4262,7 +4262,7 @@
             "kind": "covenants",
             "target_id": "urania",
             "note": "Lies in their lands",
-            "id": "f1cb08103183"
+            "id": "e0fef61cc0c5"
           }
         ],
         "arms": {},
@@ -4292,25 +4292,25 @@
             "kind": "places",
             "target_id": "damascus",
             "note": "His capital",
-            "id": "4e0888b31374"
+            "id": "a34fa3adb3d3"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "His; he razed it in 1219",
-            "id": "e5cad362791f"
+            "id": "9b4d7c636f51"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "His brother and rival, head of the family",
-            "id": "919a742e96eb"
+            "id": "d96816e517f6"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Buys its quarry stone",
-            "id": "905c801f00fc"
+            "id": "800f16c57dbf"
           }
         ],
         "arms": {},
@@ -4367,13 +4367,13 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "The sect they belong to",
-            "id": "f1981d4edbb4"
+            "id": "7f9d83a49020"
           },
           {
             "kind": "places",
             "target_id": "the_old_man_of_the_mountain",
             "note": "Their chief",
-            "id": "bbfe39c54e0d"
+            "id": "ddba7322a854"
           }
         ],
         "arms": {},
@@ -4478,13 +4478,13 @@
             "kind": "places",
             "target_id": "chastel_p_lerin",
             "note": "Its castle",
-            "id": "ac35dabff7cc"
+            "id": "5ab6193e8d3b"
           },
           {
             "kind": "places",
             "target_id": "tortosa",
             "note": "Its castle",
-            "id": "03b63ede0ec3"
+            "id": "2499a7278cef"
           }
         ],
         "arms": {},
@@ -4516,13 +4516,13 @@
             "kind": "places",
             "target_id": "krak_des_chevaliers",
             "note": "Its castle",
-            "id": "4cdb4cc3fb0d"
+            "id": "e1452b04dd94"
           },
           {
             "kind": "places",
             "target_id": "marqab",
             "note": "Its castle",
-            "id": "0e0e961f2ef9"
+            "id": "b7658d44f009"
           }
         ],
         "arms": {},
@@ -4554,7 +4554,7 @@
             "kind": "places",
             "target_id": "montfort",
             "note": "Its castle",
-            "id": "d61e01b2ffd0"
+            "id": "9207afbd4263"
           }
         ],
         "arms": {},
@@ -4853,13 +4853,13 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Leads it as the Pope's legate",
-            "id": "2128a338f78a"
+            "id": "02b4107ecc52"
           },
           {
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "Quarrels with John of Brienne",
-            "id": "6dac386b6531"
+            "id": "254e80e0b411"
           }
         ],
         "arms": {},
@@ -4888,7 +4888,7 @@
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "The king chooses the patriarch",
-            "id": "54f8e5e0c4e8"
+            "id": "fecb1842b2bb"
           }
         ],
         "arms": {},
@@ -5285,25 +5285,25 @@
             "kind": "places",
             "target_id": "the_syrian_nizaris",
             "note": "Another Shi'i branch",
-            "id": "f52a6fa2bed7"
+            "id": "4419b90b6671"
           },
           {
             "kind": "places",
             "target_id": "the_nusayris",
             "note": "Their splinter",
-            "id": "16e7ca9645dd"
+            "id": "258c7b39e643"
           },
           {
             "kind": "places",
             "target_id": "the_druze",
             "note": "Another Shi'i branch",
-            "id": "136e491ff8b2"
+            "id": "886ece522547"
           },
           {
             "kind": "places",
             "target_id": "the_bedouin",
             "note": "Many are Twelvers",
-            "id": "1f834991b6f0"
+            "id": "0f49cfb5c7e2"
           }
         ],
         "arms": {},
@@ -5364,91 +5364,91 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Brings the renewal",
-            "id": "b1b8cb2315e9"
+            "id": "3b06ef99dc28"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Hosts the vote; for renewal",
-            "id": "fa7bdf98bde0"
+            "id": "ceb06bd93459"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "For renewal",
-            "id": "443cd4148950"
+            "id": "b1711be3158d"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Leads the vote against",
-            "id": "6f1058af20dc"
+            "id": "d35d4726d03b"
           },
           {
             "kind": "covenants",
             "target_id": "para_belli",
             "note": "Against renewal",
-            "id": "64780dbdc116"
+            "id": "7d8947539c0c"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "Against renewal",
-            "id": "87878fe50726"
+            "id": "b4dd5aaf287f"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "Twelve votes",
-            "id": "9a6b471f45c9"
+            "id": "020c3eddaa2d"
           },
           {
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Its maker",
-            "id": "c0ba5e1a4588"
+            "id": "8ba1da74f694"
           },
           {
             "kind": "characters",
             "target_id": "scipio",
             "note": "In the chair",
-            "id": "32ad9224e5f9"
+            "id": "c486d04a4853"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "The Praeco, the host",
-            "id": "e778fd356bdd"
+            "id": "ef624219e7af"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Speaks against",
-            "id": "d476ed9f3fd7"
+            "id": "f0fda29a883f"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Holds twelve votes",
-            "id": "351d1e3963ab"
+            "id": "96a35af343da"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "The other party",
-            "id": "7b1ec3fe6e72"
+            "id": "cfd30da42454"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Strains the peace",
-            "id": "050a738fda93"
+            "id": "4836b5e4add1"
           },
           {
             "kind": "places",
             "target_id": "the_islamic_tradition",
             "note": "Suspected of meddling",
-            "id": "c05a7c49ea89"
+            "id": "9cc659cc656f"
           }
         ],
         "arms": {},
@@ -5519,55 +5519,55 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Wages it",
-            "id": "66200e4b3587"
+            "id": "25eb4a614a32"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Its target",
-            "id": "697ad47a9a59"
+            "id": "81a483b4d2ba"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Full of both sides' spies",
-            "id": "f33e502036ed"
+            "id": "d1cdb96fe4b8"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Troubled by both",
-            "id": "cc05302a72fc"
+            "id": "d05309591fcf"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Leads it",
-            "id": "4c570ada715c"
+            "id": "21db5f80bb37"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "Fights beside 'Umar",
-            "id": "ebbb90d43c15"
+            "id": "af034b4b772b"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "Fights too",
-            "id": "71a345911108"
+            "id": "7d0f26274df5"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "Its target",
-            "id": "f1cc4a711043"
+            "id": "62cf87cbea0f"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Its target",
-            "id": "92c08c41726a"
+            "id": "e60ed6f0e0a8"
           }
         ],
         "arms": {},
@@ -5639,55 +5639,55 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "The servant",
-            "id": "028e3f6e194a"
+            "id": "da95cfefac9e"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "His friend, unknowing",
-            "id": "ec65633c7528"
+            "id": "7f2c6913b41a"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "His sodalis",
-            "id": "de0965eb2ebf"
+            "id": "4a86afcea1fc"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "A quaesitor who may find out",
-            "id": "9ddc5d246788"
+            "id": "6e21b1458713"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "His covenant",
-            "id": "401da45f754f"
+            "id": "9e52c439f734"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Wants him Renounced",
-            "id": "ad97314d8377"
+            "id": "bafb43df038e"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "One of the sultans he serves",
-            "id": "57123560d198"
+            "id": "2bed0914b43a"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_damascus",
             "note": "His sultan at Damascus",
-            "id": "1a8c5cc65f81"
+            "id": "f7c757ec7e8c"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Where he plays the emir",
-            "id": "79837e7b72f9"
+            "id": "692d26443a85"
           }
         ],
         "arms": {},
@@ -5749,37 +5749,37 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The trader",
-            "id": "68d5460634f0"
+            "id": "c9cdd548009d"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Quaesitor under her roof",
-            "id": "405a5cb2a3b5"
+            "id": "2bd24286313c"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Her covenant's head",
-            "id": "d2123dc0d9a2"
+            "id": "e9e1922bb0a0"
           },
           {
             "kind": "characters",
             "target_id": "hildegard",
             "note": "Al-Arama's",
-            "id": "92ac320a0f1c"
+            "id": "6253e3386dc4"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her covenant",
-            "id": "6abe7e0b8063"
+            "id": "cce672ee5061"
           },
           {
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Her rival in trade",
-            "id": "652fb5cff285"
+            "id": "f6a3e6587bac"
           }
         ],
         "arms": {},
@@ -5841,19 +5841,19 @@
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "The blackmailer",
-            "id": "503d7661c36f"
+            "id": "e32b04f0fb52"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "His sodalis",
-            "id": "d13affefa117"
+            "id": "1fc8bd6432d5"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "His covenant",
-            "id": "977142734dc0"
+            "id": "2e8b755e10d9"
           }
         ],
         "arms": {},
@@ -5915,37 +5915,37 @@
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "The rebel",
-            "id": "2413332ceaf8"
+            "id": "9bfb1787d5e9"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her friend",
-            "id": "0e28b004d595"
+            "id": "cdd82c194037"
           },
           {
             "kind": "characters",
             "target_id": "david",
             "note": "A Tremere of the Levant",
-            "id": "305743ae2c4c"
+            "id": "fba75dfd74ec"
           },
           {
             "kind": "characters",
             "target_id": "xerxes",
             "note": "A Tremere of the Levant",
-            "id": "9a9b2e19126a"
+            "id": "2b698b0cc0b2"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Her familiar",
-            "id": "63a1e9341d91"
+            "id": "d0f17976a162"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Her covenant",
-            "id": "64564456997a"
+            "id": "da4b51e6ba1f"
           }
         ],
         "arms": {},
@@ -6007,31 +6007,31 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Failing",
-            "id": "2fc790ecb9b6"
+            "id": "33ba41ed5e35"
           },
           {
             "kind": "characters",
             "target_id": "spiral",
             "note": "Her unfit heir",
-            "id": "e55659b02e79"
+            "id": "20ced99b2fa0"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Her covenant",
-            "id": "8d93a2d939ab"
+            "id": "1d87d03ac033"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her first covenant",
-            "id": "706c23670276"
+            "id": "396f2a63aecb"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Her counterpart",
-            "id": "ddfecdd81f71"
+            "id": "a8a095536e04"
           }
         ],
         "arms": {},
@@ -6093,31 +6093,31 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "The eldest",
-            "id": "0aedad9262cf"
+            "id": "8c9c40bbcb12"
           },
           {
             "kind": "characters",
             "target_id": "wraith",
             "note": "Praeco by right",
-            "id": "a6e48125eed2"
+            "id": "1f341f8d639c"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Praeco by ruling",
-            "id": "fd5e7960abac"
+            "id": "e369d7f995f9"
           },
           {
             "kind": "covenants",
             "target_id": "urbs_rubra",
             "note": "Shut by its jinn",
-            "id": "2fc54a1f3517"
+            "id": "2ea86216bc98"
           },
           {
             "kind": "places",
             "target_id": "petra",
             "note": "The Red City",
-            "id": "ded5210c75da"
+            "id": "b3036e7cf22a"
           }
         ],
         "arms": {},
@@ -6179,19 +6179,19 @@
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "The kingmaker",
-            "id": "1191be2493be"
+            "id": "21908969d48c"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "His twelve votes",
-            "id": "96df48f9c8e5"
+            "id": "1d692fef046a"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The hidden temple",
-            "id": "088e128ef4e7"
+            "id": "f93435c477a7"
           }
         ],
         "arms": {},
@@ -6253,25 +6253,25 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Made the peace",
-            "id": "0df6c338630e"
+            "id": "f87d5e1d989d"
           },
           {
             "kind": "places",
             "target_id": "asia_minor",
             "note": "The border",
-            "id": "6dd5e2767626"
+            "id": "5abe304f2d02"
           },
           {
             "kind": "places",
             "target_id": "emperor_of_trebizond",
             "note": "The Levant's side",
-            "id": "07dfa41e6584"
+            "id": "bc67bf7de1ee"
           },
           {
             "kind": "places",
             "target_id": "sultan_of_rum",
             "note": "Rules between",
-            "id": "cc59fcfe586f"
+            "id": "36391f57ffc8"
           }
         ],
         "arms": {},
@@ -6323,25 +6323,25 @@
             "kind": "characters",
             "target_id": "arash",
             "note": "Outside the Order",
-            "id": "86bea24ed068"
+            "id": "3531ca7874ef"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Watches the Kabbalists",
-            "id": "0e8f793c7291"
+            "id": "9bac400f5381"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "His neighbour in Baghdad",
-            "id": "cb72de5f842b"
+            "id": "edbeb96a7bc5"
           },
           {
             "kind": "places",
             "target_id": "baghdad",
             "note": "Where he hides",
-            "id": "669fab7d8576"
+            "id": "f073b5fc1cda"
           }
         ],
         "arms": {},
@@ -6403,31 +6403,31 @@
             "kind": "characters",
             "target_id": "david",
             "note": "Sends the call",
-            "id": "43ea23379030"
+            "id": "617ca345e644"
           },
           {
             "kind": "characters",
             "target_id": "xydas",
             "note": "His sodalis",
-            "id": "6e17bee92ff9"
+            "id": "05a50360be40"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "The covenant",
-            "id": "f72849c07430"
+            "id": "0fad4b449e9f"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Its fortunes",
-            "id": "4de5cc7c62f1"
+            "id": "58c8e410d283"
           },
           {
             "kind": "places",
             "target_id": "damietta",
             "note": "Its city",
-            "id": "257a44e58164"
+            "id": "7920569125bd"
           }
         ],
         "arms": {},
@@ -6489,37 +6489,37 @@
             "kind": "characters",
             "target_id": "ruth",
             "note": "Would open them",
-            "id": "f3b4d331b920"
+            "id": "8c6e94dc8432"
           },
           {
             "kind": "characters",
             "target_id": "pariah",
             "note": "Would open them",
-            "id": "f600bc80df09"
+            "id": "0277e76678b9"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Below, in the regio",
-            "id": "a04831d6523a"
+            "id": "047389492220"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_i",
             "note": "The diggers",
-            "id": "a0395e3be910"
+            "id": "b0573d1a7995"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "The hidden temple",
-            "id": "2935d22fce31"
+            "id": "26190937ed4d"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The pyramids",
-            "id": "da2755fb1fac"
+            "id": "7399e1f19e6d"
           }
         ],
         "arms": {},
@@ -7155,7 +7155,7 @@
             "xp": 55
           },
           "ignem": {
-            "xp": 136
+            "xp": 151
           },
           "imaginem": {
             "xp": 6
@@ -7190,6 +7190,13 @@
             "category": "General",
             "xp": 30,
             "specialty": "fist",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 105,
+            "specialty": "Ignem",
             "xp_table": "ability"
           },
           {
@@ -7277,17 +7284,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 50,
-            "specialty": "heroes",
-            "xp_table": "ability"
-          },
-          {
             "name": "Area Lore: Levant Tribunal",
             "category": "General",
-            "xp": 50,
-            "specialty": "magical sites",
+            "xp": 100,
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -7309,13 +7309,6 @@
             "category": "Arcane",
             "xp": 75,
             "specialty": "Mentem",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 75,
-            "specialty": "Terram",
             "xp_table": "ability"
           },
           {
@@ -7541,7 +7534,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_wizard_s_flood",
+            "spell_id": "spell_breaking_the_perpetual_drought",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -7649,43 +7642,43 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_chaos_of_the_angry_waves",
+            "spell_id": "spell_change_the_river_s_path",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_catapult_of_the_mighty_winds",
+            "spell_id": "spell_fulgurous_orb",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_embracing_the_downy_arms_of_the_nephelae",
+            "spell_id": "spell_the_travelling_thistledown",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_movement_within_the_sirocco",
+            "spell_id": "spell_call_aeolus_servants",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_ward_against_the_sirocco",
+            "spell_id": "spell_prison_of_the_zephyrs",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_self_immolation",
+            "spell_id": "spell_breath_of_vulcan",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_unified_flame",
+            "spell_id": "spell_curse_of_the_attraction_of_the_fire",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -7709,7 +7702,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_rainbow_bridge",
+            "spell_id": "spell_heat_of_hell_s_impending_doom",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -7748,6 +7741,174 @@
             "page": "65",
             "experimental_effects": [],
             "details_missing": false
+          },
+          {
+            "id": "spell_breaking_the_perpetual_drought",
+            "name": "Breaking the Perpetual Drought",
+            "technique": "Creo",
+            "form": "Aquam",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +1 Touch, +2 Sun, +4 Boundary)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Boundary",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_change_the_river_s_path",
+            "name": "Change the River's Path",
+            "technique": "Rego",
+            "form": "Aquam",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +2 Voice, +1 Conc, +1 Part, +1 size)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Concentration",
+            "target": "Part",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_fulgurous_orb",
+            "name": "Fulgurous Orb",
+            "technique": "Creo",
+            "form": "Auram",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand. (Base 20, +2 Voice, +1 thunderclap)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Momentary",
+            "target": "Room",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_the_travelling_thistledown",
+            "name": "The Travelling Thistledown",
+            "technique": "Rego",
+            "form": "Auram",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Touch, +2 Sun)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_call_aeolus_servants",
+            "name": "Call Aeolus' Servants",
+            "technique": "Rego",
+            "form": "Auram",
+            "level": 25,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +2 Voice, +2 Sun, +2 Room)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Sun",
+            "target": "Room",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_prison_of_the_zephyrs",
+            "name": "Prison of the Zephyrs",
+            "technique": "Rego",
+            "form": "Auram",
+            "level": 25,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +2 Voice, +2 Sun)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_breath_of_vulcan",
+            "name": "Breath of Vulcan",
+            "technique": "Creo",
+            "form": "Ignem",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand. (Base 15, +2 Voice, +2 Room)",
+            "requisites": [
+              "Auram",
+              "Terram"
+            ],
+            "range": "Voice",
+            "duration": "Momentary",
+            "target": "Room",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_curse_of_the_attraction_of_the_fire",
+            "name": "Curse of the Attraction of the Fire",
+            "technique": "Rego",
+            "form": "Ignem",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_heat_of_hell_s_impending_doom",
+            "name": "Heat of Hell's Impending Doom",
+            "technique": "Muto",
+            "form": "Auram",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +1 Touch, +1 Conc, +4 Boundary, +1 unnatural, Ritual)",
+            "requisites": [
+              "Rego",
+              "Ignem"
+            ],
+            "range": "Touch",
+            "duration": "Concentration",
+            "target": "Boundary",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
           }
         ],
         "inventory": [],
@@ -7779,7 +7940,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Every spell he knows the book writes with Islamic Ranges, Durations and Targets; here they are the catalog's Hermetic ones, which his Poorly-Meshed Hermetic-Islamic Magic lets a troupe cast the Islamic way (SiS gives both levels). His own The Wrath of Allah keeps its Islamic terms.\nEquipment: his quarterstaff, a talisman attuned to repelling (+2), to hurling missiles (+3) and to moving (+4) and destroying (+4) things at a distance, holding two effects of six uses a day: tapped twice on the ground it turns aside wooden and metal weapons that come within reach (ReHe(Te), the book's level 35 in Islamic terms), and tapped three times it carries him as the Seven-League Stride (ReCo 30). A plain brass ring is his voting sigil; a shadow crosses his face whenever he casts. His last longevity ritual needed four rare ingredients: his first milk tooth, dust from where he cast his first spell, chips of his parents' bones and stone from the ruins of the house he grew up in.\nAfflictions as printed: visibly aging, sore knees. Twilight has cost him his Gentle Gift (now plainly Gifted), made his magic clumsy, and once added to his Penetration.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 72 as printed (looks 54); Twilight Points 14 / 3 = Warping 4; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Elementalist as Elemental Magic; Jack of All Trades as Jack-of-All-Trades; Well Traveled as Well-Traveled; Obligations as Dutybound: to the Ayyubid sultans; Dark Secret: servant of the Ayyubids; Vow (Minor): fealty to the Ayyubids; Obsession as Obsessed (Minor): the counter-Crusade; Driving Goal as Driven (Minor): rare longevity ingredients.\nAbilities: Affinity Elements 5 dropped; Brawling 3 to Brawl; Certamen 3 dropped; Hermes Lore 4 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Legend Lore 4 to Magic Lore; Levant Lore 4 to Area Lore: Levant Tribunal; Longshaft Weapon 4 to Great Weapon; Scribe Arabic 4 to Artes Liberales; Scribe Latin 4 to Artes Liberales.\nSpells: Breaking the Perpetual Drought for Wizard's Flood; Parting the Waves as Parting of the Waves; The Seven-League Stride as Seven-League Stride; Change the River's Path for Chaos of the Angry Waves; Fulgurous Orb for Catapult of the Mighty Winds; The Travelling Thistledown for Embracing the Downy Arms of the Nephelae; Call Aeolus' Servants for Movement Within the Sirocco; Prison of the Zephyrs for Ward Against the Sirocco; Breath of Vulcan for Self Immolation; Curse of the Attraction of the Fire for Unified Flame; Heat of Hell's Impending Doom for Rainbow Bridge; At the catalog's level or Art: Crest of the Earth Wave ReTe 25 to ReTe 20; Earth Shock ReTe 25 to ReTe 30; Wall of Protecting Stone CrTe 30 to CrTe 25; Circling Winds of Protection ReAu 15 to CrAu 20; Parting the Waves ReAq 35 to ReAq 30; Pull of the Watery Grave ReAq 25 to ReAq 35; Clouds of Rain and Thunder CrAu 20 to CrAu 25; Wings of the Soaring Wind ReAu 20 to CrAu 30; Gathering of the Stormy Might ReAu 30 to ReAu 40; Pull of the Skybound Winds ReAu 30 to CrAu 30; The Chirurgeon's Healing Touch CrCo 25 to CrCo 20; Sight of the True Form InCo 25 to InCo general; The Seven-League Stride ReCo 35 to ReCo 30; Burst of the Sweeping Flames ReIg 20 to ReIg 25; Ward Against Heat and Flames ReIg 30 to ReIg 25; Stone Tell of the Mind that Sits InTe 35 to InTe 30.",
+          "biography": "Every spell he knows the book writes with Islamic Ranges, Durations and Targets; here they are the catalog's Hermetic ones, which his Poorly-Meshed Hermetic-Islamic Magic lets a troupe cast the Islamic way (SiS gives both levels). His own The Wrath of Allah keeps its Islamic terms.\nEquipment: his quarterstaff, a talisman attuned to repelling (+2), to hurling missiles (+3) and to moving (+4) and destroying (+4) things at a distance, holding two effects of six uses a day: tapped twice on the ground it turns aside wooden and metal weapons that come within reach (ReHe(Te), the book's level 35 in Islamic terms), and tapped three times it carries him as the Seven-League Stride (ReCo 30). A plain brass ring is his voting sigil; a shadow crosses his face whenever he casts. His last longevity ritual needed four rare ingredients: his first milk tooth, dust from where he cast his first spell, chips of his parents' bones and stone from the ruins of the house he grew up in.\nAfflictions as printed: visibly aging, sore knees. Twilight has cost him his Gentle Gift (now plainly Gifted), made his magic clumsy, and once added to his Penetration.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 72 as printed (looks 54); Twilight Points 14 / 3 = Warping 4; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Elementalist as Elemental Magic; Jack of All Trades as Jack-of-All-Trades; Well Traveled as Well-Traveled; Obligations as Dutybound: to the Ayyubid sultans; Dark Secret: servant of the Ayyubids; Vow (Minor): fealty to the Ayyubids; Obsession as Obsessed (Minor): the counter-Crusade; Driving Goal as Driven (Minor): rare longevity ingredients.\nAbilities: Affinity Elements 5 to Ignem, 15 xp; Brawling 3 to Brawl; Certamen 3 to Penetration; Hermes Lore 4 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Legend Lore 4 to Area Lore: Levant Tribunal; Levant Lore 4 to Area Lore: Levant Tribunal; Longshaft Weapon 4 to Great Weapon; Scribe Arabic 4 to Artes Liberales; Scribe Latin 4 to Artes Liberales.\nSpells: Parting the Waves as Parting of the Waves; The Seven-League Stride as Seven-League Stride; At the catalog's level or Art: Crest of the Earth Wave ReTe 25 to ReTe 20; Earth Shock ReTe 25 to ReTe 30; Wall of Protecting Stone CrTe 30 to CrTe 25; Circling Winds of Protection ReAu 15 to CrAu 20; Breaking the Perpetual Drought CrAq 35 to level 30; Parting the Waves ReAq 35 to ReAq 30; Pull of the Watery Grave ReAq 25 to ReAq 35; Clouds of Rain and Thunder CrAu 20 to CrAu 25; Wings of the Soaring Wind ReAu 20 to CrAu 30; Gathering of the Stormy Might ReAu 30 to ReAu 40; Pull of the Skybound Winds ReAu 30 to CrAu 30; The Chirurgeon's Healing Touch CrCo 25 to CrCo 20; Sight of the True Form InCo 25 to InCo general; The Seven-League Stride ReCo 35 to ReCo 30; Burst of the Sweeping Flames ReIg 20 to ReIg 25; Ward Against Heat and Flames ReIg 30 to ReIg 25; The Travelling Thistledown ReAu 25 to level 20; Breath of Vulcan CrIg(Au,Te) 30 to level 35; Stone Tell of the Mind that Sits InTe 35 to InTe 30.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -8023,7 +8184,7 @@
             "xp": 66
           },
           "animal": {
-            "xp": 171
+            "xp": 181
           },
           "aquam": {
             "xp": 28
@@ -8073,6 +8234,13 @@
             "category": "General",
             "xp": 50,
             "specialty": "in cat form",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 80,
+            "specialty": "Animal",
             "xp_table": "ability"
           },
           {
@@ -8139,17 +8307,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 15,
-            "specialty": "beasts",
-            "xp_table": "ability"
-          },
-          {
             "name": "Area Lore: Levant Tribunal",
             "category": "General",
-            "xp": 15,
-            "specialty": "personalities",
+            "xp": 30,
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -8164,13 +8325,6 @@
             "category": "Arcane",
             "xp": 50,
             "specialty": "Mentem",
-            "xp_table": "ability"
-          },
-          {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 30,
-            "specialty": "Corpus",
             "xp_table": "ability"
           },
           {
@@ -8392,7 +8546,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_flight_perfected",
+            "spell_id": "spell_full_health_of_beast_and_bird",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -8524,19 +8678,19 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_stance_of_the_patient_tree",
+            "spell_id": "spell_blessing_of_antaeus_fortitude",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_cloak_of_fins_and_scales",
+            "spell_id": "spell_gift_of_the_buoyant_gosling",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_my_old_and_dear_friend",
+            "spell_id": "spell_humility_of_the_vanquished_knight",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -8567,6 +8721,78 @@
           }
         ],
         "invented_spells": [
+          {
+            "id": "spell_full_health_of_beast_and_bird",
+            "name": "Full Health of Beast and Bird",
+            "technique": "Creo",
+            "form": "Animal",
+            "level": 25,
+            "description": "From the stat block in Secrets in Sand. (Base 20, +1 Touch, Ritual)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_blessing_of_antaeus_fortitude",
+            "name": "Blessing of Antaeus' Fortitude",
+            "technique": "Muto",
+            "form": "Corpus",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand. (Base 25, +2 Sun)",
+            "requisites": [],
+            "range": "Personal",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_gift_of_the_buoyant_gosling",
+            "name": "Gift of the Buoyant Gosling",
+            "technique": "Muto",
+            "form": "Corpus",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +3 Sight, +2 Sun)",
+            "requisites": [],
+            "range": "Sight",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_humility_of_the_vanquished_knight",
+            "name": "Humility of the Vanquished Knight",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
           {
             "id": "spell_shape_of_the_barnyard_creeper",
             "name": "Shape of the Barnyard Creeper",
@@ -8655,7 +8881,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Her voting sigil, a ruby bracelet, is in her parens Catullus's keeping; her eyes flash gold when she casts. She carries props for changing shape. A reagent mixed wrongly in her apprenticeship blew up, threw her briefly into Twilight and left her skin, hair and eyes golden; binding Luigi slit her pupils like a cat's. She has invented and mastered three spells of her own, the cat and leopard shapes and From Cat to Cat.\nHer Virtues outweigh her Flaws, as printed; the pack does not trim them (L11). The familiar bond gives her True Friend and Loyal (Luigi) +3.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 54 as printed (looks 37); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Knack with Certamen as Minor Magical Focus; Mentor: Catullus of Tremere; Felines as Special Circumstances; No Sigil dropped (the voting sigil is a token, not a Flaw now); Twilight Points dropped (its points are in the Warping); Oversensitive (Minor): being controlled; Disfigured: golden skin; Bad Reputation dropped (kept as the Reputation it printed).\nAbilities: Affinity Felines 4 dropped; Brawling 4 to Brawl; Certamen 4 dropped; Hermes Lore 3 to Organization Lore: Order of Hermes; Hermetic Law 2 to Code of Hermes; Legend Lore 2 to Magic Lore; Levant Lore 2 to Area Lore: Levant Tribunal; Scribe Arabic 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales.\nSpells: Confusion of the Numbed Will as Confusion of the Numb Will; Full Health of Beast and Bird for Flight Perfected; Transformation of the Ravenous Beast to a Torpid Toad as Transformation Of The Ravenous Beast To The Torpid Toad; Blessing of Antaeus' Fortitude for Stance of the Patient Tree; Gift of the Buoyant Gosling for Cloak of Fins and Scales; Humility of the Vanquished Knight for My Old and Dear Friend; At the catalog's level or Art: Weaver's Trap of Webs CrAn 20 to CrAn 35; Cripple the Howling Wolf PeAn 20 to PeAn 25; The Gentle Beast ReAn 20 to ReAn 25; Circle of Beast Warding ReAn 25 to ReAn 5; Sight of the True Form InCo 25 to InCo general; Steed of Vengeance MuAn 30 to MuAn 35; Transformation of the Ravenous Beast to a Torpid Toad MuAn 30 to MuAn 25; Curse of Circe MuCo(An) 35 to MuCo 30; Preternatural Growth and Shrinking MuCo 20 to MuCo 15.",
+          "biography": "Her voting sigil, a ruby bracelet, is in her parens Catullus's keeping; her eyes flash gold when she casts. She carries props for changing shape. A reagent mixed wrongly in her apprenticeship blew up, threw her briefly into Twilight and left her skin, hair and eyes golden; binding Luigi slit her pupils like a cat's. She has invented and mastered three spells of her own, the cat and leopard shapes and From Cat to Cat.\nHer Virtues outweigh her Flaws, as printed; the pack does not trim them (L11). The familiar bond gives her True Friend and Loyal (Luigi) +3.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 54 as printed (looks 37); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Knack with Certamen as Minor Magical Focus; Mentor: Catullus of Tremere; Felines as Special Circumstances; No Sigil dropped (the voting sigil is a token, not a Flaw now); Twilight Points dropped (its points are in the Warping); Oversensitive (Minor): being controlled; Disfigured: golden skin; Bad Reputation dropped (kept as the Reputation it printed).\nAbilities: Affinity Felines 4 to Animal, 10 xp; Brawling 4 to Brawl; Certamen 4 to Penetration; Hermes Lore 3 to Organization Lore: Order of Hermes; Hermetic Law 2 to Code of Hermes; Legend Lore 2 to Area Lore: Levant Tribunal; Levant Lore 2 to Area Lore: Levant Tribunal; Scribe Arabic 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales.\nSpells: Confusion of the Numbed Will as Confusion of the Numb Will; Transformation of the Ravenous Beast to a Torpid Toad as Transformation Of The Ravenous Beast To The Torpid Toad; At the catalog's level or Art: Weaver's Trap of Webs CrAn 20 to CrAn 35; Cripple the Howling Wolf PeAn 20 to PeAn 25; The Gentle Beast ReAn 20 to ReAn 25; Circle of Beast Warding ReAn 25 to ReAn 5; Sight of the True Form InCo 25 to InCo general; Steed of Vengeance MuAn 30 to MuAn 35; Transformation of the Ravenous Beast to a Torpid Toad MuAn 30 to MuAn 25; Curse of Circe MuCo(An) 35 to MuCo 30; Gift of the Buoyant Gosling MuCo 35 to level 20; Preternatural Growth and Shrinking MuCo 20 to MuCo 15.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -8845,13 +9071,13 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her close friend",
-            "id": "6ef2a5e870e5"
+            "id": "e765811c5b95"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "her familiar, Luigi",
-            "id": "0f80d4805c81"
+            "id": "fcd663008908"
           }
         ],
         "agents": [],
@@ -8982,17 +9208,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 75,
-            "specialty": "jinn",
-            "xp_table": "ability"
-          },
-          {
             "name": "Area Lore: Levant Tribunal",
             "category": "General",
-            "xp": 15,
-            "specialty": "the Holy Land",
+            "xp": 90,
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -9234,7 +9453,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "A sahira of the Hermetic Sahirs, the House Ex Miscellanea tradition of Houses of Hermes: Societates, whose package (Sihr, a Minor Magical Focus in jinn, Twilight Prone) she takes in place of the Fourth Edition's sahir rules; that tradition is Iberian and rare in the Levant, so she is an outlier. She keeps no Arts and no Parma Magica, as printed (ArM4's sahirs could not learn Parma; HoH:S's have Arts). Her Sihr is 6 on the Art table: modest. ArM4 gave every sahir Magic Sensitivity and Second Sight, which are on her sheet.\nHer Familiarities, the old rules' knowledge of particular beings that eased their summoning: 'Aziza 3 (her grandmother's ghost), Hiss 2 (an airy fire spirit), Lucius 3 (a demon, whom she may call but never command), al-Manqa'i 3 and Sharif 3 (jinn of the Ghul and Marid tribes, her bound jinn), and the planets Mars (al-Mirrikh) 3, Jupiter (al-Mushtari) 4 and the Sun (al-Shams) 4. Her planetary invocations stretch a spell's Range, Duration or Target as vis once could for a magus: a power of the sahirs that Hermetic magic no longer has, kept as story.\nThe jinni al-Abyad, the White, has plagued her since she was a child; finding how to beat him is her life's work, and she leaves her rooms only when the fight against the Crusaders needs her. Her sigil is a copper bracelet; a faint smell of roses rises as she works.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 33 as printed; Twilight Points 0 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Outsider Trained in Order dropped (a sahir joins by the tradition, in Ex Miscellanea); Cyclic Magic (+) as Cyclic Magic (Positive); Plagued by Jinni as Plagued by Supernatural Entity: al-Abyad; Cyclic Magic (-) as Cyclic Magic (Negative); Obsessed (Minor): the counter-Crusade; Driving Goal as Driven (Minor): to defeat al-Abyad.\nAbilities: Brawling 2 to Brawl; Scribe Arabic 3 to Artes Liberales; Divination: Astrology 5 to Artes Liberales; Hermes Lore 2 to Organization Lore: Order of Hermes; Legend Lore 5 to Magic Lore; Levant Lore 2 to Area Lore: Levant Tribunal; Occult Lore 5 to Infernal Lore.",
+          "biography": "A sahira of the Hermetic Sahirs, the House Ex Miscellanea tradition of Houses of Hermes: Societates, whose package (Sihr, a Minor Magical Focus in jinn, Twilight Prone) she takes in place of the Fourth Edition's sahir rules; that tradition is Iberian and rare in the Levant, so she is an outlier. She keeps no Arts and no Parma Magica, as printed (ArM4's sahirs could not learn Parma; HoH:S's have Arts). Her Sihr is 6 on the Art table: modest. ArM4 gave every sahir Magic Sensitivity and Second Sight, which are on her sheet.\nHer Familiarities, the old rules' knowledge of particular beings that eased their summoning: 'Aziza 3 (her grandmother's ghost), Hiss 2 (an airy fire spirit), Lucius 3 (a demon, whom she may call but never command), al-Manqa'i 3 and Sharif 3 (jinn of the Ghul and Marid tribes, her bound jinn), and the planets Mars (al-Mirrikh) 3, Jupiter (al-Mushtari) 4 and the Sun (al-Shams) 4. Her planetary invocations stretch a spell's Range, Duration or Target as vis once could for a magus: a power of the sahirs that Hermetic magic no longer has, kept as story.\nThe jinni al-Abyad, the White, has plagued her since she was a child; finding how to beat him is her life's work, and she leaves her rooms only when the fight against the Crusaders needs her. Her sigil is a copper bracelet; a faint smell of roses rises as she works.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 33 as printed; Twilight Points 0 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Outsider Trained in Order dropped (a sahir joins by the tradition, in Ex Miscellanea); Cyclic Magic (+) as Cyclic Magic (Positive); Plagued by Jinni as Plagued by Supernatural Entity: al-Abyad; Cyclic Magic (-) as Cyclic Magic (Negative); Obsessed (Minor): the counter-Crusade; Driving Goal as Driven (Minor): to defeat al-Abyad.\nAbilities: Brawling 2 to Brawl; Scribe Arabic 3 to Artes Liberales; Divination: Astrology 5 to Artes Liberales; Hermes Lore 2 to Organization Lore: Order of Hermes; Legend Lore 5 to Area Lore: Levant Tribunal; Levant Lore 2 to Area Lore: Levant Tribunal; Occult Lore 5 to Infernal Lore.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -9404,31 +9623,31 @@
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to her service",
-            "id": "cdafff59e60c"
+            "id": "31385b051ca8"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to her service",
-            "id": "eeb24cf8ca59"
+            "id": "878e11b32d10"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "her grandmother's ghost, whom she summons",
-            "id": "9d2d151c7f1f"
+            "id": "6cb7f17eb57a"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit she summons",
-            "id": "403799cb6d18"
+            "id": "f72917fdcf51"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon she can summon but not command",
-            "id": "f8c48a0d3aa4"
+            "id": "69497f7fdef5"
           }
         ],
         "agents": [],
@@ -10124,7 +10343,7 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Came to the Levant with her",
-            "id": "52268675d370"
+            "id": "c77512083377"
           }
         ],
         "agents": [],
@@ -10584,7 +10803,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_my_old_and_dear_friend",
+            "spell_id": "spell_emotion_of_reversed_intentions",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -10602,7 +10821,26 @@
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [],
+        "invented_spells": [
+          {
+            "id": "spell_emotion_of_reversed_intentions",
+            "name": "Emotion of Reversed Intentions",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          }
+        ],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -10632,7 +10870,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: his gold sigil ring, bearing House Guernicus's sign, and a walking staff. His magic hurts him to cast, which is his wizard's sigil as well as his Flaw. Tau of Flambeau made his longevity ritual. Afflictions as printed: stiff joints, visible aging, hearing going.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 48 as printed (looks 45); Twilight Points 1 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Veteran as Warrior; Well Traveled as Well-Traveled; Old dropped (the age itself carries it); Common Fear as Fear: fire.\nAbilities: Brawling 2 to Brawl; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Rabbinical Law 2 to Rabbinic Law; Scribe Hebrew 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales; Shield and Weapon 3 to Single Weapon.\nSpells: Eyes of the Past for Frosty Breath of the Spoken Lie; Ear for the Distant Voice as The Ear for Distant Voices; Emotion of Reversed Intentions for My Old and Dear Friend; At the catalog's level or Art: Discern the Images of Truth and Falsehood InIm 30 to InIm general.",
+          "biography": "Equipment: his gold sigil ring, bearing House Guernicus's sign, and a walking staff. His magic hurts him to cast, which is his wizard's sigil as well as his Flaw. Tau of Flambeau made his longevity ritual. Afflictions as printed: stiff joints, visible aging, hearing going.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 48 as printed (looks 45); Twilight Points 1 / 3 = Warping 0; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Quaesitor dropped (an office of House Guernicus, not a Virtue now; the office is noted); Veteran as Warrior; Well Traveled as Well-Traveled; Old dropped (the age itself carries it); Common Fear as Fear: fire.\nAbilities: Brawling 2 to Brawl; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Rabbinical Law 2 to Rabbinic Law; Scribe Hebrew 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales; Shield and Weapon 3 to Single Weapon.\nSpells: Eyes of the Past for Frosty Breath of the Spoken Lie; Ear for the Distant Voice as The Ear for Distant Voices; At the catalog's level or Art: Discern the Images of Truth and Falsehood InIm 30 to InIm general.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -10974,7 +11212,7 @@
           {
             "name": "Guile",
             "category": "General",
-            "xp": 50,
+            "xp": 60,
             "specialty": "selling",
             "xp_table": "ability"
           },
@@ -11000,23 +11238,16 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 5,
-            "specialty": "famous magic items",
-            "xp_table": "ability"
-          },
-          {
             "name": "Area Lore: Levant Tribunal",
             "category": "General",
-            "xp": 30,
-            "specialty": "merchants' quarters",
+            "xp": 35,
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
             "name": "Magic Theory",
             "category": "Arcane",
-            "xp": 140,
+            "xp": 215,
             "specialty": "items",
             "xp_table": "ability"
           },
@@ -11206,13 +11437,13 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_distraction_of_the_magpie",
+            "spell_id": "spell_subtle_shift_of_the_heart",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_my_old_and_dear_friend",
+            "spell_id": "spell_emotion_of_reversed_intentions",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11242,7 +11473,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_frosty_breath_of_the_spoken_lie",
+            "spell_id": "spell_weighing_the_turncoat_s_silver",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11278,7 +11509,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_lay_your_burdens_on_me",
+            "spell_id": "spell_mastering_the_stolid_mundane",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11290,7 +11521,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_silvery_scales_of_the_knight",
+            "spell_id": "spell_circle_of_the_faerie_stone",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11302,7 +11533,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_intuition_of_the_forest",
+            "spell_id": "spell_sense_the_magic_root",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11314,19 +11545,19 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_enchantment_of_my_lover_s_eye",
+            "spell_id": "spell_beguile_the_normal_mind",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_breath_of_the_glassworker",
+            "spell_id": "spell_wizard_s_sleeve_of_practical_tools",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_eyes_of_the_treacherous_terrain",
+            "spell_id": "spell_origin_of_the_ancient_object",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -11344,7 +11575,174 @@
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [],
+        "invented_spells": [
+          {
+            "id": "spell_subtle_shift_of_the_heart",
+            "name": "Subtle Shift of the Heart",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 10,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_emotion_of_reversed_intentions",
+            "name": "Emotion of Reversed Intentions",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_weighing_the_turncoat_s_silver",
+            "name": "Weighing the Turncoat's Silver",
+            "technique": "Intellego",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 15, +1 Eye, as Posing the Silent Question)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_mastering_the_stolid_mundane",
+            "name": "Mastering the Stolid Mundane",
+            "technique": "Rego",
+            "form": "Mentem",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand. (Base 25, +1 Eye, +1 Conc)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_circle_of_the_faerie_stone",
+            "name": "Circle of the Faerie Stone",
+            "technique": "Creo",
+            "form": "Terram",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +2 Voice, +2 Sun, +3 size)",
+            "requisites": [
+              "Vim"
+            ],
+            "range": "Voice",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_sense_the_magic_root",
+            "name": "Sense the Magic Root",
+            "technique": "Intellego",
+            "form": "Herbam",
+            "level": 10,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Touch)",
+            "requisites": [
+              "Vim"
+            ],
+            "range": "Touch",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_beguile_the_normal_mind",
+            "name": "Beguile the Normal Mind",
+            "technique": "Rego",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_wizard_s_sleeve_of_practical_tools",
+            "name": "Wizard's Sleeve of Practical Tools",
+            "technique": "Creo",
+            "form": "Terram",
+            "level": 15,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +1 Touch, +2 Sun, +1 metal)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_origin_of_the_ancient_object",
+            "name": "Origin of the Ancient Object",
+            "technique": "Intellego",
+            "form": "Terram",
+            "level": 15,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Touch, +1 Conc)",
+            "requisites": [],
+            "range": "Touch",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          }
+        ],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -11374,7 +11772,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: tools and spell foci; her sigil, a gold circlet (a faint tension in the air marks her casting); and a cloak that, while its hood is up, keeps its wearer unseen and unheard even on the move, without limit of uses (the book's PeIm 5; the nearest catalog effect is the Veil of Invisibility, PeIm 20, with silence added). Affliction as printed: slowing reactions.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 43 as printed (looks 39); Twilight Points 3 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Jack of All Trades as Jack-of-All-Trades; Mage-Smith as Verditius Magic; Well Traveled as Well-Traveled; Secret Vis Source as Personal Vis Source: Terram; Weak Parma Magica dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Enemies: the magi of al-Arama; Follower of Verditius dropped (folded into Verditius Magic); Driving Goal as Driven (Minor): wealth; Dark Secret: selling magic items to mundanes.\nAbilities: Craft: Armory 2 to Craft: Armorer; Craft: Clothiery 4 to Craft: Clothier; Craft: Jewelry-making 3 to Craft: Jeweler; Craft: Weapon-smithing 2 to Craft: Weaponsmith; Forgery 3 to Guile; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 1 to Code of Hermes; Legend Lore 1 to Magic Lore; Levant Lore 3 to Area Lore: Levant Tribunal; Scribe Latin 2 to Artes Liberales; Verditius Magic 5 dropped.\nSpells: Subtle Shift of the Heart for Distraction of the Magpie; Emotion of Reversed Intentions for My Old and Dear Friend; Weighing the Turncoat's Silver for Frosty Breath of the Spoken Lie; Mastering the Stolid Mundane for Lay Your Burdens on Me; Circle of the Faerie Stone for Silvery Scales of the Knight; Sense the Magic Root for Intuition of the Forest; Eyes of the Future for Sight of the Blossom, Ears of the Oak; Beguile the Normal Mind for Enchantment of my Lover's Eye; Wizard's Sleeve of Practical Tools for Breath of the Glassworker; Origin of the Ancient Object for Eyes of the Treacherous Terrain; At the catalog's level or Art: Gather the Essence of the Beast MuVi 15 to ReVi general; Shroud Magic MuVi 25 to MuVi general; Edge of the Razor MuTe 5 to MuTe 20; Disenchant PeVi 20 to PeVi general; Masking the Odor of Magic PeVi 20 to PeVi general; Watching Ward ReVi 30 to ReVi general.",
+          "biography": "Equipment: tools and spell foci; her sigil, a gold circlet (a faint tension in the air marks her casting); and a cloak that, while its hood is up, keeps its wearer unseen and unheard even on the move, without limit of uses (the book's PeIm 5; the nearest catalog effect is the Veil of Invisibility, PeIm 20, with silence added). Affliction as printed: slowing reactions.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 43 as printed (looks 39); Twilight Points 3 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Jack of All Trades as Jack-of-All-Trades; Mage-Smith as Verditius Magic; Well Traveled as Well-Traveled; Secret Vis Source as Personal Vis Source: Terram; Weak Parma Magica dropped (the catalog's Flawed Parma Magica is weak against one Form, not when unaware); Enemies: the magi of al-Arama; Follower of Verditius dropped (folded into Verditius Magic); Driving Goal as Driven (Minor): wealth; Dark Secret: selling magic items to mundanes.\nAbilities: Craft: Armory 2 to Craft: Armorer; Craft: Clothiery 4 to Craft: Clothier; Craft: Jewelry-making 3 to Craft: Jeweler; Craft: Weapon-smithing 2 to Craft: Weaponsmith; Forgery 3 to Guile; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 1 to Code of Hermes; Legend Lore 1 to Area Lore: Levant Tribunal; Levant Lore 3 to Area Lore: Levant Tribunal; Scribe Latin 2 to Artes Liberales; Verditius Magic 5 to Magic Theory.\nSpells: Eyes of the Future for Sight of the Blossom, Ears of the Oak; At the catalog's level or Art: Gather the Essence of the Beast MuVi 15 to ReVi general; Shroud Magic MuVi 25 to MuVi general; Edge of the Razor MuTe 5 to MuTe 20; Disenchant PeVi 20 to PeVi general; Masking the Odor of Magic PeVi 20 to PeVi general; Mastering the Stolid Mundane ReMe 20 to level 35; Watching Ward ReVi 30 to ReVi general.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -11544,7 +11942,7 @@
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Enemies: she broke its monopoly",
-            "id": "168c6265b230"
+            "id": "202ee35802ea"
           }
         ],
         "agents": [],
@@ -11620,7 +12018,7 @@
             "xp": 15
           },
           "ignem": {
-            "xp": 190
+            "xp": 205
           },
           "imaginem": {
             "xp": 15
@@ -11693,17 +12091,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Magic Lore",
-            "category": "Arcane",
-            "xp": 15,
-            "specialty": "jinn",
-            "xp_table": "ability"
-          },
-          {
             "name": "Area Lore: Levant Tribunal",
             "category": "General",
-            "xp": 30,
-            "specialty": "politics",
+            "xp": 45,
+            "specialty": "legends",
             "xp_table": "ability"
           },
           {
@@ -11984,25 +12375,25 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_high_tree_or_small_boulder",
+            "spell_id": "spell_gift_of_the_hero_s_strength",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_jump_of_the_lynx",
+            "spell_id": "spell_mighty_fling_of_the_menacing_knight",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_petite_phoenix",
+            "spell_id": "spell_curse_of_the_attraction_of_the_fire",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_aura_of_the_ennobled_presence",
+            "spell_id": "spell_enlarging_the_distant_image",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -12014,7 +12405,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_rise_of_the_feathery_body",
+            "spell_id": "spell_eyes_of_the_serpent",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -12026,7 +12417,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_circle_of_encompassing_flame",
+            "spell_id": "spell_eyes_of_flame",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -12044,7 +12435,118 @@
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [],
+        "invented_spells": [
+          {
+            "id": "spell_gift_of_the_hero_s_strength",
+            "name": "Gift of the Hero's Strength",
+            "technique": "Muto",
+            "form": "Corpus",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Touch, +2 Sun)",
+            "requisites": [
+              "Creo"
+            ],
+            "range": "Touch",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_mighty_fling_of_the_menacing_knight",
+            "name": "Mighty Fling of the Menacing Knight",
+            "technique": "Rego",
+            "form": "Corpus",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 10, +2 Voice)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_curse_of_the_attraction_of_the_fire",
+            "name": "Curse of the Attraction of the Fire",
+            "technique": "Rego",
+            "form": "Ignem",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_enlarging_the_distant_image",
+            "name": "Enlarging the Distant Image",
+            "technique": "Muto",
+            "form": "Imaginem",
+            "level": 10,
+            "description": "From the stat block in Secrets in Sand. (Base 2, +3 Sight, +1 Conc)",
+            "requisites": [],
+            "range": "Sight",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_eyes_of_the_serpent",
+            "name": "Eyes of the Serpent",
+            "technique": "Rego",
+            "form": "Corpus",
+            "level": 10,
+            "description": "From the stat block in Secrets in Sand. (Base 4, +1 Eye, +1 Conc)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_eyes_of_flame",
+            "name": "Eyes of Flame",
+            "technique": "Creo",
+            "form": "Ignem",
+            "level": 25,
+            "description": "From the stat block in Secrets in Sand. (Base 15, +1 Eye, +1 blinding)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          }
+        ],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -12074,7 +12576,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: long sword, kite shield (a Heater Shield), reinforced leather hauberk (Metal Reinforced Leather); his longsword is his sigil, and sparks leap from his fingertips when he casts. Twilight once deepened his grasp of Ignem: he may write on it up to two thirds of his score.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 43 as printed (looks 39); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Magical Affinity as Affinity with ignem; Fury as Wrathful (Major): when wounded; Overconfident (Major); Obsessed (Minor): the Crusade; Disfigured: a scar.\nAbilities: Affinity Ignem 5 dropped; Brawling 3 to Brawl; Climb 2 to Athletics; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 1 to Code of Hermes; Legend Lore 2 to Magic Lore; Levant Lore 3 to Area Lore: Levant Tribunal; Scribe Latin 2 to Artes Liberales; Shield and Weapon 5 to Single Weapon.\nSpells: Gift of the Hero's Strength for High Tree or Small Boulder; Mighty Fling of the Menacing Knight for Jump of the Lynx; Curse of the Attraction of the Fire for Petite Phoenix; Enlarging the Distant Image for Aura of the Ennobled Presence; Eyes of the Serpent for Rise of the Feathery Body; Eyes of Flame for Circle of Encompassing Flames; At the catalog's level or Art: Blade of the Virulent Flame CrIg 20 to CrIg 15; Prison of Flames MuIg 15 to MuIg 20; Well Without Light PeIg 30 to PeIg 25; Words of the Flickering Flame InIg 25 to InIg 35; Leap of the Fire ReIg 20 to ReIg 10; Cripple the Howling Wolf PeAn 20 to PeAn 25; The Severed Limb Made Whole CrCo 30 to CrCo 25; Preternatural Growth and Shrinking MuCo 20 to MuCo 15.",
+          "biography": "Equipment: long sword, kite shield (a Heater Shield), reinforced leather hauberk (Metal Reinforced Leather); his longsword is his sigil, and sparks leap from his fingertips when he casts. Twilight once deepened his grasp of Ignem: he may write on it up to two thirds of his score.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 43 as printed (looks 39); Twilight Points 5 / 3 = Warping 1; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Magical Affinity as Affinity with ignem; Fury as Wrathful (Major): when wounded; Overconfident (Major); Obsessed (Minor): the Crusade; Disfigured: a scar.\nAbilities: Affinity Ignem 5 to Ignem, 15 xp; Brawling 3 to Brawl; Climb 2 to Athletics; Hermes Lore 2 to Organization Lore: Order of Hermes; Hermetic Law 1 to Code of Hermes; Legend Lore 2 to Area Lore: Levant Tribunal; Levant Lore 3 to Area Lore: Levant Tribunal; Scribe Latin 2 to Artes Liberales; Shield and Weapon 5 to Single Weapon.\nSpells: At the catalog's level or Art: Blade of the Virulent Flame CrIg 20 to CrIg 15; Prison of Flames MuIg 15 to MuIg 20; Well Without Light PeIg 30 to PeIg 25; Words of the Flickering Flame InIg 25 to InIg 35; Leap of the Fire ReIg 20 to ReIg 10; Cripple the Howling Wolf PeAn 20 to PeAn 25; Eyes of Flame CrIg 35 to level 25; The Severed Limb Made Whole CrCo 30 to CrCo 25; Preternatural Growth and Shrinking MuCo 20 to MuCo 15.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -12332,7 +12834,7 @@
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 30,
+            "xp": 45,
             "specialty": "details",
             "xp_table": "ability"
           },
@@ -12341,6 +12843,13 @@
             "category": "General",
             "xp": 15,
             "specialty": "dagger",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Penetration",
+            "category": "Arcane",
+            "xp": 60,
+            "specialty": "Mentem",
             "xp_table": "ability"
           },
           {
@@ -12365,9 +12874,9 @@
             "xp_table": "ability"
           },
           {
-            "name": "Artes Liberales",
-            "category": "Academic",
-            "xp": 30,
+            "name": "Teaching",
+            "category": "General",
+            "xp": 15,
             "specialty": "debate",
             "xp_table": "ability"
           },
@@ -12449,10 +12958,10 @@
             "xp_table": "ability"
           },
           {
-            "name": "Penetration",
-            "category": "Arcane",
-            "xp": 30,
-            "specialty": "Mentem",
+            "name": "Artes Liberales",
+            "category": "Academic",
+            "xp": 15,
+            "specialty": "a bad hand",
             "xp_table": "ability"
           },
           {
@@ -12652,19 +13161,19 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_bane_of_the_decrepit_body",
+            "spell_id": "spell_pain_of_the_wizard_s_gaze",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_convince_a_man_he_has_an_enemy",
+            "spell_id": "spell_spectacle_of_abject_terror",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_frosty_breath_of_the_spoken_lie",
+            "spell_id": "spell_weighing_the_turncoat_s_silver",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -12736,7 +13245,62 @@
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [],
+        "invented_spells": [
+          {
+            "id": "spell_pain_of_the_wizard_s_gaze",
+            "name": "Pain of the Wizard's Gaze",
+            "technique": "Perdo",
+            "form": "Corpus",
+            "level": 25,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +3 Sight, +1 Conc)",
+            "requisites": [],
+            "range": "Sight",
+            "duration": "Concentration",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_spectacle_of_abject_terror",
+            "name": "Spectacle of Abject Terror",
+            "technique": "Creo",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 4, +2 Voice, +2 Sun)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_weighing_the_turncoat_s_silver",
+            "name": "Weighing the Turncoat's Silver",
+            "technique": "Intellego",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 15, +1 Eye, as Posing the Silent Question)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          }
+        ],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -12766,7 +13330,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Equipment: a dagger, and his sigil, a silver pendant engraved with House Tytalus's sign; his casting shows no wizard's sigil at all. Afflictions as printed: a stoop and aching joints, and the Decrepitude his childhood's abuse left him. ArM4's Silent Magic (+5) is Quiet Magic here, taken once.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 45 as printed (looks 36); Twilight Points 2 / 3 = Warping 0; Confidence 2 (3 points), the Definitive Edition's baseline, +1 for a Tytalus apprenticeship, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Silent Magic as Quiet Magic; Read Lips dropped (no Fifth Edition Virtue; the Ability went to Awareness); Decrepit dropped (the Decrepitude score carries it); Diabolic upbringing as Diabolic Past; Terrors as Fear: demons; Driving Goal as Driven (Minor): magical power; Obsessed (Minor): the Crusade; Dark Secret: son of diabolists.\nAbilities: Brawling 2 to Brawl; Certamen 3 dropped; Civil & Canon Law 2 to Civil and Canon Law; Disputatio 2 to Artes Liberales; Hermes Lore 4 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Occult Lore 2 to Infernal Lore; Read Lips 3 to Awareness; Scribe Latin 2 to Artes Liberales.\nSpells: Pain of the Wizard's Gaze for Bane of the Decrepit Body; Spectacle of Abject Terror for Convince a Man he has an Enemy; Weighing the Turncoat's Silver for Frosty Breath of the Spoken Lie; The Demon's Eternal Oblivion as Demon's Eternal Oblivion; Eyes of the Past for The Ear for Distant Voices; At the catalog's level or Art: Loss of But a Moment's Memory PeMe(In) 10 to PeMe 15; Black Whisper PeMe 35 to PeMe 40; Grip of the Choking Hand PeCo 15 to PeCo 25; Veil of Invisibility PeIm 10 to PeIm 20; Silence of the Smothered Sound PeIm 10 to PeIm 20; The Demon's Eternal Oblivion PeVi 20 to PeVi general; Circular Ward Against Demons ReVi 15 to ReVi general; Conjuration of the Indubitable Cold PeIg 20 to PeIg 25.",
+          "biography": "Equipment: a dagger, and his sigil, a silver pendant engraved with House Tytalus's sign; his casting shows no wizard's sigil at all. Afflictions as printed: a stoop and aching joints, and the Decrepitude his childhood's abuse left him. ArM4's Silent Magic (+5) is Quiet Magic here, taken once.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 45 as printed (looks 36); Twilight Points 2 / 3 = Warping 0; Confidence 2 (3 points), the Definitive Edition's baseline, +1 for a Tytalus apprenticeship, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Silent Magic as Quiet Magic; Read Lips dropped (no Fifth Edition Virtue; the Ability went to Awareness); Decrepit dropped (the Decrepitude score carries it); Diabolic upbringing as Diabolic Past; Terrors as Fear: demons; Driving Goal as Driven (Minor): magical power; Obsessed (Minor): the Crusade; Dark Secret: son of diabolists.\nAbilities: Brawling 2 to Brawl; Certamen 3 to Penetration; Civil & Canon Law 2 to Civil and Canon Law; Disputatio 2 to Teaching; Hermes Lore 4 to Organization Lore: Order of Hermes; Hermetic Law 3 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Occult Lore 2 to Infernal Lore; Read Lips 3 to Awareness; Scribe Latin 2 to Artes Liberales.\nSpells: The Demon's Eternal Oblivion as Demon's Eternal Oblivion; Eyes of the Past for The Ear for Distant Voices; At the catalog's level or Art: Loss of But a Moment's Memory PeMe(In) 10 to PeMe 15; Black Whisper PeMe 35 to PeMe 40; Grip of the Choking Hand PeCo 15 to PeCo 25; Veil of Invisibility PeIm 10 to PeIm 20; Silence of the Smothered Sound PeIm 10 to PeIm 20; The Demon's Eternal Oblivion PeVi 20 to PeVi general; Circular Ward Against Demons ReVi 15 to ReVi general; Conjuration of the Indubitable Cold PeIg 20 to PeIg 25.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -13682,7 +14246,7 @@
             "xp": 6
           },
           "vim": {
-            "xp": 276
+            "xp": 291
           }
         },
         "abilities": [
@@ -13976,13 +14540,13 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_impression_of_the_faded_sigil",
+            "spell_id": "spell_spell_analysis",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_sense_the_hour",
+            "spell_id": "spell_sense_the_shadows_of_the_spheres",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -14060,37 +14624,37 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_reveal_the_lurking_watchers",
+            "spell_id": "spell_wizard_s_focus",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_piercing_the_faerie_veil",
+            "spell_id": "spell_glimpse_through_the_mystic_veil",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_see_the_light_of_magic",
+            "spell_id": "spell_reveal_the_gift",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_clear_breath_of_the_consummate_liar",
+            "spell_id": "spell_warping_the_magical_veil",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_snipping_the_thread_of_power",
+            "spell_id": "spell_hammer_of_thaumaturgical_shattering",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_the_patient_spell",
+            "spell_id": "spell_wizard_s_wait",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -14126,7 +14690,7 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_my_old_and_dear_friend",
+            "spell_id": "spell_emotion_of_reversed_intentions",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
@@ -14144,13 +14708,200 @@
             "mastery_abilities": []
           },
           {
-            "spell_id": "spell_enchantment_of_my_lover_s_eye",
+            "spell_id": "spell_beguile_the_normal_mind",
             "mastery_score": 0,
             "mastery_xp": 0,
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [],
+        "invented_spells": [
+          {
+            "id": "spell_spell_analysis",
+            "name": "Spell Analysis",
+            "technique": "Intellego",
+            "form": "Vim",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_sense_the_shadows_of_the_spheres",
+            "name": "Sense the Shadows of the Spheres",
+            "technique": "Intellego",
+            "form": "Vim",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Ritual at the least level)",
+            "requisites": [
+              "Mentem"
+            ],
+            "range": "Personal",
+            "duration": "Special",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_wizard_s_focus",
+            "name": "Wizard's Focus",
+            "technique": "Intellego",
+            "form": "Vim",
+            "level": 30,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [
+              "Mentem"
+            ],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_glimpse_through_the_mystic_veil",
+            "name": "Glimpse Through the Mystic Veil",
+            "technique": "Intellego",
+            "form": "Vim",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 3, +1 Conc, +4 Vision, as Piercing the Faerie Veil)",
+            "requisites": [],
+            "range": "Personal",
+            "duration": "Concentration",
+            "target": "Vision",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_reveal_the_gift",
+            "name": "Reveal the Gift",
+            "technique": "Intellego",
+            "form": "Vim",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 10, +2 Voice)",
+            "requisites": [],
+            "range": "Voice",
+            "duration": "Momentary",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_warping_the_magical_veil",
+            "name": "Warping the Magical Veil",
+            "technique": "Muto",
+            "form": "Vim",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_hammer_of_thaumaturgical_shattering",
+            "name": "Hammer of Thaumaturgical Shattering",
+            "technique": "Perdo",
+            "form": "Vim",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [
+              "Intellego"
+            ],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_wizard_s_wait",
+            "name": "Wizard's Wait",
+            "technique": "Rego",
+            "form": "Vim",
+            "level": 35,
+            "description": "From the stat block in Secrets in Sand.",
+            "requisites": [],
+            "range": "",
+            "duration": "",
+            "target": "",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_emotion_of_reversed_intentions",
+            "name": "Emotion of Reversed Intentions",
+            "technique": "Muto",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          },
+          {
+            "id": "spell_beguile_the_normal_mind",
+            "name": "Beguile the Normal Mind",
+            "technique": "Rego",
+            "form": "Mentem",
+            "level": 20,
+            "description": "From the stat block in Secrets in Sand. (Base 5, +1 Eye, +2 Sun)",
+            "requisites": [],
+            "range": "Eye",
+            "duration": "Sun",
+            "target": "Individual",
+            "ritual": false,
+            "base_level": null,
+            "source": "SiS",
+            "page": "",
+            "experimental_effects": [],
+            "details_missing": false
+          }
+        ],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -14180,7 +14931,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "His sigil, after some rummaging in his robes, turns out to be a small mummified toad; his hair stands on end when he casts. Twilight once deepened his grasp of Vim: he may write on it up to two thirds of his score. He knows Mirror of Opposition (Form) for Corpus, Mentem and Vim, and Wizard's Boost (Form) for Vim and Mentem, each at level 35; the general spells the Aegis of the Hearth, the Watching Ward and the rest he knows at 35 as well. ArM4's Feeble Communication (-4) is two steps of Poor Communication, which take him to -5.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 53 as printed (looks 42); Twilight Points 6 / 3 = Warping 2; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Affinity as Affinity with vim; Visual Eidetic Memory dropped (not in the catalog); Well Known as Famous: the Sufis of Baghdad; Feeble Communication as Poor communication; Lack of Control as Unpredictable Magic; Disfigured: tattoos; Obsessed (Minor): Islam's magic.\nAbilities: Affinity Vim 5 dropped; Hermes Lore 3 to Organization Lore: Order of Hermes; Hermetic Law 2 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Scribe Arabic 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales.\nSpells: Sense the Lingering Magic as Sense of the Lingering Magic; Spell Analysis for Impression of the Faded Sigil; Sense the Shadows of the Spheres for Sense the Hour; The Demon's Eternal Oblivion as Demon's Eternal Oblivion; Wizard's Focus for Reveal the Lurking Watchers; Glimpse Through the Mystic Veil for Piercing the Faerie Veil; Reveal the Gift for See the Light of Magic; Warping the Magical Veil for Clear Breath of the Consummate Liar; Hammer of Thaumaturgical Shattering for Snipping the Thread of Power; Wizard's Wait for The Patient Spell; Emotion of Reversed Intentions for My Old and Dear Friend; Eyes of the Future for Sight of the Blossom, Ears of the Oak; Beguile the Normal Mind for Enchantment of my Lover's Eye; At the catalog's level or Art: The Invisible Eye Revealed InVi 30 to InVi general; Shell of Opaque Mysteries CrVi 25 to CrVi general; Shell of False Determinations CrVi 25 to CrVi general; Shroud Magic MuVi 35 to MuVi general; Wizard's Communion MuVi 35 to MuVi general; Mirror of Opposition (Corpus) MuVi 35 to MuVi general; Wizard's Boost (Vim) MuVi 35 to MuVi general; The Demon's Eternal Oblivion PeVi 35 to PeVi general; Masking the Odor of Magic PeVi 35 to PeVi general; Aegis of the Hearth ReVi 35 to ReVi general; Circular Ward Against Demons ReVi 35 to ReVi general; Maintaining the Demanding Spell ReVi 35 to ReVi general; Wind of Mundane Silence PeVi 35 to PeVi general; Watching Ward ReVi 35 to ReVi general; Discern the Images of Truth and Falsehood InIm 30 to InIm general; Gift of Reason CrMe 25 to CrMe 35.",
+          "biography": "His sigil, after some rummaging in his robes, turns out to be a small mummified toad; his hair stands on end when he casts. Twilight once deepened his grasp of Vim: he may write on it up to two thirds of his score. He knows Mirror of Opposition (Form) for Corpus, Mentem and Vim, and Wizard's Boost (Form) for Vim and Mentem, each at level 35; the general spells the Aegis of the Hearth, the Watching Ward and the rest he knows at 35 as well. ArM4's Feeble Communication (-4) is two steps of Poor Communication, which take him to -5.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 53 as printed (looks 42); Twilight Points 6 / 3 = Warping 2; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Affinity as Affinity with vim; Visual Eidetic Memory dropped (not in the catalog); Well Known as Famous: the Sufis of Baghdad; Feeble Communication as Poor communication; Lack of Control as Unpredictable Magic; Disfigured: tattoos; Obsessed (Minor): Islam's magic.\nAbilities: Affinity Vim 5 to Vim, 15 xp; Hermes Lore 3 to Organization Lore: Order of Hermes; Hermetic Law 2 to Code of Hermes; Levant Lore 2 to Area Lore: Levant Tribunal; Scribe Arabic 2 to Artes Liberales; Scribe Latin 3 to Artes Liberales.\nSpells: Sense the Lingering Magic as Sense of the Lingering Magic; The Demon's Eternal Oblivion as Demon's Eternal Oblivion; Eyes of the Future for Sight of the Blossom, Ears of the Oak; At the catalog's level or Art: The Invisible Eye Revealed InVi 30 to InVi general; Shell of Opaque Mysteries CrVi 25 to CrVi general; Shell of False Determinations CrVi 25 to CrVi general; Sense the Shadows of the Spheres InVi(Me) 10 to level 20; Shroud Magic MuVi 35 to MuVi general; Wizard's Communion MuVi 35 to MuVi general; Mirror of Opposition (Corpus) MuVi 35 to MuVi general; Wizard's Boost (Vim) MuVi 35 to MuVi general; The Demon's Eternal Oblivion PeVi 35 to PeVi general; Masking the Odor of Magic PeVi 35 to PeVi general; Aegis of the Hearth ReVi 35 to ReVi general; Circular Ward Against Demons ReVi 35 to ReVi general; Maintaining the Demanding Spell ReVi 35 to ReVi general; Wind of Mundane Silence PeVi 35 to PeVi general; Watching Ward ReVi 35 to ReVi general; Reveal the Gift InVi 30 to level 20; Discern the Images of Truth and Falsehood InIm 30 to InIm general; Gift of Reason CrMe 25 to CrMe 35.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -15072,7 +15823,7 @@
             "kind": "characters",
             "target_id": "wraith",
             "note": "His wife",
-            "id": "7be936ca0e51"
+            "id": "91ba679feff6"
           }
         ],
         "agents": [],
@@ -15791,7 +16542,7 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "Her husband",
-            "id": "7ef6d191c3bc"
+            "id": "24d25f39a135"
           }
         ],
         "agents": [],
@@ -18444,7 +19195,7 @@
             "kind": "characters",
             "target_id": "leo",
             "note": "His firm friend",
-            "id": "77994d05225f"
+            "id": "ab68b28a5526"
           }
         ],
         "agents": [],
@@ -19038,7 +19789,7 @@
             "kind": "characters",
             "target_id": "tiberius",
             "note": "His firm friend",
-            "id": "cdc0b70d8969"
+            "id": "1a2e529cb2af"
           }
         ],
         "agents": [],
@@ -22670,7 +23421,7 @@
             "kind": "characters",
             "target_id": "hergar",
             "note": "Her parens",
-            "id": "4e56fbac55b1"
+            "id": "5255856ec279"
           }
         ],
         "agents": [],
@@ -23147,7 +23898,7 @@
             "kind": "characters",
             "target_id": "hildegard",
             "note": "His parens",
-            "id": "a13dede01949"
+            "id": "8f0d4a0e32d7"
           }
         ],
         "agents": [],
@@ -24189,7 +24940,7 @@
             "kind": "characters",
             "target_id": "sarah",
             "note": "His twin sister",
-            "id": "feb5de0eff25"
+            "id": "0e67b11e686b"
           }
         ],
         "agents": [],
@@ -24482,7 +25233,7 @@
             "kind": "characters",
             "target_id": "simon",
             "note": "Her twin brother",
-            "id": "1e882ec5213b"
+            "id": "12d2dfdf0fe5"
           }
         ],
         "agents": [],
@@ -29900,7 +30651,7 @@
             "kind": "places",
             "target_id": "baghdad",
             "note": "Lives among its Jews",
-            "id": "eed4e224f0a1"
+            "id": "bcb463457b21"
           }
         ],
         "agents": [],
@@ -31002,7 +31753,7 @@
           "dexterity": 3,
           "quickness": 3
         },
-        "base_soak": 1,
+        "base_soak": -2,
         "magic_resistance": 13,
         "wounds": {
           "light": 0,
@@ -31238,13 +31989,13 @@
           {
             "name": "Stony fist",
             "init": -3,
-            "attack": 5,
-            "defense": 2,
-            "damage": 10,
-            "id": "6c4f5b47b120"
+            "attack": 8,
+            "defense": 5,
+            "damage": 19,
+            "id": "f6b9dd10bf5f"
           }
         ],
-        "soak": 31,
+        "soak": 22,
         "wounds": {
           "light": 0,
           "medium": 0,
@@ -31268,7 +32019,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 75,
+            "xp": 180,
             "specialty": "fist",
             "xp_table": "ability"
           },
@@ -31305,7 +32056,7 @@
           {
             "name": "Command of Terram",
             "might_cost": 1,
-            "init": -4,
+            "init": -13,
             "form": "Terram",
             "range": "",
             "duration": "",
@@ -31314,12 +32065,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "11d6efe2f754"
+            "id": "be896cdecd51"
           },
           {
             "name": "Dread of the Heights",
-            "might_cost": 6,
-            "init": -9,
+            "might_cost": 3,
+            "init": -6,
             "form": "Mentem",
             "range": "Voice",
             "duration": "Diameter",
@@ -31327,13 +32078,13 @@
             "level": 30,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Fills a crowd with terror, so that it flees or cowers; one person she may merely make wary. CrMe 30 (Base 5, +2 Voice, +1 Diameter, +2 Group), for the book's Fear 10.",
-            "id": "8322638fd52f"
+            "description": "Fills a crowd with terror, so that it flees or cowers; one person she may merely make wary. CrMe 30 (Base 5, +2 Voice, +1 Diameter, +2 Group), for the book's Fear 10. Fourth Edition: 6 points.",
+            "id": "9f84429318ec"
           },
           {
             "name": "Shape of the Crag",
-            "might_cost": 6,
-            "init": -9,
+            "might_cost": 3,
+            "init": -6,
             "form": "Corpus",
             "range": "Touch",
             "duration": "Sun",
@@ -31341,8 +32092,8 @@
             "level": 30,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Turns her, or someone she touches, into any lifeless thing, from a pebble to a cliff, up to 14 steps of Size from the true one; she still sees and speaks in that shape, a victim does not. An unwilling victim resists on a Stamina stress roll of 9+. Others notice the disguise only if their Per + Awareness beats her Int + 14. MuCo(Te) 30, for the book's Shapechange to Object 14.",
-            "id": "134a8facde28"
+            "description": "Turns her, or someone she touches, into any lifeless thing, from a pebble to a cliff, up to 14 steps of Size from the true one; she still sees and speaks in that shape, a victim does not. An unwilling victim resists on a Stamina stress roll of 9+. Others notice the disguise only if their Per + Awareness beats her Int + 14. MuCo(Te) 30, for the book's Shapechange to Object 14. Fourth Edition: 6 points.",
+            "id": "56fac778ff5f"
           },
           {
             "name": "Strength Beyond Nature",
@@ -31356,7 +32107,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 6 to Strength for one roll.",
-            "id": "4127cfbd3ab4"
+            "id": "293ea1b4a138"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -31370,12 +32121,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls from her mountains up to 10 lesser jinn of Might up to 30 each and no more than 100 in all, who come within 10 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "27ed7f504dd7"
+            "id": "0c8747abc4d6"
           },
           {
             "name": "The Jinni's Road",
-            "might_cost": 7,
-            "init": -10,
+            "might_cost": 4,
+            "init": -7,
             "form": "Corpus",
             "range": "Personal",
             "duration": "Momentary",
@@ -31383,8 +32134,8 @@
             "level": 35,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 10 miles off, on Int + 10 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 12 people along. As the Leap of Homecoming, ReCo 35.",
-            "id": "3a9fe9f451b6"
+            "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 10 miles off, on Int + 10 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 12 people along. As the Leap of Homecoming, ReCo 35. Fourth Edition: 7 points.",
+            "id": "204978ba341c"
           }
         ],
         "vis": [
@@ -31392,18 +32143,18 @@
             "pawns": 10,
             "art": "Terram",
             "where": "in her body",
-            "id": "f942b8c4d984"
+            "id": "763e38e63182"
           },
           {
             "pawns": 10,
             "art": "Ignem",
             "where": "in her body",
-            "id": "1fffc74ff6b8"
+            "id": "b83bcae69ae4"
           }
         ],
         "equipment": "",
         "appearance": "A marida fifteen feet tall and nearly as wide, a rough, hairless human shape with skin like sandy brown stone; strangers take her for part of the mountainside. Her voice is a deep rumble.",
-        "notes": "A marida of the Marid tribe in the mountains of northern Syria. Mortal business barely interests her: she spends her care on the lesser jinn of the heights, many of whom treat her as a grandmother. She is kind to whoever shows her respect and fearsome to whoever harms her or those she shelters. A Muslim in name, she keeps the faith fitfully, always being drawn off by her charges' troubles. Talking is wiser than fighting her.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.\n\nStory seeds:\nOops!: the characters hurt one of the jinn under Amirat al-Jabal's protection by mistake; she hunts them for revenge or payment, and talking is far safer than fighting her.",
+        "notes": "A marida of the Marid tribe in the mountains of northern Syria. Mortal business barely interests her: she spends her care on the lesser jinn of the heights, many of whom treat her as a grandmother. She is kind to whoever shows her respect and fearsome to whoever harms her or those she shelters. A Muslim in name, she keeps the faith fitfully, always being drawn off by her charges' troubles. Talking is wiser than fighting her.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-9, Medium to 18, Heavy to 27, Incapacitated to 36, Dead from 37.\n\nStory seeds:\nOops!: the characters hurt one of the jinn under Amirat al-Jabal's protection by mistake; she hunts them for revenge or payment, and talking is far safer than fighting her.\n\nAs printed in Fourth Edition: Stony fist Init +8, Attack +8, Defense -1, Damage +23; Soak +35.",
         "source": "Blood and Sand: The Levant Tribunal p. 88",
         "detail": "Full",
         "place_id": "the_mountains_of_northern_syria",
@@ -31512,8 +32263,8 @@
             "init": 4,
             "attack": 11,
             "defense": 12,
-            "damage": 7,
-            "id": "b2b887b272a3"
+            "damage": 10,
+            "id": "9483fe0678ab"
           }
         ],
         "soak": 11,
@@ -31668,7 +32419,7 @@
           {
             "name": "Command of Aquam",
             "might_cost": 1,
-            "init": 3,
+            "init": -6,
             "form": "Aquam",
             "range": "",
             "duration": "",
@@ -31677,12 +32428,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Aquam effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "16025f8dc5ea"
+            "id": "e41f7404ae56"
           },
           {
             "name": "Command of Auram",
             "might_cost": 1,
-            "init": 3,
+            "init": -6,
             "form": "Auram",
             "range": "",
             "duration": "",
@@ -31691,12 +32442,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Auram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "652f02c06882"
+            "id": "b23a9d3f726d"
           },
           {
             "name": "Command of Ignem",
             "might_cost": 1,
-            "init": 3,
+            "init": -6,
             "form": "Ignem",
             "range": "",
             "duration": "",
@@ -31705,12 +32456,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Ignem effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. Creo Ignem effects reach a magnitude higher and Perdo Ignem ones a magnitude lower, as befits a creature of fire.",
-            "id": "cfb3012107ee"
+            "id": "74492f666894"
           },
           {
             "name": "Command of Terram",
             "might_cost": 1,
-            "init": 3,
+            "init": -8,
             "form": "Terram",
             "range": "",
             "duration": "",
@@ -31719,12 +32470,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 60 (the book's rating of 12), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "1e1abbbf440f"
+            "id": "448b209705fc"
           },
           {
             "name": "Unseen",
-            "might_cost": 4,
-            "init": 0,
+            "might_cost": 2,
+            "init": 2,
             "form": "Imaginem",
             "range": "Personal",
             "duration": "Sun",
@@ -31732,8 +32483,8 @@
             "level": 20,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "No mortal sense can find him; he may show himself and vanish again at will while it lasts. Second Sight, angels and demons see through it, and magic can find him. As the Veil of Invisibility, PeIm 20, for the book's Invisibility 6.",
-            "id": "8835f0a2f8f0"
+            "description": "No mortal sense can find him; he may show himself and vanish again at will while it lasts. Second Sight, angels and demons see through it, and magic can find him. As the Veil of Invisibility, PeIm 20, for the book's Invisibility 6. Fourth Edition: 4 points.",
+            "id": "53321348e4bd"
           },
           {
             "name": "Strength Beyond Nature",
@@ -31747,7 +32498,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Strength for one roll. Once it was 8: his strength has drained with his Might.",
-            "id": "1f07eba7c6d0"
+            "id": "b12f2e09be97"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -31761,12 +32512,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls to his side up to 12 lesser jinn of Might up to 7 each and no more than 120 in all, who come within 8 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "ef7645b53ac5"
+            "id": "daf68a3edb6e"
           },
           {
             "name": "The Jinni's Road",
-            "might_cost": 7,
-            "init": -3,
+            "might_cost": 4,
+            "init": 0,
             "form": "Corpus",
             "range": "Personal",
             "duration": "Momentary",
@@ -31774,8 +32525,8 @@
             "level": 35,
             "penetration_bonus": 0,
             "quality": "",
-            "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 12 miles off, on Int + 12 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 3 people along. As the Leap of Homecoming, ReCo 35.",
-            "id": "2f7ace259563"
+            "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 12 miles off, on Int + 12 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 3 people along. As the Leap of Homecoming, ReCo 35. Fourth Edition: 7 points.",
+            "id": "f7ed500f24aa"
           }
         ],
         "vis": [
@@ -31783,12 +32534,12 @@
             "pawns": 15,
             "art": "Ignem",
             "where": "in his body",
-            "id": "e433464e065a"
+            "id": "e7bc6b8ef8df"
           }
         ],
         "equipment": "",
         "appearance": "About twelve feet tall and very broad in the shoulder, with jet-black skin and curled ram's horns, in loose white trousers and a white sash, his face fixed in gloom.",
-        "notes": "The marid bound to the copper lamp of A'la al-Din, the tailor's son from China whose tale the Arabian Nights may have gained late (the book lets a storyguide who wants history strict leave the lamp out). Whoever rubs the lamp calls him and whoever holds it commands him, with as many orders as the holder likes from chapter 6's list of services a bound jinni gives; the three wishes came later. The lamp has passed down A'la al-Din's line, each heir spending his Might, which stood at 80 and is now 15. Old, worn and resentful, he still has all his skill, if little of his raw power. The book places neither the lamp nor its owner.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.\n\nStory seeds:\nSet Me Free!: the lamp of A'la al-Din comes to the characters, and 'Abd al-Misbah tells them the hard terms of his freedom; he would make a fine friend if they meet them, and a wretched servant until they do.",
+        "notes": "The marid bound to the copper lamp of A'la al-Din, the tailor's son from China whose tale the Arabian Nights may have gained late (the book lets a storyguide who wants history strict leave the lamp out). Whoever rubs the lamp calls him and whoever holds it commands him, with as many orders as the holder likes from chapter 6's list of services a bound jinni gives; the three wishes came later. The lamp has passed down A'la al-Din's line, each heir spending his Might, which stood at 80 and is now 15. Old, worn and resentful, he still has all his skill, if little of his raw power. The book places neither the lamp nor its owner.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-8, Medium to 16, Heavy to 24, Incapacitated to 32, Dead from 33.\n\nStory seeds:\nSet Me Free!: the lamp of A'la al-Din comes to the characters, and 'Abd al-Misbah tells them the hard terms of his freedom; he would make a fine friend if they meet them, and a wretched servant until they do.\n\nAs printed in Fourth Edition: Fist Init +16, Attack +13, Defense +12, Damage +15; Soak +14.",
         "source": "Blood and Sand: The Levant Tribunal p. 95",
         "detail": "Full",
         "place_id": "the_levant",
@@ -31903,26 +32654,26 @@
           {
             "name": "Fist",
             "init": 4,
-            "attack": 9,
-            "defense": 8,
+            "attack": 13,
+            "defense": 12,
             "damage": 5,
-            "id": "e87d2327310e"
+            "id": "042904898bee"
           },
           {
             "name": "Long sword",
             "init": 6,
-            "attack": 15,
-            "defense": 11,
+            "attack": 17,
+            "defense": 13,
             "damage": 11,
-            "id": "5547edb617c2"
+            "id": "a4151486038a"
           },
           {
             "name": "Long sword and round shield",
             "init": 6,
-            "attack": 15,
-            "defense": 13,
+            "attack": 17,
+            "defense": 15,
             "damage": 11,
-            "id": "c748860d28ff"
+            "id": "f2922b89eea6"
           }
         ],
         "soak": 10,
@@ -31949,7 +32700,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 50,
+            "xp": 180,
             "specialty": "fist",
             "xp_table": "ability"
           },
@@ -31977,7 +32728,7 @@
           {
             "name": "Single Weapon",
             "category": "Martial",
-            "xp": 105,
+            "xp": 180,
             "specialty": "long sword",
             "xp_table": "ability"
           }
@@ -31995,7 +32746,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs anger in someone near him, adding 1 to rolls on a trait of anger; he may hold the power for several passions. The book's Psychomachia (Anger) 3.",
-            "id": "7e960c391086"
+            "id": "7508e521581c"
           },
           {
             "name": "Beast Shape",
@@ -32009,7 +32760,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of any living thing, a man among them, within 4 steps of his own Size, keeping his speech; to see through a human disguise others must beat his Int + 4 with Per + Awareness. MuCo(An) 20 (Base 10, +2 Sun), for the book's Shapechange to Animal 4; worked on another (Touch, +5 levels and 1 more Might) it allows a Stamina stress roll of 9+.",
-            "id": "cf276024260c"
+            "id": "2da28cce4c48"
           },
           {
             "name": "Ghul's Quickness",
@@ -32023,7 +32774,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Dexterity or 1 to Quickness for one roll.",
-            "id": "c71c09759ccf"
+            "id": "4006e3a89a2c"
           },
           {
             "name": "The Second Blow",
@@ -32037,7 +32788,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His own power, the ghul's legend made real: after he calls on it, the next blow that wounds him undoes, instead, the wounds of the last blow that struck him. It lasts for that one blow. The book allowed it twice a day; now each use costs its Might.",
-            "id": "44a235de5993"
+            "id": "01b61a539a11"
           }
         ],
         "vis": [
@@ -32045,24 +32796,24 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in his body",
-            "id": "f01d1ed087bf"
+            "id": "41c8be5cde6f"
           },
           {
             "pawns": 2,
             "art": "Terram",
             "where": "in his sword",
-            "id": "db602d981cb0"
+            "id": "befc3439c7a3"
           },
           {
             "pawns": 2,
             "art": "Herbam",
             "where": "in his shield",
-            "id": "354277e60186"
+            "id": "95e3d052bb51"
           }
         ],
         "equipment": "Long sword, round shield, partial chain mail.",
         "appearance": "In his own shape a squat, red-skinned man in chain mail with a sword and shield; he usually hides it under another.",
-        "notes": "An Infernal jinni of the Ghul tribe who hires himself out to whoever pays. Other jinn shun him. He likes mortal armies best, for the fighting and slaughter, and for the chance to feed on those he cuts down while the battle keeps everyone busy; his Weakness is for human flesh. He changes his looks to slip into the ranks.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nStory seeds:\nA Rogue Element: al-Qatil takes the shape of a common soldier, joins the covenant's grogs and stirs them towards mutiny, and the magi must find the cause before it is too late.",
+        "notes": "An Infernal jinni of the Ghul tribe who hires himself out to whoever pays. Other jinn shun him. He likes mortal armies best, for the fighting and slaughter, and for the chance to feed on those he cuts down while the battle keeps everyone busy; his Weakness is for human flesh. He changes his looks to slip into the ranks.\n\nA jinni, made of smokeless flame. Its nature, from the book (TC&TC's Jinni Virtue is not in the catalog, so it is written here): it heals a wound level a day for each point of a Magic aura it rests in; magical fire cannot hurt it and mundane fire does half its harm, but cold does double; it sees in darkness as by day, and has Second Sight and Magic Sensitivity of at least 2; it neither ages nor sickens and dies only by violence; and it must keep any promise it makes, so it gives its word sparingly.\n\nIts powers' effects end at the next dawn or call to prayer; to make one last, it pays the effect's Might cost a second time. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nStory seeds:\nA Rogue Element: al-Qatil takes the shape of a common soldier, joins the covenant's grogs and stirs them towards mutiny, and the magi must find the cause before it is too late.\n\nAs printed in Fourth Edition: Fist Init +10, Attack +12, Defense +10, Damage +5; Long sword Init +14, Attack +13, Defense +15, Damage +9; Long sword and round shield Init +13, Attack +14, Defense +18, Damage +9; Soak +12.",
         "source": "Blood and Sand: The Levant Tribunal p. 89",
         "detail": "Full",
         "place_id": "bilad_al_sham",
@@ -32076,7 +32827,7 @@
         "many": true,
         "how_many": "a lone creature at a well or oasis, most often in Upper Egypt",
         "realm": "Infernal",
-        "might": 20,
+        "might": 15,
         "might_form": "Mentem",
         "might_pool": null,
         "order": "",
@@ -32122,18 +32873,18 @@
           {
             "name": "Fist",
             "init": 3,
-            "attack": 8,
-            "defense": 8,
+            "attack": 11,
+            "defense": 11,
             "damage": 5,
-            "id": "e739ce27df3c"
+            "id": "51ae8fd6ecdf"
           },
           {
             "name": "Grapple (the spiked embrace)",
             "init": 3,
-            "attack": 8,
-            "defense": 8,
+            "attack": 11,
+            "defense": 11,
             "damage": null,
-            "id": "0da20d0c1a3d"
+            "id": "e83a3ccf1845"
           }
         ],
         "soak": 8,
@@ -32160,7 +32911,7 @@
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 75,
+            "xp": 180,
             "specialty": "grapple",
             "xp_table": "ability"
           },
@@ -32185,7 +32936,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each time she asks something of her victim, he must make a Stamina roll of 12+ or do it unquestioning; a cynic may add to the roll and a kindly soul take away. She asks for a drink first, and then to be held. ReMe 30 at 2 Might points, as the book prices it.",
-            "id": "4397eca88504"
+            "id": "7e9f98a49ed0"
           }
         ],
         "vis": [
@@ -32193,12 +32944,12 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in her larynx",
-            "id": "a37e4b3406c7"
+            "id": "69fbb37bc9fc"
           }
         ],
         "equipment": "",
         "appearance": "An old woman muffled in a black milaya. Under her clothes her body is covered in long spikes as sharp as razors; unclothed her Presence is -5.",
-        "notes": "One of the deadliest things in the Levant. She haunts wells and oases, calling a lone traveller over with a plea for water or some other likely excuse, and likes handsome victims best, perhaps from spite at her own ugliness. When he is close she crushes him against her spikes. She hides when more than one person comes. TC&TC counts naddahas among the spirits that are not true jinn, so Sihr has no special hold on her.\n\nShe nearly always grapples. Once she holds a victim he is immobilised and takes a wound level each round, starting with the round she seizes him, until her hold is broken. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nStory seeds:\nMissing Persons: a village qadi asks the covenant to find villagers who vanished at a riverside well; a naddaha has made it its home, and once it is dealt with the qadi wants the bodies it threw in the river, now far downstream.",
+        "notes": "One of the deadliest things in the Levant. She haunts wells and oases, calling a lone traveller over with a plea for water or some other likely excuse, and likes handsome victims best, perhaps from spite at her own ugliness. When he is close she crushes him against her spikes. She hides when more than one person comes. TC&TC counts naddahas among the spirits that are not true jinn, so Sihr has no special hold on her.\n\nShe nearly always grapples. Once she holds a victim he is immobilised and takes a wound level each round, starting with the round she seizes him, until her hold is broken. Wound ranges: Light 1-5, Medium to 10, Heavy to 15, Incapacitated to 20, Dead from 21.\n\nStory seeds:\nMissing Persons: a village qadi asks the covenant to find villagers who vanished at a riverside well; a naddaha has made it its home, and once it is dealt with the qadi wants the bodies it threw in the river, now far downstream.\n\nMight 20 as printed.\n\nAs printed in Fourth Edition: Fist Init +8, Attack +8, Defense +8, Damage +5; Grapple (the spiked embrace) Init +9, Attack +9, Defense +9, Damage n/a; Soak +8.",
         "source": "Blood and Sand: The Levant Tribunal p. 90",
         "detail": "Full",
         "place_id": "upper_egypt",
@@ -32231,7 +32982,7 @@
           "presence": 0,
           "communication": 0,
           "dexterity": 3,
-          "quickness": 3
+          "quickness": 6
         },
         "cunning": false,
         "size": -3,
@@ -32302,11 +33053,11 @@
         "attacks": [
           {
             "name": "Claws and teeth",
-            "init": 2,
-            "attack": 5,
-            "defense": 6,
+            "init": 5,
+            "attack": 13,
+            "defense": 17,
             "damage": -1,
-            "id": "b93b19fd0af6"
+            "id": "949564838d14"
           }
         ],
         "soak": 1,
@@ -32343,6 +33094,13 @@
             "xp": 105,
             "specialty": "hunting",
             "xp_table": "ability"
+          },
+          {
+            "name": "Brawl",
+            "category": "General",
+            "xp": 180,
+            "specialty": null,
+            "xp_table": "ability"
           }
         ],
         "powers": [],
@@ -32351,24 +33109,24 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in his left eye",
-            "id": "7aaa192b1e69"
+            "id": "99c47680de7b"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his right eye",
-            "id": "4914dae0ce58"
+            "id": "b9cd39bf836c"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his brain",
-            "id": "04add3190167"
+            "id": "136e7455e898"
           }
         ],
         "equipment": "",
         "appearance": "An ordinary-sized cat whose white fur is tipped with gold.",
-        "notes": "Amber the Golden's familiar (her sheet has the bond). The choosing was mutual, and each leaves the other room to be themselves. He loves the leopard's shape Amber's From Cat to Cat gives him. Presence and Communication n/a as printed.\n\nCombat from the Definitive Edition's claws (Init Qik + -1, Attack Dex + 2, Defense Qik + 3, Damage Str + 2), with no Brawl score printed. Wound ranges: Light 1-2, Medium to 4, Heavy to 6, Incapacitated to 8, Dead from 9.",
+        "notes": "Amber the Golden's familiar (her sheet has the bond). The choosing was mutual, and each leaves the other room to be themselves. He loves the leopard's shape Amber's From Cat to Cat gives him. Presence and Communication n/a as printed.\n\nCombat from the Definitive Edition's claws (Init Qik + -1, Attack Dex + 2, Defense Qik + 3, Damage Str + 2), with no Brawl score printed. Wound ranges: Light 1-2, Medium to 4, Heavy to 6, Incapacitated to 8, Dead from 9.\n\nAs printed in Fourth Edition: Claws and teeth Init +5, Attack +5, Defense +7, Damage -3; Soak -2.",
         "source": "Secrets in Sand p. 7",
         "detail": "Full",
         "place_id": "the_mountain_of_aedes_veritatis",
@@ -32527,7 +33285,7 @@
         "might": 15,
         "might_form": "Vim",
         "might_pool": null,
-        "order": "",
+        "order": "Tempter",
         "hierarchy": null,
         "weakness": "",
         "faerie_role": "",
@@ -33200,7 +33958,7 @@
           "kind": "places",
           "target_id": "baghdad",
           "note": "Lives among its Jews",
-          "id": "eed4e224f0a1"
+          "id": "bcb463457b21"
         }
       ],
       "agents": [],
@@ -33395,7 +34153,7 @@
           "kind": "characters",
           "target_id": "aurora_borealis",
           "note": "Came to the Levant with her",
-          "id": "52268675d370"
+          "id": "c77512083377"
         }
       ],
       "agents": [],
@@ -33778,7 +34536,7 @@
           "kind": "characters",
           "target_id": "wraith",
           "note": "His wife",
-          "id": "7be936ca0e51"
+          "id": "91ba679feff6"
         }
       ],
       "agents": [],
@@ -33973,7 +34731,7 @@
           "kind": "characters",
           "target_id": "fade",
           "note": "Her husband",
-          "id": "7ef6d191c3bc"
+          "id": "24d25f39a135"
         }
       ],
       "agents": [],
@@ -34920,7 +35678,7 @@
           "kind": "characters",
           "target_id": "leo",
           "note": "His firm friend",
-          "id": "77994d05225f"
+          "id": "ab68b28a5526"
         }
       ],
       "agents": [],
@@ -35115,7 +35873,7 @@
           "kind": "characters",
           "target_id": "tiberius",
           "note": "His firm friend",
-          "id": "cdc0b70d8969"
+          "id": "1a2e529cb2af"
         }
       ],
       "agents": [],
@@ -36438,7 +37196,7 @@
           "kind": "characters",
           "target_id": "hergar",
           "note": "Her parens",
-          "id": "4e56fbac55b1"
+          "id": "5255856ec279"
         }
       ],
       "agents": [],
@@ -36633,7 +37391,7 @@
           "kind": "characters",
           "target_id": "hildegard",
           "note": "His parens",
-          "id": "a13dede01949"
+          "id": "8f0d4a0e32d7"
         }
       ],
       "agents": [],
@@ -37204,7 +37962,7 @@
           "kind": "characters",
           "target_id": "sarah",
           "note": "His twin sister",
-          "id": "feb5de0eff25"
+          "id": "0e67b11e686b"
         }
       ],
       "agents": [],
@@ -37399,7 +38157,7 @@
           "kind": "characters",
           "target_id": "simon",
           "note": "Her twin brother",
-          "id": "1e882ec5213b"
+          "id": "12d2dfdf0fe5"
         }
       ],
       "agents": [],

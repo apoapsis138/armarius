@@ -59,12 +59,13 @@ if TYPE_CHECKING:
 
 SIS = "SiS"
 SAHIRS = "trad_hermetic_sahirs"
+#: The Area Lore that takes a block's Legend Lore.
+AREA = "Levant Tribunal"
 #: Swaps made otherwise for one magus: Felix already knows The Ear for
 #: Distant Voices, and Guillaume's Curse is the book's level 30, not
 #: 'Umar's 35.
 SECOND_SWAPS = {
     ("felix", "Eyes of the Past"): "Frosty Breath of the Spoken Lie",
-    ("guillaume", "Curse of the Attraction of the Fire"): "Petite Phoenix",
 }
 #: The magi's own spells, which no catalog prints: the book's Range,
 #: Duration and Target, page and source, and a description.
@@ -979,7 +980,7 @@ def stats(levant: Levant) -> None:
         character = levant.magi.get(key)
         if character is None:
             continue
-        stat, age = convert(key, block, SECOND_SWAPS)
+        stat, age = convert(key, block, SECOND_SWAPS, area=AREA)
         b.stats(character, stat, source=source)
         character.background.year_born = b.year - age
         _own_spells(character)
