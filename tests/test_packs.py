@@ -20,8 +20,9 @@ from ars_magica_manager import (
 from ars_magica_manager.book_packs import templates
 from ars_magica_manager.commands import Refuse
 from ars_magica_manager.forms import creation as creation_forms
+from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import saga as saga_forms
-from ars_magica_manager.models import Character, CharacterTemplateDef, Saga
+from ars_magica_manager.models import Character, CharacterTemplateDef, Neighbour, Saga
 
 
 def _rhine_pack(saga: Saga) -> dict:
@@ -481,3 +482,48 @@ def test_the_iceland_pack_holds_vindolanda_with_no_tribunal():
     assert vindolanda["place_id"] and not vindolanda["tribunal_id"]
     stories = [n for n in data["saga"]["neighbours"] if n["kind"] == threats.THREAT]
     assert all(n["details"].get(threats.DORMANT) for n in stories)
+
+
+def _story_pack() -> dict:
+    """A pack of two stories, one the pack has dormant, with a dated stage."""
+    return {
+        "kind": packs.PACK,
+        "saga": {
+            "neighbours": [
+                {"id": "awake", "name": "Awake", "kind": "threat", "details": {}},
+                {
+                    "id": "asleep",
+                    "name": "Asleep",
+                    "kind": "threat",
+                    "details": {"dormant": True},
+                },
+            ]
+        },
+    }
+
+
+def test_a_story_the_pack_has_dormant_starts_unticked():
+    ticks = {f.key: f.value for f in packs.story_fields(_story_pack())}
+    assert ticks == {"story_awake": True, "story_asleep": False}
+
+
+def test_ticking_a_dormant_story_begins_it_and_unticking_puts_one_to_sleep():
+    pack = _story_pack()
+    chosen = packs.narrow(pack, {"story_awake": False, "story_asleep": True})
+    awake = next(n for n in chosen["saga"]["neighbours"] if n["id"] == "awake")
+    assert awake["details"]["dormant"] and chosen[packs.BEGIN_STORIES] == ["asleep"]
+    saga = Saga(id="s", name="S")
+    saga.neighbours.append(
+        Neighbour("asleep", "Asleep", kind="threat", details={"dormant": True})
+    )
+    packs.after_import(saga, chosen)
+    assert not threats.is_dormant(saga.neighbours[0])
+
+
+def test_the_import_form_hands_what_was_chosen_to_what_follows_the_import():
+    saga = Saga(id="s", name="S")
+    pack = transfer.read(packs.SHIPPED_DIR / "iceland.amm.json")
+    step = import_forms._import_pack(saga, pack)
+    step.apply({"story_the_lean_year": True}).apply()
+    held = {n.name: threats.is_dormant(n) for n in saga.neighbours}
+    assert not held["The Lean Year"] and held["The Storgodar Feud"]

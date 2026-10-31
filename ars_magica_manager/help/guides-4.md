@@ -1198,7 +1198,11 @@ harvesting vis at auspicious times. It has the Constantly Mobile Hook.
    **Circuit** if it goes round for ever.
 4. **Bring its own aura, if it has one.** Edit the Place that holds that aura or
    regio and set **Travels with**. Place the covenant there, and its laboratories
-   in the regio's level.
+   in the regio's level. Aura Boons act on the covenant's own Place, so they
+   need that travelling Place: without it, they do nothing away from home. Name
+   what carries the aura: a ship's timbers, a magestone, a spirit. The books'
+   travelling auras are small and strongly anchored, as Favonius's ships and
+   Delos are, so give anything above 3 or 4 a strong anchor of that kind.
 5. **Advance the season.** Advance Season asks: move on, stay, or go somewhere
    else. Whatever you answer is logged as a stop.
 6. **Mind the Aegis.** A move leaves the Aegis behind, and a fleet can hold one

@@ -28,6 +28,7 @@ from ars_magica_manager.models import (
     Possession,
     RouteStop,
     Saga,
+    VirtueFlawInstance,
 )
 from ars_magica_manager.models.ships import Ship
 from ars_magica_manager.rules import lab as lab_rules
@@ -773,3 +774,56 @@ def test_a_ship_apart_says_so_on_her_card_and_row():
         "Apart from the fleet: at Isle, Magic 3; aboard: Cassius"
     )
     assert ship_text.APART in ship_text.row_label(record, saga)
+
+
+def test_a_stop_logged_ahead_leaves_the_aegis_behind_when_it_comes_due():
+    saga = _saga(place_id="isle", aegis_of_the_hearth=15)
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Summer", "cove"))
+    saga.current_season = "Summer"
+    lines = mobile_covenants.log_moves(saga, ())
+    assert covenant.aegis_of_the_hearth == 0
+    assert "left behind" in lines[0] and covenant.diary[-1].category
+
+
+def test_a_stop_logged_ahead_at_the_same_place_keeps_the_aegis():
+    saga = _saga(place_id="port", aegis_of_the_hearth=15)
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Summer", "port"))
+    saga.current_season = "Summer"
+    assert mobile_covenants.log_moves(saga, ()) == []
+    assert covenant.aegis_of_the_hearth == 15
+
+
+def _aura_boons(covenant: Covenant) -> None:
+    covenant.boons_hooks = [
+        VirtueFlawInstance(mobile_covenants.AURA_BOON, {"detail": "site"}),
+        VirtueFlawInstance(mobile_covenants.AURA_BOON, {"detail": "site"}),
+        VirtueFlawInstance("covbh_hook_major_constantly_mobile", {}),
+    ]
+
+
+def test_aura_boons_stay_at_home_without_an_anchor():
+    saga = _saga(place_id="home")
+    saga.neighbours.append(_place("home", 3))
+    covenant = saga.covenants[0]
+    _aura_boons(covenant)
+    places.sync(saga)
+    assert realms.aura_of(covenant) == (5, "Magic")
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    places.sync(saga)
+    assert realms.aura_of(covenant) == (3, "Magic")
+    assert not covenant.aura_boons_apply
+    assert "Aura Boon isn't reaching" in mobile_covenants.summary_text(saga, covenant)
+
+
+def test_aura_boons_raise_a_travelling_anchor_against_the_aura_around_it():
+    saga = _saga(place_id="deck")
+    saga.neighbours.append(_place("deck", 2, travels_with="c"))
+    covenant = saga.covenants[0]
+    _aura_boons(covenant)
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    places.sync(saga)
+    assert realms.aura_of(covenant) == (4, "Magic")
+    assert mobile_covenants.grid(saga, covenant).rows[0][2] == "Magic 4"
+    assert "Aura Boon" not in mobile_covenants.summary_text(saga, covenant)

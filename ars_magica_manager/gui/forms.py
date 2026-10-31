@@ -994,6 +994,25 @@ class CardsDialog(_Sheet):
         )
 
 
+#: The lines of a question or notice beyond which it scrolls, so a long
+#: one (what a pack adds) leaves its buttons on the screen.
+LONG_WORDS_LINES = 30
+#: How tall a scrolling question or notice is drawn.
+LONG_WORDS_HEIGHT = 520
+
+
+def _scrolled_if_long(label: QLabel, words: str) -> QWidget:
+    """`label`, inside a scrolling area if `words` run long."""
+    if words.count("\n") <= LONG_WORDS_LINES:
+        return label
+    area = QScrollArea()
+    area.setWidgetResizable(True)
+    area.setWidget(label)
+    area.setMinimumHeight(LONG_WORDS_HEIGHT)
+    area.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
+    return area
+
+
 class ConfirmDialog(_Sheet):
     """A yes-or-no question; Accepted means yes."""
 
@@ -1014,7 +1033,7 @@ class ConfirmDialog(_Sheet):
         words.setWordWrap(True)
         words.setFont(serif(13))
         self.question = plain(question)
-        self.column.addWidget(words)
+        self.column.addWidget(_scrolled_if_long(words, question), 1)
         self.save.clicked.connect(self.accept)
         # No by default, as on the terminal.
         self.save.setDefault(False)
@@ -1064,7 +1083,7 @@ class NoticeDialog(_Sheet):
         body.setWordWrap(True)
         body.setFont(serif(13))
         self.words = plain(words)
-        self.column.addWidget(body)
+        self.column.addWidget(_scrolled_if_long(body, words), 1)
         self.save.clicked.connect(self.accept)
         self.cancel.hide()
         self.finish()

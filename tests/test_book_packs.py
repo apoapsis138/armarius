@@ -1364,12 +1364,15 @@ def test_the_novgorod_pack_converts_its_printed_magi_by_the_de_readings():
     assert all(k.mastery_score == 1 for k in andrei.spells_known)
     malincka = magi["Malincka Capcek"]
     own = {s.name: s.level for s in malincka.invented_spells}
-    assert own.items() >= {
-        "Charge the Magical Circle": 25,
-        "Read the Magic Sphere": 35,
-        "Plumb the Magical Scent": 20,
-        "Air of Friendly Magic": 30,
-    }.items()
+    assert (
+        own.items()
+        >= {
+            "Charge the Magical Circle": 25,
+            "Read the Magic Sphere": 35,
+            "Plumb the Magical Scent": 20,
+            "Air of Friendly Magic": 30,
+        }.items()
+    )
     nastassia = magi["Nastassia Baramov"]
     assert {"Form of the Avenging Beast", "Echo of the Firebird"} <= {
         s.name for s in nastassia.invented_spells

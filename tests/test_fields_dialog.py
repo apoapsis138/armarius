@@ -14,7 +14,7 @@ from textual.app import App
 from textual.widgets import Checkbox, Input, Select, Static, TextArea
 
 from ars_magica_manager import ROOT, storage
-from ars_magica_manager.tui.screens import DialogField, FieldsDialog
+from ars_magica_manager.tui.screens import ConfirmScreen, DialogField, FieldsDialog
 
 
 def _fields() -> list[DialogField]:
@@ -328,3 +328,15 @@ async def test_delete_clears_a_picker_field_that_may_be_blank():
             dialog.query_one(f"#fld-{key}").focus()
             await pilot.press("delete")
         assert dialog.current_values() == {"must": "kept", "may": None}
+
+
+async def test_a_long_confirmation_keeps_its_buttons_on_the_screen():
+    class Host(App[None]):
+        def on_mount(self) -> None:
+            self.push_screen(ConfirmScreen("\n".join(f"L{n}" for n in range(300))))
+
+    app = Host()
+    async with app.run_test(size=(120, 45)) as pilot:
+        await pilot.pause()
+        region = app.screen.query_one("#btn-yes").region
+        assert region.height > 0 and region.bottom <= 45

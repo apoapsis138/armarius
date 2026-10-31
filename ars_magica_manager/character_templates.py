@@ -16,6 +16,7 @@ Templates (SOURCE); each entry's `fixes` say where it differs from the page.
 
 from __future__ import annotations
 
+import re
 from dataclasses import replace
 
 from . import catalog, sourcebooks, storage
@@ -83,13 +84,34 @@ def find(template_id: str | None) -> CharacterTemplateDef | None:
     )
 
 
+#: A book's Ability left to the player, as a pack writes it: "Living
+#: Language: (Native)".
+_PRINTED_BLANK = re.compile(r"^([^:]+): \(([^)]+)\)$")
+
+
+def _printed_blank(name: str) -> str | None:
+    """The blank a pack's Ability name leaves ("living_language_native"), as
+    two Abilities of one template can both say (Local)."""
+    found = _PRINTED_BLANK.match(name)
+    return "_".join(f"{found[1]} {found[2]}".lower().split()) if found else None
+
+
 def blanks(template: CharacterTemplateDef) -> list[str]:
     """The names the template leaves to the player ("area", "language"), in
     the order its Abilities first ask for them."""
-    return cx.template_blanks(tuple((a["name"], 0) for a in template.abilities))
+    names = tuple((a["name"], 0) for a in template.abilities)
+    found = cx.template_blanks(names)
+    for name, _ in names:
+        blank = _printed_blank(name)
+        if blank is not None and blank not in found:
+            found.append(blank)
+    return found
 
 
 def _fill(name: str, values: dict[str, str]) -> str:
+    blank = _printed_blank(name)
+    if blank is not None and values.get(blank, "").strip():
+        return f"{name.split(':')[0]}: {values[blank].strip()}"
     return cx.fill_template(((name, 0),), values)[0][0]
 
 

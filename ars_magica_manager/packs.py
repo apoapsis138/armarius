@@ -708,14 +708,15 @@ def story_fields(
     prefix: str = "",
     show_if: Callable[[dict[str, Any]], bool] | None = None,
 ) -> list[DialogField]:
-    """A tick for each of the pack's stories to begin, all ticked: one
-    left unticked comes in dormant, to begin later."""
+    """A tick for each of the pack's stories to begin, ticked unless the
+    pack has it dormant: one left unticked comes in dormant, to begin
+    later, and a tick begins one the pack has dormant."""
     return [
         DialogField(
             story_key(n["id"], prefix),
             f"Begin: {escape(str(n.get('name') or ''))}",
             "check",
-            True,
+            not (n.get("details") or {}).get(threats.DORMANT),
             hint="Unticked, it comes in dormant: Begin This Story, in its "
             "More, starts it later.",
             show_if=show_if,
@@ -762,15 +763,40 @@ def _with_people(values: dict[str, Any]) -> bool:
     return bool(values.get("people", True))
 
 
+#: The pack key listing the stories ticked to begin that the pack has
+#: dormant.
+BEGIN_STORIES = "begin_stories"
+
+
+def _begin_stories(saga: Saga, data: dict[str, Any]) -> None:
+    """Begin each story ticked to begin, now it is in the saga: its dated
+    stages move on from the saga's date as Begin This Story moves them."""
+    chosen = set(data.get(BEGIN_STORIES) or [])
+    for story in _held(data, "neighbours"):
+        if story["id"] not in chosen:
+            continue
+        for neighbour in saga.neighbours:
+            if neighbour.name == story.get("name") and threats.is_dormant(neighbour):
+                threats.begin(saga, neighbour)
+
+
 def _dormant(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
-    """`data` with each story left unticked in `values` marked dormant."""
-    asleep = {
-        n["id"]
+    """`data` with each story left unticked in `values` marked dormant, and
+    each one the pack has dormant but ticked there listed to begin once it
+    is in the saga (after_import)."""
+    answered = [
+        n
         for n in _held(data, "neighbours")
-        if n.get("kind") == threats.THREAT
-        and story_key(n["id"]) in values
-        and not values[story_key(n["id"])]
-    }
+        if n.get("kind") == threats.THREAT and story_key(n["id"]) in values
+    ]
+    asleep = {n["id"] for n in answered if not values[story_key(n["id"])]}
+    woken = [
+        n["id"]
+        for n in answered
+        if n["id"] not in asleep and (n.get("details") or {}).get(threats.DORMANT)
+    ]
+    if woken:
+        data = {**data, BEGIN_STORIES: woken}
     if not asleep:
         return data
     neighbours = [
@@ -1095,6 +1121,7 @@ def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     """What importing a pack does besides its records: a pack built from
     a sourcebook (its "book") puts that book in play, and one that names
     its assumptions page says where to read them. The notes to show."""
+    _begin_stories(saga, data)
     book = data.get("book")
     if not isinstance(book, str):
         return []

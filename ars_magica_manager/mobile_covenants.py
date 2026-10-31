@@ -96,16 +96,20 @@ def title(covenant: Covenant) -> str:
     return f"{TITLE} ({len(covenant.stops)})"
 
 
+#: The Boon that raises a covenant's aura (Covenants p. 8).
+AURA_BOON = "covbh_boon_minor_aura"
+
+
 def where_now(saga: Saga, covenant: Covenant) -> str:
     """ "The Northern Seas, Magic 0": where it is now and the aura holding
     sway (plain words); "" for nowhere."""
     where = sites.covenant_place(saga, covenant)
     if where is None:
         return ""
-    aura, realm = sites.aura_here(saga, *where)
+    aura, realm = realms.aura_of(covenant)
     place_id, level = _at(saga, covenant)
     named = places.where_text(saga, place_id, level)
-    return f"{named or where[0].name}, {realm} {realms.with_boons(covenant, aura)}"
+    return f"{named or where[0].name}, {realm} {aura}"
 
 
 def route_text(saga: Saga, covenant: Covenant) -> str:
@@ -134,6 +138,19 @@ def vis_this_season(saga: Saga, covenant: Covenant) -> str:
     return escape("; ".join(found))
 
 
+def _anchor_note(covenant: Covenant) -> str:
+    """Why an Aura Boon isn't reaching where it is now; "" if it is."""
+    if covenant.aura_boons_apply or not mobile.has_mobile_hook(covenant):
+        return ""
+    if not any(held.vf_id == AURA_BOON for held in covenant.boons_hooks):
+        return ""
+    return (
+        "[$text-warning]Its Aura Boon isn't reaching this stop: an aura needs "
+        "something that travels to anchor it. Add a Place, set Travels with, and "
+        "put the covenant there.[/]"
+    )
+
+
 def summary_text(saga: Saga, covenant: Covenant) -> str:
     """The section's lines above its stops (markup): where it is now, its
     home, its route and this season's vis."""
@@ -149,6 +166,9 @@ def summary_text(saga: Saga, covenant: Covenant) -> str:
     vis = vis_this_season(saga, covenant)
     if vis:
         lines.append(f"[$label]Vis this season:[/] {vis}")
+    note = _anchor_note(covenant)
+    if note:
+        lines.append(note)
     return "\n".join(lines)
 
 
@@ -769,15 +789,50 @@ def _log_ship(saga: Saga, ship: Ship, what: str, where: str | None) -> None:
     mobile.date_order(ship.stops)
 
 
+def _planned_arrival(saga: Saga, covenant: Covenant) -> list[str]:
+    """A stop logged ahead of time has come due: if it moved the covenant,
+    the Aegis stays behind, as for any move."""
+    year, season = saga.current_year, saga.current_season
+    index = next(
+        (
+            i
+            for i, stop in enumerate(covenant.stops)
+            if (stop.year, stop.season) == (year, season)
+        ),
+        None,
+    )
+    if index is None:
+        return []
+    stop = covenant.stops[index]
+    before = (
+        (covenant.stops[index - 1].place_id, covenant.stops[index - 1].level)
+        if index
+        else (covenant.place_id, covenant.place_level)
+    )
+    if before == (stop.place_id, stop.level):
+        return []
+    return _aegis_lost(
+        covenant,
+        year,
+        season,
+        f"left behind when the covenant moved to "
+        f"{places.where_text(saga, stop.place_id, stop.level)}.",
+    )
+
+
 def log_moves(saga: Saga, moves: Moves) -> list[str]:
     """Log Advance Season's answers, dated the new season; then make every
     aura right for the new date, stops already planned for it included."""
     lines: list[str] = []
+    answered = {e.covenant.id for e, _, _ in moves if e.record is None}
     for entry, what, where in moves:
         if entry.record is None:
             lines += _log_covenant(saga, entry, what, where)
         else:
             _log_ship(saga, ship_rules.ship_of(entry.record), what, where)
+    for covenant in saga.covenants:
+        if covenant.id not in answered:
+            lines += _planned_arrival(saga, covenant)
     places.sync(saga)
     return lines
 

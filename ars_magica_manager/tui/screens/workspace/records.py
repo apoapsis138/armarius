@@ -772,7 +772,7 @@ class RecordActions(WorkspaceBase):
         run_steps(
             self.app,
             tomb_rules.overcome_trap(self.saga, view.neighbour, row),
-            lambda _end: self._commit(TOMB_TRAPS_SECTION, DIARY_SECTION),
+            lambda end: self._commit_told(end, TOMB_TRAPS_SECTION, DIARY_SECTION),
         )
 
     def action_overcome_ward(self) -> None:
@@ -784,7 +784,7 @@ class RecordActions(WorkspaceBase):
         run_steps(
             self.app,
             tomb_rules.overcome_ward(self.saga, view.neighbour, row),
-            lambda _end: self._commit(TOMB_WARDS_SECTION, DIARY_SECTION),
+            lambda end: self._commit_told(end, TOMB_WARDS_SECTION, DIARY_SECTION),
         )
 
     # -- a lord's marriages --

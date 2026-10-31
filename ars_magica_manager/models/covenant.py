@@ -393,6 +393,9 @@ class Covenant:
     place_level: int = 0
     own_aura: int | None = None
     own_realm: str = ""
+    #: Whether it is at a Place of its own, where its Boons and Hooks act on
+    #: the aura: its home, or a Place travelling with it (places.sync).
+    aura_boons_apply: bool = True
     #: The Tribunal it belongs to (Saga.tribunals), if any.
     tribunal_id: str | None = None
     #: The covenant it is vassal to (vassals.py), and the oath's duties.

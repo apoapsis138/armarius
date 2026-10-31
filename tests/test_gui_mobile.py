@@ -12,13 +12,15 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QLabel, QWidget
+from PySide6.QtWidgets import QApplication, QLabel, QScrollArea, QWidget
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.covenant import CovenantPage
+from ars_magica_manager.gui.forms import ConfirmDialog
 from ars_magica_manager.gui.ships import ShipEntry
+from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import CovenantStop, Neighbour, Possession, Ship
 from ars_magica_manager.sections import WHEREABOUTS_SECTION
@@ -112,3 +114,10 @@ def test_a_ship_apart_says_so_on_her_entry(app):
     )[0]
     words = [label.text() for label in entry.findChildren(QLabel)]
     assert any("Apart from the fleet: at The Sound" in w for w in words)
+
+
+def test_a_long_question_scrolls_so_its_buttons_stay_on_the_screen(app):
+    words = "\n".join(f"Line {n}" for n in range(300))
+    dialog = ConfirmDialog(words, SCRIPTORUM, None, yes_label="Import")
+    assert dialog.minimumSizeHint().height() < 800
+    assert dialog.findChildren(QScrollArea)

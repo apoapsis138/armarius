@@ -1388,6 +1388,14 @@ def _action_fields(spring: Springing) -> list[DialogField]:
             hint="A magus's spell is judged on its own, not against this.",
         ),
         DialogField(
+            "spell_saved",
+            "The spell worked",
+            "check",
+            False,
+            hint="Roll the spell as usual. If it failed, the trap still has him.",
+            show_if=lambda values: bool(values.get("fast_cast")),
+        ),
+        DialogField(
             "roll",
             "His roll",
             "text",
@@ -1462,7 +1470,9 @@ def _acted(spring: Springing, who: Character, values: dict[str, Any]) -> Acted:
     if _passes(obstacle, values):
         return Acted(who, f"{name} passes untouched.", True)
     if values.get("fast_cast"):
-        return Acted(who, f"{name} answers with a Fast-Cast spell.", False)
+        worked = bool(values.get("spell_saved"))
+        ending = "and it works" if worked else "and it fails"
+        return Acted(who, f"{name} answers with a Fast-Cast spell, {ending}.", worked)
     roll = str(values.get("roll") or "").strip()
     if not roll:
         return Acted(who, f"{name} makes no roll.", False)

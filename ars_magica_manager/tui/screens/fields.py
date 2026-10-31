@@ -100,6 +100,11 @@ class ConfirmScreen(ModalDialog[bool]):
         padding: 1 2;
     }
 
+    #confirm-scroll {
+        height: auto;
+        max-height: 75vh;
+    }
+
     #confirm-message {
         height: auto;
         margin-bottom: 1;
@@ -130,7 +135,8 @@ class ConfirmScreen(ModalDialog[bool]):
 
     def compose(self) -> ComposeResult:
         with Vertical(id="confirm-dialog", classes="dialog-box"):
-            yield Static(self.message, id="confirm-message")
+            with VerticalScroll(id="confirm-scroll"):
+                yield Static(self.message, id="confirm-message")
             with Horizontal(id="confirm-buttons"):
                 yield Button(self.yes_label, id="btn-yes", variant=self.yes_variant)
                 yield Button("No", id="btn-no")

@@ -1768,6 +1768,12 @@ class WorkspaceBase(Screen[None]):
         """After a change that may touch books (the library's actions
         redraw the book lists and the tree's Unassigned Books)."""
 
+    def _commit_told(self, end: object, *sections: str, tree: bool = False) -> None:
+        """_commit, then show the notes a step ended with."""
+        self._commit(*sections, tree=tree)
+        if isinstance(end, list) and end:
+            self.notify("\n".join(end))
+
     def _commit(self, *sections: str, tree: bool = False) -> None:
         """Save a change: write the saga, rebuild the navigation tree if a
         name or the structure changed (`tree`), and refresh `sections` of the
@@ -1942,7 +1948,9 @@ class WorkspaceBase(Screen[None]):
         run_steps(
             self.app,
             step,
-            lambda _end: self._commit(section, tree=section in self._TREE_SECTIONS),
+            lambda end: self._commit_told(
+                end, section, tree=section in self._TREE_SECTIONS
+            ),
         )
 
     def action_add(self) -> None:

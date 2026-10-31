@@ -317,6 +317,23 @@ def test_overcome_it_goes_in_order_and_ends_in_the_diary():
     assert tombs.traps(place)[0]["sprung"] is True
 
 
+def test_a_fast_cast_spell_that_works_clears_the_trap():
+    """Only those who failed and weren't helped suffer it (p. 33)."""
+    place = _tomb()
+    saga = _party_saga(place)
+    opening = tombs.overcome_trap(saga, place, 0, random.Random(3))
+    assert isinstance(opening, Form)
+    first = opening.apply(_values(opening, who="gregor", with_corvinus=True))
+    assert isinstance(first, Form)
+    second = first.apply(_values(first, roll="Qik + Athletics", adjust=-90))
+    assert isinstance(second, Form)
+    last = second.apply(_values(second, fast_cast=True, spell_saved=True))
+    assert isinstance(last, Form) and last.title.startswith("It Acts")
+    assert "Corvinus is helped, or out of its reach" not in [
+        f.label for f in last.fields()
+    ]
+
+
 def test_one_who_is_helped_does_not_suffer_it():
     assert et.suffering(["Gregor", "Viktor"], {"Viktor"}) == ["Gregor"]
     place = _tomb()

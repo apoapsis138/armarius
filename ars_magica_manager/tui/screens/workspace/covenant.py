@@ -770,7 +770,9 @@ class CovenantActions(WorkspaceBase):
         run_steps(
             self.app,
             build(self.saga, covenant, row),
-            lambda _end: self._commit("section-pos-ship", "tab-cov-diary", tree=tree),
+            lambda end: self._commit_told(
+                end, "section-pos-ship", "tab-cov-diary", tree=tree
+            ),
         )
 
     def action_build_ship(self) -> None:
@@ -812,7 +814,7 @@ class CovenantActions(WorkspaceBase):
         run_steps(
             self.app,
             mobile_covenants.add_stop(self.saga, covenant),
-            lambda _end: self._commit(WHEREABOUTS_SECTION),
+            lambda end: self._commit_told(end, WHEREABOUTS_SECTION),
         )
 
     def action_plan_route(self) -> None:
@@ -823,7 +825,7 @@ class CovenantActions(WorkspaceBase):
         run_steps(
             self.app,
             mobile_covenants.plan_route(self.saga, covenant),
-            lambda _end: self._commit(WHEREABOUTS_SECTION),
+            lambda end: self._commit_told(end, WHEREABOUTS_SECTION),
         )
 
     def action_ship_stress(self) -> None:

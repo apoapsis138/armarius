@@ -2,6 +2,8 @@
 book's ready-to-play characters, filling a sheet from one, and the New
 Character form's Template choice."""
 
+import dataclasses
+
 import pytest
 from dialog_openers import contract_saga, new_app, open_dialog
 from support import wait_until
@@ -250,3 +252,16 @@ async def test_a_grogs_template_asks_its_choices_and_starts_in_creation():
     assert ulla.in_creation
     assert {x.step for x in ulla.creation_xp} >= {"childhood", "later_life"}
     assert "vf_priest" in {vf.vf_id for vf in ulla.virtues_flaws}
+
+
+def test_a_pack_template_asks_for_the_names_it_leaves_blank():
+    ability = [
+        {"name": "Living Language: (Local)", "score": 5},
+        {"name": "Area Lore: (Local)", "score": 2},
+        {"name": "Living Language: (Local)", "score": 5},
+    ]
+    template = dataclasses.replace(ct.templates_for("magus")[0], abilities=ability)
+    assert ct.blanks(template) == ["living_language_local", "area_lore_local"]
+    filled = {"living_language_local": "Saxon", "area_lore_local": "Wessex"}
+    assert ct._fill("Area Lore: (Local)", filled) == "Area Lore: Wessex"
+    assert ct._fill("Area Lore: (Local)", {}) == "Area Lore: (Local)"

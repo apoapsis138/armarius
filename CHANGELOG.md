@@ -115,6 +115,34 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.64.0 — 2026-10-31
+
+### Pagina
+
+- A covenant's Aura Boons now raise its own Place: its home, or a Place travelling with it. At a stop with neither, they stay behind, and Whereabouts says how to give the aura an anchor.
+- A stop logged ahead now drops the Aegis when it comes due.
+
+### Orbis
+
+- **Overcome It**: a Fast-Cast spell that works now clears the magus of the trap.
+
+### Peregrinatio
+
+- Ticking a story when importing a pack now begins it, and dormant stories come in unticked.
+- The import form's choices now reach the import: "Use this book's..." and leaving a magus out.
+
+### Gauntlet
+
+- Antagonist templates now ask for the languages and lores they leave open.
+
+### Scriptorum
+
+- The terminal now shows the notes a section's action ends with, such as an Overcome It outcome or the Aegis dropping.
+
+### Illuminatio
+
+- A long confirmation now scrolls, on both front-ends, so its button stays in reach.
+
 ## 3.63.0 — 2026-10-31
 
 ### Peregrinatio

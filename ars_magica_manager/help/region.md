@@ -1651,7 +1651,8 @@ the same rules resolve (pp. 35, 42).
    `- Encumbrance` if it counts; blank if the action needs none), and the
    storyguide moves the Ease Factor by 3, 6 or more for that action. A
    magus answers with **a Fast-Cast spell**, judged on its own: cast it
-   from his sheet. Against a talisman or ward, Magic Resistance of at
+   from his sheet, and tick **The spell worked** if it did, which clears
+   him of the trap. Against a talisman or ward, Magic Resistance of at
    least its Penetration passes it untouched. If two actions clash, the
    troupe settles it by an Action Priority Roll (Qik + an Ability,
    Finesse for a fast-caster).

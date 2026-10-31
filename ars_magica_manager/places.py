@@ -70,6 +70,7 @@ from .rules import (
     senses,
 )
 from .rules.lab import ability_score
+from .rules.realms import settled_aura
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
@@ -308,11 +309,14 @@ def sync(saga: Saga) -> None:
             if covenant.own_aura is None:
                 covenant.own_aura = covenant.aura
                 covenant.own_realm = covenant.aura_realm
-            covenant.aura, covenant.aura_realm = aura_here(saga, *where)
+            aura, realm, applies = settled_aura(saga, covenant)
+            covenant.aura, covenant.aura_realm = aura, realm
+            covenant.aura_boons_apply = applies
         elif covenant.own_aura is not None:
             covenant.aura = covenant.own_aura
             covenant.aura_realm = covenant.own_realm or "Magic"
             covenant.own_aura, covenant.own_realm = None, ""
+            covenant.aura_boons_apply = True
 
 
 # -- effects, as the totals collect them --

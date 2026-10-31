@@ -280,10 +280,11 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
 
     def apply(values: dict[str, Any]) -> Command:
         try:
-            plan = transfer.plan_import(saga, packs.narrow(data, values))
+            chosen = packs.narrow(data, values)
+            plan = transfer.plan_import(saga, chosen)
         except (ValueError, KeyError, TypeError) as problem:
             return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
-        return _confirm_import(saga, plan, data)
+        return _confirm_import(saga, plan, chosen)
 
     def live(values: dict[str, Any]) -> str:
         return f"Brings {escape(packs.summary(packs.narrow(data, values)))}."

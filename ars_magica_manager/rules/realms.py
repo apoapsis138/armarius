@@ -140,9 +140,13 @@ def covenant_aura(covenant: Covenant, catalog_by_id: Mapping[str, Any]) -> Break
     """The covenant's aura: its base score plus every `covenant_aura`
     modifier its Boons and Hooks carry (each Aura Boon adds 1). What its
     laboratories inherit."""
-    found = effects.collect(
-        [effects.EffectSource("covenant", covenant.boons_hooks, catalog_by_id)],
-        "covenant_aura",
+    found = (
+        ()
+        if not covenant.aura_boons_apply
+        else effects.collect(
+            [effects.EffectSource("covenant", covenant.boons_hooks, catalog_by_id)],
+            "covenant_aura",
+        )
     )
     return effects.combine(
         covenant.aura,
@@ -193,17 +197,68 @@ def aura_of(covenant: Covenant | None) -> tuple[int, str]:
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
 
 
-def with_boons(covenant: Covenant, aura: int) -> int:
-    """`aura`, somewhere `covenant` is, with what its Boons and Hooks add."""
+def _boon_points(covenant: Covenant) -> int:
+    """What its Boons and Hooks add to an aura of its own."""
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
-    return aura + covenant_effective_aura(covenant, boons) - covenant.aura
+    found = effects.collect(
+        [effects.EffectSource("covenant", covenant.boons_hooks, boons)],
+        "covenant_aura",
+    )
+    return int(effects.combine(0, found, rounding=round_down).total)
+
+
+def _in_force(
+    covenant: Covenant, mine: tuple[int, str] | None, theirs: tuple[int, str]
+) -> tuple[int, str, bool]:
+    """The aura in force, its realm and whether the covenant's Boons act on
+    it: `theirs` is the aura around it, and `mine` the aura of a Place
+    travelling with it, which takes its Boons and holds sway unless the
+    aura around it is stronger (DE p. 410). With no such Place, the Boons
+    stay behind."""
+    if mine is None:
+        return *theirs, False
+    boosted = mine[0] + _boon_points(covenant)
+    if theirs[0] > boosted:
+        return *theirs, False
+    return mine[0], mine[1], True
+
+
+def settled_aura(saga: Saga, covenant: Covenant) -> tuple[int, str, bool]:
+    """The aura where `covenant` is now, its realm, and whether its Boons
+    and Hooks act on it: at its own Place, or a Place travelling with it.
+    Without one of those a covenant on the move has none of their aura:
+    an aura needs something to anchor it (Covenants p. 8; The Sundered
+    Eagle p. 84)."""
+    where = sites.covenant_place(saga, covenant)
+    assert where is not None
+    found, level = where
+    if found.id != covenant.place_id:
+        return *sites.aura_here(saga, found, level), False
+    around = sites.place(saga, found.place_id)
+    if level or around is None or not sites.travels(found):
+        return *sites.aura_at(found, level), True
+    return _in_force(
+        covenant, sites.aura_at(found), sites.aura_at(around, found.place_level)
+    )
 
 
 def aura_at_stop(saga: Saga, covenant: Covenant, stop: CovenantStop) -> tuple[int, str]:
     """A covenant's effective Aura at a stop, past or planned, and its
     realm: what aura_of gives while the stop is in force."""
-    aura, realm = sites.stop_aura(saga, covenant, stop)
-    return (with_boons(covenant, aura), realm) if realm else (aura, realm)
+    found = sites.place(saga, stop.place_id)
+    if found is None:
+        return 0, ""
+    theirs = sites.aura_at(found, stop.level)
+    own = sites.place(saga, covenant.place_id)
+    if own is None or not sites.travels(own):
+        if stop.place_id != covenant.place_id:
+            return theirs
+        return theirs[0] + _boon_points(covenant), theirs[1]
+    mine = sites.aura_at(own, covenant.place_level)
+    if covenant.place_level:
+        return mine[0] + _boon_points(covenant), mine[1]
+    aura, realm, applies = _in_force(covenant, mine, theirs)
+    return (aura + _boon_points(covenant) if applies else aura), realm
 
 
 def host(saga: Saga, character: Character) -> Covenant | None:
