@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.60.0",
+  "app_version": "3.61.0",
   "kind": "pack",
   "name": "Between Sand and Sea",
   "from_saga": "Between Sand and Sea",
@@ -28,7 +28,7 @@
         "id": "the_great_hunger",
         "name": "The Great Hunger",
         "kind": "faction",
-        "summary": "The spirit at the centre of the Great Desert, so vast it gives gods pause: the parching heat and eroding wind made one, seeking to reduce the world to dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
+        "summary": "The spirit at the centre of the Great Desert, whose strength even gods respect: the desert's heat and scouring wind given one will, which would leave the world dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -113,7 +113,7 @@
         "id": "mythic_africa",
         "name": "Mythic Africa",
         "kind": "place",
-        "summary": "The third of the world's three continents, lying between the Mediterranean and the Great Ocean, with the Nile on its east and the Atlantic on its west. It takes its name from the Roman province, which the Arabs still call Ifriqiyeh; Arab writers call the land Bilad al-Barbar or al-Maghrib, 'the West', and Europeans still draw Gaetula at its heart and Ethiopia beyond. The strip between desert and sea looks barely fit to live in, yet some of the widest-ruling dynasties the world has known began here.\n\nTo a European it is a land of wonder: in the markets of Marrakesh spices lie in open heaps beside cloth of impossible colour, blemmyae trade raw gold from camels guarded by huge black-furred dog-heads, and at the desert's edge the heat is a smith's forge. Small raiders ride ostriches, Tuareg ride out of a mirage and are gone, and in the deep sands travellers tell of ancient cities, the congresses of demons and talk with angels. It is also a land of hunger: the spirit at the desert's centre would dry every oasis and grind the mountains to dust, and only what has been raised against it has stopped it. Egypt called on the black earth, Carthage paid its gods for protection, and today the Dominion, Christian and then Muslim, makes a thin firm wall. Those who live here hardly notice either theme; a stranger notices both.\n\nThe time of legends gave the land the giant Antaios (Antaeus to the Romans, Anti to the Berbers), who raised a temple to his father Poseidon out of the skulls of those he beat at wrestling and drew his strength from his mother the earth, until Herakles, on the way to the Apples of the Hesperides, held him off the ground and crushed his ribs. By Antaios's wife Tinjis, Herakles fathered Sufax, mythic ancestor of the Berbers, who built Tangier in his mother's name and took up the giant's guardianship of the country.\n\nDido the Phoenician founded Carthage in 814 BC, and at its height its trade ran from the Gulf of Sidra to the Atlantic with colonies in Spain, Sicily, Sardinia and Corsica, while Greeks held the coast of Cyrenaica and Tripolitania and Berber kingdoms, Numidia and Mauritania the greatest, traded with it. In the Second Punic War the Numidian kings took opposite sides: Suphax of the western Masaesyli for Rome and Gala of the eastern Massylii for Carthage, until Gala's heir Massinissa, seeing who was winning, went over to Rome and Suphax allied with Hasdrubal, Hannibal's brother. Rome razed Carthage in 146 BC, salted its fields and made the Province of Africa; Massinissa received Numidia. His grandson Jugurtha fought Rome from 112 BC until Mauritania helped capture him in 104 BC. Claudius split Mauritania into Caesariensis and Tingitana.\n\nThe Roman provinces grew rich and Latin-speaking, and Christianity gave them Tertullian, Cyprian and Augustine, then, as Rome faded, Arianism, Pelagianism, Donatism and Montanism. The tribes of the interior paid tribute, sent auxiliaries and otherwise lived as before. The Vandals raided Tingitana in 422; invited in under Gaiseric by the Comes Africae to be penned there, they refused all control and the provinces were lost until Belisarius retook Africa for Byzantium in 522. Byzantium held only the coastal towns, playing chiefs against each other, while the Luwata in the east, the Sanhaja in the west and centre and the Zenata in the south and south-west held the rest.\n\nUmayyad raiders reached Cyrenaica in 642 and were bribed away. 'Uqbah ibn Nafi returned in 670, founded al-Qayrawan and carried Arab rule across the Maghreb until the chief Kusayla slew him in 683. Under Kusayla and then the Kahina the Berbers held twenty years, and Umayyad wizards found their spirits deserting them before Berber magic. The Arabs won at last by buying tribes with land and reward, finishing the resistance in 711, and the mostly Berber army of Tariq ibn Ziyad went on to take Visigothic Hispania. By 720 the wazirs were fighting a magical war in Africa against their own rebellious jinn, whom Berber magic had goaded, and were driven back east. Umayyad governors enforced Arab rule by discrimination and slavery; in 739 the Berbers rose, united under Kharijite Islam, and with a revolt in Egypt and the caliph's death the Umayyad dynasty fell.\n\nMost of the north now belongs to the Almohad confederation. Africa is not a land of feudal states with fixed borders: each village belongs to a tribe, and tribal leaders form confederations that raise or uphold a dynasty. Monstrous races such as the headless blemmyae, dog-faced cynocephali and child-sized tripithami mostly keep apart from people, save in the great cities, but meeting them is not rare. The Latin Church has almost no presence: no abbeys, most Christians in Tunis and a very small enclave at Kairouan, while mosques are everywhere and the call to prayer marks how far a Divine aura runs. The Genoese guard a busy trade with ports on both sides of the Pillars of Hercules. Sicily's west is still held by a Muslim warlord in 1220, and if history holds Frederick II begins his campaigns against him in 1221.",
+        "summary": "The third of the world's three continents, lying between the Mediterranean and the Great Ocean, with the Nile on its east and the Atlantic on its west. It takes its name from the Roman province, which the Arabs still call Ifriqiyeh; Arab writers call the land Bilad al-Barbar or al-Maghrib, 'the West', and Europeans still draw Gaetula at its heart and Ethiopia beyond. The strip between desert and sea looks barely fit to live in, yet some of the widest-ruling dynasties the world has known began here.\n\nTo a European it is a land of wonder: in the markets of Marrakesh spices lie in open heaps beside cloth of impossible colour, blemmyae trade raw gold from camels guarded by huge black-furred dog-heads, and at the desert's edge the heat is a smith's forge. Small raiders ride ostriches, Tuareg ride out of a mirage and are gone, and in the deep sands travellers tell of ancient cities, the congresses of demons and talk with angels. It is also a land of hunger: the spirit at the desert's centre would dry every oasis and grind the mountains to dust, and only what has been raised against it has stopped it. Egypt called on the black earth, Carthage paid its gods for protection, and some think the Hunger moved Rome to destroy them and left it needing a protector of its own. Today the Dominion, Christian and then Muslim, makes a thin firm wall. Those who live here hardly notice either theme; a stranger notices both.\n\nThe time of legends gave the land the giant Antaios (Antaeus to the Romans, Anti to the Berbers), who raised a temple to his father Poseidon out of the skulls of those he beat at wrestling and drew his strength from his mother the earth, until Herakles, on the way to the Apples of the Hesperides, held him off the ground and crushed his ribs. By Antaios's wife Tinjis, Herakles fathered Sufax, mythic ancestor of the Berbers, who built Tangier in his mother's name and took up the giant's guardianship of the country.\n\nDido the Phoenician founded Carthage in 814 BC, and at its height its trade ran from the Gulf of Sidra to the Atlantic with colonies in Spain, Sicily, Sardinia and Corsica, while Greeks held the coast of Cyrenaica and Tripolitania and Berber kingdoms, Numidia and Mauritania the greatest, traded with it. In the Second Punic War the Numidian kings took opposite sides: Suphax of the western Masaesyli for Rome and Gala of the eastern Massylii for Carthage, until Gala's heir Massinissa, seeing who was winning, went over to Rome and Suphax allied with Hasdrubal, Hannibal's brother. Rome razed Carthage in 146 BC, salted its fields and made the Province of Africa; Massinissa received Numidia. His grandson Jugurtha fought Rome from 112 BC until Mauritania helped capture him in 104 BC. Claudius split Mauritania into Caesariensis and Tingitana.\n\nThe Roman provinces grew rich and Latin-speaking, and Christianity gave them Tertullian, Cyprian and Augustine, then, as Rome faded, Arianism, Pelagianism, Donatism and Montanism. The tribes of the interior paid tribute, sent auxiliaries and otherwise lived as before. The Vandals raided Tingitana in 422; invited in under Gaiseric by the Comes Africae to be penned there, they refused all control and the provinces were lost until Belisarius retook Africa for Byzantium in 522. Byzantium held only the coastal towns, playing chiefs against each other, while the Luwata in the east, the Sanhaja in the west and centre and the Zenata in the south and south-west held the rest.\n\nUmayyad raiders reached Cyrenaica in 642 and were bribed away. 'Uqbah ibn Nafi returned in 670, founded al-Qayrawan and carried Arab rule across the Maghreb until the chief Kusayla slew him in 683. Under Kusayla and then the Kahina the Berbers held twenty years, and Umayyad wizards found their spirits deserting them before Berber magic. The Arabs won at last by buying tribes with land and reward, finishing the resistance in 711, and the mostly Berber army of Tariq ibn Ziyad went on to take Visigothic Hispania. By 720 the wazirs were fighting a magical war in Africa against their own rebellious jinn, whom Berber magic had goaded, and were driven back east. Umayyad governors enforced Arab rule by discrimination and slavery; in 739 the Berbers rose, united under Kharijite Islam, and with a revolt in Egypt and the caliph's death the Umayyad dynasty fell.\n\nMost of the north now belongs to the Almohad confederation. Africa is not a land of feudal states with fixed borders: each village belongs to a tribe, and tribal leaders form confederations that raise or uphold a dynasty. Monstrous races such as the headless blemmyae, dog-faced cynocephali and child-sized tripithami mostly keep apart from people, save in the great cities, but meeting them is not rare. The Latin Church has almost no presence: no abbeys, most Christians in Tunis and a very small enclave at Kairouan, while mosques are everywhere and the call to prayer marks how far a Divine aura runs. The Genoese guard a busy trade with ports on both sides of the Pillars of Hercules. Sicily's west is still held by a Muslim warlord in 1220, and if history holds Frederick II begins his campaigns against him in 1221.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -131,7 +131,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Why no covenants (pp. 8-11). Any of these may be true in a saga: the pact of 925, which questionable covenants may have broken; the early Order's heart being the Black Forest and not Rome, so young magi found sites nearer home; Muslim Sicily and Castille having once stood between the core Tribunals and the Maghreb; the desert uprisings of uncompromising nomad Muslims, unbribable and seemingly Divinely protected, who wreck irrigation and ruin agrarian lands. The book details no failed covenants, but a troupe may add them.\n\nWhat Africa offers magi: rival-free vis and resources, troubled only by Moorish or Berber settlements and local sorcerers; no vote, no Tribunal approval, no Peripheral Code on vis sites, and little fear of a charge of mundane interference, though acts that spill over the Mediterranean can still bring charges in Europe. Against that: isolation from news and help, native distrust of foreigners, and no safe assumption that magic is superior, since a campaign of conquest may unite sahirs, murabitin, the Tuareg and the Wind Spirits. Weak Divine reach and thin population make Magic sites easy to find, and nothing stops magi evicting a weaker sorcerer, genius loci or faerie. Muslim magi avoid the strife of the Iberian or Levant Tribunals. Exiles from the Order may hide here, near enough to keep ties that may also betray them.\n\nLogistics (pp. 11-12): a magus must belong to one Tribunal, and one may refuse an African covenant, or several may fight to claim it; Houses Mercere and Guernicus may object to the journeys, and a covenant may need an enchantment for redcaps or even a Mercere Portal. Hermetic settlement is left undefined, and later books assume none. Options for any city: a Mercere trading house with wharf and warehouse, keeping magic quiet; Jerbiton scholars at the madrasas, a loose network anxious about coming civil war; Criamon's small Sufi membership, welcoming to those learning Enigmatic Wisdom; or Tremere spies, African-looking magi raised from Gifted children Mercere gathered at the Primus's request a few decades ago.\n\nLanguages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; Derija is the common speech, Classical the tongue of scholarship and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and Arabic (Classical) 3); Tamazight (Tarifit, Kabyle, Tashelhiyt, Zenaga, Tamahak, Siwi); Lingua Franca or Sabir (Western, Eastern); Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek (Classical), Latin (Classical), Libyan, Punic (Carthaginian, Phoenician). Scholars and travellers often lose their dialect for a standard specialty. Northern Arabic and Tamazight use Arabic script, the Tuareg and southern Berbers Tifinagh, Khalidan a Phoenician variant, the Germans Gothic. Penalties to both speakers: dialects of one language -1; northern Tamazight with Tamahak -2; any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. Others are mutually unintelligible. Almoravid and Almohad warriors and clerics often have only Arabic (Classical) 3.\n\nPronunciation and Tamazight plurals are on p. 19; Arabic pronunciation is in Realms of Power: The Divine p. 107. Art & Academe p. 28 discusses the shape of the world."
+        "secrets": "Why no covenants (pp. 8-11). Any of these may be true in a saga: the pact of 925, which questionable covenants may have broken; the early Order's heart being the Black Forest and not Rome, so young magi found sites nearer home; Muslim Sicily and Castille having once stood between the core Tribunals and the Maghreb; the desert uprisings of uncompromising nomad Muslims, unbribable and seemingly Divinely protected, who wreck irrigation and ruin agrarian lands. The book details no failed covenants, but a troupe may add them.\n\nWhat Africa offers magi: rival-free vis and resources, troubled only by Moorish or Berber settlements and local sorcerers; no vote, no Tribunal approval, no Peripheral Code on vis sites, and little fear of a charge of mundane interference, though acts that spill over the Mediterranean can still bring charges in Europe. Against that: isolation from news and help, native distrust of foreigners, and no safe assumption that magic is superior, since a campaign of conquest may unite sahirs, murabitin, the Tuareg and the Wind Spirits. Weak Divine reach and thin population make Magic sites easy to find, and nothing stops magi evicting a weaker sorcerer, genius loci or faerie. Muslim magi avoid the strife of the Iberian or Levant Tribunals. Exiles from the Order may hide here, near enough to keep ties that may also betray them.\n\nLogistics (pp. 11-12): a magus must belong to one Tribunal, and one may refuse an African covenant, or several may fight to claim it; Houses Mercere and Guernicus may object to the journeys, and a covenant may need an enchantment for redcaps or even a Mercere Portal. Hermetic settlement is left undefined, and later books assume none. Options for any city: a Mercere trading house with wharf and warehouse, keeping magic quiet; Jerbiton scholars at the madrasas, a loose network anxious about coming civil war; Criamon's small Sufi membership, welcoming to those learning Enigmatic Wisdom; or Tremere spies, African-looking magi raised from Gifted children Mercere gathered at the Primus's request a few decades ago.\n\nLanguages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; Derija is the common speech, Classical the tongue of scholarship and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in the central highlands, Zenaga in south-west Mauritania, Tamahak among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir (Western, Eastern), the commonest tongue of visiting Europeans; Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek (Classical), Latin (Classical), Libyan, Punic (Carthaginian, Phoenician). Scholars and travellers often lose their dialect for a standard specialty. Northern Arabic and Tamazight use Arabic script, the Tuareg and southern Berbers Tifinagh, Khalidan a Phoenician variant, the Germans Gothic. Penalties to both speakers: dialects of one language -1; northern Tamazight with Tamahak -2; any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. Others are mutually unintelligible. Almoravid and Almohad warriors and clerics often have only Arabic (Classical) 3.\n\nPronunciation and Tamazight plurals are on p. 19; Arabic pronunciation is in Realms of Power: The Divine p. 107. Art & Academe p. 28 discusses the shape of the world."
       },
       {
         "id": "mauritania_al_maghrib_al_aqsa",
@@ -372,8 +372,8 @@
           {
             "kind": "places",
             "target_id": "the_banu_sulaym",
-            "note": "Beyond his effective rule",
-            "id": "7799cce88870"
+            "note": "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
+            "id": "03b77a499124"
           }
         ],
         "arms": {},
@@ -403,7 +403,7 @@
             "kind": "places",
             "target_id": "mythic_africa",
             "note": "Holds Cyrenaica and Tripolitania",
-            "id": "405c3cff66c8"
+            "id": "9e7374798718"
           }
         ],
         "arms": {},
@@ -661,7 +661,7 @@
         "id": "the_berbers_imazighen",
         "name": "The Berbers (Imazighen)",
         "kind": "faction",
-        "summary": "The first people of Africa, who call themselves Imazighen (one Amazigh), 'free men'; the Romans said Mazices or Mauri, whence Europe's 'Moor' for Berber and Arab alike. Phoenicians, Romans, Visigoths, Greeks and Arabs have all come, and Berbers remain the dominant culture, a Berber dynasty ruling most of the Maghreb. They are a Mediterranean folk with olive skin weathered by desert wind, dark-haired, sometimes auburn or blond. Men wear the hooded wool tajellabiyt, with an asilham cloak at night or in the mountains. Women wear the white haik and tahruyt headscarf, drawn across the face before strange men so that only the right eye shows, with an indigo set embroidered for ceremony.\n\nWomen's tattoos are thought to add beauty, and pass from mother to daughter, allowed by local custom despite the Hadith. Green siyala mark the face, neck and chest: a line from lip to chin at marriage that grows crosses and palm fronds for children and family events, and dotted 'ant-tracks' round the eyes. Ahadjam on the body, worn by both sexes, ward infertility on the back, wake the senses on the breast, turn the evil eye at wrist and ankle and keep off jnun at hand and foot. A neggafa paints festive tawzayt in henna, saffron or black harquus, and some ngagef put power in them.\n\nTheir society is in name leaderless, joined by resistance to central rule. Houses are of equal size, milk is shameful to buy and surplus is given and not sold. Men have everything outdoors: herding sheep and goats, metalwork, butchery, market and the grain store, where no woman should be seen. The wife or mother of the eldest male rules the house, and women hold weaving, dyeing, pottery, baskets, food and even carpentry, and teach each other letters at the loom, so a wife is likelier literate than her husband. Monogamy is the norm. They are freer with women than Arabs are, yet the fountain is as forbidden to men as the grain store to women.\n\nA village or thaddart climbs a hilltop in steps to the minaret, or is dug into caves in the Atlas; old families live on top, new arrivals below, from 50 houses to 1500 near trade roads. In towns men hold the vaulted streets and women the roofs above, crossing gaps by leap, ladder and bridge. Houses of two or three storeys keep beasts below, windows only high up and a roof terrace; three or four share a courtyard, and these make a ward or thakherroubt with its own cemetery, threshing room and grain store. Outsiders live at the edge. Each ward's tajmait, chaired by an elected amin, judges public matters and fines men who fail to attend; its worst sentence is that nobody speak to the offender. The ward's most learned women form the tala at the fountain: they tend the dead, act on anonymous denunciations over private conduct, and enforce penance through their sons and husbands.\n\nTwo to eight or more villages make a tribe or 'arsh. Trees and irrigated plots are private, rain-fed plough land the village's, pasture the tribe's, which also terraces land and digs channels together. Members trade among themselves; Berbers hold no markets, though men go to those outside and peddlers are borne. Tribes may join a thaqbilt, and the three such great confederations are the Zenata, Masmuda and Sanhaja.\n\nCoastal Arabs think them superstitious. Most are in name Ibadi Muslims, little given to persecuting anyone, and much pagan custom lingers, above all inland; Christians survive on the coast of the Tell. Villages hold one faith or another, the settuten, pagan nearly always, being tolerated for their service up to a point. Pagans honour Tafuyt the harsh sun, Ayyur the moon and sacrifices, bull-headed Gurzil of war, Anzar of rain, Dunnit of fertility and death (Tanit at Carthage, Neith in Egypt), and local gods such as Baccax of caves and Lilleu of a river. Their dead are gods too: they swear with a hand on a tomb and sleep in it for dreams. Householders lead the village's rites and chief women the family's. Remote villages still leave small gifts in cave shrines for the Dii Mauri, more to placate them than to worship.\n\nIn the beginning a man and a woman lived in the dark Netherworld, and she was the Yemma-t n Dunnit, the First Mother of the World, a great witch whose hundred children climbed to the light. She made sun, moon, stars, beasts and plants, and having no more to make, made destruction: eclipses, discord, death, gossip and lies. The porcupine bears the splinters of her spindle and the tortoise was a calf crushed in her millstones. Against her stands Awettuf the ant, husband of Tafuyt, who taught people to use what she made, to grow grain and bake, to sacrifice, and got the wild bulls to serve.\n\nThe Kahina (al-Kahinat, 'the seeress'), born Dihya, took up the resistance in the 680s, drove the Arabs from Ifriqiyeh and kept them besieged in Cyrenaica for five years while she wasted the land, losing the oasis folk's love. Her adopted son betrayed her, and she died sword in hand in 703, aged 127, having foreseen enough to save her line: her sons turned Muslim and led the Berber army into Iberia. An idol of Gurzil from Jugurtha's day went into every battle with her, and some think her a settut.",
+        "summary": "The first people of Africa, who call themselves Imazighen (one Amazigh), 'free men'; the Romans said Mazices or Mauri, whence Europe's 'Moor' for Berber and Arab alike. Phoenicians, Romans, Visigoths, Greeks and Arabs have all come, and Berbers remain the dominant culture, a Berber dynasty ruling most of the Maghreb. They are a Mediterranean folk with olive skin weathered by desert wind, dark-haired, sometimes auburn or blond. Men wear the hooded wool tajellabiyt, with an asilham cloak at night or in the mountains. Women wear the white haik and tahruyt headscarf, drawn across the face before strange men so that only the right eye shows, with an indigo set embroidered for ceremony.\n\nWomen's tattoos are thought to add beauty, and pass from mother to daughter, allowed by local custom despite the Hadith. Green siyala mark the face, neck and chest: a line from lip to chin at marriage that grows crosses and palm fronds for children and family events, and dotted 'ant-tracks' round the eyes. Ahadjam on the body, worn by both sexes, ward infertility on the back, wake the senses on the breast, turn the evil eye at wrist and ankle and keep off jnun at hand and foot. A neggafa paints festive tawzayt in henna, saffron or black harquus, and some ngagef put power in them.\n\nTheir society is in name leaderless, joined by resistance to central rule. Houses are of equal size, milk is shameful to buy and surplus is given and not sold. Men have everything outdoors: herding sheep and goats, metalwork, butchery, market and the grain store, where no woman should be seen. The wife or mother of the eldest male rules the house, and women hold weaving, dyeing, pottery, baskets, food and even carpentry, and teach each other letters at the loom, so a wife is likelier literate than her husband. Monogamy is the norm. They are freer with women than Arabs are, yet the fountain is as forbidden to men as the grain store to women.\n\nA village or thaddart climbs a hilltop in steps to the minaret, or is dug into caves in the Atlas; old families live on top, new arrivals below, from 50 houses to 1500 near trade roads. In towns men hold the vaulted streets and women the roofs above, crossing gaps by leap, ladder and bridge. Houses of two or three storeys keep beasts below, windows only high up and a roof terrace; three or four share a courtyard, and these make a ward or thakherroubt with its own cemetery, threshing room and grain store. Outsiders live at the edge. Each ward's tajmait, chaired by an elected amin, judges public matters and fines men who fail to attend; its worst sentence is that nobody speak to the offender. The ward's most learned women form the tala at the fountain: they tend the dead, act on anonymous denunciations over private conduct, and enforce penance through their sons and husbands.\n\nTwo to eight or more villages make a tribe or 'arsh. Trees and irrigated plots are private, rain-fed plough land the village's, pasture the tribe's, which also terraces land and digs channels together. Members trade among themselves; Berbers hold no markets, though men go to those outside and peddlers are borne. Tribes may join a thaqbilt, and the three such great confederations are the Zenata, Masmuda and Sanhaja.\n\nCoastal Arabs think them superstitious. Most are in name Ibadi Muslims, little given to persecuting anyone, and much pagan custom lingers, above all inland; Christians survive on the coast of the Tell. Villages hold one faith or another, the settuten, pagan nearly always, being tolerated for their service up to a point. Pagans honour Tafuyt the harsh sun, Ayyur the moon and sacrifices, bull-headed Gurzil of war, Anzar of rain, Dunnit of fertility and death (Tanit at Carthage, Neith in Egypt), and local gods such as Baccax of caves and Lilleu of a river. Their dead are gods too: they swear with a hand on a tomb and sleep in it for dreams. Householders lead the village's rites and chief women the family's. Remote villages still leave small gifts in cave shrines for the Dii Mauri, more to placate them than to worship.\n\nIn the beginning a man and a woman lived in the dark Netherworld, and she was the Yemma-t n Dunnit, the First Mother of the World, a great witch whose hundred children climbed to the light. She made sun, moon, stars, beasts and plants, and having no more to make, made destruction: eclipses, discord, death, gossip and lies. The porcupine bears the splinters of her spindle and the tortoise was a calf crushed in her millstones. Ayyur the moon is her son and Tafuyt the sun her daughter. Against her stands Awettuf the ant, husband of Tafuyt, who taught people to use what she made, to grow grain and bake, to sacrifice, and got the wild bulls to serve.\n\nThe Kahina (al-Kahinat, 'the seeress'), born Dihya, took up the resistance in the 680s, drove the Arabs from Ifriqiyeh and kept them besieged in Cyrenaica for five years while she wasted the land, losing the oasis folk's love. Her adopted son betrayed her, and she died sword in hand in 703, aged 127, having foreseen enough to save her line: her sons turned Muslim and led the Berber army into Iberia. An idol of Gurzil from Jugurtha's day went into every battle with her, and some think her a settut.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -1210,7 +1210,7 @@
         "id": "the_maghrebi_arabs",
         "name": "The Maghrebi Arabs",
         "kind": "faction",
-        "summary": "The most numerous people of the north. The first Arabs, Umayyads of the eighth century, built cities and made a town-dwelling upper class over rural Berbers on the coast; the Banu Hilal came in the eleventh, and the Almoravids put Berbers on top. Almost all are Muslim, and the further west and the poorer or more nomadic, the stricter, Marrakesh excepted. They make the five duties public: the profession of faith, prayer five times a day towards Mecca, above all Friday noon, alms, which none here think the poor don't deserve, the Ramadan fast, and pilgrimage. A returning Hajj or Hajja may wear a green head covering; three pilgrimages to Kairouan count as one to Mecca for the poor.\n\nBaraka here is fortune, set before birth and not earned: the fortunate are skilful, lucky and happy, and it rubs off on those near them. Thankful for it, many turn devout. Saints' fortune stays in their relics and in the tomb, also called a murabit, which each family visits yearly or expects spirits or faeries to torment it. Outsiders and strict Muslims fear these intercessors are demons.\n\nShame is public knowledge of a wrong, not the wrong: a sin with no witness brings none. So a Muslim here seeks to wipe out a bad name before his family repudiates him, and his neighbours accept this; the Hajj is the finest way. Speech is formal even among friends, using sidi or lella as courtesy, though in the street anybody may be jostled. One never asks outright, since refusal costs both sides face, and that covers questions; a reasonable request must be met. One says 'if God wills' of the future, and never boasts of coming luck, which invites the evil eye.\n\nThe educated and wealthy must command others and do no labour: not to employ people fails the community. Men wear loose trousers, a hooded robe and a head covering that shows origin, with slippers and a jacket; women cover body, arms and hair with a pinned cloth and scarf, and Berber women are brighter and bolder. Wealth shows in colour, embroidery and jewels, and pilgrims all wear plain white.\n\nLife is lived in company to keep up one's network: washing, cooking and every task done with others, gifts unopened before the giver, and circumcisions, weddings and funerals held at home. Magi who shut themselves away must be holy, shameful or mad, and to live apart from family and unmarried seems tragic. Lunch is the big meal, of spiced shared dishes, dates, flatbread with aniseed and couscous, eaten with the right hand. In the Tell the fashion is for carousing on the diwan in bright robes and perfumed beards, with wine, date wine and slave-songstresses open to negotiation, which holy men dislike. Men meet at the Roman-style baths, and sport outside the walls: archery, fencing, racing, javelins, polo and a mallet game, hunting and falconry, the falconer cutting the prey's throat so that the law allows it to be eaten.\n\nPublic life is men's. High-born women are unreachable to unrelated men, so female agents hear what men cannot at the baths and on rooftops, and may pass as boys. A married woman travels more easily. A man may have four wives if he treats them equally; kings ignore the rule, concubines do not count, and some nobles marry and divorce by the minute, which most scholars condemn. Arab tales are full of jealous wives.",
+        "summary": "The most numerous people of the north. The first Arabs, Umayyads of the eighth century, built cities and made a town-dwelling upper class over rural Berbers on the coast; the Banu Hilal came in the eleventh, and the Almoravids put Berbers on top. Almost all are Muslim, and the further west and the poorer or more nomadic, the stricter, Marrakesh excepted. They make the five duties public: the profession of faith, prayer five times a day towards Mecca, above all Friday noon, alms, which none here think the poor don't deserve, the Ramadan fast, which spares children, the old, the pregnant, the ill and travellers, and pilgrimage. Pork, alcohol and garlic are shunned, some more strictly than others. A returning Hajj or Hajja may wear a green head covering; three pilgrimages to Kairouan count as one to Mecca for the poor.\n\nBaraka here is fortune, set before birth and not earned: the fortunate are skilful, lucky and happy, and it rubs off on those near them. Thankful for it, many turn devout. Saints' fortune stays in their relics and in the tomb, also called a murabit, which each family visits yearly or expects spirits or faeries to torment it. Outsiders and strict Muslims fear these intercessors are demons.\n\nShame is public knowledge of a wrong, not the wrong: a sin with no witness brings none. So a Muslim here seeks to wipe out a bad name before his family repudiates him, and his neighbours accept this; the Hajj is the finest way. Speech is formal even among friends, using sidi or lella as courtesy, though in the street anybody may be jostled. One never asks outright, since refusal costs both sides face, and that covers questions; a reasonable request must be met. One says 'if God wills' of the future, and never boasts of coming luck, which invites the evil eye.\n\nThe educated and wealthy must command others and do no labour: not to employ people fails the community. Men wear loose trousers, a hooded robe and a head covering that shows origin, with slippers and a jacket; women cover body, arms and hair with a pinned cloth and scarf, and Berber women are brighter and bolder. Wealth shows in colour, embroidery and jewels, and pilgrims all wear plain white.\n\nLife is lived in company to keep up one's network: washing, cooking and every task done with others, gifts unopened before the giver, and circumcisions, weddings and funerals held at home. Magi who shut themselves away must be holy, shameful or mad, and to live apart from family and unmarried seems tragic. Lunch is the big meal, of spiced shared dishes, dates, flatbread with aniseed and couscous, eaten with the right hand. In the Tell the fashion is for carousing on the diwan in bright robes and perfumed beards, with wine, date wine and slave-songstresses open to negotiation, which holy men dislike. Men meet at the Roman-style baths, and sport outside the walls: archery, fencing, racing, javelins, polo and a mallet game, hunting and falconry, the falconer cutting the prey's throat so that the law allows it to be eaten.\n\nPublic life is men's. High-born women are unreachable to unrelated men, so female agents hear what men cannot at the baths and on rooftops, and may pass as boys. A married woman travels more easily. A man may have four wives if he treats them equally; kings ignore the rule, concubines do not count, and some nobles marry and divorce by the minute, which most scholars condemn. Arab tales are full of jealous wives.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -2617,7 +2617,7 @@
         "id": "rabat",
         "name": "Rabat",
         "kind": "town",
-        "summary": "The town on the south side of the mouth of the Bou Regreg, grown from the Almohads' fortress of Rabatu l-Fath, the Stronghold of Victory, their staging point for Iberia. Caliph al-Mansur made it his capital in 1190, finished its great walls and built widely until his death in 1199. His heir al-Nasir turned to the Reconquista and died in 1213, and the absent caliph Yusuf al-Mustansir leaves the region to a bureaucrat whose eyes are on Sale.\n\nThe Kasbah, an enormous palace-fortress with its own mosque at the river mouth, has stood empty but for a few squatters since 1199, and the aura of its mosque has faded.",
+        "summary": "The town on the south side of the mouth of the Bou Regreg, grown from the Almohads' fortress of Rabatu l-Fath, the Stronghold of Victory, their staging point for Iberia. Caliph al-Mansur made it his capital in 1190, finished its great walls and built widely until his death in 1199. His heir al-Nasir turned to the Reconquista and died in 1213, and the absent caliph Yusuf al-Mustansir leaves the region to a bureaucrat whose eyes are on Sale.\n\nThe Kasbah, an enormous palace-fortress with its own mosque at the river mouth, has held only squatters since 1199, and no aura remains in that mosque.",
         "detail": "Sketch",
         "ruler": "the Almohad Caliph",
         "answers_to": null,
@@ -3113,7 +3113,7 @@
         "id": "tunis",
         "name": "Tunis",
         "kind": "town",
-        "summary": "The Maghreb's largest port, a centre of trade and naval power for the Almohads, whose fleet has weakened with the loss of al-Andalus. It stands strikingly white under the sun, its doors ultramarine, facing a lake and living by the sea. Round the central mosque lie the markets of perfume to the north, cloth to the west, wool to the south, and dried fruit and books to the east. Others ring outward, fouler with each circle.\n\nSailors, the navy and the water colour everything here. It needs wheat from Sicily and sells desert goods to Italy.",
+        "summary": "The Maghreb's largest port, a centre of trade and naval power for the Almohads, whose fleet has weakened with the loss of al-Andalus. It stands strikingly white under the sun, its doors ultramarine, facing a lake and living by the sea. Round the central mosque lie the markets of perfume to the north, cloth to the west, wool to the south, and dried fruit and books to the east. Others ring outward, fouler with each circle.\n\nSailors, the navy and the water colour everything here. Nearly 100,000 people live in it, and merchants from across the Mediterranean come for the desert's gold and slaves. It needs wheat from Sicily and sells desert goods to Italy.",
         "detail": "Sketch",
         "ruler": "The Hafsid family, for the Almohads",
         "answers_to": "almohad_caliph",
@@ -3399,7 +3399,7 @@
         "id": "kairouan",
         "name": "Kairouan",
         "kind": "town",
-        "summary": "The fourth holy city of Islam, large parts of it closed to non-Muslims on pain of death. Its mosque, among the oldest and the largest in North Africa, is thought the model for all those of the region and draws pilgrims and students. No city of the Maghreb has a higher Dominion aura, though the book gives no figure.\n\nThe sack of 1057 ended its fame for learning and as a court of the Jewish exilarchs; the Jews have mostly gone to Egypt and the scholars to Tunis, and rebuilding is unfinished. Libraries lost in the flight may lie in the ruins.",
+        "summary": "The fourth holy city of Islam, large parts of it closed to non-Muslims on pain of death. Its mosque, among the oldest and the largest in North Africa, is thought the model for all those of the region and draws pilgrims and students. No city of the Maghreb has a higher Dominion aura.\n\nThe sack of 1057 ended its fame for learning and as a court of the Jewish exilarchs; the Jews have mostly gone to Egypt and the scholars to Tunis, and rebuilding is unfinished. Libraries lost in the flight may lie in the ruins.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -3415,7 +3415,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "The book gives no figure for its Divine aura (p. 56)."
       },
       {
         "id": "djemila",
@@ -5246,7 +5246,7 @@
         "id": "the_great_desert",
         "name": "The Great Desert",
         "kind": "place",
-        "summary": "Europeans imagine an ocean of sand no one can cross. In truth only a fifth to a quarter of it is sand, and those who know it find it hard and unsafe but passable, on horseback if need be. Water is the difficulty, not the going.\n\nSix kinds of country make it up. Erg is the rolling dune sea, almost bare of plants, some 20 percent of the whole. Reg, the stony plains of sand and black, red or white gravel, is some 70 percent. Hamadas are the plateaus and mountains; chott the salt flats left by old or seasonal water. Wadis are deep standing pools fed by rain or springs, and oases the fixed places of food and water where Berbers, Tuareg, jinn and the odd stranger meet to trade and rest. Almost every other water is seasonal, lasting through winter and spring and boiling off by autumn.\n\nIt falls into the Fezzan, the Central Great Desert, the Tanezrouft in the west and the T\u00e9n\u00e9r\u00e9 in the south. Some say the Fezzan and the T\u00e9n\u00e9r\u00e9 run on into the Nubian Desert; most take that for the raving of men driven mad by jinn.\n\nMyrtle Trees of Virtue grow in some hidden wadis. Sardinians make the liqueur Mirto from the crushed berries, murabitin use them to sharpen their reading of dreams, Jewish scholars hold myrtle the scent and sign of Eden, and some theurgists keep a sprig on the tongue to improve their casting.\n\nVis: a sprig of myrtle leaves with a flower or berry holds 2 pawns of Mentem. Its enrichment is in the Secrets.\n\nBooks: travellers can read up on the routes in Arabic works. Abu Abdullah al-Bakri's Book of Routes and Places (1068, drawn from two centuries of merchants' reports) is a summa on Area Lore: Maghreb, level 3, Quality 10, with a tractatus on Area Lore: Great Desert, Quality 10; it is held in merchants' and nobles' private libraries in the Maghreb and Al-Andalus. Ibn Hawqal's Kitab Surat al-'Ard, Face of the Earth, in the same libraries, is a summa on Area Lore: Maghreb, level 5, Quality 11, with tractatus on Area Lore: Provence, Iberia and Sicily, each Quality 11; its praise of Fraxinet makes some Hermetic scholars suspect he followed Jerbiton. Yusuf al-Warraq's On the Topography of North Africa is a tractatus on Area Lore: Maghreb, Quality 8, and al-Zuhri's Kitab al-Jaghrafiyya, Book of Geography, another, Quality 10.\n\nGaetula on the maps, and most of the continent. Westerners think it one sheet of sand, but that is true only of the ergs, or sand seas, which nobody lives in; most of it is the stony reg and the rock plateaus called hamada, with salt flats in the lee of mountains.\n\nAt its centre stand the Ahaggar (idurar n Ahaggar), with the eroded 'rock forests' of the Tassili n Ajjer on their north-east and the Adagh and the triangular Air massif to the south. Tuat, south-east of the Tademait, is a string of small oases along a dry wadi, an important road. Tanezrouft, the Land of Thirst, west of the Ahaggar and south of Tuat, has no oasis at all: dark sandstone hills and canyons of 250 to 500 paces between dune fields, the rock scoured into perfect concentric circles and ellipses.",
+        "summary": "Europeans imagine an ocean of sand no one can cross. In truth only a fifth to a quarter of it is sand, and those who know it find it hard and unsafe but passable, on horseback if need be. Water is the difficulty, not the going.\n\nSix kinds of country make it up. Erg is the rolling dune sea, almost bare of plants, some 20 percent of the whole. Reg, the stony plains of sand and black, red or white gravel, is some 70 percent. Hamadas are the plateaus and mountains; chott the salt flats left by old or seasonal water. Wadis are deep standing pools fed by rain or springs, and oases the fixed places of food and water where Berbers, Tuareg, jinn and the odd stranger meet to trade and rest. Almost every other water is seasonal, lasting through winter and spring and boiling off by autumn.\n\nIt falls into the Fezzan, the Central Great Desert, the Tanezrouft in the west and the T\u00e9n\u00e9r\u00e9 in the south. Some say the Fezzan and the T\u00e9n\u00e9r\u00e9 run on into the Nubian Desert; most take that for the raving of men driven mad by jinn.\n\nMyrtle Trees of Virtue grow in some hidden wadis. Sardinians make the liqueur Mirto from the crushed berries, murabitin use them to sharpen their reading of dreams, Jewish scholars hold myrtle the scent and sign of Eden, and some theurgists keep a sprig on the tongue to improve their casting.\n\nGaetula on the maps, and most of the continent. Westerners think it one sheet of sand, but that is true only of the ergs, or sand seas, which nobody lives in; most of it is the stony reg and the rock plateaus called hamada, with salt flats in the lee of mountains.\n\nAt its centre stand the Ahaggar (idurar n Ahaggar), with the eroded 'rock forests' of the Tassili n Ajjer on their north-east and the Adagh and the triangular Air massif to the south. Tuat, south-east of the Tademait, is a string of small oases along a dry wadi, an important road. Tanezrouft, the Land of Thirst, west of the Ahaggar and south of Tuat, has no oasis at all: dark sandstone hills and canyons of 250 to 500 paces between dune fields, the rock scoured into perfect concentric circles and ellipses.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5264,7 +5264,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Sun (BS&S p. 66): the Deprivation check for lack of water comes every 4 hours in the deserts, and exposed skin takes +1 non-combat damage (ArM5 pp. 180-181).\n\nDry quicksand in the ergs pulls a man under in two rounds, and he then suffocates. In the first round he may make a Strength or Quickness stress roll against Ease Factor 9 to get free; a botch traps his arms next round. After that it is up to his companions, though with free arms he may help in the second round, lowering their further Ease Factors by 3.\n\nBrigands prey on caravans not clearly well guarded, as far as their need drives them. Sandstorms and dust-storms can smother or flay: natural, the work of sorcerers, elemental jinn, or witches in disguise. Jinn and demons send false oases; the victim learns of it when her first long drink turns out to be sand.\n\nMyrtle of Virtue (p. 72): berries fermented in a silver urn underground for a season give a draught of +3 to all recovery rolls for a season. A flowering sprig gives its bearer Clear Thinker if the intended user sleeps with it under the pillow for a season, or by some Jewish traditions if it dries in the Holy of Holies, touched by each day's rising sun for a season. Soaked in seawater for a season in a place sacred to Aphrodite it stays supple and fresh and gives Venus' Blessing.\n\nWhy slaves rarely flee (p. 84): all three faiths hold that a runaway is a thief bound for Hell, tempted by evil spirits, though each forbids enslaving its own. Many are freed anyway: a mother of her master's child, warriors after a campaign, domestics by will or charity. A runaway in the Maghreb has nowhere to go where slaves do not already do the work, and some would rather be a trusted ghilman than free and poor. Maghrebi Muslims also take suffering as God's will, which flight cannot change."
+        "secrets": "Sun (BS&S p. 66): the Deprivation check for lack of water comes every 4 hours in the deserts, and exposed skin takes +1 non-combat damage (ArM5 pp. 180-181).\n\nDry quicksand in the ergs pulls a man under in two rounds, and he then suffocates. In the first round he may make a Strength or Quickness stress roll against Ease Factor 9 to get free; a botch traps his arms next round. After that it is up to his companions, though with free arms he may help in the second round, lowering their further Ease Factors by 3.\n\nBrigands prey on caravans not clearly well guarded, as far as their need drives them. Sandstorms and dust-storms can smother or flay: natural, the work of sorcerers, elemental jinn, or witches in disguise. Jinn and demons send false oases; the victim learns of it when her first long drink turns out to be sand.\n\nMyrtle of Virtue (p. 72): berries fermented in a silver urn underground for a season give a draught of +3 to all recovery rolls for a season. A flowering sprig gives its bearer Clear Thinker if the intended user sleeps with it under the pillow for a season, or by some Jewish traditions if it dries in the Holy of Holies, touched by each day's rising sun for a season. Soaked in seawater for a season in a place sacred to Aphrodite it stays supple and fresh and gives Venus' Blessing.\n\nWhy slaves rarely flee (p. 84): all three faiths hold that a runaway is a thief bound for Hell, tempted by evil spirits, though each forbids enslaving its own. Many are freed anyway: a mother of her master's child, warriors after a campaign, domestics by will or charity. A runaway in the Maghreb has nowhere to go where slaves do not already do the work, and some would rather be a trusted ghilman than free and poor. Maghrebi Muslims also take suffering as God's will, which flight cannot change.\n\nVis: a sprig of myrtle leaves with a flower or berry holds 2 pawns of Mentem. Its enrichment is in the Secrets.\n\nBooks: travellers can read up on the routes in Arabic works. Abu Abdullah al-Bakri's Book of Routes and Places (1068, drawn from two centuries of merchants' reports) is a summa on Area Lore: Maghreb, level 3, Quality 10, with a tractatus on Area Lore: Great Desert, Quality 10; it is held in merchants' and nobles' private libraries in the Maghreb and Al-Andalus. Ibn Hawqal's Kitab Surat al-'Ard, Face of the Earth, in the same libraries, is a summa on Area Lore: Maghreb, level 5, Quality 11, with tractatus on Area Lore: Provence, Iberia and Sicily, each Quality 11; its praise of Fraxinet makes some Hermetic scholars suspect he followed Jerbiton. Yusuf al-Warraq's On the Topography of North Africa is a tractatus on Area Lore: Maghreb, Quality 8, and al-Zuhri's Kitab al-Jaghrafiyya, Book of Geography, another, Quality 10."
       },
       {
         "id": "the_great_desert_regio_network",
@@ -5303,7 +5303,7 @@
         "id": "the_ibadi_of_the_desert",
         "name": "The Ibadi of the Desert",
         "kind": "faction",
-        "summary": "An unusual Muslim sect who hold that any Muslim may lead the community, and keep the right to rise against an unjust or heretical leader. Many fled to Wargala from Tahert when the Rustamid Imamate fell early in the 10th century; others live at Ghardaia and on Djerba.",
+        "summary": "An unusual Muslim sect, for whom leadership is open to any of the faithful and a bad or heretical leader may rightly be overthrown. Many fled to Wargala from Tahert when the Rustamid Imamate fell early in the 10th century; others live at Ghardaia and on Djerba.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5472,7 +5472,7 @@
         "id": "the_field_of_glass",
         "name": "The Field of Glass",
         "kind": "place",
-        "summary": "East of Al Kufra in the Great Sand Sea, a stretch of desert strewn with green-white natural glass, in a Magic aura of 4.\n\nVis: the clearest, brightest pieces, bared on windswept dune crests, hold Ignem or Auram vis, the best of them both. Very large pieces hold two or three pawns. Whether the aura outlasts the gathering of all the vis-bearing glass is an open question.",
+        "summary": "East of Al Kufra in the Great Sand Sea, a stretch of desert strewn with green-white natural glass, in a Magic aura of 4.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5490,7 +5490,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: the clearest, brightest pieces, bared on windswept dune crests, hold Ignem or Auram vis, the best of them both. Very large pieces hold two or three pawns. Whether the aura outlasts the gathering of all the vis-bearing glass is an open question."
       },
       {
         "id": "the_mosque_of_atiq",
@@ -5678,7 +5678,7 @@
         "id": "the_changing_lake",
         "name": "The Changing Lake",
         "kind": "place",
-        "summary": "A salt lake near Murzuq whose water turns from red to green to blue and now and then yellow.\n\nVis: twice a year, as the season and the colour change, red sand blows over the lake, and some floats by the shore reeds as 2 pawns each of Imaginem and Muto vis. Locals sometimes gather it and work it into their pots and bricks.",
+        "summary": "A salt lake near Murzuq whose water turns from red to green to blue and now and then yellow.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5696,7 +5696,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: twice a year, as the season and the colour change, red sand blows over the lake, and some floats by the shore reeds as 2 pawns each of Imaginem and Muto vis. Locals sometimes gather it and work it into their pots and bricks."
       },
       {
         "id": "ubari",
@@ -5774,7 +5774,7 @@
         "id": "the_forest_of_the_jobar",
         "name": "The Forest of the Jobar",
         "kind": "place",
-        "summary": "A copse of trees of dark stone shot through with grey crystal, rising from the sands. After terrible sandstorms some fall and split; now and then the erg bares a new one. The book does not say where it lies. The Tuareg shun it for fear of the Jobar, a great lizard that creeps through the dunes under cover of storms and takes children. Bones of its kind lie across the desert, and nomads steer by them.\n\nVis: split trees give fragments rich in Terram vis; one pawn in five is Herbam or Aurum instead, but only in vis found in spring.",
+        "summary": "A copse of trees of dark stone shot through with grey crystal, rising from the sands. After terrible sandstorms some fall and split; now and then the erg bares a new one. The Tuareg shun it for fear of the Jobar, a great lizard that creeps through the dunes under cover of storms and takes children. Bones of its kind lie across the desert, and nomads steer by them.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5792,7 +5792,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "The book does not say where it lies (p. 68). It prints the second Form as Aurum, read here as Auram.\n\nVis: split trees give fragments rich in Terram vis; one pawn in five is Herbam or Auram instead, but only in vis found in spring."
       },
       {
         "id": "garama",
@@ -5919,7 +5919,7 @@
         "id": "the_forgotten_foggara",
         "name": "The Forgotten Foggara",
         "kind": "place",
-        "summary": "As the rebellion began, a noble set corpse-miners to dig him a new foggara; slaves killed him before he told anyone. The workers dug a great reservoir under a rocky outcrop until water drowned their cave. The flow keeps a small wadi green. The noble's lost supply cache may be close by.\n\nVis: after rare storms the overflow leaves 5 pawns of Aquam vis on the wadi's shore, in bone fragments of the lost workers.",
+        "summary": "As the rebellion began, a noble set corpse-miners to dig him a new foggara; slaves killed him before he told anyone. The workers dug a great reservoir under a rocky outcrop until water drowned their cave. The flow keeps a small wadi green. The noble's lost supply cache may be close by.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5937,7 +5937,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: after rare storms the overflow leaves 5 pawns of Aquam vis on the wadi's shore, in bone fragments of the lost workers."
       },
       {
         "id": "the_central_great_desert",
@@ -5997,7 +5997,7 @@
             "kind": "places",
             "target_id": "the_central_great_desert",
             "note": "Passes by the Central Great Desert",
-            "id": "166a2dbbb580"
+            "id": "d00224175700"
           }
         ],
         "arms": {},
@@ -6349,7 +6349,7 @@
         "id": "the_ahaggar",
         "name": "The Ahaggar",
         "kind": "place",
-        "summary": "The Tuareg's spiritual home and refuge, a plateau of hard black rock split into pinnacles and towers, its valleys full of cooled lava, lilac in the setting sun. The central peaks are the Atakor, 'the place of stone'. Raptors nest here but the land only feeds the goats and sheep of the lesser Kel Ulli tribes; the Kel Ahaggar live mostly in the dark canyons around the edge.\n\nThe Egyptians believed the destructive force strongest in these mountains (see the Great Hunger), which may only be where a powerful faerie tied to it claimed to come from.\n\nVis: Tahat, Ilaman, Amjer, Tiouyen and Iherhe are the highest peaks, and the Tuareg say their spirits quarrelled over love. At the foot of Ilaman is the spring that opened when jealous Amjer struck his brother's shoulder; its water is a liquid form of Terram vis.",
+        "summary": "The Tuareg's spiritual home and refuge, a plateau of hard black rock split into pinnacles and towers, its valleys full of cooled lava, lilac in the setting sun. The central peaks are the Atakor, 'the place of stone'. Raptors nest here but the land only feeds the goats and sheep of the lesser Kel Ulli tribes; the Kel Ahaggar live mostly in the dark canyons around the edge.\n\nThe Egyptians believed the destructive force strongest in these mountains (see the Great Hunger), which may only be where a powerful faerie tied to it claimed to come from.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -6367,7 +6367,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The remotest heights are pocked with Magic auras. In the sharpest clefts at their feet lie small Infernal auras, home to demons and Infernal jnun of the Aerial Powers and Furies, who send flash floods down the gueltas."
+        "secrets": "The remotest heights are pocked with Magic auras. In the sharpest clefts at their feet lie small Infernal auras, home to demons and Infernal jnun of the Aerial Powers and Furies, who send flash floods down the gueltas.\n\nVis: Tahat, Ilaman, Amjer, Tiouyen and Iherhe are the highest peaks, and the Tuareg say their spirits quarrelled over love. At the foot of Ilaman is the spring that opened when jealous Amjer struck his brother's shoulder; its water is a liquid form of Terram vis."
       },
       {
         "id": "tamanghest",
@@ -6443,7 +6443,7 @@
         "id": "wadi_amazar",
         "name": "Wadi Amazar",
         "kind": "place",
-        "summary": "A stony wadi with the oldest grove, led by Tin-Balalan, 'the one with the pool at its feet'. Each tree is the body of a powerful genius loci, wiser than any man and a Magic guardian of its ground, like the elder trees of the German forests (Guardians of the Forest ch. 4; Realms of Power: Magic p. 106).\n\nVis: Tuareg hedge magicians must beg a tree's spirit for timber. A fallen limb holds Vim vis, each tree's giving its own power once enriched: Tin-Balalan Puissant Leadership, Tin-Ambarak Puissant Ride, Tin-Gaded Wilderness Sense, Tin-Tamanzazt Lesser Immunity to Thirst. Wandering male inenden know the enrichment and must be bargained with or forced. Ancient cypress wood gives +3 to spirits and +3 to necromancy.",
+        "summary": "A stony wadi with the oldest grove, led by Tin-Balalan, 'the one with the pool at its feet'. Each tree is the body of a powerful genius loci, wiser than any man and a Magic guardian of its ground, like the elder trees of the German forests (Guardians of the Forest ch. 4; Realms of Power: Magic p. 106).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -6461,7 +6461,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: Tuareg hedge magicians must beg a tree's spirit for timber. A fallen limb holds Vim vis, each tree's giving its own power once enriched: Tin-Balalan Puissant Leadership, Tin-Ambarak Puissant Ride, Tin-Gaded Wilderness Sense, Tin-Tamanzazt Lesser Immunity to Thirst. Wandering male inenden know the enrichment and must be bargained with or forced. Ancient cypress wood gives +3 to spirits and +3 to necromancy."
       },
       {
         "id": "the_a_r",
@@ -6524,7 +6524,7 @@
         "id": "the_adagh",
         "name": "The Adagh",
         "kind": "place",
-        "summary": "A sandstone massif past the feared Tanezrouft, sometimes called the Adrar Ifoghas after the Kel Ifoghas who claim it. Unlike the other three its auras are mostly Faerie, of no printed strength. Its rock art shows nomad life, and shifts from one visit to the next.",
+        "summary": "A sandstone massif past the feared Tanezrouft, sometimes called the Adrar Ifoghas after the Kel Ifoghas who claim it. Unlike the other three its auras are mostly Faerie. Its rock art shows nomad life, and shifts from one visit to the next.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -6542,7 +6542,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "The book prints no strength for its auras (p. 74)."
       },
       {
         "id": "the_kel_asouf",
@@ -6621,7 +6621,7 @@
         "id": "iwalatan",
         "name": "Iwalatan",
         "kind": "town",
-        "summary": "A wonder of cut stone, the southern end of the Iwalatan Road and the Taghaza Trail. The Massufa keep a few date groves with melons in their shade, and flocks of sheep, and after the long dry road its many wells taste all the sweeter. Timbuktu is 100 leagues east-south-east.",
+        "summary": "A wonder of cut stone, the southern end of the Iwalatan Road and the Taghaza Trail. The Massufa keep a few date groves with melons in their shade, and flocks of sheep, and after the long dry road its many wells taste all the sweeter. Timbuktu is 100 leagues east-south-east, and the salt mines of Taghaza 165 leagues north-north-east.",
         "detail": "Sketch",
         "ruler": "The Massufa Berbers",
         "answers_to": null,
@@ -6637,7 +6637,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "The book disagrees on the road to Taghaza: 165 leagues north-north-east from here (p. 74), 125 leagues south-south-east from there (p. 75)."
       },
       {
         "id": "tasarahla",
@@ -6707,7 +6707,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "The book disagrees on the road to Iwalatan: 125 leagues south-south-east from here (p. 75), 165 leagues north-north-east from there (p. 74)."
       },
       {
         "id": "tuwat",
@@ -7203,7 +7203,7 @@
         "id": "the_desert_caravans",
         "name": "The Desert Caravans",
         "kind": "faction",
-        "summary": "The crossing goes by stages of about 7 leagues (21 miles) and takes two to three months one way, on the backs of camels and slaves. Gold, slaves and salt go north; slaves, glass and horses go south, among much else. Northbound too are ivory, gum arabic, ostrich feathers, kola nuts, ebony and cloth, cotton cloth, hides, goatskins and leatherwork. Southbound are dates, figs, sugar, cowries, copper, ironwork, paper, books, tools, weapons, cotton, silk, textiles, ceramics and armaments, serving as currency with the nomads. Salt and copper from the desert are bought along the way. Wheeled vehicles cannot cross, since no road stays clear of sand, so bulk trade is rare. Barbary steeds, bred for slavers rounding up people where horses are unknown, cost ten to thirty slaves each.\n\nThousands of slaves cross each year, half-starved and carrying the goods, many expected to die. Moorish pirates take pagans from Rus, Christians from the Mediterranean and England, and the least scrupulous Muslims from Iberia and the Levant. Those from the south reaching the Maghreb are mostly women, at 3 to 9 Mythic Pounds, though a ruler may buy men for war, as Marrakesh's founder bought 2,000. Islamic law frees a concubine who bears a Muslim's child, and soldiers die or win freedom, so demand and prices stay high.\n\nBerbers and Tuareg bring most of the caravans from the south, with hundreds of camels, into the markets in March and November; Muslim traders go the other way. The Genoese have traded along the coast since the mid-11th century, with enclaves at Safi, Sale, Tangier, Orano, Algiers, Bona, Tunis, Mahadia and Tripoli, chiefly for gold, timber, salt, cheese, wine, oil and grain, and take part in the slave trade too.\n\nMerchants bound for one city gather at its departure city, buy rested camels and choose a guide, on whom everything depends. He sets a day in the cool months, October to March. The merchant stays home, sending a trusted slave or young relative. Up to two thousand camels move as one, a stage a day, by night and morning, by a winding route that ends each day at water, though camels need it only every ten days, for a well may be dry, poisoned, buried, beset by bandits or not where he remembers.\n\nA guide needs Area Lore to follow paths the sandstorms change, languages to deal with the tribes, Leadership to hold his men in trouble, the stars to steer by, and often dealings with creatures of the realms. He is paid in money or shares of cargo. Four days out a pair of runners goes ahead to warn the Sudanese, never one alone, for the demons of the desert play with single runners until they go mad or die of thirst; they earn pounds of gold for a few days' work. At a Maghrebi city everyone must buy, sell and change camels before the caravan leaves, and some cities see one a year or one in ten years, so the pressure is intense and crime by and against merchants pays.\n\nCamels come in two breeds: big, slow pack camels, by far the commoner, and swift saddle camels used as combat mounts, faster than oxen and carrying more than horses. Caravans make 15 to 25 miles a day. The wealthy and pilgrims ride in small canopies, often for two, shielded from sun and sand, with room to talk, play chess or eat.",
+        "summary": "The crossing goes by stages of about 7 leagues (21 miles) and takes two to three months one way, on the backs of camels and slaves. Gold, slaves and salt go north; slaves, glass and horses go south, among much else. Northbound too are ivory, gum arabic, ostrich feathers, kola nuts, ebony and cloth, cotton cloth, hides, goatskins and leatherwork. Southbound are dates, figs, sugar, cowries, copper, ironwork, paper, books, tools, weapons, cotton, silk, textiles, ceramics and armaments, serving as currency with the nomads. Salt and copper from the desert are bought along the way. Wheeled vehicles cannot cross, since no road stays clear of sand, so bulk trade is rare. Barbary steeds, bred for slavers rounding up people where horses are unknown, cost ten to thirty slaves each.\n\nThousands of slaves cross each year, half-starved and carrying the goods, many expected to die. Moorish pirates take pagans from Rus, Christians from the Mediterranean and England, and the least scrupulous Muslims from Iberia and the Levant. Those from the south reaching the Maghreb are mostly women, at 3 to 9 Mythic Pounds, though a ruler may buy men for war, as Marrakesh's founder bought 2,000. Islamic law frees a concubine who bears a Muslim's child, and soldiers die or win freedom, so demand and prices stay high.\n\nBerbers and Tuareg bring most of the caravans from the south, with hundreds of camels, into the markets in March and November; Muslim traders go the other way. The Genoese have traded along the coast since the mid-11th century, with enclaves at Safi, Sale, Tangier, Orano, Algiers, Bona, Tunis, Mahadia and Tripoli, chiefly for gold, timber, salt, cheese, wine, oil and grain, and take part in the slave trade too: many of their households keep two or three slaves. Many places forbid keeping Christian slaves, and an owner should free one who converts, which keeps demand from the north up.\n\nMerchants bound for one city gather at its departure city, buy rested camels and choose a guide, on whom everything depends. He sets a day in the cool months, October to March. The merchant stays home, sending a trusted slave or young relative. Up to two thousand camels move as one, a stage a day, by night and morning, by a winding route that ends each day at water, though camels need it only every ten days, for a well may be dry, poisoned, buried, beset by bandits or not where he remembers.\n\nA guide needs Area Lore to follow paths the sandstorms change, languages to deal with the tribes, Leadership to hold his men in trouble, the stars to steer by, and often dealings with creatures of the realms. He is paid in money or shares of cargo. Four days out a pair of runners goes ahead to warn the Sudanese, never one alone, for the demons of the desert play with single runners until they go mad or die of thirst; they earn pounds of gold for a few days' work. At a Maghrebi city everyone must buy, sell and change camels before the caravan leaves, and some cities see one a year or one in ten years, so the pressure is intense and crime by and against merchants pays.\n\nCamels come in two breeds: big, slow pack camels, by far the commoner, and swift saddle camels used as combat mounts, faster than oxen and carrying more than horses. Caravans make 15 to 25 miles a day. The wealthy and pilgrims ride in small canopies, often for two, shielded from sun and sand, with room to talk, play chess or eat.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -8810,7 +8810,7 @@
         "id": "the_afarta",
         "name": "The Afarta",
         "kind": "faction",
-        "summary": "The winged messengers and nobles of the jnun (singular afrit), spirits of the air kin to the leriah but outranking other jnoun, as mighty as the strongest marid of the East. Many lesser afarta take the shape of long-haired winged serpents and carry messages for the sultan of the jinn under their chief, Eblis.\n\nThe greater afarta are the jnun's nobility, terrible and monstrous, many-headed serpents or beast-headed giants. Many afarta possess humans, and the possessed is called a majnun, a madman. When the Order of Suleiman talks of the untamable jinn of the Maghrib and Libya, it usually means these. Only the fabled Seal of Solomon, a lost non-Hermetic artifact, is thought able to control them with ease.",
+        "summary": "The winged messengers and nobles of the jnun (singular afrit), spirits of the air kin to the leriah but outranking other jnoun, as mighty as the strongest marid of the East. Many lesser afarta take the shape of long-haired winged serpents and carry messages for the sultan of the jinn under their chief, Eblis.\n\nThe greater afarta are the jnun's nobility, terrible and monstrous, many-headed serpents or beast-headed giants. Many afarta possess humans, and the possessed is called a majnun, a madman. When the Order of Suleiman talks of the untamable jinn of the Maghrib and Libya, it usually means these. Solomon's lost Seal, they say, is the one thing that would master them easily.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -9059,11 +9059,11 @@
         "id": "the_ruins_of_carthage",
         "name": "The Ruins of Carthage",
         "kind": "place",
-        "summary": "Outside Tunis, on the site of the city, the Punic and Roman works are abandoned and looted for their cut stone, and little can be recognised. Carthage was utterly destroyed in 164 BC, its enemies writing all that survives of it. Tunis is what remains of its greatness.",
+        "summary": "Outside Tunis, on the site of the city, the Punic and Roman works are abandoned and looted for their cut stone, and little can be recognised. Carthage was utterly destroyed in 146 BC, its enemies writing all that survives of it. Tunis is what remains of its greatness.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
-        "realm": "Infernal",
+        "realm": "",
         "place_id": null,
         "place_level": 0,
         "details": {
@@ -9077,7 +9077,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "A great mass of melted bronze lies buried here, the remains of a tophet destroyed in the razing, and with it Ba'al Ammon's urns of vis-rich ash.\n\nEvery Punic colony had to build a temple to Tanit and Ba'al Ammon, its shrines beside a tophet: a great bronze god or goddess with upstretched arms and a fire within. Petitioners laid bound offerings on the sloping hands to fall into the mouth and burn. The priests buried the ashes in urns dedicated to Tanit, and the demon drew on the pits as vast stores of vis."
+        "secrets": "The ruins belong to the Infernal realm, the legacy of the gods of Carthage (p. 132).\n\nThe book prints the city's destruction as 164 BC on p. 132, likely a misprint: p. 15 gives 146 BC, used here.\n\nA great mass of melted bronze lies buried here, the remains of a tophet destroyed in the razing, and with it Ba'al Ammon's urns of vis-rich ash.\n\nEvery Punic colony had to build a temple to Tanit and Ba'al Ammon, its shrines beside a tophet: a great bronze god or goddess with upstretched arms and a fire within. Petitioners laid bound offerings on the sloping hands to fall into the mouth and burn. The priests buried the ashes in urns dedicated to Tanit, and the demon drew on the pits as vast stores of vis."
       },
       {
         "id": "the_priesthood_of_carthage",
@@ -9087,7 +9087,7 @@
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
-        "realm": "Infernal",
+        "realm": "",
         "place_id": "the_ruins_of_carthage",
         "place_level": 0,
         "details": {
@@ -9102,7 +9102,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The apotheosis was a lie. The gods were a single demon who enjoyed the work, granting just enough to encourage more sin and bloodshed, and charging for things it would gladly have done anyway.\n\nTheir rite was a now-lost Profane Sacrifice, joining Sacrifice and Profaning the Holy (Realms of Power: The Infernal pp. 95-96): burning an offering makes a pawn of Vim vis infesta for each +2 the offering would give, 5 pawns for an innocent human.\n\nA storyguide may instead make them Faerie hedge wizards of Faerie Bargaining (p. 130; Realms of Power: Faerie p. 131), the child sacrifices giving vitality. Later they raised slave children to offer in place of their own; such faeries, finding the trick, could withdraw their protection."
+        "secrets": "Their realm is the Infernal. The apotheosis was a lie. The gods were a single demon who enjoyed the work, granting just enough to encourage more sin and bloodshed, and charging for things it would gladly have done anyway.\n\nTheir rite was a now-lost Profane Sacrifice, joining Sacrifice and Profaning the Holy (Realms of Power: The Infernal pp. 95-96): burning an offering makes a pawn of Vim vis infesta for each +2 the offering would give, 5 pawns for an innocent human.\n\nA storyguide may instead make them Faerie hedge wizards of Faerie Bargaining (p. 130; Realms of Power: Faerie p. 131), the child sacrifices giving vitality. Later they raised slave children to offer in place of their own; such faeries, finding the trick, could withdraw their protection."
       },
       {
         "id": "the_broken_gift",
@@ -11992,7 +11992,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "c2f3a47d05aa"
+            "id": "14561c6ea244"
           },
           {
             "name": "Evasion",
@@ -12000,7 +12000,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "85e8f9d338d3"
+            "id": "16eb1eb41f51"
           }
         ],
         "soak": 1,
@@ -12073,7 +12073,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a minor natural ability or mundane Quality of an animal he sees, such as a frog's swimming, a cat's night vision, horns, spines or a bear's pelt, but no major change like wings. One at a time; a second replaces the first. It lasts indefinitely, but he loses a Might point each sunrise and sunset while he keeps it, regained in three hours or less in a Magic aura. MuAn 25 (Base 4, +2 Sun, +1 Part, +1 Constant effect, +1 can change ability possessed); Personal Power (25 levels, -2 Might cost).",
-            "id": "a89039e2c7bf"
+            "id": "ddac6b30b8ff"
           },
           {
             "name": "Mimic the Man",
@@ -12087,7 +12087,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Copies any sound exactly, even human speech, without understanding it. MuIm 3 (Base 1, +1 Conc, +1 Complexity); Personal Power (3 levels, -1 Might cost, +1 Init).",
-            "id": "860862842f81"
+            "id": "506e897e4f9e"
           }
         ],
         "vis": [
@@ -12095,7 +12095,7 @@
             "pawns": 2,
             "art": "Muto",
             "where": "one pawn in each hand",
-            "id": "9134b5d3add5"
+            "id": "4d948b860603"
           }
         ],
         "equipment": "",
@@ -12539,7 +12539,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 12,
-            "id": "62f95aa782e5"
+            "id": "8289612d8fc2"
           },
           {
             "name": "Bite",
@@ -12547,7 +12547,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 11,
-            "id": "b8026d019806"
+            "id": "5d67f39a0ad9"
           }
         ],
         "soak": 10,
@@ -12739,7 +12739,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "With a moment's concentration he learns the physical state of any Beast of Virtue whose token he holds. InAn 35 (Base 3, +4 Arc, +4 Boundary); Ritual Power x2. Might spent so is recovered only by resting in a Magic aura of 4 or higher.",
-            "id": "67b19a2b99ec"
+            "id": "20bbaf0daeeb"
           },
           {
             "name": "Routing Bellow",
@@ -12753,7 +12753,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that makes men and beasts who hear it flee in fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "93e99a895788"
+            "id": "244d640f4e2d"
           },
           {
             "name": "Circle of Beast Warding",
@@ -12767,7 +12767,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ring traced in the earth that no mundane beast of Size +4 or less may cross; he thinks it unsporting for hunting. ReAn 20 (Base 2, +1 Touch, +2 Ring, +3 Size); Lesser Power (20 levels, +5xp Penetration).",
-            "id": "09121c00bc0c"
+            "id": "1e7c2b373841"
           },
           {
             "name": "Cowing Snarl",
@@ -12781,7 +12781,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A man or beast of his size or less, caught by his gaze, kneels in fear. ReAn 25 (Base 4, +1 Eye, +1 Diam, +2 Size, +1 Mentem requisite); Lesser Power (25 levels), Improved Powers x3 (-5 Might cost, +10 Initiative).",
-            "id": "01d5b31c020d"
+            "id": "06ba3bd66e36"
           },
           {
             "name": "Trackless Step",
@@ -12795,7 +12795,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His sweeping tail erases his tracks as he walks. ReTe 10 (Base 4, +1 Touch, +1 Conc); Lesser Power (10 levels, +15xp Concentration).",
-            "id": "f5ec8dbddfd9"
+            "id": "f186faba6fac"
           },
           {
             "name": "Hunter's Pounce",
@@ -12809,7 +12809,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaps up to 50 paces. ReAn 25 (Base 15, +2 Size); Personal Power (25 levels).",
-            "id": "b88ec3eb1fa5"
+            "id": "a16e4b5b8693"
           },
           {
             "name": "Sleep with Eyes Open",
@@ -12823,7 +12823,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He sleeps with open eyes and is hard to surprise. ReAn 20 (Base 4, +2 Sun, +2 Size); Personal Power (20 levels, -1 Might cost).",
-            "id": "147471962f42"
+            "id": "55e06d159604"
           }
         ],
         "vis": [
@@ -12831,7 +12831,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in his mane",
-            "id": "7219aaa09f70"
+            "id": "56257989735d"
           }
         ],
         "equipment": "",
@@ -13291,7 +13291,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 13,
-            "id": "f5e9302bcba5"
+            "id": "e04eb3f20469"
           },
           {
             "name": "Teeth",
@@ -13299,7 +13299,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "650dd9e1d166"
+            "id": "46b083a9345c"
           },
           {
             "name": "Grapple",
@@ -13307,7 +13307,7 @@
             "attack": 11,
             "defense": 9,
             "damage": null,
-            "id": "ae78c3d4171e"
+            "id": "58445758c9e5"
           }
         ],
         "soak": 13,
@@ -13443,7 +13443,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that freezes men and beasts who hear it, trembling with fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "6c4eec9ab271"
+            "id": "0bd94d53ad5a"
           },
           {
             "name": "Thunderous Swipe",
@@ -13457,7 +13457,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blow that throws anything up to his own size 5 paces; Dex against Ease Factor 12 to stay standing. Thrown straight up or into something hard, the target takes falling damage (+1 per 2 feet, +7 at most). It may join a claw attack. ReAn 25 (Base 10, +1 Touch, +1 Size, +1 Corpus requisite); Lesser Power (25 levels), Improved Powers (-5 Might cost).",
-            "id": "19864862f8c5"
+            "id": "24c48b745018"
           }
         ],
         "vis": [
@@ -13465,12 +13465,12 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his claws",
-            "id": "3e35d85e2f81"
+            "id": "887103003849"
           }
         ],
         "equipment": "",
         "appearance": "A large shaggy bear of up to fifty stone (700 pounds), over seven feet tall upright, with a coat from light brown or yellowish to black, most often medium brown, big claws and a deep, echoing roar.",
-        "notes": "Natural weapons: Large Claws Init 0, Atk +5, Def +3, Dam +4; Teeth Init 0, Atk +3, Def +1, Dam +1. Hide and fur Protection +3. Flaw details: Weakness (sweet foods); Extra Natural Weapons (bite); Improved Damage and Improved Initiative (claws).\n\nOnce hunted for the arena, Africa's only native bear ranges from Marrakesh to Tripoli in its mountains and their surrounds: mundane ones brownish black with a reddish-orange belly, no white on the short muzzle, stout and strong-clawed, hunting wadi and brush and always seeking a beehive.\n\nEnrichment: wrap the Bear's claws in its hide round a dry river rock from a wadi in its hunting grounds and leave them 20 days in the sun. The fetish grants Tough.",
+        "notes": "Natural weapons: Large Claws Init 0, Atk +5, Def +3, Dam +4; Teeth Init 0, Atk +3, Def +1, Dam +1. Hide and fur Protection +3. Virtue and Flaw details: Ferocity (when injured), Weakness (sweet foods); Extra Natural Weapons (bite); Improved Damage and Improved Initiative (claws).\n\nOnce hunted for the arena, Africa's only native bear ranges from Marrakesh to Tripoli in its mountains and their surrounds: mundane ones brownish black with a reddish-orange belly, no white on the short muzzle, stout and strong-clawed, hunting wadi and brush and always seeking a beehive.\n\nEnrichment: wrap the Bear's claws in its hide round a dry river rock from a wadi in its hunting grounds and leave them 20 days in the sun. The fetish grants Tough.",
         "source": "Between Sand and Sea: Mythic Africa p. 64",
         "detail": "Full",
         "place_id": "the_atlas_mountains",
@@ -13840,7 +13840,7 @@
             "attack": null,
             "defense": 1,
             "damage": null,
-            "id": "141af15ef353"
+            "id": "9c7de36cc286"
           },
           {
             "name": "Fist",
@@ -13848,7 +13848,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 16,
-            "id": "6b51daa87673"
+            "id": "4d70a381e89e"
           },
           {
             "name": "Kick",
@@ -13856,7 +13856,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 13,
-            "id": "21d3f4c3598e"
+            "id": "3ed8baadb66f"
           },
           {
             "name": "Cudgel",
@@ -13864,7 +13864,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 17,
-            "id": "8afcaca6defc"
+            "id": "253158fd02d1"
           },
           {
             "name": "Thrown Stone",
@@ -13872,7 +13872,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 15,
-            "id": "96121626710a"
+            "id": "116a72e9faac"
           }
         ],
         "soak": 16,
@@ -13973,7 +13973,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He looks and sounds like a Size 0 man. MuIm 25 (Base 2, +4 size, +2 Sun, +1 Moving Image); Improved Powers: -3 Might cost.",
-            "id": "5b24c4093011"
+            "id": "c2755ce0ce2d"
           },
           {
             "name": "Friend of the Desert",
@@ -13987,7 +13987,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He ignores heat and fire damage of +15 or less. ReIg (Base 4, +2 for +15 or less, +2 Sun, +1 size; the book gives no total); Improved Powers: -2 Might cost; Slow Power.",
-            "id": "bf9d79c1cf2c"
+            "id": "a2f6e935c8cb"
           }
         ],
         "vis": [
@@ -13995,7 +13995,7 @@
             "pawns": 4,
             "art": "Ignem",
             "where": "in his heart",
-            "id": "4693f7e455f1"
+            "id": "83258ed382bb"
           }
         ],
         "equipment": "Acacia wood cudgel, sack of salt, gold, trinkets",
@@ -14101,7 +14101,7 @@
             "attack": 7,
             "defense": 4,
             "damage": 5,
-            "id": "a5b7f5b3d254"
+            "id": "c5985cc281ba"
           },
           {
             "name": "Grapple",
@@ -14109,7 +14109,7 @@
             "attack": 3,
             "defense": 6,
             "damage": null,
-            "id": "d546beb1fdf9"
+            "id": "d6f1eeac5c39"
           }
         ],
         "soak": 11,
@@ -14384,7 +14384,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "fe5c4b3e5d40"
+            "id": "2f3df2ec88f0"
           },
           {
             "name": "Bite",
@@ -14392,7 +14392,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 8,
-            "id": "acd929396e12"
+            "id": "f5da042c4af7"
           }
         ],
         "soak": 3,
@@ -14500,7 +14500,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its gaze fills a victim with the wish to chase it until sunrise or sunset. ReMe 15 (Base 4, +1 Eye, +2 Sun): Lesser Power (15 levels, -2 Might cost).",
-            "id": "85218e79bc86"
+            "id": "4c7c567e1263"
           },
           {
             "name": "Gone to Ground",
@@ -14514,7 +14514,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Teleports to a place within 500 paces to which it has an Arcane Connection. ReAn 20 (Base 20): Personal Power (20 levels, -1 Might cost). Not while observed.",
-            "id": "f5668ff05196"
+            "id": "8887628c291b"
           },
           {
             "name": "Unsporting Stalker",
@@ -14528,7 +14528,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blends into the terrain, +3 to vision-based Stealth checks. MuIm 3 (Base 1, +1 Diam, +1 moving images): Personal Power (5 levels, -1 Might cost, +15xp Concentration). The book prints Duration Conc but prices +1 Diam.",
-            "id": "38669e550148"
+            "id": "4f1f969eb8bc"
           }
         ],
         "vis": [
@@ -14536,7 +14536,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "5d9c909b3286"
+            "id": "a26102a54682"
           }
         ],
         "equipment": "",
@@ -14748,7 +14748,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 0,
-            "id": "d6076be75b15"
+            "id": "d828fb4fdba8"
           },
           {
             "name": "Grapple",
@@ -14756,7 +14756,7 @@
             "attack": 9,
             "defense": 0,
             "damage": null,
-            "id": "5c2a55073a40"
+            "id": "23273105a1e0"
           },
           {
             "name": "Sting",
@@ -14764,7 +14764,7 @@
             "attack": 9,
             "defense": 2,
             "damage": -3,
-            "id": "a69178686366"
+            "id": "bfe9b5565d22"
           }
         ],
         "soak": 4,
@@ -14872,7 +14872,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers an exceptionally debilitating poison (Stamina roll against Ease Factor 6, Incapacitating), wounded or not.",
-            "id": "6ded27b72ef0"
+            "id": "d99d04c15997"
           },
           {
             "name": "Drive Berserk",
@@ -14886,7 +14886,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch drives the target to attack everything nearby for a Diameter. CrMe 10 (Base 4, +1 Touch, +1 Diameter): Lesser Power (10 levels, -1 Might cost, 5xp Concentration, +5xp Penetration).",
-            "id": "e5318e2a1eba"
+            "id": "d45617d1fcb3"
           },
           {
             "name": "Lie in Wait",
@@ -14900,7 +14900,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sitting still, it looks like a plain rock or small dune. MuIm 10 (Base 5, +1 Conc): Personal Power (10 levels, -1 Might cost, +10xp Concentration).",
-            "id": "39099e065a11"
+            "id": "ead6dd236608"
           }
         ],
         "vis": [
@@ -14908,11 +14908,11 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its stinger",
-            "id": "f793933af455"
+            "id": "587f1a6d88ba"
           }
         ],
         "equipment": "",
-        "appearance": "A dull black creature, slate grey in the book's opening words, with crab-like chitinous legs, glossy obsidian eyes, oversized pincers and a barbed tail arched over its back; as big as a healthy dog or a six-year-old child.",
+        "appearance": "A dull black or slate grey creature with crab-like chitinous legs, glossy obsidian eyes, oversized pincers and a barbed tail arched over its back; as big as a healthy dog or a six-year-old child.",
         "notes": "Natural Weapons: pincers Init +0, Atk +3, Def +3, Dam +4; tail sting Init +4, Atk +2, Def -6, Dam +1. The book prints Grapple Defense as +* and Sting Damage as -3* with no key, so Grapple Defense is 0 here. Ignem Resistance 4 (solar heat) has no entry in the Ability catalog. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12), Dead (13+).\n\nCruel and belligerent, it hunts warm creatures sleeping by fires or on sunny rocks, and lurks under the sand to sting what steps over it.\n\nEnrichment: its stinger set on a willow handle, anointed with Alkhad gourd sap and left a month plunged in a dune, carried as a token, gives Greater Immunity to Venom. The Tuareg claim the creeping Alkhad or Tadjalt plant and its inedible gourds cure scorpion venom; the cut gourd's milky sap is said to purge poison.",
         "source": "Between Sand and Sea: Mythic Africa pp. 81-82",
         "detail": "Full",
@@ -14985,7 +14985,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "1e7a21a16180"
+            "id": "f81007a33026"
           }
         ],
         "soak": 7,
@@ -15030,7 +15030,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form in one round, most often a wave of grinding stones, and may discorporate almost at once. Its rocky body can hide trails and landmarks.",
-            "id": "3f22c0240a1a"
+            "id": "5d949ad1af4f"
           },
           {
             "name": "Elemental Control of Water",
@@ -15044,7 +15044,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: any Creo, Muto or Rego Aquam effect at 1 Might a magnitude, minor effects of level no higher than its Might. It taunts those dying of thirst.",
-            "id": "345b96d9a23e"
+            "id": "0d16cd4765e9"
           },
           {
             "name": "Envisioning",
@@ -15058,7 +15058,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Subtly alters dreams to make them more ominous and depressing.",
-            "id": "d6fbc5021fd5"
+            "id": "328f38a7fff9"
           },
           {
             "name": "Obsession",
@@ -15072,7 +15072,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and it spends Might, then at the next crisis of worthiness the storyguide rolls a simple die +3 and the player a simple die + a suitable Personality Trait - adjustments for harsh surroundings. If the demon's total is higher, the character gains Doubt +1; acting on it puts him in a state of sin, and the demon then coagulates and kills him.",
-            "id": "3aa2d66384fb"
+            "id": "00d3e46dd6f6"
           }
         ],
         "vis": [
@@ -15080,7 +15080,7 @@
             "pawns": 2,
             "art": "Perdo",
             "where": "tainted, in its body",
-            "id": "18822d4987be"
+            "id": "33e76797d1f7"
           }
         ],
         "equipment": "",
@@ -15267,7 +15267,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 2,
-            "id": "54510a55d1f8"
+            "id": "d819ba705c00"
           }
         ],
         "soak": -1,
@@ -15333,7 +15333,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 on all rolls to impress others. Base 3, +1 Touch, +2 Sun.",
-            "id": "110f5c6c26b6"
+            "id": "963aa4b95f8b"
           },
           {
             "name": "Grant Major Flaw (Wildness)",
@@ -15347,7 +15347,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover grows helpless before all faeries, and suffers a different random Minor Personality Flaw each scene, stilled briefly by ecstatic experience such as dance, music or wandering dry riverbeds in hope of meeting faeries again.",
-            "id": "14e55f89b6ea"
+            "id": "a1a047b3bc69"
           },
           {
             "name": "Grant Minor Flaw (Impotence)",
@@ -15361,7 +15361,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover cannot have sex with others.",
-            "id": "5e1a87b2e819"
+            "id": "8f968eb72b28"
           },
           {
             "name": "Guide",
@@ -15375,7 +15375,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leads a character into danger like the Common Sense Virtue, but serving her ends. ReMe Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "36530ebf0e4f"
+            "id": "4503260e0afc"
           },
           {
             "name": "Hound",
@@ -15389,7 +15389,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her the direction and distance of her human quarry. InCo Base 3, +4 Arc, +1 Conc.",
-            "id": "2ced4ccf1634"
+            "id": "27cfeceb8dda"
           },
           {
             "name": "Invisibility",
@@ -15403,7 +15403,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility (ArM5 p. 146). Base 4, +2 Sun, +1 moving image. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "42190d22b164"
+            "id": "0556948b8755"
           },
           {
             "name": "Pine Away",
@@ -15417,7 +15417,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A major disease, Ease Factor 15, causing a Light Wound, treatable with Faerie Lore or Medicine; the victim loses the will and the vitality to live. Base 30 (5 + 25 virulence), +2 Voice.",
-            "id": "98785fe17b32"
+            "id": "b72ac02035ba"
           },
           {
             "name": "Silent Motion",
@@ -15431,7 +15431,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: she moves without a sound. Base 3, +2 Sun, +1 constant. The book prints '1 point, Init 0, Mentem' before '1 point, constant, Imaginem'.",
-            "id": "5bf8e1bd888f"
+            "id": "cdf2274da46d"
           },
           {
             "name": "Steal Judgment",
@@ -15445,7 +15445,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes almost any lie she tells; an Intelligence roll against Ease Factor 6 resists, easier for truly incredible lies. Base 4, +1 Eye, +2 Sun. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "33bcafb138fd"
+            "id": "e1b54a76646b"
           }
         ],
         "vis": [
@@ -15453,7 +15453,7 @@
             "pawns": 9,
             "art": "",
             "where": "bones of a goat",
-            "id": "c54c9eb20097"
+            "id": "125ba2a4d8aa"
           }
         ],
         "equipment": "Any trappings of a woman of wealth and dubious virtue.",
@@ -15827,7 +15827,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "fe47e221645b"
+            "id": "9f25bf7286d1"
           },
           {
             "name": "Falchion",
@@ -15835,7 +15835,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 5,
-            "id": "3295e96b6a41"
+            "id": "f95bbecc68f7"
           },
           {
             "name": "Fist",
@@ -15843,7 +15843,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 2,
-            "id": "66bdcbb467e2"
+            "id": "d145e10e8d49"
           }
         ],
         "soak": 2,
@@ -16049,7 +16049,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Constant effect. With a few moments' concentration he learns anything that happens within the bounds of the Great Desert.",
-            "id": "672daeca48a3"
+            "id": "f721fb18399d"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -16063,7 +16063,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Cr(Re)Co).",
-            "id": "6d83680ac1b1"
+            "id": "6c7fea7866f2"
           },
           {
             "name": "Eidolon",
@@ -16077,7 +16077,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory form material beings can see and hear. It moves and speaks as he directs and lasts until he has no use for it.",
-            "id": "6bbe1e2b4289"
+            "id": "30ea9b015300"
           },
           {
             "name": "Master of Sandstorms",
@@ -16091,7 +16091,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points, a point a magnitude: any non-ritual Creo, Muto or Rego Auram effect up to 7th magnitude, with Terram or Ignem prerequisites as he likes.",
-            "id": "f6ddb2cd3619"
+            "id": "87a6c746eb31"
           },
           {
             "name": "Master of Thirst",
@@ -16105,7 +16105,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Draws most of the water out of any object (PeAq(Co)).",
-            "id": "17fd6fd2072b"
+            "id": "7754ad2884aa"
           }
         ],
         "vis": [
@@ -16113,12 +16113,12 @@
             "pawns": 7,
             "art": "Auram",
             "where": "in the dust on his clothes or in his cyclone",
-            "id": "e2d2f4d4a89d"
+            "id": "cbd6e2fa245e"
           }
         ],
         "equipment": "",
         "appearance": "A Tuareg warrior, robed and veiled, a falchion at his side and sand swirling round his feet; or a whirling cyclone of dust and sand.",
-        "notes": "The hot, dust-laden wind out of the south-east, which often reaches hurricane speed. In Africa it prefers its Arabic name, the Ghibli, and grudgingly owns that Europeans know Sirocco better. It appears most often as a veiled Tuareg raider, and always as some sort of warrior, short-tempered and with a biting falchion.\n\nProud and Wind are its Essential Traits. Its Qualities are printed as Focus Power: Auram x2, Greater Power (Donning the Corporeal Veil, Eidolon, Presence), Major Virtue (Magical Master), Improved Abilities x4, Improved Might x5, Improved Powers (Focus Power, Master of Thirst) and Lesser Power (Master of Thirst). The block gives three Greater Powers for the three named.",
+        "notes": "The hot, dust-laden wind out of the south-east, which often reaches hurricane speed. In Africa it prefers its Arabic name, the Ghibli, and grudgingly owns that Europeans know Sirocco better. It appears most often as a veiled Tuareg raider, and always as some sort of warrior, short-tempered and with a biting falchion.\n\nProud and Wind are its Essential Traits; its Homing Instinct is for Kaf Ajnoun. Its Qualities are printed as Focus Power: Auram x2, Greater Power (Donning the Corporeal Veil, Eidolon, Presence), Major Virtue (Magical Master), Improved Abilities x4, Improved Might x5, Improved Powers (Focus Power, Master of Thirst) and Lesser Power (Master of Thirst). The block gives three Greater Powers for the three named.",
         "source": "Between Sand and Sea: Mythic Africa p. 91",
         "detail": "Full",
         "place_id": "kaf_ajnoun",
@@ -16495,7 +16495,7 @@
             "attack": 0,
             "defense": -3,
             "damage": -2,
-            "id": "4eb67c0bf0b0"
+            "id": "3ca7b1c6cd7d"
           }
         ],
         "soak": 2,
@@ -16659,7 +16659,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Lesser Power, -5 Might cost).",
-            "id": "4290c9a7dc01"
+            "id": "89f5ce037e5c"
           },
           {
             "name": "Focus Power (Divination)",
@@ -16673,7 +16673,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Intellego Corpus, Imaginem or Vim effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "703765f321fe"
+            "id": "33e735122ce9"
           },
           {
             "name": "Focus Power (Destruction)",
@@ -16687,7 +16687,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Perdo Animal, Corpus or Terram effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "481002006001"
+            "id": "2e3d93a23211"
           },
           {
             "name": "Invisibility",
@@ -16701,7 +16701,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She, or someone she touches, turns invisible at will, though Second Sight still sees her. The effect is PeIm 15; the book also says the Lesser Power's 25 levels.",
-            "id": "f125e966ed8d"
+            "id": "0267f26a2868"
           },
           {
             "name": "Ritual Focus Power (Healing)",
@@ -16715,7 +16715,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Creo Corpus ritual effects up to 7th magnitude, paid for with any fitting vis she holds. Its Initiative is (2 x magnitude) - 3.",
-            "id": "08dc1588bcae"
+            "id": "20f9a9b8e08c"
           }
         ],
         "vis": [
@@ -16723,7 +16723,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in her bracelets",
-            "id": "4ec18d386053"
+            "id": "fd01d59680ce"
           }
         ],
         "equipment": "",
@@ -16943,7 +16943,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "82c643063164"
+            "id": "785efa819673"
           },
           {
             "name": "Fist",
@@ -16951,7 +16951,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 1,
-            "id": "194744bb85c1"
+            "id": "8fb1b78a7516"
           },
           {
             "name": "Sling",
@@ -16959,7 +16959,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 5,
-            "id": "965b1600c433"
+            "id": "fa3831b3b4e0"
           }
         ],
         "soak": 2,
@@ -17039,7 +17039,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch, a tunnel a pace deep. Used over and over to build warrens, and to loosen stones for the great burial mounds (PeTe; 2 mastery points on Might cost, 1 on Initiative).",
-            "id": "616c651a375f"
+            "id": "90b8c9204844"
           }
         ],
         "vis": [
@@ -17047,7 +17047,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in its hands",
-            "id": "68f827994b57"
+            "id": "b6d66f1f5aee"
           }
         ],
         "equipment": "Any small thing that caught its interest, a camel-hide loincloth, and a sling wound round the waist or worn as a sash with a stone ready.",
@@ -17880,7 +17880,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 4,
-            "id": "db2e78496af7"
+            "id": "d253356e9677"
           },
           {
             "name": "Great Sword",
@@ -17888,7 +17888,7 @@
             "attack": 21,
             "defense": 17,
             "damage": 13,
-            "id": "3c26c970a8da"
+            "id": "843ba4e9be1d"
           }
         ],
         "soak": 4,
@@ -18010,7 +18010,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once in a body, he shifts to any human form, even with animal parts such as curling ram's horns, and dissolves them at will. A natural change: Magic Resistance does not stop physical attacks.",
-            "id": "e4c16dce86e8"
+            "id": "c5b3fe239eb3"
           },
           {
             "name": "Know the Places of Men",
@@ -18024,7 +18024,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Intellego Corpus or Imaginem effects up to 10th magnitude.",
-            "id": "579fcc1dd93d"
+            "id": "055928854ea6"
           },
           {
             "name": "Master of Flame",
@@ -18038,7 +18038,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Ignem effects up to 10th magnitude.",
-            "id": "53181174db67"
+            "id": "8445f4587f3e"
           },
           {
             "name": "Summon the Herd of Destruction",
@@ -18052,7 +18052,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ritual power (ReMe 15, +4 Arc, +3 Moon, +2 Group): 10 ghostly war elephants who obey him, or one he names, for Moon Duration. They understand only Punic.",
-            "id": "e090f4f4e6ab"
+            "id": "b2f9146af9a4"
           },
           {
             "name": "Coagulation",
@@ -18066,7 +18066,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form, which he may dissolve at will.",
-            "id": "d6d0a5b9a66e"
+            "id": "340749d606fc"
           },
           {
             "name": "Envisioning",
@@ -18080,7 +18080,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point to appear in a sleeper's dreams, 5 for a waking dream. So he often spoke to his worshippers.",
-            "id": "a2989f4e5ba1"
+            "id": "ad875a672cdd"
           },
           {
             "name": "His Master's Voice",
@@ -18094,7 +18094,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: summons demons or corrupt beasts to him, 1 point for each point of their Infernal Might, so rarely used. He has no control over what comes.",
-            "id": "19a16dab50a0"
+            "id": "abbfa04f18d7"
           },
           {
             "name": "Obsession",
@@ -18108,7 +18108,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points: imposes the Obsession Traits of Greed, Merciless Ambition and Pride (Realms of Power: The Infernal pp. 31-32).",
-            "id": "c66e9837bdea"
+            "id": "50ac5159c26f"
           },
           {
             "name": "Possession",
@@ -18122,7 +18122,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: as Realms of Power: The Infernal. Might moved into a Possession Pool stays there until the possession ends. The more Might, the more he can do and the weaker the Penetration. Each portion is an independent copy of his mind using any Power its pool can pay for. He may give the host Magic Resistance equal to the Pool, or hide within and pass wards. Forcing the host, or using its powers, draws on the pool (1 point a magnitude or Ability point, or the Might the victim spent; a questionable act must beat the host's Trait on stress die + Might spent). The possession ends at pool 0. Vim spells drain the pool but must Penetrate his full Might.",
-            "id": "90b370cf6ca1"
+            "id": "6431d6d39951"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -18136,7 +18136,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: conceals the Infernal nature of a power or aura as Magical or Faerie, or as wholly mundane, even from Sense Holiness and Unholiness, for as long as what it masks. It costs the masked Power's cost, or its magnitude if it costs no Might.",
-            "id": "1fc3b2fbfad7"
+            "id": "8ddfb24a99c2"
           },
           {
             "name": "Wealth of Nations",
@@ -18150,7 +18150,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Summons riches of intrinsic value up to 50 pounds of gold from somewhere else, a royal treasury or the purse of the man beside you, chosen to corrupt most.",
-            "id": "4c6c9880782a"
+            "id": "7885068aad4c"
           }
         ],
         "vis": [
@@ -18158,13 +18158,13 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in his curling horns",
-            "id": "1775e340316d"
+            "id": "4f6a1469da25"
           },
           {
             "pawns": 20,
             "art": "Vim",
             "where": "vis infesta, carried on long stays abroad",
-            "id": "9db7eda21690"
+            "id": "01ef9e2d0092"
           }
         ],
         "equipment": "",
@@ -18251,7 +18251,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 0,
-            "id": "10fcc24c9f52"
+            "id": "431a9a25dd03"
           }
         ],
         "soak": 0,
@@ -18296,7 +18296,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 or more points, if it penetrates, the victim is possessed and under her direct control. Using the host's magic costs 1 Might per magnitude; a questionable act against the host's nature needs a stress die + Might spent over the host's Personality Trait roll (see Entrancement, ArM5 p. 65, for modifiers), and both costs apply together. Under her direct control the host has her Magic Resistance and is stopped by wards against her; acting freely, the host has neither. The costs follow Realms of Power: Magic, not Hermetic magic.",
-            "id": "777778c75fa0"
+            "id": "91581d381975"
           }
         ],
         "vis": [
@@ -18304,7 +18304,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in the fingernails of the possession victim",
-            "id": "e6579f0db61a"
+            "id": "a83c9e07faaa"
           }
         ],
         "equipment": "Someone else's body and all her goods.",
@@ -18844,7 +18844,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 3. Any voice of man or creature, in any language it knows, in any shape (MuIm).",
-            "id": "45733eecfd0a"
+            "id": "9acf8b833db2"
           },
           {
             "name": "Trembling Fear of the Predator's Gaze",
@@ -18858,7 +18858,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. While it holds his eye the target cannot run or dodge, though he can use his hands or call out; he loses his Quickness from Defense and takes -3 (ReCo).",
-            "id": "5cb25d0d81c4"
+            "id": "cc62ee7770e0"
           },
           {
             "name": "Rending Fangs",
@@ -18872,7 +18872,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 3. Its bite destroys leather, bone, wood, cloth, stone or metal it can get its teeth round. With an attack it takes a point of Protection off armour, or instead of one it breaks a weapon or shield if it beats Defense by 3 or more, doing no damage; not together with Ripping Jaws (PeTe(An, He)).",
-            "id": "4524c85a3080"
+            "id": "f5c6e4f4ca87"
           },
           {
             "name": "Ripping Jaws",
@@ -18886,7 +18886,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 2. The victim takes -3 to all recovery rolls until fully healed, for any wound; Incapacitating Wounds leave scars that never fade (PeCo).",
-            "id": "44b0e92696bd"
+            "id": "efac699545ea"
           },
           {
             "name": "The Beast Between",
@@ -18900,7 +18900,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. 3 points or Fatigue; Initiative Qik - 2. A hyena's head, claws, fur and tail on a man's upright frame, human mental Characteristics and a hyena's physical ones, usable hands, Protection +2. Bite of the hybrid form: Init 0, Attack +3, Defense +1, Damage +4. Ended early by changing shape (MuCo, free Animal requisite).",
-            "id": "8ab352ddb862"
+            "id": "e896e07b0117"
           }
         ],
         "vis": [],
@@ -19162,7 +19162,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 9,
-            "id": "83695cae4e85"
+            "id": "6ff9beb6473a"
           },
           {
             "name": "Bite",
@@ -19170,7 +19170,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 8,
-            "id": "0e5c8b4f0eb5"
+            "id": "f1251dc68994"
           }
         ],
         "soak": 3,
@@ -19264,7 +19264,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Or Crafter's Healing, below. 1 point a magnitude, Initiative variable: any non-Ritual Creo, Muto, Rego or Perdo Terram spell, within its motif as a blacksmith.",
-            "id": "d195f8d6616d"
+            "id": "66932be0105e"
           },
           {
             "name": "Crafter's Healing",
@@ -19278,7 +19278,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In place of Blacksmithing, as the Major Supernatural Virtue (City & Guild p. 71).",
-            "id": "119678b27266"
+            "id": "4b105765c2d3"
           },
           {
             "name": "Looked at Thrice",
@@ -19292,7 +19292,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Trembling Fear of the Predator's Gaze.",
-            "id": "89fdf5cbef4b"
+            "id": "cd596375067a"
           },
           {
             "name": "The Shadow Stays the Hound",
@@ -19306,7 +19306,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes a dog the werehyena's shadow falls on (Base 5, +2 Sight, +1 Conc).",
-            "id": "d1370bf64629"
+            "id": "c9190467ea93"
           },
           {
             "name": "Transform into Human",
@@ -19320,7 +19320,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Human form for Duration: Sun, and only at sunrise (Personal, MuAn(Co)).",
-            "id": "806c67595f06"
+            "id": "bc2528a502a5"
           }
         ],
         "vis": [
@@ -19328,7 +19328,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in its tools",
-            "id": "c37afd76f52e"
+            "id": "11828c16b79a"
           }
         ],
         "equipment": "Blacksmith tools, apron.",
@@ -19598,7 +19598,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Any sound, speech, song or music comes from the head, no louder than a human could make; only suppressing the power silences it (CrIm).",
-            "id": "fb37cc7fa4bc"
+            "id": "161d1fc97da1"
           }
         ],
         "vis": [],
@@ -19983,7 +19983,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. He makes out detail at any distance as if a foot away, and judges distance to an inch or so at several miles (InIm, Personal Power x2).",
-            "id": "6a4be28b500c"
+            "id": "6cb1ed0a512b"
           }
         ],
         "vis": [],
@@ -20130,7 +20130,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. A short-term Fatigue level for flight as fast as a running horse. Every minute a Stamina + Concentration roll against 6 or another Fatigue level; none when Dazed. Athletics steers (ReCo).",
-            "id": "3a50dc6e39a1"
+            "id": "ed0f311635e7"
           }
         ],
         "vis": [],
@@ -20299,7 +20299,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. The eyes shine like a lantern for five paces, without hurting sight; only closing them or a Confidence point shuts it off (CrIg; printed Greater Power, 10 levels, -2 cost).",
-            "id": "09a33e6988bc"
+            "id": "9c061da0768a"
           },
           {
             "name": "The Sun's Breath",
@@ -20313,7 +20313,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 1. Heats a thing no bigger than her head: metal glows red, water boils, the flammable ignites. It cools normally (CrIg).",
-            "id": "09aedc5919f2"
+            "id": "489302d24ad3"
           },
           {
             "name": "The Sun's Shout",
@@ -20327,7 +20327,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 1. Spits a dart of fire for +5 damage if it Penetrates (CrIg).",
-            "id": "4eaeba7d6d36"
+            "id": "9029a1ac5512"
           }
         ],
         "vis": [],
@@ -20482,7 +20482,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Moves freely in complete darkness, as the Hermetic spell (ArM5 p. 127; InAu).",
-            "id": "34b42c503bda"
+            "id": "fc2c3a8bddec"
           }
         ],
         "vis": [],
@@ -21854,7 +21854,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 2,
-            "id": "ca0a6fa188da"
+            "id": "c2328cf857ef"
           }
         ],
         "soak": 3,
@@ -21911,7 +21911,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A single-humped Arabian camel.",
-        "notes": "The common riding dromedary (Jamal), first given under Alexander of Jerbiton in Magi of Hermes pp. 10-11. Camels smell open water by its air-after-rain scent, go long without drinking and can walk through mild sandstorms unharmed. Splayed feet carry them faster over sand than horses and tire them less.\n\nRiding camel, the mehari of the lower classes' races: add Fast Runner (+3 to running) and Improved Characteristics, Quickness +0. War camel: add Aggressive, Pack Animal and Ferocity (when ridden in battle), Brawl (hooves) 5; kick Init +0, Attack +8, Defense +5, Damage +2; it can train to attack in a Trained Group with its rider. Bactrian camel: Hardy, Long-Winded and Feral Scent, fully given in The Cradle and the Crescent p. 170.\n\nThe block's wound ranges stop at Incapacitated 22+.",
+        "notes": "The common riding dromedary (Jamal), first given under Alexander of Jerbiton in Magi of Hermes pp. 10-11. Camels smell drinkable water up to two miles off by its air-after-rain scent, go up to two weeks without it and can walk through mild sandstorms unharmed. Splayed feet carry them faster over sand than horses and tire them less.\n\nRiding camel, the mehari of the lower classes' races: add Fast Runner (+3 to running) and Improved Characteristics, Quickness +0. War camel: add Aggressive, Pack Animal and Ferocity (when ridden in battle), Brawl (hooves) 5; kick Init +0, Attack +8, Defense +5, Damage +2; it can train to attack in a Trained Group with its rider. Bactrian camel: Hardy, Long-Winded and Feral Scent, fully given in The Cradle and the Crescent p. 170.\n\nThe block's wound ranges stop at Incapacitated 22+.",
         "source": "Between Sand and Sea: Mythic Africa p. 136",
         "detail": "Full",
         "place_id": null,
@@ -22142,7 +22142,7 @@
             "attack": 8,
             "defense": 3,
             "damage": 5,
-            "id": "e8ca1d8b277e"
+            "id": "bacc71f21790"
           }
         ],
         "soak": 2,
@@ -22222,7 +22222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns it into dromedary or Bactrian form and back, changing its Characteristics and non-magical Qualities to suit (MuAn; Base 5, +2 Sun).",
-            "id": "a0fdcd329a04"
+            "id": "a5fbf8ce1551"
           },
           {
             "name": "Keep the Simoon at Bay",
@@ -22236,7 +22236,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shields the camel, its herd and any riders from the simoon, the scorching wind and sandstorm of the deep desert (ReAu).",
-            "id": "ba5c8e8cd084"
+            "id": "d8fe5c900140"
           },
           {
             "name": "Scent the Distant Waters of the Oasis",
@@ -22250,7 +22250,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Finds any natural water on the path it is travelling, by simple Perception rolls against 6, once a day on long journeys; invoked again if the water is more than half a day off (InAq; Base 2, +2 Road, +2 Smell, +2 Sun).",
-            "id": "a78c1e41ab8e"
+            "id": "2cbdef21876d"
           },
           {
             "name": "Subtle Taste of Poison and Purity",
@@ -22264,7 +22264,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ArM5 p. 122); poison does not harm it, a Magical Animal, so it tastes fouled water safely (InAq).",
-            "id": "3ab35b3ec3f0"
+            "id": "d1fb0ce41ad7"
           }
         ],
         "vis": [],
@@ -22453,7 +22453,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "979c0c81ef91"
+            "id": "91cd86157d7f"
           },
           {
             "name": "Bite",
@@ -22461,7 +22461,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 1,
-            "id": "8c78eb0ab092"
+            "id": "e138d9acee71"
           }
         ],
         "soak": 2,
@@ -22656,7 +22656,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "f01ac9a7f52e"
+            "id": "9bf44880d63c"
           },
           {
             "name": "Bite",
@@ -22664,7 +22664,7 @@
             "attack": 9,
             "defense": 10,
             "damage": -5,
-            "id": "cf20d69a4b7a"
+            "id": "8d51d17bd3e7"
           }
         ],
         "soak": -1,
@@ -22882,7 +22882,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 2,
-            "id": "32661bd56c3b"
+            "id": "c31ebc0caa1c"
           },
           {
             "name": "Hooves",
@@ -22890,7 +22890,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 1,
-            "id": "25004cdd4aef"
+            "id": "8b494d344983"
           }
         ],
         "soak": 1,
@@ -23130,7 +23130,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "8782919daf98"
+            "id": "591185b9a609"
           },
           {
             "name": "Dodge",
@@ -23138,7 +23138,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "f96498bf0ffe"
+            "id": "90d30889e8b7"
           }
         ],
         "soak": 3,
@@ -23419,7 +23419,7 @@
             "attack": null,
             "defense": 6,
             "damage": null,
-            "id": "83c7b3811c25"
+            "id": "38d91a5ec285"
           },
           {
             "name": "Bite",
@@ -23427,7 +23427,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -2,
-            "id": "16262504a005"
+            "id": "7f6fad4e904e"
           }
         ],
         "soak": 2,
@@ -23751,7 +23751,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 9,
-            "id": "8b6cce5d5ba3"
+            "id": "a0cf205c3fab"
           },
           {
             "name": "Grapple",
@@ -23759,7 +23759,7 @@
             "attack": 7,
             "defense": 4,
             "damage": null,
-            "id": "6600d8a0ff64"
+            "id": "26f82733397c"
           }
         ],
         "soak": 8,
@@ -23825,7 +23825,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 12 or Incapacitating, whether or not the bite wounds. Boots do not stop it, and it serves well on a victim held in its locking bite.",
-            "id": "7d19f57c9292"
+            "id": "a2184eee797a"
           }
         ],
         "vis": [],
@@ -23980,7 +23980,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "1ff9264f9af5"
+            "id": "eb66fe8189ea"
           },
           {
             "name": "Kick (as hoof)",
@@ -23988,7 +23988,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "be5f807a9abc"
+            "id": "3ecfa867014c"
           }
         ],
         "soak": 3,
@@ -24184,7 +24184,7 @@
             "attack": 10,
             "defense": 14,
             "damage": -6,
-            "id": "a9ad8b489757"
+            "id": "a4200944d287"
           },
           {
             "name": "Grapple",
@@ -24192,7 +24192,7 @@
             "attack": 7,
             "defense": 11,
             "damage": null,
-            "id": "792596b45e54"
+            "id": "a5a50cc0fdb7"
           },
           {
             "name": "Sting",
@@ -24200,7 +24200,7 @@
             "attack": 10,
             "defense": 6,
             "damage": -9,
-            "id": "cead5660401c"
+            "id": "80a733d83441"
           }
         ],
         "soak": 4,
@@ -24280,7 +24280,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 6 or Incapacitating, whether or not the sting wounds. High leather boots and other simple measures hinder it.",
-            "id": "da5cdaf371c0"
+            "id": "4aef03f0678d"
           }
         ],
         "vis": [],
@@ -24498,7 +24498,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 11,
-            "id": "3117e1f0669b"
+            "id": "0594d54c3997"
           },
           {
             "name": "Trample",
@@ -24506,7 +24506,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 9,
-            "id": "f75082636ed7"
+            "id": "a5e5fdcc3729"
           }
         ],
         "soak": 11,
@@ -24572,7 +24572,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A natural power. It spends a Fatigue level to charge over flat ground with its horn, adding its Combat Ability to its Attack roll; anything smaller it strikes is knocked prone (Lords of Men p. 123).",
-            "id": "b72f79669b07"
+            "id": "c25cdf020340"
           }
         ],
         "vis": [],
@@ -24729,7 +24729,7 @@
             "attack": 6,
             "defense": 10,
             "damage": -4,
-            "id": "30f5d9fb0078"
+            "id": "e17aabdfeabf"
           },
           {
             "name": "Beak",
@@ -24737,7 +24737,7 @@
             "attack": 6,
             "defense": 7,
             "damage": -3,
-            "id": "5bbcdb8859a5"
+            "id": "add26a2c6faf"
           },
           {
             "name": "Stone (dropped)",
@@ -24745,7 +24745,7 @@
             "attack": -1,
             "defense": 0,
             "damage": null,
-            "id": "696318c9757c"
+            "id": "1d65ddc25c32"
           },
           {
             "name": "Stone (bludgeon)",
@@ -24753,7 +24753,7 @@
             "attack": 0,
             "defense": 6,
             "damage": -2,
-            "id": "328d197b03ff"
+            "id": "7dbc8469c008"
           }
         ],
         "soak": 3,
@@ -24888,7 +24888,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A giant black vulture of the highest mountains.",
-        "notes": "They personify intimidation, patience and prudence. Every one the magi have identified was female, and most are thought to live a hundred years. Many classical authorities deny there are male vultures, saying females bear identical daughters without a mate, an allegory the Church uses for the Virgin birth.\n\nThe skin of the bald head holds Corpus, not Animal, vis; the amount is not printed. At least one elder Bjornaer with a vulture Heartbeast has lately passed into Final Twilight as one of these, and nobody knows what a male would become.\n\nThe book prints no statistics for it.",
+        "notes": "They embody menace, patience and caution. Every one the magi have identified was female, and most are thought to live a hundred years. Many classical authorities deny there are male vultures, saying females bear identical daughters without a mate, an allegory the Church uses for the Virgin birth.\n\nThe skin of the bald head holds Corpus, not Animal, vis; the amount is not printed. At least one elder Bjornaer with a vulture Heartbeast has lately passed into Final Twilight as one of these, and nobody knows what a male would become.\n\nThe book prints no statistics for it.",
         "source": "Between Sand and Sea: Mythic Africa p. 143",
         "detail": "Full",
         "place_id": null,

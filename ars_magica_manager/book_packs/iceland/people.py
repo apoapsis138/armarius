@@ -488,7 +488,8 @@ def _giants(b: Builder) -> None:
             "mostly outlaws, and a number of Icelandic trollsynir (p. 51) come "
             "of bored, lonely daughters of such hosts and an occasional "
             "outlaw. Most giants have no love for humans, but few ever meet "
-            "one, for no sane man walks into their glaciers and volcanoes.",
+            "one, for men in their right minds stay out of the ice and fire "
+            "where giants live.",
         ),
         rules="No more than four hundred giants in Iceland in 1220. Pp. 29-31.",
     )

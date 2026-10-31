@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.60.0",
+  "app_version": "3.61.0",
   "kind": "pack",
   "name": "The Sundered Eagle: the Theban Tribunal",
   "from_saga": "The Sundered Eagle: the Theban Tribunal",
@@ -138,7 +138,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 2,
-        "what_matters": "Vis: the Blood of Medusa, 16 pawns of extraordinary Corpus vis a year, kept in a basin atop a carved stele by the statue of Asklepios in the Hall of Repose\nVis: Imaginem from the ancient theatre\nVis: a small stipend from the Tribunal for healing magi\nLaboratory: the Hall of Repose, shared, specialised in healing and longevity; Tribunal-funded Longevity Rituals are made there\nLibrary: an unrivalled collection on Medicine and outstanding books on Creo and Corpus\nBoon: Powerful Ally (Asklepios, the covenant's patron)\nBoon: Aura (Magic 5); Prestige (healers of the Tribunal); Loyal Covenfolk\nHook: Hermetic Services (a season of healing and a Longevity Ritual from each magus a year)\nHook: Distorted Covenfolk (maimed, leprous and outcast servants)\nTension: prejudice against lepers keeps many magi from Xenias, and magic cannot cure leprosy\nTension: healing the Prince of Achaea or his kin would be meddling with mundanes, and refusing would make enemies",
+        "what_matters": "Laboratory: the Hall of Repose, shared, specialised in healing and longevity; Tribunal-funded Longevity Rituals are made there\nBoon: Powerful Ally (Asklepios, the covenant's patron)\nBoon: Aura (Magic 5); Prestige (healers of the Tribunal); Loyal Covenfolk\nHook: Hermetic Services (a season of healing and a Longevity Ritual from each magus a year)\nHook: Distorted Covenfolk (maimed, leprous and outcast servants)\nTension: prejudice against lepers keeps many magi from Xenias, and magic cannot cure leprosy\nTension: healing the Prince of Achaea or his kin would be meddling with mundanes, and refusing would make enemies",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -158,7 +158,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.\nMagi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.",
+        "secrets": "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.\nMagi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.\n\nVis: the Blood of Medusa, 16 pawns of extraordinary Corpus vis a year, kept in a basin atop a carved stele by the statue of Asklepios in the Hall of Repose\n\nVis: Imaginem from the ancient theatre\n\nVis: a small stipend from the Tribunal for healing magi\n\nLibrary: an unrivalled collection on Medicine and outstanding books on Creo and Corpus",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -286,7 +286,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 9,
-        "what_matters": "Vis: Perdo from the bats of Hecate's cave near the valley\nLibrary: no books named; the leader shares out the books and vis\nBoon: Local Ally (Cyra, the covenant's patron)\nBoon: Hedge Tradition (the native traditions it shelters)\nHook: Fractured Council (no council; magi of rival traditions quarrel)\nHook: Infamous (secretive, reluctant to serve, led by witches)\nHook: Rival (the Daughters of Erictho in the mountains; the Tremere of Gigas)\nTension: the autocrat, loyal only to Destasia, controls the purse\nTension: young magi of Erebos are among those the League of the Vigilant may be steered to accuse",
+        "what_matters": "Boon: Local Ally (Cyra, the covenant's patron)\nBoon: Hedge Tradition (the native traditions it shelters)\nHook: Fractured Council (no council; magi of rival traditions quarrel)\nHook: Infamous (secretive, reluctant to serve, led by witches)\nHook: Rival (the Daughters of Erictho in the mountains; the Tremere of Gigas)\nTension: the autocrat, loyal only to Destasia, controls the purse\nTension: young magi of Erebos are among those the League of the Vigilant may be steered to accuse",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -306,7 +306,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.\nProximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.",
+        "secrets": "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.\nProximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.\n\nVis: Perdo from the bats of Hecate's cave near the valley\n\nLibrary: no books named; the leader shares out the books and vis",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -424,7 +424,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 3,
-        "what_matters": "Library: no books named; records Boustaphan will not open to outsiders\nBoon: Hidden Resources (underground sancta under a modest lodge)\nHook: Superiors (Coeris, the Tremere domus magna)\nHook: House Covenant (Tremere only since 1069)\nHook: Hermetic Politics (its campaign to normalise the Tribunal)\nTension: feud with Erebos, which it thinks a nest of diabolists\nTension: Hedyosmos, which it suspects of the Sundering; Tremere are not welcome there\nTension: the Tremere appeal to the Grand Tribunal of 1228 to retry the League of Advisors",
+        "what_matters": "Boon: Hidden Resources (underground sancta under a modest lodge)\nHook: Superiors (Coeris, the Tremere domus magna)\nHook: House Covenant (Tremere only since 1069)\nHook: Hermetic Politics (its campaign to normalise the Tribunal)\nTension: feud with Erebos, which it thinks a nest of diabolists\nTension: Hedyosmos, which it suspects of the Sundering; Tremere are not welcome there\nTension: the Tremere appeal to the Grand Tribunal of 1228 to retry the League of Advisors",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -444,7 +444,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.",
+        "secrets": "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.\n\nLibrary: no books named; records Boustaphan will not open to outsiders",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -580,7 +580,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 3,
-        "what_matters": "Income: hidden mines of gold, silver and gemstones found by dowsing covenfolk, worked through intermediaries\nLibrary: Ausculator's works on Terram, and the covenant's records of the time of the Sundering\nMysteries: Initiation Scripts of the threskeia geine for Divination and Augury (Geomancy), Summoning (of Terram-aligned Magic beings), Dowsing, Puissant Terram, Silent Magic and Spirit Familiar\nServices: debaters for decrees, and Aiakia's rituals, each for the neutralisation of a shard\nBoon: Powerful Ally (Minthe, the covenant's patron)\nBoon: Wealth; Vast and Labyrinthine; Veteran Fighters (grogs who fight blind)\nHook: Uncontrolled Portal (the gate to Tartaros in the labyrinth)\nHook: Infamous (stygian magic and dark rumours)\nHook: Rival (House Tremere, which wants its records of the Sundering)\nTension: its Terrae Cult is the heart of Kampe's Lovers, who would loosen Hades's hold on the titans",
+        "what_matters": "Income: hidden mines of gold, silver and gemstones found by dowsing covenfolk, worked through intermediaries\nMysteries: Initiation Scripts of the threskeia geine for Divination and Augury (Geomancy), Summoning (of Terram-aligned Magic beings), Dowsing, Puissant Terram, Silent Magic and Spirit Familiar\nServices: debaters for decrees, and Aiakia's rituals, each for the neutralisation of a shard\nBoon: Powerful Ally (Minthe, the covenant's patron)\nBoon: Wealth; Vast and Labyrinthine; Veteran Fighters (grogs who fight blind)\nHook: Uncontrolled Portal (the gate to Tartaros in the labyrinth)\nHook: Infamous (stygian magic and dark rumours)\nHook: Rival (House Tremere, which wants its records of the Sundering)\nTension: its Terrae Cult is the heart of Kampe's Lovers, who would loosen Hades's hold on the titans",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -600,7 +600,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.\nAusculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.\nVrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.\nThe Estate of Hades: Askalaphos means in time to make the covenant a temple of Hades again and rid it of the magi; the Aegis of the Hearth stands in his way, and he wonders how to get himself invited into the ritual.\nProximios hopes to turn Aiakia and Tisiphon against Gigas, and Celaenea against Lucian of Aegaea.",
+        "secrets": "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.\nAusculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.\nVrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.\nThe Estate of Hades: Askalaphos means in time to make the covenant a temple of Hades again and rid it of the magi; the Aegis of the Hearth stands in his way, and he wonders how to get himself invited into the ritual.\nProximios hopes to turn Aiakia and Tisiphon against Gigas, and Celaenea against Lucian of Aegaea.\n\nLibrary: Ausculator's works on Terram, and the covenant's records of the time of the Sundering",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -904,7 +904,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 2,
-        "what_matters": "Boon: Powerful Ally (Triton, the covenant's patron)\nBoon: Regio (the palace, Faerie aura 8); Fantastic Environment (air-like water, constant sunlight); Inhuman Residents (the tritones and nereids); Wealth (faerie treasure, real only inside the regio)\nHook: Faerie Aura; Hermetic Politics (Lucian's shifting alliances); Warping to a Pattern (non-Merinita are heavily Warped)\nLibrary: a surprisingly good one, excellent in Faerie Lore and Aquam, and a peerless collection of ancient Greek and Byzantine poetry\nIncome: almost none needed; the tritones furnish food, furniture, tools and clothes, and only parchment, ink and some laboratory rarities come from outside\nDevices: items lent to visitors, such as a necklace that turns the wearer into a sea lion and a floating orb in a bubble of air; a magic conch on permanent loan to the Tribunal's Redcaps calls the covenant from up to a league away\nTurb: no human servants or grogs; an army of warrior tritones in need\nHorses: faerie-blooded horses bred in the palace stables, given as gifts\nTension: blamed for every shipwreck, and thought treacherous; predictable only in defending Faerie sites and rebuking those who abuse them\nTension: Lucian's Children of Olympos and his secret Mysteries\nTension: it says loyalty to Triton, lord of the tritones, keeps it out of the battle for the Stone Ship of Corfu's vis (see Greece), and it enjoys coaxing other magi into trying",
+        "what_matters": "Boon: Powerful Ally (Triton, the covenant's patron)\nBoon: Regio (the palace, Faerie aura 8); Fantastic Environment (air-like water, constant sunlight); Inhuman Residents (the tritones and nereids); Wealth (faerie treasure, real only inside the regio)\nHook: Faerie Aura; Hermetic Politics (Lucian's shifting alliances); Warping to a Pattern (non-Merinita are heavily Warped)\nIncome: almost none needed; the tritones furnish food, furniture, tools and clothes, and only parchment, ink and some laboratory rarities come from outside\nDevices: items lent to visitors, such as a necklace that turns the wearer into a sea lion and a floating orb in a bubble of air; a magic conch on permanent loan to the Tribunal's Redcaps calls the covenant from up to a league away\nTurb: no human servants or grogs; an army of warrior tritones in need\nHorses: faerie-blooded horses bred in the palace stables, given as gifts\nTension: blamed for every shipwreck, and thought treacherous; predictable only in defending Faerie sites and rebuking those who abuse them\nTension: Lucian's Children of Olympos and his secret Mysteries\nTension: it says loyalty to Triton, lord of the tritones, keeps it out of the battle for the Stone Ship of Corfu's vis (see Greece), and it enjoys coaxing other magi into trying",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -924,7 +924,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "They probably could do real harm to other covenants' shipping if they ever cared to.\nLucian is the only magus with an Olympian Pact; he is mystagogue of every member of his league who has Elysian Ecstasy, and may be channelling pretenders, faerie or infernal, rather than gods.\nProximios means to have the nosy Delfini falsely accused of diabolism by the League of the Vigilant, and to set Celaenea of Hedyosmos against Lucian.",
+        "secrets": "They probably could do real harm to other covenants' shipping if they ever cared to.\nLucian is the only magus with an Olympian Pact; he is mystagogue of every member of his league who has Elysian Ecstasy, and may be channelling pretenders, faerie or infernal, rather than gods.\nProximios means to have the nosy Delfini falsely accused of diabolism by the League of the Vigilant, and to set Celaenea of Hedyosmos against Lucian.\n\nLibrary: a surprisingly good one, excellent in Faerie Lore and Aquam, and a peerless collection of ancient Greek and Byzantine poetry",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1048,7 +1048,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 2,
-        "what_matters": "Boon: Powerful Ally (Dryops, the covenant's patron)\nBoon: Magical Fortress (the four enchanted ships); Regio (a laboratory regio on each sanctum ship); Hunters or Sailors\nHook: Constantly Mobile; Indebted (a great debt to Dryops)\nIncome: trade by the Procne under Basil of Andros; a third of Peter Monocheiros's plunder\nLibrary: no books named\nServices: passage for other magi, sometimes for a shard neutralised for one of their members\nExpansion: a fifth sanctum ship of three laboratories is being built at Memnos's shipyard\nTension: Basil wants profitable voyages; Verecunda and Dryops want adventures\nTension: the patron's notion of excitement often puts the fleet in real danger",
+        "what_matters": "Boon: Powerful Ally (Dryops, the covenant's patron)\nBoon: Magical Fortress (the four enchanted ships); Regio (a laboratory regio on each sanctum ship); Hunters or Sailors\nHook: Constantly Mobile; Indebted (a great debt to Dryops)\nIncome: trade by the Procne under Basil of Andros; a third of Peter Monocheiros's plunder\nServices: passage for other magi, sometimes for a shard neutralised for one of their members\nExpansion: a fifth sanctum ship of three laboratories is being built at Memnos's shipyard\nTension: Basil wants profitable voyages; Verecunda and Dryops want adventures\nTension: the patron's notion of excitement often puts the fleet in real danger",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1068,7 +1068,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Peter Monocheiros pays the covenant a third of his plunder for its protection; Basil sells anything traceable in distant ports.\nPeter's crew wear masks at their 'work', and his ships are enchanted to change their look, so nothing can be traced to Favonius.",
+        "secrets": "Peter Monocheiros pays the covenant a third of his plunder for its protection; Basil sells anything traceable in distant ports.\nPeter's crew wear masks at their 'work', and his ships are enchanted to change their look, so nothing can be traced to Favonius.\n\nLibrary: no books named",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1204,7 +1204,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Boon: Powerful Ally (Mosychlos, the covenant's patron)\nBoon: Aura (Magic 4); Vast and Labyrinthine (the tunnels under the volcano); Famous Resident (the primus); Prestige (Verditius domus magna in all but name)\nBoon: a shared forge laboratory at the Forge of Hephaistos, +8 to Rego and +5 to enchanting\nHook: House Covenant; Natural Disaster (the volcano's tempers); Inhuman Covenfolk (the karkinoi)\nVis: a large store kept on hand for enchanting, unusual in the Theban Tribunal, kept by the autocrat\nIncome: enchanted items sold to all sides through vendatores; five a year may go to mundanes, Items of Quality not counted\nIncome lost: the Lemnian Earth, seized by Venice\nLibrary: no books named; kept underground in the labyrinth\nDuty: the Forge of Hephaistos under Olympos (see Greece), kept by Theorus the Old\nPlans: Stouritus's new buildings above ground and laboratories below, to host the Contest of 1234; Egyptian marble and Trebizond oak are on order, masons and labourers hired from the villages\nTension: pro-Verdi and pro-Ingasia factions of the House over the Contest's venue\nTension: suspected of a secret deal with the old doge, or of aiding the crusade, since Venice took Lemnos alone of the northern isles",
+        "what_matters": "Boon: Powerful Ally (Mosychlos, the covenant's patron)\nBoon: Aura (Magic 4); Vast and Labyrinthine (the tunnels under the volcano); Famous Resident (the primus); Prestige (Verditius domus magna in all but name)\nBoon: a shared forge laboratory at the Forge of Hephaistos, +8 to Rego and +5 to enchanting\nHook: House Covenant; Natural Disaster (the volcano's tempers); Inhuman Covenfolk (the karkinoi)\nIncome: enchanted items sold to all sides through vendatores; five a year may go to mundanes, Items of Quality not counted\nIncome lost: the Lemnian Earth, seized by Venice\nDuty: the Forge of Hephaistos under Olympos (see Greece), kept by Theorus the Old\nPlans: Stouritus's new buildings above ground and laboratories below, to host the Contest of 1234; Egyptian marble and Trebizond oak are on order, masons and labourers hired from the villages\nTension: pro-Verdi and pro-Ingasia factions of the House over the Contest's venue\nTension: suspected of a secret deal with the old doge, or of aiding the crusade, since Venice took Lemnos alone of the northern isles",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1224,7 +1224,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Gemma and Bobila sell more enchanted items than the law allows, and favour Nicaea, sworn enemy of Venice; Stouritus, busy with his buildings, has not noticed, and they raise the covenant's wealth slowly to avoid notice. Their long-term aims are unknown.\nTheodorus has seen the twins' rising takings but says nothing, since the money will pay for Stouritus's building.\nProximios is using Hydatius and the League of the Vigilant to persecute innocent magi; a demon in Hydatius's likeness is to lead the league's members to attack.",
+        "secrets": "Gemma and Bobila sell more enchanted items than the law allows, and favour Nicaea, sworn enemy of Venice; Stouritus, busy with his buildings, has not noticed, and they raise the covenant's wealth slowly to avoid notice. Their long-term aims are unknown.\nTheodorus has seen the twins' rising takings but says nothing, since the money will pay for Stouritus's building.\nProximios is using Hydatius and the League of the Vigilant to persecute innocent magi; a demon in Hydatius's likeness is to lead the league's members to attack.\n\nVis: a large store kept on hand for enchanting, unusual in the Theban Tribunal, kept by the autocrat\n\nLibrary: no books named; kept underground in the labyrinth",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1380,7 +1380,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 3,
-        "what_matters": "Boon: Powerful Ally (Varazes, the covenant's patron)\nBoon: Island; Veteran Fighters (a famous, well-equipped turb); Militocracy (an elected general); Aura (Magic 4)\nHook: School (the Gifted children's school); Hermetic Services (defence of the Tribunal); Mundane Politics (the Duke of Naxos covets its wealth)\nIncome: mining and quarrying, a quarry monopoly on Argentiera, and the old gold and silver mines of Sifnos\nIncome: a small vis stipend from the Tribunal for schooling Gifted children\nLibrary: kept in the watchtower on the high peak; no books named\nSchool: classical Greek, Latin, philosophy and the liberal arts for Gifted children awaiting the Apprentice Presentation (up to a dozen by the end of the seven years), and a few unGifted youths trained as autocrats, stewards and scribes\nSchool: a military school where grogs are always drilling; other covenants send their soldiers and captains to train\nWarship: a crewed war galley in the island's small harbour\nTension: Varazes's crushes on attractive female visitors, and the wife the magi promised him and have not found\nTension: Caterina's Venetian links make other Jerbiton distrust her",
+        "what_matters": "Boon: Powerful Ally (Varazes, the covenant's patron)\nBoon: Island; Veteran Fighters (a famous, well-equipped turb); Militocracy (an elected general); Aura (Magic 4)\nHook: School (the Gifted children's school); Hermetic Services (defence of the Tribunal); Mundane Politics (the Duke of Naxos covets its wealth)\nIncome: mining and quarrying, a quarry monopoly on Argentiera, and the old gold and silver mines of Sifnos\nIncome: a small vis stipend from the Tribunal for schooling Gifted children\nSchool: classical Greek, Latin, philosophy and the liberal arts for Gifted children awaiting the Apprentice Presentation (up to a dozen by the end of the seven years), and a few unGifted youths trained as autocrats, stewards and scribes\nSchool: a military school where grogs are always drilling; other covenants send their soldiers and captains to train\nWarship: a crewed war galley in the island's small harbour\nTension: Varazes's crushes on attractive female visitors, and the wife the magi promised him and have not found\nTension: Caterina's Venetian links make other Jerbiton distrust her",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1400,7 +1400,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Marco Sanudo, Duke of Naxos, overlord in name of the Cyclades, has heard of the school's wealth and envies it.\nCaterina has met the duke, posing as a rich noblewoman, and is laying the ground for a quiet arrangement with him.\nSatabus, newly arrived, is the duke's lost brother Pietro and has not yet written to him.\nProximios means to have Caterina falsely accused of diabolism by the League of the Vigilant.",
+        "secrets": "Marco Sanudo, Duke of Naxos, overlord in name of the Cyclades, has heard of the school's wealth and envies it.\nCaterina has met the duke, posing as a rich noblewoman, and is laying the ground for a quiet arrangement with him.\nSatabus, newly arrived, is the duke's lost brother Pietro and has not yet written to him.\nProximios means to have Caterina falsely accused of diabolism by the League of the Vigilant.\n\nLibrary: kept in the watchtower on the high peak; no books named",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1551,11 +1551,11 @@
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "Two of the founders came from it",
-            "id": "51fb6b9e44c7"
+            "id": "ca51248a7936"
           }
         ],
         "unnamed_magi": 4,
-        "what_matters": "Boon: Powerful Ally (Fylakas, the covenant's patron)\nVis: a few unnamed sources in the catacombs\nIncome: a generous gift of money and books every year or two, brought by a Redcap from a sponsor who stays anonymous\nLibrary: a young collection, partly old books saved from Thermakopolis, swelled by the anonymous sponsor's gifts\nBoon: Hidden Ways (the catacombs, sealed by walls only the magi's keys open); Criminals (a part-time following of rogues, spies and mercenaries)\nHook: Urban; Mundane Politics (its covert war on the Latins); Poverty (too poor to keep many covenfolk); Fallen Temple (the mithraeum)\nHook: Hermetic Politics (Quaesitores suspect it of meddling)\nTension: the magi disagree how boldly to strike at the Franks\nTension: Petros leads only out of respect for his pater, and thinks of leaving for a monastery\nTension: some magi may hold knowledge or relics of Heron of Alexandria's legacy",
+        "what_matters": "Boon: Powerful Ally (Fylakas, the covenant's patron)\nIncome: a generous gift of money and books every year or two, brought by a Redcap from a sponsor who stays anonymous\nBoon: Hidden Ways (the catacombs, sealed by walls only the magi's keys open); Criminals (a part-time following of rogues, spies and mercenaries)\nHook: Urban; Mundane Politics (its covert war on the Latins); Poverty (too poor to keep many covenfolk); Fallen Temple (the mithraeum)\nHook: Hermetic Politics (Quaesitores suspect it of meddling)\nTension: the magi disagree how boldly to strike at the Franks\nTension: Petros leads only out of respect for his pater, and thinks of leaving for a monastery\nTension: some magi may hold knowledge or relics of Heron of Alexandria's legacy",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1575,7 +1575,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Fylakas may instead be a demon loosed from its binding in the sack, deceiving the pious magi.\nDespite their piety, one or more of the magi might stoop to demonic help if it would rid the city of the Franks.\nThe book leaves the anonymous sponsor's identity to the storyguide.",
+        "secrets": "Fylakas may instead be a demon loosed from its binding in the sack, deceiving the pious magi.\nDespite their piety, one or more of the magi might stoop to demonic help if it would rid the city of the Franks.\nThe book leaves the anonymous sponsor's identity to the storyguide.\n\nVis: a few unnamed sources in the catacombs\n\nLibrary: a young collection, partly old books saved from Thermakopolis, swelled by the anonymous sponsor's gifts",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1733,7 +1733,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Boon: Local Ally (St. Loukia, the covenant's patron)\nVis: the book names none\nIncome: the orphanage, still paid for from the imperial treasury by the Latins, and taught by the covenant's companions\nLibrary: the orphanage's library and scriptorium; St. Loukia's icon is unknowingly a summa of Animal Ken\nAllies: four eunuch priests among its companions, who say mass in nunneries across the city and have the ear of many retired noblewomen and at least one former empress\nBoon: Hidden Ways (the flooded tunnels under the city); Literate Covenfolk (the tutors)\nHook: Urban; Monastery (the monks of St. Christopoulos, who must go on thinking the magi hermits); Infants (the orphans, some Gifted)\nHook: Heretics (its patron is a Montanist heretic in a false icon); Dwindling Resource (the eunuch trade that once fed it)\nTension: curious orphans keep sneaking into the vaults\nTension: Trasaricus's imperial blood and hatred of the Doukas family make him a danger in the city\nTension: Artoud gives fitful support to the League Against Idolatry's petition against the Ceremony of Propitiation",
+        "what_matters": "Boon: Local Ally (St. Loukia, the covenant's patron)\nIncome: the orphanage, still paid for from the imperial treasury by the Latins, and taught by the covenant's companions\nAllies: four eunuch priests among its companions, who say mass in nunneries across the city and have the ear of many retired noblewomen and at least one former empress\nBoon: Hidden Ways (the flooded tunnels under the city); Literate Covenfolk (the tutors)\nHook: Urban; Monastery (the monks of St. Christopoulos, who must go on thinking the magi hermits); Infants (the orphans, some Gifted)\nHook: Heretics (its patron is a Montanist heretic in a false icon); Dwindling Resource (the eunuch trade that once fed it)\nTension: curious orphans keep sneaking into the vaults\nTension: Trasaricus's imperial blood and hatred of the Doukas family make him a danger in the city\nTension: Artoud gives fitful support to the League Against Idolatry's petition against the Ceremony of Propitiation",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1753,7 +1753,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Meditating on the icon works as a summa of Animal Ken, level 3, Quality 10. None of the magi has realised it, since they fear to meditate on it long, but the Criamon may find it out.\nLoukia is not dead but caught in something like Twilight between this world and the Magic Realm, which is why the aura pours from her icon.\nArtoud knows Trasaricus must soon be sent far from the city to avert disaster, but cannot bring himself to expel him.",
+        "secrets": "Meditating on the icon works as a summa of Animal Ken, level 3, Quality 10. None of the magi has realised it, since they fear to meditate on it long, but the Criamon may find it out.\nLoukia is not dead but caught in something like Twilight between this world and the Magic Realm, which is why the aura pours from her icon.\nArtoud knows Trasaricus must soon be sent far from the city to avert disaster, but cannot bring himself to expel him.\n\nVis: the book names none\n\nLibrary: the orphanage's library and scriptorium; St. Loukia's icon is unknowingly a summa of Animal Ken",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -1912,11 +1912,11 @@
             "kind": "creatures",
             "target_id": "anima_the_glass_submarine",
             "note": "one of its two artifacts",
-            "id": "2a1fea2c4cb6"
+            "id": "8718c019e73e"
           }
         ],
         "unnamed_magi": 13,
-        "what_matters": "Purpose: to give the Tribunal's bureaucracy a central seat and its Redcaps a safe, handy home\nBoon: Powerful Ally (Fides, the covenant's patron)\nBoon: Regio (two levels inside the citadel, Magic 3 and 5)\nBoon: Wealth (trade treaties round the Aegean, warehouses and three ships at Smyrna)\nHook: Mercer House; Hermetic Services (the Tribunal's records and the logothete's register)\nHook: Haunted (the ghosts of Alexander's army); Crumbling (the citadel's walls left unmended)\nHook: Mundane Politics (a Nicene garrison holds the outer citadel; food must be smuggled in and members slip in and out)\nHook: Hermetic Politics (the logothete's failure and succession)\nVis: no source of its own is named; its Redcaps are rich enough in vis to buy strong Longevity Rituals, and borrowers of its artifacts pay 1 pawn a week\nVis: the Seven Sleepers' regio near Ephesus, a possible source its Redcaps have only speculated about\nIncome: merchant trade through its warehouses and three ships in Smyrna harbour\nLibrary: the records of the Theban Tribunal and the register of tokens and shards\nEnchantments: Alexander's flying device (a ReTe 39 mechanica, idle since its flying horses escaped two years ago), the glass submarine (an anima, see the Bestiary), and small items for travelling Redcaps\nTension: Leontius has lost records and kept a faulty register; he will resign in 1221 and the Redcaps mean to propose Proximios\nTension: Catella wants the artifacts for her research, but must lend them out\nTension: the garrison could find the regio at any time",
+        "what_matters": "Purpose: to give the Tribunal's bureaucracy a central seat and its Redcaps a safe, handy home\nBoon: Powerful Ally (Fides, the covenant's patron)\nBoon: Regio (two levels inside the citadel, Magic 3 and 5)\nBoon: Wealth (trade treaties round the Aegean, warehouses and three ships at Smyrna)\nHook: Mercer House; Hermetic Services (the Tribunal's records and the logothete's register)\nHook: Haunted (the ghosts of Alexander's army); Crumbling (the citadel's walls left unmended)\nHook: Mundane Politics (a Nicene garrison holds the outer citadel; food must be smuggled in and members slip in and out)\nHook: Hermetic Politics (the logothete's failure and succession)\nIncome: merchant trade through its warehouses and three ships in Smyrna harbour\nEnchantments: Alexander's flying device (a ReTe 39 mechanica, idle since its flying horses escaped two years ago), the glass submarine (an anima, see the Bestiary), and small items for travelling Redcaps\nTension: Leontius has lost records and kept a faulty register; he will resign in 1221 and the Redcaps mean to propose Proximios\nTension: Catella wants the artifacts for her research, but must lend them out\nTension: the garrison could find the regio at any time",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1936,7 +1936,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Proximios, the likely next logothete and co-founder of the League of the Vigilant, is secretly an infernalist bent on the Order's downfall; his place at Alexandria lets him read the missives and private letters that pass through it (see his entry and An Enemy Within).\nThe garrison does not know of the regio; if it finds it, the covenant's secrecy and the Tribunal's records are at risk.",
+        "secrets": "Proximios, the likely next logothete and co-founder of the League of the Vigilant, is secretly an infernalist bent on the Order's downfall; his place at Alexandria lets him read the missives and private letters that pass through it (see his entry and An Enemy Within).\nThe garrison does not know of the regio; if it finds it, the covenant's secrecy and the Tribunal's records are at risk.\n\nVis: no source of its own is named; its Redcaps are rich enough in vis to buy strong Longevity Rituals, and borrowers of its artifacts pay 1 pawn a week\n\nVis: the Seven Sleepers' regio near Ephesus, a possible source its Redcaps have only speculated about\n\nLibrary: the records of the Theban Tribunal and the register of tokens and shards",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -2087,11 +2087,11 @@
             "kind": "places",
             "target_id": "the_old_house_of_moero_s_garden",
             "note": "Its old house, where Moero's ghost is still bound",
-            "id": "3b2b5196fed5"
+            "id": "8b6f4206bb8a"
           }
         ],
         "unnamed_magi": 2,
-        "what_matters": "Purpose: to collect the art and literature of the past to show the harmony of beauty, and to recover what was lost in 1204\nBoon: Local Ally (Hipparchus's ghost, the covenant's patron)\nBoon: Secondary Income (the craftsmen and artists of Nicaea that its autocrat backs)\nHook: Urban (a merchants' quarter of Nicaea, in a Divine aura of 2)\nHook: Poverty (Minor) (its finances are dwindling); Dwindling Resource (its vis stores)\nHook: Refugee (driven out of Constantinople in 1204)\nHook: Resident Nuisance (the patron's ghost torments the covenfolk)\nVis: one source found to replace the many it lost round Constantinople (the book does not say which); most of its vis is gifts from other Theban magi\nVis: its magi found the rite that makes the Serpent Column in Constantinople's Hippodrome yield 8 pawns of Animal vis a year\nIncome: the craftsmen it has set up, chief among them Nanno, a maker of wondrous cosmetics, and Ampelius, a master of religious murals\nLibrary: Kassia's poetry, gathered by Ionnia; her own summae and tractatus on Rego and Mentem; her poems\nAllies: the League of Constantine, centred here\nTension: the covenant is split four to four on helping the emperor retake Constantinople; Pancratius, due his Gauntlet in 1221, may tip it\nTension: Ziper, backed by Proximios, wants Nanno and Ampelius made unGifted Jerbiton members; all but Syagricus are appalled, and the pair threaten to ask the Tribunal at Delos\nHook: the magi know a secret way under the Theodosian Walls near the Gate of Pege and often send searchers into Constantinople for lost art and relics",
+        "what_matters": "Purpose: to collect the art and literature of the past to show the harmony of beauty, and to recover what was lost in 1204\nBoon: Local Ally (Hipparchus's ghost, the covenant's patron)\nBoon: Secondary Income (the craftsmen and artists of Nicaea that its autocrat backs)\nHook: Urban (a merchants' quarter of Nicaea, in a Divine aura of 2)\nHook: Poverty (Minor) (its finances are dwindling); Dwindling Resource (its vis stores)\nHook: Refugee (driven out of Constantinople in 1204)\nHook: Resident Nuisance (the patron's ghost torments the covenfolk)\nIncome: the craftsmen it has set up, chief among them Nanno, a maker of wondrous cosmetics, and Ampelius, a master of religious murals\nAllies: the League of Constantine, centred here\nTension: the covenant is split four to four on helping the emperor retake Constantinople; Pancratius, due his Gauntlet in 1221, may tip it\nTension: Ziper, backed by Proximios, wants Nanno and Ampelius made unGifted Jerbiton members; all but Syagricus are appalled, and the pair threaten to ask the Tribunal at Delos\nHook: the magi know a secret way under the Theodosian Walls near the Gate of Pege and often send searchers into Constantinople for lost art and relics",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -2111,7 +2111,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis: one source found to replace the many it lost round Constantinople (the book does not say which); most of its vis is gifts from other Theban magi\n\nVis: its magi found the rite that makes the Serpent Column in Constantinople's Hippodrome yield 8 pawns of Animal vis a year\n\nLibrary: Kassia's poetry, gathered by Ionnia; her own summae and tractatus on Rego and Mentem; her poems",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -2169,7 +2169,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "0e035b733d54"
+            "id": "b2a8693be55f"
           },
           {
             "title": "The faulty register of tokens and shards",
@@ -2201,7 +2201,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "ef9bb3ff6779"
+            "id": "174860317199"
           },
           {
             "title": "Against the Ceremony of Propitiation",
@@ -2233,7 +2233,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "43348ad747e3"
+            "id": "33ebee3c8ca4"
           },
           {
             "title": "Caterina da Vigonovo's citizenship",
@@ -2265,7 +2265,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "14ffe3bc744a"
+            "id": "c0e9f66b9a74"
           },
           {
             "title": "Nanno and Ampelius",
@@ -2297,7 +2297,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "c442d0ab0bbb"
+            "id": "29d27d9d2868"
           },
           {
             "title": "Passara and the Latin emperor",
@@ -2329,7 +2329,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "bae64aba9b40"
+            "id": "9a181beb8896"
           },
           {
             "title": "The mysterious knight of 1211",
@@ -2361,7 +2361,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "ccba5cdcef3c"
+            "id": "11cbc5e3e819"
           },
           {
             "title": "Normalising the Tribunal",
@@ -2393,7 +2393,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "86a749b1d278"
+            "id": "77e798145a8b"
           },
           {
             "title": "A covenant in Constantinople again",
@@ -2425,7 +2425,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "d2e46170a226"
+            "id": "1e5131e77f85"
           },
           {
             "title": "Tremere's appeal over the League of Advisors",
@@ -2457,7 +2457,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "3041cf439de3"
+            "id": "8f4eb31a58e6"
           },
           {
             "title": "Ingasia's sales to Nicaea",
@@ -2489,7 +2489,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "8741ee09a8f1"
+            "id": "447ea9aad788"
           }
         ],
         "rulings": [
@@ -2498,147 +2498,147 @@
             "year": 865,
             "says": "When the Tribunal was made, its magi brought its government back toward the Typikon of Prokopios. The Hermetic Assembly, every magus present, decides all things by majority, one voting sigil each, politai and metoikoi alike; the magistrates chosen by lot prepare and carry out its business but have no vote or power of their own. The magistrates, not the parties, gather the evidence in a case, and the Assembly, not the Quaesitores, settles guilt and sentence. The Code is judged afresh in each case, without precedent.",
             "case_id": "",
-            "id": "09774507ac5f"
+            "id": "a042dc253d20"
           },
           {
             "title": "Politai and metoikoi",
             "year": null,
             "says": "A polites passed Gauntlet in the Tribunal and stays in good standing. A metoikos is a magus from another Tribunal, or a polites who has lost his rights, and can hold neither tokens nor shards; he is punished by fines or ostracism instead. A metoikos may ask the Assembly for a decree of citizenship if he lives at an established covenant, can show he has served the polity, and has an arche to sponsor him; a new polites cannot be drawn as arche at the meeting that made him one.",
             "case_id": "",
-            "id": "7ced6c25ea9a"
+            "id": "9f4d87b2c644"
           },
           {
             "title": "The phylai and the sortition",
             "year": null,
             "says": "Every polites belongs to the phyle of the covenant where his sanctum is: Ionian, Aegean, Kretan or Propontian. Each phyle sends four archai, drawn by lot from its politai who are not serving and consent to stand; a magus who is eligible but refuses earns a shard. Archai serve seven years, never two terms running, and never on the same board twice. Redcaps belong to the phylai but are not drawn; they fill board seats no arche can.",
             "case_id": "",
-            "id": "3727ed944b75"
+            "id": "beebd39e2cb7"
           },
           {
             "title": "The officers",
             "year": 1186,
             "says": "The archai elect one of their number as archon, the Tribunal's Praeco and chair of the Council, who may serve more than once; by custom an arche with no preference votes for the eldest magus on the Council. They elect the polemarch from all the politai, and only a former polemarch may decline; the same magus is often chosen again and again. The polemarch may award tokens to the magi she names to help her carry out a Wizard's March, and has the use of the Tribunal's devices that bind a magus's body and Gift. The logothete, the Chief Redcap, was once chosen every seven years, but since 1186 holds office until death, Twilight, resignation or a vote of no confidence among the Redcaps, and earns no tokens for it.",
             "case_id": "",
-            "id": "7f7e6e028edf"
+            "id": "a5c8496e2651"
           },
           {
             "title": "The Judicial Board",
             "year": null,
             "says": "Prepares every charge of a High Crime and may take over any matter before the other boards that plainly breaks the Oath. A prosecution and a defence principal are drawn by lot from its members and must share what they find. In haste, as over the unlawful slaying of a magus or diabolism, it may call an interim Tribunal of at least twelve magi from four covenants, and the polemarch fetches the accused.",
             "case_id": "",
-            "id": "5fec7ebae53a"
+            "id": "8559e042d02d"
           },
           {
             "title": "The Legislative Board",
             "year": null,
             "says": "Reviews the Peripheral Code. Any polites may ask for a change, but must offer a replacement: no ruling can simply be repealed. Two members drawn by lot argue for the old ruling and the new before the Law Council at the next meeting, where the Assembly votes. A polites who fears conviction may seek a review of the law first, at the risk of having no defence left if it fails.",
             "case_id": "",
-            "id": "09b761c18b66"
+            "id": "0555aa5289c0"
           },
           {
             "title": "The Conciliatory Board",
             "year": null,
             "says": "Hears quarrels between magi, over land, resources, or between master and apprentice, and investigates an apprentice's death. It solemnises binding agreements, such as shares of vis sources, the founding of covenants and new members' Oaths, and issues decrees of contrition. A settlement is binding only when the whole board agrees it was fair; its decrees are read to the Assembly, which may overturn them.",
             "case_id": "",
-            "id": "1d439f2be6f9"
+            "id": "dffb4fe0a4d3"
           },
           {
             "title": "Convening a board",
             "year": null,
             "says": "No board can call itself together: a polites with a complaint applies through its Redcap, and the board must meet within six months, somewhere convenient or relevant. An arche who needs a board applies as a citizen, and may not sit when his own case is heard.",
             "case_id": "",
-            "id": "1b688116194d"
+            "id": "da05d0063beb"
           },
           {
             "title": "Tokens and shards",
             "year": null,
             "says": "Tokens are earned by service: two for a term as arche, three as archon, five as polemarch; one for gathering a common vis source in a Tribunal period; one for a requested service, a Longevity Ritual made for the treasurer (two at tenth magnitude or more), a Gifted child delivered, or seven and fourteen years of apprentice training without abuse; one for a prosecution that convicts and three if it ends in a March; and what the polemarch awards those who join a March at her call. Shards punish harm: three for a High Crime and one for a Low, one for a failed prosecution, losing or suffering a decree of defamation, refusing candidacy, neglect of an arche's duty or a promised task, or abusing an apprentice, and two for withholding a Gifted child. A token holder may ask a shard holder for a season's service; if he agrees before a Redcap, each surrenders one, but not within one covenant. A decree of contrition, with a reparation the magus chooses, also clears a shard. Tokens may be given, never exchanged for vis.",
             "case_id": "",
-            "id": "763c7174170f"
+            "id": "010f73263af3"
           },
           {
             "title": "Ostracism",
             "year": null,
             "says": "Every polites holding a shard is named at the Assembly, and the magi vote which of them stand as candidates; then each writes a name, or 'no one', on a potsherd. The magus named most often loses his citizenship, must leave the Tribunal within a season, may not return for seven years, and comes back only as a metoikos.",
             "case_id": "",
-            "id": "059bb979f33f"
+            "id": "61af8499a84c"
           },
           {
             "title": "Common vis sources",
             "year": null,
             "says": "Vis from the shrines of the old gods and certain mythic sites is held to belong to everyone, and the Code lists these sources. The Treasury Council assigns their gathering, which earns a token, and the vis goes to the Tribunal's coffers.",
             "case_id": "",
-            "id": "ee84d9e057f1"
+            "id": "b785c85e8900"
           },
           {
             "title": "The sponsored Longevity Ritual",
             "year": null,
             "says": "Each year the Tribunal pays for one Longevity Ritual. Any polites with no shards and no working ritual may apply to the tamias by spring; the one with most tokens, the elder on a tie, wins and gives up all of them. Winners usually hold three or four. The rituals are customarily made at Epidauros.",
             "case_id": "",
-            "id": "105403a76845"
+            "id": "7b5f210f913f"
           },
           {
             "title": "Healing",
             "year": null,
             "says": "A capable magus asked to heal a sodalis is expected to, paying the vis himself; the healed customarily gives back about half of it, and the healer earns a token. The coffers pay only when neither can. A covenant bears the cost of healing its own members at home, and no token is given.",
             "case_id": "",
-            "id": "6a153194f984"
+            "id": "6d8e3bb898a3"
           },
           {
             "title": "Gifted children",
             "year": null,
             "says": "Whoever finds a Gifted child must tell the Treasury Council, which houses and schools the children until the Apprentice Presentation before each meeting. Masters without a shard, and any Bonisagus, interview them and bid tokens; a child bid for by several chooses her master, and keeps his tokens. Under pressure from Tytalus, the Conciliatory Board holds that following the Book of Instruction is not abuse.",
             "case_id": "",
-            "id": "f3ed73b3eb42"
+            "id": "cd235983bfa4"
           },
           {
             "title": "Covenant patrons",
             "year": null,
             "says": "Every covenant is bound by a pact of mutual protection to a patron, a spirit, god, genius loci, saint or faerie living within it, and honours it at the Ceremony of Propitiation. A patron known to be Infernal would not be tolerated. A covenant whose patron dies must find another quickly, or is held to have died with it.",
             "case_id": "",
-            "id": "9ce32cd83aef"
+            "id": "28ee1344d31d"
           },
           {
             "title": "Founding a covenant",
             "year": null,
             "says": "A new covenant must declare its purpose, secure a willing patron at its site and draw up a charter. The Conciliatory Board checks all three, and the Assembly then votes a decree of founding, usually a formality once the board approves.",
             "case_id": "",
-            "id": "bea0b0b2c49f"
+            "id": "676429791b4c"
           },
           {
             "title": "The peace of Delos",
             "year": null,
             "says": "No one may be killed or born on Delos: the magi still keep the old ban for fear of Zeus. No pregnant women or beasts, and no predatory animals, familiars included, are allowed there during a meeting, and executions are carried out at sea or on another island.",
             "case_id": "",
-            "id": "74d256a894da"
+            "id": "872b1ce8045f"
           },
           {
             "title": "Certamen",
             "year": null,
             "says": "Certamen is for real disputes only. Using it to claim precedence offends the equality of politai, and duelling over a vis find is thought especially rude: the finders share it, or the richer yields.",
             "case_id": "",
-            "id": "502027add9b9"
+            "id": "50b205955b1e"
           },
           {
             "title": "Enchanted items sold to mundanes",
             "year": null,
             "says": "Through intermediaries, a Theban magus may sell up to five enchanted items a year to mundanes, where many Tribunals allow one. Items of Quality are not counted as enchanted items. Both rules are Stouritus of Ingasia's work.",
             "case_id": "",
-            "id": "a42b1790e068"
+            "id": "fe891d4f33ed"
           },
           {
             "title": "No preying on Hermetic ships",
             "year": null,
             "says": "Magi and covenants may not prey on one another's shipping. Piracy against mundanes is not forbidden, though frowned on.",
             "case_id": "",
-            "id": "d8f6bcd9cea1"
+            "id": "5f919b93f38f"
           },
           {
             "title": "Classical Greek",
             "year": 848,
             "says": "Just before the Sundering, the Tribunal's magi recast Hermetic magic in Classical Greek, chosen over the spoken tongue for its weight and the power of a dead language, and it remains the Tribunal's Hermetic language. A magus with no Classical Greek has -10 to tell the Form of a Greek spell, or -5 below an effective score of 4; Theban magi suffer the same against Latin. The app does not enforce this.",
             "case_id": "",
-            "id": "2bf306572c51"
+            "id": "60885a605fc0"
           }
         ],
         "treasury": [],
@@ -2650,7 +2650,7 @@
             "details": "Early in the eighth century Greek wizards band together as the League of Iconophiles, to rescue holy images from the emperors bent on destroying them. It is the first league worth naming, and its charter is the typikon of Prokopios, a pre-Hermetic wizard with the Gentle Gift who said the spirit of Aristotle had dictated it to him. Some thirty years into their struggle the league's leaders meet Trianoma; they turn down her offer, but the meeting gives rise to House Jerbiton. (The book gives no exact year.)",
             "changes": [],
             "margin": "",
-            "id": "64665c99ae87"
+            "id": "1f877b65d69b"
           },
           {
             "year": 775,
@@ -2659,7 +2659,7 @@
             "details": "House Tremere invades Greece, killing wizards and carrying off their vis and enchanted items. None of the dead belong to the Order, so no Oath is broken. The Greek wizards unite as the Theban League to drive the raiders back, and when followers of Jerbiton and Trianoma renew the invitation to join the Order, many accept, since the Tremere will not attack fellow members. That protection, more than any battle, ends the raids. Among the League are three wizards of Hedyosmos, the youngest of whom Guernicus himself teaches Hermetic magic, and the healers who had restored the old sanctuary of Epidauros. The enchanters of Hephaistos's forge on Lemnos join in the same years: Ingasia is younger than Verdi in law, though its members hold it the older forge.",
             "changes": [],
             "margin": "",
-            "id": "d39cb70ede46"
+            "id": "c287af2afd3f"
           },
           {
             "year": 815,
@@ -2668,7 +2668,7 @@
             "details": "Tremere magi found Dorostolon, a fortress covenant on the south bank of the Danube in Bulgaria. Several of the Founder's most powerful lieutenants make it their base for his plan to rule the Order. In these years Tremere magi also seize the sanctuary of Epidauros for a time.",
             "changes": [],
             "margin": "",
-            "id": "9b10e82753b1"
+            "id": "e2b972c7f087"
           },
           {
             "year": 848,
@@ -2677,7 +2677,7 @@
             "details": "Theban magi intercept letters revealing Tremere's design to make himself master of the Order, and learn that his chief lieutenants will gather at Dorostolon. A hidden force slips into the covenant and shatters the minds and loyalties of the lieutenants, and the fortress is torn apart. No one claims the deed. Local opinion holds that magi of Hedyosmos, with others, loosed the Titan Typhon from its bonds, struck a pact with it and sent it against Dorostolon before binding it again. Tremere dies soon afterwards, and the Tremere usurpers are driven from Epidauros.\n\nSecrets\nHedyosmos keeps its own records of these years. Tremere magi would dearly like to read them, and none is welcome there.",
             "changes": [],
             "margin": "",
-            "id": "33111f56fd80"
+            "id": "3a8962c77237"
           },
           {
             "year": 855,
@@ -2686,7 +2686,7 @@
             "details": "Not long after the Sundering, envoys of the young House Ex Miscellanea reach Thebes, among them a filius of Pralix sent to deal with the Witches of Thessaly. A few of the witches, led by the maga Cyra, agree to join the Order. Unwilling to leave home, Cyra founds a covenant in the Cambunian mountains and charges it with keeping alive every native Greek tradition that Tremere had threatened, naming it Erebos, the darkness. (The book places this only in the second half of the ninth century.)",
             "changes": [],
             "margin": "",
-            "id": "5bef97a11528"
+            "id": "9192c53e2fba"
           },
           {
             "year": 865,
@@ -2695,7 +2695,7 @@
             "details": "The sixth Grand Tribunal formally creates the Theban Tribunal and names it for the Theban League. Its lands run from the Ionian Sea to the Black Sea, taking in the Bulgars' country and Anatolia; Coeris, Tremere's home, is its only domus magna, a sign of how little the Order then trusts that House. The League's heirs at once pass Peripheral Code rulings that bring the Tribunal's government closer to the typikon of Prokopios: the polity, in which the Hermetic Assembly decides everything and archai drawn by lot only prepare and carry out its business.",
             "changes": [],
             "margin": "",
-            "id": "2f349036a5d1"
+            "id": "1b5813da5595"
           },
           {
             "year": 910,
@@ -2704,7 +2704,7 @@
             "details": "Early in the tenth century the Cretan-born Aella of House Verditius builds the automata of the Palace of Magnaura in Constantinople. Accused more than once of serving the emperor as a court wizard, she is never convicted, thanks largely to the legal skill of her husband, Vaanes of House Guernicus; she is twice ostracised and twice comes back to tend her creations. (The book gives no exact year.)",
             "changes": [],
             "margin": "",
-            "id": "a6414d774811"
+            "id": "a1d49f5307c6"
           },
           {
             "year": 914,
@@ -2713,7 +2713,7 @@
             "details": "A sept of Bjornaer magi, every one with the heartbeast of a bird of prey, founds Estropi on Mount Erciyes, the highest peak of central Anatolia.",
             "changes": [],
             "margin": "",
-            "id": "bb6319d188e8"
+            "id": "5b84a69bf828"
           },
           {
             "year": 964,
@@ -2722,7 +2722,7 @@
             "details": "The rise of the Bulgarian Empire some thirty years after 865, and House Tremere's slow recovery and growth, persuade the ninth Grand Tribunal that the Theban Tribunal is too large to govern. Its northern lands become the Transylvanian Tribunal, and the Theban borders have not moved since.",
             "changes": [],
             "margin": "",
-            "id": "3ed2b97097ae"
+            "id": "64b1f8a0448a"
           },
           {
             "year": 980,
@@ -2731,7 +2731,7 @@
             "details": "Grammaton of House Bonisagus and his filii found a covenant, named for him, to pursue original research into the magic of binding.",
             "changes": [],
             "margin": "",
-            "id": "c3b63bc8f4d7"
+            "id": "c0f7bf4e55ff"
           },
           {
             "year": 1004,
@@ -2740,7 +2740,7 @@
             "details": "The brothers Cosmas and Baztas of House Verditius found Diadelphia on the island of Kalymnos. Other Verditius magi join them, but the brothers' bitter rivalry drives the newcomers away again.",
             "changes": [],
             "margin": "",
-            "id": "0d0842796618"
+            "id": "4ed11c3bba95"
           },
           {
             "year": 1014,
@@ -2749,7 +2749,7 @@
             "details": "As the Schism War dies away in the west (the Tribunal took almost no part, though a few Greek magi fought in it), a Byzantine army invades Bulgaria. After his victory at Kleidion, Basil II is said to blind fourteen thousand prisoners, sparing one eye in every hundred men to lead the rest home, and Tsar Samuel dies of the shock at the sight. House Tremere insists Theban magi helped the emperor; nothing is proved, though some Jerbiton with the Gentle Gift are close to the imperial family.",
             "changes": [],
             "margin": "",
-            "id": "67bc23c792e2"
+            "id": "f2fae444d309"
           },
           {
             "year": 1019,
@@ -2758,7 +2758,7 @@
             "details": "Basil II completes the conquest of the Bulgarian state, which becomes a part of the empire, and restores the old northern frontier on the Danube.",
             "changes": [],
             "margin": "",
-            "id": "f396cccb3177"
+            "id": "53bd02df8902"
           },
           {
             "year": 1020,
@@ -2767,7 +2767,7 @@
             "details": "The Merinita maga Orithyia, coming back from Arcadia, says she was led through the sea by a golden man with a dolphin's tail, whom she takes for Triton, Poseidon's herald. She makes a pact with him to dwell in the undersea palace he showed her, which she takes for Poseidon's own, and names her covenant Aegaea after it, with Triton as patron. The Tribunal doubts her until Redcaps confirm the place and its splendour. (The book says only about two centuries ago.)",
             "changes": [],
             "margin": "",
-            "id": "410d68254cda"
+            "id": "1d8da726882b"
           },
           {
             "year": 1023,
@@ -2776,7 +2776,7 @@
             "details": "Gigas is founded in the forests south-west of Sofia as a place for magi and trusted companions wounded in the Schism War to recover. The Tribunal suspects its purpose from the start.",
             "changes": [],
             "margin": "",
-            "id": "69c3302da377"
+            "id": "ee064c314231"
           },
           {
             "year": 1025,
@@ -2785,7 +2785,7 @@
             "details": "Basil II, the Bulgar-Slayer, dies without an heir after the most victorious reign in the empire's history. Some say it was God's punishment for his cruelty, and for marrying his sister Anna, born in the purple, to Vladimir of Kiev against the law.",
             "changes": [],
             "margin": "",
-            "id": "f2749a30cb44"
+            "id": "ffee0d032786"
           },
           {
             "year": 1028,
@@ -2794,7 +2794,7 @@
             "details": "Constantine VIII is laid to rest in the Church of the Holy Apostles in Constantinople, the last emperor buried there.",
             "changes": [],
             "margin": "",
-            "id": "9accb2ae448a"
+            "id": "f751cf14e537"
           },
           {
             "year": 1030,
@@ -2803,7 +2803,7 @@
             "details": "Emperor Romanos III Argyros, Zoe's first husband, endows a school and orphanage at the monastery of St. Christopoulos in Constantinople, paid for by the treasury and run by the monks. The monastery itself dates from 823.",
             "changes": [],
             "margin": "",
-            "id": "277e0f647dd1"
+            "id": "1122f11919d3"
           },
           {
             "year": 1031,
@@ -2812,7 +2812,7 @@
             "details": "Romanos III gives the monastery of St. Christopoulos a tiny and exquisite icon of a little-known saint, St. Loukia.",
             "changes": [],
             "margin": "",
-            "id": "17253f313e4d"
+            "id": "999a068bd578"
           },
           {
             "year": 1039,
@@ -2821,7 +2821,7 @@
             "details": "A group of Flambeau magi founds Kyddopetre at the Cilician Gates, the narrow pass through the Taurus mountains into southern Anatolia.",
             "changes": [],
             "margin": "",
-            "id": "9596cd44d04e"
+            "id": "ca286a69dc11"
           },
           {
             "year": 1050,
@@ -2830,7 +2830,7 @@
             "details": "Stringes witches nest on the Cycladic island of Polyaigos and plague the isles around it, Delos among them, sheltering a renegade Flambeau. At the Assembly's call the hoplite Quaesitor Laskaris fights his way ashore, allies with Varazes, a drakos giant native to the island, and shields him in a duel while the giant clubs the renegade to death. Having cleansed the island, Laskaris founds a covenant there and pledges it to the swift defence of the Tribunal. (The book says only that this happened in the 11th century.)",
             "changes": [],
             "margin": "",
-            "id": "d743cf5b2924"
+            "id": "3ac0bcc7b22d"
           },
           {
             "year": 1054,
@@ -2839,7 +2839,7 @@
             "details": "Rome and Constantinople finally break over the filioque, the Latin claim that the Spirit proceeds from the Son as well as the Father. Few think it a disaster at the time, but the breach has widened into deep mistrust.",
             "changes": [],
             "margin": "",
-            "id": "31e4194880be"
+            "id": "92b78dccd974"
           },
           {
             "year": 1056,
@@ -2848,7 +2848,7 @@
             "details": "The Macedonian dynasty, under which Byzantine power reached its height, ends with the empresses Zoe and Theodora, born in the purple. Zoe, who ruled through four husbands, collected magical amulets and automata, some of which may still survive; after her death the mob put her sister on the throne in place of her last husband.",
             "changes": [],
             "margin": "",
-            "id": "413f39085d9e"
+            "id": "750f61e1c8e3"
           },
           {
             "year": 1063,
@@ -2857,7 +2857,7 @@
             "details": "Miphoria, the first covenant of House Mercere, on the coast near Smyrna, had ridden giant magical sea turtles; the Tribunal told its Redcaps to draw less mundane notice, and without the turtles the covenant withered. By this year most of its Redcaps have moved to other covenants. In the same year the Crown of Thorns is brought from the Holy Land to Hagia Sophia.",
             "changes": [],
             "margin": "",
-            "id": "00de44db1565"
+            "id": "278d17b8464d"
           },
           {
             "year": 1066,
@@ -2866,7 +2866,7 @@
             "details": "After the Norman Conquest of England, Anglo-Saxon exiles take the place of the Norsemen in the emperor's Varangian Guard.",
             "changes": [],
             "margin": "",
-            "id": "5be39fd524d4"
+            "id": "484d8dfe9f48"
           },
           {
             "year": 1067,
@@ -2875,7 +2875,7 @@
             "details": "Cosmas of Diadelphia is ostracised, and to everyone's surprise his rival brother Baztas leaves the Tribunal with him. With no magi left, Diadelphia is disbanded by default.",
             "changes": [],
             "margin": "",
-            "id": "16607fdb4aee"
+            "id": "4c8b09d10e6e"
           },
           {
             "year": 1069,
@@ -2884,7 +2884,7 @@
             "details": "Gigas adopts a rule of admitting only magi of House Tremere, which deepens the Tribunal's distrust. In the same year the Bjornaer of Estropi abandon Mount Erciyes before the advancing Seljuk Turks.",
             "changes": [],
             "margin": "",
-            "id": "9d46019a12e6"
+            "id": "a1d80cc7a4e9"
           },
           {
             "year": 1071,
@@ -2893,7 +2893,7 @@
             "details": "At Manzikert the Seljuk horse archers wear down Emperor Romanos IV Diogenes, and Andronikos Doukas, commanding the reserve, deliberately withdraws and leaves him to be captured. Alp Arslan frees Romanos on generous terms within a week, but the Doukas blind him and repudiate the treaty, and the furious Seljuks overrun the Anatolian plateau, the empire's granary. The Byzantine magi living there flee and never return. The icon of St. Loukia cries out a warning before the battle, and in this year Tikh of Jerbiton, teaching at the orphanage, notices the icon's strange properties: it portrays Loukia of Berytus, a Montanist executed for blasphemy, and a Magic aura grows round it.",
             "changes": [],
             "margin": "",
-            "id": "a3c2cf042534"
+            "id": "35431c82db37"
           },
           {
             "year": 1074,
@@ -2902,7 +2902,7 @@
             "details": "Needing room for a laboratory, Tikh of Jerbiton clears and partly drains a great vaulted cistern beneath the orphanage of St. Christopoulos and founds Xylinites there, with the icon of St. Loukia as its heart. For the next 130 years its magi teach at the orphanage, find Gifted foundlings, and build influence in the palace through the eunuchs the school sends there.",
             "changes": [],
             "margin": "",
-            "id": "40de80fbd37e"
+            "id": "bd1383f3e191"
           },
           {
             "year": 1075,
@@ -2911,7 +2911,7 @@
             "details": "Methodius, the best-loved Redcap of his day, who claims descent from Alexander and found the king's flying device in Seljuk lands, chooses an old fortress on Mount Pagus above Smyrna for a second Mercere covenant. He binds an eidolon lingering among the ghosts of Alexander's army as its patron, leaves the walls in ruin to avoid notice, and finishes building this year, naming the covenant Alexandria.",
             "changes": [],
             "margin": "",
-            "id": "b12f5c46b17b"
+            "id": "9e52d14755a3"
           },
           {
             "year": 1076,
@@ -2920,7 +2920,7 @@
             "details": "With Cilicia lost to the Sultanate of Rum after Manzikert, the Flambeau of Kyddopetre, though breaking no law by living outside the empire, feel too cut off from their Greek sodales and disband.",
             "changes": [],
             "margin": "",
-            "id": "b6353ea52a27"
+            "id": "ea10621b963e"
           },
           {
             "year": 1081,
@@ -2929,7 +2929,7 @@
             "details": "After the rebellions of Michael VII and Nikephoros Botaneiates, the general Alexios Komnenos seizes the throne in a daring coup. The same year Robert Guiscard of Sicily (the book calls him king) takes Durazzo with Norman knights and Saracen horse, beats the Byzantine army and marches into Greece; when he is called home, his son Bohemond overruns Macedonia and much of Thessaly.",
             "changes": [],
             "margin": "",
-            "id": "827f01575e7c"
+            "id": "8133abb24879"
           },
           {
             "year": 1082,
@@ -2938,7 +2938,7 @@
             "details": "The Republic of Venice sets up the naval base on Rodos that it still keeps.",
             "changes": [],
             "margin": "",
-            "id": "8219ffd5d8c6"
+            "id": "f7145a27f54a"
           },
           {
             "year": 1083,
@@ -2947,7 +2947,7 @@
             "details": "Anna, the eldest of the nine children of Alexios Komnenos, is born in the purple. In old age she will write the Alexiad, her life of her father.",
             "changes": [],
             "margin": "",
-            "id": "1ed7733bf52e"
+            "id": "388034b6ff2f"
           },
           {
             "year": 1084,
@@ -2956,7 +2956,7 @@
             "details": "A terrible plague breaks out in Bohemond's camp and ends the Norman invasion.",
             "changes": [],
             "margin": "",
-            "id": "1d2d0d71ae67"
+            "id": "80263bb03a2b"
           },
           {
             "year": 1091,
@@ -2965,7 +2965,7 @@
             "details": "A great host of Pecheneg nomads invades. Allied with the Cumans, the Byzantines all but wipe them out at Levounion; the survivors sue for peace, and Pecheneg and Cuman horsemen have served in imperial armies ever since.",
             "changes": [],
             "margin": "",
-            "id": "c9913ec0e0c2"
+            "id": "0c0ecee79128"
           },
           {
             "year": 1092,
@@ -2974,7 +2974,7 @@
             "details": "After more than a century, and some notable discoveries, it is plain that Grammaton's research into binding magic will never reach its goal. The covenant disbands and its magi join others.",
             "changes": [],
             "margin": "",
-            "id": "e46b69b6bc1e"
+            "id": "056ea148cc31"
           },
           {
             "year": 1095,
@@ -2983,7 +2983,7 @@
             "details": "When crusaders take Antioch a Latin patriarch is set up there, driving the Orthodox patriarch into exile; his successor Dorotheus now lives at Nicaea. (The book dates this 1095; Antioch actually fell in 1098.)",
             "changes": [],
             "margin": "",
-            "id": "d71dcd4fe7b1"
+            "id": "5ef46a86b104"
           },
           {
             "year": 1096,
@@ -2992,7 +2992,7 @@
             "details": "Answering the emperor's plea for help, Pope Urban preaches a crusade. Alexios wanted mercenaries, not armies that might keep his lost lands, and has the crusaders shadowed by Pecheneg and Cuman horse as they plunder their way across the empire. He refuses to ship them to Asia until their lords swear to return former imperial lands; only Raymond of Toulouse keeps his word, and each side comes away feeling betrayed. (The book dates the crusade 1091 to 1108.)",
             "changes": [],
             "margin": "",
-            "id": "f9114cb16ead"
+            "id": "f56afe2606c4"
           },
           {
             "year": 1098,
@@ -3001,7 +3001,7 @@
             "details": "During the First Crusade a second, longer lance is found, which also seems to be a true relic.",
             "changes": [],
             "margin": "",
-            "id": "36ae0615d51a"
+            "id": "65c3674b660e"
           },
           {
             "year": 1100,
@@ -3010,7 +3010,7 @@
             "details": "After nearly forty years of Seljuk rule, Ephesus returns to the empire and is renamed Hagios Theologos, but it dwindles to a few hundred souls by a silted harbour.",
             "changes": [],
             "margin": "",
-            "id": "0a483fd9290d"
+            "id": "3b2513ea860f"
           },
           {
             "year": 1101,
@@ -3019,7 +3019,7 @@
             "details": "Mystics and soothsayers of House Ex Miscellanea form the Court of Fools, a wandering covenant that travels the Greek mainland.",
             "changes": [],
             "margin": "",
-            "id": "8b703e288070"
+            "id": "ad81730d2314"
           },
           {
             "year": 1109,
@@ -3028,7 +3028,7 @@
             "details": "After many such proposals, the Tribunal finally lets Droserius of House Merinita and four companions found Wilusa at Ilion, where he says the spirit of the river Scamander, dwelling in a regio, has promised to be their patron. By the next Tribunal the covenant and all its magi have vanished, and no search finds any trace. The Tribunal has refused every later plan for a covenant there.\n\nSecrets\nDroserius and his companions are trapped in one of Ilion's Faerie regiones, made to fight the fall of Troy over and over.",
             "changes": [],
             "margin": "",
-            "id": "90a46a4d71dc"
+            "id": "1890ba4c1dfa"
           },
           {
             "year": 1110,
@@ -3037,7 +3037,7 @@
             "details": "Petronas of House Mercere begins nearly a hundred years as the Tribunal's logothete. (The book says only that he served for almost a century before 1207.)",
             "changes": [],
             "margin": "",
-            "id": "a7592fa83907"
+            "id": "4c6bafd14437"
           },
           {
             "year": 1111,
@@ -3046,7 +3046,7 @@
             "details": "With Alexios fighting the Turks in Asia, the fleets of Genoa and Pisa gather off the Ionian coast and force trading privileges like those Venice already holds. Native Greek trade and the imperial fleet decline from this time.",
             "changes": [],
             "margin": "",
-            "id": "ede82b220e4f"
+            "id": "d299418fac13"
           },
           {
             "year": 1115,
@@ -3055,7 +3055,7 @@
             "details": "Jerbiton magi found Thermakopolis in Constantinople, sworn to preserve and protect the city: the pride, and later the shame, of their House.",
             "changes": [],
             "margin": "",
-            "id": "de7af80ee5c2"
+            "id": "7a4cef5569f5"
           },
           {
             "year": 1118,
@@ -3064,7 +3064,7 @@
             "details": "Ioannes II, a pious and swarthy man called both the Beautiful and the Moor, succeeds his father despite palace plots. When he revokes the Venetians' privileges, their fleet seizes several great islands, and he has to restore them to win the islands back.",
             "changes": [],
             "margin": "",
-            "id": "ef2b2cb73bf5"
+            "id": "e3b893b4e8ca"
           },
           {
             "year": 1123,
@@ -3073,7 +3073,7 @@
             "details": "Magi devoted to prophecy found Lamites in Anatolia and claim the Phrygian Sibyl as their patron.",
             "changes": [],
             "margin": "",
-            "id": "8e5d1b8cf57a"
+            "id": "9df8653a6490"
           },
           {
             "year": 1127,
@@ -3082,7 +3082,7 @@
             "details": "Everyone at Lamites dies, most believe at the hands of Lamia, angered by their presumption; it may instead have been the faerie Lamia, resenting rivals.",
             "changes": [],
             "margin": "",
-            "id": "5740f1cd69c7"
+            "id": "3377bc1dda08"
           },
           {
             "year": 1143,
@@ -3091,7 +3091,7 @@
             "details": "Manuel I, tall, athletic, a great huntsman, warrior and notorious seducer, takes the throne.",
             "changes": [],
             "margin": "",
-            "id": "5aa58604b5d4"
+            "id": "0af450a108c5"
           },
           {
             "year": 1147,
@@ -3100,7 +3100,7 @@
             "details": "The Second Crusade passes through the empire with more looting and ends in disaster, and relations with the crusaders sink further. About this time Roger II of Sicily ravages the Morea, takes Thebes and Athens, and carries the Theban silk industry, workers and all, off to Sicily; Thebes later recovers. (The book dates the crusade 1143 to 1149 and puts Roger's raid in the middle of the century.)",
             "changes": [],
             "margin": "",
-            "id": "a138eda604b3"
+            "id": "c1e04c088b6e"
           },
           {
             "year": 1151,
@@ -3109,7 +3109,7 @@
             "details": "Mostly Jerbiton magi found Thumachia to guard the Tribunal's western border after the ravages of the Second Crusade, treading carefully between meddling in mundane affairs and protecting their sodales.",
             "changes": [],
             "margin": "",
-            "id": "2ee14a03420d"
+            "id": "3c50f2fb4cef"
           },
           {
             "year": 1157,
@@ -3118,7 +3118,7 @@
             "details": "William I of Sicily, called the Bad, lands ten thousand men from 164 ships and sacks every coastal town of Euboea, which never recovers its old prosperity.",
             "changes": [],
             "margin": "",
-            "id": "5c7aef693fca"
+            "id": "3def73e4d6f2"
           },
           {
             "year": 1163,
@@ -3127,7 +3127,7 @@
             "details": "Ionnia of House Jerbiton, a minor noble who loves the women poets, finds the house of the poet Moero in one of Constantinople's empty quarters, summons her ghost as patron and invites aristocratic Jerbiton sodales to join her. The covenant is pledged to recovering early Byzantine art and letters, and its members must live, like senators, from land others work.",
             "changes": [],
             "margin": "",
-            "id": "8a58dcb183ea"
+            "id": "7c57aa55b411"
           },
           {
             "year": 1170,
@@ -3136,7 +3136,7 @@
             "details": "On his travels through mainland Greece, Memnos of Verditius meets Dryops, the spirit of an oak forest, who is bored and longs to see the world. Memnos has the forest felled and carried to his workshop on Andros, the spirit with it, and spends decades planning a ship of its wood that the spirit will inhabit and fill with a Magic regio. Having grown terrified of the sea, he gives the finished Philomela to his apprentice to captain; when the Procne joins her, the covenant takes the name Favonius. In these years too Ausculator takes his mater's place at the head of Hedyosmos. (The book says some fifty years ago.)",
             "changes": [],
             "margin": "",
-            "id": "2420fd6b29a7"
+            "id": "ac81917e70f4"
           },
           {
             "year": 1171,
@@ -3145,7 +3145,7 @@
             "details": "When the Genoese colony at Galata is burned, Manuel blames Venice and imprisons ten thousand Venetians in Constantinople. The Venetian fleet sails against the empire, but plague strikes it at Chios and it limps home carrying death to Venice; peace follows and the prisoners go free.",
             "changes": [],
             "margin": "",
-            "id": "1da90b203b3d"
+            "id": "452d65853764"
           },
           {
             "year": 1180,
@@ -3154,7 +3154,7 @@
             "details": "Boniface of Montferrat's brother Renier marries Maria Komnene, giving the family the claim to Thessaloniki that Boniface will later press. Manuel I dies this year, leaving an infant heir; about now Andronikos Komnenos builds the palace of Nymphaion south of Smyrna.",
             "changes": [],
             "margin": "",
-            "id": "0313e81d233f"
+            "id": "380f017839b3"
           },
           {
             "year": 1182,
@@ -3163,7 +3163,7 @@
             "details": "Andronikos Komnenos rides into Constantinople at the head of an army and has his rivals murdered, Renier of Montferrat among them. The mob turns on the Venetians and then on every Westerner, killing tens of thousands, even the sick in their beds. Venice and Montferrat do not forget.\n\nSecrets\nAndronikos, exiled for plotting against Manuel, had sold his soul to a demon in a woman's shape for the throne.",
             "changes": [],
             "margin": "",
-            "id": "2fd12be10933"
+            "id": "237050e540ee"
           },
           {
             "year": 1183,
@@ -3172,7 +3172,7 @@
             "details": "Andronikos I becomes emperor and rules by torture and executions.",
             "changes": [],
             "margin": "",
-            "id": "477101f4f328"
+            "id": "567499f67bf8"
           },
           {
             "year": 1185,
@@ -3181,7 +3181,7 @@
             "details": "William II of Sicily takes Durazzo without a fight and marches along the Via Egnatia. In August Thessaloniki falls: its defenders inexplicably run out of missiles, the walls give way as if by magic, St. Demetrios does not rise to defend it, and five thousand die amid unheard-of sacrilege, leaving a strong Infernal aura. Thumachia is sacked in the same war; its survivors join Thermakopolis. In answer to the outrage two holy magae, the sisters Anna and Theocharista Psellus, found the convent of Koukoubiou and with it Oikos tou Eleous, the House of Mercy; the novice Gemma has been with them ever since.\n\nSecrets\nBehind the sack the sisters find a widespread diabolist circle among the Paulicians of Thessaloniki, which they still fight.",
             "changes": [],
             "margin": "",
-            "id": "107ad18690c3"
+            "id": "6d5e47dfaa45"
           },
           {
             "year": 1185,
@@ -3190,7 +3190,7 @@
             "details": "Andronikos orders hundreds more executions; the mob rises from Hagia Sophia, his soldiers refuse to fire on it, and he is caught, blinded in one eye, and tortured to death in the streets, while the palaces and many relics are plundered. His ghost still rides on moonless nights. Isaac II Angelos is raised to the throne, and the rising spreads to Thessaloniki, where the Sicilians are routed and cut down. The same year House Tremere backs the lords leading a Bulgarian revolt with advice and materials, though not troops; in reply a few Greek magi form the League of Advisors and go to court in Constantinople, offering counsel unpaid and keeping just short of the forbidden role of court wizard.",
             "changes": [],
             "margin": "",
-            "id": "89277d877504"
+            "id": "adbbd3af51c6"
           },
           {
             "year": 1186,
@@ -3199,7 +3199,7 @@
             "details": "The Tribunal passes a motion making the logothete, until now elected from the Redcaps every seven years, a permanent post, to spare the bureaucracy a changing administration. A new logothete is chosen only on death, Twilight, resignation or a failed vote of confidence among the Redcaps.",
             "changes": [],
             "margin": "",
-            "id": "748842caee9e"
+            "id": "0d8dc66464f6"
           },
           {
             "year": 1190,
@@ -3208,7 +3208,7 @@
             "details": "Frederick Barbarossa's crusade marches overland through the empire; Isaac's own envoys urge him to take Constantinople, he occupies Philippopolis and Didymoteichon, and Isaac must ferry his army across the Bosporus. Isaac then leads the army of Constantinople against the rebel Bulgarians and is routed; the imperial battle standard, a holy relic of the emperors, is last seen in that army.",
             "changes": [],
             "margin": "",
-            "id": "76fd5e6140da"
+            "id": "426947acda0c"
           },
           {
             "year": 1191,
@@ -3217,7 +3217,7 @@
             "details": "During the Third Crusade Richard the Lionheart takes Rodos and recruits its sailors.",
             "changes": [],
             "margin": "",
-            "id": "f97e5974e72e"
+            "id": "517fc80487fc"
           },
           {
             "year": 1195,
@@ -3226,7 +3226,7 @@
             "details": "In April Isaac II is overthrown and blinded by his brother, who becomes Alexios III and pays for tribute to the German emperor Henry VI with the hated Alamanikon tax. Central authority crumbles; Leo Sgouros makes himself master of the Morea, and local rulers spring up across the mainland.",
             "changes": [],
             "margin": "",
-            "id": "b2956df6da0f"
+            "id": "b039d8afd312"
           },
           {
             "year": 1202,
@@ -3235,7 +3235,7 @@
             "details": "The Fourth Crusade, meant for Egypt, cannot pay Venice for the fleet it ordered after far fewer knights arrive than planned. To reduce the debt the crusaders take and plunder Zara, a Christian city, for Venice, and the pope excommunicates them. At Zara Prince Alexios, son of the deposed Isaac, offers money and troops if they will restore his father.\n\nSecrets\nInfernal agents worked in every army of the crusade. Their excommunication left the knights without Divine protection, and several nobles made pacts with demons; the whole design was the work of Akgah, a prince of Hell.",
             "changes": [],
             "margin": "",
-            "id": "db9a517ead27"
+            "id": "069998e89118"
           },
           {
             "year": 1203,
@@ -3244,7 +3244,7 @@
             "details": "Porphyrio, the giant whale that Belisarius once fought, surfaces in April, a week before the Venetian fleet fills the Sea of Marmara. In June the crusaders storm the tower at Galata and break the great chain across the Golden Horn. After a month's siege Alexios III flees by night, and the prince is crowned Alexios IV beside his blind father, Isaac II.",
             "changes": [],
             "margin": "",
-            "id": "007079217744"
+            "id": "285f96cb9853"
           },
           {
             "year": 1203,
@@ -3253,7 +3253,7 @@
             "details": "In August crusaders attack a mosque outside the walls; driven back by the locals, they set houses alight, and the wind carries the fire into the city. It burns for three days and leaves 440 acres in ashes, which are still a waste in 1220. The emperors, unable to pay what they promised, lose the people's goodwill.",
             "changes": [],
             "margin": "",
-            "id": "53cd27375bec"
+            "id": "773dfecf478b"
           },
           {
             "year": 1204,
@@ -3262,7 +3262,7 @@
             "details": "In April the second assault carries the walls: the cleric Aleaumes of Clari hurls himself through a breach, the defenders panic, and Murzuphlos slips away by night. Constantine Laskaris is acclaimed in Hagia Sophia but flees at dawn as the army deserts, and the city suffers three days of murder, rape and sacrilege. The magi of Thermakopolis, trusting their Mentem magic to keep the peace, fail, and their spells frighten their own side off the walls; four of them die, and Michael dies last, after binding his apprentice Petros, Wilrich of Flambeau and three Jerbiton survivors to defend the city for ever. Only Mathieus escapes, to Normandy. The Court of Fools, visiting the city, burns with it. Three Jerbiton of Xylinites fall fighting, the rest flee into exile and Artoud of Criamon stays on alone (the book dates this once to 1205). Moero's Garden flees with the Greek nobles to its chapter house in Nicaea, leaving most of its treasures behind. The icon of St. Loukia screams a warning for the third time this spring.\n\nSecrets\nIn the Hippodrome the demon Akgah, a vast two-headed winged leopard, fights the Hagka and wins; crusaders who see it think it the lion of Venice. In these days someone also took the palladium and its relics from under the Column of Constantine, and the city's ancient Divine wards fell. The survivors who swore Michael's oath hid in the catacombs, helped by a humanoid figure of living rock.",
             "changes": [],
             "margin": "",
-            "id": "c19ffd4b1867"
+            "id": "18f468df1b89"
           },
           {
             "year": 1204,
@@ -3271,7 +3271,7 @@
             "details": "By the partition agreed in March, the emperor takes a quarter of the empire and Venice and the crusader lords three-eighths each. Electors choose Baldwin of Flanders as Emperor Baldwin I over Boniface of Montferrat. Venice claims Candia, Rodos, Karpathos, the Cyclades, Durazzo and, of the northern isles, only Lemnos, Ingasia's island, which takes the Lemnian Earth and leaves the covenant poorer; some magi suspect Verditius of a deal with the doge. Boniface marches on Thessaloniki, where the Greeks welcome him, and only Doge Dandolo's diplomacy stops a war with Baldwin. Greek leaders flee to Arta and to Nicaea, where Theodore Laskaris sets up a court in exile; Alexios and David Komnenos seize Trebizond.",
             "changes": [],
             "margin": "",
-            "id": "407caa603eee"
+            "id": "a969863d5db8"
           },
           {
             "year": 1204,
@@ -3280,7 +3280,7 @@
             "details": "Accusations fly: House Tremere is blamed, and so is House Jerbiton. The League of Advisors, which lost many members with Thermakopolis, cannot survive the charge of meddling with mundanes and breaks up. The Tribunal fails to convict its surviving members.",
             "changes": [],
             "margin": "",
-            "id": "e1c34943a670"
+            "id": "c93d364595d4"
           },
           {
             "year": 1204,
@@ -3289,7 +3289,7 @@
             "details": "In January the mob gathers at Hagia Sophia and Alexios Doukas, called Murzuphlos, takes power in a palace coup; Isaac and Alexios IV die (some say Isaac of age and shock). Crowned Alexios V, he strengthens the walls and rejects the crusaders' claims. In a skirmish at Philia he loses his crown and the Hagka banner to raiding French knights.",
             "changes": [],
             "margin": "",
-            "id": "e325bc33572c"
+            "id": "8bb50661e116"
           },
           {
             "year": 1205,
@@ -3298,7 +3298,7 @@
             "details": "The attempt to impose feudal rule on Thrace sets off a Greek revolt backed by Tsar Kaloyan of Bulgaria. On 14 April the Bulgarians ambush the Latins at Adrianople; Louis of Blois is killed by Cumans and Baldwin is captured and never seen again. Doge Enrico Dandolo dies the same year, and the captured Murzuphlos is thrown to his death from the Column of Theodosius.\n\nSecrets\nA Redcap who whispered that House Tremere knew more of Baldwin's fate died soon after in a fall from his horse, and the archai of the day let the matter drop. One tale says his skull became a drinking cup.",
             "changes": [],
             "margin": "",
-            "id": "7efbadd3dd93"
+            "id": "1df54506e150"
           },
           {
             "year": 1205,
@@ -3307,7 +3307,7 @@
             "details": "When news of Baldwin's death arrives, his brother is crowned Emperor Henry I on 20 August, ruling a narrow strip round Constantinople. In the Morea William de Champlitte and Geoffrey de Villehardouin beat an army ten times their number from Epiros at the Olive Grove of Koundouros and found the Principality of Achaea; the defeated Michael Komnenos Doukas retreats to Arta and founds Epiros. (The book also dates Achaea's founding to 1204.) Otto de la Roche founds the Duchy of Athens, and the monastery of Daphni is sacked and given to the Cistercians. At Nicaea Theodore Laskaris names Michael Autoreianos Orthodox patriarch, and the Venetians begin walling their quarter of Constantinople.",
             "changes": [],
             "margin": "",
-            "id": "5c4bf6dfc179"
+            "id": "0f85f1ba7f1c"
           },
           {
             "year": 1207,
@@ -3316,7 +3316,7 @@
             "details": "The first Tribunal since the fall meets on Delos. Michael's Tabula is formally founded by the survivors who swore Michael's oath, named for the stone tablet on which it was carved. Petronas abdicates as logothete after almost a century and Leontius of Alexandria, an unhappy choice, replaces him. Maria Laskarina of Polyaigos, filia of its founder, is elected polemarch. Krum of Bjornaer, late of Moero's Garden, hears Lucian of Aegaea's tales of Poseidon and joins Aegaea. Frankish magi found Novocastrum on the western borders of the Kingdom of Thessaloniki. (The book gives no season for the meeting.)",
             "changes": [],
             "margin": "",
-            "id": "b2cd22621867"
+            "id": "e5a7dc3bb980"
           },
           {
             "year": 1207,
@@ -3325,7 +3325,7 @@
             "details": "Boniface of Montferrat dies in a Bulgarian ambush and his head is sent to the tsar, leaving his two-year-old son Demetrios heir to Thessaloniki under Queen Margaret, who soon marries Nicholas of St. Omer, a lord of Thebes. Kaloyan (the book also calls him Ioannitsa) besieges the city; the sisters of Oikos tou Eleous call on St. Demetrios, and early in October a shining armoured rider comes out and kills the tsar with a spear. The Bulgarians say his Cuman commander did it. Henry's battles reopen the road between the two Latin states, and his wife Agnes of Montferrat dies. Marco Sanudo attacks Naxos. Seirene twins from Lesbos join Oikos tou Eleous and secretly back Queen Margaret.",
             "changes": [],
             "margin": "",
-            "id": "025eb601d3f0"
+            "id": "bedb755bcd3e"
           },
           {
             "year": 1208,
@@ -3334,7 +3334,7 @@
             "details": "Theodore I Laskaris (the book calls him Theodore II) is crowned emperor at Nicaea, vowing to retake Constantinople. Trapped in Acrocorinth, Leo Sgouros rides his horse off the battlements to his death, and Greek resistance in the Morea falters. Otto de la Roche takes the title of duke.",
             "changes": [],
             "margin": "",
-            "id": "22617158df54"
+            "id": "1708c3fa81a0"
           },
           {
             "year": 1209,
@@ -3343,7 +3343,7 @@
             "details": "Demetrios is crowned king of Thessaloniki at four. Count Oberto of Biandrate, who has forced Margaret from the regency to put William VI of Montferrat on the throne, shuts the gates against Henry, but Henry, once admitted, takes Margaret's side and has Oberto chained in the castle of Serres. In the Morea William de Champlitte dies on his way to France, and Geoffrey de Villehardouin, regent, contrives with Venice to delay the heir and keeps the principality.",
             "changes": [],
             "margin": "",
-            "id": "2a3774d66a12"
+            "id": "d500b6a0b3d4"
           },
           {
             "year": 1210,
@@ -3352,7 +3352,7 @@
             "details": "Michael Komnenos Doukas, allied with Venice, attacks Thessaloniki and his son-in-law the boy king; Henry intervenes to save Demetrios from Venice, the Bulgarians and Epiros. Michael's half-brother Theodore Komnenos Doukas defects from Nicaea to Epiros. Porphyrion of Tytalus leaves Hedyosmos for Rome.\n\nSecrets\nIn Rome Porphyrion is rumoured to have found the Jar of Pandora before moving on to Normandy, where he may bid to become primus of Tytalus.",
             "changes": [],
             "margin": "",
-            "id": "2f56da3abc81"
+            "id": "c78cc482fd25"
           },
           {
             "year": 1211,
@@ -3361,7 +3361,7 @@
             "details": "Theodore Laskaris marches out of Philadelphia and defeats Sultan Kaykhusraw I of Rum; the Maeander becomes Nicaea's southern border. Greek chroniclers say the sultan had struck the emperor down when a mysterious French knight appeared from nowhere and killed him, and the Tribunal whispers that the knight was a magus. The Latin patriarch Thomas Morosini dies, and the whole Morea is now in Latin hands.",
             "changes": [],
             "margin": "",
-            "id": "097b028ede71"
+            "id": "b6225bbb86df"
           },
           {
             "year": 1212,
@@ -3370,7 +3370,7 @@
             "details": "Epiros overruns the western borders of Thessaloniki, and the Frankish magi of Novocastrum die resisting it; few mourn them. Venice ousts the Genoese pirate Enrico Pescatore and establishes the Kingdom of Candia. Marco Sanudo has taken nearly all the Cyclades and parcels them into some fifty lordships of the Duchy of Naxos. Nicaea takes back most of David Komnenos's conquests.",
             "changes": [],
             "margin": "",
-            "id": "48a5ad47d15e"
+            "id": "347646a81c5a"
           },
           {
             "year": 1213,
@@ -3379,7 +3379,7 @@
             "details": "Michael of Epiros starts taking the towns of the Adriatic and Ionian shores from Venice, his ally of three years before.",
             "changes": [],
             "margin": "",
-            "id": "60d8615aa19f"
+            "id": "4630b2f813bb"
           },
           {
             "year": 1214,
@@ -3388,7 +3388,7 @@
             "details": "Michael of Epiros wrests Corfu from Venice. Theodore Laskaris takes Amastris on the Black Sea, still his eastern border; the Sultanate of Rum drives north between Nicaea and Trebizond and kills David Komnenos. Nicaea makes peace with the Latin Empire, which holds for six years.",
             "changes": [],
             "margin": "",
-            "id": "8675ecc7ccb0"
+            "id": "330b71747076"
           },
           {
             "year": 1214,
@@ -3397,7 +3397,7 @@
             "details": "The Tribunal meets on Delos. Aiakia of Hedyosmos is elected archon and Maria Laskarina re-elected polemarch. Leontius, the logothete, narrowly escapes ostracism over his faulty register of tokens and shards. (The book gives no season for the meeting.)",
             "changes": [],
             "margin": "",
-            "id": "5f5e41ebc543"
+            "id": "3dd4b754f663"
           },
           {
             "year": 1215,
@@ -3406,7 +3406,7 @@
             "details": "Michael Komnenos Doukas is stabbed by a servant driven past bearing by his cruelty, and his half-brother Theodore succeeds him, taking Ohrid and Pelagonia from the Bulgarians. Gervase becomes Latin patriarch of Constantinople after four years' vacancy.",
             "changes": [],
             "margin": "",
-            "id": "3f366c5efb78"
+            "id": "405a45fd7b11"
           },
           {
             "year": 1216,
@@ -3415,7 +3415,7 @@
             "details": "Henry marries Maria of Bulgaria, Kaloyan's daughter, and dies suddenly the same year, poisoned, people say, by her or by Count Oberto; Maria vanishes. The barons elect Peter of Courtenay, Henry's brother-in-law, who accepts William of Montferrat's claim to Thessaloniki, and Margaret flees into exile, leaving her son in the city. Ravano dalle Carceri, lord of Negroponte, dies, and Venetian bailiffs split his three baronies into six. A peace treaty settles the Troad.\n\nSecrets\nHermetic gossip ties the vanished Maria of Bulgaria to the Daughters of Erichtho.",
             "changes": [],
             "margin": "",
-            "id": "64cc37ef979c"
+            "id": "9aa6c40eb6e8"
           },
           {
             "year": 1217,
@@ -3424,7 +3424,7 @@
             "details": "Peter is crowned by the pope and lands at Durazzo with 5,500 men, but Theodore of Epiros seizes him on the Via Egnatia; he dies a prisoner, almost certainly murdered, though no grave is known. His wife Yolanda of Flanders reaches Constantinople by sea and rules as regent, making peace with Bulgaria and Nicaea.",
             "changes": [],
             "margin": "",
-            "id": "6dc1ad16219a"
+            "id": "4533f8d58a8d"
           },
           {
             "year": 1218,
@@ -3433,7 +3433,7 @@
             "details": "Geoffrey de Villehardouin dies and his son Geoffrey II, husband of Yolanda's daughter Agnes, succeeds him; generous to Greeks and Latins, he taxes Latin church lands and spares the Orthodox clergy. In Bulgaria Ivan Asen II takes the throne from Tsar Boril (the book still names Boril as tsar).",
             "changes": [],
             "margin": "",
-            "id": "27d3a7fb87e3"
+            "id": "4ecbeecdeb91"
           },
           {
             "year": 1219,
@@ -3442,7 +3442,7 @@
             "details": "Yolanda marries her daughter Marie of Courtenay to Theodore Laskaris and dies suddenly. Her elder son Philip of Namur refuses the throne; his brother Robert of Courtenay accepts it but has not yet arrived, and the Latin Empire is leaderless. The Latin patriarch Gervase dies too, and the Serbian Church becomes autocephalous. In August Venice and Nicaea agree a trade treaty, ending the Nicene navy's war on Venetian shipping.",
             "changes": [],
             "margin": "",
-            "id": "88790c9653df"
+            "id": "ff1c6137bc6c"
           },
           {
             "year": 1220,
@@ -3451,7 +3451,7 @@
             "details": "The peace with the Latins breaks and Theodore Laskaris masses his army to take Holkos on the Hellespont while the Latin knights are away fighting the Bulgarians. He also gathers churchmen at Nicaea to seek an end to the schism with Rome. Several magi of the Court of Fools, lost in 1204, reappear.",
             "changes": [],
             "margin": "",
-            "id": "4a97d592166b"
+            "id": "bac513ab346a"
           }
         ],
         "package_data": {
@@ -4093,7 +4093,7 @@
             "kind": "covenants",
             "target_id": "hedyosmos",
             "note": "Its magi are credited with the Sundering",
-            "id": "79a350b4eafb"
+            "id": "dc6e2644957c"
           }
         ],
         "arms": {},
@@ -4225,7 +4225,7 @@
             "kind": "covenants",
             "target_id": "alexandria",
             "note": "Founded to take its place",
-            "id": "239c5917d464"
+            "id": "f9f770c433f7"
           }
         ],
         "arms": {},
@@ -4316,7 +4316,7 @@
             "kind": "covenants",
             "target_id": "michael_s_tabula",
             "note": "Founded by survivors of the sack",
-            "id": "9555c8e80b20"
+            "id": "e990852744ce"
           }
         ],
         "arms": {},
@@ -4422,31 +4422,31 @@
             "kind": "creatures",
             "target_id": "baskanos",
             "note": "the demon behind the evil eye",
-            "id": "e097e09dd5cd"
+            "id": "8cf14f0bc602"
           },
           {
             "kind": "creatures",
             "target_id": "a_stoicheion",
             "note": "the guardian spirits of villages",
-            "id": "9172e33e9894"
+            "id": "6b7a346480b2"
           },
           {
             "kind": "creatures",
             "target_id": "vrykolakas",
             "note": "the vampire of Greek folklore",
-            "id": "408cb984c1bb"
+            "id": "e6fd6c6f1504"
           },
           {
             "kind": "creatures",
             "target_id": "smerdaki",
             "note": "the demons that plague shepherds",
-            "id": "942e81eaf17f"
+            "id": "daa26bfe1038"
           },
           {
             "kind": "creatures",
             "target_id": "the_gorgona",
             "note": "the mermaid of the northern Aegean",
-            "id": "b42fdbf2727d"
+            "id": "99baab7eaeeb"
           }
         ],
         "arms": {},
@@ -6470,7 +6470,7 @@
         "id": "the_petrified_forest_of_lesbos",
         "name": "The Petrified Forest of Lesbos",
         "kind": "place",
-        "summary": "A desolate vale in western Lesbos where a forest has turned to stone: trunks of all sizes stand upright, and a few of the stone pillars look much like cursed woodcutters. A spiteful band of kalotyches, the tree spirits who avenge a felling (see the Faerie landscape), lives here, and the place, with its Faerie aura of 3, is dreaded across the island.\n\nVis: the stone roots of the trees can be cut as Perdo vis, which angers the spirits. For fear of sharing the woodcutters' fate the islanders honour their trees and never fell them, one reason Lesbos has so many tended gardens and groves.",
+        "summary": "A desolate vale in western Lesbos where a forest has turned to stone: trunks of all sizes stand upright, and a few of the stone pillars look much like cursed woodcutters. A spiteful band of kalotyches, the tree spirits who avenge a felling (see the Faerie landscape), lives here, and the place, with its Faerie aura of 3, is dreaded across the island.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -6488,7 +6488,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: the stone roots of the trees can be cut as Perdo vis, which angers the spirits. For fear of sharing the woodcutters' fate the islanders honour their trees and never fell them, one reason Lesbos has so many tended gardens and groves."
       },
       {
         "id": "khios",
@@ -6731,19 +6731,19 @@
             "kind": "creatures",
             "target_id": "arge_nymph_of_delos",
             "note": "a guardian of the shrines",
-            "id": "51351cbf8ee1"
+            "id": "c9c006990249"
           },
           {
             "kind": "creatures",
             "target_id": "opis_nymph_of_delos",
             "note": "a guardian of the shrines",
-            "id": "33950be31be1"
+            "id": "c8bcec2c9481"
           },
           {
             "kind": "creatures",
             "target_id": "loxo_nymph_of_delos",
             "note": "a guardian of the shrines",
-            "id": "d9b175613a95"
+            "id": "1e1a60ca5df9"
           }
         ],
         "arms": {},
@@ -6777,7 +6777,7 @@
         "id": "the_springs_of_krini_and_karava",
         "name": "The springs of Krini and Karava",
         "kind": "place",
-        "summary": "Two rival springs in the north-east of Naxos. The spring of Krini at Apeiranthos has a shape-changing stoicheion (see the Faerie landscape); that of nearby Karava always appears as a white cat. Karava is the stronger faerie, Krini the more versatile.\n\nVis: the springs yield vis to those their guardians allow (the book names neither Art nor amount).",
+        "summary": "Two rival springs in the north-east of Naxos. The spring of Krini at Apeiranthos has a shape-changing stoicheion (see the Faerie landscape); that of nearby Karava always appears as a white cat. Karava is the stronger faerie, Krini the more versatile.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -6795,7 +6795,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "When anyone takes an interest in the springs, Krini turns into a white cat, passes itself off as Karava, and grants leave to take vis from Karava's spring."
+        "secrets": "When anyone takes an interest in the springs, Krini turns into a white cat, passes itself off as Karava, and grants leave to take vis from Karava's spring.\n\nVis: the springs yield vis to those their guardians allow (the book names neither Art nor amount)."
       },
       {
         "id": "the_island_of_andros",
@@ -6993,7 +6993,7 @@
         "id": "the_bay_of_thera",
         "name": "The Bay of Thera",
         "kind": "place",
-        "summary": "Thera, the southernmost of the Cyclades, newly called Santorini (St Irene) by the Latins, is a crescent of rock round a lagoon that would be a vast harbour but for its sheer black cliffs; a few hamlets perch on top. The still blue bay, several miles across and entered by two wide channels, is fathomless save at its centre, where a volcano's peak smoulders just under the surface. It was land until the last battle of titans and Olympians blew it apart, more than a thousand years before Christ, sending a wave to wreck the coasts of the Cyclades and Candia (see the Magical landscape). Zeus cast Typhon of the hundred serpent heads into Tartaros, and he lies imprisoned in the volcano, now and then belching a whirl of dust and fire that sweeps the whole Aegean. The lagoon has a Magic aura of 7.\n\nVis: the burning pumice the cloud scatters is Perdo vis.\n\nOutside the bay the Thalassomachos, the Warrior of the Sea (see the Faerie landscape), haunts the waters, stealing fishermen's nets and raising contrary winds; he never enters the bay, and if he suddenly flees Thera, a great storm from Typhon may be coming.",
+        "summary": "Thera, the southernmost of the Cyclades, newly called Santorini (St Irene) by the Latins, is a crescent of rock round a lagoon that would be a vast harbour but for its sheer black cliffs; a few hamlets perch on top. The still blue bay, several miles across and entered by two wide channels, is fathomless save at its centre, where a volcano's peak smoulders just under the surface. It was land until the last battle of titans and Olympians blew it apart, more than a thousand years before Christ, sending a wave to wreck the coasts of the Cyclades and Candia (see the Magical landscape). Zeus cast Typhon of the hundred serpent heads into Tartaros, and he lies imprisoned in the volcano, now and then belching a whirl of dust and fire that sweeps the whole Aegean. The lagoon has a Magic aura of 7.\n\nOutside the bay the Thalassomachos, the Warrior of the Sea (see the Faerie landscape), haunts the waters, stealing fishermen's nets and raising contrary winds; he never enters the bay, and if he suddenly flees Thera, a great storm from Typhon may be coming.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -7011,7 +7011,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The Seekers of the Fallen believe that clearing the mouth of the sunken volcano would open a way into Tartaros, part of the Magic Realm."
+        "secrets": "The Seekers of the Fallen believe that clearing the mouth of the sunken volcano would open a way into Tartaros, part of the Magic Realm.\n\nVis: the burning pumice the cloud scatters is Perdo vis."
       },
       {
         "id": "the_dodecanese",
@@ -7065,7 +7065,7 @@
         "id": "the_cave_of_the_apocalypse",
         "name": "The Cave of the Apocalypse",
         "kind": "place",
-        "summary": "A small cave high on Patmos's tallest peak, where St John received the visions of the Revelation, written down by his disciple Prochorus. Pilgrims see the stone he slept on, the cross he cut in the rock and the triple cleft through which he heard Christ's voice. Some monks of the monastery claim visions of their own here. The book gives no aura.\n\nVis: a visiting Criamon magus once caught the murmuring echo from the cleft in a velvet bag, and it proved to be Intellego vis.",
+        "summary": "A small cave high on Patmos's tallest peak, where St John received the visions of the Revelation, written down by his disciple Prochorus. Pilgrims see the stone he slept on, the cross he cut in the rock and the triple cleft through which he heard Christ's voice. Some monks of the monastery claim visions of their own here. The book gives no aura.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -7083,7 +7083,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: a visiting Criamon magus once caught the murmuring echo from the cleft in a velvet bag, and it proved to be Intellego vis."
       },
       {
         "id": "the_island_of_kos",
@@ -7113,7 +7113,7 @@
         "id": "the_tree_of_hippocrates",
         "name": "The Tree of Hippocrates",
         "kind": "place",
-        "summary": "An ancient plane tree in the middle of Kos town, the oldest and biggest in the Tribunal. Settlers from Epidauros set up an asklepieion on Kos, and there Hippocrates, a native, learnt healing from Asklepios and taught it in the tree's shade; later St Paul preached under it. Each autumn the women of Kos weave a wreath of its leaves, which is blessed and hung among the church's icons, and carry the last year's wreath in procession to the shore and throw it into the sea; returning, they hug the tree, which grants them long years and strength. The tree has a Magic aura of 4 inside the town's Divine aura.\n\nVis: the old wreath holds 8 pawns of Creo vis.",
+        "summary": "An ancient plane tree in the middle of Kos town, the oldest and biggest in the Tribunal. Settlers from Epidauros set up an asklepieion on Kos, and there Hippocrates, a native, learnt healing from Asklepios and taught it in the tree's shade; later St Paul preached under it. Each autumn the women of Kos weave a wreath of its leaves, which is blessed and hung among the church's icons, and carry the last year's wreath in procession to the shore and throw it into the sea; returning, they hug the tree, which grants them long years and strength. The tree has a Magic aura of 4 inside the town's Divine aura.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -7131,7 +7131,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "A magus usually waits unobtrusively in a boat to fish the wreath out of the sea."
+        "secrets": "A magus usually waits unobtrusively in a boat to fish the wreath out of the sea.\n\nVis: the old wreath holds 8 pawns of Creo vis."
       },
       {
         "id": "nisyros",
@@ -7161,7 +7161,7 @@
         "id": "the_island_of_rodos",
         "name": "The island of Rodos",
         "kind": "place",
-        "summary": "The largest of the Dodecanese, named for the nymph Rhode, daughter of Aphrodite and consort of Helios; both were its protectors, and her gift, the pink hibiscus called rhoda, blooms on every shore. The Colossus, a giant Helios astride the harbour mouth and one of the Seven Wonders, stood less than a century before an earthquake broke it at the knees; the bronze lay for centuries until the Saracens broke it up in the seventh century and sold it to a mysterious Jewish merchant from the Holy Land, who took it away on a thousand camels.\n\nVis: small bronze shards of the Colossus can still be found, and are Ignem vis; perhaps the merchant knew it.\n\nThe Saracens walled the city and split it into quarters, one still largely Jewish, with another for its rulers. The First Crusade gave it back to Byzantium; Richard the Lionheart took it in 1191 and enlisted its sailors; Venice, whose fleet has kept a base here since 1082, claimed it after 1204. Leo Gavalas, a rich and corrupt dynatos of Constantinople, now rules it as self-proclaimed despot. Fearing that free reading breeds rebellion, he seized every book on the island; only works he approves, which flatter him, may be sold.",
+        "summary": "The largest of the Dodecanese, named for the nymph Rhode, daughter of Aphrodite and consort of Helios; both were its protectors, and her gift, the pink hibiscus called rhoda, blooms on every shore. The Colossus, a giant Helios astride the harbour mouth and one of the Seven Wonders, stood less than a century before an earthquake broke it at the knees; the bronze lay for centuries until the Saracens broke it up in the seventh century and sold it to a mysterious Jewish merchant from the Holy Land, who took it away on a thousand camels.\n\nThe Saracens walled the city and split it into quarters, one still largely Jewish, with another for its rulers. The First Crusade gave it back to Byzantium; Richard the Lionheart took it in 1191 and enlisted its sailors; Venice, whose fleet has kept a base here since 1082, claimed it after 1204. Leo Gavalas, a rich and corrupt dynatos of Constantinople, now rules it as self-proclaimed despot. Fearing that free reading breeds rebellion, he seized every book on the island; only works he approves, which flatter him, may be sold.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -7179,7 +7179,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The despot's closest adviser is a hedge wizard of foul character, very likely Infernal, who bends him to his own ends; he wrote the only books left on the island, tainted works including a corrupted Bible, and is greedily hoarding the island's vis while his demon master watches, pleased. Rumours of depravity and sorcery on Rodos may lead the Tribunal to ask for volunteers to look into it (The Despot's Advisor)."
+        "secrets": "The despot's closest adviser is a hedge wizard of foul character, very likely Infernal, who bends him to his own ends; he wrote the only books left on the island, tainted works including a corrupted Bible, and is greedily hoarding the island's vis while his demon master watches, pleased. Rumours of depravity and sorcery on Rodos may lead the Tribunal to ask for volunteers to look into it (The Despot's Advisor).\n\nVis: small bronze shards of the Colossus can still be found, and are Ignem vis; perhaps the merchant knew it."
       },
       {
         "id": "candia",
@@ -7206,7 +7206,7 @@
             "kind": "creatures",
             "target_id": "talos_the_protector_of_candia",
             "note": "the bronze protector of Candia",
-            "id": "b1cc5ad4621b"
+            "id": "5eff56e08776"
           }
         ],
         "arms": {},
@@ -7612,7 +7612,7 @@
             "kind": "characters",
             "target_id": "satabus",
             "note": "His lost brother Pietro",
-            "id": "684ad33aaf67"
+            "id": "051408cd784f"
           }
         ],
         "arms": {},
@@ -8415,7 +8415,7 @@
             "kind": "creatures",
             "target_id": "belisarius_of_the_serpent_column",
             "note": "the faerie of the Serpent Column's regio",
-            "id": "3ced2695f86b"
+            "id": "25b89f41f198"
           }
         ],
         "arms": {},
@@ -9062,7 +9062,7 @@
             "kind": "creatures",
             "target_id": "anima_the_glass_submarine",
             "note": "Alexandria's glass submarine, chained to a ship at Smyrna",
-            "id": "6e240f8edf5c"
+            "id": "ceb642c1e579"
           }
         ],
         "arms": {},
@@ -9117,7 +9117,7 @@
             "kind": "creatures",
             "target_id": "demon_of_nicaea",
             "note": "seven demon dogs on the roads outside the walls",
-            "id": "627baa532331"
+            "id": "805e4771657a"
           }
         ],
         "arms": {},
@@ -9220,7 +9220,7 @@
             "kind": "creatures",
             "target_id": "the_druj_of_xerxes_s_hill",
             "note": "the demon bound beneath Xerxes's hill",
-            "id": "451eb0a6da60"
+            "id": "b4ebe0699829"
           }
         ],
         "arms": {},
@@ -9356,7 +9356,7 @@
             "kind": "creatures",
             "target_id": "klymene",
             "note": "the titan bound under the great altar",
-            "id": "2dd4bf95cc1f"
+            "id": "3416988846d3"
           }
         ],
         "arms": {},
@@ -9366,7 +9366,7 @@
         "id": "the_asklepieion_of_pergamos",
         "name": "The Asklepieion of Pergamos",
         "kind": "place",
-        "summary": "A sanctuary of Asklepios two miles south of the acropolis, built over a sacred healing spring. It began as an offshoot of the shrines at Epidauros and grew more famous in the second century through Galen of Pergamos, who studied and taught here and whose ideas still shape the medicine of 1220. It has a Magic aura of 3.\n\nVis: 12 pawns of Corpus a year, as small clay body parts like the votive offerings of the sick. The book does not say who gathers them.",
+        "summary": "A sanctuary of Asklepios two miles south of the acropolis, built over a sacred healing spring. It began as an offshoot of the shrines at Epidauros and grew more famous in the second century through Galen of Pergamos, who studied and taught here and whose ideas still shape the medicine of 1220. It has a Magic aura of 3.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -9384,7 +9384,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: 12 pawns of Corpus a year, as small clay body parts like the votive offerings of the sick. The book does not say who gathers them."
       },
       {
         "id": "lydia",
@@ -9593,7 +9593,7 @@
         "id": "the_vineyard_of_dionysus_on_mount_tmolus",
         "name": "The Vineyard of Dionysus on Mount Tmolus",
         "kind": "place",
-        "summary": "Of the many vineyards on the slopes of Mount Tmolus above Philadelphia, one has borne grapes for centuries, and its wine is unusually strong, above all for women. Hermetic inquiry shows it was once a festival ground of Dionysus, where satyrs and maenads (women driven to frenzy by wine) gathered. It has a Faerie aura of 3.\n\nVis: its grapes can be distilled into Mentem vis, 1 pawn for each hundred gallons of wine. The book names no one who gathers it.\n\nNo magus has found a satyr, though tales of them are many; the women of Philadelphia know that if enough of them get drunk and dance wildly, the satyrs come.",
+        "summary": "Of the many vineyards on the slopes of Mount Tmolus above Philadelphia, one has borne grapes for centuries, and its wine is unusually strong, above all for women. Hermetic inquiry shows it was once a festival ground of Dionysus, where satyrs and maenads (women driven to frenzy by wine) gathered. It has a Faerie aura of 3.\n\nNo magus has found a satyr, though tales of them are many; the women of Philadelphia know that if enough of them get drunk and dance wildly, the satyrs come.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -9611,7 +9611,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": ""
+        "secrets": "Vis: its grapes can be distilled into Mentem vis, 1 pawn for each hundred gallons of wine. The book names no one who gathers it."
       },
       {
         "id": "the_field_of_antioch_on_the_maeander",
@@ -9689,7 +9689,7 @@
         "id": "the_gardens_of_trebizond",
         "name": "The Gardens of Trebizond",
         "kind": "place",
-        "summary": "Trebizond's beauty has given rise to several Magic auras, most of them in the city's gardens and arboretums (the book gives no strengths). Magic has soaked into the plants, and the city has many magical herbs, fruits and hardwoods: one grove's bark is as hard as iron and must soak in water a year before it can be worked, and Aristotle wrote of some of them, among them a vine dripping honey that cures madmen and epileptics.\n\nVis: several of the plants would give vis each year if harvested properly. Unclaimed; Ingasia is buying Trebizond oak for its new buildings.\n\nLately bardi have plagued the city: shapeshifting spirits in the form of a she-jackal, solitary, whose wail foretells a death. The clergy call them demons, the townsfolk faeries; no magus has caught one to study. Their warnings are uncannily true: everyone who has seen the jackal and heard it wail has soon lost someone dear.",
+        "summary": "Trebizond's beauty has given rise to several Magic auras, most of them in the city's gardens and arboretums (the book gives no strengths). Magic has soaked into the plants, and the city has many magical herbs, fruits and hardwoods: one grove's bark is as hard as iron and must soak in water a year before it can be worked, and Aristotle wrote of some of them, among them a vine dripping honey that cures madmen and epileptics.\n\nLately bardi have plagued the city: shapeshifting spirits in the form of a she-jackal, solitary, whose wail foretells a death. The clergy call them demons, the townsfolk faeries; no magus has caught one to study. Their warnings are uncannily true: everyone who has seen the jackal and heard it wail has soon lost someone dear.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -9707,7 +9707,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Fishermen of the docks have lately seen a huge, savage shark off the shore that has killed several men who tried to kill it, and they are sure it hunts the Pearl of Peroz, which must be somewhere in the city. That pearl, the greatest ever seen, hung from the ear of King Peroz of Persia, who marched into eastern Anatolia against the Ephthalite Huns in the fifth century. A fisherman found it by watching a monstrous shark follow an oyster that showed it its pearl; he threw the oyster ashore and was eaten, and the shark haunted the king whenever he went near the sea. Peroz, falling into a trench his enemies had dug, tore the pearl from his ear and threw it away rather than be buried with it; it has turned up now and then since, and whoever bears it near water soon meets the shark. The fishermen think the shark magical and the pearl mighty."
+        "secrets": "Fishermen of the docks have lately seen a huge, savage shark off the shore that has killed several men who tried to kill it, and they are sure it hunts the Pearl of Peroz, which must be somewhere in the city. That pearl, the greatest ever seen, hung from the ear of King Peroz of Persia, who marched into eastern Anatolia against the Ephthalite Huns in the fifth century. A fisherman found it by watching a monstrous shark follow an oyster that showed it its pearl; he threw the oyster ashore and was eaten, and the shark haunted the king whenever he went near the sea. Peroz, falling into a trench his enemies had dug, tore the pearl from his ear and threw it away rather than be buried with it; it has turned up now and then since, and whoever bears it near water soon meets the shark. The fishermen think the shark magical and the pearl mighty.\n\nVis: several of the plants would give vis each year if harvested properly. Unclaimed; Ingasia is buying Trebizond oak for its new buildings."
       },
       {
         "id": "the_hidden_shrine_of_serapis_at_sinope",
@@ -10277,7 +10277,7 @@
             "kind": "creatures",
             "target_id": "a_sibyl",
             "note": "the sibyls of Ionia, Phrygia and the Hellespont",
-            "id": "4d68c8b490a1"
+            "id": "c9a6687cd140"
           }
         ],
         "arms": {},
@@ -10389,7 +10389,7 @@
             "kind": "creatures",
             "target_id": "akgah_the_demon_of_the_fourth_crusade",
             "note": "the demon of the Fourth Crusade, laired outside the city",
-            "id": "a6807f5d2509"
+            "id": "3fb7441e12a8"
           }
         ],
         "arms": {},
@@ -10487,7 +10487,7 @@
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "Its centre; four members",
-            "id": "1cd32066e55c"
+            "id": "d8c5b960e589"
           }
         ],
         "arms": {},
@@ -10519,7 +10519,7 @@
             "kind": "characters",
             "target_id": "lucian_the_scholar",
             "note": "Its leader and mystagogue",
-            "id": "dc25ae371ade"
+            "id": "116ee930f6bb"
           }
         ],
         "arms": {},
@@ -10551,13 +10551,13 @@
             "kind": "characters",
             "target_id": "hydatius",
             "note": "Its general",
-            "id": "8923f1a668f5"
+            "id": "e6f2cd154f49"
           },
           {
             "kind": "characters",
             "target_id": "proximios",
             "note": "Co-founder and paymaster",
-            "id": "4a833c42068f"
+            "id": "1dc460eb0667"
           }
         ],
         "arms": {},
@@ -10589,19 +10589,19 @@
             "kind": "characters",
             "target_id": "artoud",
             "note": "Lends it fitful support",
-            "id": "276a68fb7c58"
+            "id": "e9dfaba2ab22"
           },
           {
             "kind": "covenants",
             "target_id": "oikos_tou_eleous",
             "note": "Its members",
-            "id": "6442cd1b19a5"
+            "id": "bdb7b52cbe1f"
           },
           {
             "kind": "covenants",
             "target_id": "gigas",
             "note": "Its members",
-            "id": "aa0e7558f68f"
+            "id": "23de58f4173d"
           }
         ],
         "arms": {},
@@ -10633,7 +10633,7 @@
             "kind": "characters",
             "target_id": "syagricus",
             "note": "A member",
-            "id": "f47eb6216529"
+            "id": "4d786172e7d7"
           }
         ],
         "arms": {},
@@ -10665,7 +10665,7 @@
             "kind": "characters",
             "target_id": "evantia",
             "note": "Its most respected member",
-            "id": "8c52278324e5"
+            "id": "fed2c14e7f08"
           }
         ],
         "arms": {},
@@ -10697,7 +10697,7 @@
             "kind": "characters",
             "target_id": "kristophoros",
             "note": "Its rallying point",
-            "id": "547e605a681d"
+            "id": "af1a0a9e5024"
           }
         ],
         "arms": {},
@@ -10729,13 +10729,13 @@
             "kind": "characters",
             "target_id": "tisiphon",
             "note": "Its best-known member",
-            "id": "d67f059faa78"
+            "id": "491cd366ee3f"
           },
           {
             "kind": "covenants",
             "target_id": "hedyosmos",
             "note": "Its heart",
-            "id": "59dfd901d0c6"
+            "id": "8b0668f768d0"
           }
         ],
         "arms": {},
@@ -10768,13 +10768,13 @@
             "kind": "characters",
             "target_id": "destasia",
             "note": "A Witch of Thessaly, leader of Erebos",
-            "id": "4c4ae2fa511a"
+            "id": "e31bdeb9326f"
           },
           {
             "kind": "covenants",
             "target_id": "erebos",
             "note": "Led by one of them",
-            "id": "e681bbee1b07"
+            "id": "5413b521da65"
           }
         ],
         "arms": {},
@@ -10806,7 +10806,7 @@
             "kind": "covenants",
             "target_id": "erebos",
             "note": "Their enemy",
-            "id": "c9564394dd64"
+            "id": "efd889ef0c34"
           }
         ],
         "arms": {},
@@ -10966,7 +10966,7 @@
             "kind": "characters",
             "target_id": "zacharias",
             "note": "Tends Orphykia",
-            "id": "44dfed33c07c"
+            "id": "b91804101c1d"
           }
         ],
         "arms": {},
@@ -10999,7 +10999,7 @@
             "kind": "characters",
             "target_id": "galla",
             "note": "Trained in the tradition",
-            "id": "1332b0790147"
+            "id": "d3fd76d8d027"
           }
         ],
         "arms": {},
@@ -11132,7 +11132,7 @@
             "kind": "covenants",
             "target_id": "oikos_tou_eleous",
             "note": "Preaches against them",
-            "id": "237b118233b2"
+            "id": "c9b76821612b"
           }
         ],
         "arms": {},
@@ -11238,91 +11238,91 @@
             "kind": "characters",
             "target_id": "proximios",
             "note": "The hidden infernalist",
-            "id": "eebf022e1502"
+            "id": "5a89c8e29614"
           },
           {
             "kind": "characters",
             "target_id": "hydatius",
             "note": "The Vigilant's general, his dupe",
-            "id": "cb2d8bcdb504"
+            "id": "49c2e7791c17"
           },
           {
             "kind": "characters",
             "target_id": "leontius",
             "note": "The logothete he will succeed",
-            "id": "ec5e5655b15f"
+            "id": "1990ba768f46"
           },
           {
             "kind": "characters",
             "target_id": "caterina_da_vigonovo",
             "note": "A target of false charges",
-            "id": "2781efa64db8"
+            "id": "a0178d3316ac"
           },
           {
             "kind": "characters",
             "target_id": "delfini",
             "note": "A target of false charges",
-            "id": "e3b351a48fac"
+            "id": "c15015a3b8ec"
           },
           {
             "kind": "characters",
             "target_id": "aiakia",
             "note": "To be turned on Gigas",
-            "id": "8a355bd40e76"
+            "id": "caa99c7b732b"
           },
           {
             "kind": "characters",
             "target_id": "tisiphon",
             "note": "To be turned on Gigas",
-            "id": "88f6474fc131"
+            "id": "af7e4454735a"
           },
           {
             "kind": "characters",
             "target_id": "boustaphan",
             "note": "Will not open Gigas's records",
-            "id": "a3d8aeb14c5d"
+            "id": "84a0d9078a66"
           },
           {
             "kind": "characters",
             "target_id": "celaenea",
             "note": "To be set against Lucian",
-            "id": "44707e152269"
+            "id": "f26ad8b5955a"
           },
           {
             "kind": "characters",
             "target_id": "lucian_the_scholar",
             "note": "Celaenea's intended target",
-            "id": "2cd39ecb6ec9"
+            "id": "2c1024ae3044"
           },
           {
             "kind": "covenants",
             "target_id": "alexandria",
             "note": "Proximios's covenant",
-            "id": "dc80bb3de8c9"
+            "id": "3c207e3610e1"
           },
           {
             "kind": "covenants",
             "target_id": "ingasia",
             "note": "Hydatius's covenant",
-            "id": "ccdd256be287"
+            "id": "8469356f2b19"
           },
           {
             "kind": "covenants",
             "target_id": "erebos",
             "note": "Its young magi to be accused",
-            "id": "41bd5fd04cf1"
+            "id": "09f08c0c7eb6"
           },
           {
             "kind": "covenants",
             "target_id": "hedyosmos",
             "note": "To be turned on Gigas",
-            "id": "3b07e9b5bdbd"
+            "id": "d88d56769a06"
           },
           {
             "kind": "covenants",
             "target_id": "gigas",
             "note": "The intended victim",
-            "id": "0a36904107b4"
+            "id": "ac6e470623ee"
           }
         ],
         "arms": {},
@@ -11413,91 +11413,91 @@
             "kind": "places",
             "target_id": "delos",
             "note": "Where the Tribunal meets",
-            "id": "bf98cc4819c5"
+            "id": "ee4d005902dd"
           },
           {
             "kind": "characters",
             "target_id": "aiakia",
             "note": "The archon presides",
-            "id": "e3c18af57a22"
+            "id": "2ea67e6b2d35"
           },
           {
             "kind": "characters",
             "target_id": "maria_laskarina",
             "note": "The polemarch",
-            "id": "e985ce5693dc"
+            "id": "5312bf24047d"
           },
           {
             "kind": "characters",
             "target_id": "leontius",
             "note": "Resigns as logothete",
-            "id": "b6c9d5bf5a54"
+            "id": "9bd3b2c384dd"
           },
           {
             "kind": "characters",
             "target_id": "proximios",
             "note": "Proposed as logothete",
-            "id": "9af9ac24afad"
+            "id": "a0a6169b821c"
           },
           {
             "kind": "characters",
             "target_id": "caterina_da_vigonovo",
             "note": "Seeks citizenship",
-            "id": "db411f78deca"
+            "id": "bf4fec6e7da0"
           },
           {
             "kind": "characters",
             "target_id": "ziper",
             "note": "Proposes Nanno and Ampelius",
-            "id": "8e5f4993fdaa"
+            "id": "ba35525acc60"
           },
           {
             "kind": "characters",
             "target_id": "syagricus",
             "note": "Pancratius's master",
-            "id": "bf7160d9d511"
+            "id": "e62700429ec5"
           },
           {
             "kind": "characters",
             "target_id": "artoud",
             "note": "Half-hearted against the Propitiation",
-            "id": "e73bdbb01ccd"
+            "id": "f521e8f1b05a"
           },
           {
             "kind": "characters",
             "target_id": "kristophoros",
             "note": "May speak against idolatry",
-            "id": "d049fc2e550a"
+            "id": "d7bf4f5299ad"
           },
           {
             "kind": "characters",
             "target_id": "formosos",
             "note": "Accuses Passara",
-            "id": "14ebc4588412"
+            "id": "6aafff2f76ff"
           },
           {
             "kind": "characters",
             "target_id": "passara",
             "note": "Accused of serving the emperor",
-            "id": "40b06051be46"
+            "id": "9f9bff2df289"
           },
           {
             "kind": "covenants",
             "target_id": "oikos_tou_eleous",
             "note": "Petitions against the Propitiation",
-            "id": "43a8376be4d9"
+            "id": "17b041549aca"
           },
           {
             "kind": "covenants",
             "target_id": "gigas",
             "note": "Petitions against the Propitiation",
-            "id": "be46118d7b15"
+            "id": "ca3e3b7e0ea7"
           },
           {
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "Pancratius and the craftsmen",
-            "id": "fd34fa4d6a25"
+            "id": "181bcc0c8388"
           }
         ],
         "arms": {},
@@ -11578,13 +11578,13 @@
             "kind": "covenants",
             "target_id": "oikos_tou_eleous",
             "note": "Sworn to the boy-king",
-            "id": "ef2bae7ae0ca"
+            "id": "796a92fe49a8"
           },
           {
             "kind": "covenants",
             "target_id": "erebos",
             "note": "In Epirote Thessaly",
-            "id": "8f5c6aca55fb"
+            "id": "ff5f549b8b52"
           }
         ],
         "arms": {},
@@ -11665,19 +11665,19 @@
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "The League of Constantine",
-            "id": "f28fa9aa300c"
+            "id": "8899998b0841"
           },
           {
             "kind": "covenants",
             "target_id": "alexandria",
             "note": "A Nicene garrison in its citadel",
-            "id": "bb95a2f9aed1"
+            "id": "83edeae2e71a"
           },
           {
             "kind": "places",
             "target_id": "the_hellespont",
             "note": "The landing",
-            "id": "cc5f6bb67bde"
+            "id": "731201ef1cdd"
           }
         ],
         "arms": {},
@@ -11739,7 +11739,7 @@
             "kind": "places",
             "target_id": "the_hippodrome",
             "note": "Where it beat the Hagka",
-            "id": "9d2d3d5c40a3"
+            "id": "b53a59b73ab7"
           }
         ],
         "arms": {},
@@ -11811,37 +11811,37 @@
             "kind": "characters",
             "target_id": "lucian_the_scholar",
             "note": "The league's leader",
-            "id": "651144ae96fa"
+            "id": "419e7086fa5b"
           },
           {
             "kind": "characters",
             "target_id": "leukothea",
             "note": "Cast as Amphitrite",
-            "id": "b9c5786f1843"
+            "id": "784f27f2a4d3"
           },
           {
             "kind": "characters",
             "target_id": "celaenea",
             "note": "Jealous for Hermes",
-            "id": "71b89be2d5b5"
+            "id": "31cf06bd0242"
           },
           {
             "kind": "characters",
             "target_id": "proximios",
             "note": "Would plant an infernalist",
-            "id": "e6aa7dce8bd9"
+            "id": "ca3d4780341d"
           },
           {
             "kind": "covenants",
             "target_id": "aegaea",
             "note": "Lucian's covenant",
-            "id": "957771a2f33e"
+            "id": "ba067575b405"
           },
           {
             "kind": "places",
             "target_id": "the_great_altar_of_pergamos",
             "note": "The league's altar",
-            "id": "99ff09288e57"
+            "id": "0d63fad6bddf"
           }
         ],
         "arms": {},
@@ -11903,37 +11903,37 @@
             "kind": "characters",
             "target_id": "tisiphon",
             "note": "The faction's best known member",
-            "id": "958e038d346a"
+            "id": "a8e0198bcaec"
           },
           {
             "kind": "characters",
             "target_id": "ausculator",
             "note": "Head of the threskeia geine",
-            "id": "b0d7f0b9eced"
+            "id": "3c8d1c47be85"
           },
           {
             "kind": "characters",
             "target_id": "aiakia",
             "note": "Keeper of the cult's rites",
-            "id": "cdfa61541d0e"
+            "id": "344c80c2874b"
           },
           {
             "kind": "characters",
             "target_id": "kristophoros",
             "note": "The Legion of Atlas",
-            "id": "d2ebe0bfad19"
+            "id": "c2f785b2bb3b"
           },
           {
             "kind": "characters",
             "target_id": "evantia",
             "note": "The Seekers of the Fallen",
-            "id": "6ef7263e2f60"
+            "id": "02413c08e8dc"
           },
           {
             "kind": "covenants",
             "target_id": "hedyosmos",
             "note": "Over the gate of Tartaros",
-            "id": "c8fd91dc426d"
+            "id": "3b418276d43b"
           }
         ],
         "arms": {},
@@ -11995,19 +11995,19 @@
             "kind": "creatures",
             "target_id": "klymene",
             "note": "The prisoner",
-            "id": "e42be6886da1"
+            "id": "cd56f7b20fad"
           },
           {
             "kind": "characters",
             "target_id": "lucian_the_scholar",
             "note": "His league uses the altar",
-            "id": "334df0277371"
+            "id": "15b0d6216b34"
           },
           {
             "kind": "places",
             "target_id": "the_great_altar_of_pergamos",
             "note": "The lock",
-            "id": "9551b0942d2a"
+            "id": "2eb473bedcb2"
           }
         ],
         "arms": {},
@@ -12069,7 +12069,7 @@
             "kind": "covenants",
             "target_id": "hedyosmos",
             "note": "The temple Askalaphos wants back",
-            "id": "c6de78e3c505"
+            "id": "9414158af394"
           }
         ],
         "arms": {},
@@ -12131,25 +12131,25 @@
             "kind": "covenants",
             "target_id": "gigas",
             "note": "Tremere's covenant in Thebes",
-            "id": "8e21f1562a64"
+            "id": "747f29bf08f3"
           },
           {
             "kind": "characters",
             "target_id": "boustaphan",
             "note": "Tremere's tribune",
-            "id": "1efe8be5054a"
+            "id": "0f0ec7ee1dcc"
           },
           {
             "kind": "characters",
             "target_id": "allectores",
             "note": "Gigas's envoy",
-            "id": "d23b5197814c"
+            "id": "fb9e8f68f578"
           },
           {
             "kind": "places",
             "target_id": "thermakopolis",
             "note": "The Advisors' fall",
-            "id": "aa39c4a75296"
+            "id": "00af986f7ca9"
           }
         ],
         "arms": {},
@@ -12211,25 +12211,25 @@
             "kind": "covenants",
             "target_id": "ingasia",
             "note": "Would host the Contest",
-            "id": "4066d9ba1251"
+            "id": "64b4f86d4327"
           },
           {
             "kind": "characters",
             "target_id": "stouritus",
             "note": "The primus",
-            "id": "7959075bd038"
+            "id": "0a7136207eba"
           },
           {
             "kind": "characters",
             "target_id": "gemma",
             "note": "Over-quota sales",
-            "id": "4be4d252fe0b"
+            "id": "4800cc7c4c8d"
           },
           {
             "kind": "characters",
             "target_id": "bobila",
             "note": "Over-quota sales",
-            "id": "b56afc74d5e1"
+            "id": "f4adb30b8a89"
           }
         ],
         "arms": {},
@@ -12346,19 +12346,19 @@
             "kind": "covenants",
             "target_id": "polyaigos",
             "note": "The duke envies its wealth",
-            "id": "9be0065b0edd"
+            "id": "a97d6de4bcc9"
           },
           {
             "kind": "characters",
             "target_id": "caterina_da_vigonovo",
             "note": "Arranging terms with him",
-            "id": "e57bf96244cc"
+            "id": "838351fc06fd"
           },
           {
             "kind": "characters",
             "target_id": "satabus",
             "note": "The duke's lost brother",
-            "id": "f07e0f4d5605"
+            "id": "ce1241fd9872"
           }
         ],
         "arms": {},
@@ -12420,13 +12420,13 @@
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "The League of Constantine's seat",
-            "id": "568846cb5c6a"
+            "id": "aa16cc317784"
           },
           {
             "kind": "covenants",
             "target_id": "michael_s_tabula",
             "note": "Sworn to the city",
-            "id": "a663efdc6a4b"
+            "id": "3ebfc7410e51"
           }
         ],
         "arms": {},
@@ -12598,25 +12598,25 @@
             "kind": "covenants",
             "target_id": "michael_s_tabula",
             "note": "Already sworn to the city",
-            "id": "92c530a68c69"
+            "id": "ca52138a4fd3"
           },
           {
             "kind": "covenants",
             "target_id": "moero_s_garden",
             "note": "Its young magi want it",
-            "id": "82ccd11e8b48"
+            "id": "e22666590e0f"
           },
           {
             "kind": "characters",
             "target_id": "petros",
             "note": "Bears the old shame",
-            "id": "352d8592492b"
+            "id": "b74f2cac67b0"
           },
           {
             "kind": "places",
             "target_id": "thermakopolis",
             "note": "The old site",
-            "id": "74b3755b3164"
+            "id": "a0843ba5d403"
           }
         ],
         "arms": {},
@@ -12678,7 +12678,7 @@
             "kind": "places",
             "target_id": "wilusa",
             "note": "The lost covenant",
-            "id": "1ccbbd286929"
+            "id": "f1c45de34209"
           }
         ],
         "arms": {},
@@ -15248,7 +15248,7 @@
             "kind": "characters",
             "target_id": "destasia",
             "note": "Her filia and successor",
-            "id": "2647596e8c06"
+            "id": "9fcc34d252dd"
           }
         ],
         "agents": [],
@@ -15953,7 +15953,7 @@
             "kind": "characters",
             "target_id": "monorchis",
             "note": "Found him and brought him to Gigas to train",
-            "id": "e4def5aae895"
+            "id": "38a77a8da1fb"
           }
         ],
         "agents": [],
@@ -17855,7 +17855,7 @@
             "kind": "characters",
             "target_id": "aiakia",
             "note": "His youngest filia and heir",
-            "id": "8e02a12f2650"
+            "id": "b395a28555c1"
           }
         ],
         "agents": [],
@@ -19594,7 +19594,7 @@
             "kind": "places",
             "target_id": "celaenea_s_laboratory_on_mount_cyllene",
             "note": "Her hidden laboratory",
-            "id": "8417a571e5da"
+            "id": "2c43f3dabce7"
           }
         ],
         "agents": [],
@@ -20927,7 +20927,7 @@
             "kind": "characters",
             "target_id": "theocharista_psellus",
             "note": "Her younger sister",
-            "id": "8e71ae7d9db8"
+            "id": "5cec719c653f"
           }
         ],
         "agents": [],
@@ -22189,7 +22189,7 @@
             "kind": "characters",
             "target_id": "nonna",
             "note": "Her twin sister",
-            "id": "caa78db96500"
+            "id": "2836e8298413"
           }
         ],
         "agents": [],
@@ -30249,7 +30249,7 @@
             "kind": "characters",
             "target_id": "bobila",
             "note": "Her conjoined twin",
-            "id": "8c3ed3d6cc8c"
+            "id": "5c9b37bfafd3"
           }
         ],
         "agents": [],
@@ -34822,7 +34822,7 @@
             "kind": "characters",
             "target_id": "petros",
             "note": "Saved him in the fall of the city",
-            "id": "1320cc51e8db"
+            "id": "870fd4a86f21"
           }
         ],
         "agents": [],
@@ -37385,19 +37385,19 @@
             "kind": "characters",
             "target_id": "hydatius",
             "note": "Co-founder of the League of the Vigilant, which Hydatius leads",
-            "id": "5cef601c0120"
+            "id": "c31ff09d58aa"
           },
           {
             "kind": "characters",
             "target_id": "ziper",
             "note": "Backs Ziper's proposal to take Nanno and Ampelius into Moero's Garden",
-            "id": "d17deb7b42d8"
+            "id": "12f1eee0c9e7"
           },
           {
             "kind": "characters",
             "target_id": "lucian_the_scholar",
             "note": "Delighted Lucian with acrobatics as a young messenger",
-            "id": "fd2e498a4c57"
+            "id": "d9cefb404706"
           }
         ],
         "agents": [],
@@ -43322,7 +43322,7 @@
             "kind": "places",
             "target_id": "delphi",
             "note": "Her temple and oracle",
-            "id": "5748ccecc149"
+            "id": "e562748cb298"
           }
         ],
         "agents": [],
@@ -45017,7 +45017,7 @@
             "kind": "characters",
             "target_id": "formosos",
             "note": "Hunting her for the Tribunal",
-            "id": "414db6544bcd"
+            "id": "1d5ecb00774d"
           }
         ],
         "agents": [],
@@ -45617,7 +45617,7 @@
             "kind": "characters",
             "target_id": "passara",
             "note": "Means to prove she serves the emperor",
-            "id": "0e1c04538a3e"
+            "id": "42a31e4ed821"
           }
         ],
         "agents": [],
@@ -47217,7 +47217,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a solid body, which it can let dissolve whenever it likes.",
-            "id": "84fa82a7fe77"
+            "id": "c942a9ab82f1"
           },
           {
             "name": "Obsession",
@@ -47231,7 +47231,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: plants the Obsession Trait Envy in its victim, as Realms of Power: The Infernal describes.",
-            "id": "77d0974be8b2"
+            "id": "71c6d341a08f"
           }
         ],
         "vis": [
@@ -47239,7 +47239,7 @@
             "pawns": 1,
             "art": "Vim",
             "where": "in its eye",
-            "id": "9d34566ff622"
+            "id": "b1c5ceada871"
           }
         ],
         "equipment": "",
@@ -47615,7 +47615,7 @@
             "attack": 25,
             "defense": 0,
             "damage": 14,
-            "id": "d364f52162f5"
+            "id": "7d9ffc5de3f6"
           },
           {
             "name": "Dodge",
@@ -47623,7 +47623,7 @@
             "attack": null,
             "defense": 11,
             "damage": null,
-            "id": "48e8fda02cb1"
+            "id": "90fa0251f2b7"
           }
         ],
         "soak": 5,
@@ -47759,7 +47759,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes herself a body with these statistics and lets it go at will. If the body is killed it leaves the vis behind, but only this Aspect dies, not the spirit.",
-            "id": "5e532fbd91de"
+            "id": "988b946f48eb"
           },
           {
             "name": "Strike of the Cornered Game",
@@ -47773,7 +47773,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Anyone her arrow hits is held paralysed until she lifts the power or the sun next rises or sets (ReCo 25: base 5, +1 Touch, +2 Sun, +1 ended at will; Greater Power, -1 Might cost, +4 Init).",
-            "id": "2969c4210be6"
+            "id": "dc96ac3f3a65"
           },
           {
             "name": "Outstanding Distance",
@@ -47787,7 +47787,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Her arrow can reach a target as far as seven leagues off with no penalty for range, on a normal missile Attack, so long as she can see it with nothing in the way (ReHe 25: base 3, +1 Touch, +4 magnitudes for the distance; Greater Power, +5 Init).",
-            "id": "0d8e884010ac"
+            "id": "c65361a15bf4"
           }
         ],
         "vis": [
@@ -47795,7 +47795,7 @@
             "pawns": 6,
             "art": "Rego",
             "where": "in her bow",
-            "id": "8b7516d882aa"
+            "id": "64fa891b1c52"
           }
         ],
         "equipment": "Short bow of ivory, full heavy leather armor.",
@@ -48171,7 +48171,7 @@
             "attack": 25,
             "defense": 0,
             "damage": 14,
-            "id": "d65f5bfb4f31"
+            "id": "0234f04daa04"
           },
           {
             "name": "Dodge",
@@ -48179,7 +48179,7 @@
             "attack": null,
             "defense": 11,
             "damage": null,
-            "id": "5697850fc787"
+            "id": "8a3e67c171f8"
           }
         ],
         "soak": 5,
@@ -48315,7 +48315,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes herself a body with these statistics and lets it go at will. If the body is killed it leaves the vis behind, but only this Aspect dies, not the spirit.",
-            "id": "5e532fbd91de"
+            "id": "988b946f48eb"
           },
           {
             "name": "Strike of the Cornered Game",
@@ -48329,7 +48329,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Anyone her arrow hits is held paralysed until she lifts the power or the sun next rises or sets (ReCo 25: base 5, +1 Touch, +2 Sun, +1 ended at will; Greater Power, -1 Might cost, +4 Init).",
-            "id": "2969c4210be6"
+            "id": "dc96ac3f3a65"
           },
           {
             "name": "Unequaled Aim",
@@ -48343,7 +48343,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An arrow that hits strikes the body part she chooses: normal damage, and the part is useless, giving a Minor Flaw (Lame, Missing Eye or Missing Hand, say) until the wound heals. A struck hand lets go of what it held. A Greater Power, +7 Init, matching PeCo 15 (+1 Part, +1 Touch, base 5).",
-            "id": "7e33281e9a43"
+            "id": "0ffd48515204"
           }
         ],
         "vis": [
@@ -48351,7 +48351,7 @@
             "pawns": 6,
             "art": "Rego",
             "where": "in her bow",
-            "id": "fc6e6e857df5"
+            "id": "505473ff807c"
           }
         ],
         "equipment": "Short bow of ivory, full heavy leather armor.",
@@ -48727,7 +48727,7 @@
             "attack": 25,
             "defense": 0,
             "damage": 14,
-            "id": "3a49a973fd1d"
+            "id": "9f6d0829527c"
           },
           {
             "name": "Dodge",
@@ -48735,7 +48735,7 @@
             "attack": null,
             "defense": 11,
             "damage": null,
-            "id": "51497b8c1d63"
+            "id": "d98a36d74d3e"
           }
         ],
         "soak": 5,
@@ -48871,7 +48871,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes herself a body with these statistics and lets it go at will. If the body is killed it leaves the vis behind, but only this Aspect dies, not the spirit.",
-            "id": "5e532fbd91de"
+            "id": "988b946f48eb"
           },
           {
             "name": "Strike of the Cornered Game",
@@ -48885,7 +48885,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Anyone her arrow hits is held paralysed until she lifts the power or the sun next rises or sets (ReCo 25: base 5, +1 Touch, +2 Sun, +1 ended at will; Greater Power, -1 Might cost, +4 Init).",
-            "id": "2969c4210be6"
+            "id": "dc96ac3f3a65"
           },
           {
             "name": "Peerless Trajectory",
@@ -48899,7 +48899,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Her arrow bends round corners, walls and shields: if she knows where the target is, cover doesn't stop a normal missile Attack, range counts along the arrow's real path, and the target's Defense leaves out any shield. A Greater Power, -1 Might cost and +8 Init, matching ReHe 5 (+1 complexity, +1 Touch, base 3).",
-            "id": "03b440a779ee"
+            "id": "36284f56223c"
           }
         ],
         "vis": [
@@ -48907,7 +48907,7 @@
             "pawns": 6,
             "art": "Rego",
             "where": "in her bow",
-            "id": "828bab3d84f9"
+            "id": "5fd71ba97d70"
           }
         ],
         "equipment": "Short bow of ivory, full heavy leather armor.",
@@ -49013,7 +49013,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 4,
-            "id": "f3f06c302110"
+            "id": "a42d920e5a25"
           }
         ],
         "soak": 5,
@@ -49079,7 +49079,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a solid body (Realms of Power: The Infernal).",
-            "id": "e24008cd448a"
+            "id": "5ad663a7898d"
           },
           {
             "name": "Endurance of the Enraged",
@@ -49093,7 +49093,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The Furies' power to fight on in a rage (Realms of Power: The Infernal).",
-            "id": "56a1a4845a7b"
+            "id": "85181cbb9648"
           },
           {
             "name": "Obsession",
@@ -49107,7 +49107,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: imposes the Obsession Trait Wrath.",
-            "id": "d3744941ce7d"
+            "id": "12bcd5065784"
           }
         ],
         "vis": [
@@ -49115,7 +49115,7 @@
             "pawns": 4,
             "art": "Animal",
             "where": "one in each paw",
-            "id": "b23556d39a1e"
+            "id": "871c70f0a4e0"
           }
         ],
         "equipment": "",
@@ -49210,7 +49210,7 @@
             "attack": null,
             "defense": 0,
             "damage": null,
-            "id": "5b7c9c957b1f"
+            "id": "30a18bc2db99"
           }
         ],
         "soak": 8,
@@ -49276,7 +49276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An instilled effect that lets the iron body swim as easily as a fish: ReTe 34 (+2 Sun, +2 metal, +3 Size, base 3, +1 complexity, +1 for two uses a day, +3 for a sunrise and sunset trigger).",
-            "id": "cd21392e7a0e"
+            "id": "5a4eb06bb9d9"
           },
           {
             "name": "Transparent Skin",
@@ -49290,7 +49290,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes its hide almost clear, so it is hard to see and its riders can look out (MuTe 24: base 1, +2 metal, +3 Size, +2 Sun, +1 for two uses a day, +3 for a sunrise and sunset trigger).",
-            "id": "0cb51afefe39"
+            "id": "12bef894935f"
           },
           {
             "name": "Habitable Bowels",
@@ -49304,7 +49304,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps a light breeze moving inside it, so the riders can breathe in some comfort: CrAu 19 (+3 Structure, +1 Touch, base 1, +2 Sun, +1 for two uses a day, +3 for a sunrise and sunset trigger).",
-            "id": "e9b2f11ba641"
+            "id": "8b1fe4d01582"
           }
         ],
         "vis": [],
@@ -49645,7 +49645,7 @@
             "attack": null,
             "defense": -1,
             "damage": null,
-            "id": "56e9090dc6f1"
+            "id": "114413cc4df5"
           }
         ],
         "soak": 0,
@@ -49809,7 +49809,7 @@
             "pawns": 5,
             "art": "Mentem",
             "where": "in her tools of divination",
-            "id": "12de9238c286"
+            "id": "45cb22fd5cdc"
           }
         ],
         "equipment": "",
@@ -50031,7 +50031,7 @@
             "attack": 14,
             "defense": 10,
             "damage": 5,
-            "id": "c57793631dcd"
+            "id": "9b16317f1677"
           },
           {
             "name": "Claws",
@@ -50039,7 +50039,7 @@
             "attack": 15,
             "defense": 12,
             "damage": 6,
-            "id": "f0ad60f2b895"
+            "id": "ccd35ec52cdb"
           },
           {
             "name": "Horns",
@@ -50047,7 +50047,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 5,
-            "id": "63c0c34ad316"
+            "id": "f895946257ad"
           }
         ],
         "soak": 8,
@@ -50134,7 +50134,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: it knows all that happens within the domain it has chosen, being one with that place; Might 10 covers a room, more Might a wider land. The domain yields Might/10 pawns of Animal vis a year as objects, which may be taken without harm if bargained for.",
-            "id": "33d289a5d651"
+            "id": "8df75963ae16"
           },
           {
             "name": "Guardian of the Bounds",
@@ -50148,7 +50148,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 5 points, 1 per 5 levels of the matching spell: walking the village's bounds and drawing a circle, it raises a ward like Ward against Faeries of the Water, of the Realm and Form it picks each time (Faeries of the Wood against crop blight, Demons of the Mind against the evil eye). Wards are kept low to penetrate; at Might 20 a level 10 ward costs 2 points and has Penetration 15.",
-            "id": "71c29e3fa379"
+            "id": "9fec634feb18"
           },
           {
             "name": "Loosely Material",
@@ -50162,7 +50162,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Over a round it puts on glamoured flesh: Size +2 with the physical scores in the notes, the only form in which it can attack, kept as long as it likes. Slain, the body leaves the vis. Going back to spirit takes an unbroken round and returns the Might spent; a new body starts unwounded.",
-            "id": "22faec49ad4f"
+            "id": "65ca756cafb2"
           },
           {
             "name": "Strike Dumb",
@@ -50176,7 +50176,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the victim the Mute Flaw. Made permanent, it costs Might score as well as Might Pool; temporary, the points come back only when it is lifted. Improved Powers has been applied.",
-            "id": "2504cb90fced"
+            "id": "f3e2416c889d"
           }
         ],
         "vis": [
@@ -50184,7 +50184,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its bones",
-            "id": "25251c915b6d"
+            "id": "eb39cac578bb"
           }
         ],
         "equipment": "",
@@ -50287,7 +50287,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 4,
-            "id": "0419bd8d7b41"
+            "id": "1e8bc4c6f66c"
           },
           {
             "name": "Teeth",
@@ -50295,7 +50295,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 7,
-            "id": "f7274782e7f4"
+            "id": "70294e7373d3"
           },
           {
             "name": "Spittle",
@@ -50303,7 +50303,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 10,
-            "id": "8bc498bc4506"
+            "id": "81cb66dd4320"
           }
         ],
         "soak": 14,
@@ -50376,7 +50376,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shows its true, dreadful shape to spread panic (Realms of Power: The Infernal).",
-            "id": "b7db960ac85b"
+            "id": "47d3c0c45c25"
           },
           {
             "name": "Form of Man",
@@ -50390,7 +50390,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wears the dead man's likeness (Realms of Power: The Infernal).",
-            "id": "45e97bbbd41d"
+            "id": "88a588fb8d14"
           },
           {
             "name": "Contagious Obsession",
@@ -50404,7 +50404,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "One point for each victim (Realms of Power: The Infernal).",
-            "id": "bf6a9050c6f9"
+            "id": "5c9f4b40d0cd"
           },
           {
             "name": "Obsession",
@@ -50418,7 +50418,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: imposes the Obsession Trait Fear.",
-            "id": "b717927066e6"
+            "id": "66b549d8289a"
           },
           {
             "name": "Burning Spittle",
@@ -50432,7 +50432,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Spits liquid fire up to five paces for +10 damage; anything that parries it is eaten through and ruined. A natural attack, which Magic Resistance does not stop.",
-            "id": "689e3ce4931b"
+            "id": "d13d55052599"
           }
         ],
         "vis": [
@@ -50440,7 +50440,7 @@
             "pawns": 4,
             "art": "Corpus",
             "where": "in its teeth",
-            "id": "c252b513c7e8"
+            "id": "b7e3951d14e1"
           }
         ],
         "equipment": "",
@@ -50525,7 +50525,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "dc607e1a2497"
+            "id": "adeb7df6c7df"
           }
         ],
         "soak": 5,
@@ -50598,7 +50598,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a solid body, but only from its illusory or physical form.",
-            "id": "03a65bf25f38"
+            "id": "a6457c9ecdb1"
           },
           {
             "name": "Obsession",
@@ -50612,7 +50612,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: imposes the Obsession Trait Terror.",
-            "id": "5947f031e28b"
+            "id": "75e45f620888"
           },
           {
             "name": "Illusionary Form",
@@ -50626,7 +50626,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a moving image of its body that it steers; it must be in this form or a real body to use Coagulation.",
-            "id": "cdd55225bb30"
+            "id": "cc34de400b76"
           },
           {
             "name": "Shout of Pan",
@@ -50640,7 +50640,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to ten animals bolt in terror, and the fear runs through the rest of a herd; enough goats or sheep make a deadly stampede.",
-            "id": "aa292a0570cd"
+            "id": "4f5e1f9b4735"
           }
         ],
         "vis": [
@@ -50648,7 +50648,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in its eyes",
-            "id": "9823e54a8104"
+            "id": "183b33006b29"
           }
         ],
         "equipment": "",
@@ -50797,7 +50797,7 @@
             "pawns": 7,
             "art": "Ignem",
             "where": "in his ichor, if drained",
-            "id": "bf2fc8e13be7"
+            "id": "8f05c9fe9a29"
           }
         ],
         "equipment": "",
@@ -52777,7 +52777,7 @@
           "kind": "characters",
           "target_id": "destasia",
           "note": "Her filia and successor",
-          "id": "2647596e8c06"
+          "id": "9fcc34d252dd"
         }
       ],
       "agents": [],
@@ -53013,7 +53013,7 @@
           "kind": "characters",
           "target_id": "monorchis",
           "note": "Found him and brought him to Gigas to train",
-          "id": "e4def5aae895"
+          "id": "38a77a8da1fb"
         }
       ],
       "agents": [],
@@ -53677,7 +53677,7 @@
           "kind": "characters",
           "target_id": "aiakia",
           "note": "His youngest filia and heir",
-          "id": "8e02a12f2650"
+          "id": "b395a28555c1"
         }
       ],
       "agents": [],
@@ -54341,7 +54341,7 @@
           "kind": "places",
           "target_id": "celaenea_s_laboratory_on_mount_cyllene",
           "note": "Her hidden laboratory",
-          "id": "8417a571e5da"
+          "id": "2c43f3dabce7"
         }
       ],
       "agents": [],
@@ -54755,7 +54755,7 @@
           "kind": "characters",
           "target_id": "theocharista_psellus",
           "note": "Her younger sister",
-          "id": "8e71ae7d9db8"
+          "id": "5cec719c653f"
         }
       ],
       "agents": [],
@@ -55200,7 +55200,7 @@
           "kind": "characters",
           "target_id": "nonna",
           "note": "Her twin sister",
-          "id": "caa78db96500"
+          "id": "2836e8298413"
         }
       ],
       "agents": [],
@@ -55614,7 +55614,7 @@
           "kind": "places",
           "target_id": "delphi",
           "note": "Her temple and oracle",
-          "id": "5748ccecc149"
+          "id": "e562748cb298"
         }
       ],
       "agents": [],
@@ -58207,7 +58207,7 @@
           "kind": "characters",
           "target_id": "bobila",
           "note": "Her conjoined twin",
-          "id": "8c3ed3d6cc8c"
+          "id": "5c9b37bfafd3"
         }
       ],
       "agents": [],
@@ -60311,7 +60311,7 @@
           "kind": "characters",
           "target_id": "petros",
           "note": "Saved him in the fall of the city",
-          "id": "1320cc51e8db"
+          "id": "870fd4a86f21"
         }
       ],
       "agents": [],
@@ -61163,7 +61163,7 @@
           "kind": "characters",
           "target_id": "formosos",
           "note": "Hunting her for the Tribunal",
-          "id": "414db6544bcd"
+          "id": "1d5ecb00774d"
         }
       ],
       "agents": [],
@@ -61358,7 +61358,7 @@
           "kind": "characters",
           "target_id": "passara",
           "note": "Means to prove she serves the emperor",
-          "id": "0e1c04538a3e"
+          "id": "42a31e4ed821"
         }
       ],
       "agents": [],
@@ -61783,19 +61783,19 @@
           "kind": "characters",
           "target_id": "hydatius",
           "note": "Co-founder of the League of the Vigilant, which Hydatius leads",
-          "id": "5cef601c0120"
+          "id": "c31ff09d58aa"
         },
         {
           "kind": "characters",
           "target_id": "ziper",
           "note": "Backs Ziper's proposal to take Nanno and Ampelius into Moero's Garden",
-          "id": "d17deb7b42d8"
+          "id": "12f1eee0c9e7"
         },
         {
           "kind": "characters",
           "target_id": "lucian_the_scholar",
           "note": "Delighted Lucian with acrobatics as a young messenger",
-          "id": "fd2e498a4c57"
+          "id": "d9cefb404706"
         }
       ],
       "agents": [],

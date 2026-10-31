@@ -451,17 +451,17 @@ def test_an_antagonist_template_needs_its_book_and_copies_the_record():
         t for t in character_templates.templates_for("magus", saga) if t.source == "Ant"
     ]
     saga.books_in_play = ["Ant"]
-    galerius = next(
+    ingrid = next(
         t
         for t in character_templates.templates_for("magus", saga)
-        if t.name.startswith("Antagonist - Galerius")
+        if t.name.startswith("Antagonist - Ingrid")
     )
     character = Character(id="c", name="N", type="magus")
-    character_templates.apply(saga, character, galerius, {})
+    character_templates.apply(saga, character, ingrid, {})
     printed = next(
         c
         for c in book_packs.PACKS["antagonists"].assemble().saga.characters
-        if c.name == "Galerius of House Guernicus"
+        if c.name == "Ingrid of House Tremere"
     )
     assert character.characteristics == printed.characteristics
     assert {a.name: a.xp for a in character.abilities} == {

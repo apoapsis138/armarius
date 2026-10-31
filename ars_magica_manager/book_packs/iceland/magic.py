@@ -280,7 +280,9 @@ def _icelandic_magicians(b: Builder) -> Neighbour:
             "shifter keeps as many sure forms as his score, for those he "
             "beats without a roll. Second Sight and Sight of the True Form "
             "see through them. Clothing and small metal change with the "
-            "target, larger metal falls away, and armour bursts on two Sizes' "
+            "target, though a changed object's magic stops working until it is "
+            "back in its own form; larger metal falls away, and armour bursts "
+            "on two Sizes' "
             "growth, +5 damage in scale, +10 in chain. Inanimate forms keep "
             "only touch and hearing.",
             "Sun Duration (p. 51): in Iceland D: Sun lasts to the next "

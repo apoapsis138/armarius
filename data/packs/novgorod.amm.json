@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.58.0",
+  "app_version": "3.61.0",
   "kind": "pack",
   "name": "The Dragon and the Bear: the Novgorod Tribunal",
   "from_saga": "The Dragon and the Bear: the Novgorod Tribunal",
@@ -99,7 +99,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis stores: 300 pawns (Animal 30, Aquam 30, Auram 20, Corpus 10, Creo 20, Herbam 45, Ignem 20, Imaginem 15, Intellego 10, Mentem 30, Muto 5, Perdo 10, Rego 5, Terram 40, Vim 10)\nVis: 50 pawns a year (Animal 5, Aquam 8, Auram 4, Corpus 4, Herbam 15, Mentem 4, Terram 10)\nIncome: 700 silver pennies a year above its costs; supplies worth 7,000 a year\nLibrary: spells of about 3,000 levels, most in InMe, ReMe and MuCo; Aegis 35. Summae: Animal L16 Q8, Herbam L18 Q8, Intellego L20 Q9, Mentem L23 Q9, Rego L19 Q10, the rest about L15 Q7. Mundane: Hermetic Law L6 Q7, travellers' tales, Nordic lore, maps of the north and the Baltic, merchant law, Russian chronicles and the Tribunal's records\nCovenfolk: 10 magi, 40 specialists, 100 grogs, 50 herders, drovers, trappers and servants\nEnchantments: the Hermes Portal to Leczyca; ten sleds with runners of Veneer of Smooth Riding; twenty swords and spears for favoured grogs (Edge of the Razor); the Eye of Magic, a great faceted crystal Nicollo and Pavel made over three years to study cryptic magics and watch for magic coming near\nLaboratories: good throughout (+1)\nAllies: Leczyca. Contacts: six merchants in north Russia and the Baltic\nEnemies: trade rivals in Novgorod; a minor Rhine covenant and a minor Transylvanian one\nReputations: good neighbours to local peasants and lords; suspect to the local clergy; formidable in the Order\nBoon: Mystical Portal (the Hermes Portal to Leczyca)\nBoon: Secondary Income (the Beslavichi's trade)\nBoon: Prestige (the Tribunal's guiding covenant)\nBoon: Informants (merchant agents across the north)\nHook: Hermetic Politics (the Tribunal's quarrels come to its council)\nHook: Hermetic Services (the Quaesitores and the Redcaps)\nHook: Mundane Politics (the Royal Embargo and Novgorod's princes)\nHook: Infants (four apprentices trained together)",
+        "what_matters": "Income: 700 silver pennies a year above its costs; supplies worth 7,000 a year\nCovenfolk: 10 magi, 40 specialists, 100 grogs, 50 herders, drovers, trappers and servants\nEnchantments: the Hermes Portal to Leczyca; ten sleds with runners of Veneer of Smooth Riding; twenty swords and spears for favoured grogs (Edge of the Razor); the Eye of Magic, a great faceted crystal Nicollo and Pavel made over three years to study cryptic magics and watch for magic coming near\nLaboratories: good throughout (+1)\nAllies: Leczyca. Contacts: six merchants in north Russia and the Baltic\nEnemies: trade rivals in Novgorod; a minor Rhine covenant and a minor Transylvanian one\nReputations: good neighbours to local peasants and lords; suspect to the local clergy; formidable in the Order\nBoon: Mystical Portal (the Hermes Portal to Leczyca)\nBoon: Secondary Income (the Beslavichi's trade)\nBoon: Prestige (the Tribunal's guiding covenant)\nBoon: Informants (merchant agents across the north)\nHook: Hermetic Politics (the Tribunal's quarrels come to its council)\nHook: Hermetic Services (the Quaesitores and the Redcaps)\nHook: Mundane Politics (the Royal Embargo and Novgorod's princes)\nHook: Infants (four apprentices trained together)",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -119,11 +119,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Zashya Miyovna's secret: her daughter by a Rurikid prince, and her granddaughter Nastassia Baramov of Thousand Caves.",
+        "secrets": "Zashya Miyovna's secret: her daughter by a Rurikid prince, and her granddaughter Nastassia Baramov of Thousand Caves.\n\nVis stores: 300 pawns (Animal 30, Aquam 30, Auram 20, Corpus 10, Creo 20, Herbam 45, Ignem 20, Imaginem 15, Intellego 10, Mentem 30, Muto 5, Perdo 10, Rego 5, Terram 40, Vim 10)\n\nVis: 50 pawns a year (Animal 5, Aquam 8, Auram 4, Corpus 4, Herbam 15, Mentem 4, Terram 10)\n\nLibrary: spells of about 3,000 levels, most in InMe, ReMe and MuCo; Aegis 35. Summae: Animal L16 Q8, Herbam L18 Q8, Intellego L20 Q9, Mentem L23 Q9, Rego L19 Q10, the rest about L15 Q7. Mundane: Hermetic Law L6 Q7, travellers' tales, Nordic lore, maps of the north and the Baltic, merchant law, Russian chronicles and the Tribunal's records",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "thousand_caves",
@@ -202,7 +206,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis stores: 150 pawns (Animal 25, Aquam 20, Auram 15, Corpus 10, Herbam 20, Imaginem 15, Intellego 5, Mentem 5, Terram 20, Vim 15)\nVis: 60 pawns a year (Animal 10, Aquam 5, Auram 6, Corpus 5, Herbam 7, Imaginem 5, Intellego 5, Mentem 5, Terram 6, Vim 6)\nIncome: 700 silver pennies a year in debt, for parchment, glass and ink\nLibrary: spells of about 1,200 levels (CrVi, InVi, MuVi; Malincka's aura spells, Nastassia's shapechanging, Nastassia's and Yakim's CrIg, Basyl's faerie CrIm and ReIm); Aegis 35. Summae of every Art at L5 Q5; Malincka's four tractatus (Vim Q5 and Q6, Intellego Q7 and Q5). Mundane: Legend Lore (Slavic) L8 Q6, Legend Lore (Greek) L5 Q5, Magic Theory L7 Q5; Volkhv ritual, folklore and magic; a copy of the Yannes Discourse\nCovenfolk: 8 magi and 175 tribesfolk; room for 200\nEnchantments: a Cloak of Feathers; two Fire Javelins (as Pilum of Fire)\nLaboratories: six poor (-1), one good (+2)\nAllies: the local villages, faeries and animals\nEnemies: Pripet Maior\nReputations: formidable and benevolent to the local villages; radical among the Tribunal's covenants\nBoon: Hedge Tradition (the Volkhvy)\nBoon: Mystical Allies (the faeries and beasts about the valley)\nBoon: Loyal Covenfolk (the tribes)\nBoon: Natural Fortress (caves reached by ledge, ladder or wing)\nHook: Pagans (a revived cult of Hermes)\nHook: Faerie Aura (Slavic Faerie 6)\nHook: Rival (Pripet Maior)\nHook: Indigenes (a confederation of tribes)",
+        "what_matters": "Income: 700 silver pennies a year in debt, for parchment, glass and ink\nCovenfolk: 8 magi and 175 tribesfolk; room for 200\nEnchantments: a Cloak of Feathers; two Fire Javelins (as Pilum of Fire)\nLaboratories: six poor (-1), one good (+2)\nAllies: the local villages, faeries and animals\nEnemies: Pripet Maior\nReputations: formidable and benevolent to the local villages; radical among the Tribunal's covenants\nBoon: Hedge Tradition (the Volkhvy)\nBoon: Mystical Allies (the faeries and beasts about the valley)\nBoon: Loyal Covenfolk (the tribes)\nBoon: Natural Fortress (caves reached by ledge, ladder or wing)\nHook: Pagans (a revived cult of Hermes)\nHook: Faerie Aura (Slavic Faerie 6)\nHook: Rival (Pripet Maior)\nHook: Indigenes (a confederation of tribes)",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -222,11 +226,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis stores: 150 pawns (Animal 25, Aquam 20, Auram 15, Corpus 10, Herbam 20, Imaginem 15, Intellego 5, Mentem 5, Terram 20, Vim 15)\n\nVis: 60 pawns a year (Animal 10, Aquam 5, Auram 6, Corpus 5, Herbam 7, Imaginem 5, Intellego 5, Mentem 5, Terram 6, Vim 6)\n\nLibrary: spells of about 1,200 levels (CrVi, InVi, MuVi; Malincka's aura spells, Nastassia's shapechanging, Nastassia's and Yakim's CrIg, Basyl's faerie CrIm and ReIm); Aegis 35. Summae of every Art at L5 Q5; Malincka's four tractatus (Vim Q5 and Q6, Intellego Q7 and Q5). Mundane: Legend Lore (Slavic) L8 Q6, Legend Lore (Greek) L5 Q5, Magic Theory L7 Q5; Volkhv ritual, folklore and magic; a copy of the Yannes Discourse",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "pripet_maior",
@@ -305,7 +313,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis stores: 400 pawns (Animal 40, Aquam 50, Auram 10, Corpus 10, Creo 45, Herbam 5, Ignem 10, Imaginem 10, Intellego 15, Mentem 15, Muto 45, Perdo 25, Rego 10, Terram 40, Vim 25)\nVis: 30 pawns a year (Animal 3, Aquam 7, Creo 5, Herbam 7, Muto 5, Terram 3), once far more\nIncome: 350 silver pennies a year in debt; 3,500 owed\nLibrary: spells of about 1,200 levels (MuCo; weather in CrAu, MuAu, ReAu; plants in CrHe, MuHe, ReHe); Aegis 40, its causeway tied to it. Summae: Animal L28 Q11, Corpus L24 Q9, Herbam L20 Q10, Muto L27 Q12; the rest damp and neglected, about L4 Q3. Mundane: over a hundred books of natural philosophy and the liberal arts, all spoilt\nCovenfolk: 5 magi, 10 specialists, 25 grogs; room for twice as many\nEnchantments: a chalice of pure water; two Feather Cloaks; a swamp skimmer boat\nLaboratories: six, all poor (-1)\nAllies: Crintera\nEnemies: Thousand Caves; the local nobles and peasants\nReputations: venerable in the Tribunal and House Bjornaer; decaying in the Order; evil to the local peasants\nBoon: Island (the causeway the Aegis raises)\nBoon: Hidden Resources (a store of 400 pawns)\nHook: Crumbling (the living palaces rot)\nHook: Dwindling Resource (vis no one harvests)\nHook: Unhealthy Environment (insects, fever and damp)\nHook: Rival (Thousand Caves)\nHook: Infamous (to the marsh's peasants)",
+        "what_matters": "Income: 350 silver pennies a year in debt; 3,500 owed\nCovenfolk: 5 magi, 10 specialists, 25 grogs; room for twice as many\nEnchantments: a chalice of pure water; two Feather Cloaks; a swamp skimmer boat\nLaboratories: six, all poor (-1)\nAllies: Crintera\nEnemies: Thousand Caves; the local nobles and peasants\nReputations: venerable in the Tribunal and House Bjornaer; decaying in the Order; evil to the local peasants\nBoon: Island (the causeway the Aegis raises)\nBoon: Hidden Resources (a store of 400 pawns)\nHook: Crumbling (the living palaces rot)\nHook: Dwindling Resource (vis no one harvests)\nHook: Unhealthy Environment (insects, fever and damp)\nHook: Rival (Thousand Caves)\nHook: Infamous (to the marsh's peasants)",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -325,11 +333,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Miya Cossuri does not know that Nastassia Baramov of Thousand Caves, whom the covenant loathes, is her own great-granddaughter.",
+        "secrets": "Miya Cossuri does not know that Nastassia Baramov of Thousand Caves, whom the covenant loathes, is her own great-granddaughter.\n\nVis stores: 400 pawns (Animal 40, Aquam 50, Auram 10, Corpus 10, Creo 45, Herbam 5, Ignem 10, Imaginem 10, Intellego 15, Mentem 15, Muto 45, Perdo 25, Rego 10, Terram 40, Vim 25)\n\nVis: 30 pawns a year (Animal 3, Aquam 7, Creo 5, Herbam 7, Muto 5, Terram 3), once far more\n\nLibrary: spells of about 1,200 levels (MuCo; weather in CrAu, MuAu, ReAu; plants in CrHe, MuHe, ReHe); Aegis 40, its causeway tied to it. Summae: Animal L28 Q11, Corpus L24 Q9, Herbam L20 Q10, Muto L27 Q12; the rest damp and neglected, about L4 Q3. Mundane: over a hundred books of natural philosophy and the liberal arts, all spoilt",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "leczyca",
@@ -408,7 +420,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis stores: 200 pawns (Animal 5, Aquam 10, Auram 10, Corpus 15, Creo 10, Herbam 15, Ignem 15, Imaginem 5, Intellego 20, Mentem 15, Muto 5, Perdo 20, Rego 20, Terram 25, Vim 10)\nVis: 60 pawns a year (Auram 4, Corpus 6, Herbam 6, Ignem 6, Intellego 6, Mentem 6, Perdo 8, Rego 8, Terram 10)\nIncome: 700 silver pennies a year above its costs; 3,500 in hand\nLibrary: spells of about 2,700 levels, mostly destructive and defensive (CrAu, CrIg, PeMe, MuMe, PeCo, MuCo, ReTe, PeTe); Aegis 30. Summae: Creo L17 Q6, Auram L19 Q9, Ignem L16 Q7, Mentem L20 Q10, Perdo L21 Q8, Terram L18 Q8, the rest about L12 Q6, with tractatus on its magi's specialties. Mundane: Civil and Canon Law L8 Q7, Polish chronicles and papal rulings on German-Polish disputes; the Yannes Discourse\nCovenfolk: 7 magi, 20 specialists, 100 grogs, 50 covenfolk; room for 8 magi and 150 grogs\nEnchantments: the Hermes Portal to Three Lakes; twenty swords and lances of Edge of the Razor\nLaboratories: five ordinary, two good (+2)\nAllies: Three Lakes, for about twelve weeks a year. Contacts: four merchants\nEnemies: Durenmar and lesser Rhine covenants\nReputations: treacherous in the Rhine Tribunal\nBoon: Courtyard Castle (concentric walls, gatehouse, watchtower and keep)\nBoon: Veteran Fighters (a turb trained against the Rhine)\nBoon: Cavalry (its stud, stables and tilting yard)\nBoon: Mystical Portal (the Hermes Portal to Three Lakes)\nHook: Tribunal Border (the Rhine claims Poland)\nHook: Rival (Durenmar)\nHook: Fractured Council (argumentative equals)\nHook: Mundane Politics (the Polish nobles and the Embargo)",
+        "what_matters": "Income: 700 silver pennies a year above its costs; 3,500 in hand\nCovenfolk: 7 magi, 20 specialists, 100 grogs, 50 covenfolk; room for 8 magi and 150 grogs\nEnchantments: the Hermes Portal to Three Lakes; twenty swords and lances of Edge of the Razor\nLaboratories: five ordinary, two good (+2)\nAllies: Three Lakes, for about twelve weeks a year. Contacts: four merchants\nEnemies: Durenmar and lesser Rhine covenants\nReputations: treacherous in the Rhine Tribunal\nBoon: Courtyard Castle (concentric walls, gatehouse, watchtower and keep)\nBoon: Veteran Fighters (a turb trained against the Rhine)\nBoon: Cavalry (its stud, stables and tilting yard)\nBoon: Mystical Portal (the Hermes Portal to Three Lakes)\nHook: Tribunal Border (the Rhine claims Poland)\nHook: Rival (Durenmar)\nHook: Fractured Council (argumentative equals)\nHook: Mundane Politics (the Polish nobles and the Embargo)",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -428,11 +440,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis stores: 200 pawns (Animal 5, Aquam 10, Auram 10, Corpus 15, Creo 10, Herbam 15, Ignem 15, Imaginem 5, Intellego 20, Mentem 15, Muto 5, Perdo 20, Rego 20, Terram 25, Vim 10)\n\nVis: 60 pawns a year (Auram 4, Corpus 6, Herbam 6, Ignem 6, Intellego 6, Mentem 6, Perdo 8, Rego 8, Terram 10)\n\nLibrary: spells of about 2,700 levels, mostly destructive and defensive (CrAu, CrIg, PeMe, MuMe, PeCo, MuCo, ReTe, PeTe); Aegis 30. Summae: Creo L17 Q6, Auram L19 Q9, Ignem L16 Q7, Mentem L20 Q10, Perdo L21 Q8, Terram L18 Q8, the rest about L12 Q6, with tractatus on its magi's specialties. Mundane: Civil and Canon Law L8 Q7, Polish chronicles and papal rulings on German-Polish disputes; the Yannes Discourse",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       }
     ],
     "tribunals": [
@@ -482,7 +498,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "524ba2319bbc"
+            "id": "1e039bba821a"
           },
           {
             "title": "Meddling with mundanes at Thousand Caves",
@@ -514,7 +530,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "9aa80ac686e5"
+            "id": "6ea7b930465e"
           },
           {
             "title": "Lelya Danichev's motion on the Volkhvy",
@@ -546,7 +562,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "fcd3546bee02"
+            "id": "6e17b136f4ce"
           }
         ],
         "rulings": [
@@ -555,21 +571,21 @@
             "year": 1039,
             "says": "The Tribunal's council has formal authority over the settlement of every new covenant in the Slavic lands. Pushed through after the fall of Grand Silesia, when the Rhine's first attempt to move the border was only narrowly defeated at Grand Tribunal; it has been used several times since to eject trespassing bands of foreign magi, and some now say it has slowed the Tribunal's growth.",
             "case_id": "",
-            "id": "6f7d26518afb"
+            "id": "da5a3e806350"
           },
           {
             "title": "The Royal Embargo",
             "year": 1132,
             "says": "No member of the Tribunal may reveal himself to any member of the Russian royal house. Made after the death of Mstislav the Great, when every alliance with a prince had ended in disaster; Yury Beslav of Three Lakes shaped it. Later extended to the Polish royal house. Leczyca and Pavel Chedyav resent it.",
             "case_id": "",
-            "id": "9ec9b9b3ae1d"
+            "id": "d793c48ea310"
           },
           {
             "title": "Leczyca's fine",
             "year": 1190,
             "says": "Leczyca was found guilty of serious breaches of the Royal Embargo for giving Silesian nobles magically gained word of German raids, and paid a heavy fine in vis. The book dates it about thirty years before 1220.",
             "case_id": "",
-            "id": "f57f9e51fe94"
+            "id": "c44bbd854dbc"
           }
         ],
         "treasury": [],
@@ -581,7 +597,7 @@
             "details": "With Princess Olga driving off the Volkhvy, a Byzantine expedition under Michael of Amastris tries to found a covenant in the Drevlianian lands. Two magi are lost in Arcadia, one is killed by Volkhvy and one stoned in Kiev.",
             "changes": [],
             "margin": "",
-            "id": "779a118b6710"
+            "id": "e11ef3a31ed8"
           },
           {
             "year": 962,
@@ -590,7 +606,7 @@
             "details": "Sviatoslav, a pagan who cares only for war, lets Olga's policy lapse; the Volkhvy return in force and Michael flees to Constantinople before they strike.",
             "changes": [],
             "margin": "",
-            "id": "79be6dbee529"
+            "id": "8b49aee9d44d"
           },
           {
             "year": 992,
@@ -599,7 +615,7 @@
             "details": "The Theban Tribunal founds Rodnya on the Dnieper, about eighty miles south of Kiev.",
             "changes": [],
             "margin": "",
-            "id": "5594c7dfa96c"
+            "id": "ccb77e6c6174"
           },
           {
             "year": 993,
@@ -608,7 +624,7 @@
             "details": "The Rhine founds Grand Silesia between the Oder and the Warta, heavily backed by Crintera; Transylvania founds Pripet Maior in the Pripet marshes (the book's sidebar says 994).",
             "changes": [],
             "margin": "",
-            "id": "be9f53aa384a"
+            "id": "502b7717157d"
           },
           {
             "year": 1006,
@@ -617,7 +633,7 @@
             "details": "Ordered by Thebes to join a strike on a Carpathian covenant, the quaesitor Patrick of Dunderry refuses and denounces the order as diabolical madness; Rodnya backs him, and the three covenants begin a quiet reconciliation.",
             "changes": [],
             "margin": "",
-            "id": "3aab6589ef08"
+            "id": "a1992cd72ca5"
           },
           {
             "year": 1008,
@@ -626,7 +642,7 @@
             "details": "The three covenants shed their sponsors and declare themselves a Tribunal; the Grand Tribunal after the Schism War ratifies it.",
             "changes": [],
             "margin": "",
-            "id": "7f6decacc07f"
+            "id": "bf76789c673a"
           },
           {
             "year": 1009,
@@ -635,7 +651,7 @@
             "details": "Attacked by Thebans and Transylvanians alike, Rodnya is abandoned; Patrick leads its magi north. Grand Silesia is damaged and its refugees flee to Pripet Maior.",
             "changes": [],
             "margin": "",
-            "id": "f60aaa517231"
+            "id": "3206b0bb54a1"
           },
           {
             "year": 1012,
@@ -644,7 +660,7 @@
             "details": "Between lakes Onega, Beloe and Ilmen, equidistant from Novgorod, Beloozero and Ladoga.",
             "changes": [],
             "margin": "",
-            "id": "17f4b81f70ac"
+            "id": "f5bc1a3c9ef2"
           },
           {
             "year": 1039,
@@ -653,7 +669,7 @@
             "details": "Resettled in 1013, Grand Silesia is destroyed by anti-pagan knights when Casimir the Restorer returns to power; the Rhine makes its first attempt on the border.",
             "changes": [],
             "margin": "",
-            "id": "6d0cdfd16eea"
+            "id": "1bc91624d57a"
           },
           {
             "year": 1052,
@@ -662,7 +678,7 @@
             "details": "Once Casimir has driven the Czechs from Silesia, Grand Silesia's survivors found Leczyca between the Vistula and the Warta; many stay at Pripet Maior, the root of its bond with House Bjornaer.",
             "changes": [],
             "margin": "",
-            "id": "9e53a0bc21c3"
+            "id": "08bd56600306"
           },
           {
             "year": 1053,
@@ -671,7 +687,7 @@
             "details": "The Tribunal drops 'New' from its name and takes Novgorod's.",
             "changes": [],
             "margin": "",
-            "id": "bffda24f9435"
+            "id": "759053303c4b"
           },
           {
             "year": 1069,
@@ -680,7 +696,7 @@
             "details": "Vseslav of Polotsk, a prince and a Volkhv, takes Kiev; the Tribunal, as in 1054, chooses to do nothing, and he is soon driven out. He dies in 1101, having written his dangerous lore in six great tomes of black serpent skin.",
             "changes": [],
             "margin": "",
-            "id": "50a36657773b"
+            "id": "c8432aa76488"
           },
           {
             "year": 1132,
@@ -689,7 +705,7 @@
             "details": "After the death of Mstislav the Great the Tribunal forbids its members to reveal themselves to the Russian royal house.",
             "changes": [],
             "margin": "",
-            "id": "749e179d499d"
+            "id": "ec9c3872049b"
           },
           {
             "year": 1147,
@@ -698,7 +714,7 @@
             "details": "Roslav of Pripet Maior is summoned to Crintera to become Primus of House Bjornaer, which he is for almost thirty years.",
             "changes": [],
             "margin": "",
-            "id": "964bdf4e6d25"
+            "id": "a96f6a86ca46"
           },
           {
             "year": 1185,
@@ -707,7 +723,7 @@
             "details": "On the urging of Malincka Capcek, the Tribunal grants a charter for a covenant in a gorge of the western Urals; Nastassia Baramov passes her Gauntlet at Three Lakes the day before.",
             "changes": [],
             "margin": "",
-            "id": "fcc69ae355c5"
+            "id": "e088f5cf855d"
           },
           {
             "year": 1190,
@@ -716,7 +732,7 @@
             "details": "Leczyca pays a heavy vis fine for aiding Silesian nobles against German raids.",
             "changes": [],
             "margin": "",
-            "id": "85e8ddbab4e4"
+            "id": "a3ecc7e417e8"
           },
           {
             "year": 1194,
@@ -725,7 +741,7 @@
             "details": "The oldest covenant of the Tribunal marks two hundred years.",
             "changes": [],
             "margin": "",
-            "id": "6510b1539929"
+            "id": "7bf100e5ed9c"
           },
           {
             "year": 1206,
@@ -734,7 +750,7 @@
             "details": "The Criamon Yannes Kolski of Leczyca spends at least two weeks in Twilight, prophesying; his words, the Yannes Discourse, are kept at Leczyca. He never works magic again.",
             "changes": [],
             "margin": "",
-            "id": "0715e3b1083c"
+            "id": "074fbc7320ad"
           },
           {
             "year": 1212,
@@ -743,7 +759,7 @@
             "details": "A special council finds that no apprentice has passed a Gauntlet at Three Lakes in thirty-five years; four apprentices are taken in the five years after.",
             "changes": [],
             "margin": "",
-            "id": "d6f8dd972a08"
+            "id": "18bdb72a1acf"
           },
           {
             "year": 1214,
@@ -752,7 +768,7 @@
             "details": "Thousand Caves and Pripet Maior trade accusations; Malincka speaks for hours on how the Volkhvy temper auras. The Quaesitores confer in private, then dismiss the meeting, announcing a delegation to both covenants. They are also asked whether Yannes Kolski has passed into Final Twilight.",
             "changes": [],
             "margin": "",
-            "id": "488a9341d2d4"
+            "id": "80e79bc6bf21"
           },
           {
             "year": 1215,
@@ -761,7 +777,7 @@
             "details": "A quaesitorial delegation backed by magi of every covenant visits Pripet Maior and Thousand Caves over 1215 and 1216, and finds both in breach of the Code.",
             "changes": [],
             "margin": "",
-            "id": "4d96aad2f79b"
+            "id": "6b8decdb5441"
           },
           {
             "year": 1216,
@@ -770,7 +786,7 @@
             "details": "After a disruptive visit to Thousand Caves, Yannes Kolski is lost near Vladimir-in-Suzdalia while its magi escort him back.",
             "changes": [],
             "margin": "",
-            "id": "45309e6c3c86"
+            "id": "ab8031598422"
           },
           {
             "year": 1217,
@@ -779,7 +795,7 @@
             "details": "Pripet Maior strikes Thousand Caves without declaring Wizard's War. It fails: the local animals stay loyal, two attackers fall into Twilight, and Otto Rattstein drives off Casimi Ljech as he is about to kill Nastassia Baramov.",
             "changes": [],
             "margin": "",
-            "id": "bf166f0d9261"
+            "id": "b06702d751e2"
           },
           {
             "year": 1218,
@@ -788,7 +804,7 @@
             "details": "Zashya Miyovna complains of Pripet Maior to the elders at Crintera, who summon Pripet to judgement but promise nothing to make it come.",
             "changes": [],
             "margin": "",
-            "id": "58a4119f230c"
+            "id": "fb3610309da3"
           }
         ],
         "package_data": {},
@@ -2460,19 +2476,19 @@
             "kind": "characters",
             "target_id": "casimi_ljech",
             "note": "Led the raid",
-            "id": "0b9d3a63fd39"
+            "id": "215aac3415ef"
           },
           {
             "kind": "characters",
             "target_id": "andrei_soitkchin",
             "note": "Must judge it",
-            "id": "2ac8646354d3"
+            "id": "9cbd91ae39ce"
           },
           {
             "kind": "characters",
             "target_id": "lelya_danichev",
             "note": "Wants an apology",
-            "id": "da37c5d8c5a8"
+            "id": "fcff85e5e06d"
           }
         ],
         "arms": {},
@@ -2523,13 +2539,13 @@
             "kind": "places",
             "target_id": "mikhail_of_turov",
             "note": "Means to drain the marsh",
-            "id": "bc65b5be6dcf"
+            "id": "3662e706daca"
           },
           {
             "kind": "covenants",
             "target_id": "pripet_maior",
             "note": "Its marsh",
-            "id": "12db39ec2926"
+            "id": "2937b3b11753"
           }
         ],
         "arms": {},
@@ -2570,7 +2586,7 @@
             "kind": "characters",
             "target_id": "malincka_capcek",
             "note": "Her spell",
-            "id": "fb4dbac59eb6"
+            "id": "28c87ee47b5a"
           }
         ],
         "arms": {},
@@ -2611,19 +2627,19 @@
             "kind": "characters",
             "target_id": "rehamchi_danichev",
             "note": "Half believes",
-            "id": "f2687a7b1eee"
+            "id": "5fd21e9fd107"
           },
           {
             "kind": "characters",
             "target_id": "basyl_karrimichi",
             "note": "Sees visions",
-            "id": "089431511a32"
+            "id": "893e6800c03b"
           },
           {
             "kind": "places",
             "target_id": "the_cult_of_hermes",
             "note": "Its cult",
-            "id": "ce79b55f914b"
+            "id": "417cc873c972"
           }
         ],
         "arms": {},
@@ -2665,7 +2681,7 @@
             "kind": "characters",
             "target_id": "yannes_kolski",
             "note": "Vanished",
-            "id": "a58225b84507"
+            "id": "82913fa4581c"
           }
         ],
         "arms": {},
@@ -2707,7 +2723,7 @@
             "kind": "creatures",
             "target_id": "stolitzya_the_swimmer",
             "note": "The Swimmer",
-            "id": "b0c07243bff9"
+            "id": "1283e14225ee"
           }
         ],
         "arms": {},
@@ -2749,19 +2765,19 @@
             "kind": "characters",
             "target_id": "zashya_miyovna",
             "note": "Her secret",
-            "id": "e144878d16f5"
+            "id": "9a1a0add7a1e"
           },
           {
             "kind": "characters",
             "target_id": "nastassia_baramov",
             "note": "Her granddaughter",
-            "id": "7a6304e3a88e"
+            "id": "a97d358a5e58"
           },
           {
             "kind": "characters",
             "target_id": "miya_cossuri",
             "note": "Her mother",
-            "id": "6f5ed83718df"
+            "id": "ad64d4a1e450"
           }
         ],
         "arms": {},
@@ -2803,7 +2819,7 @@
             "kind": "covenants",
             "target_id": "leczyca",
             "note": "In the Rhine's sights",
-            "id": "595be6199a58"
+            "id": "9be69d381c5e"
           }
         ],
         "arms": {},
@@ -21322,7 +21338,7 @@
             "attack": 10,
             "defense": 10,
             "damage": 8,
-            "id": "55e9ced96b9f"
+            "id": "64686d349f9c"
           },
           {
             "name": "Faerie lance",
@@ -21330,7 +21346,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 7,
-            "id": "2b69ed475f87"
+            "id": "9ddad7bacdee"
           },
           {
             "name": "Faerie bow",
@@ -21338,7 +21354,7 @@
             "attack": 9,
             "defense": 6,
             "damage": 9,
-            "id": "c9ab875bb646"
+            "id": "8db0ecba1392"
           }
         ],
         "soak": 14,
@@ -21390,7 +21406,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "05f8733080dc"
+            "id": "63a3e5bf35da"
           },
           {
             "name": "Change of Size",
@@ -21404,7 +21420,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 5)",
-            "id": "ec09def0c62f"
+            "id": "34cd66ea1a8e"
           },
           {
             "name": "Control of Auram",
@@ -21418,7 +21434,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "deef1f8abaae"
+            "id": "4b5d01e11852"
           },
           {
             "name": "Control of Aquam",
@@ -21432,7 +21448,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "07596705924a"
+            "id": "378fbb5a5dbb"
           },
           {
             "name": "Curse",
@@ -21446,7 +21462,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "d9cbb6799b39"
+            "id": "afa13de61a96"
           },
           {
             "name": "Elfshot",
@@ -21460,7 +21476,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cause Sickness: an unseen dart that strikes a serious illness into its victim. RoP:F p. 58 (the book's Elfshot 10)",
-            "id": "9e8841fa2855"
+            "id": "8199428e1a34"
           },
           {
             "name": "Glamour",
@@ -21474,7 +21490,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 30 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "fe57c7d75d9a"
+            "id": "a3f67e77482c"
           },
           {
             "name": "Healing",
@@ -21488,7 +21504,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo Corpus effect that heals up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "5082ac2957e8"
+            "id": "013c0f6cfb26"
           },
           {
             "name": "Shapechange to Animal",
@@ -21502,7 +21518,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 10)",
-            "id": "3724b0240961"
+            "id": "f06190d323e8"
           }
         ],
         "vis": [],
@@ -21571,7 +21587,7 @@
             "attack": 5,
             "defense": 3,
             "damage": 3,
-            "id": "623371d31930"
+            "id": "8a0459dbe62a"
           }
         ],
         "soak": 5,
@@ -21616,7 +21632,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 6)",
-            "id": "48d558647d9b"
+            "id": "8ed462bd963a"
           },
           {
             "name": "Change of Size",
@@ -21630,7 +21646,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 4)",
-            "id": "cb9e71f4fb12"
+            "id": "5bbe045c4a3c"
           },
           {
             "name": "Control Animals",
@@ -21644,7 +21660,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 20 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "d411c31cdff6"
+            "id": "1bae9a00be5b"
           },
           {
             "name": "Control Fertility",
@@ -21658,7 +21674,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 30 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "b35f085a3072"
+            "id": "dcff29674e3d"
           },
           {
             "name": "Curse",
@@ -21672,7 +21688,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 6)",
-            "id": "e84bd888df7b"
+            "id": "060deed13cc6"
           },
           {
             "name": "Glamour",
@@ -21686,7 +21702,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 30 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "86de4feb5889"
+            "id": "3e437184ce63"
           },
           {
             "name": "Shapechange to Animal",
@@ -21700,7 +21716,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 7)",
-            "id": "61218d1aa540"
+            "id": "9817948184f9"
           },
           {
             "name": "Transform Victim into an Animal",
@@ -21714,7 +21730,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns one who hears it into a land animal, chosen when the faerie was made. RoP:F p. 60 (the book's Shapechange Other to Animal 7)",
-            "id": "371cd54b6af1"
+            "id": "bb5f35d53f80"
           }
         ],
         "vis": [
@@ -21722,7 +21738,7 @@
             "pawns": 15,
             "art": "Herbam",
             "where": "in its body",
-            "id": "0f71ddd72e57"
+            "id": "800aa2fffcad"
           }
         ],
         "equipment": "",
@@ -21800,7 +21816,7 @@
             "attack": 5,
             "defense": 7,
             "damage": 2,
-            "id": "81049549c0fa"
+            "id": "1c2cf6f80a66"
           }
         ],
         "soak": 3,
@@ -21845,7 +21861,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 8)",
-            "id": "7a9a8b9095ff"
+            "id": "ae97957a7d6b"
           },
           {
             "name": "Control of Herbam",
@@ -21859,7 +21875,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Herbam effect up to level 20 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4a3e58e0adf6"
+            "id": "254ac858fcfd"
           },
           {
             "name": "Control Fertility",
@@ -21873,7 +21889,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 20 (the book's rating of 16), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "c289739e33ff"
+            "id": "41098cbeda9f"
           },
           {
             "name": "Curse",
@@ -21887,7 +21903,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 8)",
-            "id": "1d85abad388f"
+            "id": "fadb0998d43d"
           },
           {
             "name": "Healing",
@@ -21901,7 +21917,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo Corpus effect that heals up to level 20 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "d32c217ca7ec"
+            "id": "818b74dc65d9"
           }
         ],
         "vis": [
@@ -21909,7 +21925,7 @@
             "pawns": 7,
             "art": "Herbam",
             "where": "in its body",
-            "id": "61d20677d3c9"
+            "id": "e1b7bf2cfffd"
           }
         ],
         "equipment": "",
@@ -21977,7 +21993,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 3,
-            "id": "81ae5056cfc9"
+            "id": "eb078fe6200c"
           }
         ],
         "soak": 5,
@@ -22022,7 +22038,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 15 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "125c13c9e5a9"
+            "id": "4e66cec399c5"
           },
           {
             "name": "Control of Aquam",
@@ -22036,7 +22052,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 15 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "fcb7175ce6cc"
+            "id": "f42ee9c2649a"
           },
           {
             "name": "Curse",
@@ -22050,7 +22066,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 10)",
-            "id": "b8e27b88c66c"
+            "id": "729217a328d5"
           },
           {
             "name": "Dread",
@@ -22064,7 +22080,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 5)",
-            "id": "7265d3e4b724"
+            "id": "a706e8e3755b"
           },
           {
             "name": "Glamour",
@@ -22078,7 +22094,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 15 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "cd5910367de9"
+            "id": "aa4a46cf6633"
           },
           {
             "name": "Infatuation",
@@ -22092,7 +22108,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 5)",
-            "id": "f1d8615c6eea"
+            "id": "209ab43587ae"
           },
           {
             "name": "Shapechange to Animal",
@@ -22106,7 +22122,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 5)",
-            "id": "d2e1feb6f534"
+            "id": "895af4dcc48c"
           }
         ],
         "vis": [
@@ -22114,13 +22130,13 @@
             "pawns": 6,
             "art": "Aquam",
             "where": "in its body",
-            "id": "80b9fc1b8497"
+            "id": "86f70416da05"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "in its body",
-            "id": "5fe8866d65a0"
+            "id": "1a846d628295"
           }
         ],
         "equipment": "",
@@ -22198,7 +22214,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 1,
-            "id": "fb561d3f836e"
+            "id": "cde49829eeb5"
           }
         ],
         "soak": 5,
@@ -22243,7 +22259,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 10 (the book's rating of 7), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "0b7d98b5a91d"
+            "id": "a7761426d8a7"
           },
           {
             "name": "Control Fertility",
@@ -22257,7 +22273,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 10 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "fad69ac4e9c2"
+            "id": "bb019376934c"
           },
           {
             "name": "Curse",
@@ -22271,7 +22287,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 6)",
-            "id": "6638abd5454f"
+            "id": "d0434d6cebc9"
           },
           {
             "name": "Dread",
@@ -22285,7 +22301,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 3)",
-            "id": "3ef26409da50"
+            "id": "4272c4541232"
           },
           {
             "name": "Infatuation",
@@ -22299,7 +22315,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 4)",
-            "id": "ae174882c097"
+            "id": "612c29099ce4"
           }
         ],
         "vis": [
@@ -22307,13 +22323,13 @@
             "pawns": 4,
             "art": "Aquam",
             "where": "in its body",
-            "id": "473b74223b87"
+            "id": "04cc7f21820e"
           },
           {
             "pawns": 3,
             "art": "Perdo",
             "where": "in its body",
-            "id": "81c03e829bfb"
+            "id": "f7f500423513"
           }
         ],
         "equipment": "",
@@ -22391,7 +22407,7 @@
             "attack": 5,
             "defense": 7,
             "damage": 2,
-            "id": "0d6fda7f1fe0"
+            "id": "9c4f84b0d614"
           }
         ],
         "soak": 4,
@@ -22436,7 +22452,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "cf2225ce3203"
+            "id": "84cd266d3a95"
           },
           {
             "name": "Change of Size",
@@ -22450,7 +22466,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 2)",
-            "id": "f66247325dde"
+            "id": "390f342ca70b"
           },
           {
             "name": "Curse",
@@ -22464,7 +22480,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "529fbda445f6"
+            "id": "abbd03b44bdf"
           },
           {
             "name": "Unseen",
@@ -22478,7 +22494,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 5)",
-            "id": "967fb5052809"
+            "id": "ca2d87126aa7"
           },
           {
             "name": "Insubstantial Form",
@@ -22492,7 +22508,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "1c196ecb7456"
+            "id": "448aa44126a3"
           },
           {
             "name": "Prophecy",
@@ -22506,7 +22522,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "a49d802d0242"
+            "id": "4354b649db12"
           },
           {
             "name": "Shapechange to Object",
@@ -22520,7 +22536,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "8f28e259b3e6"
+            "id": "e69df0c3d892"
           }
         ],
         "vis": [],
@@ -22599,7 +22615,7 @@
             "attack": 4,
             "defense": 5,
             "damage": 2,
-            "id": "3eb3c2cab197"
+            "id": "9ab0a06cf3d4"
           }
         ],
         "soak": 5,
@@ -22644,7 +22660,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "f664ad6d99f9"
+            "id": "1bdc242444f5"
           },
           {
             "name": "Change of Size",
@@ -22658,7 +22674,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 2)",
-            "id": "ec2262a8acd4"
+            "id": "a5ee7823c03c"
           },
           {
             "name": "Speech with Animal",
@@ -22672,7 +22688,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "d80514606856"
+            "id": "4079f75dcae7"
           },
           {
             "name": "Control Fertility",
@@ -22686,7 +22702,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "b118723aa6b6"
+            "id": "2fbed19bef26"
           },
           {
             "name": "Curse",
@@ -22700,7 +22716,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "f1395ac99daf"
+            "id": "23f5b5d137e9"
           },
           {
             "name": "Infatuation",
@@ -22714,7 +22730,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 6)",
-            "id": "36cb6d6bab19"
+            "id": "2038a2b3f7f0"
           },
           {
             "name": "Shapechange to Animal",
@@ -22728,7 +22744,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 4)",
-            "id": "b0db44c001f7"
+            "id": "c216da93932a"
           },
           {
             "name": "Shapechange to Object",
@@ -22742,7 +22758,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 4)",
-            "id": "818a0f1b9ae8"
+            "id": "da93cdcbaa68"
           }
         ],
         "vis": [],
@@ -22821,7 +22837,7 @@
             "attack": 5,
             "defense": 7,
             "damage": 2,
-            "id": "1fa5c86b31f8"
+            "id": "3ef724f91c11"
           }
         ],
         "soak": 4,
@@ -22866,7 +22882,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 5 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "6c7149e8ab6a"
+            "id": "823bebdc1292"
           },
           {
             "name": "Insubstantial Form",
@@ -22880,7 +22896,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "ca1ec638bf99"
+            "id": "d0c36714e493"
           },
           {
             "name": "Unseen",
@@ -22894,7 +22910,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 4)",
-            "id": "c7a352ef410c"
+            "id": "9e9338172e45"
           },
           {
             "name": "Prophecy",
@@ -22908,7 +22924,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "33947ec9b75d"
+            "id": "7d0c91863f06"
           }
         ],
         "vis": [],
@@ -22987,7 +23003,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 2,
-            "id": "306f414c88a0"
+            "id": "3d25fedf0050"
           }
         ],
         "soak": 6,
@@ -23032,7 +23048,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 8 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ebb1a8b376e7"
+            "id": "e91dadfa861b"
           },
           {
             "name": "Curse",
@@ -23046,7 +23062,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "8e6114bc9ab9"
+            "id": "0419945cf919"
           },
           {
             "name": "Elfshot",
@@ -23060,7 +23076,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cause Sickness: an unseen dart that strikes a serious illness into its victim. RoP:F p. 58 (the book's Elfshot 5)",
-            "id": "565faaf7d27f"
+            "id": "7be2627ccebc"
           },
           {
             "name": "Shapechange to Animal",
@@ -23074,7 +23090,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a beast's shape, as the Shape of the Woodland Prowler (MuCo(An) 15) (the book's Shapechange to Animal 4)",
-            "id": "6038758c6123"
+            "id": "3188f9a082be"
           }
         ],
         "vis": [
@@ -23082,7 +23098,7 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in its body",
-            "id": "8fa34709aa0b"
+            "id": "2329665aeb2c"
           }
         ],
         "equipment": "",
@@ -23188,7 +23204,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 5)",
-            "id": "2123be2e3873"
+            "id": "3e6983368ebf"
           },
           {
             "name": "Control of Ignem",
@@ -23202,7 +23218,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 5 (the book's rating of 4), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "c1e3ccf1e49b"
+            "id": "ff55cff64bd9"
           },
           {
             "name": "Control Fertility",
@@ -23216,7 +23232,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 5 (the book's rating of 5), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "5e9edbf0ed43"
+            "id": "b2f827b9041e"
           },
           {
             "name": "Curse",
@@ -23230,7 +23246,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "2f2696a6dc51"
+            "id": "500325ec2209"
           },
           {
             "name": "Prophecy",
@@ -23244,7 +23260,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 5)",
-            "id": "a13ec02d864c"
+            "id": "56888644f74b"
           }
         ],
         "vis": [
@@ -23252,7 +23268,7 @@
             "pawns": 3,
             "art": "Intellego",
             "where": "in its body",
-            "id": "3cb41ee7dbec"
+            "id": "6e2e6f8e54ee"
           }
         ],
         "equipment": "",
@@ -23330,7 +23346,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 10,
-            "id": "7f3ad481adc0"
+            "id": "b24f149b1bc7"
           },
           {
             "name": "Tackle (knocks down)",
@@ -23338,7 +23354,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 6,
-            "id": "c562e241e1fb"
+            "id": "ed98fe0f6bec"
           }
         ],
         "soak": 27,
@@ -23383,7 +23399,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "26e2f6054945"
+            "id": "70bd53388bc3"
           },
           {
             "name": "Control Animals",
@@ -23397,7 +23413,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "fc55b72d2451"
+            "id": "e00c307aa389"
           },
           {
             "name": "Control of Herbam",
@@ -23411,7 +23427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Herbam effect up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "978480c94b60"
+            "id": "52f6e5601e5d"
           },
           {
             "name": "Control Fertility",
@@ -23425,7 +23441,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Creo effect on the fertility of fields, beasts and people (Herbam, Animal or Corpus) up to level 15 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "5a64a171c21c"
+            "id": "ecdcffd2885e"
           },
           {
             "name": "Curse",
@@ -23439,7 +23455,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 10)",
-            "id": "f500ff241bbb"
+            "id": "b0e5d57f9d0e"
           },
           {
             "name": "Prophecy",
@@ -23453,7 +23469,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 10)",
-            "id": "e80e2e216c07"
+            "id": "9cf64c8cf140"
           },
           {
             "name": "Shapechange to Object",
@@ -23467,7 +23483,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "cf703264e418"
+            "id": "f31f1a7630d3"
           }
         ],
         "vis": [
@@ -23475,13 +23491,13 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in its body",
-            "id": "cc1f66e58a9f"
+            "id": "a92265b7bb58"
           },
           {
             "pawns": 3,
             "art": "Vim",
             "where": "in its body",
-            "id": "ad8f89f5e668"
+            "id": "96cd2d3591aa"
           }
         ],
         "equipment": "",
@@ -23559,7 +23575,7 @@
             "attack": 8,
             "defense": 4,
             "damage": 6,
-            "id": "5e7e328071e4"
+            "id": "b2b4500929ef"
           }
         ],
         "soak": 6,
@@ -23604,7 +23620,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "be10f38d57ef"
+            "id": "085eadd4b4b7"
           },
           {
             "name": "Brew Faerie Potions",
@@ -23618,7 +23634,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a potion of glamour that lets its drinker use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Brew Faerie Potions 5)",
-            "id": "ab8e72c8c119"
+            "id": "c3e6969b360c"
           },
           {
             "name": "Change of Size",
@@ -23632,7 +23648,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 6)",
-            "id": "3ab218367e27"
+            "id": "36cd610f7106"
           },
           {
             "name": "Human Speech",
@@ -23646,7 +23662,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: speaks and understands the tongues of men; its spare levels made it cost nothing. RoP:F p. 61 (the book's Communication with Humans 10)",
-            "id": "6d8dd886f9a7"
+            "id": "81c5d4e181d9"
           },
           {
             "name": "Control Animals",
@@ -23660,7 +23676,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Animal effect up to level 30 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "1e5a0e4548bc"
+            "id": "3ec0322b5d5b"
           },
           {
             "name": "Control Person",
@@ -23674,7 +23690,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "8467096c752b"
+            "id": "a696c1e4e5d5"
           },
           {
             "name": "Control of Aquam",
@@ -23688,7 +23704,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4c38f0817fe8"
+            "id": "91a9e78d213c"
           },
           {
             "name": "Curse",
@@ -23702,7 +23718,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "07e25cfdf005"
+            "id": "cb076a18e5f8"
           },
           {
             "name": "Enchant Objects",
@@ -23716,7 +23732,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a trinket of glamour that lets its holder use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Enchant Objects 5)",
-            "id": "e83a760ae8de"
+            "id": "725de86bf4ed"
           },
           {
             "name": "Glamour",
@@ -23730,7 +23746,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a156c804e099"
+            "id": "11186a80011b"
           },
           {
             "name": "Prophecy",
@@ -23744,7 +23760,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 10)",
-            "id": "10661782fcc5"
+            "id": "dd2fd9203ffc"
           },
           {
             "name": "Human Shape",
@@ -23758,7 +23774,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a human shape (Base 10, +2 Sun) (the book's Shapechange to Human 5)",
-            "id": "c66037ec4f52"
+            "id": "0d14fff0b806"
           }
         ],
         "vis": [
@@ -23766,19 +23782,19 @@
             "pawns": 15,
             "art": "Aquam",
             "where": "in its body",
-            "id": "7cd7e5f65a47"
+            "id": "11917f60555a"
           },
           {
             "pawns": 5,
             "art": "Mentem",
             "where": "in its body",
-            "id": "5ad6d99474b3"
+            "id": "a6df35ba6d69"
           },
           {
             "pawns": 5,
             "art": "Intellego",
             "where": "in its body",
-            "id": "b518c894a4c2"
+            "id": "0607a3758e73"
           }
         ],
         "equipment": "",
@@ -23856,7 +23872,7 @@
             "attack": 10,
             "defense": 13,
             "damage": 3,
-            "id": "9bba6b39e8a4"
+            "id": "22ccd2b8886c"
           }
         ],
         "soak": 7,
@@ -23901,7 +23917,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "a7b54785efdc"
+            "id": "49e703ecfd9d"
           },
           {
             "name": "Control of Ignem",
@@ -23915,7 +23931,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 50 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ed3748f45dc3"
+            "id": "fa449e5a766e"
           },
           {
             "name": "Curse",
@@ -23929,7 +23945,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "16653f7cc75b"
+            "id": "64237e147116"
           },
           {
             "name": "Faerie Road",
@@ -23943,7 +23959,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power: is at once in any place it knows, as the Leap of Homecoming (ReCo 35) (the book's Travel 21)",
-            "id": "a2ba15beebd8"
+            "id": "fac4ce9edb0a"
           }
         ],
         "vis": [
@@ -23951,7 +23967,7 @@
             "pawns": 30,
             "art": "Ignem",
             "where": "in its body",
-            "id": "cc53967335c3"
+            "id": "66122326f2eb"
           }
         ],
         "equipment": "",
@@ -24019,7 +24035,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 4,
-            "id": "12d127947b15"
+            "id": "50dfc4ea1a86"
           }
         ],
         "soak": 6,
@@ -24064,7 +24080,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Virtue): bestows a Minor Virtue the faerie's nature suits, for as long as it chooses or until a condition is broken; the Might returns when it is withdrawn. RoP:F pp. 56-57 (the book's Bless 10)",
-            "id": "32002531545b"
+            "id": "e50c06b9ce82"
           },
           {
             "name": "Speech with Animal",
@@ -24078,7 +24094,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 30 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "8c6b719b9b13"
+            "id": "4ed336f5a717"
           },
           {
             "name": "Control of Auram",
@@ -24092,7 +24108,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 30 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a6205c5916d1"
+            "id": "e1a3f28daa74"
           },
           {
             "name": "Curse",
@@ -24106,7 +24122,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Major Flaw): lays a Major Flaw on a victim; 5 levels and 1 Might more to curse a family or household. It cannot kill outright. RoP:F p. 57 (the book's Curse 10)",
-            "id": "16ea3688feb4"
+            "id": "519f8d40b1f1"
           },
           {
             "name": "Dread",
@@ -24120,7 +24136,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 10)",
-            "id": "965c593a9d4c"
+            "id": "87945095344c"
           },
           {
             "name": "Insubstantial Form",
@@ -24134,7 +24150,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing of air that blades pass through (MuCo(Au), Base 15, +2 Sun) (the book's Insubstantial Form 5)",
-            "id": "6af45b864fea"
+            "id": "7912323c4a34"
           },
           {
             "name": "Faerie Road",
@@ -24148,7 +24164,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power: is at once in any place it knows, as the Leap of Homecoming (ReCo 35) (the book's Travel 28)",
-            "id": "4c6559646358"
+            "id": "ae7b6d509899"
           }
         ],
         "vis": [
@@ -24156,13 +24172,13 @@
             "pawns": 10,
             "art": "Animal",
             "where": "in its body",
-            "id": "0377558ccfdb"
+            "id": "e5c9c60f054a"
           },
           {
             "pawns": 10,
             "art": "Auram",
             "where": "in its body",
-            "id": "60e60401bc0e"
+            "id": "9fef97230b59"
           }
         ],
         "equipment": "",
@@ -24258,7 +24274,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 2)",
-            "id": "96a421b30225"
+            "id": "d14917965035"
           },
           {
             "name": "Prophecy",
@@ -24272,7 +24288,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Greater Power with no Hermetic equivalent, as Hermetic magic cannot see the future: a glimpse of what is to come, given in its own way (the book's Prophecy 3)",
-            "id": "025e6cf54d08"
+            "id": "d371af6d19a3"
           }
         ],
         "vis": [],
@@ -24341,7 +24357,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 2,
-            "id": "9f2ba25d3ed6"
+            "id": "afa1035c0198"
           }
         ],
         "soak": 4,
@@ -24386,7 +24402,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 10 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "f07b56be089d"
+            "id": "aa5b6d0262c8"
           },
           {
             "name": "Curse",
@@ -24400,7 +24416,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grant (Minor Flaw): lays a Minor Flaw on a victim, now or when a taboo is broken; 5 levels and 1 Might more to curse a family or household. RoP:F p. 57 (the book's Curse 5)",
-            "id": "a3112b0dedd7"
+            "id": "dbd10813e8c6"
           },
           {
             "name": "Dread",
@@ -24414,7 +24430,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 8)",
-            "id": "fcddcbe80708"
+            "id": "fce13bf4d7f8"
           },
           {
             "name": "Glamour",
@@ -24428,7 +24444,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 10 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "8308360bc2be"
+            "id": "5e5c40f81823"
           },
           {
             "name": "Possession",
@@ -24442,7 +24458,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthrallment: takes complete control of a person for a day by meeting his eye. RoP:F p. 58 (the book's Possession 10)",
-            "id": "6e5f48f82bc7"
+            "id": "38363e5fbb6e"
           }
         ],
         "vis": [
@@ -24450,13 +24466,13 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its body",
-            "id": "31a36b934084"
+            "id": "c8e75e9ad9b7"
           },
           {
             "pawns": 2,
             "art": "Vim",
             "where": "in its body",
-            "id": "0c66cc74d39e"
+            "id": "717c562b2983"
           }
         ],
         "equipment": "",
@@ -24524,7 +24540,7 @@
             "attack": 13,
             "defense": 10,
             "damage": 12,
-            "id": "5dbe12b3f6dc"
+            "id": "9263f4c82fbe"
           }
         ],
         "soak": 15,
@@ -24569,7 +24585,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 20)",
-            "id": "4f6696e88ef0"
+            "id": "d8b09bf10930"
           },
           {
             "name": "Fiery Breath",
@@ -24583,7 +24599,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cone of fire thirty to forty paces long and five wide at its end: +35 damage to all within it, which metal armour does not stop. The book's CrIg 35, priced as a Greater Power.",
-            "id": "1d90bec6e875"
+            "id": "19f0b4d3166f"
           }
         ],
         "vis": [
@@ -24591,25 +24607,25 @@
             "pawns": 10,
             "art": "Animal",
             "where": "in its body",
-            "id": "22832862eef0"
+            "id": "bbb2fef4f81b"
           },
           {
             "pawns": 10,
             "art": "Ignem",
             "where": "in its body",
-            "id": "6d6ac50a145d"
+            "id": "9e87c4d5f499"
           },
           {
             "pawns": 10,
             "art": "Perdo",
             "where": "in its body",
-            "id": "99825225be05"
+            "id": "59ea6150e44b"
           },
           {
             "pawns": 5,
             "art": "Vim",
             "where": "in its body",
-            "id": "696023da014b"
+            "id": "0e92f0feb80e"
           }
         ],
         "equipment": "",
@@ -24687,7 +24703,7 @@
             "attack": 14,
             "defense": 11,
             "damage": 10,
-            "id": "2ea371d63b3a"
+            "id": "9bbcd3fa1a11"
           }
         ],
         "soak": 11,
@@ -24732,7 +24748,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Craft Magical Trinket: a potion of glamour that lets its drinker use a Minor Virtue once; 15 Might for a Major one. RoP:F p. 58 (the book's Brew Faerie Potions 5)",
-            "id": "ec9d3c7bce6c"
+            "id": "4a6894161403"
           },
           {
             "name": "Change of Size",
@@ -24746,7 +24762,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: grows or shrinks by steps of Size (Base 3, +2 Sun). RoP:F p. 60 (the book's Change Size 6)",
-            "id": "157574ec246c"
+            "id": "a401df16c4ed"
           },
           {
             "name": "Control Person",
@@ -24760,7 +24776,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Rego Mentem effect on people up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a9d1384a09a9"
+            "id": "ed2b1cb0328d"
           },
           {
             "name": "Control of Ignem",
@@ -24774,7 +24790,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Ignem effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "3514796e0f48"
+            "id": "53d9c9a08796"
           },
           {
             "name": "Control of Auram",
@@ -24788,7 +24804,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "a695ff5784a8"
+            "id": "61b015206a15"
           },
           {
             "name": "Dread",
@@ -24802,7 +24818,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 10)",
-            "id": "a858cce2af58"
+            "id": "dca809fd080a"
           },
           {
             "name": "Glamour",
@@ -24816,7 +24832,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 50 (the book's rating of 12), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "ca0be3550928"
+            "id": "2acee29ca061"
           },
           {
             "name": "Infatuation",
@@ -24830,7 +24846,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills those who hear it with desire for the faerie; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Infatuation 10)",
-            "id": "077eaf80e63f"
+            "id": "6ca3a9d8f8c0"
           },
           {
             "name": "Unseen",
@@ -24844,7 +24860,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: as the Veil of Invisibility (PeIm 20) (the book's Invisibility 5)",
-            "id": "cfb15eac0ab7"
+            "id": "d10bcbe4e1f6"
           },
           {
             "name": "Human Shape",
@@ -24858,7 +24874,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: takes a human shape (Base 10, +2 Sun) (the book's Shapechange to Human 6)",
-            "id": "f256a226c7e4"
+            "id": "b72aedaa95fc"
           },
           {
             "name": "Shapechange to Object",
@@ -24872,7 +24888,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "e88727c9120c"
+            "id": "a466a1f4b98e"
           },
           {
             "name": "Fiery Breath",
@@ -24886,7 +24902,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cone of fire thirty to forty paces long and five wide at its end: +35 damage to all within it, which metal armour does not stop. The book's CrIg 35, priced as a Greater Power.",
-            "id": "41dad859211d"
+            "id": "0b081af5ed18"
           }
         ],
         "vis": [
@@ -24894,19 +24910,19 @@
             "pawns": 5,
             "art": "Ignem",
             "where": "in its body",
-            "id": "68a5be7fd41f"
+            "id": "a684c055398a"
           },
           {
             "pawns": 15,
             "art": "Perdo",
             "where": "in its body",
-            "id": "bfc958672346"
+            "id": "7543f539eb39"
           },
           {
             "pawns": 15,
             "art": "Vim",
             "where": "in its body",
-            "id": "da9021824b1e"
+            "id": "ea00b60b6e20"
           }
         ],
         "equipment": "",
@@ -24984,7 +25000,7 @@
             "attack": 12,
             "defense": 8,
             "damage": 13,
-            "id": "88487ddb2dc3"
+            "id": "c9c1fc47ee36"
           }
         ],
         "soak": 7,
@@ -25029,7 +25045,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Herbam up to level 15 (the book's rating of 6), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "72e8e4104c01"
+            "id": "62b6cfb79ba0"
           },
           {
             "name": "Control of Terram",
@@ -25043,7 +25059,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Terram effect up to level 15 (the book's rating of 8), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "40b1fd2ba896"
+            "id": "950c973f5cde"
           },
           {
             "name": "Dread",
@@ -25057,7 +25073,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 8)",
-            "id": "921d4fd1c647"
+            "id": "3666e3f8100a"
           },
           {
             "name": "Shapechange to Object",
@@ -25071,7 +25087,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Personal Power: becomes a thing, a gatepost, a stone or a log (Base 25, +2 Sun) (the book's Shapechange to Object 6)",
-            "id": "f605341fbc3c"
+            "id": "0d786f5308dd"
           }
         ],
         "vis": [
@@ -25079,13 +25095,13 @@
             "pawns": 6,
             "art": "Terram",
             "where": "in its body",
-            "id": "b29d1a1bb440"
+            "id": "7cd56a7ae79d"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "in its body",
-            "id": "62e672ae14b0"
+            "id": "2889b3eec389"
           }
         ],
         "equipment": "",
@@ -25153,7 +25169,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 10,
-            "id": "613cb2310686"
+            "id": "b9b6555af96f"
           },
           {
             "name": "Claws",
@@ -25161,7 +25177,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 11,
-            "id": "3cb528df2797"
+            "id": "a734ed160a60"
           }
         ],
         "soak": 15,
@@ -25206,7 +25222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any Intellego effect that speaks with Animal up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "9d44bb181431"
+            "id": "dc5597cb54c8"
           },
           {
             "name": "Control of Auram",
@@ -25220,7 +25236,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Auram effect up to level 40 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "f4da1b7001d3"
+            "id": "328f9f5ff07b"
           },
           {
             "name": "Control of Aquam",
@@ -25234,7 +25250,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Creo, Muto, Perdo or Rego Aquam effect up to level 40 (the book's rating of 15), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "4634a52fc81b"
+            "id": "4401ec91466f"
           },
           {
             "name": "Dread",
@@ -25248,7 +25264,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enthralling Sound: fills everyone who hears it with fear, or deepens a fear they have; a Personality roll of 9+ throws it off. RoP:F p. 58 (the book's Fear 12)",
-            "id": "600d8a5c88f6"
+            "id": "498be181e32d"
           },
           {
             "name": "Glamour",
@@ -25262,7 +25278,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Focus Power: any non-Ritual Imaginem effect up to level 40 (the book's rating of 10), at 1 Might point a magnitude; the cost shown is the most it can be. RoP:F p. 54.",
-            "id": "2b0af88dc59b"
+            "id": "060e821bbb2a"
           }
         ],
         "vis": [
@@ -25270,25 +25286,25 @@
             "pawns": 10,
             "art": "Auram",
             "where": "in its body",
-            "id": "ae99033a33b4"
+            "id": "05035d5da235"
           },
           {
             "pawns": 10,
             "art": "Aquam",
             "where": "in its body",
-            "id": "980a66f407fd"
+            "id": "187924cd3e8e"
           },
           {
             "pawns": 10,
             "art": "Perdo",
             "where": "in its body",
-            "id": "3f0b9f856529"
+            "id": "9cde39a8a87a"
           },
           {
             "pawns": 10,
             "art": "Vim",
             "where": "in its body",
-            "id": "a6676d9b2aba"
+            "id": "4b22a04d66dd"
           }
         ],
         "equipment": "",
@@ -25356,7 +25372,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 3,
-            "id": "87e349e1a5c3"
+            "id": "69a7111f7059"
           },
           {
             "name": "Strangle",
@@ -25364,7 +25380,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 2,
-            "id": "6150230c854e"
+            "id": "6f8939471f2b"
           }
         ],
         "soak": 5,
@@ -25409,7 +25425,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ReMe 15).",
-            "id": "0802cd8705b3"
+            "id": "0a267c0981c6"
           },
           {
             "name": "Shape of the Furred Slinker",
@@ -25423,7 +25439,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Becomes a rat (MuCo 25).",
-            "id": "bb0820b128ac"
+            "id": "f81ad85fc0d3"
           },
           {
             "name": "Broom of the Winds",
@@ -25437,7 +25453,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ReAu 15).",
-            "id": "7872186669b6"
+            "id": "a15058ba39f2"
           },
           {
             "name": "The Iron Grasp",
@@ -25451,7 +25467,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 to its grip: Strength, and the strangle's Attack and Damage (MuCo 15).",
-            "id": "e265f5a43721"
+            "id": "90ab346b32cb"
           }
         ],
         "vis": [
@@ -25459,19 +25475,19 @@
             "pawns": 1,
             "art": "Perdo",
             "where": "diabolically tainted",
-            "id": "03da1004a4e9"
+            "id": "9d8d4a1ff44c"
           },
           {
             "pawns": 1,
             "art": "Vim",
             "where": "diabolically tainted",
-            "id": "dd4afe8b9b01"
+            "id": "794f2f268e47"
           },
           {
             "pawns": 1,
             "art": "Corpus",
             "where": "diabolically tainted",
-            "id": "84efb526dac7"
+            "id": "eafc49001288"
           }
         ],
         "equipment": "",
@@ -25580,7 +25596,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 10,
-            "id": "8279d5998977"
+            "id": "59857fae7ecd"
           }
         ],
         "soak": 31,
@@ -25625,7 +25641,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns a man as far off as she can see into a fish of about Size -3. The book's MuCo 35, Penetration 30.",
-            "id": "202cc0da9293"
+            "id": "8ab368457df1"
           },
           {
             "name": "Steel Shell",
@@ -25639,7 +25655,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Her last defence: her shell becomes a gleaming steel dome (+15 Soak), her head drawn in under her horny forelimbs, and she sinks into deep water. The book's MuAn 40.",
-            "id": "4d0eb0261958"
+            "id": "e5b743c7f90e"
           },
           {
             "name": "Dominion of the Swamp",
@@ -25653,7 +25669,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Whips plants and water within 300 yards into a maelstrom: +5 damage to everyone in it who fails a stress die + Dex + Swim or Athletics of 6+, and the same roll to do anything but hold position. The book's ReHe(Aq) 40.",
-            "id": "4ff66d24d897"
+            "id": "470c59d4da91"
           },
           {
             "name": "Speech",
@@ -25667,7 +25683,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She can still speak human tongues at will, though her attention is hard to hold. The book's ReAn 5.",
-            "id": "7be88e93a928"
+            "id": "e9391b67f242"
           }
         ],
         "vis": [],
@@ -25684,6 +25700,7 @@
     ],
     "enchanted_devices": [],
     "books_in_play": null,
+    "overlays": [],
     "sources": [],
     "hidden_catalogs": [],
     "hidden_entries": {},
@@ -25719,6 +25736,7 @@
     "saved_by": "",
     "marriages": []
   },
+  "key": "novgorod",
   "book": "D&B",
   "source": "The Dragon and the Bear: The Novgorod Tribunal, by Atlas Games, content under the Creative Commons Attribution-ShareAlike 4.0 licence; summarised, not quoted.",
   "assumptions": "pack-assumptions-novgorod",

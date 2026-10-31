@@ -78,6 +78,10 @@ SCARTARIS_ROOMS: tuple[tuple[str, str], ...] = (
         "Twelve paces by eight, divided into four sleeping closets (p. 89).",
     ),
     (
+        "Store Rooms",
+        "Two small rooms beside the laundry room, printed only on the map (p. 90).",
+    ),
+    (
         "Library",
         "Twelve paces by ten, with four lecterns and four writing desks. "
         "About fifty books stand on their own lecterns along the walls, "
@@ -431,6 +435,10 @@ def _old_vindolanda(b: Builder, home: Neighbour) -> Neighbour:
             "two-level magical regio (+2, +4). Digging while the Infernal "
             "regio stands draws further attacks, and many workers die in "
             "accidents (p. 94).",
+            "The map (p. 93) shows the walled fort, with four barracks, stables "
+            "on two sides, a granary, the headquarters, two storehouses and a "
+            "catapult platform on one corner; beyond its wall stand the bath "
+            "house, the mansio and the married quarters.",
         ),
         levels=[
             b.level("Lowest level", 1, "Infernal"),

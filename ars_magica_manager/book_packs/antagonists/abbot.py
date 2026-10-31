@@ -250,14 +250,14 @@ def _rasa(b: Builder):
         ],
         vis=[BodyVis(10, "Vim", "in its blood")],
         appearance=(
-            "Long and sinuous, about seventeen paces from nose to tail, with "
-            "a head some three paces long and a tail of eight. Its scales run "
-            "from pearly, shimmering grey to the rusty brown of dried blood. "
-            "It lies low like a crocodile yet stands just over two paces at "
-            "the shoulder, on eight legs, wingless, with teeth and claws like "
-            "daggers and great black eyes rimmed with gold, nearly two palms "
-            "across. A heavy sandalwood mist rolls from its open mouth, and "
-            "its voice comes from deep inside it with the jaws unmoving."
+            "A wingless, eight-legged worm of some seventeen paces, of which "
+            "three are head and eight tail. It is pale as mother-of-pearl at "
+            "the neck, darkening along the back to the brown of old blood. "
+            "Its belly hangs near the ground, yet its shoulder is a little over "
+            "two paces high. Its fangs and talons are dagger-long, and its "
+            "black, gold-ringed eyes are almost two palms wide. Mist heavy with "
+            "sandalwood pours from its jaws, which do not move when it speaks, "
+            "for the voice rises from far within."
         ),
         notes=paragraphs(
             "Wound Penalties as printed: -1 (1-13), -3 (14-26), -5 (27-39), "

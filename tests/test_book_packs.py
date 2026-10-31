@@ -1425,3 +1425,23 @@ def test_the_novgorod_pack_imports_clean_into_a_new_saga():
     ids = {n.id for n in target.neighbours}
     for record in [*target.covenants, *target.neighbours]:
         assert record.place_id is None or record.place_id in ids
+
+
+def test_no_pack_says_its_vis_or_books_in_public():
+    found = []
+    for pack in book_packs.PACKS.values():
+        saga = pack.assemble().saga
+        for records, name in (
+            (saga.neighbours, "summary"),
+            (saga.covenants, "what_matters"),
+            (saga.creatures, "notes"),
+        ):
+            found += [
+                f"{pack.key}: {r.name}"
+                for r in records
+                if any(
+                    builder.HOLDINGS.match(line)
+                    for line in getattr(r, name).split("\n")
+                )
+            ]
+    assert not found, found

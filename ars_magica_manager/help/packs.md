@@ -386,6 +386,8 @@ The Levant pack is built from *Blood and Sand* and its free web companion *Secre
 # Assumptions made for Sanctuary of Ice: The Greater Alps Tribunal
 <!-- help: pack-assumptions-alps -->
 
+The creatures' stats are unconverted Fourth Edition figures, unsuitable for Fifth Edition play until conversion rules are settled. Each creature's notes say so.
+
 The Greater Alps pack is built from *Sanctuary of Ice*, a Fourth Edition book, so its numbers had to be converted: the stats follow the Definitive Edition's Fourth Edition conversion guide where it applies, and where the guide is silent the pack made a judgement call, each one listed on this page. Where a Fifth Edition book describes the same thing it wins: Muscaria as Prima of Criamon and the Cave's twelve living magi (*Houses of Hermes: Mystery Cults*), and Andru, Carmine, the Steward and Valnastium's auras (*Houses of Hermes: Societates*). You can change any of it in your saga.
 
 ### Inferred from the text
@@ -620,11 +622,11 @@ The Tomb of Tin Hinan is marked a tomb of a major monarch, as her aura of 5 fits
 
 The pack joins *Land of Fire & Ice* and *The Icelandic Wars*, Fourth Edition books converted by the Definitive Edition's appendix. It holds no Tribunal. Vindolanda and Wormhout are covenants with none, and each comes with its places. The book calls Vindolanda and its saga optional and not official history, so all of it is in secrets and dormant stories, and nothing in it replaces another pack's record.
 
-The appendix doesn't cover creatures, so their combat totals, Soak and power costs are as printed. A Might Form the book doesn't print is this pack's reading, and the record says so. Virtues, Abilities and powers with no Definitive Edition counterpart are named in the notes or kept under their printed names. Galdor and trollskap are described, and aren't working rules yet. Where the two books or one book's pages disagree, the record says so and gives both.
+The appendix doesn't cover creatures, so their combat totals, Soak and power costs are unconverted Fourth Edition figures, unsuitable for Fifth Edition play until conversion rules are settled. Each creature's notes say so. A Might Form the book doesn't print is this pack's reading, and the record says so. Virtues, Abilities and powers with no Definitive Edition counterpart are named in the notes or kept under their printed names. Galdor and trollskap are described, and aren't working rules yet. Where the two books or one book's pages disagree, the record says so and gives both.
 
 # Assumptions made for Antagonists
 <!-- help: pack-assumptions-antagonists -->
 
-The pack holds no Tribunal: the book's opponents can be set in any saga. Each one's plots and hidden nature are in secrets, and their stories come in dormant. Where the book gives a person no name for a thing, or its name gives the plot away, the record has a plain name instead. A person printed in two versions, as Hannelore and the Friar or Monk are, is a choice on the import form. Spells whose printed level differs from the catalog's are the book's own spells. Where the book contradicts itself, the record says so and gives both.
+The pack holds no Tribunal: the book's opponents can be set in any saga. Each one's plots and hidden nature are in secrets, and their stories come in dormant. Where it differs from the Definitive Edition, a spell is the Definitive Edition's, and the record notes the book's figure. Where the book gives a person no name for a thing, or its name gives the plot away, the record has a plain name instead. A person printed in two versions, as Hannelore and the Friar or Monk are, is a choice on the import form. Where the book contradicts itself, the record says so and gives both.
 
 The people with printed stats are also templates on New Character, named **Antagonist -**, in any saga with the book in play.

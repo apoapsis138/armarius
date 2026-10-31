@@ -335,7 +335,8 @@ def _winds(b: Builder) -> None:
             "better. It appears most often as a veiled Tuareg raider, and "
             "always as some sort of warrior, short-tempered and with a biting "
             "falchion.",
-            "Proud and Wind are its Essential Traits. Its Qualities are "
+            "Proud and Wind are its Essential Traits; its Homing Instinct is "
+            "for Kaf Ajnoun. Its Qualities are "
             "printed as Focus Power: Auram x2, Greater Power (Donning the "
             "Corporeal Veil, Eidolon, Presence), Major Virtue (Magical "
             "Master), Improved Abilities x4, Improved Might x5, Improved "
@@ -1828,9 +1829,8 @@ def _jnun(b: Builder) -> None:
             "monstrous, many-headed serpents or beast-headed giants. Many "
             "afarta possess humans, and the possessed is called a majnun, a "
             "madman. When the Order of Suleiman talks of the untamable jinn of "
-            "the Maghrib and Libya, it usually means these. Only the fabled "
-            "Seal of Solomon, a lost non-Hermetic artifact, is thought able to "
-            "control them with ease.",
+            "the Maghrib and Libya, it usually means these. Solomon's lost "
+            "Seal, they say, is the one thing that would master them easily.",
         ),
         rules=(
             "Lesser afarta are Infernal dragons (p. 125), not true jinn and "
@@ -2248,15 +2248,19 @@ def _carthage(b: Builder) -> None:
     )
     ruins = b.place(
         "The Ruins of Carthage",
-        realm="Infernal",
+        realm="",
         summary=paragraphs(
             "Outside Tunis, on the site of the city, the Punic and Roman works "
             "are abandoned and looted for their cut stone, and little can "
-            "be recognised. Carthage was utterly destroyed in 164 BC, its "
+            "be recognised. Carthage was utterly destroyed in 146 BC, its "
             "enemies writing all that survives of it. Tunis is what remains of "
             "its greatness.",
         ),
         secrets=paragraphs(
+            "The ruins belong to the Infernal realm, the legacy of the gods of "
+            "Carthage (p. 132).",
+            "The book prints the city's destruction as 164 BC on p. 132, likely "
+            "a misprint: p. 15 gives 146 BC, used here.",
             "A great mass of melted bronze lies buried here, the remains of a "
             "tophet destroyed in the razing, and with it Ba'al Ammon's urns of "
             "vis-rich ash.",
@@ -2270,7 +2274,6 @@ def _carthage(b: Builder) -> None:
     )
     b.faction(
         "The Priesthood of Carthage",
-        realm="Infernal",
         place=ruins,
         summary=paragraphs(
             "Long dead. The priests of Carthage drew their tradition from the "
@@ -2302,6 +2305,7 @@ def _carthage(b: Builder) -> None:
             "might rise likewise. No account of how survives.",
         ),
         secrets=paragraphs(
+            "Their realm is the Infernal. "
             "The apotheosis was a lie. The gods were a single demon who enjoyed "
             "the work, granting just enough to encourage more sin and "
             "bloodshed, and charging for things it would gladly have done "
@@ -2611,8 +2615,9 @@ def _beasts(b: Builder) -> None:
         appearance="A single-humped Arabian camel.",
         notes=paragraphs(
             "The common riding dromedary (Jamal), first given under Alexander "
-            "of Jerbiton in Magi of Hermes pp. 10-11. Camels smell open water "
-            "by its air-after-rain scent, go long without drinking and can "
+            "of Jerbiton in Magi of Hermes pp. 10-11. Camels smell drinkable "
+            "water up to two miles off by its air-after-rain scent, go up to "
+            "two weeks without it and can "
             "walk through mild sandstorms unharmed. Splayed feet carry them "
             "faster over sand than horses and tire them less.",
             "Riding camel, the mehari of the lower classes' races: add Fast "
@@ -3384,7 +3389,7 @@ def _beasts(b: Builder) -> None:
         realm="Magic",
         appearance="A giant black vulture of the highest mountains.",
         notes=paragraphs(
-            "They personify intimidation, patience and prudence. Every one the "
+            "They embody menace, patience and caution. Every one the "
             "magi have identified was female, and most are thought to live a "
             "hundred years. Many classical authorities deny there are male "
             "vultures, saying females bear identical daughters without a mate, "

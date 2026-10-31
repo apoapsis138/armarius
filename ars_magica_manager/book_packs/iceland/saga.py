@@ -147,9 +147,10 @@ def _wormhout(b: Builder) -> Any:
         ),
         secrets=paragraphs(
             "The book sets it in the Normandy Tribunal (p. 77). This pack holds "
-            "no Tribunal, so it stands on no roster here. Its magi are given "
-            "only brief statistics; the book suggests about 1200 xp in Arts and "
-            "120 in Abilities for a storyguide who fleshes them out (p. 78).",
+            "no Tribunal, so it stands on no roster here. Its magi, each "
+            "gauntleted some 60 to 70 years ago, are given only brief statistics; "
+            "the book suggests about 1200 xp in Arts and 120 in Abilities for a "
+            "storyguide who fleshes them out (p. 78).",
             "Four members, most in middle age, none near final Twilight. It "
             "was built on its founders' cooperation, and its vis sources and "
             "its mundane and magical security are excellent (p. 79).",
@@ -427,7 +428,6 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
                 ("Blackmail", 2, "Falkes de Bréauté, acting Earl of Devonshire"),
                 ("Strong-Willed", 1),
                 ("Educated", 1),
-                ("Reckless (Minor)", 1),
                 ("Susceptible to Divine Power", -4),
                 ("Tainted With Evil", -2),
                 ("Bad Reputation", -1, "kidnapper"),
@@ -454,14 +454,15 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
             ),
             arts={},
             spells=(),
-            traits={"Ruthless": 3, "Sadistic": 3, "Sly": 1},
+            traits={"Ruthless": 3, "Sadistic": 3, "Reckless": 1, "Sly": 1},
             reputations={"Kidnapper (Newton Abbey)": 1, "Refined (Devon nobility)": 2},
             notes=(
                 "Printed combat: Brawl (fist) Init +4 Atk +4 Dfn +3 Dam +1; "
                 "Dagger +6, +5, +6, +3; Longsword +9, +8, +10, +4. Soak +15 with "
                 "his magical cloak. Printed as Landed Knight, Virtues Demonic "
-                "Familiar +4, Blackmail +2 and Reckless +1: the catalog has them "
-                "as Landed Noble and as Minor Flaws. English Law is Common Law, "
+                "Familiar +4 and Blackmail +2: the catalog has them as Landed "
+                "Noble and as Minor Flaws. Reckless +1, printed among his Virtues "
+                "and Flaws, is a Personality Trait. English Law is Common Law, "
                 "and his Guile's specialty is as printed. Fatigue OK, 0, -1, -3, "
                 "-5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated. LFI p. 83."
             ),

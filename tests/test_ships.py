@@ -377,3 +377,10 @@ def test_a_typed_enemy_and_losing():
     said = " ".join(form.apply(values))
     assert "A pirate slips away" in said
     assert not saga.fights
+
+
+def test_editing_a_ship_keeps_her_fate():
+    sunk = dataclasses.replace(sf.Ship(), fate=sf.SUNK, fate_when="Summer 1219")
+    edited = sf.ship_from({"tons": 40}, sunk)
+    assert edited.fate == sf.SUNK and edited.fate_when == "Summer 1219"
+    assert edited.tons == 40

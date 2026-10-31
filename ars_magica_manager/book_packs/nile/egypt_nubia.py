@@ -592,13 +592,13 @@ def _gizeh(b: Builder, w: World) -> None:
         "Abu 'l-Ahwa, the Father of Dread",
         inside=w["gizeh"],
         summary=(
-            "The colossal lion with a man's head. The Greeks call it the "
+            "Abu 'l-Ahwa, the Father of Dread, is the colossal lion with a "
+            "man's head. The Greeks call it the "
             "strangler, or sphinx, after the winged female monster of the "
             "Theban Tribunal that strangled those who failed its riddle. Some "
             "think it a solar god. It appeared to Menkheperure (Thutmose IV) "
             "to ask that its statue be dug from the sand, according to a stela "
-            "said to stand between its paws. Mary laid the Christ child there, "
-            "resting on the flight into Egypt. Some call it the grave of the "
+            "said to stand between its paws. Some call it the grave of the "
             "Prophet Idris, or of Thoth, or both. If it were dug out and rites "
             "could again be held between its paws, answers might come (p. 62)."
         ),
@@ -733,7 +733,7 @@ def _alexandria(b: Builder, w: World) -> None:
     w["damietta"] = b.town(
         "Damietta",
         charter="Noble lord",
-        ruler="The Crusade's leaders (the legate Pelagius claims it)",
+        ruler="The Crusade's leaders, in dispute",
         place=w["egypt"],
         summary=paragraphs(
             "A port in ancient times that lost its trade to Alexandria, kept "
@@ -1012,9 +1012,9 @@ def _south_of_cairo(b: Builder, w: World) -> None:
             "will rob and kill for money. The desert around gives nothing: no "
             "crops, and even the water is imported. Most older buildings are "
             "woven of reeds shipped from the Nile, a few new ones plastered. "
-            "Officially it lives by merchants, pilgrims and fishing; the "
-            "merchants are pirates, the pilgrims victims, and the fishing poor "
-            "(p. 69). The port lies in land the Blemmyae claim, but in "
+            "On paper its wealth is trade, the pilgrim traffic and the catch; "
+            "in truth its traders prey at sea, the pilgrims are its prey ashore "
+            "and few fish are landed (p. 69). The port lies in land the Blemmyae claim, but in "
             "Egyptian hands (p. 96).",
             "Some pilgrims think the journey washes out sin and use it to "
             "indulge, and at a price most vices can be had here. Pilgrims are "
@@ -1453,7 +1453,9 @@ def _upper_egypt_seeds(b: Builder, w: World) -> None:
         "north on purpose short of supplies, and then claim the goods of "
         "those who die of hunger and thirst. Their sultan lives in the "
         "mountains near Philae, and his family are said to be corrupt "
-        "nudists who wear a loincloth at most (p. 68).",
+        "nudists who wear a loincloth at most. The al-Bujat once lived around "
+        "Philae and worshipped Isis, and their wars made the Romans move "
+        "Egypt's border north and garrison it (p. 68).",
         where=egypt,
         secrets=(
             "It is unclear whether these are the Bujat, or headless faeries "
@@ -1707,7 +1709,7 @@ def _nubian_powers(b: Builder, w: World) -> None:
         "The Ja'alin",
         faction="Family",
         decides="Its leader",
-        ruler="'Izz el-Afram Hamad",
+        ruler="Hamad",
         place=nubia,
         tradition=SAHIRS,
         summary=(
@@ -2157,7 +2159,6 @@ def _makuria(b: Builder, w: World) -> None:
     w["abu_hamad"] = b.town(
         "Abu Hamad",
         charter="Rules itself",
-        ruler="'Izz el-Afram Hamad",
         place=w["makuria"],
         summary=(
             "A tent city at the end of the great bend of the Nile, the only "
@@ -3309,11 +3310,11 @@ def _artanyeszame(b: Builder, w: World) -> None:
         age=None,
         type="mythic companion",
         summary=(
-            "Three sisters, hyena skinchangers and witches (Hex 5), friends of "
-            "Artanyeszame, who live in the antechamber of the Pyramid of "
-            "Arrakkamani. They lead a dozen magical hyenas, his covenfolk. "
-            "Bouda are described in chapter 8 (p. 92)."
+            "Three sisters, hyena skinchangers and witches (Hex 5), who live in "
+            "the antechamber of the Pyramid of Arrakkamani and lead a dozen "
+            "magical hyenas. Bouda are described in chapter 8 (p. 92)."
         ),
+        secrets=("Friends of Artanyeszame; the hyenas serve as his covenfolk."),
     )
 
 

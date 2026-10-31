@@ -136,13 +136,18 @@ _GALERIUS: StatBlock = {
         "His Magic Theory is printed 6 (12): score 6 with 12 experience "
         "toward 7. The book asks the troupe to change his native tongue and "
         "his Civil and Canon Law specialty to suit the saga (p. 68).",
-        "Spells as this block prints them (p. 68): The Whole from the Part at "
-        "level 15 (its source, level 20); Disguise of the Transformed Image "
-        "at level 10 (the Definitive Edition, level 15); Maintaining the "
+        "The Definitive Edition's spells are used, which differ from this block "
+        "(p. 68): The Whole from the Part is level 20 here, printed 15; "
+        "Disguise of the Transformed Image is level 15 here, printed 10. "
+        "Maintaining the "
         "Demanding Spell at level 20, a general spell. 'Aura of Beguiling "
         "Presence', cited to Houses of Hermes: Societates p. 96, is that "
         "page's Aura of Beguiling Appearance; 'Words of Unbroken Silence' is "
         "Words of the Unbroken Silence.",
+        "The block's casting totals check against his Arts, Stamina and "
+        "Mastery but for two: The Whole from the Part is printed +22, where "
+        "they give +23, and By His Works +21, where they and the memory "
+        "attunement give +22 (p. 68).",
     ),
 }
 
@@ -248,7 +253,7 @@ def _talisman(
         talisman=True,
         holder_kind="character",
         holder_id=holder.id,
-        bonuses=attunements,
+        attunements=attunements,
     )
     for number, effect in enumerate(effects, 1):
         effect.id = f"{device.id}-{number}"

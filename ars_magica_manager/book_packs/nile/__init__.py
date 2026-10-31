@@ -17,7 +17,13 @@ PARTS = ("peoples", "monuments", "egypt_nubia", "ethiopia")
 
 
 #: Places two parts each made: (the one kept, the one merged into it).
-SAME_PLACES = (("The Danakil Desert", "The Danakil Desert"),)
+SAME_PLACES = (
+    ("The Danakil Desert", "The Danakil Desert"),
+    ("The Gizeh Necropolis", "The Necropolis of Gizeh"),
+    ("The Gizeh Necropolis", "Abu 'l-Ahwa, the Father of Dread"),
+)
+#: Factions two parts each made, the same way round.
+SAME_FACTIONS = (("The Hirranian Sabeans", "The Sabeans"),)
 
 
 def assemble(supplements: tuple[str, ...] = ()) -> Builder:
@@ -29,6 +35,8 @@ def assemble(supplements: tuple[str, ...] = ()) -> Builder:
         importlib.import_module(f"{__name__}.{name}").build(b)
     for keep, drop in SAME_PLACES:
         b.absorb(keep, drop)
+    for keep, drop in SAME_FACTIONS:
+        b.absorb(keep, drop, kind="faction")
     return b
 
 

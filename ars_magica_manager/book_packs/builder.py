@@ -14,6 +14,7 @@ diary entry, a book's description) keep theirs at their end under a
 
 from __future__ import annotations
 
+import re
 from collections.abc import Sequence
 from dataclasses import replace
 from functools import cache
@@ -987,15 +988,19 @@ class Builder:
             "turned": turned,
         }
 
-    def absorb(self, keep: str, drop: str) -> None:
-        """Merge two parts' records of one place: `drop`'s words go on
-        `keep`, whatever sat in it or pointed at it moves there, and it
-        goes. With the same name twice, the later record is the one dropped."""
-        places = [n for n in self.saga.neighbours if n.kind == PLACE]
-        kept = next(n for n in places if n.name == keep)
-        gone = next(n for n in reversed(places) if n.name == drop and n is not kept)
+    def absorb(self, keep: str, drop: str, *, kind: str = PLACE) -> None:
+        """Merge two parts' records of one thing, both of `kind` (a place
+        unless it says otherwise): `drop`'s words go on `keep`, whatever
+        sat in it or pointed at it moves there, and it goes. With the same
+        name twice, the later record is the one dropped."""
+        records = [n for n in self.saga.neighbours if n.kind == kind]
+        kept = next(n for n in records if n.name == keep)
+        gone = next(n for n in reversed(records) if n.name == drop and n is not kept)
         kept.summary = paragraphs(kept.summary, gone.summary)
         kept.secrets = paragraphs(kept.secrets, gone.secrets).strip()
+        for record in self.saga.neighbours:
+            if record.answers_to == gone.id:
+                record.answers_to = kept.id
         for record in (*self.saga.neighbours, *self.saga.creatures):
             if record.place_id == gone.id:
                 record.place_id = kept.id
@@ -1326,9 +1331,51 @@ class Builder:
         )
 
 
+#: A paragraph saying where a record's vis and books are: what the troupe
+#: finds out in play, not what a description says.
+HOLDINGS = re.compile(r"(Vis|Books?|Library)\b[^.:\n]{0,24}:")
+
+
+def _split_holdings(text: str) -> tuple[str, list[str]]:
+    lines = text.split("\n")
+    held = [line for line in lines if HOLDINGS.match(line)]
+    kept = "\n".join(line for line in lines if not HOLDINGS.match(line))
+    return re.sub(r"\n{3,}", "\n\n", kept).strip(), held
+
+
+def hide_holdings(saga: Saga) -> None:
+    """Move each record's vis and books out of its public text into its
+    secrets."""
+    public = (
+        (saga.neighbours, "summary"),
+        (saga.covenants, "what_matters"),
+        (saga.creatures, "notes"),
+    )
+    for records, name in public:
+        for record in records:
+            kept, held = _split_holdings(getattr(record, name))
+            if held:
+                setattr(record, name, kept)
+                record.secrets = paragraphs(record.secrets, *held).strip()
+
+
+#: What a creature entered at its printed Fourth Edition figures says.
+UNCONVERTED = (
+    "Unconverted Fourth Edition stats, unsuitable for Fifth Edition play until "
+    "conversion rules for creatures are settled."
+)
+
+
+def mark_unconverted(saga: Saga) -> None:
+    """Say so on every creature a Fourth Edition book's pack holds at its
+    printed figures."""
+    for creature in saga.creatures:
+        creature.notes = paragraphs(UNCONVERTED, creature.notes).strip()
+
+
 #: Books whose stat blocks keep a spell at its printed level and Arts as
 #: the magus's own spell, where the catalog's spell of that name differs.
-OWN_PRINTINGS = ("TtA", "MoH", "LoH", "Ant")
+OWN_PRINTINGS = ("TtA", "MoH", "LoH")
 
 #: A stat block as a book prints it, in the book's scores:
 #: "characteristics" {name: score}, "aging_points" {name: points} (the

@@ -103,8 +103,8 @@ _BLOCK: StatBlock = {
         "Tall and ascetic, with a slight stoop from years at the writing desk, "
         "though he straightens and his eyes shine when he preaches. He is plainly "
         "old but not frail. He wears a priest's regalia, carries a satchel of "
-        "writing gear, and rides a costly glossy black stallion, lighter and "
-        "quicker than a warhorse, that can go for days with little rest. One or "
+        "writing gear, and rides a black stallion worth a great deal, built for "
+        "speed and able to go for days with little rest. One or "
         "two clergymen ride with him, and later perhaps a magus ally dressed as "
         "one.",
         "Commanding Aura (Ant p. 38; DE p. 82, same figures): as Aura of Rightful "

@@ -128,11 +128,11 @@ def _abaissier(b: Builder):
         ],
         vis=[BodyVis(7, "Perdo", "one in each whip")],
         appearance=(
-            "An angel of burning chains, brass and blood in colour, in a pale "
-            "white robe that alone among its kind stains with something like "
-            "blood when it is hurt. Where its right hand should be hang five "
-            "thin weighted chains, which reach an astonishing length in a "
-            "fight and each lash on their own."
+            "An angel whose body is chain on fire, coloured like old blood and "
+            "brass. Its pale robe, alone among its kind, shows a stain like "
+            "blood when it is hurt. It has no right hand, only five slender "
+            "chains with weights at their tips, which run out to a startling "
+            "length in a fight and strike each for itself."
         ),
         notes=paragraphs(
             "Wound Penalties as printed: +1* (1-7), -3 (8-14), -5 (15-22), "
@@ -248,8 +248,9 @@ def _bufonia(b: Builder):
         ],
         vis=[BodyVis(4, "Perdo", "long nose")],
         appearance=(
-            "By nature a formless dark shape, sin made visible. In solid form "
-            "she is a tall, refined woman, often dressed as a plague doctor."
+            "By nature a shapeless darkness, sin given sight. In solid form "
+            "she passes for a tall lady of good breeding, and often goes in "
+            "the dress of a plague doctor."
         ),
         notes=paragraphs(
             "Thrown vial: touching the undiluted contents is poisoning of Ease "
@@ -368,9 +369,9 @@ def _fabrico(b: Builder):
         ],
         vis=[BodyVis(4, "Perdo", "eyes")],
         appearance=(
-            "As with all deluders, his natural shape is a rip of darkness in "
-            "the world, full of eyes, teeth and organs. For this story he "
-            "appears as a flagellant swathed in bandages."
+            "Like any deluder, by nature he is a dark tear in things, crowded "
+            "with eyes, teeth and innards. For this story he goes as a "
+            "flagellant bound up in bandages."
         ),
         notes=paragraphs(
             "Guile is printed 6+2, the +2 being his Puissant Guile.",
@@ -507,10 +508,9 @@ def _malicia(b: Builder):
         ],
         vis=[BodyVis(3, "Perdo", "serpent head")],
         appearance=(
-            "A young woman with a serpent growing from the middle of her "
-            "chest. Its head gnaws and stings all of her but her face, and the "
-            "bites bleed a little, some showing the bruised colours of venom "
-            "and rot."
+            "A young woman out of whose breast a snake grows. It worries at "
+            "her everywhere but the face, leaving small bleeding bites, some "
+            "of them bruised dark by poison and decay."
         ),
         notes=paragraphs(
             "Berserk: +2 Attack on both lines; Soak +3 in place of +1. The "

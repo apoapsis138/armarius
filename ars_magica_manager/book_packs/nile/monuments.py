@@ -322,15 +322,16 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         known=REGION,
         inside=monuments,
         summary=paragraphs(
-            "The greatest of the necropolises, and home to its most powerful "
-            "guardian, the Father of Dread: the great effigy of Harmarchis, Horus "
-            "at Dawn, which Greek scholars call the Sphinx. It faces the opposite "
-            "way from the one Herodotus reports, and nobody recalls when it "
-            "turned or why.",
+            "Of all the guardians of the great necropolises the most powerful "
+            "is Gizeh's, the Father of Dread: the great effigy of Harmarchis, "
+            "Horus at Dawn, which Greek scholars call the Sphinx. It faces the "
+            "opposite way from the one Herodotus reports, and nobody recalls "
+            "when it turned or why (p. 28).",
             "Between its forepaws lies a small Divine aura, from when Mary laid "
-            "the infant Christ in the shade there while they rested.",
+            "the infant Christ in the shade there while they rested (p. 28).",
         ),
-        secrets="That Divine aura may be what has locked the Father of Dread in "
+        secrets="The Divine aura between its forepaws may be what has locked the "
+        "Father of Dread in "
         "place: it no longer gives predictions or warns of grave worldly events, "
         "but it protects the tombs in a subtler way, drawing trespassers into "
         "Faerie (LotN p. 28). The aura's strength is not printed.",
@@ -1241,7 +1242,8 @@ def _creatures(b: Builder, monuments: Any, reeds: Any, giza: Any) -> None:
             "Wound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitated "
             "(22-28), Dead (29+).",
             "Greater Powers are Chilling Laugh or Howl, Damaging Effect, and "
-            "Decapitate.",
+            "Decapitate. Its Feast of the Dead recovers 2 Might when it inflicts "
+            "a Heavy Wound or greater.",
         ),
     )
     b.creature(
@@ -1865,11 +1867,8 @@ def _copts(b: Builder) -> None:
         "find enlightenment in the attempt. They also study alchemy, only for "
         "substances that alter mood and body and so ease meditation and the "
         "channelling of the Divine.",
-        secrets="They hold the Wisdom from Ignorance Virtue (LotN p. 49): books in "
-        "languages they cannot read teach Theology, Organization Lore: Sufis or "
-        "the like instead of their subject. Practical learning comes only when "
-        "overcoming challenges on spiritual journeys, and counts as a miracle. The "
-        "book gives this school no name; the record's name is descriptive.",
+        secrets="They hold the Wisdom from Ignorance Virtue (LotN p. 49; DE p. 116). "
+        "The book gives this school no name; the record's name is descriptive.",
     )
 
 

@@ -982,7 +982,7 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
         "Spider in the Ice",
         (
-            "Damhan-Allaidh, the Spider",
+            "Damhan-allaidh, the Spider",
             "Hetep the Corrupter",
             "Victor filius Pralix",
             "Brighde Scot",
@@ -1082,7 +1082,7 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
             "Brighde Scot",
             "Victor filius Pralix",
             "Hetep the Corrupter",
-            "Damhan-Allaidh, the Spider",
+            "Damhan-allaidh, the Spider",
             "Whisper",
             "Ammon, Master of the Hidden Revels",
             "Liam the Shapeless",
@@ -1090,12 +1090,12 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
     ),
     (
         "Spider Through Mist",
-        ("Damhan-Allaidh, the Spider", "Hetep the Corrupter", "Geirrod", "Setna"),
+        ("Damhan-allaidh, the Spider", "Hetep the Corrupter", "Geirrod", "Setna"),
     ),
     (
         "Into the Gateway",
         (
-            "Damhan-Allaidh, the Spider",
+            "Damhan-allaidh, the Spider",
             "Hetep the Corrupter",
             "Hetep's Undead Form",
             "Setna",
@@ -1134,8 +1134,8 @@ TIES: tuple[tuple[str, str, str], ...] = (
     ("Kollbjorn", "Skrukka", "His mother"),
     ("Kollbjorn", "Drit", "His daughter"),
     ("Thorkel Red-Cloak's Son", "Bard Snaefellsass Dumbson", "His half-brother"),
-    ("Damhan-Allaidh, the Spider", "Hetep the Corrupter", "His demon"),
-    ("Hetep's Undead Form", "Damhan-Allaidh, the Spider", "His body"),
+    ("Damhan-allaidh, the Spider", "Hetep the Corrupter", "His demon"),
+    ("Hetep's Undead Form", "Damhan-allaidh, the Spider", "His body"),
     ("Hetep's Undead Form", "Hetep the Corrupter", "The same demon"),
     ("Gudmund of Glasvellir", "Geirrod", "His brother"),
     ("Geirrod", "Jarl Agdi", "His lieutenant"),

@@ -60,8 +60,10 @@ def _land(b: Builder) -> Neighbour:
             "of hunger: the spirit at the desert's centre would dry every "
             "oasis and grind the mountains to dust, and only what has been "
             "raised against it has stopped it. Egypt called on the black "
-            "earth, Carthage paid its gods for protection, and today the "
-            "Dominion, Christian and then Muslim, makes a thin firm wall. "
+            "earth, Carthage paid its gods for protection, and some think the "
+            "Hunger moved Rome to destroy them and left it needing a protector "
+            "of its own. Today the Dominion, Christian and then Muslim, makes "
+            "a thin firm wall. "
             "Those who live here hardly notice either theme; a stranger "
             "notices both.",
             "The time of legends gave the land the giant Antaios (Antaeus to "
@@ -163,8 +165,11 @@ def _land(b: Builder) -> Neighbour:
             "Languages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; "
             "Derija is the common speech, Classical the tongue of scholarship "
             "and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and "
-            "Arabic (Classical) 3); Tamazight (Tarifit, Kabyle, Tashelhiyt, "
-            "Zenaga, Tamahak, Siwi); Lingua Franca or Sabir (Western, Eastern); "
+            "Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); "
+            "Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in "
+            "the central highlands, Zenaga in south-west Mauritania, Tamahak "
+            "among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir "
+            "(Western, Eastern), the commonest tongue of visiting Europeans; "
             "Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek "
             "(Classical), Latin (Classical), Libyan, Punic (Carthaginian, "
             "Phoenician). Scholars and travellers often lose their dialect for "
@@ -556,7 +561,8 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
             "sun, moon, stars, beasts and plants, and having no more to make, "
             "made destruction: eclipses, discord, death, gossip and lies. The "
             "porcupine bears the splinters of her spindle and the tortoise was "
-            "a calf crushed in her millstones. Against her stands Awettuf the "
+            "a calf crushed in her millstones. Ayyur the moon is her son and "
+            "Tafuyt the sun her daughter. Against her stands Awettuf the "
             "ant, husband of Tafuyt, who taught people to use what she made, to "
             "grow grain and bake, to sacrifice, and got the wild bulls to serve.",
             "The Kahina (al-Kahinat, 'the seeress'), born Dihya, took up the "
@@ -713,7 +719,12 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
         "Tripolitania and the Libyan Desert's fringes, where a century of "
         "feuding left the Debbab on top.",
     )
-    b.link(caliph, "places", b.saga.neighbours[-1], "Beyond his effective rule")
+    b.link(
+        caliph,
+        "places",
+        b.saga.neighbours[-1],
+        "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
+    )
 
 
 # -- how to live among them --
@@ -732,7 +743,10 @@ def _customs(b: Builder) -> None:
             "stricter, Marrakesh excepted. They make the five duties public: "
             "the profession of faith, prayer five times a day towards Mecca, "
             "above all Friday noon, alms, which none here think the poor don't "
-            "deserve, the Ramadan fast, and pilgrimage. A returning Hajj or "
+            "deserve, the Ramadan fast, which spares children, the old, the "
+            "pregnant, the ill and travellers, and pilgrimage. Pork, alcohol "
+            "and garlic are shunned, some more strictly than others. A "
+            "returning Hajj or "
             "Hajja may wear a green head covering; three pilgrimages to "
             "Kairouan count as one to Mecca for the poor.",
             "Baraka here is fortune, set before birth and not earned: the "

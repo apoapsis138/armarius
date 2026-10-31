@@ -400,11 +400,11 @@ def _orris(b: Builder, cathedral: Covenant) -> Character:
         type="companion",
         age=57,
         summary=paragraphs(
-            "The bishop of the diocese: tall and stick-thin, with a large hooked "
-            "nose and clear blue eyes. His orange-red hair has faded to pure "
-            "white and, tonsure apart, he has a full head of it. A strong and "
-            "clever speaker, he fills a powerful voice with feeling and stirs "
-            "men's hearts.",
+            "The bishop of the diocese, a long, gaunt man with a great beak of "
+            "a nose and bright blue eyes. The red hair of his youth has gone "
+            "white, though he has kept it all but the tonsure. In the pulpit "
+            "he is formidable, with a big voice and a sure command of "
+            "argument, and he can move a congregation.",
             "He is a local man made good, the second son of a wealthy knight who "
             "grew up in the diocese and served as a parish priest in it before "
             "his election, and the city is proud of him. He preaches in his "

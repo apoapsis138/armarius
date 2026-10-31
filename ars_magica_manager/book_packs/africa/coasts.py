@@ -306,8 +306,8 @@ def _atlantic(b: Builder, maghreb: Neighbour) -> dict[str, Neighbour]:
             "al-Mustansir leaves the region to a bureaucrat whose eyes are on "
             "Sale.",
             "The Kasbah, an enormous palace-fortress with its own mosque at "
-            "the river mouth, has stood empty but for a few squatters since "
-            "1199, and the aura of its mosque has faded.",
+            "the river mouth, has held only squatters since 1199, and no aura "
+            "remains in that mosque.",
         ),
     )
     _place(
@@ -852,7 +852,9 @@ def _tell(
             "the markets of perfume to the north, cloth to the west, wool to "
             "the south, and dried fruit and books to the east. Others ring "
             "outward, fouler with each circle.",
-            "Sailors, the navy and the water colour everything here. It needs "
+            "Sailors, the navy and the water colour everything here. Nearly "
+            "100,000 people live in it, and merchants from across the "
+            "Mediterranean come for the desert's gold and slaves. It needs "
             "wheat from Sicily and sells desert goods to Italy.",
         ),
     )
@@ -973,12 +975,13 @@ def _tell_towns(
             "non-Muslims on pain of death. Its mosque, among the oldest and the "
             "largest in North Africa, is thought the model for all those of the "
             "region and draws pilgrims and students. No city of the Maghreb has "
-            "a higher Dominion aura, though the book gives no figure.",
+            "a higher Dominion aura.",
             "The sack of 1057 ended its fame for learning and as a court of the "
             "Jewish exilarchs; the Jews have mostly gone to Egypt and the "
             "scholars to Tunis, and rebuilding is unfinished. Libraries lost in "
             "the flight may lie in the ruins.",
         ),
+        secrets="The book gives no figure for its Divine aura (p. 56).",
     )
     for name, kw in (
         (
@@ -1898,8 +1901,9 @@ def _azru(b: Builder, atlas: Neighbour) -> None:
         ),
         notes=paragraphs(
             "Natural weapons: Large Claws Init 0, Atk +5, Def +3, Dam +4; Teeth "
-            "Init 0, Atk +3, Def +1, Dam +1. Hide and fur Protection +3. Flaw "
-            "details: Weakness (sweet foods); Extra Natural Weapons (bite); "
+            "Init 0, Atk +3, Def +1, Dam +1. Hide and fur Protection +3. Virtue "
+            "and Flaw details: Ferocity (when injured), Weakness (sweet foods); "
+            "Extra Natural Weapons (bite); "
             "Improved Damage and Improved Initiative (claws).",
             "Once hunted for the arena, Africa's only native bear ranges from "
             "Marrakesh to Tripoli in its mountains and their surrounds: mundane "

@@ -169,7 +169,22 @@ def _lands(b: Builder) -> tuple[Neighbour, Neighbour]:
             "fertility. Secrets and mysteries: the Red devours secrets, so some "
             "mysteries no longer have answers, and others never had any, being "
             "plain marvels of God; players must expect that. Endlessness: see "
-            "above.",
+            "above. The Black's servants include the lector priests who were "
+            "the pharaohs' magicians.",
+            "Why the Order might come here (pp. 127-128). The book puts no magi "
+            "in these lands in 1220. A saga may loot the past with no neighbours "
+            "and add other covenants later; a crusading or tired covenant may "
+            "come to escape the Code or a Peripheral Code, until its actions "
+            "bring magi from the Roman or Levant Tribunals; a covenant may join "
+            "an existing Tribunal, if Redcaps or that Tribunal's members can "
+            "reach it in good time and its Peripheral Code allows, or contest a "
+            "border at Grand Tribunal, where no precedent yet exists, for vis or "
+            "votes (Houses of Hermes: True Lineages p. 49; ArM5 p. 14). A Nile "
+            "Tribunal needs at least twelve magi of four covenants and a "
+            "Quaesitor, and a sponsor at the Grand Tribunal of 1228 or 1261. It "
+            "must outlast the Fifth Crusade and, if history holds, the Seventh "
+            "(1248 to 1254), against eremites, Moorish sahirs, treasure hunters "
+            "and magi who want no new delegation.",
             "Every monument of medieval Africa stands in Mythic Africa, with "
             "many more. The book follows thirteenth-century folklore, not "
             "modern archaeology. Tombs hold bizarre traps, strange creatures "
@@ -386,10 +401,10 @@ def _peoples(b: Builder) -> None:
     b.faction(
         "The Sabeans",
         summary=(
-            "A people who claim to be Sabeans, and so People of the Book, with "
+            "They claim to be Sabeans, and so People of the Book, with "
             "communities across Egypt and a fire religion much like the "
             "Zoroastrians'. They stand out in Cairo, for they venerate the "
-            "Keeper of the Dead at Giza."
+            "Keeper of the Dead at Giza (p. 13)."
         ),
     )
     b.faction(
@@ -1010,7 +1025,7 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         place=valley,
     )
     elephant_block: StatBlock = {
-        "characteristics": characteristics(0, 1, 1, -4, 12, 3, 0, -3),
+        "characteristics": characteristics(1, 1, 1, -5, 12, 3, 0, -3),
         "virtues_flaws": [
             "Improved Characteristics",
             "Ferocity",
@@ -1078,7 +1093,10 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "may live three hundred years.",
             elephant_weapons,
             "Only the herd leader has Leadership, and the Pack/Herd Leader "
-            "Quality rather than Herd Animal.",
+            "Quality rather than Herd Animal. The errata (p. 87) give Com -5/-4* "
+            "and do not explain the asterisk. Reading it as the book's own "
+            "footnote, 'herd leader only' (p. 20), Com is -5 and herd leaders "
+            "have -4; this is an inference, not a printed rule.",
             "Female: Size +4, -2 Strength, +1 Quickness; no Aggressive, Extra "
             "Natural Weapons or Large Horns (Tusks) Qualities and no Ferocity; "
             "Brawl 4 (dodge); no Tusk attack; Communication -5.",
@@ -1363,7 +1381,7 @@ def _hyena() -> StatBlock:
             "Improved Characteristics",
             "Keen Vision",
             vf_puissant("Guile"),
-            "Social Handicap",
+            ("Social Handicap", {"detail": "unpleasant odour"}),
             "Nocturnal",
             "Crafty",
             "Keen Eyesight",
@@ -1387,24 +1405,26 @@ def _hyena() -> StatBlock:
 
 def _baboon_block() -> StatBlock:
     return {
-        "characteristics": characteristics(2, 0, -3, 0, -4, 0, 2, 1),
+        "characteristics": characteristics(2, 0, -2, 0, -4, 0, 2, 1),
         "virtues_flaws": [
             "Berserk",
             ("Learn {ability} From Mistakes", {"ability": "Athletics"}),
             "Oversensitive (Minor)",
             "Short Attention Span",
+            "Aggressive",
+            "Ambush Predator",
             "Crafty",
-            "Defensive Fighter",
             "Pack Animal",
             "Skilled Climber",
+            "Vocal",
         ],
         "abilities": [
-            ("Athletics", 5, "climbing"),
-            ("Awareness", 4, "predators"),
-            ("Brawl", 3, "bite"),
-            ("Leadership", 5, "monkeys"),
-            ("Stealth", 3, "hiding"),
-            ("Survival", 3, "foraging"),
+            ("Athletics", 3, "climbing"),
+            ("Awareness", 3, "food"),
+            ("Brawl", 5, "bite"),
+            ("Hunt", 4, "prey"),
+            ("Stealth", 4, "stalking prey"),
+            ("Survival", 3, "savannah"),
         ],
         "traits": {"Mischievous": 2, "Brave": 2},
     }
@@ -1446,7 +1466,9 @@ def _monkey(
         block=block,
         appearance=appearance,
         notes=paragraphs(
-            notes, "Combat figures follow the baboon's, adjusted for Size."
+            notes,
+            "Combat figures follow the baboon's, adjusted for Size. Troop "
+            "leaders have Com +1, inferred as for the baboon.",
         ),
         place=valley,
     )
@@ -1460,7 +1482,7 @@ def _monkeys(b: Builder, valley: Neighbour) -> None:
         size=-2,
         cunning=True,
         block=_baboon_block(),
-        attacks=[b.attack("Bite", 2, 9, 7, -3), b.attack("Evasion", 2, None, 7, None)],
+        attacks=[b.attack("Bite", 2, 11, 9, -3), b.attack("Evasion", 2, None, 9, None)],
         soak=1,
         fatigue_levels=FATIGUE,
         appearance=(
@@ -1475,8 +1497,13 @@ def _monkeys(b: Builder, valley: Neighbour) -> None:
             "hugging the one she loves and leaving the other to ride on her "
             "back, but she drops the loved one to escape a predator.",
             "Oversensitive is to threats. Pack leaders also have Pack/Herd "
-            "Leader and Leadership. Natural weapon: Init +1, Atk +3, Def +2, "
-            "Dam +1.",
+            "Leader. Characteristics, Qualities and Abilities follow the errata "
+            "(p. 87), whose list drops the book's Leadership 5 (monkeys) for "
+            "troop leaders. It gives Com 0/+1* and does not explain the "
+            "asterisk. Reading it as the book's own footnote, 'troop leaders "
+            "only' (p. 22), Com is 0 and troop leaders have +1; this is an "
+            "inference, not a printed rule. Natural weapon: Init +1, Atk +3, "
+            "Def +2, Dam +1.",
         ),
         place=valley,
     )
@@ -1489,7 +1516,7 @@ def _monkeys(b: Builder, valley: Neighbour) -> None:
         ["Fast Runner", "Timid"],
         -8,
         4,
-        -4,
+        -3,
         4,
         "The smallest monkey, shaggy and reddish brown with a long tail, white "
         "legs and belly, a brighter red cap and black lines from face to ear. "
@@ -1506,8 +1533,8 @@ def _monkeys(b: Builder, valley: Neighbour) -> None:
         [],
         -6,
         3,
-        -3,
-        3,
+        -2,
+        4,
         "A black monkey with a long white beard, a long shawl of white fur over "
         "its back and a white tuft on its tail.",
         "It has no thumb, hence Palsied Hands. Native to the Horn of Africa, "
@@ -1522,8 +1549,8 @@ def _monkeys(b: Builder, valley: Neighbour) -> None:
         [],
         -4,
         1,
-        -3,
-        3,
+        -2,
+        4,
         "A docile, shaggy beast with a long tail. The male has a lion-like mane "
         "and a bright face: red stripe, blue muzzle and yellow beard.",
         "Native to the far south, sometimes found in Ethiopia and beyond.",

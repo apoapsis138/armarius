@@ -195,9 +195,9 @@ def _great_desert(b: Builder) -> Neighbour:
         place=desert,
         faction="Other",
         summary=paragraphs(
-            "An unusual Muslim sect who hold that any Muslim may lead the "
-            "community, and keep the right to rise against an unjust or "
-            "heretical leader. Many fled to Wargala from Tahert when the "
+            "An unusual Muslim sect, for whom leadership is open to any of the "
+            "faithful and a bad or heretical leader may rightly be overthrown. "
+            "Many fled to Wargala from Tahert when the "
             "Rustamid Imamate fell early in the 10th century; others live "
             "at Ghardaia and on Djerba.",
         ),
@@ -413,14 +413,16 @@ def _fezzan(b: Builder, desert: Neighbour) -> Neighbour:
         summary=paragraphs(
             "A copse of trees of dark stone shot through with grey crystal, "
             "rising from the sands. After terrible sandstorms some fall and "
-            "split; now and then the erg bares a new one. The book does not "
-            "say where it lies. The Tuareg shun it for fear of the Jobar, a "
+            "split; now and then the erg bares a new one. The Tuareg shun it "
+            "for fear of the Jobar, a "
             "great lizard that creeps through the dunes under cover of "
             "storms and takes children. Bones of its kind lie across the "
             "desert, and nomads steer by them.",
             "Vis: split trees give fragments rich in Terram vis; one pawn in "
-            "five is Herbam or Aurum instead, but only in vis found in spring.",
+            "five is Herbam or Auram instead, but only in vis found in spring.",
         ),
+        secrets="The book does not say where it lies (p. 68). It prints the "
+        "second Form as Aurum, read here as Auram.",
     )
     return fezzan
 
@@ -884,10 +886,10 @@ def _redoubts(b: Builder, desert: Neighbour) -> Neighbour:
         summary=paragraphs(
             "A sandstone massif past the feared Tanezrouft, sometimes called "
             "the Adrar Ifoghas after the Kel Ifoghas who claim it. Unlike the "
-            "other three its auras are mostly Faerie, of no printed strength. "
-            "Its rock art shows nomad life, and shifts from one visit to the "
-            "next.",
+            "other three its auras are mostly Faerie. Its rock art shows nomad "
+            "life, and shifts from one visit to the next.",
         ),
+        secrets="The book prints no strength for its auras (p. 74).",
     )
     b.faction(
         "The Kel Asouf",
@@ -942,8 +944,12 @@ def _tanezrouft(b: Builder, desert: Neighbour) -> Neighbour:
             "the Taghaza Trail. The Massufa keep a few date groves with "
             "melons in their shade, and flocks of sheep, and after the long "
             "dry road its many wells taste all the sweeter. Timbuktu is 100 "
-            "leagues east-south-east.",
+            "leagues east-south-east, and the salt mines of Taghaza 165 leagues "
+            "north-north-east.",
         ),
+        secrets="The book disagrees on the road to Taghaza: 165 leagues "
+        "north-north-east from here (p. 74), 125 leagues south-south-east from "
+        "there (p. 75).",
     )
     _place(
         b,
@@ -988,6 +994,9 @@ def _tanezrouft(b: Builder, desert: Neighbour) -> Neighbour:
             "Iwalatan is 125 leagues south-south-east and Sijilmasa some 20 "
             "days north.",
         ),
+        secrets="The book disagrees on the road to Iwalatan: 125 leagues "
+        "south-south-east from here (p. 75), 165 leagues north-north-east from "
+        "there (p. 74).",
     )
     tuwat = _place(
         b,
@@ -1217,7 +1226,10 @@ def _roads(b: Builder, desert: Neighbour) -> None:
             "the coast since the mid-11th century, with enclaves at Safi, "
             "Sale, Tangier, Orano, Algiers, Bona, Tunis, Mahadia and Tripoli, "
             "chiefly for gold, timber, salt, cheese, wine, oil and grain, and "
-            "take part in the slave trade too.",
+            "take part in the slave trade too: many of their households keep "
+            "two or three slaves. Many places forbid keeping Christian slaves, "
+            "and an owner should free one who converts, which keeps demand "
+            "from the north up.",
             "Merchants bound for one city gather at its departure city, buy "
             "rested camels and choose a guide, on whom everything depends. He "
             "sets a day in the cool months, October to March. The merchant "
@@ -1560,8 +1572,8 @@ def _creatures(b: Builder, desert: Neighbour, garama: Neighbour) -> None:
         ],
         vis=[BodyVis(2, "Mentem", "in its stinger")],
         encumbrance="0 (0)",
-        appearance="A dull black creature, slate grey in the book's opening "
-        "words, with crab-like chitinous legs, glossy obsidian eyes, "
+        appearance="A dull black or slate grey creature with crab-like "
+        "chitinous legs, glossy obsidian eyes, "
         "oversized pincers and a barbed tail arched over its back; as big as "
         "a healthy dog or a six-year-old child.",
         notes=paragraphs(

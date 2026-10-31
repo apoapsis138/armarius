@@ -22,7 +22,7 @@ from __future__ import annotations
 
 from ...models import Saga
 from .. import BookPack, register
-from ..builder import Builder
+from ..builder import Builder, mark_unconverted
 from . import bestiary, covenants, places, stats_magi, stories, tribunal, world
 from .state import Alps
 
@@ -51,6 +51,7 @@ def assemble() -> Builder:
         stats = getattr(part, "stats", None)
         if stats is not None:
             stats(alps)
+    mark_unconverted(alps.b.saga)
     return alps.b
 
 

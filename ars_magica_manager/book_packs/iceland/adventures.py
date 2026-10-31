@@ -281,7 +281,6 @@ def _thords_feast(b: Builder) -> None:
             "abilities": [
                 ("Athletics", 4, ""),
                 ("Awareness", 3, ""),
-                ("Hamfarir", 5, ""),
                 ("Hunt", 3, ""),
                 ("Stealth", 4, "hunting"),
                 ("Second Sight", 5, ""),
@@ -329,9 +328,9 @@ def _thords_feast(b: Builder) -> None:
             "spirits. If she sees that the magi mean to help she tries to lead "
             "them to the mud pits (p. 100).",
             "Converted: her Spiritual Form has Str +3, Sta +1, Size -1 and Soak "
-            "+5. Ferocity 3 is the Virtue, for protecting her mistress, and "
-            "Hamfaring 5 is Hamfarir. Body levels OK, -3, Incapacitated. "
-            "Might Form Animal is this pack's reading.",
+            "+5. Ferocity 3 is the Virtue, for protecting her mistress. Body "
+            "levels OK, -3, Incapacitated. Might Form Animal is this pack's "
+            "reading. Powers with no Ability now, as printed: Hamfarir 5.",
         ),
     )
     b.creature(
@@ -477,7 +476,7 @@ def _hreppur_people(b: Builder) -> None:
         age=196,
         summary=council,
         traits={"Quick Temper": 3, "Distrustful": 2, "Boorish": 1, "Cautious": 1},
-        secrets="A trollson of the council: Magic Resistance 63, Size +2, looks "
+        secrets="A trollsdottir of the council: Magic Resistance 63, Size +2, looks "
         "37, printed Confidence 3. Her giant mother raised her and she never "
         "met her outlawed father. She picked fights until age taught her some "
         "caution, and trollsynir magic has left her looking more troll than "
@@ -607,7 +606,7 @@ def _meet_the_dragon(b: Builder) -> None:
         aura=9,
         inside=_named(b, "Hekla"),
     )
-    snaefell = _named(b, "Snaefelljokul")
+    snaefell = _named(b, "Snaefell")
     _site(
         b,
         "Silver Spring of Snaefell",
@@ -738,7 +737,7 @@ def _meet_the_dragon(b: Builder) -> None:
 
 
 def _feast_of_thanks(b: Builder) -> None:
-    snaefell = _named(b, "Snaefelljokul")
+    snaefell = _named(b, "Snaefell")
     caves = _site(
         b,
         "The Troll Caves of Snaefell",
@@ -870,6 +869,9 @@ def _feast_of_thanks(b: Builder) -> None:
             "Printed abilities, described and not built: Curse 12, External "
             "Soul, Potency 9, Shapeshift 12, Speak Jotunn 9, Svonhverfing 18 "
             "(pp. 57-59 for those talents).",
+            "The book's Curse example (p. 59) has a troll-sorceress Skrukka "
+            "curse a man, Jorik, to marry her granddaughter, with Curse 8, Speak "
+            "Jotunn 7 and Potency 6 against the 12, 9 and 9 of her block here.",
             CORPUS_FORM,
         ),
     )
@@ -1213,7 +1215,7 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
 
 
 def _glittering_plains(b: Builder) -> None:
-    snaefell = _named(b, "Snaefelljokul")
+    snaefell = _named(b, "Snaefell")
     plains = _site(
         b,
         "Glasvellir",

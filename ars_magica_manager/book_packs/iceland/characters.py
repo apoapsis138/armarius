@@ -9,12 +9,16 @@ keeps the Gift and Hermetic Magus that `convert` gives every block, and
 his Might and powers are in words, as a character has no Might.
 
 Creatures: Hetep the Corrupter, Pan Caudarax and Bard Snaefellsass have a
-Might; Liam the Shapeless and Damhan-Allaidh, gruagachs long past human,
+Might; Liam the Shapeless and Damhan-allaidh, gruagachs long past human,
 have a printed Magic Resistance and no Might, so they are Magic creatures
 at Might 0 with the figure in their notes. Their Characteristics,
 Virtues, Abilities and traits go through `convert` too where the book
 prints them. Combat, powers, Confidence and Might Forms follow the pack's
 readings (see the package docstring).
+
+An Ability with no catalog counterpart is not kept under its printed name:
+its experience is spent on catalog Abilities (DE p. 538), or, for an
+arcane power no catalog Ability fits, it is named in the notes instead.
 
 The book gives no Might Form, so each is this pack's reading: Hetep's is
 Vim, the vis in his heart; Pan Caudarax's Ignem, his breath; Bard's Aquam,
@@ -25,10 +29,12 @@ see, and histories, plans and powers are in secrets."""
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import replace
 
-from ...models import BodyVis, Character, Covenant, Neighbour
+from ...models import BodyVis, Character, Covenant, Creature, Neighbour
 from ...rules.sites import PLACE
+from ...rules.xp import ABILITY_FACTOR, ability_xp, score_from_xp
 from ..builder import Builder, StatBlock, characteristics, paragraphs
 from ..fourth import Fourth, convert
 
@@ -44,7 +50,6 @@ ABILITY_NAMES = {
     "European Area Lore": "Area Lore: Europe",
     "Farming": "Profession: Farmer",
     "Fantastic Beast Lore": "Magic Lore",
-    "Hamfaring": "Hamfarir",
     "Hermes History": "Organization Lore: Order of Hermes",
     "Icelandic Law": "Common Law",
     "Mediterranean Area Lore": "Area Lore: Mediterranean",
@@ -53,6 +58,41 @@ ABILITY_NAMES = {
     "Sense Holiness & Unholiness": "Sense Holiness and Unholiness",
     "Shapechange": "Shapeshifter",
     "Shapeshift": "Shapeshifter",
+}
+#: Printed Abilities with no catalog counterpart, and the catalog Ability
+#: their whole experience is spent on, as the appendix spreads a removed
+#: Ability's experience (DE p. 538). The catalog's Empathy is a Faerie
+#: Method, not the Fourth Edition Talent.
+SPENT_ON = {
+    "Alchemy": "Philosophiae",
+    "Compose Poetry": "Profession: Poet",
+    "Contortions": "Athletics",
+    "Diplomacy": "Etiquette",
+    "Direction Sense": "Area Lore: Scottish Highlands",
+    "Empathy": "Folk Ken",
+    "Gruagach Lore": "Organization Lore: Gruagachan",
+    "Mimicry": "Guile",
+    "Visions": "Premonitions",
+    "Weather Sense": "Wilderness Sense",
+}
+#: Printed arcane powers no catalog Ability fits: named in the notes and
+#: left off the Abilities list.
+POWERS = {
+    "Curse",
+    "Decay",
+    "Enthrall",
+    "Galdor Wisdom",
+    "Geasa",
+    "Gift",
+    "Gruagach Wisdom",
+    "Hamfarir",
+    "Hamfaring",
+    "Incinerate",
+    "Jotunn Affinity with Frost",
+    "Potency",
+    "Sacrifice",
+    "Shatter",
+    "Transform",
 }
 #: A combat line of a character's block: name, Init, Attack, Defense,
 #: Damage, Fatigue.
@@ -70,6 +110,38 @@ def _combat(lines: list[Combat], soak: str) -> str:
     return f"Combat as printed (Fourth Edition): {shown}. Soak {soak}."
 
 
+def _spend(stat: StatBlock, printed: Sequence[tuple[str, int, str]]) -> list[str]:
+    """Spends each `SPENT_ON` Ability's whole experience on its catalog
+    Ability, a new one taking the printed specialty, and says so. What
+    buys no further score goes in the block's "spare_xp", for `_top_up`:
+    a block holds only scores."""
+    entries = {name: (score, spec) for name, score, spec in stat["abilities"]}
+    spare: dict[str, int] = {}
+    said: list[str] = []
+    for name, score, specialty in printed:
+        new = SPENT_ON.get(name)
+        if new is None:
+            continue
+        xp = ability_xp(score)
+        held, own = entries.get(new, (0, specialty))
+        total = ability_xp(held) + spare.get(new, 0) + xp
+        reached = score_from_xp(total, ABILITY_FACTOR)
+        entries[new] = (reached, own)
+        spare[new] = total - ability_xp(reached)
+        owner = f"{name}'" if name.endswith("s") else f"{name}'s"
+        said.append(f"{owner} {xp} xp spent on {new}")
+    stat["abilities"] = [(n, s, spec) for n, (s, spec) in entries.items()]
+    stat["spare_xp"] = spare
+    return said
+
+
+def _top_up(record: Character | Creature, stat: StatBlock) -> None:
+    """Adds to a built record's Abilities the experience `_spend` left
+    over its scores."""
+    for ability in record.abilities:
+        ability.xp += stat["spare_xp"].get(ability.name, 0)
+
+
 def _sheet(key: str, block: Fourth, *, hermetic: bool = False) -> StatBlock:
     """The converted block. Only a Hermetic magus keeps the Gift and
     Hermetic Magus that `convert` gives every block; the clauses about
@@ -79,20 +151,32 @@ def _sheet(key: str, block: Fourth, *, hermetic: bool = False) -> StatBlock:
         for name, score, _ in block.abilities
         if ABILITY_NAMES.get(name, name) != name
     ]
+    powers = [
+        f"{name} {score}" + (f" ({specialty})" if specialty else "")
+        for name, score, specialty in block.abilities
+        if name in POWERS
+    ]
     renamed = replace(
         block,
         abilities=[
             (ABILITY_NAMES.get(name, name), score, specialty)
             for name, score, specialty in block.abilities
+            if name not in POWERS and name not in SPENT_ON
         ],
     )
     stat, _ = convert(key, renamed)
+    spent = _spend(stat, block.abilities)
     if not hermetic:
         stat["virtues_flaws"] = stat["virtues_flaws"][2:]
     notes = stat["notes"].replace("Twilight Points 0 / 3 = Warping 0; ", "")
     notes = notes.replace(", not the old 0", "")
     stat["notes"] = paragraphs(
-        notes, f"Abilities renamed: {'; '.join(moved)}." if moved else ""
+        notes,
+        f"Abilities renamed: {'; '.join(moved)}." if moved else "",
+        f"Abilities with no counterpart: {'; '.join(spent)}." if spent else "",
+        f"Powers with no Ability now, as printed: {'; '.join(powers)}."
+        if powers
+        else "",
     )
     return stat
 
@@ -144,7 +228,10 @@ def _person(
         type="companion",
         secrets=secrets,
     )
-    return b.stats(person, _sheet(key, block), source="LFI")
+    stat = _sheet(key, block)
+    person = b.stats(person, stat, source="LFI")
+    _top_up(person, stat)
+    return person
 
 
 def build(b: Builder) -> None:
@@ -406,7 +493,7 @@ def _victor(b: Builder) -> None:
         house="house_ex_miscellanea",
         age=438,
         summary="A follower of Pralix, given his sigil when she defeated "
-        "Damhan-Allaidh in 816, whom the Order has long counted among the dead.",
+        "Damhan-allaidh in 816, whom the Order has long counted among the dead.",
         secrets=paragraphs(
             "In life he could bring anyone round to any position, with an "
             "understanding of people unmatched in his day, but a demon was "
@@ -421,7 +508,7 @@ def _victor(b: Builder) -> None:
             "works by possession alone. Brighde, his friend's granddaughter, "
             "comes first, but everything he does bends toward destroying the "
             "Spider, and he will draw the magi into risky schemes in return "
-            "for scraps of knowledge about Damhan-Allaidh or Hetep (pp. 135-136).",
+            "for scraps of knowledge about Damhan-allaidh or Hetep (pp. 135-136).",
             "He looks a tall man in Roman robes, frozen in the ward in his "
             "Scartaris laboratory (p. 82). Founder and Disceptator of Vindolanda, "
             "he entered the battle of wills in 888 (p. 72). Born in 782.",
@@ -459,7 +546,7 @@ def _victor(b: Builder) -> None:
             "Focused": 3,
             "Otherworldly": 4,
             "Patient": 2,
-            "Obsessed with destroying Damhan-Allaidh": 6,
+            "Obsessed with destroying Damhan-allaidh": 6,
         },
         reputations={"Long Dead (the Order)": 3},
         notes="The book prints no Arts, Abilities, Virtues or Flaws: his powers, "
@@ -535,7 +622,7 @@ def _liam(b: Builder) -> None:
             ),
         ),
     )
-    b.creature(
+    liam = b.creature(
         "Liam the Shapeless",
         page="p. 136",
         realm="Magic",
@@ -558,7 +645,7 @@ def _liam(b: Builder) -> None:
             "pain, and moves only by shapeshifting, into the one form he can hold "
             "for long. Endurance of the Berserkers, or any Corpus or Mentem effect "
             "that quells pain, gives him respite, and with it he can help the magi "
-            "hunt Damhan-Allaidh; without it he can only beg to die. Even so he "
+            "hunt Damhan-allaidh; without it he can only beg to die. Even so he "
             "will ask Iain to destroy his soulstone once the Spider is gone (p. "
             "136).",
             "A fleshy thing with no shape, bones or organs, able to squeeze "
@@ -567,6 +654,7 @@ def _liam(b: Builder) -> None:
             stat["notes"],
         ),
     )
+    _top_up(liam, stat)
 
 
 def _hetep(b: Builder) -> None:
@@ -666,10 +754,10 @@ def _hetep(b: Builder) -> None:
         "means to turn all magic to its service, working chiefly on "
         "magicians. His former kin kept watch: Setna caught him time and "
         "again hiding in those who came to Thoth's stelae, until "
-        "Damhan-Allaidh brought him into the sanctum. There he set to "
+        "Damhan-allaidh brought him into the sanctum. There he set to "
         "corrupting Thoth's own words, hoping to lay the magic realm at "
         "Hell's feet. Setna noticed before it was done and drove "
-        "Damhan-Allaidh out, but the corruption went on sapping Setna, and "
+        "Damhan-allaidh out, but the corruption went on sapping Setna, and "
         "Hetep needed only time, until Pralix broke in on the Spider's "
         "preparations and in the end beat him. Victor of Vindolanda captured "
         "Hetep in 875. The two have been locked in a battle of wills ever "
@@ -784,8 +872,8 @@ def _damhan_allaidh(b: Builder) -> None:
             ),
         ),
     )
-    b.creature(
-        "Damhan-Allaidh, the Spider",
+    spider = b.creature(
+        "Damhan-allaidh, the Spider",
         page="pp. 138-139",
         realm="Magic",
         size=1,
@@ -799,7 +887,9 @@ def _damhan_allaidh(b: Builder) -> None:
         soak=16,
         fatigue_levels="OK, 0, 0, -1, -3, -5, Unconscious",
         secrets=paragraphs(
-            "The ancient gruagach, born in 570, whom the Order thinks dead. "
+            "The ancient gruagach, born in 570, whom the Order thinks dead. His "
+            "name, said davan-alli, is Gaelic for the spider, and he is also "
+            "called Dav'nalleous (pp. 70-71). "
             "His mind is close to ruin, and the scrap of humanity left in it "
             "longs to be free of him. Beast instinct usually rules and he obeys "
             "Hetep at a word. Brought to reflect on his state, by The Gift of "
@@ -812,6 +902,7 @@ def _damhan_allaidh(b: Builder) -> None:
             stat["notes"],
         ),
     )
+    _top_up(spider, stat)
 
 
 def _einar(b: Builder) -> None:
@@ -928,11 +1019,7 @@ def _pan_caudarax(b: Builder) -> None:
         block={
             "characteristics": characteristics(5, 4, 0, 0, 20, 10, 0, 0),
             "abilities": [
-                ("Curse", 31, "thieves"),
-                ("Geas", 34, "deals"),
-                ("Gift", 28, "one time bonus"),
                 ("Shapeshifter", 23, "fantastic beasts"),
-                ("Transform", 29, "tasty"),
             ],
             "traits": {"Honorable": 3, "Brave": 6, "Cunning": 3},
             "reputations": {
@@ -982,10 +1069,11 @@ def _pan_caudarax(b: Builder) -> None:
             "several foes in a round with no penalty; Breath has no Defense "
             "(n/a).",
             "Converted: Might, Characteristics (Presence and Communication "
-            "unprinted, 0 here) and Abilities as printed, under the book's "
-            "Talent names, Geas and all; the Fatigue totals are left out "
+            "unprinted, 0 here) as printed; the Fatigue totals are left out "
             "(Breath +10, the rest +20); the Might Form, unprinted, is Ignem, "
             "his breath, this pack's reading.",
+            "Powers with no Ability now, as printed: Curse 31 (thieves); Geas "
+            "34 (deals); Gift 28 (one time bonus); Transform 29 (tasty).",
         ),
         secrets=paragraphs(
             "He has a weak spot beneath his left ear, where the scales never "
@@ -1077,7 +1165,8 @@ def _bard(b: Builder) -> None:
         "He leads all Iceland's giants and is one of the land's Guardians "
         "(p. 141). He wants peace between the dragon and Einar, and counts "
         "himself guardian of the land where the characters' covenant stands "
-        "(p. 70).",
+        "(p. 70). The book's dates disagree: born in 960, he leaves Norway at "
+        "the accession of a Harald who reigns 890-930 (pp. 17, 141).",
     )
 
 

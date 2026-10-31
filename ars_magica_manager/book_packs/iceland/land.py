@@ -544,11 +544,18 @@ def _sites(
         west,
         "The glacier Eirik the Red sailed from when he went looking for Greenland.",
     )
-    _short(
+    snaefellsnes = _short(
         b,
         "Snaefellsnes",
         west,
         "Part of Thord Sturluson's domain, with Dalir.",
+    )
+    _short(
+        b,
+        "Snaefell",
+        snaefellsnes,
+        "The great volcano near the tip of the peninsula, seen from a hundred "
+        "miles off, with one main peak north of its crater and one south.",
     )
     _short(
         b,
@@ -682,6 +689,9 @@ def _west_over_sea(b: Builder) -> None:
         realm="",
         summary="Flatstone Land, which Leif Eiriksson found: "
         "mountains and glaciers, barren and without grass.",
+        secrets="A realm ruled by giants, where King Dumb reigned and Bard "
+        "Snaefellsass was born (p. 141). Fleeing trollsynir and giants make "
+        "for it in the Icelandic Wars (Icelandic Wars p. 13).",
     )
     b.place(
         "Markland",

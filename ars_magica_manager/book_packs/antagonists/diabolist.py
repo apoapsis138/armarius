@@ -127,10 +127,10 @@ _DIABOLIST: StatBlock = {
     "notes": paragraphs(
         COMBAT,
         "Equipment: fine clothes, curved dagger. Encumbrance 0 (0).",
-        "Appearance: a handsome young woman with uncovered dark wavy hair and "
-        "deep green eyes. She favours gowns of red velvet and nearly always "
-        "wears a fur cloak, because she takes cold easily. Her voice is rich "
-        "and unusually deep for a woman, and many call it her best feature.",
+        "Appearance: a good-looking young woman, bareheaded, her dark hair "
+        "waving over green eyes. Red velvet is her choice of dress, under a "
+        "fur cloak she is seldom without, for she feels the cold. Men remember "
+        "her voice above all, which is full and low.",
     ),
 }
 

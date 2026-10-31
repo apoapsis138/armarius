@@ -1158,6 +1158,27 @@ told, or grows into a threat.
 
 **See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
 
+# How to build a tomb
+<!-- help: guide-tomb -->
+
+Your troupe wants a royal tomb of your own to explore. Any place can be one,
+with *Lands of the Nile* in play.
+
+1. **Make the place.** In The Region, add a Place and tick its **Tomb** box.
+   A Tomb tab appears on it.
+2. **Say whose it is.** Edit the [Tomb tab](help:tab-nb-tomb)'s block: its kind
+   gives the base aura and Build Points, and the centuries of burials and any
+   decay change the aura. Add Boons, and up to 10 points of Hooks.
+3. **Guard it.** Add curses, talismans and wards, and traps, each to its own
+   list. Each form shows the Build Points it costs, and the tab shows what is
+   left to spend.
+4. **Run it.** With a trap chosen, More's **Overcome It** walks through springing
+   it: who is in danger, a look for it by the light there, each character's action,
+   and the trap last. Talismans and wards work the same way.
+
+A tomb stays as you built it. Only the rolls change each time. Puzzles are
+written in the place's Description or Secrets: the book's minigame isn't a rule.
+
 # How to keep a covenant on the move
 <!-- help: guide-mobile-covenant -->
 

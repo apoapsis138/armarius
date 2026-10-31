@@ -1895,24 +1895,7 @@
     },
     {
      "mastery": 0,
-     "spell": {
-      "id": "spell_the_whole_from_the_part",
-      "name": "The Whole from the Part",
-      "technique": "Intellego",
-      "form": "Corpus",
-      "level": 15,
-      "description": "From the stat block in Antagonists.",
-      "requisites": [],
-      "range": "",
-      "duration": "",
-      "target": "",
-      "ritual": false,
-      "base_level": null,
-      "source": "Ant",
-      "page": "",
-      "experimental_effects": [],
-      "details_missing": false
-     }
+     "spell_id": "spell_the_whole_from_the_part"
     },
     {
      "mastery": 0,
@@ -1932,24 +1915,7 @@
     },
     {
      "mastery": 0,
-     "spell": {
-      "id": "spell_disguise_of_the_transformed_image",
-      "name": "Disguise of the Transformed Image",
-      "technique": "Muto",
-      "form": "Imaginem",
-      "level": 10,
-      "description": "From the stat block in Antagonists.",
-      "requisites": [],
-      "range": "",
-      "duration": "",
-      "target": "",
-      "ritual": false,
-      "base_level": null,
-      "source": "Ant",
-      "page": "",
-      "experimental_effects": [],
-      "details_missing": false
-     }
+     "spell_id": "spell_disguise_of_the_transformed_image"
     },
     {
      "mastery": 0,

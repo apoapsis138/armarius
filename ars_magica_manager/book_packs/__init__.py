@@ -24,7 +24,8 @@ licence, and NOTICE.md the credit."""
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
+from functools import wraps
 from pathlib import Path
 from typing import TYPE_CHECKING, Any
 
@@ -60,8 +61,20 @@ class BookPack:
 PACKS: dict[str, BookPack] = {}
 
 
+def _finished(assemble: Callable[..., Builder]) -> Callable[..., Builder]:
+    """`assemble`, with what every pack keeps out of its public text."""
+
+    @wraps(assemble)
+    def finished(*args: Any) -> Builder:
+        b = assemble(*args)
+        builder.hide_holdings(b.saga)
+        return b
+
+    return finished
+
+
 def register(pack: BookPack) -> None:
-    PACKS[pack.key] = pack
+    PACKS[pack.key] = replace(pack, assemble=_finished(pack.assemble))
 
 
 def data(pack: BookPack) -> dict[str, Any]:
@@ -128,6 +141,7 @@ from . import (  # noqa: F401
     africa,
     alps,
     antagonists,
+    builder,
     cradle,
     hibernia,
     iceland,

@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.58.0",
+  "app_version": "3.61.0",
   "kind": "pack",
   "name": "The Lion and the Lily: the Normandy Tribunal",
   "from_saga": "The Lion and the Lily: the Normandy Tribunal",
@@ -50,7 +50,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "71c03ad8b093",
+            "id": "d00e73dbe06c",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -60,7 +60,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "fae40e8c6c40",
+            "id": "9392702a2c21",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -123,23 +123,23 @@
             "kind": "creatures",
             "target_id": "mogidell_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "0caa526b3a3b"
+            "id": "d07ca98e9463"
           },
           {
             "kind": "creatures",
             "target_id": "kerseenn_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "87ac953a6573"
+            "id": "f29010b9f40e"
           },
           {
             "kind": "creatures",
             "target_id": "arnev_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "625110f648f5"
+            "id": "151ba399a6f6"
           }
         ],
         "unnamed_magi": 0,
-        "what_matters": "Vis: 12 pawns a year manifest on Ushant through the Three Great Spirits, 4 each of Creo, Auram and Imaginem (seisin)\nVis: Brittany's rich vis fell largely to Fudarus after 1018; Harpax governs it as Lord Heusaff\nVis: stripped of a legacy lease in 1172, granted to House Mercere, after Atlax of Tytalus read a Redcap's messages here\nIncome: Lampaul's fishing, through the Heusaff family\nIncome: the feudal dues of two vassals, Exspectatio and one other, under harsh oaths\nLibrary: the House's great collection, used by Exspectatio's magi (no books named)\nEnchantment: the Rod of the Primus controls every room's light, heat, doorways, smells, sounds and textures, and can make the effect follow one person (held by Harpax)\nEnchantment: the Circlet of the Primus commands the servant spirits and the Three Great Spirits (worn by Buliste)\nDefence: the Three Great Spirits, Magic Might 40 each, bound into the walls since the Schism War\nDefence: sheer 180-foot cliffs, wandering reefs and currents, and a password tunnel for guests\nBoon: Natural Fortress, Magical Fortress, Mystical Allies (the spirits), Informants (Buliste's spies)\nHook: House Covenant; Fractured Council (the two Primi); Divided Loyalty (the colour-blind turb)\nMundane: Fudarus's agents run the Paris Dyers' Guild, a coup against Florum\nTension: the feud of the two Primi, to be settled before the coming Grand Tribunal, where only one may sit\nTension: Buliste holds the House's network of spies and the Order's respect; Harpax holds the covenant, its vis and coin, and more sway in Normandy\nTension: the Traitor of Confluensis bears a key said to weaken Fudarus's defences\nTension: accused in 1200 of ruining Atramentum by founding an artificers' guild at Le Conquet\nHook: visitors must win entry by a Primus's challenge; an easy task is an insult, a hard one a compliment\nHook: a covenant Fudarus favours may be given some of its colour-blind grogs",
+        "what_matters": "Income: Lampaul's fishing, through the Heusaff family\nIncome: the feudal dues of two vassals, Exspectatio and one other, under harsh oaths\nEnchantment: the Rod of the Primus controls every room's light, heat, doorways, smells, sounds and textures, and can make the effect follow one person (held by Harpax)\nEnchantment: the Circlet of the Primus commands the servant spirits and the Three Great Spirits (worn by Buliste)\nDefence: the Three Great Spirits, Magic Might 40 each, bound into the walls since the Schism War\nDefence: sheer 180-foot cliffs, wandering reefs and currents, and a password tunnel for guests\nBoon: Natural Fortress, Magical Fortress, Mystical Allies (the spirits), Informants (Buliste's spies)\nHook: House Covenant; Fractured Council (the two Primi); Divided Loyalty (the colour-blind turb)\nMundane: Fudarus's agents run the Paris Dyers' Guild, a coup against Florum\nTension: the feud of the two Primi, to be settled before the coming Grand Tribunal, where only one may sit\nTension: Buliste holds the House's network of spies and the Order's respect; Harpax holds the covenant, its vis and coin, and more sway in Normandy\nTension: the Traitor of Confluensis bears a key said to weaken Fudarus's defences\nTension: accused in 1200 of ruining Atramentum by founding an artificers' guild at Le Conquet\nHook: visitors must win entry by a Primus's challenge; an easy task is an insult, a hard one a compliment\nHook: a covenant Fudarus favours may be given some of its colour-blind grogs",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -159,11 +159,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Lord Heusaff is Harpax in disguise: he stole the identity from Buliste's sanctum along with the Rod when she seemed dead.\nThe Three Great Spirits obey the Circlet's wearer through the old pact, not because the Circlet compels them; their vis's form is known only inside Fudarus.\nHarpax is offering generous terms to new vassals for pawns in his feud, and wants the pieces of a pre-Hermetic item; it is a Diedne relic, Buliste has steered him to it, and she means to frame him once he has it.\nHarpax has a merchant of Fudarus's spy network jailed on false charges; Buliste sends a spirit to help whoever frees him.\nPorphyrion of Tytalus, an archmage who came from the Rome Tribunal three years ago, may mean to take the House for himself; a third contender is the one thing that would make the Primi work together.\nThe Primi will not stoop to a High Crime or Wizard's War against each other, though either may put the other in mortal danger.",
+        "secrets": "Lord Heusaff is Harpax in disguise: he stole the identity from Buliste's sanctum along with the Rod when she seemed dead.\nThe Three Great Spirits obey the Circlet's wearer through the old pact, not because the Circlet compels them; their vis's form is known only inside Fudarus.\nHarpax is offering generous terms to new vassals for pawns in his feud, and wants the pieces of a pre-Hermetic item; it is a Diedne relic, Buliste has steered him to it, and she means to frame him once he has it.\nHarpax has a merchant of Fudarus's spy network jailed on false charges; Buliste sends a spirit to help whoever frees him.\nPorphyrion of Tytalus, an archmage who came from the Rome Tribunal three years ago, may mean to take the House for himself; a third contender is the one thing that would make the Primi work together.\nThe Primi will not stoop to a High Crime or Wizard's War against each other, though either may put the other in mortal danger.\n\nVis: 12 pawns a year manifest on Ushant through the Three Great Spirits, 4 each of Creo, Auram and Imaginem (seisin)\n\nVis: Brittany's rich vis fell largely to Fudarus after 1018; Harpax governs it as Lord Heusaff\n\nVis: stripped of a legacy lease in 1172, granted to House Mercere, after Atlax of Tytalus read a Redcap's messages here\n\nLibrary: the House's great collection, used by Exspectatio's magi (no books named)",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "exspectatio",
@@ -193,7 +197,7 @@
             "params": {
               "detail": "Fudarus"
             },
-            "id": "8dec7256225f",
+            "id": "48e1522668fe",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -203,7 +207,7 @@
             "params": {
               "detail": "Fudarus"
             },
-            "id": "e23d9faecc87",
+            "id": "4fba4914d923",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -213,7 +217,7 @@
             "params": {
               "detail": "Atramentum Renatus"
             },
-            "id": "a006f170aea2",
+            "id": "ae1fff53df6d",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -223,7 +227,7 @@
             "params": {
               "detail": "Atramentum Renatus"
             },
-            "id": "10f651865872",
+            "id": "6298432d88da",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -283,7 +287,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 3,
-        "what_matters": "Vis: none given; the covenant draws on Fudarus's resources\nLibrary: Fudarus's, to which its members return for books\nAura: not given; weaker than Fudarus's, so its magi do some laboratory work at the domus magna\nOath: vassal of Fudarus on unusually generous terms, which its own magi helped draft\nVassal: Atramentum Renatus in Burgundy, founded by the magi it evicted\nBoon: Seclusion (a hidden mountain valley)\nHook: Fractured Council (Adanos for Harpax, Kybella for Buliste); Superiors (Fudarus)\nTension: Cynics say the founders of Atramentum were duped into preparing the site for them\nHook: Iasper's family, the Foutins, and his taste for turmoil",
+        "what_matters": "Aura: not given; weaker than Fudarus's, so its magi do some laboratory work at the domus magna\nOath: vassal of Fudarus on unusually generous terms, which its own magi helped draft\nVassal: Atramentum Renatus in Burgundy, founded by the magi it evicted\nBoon: Seclusion (a hidden mountain valley)\nHook: Fractured Council (Adanos for Harpax, Kybella for Buliste); Superiors (Fudarus)\nTension: Cynics say the founders of Atramentum were duped into preparing the site for them\nHook: Iasper's family, the Foutins, and his taste for turmoil",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -303,11 +307,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Iasper, looking for a way into the Cabal of the Laden Cart, draws a crossroads faerie of the passage between life and death, which blurs the border: corpses walk, the living fall into a death-like pallor, and Iasper must be freed from his own death-state to break the spell.\nWhen one of Iasper's Foutin cousins gets into trouble (perhaps a grog of the player covenant), Iasper smooths things over with the authorities by framing the player magi in a grand plot to destabilise the region, then comes to them contrite to help untangle the mess without admitting his part.\nKybella founded the Cabal of the Laden Cart and hunts the Ankeu to imprison Death itself.",
+        "secrets": "Iasper, looking for a way into the Cabal of the Laden Cart, draws a crossroads faerie of the passage between life and death, which blurs the border: corpses walk, the living fall into a death-like pallor, and Iasper must be freed from his own death-state to break the spell.\nWhen one of Iasper's Foutin cousins gets into trouble (perhaps a grog of the player covenant), Iasper smooths things over with the authorities by framing the player magi in a grand plot to destabilise the region, then comes to them contrite to help untangle the mess without admitting his part.\nKybella founded the Cabal of the Laden Cart and hunts the Ankeu to imprison Death itself.\n\nVis: none given; the covenant draws on Fudarus's resources\n\nLibrary: Fudarus's, to which its members return for books",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "montverte",
@@ -337,7 +345,7 @@
             "params": {
               "detail": "Atsingani"
             },
-            "id": "a0809d85312d",
+            "id": "c8091d715c84",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -347,7 +355,7 @@
             "params": {
               "detail": "Atsingani"
             },
-            "id": "ab7402eaf7f8",
+            "id": "f26a6a84f916",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -407,7 +415,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 5,
-        "what_matters": "Vis: the book names no source; the covenant's wealth comes from raiding, its vassals and its stores, which Runild keeps\nIncome: the baron's domain and village, and the spoils of raids by Montverte and its vassals; one of the wealthiest covenants in the Tribunal\nLibrary: in the central keep, overseen by Runild; contents not described\nVassals: Atsingani (since 1187); in the past Nauche-Fleur (1072-1166), and usually one to three at a time\nBoon: a castle on a fortified hill with concentric walls, hanging gardens and a spring\nBoon: a mundane baron and his soldiers wholly under the covenant's control\nBoon: contacts in the Hanse Parisienne, who supply luxuries, and dealings with the eremite Anacr\u00f4n on raids against other covenants' town storehouses\nHook: raiding sets much of the Tribunal against it; its magi are blamed for the fall of past covenants\nHook: other magi question whether living through a mundane baron breaks the Code\nTension: Geirlaug's near-irrational hatred of Oleron, over an insult from its leader decades ago, and her dislike of the other lieges\nTension: Geirlaug's mind; she is seen only in the council mirror, and the others doubt her sanity in private\nTension: the succession to the Praeco: Geirlaug is third eldest in the Tribunal, after Celeres and Somnifer\nTension: the Lotharingian Tribunal movement, which would carve covenants away from Normandy",
+        "what_matters": "Income: the baron's domain and village, and the spoils of raids by Montverte and its vassals; one of the wealthiest covenants in the Tribunal\nVassals: Atsingani (since 1187); in the past Nauche-Fleur (1072-1166), and usually one to three at a time\nBoon: a castle on a fortified hill with concentric walls, hanging gardens and a spring\nBoon: a mundane baron and his soldiers wholly under the covenant's control\nBoon: contacts in the Hanse Parisienne, who supply luxuries, and dealings with the eremite Anacr\u00f4n on raids against other covenants' town storehouses\nHook: raiding sets much of the Tribunal against it; its magi are blamed for the fall of past covenants\nHook: other magi question whether living through a mundane baron breaks the Code\nTension: Geirlaug's near-irrational hatred of Oleron, over an insult from its leader decades ago, and her dislike of the other lieges\nTension: Geirlaug's mind; she is seen only in the council mirror, and the others doubt her sanity in private\nTension: the succession to the Praeco: Geirlaug is third eldest in the Tribunal, after Celeres and Somnifer\nTension: the Lotharingian Tribunal movement, which would carve covenants away from Normandy",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -427,11 +435,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "The inner council is largely dysfunctional: each councillor is very able alone, but they barely coordinate, and behind a polite show of deference to Geirlaug runs a quiet contest of wills.\nThe baron's high chair carries an old Mentem enchantment that keeps its occupant compliant, and has left several barons slightly Warped.\nThrough a Mirror, Darkly: Geirlaug's face in the mirror begins to show two personalities quarrelling; perhaps a demon has supplanted her and rules through her image. Only Thormod seems untroubled.\nOdin's Magus: Thormod is a leading member of the Children of Odin, practises Viking magic and uses his position for the cult; he may be kin or lover of its hierophant, Queen Skuld.\nThe Pirate Covenant: the council has allied with Waddenzee, the pirate covenant of the Rhine; Waddenzee would join the Lotharingian secession and then declare itself Montverte's vassal in Normandy instead, crippling the new Tribunal and winning a Tribunal that tolerates its raids.",
+        "secrets": "The inner council is largely dysfunctional: each councillor is very able alone, but they barely coordinate, and behind a polite show of deference to Geirlaug runs a quiet contest of wills.\nThe baron's high chair carries an old Mentem enchantment that keeps its occupant compliant, and has left several barons slightly Warped.\nThrough a Mirror, Darkly: Geirlaug's face in the mirror begins to show two personalities quarrelling; perhaps a demon has supplanted her and rules through her image. Only Thormod seems untroubled.\nOdin's Magus: Thormod is a leading member of the Children of Odin, practises Viking magic and uses his position for the cult; he may be kin or lover of its hierophant, Queen Skuld.\nThe Pirate Covenant: the council has allied with Waddenzee, the pirate covenant of the Rhine; Waddenzee would join the Lotharingian secession and then declare itself Montverte's vassal in Normandy instead, crippling the new Tribunal and winning a Tribunal that tolerates its raids.\n\nVis: the book names no source; the covenant's wealth comes from raiding, its vassals and its stores, which Runild keeps\n\nLibrary: in the central keep, overseen by Runild; contents not described",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "oleron",
@@ -461,7 +473,7 @@
             "params": {
               "detail": "Nidi"
             },
-            "id": "ae5e3446ed18",
+            "id": "84b87f2d64b3",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -471,7 +483,7 @@
             "params": {
               "detail": "Nidi"
             },
-            "id": "c1e5c92535d0",
+            "id": "53391d65349c",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -531,7 +543,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 2,
-        "what_matters": "Vis: surplus vis harvested in the Apple Mile, traded to vassals for mundane goods (kinds and amounts not given)\nIncome: the vassals' mundane goods, and purchases through House Mercere\nBoon: Regio (Major): the Apple Mile, a Faerie regio of aura 5\nBoon: Fantastic Environment: an endless summer, looping roads and the covenant's own sea\nBoon: Natural Fortress: any invader faces every Sleeper, some made for home defence\nBoon: Inhuman Residents: faeries and the Sleepers of the Stone Couches\nBoon: Faux Feudalism: ruled by the faerie queen and her champion consort\nHook: Faerie Aura\nHook: Hermetic Politics: liege of Nidi; at odds with Fudarus and House Tytalus\nTension: the champion's seat is open to any challenger on Midsummer's Day; an unanswered challenge would cut the regio off\nTension: magi explore the looping roads and the sea for another way out, to the world or to Arcadia, without success\nTension: censured by the chief Quaesitor of Stonehenge for trying to rescue Eleanor of Aquitaine from captivity\nTension: the Keepers of a Thousand Tales dislike the Stone Couches for fixing stories to one place and one version\nMundane: can raise gangs of sailors from the isle to make trouble in Paris, but keeps no agents there",
+        "what_matters": "Income: the vassals' mundane goods, and purchases through House Mercere\nBoon: Regio (Major): the Apple Mile, a Faerie regio of aura 5\nBoon: Fantastic Environment: an endless summer, looping roads and the covenant's own sea\nBoon: Natural Fortress: any invader faces every Sleeper, some made for home defence\nBoon: Inhuman Residents: faeries and the Sleepers of the Stone Couches\nBoon: Faux Feudalism: ruled by the faerie queen and her champion consort\nHook: Faerie Aura\nHook: Hermetic Politics: liege of Nidi; at odds with Fudarus and House Tytalus\nTension: the champion's seat is open to any challenger on Midsummer's Day; an unanswered challenge would cut the regio off\nTension: magi explore the looping roads and the sea for another way out, to the world or to Arcadia, without success\nTension: censured by the chief Quaesitor of Stonehenge for trying to rescue Eleanor of Aquitaine from captivity\nTension: the Keepers of a Thousand Tales dislike the Stone Couches for fixing stories to one place and one version\nMundane: can raise gangs of sailors from the isle to make trouble in Paris, but keeps no agents there",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -551,11 +563,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Caprican has helped other covenants claim Fudarus's resources while Fudarus is weak, and has added and fortified vassals; if House Tytalus learns of it there will be reprisals once it unites behind a Primus.\nOne ancient Sleeper, older than the Hermetic colony, may be a mighty faerie Ogier the Dane, Charlemagne's paladin whom Morgan le Fay kept two hundred years in Avalon with a rejuvenating ring and a crown of forgetfulness. He has woken and escaped at least once and might again if disaster strikes Denmark; Rhine and Norman magi who dream of colonising Denmark would like his help, but he is hard to control and would likely seek service with Philip II. Whoever puts on the ring he wears dies at once, his place taken by a faerie that believes it is, and may be, his spirit.\nThe prophecy of a last battle may itself be a story planted to wake every Sleeper at the covenant's hour of need.\nNidi's weakness is a lure Oleron built for Tytalus: Oleron can reinforce it by rapid travel magic and stocks it with hidden resources.",
+        "secrets": "Caprican has helped other covenants claim Fudarus's resources while Fudarus is weak, and has added and fortified vassals; if House Tytalus learns of it there will be reprisals once it unites behind a Primus.\nOne ancient Sleeper, older than the Hermetic colony, may be a mighty faerie Ogier the Dane, Charlemagne's paladin whom Morgan le Fay kept two hundred years in Avalon with a rejuvenating ring and a crown of forgetfulness. He has woken and escaped at least once and might again if disaster strikes Denmark; Rhine and Norman magi who dream of colonising Denmark would like his help, but he is hard to control and would likely seek service with Philip II. Whoever puts on the ring he wears dies at once, his place taken by a faerie that believes it is, and may be, his spirit.\nThe prophecy of a last battle may itself be a story planted to wake every Sleeper at the covenant's hour of need.\nNidi's weakness is a lure Oleron built for Tytalus: Oleron can reinforce it by rapid travel magic and stocks it with hidden resources.\n\nVis: surplus vis harvested in the Apple Mile, traded to vassals for mundane goods (kinds and amounts not given)",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "nidi",
@@ -585,7 +601,7 @@
             "params": {
               "detail": "Oleron"
             },
-            "id": "1d0794a3b6ad",
+            "id": "1aa1842d82dc",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -595,7 +611,7 @@
             "params": {
               "detail": "Oleron"
             },
-            "id": "0c167e024e53",
+            "id": "2ca802e614ae",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -655,7 +671,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: the lilac-grown oak grove in the chase, Herbam vis from the flowers; Regulus can turn it into honey holding Animal vis, losing a third\nVis: pays its tithes openly, through the Redcaps and at Tribunal, for show\nBoon: Tame Nobleman: Lord Henri, who hosts the magi and holds their lands\nBoon: Hidden Resources: unused magic items, copies of a strong Aegis, servants trained by awakened Sleepers\nHook: Urban: close beside farmland and the port of Bergerac, and seeking niches in towns\nHook: Beholden: vassal of Oleron\nTension: the faeries driven out by the Dominion may come back in hardier forms; losing the riverbank laboratories or the grove in the chase could finish the covenant\nTension: Micropedus is close to Final Twilight; his weather magic keeps the district prosperous\nTension: Henri's only child Lila must marry a man the covenant can manage, and be happy, or the arrangement fails; Henri will soon want a longevity potion\nTension: a girl found as a baby in a wild hive a few days south may be a Bee Queen; Regulus wants her raised far away",
+        "what_matters": "Boon: Tame Nobleman: Lord Henri, who hosts the magi and holds their lands\nBoon: Hidden Resources: unused magic items, copies of a strong Aegis, servants trained by awakened Sleepers\nHook: Urban: close beside farmland and the port of Bergerac, and seeking niches in towns\nHook: Beholden: vassal of Oleron\nTension: the faeries driven out by the Dominion may come back in hardier forms; losing the riverbank laboratories or the grove in the chase could finish the covenant\nTension: Micropedus is close to Final Twilight; his weather magic keeps the district prosperous\nTension: Henri's only child Lila must marry a man the covenant can manage, and be happy, or the arrangement fails; Henri will soon want a longevity potion\nTension: a girl found as a baby in a wild hive a few days south may be a Bee Queen; Regulus wants her raised far away",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -675,11 +691,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Nidi's weakness is deliberate. Oleron means it to look a fit target for House Tytalus once the Tytalan civil war ends and its magi go back to provoking the Tribunal: Tytalus magi who attack it in earnest will underestimate it, be driven off and be exposed before the Tribunal.\nIts hidden resources: many small magic items it never uses, several copies of a remarkably strong Aegis of the Hearth, and servants whom awakened Sleepers have trained. Its magi may use them only with Oleron's leave or against magi of Fudarus, and Oleron can reinforce it quickly by travel magic.\nFor over thirty years its tithes have been repaid, or traded at good rates for other vis, by Oleron.\nIts magi are promised places in Oleron or another of its vassals should Nidi fall.",
+        "secrets": "Nidi's weakness is deliberate. Oleron means it to look a fit target for House Tytalus once the Tytalan civil war ends and its magi go back to provoking the Tribunal: Tytalus magi who attack it in earnest will underestimate it, be driven off and be exposed before the Tribunal.\nIts hidden resources: many small magic items it never uses, several copies of a remarkably strong Aegis of the Hearth, and servants whom awakened Sleepers have trained. Its magi may use them only with Oleron's leave or against magi of Fudarus, and Oleron can reinforce it quickly by travel magic.\nFor over thirty years its tithes have been repaid, or traded at good rates for other vis, by Oleron.\nIts magi are promised places in Oleron or another of its vassals should Nidi fall.\n\nVis: the lilac-grown oak grove in the chase, Herbam vis from the flowers; Regulus can turn it into honey holding Animal vis, losing a third\n\nVis: pays its tithes openly, through the Redcaps and at Tribunal, for show",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "atsingani",
@@ -709,7 +729,7 @@
             "params": {
               "detail": "Montverte"
             },
-            "id": "e3a3b102d5fb",
+            "id": "6e1252542865",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -719,7 +739,7 @@
             "params": {
               "detail": "Montverte"
             },
-            "id": "3422896e2d2b",
+            "id": "e6b53e4321b5",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -779,7 +799,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: the one permanent source, gathered each summer at the ruined council tower (kind and amount not given)\nVis: whatever the magi find, take or win at the Tourney\nIncome: mercenary service when there are rich masters; robbery when there are not\nBoon: Veteran Fighters: three dozen Braban\u00e7on mercenaries\nBoon: Crossbowmen: the Braban\u00e7ons are expert with the crossbow\nBoon: Cavalry: expert horsemen, with nearly as many horses as people\nBoon: Loyal Covenfolk: a close-knit, loyal company\nBoon: Strong Community\nHook: Constantly Mobile: wagons and tents, moving on whenever it wears out its welcome\nHook: Poverty: no stable income\nHook: Beholden: vassal of Montverte\nHook: Criminals: brigands, some excommunicate under the ban on Brabanters\nTension: raids on weaker covenants have made it widely distrusted in the Tribunal\nTension: its council chamber cannot be moved, and Quaesitors check that council is really held there\nHook: it may settle near the players' covenant and prey on its convoys, or offer its services for a share of the spoils; fighting it off will anger Montverte",
+        "what_matters": "Income: mercenary service when there are rich masters; robbery when there are not\nBoon: Veteran Fighters: three dozen Braban\u00e7on mercenaries\nBoon: Crossbowmen: the Braban\u00e7ons are expert with the crossbow\nBoon: Cavalry: expert horsemen, with nearly as many horses as people\nBoon: Loyal Covenfolk: a close-knit, loyal company\nBoon: Strong Community\nHook: Constantly Mobile: wagons and tents, moving on whenever it wears out its welcome\nHook: Poverty: no stable income\nHook: Beholden: vassal of Montverte\nHook: Criminals: brigands, some excommunicate under the ban on Brabanters\nTension: raids on weaker covenants have made it widely distrusted in the Tribunal\nTension: its council chamber cannot be moved, and Quaesitors check that council is really held there\nHook: it may settle near the players' covenant and prey on its convoys, or offer its services for a share of the spoils; fighting it off will anger Montverte",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -799,11 +819,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis: the one permanent source, gathered each summer at the ruined council tower (kind and amount not given)\n\nVis: whatever the magi find, take or win at the Tourney",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "eboris",
@@ -882,7 +906,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 3,
-        "what_matters": "Vis: a modest income (sources not given), enough to leave a surplus for trade\nIncome: the ivory-carving business; silent shares in at least thirty Paris businesses; hospitality repaid in favours\nIncome: Marcus of Paris's intelligence and recruiting services, sold to other covenants\nBoon: Urban; Wealth; Ivory carving as a covenant business; the lacuna in the cellar\nBoon: Neutral ground for negotiation between quarrelling covenants\nBoon: Senex of Paris (Tribunal ruling of 1200): its agents outrank others' in the city\nHook: Mathieus is the only senior magus, elderly and without apprentices; succession is open\nHook: the Sweated Shillings leave crises behind them\nHook: the Itinerarium's apprentices to keep out of trouble\nTension: an unsettled understanding with Anacr\u00f4n; if it came to war he has numbers and the streets\nTension: Mathieus loathes Venice and the covenants he blames for the Fourth Crusade\nMundane: influence over the quarter's thugs and the criminal class; patronage of artists; trust of the Byzantine \u00e9migr\u00e9s\nMundane: supports the French crown and the French Church",
+        "what_matters": "Income: the ivory-carving business; silent shares in at least thirty Paris businesses; hospitality repaid in favours\nIncome: Marcus of Paris's intelligence and recruiting services, sold to other covenants\nBoon: Urban; Wealth; Ivory carving as a covenant business; the lacuna in the cellar\nBoon: Neutral ground for negotiation between quarrelling covenants\nBoon: Senex of Paris (Tribunal ruling of 1200): its agents outrank others' in the city\nHook: Mathieus is the only senior magus, elderly and without apprentices; succession is open\nHook: the Sweated Shillings leave crises behind them\nHook: the Itinerarium's apprentices to keep out of trouble\nTension: an unsettled understanding with Anacr\u00f4n; if it came to war he has numbers and the streets\nTension: Mathieus loathes Venice and the covenants he blames for the Fourth Crusade\nMundane: influence over the quarter's thugs and the criminal class; patronage of artists; trust of the Byzantine \u00e9migr\u00e9s\nMundane: supports the French crown and the French Church",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -902,11 +926,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Mathieus's revels may honour magi long forgotten or entirely invented; some say the maga who never existed ought to have.\nMathieus will help the Quaesitores by claiming injury when it suits him.\nSeed, the Folk Magicians: hedge wizards hidden in Paris need buying, warning off or killing.\nSeed, Rescuing Constantinopolitans: a slave of a Roman Tribunal covenant asks Mathieus to rescue survivors of his old covenant; Mathieus fears a Venetian trap and sends young magi to scout and smuggle.\nSeed, Treasure in Constantinople: Mathieus sealed away his dead friends' treasures in the city and now wants sturdy young magi to bring them out; he will not go himself.\nSeed, Succession: his named heir, Constantina filia Andru, was picked mostly to silence petitioners; a novel enough experience might win the player characters the place.\nSeed, Tremors at the End of the World: Paris's ivory comes through Trebizond, so a sudden stop means trouble in Asia, and Andru will send magi to look; a glut of walrus ivory would also make Mathieus ask who took it and why.",
+        "secrets": "Mathieus's revels may honour magi long forgotten or entirely invented; some say the maga who never existed ought to have.\nMathieus will help the Quaesitores by claiming injury when it suits him.\nSeed, the Folk Magicians: hedge wizards hidden in Paris need buying, warning off or killing.\nSeed, Rescuing Constantinopolitans: a slave of a Roman Tribunal covenant asks Mathieus to rescue survivors of his old covenant; Mathieus fears a Venetian trap and sends young magi to scout and smuggle.\nSeed, Treasure in Constantinople: Mathieus sealed away his dead friends' treasures in the city and now wants sturdy young magi to bring them out; he will not go himself.\nSeed, Succession: his named heir, Constantina filia Andru, was picked mostly to silence petitioners; a novel enough experience might win the player characters the place.\nSeed, Tremors at the End of the World: Paris's ivory comes through Trebizond, so a sudden stop means trouble in Asia, and Andru will send magi to look; a glut of walrus ivory would also make Mathieus ask who took it and why.\n\nVis: a modest income (sources not given), enough to leave a surplus for trade",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "lapis_crudus",
@@ -985,7 +1013,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 1,
-        "what_matters": "Vis: the Bleeding Stone, in a cavern under the council chamber, Corpus and Terram (seisin; amount not given)\nVis: the vines down the valley cliffs, Herbam (seisin; amount not given)\nVis: large old stocks, much drawn down by eighty years of study\nLibrary: large, with several rare high-quality tomes and many tractatus written in captivity\nBoon: Regio; Faerie Aura 7; household enchantments everywhere (Herbam and Terram)\nHook: trapped behind Candidus's mirror; leaving needs a substitute of like standing\nHook: covenfolk heavily Warped; magi nearing Final Twilight\nHook: all legacies lapsed; no Tourney team since the sealing\nTension: means to reclaim its old vassals, now independent\nTension: Mnemon's unknown debt to Candidus\nTension: Somnifer is second in line for Praeco after Celeres of Cunfin",
+        "what_matters": "Boon: Regio; Faerie Aura 7; household enchantments everywhere (Herbam and Terram)\nHook: trapped behind Candidus's mirror; leaving needs a substitute of like standing\nHook: covenfolk heavily Warped; magi nearing Final Twilight\nHook: all legacies lapsed; no Tourney team since the sealing\nTension: means to reclaim its old vassals, now independent\nTension: Mnemon's unknown debt to Candidus\nTension: Somnifer is second in line for Praeco after Celeres of Cunfin",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1005,11 +1033,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Seed, Through the Looking Glass: to travel, the magi must tempt other magi to take their place, offering seasons in the library; once out, they do not want to go back.\nSeed: as the price of the new terms Candidus bound Mnemon to a fearsome task once he gets out, which might destroy a player covenant's faerie-bound vis source, kill its guardian, or stir mundane politics to have it disbanded.\nSeed: Lapis Crudus will try to reassert its lost Oaths of Fealty, perhaps over the player covenant.\nEach magus took a Warping Point a year from the aura alone during the eighty years, and more from Longevity Rituals; the opening may have come just in time.",
+        "secrets": "Seed, Through the Looking Glass: to travel, the magi must tempt other magi to take their place, offering seasons in the library; once out, they do not want to go back.\nSeed: as the price of the new terms Candidus bound Mnemon to a fearsome task once he gets out, which might destroy a player covenant's faerie-bound vis source, kill its guardian, or stir mundane politics to have it disbanded.\nSeed: Lapis Crudus will try to reassert its lost Oaths of Fealty, perhaps over the player covenant.\nEach magus took a Warping Point a year from the aura alone during the eighty years, and more from Longevity Rituals; the opening may have come just in time.\n\nVis: the Bleeding Stone, in a cavern under the council chamber, Corpus and Terram (seisin; amount not given)\n\nVis: the vines down the valley cliffs, Herbam (seisin; amount not given)\n\nVis: large old stocks, much drawn down by eighty years of study\n\nLibrary: large, with several rare high-quality tomes and many tractatus written in captivity",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "florum",
@@ -1039,7 +1071,7 @@
             "params": {
               "detail": "Spider's Palace"
             },
-            "id": "eb12465756d5",
+            "id": "5086ba755282",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1049,7 +1081,7 @@
             "params": {
               "detail": "Spider's Palace"
             },
-            "id": "2f6d5fee8c93",
+            "id": "adc092fe4ab8",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1059,7 +1091,7 @@
             "params": {
               "detail": "Requies Aeterna"
             },
-            "id": "694f1bbbb6f7",
+            "id": "8c13b074aaf2",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1069,7 +1101,7 @@
             "params": {
               "detail": "Requies Aeterna"
             },
-            "id": "c768fb910d54",
+            "id": "8a1d3a2a6990",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1129,7 +1161,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 2,
-        "what_matters": "Income: cloth woven by touch by the Spinnen, almost thirty of them in 1220, sold through international traders and much of it exported in secret\nIncome: a mundane weaving workshop of the Spinnen's relatives, and a seat in Ghent's Weavers' Guild\nVis: half the harvest of Requies Aeterna, its vassal, sent as a tithe\nVis: Prunellie harvests faeries turned to standing stones in the fields of the Low Countries (Form and amount not given)\nVis: the Spider's Palace keeps the old site's sources for the line\nLibrary: no titles given (see its library record)\nBoon: Wealth (the Spinnen's cloth)\nBoon: Strong Community (the Farm's families), Mystical Allies (a kabouter tribe)\nHook: City (Ghent), Faerie Aura, Hermetic Politics (the Lotharingian movement)\nHook: Guild (the Weavers' Guild of Ghent), Dark Secret (the Spinnen and the false family)\nDuty: each year a small party of covenfolk is sent, by drawing straws, to serve a year at Requies Aeterna; all dread it\nTension: the Tribunal ordered its magical linen factory dismantled in 1081 and dismissed its appeal; in 1088 it was ruled against for upsetting Ghent's economy, the precedent behind the Code's ruling on mundane interference\nTension: Confluensis used Florum's weakness after Alcuin's Auberge fell in 1197 to move the Mercer House to Cunfin\nTension: Fudarus's agents in the Parisian Dyers' Guild are bitter rivals of Florum's\nTension: suspected by some magi of raising the tidal wave of 1134 that opened the Zwin to Bruges; never investigated for want of evidence\nTension: champion needed for Tourneys and raids; Alroy hopes to fight Tytali",
+        "what_matters": "Income: cloth woven by touch by the Spinnen, almost thirty of them in 1220, sold through international traders and much of it exported in secret\nIncome: a mundane weaving workshop of the Spinnen's relatives, and a seat in Ghent's Weavers' Guild\nBoon: Wealth (the Spinnen's cloth)\nBoon: Strong Community (the Farm's families), Mystical Allies (a kabouter tribe)\nHook: City (Ghent), Faerie Aura, Hermetic Politics (the Lotharingian movement)\nHook: Guild (the Weavers' Guild of Ghent), Dark Secret (the Spinnen and the false family)\nDuty: each year a small party of covenfolk is sent, by drawing straws, to serve a year at Requies Aeterna; all dread it\nTension: the Tribunal ordered its magical linen factory dismantled in 1081 and dismissed its appeal; in 1088 it was ruled against for upsetting Ghent's economy, the precedent behind the Code's ruling on mundane interference\nTension: Confluensis used Florum's weakness after Alcuin's Auberge fell in 1197 to move the Mercer House to Cunfin\nTension: Fudarus's agents in the Parisian Dyers' Guild are bitter rivals of Florum's\nTension: suspected by some magi of raising the tidal wave of 1134 that opened the Zwin to Bruges; never investigated for want of evidence\nTension: champion needed for Tourneys and raids; Alroy hopes to fight Tytali",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1149,11 +1181,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Piet de Spinnen is Petrus, Calvinus's mundane son, born at Valnastium; a mercenary in Italy who faked his death to escape his rivals and was trained by an old Redcap to play the heir of the childless Arne de Spinnen, who was himself a front. The de Spinnens are a fiction the magi keep up.\nTwo of Piet's children spent a year at the new university in Paris and then went secretly to Valnastium to be trained as servants of House Jerbiton.\nCalvinus's 'uncle Calvin' persona, his Italian wife and his daughter brought up by her grandparents are all invented; the daughter newly arrived in Ghent is his apprentice Sophia.\nThe flax origin legend of the Spinnen is common knowledge in the Low Countries, so anyone with enough clues might guess what the spider-kin are.\nThe visiting Quaesitor, hoplite and Redcap are scouting for Confluensis's planned Quaesitorial covenant and Mercer House in a Lotharingian Tribunal.",
+        "secrets": "Piet de Spinnen is Petrus, Calvinus's mundane son, born at Valnastium; a mercenary in Italy who faked his death to escape his rivals and was trained by an old Redcap to play the heir of the childless Arne de Spinnen, who was himself a front. The de Spinnens are a fiction the magi keep up.\nTwo of Piet's children spent a year at the new university in Paris and then went secretly to Valnastium to be trained as servants of House Jerbiton.\nCalvinus's 'uncle Calvin' persona, his Italian wife and his daughter brought up by her grandparents are all invented; the daughter newly arrived in Ghent is his apprentice Sophia.\nThe flax origin legend of the Spinnen is common knowledge in the Low Countries, so anyone with enough clues might guess what the spider-kin are.\nThe visiting Quaesitor, hoplite and Redcap are scouting for Confluensis's planned Quaesitorial covenant and Mercer House in a Lotharingian Tribunal.\n\nVis: half the harvest of Requies Aeterna, its vassal, sent as a tithe\n\nVis: Prunellie harvests faeries turned to standing stones in the fields of the Low Countries (Form and amount not given)\n\nVis: the Spider's Palace keeps the old site's sources for the line\n\nLibrary: no titles given (see its library record)",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "spider_s_palace",
@@ -1183,7 +1219,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "6ce1490f789f",
+            "id": "e6e75952ce3e",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1193,7 +1229,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "caf56cf1a39e",
+            "id": "1ffb5bd78ccc",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1253,7 +1289,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 1,
-        "what_matters": "Vis: the old site's sources, held as seisins for Florum's line (amounts not given)\nLabs: excellent laboratories in the faded palace, used by Florum's magi\nBoon: Regio (the palace has faded from the mundane world)\nHook: Hermetic Politics (exists to keep a claim; backs the Lotharingian movement)",
+        "what_matters": "Labs: excellent laboratories in the faded palace, used by Florum's magi\nBoon: Regio (the palace has faded from the mundane world)\nHook: Hermetic Politics (exists to keep a claim; backs the Lotharingian movement)",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1273,11 +1309,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis: the old site's sources, held as seisins for Florum's line (amounts not given)",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "requies_aeterna",
@@ -1307,7 +1347,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "c868abb990f6",
+            "id": "2218da28e5a5",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1317,7 +1357,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "d3b82fe3bd32",
+            "id": "513d3f14df63",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1377,7 +1417,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: the site is rich in vis, Perdo and Corpus among it (amounts not given); roughly half goes to Florum as tithe\nLibrary: the noted library of Donatores lore, the tradition's chief repository\nBoon: Aura (Magic 5), Hedge Tradition (the Donatores)\nHook: Haunted (reputation), Massacre Site (the battle of Nesle), Indebted (servants from Florum for a larger tithe)\nHook: Beholden (vassal of Florum), Hermetic Politics (the Quaesitores' suspicion)\nTension: the Quaesitores distrust its past dealings with the Church; several Donatores were trained clergy\nTension: magi who distrust the Donatores could plot a Wizard's War on Eulogius to break the covenant and seize its vis, which would drag Florum in\nHook: magi troubled by restless dead may seek its help, but persuading Eulogius or Henri to leave, or even finding the way in, is hard",
+        "what_matters": "Boon: Aura (Magic 5), Hedge Tradition (the Donatores)\nHook: Haunted (reputation), Massacre Site (the battle of Nesle), Indebted (servants from Florum for a larger tithe)\nHook: Beholden (vassal of Florum), Hermetic Politics (the Quaesitores' suspicion)\nTension: the Quaesitores distrust its past dealings with the Church; several Donatores were trained clergy\nTension: magi who distrust the Donatores could plot a Wizard's War on Eulogius to break the covenant and seize its vis, which would drag Florum in\nHook: magi troubled by restless dead may seek its help, but persuading Eulogius or Henri to leave, or even finding the way in, is hard",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1397,11 +1437,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Philip of Atramentum Renatus was formerly a member here, and other Donatores are scattered across western Europe. Without Eulogius the covenant would surely fall.",
+        "secrets": "Philip of Atramentum Renatus was formerly a member here, and other Donatores are scattered across western Europe. Without Eulogius the covenant would surely fall.\n\nVis: the site is rich in vis, Perdo and Corpus among it (amounts not given); roughly half goes to Florum as tithe\n\nLibrary: the noted library of Donatores lore, the tradition's chief repository",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "cunfin",
@@ -1431,7 +1475,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "edc183aaacc2",
+            "id": "687b9b76186e",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1441,7 +1485,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "d0e92fe4421c",
+            "id": "247a027f32d2",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1501,7 +1545,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: none is named in the book\nLibrary: Celeres's Grail library, said to hold every book written on the Grail and many on Arthur and Merlin\nIncome: the Tribunal's Mercer House, and the Redcaps' trade at the temporary Mercer Houses of the Champagne fairs\nMundane: the Cistercian abbey of Cunfin, its prior a magus and its abbot an ally; Eloi's contacts reach the whole Cistercian Order\nMundane: a Mercere Portal to Dragon's Rest, paid for by Confluensis\nBoon: Mercer House; Hook: a Divine aura round a Magic regio\nTourney: Eloi, Celeres and the Redcap Renaud have won the hastiludium three times running\nTension: the Presiding Quaesitor fears the covenant will embroil the Order with the mundanes\nTension: Florum and others resent Confluensis's grip on the Redcaps since the Mercer House moved here\nTension: Celeres is the Tribunal's eldest magus now Renita is dead and Stellatus gone to Iberia, so first in line for Praeco; Proctor would set him aside\nTension: Herv\u00e9 holds the post at the fairs that Renaud wanted, and resents his foster brother\nTension: the new Dominican Order's hunt for heretics; Eloi fears the inquisitors will turn north once the Cathars are done\nHook: everything rests on Eloi; without him the arrangement would fall apart",
+        "what_matters": "Income: the Tribunal's Mercer House, and the Redcaps' trade at the temporary Mercer Houses of the Champagne fairs\nMundane: the Cistercian abbey of Cunfin, its prior a magus and its abbot an ally; Eloi's contacts reach the whole Cistercian Order\nMundane: a Mercere Portal to Dragon's Rest, paid for by Confluensis\nBoon: Mercer House; Hook: a Divine aura round a Magic regio\nTourney: Eloi, Celeres and the Redcap Renaud have won the hastiludium three times running\nTension: the Presiding Quaesitor fears the covenant will embroil the Order with the mundanes\nTension: Florum and others resent Confluensis's grip on the Redcaps since the Mercer House moved here\nTension: Celeres is the Tribunal's eldest magus now Renita is dead and Stellatus gone to Iberia, so first in line for Praeco; Proctor would set him aside\nTension: Herv\u00e9 holds the post at the fairs that Renaud wanted, and resents his foster brother\nTension: the new Dominican Order's hunt for heretics; Eloi fears the inquisitors will turn north once the Cathars are done\nHook: everything rests on Eloi; without him the arrangement would fall apart",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1521,11 +1565,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "The abbot knows what Eloi and the magi are and shares their aims.\nJerome of Confluensis secretly saves troublesome heirs marked for death, convincing the world they are dead and hiding them in monasteries and covenants; Eloi is his chief partner, and Artorius was one such child. It is very likely a breach of the Code.\nThe covenant may not survive the Church's growing hostility even with Eloi (The Specter of Rome).",
+        "secrets": "The abbot knows what Eloi and the magi are and shares their aims.\nJerome of Confluensis secretly saves troublesome heirs marked for death, convincing the world they are dead and hiding them in monasteries and covenants; Eloi is his chief partner, and Artorius was one such child. It is very likely a breach of the Code.\nThe covenant may not survive the Church's growing hostility even with Eloi (The Specter of Rome).\n\nVis: none is named in the book\n\nLibrary: Celeres's Grail library, said to hold every book written on the Grail and many on Arthur and Merlin",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "atramentum_renatus",
@@ -1555,7 +1603,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "69266fefb836",
+            "id": "9b3b26bf0276",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1565,7 +1613,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "e1f763703a4d",
+            "id": "93e3f6afd10e",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1625,7 +1673,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: the source about which the covenant was built, formerly a legacy of Fudarus (Art and amount not given)\nLibrary: no books are named\nOath: a harsh contract of obligation to Exspectatio and Fudarus, paid partly from Tourney winnings\nTension: Helios's theurgy probes whether Bibracte raised the spirit of Vercingetorix; Philip fears it is angering the ghosts\nTension: a Quaesitor is looking into reports of a savage wild beast near the covenant, and whether Gulo broke the Code\nTension: the founders were evicted from their first covenant by their liege's own magi\nHook: Iacula's new projectile spells have great martial potential",
+        "what_matters": "Oath: a harsh contract of obligation to Exspectatio and Fudarus, paid partly from Tourney winnings\nTension: Helios's theurgy probes whether Bibracte raised the spirit of Vercingetorix; Philip fears it is angering the ghosts\nTension: a Quaesitor is looking into reports of a savage wild beast near the covenant, and whether Gulo broke the Code\nTension: the founders were evicted from their first covenant by their liege's own magi\nHook: Iacula's new projectile spells have great martial potential",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1645,11 +1693,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Whether the ravaging beast is Gulo in his heartbeast's shape, and whether he harmed mundanes by it, is the Quaesitor's open question.\nCynics say Helios and Gulo were duped into preparing Atramentum's site for the elder Tytali of Exspectatio.",
+        "secrets": "Whether the ravaging beast is Gulo in his heartbeast's shape, and whether he harmed mundanes by it, is the Quaesitor's open question.\nCynics say Helios and Gulo were duped into preparing Atramentum's site for the elder Tytali of Exspectatio.\n\nVis: the source about which the covenant was built, formerly a legacy of Fudarus (Art and amount not given)\n\nLibrary: no books are named",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "confluensis",
@@ -1679,7 +1731,7 @@
             "params": {
               "detail": "Dragon's Rest"
             },
-            "id": "bf32abce6699",
+            "id": "ab08787c5695",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1689,7 +1741,7 @@
             "params": {
               "detail": "Dragon's Rest"
             },
-            "id": "f44d2e99b0f9",
+            "id": "0b81f7c14dc6",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1699,7 +1751,7 @@
             "params": {
               "detail": "Cunfin"
             },
-            "id": "7980d6539414",
+            "id": "cb2516928b11",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1709,7 +1761,7 @@
             "params": {
               "detail": "Cunfin"
             },
-            "id": "2dac6ab923f5",
+            "id": "b87c49ae93cb",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1769,7 +1821,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: whirlpools spun up by the spring tides beneath the covenant, caught in enchanted nets (seisin; Art and amount not given)\nVis: Intellego in the sour apples of the Orchard island (seisin; amount not given)\nVis: a tithe from Dragon's Rest of one pawn a year for each of its members\nVis: Dragon's Rest and its other vassals tithe as their oaths require\nLibrary: the covenant's own library in the Library Tower, and the Library of the Tribunal, lent only as Tourney prizes\nIncome: the Venelli covenfolk's crafts (pottery, papyrus paper, rope and flax) and trade with the southern English ports\nIncome: great influence over the shipping companies that carry Paris's food down the Seine, and friends on the University of Paris's law faculty\nBoon: Difficult Access (the ring of mist and shifting currents)\nBoon: Defensive Environment (the tidal marsh, and a ring of active defences)\nBoon: Mystical Portal (the Mercere Portal to Dragon's Rest)\nBoon: Favors Owed (liege of Dragon's Rest, Cunfin and a small Guernicus covenant)\nHook: Protector (owes its vassals support and protection under its oath)\nHook: House Covenant (it serves the policies of the Primus of Guernicus)\nHook: Hermetic Services (the Tribunal's Quaesitors, its law and its book store)\nHook: Indigenes (the Venelli, last of a Celtic tribe)\nTension: the Praeco is dead; the eldest magus would be Celeres of Cunfin, whom Proctor wants set aside\nTension: Proctor's hatred of House Tytalus, with a Tytalus Traitor under his roof\nTension: Cavillor advises the pro-Lotharingian faction, which Proctor will take as betrayal\nTension: a Fengheld chapter house magus at Cherbourg takes vis Confluensis has always gathered\nTension: the Hospitallers' City of God, with a Dominion aura of 4, on the peninsula",
+        "what_matters": "Income: the Venelli covenfolk's crafts (pottery, papyrus paper, rope and flax) and trade with the southern English ports\nIncome: great influence over the shipping companies that carry Paris's food down the Seine, and friends on the University of Paris's law faculty\nBoon: Difficult Access (the ring of mist and shifting currents)\nBoon: Defensive Environment (the tidal marsh, and a ring of active defences)\nBoon: Mystical Portal (the Mercere Portal to Dragon's Rest)\nBoon: Favors Owed (liege of Dragon's Rest, Cunfin and a small Guernicus covenant)\nHook: Protector (owes its vassals support and protection under its oath)\nHook: House Covenant (it serves the policies of the Primus of Guernicus)\nHook: Hermetic Services (the Tribunal's Quaesitors, its law and its book store)\nHook: Indigenes (the Venelli, last of a Celtic tribe)\nTension: the Praeco is dead; the eldest magus would be Celeres of Cunfin, whom Proctor wants set aside\nTension: Proctor's hatred of House Tytalus, with a Tytalus Traitor under his roof\nTension: Cavillor advises the pro-Lotharingian faction, which Proctor will take as betrayal\nTension: a Fengheld chapter house magus at Cherbourg takes vis Confluensis has always gathered\nTension: the Hospitallers' City of God, with a Dominion aura of 4, on the peninsula",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1789,11 +1841,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "One of the founders had a flaw in her Gift that made building on the tide necessary.\nJerome secretly saves 'troublesome heirs' from murder with Mentem magic and hides them in monasteries and covenants, very likely against the Code; Eloi of Cunfin is his chief partner, and Proctor does not know.\nValerian's familiar is a spirit beyond Hermetic binding, so he must belong to a Mystery Cult, probably the Guernicus Terrae cult.\nAugustina belongs to the Cabal of Frankish Gold, which works for the Lotharingian Tribunal; she thinks it will fail but wants to see how the Order reacts.\nThe Traitor's key is thought to weaken the defences of Fudarus, or perhaps by now to be only a symbol.\nThe stone flowers were not made by Terram magi: they belong to an older pact between the marsh's faerie powers and the Venelli.",
+        "secrets": "One of the founders had a flaw in her Gift that made building on the tide necessary.\nJerome secretly saves 'troublesome heirs' from murder with Mentem magic and hides them in monasteries and covenants, very likely against the Code; Eloi of Cunfin is his chief partner, and Proctor does not know.\nValerian's familiar is a spirit beyond Hermetic binding, so he must belong to a Mystery Cult, probably the Guernicus Terrae cult.\nAugustina belongs to the Cabal of Frankish Gold, which works for the Lotharingian Tribunal; she thinks it will fail but wants to see how the Order reacts.\nThe Traitor's key is thought to weaken the defences of Fudarus, or perhaps by now to be only a symbol.\nThe stone flowers were not made by Terram magi: they belong to an older pact between the marsh's faerie powers and the Venelli.\n\nVis: whirlpools spun up by the spring tides beneath the covenant, caught in enchanted nets (seisin; Art and amount not given)\n\nVis: Intellego in the sour apples of the Orchard island (seisin; amount not given)\n\nVis: a tithe from Dragon's Rest of one pawn a year for each of its members\n\nVis: Dragon's Rest and its other vassals tithe as their oaths require\n\nLibrary: the covenant's own library in the Library Tower, and the Library of the Tribunal, lent only as Tourney prizes",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "dragon_s_rest",
@@ -1823,7 +1879,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "8b2a51173f46",
+            "id": "893dc5ca0091",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1833,7 +1889,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "f14df82429f1",
+            "id": "f4b17da00a80",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1893,7 +1949,7 @@
         "favours": [],
         "links": [],
         "unnamed_magi": 0,
-        "what_matters": "Vis: pays a tithe of one pawn a year per member to Confluensis\nIncome: trade by its covenfolk and the Mercere network\nLaboratories: excellent, shared with Confluensis\nBoon: Mystical Portal (hub of the Tribunal's Mercere Portals: Cunfin, Confluensis, Harco and others)\nBoon: Powerful Ally (Confluensis, its liege)\nHook: Mercer House\nHook: Beholden (the oath of fealty to Confluensis)\nHook: Legendary Site (the Gargouille's lair, remembered by the clergy of Rouen)\nTension: Rouen's clergy keep the Gargouille's memory, and a mob led by the archbishop with St. Romanus's shrine could be roused against magi near the city",
+        "what_matters": "Income: trade by its covenfolk and the Mercere network\nLaboratories: excellent, shared with Confluensis\nBoon: Mystical Portal (hub of the Tribunal's Mercere Portals: Cunfin, Confluensis, Harco and others)\nBoon: Powerful Ally (Confluensis, its liege)\nHook: Mercer House\nHook: Beholden (the oath of fealty to Confluensis)\nHook: Legendary Site (the Gargouille's lair, remembered by the clergy of Rouen)\nTension: Rouen's clergy keep the Gargouille's memory, and a mob led by the archbishop with St. Romanus's shrine could be roused against magi near the city",
         "arms": {},
         "charter": {},
         "manors": {},
@@ -1913,11 +1969,15 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "",
+        "secrets": "Vis: pays a tithe of one pawn a year per member to Confluensis",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       }
     ],
     "tribunals": [
@@ -1967,7 +2027,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "93abdeb46253"
+            "id": "bc9d6842e328"
           },
           {
             "title": "Augustina of Tytalus, the Traitor",
@@ -1999,7 +2059,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1f9fd9ad744c"
+            "id": "b3b02d2ef830"
           },
           {
             "title": "Fengheld's chapter at Cherbourg",
@@ -2031,7 +2091,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "d10402071d44"
+            "id": "a2e05ee71c37"
           },
           {
             "title": "A Proven\u00e7al claim by language",
@@ -2063,7 +2123,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1c32f666bcdb"
+            "id": "23011b75d4db"
           },
           {
             "title": "Praeda's vis auction",
@@ -2095,7 +2155,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "26dc3c85e4fa"
+            "id": "979505fcd550"
           },
           {
             "title": "Raiders from over the border",
@@ -2127,7 +2187,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "dd93db808e93"
+            "id": "8c78da255722"
           },
           {
             "title": "A covenant at the vacant castle",
@@ -2159,7 +2219,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "045c45cbb0be"
+            "id": "52e2057ef0cb"
           }
         ],
         "rulings": [
@@ -2168,224 +2228,224 @@
             "year": 1025,
             "says": "Every vis source belongs to a covenant, never to a magus. A source within a day's return march of an established covenant is its seisin, harvested by it alone. Since 1109 the test is exact: a man on foot, with no magic, must go from the covenant's council chamber to the source and back between sunrise and sunset on a day within a month of an equinox. Covenants keep trained runners (cursores) to prove it before the Quaesitores (a fit man covers about 10 + twice his Athletics miles a day cross country, five fewer in wild country and five more on good roads). An unchallenged claim stands; roads built, forests cleared and even a hill moved have stretched the march, and rivals have done the reverse.",
             "case_id": "",
-            "id": "caa32b264eb4"
+            "id": "16a2fcdc8fde"
           },
           {
             "title": "The Perthean Compact: legacies",
             "year": 1025,
             "says": "A source too far away to be a seisin may be voted the discoverer's legacy: exclusive harvest for seven years. Since 1032 the lease must be renewed by vote at each meeting, and fewer than half the renewals succeed; a source refused becomes a tropaeum. A new find is usually granted without contest, and a legacy may last for many terms when only its holders can reach it. Harvesting another's legacy is the High Crime of depriving a magus of his power, though pleas for mercy are nearly always granted. The holder may grant the harvest to whom it likes, including new magi settling within a day's march, which is how most covenants are founded.",
             "case_id": "",
-            "id": "6609304c20d3"
+            "id": "f3f110f8beb2"
           },
           {
             "title": "The Perthean Compact: tropaea",
             "year": 1032,
             "says": "Known sources that are neither seisins nor legacies, and need little effort to harvest, are tropaea, owned by the Tribunal in common and leased for seven years as prizes at the Tourney, with the same exclusive harvest as a legacy. A covenant that would settle within a day's march of one needs the Tribunal's vote, and if it wins, the tropaeum becomes its seisin.",
             "case_id": "",
-            "id": "20c06b0a98a2"
+            "id": "0113c3444d18"
           },
           {
             "title": "The Perthean Compact: luctationes",
             "year": 1039,
             "says": "A Tribunal source whose harvest depends on the harvester's skill or daring is a luctatio, a contest open to any magus willing to try; success gives no right to later harvests. The list is public and a copy is kept at Confluensis, though how to win the vis need not be written down. Settling near one needs the Tribunal's leave, which is a little easier to get than for a tropaeum.",
             "case_id": "",
-            "id": "25517a8f9474"
+            "id": "1ae20d080221"
           },
           {
             "title": "Interim leases and plundering",
             "year": 1025,
             "says": "Whoever finds a vis source reports it to a Quaesitor, who grants an interim lease until the next meeting declares it. An interim lease is not exclusive: a second finder may get one too, and the holders settle it between themselves until the Tribunal rules. Harvesting an unknown source without declaring it is plundering, a Low Crime punished harshly, with fines above three times the vis taken. Vis traded or lent by the Redcaps, once it belongs to magi, is outside the Compact, which governs only gathering.",
             "case_id": "",
-            "id": "a33531c34b7a"
+            "id": "1a8733e664c5"
           },
           {
             "title": "The Library of the Tribunal",
             "year": 1081,
             "says": "Books given to the Tribunal in common, a custom begun by Perpauca of Bonisagus, are kept at Confluensis, their list public, and no one may read them unless they win them at the Tourney. A book won is leased for seven years under a Cow and Calf oath (copies made belong to the Tribunal) and must come back in good order before the next meeting. A magus who gives an original book wins at the next Tourney the lease of one of similar worth, settled by certamen when two authors want the same book. Pamphlets on each spine tell a reader its Quality and Level.",
             "case_id": "",
-            "id": "a59036025c07"
+            "id": "9d6643e8dcc9"
           },
           {
             "title": "Mundane resources and raiding",
             "year": 1116,
             "says": "Confirming the rulings of 1081 and 1088: a covenant's food, consumables, building supplies, arms and armour and luxuries are not part of its magi's magical power, so raiding them is no Hermetic crime; books (finished or not), vis, enchanted items and laboratory supplies are. Livestock and covenfolk have no protection (1123), but apprentices, familiars and magical beasts do. A raider may not damage the covenant's buildings (1130) or break the Code in any way during the raid, and must challenge any magus escorting the goods to certamen: losing ends the raid, winning sends the escort a mile off until sunrise. Raids by magi of other Tribunals fall under this Code too, and the Tribunal judges foreign raiders who break it especially harshly.",
             "case_id": "",
-            "id": "9e79c272b93f"
+            "id": "da051ace903f"
           },
           {
             "title": "The town senex",
             "year": 1200,
             "says": "The covenant nearest a town, its senex, has the better right there: if the senex's agents harm another covenant's interests in the town as a side effect, no ruin has been caused. The senex is the covenant where the town's church bells sound loudest, as a Quaesitor judges; a covenant that cannot hear them has no claim, so many towns have none. Made in Fudarus's favour against its vassal Atramentum over the artificers' guild of Le Conquet, and sometimes used to settle rival claims to urban vis.",
             "case_id": "",
-            "id": "b086edfdd4fc"
+            "id": "0ed9dadc828a"
           },
           {
             "title": "Urban covenants",
             "year": 1207,
             "says": "A covenant may sit in a town, and its magi's ordinary dealings with townsfolk ruin no one. A lord may grant a covenant a charter, but the magi may take none of its privileges, which would be fealty in all but name; paying a tax as a covenant is allowed, and seeking a charter to fix the limits of a lord's power is commended. Eligible covenfolk may vote and hold town office; magi may not. Made after several covenants took charters from King John and were then asked for soldiers. Fluvius's The Order and Towns (1208) is the standard commentary.",
             "case_id": "",
-            "id": "edf36416c2ae"
+            "id": "6ffc3c48697e"
           },
           {
             "title": "Mundane interference",
             "year": null,
             "says": "No ruling has ever been made. By long precedent a covenant is rarely convicted of meddling unless its actions bring mundane reprisals down on magi, and acting through a mundane 'mask' who never names his Hermetic sponsors protects it even when the mask is punished. Masks give no protection against a charge of depriving a magus of his power, so they cannot be used against a town's senex.",
             "case_id": "",
-            "id": "28e628950206"
+            "id": "d2bee5a68890"
           },
           {
             "title": "Founding a covenant",
             "year": null,
             "says": "A new covenant needs exclusive access to vis sources yielding at least a pawn a year for each of its magi, and never fewer than four, at its founding (aura vis does not count; losing the source or gaining magi later does not undo it), and a council chamber named to the Tribunal: any meeting place will do, a room, a cave or a grove, but not within a day's journey of another covenant's, by tradition out of reach of the Seven League Stride. Chapter houses may not be used to dodge the Compact; Fengheld's at Cherbourg is treated as a coenobium. Vis owed to a liege still counts.",
             "case_id": "",
-            "id": "2c113f8b0087"
+            "id": "19a10f6b9e09"
           },
           {
             "title": "Eremites and coenobia",
             "year": null,
             "says": "A solitary magus (an eremite) may own no seisin and lives on Tourney leases and luctationes. Magi who band together without meeting the vis rule are a coenobium, not a covenant: they own no seisin, rarely win a legacy, and enter the Tourney as solitary magi, and are looked down on for flouting the Tribunal's ways.",
             "case_id": "",
-            "id": "258ad7522b87"
+            "id": "73a8baafbf5b"
           },
           {
             "title": "Oaths of fealty between covenants",
             "year": null,
             "says": "A liege covenant has one oath that all its vassals swear: support from the vassal (usually a vis tithe and its magi's sigils as free proxies), protection from the liege (using those proxies wisely and answering calls for aid on stated terms). The oath is part of the Peripheral Code and enforceable; it ends by agreement or after one side wins a prosecution of the other for default. Covenants still may not swear fealty to a mundane lord. When a liege dies out, all its vassals are free.",
             "case_id": "",
-            "id": "7d2f53a03895"
+            "id": "349860892f5f"
           },
           {
             "title": "Personal vis",
             "year": 1144,
             "says": "Vis that grows in a magus's own person, in his hair, blood and so on, is his alone and outside the Compact. A personal source outside him is still subject to it.",
             "case_id": "",
-            "id": "f96c30c26fec"
+            "id": "2361a7379fe4"
           },
           {
             "title": "The host drawn by lot",
             "year": null,
             "says": "Since the Schism War the covenant that hosts the next meeting, and the Tourney after it, is drawn by lot from the Tribunal's covenants, not chosen as the Praeco's home. The host finds a secluded Tourney ground within a day's travel, hidden from mundane eyes (the Tribunal can lend a casting tablet for a Moon-duration Shrouded Glen), and must declare its own event to Confluensis by Redcap by the summer solstice before the meeting.",
             "case_id": "",
-            "id": "b6bbcead9ac0"
+            "id": "42c42a8c814a"
           },
           {
             "title": "The Hermetic Tourney: entry and events",
             "year": null,
             "says": "Held after the meeting's business, usually over three days, with an even number of teams (the Redcaps recruit visitors to make it so) of at most five magi each, besides grogs and companions. A team that is not a recognised Normandy covenant stakes five pawns a magus, added to the prizes. A team starts with a point per member of its covenant (a coenobium's or visitor's magi one each). Six events: the hastiludium, a magical charge on village 'mounts' (20, 10 and 5 points to the semi-finalists); the certamen tournament (25, 15, 8); the dimicatio, forceless spells against a fast-cast defence, penetrating a Parma being a crime (23, 12, 6); each with a point for taking part; the melee of grogs rushing Creo Imaginem 'castles' with blunt weapons and no magic (6, then 2 for second to fourth, 1 for fifth; serious injury forfeits and is fined); the host's choice, a true test of magic it should not win (12, 8, 3, 3); and the deadly joust (20, 8, 3, 3), each with a point for taking part.",
             "case_id": "",
-            "id": "8b9a473ad6e3"
+            "id": "9c08eff891bd"
           },
           {
             "title": "The Hermetic Tourney: ranks and prizes",
             "year": 1151,
             "says": "Teams are ranked by points, ties going to the older covenant (or the earlier Gauntlet). Ranks win gold prize pawns, spent in rank order for leases until the next Tourney: at first one tropaeum or lump of one Art's vis and one book or item each, then again while pawns remain. A tropaeum costs a pawn for each pawn it yields; a book or item a pawn per 5 Build Points (no charged or limited items); a pawn buys at once 5 pawns of Form vis or 3 of Technique. First is the Siege of Normandy (31 pawns), second the Siege of Valor (24), seventh the Siege of Notatus (17), thirteenth the Siege of Shame (nothing, its prize going to the fourteenth, since an Iberian team disgraced the Tourney in 1151) and twenty-first the Siege of Alms (6 kept and 6 given to the teams below); each named rank brings a Hermetic Reputation of 2 for seven years. A prize not returned brings charges and a ban from the next Tourney.",
             "case_id": "",
-            "id": "6891856a4ec6"
+            "id": "cff677b39b91"
           },
           {
             "title": "The first meeting",
             "year": 871,
             "says": "The Tribunal of the West Franks first meets with Confluensis, Pagus, Baiocassium, Bibracte and Sinapis; Fudarus and Branugurix attend the Britannian Tribunal instead.",
             "case_id": "",
-            "id": "bb71c5c2c347"
+            "id": "6cdfeb45f2ef"
           },
           {
             "title": "Adela of Jerbiton acquitted",
             "year": 885,
             "says": "Accused by a long-standing enemy of being court wizard to King Louis III from 879 to 881, Adela was acquitted, as nothing showed any danger to the Order from her friendship with the late king.",
             "case_id": "",
-            "id": "b7151e26ace2"
+            "id": "1df43a047e77"
           },
           {
             "title": "Lotharingia divided",
             "year": 899,
             "says": "The Tribunal accepts the Grand Tribunal's decision, takes in part of the old Proven\u00e7al lands and reaches east to the Rhine Tribunal.",
             "case_id": "",
-            "id": "5cbac85e9af2"
+            "id": "9788b9d909b2"
           },
           {
             "title": "The Normandy Tribunal",
             "year": 983,
             "says": "On Adrianus of Montverte's proposal, the Tribunal of the West Franks is renamed for the Duke of Normandy, foremost lord of its lands.",
             "case_id": "",
-            "id": "441cfe20804a"
+            "id": "8acc2d291f3e"
           },
           {
             "title": "Brittany claimed",
             "year": 1018,
             "says": "Fudarus, the last Breton covenant left after the Schism War, is welcomed to the 22nd meeting, and the Tribunal claims Brittany and all its magical resources.",
             "case_id": "",
-            "id": "b651949d38aa"
+            "id": "271d781a2270"
           },
           {
             "title": "Nauche-Fleur and the baron",
             "year": 1095,
             "says": "Nauche-Fleur was found innocent of swearing fealty to its baron, as the oath was taken by an unGifted companion acting as lord of the manor for the magi.",
             "case_id": "",
-            "id": "f496e80c7978"
+            "id": "31e7ff10a55a"
           },
           {
             "title": "The border by language",
             "year": 1102,
             "says": "On a complaint from three Flambeau of Proven\u00e7al: where no clear border exists, disputed land goes by the language of its nearest settlement, langue d'o\u00efl to Normandy and otherwise to Proven\u00e7al. Upheld against Proven\u00e7al's protest at the Grand Tribunal of 1129.",
             "case_id": "",
-            "id": "b5c22a1a0aba"
+            "id": "7e9766434af4"
           },
           {
             "title": "The Donatores admitted",
             "year": 1109,
             "says": "Quaesitor Muirgheal brings into the Order the hedge wizards he found fighting a plague of restless dead, as the Ex Miscellanea tradition of the Donatores Requietis Aeternae.",
             "case_id": "",
-            "id": "893f65020e94"
+            "id": "451cf516dc72"
           },
           {
             "title": "Koilios's raid; Praecepsus acquitted",
             "year": 1116,
             "says": "Quaesitor Lothaire upheld Koilios of Tytalus's raid of 1113 on Lapis Crudus's convoy of food and luxuries as no breach of the Code, fixing the custom of lawful raiding. Praecepsus of Flambeau, accused of cutting down the king's enemies with a Perdo sword in 1111, had no charge to answer, as no mundane could tell magic was involved.",
             "case_id": "",
-            "id": "8dd465223ff5"
+            "id": "428cef569f7c"
           },
           {
             "title": "Pandion's horses",
             "year": 1123,
             "says": "Pandion of Flambeau, who stole twelve horses from Antonin of Dragon's Rest, returned the one magical horse and paid ten pawns, keeping the other eleven as the spoils of a lawful raid: enchanted creatures count toward a magus's power, ordinary livestock and (as Lothaire added) covenfolk do not.",
             "case_id": "",
-            "id": "397947b0b347"
+            "id": "4d3e27ec8fd3"
           },
           {
             "title": "Jacinth and Infelicitas",
             "year": 1130,
             "says": "Jacinth of Oleron, raiding Infelicitas, brought down its upper storey and two laboratories: convicted of deprivation (the charge of trying to kill a magus failed), he lost his familiar, and raiders were forbidden to damage a covenant's buildings.",
             "case_id": "",
-            "id": "f9a7dbf81505"
+            "id": "2f9bbf0d3c5a"
           },
           {
             "title": "Lothaire accused",
             "year": 1144,
             "says": "Jacinth of Oleron accused Quaesitor Lothaire of profiting from raids by Montverte, Fudarus and their allies. He was cleared for want of substance but never regained his place as chief Quaesitor, and went to Magvillus.",
             "case_id": "",
-            "id": "3a68a24c1cfa"
+            "id": "de067063b26d"
           },
           {
             "title": "Atlax and the Redcap's letters",
             "year": 1172,
             "says": "Atlax of Tytalus read the messages Redcap Camille carried while a guest at Fudarus. Quaesitor Whent held the covenant responsible and gave one of its legacies to House Mercere.",
             "case_id": "",
-            "id": "8249d37c26a4"
+            "id": "82f449a5c1ea"
           },
           {
             "title": "Pernix acquitted; Camille fined",
             "year": 1179,
             "says": "Pernix of Merinita, accused by Visurgis of Tytalus of healing a fallen nobleman by magic, was acquitted, as only the man and three friendly monks knew. Camille of Mercere, accused by Buliste of using a knight to gather a legacy's vis (the knight confessed to doing devils' work, and only Atlax of Fudarus averted ruin), paid fifteen pawns to Fudarus, and the source was closed for thirty years.",
             "case_id": "",
-            "id": "a451f9b3d0ed"
+            "id": "0a96ae5fd360"
           },
           {
             "title": "Pugnatis expelled",
             "year": 1207,
             "says": "Convicted at the previous meeting of controlling the mayor of Laval by magic to reach a vis source and fined in enchanted items, Pugnatis came to neither this meeting nor with the items, and was expelled from the Order.",
             "case_id": "",
-            "id": "084f17137fd7"
+            "id": "d510f96d17d4"
           }
         ],
         "treasury": [],
@@ -2397,7 +2457,7 @@
             "details": "For more than thirty years Trianoma journeys across Europe, seeking out wizards and bringing them to meet Bonisagus. Many of those she finds become Founders of the Order.",
             "changes": [],
             "margin": "",
-            "id": "afd8dbd8cd27"
+            "id": "cd7f2325237b"
           },
           {
             "year": 767,
@@ -2406,7 +2466,7 @@
             "details": "Bonisagus and the other Founders take the Oath of Hermes, and the first gathering of the Order is held at Durenmar.",
             "changes": [],
             "margin": "",
-            "id": "b86a09347e6e"
+            "id": "f765eb50686d"
           },
           {
             "year": 773,
@@ -2415,7 +2475,7 @@
             "details": "The Order settles how lesser Tribunals work: one needs at least twelve magi drawn from at least four covenants.",
             "changes": [],
             "margin": "",
-            "id": "e5ad89baafc6"
+            "id": "e4fff5761521"
           },
           {
             "year": 789,
@@ -2424,7 +2484,7 @@
             "details": "The Founder Jerbiton, who has taken on several apprentices of the emperor's mage-smith Carolinus, meets Charlemagne. The emperor's decree against sorcery and paganism that year spares magic of a kindly sort, such as Jerbiton's.",
             "changes": [],
             "margin": "",
-            "id": "7c0a3abd24a0"
+            "id": "dbd54caf1d10"
           },
           {
             "year": 791,
@@ -2433,7 +2493,7 @@
             "details": "House Diedne raises its domus magna, Branugurix (in Breton Bren Gwrac'h), in a regio near Mount Dol in Brittany. It becomes the head of a line of Diedne vassal covenants.",
             "changes": [],
             "margin": "",
-            "id": "29b7c90a9edd"
+            "id": "81f9c3c72c59"
           },
           {
             "year": 798,
@@ -2442,7 +2502,7 @@
             "details": "Tytalus carries off Hariste, the apprentice of his own former pupil Pralix, and raises the fortress of Fudarus on Ushant to keep her safe from Pralix's anger. He trains her to the Gauntlet in five years. Pralix takes over the running of House Tytalus.",
             "changes": [],
             "margin": "",
-            "id": "01e0780fa50d"
+            "id": "868d666f3fb2"
           },
           {
             "year": 799,
@@ -2451,7 +2511,7 @@
             "details": "The Order's third Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "5b5d59c45d5d"
+            "id": "667935ac62cb"
           },
           {
             "year": 807,
@@ -2460,7 +2520,7 @@
             "details": "Tytalus walks out of Fudarus in a leper's robe and veil, staff in hand, visits his followers one last time and disappears into the Maddenhofen Woods of Bohemia. Hariste claims Fudarus and becomes the first Prima of House Tytalus; the covenant has housed the Primus ever since.",
             "changes": [],
             "margin": "",
-            "id": "e6749022013a"
+            "id": "f68114e48a3a"
           },
           {
             "year": 810,
@@ -2469,7 +2529,7 @@
             "details": "Confluensis is founded at the mouth of the Seine, on the site Dragon's Rest holds today.",
             "changes": [],
             "margin": "",
-            "id": "a49513949e9b"
+            "id": "0b1157b7f3d7"
           },
           {
             "year": 817,
@@ -2478,7 +2538,7 @@
             "details": "The Order's fourth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "dbb94a696d38"
+            "id": "57e0cbfae7a4"
           },
           {
             "year": 822,
@@ -2487,7 +2547,7 @@
             "details": "Bibracte, a vassal of Fudarus, is founded on Mount Beuvray in the Morvan by a few Diedne magi and one Tytalan.",
             "changes": [],
             "margin": "",
-            "id": "10542033206a"
+            "id": "b27485a810ee"
           },
           {
             "year": 832,
@@ -2496,7 +2556,7 @@
             "details": "The Grand Tribunal fixes its own meetings at every thirty-three years, and those of the regional Tribunals at every seven years from 836.",
             "changes": [],
             "margin": "",
-            "id": "e60a3d4c4624"
+            "id": "8d298c5d910b"
           },
           {
             "year": 840,
@@ -2505,7 +2565,7 @@
             "details": "Confluensis sponsors the vassal covenant of Pagus in a ruined Roman outpost near Cherbourg, overlooking the Channel. Its magi pour vis into restoring the Roman buildings and a dock.",
             "changes": [],
             "margin": "",
-            "id": "6186d996d522"
+            "id": "cea9d4141181"
           },
           {
             "year": 845,
@@ -2514,7 +2574,7 @@
             "details": "As Norse fleets sack Paris and the coasts, covenants suffer with the monasteries. Confluensis, then at the Seine's mouth, is raided a dozen times in a hundred years and its magi grow skilled at battle magic; Pagus loses many vis sources and never recovers; the Diedne covenants of the Breton coast are struck too. Some raids are led by Gifted shapechangers using runes, and talk of a Norse 'Order of Odin' begins, much of it from Confluensis.",
             "changes": [],
             "margin": "",
-            "id": "c6415ba0bee1"
+            "id": "905eabb790a9"
           },
           {
             "year": 851,
@@ -2523,7 +2583,7 @@
             "details": "Baiocassium, a Diedne vassal of Branugurix, is founded in the forest near Bayeux. Its magi, heirs of Gaulish druids, stay on good terms with the local faeries.",
             "changes": [],
             "margin": "",
-            "id": "aa03bd1bcb06"
+            "id": "67cee246629c"
           },
           {
             "year": 855,
@@ -2532,7 +2592,7 @@
             "details": "Sinapis is founded in Anjou, near the heart of France. It grows into an important liege covenant, head of a line of its own.",
             "changes": [],
             "margin": "",
-            "id": "b833c1a2c6b1"
+            "id": "08973f2b8250"
           },
           {
             "year": 865,
@@ -2541,7 +2601,7 @@
             "details": "A stormy Grand Tribunal divides the Order into regional Tribunals, each free to make its own Peripheral Code, on House Mercere's argument that Redcaps should serve a region they know. The Tribunal of the West Franks is one of them. It takes in Gascony but neither Flanders nor Brittany: Brittany, independent since 846 and steeped in Celtic and druidic tradition, goes to the Britannian Tribunal. The eastern lands fall to a new Lotharingian Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "ed8c24542d8a"
+            "id": "88cd97bc5670"
           },
           {
             "year": 871,
@@ -2550,7 +2610,7 @@
             "details": "The first meeting gathers Confluensis, Pagus, Baiocassium, Bibracte and Sinapis. Fudarus and Branugurix attend the Britannian Tribunal instead.",
             "changes": [],
             "margin": "",
-            "id": "3e768b23a08b"
+            "id": "e712fbed3191"
           },
           {
             "year": 875,
@@ -2559,7 +2619,7 @@
             "details": "The first generation of Sinapis's apprentices found Rotomagus near Rouen.",
             "changes": [],
             "margin": "",
-            "id": "b916089c06ca"
+            "id": "ad4c606eb015"
           },
           {
             "year": 885,
@@ -2568,7 +2628,7 @@
             "details": "Adela of Jerbiton, often at court, is charged with having been court wizard to King Louis III from 879 to 881. She blames a long feud with her accuser; nothing shows the Order was ever endangered by her friendship with the late king, and she is acquitted.",
             "changes": [],
             "margin": "",
-            "id": "abc628e2a251"
+            "id": "3490473daeaa"
           },
           {
             "year": 892,
@@ -2577,7 +2637,7 @@
             "details": "The Vikings sack Rouen and Rotomagus with it, less than a generation after its founding. Its one survivor leaves House Flambeau in shame for Ex Miscellanea.",
             "changes": [],
             "margin": "",
-            "id": "bc893374222d"
+            "id": "d0a7cb53b45c"
           },
           {
             "year": 898,
@@ -2586,7 +2646,7 @@
             "details": "Following the mundane partition of Lotharingia at Meersen in 870, the Rhine and West Frankish Tribunals had taken in its covenants, which welcomed the move. The seventh Grand Tribunal confirms it: the Lotharingian Tribunal ends, and its southern part becomes the Proven\u00e7al Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "646ab7b0957a"
+            "id": "716c967a0b13"
           },
           {
             "year": 899,
@@ -2595,7 +2655,7 @@
             "details": "The West Franks vote to accept the Grand Tribunal's decision, take in part of the former Lotharingian lands and extend east to border the Rhine Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "5b90607262b8"
+            "id": "2e00641b6f25"
           },
           {
             "year": 907,
@@ -2604,7 +2664,7 @@
             "details": "Florum is founded in Flanders, on the site Spider's Palace now holds. Like Confluensis it suffers several Viking raids in its early years.",
             "changes": [],
             "margin": "",
-            "id": "2c8175eb997c"
+            "id": "5b0485fce582"
           },
           {
             "year": 913,
@@ -2613,7 +2673,7 @@
             "details": "Fudarus sponsors Ligurio, a vassal on the border of Aquitaine and Brittany in the Vend\u00e9e.",
             "changes": [],
             "margin": "",
-            "id": "e65cfd9340fa"
+            "id": "f4584799aa62"
           },
           {
             "year": 920,
@@ -2622,7 +2682,7 @@
             "details": "Branugurix founds Kerguntuil on the Rose Coast of Brittany, by the stone said to be a petrified giant. Its magi study the Breton tales of giants, and its covenfolk grow larger than common folk.",
             "changes": [],
             "margin": "",
-            "id": "71134426a30f"
+            "id": "3dd9a8025fbd"
           },
           {
             "year": 931,
@@ -2631,7 +2691,7 @@
             "details": "The Order's eighth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "84c56b429b1f"
+            "id": "5153cd9315b2"
           },
           {
             "year": 936,
@@ -2640,7 +2700,7 @@
             "details": "Tired of Viking raids on their forest covenant, magi of Baiocassium make a spring sanctuary in a regio inside Bayeux. It becomes a covenant of its own, Baiocassium Minor, a vassal of Baiocassium.",
             "changes": [],
             "margin": "",
-            "id": "0180b1d10fde"
+            "id": "9ad8abc26426"
           },
           {
             "year": 941,
@@ -2649,7 +2709,7 @@
             "details": "Scandinavian converts to the Order found Montverte in Normandy. It becomes the head of one of the Tribunal's great lines.",
             "changes": [],
             "margin": "",
-            "id": "44413bbd5544"
+            "id": "253f86d9ce54"
           },
           {
             "year": 961,
@@ -2658,7 +2718,7 @@
             "details": "House Guernicus finds Prima Tasgillia corrupted by the Infernal and seizes her, and a large share of her House, far from Fudarus; she is executed for diabolism. Her filia Kalliste, the new Prima, refuses the Quaesitores and Flambeau hoplites entry to a covenant whose members have already been cleared, but is made to give way; the search finds nothing. The wounds between Tytalus and Flambeau last for a century.",
             "changes": [],
             "margin": "",
-            "id": "67beb21d8422"
+            "id": "95331ac9ce39"
           },
           {
             "year": 964,
@@ -2667,7 +2727,7 @@
             "details": "The Order's ninth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "d2dbc8e255c0"
+            "id": "77c2153c7950"
           },
           {
             "year": 969,
@@ -2676,7 +2736,7 @@
             "details": "Bibracte had revived a cult of Vercingetorix and turned against all things Roman, banning Latin for Brythonic and then refusing to deal with magi of the 'Roman' Houses. With Fudarus weakened after the Betrayal, four Flambeau and Tremere magi of Montverte declare Wizard's War on its magi at once, charging them with devil-worship, and destroy the covenant.",
             "changes": [],
             "margin": "",
-            "id": "89ea8700d84e"
+            "id": "c35069d7a34a"
           },
           {
             "year": 981,
@@ -2685,7 +2745,7 @@
             "details": "Branugurix founds its youngest and easternmost vassal, Caput Capra, on the Loire near Fleury, to guard the old druidic site there from the lawlessness of the age.",
             "changes": [],
             "margin": "",
-            "id": "5424a4c9da54"
+            "id": "3144f0272bad"
           },
           {
             "year": 983,
@@ -2694,7 +2754,7 @@
             "details": "With the Duke of Normandy foremost in the Tribunal's lands and the Franks fading as a people, the Tribunal adopts the proposal of Adrianus of Montverte and renames itself the Normandy Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "0582efacd8fc"
+            "id": "3598dab50b53"
           },
           {
             "year": 997,
@@ -2703,7 +2763,7 @@
             "details": "The Order's tenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "2b6d0c55e5d4"
+            "id": "9d810d428b29"
           },
           {
             "year": 998,
@@ -2712,7 +2772,7 @@
             "details": "Sinapis founds Aedes Salii on Jersey, named for the priests of Mars, as a base to coordinate the coming war in Normandy and the Stonehenge Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "d26b010359a7"
+            "id": "c1965d668501"
           },
           {
             "year": 1004,
@@ -2721,7 +2781,7 @@
             "details": "War is declared on House Diedne. Some of its worst battles are fought in Normandy and Brittany, and for a long while the Diedne have the upper hand. A Diedne force comes by sea to Fudarus, cannot break in and besieges it for months with three great summoned spirits, until Primus Klynoites wrests the spirits from them, destroys the besiegers and binds the spirits into the covenant's walls.",
             "changes": [],
             "margin": "",
-            "id": "0e16185a4bc7"
+            "id": "7cd6d7d91311"
           },
           {
             "year": 1005,
@@ -2730,7 +2790,7 @@
             "details": "Caput Capra is the war's first casualty in the Tribunal; Confluensis still brings its apprentices to the scant ruins for their history lessons. Baiocassium Minor falls the same year.",
             "changes": [],
             "margin": "",
-            "id": "14e9b43fea89"
+            "id": "8c4cbc2195d4"
           },
           {
             "year": 1007,
@@ -2739,7 +2799,7 @@
             "details": "The Diedne covenant on the Rose Coast is wiped out.\n\nSecrets\nRumour says a Quaesitor later steered the Templars into building their chapel at Lanleff, to cleanse the district of the Diedne's supposed diabolic taint.",
             "changes": [],
             "margin": "",
-            "id": "0fca2f9faf03"
+            "id": "969b05ebe871"
           },
           {
             "year": 1008,
@@ -2748,7 +2808,7 @@
             "details": "Pagus, never recovered from the Viking raids, is destroyed by the magi of Baiocassium.",
             "changes": [],
             "margin": "",
-            "id": "b4e4a8fe11bd"
+            "id": "5fb8261bb1af"
           },
           {
             "year": 1011,
@@ -2757,7 +2817,7 @@
             "details": "Baiocassium falls to the Order. Ligurio, Fudarus's vassal in the Vend\u00e9e, is crushed by giants hurling great boulders, thought to have been sent by Kerguntuil's magi before their end.",
             "changes": [],
             "margin": "",
-            "id": "27fa5faf3342"
+            "id": "1a21384df7a8"
           },
           {
             "year": 1012,
@@ -2766,7 +2826,7 @@
             "details": "The war's last battle is fought at Branugurix. In its final moments the Diedne Primus somehow seals every entrance to the regio, and some of the Flambeau and Tremere attackers are never seen again. Diedne history and alleged crimes are later struck from the Tribunal's records, and House Guernicus guards the site's secrets.\n\nSecrets\nGuernicus's records hold the regio's exact location and the old way in. Rumour has it that some Diedne survive inside, and that someone is working to free them; the Quaesitores watch anyone who lingers around Mount Dol.",
             "changes": [],
             "margin": "",
-            "id": "4782a132ec88"
+            "id": "6af944cdf622"
           },
           {
             "year": 1018,
@@ -2775,7 +2835,7 @@
             "details": "The Schism War over, the Quaesitores list the vis sources and books taken from the fallen covenants. Fudarus, the only Breton covenant left, comes to the Normandy Tribunal, which claims Brittany and its magical wealth. Pertheus of Tytalus wins the victors the right of conquest over the spoils, on condition that a contest be held in seven years to share them out again. The old Tytalus-Flambeau quarrel flares over the spoils.",
             "changes": [],
             "margin": "",
-            "id": "9d15bfc0cfdd"
+            "id": "6b0c3f82f1d9"
           },
           {
             "year": 1020,
@@ -2784,7 +2844,7 @@
             "details": "Confluensis sponsors a new vassal after the war, the Orchard of Sour Apples, on the Cotentin peninsula.",
             "changes": [],
             "margin": "",
-            "id": "68cdc167f754"
+            "id": "da3ab6731be1"
           },
           {
             "year": 1021,
@@ -2793,7 +2853,7 @@
             "details": "Florum founds Lixivia in Champagne as the great fairs begin, a covenant of Redcaps and Gentle Gifted magi meant to broker trade between the Order and merchants and fetch whatever any covenant wanted.",
             "changes": [],
             "margin": "",
-            "id": "83de07dd34e9"
+            "id": "913c2a16ec60"
           },
           {
             "year": 1025,
@@ -2802,7 +2862,7 @@
             "details": "With Northern Tytali and Southern Flambeau close to open war over the Diedne spoils, the Quaesitores back Pertheus of Tytalus, whose statutes pass over this and the next two meetings. Contested vis becomes the Tribunal's, competed for every seven years, and magi gain set rights over the vis near their covenants with a way to win more as they grow. The Compact is refined at later meetings. Three Flambeau-led covenants of the south call it a Tytalan swindle and go over to the Proven\u00e7al Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "3e5245e25c2d"
+            "id": "b5236835706d"
           },
           {
             "year": 1028,
@@ -2811,7 +2871,7 @@
             "details": "Oleron is founded on its island off Aquitaine. It becomes the head of one of the Tribunal's great lines.",
             "changes": [],
             "margin": "",
-            "id": "738772c5e1ba"
+            "id": "72c952068208"
           },
           {
             "year": 1030,
@@ -2820,7 +2880,7 @@
             "details": "The Order's eleventh Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "480a9bfaf884"
+            "id": "98dd621a78d2"
           },
           {
             "year": 1048,
@@ -2829,7 +2889,7 @@
             "details": "Fudarus founds Vexatores purely to goad Sinapis, twenty-one miles north of it, the least distance the law allows, on a vis source taken from the Diedne.",
             "changes": [],
             "margin": "",
-            "id": "077d9ecfd7a4"
+            "id": "47a5a1105c2c"
           },
           {
             "year": 1051,
@@ -2838,7 +2898,7 @@
             "details": "Confluensis moves to the Orchard of Sour Apples on the Cotentin, whose magi join their liege as the vassal covenant is wound up. Dragon's Rest is founded as a vassal of Confluensis on its old site at the Seine's mouth. By about this time the Tribunal has its modern borders.",
             "changes": [],
             "margin": "",
-            "id": "8b1ff2c27fed"
+            "id": "5b98daf3a0ad"
           },
           {
             "year": 1063,
@@ -2847,7 +2907,7 @@
             "details": "The feud of Tytalus and Flambeau formally ends with House Flambeau withdrawing from all hostilities. Sinapis is abandoned as its members leave for Provence and Iberia, ending its line; Aedes Salii, left to the Flambeau after the Tremere went home, is disbanded, and two of its magi help found Lapis Crudus, a covenant shared by the two Houses and counted in the line of Sinapis.",
             "changes": [],
             "margin": "",
-            "id": "d991b8c77076"
+            "id": "36171e53faa4"
           },
           {
             "year": 1064,
@@ -2856,7 +2916,7 @@
             "details": "Never meant to last, Vexatores is abandoned once the quarrel it was built to serve is over.",
             "changes": [],
             "margin": "",
-            "id": "136710e7f016"
+            "id": "589e865282ed"
           },
           {
             "year": 1072,
@@ -2865,7 +2925,7 @@
             "details": "Montverte sponsors Nauche-Fleur near Niort in Aquitaine, a covenant that keeps a school of arms and letters whose fees pay for its magi's lavish living.",
             "changes": [],
             "margin": "",
-            "id": "5048113d2ff5"
+            "id": "0421ca9572e9"
           },
           {
             "year": 1081,
@@ -2874,7 +2934,7 @@
             "details": "Perpauca of Bonisagus, whose own covenant kept her great books from visitors, starts giving books to the Tribunal as a whole. Hers are declared the first books of the Library of the Normandy Tribunal, kept at Confluensis, and the right to read them becomes a prize of the Tourney. Other authors follow her lead.",
             "changes": [],
             "margin": "",
-            "id": "9051269908f2"
+            "id": "79f1bff7099c"
           },
           {
             "year": 1095,
@@ -2883,7 +2943,7 @@
             "details": "Nauche-Fleur is accused of swearing fealty to its local baron. The magi answer that the oath was taken by an unGifted companion standing as lord of the manor in their name, and the Tribunal finds them innocent.",
             "changes": [],
             "margin": "",
-            "id": "188b99bf1d4a"
+            "id": "c76b0998fcc0"
           },
           {
             "year": 1096,
@@ -2892,7 +2952,7 @@
             "details": "The Order's thirteenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "b1bac4ad678a"
+            "id": "ff4bc2e77d9e"
           },
           {
             "year": 1099,
@@ -2901,7 +2961,7 @@
             "details": "Rancrax of Tytalus loses a wager to his rival and, under its terms, must leave Fudarus; he founds Infelicitas as a vassal of Fudarus.",
             "changes": [],
             "margin": "",
-            "id": "10625d88b659"
+            "id": "898c6baa5207"
           },
           {
             "year": 1100,
@@ -2910,7 +2970,7 @@
             "details": "Conventio Nidi is founded as a vassal of Oleron.",
             "changes": [],
             "margin": "",
-            "id": "3ee92c9bf3fa"
+            "id": "f379b60438a9"
           },
           {
             "year": 1102,
@@ -2919,7 +2979,7 @@
             "details": "At the request of three Proven\u00e7al Flambeau, the Tribunal rules that, without any clear natural frontier, disputed ground belongs to Normandy if the nearest settlement speaks the langue d'oeil and to Proven\u00e7al if it speaks the langue d'oc.",
             "changes": [],
             "margin": "",
-            "id": "f94a726e8acd"
+            "id": "01681faa3ec9"
           },
           {
             "year": 1109,
@@ -2928,7 +2988,7 @@
             "details": "In Picardy Quaesitor Muirgheal finds hedge wizards fighting a plague of restless dead. Once the dead are laid, many of them are taken into the Order as the Donatores Requietis Aeternae, a tradition of House Ex Miscellanea.",
             "changes": [],
             "margin": "",
-            "id": "0798f3adb03d"
+            "id": "41742f649ddb"
           },
           {
             "year": 1116,
@@ -2937,7 +2997,7 @@
             "details": "Building on an earlier ruling on mundane resources, Quaesitor Lothaire holds that raiding a covenant's mundane resources is allowed. At the same meeting Praecepsus of Flambeau, accused of wielding a Perdo-enchanted sword for the king when the count of Meulan raided Paris in 1111, is cleared: nothing showed magic to mundane eyes, so there is no case to answer.",
             "changes": [],
             "margin": "",
-            "id": "333893cebd6e"
+            "id": "536a1362db7d"
           },
           {
             "year": 1117,
@@ -2946,7 +3006,7 @@
             "details": "Florum leaves its first site, and Spider's Palace is founded there as its vassal.",
             "changes": [],
             "margin": "",
-            "id": "af609401c0f5"
+            "id": "1c89ffc93ba7"
           },
           {
             "year": 1118,
@@ -2955,7 +3015,7 @@
             "details": "Lapis Crudus becomes trapped in its own regio and is given up for lost.",
             "changes": [],
             "margin": "",
-            "id": "6a7f81ab92a9"
+            "id": "94606e3e3a4a"
           },
           {
             "year": 1123,
@@ -2964,7 +3024,7 @@
             "details": "Pandion of Flambeau is found guilty of taking twelve horses, one a magical beast, from Antonin of Dragon's Rest, a Redcap, and so lessening his magical power. He must return that one and pay ten pawns, but keeps the other eleven as spoils of a lawful raid. Enchanted creatures, familiars or not, count toward a magus's power and ordinary livestock does not; Quaesitor Lothaire later adds that covenfolk do not count either. The same year the Donatores found Requies Aeterna as a vassal of Florum.",
             "changes": [],
             "margin": "",
-            "id": "f7e4c091f5be"
+            "id": "789f7030826d"
           },
           {
             "year": 1124,
@@ -2973,7 +3033,7 @@
             "details": "Distrusted by magi who doubted its motives, Lixivia became everyone's favourite target for raids and is driven into poverty and disbanded. Its Redcaps found Alcuin's Auberge, a small Mercer House in Tours, as a vassal of Florum.",
             "changes": [],
             "margin": "",
-            "id": "3efaa20e6eae"
+            "id": "cbc0ca6325e8"
           },
           {
             "year": 1129,
@@ -2982,7 +3042,7 @@
             "details": "Despite Proven\u00e7al protests, the Grand Tribunal upholds Normandy's ruling that language marks the border between the two Tribunals.",
             "changes": [],
             "margin": "",
-            "id": "65d3c2e37367"
+            "id": "31811347b2de"
           },
           {
             "year": 1130,
@@ -2991,7 +3051,7 @@
             "details": "Raiding Infelicitas, Jacinth of Oleron brought down its upper storey and wrecked two laboratories. The charge of trying to kill a magus by destroying the covenant is not proved, but he is convicted of deprivation. Quaesitor Lothaire rules that raiders may never damage a covenant's buildings and that a lawful raid does not excuse a breach of the Code. Jacinth escapes a March but loses his familiar.",
             "changes": [],
             "margin": "",
-            "id": "f2a2c374ad09"
+            "id": "08fe29ad82c9"
           },
           {
             "year": 1136,
@@ -3000,7 +3060,7 @@
             "details": "Oleron sponsors Moles Magna on the edge of the Morvan, a covenant built inside a dam across a small tributary of the Yonne, hidden behind its own waterfall.",
             "changes": [],
             "margin": "",
-            "id": "af650655b7d8"
+            "id": "f80afa3d4d70"
           },
           {
             "year": 1144,
@@ -3009,7 +3069,7 @@
             "details": "Jacinth of Oleron accuses Quaesitor Lothaire of partisanship, naming raids by Montverte, Fudarus and their allies from which he profited. An inquiry clears him for want of substance, but he never regains his place as chief Quaesitor of Normandy and is invited to Magvillus in honour of his long service.",
             "changes": [],
             "margin": "",
-            "id": "02c560ef0c8b"
+            "id": "65169dd8236c"
           },
           {
             "year": 1158,
@@ -3018,7 +3078,7 @@
             "details": "Rancrax is killed in Wizard's War by a magus of Moles Magna, and the two magi left at Infelicitas have no wish to stay.",
             "changes": [],
             "margin": "",
-            "id": "c4c8c8aa5340"
+            "id": "651cfbe538db"
           },
           {
             "year": 1162,
@@ -3027,7 +3087,7 @@
             "details": "The Order's fifteenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "e790cbab32d2"
+            "id": "e06b8952e44d"
           },
           {
             "year": 1166,
@@ -3036,7 +3096,7 @@
             "details": "Its mundane dealings always controversial, Nauche-Fleur kept none of the apprentices it trained, and it dies when the last of its founders enters Final Twilight.",
             "changes": [],
             "margin": "",
-            "id": "0653a8f29903"
+            "id": "d2619ca18da3"
           },
           {
             "year": 1172,
@@ -3045,7 +3105,7 @@
             "details": "Atlax of Tytalus is charged with stealing and reading the messages the Redcap Camille carried while a guest at Fudarus. Quaesitor Whent holds the covenant answerable for its magus, strips Fudarus of the lease of a legacy and gives it to House Mercere.",
             "changes": [],
             "margin": "",
-            "id": "0bf8c1389263"
+            "id": "ef24ebe5ec82"
           },
           {
             "year": 1179,
@@ -3054,7 +3114,7 @@
             "details": "Pernix of Merinita, accused by Visurgis of Tytalus of interfering with mundanes for healing a young noble thrown from his horse, is acquitted: only the noble and the abbot, prior and infirmarian of a friendly monastery knew. Camille of Mercere, accused by Buliste of Tytalus of using a local knight to gather the vis of one of his legacies, is convicted after the knight confessed to doing the devil's work and Atlax of Fudarus had to avert the ruin; Camille pays fifteen pawns to Fudarus and the source is closed for thirty years or more.",
             "changes": [],
             "margin": "",
-            "id": "1942f3b84316"
+            "id": "b7669dbf26bf"
           },
           {
             "year": 1182,
@@ -3063,7 +3123,7 @@
             "details": "After heavy rain the river bursts the dam that housed Moles Magna and the covenant is swept away. Since its magi had magically strengthened the dam against exactly that, most think they angered some power of the river they held back.",
             "changes": [],
             "margin": "",
-            "id": "7af39507d1dd"
+            "id": "4080726a5c35"
           },
           {
             "year": 1187,
@@ -3072,7 +3132,7 @@
             "details": "Atsingani is founded in Anjou as a vassal of Montverte.",
             "changes": [],
             "margin": "",
-            "id": "7a7c59ea2d17"
+            "id": "99430e910ab4"
           },
           {
             "year": 1192,
@@ -3081,7 +3141,7 @@
             "details": "Cunfin is founded in Champagne as a vassal of Confluensis.",
             "changes": [],
             "margin": "",
-            "id": "ae735d3283e7"
+            "id": "33f69a4b74af"
           },
           {
             "year": 1195,
@@ -3090,7 +3150,7 @@
             "details": "The Order's sixteenth Grand Tribunal meets. About this time Prima Buliste of House Tytalus falls into a Twilight so deep she is taken for dead, and her rival Harpax, her fellow apprentice, is chosen as Primus and takes the Rod of the Primus from her sanctum.",
             "changes": [],
             "margin": "",
-            "id": "0bbd63f49b28"
+            "id": "197e8f1fa7be"
           },
           {
             "year": 1197,
@@ -3099,7 +3159,7 @@
             "details": "The Mercer House in Tours falls to raiders no one has identified.",
             "changes": [],
             "margin": "",
-            "id": "5ba87c8d1f69"
+            "id": "55a9345ae17e"
           },
           {
             "year": 1200,
@@ -3108,7 +3168,7 @@
             "details": "Buliste returns from Twilight, still wearing the Circlet of the Primus, and she and Harpax begin their struggle for the House; both are honoured as Primus and both rule Fudarus. Just as their battle begins, Fudarus sponsors the young vassal covenant of Atramentum.\n\nSecrets\nCynics hold that Atramentum's founders were duped into readying the site for the magi who would soon take it.",
             "changes": [],
             "margin": "",
-            "id": "4b6f08826d36"
+            "id": "de34869233fb"
           },
           {
             "year": 1201,
@@ -3117,7 +3177,7 @@
             "details": "The other magi of Fudarus leave the two Primi to their quarrel and settle at Atramentum, ousting its young magi and renaming it Exspectatio, still counting themselves members of Fudarus. Atramentum's founders form Atramentum Renatus, a vassal of Exspectatio, in Champagne.",
             "changes": [],
             "margin": "",
-            "id": "a09409c2582b"
+            "id": "c320298a7413"
           },
           {
             "year": 1204,
@@ -3126,7 +3186,7 @@
             "details": "The covenant of Eboris is founded in Paris.",
             "changes": [],
             "margin": "",
-            "id": "0360fe06e692"
+            "id": "21c916fa723a"
           },
           {
             "year": 1207,
@@ -3135,7 +3195,7 @@
             "details": "The previous meeting convicted Pugnatis of controlling the mayor of Laval by magic to reach a vis source, and fined her a number of enchanted items. Neither she nor the items appear at this meeting, and she is cast out of the Order. Proctor of Guernicus presides, as he does again in 1214.",
             "changes": [],
             "margin": "",
-            "id": "ed198d2d7628"
+            "id": "050caf31a09c"
           },
           {
             "year": 1215,
@@ -3144,7 +3204,7 @@
             "details": "After nearly a century trapped in its regio, Lapis Crudus wins a kind of freedom and comes back into Hermetic affairs, reminding the Tribunal that the Diedne may still be waiting in theirs.",
             "changes": [],
             "margin": "",
-            "id": "b921aa3d9f4c"
+            "id": "48b210d92b52"
           },
           {
             "year": 1219,
@@ -3153,7 +3213,7 @@
             "details": "Renita of Bjornaer, Praeco of the Tribunal and leader of Confluensis, dies in the winter. Proctor, the Presiding Quaesitor, takes charge of Confluensis; who will be the next Praeco is open. Stellatus, the next eldest, has left for Iberia, leaving Celeres of Cunfin first in line.",
             "changes": [],
             "margin": "",
-            "id": "817e612bc9a3"
+            "id": "bf2b78f8fef9"
           }
         ],
         "package_data": {
@@ -10803,7 +10863,7 @@
             "kind": "characters",
             "target_id": "anacr_n_king_of_the_beggars",
             "note": "Its king, the Grand Co\u00ebsre",
-            "id": "79462709259f"
+            "id": "3c4972f580a0"
           }
         ],
         "arms": {},
@@ -10860,7 +10920,7 @@
             "kind": "covenants",
             "target_id": "eboris",
             "note": "Hosts the tour's first stage",
-            "id": "89ff7b6dacaf"
+            "id": "7ae5683400f2"
           }
         ],
         "arms": {},
@@ -10892,7 +10952,7 @@
             "kind": "covenants",
             "target_id": "lapis_crudus",
             "note": "Bound to it by Aries's pact",
-            "id": "95fdba02889b"
+            "id": "62752399d1af"
           }
         ],
         "arms": {},
@@ -13693,13 +13753,13 @@
             "kind": "creatures",
             "target_id": "the_boar_king",
             "note": "Its lord",
-            "id": "bcead68d2c8a"
+            "id": "15f6abbe4a08"
           },
           {
             "kind": "characters",
             "target_id": "salvirius",
             "note": "The Boar King's adviser",
-            "id": "95cbf2666820"
+            "id": "5c445c601f8b"
           }
         ],
         "arms": {},
@@ -13731,13 +13791,13 @@
             "kind": "characters",
             "target_id": "queen_skuld",
             "note": "Hierophant",
-            "id": "4cfac17ade60"
+            "id": "c63ed6b93834"
           },
           {
             "kind": "characters",
             "target_id": "thormod",
             "note": "A leading member, in secret",
-            "id": "8eadd1dbe7bd"
+            "id": "957a86acd155"
           }
         ],
         "arms": {},
@@ -13769,13 +13829,13 @@
             "kind": "characters",
             "target_id": "augustina",
             "note": "A member, in secret",
-            "id": "d301db98fcd4"
+            "id": "d170adf6e074"
           },
           {
             "kind": "characters",
             "target_id": "buliste",
             "note": "A member, to distract Harpax",
-            "id": "8997eac20b3d"
+            "id": "056091d7b9cb"
           }
         ],
         "arms": {},
@@ -13832,19 +13892,19 @@
             "kind": "covenants",
             "target_id": "florum",
             "note": "Its architect in Normandy",
-            "id": "7f933d57b8be"
+            "id": "6c126ef2c209"
           },
           {
             "kind": "covenants",
             "target_id": "spider_s_palace",
             "note": "Supports its liege Florum",
-            "id": "4738e869c1d7"
+            "id": "8f6c23ed4cb3"
           },
           {
             "kind": "covenants",
             "target_id": "requies_aeterna",
             "note": "Expected to follow Florum",
-            "id": "de5b35df36d3"
+            "id": "1a2c3d5096be"
           }
         ],
         "arms": {},
@@ -13925,13 +13985,13 @@
             "kind": "creatures",
             "target_id": "the_boar_king",
             "note": "The antagonist",
-            "id": "c425d468dbdb"
+            "id": "2bd8fdc954b5"
           },
           {
             "kind": "characters",
             "target_id": "salvirius",
             "note": "Makes the King's offers",
-            "id": "4238a9529722"
+            "id": "41b51507651e"
           }
         ],
         "arms": {},
@@ -14012,25 +14072,25 @@
             "kind": "characters",
             "target_id": "queen_skuld",
             "note": "The antagonist",
-            "id": "81290d961ebe"
+            "id": "0f0a345509c7"
           },
           {
             "kind": "characters",
             "target_id": "thormod",
             "note": "A leading member of the cult",
-            "id": "ed874453bbb4"
+            "id": "1f1da31d4da7"
           },
           {
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Thormod's covenant; Norse-descended magi",
-            "id": "012af91f60f7"
+            "id": "5ecb8670abcd"
           },
           {
             "kind": "places",
             "target_id": "atramentum",
             "note": "Skuld's covenant before she left",
-            "id": "6a5875db4b98"
+            "id": "00041a0a929a"
           }
         ],
         "arms": {},
@@ -14111,37 +14171,37 @@
             "kind": "characters",
             "target_id": "augustina",
             "note": "The Traitor",
-            "id": "cc7abdd319f9"
+            "id": "abe30b9ab96a"
           },
           {
             "kind": "characters",
             "target_id": "harpax",
             "note": "Primus, holding Fudarus",
-            "id": "7d7b14a6db8c"
+            "id": "bdaddb86cd4e"
           },
           {
             "kind": "characters",
             "target_id": "buliste",
             "note": "Prima, holding the House's web of spies",
-            "id": "3b7586673a94"
+            "id": "c654c00a349c"
           },
           {
             "kind": "characters",
             "target_id": "porphyrion",
             "note": "A third contender",
-            "id": "10073f01d1bd"
+            "id": "9fb779bb5a16"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Augustina's covenant",
-            "id": "cdf70ff92804"
+            "id": "e24b3a0432ad"
           },
           {
             "kind": "covenants",
             "target_id": "fudarus",
             "note": "The House's seat the Primi contest",
-            "id": "50d098627b7d"
+            "id": "9aa59179bc68"
           }
         ],
         "arms": {},
@@ -14222,31 +14282,31 @@
             "kind": "covenants",
             "target_id": "florum",
             "note": "Leads the movement in Normandy",
-            "id": "7f72cfe89d84"
+            "id": "6b8e7a1cef00"
           },
           {
             "kind": "covenants",
             "target_id": "spider_s_palace",
             "note": "Florum's vassal, an enthusiast",
-            "id": "3033efb22701"
+            "id": "43f1bb65e596"
           },
           {
             "kind": "covenants",
             "target_id": "requies_aeterna",
             "note": "Florum's vassal, indifferent",
-            "id": "9e4467db94ee"
+            "id": "92d3d2ae175e"
           },
           {
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Plots with Waddenzee to wreck it",
-            "id": "afa0a44ad2be"
+            "id": "1837f9ec068f"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Works to defeat it",
-            "id": "3e39664a1c76"
+            "id": "665294a1f18a"
           }
         ],
         "arms": {},
@@ -14401,13 +14461,13 @@
             "kind": "characters",
             "target_id": "celeres",
             "note": "Lives by the code of chivalry",
-            "id": "21832eb0ae7b"
+            "id": "efc69e9f1d85"
           },
           {
             "kind": "covenants",
             "target_id": "cunfin",
             "note": "Keeps the Grail Library",
-            "id": "c55dcc88b409"
+            "id": "58c586af95b2"
           }
         ],
         "arms": {},
@@ -14478,7 +14538,7 @@
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Founded by Norsemen",
-            "id": "67aefecda5a1"
+            "id": "411b0c678e4f"
           }
         ],
         "arms": {},
@@ -14623,19 +14683,19 @@
             "kind": "covenants",
             "target_id": "eboris",
             "note": "Senex of Paris",
-            "id": "f855c4e718c6"
+            "id": "463705bd6ff2"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Masks among the Seine shippers",
-            "id": "885c9ea7b048"
+            "id": "5377d6b70dee"
           },
           {
             "kind": "covenants",
             "target_id": "fudarus",
             "note": "Masks in the Dyers' Guild",
-            "id": "66cabb67e33b"
+            "id": "d0e2ab70a0ec"
           }
         ],
         "arms": {},
@@ -48442,7 +48502,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 1,
-            "id": "7ec3af2bd1de"
+            "id": "e0ca45365533"
           },
           {
             "name": "Club",
@@ -48450,7 +48510,7 @@
             "attack": 6,
             "defense": 5,
             "damage": 2,
-            "id": "f2659ed195b7"
+            "id": "07f700c8daef"
           },
           {
             "name": "Stone (thrown)",
@@ -48458,7 +48518,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 1,
-            "id": "9d8580c8c326"
+            "id": "ab4151708dd5"
           }
         ],
         "soak": 3,
@@ -48559,7 +48619,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Only the stronger korrigan have it. The korred becomes a lovely young woman for an hour, or until it spends the same Might again to change back. In that shape: Int -2, Per +1, Pre +2, Com +1, Str -1, Sta 0, Dex 0, Qik -1, Size 0; Club Init +0, Attack +2, Defense +0, Damage +2; Stone (thrown) Init -1, Attack +3, Defense +1, Damage +1.",
-            "id": "f723ebbc9180"
+            "id": "48858eef3908"
           }
         ],
         "vis": [
@@ -48567,7 +48627,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its hooves",
-            "id": "983a71d4f9e4"
+            "id": "66b2c8a03a50"
           }
         ],
         "equipment": "Usually none.",
@@ -48739,7 +48799,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 1,
-            "id": "3e73116e4af9"
+            "id": "0a242fdcba44"
           }
         ],
         "soak": 2,
@@ -48805,7 +48865,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Animal or Mentem. Works like Panic of the Trembling Heart, but reaches as far as the bark is heard.",
-            "id": "60c3e8ba0f33"
+            "id": "42d3dde972e6"
           },
           {
             "name": "Dreadful Howl",
@@ -48819,7 +48879,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Animal or Mentem. Works like Weight of a Thousand Hells, but lasts until sunrise or sunset and reaches as far as the howl is heard.",
-            "id": "092f52f23790"
+            "id": "abc2a2450e78"
           }
         ],
         "vis": [
@@ -48827,7 +48887,7 @@
             "pawns": 1,
             "art": "",
             "where": "in its tongue (1 or 2 pawns)",
-            "id": "b6baa81d90f7"
+            "id": "486eb0ec5486"
           }
         ],
         "equipment": "",
@@ -48954,7 +49014,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "b15349ade196"
+            "id": "61f74ecd903c"
           },
           {
             "name": "Presence",
@@ -48968,7 +49028,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "73bb4b0063ff"
+            "id": "ae49932a1ef3"
           },
           {
             "name": "Mastery of Mist",
@@ -48982,7 +49042,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with mist and fog.",
-            "id": "23674b52466c"
+            "id": "737b844396c4"
           }
         ],
         "vis": [],
@@ -49110,7 +49170,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "e99d6087dc4e"
+            "id": "b09a86027247"
           },
           {
             "name": "Presence",
@@ -49124,7 +49184,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "c7c3add7a0da"
+            "id": "78c2340c53c9"
           },
           {
             "name": "Mastery of Misdirection",
@@ -49138,7 +49198,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with misdirection and concealment.",
-            "id": "c68cd1ddeb86"
+            "id": "1509963eb703"
           }
         ],
         "vis": [],
@@ -49266,7 +49326,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "02058e3463cf"
+            "id": "99949e3b3136"
           },
           {
             "name": "Presence",
@@ -49280,7 +49340,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "2d035d03d3a4"
+            "id": "263622b7c7e6"
           },
           {
             "name": "Mastery of Storms",
@@ -49294,7 +49354,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with gales, rain and other foul weather.",
-            "id": "00622cdd19e4"
+            "id": "597b63743cea"
           }
         ],
         "vis": [],
@@ -49414,7 +49474,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 1,
-            "id": "34bfe3554049"
+            "id": "12cd1b46946a"
           },
           {
             "name": "Stone (thrown)",
@@ -49422,7 +49482,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 1,
-            "id": "166ea11c1ebc"
+            "id": "88ded789c492"
           }
         ],
         "soak": 3,
@@ -49516,7 +49576,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Conjures silver coins that gleam in the moonlight among the stones. They vanish at dawn; the Nains use them as bait to draw the greedy into an ambush.",
-            "id": "02394d9712fb"
+            "id": "8e1b032db5a7"
           },
           {
             "name": "Deadly Dance",
@@ -49530,7 +49590,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to ten victims must dance wildly with the Nains until sunrise. Each hour: Stamina stress roll against 6, or lose a long-term Fatigue level; once unconscious, a Light Wound instead. On a botch, two levels lost per 0 rolled (or the Wound worsens by one level per 0). Many dance to death.",
-            "id": "bc9be2d048ce"
+            "id": "31fcba5c176e"
           },
           {
             "name": "Magician's Desire Denied",
@@ -49544,7 +49604,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a pebble, leaf or the like seem to hold vis to an Intellego Vim spell. The false vis vanishes at dawn or when Sense the Nature of Vis is cast on it.",
-            "id": "9d63eef1cf10"
+            "id": "3c15e42cf665"
           }
         ],
         "vis": [
@@ -49552,7 +49612,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its hooves",
-            "id": "1cf5aa170f67"
+            "id": "073762e2f638"
           }
         ],
         "equipment": "Usually none.",
@@ -49641,7 +49701,7 @@
             "attack": null,
             "defense": 4,
             "damage": null,
-            "id": "1f0a8707ae75"
+            "id": "bce95bd7f44c"
           },
           {
             "name": "Broom (improvised bludgeon)",
@@ -49649,7 +49709,7 @@
             "attack": 6,
             "defense": 3,
             "damage": -3,
-            "id": "9885244ccbe9"
+            "id": "13f4af840cd2"
           }
         ],
         "soak": 0,
@@ -49771,7 +49831,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on, indoors only. The lutin knows everything in the room it is in, how many and where, by look alone, not by use (a wand is just a little stick). It finds things hidden by mundane means or by magic of magnitude 1 or less; to find a person with Magic Resistance it must penetrate.",
-            "id": "2fc3e4f14247"
+            "id": "a6b3c4f18937"
           },
           {
             "name": "Soap and Suds",
@@ -49785,7 +49845,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Indoors only. The floor of the lutin's room turns soapy: anyone moving quickly there, fighting included, rolls Dexterity against 6 each round or slips.",
-            "id": "a734e4ac62ca"
+            "id": "a627524835ad"
           }
         ],
         "vis": [
@@ -49793,7 +49853,7 @@
             "pawns": 1,
             "art": "Aquam",
             "where": "in its heart",
-            "id": "3af33a1165cb"
+            "id": "cd2c0dcc3035"
           }
         ],
         "equipment": "Household things: a broom, a shovel or a cloth.",
@@ -49902,7 +49962,7 @@
             "attack": 13,
             "defense": 9,
             "damage": 11,
-            "id": "a9aadbc4b973"
+            "id": "5a156c42bd19"
           },
           {
             "name": "Boar Spear (mounted)",
@@ -49910,7 +49970,7 @@
             "attack": 16,
             "defense": 12,
             "damage": 11,
-            "id": "21b542d3c86c"
+            "id": "a8702ebb2435"
           },
           {
             "name": "Tusks (gore)",
@@ -49918,7 +49978,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "e25f6c668fb7"
+            "id": "5952d14d3a84"
           }
         ],
         "soak": 10,
@@ -50096,7 +50156,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on; Animal, Herbam or Mentem. He can speak with any beast or plant of the woods, and they carry out his orders as best they can.",
-            "id": "84ef4a5c5dc8"
+            "id": "1ae04ff4cfbb"
           },
           {
             "name": "Sylvan Sanctity",
@@ -50110,7 +50170,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He learns roughly where and how many human intruders are in his forest; too many to follow in full, but he easily spots anyone entering a usually empty part. Must penetrate, though magi's grogs seldom resist. Used daily, and the forest's heart is days deep, so he is ready for visitors.",
-            "id": "19ecc9ad8a07"
+            "id": "4e05a6a18aa5"
           },
           {
             "name": "Ancient Rage",
@@ -50124,7 +50184,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A frothing fury for a day: +3 to Attack and Soak, -3 to Defense, no Wound Penalties short of Incapacitated. He attacks at the least provocation and may neither retreat nor spare anyone.",
-            "id": "6c423d1dbe69"
+            "id": "46be463ba089"
           },
           {
             "name": "Impaled by the Thorn",
@@ -50138,7 +50198,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Mentem. He hurls a boar spear at a human he can see; it hits without a roll, and if it penetrates the victim is frozen, unable to move, sense, think or cast, and does not age. Pulling the spear out ends it but deals a Heavy Wound, unless magic finds a way round that.",
-            "id": "ab8503232ffb"
+            "id": "6f1d94a6a447"
           },
           {
             "name": "Call of the Hunter",
@@ -50152,7 +50212,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He appears anywhere in his forest.",
-            "id": "52a43c94dddd"
+            "id": "e2127412c277"
           }
         ],
         "vis": [
@@ -50160,13 +50220,13 @@
             "pawns": 4,
             "art": "Animal",
             "where": "in his left tusk",
-            "id": "7c4bbfc832d8"
+            "id": "ebb9670ee7d7"
           },
           {
             "pawns": 4,
             "art": "Animal",
             "where": "in his right tusk",
-            "id": "aa5c78d346fa"
+            "id": "66c37587c9ec"
           }
         ],
         "equipment": "Several boar spears; his court can give him anything else he wants, though some of it may be glamour.",
@@ -50182,6 +50242,7 @@
     ],
     "enchanted_devices": [],
     "books_in_play": null,
+    "overlays": [],
     "sources": [],
     "hidden_catalogs": [],
     "hidden_entries": {},
@@ -50217,6 +50278,7 @@
     "saved_by": "",
     "marriages": []
   },
+  "key": "normandy",
   "book": "L&L",
   "source": "The Lion and the Lily: The Normandy Tribunal, by Atlas Games, open content under the Creative Commons Attribution-ShareAlike 4.0 licence (redcap.org); summarised, not quoted.",
   "assumptions": "pack-assumptions-normandy",

@@ -502,6 +502,8 @@ def _sees(b: Builder) -> tuple[Neighbour, Neighbour]:
             "A wooden cathedral almost 50 paces long, seat of a diocese of "
             "220 churches and 290 priests. Bishop Magnus Gizurarson lives "
             "here in relative quiet (LFI p. 44).",
+            "The Southern Bishopric, all the island beyond the Northern "
+            "Bishopric's bounds (LFI p. 10).",
             "After Bishop Thorlak died in 1193 the chieftains took care to "
             "choose men to their liking: Pall Jonsson, and on his death in "
             "1211 Magnus, elected by the godar (LFI p. 43).",
@@ -516,6 +518,8 @@ def _sees(b: Builder) -> tuple[Neighbour, Neighbour]:
             "The northern diocese, of 108 parish churches and 136 priests. "
             "Its first bishop, Jon Ogmundarson, was consecrated in 1106 "
             "(LFI p. 43).",
+            "The Northern Bishopric, the middle of the north coast and the "
+            "land behind it (LFI p. 10).",
             "When the see fell vacant in 1201 the chieftain Kolbeinn Tumason "
             "arranged the election of an illegitimate relative of his wife, "
             "Gudmund Arason. Gudmund was known for his miracles but thought "
@@ -652,6 +656,7 @@ def _monasteries(b: Builder, skalholt: Neighbour) -> Neighbour:
         b,
         "Videy",
         "The site of a planned Augustinian monastery, not yet built (LFI p. 44).",
+        secrets="The map (p. 10) marks it as a monastery already.",
     )
     helgafell = _place(
         b,

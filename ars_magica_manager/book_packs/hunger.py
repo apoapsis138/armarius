@@ -13,9 +13,9 @@ def build(b: Builder) -> None:
     b.faction(
         "The Great Hunger",
         summary=paragraphs(
-            "The spirit at the centre of the Great Desert, so vast it gives "
-            "gods pause: the parching heat and eroding wind made one, seeking "
-            "to reduce the world to dust. The Romans called it the Fames "
+            "The spirit at the centre of the Great Desert, whose strength even "
+            "gods respect: the desert's heat and scouring wind given one will, "
+            "which would leave the world dust. The Romans called it the Fames "
             "Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is "
             "the Red.",
             "Hostile creatures, spirits, faeries and jinn serve it, and some "

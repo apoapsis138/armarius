@@ -565,7 +565,7 @@
             "kind": "characters",
             "target_id": "edwin_locke",
             "note": "a tutor here",
-            "id": "823cb73c2f0c"
+            "id": "04770622e330"
           }
         ],
         "arms": {},
@@ -595,43 +595,43 @@
             "kind": "characters",
             "target_id": "baron_geoffroi_d_arques",
             "note": "the baron",
-            "id": "4bc66d5ded1f"
+            "id": "69327fdb11db"
           },
           {
             "kind": "characters",
             "target_id": "ysabeau",
             "note": "the baron's wife",
-            "id": "bb5b75228d48"
+            "id": "8e7205dd4fad"
           },
           {
             "kind": "characters",
             "target_id": "claude_de_f_camp",
             "note": "the steward",
-            "id": "c90ad8493035"
+            "id": "e4d3a8e90d5f"
           },
           {
             "kind": "characters",
             "target_id": "guillaume",
             "note": "the baron's child",
-            "id": "08a0608feb8e"
+            "id": "6db9d981421f"
           },
           {
             "kind": "characters",
             "target_id": "alenard",
             "note": "the baron's child",
-            "id": "697690041455"
+            "id": "6e048e37957c"
           },
           {
             "kind": "characters",
             "target_id": "joie",
             "note": "the baron's child",
-            "id": "10c45b1645bd"
+            "id": "c29434ca6e1b"
           },
           {
             "kind": "characters",
             "target_id": "viollette",
             "note": "the baron's child",
-            "id": "264d69d63ce0"
+            "id": "9d4507e89aea"
           }
         ],
         "arms": {},
@@ -663,49 +663,49 @@
             "kind": "characters",
             "target_id": "baron_geoffroi_d_arques",
             "note": "its patron",
-            "id": "260b5051cd99"
+            "id": "e27875a9182f"
           },
           {
             "kind": "characters",
             "target_id": "edwin_locke",
             "note": "the Elementalist",
-            "id": "ef13a9657ef9"
+            "id": "473e5495e7af"
           },
           {
             "kind": "characters",
             "target_id": "dhamh_brathair",
             "note": "a member of the council",
-            "id": "940f207b0b94"
+            "id": "836aef53d775"
           },
           {
             "kind": "characters",
             "target_id": "dominici_viterbo",
             "note": "a member of the council",
-            "id": "c1f7fb442b23"
+            "id": "9bdb0cc25a02"
           },
           {
             "kind": "characters",
             "target_id": "hannelore_of_the_baron_s_council",
             "note": "a member of the council",
-            "id": "527f913bcfbe"
+            "id": "ad8f482cedf4"
           },
           {
             "kind": "characters",
             "target_id": "jabir_al_qazwini",
             "note": "a member of the council",
-            "id": "1d45ead0c1d2"
+            "id": "ceb0e8da6634"
           },
           {
             "kind": "characters",
             "target_id": "carles_peregrinus",
             "note": "a member of the council",
-            "id": "152311c1e12f"
+            "id": "0fcd55af74df"
           },
           {
             "kind": "creatures",
             "target_id": "dorothy_anning",
             "note": "a member of the council",
-            "id": "786198d9bbf2"
+            "id": "0660034d952d"
           }
         ],
         "arms": {},
@@ -857,13 +857,13 @@
             "kind": "places",
             "target_id": "the_barony_of_arques",
             "note": "the baron's lands",
-            "id": "9f99705a775b"
+            "id": "f792373005d5"
           },
           {
             "kind": "places",
             "target_id": "geoffroi_s_council_of_wizards",
             "note": "his council of wizards",
-            "id": "65b862ac6d2b"
+            "id": "130e4613ac94"
           }
         ],
         "arms": {},
@@ -989,7 +989,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His seat",
-            "id": "942759d39959"
+            "id": "db0237e102fd"
           }
         ],
         "arms": {},
@@ -1019,7 +1019,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "Its lord",
-            "id": "879bb72ead7e"
+            "id": "cc39b7697ca1"
           }
         ],
         "arms": {},
@@ -1051,19 +1051,19 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "Its head",
-            "id": "f35e0ed6e8a0"
+            "id": "26d37c8c45f9"
           },
           {
             "kind": "characters",
             "target_id": "lady_loise_le_cornu",
             "note": "His wife",
-            "id": "bd587f89379f"
+            "id": "15871c0d21c7"
           },
           {
             "kind": "characters",
             "target_id": "sir_artur_le_cornu",
             "note": "His brother",
-            "id": "e4fe28f1fb27"
+            "id": "0c7f4b7ef672"
           }
         ],
         "arms": {},
@@ -1095,19 +1095,19 @@
             "kind": "characters",
             "target_id": "sir_artur_le_cornu",
             "note": "A vassal knight",
-            "id": "0f859ef7534c"
+            "id": "c8c827dec9cc"
           },
           {
             "kind": "characters",
             "target_id": "bertrand_gallain",
             "note": "A household squire",
-            "id": "56fcaf016ce9"
+            "id": "6aa76e0f2b58"
           },
           {
             "kind": "characters",
             "target_id": "brother_henri_raoullin",
             "note": "Confessor and chaplain",
-            "id": "087dbf9897f1"
+            "id": "766f5e30d092"
           }
         ],
         "arms": {},
@@ -1161,7 +1161,7 @@
             "kind": "books",
             "target_id": "the_baron_s_diary",
             "note": "Hidden under the altar",
-            "id": "42fe2cac46f4"
+            "id": "25eb6729e94b"
           }
         ],
         "arms": {},
@@ -1192,7 +1192,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His collection",
-            "id": "1c604aa7f96e"
+            "id": "596a56c1d11e"
           }
         ],
         "arms": {},
@@ -1354,19 +1354,19 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "Drives it",
-            "id": "a6a3b9c0d2d0"
+            "id": "b9446ef686da"
           },
           {
             "kind": "places",
             "target_id": "the_barony_of_le_cornu",
             "note": "His lands",
-            "id": "fb8fd85a8e0c"
+            "id": "ed49f166ac4e"
           },
           {
             "kind": "places",
             "target_id": "the_baron_s_overlord",
             "note": "May step in",
-            "id": "9545f2fe6428"
+            "id": "caf20077833e"
           }
         ],
         "arms": {},
@@ -1395,7 +1395,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Its legate to the Order",
-            "id": "563f86d6a6b4"
+            "id": "f202bdfd2c18"
           }
         ],
         "arms": {},
@@ -1446,7 +1446,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "A canon here, 1203-1210",
-            "id": "61e8725198c4"
+            "id": "7dd3563b3c90"
           }
         ],
         "arms": {},
@@ -1478,7 +1478,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Their son",
-            "id": "4ce1ef32d323"
+            "id": "1c8d1eb1a429"
           }
         ],
         "arms": {},
@@ -1510,7 +1510,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Shares its aims",
-            "id": "c5dada5e4eb8"
+            "id": "a5edc6bf7f2f"
           }
         ],
         "arms": {},
@@ -1622,37 +1622,37 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Drives it",
-            "id": "760bedb9b471"
+            "id": "c74f86d0739f"
           },
           {
             "kind": "characters",
             "target_id": "pompius_of_house_guernicus",
             "note": "His past",
-            "id": "e151d1f7ba6e"
+            "id": "7d498b702e40"
           },
           {
             "kind": "places",
             "target_id": "the_papal_curia",
             "note": "Sends him",
-            "id": "78be3fb760b1"
+            "id": "8d46b6eb06ba"
           },
           {
             "kind": "places",
             "target_id": "the_societas_of_the_mystical_christ",
             "note": "His instrument",
-            "id": "81cf0c899326"
+            "id": "c22fc0d1320c"
           },
           {
             "kind": "places",
             "target_id": "napoli",
             "note": "His home",
-            "id": "a7cfcdd5a954"
+            "id": "c5930559e76f"
           },
           {
             "kind": "creatures",
             "target_id": "the_finger_bone_of_saint_jerome",
             "note": "He wears it",
-            "id": "339680fef458"
+            "id": "7c1a9d2e221c"
           }
         ],
         "arms": {},
@@ -1683,7 +1683,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "1b625758cc55"
+            "id": "d79659229afa"
           }
         ],
         "arms": {},
@@ -1714,7 +1714,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "383a58761033"
+            "id": "6d5110911227"
           }
         ],
         "arms": {},
@@ -1745,7 +1745,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "aa3594cac2e2"
+            "id": "16b03071b702"
           }
         ],
         "arms": {},
@@ -1776,7 +1776,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "60ae3d9a01b8"
+            "id": "2454127eb2ea"
           }
         ],
         "arms": {},
@@ -1807,7 +1807,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "3e2cb5d11161"
+            "id": "a3b3030b199b"
           }
         ],
         "arms": {},
@@ -1838,7 +1838,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "062708a9dee4"
+            "id": "6eca1eaabb7b"
           }
         ],
         "arms": {},
@@ -1869,7 +1869,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "6f736e0c76ff"
+            "id": "5ea37e5e42e5"
           }
         ],
         "arms": {},
@@ -1900,7 +1900,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "664cd0209228"
+            "id": "e5c2324fa747"
           }
         ],
         "arms": {},
@@ -1931,7 +1931,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "164704656764"
+            "id": "e9e109757762"
           }
         ],
         "arms": {},
@@ -1962,7 +1962,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "c76403072461"
+            "id": "d16605482b24"
           }
         ],
         "arms": {},
@@ -1993,7 +1993,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "31d9427d5fe8"
+            "id": "c423e80a578d"
           }
         ],
         "arms": {},
@@ -2024,7 +2024,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "84db8566573c"
+            "id": "30bf1b7673af"
           }
         ],
         "arms": {},
@@ -2055,7 +2055,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "dab3a7b7a59f"
+            "id": "5e749deb7103"
           }
         ],
         "arms": {},
@@ -2086,7 +2086,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "b1820039a3c5"
+            "id": "95fba7685e1e"
           }
         ],
         "arms": {},
@@ -2117,7 +2117,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "4afa82833d92"
+            "id": "87c00dcff7fc"
           }
         ],
         "arms": {},
@@ -2148,7 +2148,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Behind it, or near it",
-            "id": "f3cabff628cf"
+            "id": "a44552f8dd4d"
           }
         ],
         "arms": {},
@@ -2205,19 +2205,19 @@
             "kind": "characters",
             "target_id": "brother_theodoric",
             "note": "Chief chorister",
-            "id": "7702b5fc758d"
+            "id": "dbb850abe0c5"
           },
           {
             "kind": "characters",
             "target_id": "father_peter",
             "note": "Provost",
-            "id": "5ca2ed008aa1"
+            "id": "8ba60b41ae6b"
           },
           {
             "kind": "characters",
             "target_id": "bishop_orris",
             "note": "The bishop they bless",
-            "id": "b0212bda1f5c"
+            "id": "978e0284129f"
           }
         ],
         "arms": {},
@@ -2249,25 +2249,25 @@
             "kind": "characters",
             "target_id": "brother_peter",
             "note": "A member",
-            "id": "c1a55f3064a6"
+            "id": "fce30d994b50"
           },
           {
             "kind": "characters",
             "target_id": "brother_bartholomew",
             "note": "A member",
-            "id": "31ad126fb088"
+            "id": "a8b4d2151084"
           },
           {
             "kind": "characters",
             "target_id": "brother_alonso",
             "note": "A member",
-            "id": "369cd4c1ec88"
+            "id": "13ab74ae5ba7"
           },
           {
             "kind": "characters",
             "target_id": "bishop_orris",
             "note": "Asked for them",
-            "id": "13cc4059940a"
+            "id": "33c297fbb43d"
           }
         ],
         "arms": {},
@@ -2444,19 +2444,19 @@
             "kind": "characters",
             "target_id": "bishop_orris",
             "note": "Drives it",
-            "id": "7a14a3feb9e2"
+            "id": "09edee44911f"
           },
           {
             "kind": "characters",
             "target_id": "deacon_adam",
             "note": "Secretary at the visitation",
-            "id": "2401ca8f32d1"
+            "id": "3f4663e91022"
           },
           {
             "kind": "covenants",
             "target_id": "the_cathedral_of_st_john_the_apostle",
             "note": "His seat and his resources",
-            "id": "eb4928c39624"
+            "id": "47d9db6e2203"
           }
         ],
         "arms": {},
@@ -2498,19 +2498,19 @@
             "kind": "characters",
             "target_id": "turstan",
             "note": "The double",
-            "id": "dca64d6411f2"
+            "id": "b3c304b208d2"
           },
           {
             "kind": "characters",
             "target_id": "archdeacon_geoffrey",
             "note": "Runs the scam",
-            "id": "106ff6409582"
+            "id": "6ad37c8319b8"
           },
           {
             "kind": "characters",
             "target_id": "bishop_orris",
             "note": "His double",
-            "id": "26877208622e"
+            "id": "37e7ac0fa1f7"
           }
         ],
         "arms": {},
@@ -2742,13 +2742,13 @@
             "kind": "characters",
             "target_id": "galerius_of_house_guernicus",
             "note": "The investigator",
-            "id": "77a5e4fa5aac"
+            "id": "d93429dbe941"
           },
           {
             "kind": "characters",
             "target_id": "ingrid_of_house_tremere",
             "note": "His bodyguard",
-            "id": "db5e7ef0a084"
+            "id": "e8725648b09d"
           }
         ],
         "arms": {},
@@ -2802,13 +2802,13 @@
             "kind": "characters",
             "target_id": "hannelore",
             "note": "His daughter",
-            "id": "3e730f72ddbf"
+            "id": "6d4c08224ffb"
           },
           {
             "kind": "characters",
             "target_id": "lady_ermengarde",
             "note": "His wife",
-            "id": "52ba12faea6d"
+            "id": "24777f3c3cfb"
           }
         ],
         "arms": {},
@@ -2888,7 +2888,7 @@
             "kind": "places",
             "target_id": "the_sulfurous_spring",
             "note": "Its vis",
-            "id": "528ee594b76c"
+            "id": "09f657567094"
           }
         ],
         "arms": {},
@@ -3071,49 +3071,49 @@
             "kind": "characters",
             "target_id": "hannelore",
             "note": "The diabolist",
-            "id": "62e7de5846c8"
+            "id": "52d6dbbe34f8"
           },
           {
             "kind": "characters",
             "target_id": "lady_ermengarde",
             "note": "Hannelore's stepmother",
-            "id": "be724ca31601"
+            "id": "43ffe377b7fd"
           },
           {
             "kind": "characters",
             "target_id": "father_fulke",
             "note": "The false priest",
-            "id": "b87c4b15d75f"
+            "id": "8241d74dd4da"
           },
           {
             "kind": "places",
             "target_id": "baron_hugo_s_castle",
             "note": "The invitation",
-            "id": "1967aaadbbc5"
+            "id": "cbf411af1c91"
           },
           {
             "kind": "places",
             "target_id": "the_baron_s_old_storage_caves",
             "note": "The confrontation",
-            "id": "c4800717cca7"
+            "id": "036ad477e793"
           },
           {
             "kind": "places",
             "target_id": "the_sulfurous_spring",
             "note": "Vis she contests with the coven",
-            "id": "be990a433e92"
+            "id": "3b875bc0a511"
           },
           {
             "kind": "places",
             "target_id": "the_road_tavern",
             "note": "The showdown",
-            "id": "c8e2b1cb89c2"
+            "id": "131b4526d5f5"
           },
           {
             "kind": "places",
             "target_id": "the_nunnery",
             "note": "Her confinement",
-            "id": "6eebdf7b2b17"
+            "id": "309af72c6f25"
           }
         ],
         "arms": {},
@@ -3334,31 +3334,31 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "The movement this story follows",
-            "id": "204e98239e59"
+            "id": "0ab0281b8ed2"
           },
           {
             "kind": "creatures",
             "target_id": "abaissier",
             "note": "Behind the cult",
-            "id": "256d3b1c01a1"
+            "id": "2fdf508921f6"
           },
           {
             "kind": "creatures",
             "target_id": "fabrico",
             "note": "Behind the cult",
-            "id": "16ebf81e25c4"
+            "id": "065aeb1f73f7"
           },
           {
             "kind": "creatures",
             "target_id": "bufonia",
             "note": "Behind the cult",
-            "id": "c030dd9ef893"
+            "id": "86822c6d82ae"
           },
           {
             "kind": "creatures",
             "target_id": "malicia",
             "note": "Behind the cult",
-            "id": "814c64c038dc"
+            "id": "da4a7e1c0742"
           }
         ],
         "arms": {},
@@ -3387,19 +3387,19 @@
             "kind": "characters",
             "target_id": "the_prior_of_the_abbey",
             "note": "Acts in the abbot's stead",
-            "id": "300a90d1de4a"
+            "id": "6bb51dff6847"
           },
           {
             "kind": "characters",
             "target_id": "friar_or_monk_of_the_abbey",
             "note": "Its brothers",
-            "id": "16cf36f5c76c"
+            "id": "4750166b750a"
           },
           {
             "kind": "characters",
             "target_id": "penitent_knight",
             "note": "On a task for the abbot",
-            "id": "da36202222d3"
+            "id": "214a493f7a47"
           }
         ],
         "arms": {},
@@ -3603,13 +3603,13 @@
             "kind": "creatures",
             "target_id": "rasa_the_dragon_abbot",
             "note": "Behind the abbey's works",
-            "id": "069ed19d30d5"
+            "id": "389e81853385"
           },
           {
             "kind": "places",
             "target_id": "the_abbey_of_the_reclusive_abbot",
             "note": "Where it all comes from",
-            "id": "6c0b9469a606"
+            "id": "88810659d36b"
           }
         ],
         "arms": {},
@@ -3640,7 +3640,7 @@
             "kind": "characters",
             "target_id": "the_germanic_princess",
             "note": "Held captive here",
-            "id": "d04491c62cd4"
+            "id": "147679420350"
           }
         ],
         "arms": {},
@@ -3672,73 +3672,73 @@
             "kind": "creatures",
             "target_id": "the_queen_of_gold_and_glass",
             "note": "Its sovereign",
-            "id": "e59ec38b1d38"
+            "id": "272a569d2fce"
           },
           {
             "kind": "creatures",
             "target_id": "the_distinguished_knight",
             "note": "Serves in the court",
-            "id": "82af6ae379c8"
+            "id": "de35cbd286f7"
           },
           {
             "kind": "creatures",
             "target_id": "the_distinguished_herald",
             "note": "Serves in the court",
-            "id": "1d736ce29f8b"
+            "id": "9c1c8deadb71"
           },
           {
             "kind": "creatures",
             "target_id": "the_distinguished_huntsman",
             "note": "Serves in the court",
-            "id": "365d00f100b7"
+            "id": "8f065332f022"
           },
           {
             "kind": "creatures",
             "target_id": "the_distinguished_spy",
             "note": "Serves in the court",
-            "id": "40ed26ed0d47"
+            "id": "56dccea2a970"
           },
           {
             "kind": "creatures",
             "target_id": "the_distinguished_ambassador",
             "note": "Serves in the court",
-            "id": "e90745e15805"
+            "id": "4cd9ce5b8f89"
           },
           {
             "kind": "creatures",
             "target_id": "the_queen_s_steward",
             "note": "Serves in the court",
-            "id": "30f37ff2be94"
+            "id": "26cf08501c00"
           },
           {
             "kind": "creatures",
             "target_id": "undistinguished_warriors",
             "note": "Serves in the court",
-            "id": "8fe42650c84d"
+            "id": "3bc439724ef3"
           },
           {
             "kind": "creatures",
             "target_id": "undistinguished_servants",
             "note": "Serves in the court",
-            "id": "b927a720ed1b"
+            "id": "a514a3797e3a"
           },
           {
             "kind": "creatures",
             "target_id": "undistinguished_magi",
             "note": "Serves in the court",
-            "id": "bc4ed7f4f2e1"
+            "id": "0418ebc13fb6"
           },
           {
             "kind": "creatures",
             "target_id": "hazy_servants",
             "note": "Serves in the court",
-            "id": "8f7f5ddc4b6f"
+            "id": "7cadbdb9ed2f"
           },
           {
             "kind": "creatures",
             "target_id": "shadowy_minions",
             "note": "Serves in the court",
-            "id": "ac8c69744743"
+            "id": "9c6566b0031a"
           }
         ],
         "arms": {},
@@ -4014,43 +4014,43 @@
             "kind": "creatures",
             "target_id": "the_queen_of_gold_and_glass",
             "note": "Sets every challenge",
-            "id": "1e4f86d0ae7e"
+            "id": "6a241e1ed913"
           },
           {
             "kind": "creatures",
             "target_id": "the_frame_of_gold",
             "note": "A piece follows each challenge",
-            "id": "e8c27d80c71f"
+            "id": "3cb33fb7eaa1"
           },
           {
             "kind": "creatures",
             "target_id": "ice_wyrm",
             "note": "The Ignem challenge",
-            "id": "bbc1274ab7a4"
+            "id": "e6b1be17e88b"
           },
           {
             "kind": "creatures",
             "target_id": "smoothface_basic_soldier",
             "note": "Dupes of the Herbam challenge",
-            "id": "38e98ec8e1c1"
+            "id": "4c26d9047999"
           },
           {
             "kind": "creatures",
             "target_id": "knockers",
             "note": "Dupes of the Terram challenge",
-            "id": "07f2e66fcb7c"
+            "id": "9744c7d4a099"
           },
           {
             "kind": "characters",
             "target_id": "the_actor",
             "note": "The Mentem challenge",
-            "id": "ce160715c9d2"
+            "id": "2406c45870cd"
           },
           {
             "kind": "characters",
             "target_id": "the_germanic_princess",
             "note": "Freed if the Queen falls",
-            "id": "1a9b89e7f6f2"
+            "id": "fc70b6e54db8"
           }
         ],
         "arms": {},
@@ -4258,7 +4258,7 @@
             "kind": "creatures",
             "target_id": "the_waimie",
             "note": "The tale of the milk",
-            "id": "2dddc0200e29"
+            "id": "87a6a5cc012c"
           }
         ],
         "arms": {},
@@ -4386,7 +4386,7 @@
             "kind": "creatures",
             "target_id": "the_waimie",
             "note": "Its Scaly Queen",
-            "id": "93e385c9cb87"
+            "id": "f6ee8d465f50"
           }
         ],
         "arms": {},
@@ -4498,13 +4498,13 @@
             "kind": "creatures",
             "target_id": "the_waimie",
             "note": "The serpent behind the thefts",
-            "id": "099a645e2865"
+            "id": "4c0d0f1d4b76"
           },
           {
             "kind": "creatures",
             "target_id": "the_waimie_s_brood_one_year_old",
             "note": "The first thief at the vis source",
-            "id": "4ec5df8ab955"
+            "id": "5836b5c69af4"
           }
         ],
         "arms": {},
@@ -4559,7 +4559,7 @@
             "kind": "creatures",
             "target_id": "the_rebellious_daughter",
             "note": "The daughter",
-            "id": "59024a1bb1b8"
+            "id": "22b695135279"
           }
         ],
         "arms": {},
@@ -4638,7 +4638,7 @@
             "kind": "creatures",
             "target_id": "the_serpent_s_husband",
             "note": "The husband",
-            "id": "bd62f03a72ea"
+            "id": "9703615f841f"
           }
         ],
         "arms": {},
@@ -5203,7 +5203,7 @@
         },
         "portrait": "",
         "detail": "Full",
-        "summary": "The bishop of the diocese: tall and stick-thin, with a large hooked nose and clear blue eyes. His orange-red hair has faded to pure white and, tonsure apart, he has a full head of it. A strong and clever speaker, he fills a powerful voice with feeling and stirs men's hearts.\n\nHe is a local man made good, the second son of a wealthy knight who grew up in the diocese and served as a parish priest in it before his election, and the city is proud of him. He preaches in his people's own tongue, unlike the standoffish bishop before him, and knows their troubles. He is known for his sense of justice, for mediating disputes between prominent locals, and for standing with the poor against the powerful. The citizens love to see him face down lords who lean on the free men of the city.\n\nChurchmen think well of him. The story goes that a saint called him to religion in a dream. He joined the Benedictines, then after ordination won release from his monastic vows to take a parish, against his family's wishes. The abbey where he was a novice was abandoned soon after, for innocent reasons. He was known for quiet faith, strength of character and efficiency, and his election surprised no one.",
+        "summary": "The bishop of the diocese, a long, gaunt man with a great beak of a nose and bright blue eyes. The red hair of his youth has gone white, though he has kept it all but the tonsure. In the pulpit he is formidable, with a big voice and a sure command of argument, and he can move a congregation.\n\nHe is a local man made good, the second son of a wealthy knight who grew up in the diocese and served as a parish priest in it before his election, and the city is proud of him. He preaches in his people's own tongue, unlike the standoffish bishop before him, and knows their troubles. He is known for his sense of justice, for mediating disputes between prominent locals, and for standing with the poor against the powerful. The citizens love to see him face down lords who lean on the free men of the city.\n\nChurchmen think well of him. The story goes that a saint called him to religion in a dream. He joined the Benedictines, then after ordination won release from his monastic vows to take a parish, against his family's wishes. The abbey where he was a novice was abandoned soon after, for innocent reasons. He was known for quiet faith, strength of character and efficiency, and his election surprised no one.",
         "secrets": "He senses evil and the good in people's hearts, and he senses magic, but his curse makes the two one to him. He has met the power of Hell and feels the same thing around magic, and has never felt magic any other way, so he does not know the two can be told apart. Add his piety and his dread of the Infernal, and he takes the characters for Hell's allies (pp. 50, 57). He is a good man acting for his flock: run him as a puzzle to solve, not a monster to beat (p. 50).\n\nWho cursed him is the storyguide's choice (p. 57). God or an angel, to test whether the characters will keep the high ground and hold back their power. A demon, years ago, when he was a rising priest, so that a dangerous enemy of Hell would waste himself on magic and the innocent. Or a powerful hedge wizard or faerie he offended when young: fittingly, he probably saw something he did not understand and called it the Devil's work.\n\nWhat he knows of the Order (pp. 52-53): a working knowledge, partly wrong through the Order's own misinformation (Lords of Men pp. 40-41). He thinks covenants are like chapters or monasteries; he knows, unless they have hidden it, that this one lies in his diocese, and perhaps its name. He has never met a magus and expects blue robes, tall brimmed blue hats and staves. He knows of the Order's laws, its secret Tribunals and its democracy. Sorcerers he has met seemed evil to him. He accepts in reason that not all wizards are evil, but God has given him the power to know evil, and he reserves judgment until he meets them himself.\n\nHis Magic Sensitivity (p. 56): near a Divine, Infernal or Magic manifestation he grows dizzy and breaks into a cold sweat. The Divine brings joy and rays of golden light from the source; Infernal or Magic things are hard to look at, wrapped in gloom and hollow despair. He must Penetrate any Magic Resistance to feel anything. The Ease Factor to detect a Gifted person is 15 minus the highest Art divided by 5, or the highest Supernatural Ability. Next to the altar his Dominion aura of 5 and the Just temper add to the roll. A character on trial stands in aura 5, bystanders in aura 4; subtract 3 times the aura from Magic Resistance within the Dominion. He may detect a spell or an enchanted item instead. If he fails to Penetrate, the target feels something rebuffed. The storyguide may simply rule that he succeeds.\n\nWhat a character knows of him (p. 54): Intelligence + Organization Lore: Church, or a stress die + his Reputation of 4 without it; everything up to the highest Ease Factor beaten. Botch: facts about a different bishop. 3: this is Bishop Orris. 6: he is thought fair, and his city is proud of him. 9: he is a local, raised about ten miles from here. 12: he is influential in his city and a powerful orator. 15: he has been very hard on sorcerers.\n\nHoly Influence (pp. 55, 57): Presence + Leadership + stress die. 9 grants +1, 15 grants +2, 24 grants +3. The temper of the Dominion is described in RoP: The Divine Revised Edition pp. 38-40.\n\nHis frame of mind (p. 62): he spends night after night prostrate on the chancel steps, praying for a sign that he judges rightly and that his way is the only way to protect his people. A spy in the cathedral may learn from this that he is no villain and that peace can still be found.\n\nAttacking him (p. 66): he may be warned of a plot in a dream, and if the characters are thought ruthless he may hire bodyguards and keep the relics by him. The Hand gives Magic Resistance 40, and his usual Dominion aura of at least 4 raises it to 44. He prays for a miracle if attacked. Beyond that he is an aging man who has never fought and is easily killed.\n\nReworking him (pp. 53-54). Not a bishop: an abbot changes least; a Templar preceptor or a pious noble tied to the clergy, perhaps by a younger brother, may need rebuilt, more martial statistics. Other motives: he may not be deluded at all, but resent the magi's power or covet a resource such as an income. Then the Cantores help him less, Theodoric may side with the characters, and his allies are less loyal. He could be truly corrupt, but use this with care: it is a tired figure, it loses the dilemma, and angels and saints make such a man unlikely in that seat.\n\nMore powerful (pp. 53-54): an archbishop or cardinal has personal Magic Resistance that stacks with relics, and the Commanding Aura (RoP: The Divine Revised Edition pp. 42-43; The Church p. 26). An archbishop's cathedral should have another 500 Build Points. The Cantores may gain Holy Powers and act at his direction; Understanding would give him counsel and visions of what the characters do. A Templar, Hospitaller or Teutonic preceptory in his city brings the knights in sooner, their engines protected by a Cantores Blessing of Magic Resistance. Weaker: he is a busy man and can afford to move slowly unless they retaliate, so make him less ardent.",
         "links": [],
         "agents": [],
@@ -6523,13 +6523,13 @@
             "kind": "characters",
             "target_id": "ysabeau",
             "note": "his wife",
-            "id": "5cf4e5ee696a"
+            "id": "4dc304919dad"
           },
           {
             "kind": "characters",
             "target_id": "claude_de_f_camp",
             "note": "his steward",
-            "id": "ae1852cc19ad"
+            "id": "9f37308928e6"
           }
         ],
         "agents": [],
@@ -7194,7 +7194,7 @@
           "hair": "",
           "eyes": "",
           "handedness": "right",
-          "physical_description": "Of middling height and slight build, with a shaved head and a long, dour face. His right arm ends at the elbow, the sleeve of his habit folded and pinned over what remains.",
+          "physical_description": "A slight man, neither tall nor short, bald by the razor, with a long and sober face. His right arm stops at the elbow, and he keeps the empty sleeve of his habit pinned up.",
           "biography": "Stat block: Ant p. 12.\n\nCombat: Dodge Init -4, Defense -4. Soak +1, or +6 with the +5 his guardian angel grants. Encumbrance 0 (0).\n\nFatigue levels: OK, 0, -1, -3, -5, Unconscious. Wound penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nDivine Resistance 15: the angel gives him Magic Resistance +15 aligned with the Divine while he acts in accord with God's will.\n\nEquipment: a plain monk-style habit, a wooden crucifix, and a purse usually holding enough for most expenses.",
           "complexion": "",
           "complexion_minor": ""
@@ -8869,7 +8869,7 @@
             "kind": "characters",
             "target_id": "walter_de_gray",
             "note": "his Mentor",
-            "id": "a2f5e07fd961"
+            "id": "c109ab77625a"
           }
         ],
         "agents": [],
@@ -10674,7 +10674,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His wife",
-            "id": "9ade8e751ba6"
+            "id": "584d6ca5abd2"
           }
         ],
         "agents": [],
@@ -10900,7 +10900,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His confessor",
-            "id": "79eedd143d41"
+            "id": "54225796948b"
           }
         ],
         "agents": [],
@@ -11119,14 +11119,14 @@
         },
         "portrait": "",
         "detail": "Sketch",
-        "summary": "The baron's younger brother and one of his vassal knights, cut from the same cloth: the stronger man, but the slower. He cannot read or write and has less intrigue and courtly grace, yet he is less ruled by his passions. He would rule as steward if the baron died before his heir came of age.",
+        "summary": "The baron's younger brother and one of his vassal knights, much his brother's kind: the stronger man, but the slower. He cannot read or write and has less intrigue and courtly grace, yet he is less ruled by his passions. He would rule as steward if the baron died before his heir came of age.",
         "secrets": "He has come to accept the betrayal of their father as right for the realm, but doubts he could have done it himself. He knows all his brother's plans (Ant pp. 26, 29).\n\nIf he takes over the barony he soon learns intrigue and becomes nearly as dangerous. He is readier than his brother to hire hedge wizards against the magi and less willing to heed Brother Raoullin (Ant p. 26).",
         "links": [
           {
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His younger brother and vassal",
-            "id": "023bf9f23fe5"
+            "id": "047a8559daa1"
           }
         ],
         "agents": [],
@@ -11352,7 +11352,7 @@
             "kind": "characters",
             "target_id": "baron_giraud_le_cornu",
             "note": "His squire and herald",
-            "id": "9bbb3b28f4e1"
+            "id": "0dc5d871e063"
           }
         ],
         "agents": [],
@@ -11736,7 +11736,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Combat (Ant p. 38). Dodge: Init -1, Attack +1, Defense -1, Damage n/a. Soak +2 (-1 Stamina, +3 papal legate). Fatigue Levels: OK, 0, -1, -3, -5, Unconscious. Wound Penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+). Encumbrance 0.\n\nMagic Resistance 25: 15 as a papal legate and 10 from his relic. Faith Points 2: 1 from the relic, which regenerates, and 1 from mass. Age 54, looking 44, with a Longevity Ritual of +5. Powers: Commanding Aura as papal legate, and Faithful Wisdom from the relic. Arthritis and Visions are due to Warping, and his Ability Block is Martial.\n\nEquipment: priest's stole, a well-worn monk's habit, the finger-bone relic, letters of authority in a leather scroll case, writing gear (ink, parchment, the legate's seal, wax and so on), and a riding horse with saddle and tack.\n\nTall and ascetic, with a slight stoop from years at the writing desk, though he straightens and his eyes shine when he preaches. He is plainly old but not frail. He wears a priest's regalia, carries a satchel of writing gear, and rides a costly glossy black stallion, lighter and quicker than a warhorse, that can go for days with little rest. One or two clergymen ride with him, and later perhaps a magus ally dressed as one.\n\nCommanding Aura (Ant p. 38; DE p. 82, same figures): as Aura of Rightful Authority at Voice Range, at no cost and with no Penetration, with Magic Resistance 15 and Soak +3, the Magic Resistance added to any relic's. It fails if he delays or strays from his mission, until he does penance, and ends when the mission is done. It comes from his office, not his letters (Ant p. 43).\n\nHe has no True Faith and cannot work miracles, though he can pray to the saints (Ant p. 39). His Magic Resistance does not stop him crossing an Aegis of the Hearth, but the relic's Divine Might needs a token there, unless the Aegis is too weak to stop it; he can leave it behind (Ant p. 41). Replace his Area Lores and Living Languages if his past is moved to another Tribunal (Ant p. 40). A storyguide rolls Order of Hermes Lore, Code of Hermes, Magic Theory or Area Lore for anything rare he might know (Ant p. 40).",
+          "biography": "Combat (Ant p. 38). Dodge: Init -1, Attack +1, Defense -1, Damage n/a. Soak +2 (-1 Stamina, +3 papal legate). Fatigue Levels: OK, 0, -1, -3, -5, Unconscious. Wound Penalties: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+). Encumbrance 0.\n\nMagic Resistance 25: 15 as a papal legate and 10 from his relic. Faith Points 2: 1 from the relic, which regenerates, and 1 from mass. Age 54, looking 44, with a Longevity Ritual of +5. Powers: Commanding Aura as papal legate, and Faithful Wisdom from the relic. Arthritis and Visions are due to Warping, and his Ability Block is Martial.\n\nEquipment: priest's stole, a well-worn monk's habit, the finger-bone relic, letters of authority in a leather scroll case, writing gear (ink, parchment, the legate's seal, wax and so on), and a riding horse with saddle and tack.\n\nTall and ascetic, with a slight stoop from years at the writing desk, though he straightens and his eyes shine when he preaches. He is plainly old but not frail. He wears a priest's regalia, carries a satchel of writing gear, and rides a black stallion worth a great deal, built for speed and able to go for days with little rest. One or two clergymen ride with him, and later perhaps a magus ally dressed as one.\n\nCommanding Aura (Ant p. 38; DE p. 82, same figures): as Aura of Rightful Authority at Voice Range, at no cost and with no Penetration, with Magic Resistance 15 and Soak +3, the Magic Resistance added to any relic's. It fails if he delays or strays from his mission, until he does penance, and ends when the mission is done. It comes from his office, not his letters (Ant p. 43).\n\nHe has no True Faith and cannot work miracles, though he can pray to the saints (Ant p. 39). His Magic Resistance does not stop him crossing an Aegis of the Hearth, but the relic's Divine Might needs a token there, unless the Aegis is too weak to stop it; he can leave it behind (Ant p. 41). Replace his Area Lores and Living Languages if his past is moved to another Tribunal (Ant p. 40). A storyguide rolls Order of Hermes Lore, Code of Hermes, Magic Theory or Area Lore for anything rare he might know (Ant p. 40).",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -11888,31 +11888,31 @@
             "kind": "characters",
             "target_id": "pompius_of_house_guernicus",
             "note": "His old master",
-            "id": "1c93b4068f5b"
+            "id": "bb31907d5281"
           },
           {
             "kind": "books",
             "target_id": "the_order_of_hermes",
             "note": "His own",
-            "id": "62cbd9fe73a1"
+            "id": "c23f6b65a8af"
           },
           {
             "kind": "books",
             "target_id": "the_rule_of_the_order_of_hermes",
             "note": "His own",
-            "id": "3283a6cb699a"
+            "id": "c737816f642d"
           },
           {
             "kind": "books",
             "target_id": "history_of_the_magi_of_the_ecclesiastical_province_of_rome",
             "note": "His own",
-            "id": "e0d02394b61e"
+            "id": "3d66749bcba4"
           },
           {
             "kind": "books",
             "target_id": "the_legate_s_letters_of_authority",
             "note": "His own",
-            "id": "6941d5b1b873"
+            "id": "cbe42657c875"
           }
         ],
         "agents": [],
@@ -13330,44 +13330,7 @@
             "mastery_abilities": []
           }
         ],
-        "invented_spells": [
-          {
-            "id": "spell_the_whole_from_the_part",
-            "name": "The Whole from the Part",
-            "technique": "Intellego",
-            "form": "Corpus",
-            "level": 15,
-            "description": "From the stat block in Antagonists.",
-            "requisites": [],
-            "range": "",
-            "duration": "",
-            "target": "",
-            "ritual": false,
-            "base_level": null,
-            "source": "Ant",
-            "page": "",
-            "experimental_effects": [],
-            "details_missing": false
-          },
-          {
-            "id": "spell_disguise_of_the_transformed_image",
-            "name": "Disguise of the Transformed Image",
-            "technique": "Muto",
-            "form": "Imaginem",
-            "level": 10,
-            "description": "From the stat block in Antagonists.",
-            "requisites": [],
-            "range": "",
-            "duration": "",
-            "target": "",
-            "ritual": false,
-            "base_level": null,
-            "source": "Ant",
-            "page": "",
-            "experimental_effects": [],
-            "details_missing": false
-          }
-        ],
+        "invented_spells": [],
         "inventory": [],
         "silver": 0,
         "assigned_lab_id": null,
@@ -13397,7 +13360,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Combat: dodge Init 0, Attack n/a, Defense +2, Damage n/a; dagger Init 0, Attack +2, Defense +1, Damage +1. Soak +1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: opal ring talisman, wizardly robes, two-minute hourglass, dagger. Encumbrance 0.\n\nAppearance: tall, thin and austere, with the manner of a man used to being obeyed and little patience for talk. He wears robes of good wool worked with gold thread.\n\nHis Magic Theory is printed 6 (12): score 6 with 12 experience toward 7. The book asks the troupe to change his native tongue and his Civil and Canon Law specialty to suit the saga (p. 68).\n\nSpells as this block prints them (p. 68): The Whole from the Part at level 15 (its source, level 20); Disguise of the Transformed Image at level 10 (the Definitive Edition, level 15); Maintaining the Demanding Spell at level 20, a general spell. 'Aura of Beguiling Presence', cited to Houses of Hermes: Societates p. 96, is that page's Aura of Beguiling Appearance; 'Words of Unbroken Silence' is Words of the Unbroken Silence.",
+          "biography": "Combat: dodge Init 0, Attack n/a, Defense +2, Damage n/a; dagger Init 0, Attack +2, Defense +1, Damage +1. Soak +1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: opal ring talisman, wizardly robes, two-minute hourglass, dagger. Encumbrance 0.\n\nAppearance: tall, thin and austere, with the manner of a man used to being obeyed and little patience for talk. He wears robes of good wool worked with gold thread.\n\nHis Magic Theory is printed 6 (12): score 6 with 12 experience toward 7. The book asks the troupe to change his native tongue and his Civil and Canon Law specialty to suit the saga (p. 68).\n\nThe Definitive Edition's spells are used, which differ from this block (p. 68): The Whole from the Part is level 20 here, printed 15; Disguise of the Transformed Image is level 15 here, printed 10. Maintaining the Demanding Spell at level 20, a general spell. 'Aura of Beguiling Presence', cited to Houses of Hermes: Societates p. 96, is that page's Aura of Beguiling Appearance; 'Words of Unbroken Silence' is Words of the Unbroken Silence.\n\nThe block's casting totals check against his Arts, Stamina and Mastery but for two: The Whole from the Part is printed +22, where they give +23, and By His Works +21, where they and the memory attunement give +22 (p. 68).",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -13567,49 +13530,49 @@
             "kind": "creatures",
             "target_id": "nightwing",
             "note": "His familiar",
-            "id": "7f699aa803df"
+            "id": "27ed7999a28b"
           },
           {
             "kind": "characters",
             "target_id": "paulinus_of_house_guernicus",
             "note": "His pater",
-            "id": "4d7187b1ebf6"
+            "id": "e17a9f7b03f1"
           },
           {
             "kind": "characters",
             "target_id": "holger_rosmer_of_house_jerbiton",
             "note": "Convicted over Paulinus's death",
-            "id": "0a78edece971"
+            "id": "59e1f5bc3ff8"
           },
           {
             "kind": "characters",
             "target_id": "kraxia_of_house_criamon",
             "note": "Convicted of interfering with mundanes",
-            "id": "a5eb708cdaf9"
+            "id": "8a94dbbc8430"
           },
           {
             "kind": "characters",
             "target_id": "j_rgen_of_trier",
             "note": "Penalized after framing Kraxia",
-            "id": "d6f529849371"
+            "id": "f0cb22742bef"
           },
           {
             "kind": "characters",
             "target_id": "iana_of_house_merinita",
             "note": "Convicted and banished from the Tribunal",
-            "id": "1eeb3e622d50"
+            "id": "33312616fa31"
           },
           {
             "kind": "characters",
             "target_id": "tranio_of_house_jerbiton",
             "note": "Convicted of stealing vis",
-            "id": "c58ef42c84c7"
+            "id": "42b4e8f0a5ab"
           },
           {
             "kind": "characters",
             "target_id": "ingrid_of_house_tremere",
             "note": "His bodyguard on dangerous cases",
-            "id": "615233fb3d43"
+            "id": "2ea9131c77c5"
           }
         ],
         "agents": [],
@@ -14822,7 +14785,7 @@
             "kind": "characters",
             "target_id": "j_rgen_of_trier",
             "note": "The neighbour who framed her",
-            "id": "33ba7b8267e8"
+            "id": "94b37534975e"
           }
         ],
         "agents": [],
@@ -15205,7 +15168,7 @@
             "kind": "characters",
             "target_id": "claudius_of_house_verditius",
             "note": "Her opponent at certamen",
-            "id": "a638cb8cedfd"
+            "id": "dbc2b14a6ca8"
           }
         ],
         "agents": [],
@@ -16011,7 +15974,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Combat: dagger Init +1, Attack +5, Defense +4, Damage +2. Soak -1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: fine clothes, curved dagger. Encumbrance 0 (0).\n\nAppearance: a handsome young woman with uncovered dark wavy hair and deep green eyes. She favours gowns of red velvet and nearly always wears a fur cloak, because she takes cold easily. Her voice is rich and unusually deep for a woman, and many call it her best feature.",
+          "biography": "Combat: dagger Init +1, Attack +5, Defense +4, Damage +2. Soak -1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: fine clothes, curved dagger. Encumbrance 0 (0).\n\nAppearance: a good-looking young woman, bareheaded, her dark hair waving over green eyes. Red velvet is her choice of dress, under a fur cloak she is seldom without, for she feels the cold. Men remember her voice above all, which is full and low.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -16184,13 +16147,13 @@
             "kind": "characters",
             "target_id": "lady_ermengarde",
             "note": "Her stepmother",
-            "id": "7480fcfc21de"
+            "id": "206eaf276a5b"
           },
           {
             "kind": "places",
             "target_id": "the_baron_s_old_storage_caves",
             "note": "Where she hides",
-            "id": "44a53f7c5c31"
+            "id": "982b4bb37eb4"
           }
         ],
         "agents": [],
@@ -16573,7 +16536,7 @@
             "kind": "places",
             "target_id": "the_nunnery",
             "note": "Priest to the nuns",
-            "id": "0548f1c8f1d4"
+            "id": "73fed7aed4fc"
           }
         ],
         "agents": [],
@@ -18619,7 +18582,7 @@
             "kind": "places",
             "target_id": "the_cult_of_the_serpent",
             "note": "Leads it",
-            "id": "d595f20e389d"
+            "id": "2b1d91e7f363"
           }
         ],
         "agents": [],
@@ -20036,7 +19999,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blesses someone to read one text named at the blessing (tractatus, summa, Lab Text or the like), whatever their literacy, language or script, at a normal reader's pace, with the text in hand. Anyone literate may also copy it, without error, by the normal rules; the copy is exact, not a translation, so they may not read it afterward.",
-            "id": "1f2cbf5fce9a"
+            "id": "8307ec7f1906"
           }
         ],
         "vis": [],
@@ -20052,7 +20015,7 @@
             "kind": "characters",
             "target_id": "father_joseph_of_napoli",
             "note": "Worn by him",
-            "id": "f8824b2c42f3"
+            "id": "c24a6596b322"
           }
         ],
         "secrets": ""
@@ -20143,7 +20106,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 9,
-            "id": "c1023c17b7c1"
+            "id": "588b5f805da0"
           }
         ],
         "soak": 5,
@@ -20216,7 +20179,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Builds a solid body out of the world's ambient, unformed matter; the Appearance says what it looks like.",
-            "id": "ce9eae1533be"
+            "id": "88d6cf960f19"
           },
           {
             "name": "Envisioning",
@@ -20230,7 +20193,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 point the demon enters and twists a dream; for 5 it makes a waking hallucination. One meant to terrify is ignored on a Brave roll of 9+, and failing brings on a violent bodily reaction such as a seizure.\n\nAbaissier likes to show people some tiny failing, to feed their Pride with the thought that a little flagellation would make them perfect. These visions are resisted on a Humble roll of 9+.",
-            "id": "922fdf357400"
+            "id": "b65fcf328e29"
           },
           {
             "name": "Protective Obsession",
@@ -20244,7 +20207,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points. If it beats Magic Resistance while someone commits a sinful thought or deed, that person gains a temporary Self-loathing trait, and at the next chance rolls against a suitable trait to avoid harming or punishing himself. If the Obsession fails the trait goes; if it wins the trait is permanent. A person under it has a Light Wound modifier of +1, stacking for no more than three wounds (+3).",
-            "id": "521e115beb13"
+            "id": "a4dfa519e527"
           },
           {
             "name": "Punish the Sinner",
@@ -20258,7 +20221,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Delivered by touch, and usable with a blow of the flail. If it penetrates, an unexpiated mortal sin causes a Heavy wound and a venial sin a Light wound. Someone with no obvious sin takes damage equal to the sum of his negative Personality Traits.",
-            "id": "e32b42acedf6"
+            "id": "46009d786213"
           }
         ],
         "vis": [
@@ -20266,11 +20229,11 @@
             "pawns": 7,
             "art": "Perdo",
             "where": "one in each whip",
-            "id": "50957cda4634"
+            "id": "c28ebb9b2af9"
           }
         ],
         "equipment": "",
-        "appearance": "An angel of burning chains, brass and blood in colour, in a pale white robe that alone among its kind stains with something like blood when it is hurt. Where its right hand should be hang five thin weighted chains, which reach an astonishing length in a fight and each lash on their own.",
+        "appearance": "An angel whose body is chain on fire, coloured like old blood and brass. Its pale robe, alone among its kind, shows a stain like blood when it is hurt. It has no right hand, only five slender chains with weights at their tips, which run out to a startling length in a fight and strike each for itself.",
         "notes": "Wound Penalties as printed: +1* (1-7), -3 (8-14), -5 (15-22), Incapacitated (23-30), Dead (31+). *Light wounds make him more dangerous: he may hurt himself each round for the bonus, which cannot pass +5.\n\nCost of Envisioning: 1 or 5 points. Cost of Protective Obsession: 1 to 3 points.\n\nThe block calls his order the Avengers of Evil; his text calls him a Lord of the Angels of Punishment. Vis: the book gives 7 pawns, one in each whip, and five chains.",
         "source": "Antagonists p. 96",
         "detail": "Full",
@@ -20281,7 +20244,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Its true master",
-            "id": "11a7e5b9b856"
+            "id": "5c198138ffaa"
           }
         ],
         "secrets": "A demon of Pride who turns the very pious from God: suffer more, he says, and you are more beloved of Him. It is false, and the more people have given up, the harder it is to admit it. He tempts single believers and seduces charismatic men who then lead small heretical groups, and he makes sinners harm themselves and think they have atoned. As a Lord he commands many lesser demons.\n\nHe brings several cells into the open at once so they are hard to stamp out, then forces the weaker Fabrico into servitude. When the Church or the magi move, he stays out of sight and will sacrifice Fabrico if it shows him who his enemies are and how they work. He signs his work: the red mark on the flagellants' robes is a cult symbol he has used before.\n\nHis Pride is his weakness. He underestimates the player characters and can be goaded into a fight; evidence able to destroy the cult's remains may bring him to attack in person."
@@ -20372,7 +20335,7 @@
             "attack": 7,
             "defense": 0,
             "damage": 0,
-            "id": "bbcac4935840"
+            "id": "1adf4010dd25"
           }
         ],
         "soak": 1,
@@ -20445,7 +20408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 point the demon enters and twists a dream; for 5 it makes a waking hallucination. One meant to terrify is ignored on a Brave roll of 9+, and failing brings on a violent bodily reaction such as a seizure.",
-            "id": "59399adc6735"
+            "id": "3436e927d622"
           },
           {
             "name": "Form of Wickedness",
@@ -20459,7 +20422,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a solid form of pure sin, held for one round before she must take spiritual or human form. Those near her without enough Magic Resistance start to suspect their neighbours of poisoning them. Each hour they make a Stamina stress roll of 6+: failing costs a Fatigue level, success breaks the hold, and falling unconscious ends it. A botch brings temporary insanity and a Minor Personality Flaw suited to the sin.",
-            "id": "5d695d7f83ef"
+            "id": "05687f273008"
           },
           {
             "name": "Form of The Proud Man",
@@ -20473,7 +20436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once she has taken corporeal form by Form of Wickedness, she can take her solid form; the Appearance describes it.",
-            "id": "d271bf53f4f9"
+            "id": "272a73850278"
           },
           {
             "name": "Possession",
@@ -20487,7 +20450,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. After overcoming Magic Resistance she stores some Might in a temporary pool in the victim, and the possession ends when it is spent. The two parts of her can speak only in sight of each other. She drives the host, but something the victim finds abhorrent costs Might: a stress die plus the Might spent against his Personality trait roll. A Supernatural ability costs 1 Might, or as many as a possessed creature spends on one of its powers.",
-            "id": "7e9692b04729"
+            "id": "1640ec97a014"
           },
           {
             "name": "Contagious Obsession",
@@ -20501,7 +20464,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point a victim. If it beats Magic Resistance while someone commits a sinful thought or deed, he gains a temporary Hates (group) trait and at the next chance rolls against a suitable trait to avoid trying to harm the scapegoats. If it fails the trait goes; if it wins the trait is permanent. Each victim carries it and can pass it, by the same rolls, to anyone he abuses; every new victim costs her 1 Might. It stops spreading when the carrier runs out of Might or a day passes with nobody infected, though those afflicted stay so.",
-            "id": "9788b4fa75aa"
+            "id": "cce578701906"
           }
         ],
         "vis": [
@@ -20509,11 +20472,11 @@
             "pawns": 4,
             "art": "Perdo",
             "where": "long nose",
-            "id": "b6a10c351523"
+            "id": "6fe882313939"
           }
         ],
         "equipment": "",
-        "appearance": "By nature a formless dark shape, sin made visible. In solid form she is a tall, refined woman, often dressed as a plague doctor.",
+        "appearance": "By nature a shapeless darkness, sin given sight. In solid form she passes for a tall lady of good breeding, and often goes in the dress of a plague doctor.",
         "notes": "Thrown vial: touching the undiluted contents is poisoning of Ease Factor 9, doing heavy damage (ArM5 p. 180; Definitive Edition p. 406).\n\nSoak: +1 in human form, entered here; the book also prints Toad form +3, though no power or appearance gives her a toad form.\n\nWound Penalties as printed: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nHer vis lies in a long nose, which neither of her printed shapes mentions.\n\nThe plague (p. 100). With the disease rules of Art & Academe pp. 47-50: Severity 13, Stable 9, Improve 12, interval a week, causing a Heavy Wound. Otherwise use ArM5 p. 180 and treat it as a poison of Ease Factor 12 causing a Major Wound. The symptoms are thirst and burning in the fingertips, nose and toes, then bleeding from the eyes and ears.\n\nThe plague need not be the Black Death. The book suggests something the players think of as mild, such as measles or scarlet fever, or symptoms they cannot name.",
         "source": "Antagonists p. 97",
         "detail": "Full",
@@ -20524,7 +20487,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Poisons wells beside it, for her own ends",
-            "id": "f93c47de847a"
+            "id": "9bf610e78008"
           }
         ],
         "secrets": "She teaches people to poison wells, and never does it herself, so that a scapegoat takes the hatred: Jews, lepers, pagans, Muslims, sorcerers and, her own passion, greengrocers. In human form she tells some dupes their brews protect against plague. They drink it strong to save themselves and soon die, and she so enjoys telling them whom they have killed that she keeps a few such victims when willing helpers would do more harm.\n\nFor this plague each potion needs a human heart, best from a plague death. Neither ally nor servant of Abaissier, she thinks Fabrico rules the flagellants and does not fear him. Once the processions begin she recruits poisoners in towns near them to destroy whichever outsiders come easiest, magi included, and if strong opposition appears she wants Fabrico blamed. Their evils fit so well they seem to be working together.\n\nShe can brew many diseases and may change them to avoid being caught, but must not show more range than Fabrico could (p. 100)."
@@ -20626,7 +20589,7 @@
             "attack": 7,
             "defense": 10,
             "damage": 5,
-            "id": "d2255f267d84"
+            "id": "7c62cf354dfa"
           }
         ],
         "soak": 1,
@@ -20692,7 +20655,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Builds a solid body out of the world's ambient, unformed matter; the Appearance says what it looks like.",
-            "id": "8db878f193d5"
+            "id": "0545f6fa589e"
           },
           {
             "name": "Delusion",
@@ -20706,7 +20669,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Vivid illusions: 1 point for a single object, 5 for one the size of a room. Each has some subtle fault. He uses them to fake miraculous messages.",
-            "id": "8f5707118b53"
+            "id": "42a936bb6a7a"
           },
           {
             "name": "Duplicate the Magi's Creation or Transmutation",
@@ -20720,7 +20683,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost and Form. Does any non-ritual Creo or Muto Hermetic spell of level 20 or lower; he uses it with props to make false relics.",
-            "id": "3bdbee862fb1"
+            "id": "3c632b0f5248"
           },
           {
             "name": "Envisioning",
@@ -20734,7 +20697,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 point the demon enters and twists a dream; for 5 it makes a waking hallucination. One meant to terrify is ignored on a Brave roll of 9+, and failing brings on a violent bodily reaction such as a seizure.\n\nFabrico often uses waking dreams to counterfeit visions, resisted with a suitable Personality Trait roll of 9+.",
-            "id": "0ff1036f4527"
+            "id": "747b94292b4d"
           },
           {
             "name": "Obsession",
@@ -20748,7 +20711,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points. If it beats Magic Resistance while someone commits a sinful thought or deed, he gains a temporary Gullible trait, and at the next chance rolls against a suitable trait to avoid believing something dangerous or stupid. If it fails the trait goes; if it wins the trait is permanent.",
-            "id": "dcfbb56dceea"
+            "id": "1cde5389147a"
           }
         ],
         "vis": [
@@ -20756,11 +20719,11 @@
             "pawns": 4,
             "art": "Perdo",
             "where": "eyes",
-            "id": "d4f5f03d726b"
+            "id": "9e602e123774"
           }
         ],
         "equipment": "",
-        "appearance": "As with all deluders, his natural shape is a rip of darkness in the world, full of eyes, teeth and organs. For this story he appears as a flagellant swathed in bandages.",
+        "appearance": "Like any deluder, by nature he is a dark tear in things, crowded with eyes, teeth and innards. For this story he goes as a flagellant bound up in bandages.",
         "notes": "Guile is printed 6+2, the +2 being his Puissant Guile.\n\nWound Penalties as printed: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nCost of Delusion and Envisioning: 1 or 5 points. Cost of Obsession: 1 to 3 points.",
         "source": "Antagonists p. 98",
         "detail": "Full",
@@ -20771,7 +20734,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Claims part of it, then serves Abaissier against his will",
-            "id": "39a5c7dcfc2d"
+            "id": "531bf0b86322"
           }
         ],
         "secrets": "He enjoys passing off his work as the Divine: he makes ordinary objects, wraps them in fake miracles until they are hailed as relics, and backs whoever teaches the resulting errors. His little cults believe a saint has chosen them, and that regular signs let them know God's will better than the Church. The Church usually puts them down.\n\nIn this story he first spreads prophets of the Antichrist and the world's end, then notices the flagellants and claims part of them. Beaten, he serves Abaissier against his will and knows his master would spend him as a decoy, so the player characters may set him on Abaissier and weaken both. Destroying him does not end the cult, but it costs it the public's love and drives it back, over time, to secret cells."
@@ -20862,7 +20825,7 @@
             "attack": 6,
             "defense": 12,
             "damage": -8,
-            "id": "597c93580169"
+            "id": "ba741ed40b10"
           }
         ],
         "soak": 2,
@@ -20914,7 +20877,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Builds a solid body out of the world's ambient, unformed matter; the Appearance says what it looks like.",
-            "id": "924f8a81a079"
+            "id": "19acc2f888cd"
           }
         ],
         "vis": [
@@ -20922,7 +20885,7 @@
             "pawns": 1,
             "art": "Perdo",
             "where": "tongue",
-            "id": "2523f4c0297c"
+            "id": "dc8a0672328e"
           }
         ],
         "equipment": "",
@@ -20937,7 +20900,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Sent to ruin grain",
-            "id": "3aa08f901076"
+            "id": "9a9f17ea5cd9"
           }
         ],
         "secrets": "Abaissier orders them to rot seed corn, to break communities with famine before his preachers arrive."
@@ -21047,7 +21010,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 4,
-            "id": "0517711d4bd3"
+            "id": "b1c3a2307ec7"
           },
           {
             "name": "Hands",
@@ -21055,7 +21018,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "04441516e3b3"
+            "id": "3f49dec93bcd"
           }
         ],
         "soak": 1,
@@ -21114,7 +21077,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Builds a solid body out of the world's ambient, unformed matter; the Appearance says what it looks like.",
-            "id": "27585662fb50"
+            "id": "ec9c063b22ed"
           },
           {
             "name": "Obsession",
@@ -21128,7 +21091,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points. If it beats Magic Resistance while someone commits a sinful thought or deed, he gains a temporary Self-Harming trait, and at the next chance rolls against a suitable trait to avoid hurting himself. If it fails the trait goes; if it wins the trait is permanent.",
-            "id": "621d89fbe4ec"
+            "id": "1e9c521a0cbd"
           },
           {
             "name": "Envisioning",
@@ -21142,7 +21105,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 point the demon enters and twists a dream; for 5 it makes a waking hallucination. One meant to terrify is ignored on a Brave roll of 9+, and failing brings on a violent bodily reaction such as a seizure.",
-            "id": "691444baebd4"
+            "id": "3d88ccff0a5d"
           },
           {
             "name": "Endurance of the Enraged",
@@ -21156,7 +21119,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She takes no Wound penalties, except on Defense totals.",
-            "id": "31cddf0edf71"
+            "id": "86470dc54ce1"
           },
           {
             "name": "Waxing of the Humors",
@@ -21170,7 +21133,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Passion drowns sense: the victim needs a Personality trait stress roll of 9+ to hold the emotion in check. Often used straight after a successful Obsession.",
-            "id": "6864ac81fdae"
+            "id": "48aedb775140"
           }
         ],
         "vis": [
@@ -21178,11 +21141,11 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "serpent head",
-            "id": "cc23f375860e"
+            "id": "4bd855239bec"
           }
         ],
         "equipment": "",
-        "appearance": "A young woman with a serpent growing from the middle of her chest. Its head gnaws and stings all of her but her face, and the bites bleed a little, some showing the bruised colours of venom and rot.",
+        "appearance": "A young woman out of whose breast a snake grows. It worries at her everywhere but the face, leaving small bleeding bites, some of them bruised dark by poison and decay.",
         "notes": "Berserk: +2 Attack on both lines; Soak +3 in place of +1. The bite is venomous, as an asp's (ArM5 p. 180; Definitive Edition p. 406: Ease Factor 9, Incapacitating).\n\nWound Penalties as printed: -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (15-20), Dead (21+). The book's 15 falls in two ranges; the usual table starts Incapacitated at 16.\n\nCost of Envisioning: 1 or 5 points. Cost of Obsession: 1 to 3 points.",
         "source": "Antagonists p. 101",
         "detail": "Full",
@@ -21193,7 +21156,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Lieutenant, recruited with a promise of prey",
-            "id": "2153ea424485"
+            "id": "0c11370f7bb5"
           }
         ],
         "secrets": "A Fury, feeding on the anger that destroys the one who feels it, drawn to the cult by a promise of plenty of prey. Flagellants she takes whip the onlookers and may kill themselves by mistake; leaders she takes may counsel suicide.\n\nShe is the lieutenant to set before the player characters so the saga does not close too early in a fight with the main demons. Destroying her slows the cult and weakens it locally, though it still reaches the next stage. If Abaissier falls she tries to seize part of his cult and turn its despair under the crackdown into mass suicide."
@@ -21280,7 +21243,7 @@
             "kind": "places",
             "target_id": "the_flagellants",
             "note": "Followers ridden by demons",
-            "id": "9533f7ddf323"
+            "id": "b673eafadbe5"
           }
         ],
         "secrets": "These attack the counter-processions, and defend the rag manufactory, where bodiless demons help the acolytes fight and work their corpses after death. Some guard the false saints."
@@ -21836,7 +21799,7 @@
             "attack": 18,
             "defense": 14,
             "damage": 13,
-            "id": "d420eb3d9981"
+            "id": "0f4e0d4f0c68"
           },
           {
             "name": "Large Fangs",
@@ -21844,7 +21807,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 11,
-            "id": "63f2d69af2e7"
+            "id": "d4629f1cb1cd"
           },
           {
             "name": "Constrict",
@@ -21852,7 +21815,7 @@
             "attack": 12,
             "defense": 9,
             "damage": null,
-            "id": "404482e3d965"
+            "id": "d3661ef47178"
           }
         ],
         "soak": 22,
@@ -22121,7 +22084,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A gout of flame 12 paces wide, 12 tall and 55 long; everything in it takes stress die +25 fire damage. CrIg 50 (Base 20, +2 Voice, +4 size): Greater Power (50 levels) and partial Improved Powers (-3 Might cost).",
-            "id": "c9d16da68626"
+            "id": "14267366ff3d"
           },
           {
             "name": "Taste of Memory",
@@ -22135,7 +22098,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "From a creature it eats, Rasa takes a particular memory of an act or event, 5 experience points of a skill, or a Virtue. Skills improve as normal, but the creature must be eaten alive; a Virtue may be taken once a year. Might spent on skills or Virtues also lowers its Might Score, regained with 10 pawns of vis per point or a season's rest, without using the power so, in a Divine aura of 5 or more. Not a Hermetic power: the figures are for mechanics only. PeMe 35 (Base 15, +1 Touch, +1 Cr requisite, +2 complexity): Ritual Power x2 (35 levels, -3 points).",
-            "id": "0bc34755711d"
+            "id": "2e88f678a120"
           },
           {
             "name": "Gift of Blood",
@@ -22149,7 +22112,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Whoever drinks its blood gains the Tough Virtue until Rasa takes it back or the drinker dies; the Might stays out of its pool until then. Rasa may also heal itself of a Medium Wound or less, and that Might returns normally. No Hermetic equivalent. CrAn 25 (Base 20, +1 Touch): Ritual Power (25 levels).",
-            "id": "8d9c7ea1328c"
+            "id": "c36fa77eb90e"
           },
           {
             "name": "Sign of Peace",
@@ -22163,7 +22126,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An incense-scented mist fills the building, and those without Magic Resistance can scarcely do violence or sin: they gain Peaceful +4, Kind +3 and Obedient +3. To act against these, one must fail an Ease Factor 9 roll on the trait, or pass one on an opposing trait at 9 plus the trait's bonus. A grog trying to hurt someone must fail 9+ on Peaceful or make 13+ on Violent, Angry or Vengeful. ReMe 50 (Base 10, +2 Voice, +3 Moon, +3 Structure): Greater Power (50 levels), Improved Powers x2 (initiative).",
-            "id": "42fea59dea4b"
+            "id": "db7bc5d157b8"
           },
           {
             "name": "Scale of Truth",
@@ -22177,7 +22140,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "One of its scales, in plain sight, makes the eyes of anyone in the room flash red for an instant when they lie or quibble. Brothers who know of it look down or shut their eyes to fib, and hold a speaker's gaze when listening. It lasts until Rasa rescinds it, destroying the scale, and the Might does not return until then. InMe 50 (Base 10, +3 Sight, +2 Sun, +2 Room, +1 tethered to object): Greater Power (50 levels).",
-            "id": "956f9a5ff659"
+            "id": "f44ba7cfb7d7"
           },
           {
             "name": "Gift of the Stigmata",
@@ -22191,7 +22154,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Rasa imbues a scale and trades it to someone for a lock of hair. Until the next full moon, wounds that person takes while holding it pass to the dragon, which cannot Soak them but judges them on its own scale: a 13-point hit that would be a Heavy Wound on a Size 0 friar is a Light Wound to Rasa. CrCo 75 (Base 35, +4 Arcane Connection, +3 Moon, +1 Rego requisite): Ritual Power x3 (75 levels).",
-            "id": "24f5e96e129d"
+            "id": "76b2172728df"
           }
         ],
         "vis": [
@@ -22199,11 +22162,11 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in its blood",
-            "id": "765558a7653d"
+            "id": "5163f189f986"
           }
         ],
         "equipment": "None",
-        "appearance": "Long and sinuous, about seventeen paces from nose to tail, with a head some three paces long and a tail of eight. Its scales run from pearly, shimmering grey to the rusty brown of dried blood. It lies low like a crocodile yet stands just over two paces at the shoulder, on eight legs, wingless, with teeth and claws like daggers and great black eyes rimmed with gold, nearly two palms across. A heavy sandalwood mist rolls from its open mouth, and its voice comes from deep inside it with the jaws unmoving.",
+        "appearance": "A wingless, eight-legged worm of some seventeen paces, of which three are head and eight tail. It is pale as mother-of-pearl at the neck, darkening along the back to the brown of old blood. Its belly hangs near the ground, yet its shoulder is a little over two paces high. Its fangs and talons are dagger-long, and its black, gold-ringed eyes are almost two palms wide. Mist heavy with sandalwood pours from its jaws, which do not move when it speaks, for the voice rises from far within.",
         "notes": "Wound Penalties as printed: -1 (1-13), -3 (14-26), -5 (27-39), Incapacitated (40-52), Dead (53+). Decrepitude n/a.\n\nVirtues as printed; the book calls Magic Animal 'Magical Animal' and Student of Divine 'Student of Dominion', and gives Rasa one more Minor Virtue of the storyguide's choice. Hunger for Any Magic is Hunger for (Form), but any vis will do. Magical Qualities name claws for Attack, Damage and Defense.\n\nFont of Knowledge (Minor Supernatural Virtue, p. 109): grants the Ability at 1. A roll of Intelligence + Font of Knowledge + stress die against 6 + 3 x the day's earlier uses, failures included, lets it try a task with an untrained Ability as if at score 2. After two uses, Rasa rolls 7 + stress die against 12.\n\nIt can squeeze through most ordinary doorways, but no power lets it take human shape. Gift of Blood prints a Touch range and no Duration or Target.\n\nSign of Peace is printed at 5 points though a 50-level Greater Power would cost 10.\n\nNaming it (p. 109): 'the abbot' keeps the focus on its office; an angelic name stresses the change in it; 'Rasa' stresses the dragon's past. The troupe's choice colours how the characters deal with it.",
         "source": "Antagonists pp. 110-111",
         "detail": "Full",
@@ -22214,19 +22177,19 @@
             "kind": "places",
             "target_id": "the_abbey_of_the_reclusive_abbot",
             "note": "Rules it as abbot, unseen",
-            "id": "1a1e5c713858"
+            "id": "815b1279da0d"
           },
           {
             "kind": "creatures",
             "target_id": "howling_knife_of_the_dunes",
             "note": "An old enemy",
-            "id": "e99453d6940d"
+            "id": "f931af6dcde6"
           },
           {
             "kind": "characters",
             "target_id": "acumenis",
             "note": "Saw it and wrote of it",
-            "id": "0769e683728f"
+            "id": "c32cda6f1bc0"
           }
         ],
         "secrets": "Once a mere marauding serpent that gained a sliver of what it ate, it grew aware and began to choose: fewer beasts, more villages and caravans. A veteran of the Silk Road sent it east; years there gave it scraps of six tongues. A missionary priest turned it west toward the great cities of the Eastern Empire. It lingered in one place after another for decades, for centuries, until it ate the abbot.\n\nIt threatened a remote abbey, and the abbot, a man of True Faith, went out alone to face it. Eating him gave it his understanding and Faith, and an epiphany that changed it. It took his place; the community called it a miracle and serves it devoutly. Its faith is genuine, though its grasp of people and the Divine is secondhand and a little flawed.\n\nIt works to widen the Divine, believing that brings people nearer God and the world nearer Paradise: through charity, teaching crafts, and great works. It cares for the other realms only as foils, and may lure their creatures near for its monks to beat. Their texts and artifacts are to be gathered, hidden and at last destroyed. It treats opposition as God's test of its faith and never blames its opponents.\n\nEnemies: a Tremere whose Redcap lover it ate, who raised a vexillation that failed to hunt it; the jinn Howling Knife of the Dunes; and Stellatus (ArM5 p. 194, the Definitive Edition p. 465), who could not transform to stop its attack on a caravan he rode with, and fought it several times in the decades after.\n\nIt eats trained birds for what they saw, the reason for the abbey's aviaries, and now and then dogs or cats, with a small prayer of thanks. Because these are natural and non-magical, Parma does not interfere, though neither bird nor dragon knows of it. It must eat vis, so friars harvest lesser sites, knowing that success destroys what it needs.\n\nIt buried a hoard at every old lair, full of coin, jewels, weapons and curios. A trusted clergyman or penitent knight goes with a mule and a gift of its blood to fetch them, journeys that may take long, and its plans allow for that. From its stolen memories it also recalls where relics lie."
@@ -22419,7 +22382,7 @@
             "attack": 2,
             "defense": 2,
             "damage": -1,
-            "id": "b4b0402a7616"
+            "id": "7293746506f7"
           }
         ],
         "soak": -9,
@@ -22464,7 +22427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 to every roll to impress or convince others. Base 3, +1 Touch, +2 Sun.",
-            "id": "a1927e2e7022"
+            "id": "2ea5b74221e5"
           },
           {
             "name": "Eidolon",
@@ -22478,7 +22441,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes an illusory figure that moves, acts and speaks at her direction, best of all on something reflective. Base 2, +2 move at direction, +1 Touch, +2 Sun, +1 intricacy.",
-            "id": "1033aaa00e13"
+            "id": "5b10ed8c7217"
           },
           {
             "name": "Extend Glamour",
@@ -22492,7 +22455,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Makes a small mundane area part of her kingdom, with no formal boundary needed. There she may change anything cosmetic to suit her theme, summon any servant, sense all that happens and appear anywhere, and the area has a Faerie aura of 6. Fuller in Realms of Power: Faerie. Cost marked Special.",
-            "id": "5ab74d0a3f4c"
+            "id": "aa206d784f74"
           },
           {
             "name": "Guide",
@@ -22506,7 +22469,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Nudges the victims toward a course of action; she uses it to make humans exercise the skills she means to copy. Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "09b46463e5d3"
+            "id": "c862ceb72923"
           },
           {
             "name": "Hound",
@@ -22520,7 +22483,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her how far off her prey is, and in which direction. Base 3, +4 Arc, +1 Conc.",
-            "id": "974bb3924a62"
+            "id": "2811af5f9d89"
           },
           {
             "name": "Limited Enthrallment",
@@ -22534,7 +22497,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Dominates a victim in a trance with one possible order: to gaze at their own reflection without thought. Collapse from exhaustion ends it; so does being shaken, or a hand passed before the eyes. Printed as costing 20 levels from Base 25, +1 Eye, +2 Conc.",
-            "id": "ccf329f1ce3a"
+            "id": "662ea801c438"
           },
           {
             "name": "Spirit Away",
@@ -22548,7 +22511,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Described in Realms of Power: Faerie; no Might cost or dice here. Holds the princess in a mirror, lends the Queen her form and powers the frame. She uses it no further in this story.",
-            "id": "21f41fac0010"
+            "id": "144134c7d33a"
           },
           {
             "name": "Travel Through Mirrors",
@@ -22562,7 +22525,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lets her step from Faerie into the mortal world through a mirror. Fading back is no power but the nature of all faeries, though most cannot return so fast. Cost marked Greater Powers (Special).",
-            "id": "12a60d482f91"
+            "id": "7d85052a80a0"
           }
         ],
         "vis": [
@@ -22570,13 +22533,13 @@
             "pawns": 8,
             "art": "Imaginem",
             "where": "in the shards of the heart-shaped mirror",
-            "id": "36870cea6f33"
+            "id": "4f8c8be67ef7"
           },
           {
             "pawns": 8,
             "art": "",
             "where": "in a gold and glass bead",
-            "id": "1ca5dd95df2a"
+            "id": "c2f78de0f17b"
           }
         ],
         "equipment": "The finery of a barbarian queen of the time of Rome's expansion, all of it glamour that passes for mortal goods.",
@@ -22591,37 +22554,37 @@
             "kind": "places",
             "target_id": "the_cursed_mirror_of_the_artisan",
             "note": "The mirror of her origin",
-            "id": "c42153790f82"
+            "id": "b9d50048e76e"
           },
           {
             "kind": "places",
             "target_id": "the_heart_shaped_mirror",
             "note": "What she breaks into",
-            "id": "d21a10f44f75"
+            "id": "ba643548fe44"
           },
           {
             "kind": "places",
             "target_id": "the_gold_and_glass_bead",
             "note": "Her true anchor",
-            "id": "e56c785bd91f"
+            "id": "7f5a886c5ccd"
           },
           {
             "kind": "places",
             "target_id": "gold_backed_mirrors",
             "note": "Her badge",
-            "id": "56cc8b6913d0"
+            "id": "65dde38daaf4"
           },
           {
             "kind": "places",
             "target_id": "a_bonisagus_account",
             "note": "An old account of her",
-            "id": "403bb6ed3001"
+            "id": "8be339339308"
           },
           {
             "kind": "places",
             "target_id": "the_rare_book",
             "note": "A book on her",
-            "id": "3366490a5fb8"
+            "id": "ab74dbc4dd26"
           }
         ],
         "secrets": "Long ago, as Rome pushed out over the tribes, a mortal master made a flawless mirror for the woman he loved. She betrayed him, and he cursed it and buried it. A faerie found it and gave it to a princess; when she looked in, the Queen reached through from Faerie and took her shape, her life and her place. Since then the Queen has toyed with mortals and made faerie copies of her foes (Ant p. 120).\n\nShe is a dispenser of labours, a faerie fed by the quests she sets. Now she wants one or more of her servants shaped into a court magician, true in every small detail. So she chooses young magi and goads them: every new spell her servants see or suffer is one her wizards can then imitate, and she counts a challenge won if she sees one (p. 120). She does not want the magi dead, and may aid them against third parties. She is immortal and patient; they will know better spells when they are older.\n\nShe is highly cognizant, and knows her own role and how far she can exploit it (p. 121). She keeps out of combat for fear of her fragility, and sets minions to fight for her. She tailors those minions to the magi's strength and scatters tokens that lead to her, like a game's final foe; the book means the troupe to enjoy this, and to be rewarded for adding touches that suit it, such as a faerie key that opens any lock, or enemies dying in a shower of coins (p. 121). She has no originality: fill her stories with motifs from the magi's own lives, gathered by her Shadowy Minions (p. 124).\n\nHer weaknesses: faeries who cannot bear mirrors (the smoothfaces, and the knockers, who know much about her); darkness; her glass body. If she is killed, her body breaks into gold-backed glass; the 8 pawns of Imaginem in the largest piece are a decoy. Her true anchor is the bead the princess wears, holding 8 pawns (no Art printed). Unless that vis is taken, she may in time rebuild her body or move to another object (p. 123)."
@@ -22698,7 +22661,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Used to carry on the story it was shaped for. The Queen's own Spirit Away powers it (p. 122).",
-            "id": "c8dad3b1aae7"
+            "id": "bf42fd3c595c"
           }
         ],
         "vis": [
@@ -22706,7 +22669,7 @@
             "pawns": 8,
             "art": "Rego",
             "where": "in the completed frame",
-            "id": "284aa9dd587a"
+            "id": "b9449c982c12"
           }
         ],
         "equipment": "",
@@ -22979,7 +22942,7 @@
             "attack": 5,
             "defense": 7,
             "damage": 8,
-            "id": "63f03d484213"
+            "id": "0839a42aa4e6"
           },
           {
             "name": "Great sword and mirrored heater shield",
@@ -22987,7 +22950,7 @@
             "attack": 17,
             "defense": 15,
             "damage": 22,
-            "id": "9f317da337e4"
+            "id": "343696231c2b"
           }
         ],
         "soak": 12,
@@ -23088,7 +23051,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Supernaturally sharp: tiny slivers of glass break away and stay in the wound. 2 intricacy points spent on cost. Base 5, +1 Part, +1 Diameter; the book says this Base is lower than Hermetic magic might suggest.",
-            "id": "2270a61dfdd6"
+            "id": "83aeacaca3ed"
           },
           {
             "name": "Flight",
@@ -23102,7 +23065,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Base 4, +2 Sun, +1 constant, a Base deliberately below what Hermetic magic might suggest.",
-            "id": "565aa9ed7f93"
+            "id": "79411033f5ae"
           },
           {
             "name": "Shift Human Shapes",
@@ -23116,7 +23079,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He dons or sheds his armour by willing it. 1 intricacy point spent on cost. Printed as Base 3, +2 Sun, though its Duration is Mom.",
-            "id": "47799e2ab0b6"
+            "id": "b1a96b51d76c"
           }
         ],
         "vis": [
@@ -23124,7 +23087,7 @@
             "pawns": 5,
             "art": "Imaginem",
             "where": "a rusty piece from human-sized armor",
-            "id": "5e9e7824638c"
+            "id": "8ca20c104bc1"
           }
         ],
         "equipment": "Armour of magical scales of faerie iron, a lance with pennant and other weapons, an attendant for a squire, and gear bearing the mirror. His glamour makes a faerie horse.",
@@ -23335,7 +23298,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 9,
-            "id": "fde3fe418a39"
+            "id": "2cb5556da088"
           },
           {
             "name": "Bow",
@@ -23343,7 +23306,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 13,
-            "id": "3f6c222d7998"
+            "id": "1c943e2f1fa1"
           },
           {
             "name": "Flail",
@@ -23351,7 +23314,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 15,
-            "id": "4008b703aa01"
+            "id": "13a4799c8093"
           },
           {
             "name": "Greatsword",
@@ -23359,7 +23322,7 @@
             "attack": 14,
             "defense": 10,
             "damage": 16,
-            "id": "3e4dfd1e9f9e"
+            "id": "508940e8b2d3"
           },
           {
             "name": "Long Spear",
@@ -23367,7 +23330,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 14,
-            "id": "860b8f7f4da1"
+            "id": "13e42769c650"
           },
           {
             "name": "Pole Axe",
@@ -23375,7 +23338,7 @@
             "attack": 14,
             "defense": 8,
             "damage": 18,
-            "id": "843fbbb7e996"
+            "id": "8741c50989aa"
           },
           {
             "name": "Warhammer",
@@ -23383,7 +23346,7 @@
             "attack": 15,
             "defense": 8,
             "damage": 19,
-            "id": "efbc04d7fcc7"
+            "id": "a8a7e24dec57"
           }
         ],
         "soak": 10,
@@ -23456,7 +23419,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Supernaturally sharp: tiny slivers of glass break away and stay in the wound. 2 intricacy points spent on cost. Base 5, +1 Part, +1 Diameter, a Base below the Hermetic norm.",
-            "id": "816055a63eb6"
+            "id": "fb3972ddf53c"
           },
           {
             "name": "Flight",
@@ -23470,7 +23433,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Base 4, +2 Sun, +1 constant, a Base deliberately below what Hermetic magic might suggest.",
-            "id": "e258fbb86158"
+            "id": "b4298a059d67"
           },
           {
             "name": "Shift Human Shapes",
@@ -23484,7 +23447,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Dons or sheds armour by will. 1 intricacy point spent on cost. Printed as Base 3, +2 Sun, though its Duration is Mom.",
-            "id": "988b1221649a"
+            "id": "22ff163da271"
           }
         ],
         "vis": [
@@ -23492,7 +23455,7 @@
             "pawns": 4,
             "art": "Imaginem",
             "where": "a rusty piece from human-sized armor",
-            "id": "93bc37fef468"
+            "id": "e5e11e173df7"
           }
         ],
         "equipment": "Armour of magical scales of faerie iron.",
@@ -24316,7 +24279,7 @@
             "attack": 14,
             "defense": 1,
             "damage": 10,
-            "id": "e596ec7c000b"
+            "id": "abb153b0736d"
           },
           {
             "name": "Constriction",
@@ -24324,7 +24287,7 @@
             "attack": 11,
             "defense": 1,
             "damage": 10,
-            "id": "e66251714867"
+            "id": "726ea984f8dc"
           },
           {
             "name": "Claws (if appropriate)",
@@ -24332,7 +24295,7 @@
             "attack": 13,
             "defense": 6,
             "damage": 5,
-            "id": "b32750b4e7c0"
+            "id": "f4cdca552ec6"
           }
         ],
         "soak": 22,
@@ -24419,7 +24382,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell of that name, ArM5 p. 142. 3 intricacy points spent on cost.",
-            "id": "a5b43996d763"
+            "id": "040d8f086541"
           },
           {
             "name": "Constrict",
@@ -24433,7 +24396,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A hit coils round the victim, who cannot use melee weapons. Damage then comes each round with no Attack roll, but may be Soaked. At the end of each round, the first included, the victim may try to escape: Strength + stress die against the wyrm's. Each helper adds +1 and cannot attack the wyrm that round. Success frees him, to attack as normal next round. Six rounds held (30 seconds) calls for deprivation rolls, ArM5 p. 179.",
-            "id": "110b1cc1bfc1"
+            "id": "d56123b569b9"
           },
           {
             "name": "Constant Damaging Effect",
@@ -24447,7 +24410,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Its terrible cold deals +5 Damage each round. Base 5, +1 Part, +2 Sun, +1 Constant.",
-            "id": "5cafd7522d3c"
+            "id": "ffe6b6ae6bd7"
           },
           {
             "name": "Spreading a Mantle of Ice",
@@ -24461,7 +24424,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "3 intricacy points spent on cost. All water freezes for a mile about it, and any rain falls as snow. The air grows so bitter that hunting it takes magic or preparation, though spells that sense warmth can find it, always at the coldest point. The cold being magical, Auram Magic Resistance of 30 or more does not feel it.",
-            "id": "2923e57b940b"
+            "id": "5d3faa6d993c"
           },
           {
             "name": "Venomous Bite",
@@ -24475,7 +24438,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers adder venom (Poison Table, ArM5 p. 180), wound or no wound. The storyguide may shift the Advantage needed.",
-            "id": "44ff04def084"
+            "id": "add370114b97"
           }
         ],
         "vis": [
@@ -24483,7 +24446,7 @@
             "pawns": 6,
             "art": "",
             "where": "in a piece of lost string",
-            "id": "3a14618ee717"
+            "id": "39c44d9c0ade"
           }
         ],
         "equipment": "A small heap of frozen treasure.",
@@ -24638,7 +24601,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 7,
-            "id": "c6b17a81f1a5"
+            "id": "823be5c8e05d"
           },
           {
             "name": "Brawl",
@@ -24646,7 +24609,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 1,
-            "id": "6c6d09f5a61b"
+            "id": "e38409edb925"
           }
         ],
         "soak": 8,
@@ -24754,7 +24717,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Humans who see the smooth face are seized by terror and flee, losing Fatigue. Several may ambush a resting victim together, or one may torment it alone with Invisibility and Shift Human Shapes. As Panic of the Trembling Heart, ArM5 p. 148, +1 constant, +2 intricacy points to cut the cost; also printed as ReMe Base 5, +1 Eye, +2 Sun, +2 intricacy.",
-            "id": "fa842509bd2c"
+            "id": "c29adc3c6e69"
           },
           {
             "name": "Invisibility",
@@ -24768,7 +24731,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility, ArM5 p. 146.",
-            "id": "520fbe6408a8"
+            "id": "73915febf570"
           },
           {
             "name": "Loss of Sense of Direction",
@@ -24782,7 +24745,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A version of Guide, turning a fleeing victim toward some deserted spot for another attack.",
-            "id": "c79dd170e0b6"
+            "id": "abfdf31c730f"
           },
           {
             "name": "Shift Human Shapes",
@@ -24796,7 +24759,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It wipes its face away with a hand, or back again, and takes other human forms: invisibly it catches a spent human, comes as a comfort and scares him afresh. Base 3, +2 Sun, +1 intricacy point to cut cost, though its Duration is Mom.",
-            "id": "d8b06c2e1c3c"
+            "id": "0e045fa53387"
           }
         ],
         "vis": [
@@ -24804,7 +24767,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "an eggshell",
-            "id": "cc62eccfc525"
+            "id": "49ac65ab08fd"
           }
         ],
         "equipment": "As its disguise requires.",
@@ -24977,7 +24940,7 @@
             "attack": 9,
             "defense": 11,
             "damage": 3,
-            "id": "28a4f5955256"
+            "id": "72102582634a"
           },
           {
             "name": "Pick/Tool (two handed)",
@@ -24985,7 +24948,7 @@
             "attack": 8,
             "defense": 11,
             "damage": 11,
-            "id": "d413c67b8789"
+            "id": "35f7046e1081"
           }
         ],
         "soak": 6,
@@ -25065,7 +25028,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Nudges people toward a course of action: it rewards good miners with warnings or the way to ore, and sends bad ones astray or into peril. Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "ed16fa0fea8f"
+            "id": "b0d5d8fa1a3d"
           },
           {
             "name": "Loosely Material",
@@ -25079,7 +25042,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Forms a solid body for a time, with all its gear. 2 intricacy points cut the Might cost.",
-            "id": "ef6deff962ea"
+            "id": "459d036b076d"
           }
         ],
         "vis": [
@@ -25087,7 +25050,7 @@
             "pawns": 1,
             "art": "",
             "where": "a discarded mining tool",
-            "id": "afcbe396a186"
+            "id": "99d448fd1d13"
           }
         ],
         "equipment": "A miner's working gear.",
@@ -25683,7 +25646,7 @@
             "attack": 18,
             "defense": 8,
             "damage": 19,
-            "id": "252f8e139b26"
+            "id": "6493d78aaedb"
           },
           {
             "name": "Constriction",
@@ -25691,7 +25654,7 @@
             "attack": 12,
             "defense": 1,
             "damage": null,
-            "id": "a56f1cc18867"
+            "id": "72039a9eaad4"
           }
         ],
         "soak": 14,
@@ -25827,7 +25790,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "c1602376b57c"
+            "id": "b83b117fdaa6"
           },
           {
             "name": "The Envenomed Gift",
@@ -25841,7 +25804,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "2837f7d69960"
+            "id": "71f724634f73"
           },
           {
             "name": "Serpent Spies",
@@ -25855,7 +25818,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch she links her mind to one of her children and sees and hears all that the young serpent does. She can hold any number of these links at once, and each lasts until she drops it, but the Might spent on a link does not return until then. Printed as Init Qik -4. InAn 40 (Base 15, +1 Touch, +2 Sun, +1 extra sense, +1 constant). Greater Power (40 levels, -2 Might cost). (pp. 134-135)",
-            "id": "bdb53bcd1622"
+            "id": "f6ec33e32d06"
           },
           {
             "name": "Scion of the World Serpent",
@@ -25869,7 +25832,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She swells to any Size from one above her present Size up to +12, with +2 Strength and -1 Quickness per point of Size and new wound ranges. Size +9 is 130 feet long and six feet thick, +10 is 170 by seven, +11 is 210 by ten, and +12 is 265 by thirteen. It must be renewed at sunrise and sunset and may lapse if she is distracted then. While it lasts her natural attacks are magical and must Penetrate Magic Resistance; Animal spells still use her original Size. MuAn 30 (Base 4, +2 Sun, +4 Size to affect Size +12). Personal Power x 2 (30 levels, -3 Might cost, +1 Init). (p. 135)",
-            "id": "441fc2dcf303"
+            "id": "ff8240a08bc1"
           },
           {
             "name": "Swallow Whole",
@@ -25883,7 +25846,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "d4e416caf8c5"
+            "id": "d22568f2f486"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -25897,7 +25860,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "ed1e308a2260"
+            "id": "d4a23e05e57b"
           },
           {
             "name": "Venomous Bite",
@@ -25911,7 +25874,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "531492909655"
+            "id": "6dc1aad5f247"
           }
         ],
         "vis": [
@@ -25919,13 +25882,13 @@
             "pawns": 6,
             "art": "Animal",
             "where": "eyes",
-            "id": "08382013b684"
+            "id": "57a0f4260991"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "teeth",
-            "id": "5580e27f7e41"
+            "id": "ce3fd1ba4dd8"
           }
         ],
         "equipment": "",
@@ -25940,7 +25903,7 @@
             "kind": "places",
             "target_id": "the_marjoram_grove",
             "note": "Her favourite vis",
-            "id": "4a972ef0d6fd"
+            "id": "da784d175fca"
           }
         ],
         "secrets": "An ancient creature of the Magic Realm, and very strong for it. She needs vis to hold what she has learned and to grow, so she bears serpents without end and sends them to fetch it. She feels little for them. Most die in the crush of siblings; those that live often lose ground to Acclimation as they grow. (p. 133)\n\nShe keeps half the year in the Magic Realm, sharing her cave with whichever child is least stupid. She spies through her small children, and so learned of the Order and how magi hunt and hoard vis, which suggested an easier way to feed. She has no knowledge of the Aegis of the Hearth. (pp. 133, 137)\n\nHer large daughters press her constantly, sometimes in league with younger ones, for too many survivors try to kill her and mother broods of their own. (p. 133)\n\nBlades cannot harm her. None of the tales is true, but one holds a hint of this, the book does not say which, and nothing tells the characters so. (p. 138)\n\nIn her insula each wound she takes bleeds a living serpent into the fight on her side: a one-year-old from a Light Wound, a three-year-old from a Medium, a five-year-old from a Heavy or Incapacitating. These do not spawn in turn when hurt. She hides among the mounds and strikes by surprise, and a harder fight adds her offspring of six to eight years. (p. 140)\n\nA weaker Waimie: use one of the brood as the mother, and slow them to two or more years per step. Or alternate the yearly 5 Might with 5 points of Inferiorities: Minor Flaw (Anchored to (Land), Baneful Circumstances, Clumsy, Environmental Sensitivity, Essential Flaw, (Form) Monstrosity, Lesser Malediction or Poor Characteristic), Reduced Attack, Reduced Might or Reduced Powers; some are in Realms of Power: Magic pp. 47-51. (p. 135)\n\nA stronger Waimie: give her human servants, the Cult of the Serpent, held perhaps by something like Entrancement. Without Difficult Underlings she can send her children in coordinated groups, and if she beats the magi outright she need share no vis source with her brood. (p. 136)"
@@ -26164,7 +26127,7 @@
             "attack": 8,
             "defense": 13,
             "damage": -13,
-            "id": "760f2986de21"
+            "id": "da9e14d0c4fe"
           }
         ],
         "soak": 3,
@@ -26244,7 +26207,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "3f25d404a545"
+            "id": "c1d301d3324e"
           }
         ],
         "vis": [],
@@ -26467,7 +26430,7 @@
             "attack": 8,
             "defense": 10,
             "damage": -7,
-            "id": "eb05476d7758"
+            "id": "3b01a6d159f3"
           }
         ],
         "soak": 3,
@@ -26547,7 +26510,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "257d036aa317"
+            "id": "3af0b187fc4a"
           },
           {
             "name": "The Envenomed Gift",
@@ -26561,7 +26524,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "3403a86ba5fe"
+            "id": "284a64d7aed4"
           }
         ],
         "vis": [
@@ -26569,7 +26532,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "eyes",
-            "id": "fcbdc1eedb25"
+            "id": "52f0bb0d44bc"
           }
         ],
         "equipment": "",
@@ -26819,7 +26782,7 @@
             "attack": 8,
             "defense": 9,
             "damage": -1,
-            "id": "e05eeccc2ba0"
+            "id": "4d8e1997a64f"
           }
         ],
         "soak": 3,
@@ -26906,7 +26869,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "c796605a780b"
+            "id": "50a73a104786"
           },
           {
             "name": "The Envenomed Gift",
@@ -26920,7 +26883,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "a8622fe72093"
+            "id": "ee45d55327bd"
           }
         ],
         "vis": [
@@ -26928,7 +26891,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "eyes",
-            "id": "571bce1346d6"
+            "id": "1d0340b612a5"
           }
         ],
         "equipment": "",
@@ -27204,7 +27167,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "e91ba12f8d76"
+            "id": "9805780f8d9f"
           },
           {
             "name": "Constriction",
@@ -27212,7 +27175,7 @@
             "attack": 8,
             "defense": 5,
             "damage": null,
-            "id": "9cfdac23b1df"
+            "id": "9e6ac18337e7"
           }
         ],
         "soak": 8,
@@ -27299,7 +27262,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "0e9a2a21840c"
+            "id": "f77d24fe1fe3"
           },
           {
             "name": "Venomous Bite",
@@ -27313,7 +27276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "52fa81da51c0"
+            "id": "611b79b085a2"
           },
           {
             "name": "The Envenomed Gift",
@@ -27327,7 +27290,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "220d62ee7036"
+            "id": "1a94a6049606"
           }
         ],
         "vis": [
@@ -27335,7 +27298,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "eyes",
-            "id": "ab98bdc90d73"
+            "id": "5243b6685bf9"
           }
         ],
         "equipment": "",
@@ -27639,7 +27602,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 7,
-            "id": "3a376de41e1e"
+            "id": "409279990aa0"
           },
           {
             "name": "Constriction",
@@ -27647,7 +27610,7 @@
             "attack": 8,
             "defense": 3,
             "damage": null,
-            "id": "f400391aa1b8"
+            "id": "de77784623d3"
           }
         ],
         "soak": 8,
@@ -27734,7 +27697,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "38b9ed6a4cf9"
+            "id": "748e50f48cd9"
           },
           {
             "name": "Venomous Bite",
@@ -27748,7 +27711,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "bfa5170f0172"
+            "id": "b6c3e5a94045"
           },
           {
             "name": "The Envenomed Gift",
@@ -27762,7 +27725,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "1d6f9d21c9e1"
+            "id": "62460c00ae21"
           },
           {
             "name": "Swallow Whole",
@@ -27776,7 +27739,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "0367d6bd6f1f"
+            "id": "f96a3227ac1a"
           }
         ],
         "vis": [
@@ -27784,7 +27747,7 @@
             "pawns": 4,
             "art": "Animal",
             "where": "eyes",
-            "id": "b4344357631d"
+            "id": "4bb28530b7c0"
           }
         ],
         "equipment": "",
@@ -28134,7 +28097,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 9,
-            "id": "a29eea865d9c"
+            "id": "bca0929a23e1"
           },
           {
             "name": "Constriction",
@@ -28142,7 +28105,7 @@
             "attack": 9,
             "defense": 3,
             "damage": null,
-            "id": "7559c7e2c799"
+            "id": "c8ea14145855"
           }
         ],
         "soak": 8,
@@ -28229,7 +28192,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "79cc035e4f0c"
+            "id": "810a69801154"
           },
           {
             "name": "Venomous Bite",
@@ -28243,7 +28206,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "dae5ac6ab942"
+            "id": "39c16c1507f7"
           },
           {
             "name": "The Envenomed Gift",
@@ -28257,7 +28220,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "f812fc5be302"
+            "id": "5478e7e2f77f"
           },
           {
             "name": "Swallow Whole",
@@ -28271,7 +28234,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "c96b552c0746"
+            "id": "94a4080bb39b"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -28285,7 +28248,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "d28183d1eee5"
+            "id": "ec8b938c411a"
           }
         ],
         "vis": [
@@ -28293,7 +28256,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "eyes",
-            "id": "c3223e011cbf"
+            "id": "43b2cf8694fe"
           }
         ],
         "equipment": "",
@@ -28687,7 +28650,7 @@
             "attack": 13,
             "defense": 6,
             "damage": 11,
-            "id": "caf7567a32f9"
+            "id": "b4e87608597a"
           },
           {
             "name": "Constriction",
@@ -28695,7 +28658,7 @@
             "attack": 9,
             "defense": 2,
             "damage": null,
-            "id": "31d69f5103d5"
+            "id": "53651b694cdf"
           }
         ],
         "soak": 10,
@@ -28782,7 +28745,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "7590d0db4f20"
+            "id": "3135520383f6"
           },
           {
             "name": "Venomous Bite",
@@ -28796,7 +28759,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "4d8134bbc596"
+            "id": "90cb05bbb618"
           },
           {
             "name": "The Envenomed Gift",
@@ -28810,7 +28773,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "80be0ae0f3d1"
+            "id": "0a7eb0dcfa8b"
           },
           {
             "name": "Swallow Whole",
@@ -28824,7 +28787,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "0b60ada32e14"
+            "id": "4d2b03411e2b"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -28838,7 +28801,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "d70a1322bdd4"
+            "id": "8686080cb3c2"
           }
         ],
         "vis": [
@@ -28846,7 +28809,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "eyes",
-            "id": "78103cbf28b7"
+            "id": "8159a36bf456"
           }
         ],
         "equipment": "",
@@ -29266,7 +29229,7 @@
             "attack": 14,
             "defense": 8,
             "damage": 13,
-            "id": "8c2c7a240926"
+            "id": "0ebedb74f39f"
           },
           {
             "name": "Constriction",
@@ -29274,7 +29237,7 @@
             "attack": 10,
             "defense": 2,
             "damage": null,
-            "id": "348a6958fad2"
+            "id": "1be9d7f90384"
           }
         ],
         "soak": 12,
@@ -29361,7 +29324,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "33ccf7303ccf"
+            "id": "dc14c2e0cfa5"
           },
           {
             "name": "Venomous Bite",
@@ -29375,7 +29338,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "26d39fde806b"
+            "id": "993b1d97f5ce"
           },
           {
             "name": "The Envenomed Gift",
@@ -29389,7 +29352,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "12c4a8905d3e"
+            "id": "774db30d352c"
           },
           {
             "name": "Swallow Whole",
@@ -29403,7 +29366,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "97321a783003"
+            "id": "51b572aed1af"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -29417,7 +29380,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "bc43c4a25b74"
+            "id": "3cde9ddfbaa6"
           }
         ],
         "vis": [
@@ -29425,7 +29388,7 @@
             "pawns": 7,
             "art": "Animal",
             "where": "eyes",
-            "id": "e3095341db44"
+            "id": "70bf44cb60f6"
           }
         ],
         "equipment": "",
@@ -29889,7 +29852,7 @@
             "attack": 14,
             "defense": 7,
             "damage": 15,
-            "id": "a0821959b25e"
+            "id": "4200249c7e41"
           },
           {
             "name": "Constriction",
@@ -29897,7 +29860,7 @@
             "attack": 10,
             "defense": 1,
             "damage": null,
-            "id": "e81b0be60cc1"
+            "id": "51a94626861c"
           }
         ],
         "soak": 14,
@@ -29984,7 +29947,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "3c7a9ef79c92"
+            "id": "451ea7204f15"
           },
           {
             "name": "Venomous Bite",
@@ -29998,7 +29961,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "e73291147711"
+            "id": "22d1d4c49e53"
           },
           {
             "name": "The Envenomed Gift",
@@ -30012,7 +29975,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "6ce3388953f9"
+            "id": "5ec9b9363474"
           },
           {
             "name": "Swallow Whole",
@@ -30026,7 +29989,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "f06b2697270b"
+            "id": "a17fcb8bbc75"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -30040,7 +30003,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "4374c9890d2e"
+            "id": "117ebeb7777b"
           },
           {
             "name": "Scion of the World Serpent",
@@ -30054,7 +30017,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She swells to any Size from one above her present Size up to +12, with +2 Strength and -1 Quickness per point of Size and new wound ranges. Size +9 is 130 feet long and six feet thick, +10 is 170 by seven, +11 is 210 by ten, and +12 is 265 by thirteen. It must be renewed at sunrise and sunset and may lapse if she is distracted then. While it lasts her natural attacks are magical and must Penetrate Magic Resistance; Animal spells still use her original Size. MuAn 30 (Base 4, +2 Sun, +4 Size to affect Size +12). Personal Power x 2 (30 levels, -3 Might cost, +1 Init). (p. 135)",
-            "id": "9af25acf3aa1"
+            "id": "9b39ad3e4791"
           }
         ],
         "vis": [
@@ -30062,7 +30025,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "eyes",
-            "id": "db9eb1e2d370"
+            "id": "2c85d92c9f7d"
           }
         ],
         "equipment": "",
@@ -30544,7 +30507,7 @@
             "attack": 16,
             "defense": 8,
             "damage": 17,
-            "id": "756893d0a9c5"
+            "id": "dbba37a342cd"
           },
           {
             "name": "Constriction",
@@ -30552,7 +30515,7 @@
             "attack": 10,
             "defense": 0,
             "damage": null,
-            "id": "919a7cd71248"
+            "id": "c54ffb27a38d"
           }
         ],
         "soak": 14,
@@ -30639,7 +30602,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can constrict only a victim smaller than she is, by the grappling rules (ArM5 p. 174). While she holds the grapple the victim counts as deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds or takes the usual effects. Once a grapple is established she can keep constricting and still bite, at the held victim or at someone else. (p. 134)",
-            "id": "d77ddf67f26b"
+            "id": "643d18ebc4db"
           },
           {
             "name": "Venomous Bite",
@@ -30653,7 +30616,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. Compare her Attack Advantage with the victim's armor Protection, not his Soak: if hers is higher, he takes the effects of adder venom (Poison Table, ArM5 p. 180), wounded or not. (p. 135)",
-            "id": "6aa2597ad9b2"
+            "id": "142309253ccc"
           },
           {
             "name": "The Envenomed Gift",
@@ -30667,7 +30630,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "On top of the ordinary venom she may choose to taint the Gift of anyone she bites, who suffers the Painful Magic Flaw for a day. No Hermetic equivalent. Greater Power x 2 (50 levels, -5 Might cost, +5 Init). The book prints the word Init with no figure after it, so the Initiative here is left at 0. (p. 134)",
-            "id": "24bcd7561676"
+            "id": "dc7d0dc72bb1"
           },
           {
             "name": "Swallow Whole",
@@ -30681,7 +30644,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Non-magical. She can swallow anything at least 5 Size points smaller than she is. A creature not first subdued by Constriction may struggle, but stays constricted while swallowed. No one can breathe inside her, so deprivation rolls (ArM5 p. 180) apply even after escaping the grapple. Three rounds later the victim reaches the stomach: acid does +9 damage a round, or +36 at full immersion (ArM5 p. 181). A Strength + Athletics roll each round may brace him: Ease Factor 6 for half immersion (triple damage), 9 for one limb (double), 12 for a splash (normal). She swallows no second creature until the first reaches the stomach. (p. 135)",
-            "id": "d0a2d35814cd"
+            "id": "b4538d9ba849"
           },
           {
             "name": "Two Heads Are Better Than One",
@@ -30695,7 +30658,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 or more points. Her head splits lengthwise into two or more, one more per extra Might point, each giving another attack. She fights as a trained group of as many as she has heads, with no Leadership limit on the Group bonus. Physical attacks made with this power must Penetrate Magic Resistance. MuAn 50 (Base 25, +2 Sun, +3 Size). Greater Power (50 levels, -4 Might cost and +1 Init from Improved Powers). (p. 135)",
-            "id": "2b88b1cb0fcc"
+            "id": "1fbe9b6bbb93"
           },
           {
             "name": "Scion of the World Serpent",
@@ -30709,7 +30672,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She swells to any Size from one above her present Size up to +12, with +2 Strength and -1 Quickness per point of Size and new wound ranges. Size +9 is 130 feet long and six feet thick, +10 is 170 by seven, +11 is 210 by ten, and +12 is 265 by thirteen. It must be renewed at sunrise and sunset and may lapse if she is distracted then. While it lasts her natural attacks are magical and must Penetrate Magic Resistance; Animal spells still use her original Size. MuAn 30 (Base 4, +2 Sun, +4 Size to affect Size +12). Personal Power x 2 (30 levels, -3 Might cost, +1 Init). (p. 135)",
-            "id": "3d0f3b645b43"
+            "id": "9e7b0e71f1d2"
           }
         ],
         "vis": [
@@ -30717,7 +30680,7 @@
             "pawns": 9,
             "art": "Animal",
             "where": "eyes",
-            "id": "3de7a41a1cde"
+            "id": "91c80ee4eb25"
           }
         ],
         "equipment": "",
@@ -30944,7 +30907,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the Hand of St. John's power (p. 52): the target vomits sea water and drowns, unable to act, making Deprivation rolls every 30 seconds until the wielder stops.",
-            "id": "0999915b3e14"
+            "id": "0e90562b8f3d"
           },
           {
             "name": "Grant Visions",
@@ -30958,7 +30921,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A true vision of the future, clouded in mystical allegory. Intelligence + Divine Lore against Ease Factor 9 gives a rough reading; a higher roll reveals more.",
-            "id": "efd97ec4b154"
+            "id": "687976a89cab"
           },
           {
             "name": "Heal Burns",
@@ -30972,7 +30935,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Heals any non-lethal wound caused by fire.",
-            "id": "c5990d87cf1c"
+            "id": "94a16d7a4420"
           },
           {
             "name": "Purge Poison",
@@ -30986,7 +30949,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target vomits the poison up, is healed of any non-lethal wound or fatigue from it, and takes no more damage.",
-            "id": "50ec05515db3"
+            "id": "534824127e41"
           },
           {
             "name": "Turn Back the Missile",
@@ -31000,7 +30963,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the Hand of St. John's power (p. 52), of the appropriate Form: missiles are hurled back at those who sent them.",
-            "id": "eeb614a3f3b7"
+            "id": "c7b46d61c0d9"
           }
         ],
         "vis": [],
@@ -31241,7 +31204,7 @@
             "attack": null,
             "defense": 12,
             "damage": null,
-            "id": "f0e4c8a5d01e"
+            "id": "af12d4b9f474"
           },
           {
             "name": "Beak",
@@ -31249,7 +31212,7 @@
             "attack": 7,
             "defense": 11,
             "damage": -6,
-            "id": "c6bbabe30bf4"
+            "id": "c7611cba9c7a"
           }
         ],
         "soak": 0,
@@ -31357,7 +31320,7 @@
             "pawns": 2,
             "art": "Intellego",
             "where": "1 in each eye",
-            "id": "7aec745d7f0b"
+            "id": "a2bc7334f3b4"
           }
         ],
         "equipment": "",
@@ -31675,7 +31638,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 2,
-            "id": "6ac119d72756"
+            "id": "66ea393ae24e"
           }
         ],
         "soak": -1,
@@ -31846,7 +31809,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each use shows her one fact about the target that he would never admit, drawn from his secret fears and sins. The truly holy may be immune, having no secrets however small.",
-            "id": "c0793aae5dfb"
+            "id": "5ef458da0ca6"
           },
           {
             "name": "Envisioning",
@@ -31860,7 +31823,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 point she enters a sleeper's dreams; she cannot change them at a stroke but can slowly darken them and speak through any figure in them. For 5 points she forces a waking vision of whatever she likes, which may stun for a round, and the victim needs a Brave roll of 9+ to avoid retching, convulsions or terror. It is her only way of speaking to humans.",
-            "id": "e436c6e9283b"
+            "id": "8b357769bef8"
           },
           {
             "name": "Obsession",
@@ -31874,7 +31837,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points. When a mortal indulges a venial sin she may impose her Obsession Traits, Infatuation or Revenge; if it penetrates, sinful thoughts assail him and he gains the Trait at the points spent, which may stick if he indulges again at his next chance. RoP: Infernal pp. 31-32.",
-            "id": "2a17511aef4c"
+            "id": "26ba3006cd58"
           },
           {
             "name": "Possession",
@@ -31888,7 +31851,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. Any Might she spends becomes a Possession Might Pool inside the victim, not regained until the possession ends; more does more with the host but penetrates less. If it overcomes resistance she controls him directly. RoP: Infernal p. 32.",
-            "id": "43422961803f"
+            "id": "674f80b31e87"
           },
           {
             "name": "Whispers Behind the Back",
@@ -31902,7 +31865,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Exactly as the spell Pains of the Perpetual Worry: a month's nagging dread, tied to the victim's secret sins, that everyone knows and talks behind his back.",
-            "id": "f071e3323387"
+            "id": "f6dd198a916f"
           }
         ],
         "vis": [
@@ -31910,7 +31873,7 @@
             "pawns": 4,
             "art": "",
             "where": "vis prava, but insubstantial",
-            "id": "38162bcafdab"
+            "id": "ce025e13308e"
           }
         ],
         "equipment": "",
@@ -31925,7 +31888,7 @@
             "kind": "characters",
             "target_id": "hannelore",
             "note": "Hannelore after her death",
-            "id": "f7d6c2f4ccac"
+            "id": "c3a7c627de7a"
           }
         ],
         "secrets": "Hell lets her back, with her punishment eased a little for each soul won. She has a year from the anniversary of her death to win one, tempting it to mortal sin and seeing it die unrepentant; each success gives another year. Possessed humans pass an Aegis unless the demon extends its Magic Resistance over the host (RoP: Infernal p. 32), but if the Aegis's Penetration beats her Infernal Might all powers cost double. She flees superior force. If she sees her beloved she cannot help dropping her plans to kill him (p. 94)."
@@ -32090,7 +32053,17 @@
         "capacity_override": null,
         "pawns_opened": 0,
         "extra_spaces": 0,
-        "bonuses": [
+        "bonuses": [],
+        "lab_total": null,
+        "charges_made": null,
+        "charges_left": null,
+        "objects": 1,
+        "verditius_runes": false,
+        "verditius_craft": "",
+        "elder_runes": [],
+        "verditius_item": "",
+        "mystery_device": "",
+        "attunements": [
           {
             "bonus": 2,
             "applies_to": "images",
@@ -32113,16 +32086,6 @@
             "season": ""
           }
         ],
-        "lab_total": null,
-        "charges_made": null,
-        "charges_left": null,
-        "objects": 1,
-        "verditius_runes": false,
-        "verditius_craft": "",
-        "elder_runes": [],
-        "verditius_item": "",
-        "mystery_device": "",
-        "attunements": [],
         "effects": [
           {
             "id": "opal_ring_of_galerius-1",
@@ -32238,7 +32201,17 @@
         "capacity_override": null,
         "pawns_opened": 0,
         "extra_spaces": 0,
-        "bonuses": [
+        "bonuses": [],
+        "lab_total": null,
+        "charges_made": null,
+        "charges_left": null,
+        "objects": 1,
+        "verditius_runes": false,
+        "verditius_craft": "",
+        "elder_runes": [],
+        "verditius_item": "",
+        "mystery_device": "",
+        "attunements": [
           {
             "bonus": 2,
             "applies_to": "harm people",
@@ -32254,16 +32227,6 @@
             "season": ""
           }
         ],
-        "lab_total": null,
-        "charges_made": null,
-        "charges_left": null,
-        "objects": 1,
-        "verditius_runes": false,
-        "verditius_craft": "",
-        "elder_runes": [],
-        "verditius_item": "",
-        "mystery_device": "",
-        "attunements": [],
         "effects": [
           {
             "id": "ash_wand_of_ingrid-1",
@@ -33141,7 +33104,7 @@
             "eyes": "",
             "handedness": "right",
             "physical_description": "",
-            "biography": "Combat: dagger Init +1, Attack +5, Defense +4, Damage +2. Soak -1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: fine clothes, curved dagger. Encumbrance 0 (0).\n\nAppearance: a handsome young woman with uncovered dark wavy hair and deep green eyes. She favours gowns of red velvet and nearly always wears a fur cloak, because she takes cold easily. Her voice is rich and unusually deep for a woman, and many call it her best feature.",
+            "biography": "Combat: dagger Init +1, Attack +5, Defense +4, Damage +2. Soak -1. Fatigue levels OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+).\n\nEquipment: fine clothes, curved dagger. Encumbrance 0 (0).\n\nAppearance: a good-looking young woman, bareheaded, her dark hair waving over green eyes. Red velvet is her choice of dress, under a fur cloak she is seldom without, for she feels the cold. Men remember her voice above all, which is full and low.",
             "complexion": "",
             "complexion_minor": ""
           },

@@ -115,6 +115,23 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.61.1 — 2026-10-31
+
+### Peregrinatio
+
+- Every pack now keeps its vis and books in secrets, not in a place's or covenant's public text.
+- A final read of *Lands of the Nile*, *Between Sand and Sea*, *Land of Fire & Ice*, *The Icelandic Wars* and *Antagonists* against their packs: missing details added, errata for the Baboon and Elephant applied, spoilers moved to secrets, and Gizeh and the Sabeans each merged into one record.
+- Galerius and Ingrid's talisman attunements now show on their sheets, and Galerius's spells are the Definitive Edition's, with the book's figures noted.
+- Creatures in the Alps and Iceland packs now say their stats are unconverted Fourth Edition figures. Iceland's Fourth Edition Abilities with no counterpart have their experience spent on current ones.
+
+### Pagina
+
+- Editing a sunk or taken ship no longer loses her fate.
+
+### Glossa
+
+- A new guide: **How to build a tomb**.
+
 ## 3.61.0 — 2026-10-31
 
 ### Peregrinatio

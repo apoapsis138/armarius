@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.60.0",
+  "app_version": "3.61.0",
   "kind": "pack",
   "name": "Lands of the Nile",
   "from_saga": "Lands of the Nile",
@@ -28,7 +28,7 @@
         "id": "the_great_hunger",
         "name": "The Great Hunger",
         "kind": "faction",
-        "summary": "The spirit at the centre of the Great Desert, so vast it gives gods pause: the parching heat and eroding wind made one, seeking to reduce the world to dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
+        "summary": "The spirit at the centre of the Great Desert, whose strength even gods respect: the desert's heat and scouring wind given one will, which would leave the world dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -131,7 +131,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Themes for sagas (pp. 6-9), none excluding another. The Red and the Black: Africa is the battleground of the Great Hunger and the Hope, and these lands lie in the Black's stronghold. The Kom, a giant who was the Red's chief servant, was slain and seeks to remake itself (at Pakhoras). The Cult of Dedun serves the Red indirectly by gathering power from death and decay, seeking immortality through decrepitude. Wesir, the first human to learn how to become a Daimon, is now a mighty servant of the Black. The old rites of death cleansed favoured ghosts of the Red and raised them as Daimons, allies of the Black. Egypt just grows marvels: the superabundance of tombs is another face of the Black's fertility. Secrets and mysteries: the Red devours secrets, so some mysteries no longer have answers, and others never had any, being plain marvels of God; players must expect that. Endlessness: see above.\n\nEvery monument of medieval Africa stands in Mythic Africa, with many more. The book follows thirteenth-century folklore, not modern archaeology. Tombs hold bizarre traps, strange creatures and puzzles, because people then believed they did: it explained why the treasure was still there. Old Egyptian magic is far weaker in attack than Hermetic magic; its priest-magicians excelled at healing and at commanding spirits.\n\nBeasts of the valley with statistics elsewhere: the lion, in The Book of Mundane Beasts; a magical lion and the pard in Realms of Power: Magic pp. 60-61; other animals in Between Sand and Sea."
+        "secrets": "Themes for sagas (pp. 6-9), none excluding another. The Red and the Black: Africa is the battleground of the Great Hunger and the Hope, and these lands lie in the Black's stronghold. The Kom, a giant who was the Red's chief servant, was slain and seeks to remake itself (at Pakhoras). The Cult of Dedun serves the Red indirectly by gathering power from death and decay, seeking immortality through decrepitude. Wesir, the first human to learn how to become a Daimon, is now a mighty servant of the Black. The old rites of death cleansed favoured ghosts of the Red and raised them as Daimons, allies of the Black. Egypt just grows marvels: the superabundance of tombs is another face of the Black's fertility. Secrets and mysteries: the Red devours secrets, so some mysteries no longer have answers, and others never had any, being plain marvels of God; players must expect that. Endlessness: see above. The Black's servants include the lector priests who were the pharaohs' magicians.\n\nWhy the Order might come here (pp. 127-128). The book puts no magi in these lands in 1220. A saga may loot the past with no neighbours and add other covenants later; a crusading or tired covenant may come to escape the Code or a Peripheral Code, until its actions bring magi from the Roman or Levant Tribunals; a covenant may join an existing Tribunal, if Redcaps or that Tribunal's members can reach it in good time and its Peripheral Code allows, or contest a border at Grand Tribunal, where no precedent yet exists, for vis or votes (Houses of Hermes: True Lineages p. 49; ArM5 p. 14). A Nile Tribunal needs at least twelve magi of four covenants and a Quaesitor, and a sponsor at the Grand Tribunal of 1228 or 1261. It must outlast the Fifth Crusade and, if history holds, the Seventh (1248 to 1254), against eremites, Moorish sahirs, treasure hunters and magi who want no new delegation.\n\nEvery monument of medieval Africa stands in Mythic Africa, with many more. The book follows thirteenth-century folklore, not modern archaeology. Tombs hold bizarre traps, strange creatures and puzzles, because people then believed they did: it explained why the treasure was still there. Old Egyptian magic is far weaker in attack than Hermetic magic; its priest-magicians excelled at healing and at commanding spirits.\n\nBeasts of the valley with statistics elsewhere: the lion, in The Book of Mundane Beasts; a magical lion and the pard in Realms of Power: Magic pp. 60-61; other animals in Between Sand and Sea."
       },
       {
         "id": "the_abyssinian_highlands",
@@ -367,31 +367,6 @@
           "decides": "",
           "members": null,
           "rules": "The Dhimmi Flaw, a Minor General Flaw, gives these duties (p. 13); custom softens many of them in Egypt. A character from Europe might take Outsider instead. City and Guild serves merchant characters.",
-          "wants": "",
-          "offers": ""
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": ""
-      },
-      {
-        "id": "the_sabeans",
-        "name": "The Sabeans",
-        "kind": "faction",
-        "summary": "A people who claim to be Sabeans, and so People of the Book, with communities across Egypt and a fire religion much like the Zoroastrians'. They stand out in Cairo, for they venerate the Keeper of the Dead at Giza.",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "",
-        "place_id": null,
-        "place_level": 0,
-        "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
-          "rules": "",
           "wants": "",
           "offers": ""
         },
@@ -1161,30 +1136,6 @@
         "secrets": "It lies in the Magic Realm, and most tombs' Magic auras ease the passage (LotN pp. 26, 32).\n\nWesir (Osiris) rules it: a powerful Daimon and ally of the Black, whose ordeals set the pattern for other ka, and perhaps the first human to reach apotheosis as a Daimon. He opened the path hoping to recruit friends for the Black. Those who become akhu may join, but none are forced to fight the Red (pp. 32, 37). Whether stories of Wesir inspired the faerie god Osiris, or the reverse, nobody knows; a faerie copy of the Field of Reeds, in the Faerie Realm, is ruled by that god and peopled by faerie ka (p. 32).\n\nThe ba is said to leave the boat of the sun god to visit its body (p. 30). Thoth judges those who would become akhu, and hearts heavy with evil feed the Devourer of Souls (p. 37). When the ba needs protection against the Great Serpents of the Hours it must have the true words (p. 32)."
       },
       {
-        "id": "the_necropolis_of_gizeh",
-        "name": "The Necropolis of Gizeh",
-        "kind": "place",
-        "summary": "The greatest of the necropolises, and home to its most powerful guardian, the Father of Dread: the great effigy of Harmarchis, Horus at Dawn, which Greek scholars call the Sphinx. It faces the opposite way from the one Herodotus reports, and nobody recalls when it turned or why.\n\nBetween its forepaws lies a small Divine aura, from when Mary laid the infant Christ in the shade there while they rested.",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "Magic",
-        "place_id": "the_pagan_monuments_of_egypt_birbah",
-        "place_level": 0,
-        "details": {
-          "aura": 0,
-          "tethers": "",
-          "status": "Known",
-          "known": "In the region",
-          "levels": []
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": "That Divine aura may be what has locked the Father of Dread in place: it no longer gives predictions or warns of grave worldly events, but it protects the tombs in a subtler way, drawing trespassers into Faerie (LotN p. 28). The aura's strength is not printed."
-      },
-      {
         "id": "the_ramaseum",
         "name": "The Ramaseum",
         "kind": "place",
@@ -1928,7 +1879,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "They hold the Wisdom from Ignorance Virtue (LotN p. 49): books in languages they cannot read teach Theology, Organization Lore: Sufis or the like instead of their subject. Practical learning comes only when overcoming challenges on spiritual journeys, and counts as a miracle. The book gives this school no name; the record's name is descriptive."
+        "secrets": "They hold the Wisdom from Ignorance Virtue (LotN p. 49; DE p. 116). The book gives this school no name; the record's name is descriptive."
       },
       {
         "id": "the_magical_treasures_of_the_ancient_egyptians",
@@ -2603,7 +2554,7 @@
         "id": "the_hirranian_sabeans",
         "name": "The Hirranian Sabeans",
         "kind": "faction",
-        "summary": "A people the sultan treats as People of the Book, perhaps through confusion with the Sabians. They say the great statue at Gizeh shows the god Horon and is the tomb of one of the three great scholars called Hermes, whom they equate with the Prophet Idris (Enoch). They bury their dead in urns around it and sacrifice white roosters to it (p. 64).",
+        "summary": "A people the sultan treats as People of the Book, perhaps through confusion with the Sabians. They say the great statue at Gizeh shows the god Horon and is the tomb of one of the three great scholars called Hermes, whom they equate with the Prophet Idris (Enoch). They bury their dead in urns around it and sacrifice white roosters to it (p. 64).\n\nThey claim to be Sabeans, and so People of the Book, with communities across Egypt and a fire religion much like the Zoroastrians'. They stand out in Cairo, for they venerate the Keeper of the Dead at Giza (p. 13).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -2907,7 +2858,7 @@
         "id": "the_gizeh_necropolis",
         "name": "The Gizeh Necropolis",
         "kind": "place",
-        "summary": "Three great pyramids and a colossal lion with a man's head, a day's travel south of Cairo. Most Egyptians take little interest in the mastabas and pyramids here, thinking the plateau unusually dangerous even for a necropolis, and haunted, above all by night (pp. 62, 64).\n\nBeliefs differ widely. Aristotle lies under one pyramid; the largest was made for Alexander, who was buried in secret elsewhere; a pharaoh raised them to save his people's wisdom from Noah's Flood; Allah, or a false god such as Hermes, made them by miracle. Saladin's son tried to pull down the pyramid nearest the statue, and it still shows the damage: he believed, as most do, that treasure lies everywhere, even where others have already taken it.\n\nHerodotus and Manetho, widely read in Egypt, give each pyramid its own occupant. Cheops closed the temples, set all Egypt to work for ten years, and when money ran short prostituted his daughter; his brother Chephren ruled the same way. Cheops's son Mykerinos reopened the temples, judged fairly, and let people go home to their trades. As Egypt had been cursed to 150 years of suffering he was working against the gods, who took his only child and cut his life short. Told he had six years left, he set about making magical items to slow time (p. 62).\n\nOn the highest ground stand statues of marble crocodiles that keep real crocodiles out of their sight, guarding three miles of river either way. Some say the Third Hermes himself made them. No Hermetic magus has assessed them in a laboratory, so what exactly they do is unknown (p. 62).\n\nPilgrims widely report that the plateau's sand, the Sand of Hermes, raises Intelligence if carried as a talisman (p. 62).",
+        "summary": "Three great pyramids and a colossal lion with a man's head, a day's travel south of Cairo. Most Egyptians take little interest in the mastabas and pyramids here, thinking the plateau unusually dangerous even for a necropolis, and haunted, above all by night (pp. 62, 64).\n\nBeliefs differ widely. Aristotle lies under one pyramid; the largest was made for Alexander, who was buried in secret elsewhere; a pharaoh raised them to save his people's wisdom from Noah's Flood; Allah, or a false god such as Hermes, made them by miracle. Saladin's son tried to pull down the pyramid nearest the statue, and it still shows the damage: he believed, as most do, that treasure lies everywhere, even where others have already taken it.\n\nHerodotus and Manetho, widely read in Egypt, give each pyramid its own occupant. Cheops closed the temples, set all Egypt to work for ten years, and when money ran short prostituted his daughter; his brother Chephren ruled the same way. Cheops's son Mykerinos reopened the temples, judged fairly, and let people go home to their trades. As Egypt had been cursed to 150 years of suffering he was working against the gods, who took his only child and cut his life short. Told he had six years left, he set about making magical items to slow time (p. 62).\n\nOn the highest ground stand statues of marble crocodiles that keep real crocodiles out of their sight, guarding three miles of river either way. Some say the Third Hermes himself made them. No Hermetic magus has assessed them in a laboratory, so what exactly they do is unknown (p. 62).\n\nPilgrims widely report that the plateau's sand, the Sand of Hermes, raises Intelligence if carried as a talisman (p. 62).\n\nOf all the guardians of the great necropolises the most powerful is Gizeh's, the Father of Dread: the great effigy of Harmarchis, Horus at Dawn, which Greek scholars call the Sphinx. It faces the opposite way from the one Herodotus reports, and nobody recalls when it turned or why (p. 28).\n\nBetween its forepaws lies a small Divine aura, from when Mary laid the infant Christ in the shade there while they rested (p. 28).\n\nAbu 'l-Ahwa, the Father of Dread, is the colossal lion with a man's head. The Greeks call it the strangler, or sphinx, after the winged female monster of the Theban Tribunal that strangled those who failed its riddle. Some think it a solar god. It appeared to Menkheperure (Thutmose IV) to ask that its statue be dug from the sand, according to a stela said to stand between its paws. Some call it the grave of the Prophet Idris, or of Thoth, or both. If it were dug out and rites could again be held between its paws, answers might come (p. 62).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -2925,31 +2876,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The plateau's greatest guardian is the Lady of the Tombs. Alexander of Jerbiton's few accounts suggest a potent faerie once worshipped as Isis, changed as her story has changed. She can call every faerie in the area and, worst of all, rouse a faerie variant of the Father of Dread (p. 62).\n\nThe effect of the sand may be faeries using Grant Virtue to give scholars at the tombs Improved Characteristics. They take the gift back when a scholar stops studying the ruins, so that the weak can be led to spend their lives on one confected tomb after another, feeding the faeries' need for attention.\n\nSome say Mykerinos succeeded: his lamps make a room-sized Faerie regio where time runs slower. No one knows where they are."
-      },
-      {
-        "id": "abu_l_ahwa_the_father_of_dread",
-        "name": "Abu 'l-Ahwa, the Father of Dread",
-        "kind": "place",
-        "summary": "The colossal lion with a man's head. The Greeks call it the strangler, or sphinx, after the winged female monster of the Theban Tribunal that strangled those who failed its riddle. Some think it a solar god. It appeared to Menkheperure (Thutmose IV) to ask that its statue be dug from the sand, according to a stela said to stand between its paws. Mary laid the Christ child there, resting on the flight into Egypt. Some call it the grave of the Prophet Idris, or of Thoth, or both. If it were dug out and rites could again be held between its paws, answers might come (p. 62).",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "Magic",
-        "place_id": "the_gizeh_necropolis",
-        "place_level": 0,
-        "details": {
-          "aura": 0,
-          "tethers": "",
-          "status": "Known",
-          "known": "In the region",
-          "levels": []
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": ""
+        "secrets": "The plateau's greatest guardian is the Lady of the Tombs. Alexander of Jerbiton's few accounts suggest a potent faerie once worshipped as Isis, changed as her story has changed. She can call every faerie in the area and, worst of all, rouse a faerie variant of the Father of Dread (p. 62).\n\nThe effect of the sand may be faeries using Grant Virtue to give scholars at the tombs Improved Characteristics. They take the gift back when a scholar stops studying the ruins, so that the weak can be led to spend their lives on one confected tomb after another, feeding the faeries' need for attention.\n\nSome say Mykerinos succeeded: his lamps make a room-sized Faerie regio where time runs slower. No one knows where they are.\n\nThe Divine aura between its forepaws may be what has locked the Father of Dread in place: it no longer gives predictions or warns of grave worldly events, but it protects the tombs in a subtler way, drawing trespassers into Faerie (LotN p. 28). The aura's strength is not printed."
       },
       {
         "id": "the_tomb_of_aristotle",
@@ -3075,7 +3002,7 @@
         "kind": "town",
         "summary": "A port in ancient times that lost its trade to Alexandria, kept some standing as an Arab naval base, and rose again as Fustat grew, until by the thirteenth century it was the Nile's chief port (p. 65). Water and a stout chain across the navigable channel, running from the walls to a small island tower, guarded its approaches.\n\nOf the 80,000 inside when the siege began in February 1219 only 3,000 were alive when it fell that November, and only 100 of those healthy (p. 66). The looted city came to the Christians with its defences whole, and the crusaders hold the sea.\n\nIn January 1220 the victors are falling apart. John of Brienne assumed it would join the Kingdom of Jerusalem; Pelagius says not, without saying whose it is, and has somehow offended both crusading orders, who now back John. Crusaders go about in squads of countrymen for safety, and in the last month some have fought to the death in the streets. The Italians pushed to force all Frenchmen out; the orders, who had stayed above what they took for a squabble over booty, routed the Italians (p. 67).",
         "detail": "Sketch",
-        "ruler": "The Crusade's leaders (the legate Pelagius claims it)",
+        "ruler": "The Crusade's leaders, in dispute",
         "answers_to": null,
         "realm": "",
         "place_id": "egypt",
@@ -3327,7 +3254,7 @@
         "id": "aydhab",
         "name": "'Aydhab",
         "kind": "town",
-        "summary": "A seedy Red Sea port of pirates and smugglers for centuries, lately rich as the place pilgrims leave Egypt for Jiddah. Travel writers tell pilgrims to keep to trusted groups, for the locals will rob and kill for money. The desert around gives nothing: no crops, and even the water is imported. Most older buildings are woven of reeds shipped from the Nile, a few new ones plastered. Officially it lives by merchants, pilgrims and fishing; the merchants are pirates, the pilgrims victims, and the fishing poor (p. 69). The port lies in land the Blemmyae claim, but in Egyptian hands (p. 96).\n\nSome pilgrims think the journey washes out sin and use it to indulge, and at a price most vices can be had here. Pilgrims are fleeced in three legal ways: famous prices for necessities, a fairly light tax of part of their food, and the hire of jilabs. A jilab is a rickety boat of planks sewn with coconut fibre, caulked with palm shavings, rigged with Theban palm-leaf sails and greased with castor or shark oil; it flexes on the reefs, so it is thought safer than a nailed hull. The hire is so high that the owner loses nothing if it sinks. Boats are often lost, crammed with pilgrims in a sea known for wrecks and sharks, and everyone in town who is not poor owns at least two.",
+        "summary": "A seedy Red Sea port of pirates and smugglers for centuries, lately rich as the place pilgrims leave Egypt for Jiddah. Travel writers tell pilgrims to keep to trusted groups, for the locals will rob and kill for money. The desert around gives nothing: no crops, and even the water is imported. Most older buildings are woven of reeds shipped from the Nile, a few new ones plastered. On paper its wealth is trade, the pilgrim traffic and the catch; in truth its traders prey at sea, the pilgrims are its prey ashore and few fish are landed (p. 69). The port lies in land the Blemmyae claim, but in Egyptian hands (p. 96).\n\nSome pilgrims think the journey washes out sin and use it to indulge, and at a price most vices can be had here. Pilgrims are fleeced in three legal ways: famous prices for necessities, a fairly light tax of part of their food, and the hire of jilabs. A jilab is a rickety boat of planks sewn with coconut fibre, caulked with palm shavings, rigged with Theban palm-leaf sails and greased with castor or shark oil; it flexes on the reefs, so it is thought safer than a nailed hull. The hire is so high that the owner loses nothing if it sinks. Boats are often lost, crammed with pilgrims in a sea known for wrecks and sharks, and everyone in town who is not poor owns at least two.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -4190,7 +4117,7 @@
         "id": "the_bujat_road",
         "name": "The Bujat Road",
         "kind": "threat",
-        "summary": "Sailing back from Jiddah to 'Aydhab is dangerous: the winds blow ships south into the lands of the Bujat, the Romans' Blemmyae. Some travellers say the Bujat hire out camels and lead people north on purpose short of supplies, and then claim the goods of those who die of hunger and thirst. Their sultan lives in the mountains near Philae, and his family are said to be corrupt nudists who wear a loincloth at most (p. 68).",
+        "summary": "Sailing back from Jiddah to 'Aydhab is dangerous: the winds blow ships south into the lands of the Bujat, the Romans' Blemmyae. Some travellers say the Bujat hire out camels and lead people north on purpose short of supplies, and then claim the goods of those who die of hunger and thirst. Their sultan lives in the mountains near Philae, and his family are said to be corrupt nudists who wear a loincloth at most. The al-Bujat once lived around Philae and worshipped Isis, and their wars made the Romans move Egypt's border north and garrison it (p. 68).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -4360,7 +4287,7 @@
         "kind": "faction",
         "summary": "Bedouin who have come from Arabia and Egypt over the last fifty years and now hold both banks between Abu Hamad and Berber. A dozen or so little principalities, meks, each founded by a prince exiled with Hamad, hold around a hundred human families and twenty or so jinn; each prince has an unGifted sahir of Hamad's line as vizier, who also mediates with the jinn. The jinn mostly belong to the Faerie Realm and are Muslims like their neighbours. Proud descendants of Abbas, uncle of Mohammed, men and women alike scar their faces in an H or T. They herd sheep and goats over thin pasture and sometimes fight over it, but quarrels are forbidden at Abu Hamad, which is neutral ground (p. 81).",
         "detail": "Sketch",
-        "ruler": "'Izz el-Afram Hamad",
+        "ruler": "Hamad",
         "answers_to": null,
         "realm": "",
         "place_id": "nubia",
@@ -4977,7 +4904,7 @@
         "kind": "town",
         "summary": "A tent city at the end of the great bend of the Nile, the only Muslim settlement in Makuria by the book's account of it (though see Samna) and a thorn in the kingdom's side. Its people are Ja'alin Bedouin, who come and go to trade, arrange marriages, hold festivals and honour their dead, and Arabic is its chief tongue. Armies of the domestikoi and the great king have tried to clear it, and it simply reforms; the last attempt was five years ago. Makurian spies see that one set of tents at the heart of the camp never moves, and they have never got inside (p. 81).",
         "detail": "Sketch",
-        "ruler": "'Izz el-Afram Hamad",
+        "ruler": "",
         "answers_to": null,
         "realm": "",
         "place_id": "makuria",
@@ -6812,7 +6739,7 @@
             "kind": "places",
             "target_id": "ceto_s_well",
             "note": "Ceto's old hunting ground",
-            "id": "25799bbb0e4b"
+            "id": "c64c9316b47c"
           }
         ],
         "arms": {},
@@ -8215,7 +8142,7 @@
         "id": "the_ethiopian_church",
         "name": "The Ethiopian Church",
         "kind": "faction",
-        "summary": "Two brothers of Tyre, Edesius and Frumentius, enslaved at the Axumite court, taught Prince Ezana; Frumentius, consecrated by Athanasius, baptized him and became first abuna, Abba Salama, 'Father of Peace', and Kesate Birhan, 'Revealer of Light', and died in 386 (feast August 1). After Chalcedon came the Nine Saints (Abbas Aftse, Alef, Aragawi, Garima, Guba, Liqanos, Pantelewon, Sehma and Yem'ata), monophysites who spread the Rule of Pachomius and the monastic life.\n\nIt is monophysite, like Nubia and the Copts, with Christ's human nature 'dissolved like a drop of honey in the sea'. Believers pray to God and to the Kidusan, angels and saints who carry prayers up and do God's will. What is holy is not the building but the tabot, a consecrated copy of the Ark, usually of Moses' tablets and not a relic, dedicated to a saint, kept where only priests go and paraded on holy days. Its liturgy is in Ge'ez.\n\nOnly three kinds of church are allowed: cave or hypogeum churches, mostly of the bad years between Axum and the Zagwe; rectangular cut stone; and the newer round timber. Stone and timber churches must keep a thick forest around them, which carries prayers to Heaven. The abuna, always an Egyptian named by the Coptic patriarch for life, often arrives knowing neither Amharic nor Ge'ez and feeling exiled. He names bishops, who name priests and some debterah. The emperor pays the sultan of Cairo before a new abuna can be anointed.\n\nThe year starts on August 30 with twelve 30-day months in Ge'ez (Meskerem, Taqamt, Hadar, Tahsas, Tarr, Yekatit, Megabit, Miyazya, Ganbot, Sane, Hamle, Nehase) and Pagume, five or six added days. The four-year cycle is named for John, Mark, Matthew and Luke, Luke's being the leap year, and the count of years runs eight behind Europe until the new year, then seven: January 1, 1220 is Tarr 5, 1212. Feasts are Enkutatash (August 30, Sheba's return), Maskal (17 Meskerem or September 15, the True Cross, with a daisy-decked bonfire), Kulubi Gabriel (Tahsas 18 or December 16), Gena (Tahsas 28 or December 25), Timket (Tarr 10 or January 6, three days with the tsellats paraded on Ketera), Faseka (in 1220, Miyazya 2 or March 27) and Axum Tsion (Hadar 20 or November 18).",
+        "summary": "Two brothers of Tyre, Edesius and Frumentius, enslaved at the Axumite court, taught Prince Ezana; Frumentius, consecrated by Athanasius, baptized him and became first abuna, Abba Salama, 'Father of Peace', and Kesate Birhan, 'Revealer of Light', and died in 386 (feast August 1). After Chalcedon came the Nine Saints (Abbas Aftse, Alef, Aragawi, Garima, Guba, Liqanos, Pantelewon, Sehma and Yem'ata), monophysites who spread the Rule of Pachomius and the monastic life.\n\nIt is monophysite, like Nubia and the Copts, with Christ's human nature 'dissolved like a drop of honey in the sea'. Believers pray to God and to the Kidusan, angels and saints who carry prayers up and do God's will. What is holy is not the building but the tabot, a consecrated copy of the Ark, usually of Moses' tablets and not a relic, dedicated to a saint, kept where only priests go and paraded on holy days. Its liturgy is in Ge'ez.\n\nOnly three kinds of church are allowed: cave or hypogeum churches, mostly of the bad years between Axum and the Zagwe; rectangular cut stone; and the newer round timber. Stone and timber churches must keep a thick forest around them, which carries prayers to Heaven. The abuna, always an Egyptian named by the Coptic patriarch for life, often arrives knowing neither Amharic nor Ge'ez and feeling exiled. He names bishops, who name priests and some debterah. The emperor pays the sultan of Cairo before a new abuna can be anointed.\n\nThe year starts on August 30 with twelve 30-day months in Ge'ez (Meskerem, Taqamt, Hadar, Tahsas, Tarr, Yekatit, Megabit, Miyazya, Ganbot, Sane, Hamle, Nehase) and Pagume, five or six added days. By the Julian calendar they start August 30, September 29, October 29, November 28, December 28, January 27, February 26, March 29, April 28, May 28, June 27, July 27 and August 26, Miyazya and those after it a day earlier in a leap year such as 1220 (p. 108). The four-year cycle is named for John, Mark, Matthew and Luke, Luke's being the leap year, and the count of years runs eight behind Europe until the new year, then seven: January 1, 1220 is Tarr 5, 1212. Feasts are Enkutatash (August 30, Sheba's return), Maskal (17 Meskerem or September 15, the True Cross, with a daisy-decked bonfire), Kulubi Gabriel (Tahsas 18 or December 16), Gena (Tahsas 28 or December 25), Timket (Tarr 10 or January 6, three days with the tsellats paraded on Ketera), Faseka (in 1220, Miyazya 2 or March 27) and Axum Tsion (Hadar 20 or November 18).",
         "detail": "Sketch",
         "ruler": "Abuna Yeshaq",
         "answers_to": null,
@@ -9587,7 +9514,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_imhotep",
             "note": "",
-            "id": "db71003cae34"
+            "id": "62158f180fa3"
           }
         ],
         "agents": [],
@@ -9782,7 +9709,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_marcus_antonius",
             "note": "",
-            "id": "22778778a2d7"
+            "id": "e5bf2ca2e30d"
           }
         ],
         "agents": [],
@@ -10165,7 +10092,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "918699a29168"
+            "id": "8078ddff0ee3"
           }
         ],
         "agents": [],
@@ -10360,7 +10287,7 @@
             "kind": "knows of",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "c0b372ecf316"
+            "id": "a1a120293730"
           }
         ],
         "agents": [],
@@ -11836,8 +11763,8 @@
         },
         "portrait": "",
         "detail": "Sketch",
-        "summary": "Three sisters, hyena skinchangers and witches (Hex 5), friends of Artanyeszame, who live in the antechamber of the Pyramid of Arrakkamani. They lead a dozen magical hyenas, his covenfolk. Bouda are described in chapter 8 (p. 92).",
-        "secrets": "",
+        "summary": "Three sisters, hyena skinchangers and witches (Hex 5), who live in the antechamber of the Pyramid of Arrakkamani and lead a dozen magical hyenas. Bouda are described in chapter 8 (p. 92).",
+        "secrets": "Friends of Artanyeszame; the hyenas serve as his covenfolk.",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -14728,7 +14655,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "a4ca4ee0cbbb"
+            "id": "b3f03df1d03d"
           }
         ],
         "agents": [],
@@ -15117,7 +15044,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "efe40e54fde9"
+            "id": "182c490b8906"
           }
         ],
         "agents": [],
@@ -15623,7 +15550,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "9889fd18907b"
+            "id": "8169649a3f8e"
           }
         ],
         "agents": [],
@@ -15983,7 +15910,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "f8cb146acd2f"
+            "id": "e7a719bfe1cd"
           }
         ],
         "agents": [],
@@ -16480,7 +16407,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "6d0e4f7ff720"
+            "id": "0ef32d96a067"
           }
         ],
         "agents": [],
@@ -16866,7 +16793,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "b705c96e5271"
+            "id": "35ca19272414"
           }
         ],
         "agents": [],
@@ -17048,7 +16975,7 @@
             "attack": 10,
             "defense": 4,
             "damage": 13,
-            "id": "a7bca76b4bc3"
+            "id": "0c32bb5ef46f"
           },
           {
             "name": "Stomp",
@@ -17056,7 +16983,7 @@
             "attack": 9,
             "defense": 0,
             "damage": 11,
-            "id": "8f9ae9789f92"
+            "id": "b2bd31c45e98"
           }
         ],
         "soak": 6,
@@ -17415,7 +17342,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 8,
-            "id": "be9fafbf0fb8"
+            "id": "b146efe28b5a"
           }
         ],
         "soak": 12,
@@ -17481,7 +17408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. Anyone who meets its eyes when it has raised its head falls dead; lifting the head takes a round. PeCo(An) 40 (Base 30, +1 Eye, +1 requisite), a Greater Power (40 levels, -2 Might cost).",
-            "id": "8d12f1523deb"
+            "id": "cb318fc4b699"
           },
           {
             "name": "Noxious Breath",
@@ -17495,7 +17422,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Plants it breathes on turn poisonous to people and animals and streak with black. An eater rolls Stamina stress against 9 or takes a Light Wound and is violently ill for a day; a botch makes it Medium. Medicine, not Chirurgy, treats it. PeHe 15 (Base 3, +2 Voice, +2 Group), a Lesser Power (15 levels, -3 Might cost with 5 mastery points from Improved Powers).",
-            "id": "7acc27d1788d"
+            "id": "3e6354ac0452"
           },
           {
             "name": "Paralyzing Stench",
@@ -17509,7 +17436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. It breathes out a foul choking cloud, and in the next round any human or animal within 3 paces who can smell it loses all bodily movement until it stops huffing or moves off. ReCo(An) 25 (Base 5, +1 Conc, +2 Scent, +1 requisite), a Lesser Power (25 levels, -2 Might cost and +2 Init with 20 mastery points from Improved Powers).",
-            "id": "8d5299fe69ac"
+            "id": "ab780b751975"
           }
         ],
         "vis": [
@@ -17517,7 +17444,7 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its eyes",
-            "id": "85f695704d48"
+            "id": "93a8f9ada09d"
           }
         ],
         "equipment": "",
@@ -17721,7 +17648,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 12,
-            "id": "af07d5c7662c"
+            "id": "d2a1747a92bf"
           }
         ],
         "soak": 12,
@@ -17825,12 +17752,12 @@
         "vampire_limitations": "",
         "vampire_death": "",
         "characteristics": {
-          "intelligence": 0,
+          "intelligence": 1,
           "perception": 1,
           "strength": 12,
           "stamina": 3,
           "presence": 1,
-          "communication": -4,
+          "communication": -5,
           "dexterity": 0,
           "quickness": -3
         },
@@ -18025,7 +17952,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "0144adc013bf"
+            "id": "021847fbf5ae"
           },
           {
             "name": "Stomp",
@@ -18033,7 +17960,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "5b0e2a140eac"
+            "id": "f8c67fd823e9"
           },
           {
             "name": "Trunk (grapple)",
@@ -18041,7 +17968,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "e118b011a650"
+            "id": "ae3d59a46992"
           }
         ],
         "soak": 10,
@@ -18112,7 +18039,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "The African elephant stands up to 12 feet, 22 feet long, up to 14,000 pounds. These are the fiercer male's figures; a female can weigh half as much, with small, useless tusks.",
-        "notes": "Once down an elephant cannot get up, so it sleeps leaning on a tree, and hunters cut part way through its favourite. Dragons and great serpents by the Nile prey on it, yet a pig's squeal terrifies it. It has no wish to mate: the pair must eat of one mandragora root. A cow carries two years and bears one calf, and an elephant may live three hundred years.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.\n\nOnly the herd leader has Leadership, and the Pack/Herd Leader Quality rather than Herd Animal.\n\nFemale: Size +4, -2 Strength, +1 Quickness; no Aggressive, Extra Natural Weapons or Large Horns (Tusks) Qualities and no Ferocity; Brawl 4 (dodge); no Tusk attack; Communication -5.",
+        "notes": "Once down an elephant cannot get up, so it sleeps leaning on a tree, and hunters cut part way through its favourite. Dragons and great serpents by the Nile prey on it, yet a pig's squeal terrifies it. It has no wish to mate: the pair must eat of one mandragora root. A cow carries two years and bears one calf, and an elephant may live three hundred years.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.\n\nOnly the herd leader has Leadership, and the Pack/Herd Leader Quality rather than Herd Animal. The errata (p. 87) give Com -5/-4* and do not explain the asterisk. Reading it as the book's own footnote, 'herd leader only' (p. 20), Com is -5 and herd leaders have -4; this is an inference, not a printed rule.\n\nFemale: Size +4, -2 Strength, +1 Quickness; no Aggressive, Extra Natural Weapons or Large Horns (Tusks) Qualities and no Ferocity; Brawl 4 (dodge); no Tusk attack; Communication -5.",
         "source": "Lands of the Nile p. 20",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -18260,7 +18187,7 @@
             "attack": 8,
             "defense": 9,
             "damage": -4,
-            "id": "090b31d2cf19"
+            "id": "f741d9febd0f"
           }
         ],
         "soak": 3,
@@ -18395,7 +18322,9 @@
           },
           {
             "vf_id": "vf_social_handicap",
-            "params": {},
+            "params": {
+              "detail": "unpleasant odour"
+            },
             "id": "",
             "temporary": false,
             "ends_year": null,
@@ -18499,7 +18428,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "4d1251c9c9aa"
+            "id": "893f3180633f"
           },
           {
             "name": "Dodge",
@@ -18507,7 +18436,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "f3425bb1dc37"
+            "id": "051985b7db2e"
           }
         ],
         "soak": 3,
@@ -18727,7 +18656,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "3dc0b04f199b"
+            "id": "5db785f9cf92"
           },
           {
             "name": "Kick (as hoof)",
@@ -18735,7 +18664,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 2,
-            "id": "cecff8c7e707"
+            "id": "04146a371a7d"
           },
           {
             "name": "Thrown Stone",
@@ -18743,7 +18672,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 6,
-            "id": "d02f4fbe92bb"
+            "id": "d135a8faefd8"
           }
         ],
         "soak": 4,
@@ -18969,7 +18898,7 @@
             "attack": 10,
             "defense": 6,
             "damage": 9,
-            "id": "b9c59e006c33"
+            "id": "e539681457c1"
           },
           {
             "name": "Grapple",
@@ -18977,7 +18906,7 @@
             "attack": 8,
             "defense": 12,
             "damage": null,
-            "id": "72d9705f5ea2"
+            "id": "e235b0a7ebe7"
           }
         ],
         "soak": 3,
@@ -19078,7 +19007,7 @@
           "perception": 0,
           "strength": -4,
           "stamina": 0,
-          "presence": -3,
+          "presence": -2,
           "communication": 0,
           "dexterity": 2,
           "quickness": 1
@@ -19126,7 +19055,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_crafty",
+            "vf_id": "vf_aggressive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19134,7 +19063,15 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_defensive_fighter",
+            "vf_id": "vf_ambush_predator",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_crafty",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19151,6 +19088,14 @@
           },
           {
             "vf_id": "vf_skilled_climber",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_vocal",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19185,18 +19130,18 @@
           {
             "name": "Bite",
             "init": 2,
-            "attack": 9,
-            "defense": 7,
+            "attack": 11,
+            "defense": 9,
             "damage": -3,
-            "id": "dd289ccce1e1"
+            "id": "6e1133c0c186"
           },
           {
             "name": "Evasion",
             "init": 2,
             "attack": null,
-            "defense": 7,
+            "defense": 9,
             "damage": null,
-            "id": "bcd701a22040"
+            "id": "261e626d4b13"
           }
         ],
         "soak": 1,
@@ -19223,43 +19168,43 @@
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "climbing",
             "xp_table": "ability"
           },
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 50,
-            "specialty": "predators",
+            "xp": 30,
+            "specialty": "food",
             "xp_table": "ability"
           },
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 75,
             "specialty": "bite",
             "xp_table": "ability"
           },
           {
-            "name": "Leadership",
+            "name": "Hunt",
             "category": "General",
-            "xp": 75,
-            "specialty": "monkeys",
+            "xp": 50,
+            "specialty": "prey",
             "xp_table": "ability"
           },
           {
             "name": "Stealth",
             "category": "General",
-            "xp": 30,
-            "specialty": "hiding",
+            "xp": 50,
+            "specialty": "stalking prey",
             "xp_table": "ability"
           },
           {
             "name": "Survival",
             "category": "General",
             "xp": 30,
-            "specialty": "foraging",
+            "specialty": "savannah",
             "xp_table": "ability"
           }
         ],
@@ -19267,7 +19212,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A fierce dog-faced monkey, olive brown; the males have a silvery gray cape and mane.",
-        "notes": "The hamadryas or cynocephalus, 'dog head', most aggressive of African monkeys and the chief of the region's many kinds. All monkeys fight as a trained group when threatened; only baboons attack so, and even hunt that way. A monkey always bears twins, hugging the one she loves and leaving the other to ride on her back, but she drops the loved one to escape a predator.\n\nOversensitive is to threats. Pack leaders also have Pack/Herd Leader and Leadership. Natural weapon: Init +1, Atk +3, Def +2, Dam +1.",
+        "notes": "The hamadryas or cynocephalus, 'dog head', most aggressive of African monkeys and the chief of the region's many kinds. All monkeys fight as a trained group when threatened; only baboons attack so, and even hunt that way. A monkey always bears twins, hugging the one she loves and leaving the other to ride on her back, but she drops the loved one to escape a predator.\n\nOversensitive is to threats. Pack leaders also have Pack/Herd Leader. Characteristics, Qualities and Abilities follow the errata (p. 87), whose list drops the book's Leadership 5 (monkeys) for troop leaders. It gives Com 0/+1* and does not explain the asterisk. Reading it as the book's own footnote, 'troop leaders only' (p. 22), Com is 0 and troop leaders have +1; this is an inference, not a printed rule. Natural weapon: Init +1, Atk +3, Def +2, Dam +1.",
         "source": "Lands of the Nile p. 22",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -19297,7 +19242,7 @@
           "perception": 0,
           "strength": -8,
           "stamina": 0,
-          "presence": -4,
+          "presence": -3,
           "communication": 0,
           "dexterity": 2,
           "quickness": 4
@@ -19345,7 +19290,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_crafty",
+            "vf_id": "vf_aggressive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19353,7 +19298,15 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_defensive_fighter",
+            "vf_id": "vf_ambush_predator",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_crafty",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19370,6 +19323,14 @@
           },
           {
             "vf_id": "vf_skilled_climber",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_vocal",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19441,43 +19402,43 @@
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "climbing",
             "xp_table": "ability"
           },
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 50,
-            "specialty": "predators",
+            "xp": 30,
+            "specialty": "food",
             "xp_table": "ability"
           },
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 75,
             "specialty": "bite",
             "xp_table": "ability"
           },
           {
-            "name": "Leadership",
+            "name": "Hunt",
             "category": "General",
-            "xp": 75,
-            "specialty": "monkeys",
+            "xp": 50,
+            "specialty": "prey",
             "xp_table": "ability"
           },
           {
             "name": "Stealth",
             "category": "General",
             "xp": 50,
-            "specialty": "hiding",
+            "specialty": "stalking prey",
             "xp_table": "ability"
           },
           {
             "name": "Survival",
             "category": "General",
             "xp": 30,
-            "specialty": "foraging",
+            "specialty": "savannah",
             "xp_table": "ability"
           }
         ],
@@ -19485,7 +19446,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "The smallest monkey, shaggy and reddish brown with a long tail, white legs and belly, a brighter red cap and black lines from face to ear. Gray, black-faced ones live in forests near the Torrid Zone.",
-        "notes": "An incorrigible thief. Its changes (Size -4, Str -8, Qik +4, Timid taking 1 from Presence, Stealth 4) are the book's.\n\nCombat figures follow the baboon's, adjusted for Size.",
+        "notes": "An incorrigible thief. Its changes (Size -4, Str -8, Qik +4, Timid taking 1 from Presence, Stealth 4) are the book's.\n\nCombat figures follow the baboon's, adjusted for Size. Troop leaders have Com +1, inferred as for the baboon.",
         "source": "Lands of the Nile p. 22",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -19515,7 +19476,7 @@
           "perception": 0,
           "strength": -6,
           "stamina": 0,
-          "presence": -3,
+          "presence": -2,
           "communication": 0,
           "dexterity": 2,
           "quickness": 3
@@ -19563,7 +19524,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_crafty",
+            "vf_id": "vf_aggressive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19571,7 +19532,15 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_defensive_fighter",
+            "vf_id": "vf_ambush_predator",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_crafty",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19588,6 +19557,14 @@
           },
           {
             "vf_id": "vf_skilled_climber",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_vocal",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19643,43 +19620,43 @@
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "climbing",
             "xp_table": "ability"
           },
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 50,
-            "specialty": "predators",
+            "xp": 30,
+            "specialty": "food",
             "xp_table": "ability"
           },
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 75,
             "specialty": "bite",
             "xp_table": "ability"
           },
           {
-            "name": "Leadership",
+            "name": "Hunt",
             "category": "General",
-            "xp": 75,
-            "specialty": "monkeys",
+            "xp": 50,
+            "specialty": "prey",
             "xp_table": "ability"
           },
           {
             "name": "Stealth",
             "category": "General",
-            "xp": 30,
-            "specialty": "hiding",
+            "xp": 50,
+            "specialty": "stalking prey",
             "xp_table": "ability"
           },
           {
             "name": "Survival",
             "category": "General",
             "xp": 30,
-            "specialty": "foraging",
+            "specialty": "savannah",
             "xp_table": "ability"
           }
         ],
@@ -19687,7 +19664,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A black monkey with a long white beard, a long shawl of white fur over its back and a white tuft on its tail.",
-        "notes": "It has no thumb, hence Palsied Hands. Native to the Horn of Africa, and sometimes an Egyptian's pet.\n\nCombat figures follow the baboon's, adjusted for Size.",
+        "notes": "It has no thumb, hence Palsied Hands. Native to the Horn of Africa, and sometimes an Egyptian's pet.\n\nCombat figures follow the baboon's, adjusted for Size. Troop leaders have Com +1, inferred as for the baboon.",
         "source": "Lands of the Nile p. 22",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -19717,7 +19694,7 @@
           "perception": 0,
           "strength": -4,
           "stamina": 0,
-          "presence": -3,
+          "presence": -2,
           "communication": 0,
           "dexterity": 2,
           "quickness": 1
@@ -19765,7 +19742,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_crafty",
+            "vf_id": "vf_aggressive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19773,7 +19750,15 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_defensive_fighter",
+            "vf_id": "vf_ambush_predator",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_crafty",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19790,6 +19775,14 @@
           },
           {
             "vf_id": "vf_skilled_climber",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_vocal",
             "params": {},
             "id": "",
             "temporary": false,
@@ -19845,43 +19838,43 @@
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "climbing",
             "xp_table": "ability"
           },
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 50,
-            "specialty": "predators",
+            "xp": 30,
+            "specialty": "food",
             "xp_table": "ability"
           },
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 75,
             "specialty": "bite",
             "xp_table": "ability"
           },
           {
-            "name": "Leadership",
+            "name": "Hunt",
             "category": "General",
-            "xp": 75,
-            "specialty": "monkeys",
+            "xp": 50,
+            "specialty": "prey",
             "xp_table": "ability"
           },
           {
             "name": "Stealth",
             "category": "General",
-            "xp": 30,
-            "specialty": "hiding",
+            "xp": 50,
+            "specialty": "stalking prey",
             "xp_table": "ability"
           },
           {
             "name": "Survival",
             "category": "General",
             "xp": 30,
-            "specialty": "foraging",
+            "specialty": "savannah",
             "xp_table": "ability"
           }
         ],
@@ -19889,7 +19882,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A docile, shaggy beast with a long tail. The male has a lion-like mane and a bright face: red stripe, blue muzzle and yellow beard.",
-        "notes": "Native to the far south, sometimes found in Ethiopia and beyond.\n\nCombat figures follow the baboon's, adjusted for Size.",
+        "notes": "Native to the far south, sometimes found in Ethiopia and beyond.\n\nCombat figures follow the baboon's, adjusted for Size. Troop leaders have Com +1, inferred as for the baboon.",
         "source": "Lands of the Nile p. 22",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -20031,7 +20024,9 @@
           },
           {
             "vf_id": "vf_social_handicap",
-            "params": {},
+            "params": {
+              "detail": "unpleasant odour"
+            },
             "id": "",
             "temporary": false,
             "ends_year": null,
@@ -20565,7 +20560,7 @@
             "attack": 13,
             "defense": 8,
             "damage": 11,
-            "id": "f42c5e3d450b"
+            "id": "53b856bf56b8"
           },
           {
             "name": "Teeth",
@@ -20573,7 +20568,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 8,
-            "id": "535649401397"
+            "id": "7a8f691197de"
           }
         ],
         "soak": 12,
@@ -20660,7 +20655,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps the animals round it calm and quiet while it kills, up to 50 cows or the like. ReAn 45 (Base 10, +2 Voice, +2 Sun, +2 Group, +1 Size), a Greater Power (45 levels, -3 Might cost, +3 Init with Improved Powers).",
-            "id": "91d9f1c113a1"
+            "id": "8dfe04591046"
           }
         ],
         "vis": [],
@@ -20696,7 +20691,7 @@
           "perception": 0,
           "strength": -4,
           "stamina": 0,
-          "presence": -3,
+          "presence": -2,
           "communication": 0,
           "dexterity": 2,
           "quickness": 1
@@ -20744,7 +20739,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_crafty",
+            "vf_id": "vf_aggressive",
             "params": {},
             "id": "",
             "temporary": false,
@@ -20752,7 +20747,15 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_defensive_fighter",
+            "vf_id": "vf_ambush_predator",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_crafty",
             "params": {},
             "id": "",
             "temporary": false,
@@ -20769,6 +20772,14 @@
           },
           {
             "vf_id": "vf_skilled_climber",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_vocal",
             "params": {},
             "id": "",
             "temporary": false,
@@ -20840,43 +20851,43 @@
           {
             "name": "Athletics",
             "category": "General",
-            "xp": 75,
+            "xp": 30,
             "specialty": "climbing",
             "xp_table": "ability"
           },
           {
             "name": "Awareness",
             "category": "General",
-            "xp": 50,
-            "specialty": "predators",
+            "xp": 30,
+            "specialty": "food",
             "xp_table": "ability"
           },
           {
             "name": "Brawl",
             "category": "General",
-            "xp": 30,
+            "xp": 75,
             "specialty": "bite",
             "xp_table": "ability"
           },
           {
-            "name": "Leadership",
+            "name": "Hunt",
             "category": "General",
-            "xp": 75,
-            "specialty": "monkeys",
+            "xp": 50,
+            "specialty": "prey",
             "xp_table": "ability"
           },
           {
             "name": "Stealth",
             "category": "General",
-            "xp": 30,
-            "specialty": "hiding",
+            "xp": 50,
+            "specialty": "stalking prey",
             "xp_table": "ability"
           },
           {
             "name": "Survival",
             "category": "General",
             "xp": 30,
-            "specialty": "foraging",
+            "specialty": "savannah",
             "xp_table": "ability"
           }
         ],
@@ -21033,7 +21044,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 12,
-            "id": "e3350b6fb41e"
+            "id": "b0ade74c22ba"
           },
           {
             "name": "Bite",
@@ -21041,7 +21052,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 8,
-            "id": "74307e28484b"
+            "id": "e25ce8b5b838"
           }
         ],
         "soak": 6,
@@ -21107,7 +21118,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its war cry, like a wolf's howl, a hyena's mocking laugh or a setbeast's chitter by various reports. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "5744c2bac48d"
+            "id": "d93c59db3554"
           },
           {
             "name": "Damaging Effect",
@@ -21121,7 +21132,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes all its weapons exceptionally sharp for two minutes: Damage +5. (Base 5, +1 Part, +1 Diameter; base below the Hermetic level, as Realms of Power: Faerie p. 58.)",
-            "id": "3ed66a2feeab"
+            "id": "411848855528"
           },
           {
             "name": "Decapitate",
@@ -21135,7 +21146,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cleanly removes the head of a victim struck in combat. (Base 40 instant death, +1 Touch, 5 levels on cost.)",
-            "id": "43013f67f5e9"
+            "id": "b244ba5c67e6"
           }
         ],
         "vis": [
@@ -21143,12 +21154,12 @@
             "pawns": 5,
             "art": "",
             "where": "in the skull of a dog or hyena, found when the body crumbles at death",
-            "id": "5e6a8d0d09c2"
+            "id": "b8a5f112d709"
           }
         ],
         "equipment": "Knives of obsidian or alchemically toughened bronze; light Egyptian armour (boots, pectoral, greaves) or clothes, jewellery.",
         "appearance": "A medieval reading of seals of Anubis: a fit warrior with a savage jackal's head, among the corpses of his beheaded enemies.",
-        "notes": "The spirits that frighten most people off tomb robbing. They guard a whole graveyard, not one tomb, and grow more active at night. Powerful magic in the graveyard may draw them to the tomb door, to ambush characters coming out. A pack fights as a trained group.\n\nSta is printed as Tireless, and Com as n/a; both are left at 0 here. Combat damage excludes the +5 of Damaging Effect. The knives use shortsword statistics for smaller users but remain Brawling weapons in these huge hands. Its Abilities are the book's Pretenses (Realms of Power: Faerie).\n\nWound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitated (22-28), Dead (29+).\n\nGreater Powers are Chilling Laugh or Howl, Damaging Effect, and Decapitate.",
+        "notes": "The spirits that frighten most people off tomb robbing. They guard a whole graveyard, not one tomb, and grow more active at night. Powerful magic in the graveyard may draw them to the tomb door, to ambush characters coming out. A pack fights as a trained group.\n\nSta is printed as Tireless, and Com as n/a; both are left at 0 here. Combat damage excludes the +5 of Damaging Effect. The knives use shortsword statistics for smaller users but remain Brawling weapons in these huge hands. Its Abilities are the book's Pretenses (Realms of Power: Faerie).\n\nWound Penalties: -1 (1-7), -3 (8-14), -5 (15-21), Incapacitated (22-28), Dead (29+).\n\nGreater Powers are Chilling Laugh or Howl, Damaging Effect, and Decapitate. Its Feast of the Dead recovers 2 Might when it inflicts a Heavy Wound or greater.",
         "source": "Lands of the Nile p. 27",
         "detail": "Full",
         "place_id": "the_pagan_monuments_of_egypt_birbah",
@@ -21303,7 +21314,7 @@
             "attack": 17,
             "defense": 4,
             "damage": 27,
-            "id": "1ff8b12099b5"
+            "id": "b96825338108"
           },
           {
             "name": "Bite",
@@ -21311,7 +21322,7 @@
             "attack": 14,
             "defense": 1,
             "damage": 24,
-            "id": "8adc540be050"
+            "id": "d29976fb7416"
           }
         ],
         "soak": 8,
@@ -21377,7 +21388,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its hunting roar, like a tremendous lion's, deep enough to rattle the bones. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "4b383e9b929c"
+            "id": "7cf6993af709"
           },
           {
             "name": "Spirit Away",
@@ -21391,7 +21402,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable Might, Init n/a. See Realms of Power: Faerie ch. 2: sweeps mortals into Faerie, more easily as they transgress sacred or moral bounds. Its lands there look much like Giza at dawn, where it hunts and eats its victims. It has +10 Might in Faerie.",
-            "id": "2f224ea640c5"
+            "id": "d8bcded4f6d8"
           },
           {
             "name": "Extend Glamour",
@@ -21405,7 +21416,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. A God of Dawn: in Faerie it may make it dawn at will, gaining 10 Might, and uses cascading dawns to strip away effects that end at dawn: magi must let Parma Magica fail or spend each round on the ritual. It also tells it where its quarry is. It must penetrate, but few can resist its Might.",
-            "id": "36af66249b05"
+            "id": "c792cc030284"
           }
         ],
         "vis": [
@@ -21413,7 +21424,7 @@
             "pawns": 13,
             "art": "",
             "where": "the skull of a pharaoh built into it",
-            "id": "f62a85b2cdd4"
+            "id": "789a98d45e02"
           }
         ],
         "equipment": "",
@@ -21421,7 +21432,7 @@
         "notes": "Each great necropolis has a protective spirit of great power that rarely acts; magi casting in the graveyard might wake one. This is the mightiest. It is not designed as a player character. Spirit Away's and Extend Glamour's costs are recorded as 0 here; see each power.\n\nCombat Attack and Defense exclude the Ferocity bonus. Time of Power adds 10 Might while the Sun touches the horizon.\n\nWound Penalties, adjusted for stone and Size: -1 (1-21), -3 (22-32), -5 (33-43), Incapacitated (44-54), Dead (55+). Its Abilities are Pretenses.",
         "source": "Lands of the Nile p. 28",
         "detail": "Full",
-        "place_id": "the_necropolis_of_gizeh",
+        "place_id": "the_gizeh_necropolis",
         "place_level": 0,
         "links": [],
         "secrets": ""
@@ -21568,7 +21579,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 3,
-            "id": "cf87cd5eabf1"
+            "id": "9f51a01a491e"
           },
           {
             "name": "Agricultural or craft tool",
@@ -21576,7 +21587,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 6,
-            "id": "fbdfc2024827"
+            "id": "5a8a4313d8aa"
           }
         ],
         "soak": 1,
@@ -21642,7 +21653,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stops mothers making milk for their babies. (ReCo 3, the symptoms of a minor illness, Art & Academe p. 57, +1 Touch, +2 Sun; Realms of Power: Magic p. 102.)",
-            "id": "c376ddb9dc0e"
+            "id": "25aca995d7c3"
           },
           {
             "name": "Dream Manipulation",
@@ -21656,7 +21667,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enters a victim's dreams, and though it cannot change them at once, can darken them and add frights. (After the weaker Envisioning, Realms of Power: The Infernal p. 32.)",
-            "id": "35f1d2cc10f2"
+            "id": "7428a897d2fd"
           },
           {
             "name": "Ghost Touch",
@@ -21670,7 +21681,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost, Init Qik - Might spent. Moves objects not held or fastened: 5 pounds for 1 point, doubled per extra point. Hurled, it uses Thrown Weapon, damage +5 per point. With a Martial Ability it may fight through the power, on its own Abilities and Characteristics; physical attacks must Penetrate. It lasts until the object is dropped. (Focus power, ReTe25, Realms of Power: Magic p. 102.)",
-            "id": "fd3768f26c5a"
+            "id": "2cfe4c1f1acc"
           },
           {
             "name": "Lesser Eidolon",
@@ -21684,7 +21695,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An immaterial illusory form to deal with mortals, lasting until no longer needed: a see-through image of the person at their best, so a man has a wise old face and a twenty-year-old's belly. (CrIm15: Base 2, +1 Touch, +2 Conc, +2 move at command, 1 intricacy; redesigned from Realms of Power: Magic p. 102.)",
-            "id": "e64af7204290"
+            "id": "0eeabf5466e6"
           },
           {
             "name": "Possession",
@@ -21698,7 +21709,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 or more points. If it penetrates, the mut directly controls the victim. A supernatural power of the host, spells included, costs 1 Might per magnitude. An act against the host's nature means beating her Personality Trait roll with a stress die + Might spent; the storyguide may modify the trait (Entrancement, ArM5 p. 65). Both costs apply if both are true. Under direct control she has the mut's Magic Resistance but is stopped by wards that would stop it; acting freely she has neither. (Realms of Power: Faerie p. 71.)",
-            "id": "a1767d03e01b"
+            "id": "e66d62a3d095"
           }
         ],
         "vis": [
@@ -21706,7 +21717,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "a prized possession",
-            "id": "7e667db6e0f1"
+            "id": "a1b850a4be72"
           }
         ],
         "equipment": "Clothes and grave goods. The ghost's weapon reappears in its hand when needed. Some soldier ghosts wear armour.",
@@ -21975,7 +21986,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 5,
-            "id": "a66249315255"
+            "id": "61db617ed284"
           }
         ],
         "soak": 0,
@@ -22027,7 +22038,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a statue of itself as a body. (ReTe 25; Personal Power, 25 levels, -3 Might cost, +2 Init from Improved Powers.)",
-            "id": "368c9f46ca4e"
+            "id": "6b0c367b35ae"
           },
           {
             "name": "Thief after death",
@@ -22041,7 +22052,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries material objects in his hands. (Base 3, +1 Touch, +1 Conc; Lesser Power, 10 levels, -1 Might cost.)",
-            "id": "23f339f8e6b3"
+            "id": "6bc934ee6592"
           },
           {
             "name": "Strangler",
@@ -22055,7 +22066,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Chokes a victim with his hands, costing a Fatigue level. (PeCo 15: Base 10, +1 Touch; Lesser Power, 15 levels, -3 Might cost, +1 Init.)",
-            "id": "ab3c65d0d460"
+            "id": "ad8321e825dd"
           }
         ],
         "vis": [
@@ -22063,7 +22074,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "hand",
-            "id": "88a128a648e8"
+            "id": "c7fa6887f9ad"
           }
         ],
         "equipment": "",
@@ -22274,7 +22285,7 @@
             "attack": 17,
             "defense": 14,
             "damage": 12,
-            "id": "a70deb40a47c"
+            "id": "c17167330f33"
           },
           {
             "name": "Kick",
@@ -22282,7 +22293,7 @@
             "attack": 8,
             "defense": 5,
             "damage": 11,
-            "id": "e68c42d6e148"
+            "id": "d9346043d59c"
           }
         ],
         "soak": 21,
@@ -22319,7 +22330,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReTe30; Personal Powers x2 (30 levels, -3 Might cost, +1 Init).",
-            "id": "aa59a9ff9548"
+            "id": "b73f654bb85e"
           }
         ],
         "vis": [
@@ -22327,7 +22338,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "axe",
-            "id": "602347e0ef9f"
+            "id": "1cd4fcf0bef1"
           }
         ],
         "equipment": "Axe; breastplate (Egyptians did not use full scale armour).",
@@ -22873,7 +22884,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 16,
-            "id": "bc28d76306d5"
+            "id": "99118ed7c796"
           },
           {
             "name": "Bow",
@@ -22881,7 +22892,7 @@
             "attack": 8,
             "defense": 4,
             "damage": 8,
-            "id": "92057c4ef505"
+            "id": "33e2aeecafbb"
           }
         ],
         "soak": 11,
@@ -23115,7 +23126,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Creates a swarm of 60,000 mice under his complete control. (Base 15, +2 Sun, +2 Group, +1 control as a Rego requisite, +2 mice can turn immaterial to pass barriers, as Muto Mentem requisites.)",
-            "id": "e335c9c58a43"
+            "id": "6efdd06e1ae9"
           },
           {
             "name": "Immateriality",
@@ -23129,7 +23140,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Immaterial until sunrise or nightfall. (Base 30, +2 Sun.)",
-            "id": "134a7e3fd5ef"
+            "id": "848f1de23085"
           },
           {
             "name": "Invisibility",
@@ -23143,7 +23154,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility, ArM5 p. 146. (Base 4, +2 Sun, +1 moving image, 5 levels spent to reduce cost.)",
-            "id": "0da8e2f61233"
+            "id": "ada5a5b916e3"
           },
           {
             "name": "Lord of the Black",
@@ -23157,7 +23168,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Black (fresh water, rain, fertile earth and the like), at 1 Might per Hermetic magnitude.",
-            "id": "b1c1201d8aec"
+            "id": "2e01ddd07e18"
           },
           {
             "name": "Lord of the Red",
@@ -23171,7 +23182,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Red (barren Terram, parching winds and the like), at 1 Might per Hermetic magnitude.",
-            "id": "03cfaab8d36f"
+            "id": "90faeab80c8c"
           },
           {
             "name": "Silent Motion",
@@ -23185,7 +23196,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: he moves without sound. (Base 3, +2 Sun, +1 constant, 5 levels spent to reduce cost.)",
-            "id": "5ac17bdd524f"
+            "id": "8ed81e637e99"
           }
         ],
         "vis": [
@@ -23193,7 +23204,7 @@
             "pawns": 10,
             "art": "Rego",
             "where": "a small mouse statuette found implausibly in the brain",
-            "id": "7277a0ed5928"
+            "id": "67f5c3cbe02a"
           }
         ],
         "equipment": "Palace in the Field of Reeds, mace, robes, vast amounts of money. Sometimes a full suit of heavy armour.",
@@ -23361,7 +23372,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 13,
-            "id": "f690e8bf43ee"
+            "id": "0876cb264e77"
           }
         ],
         "soak": 10,
@@ -23708,7 +23719,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 6,
-            "id": "ffead1d48784"
+            "id": "f707b90f760e"
           },
           {
             "name": "Dodge",
@@ -23716,7 +23727,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "7ecd608f6cf4"
+            "id": "769c19ffa860"
           }
         ],
         "soak": 3,
@@ -23817,7 +23828,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs an emotion in all who hear it, commonly fear, lust or wrath, or deepens one already felt. A stress roll on a fitting Personality Trait against Ease Factor 9 overcomes it. CrMe 30 (Base 4, +2 Voice, +2 Sun, +2 Group); Lesser Power x2 (50 levels, -4 Might points).",
-            "id": "41d3c5aec2bb"
+            "id": "765f2248411b"
           },
           {
             "name": "Skin of Man or Beast",
@@ -23831,7 +23842,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the form of a man or woman of the area. MuAn 20 (Base 10, +2 Sun); Personal Power (20 levels, -1 Might point).",
-            "id": "b68a5b49a9c7"
+            "id": "3847d38cc7a5"
           }
         ],
         "vis": [
@@ -23839,7 +23850,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its tongue",
-            "id": "a2ad6c3f1213"
+            "id": "27bc2e74313c"
           }
         ],
         "equipment": "",
@@ -24151,7 +24162,7 @@
             "attack": 11,
             "defense": 10,
             "damage": 24,
-            "id": "20d11e9ed4bd"
+            "id": "0bfd30da214d"
           },
           {
             "name": "Fangs",
@@ -24159,7 +24170,7 @@
             "attack": 14,
             "defense": -5,
             "damage": 22,
-            "id": "10dc927f3306"
+            "id": "d2b271e71c45"
           }
         ],
         "soak": 16,
@@ -24246,7 +24257,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: +5 Damage to anyone within one pace. MuAu 25 (Base 5, +1 Part, +2 Sun, +1 Constant); Lesser Power (25 levels). No Initiative is printed.",
-            "id": "1ea3f00b1742"
+            "id": "240cec35daa0"
           },
           {
             "name": "Venomous Bite (non-magical)",
@@ -24260,7 +24271,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Compare its attack advantage to the target's armor Protection, not Soak. If it exceeds that, add adder venom (ArM5 p. 180), wound or no wound.",
-            "id": "2cee1c196d09"
+            "id": "3931e5fbe24a"
           },
           {
             "name": "Flight",
@@ -24274,7 +24285,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Flies, with Athletics for hard maneuvers, but cannot fight at full speed, nor fly heavily encumbered or with a passenger of its Size or more unless another faerie shares the load. ReAn 40 (Base 15, +2 Sun, +3 Size); Personal Power x2 (40 levels, -2 Might Cost).",
-            "id": "d1ee470ab7b8"
+            "id": "3f983bb86477"
           },
           {
             "name": "Fiery Breath",
@@ -24288,7 +24299,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A gout of flame: +20 damage to all in a 60-degree arc 50 paces long. CrIg 40 (Base 15, +2 Voice, +2 Size, +1 Unnatural Shape); Lesser Power x2 (40 levels, -2 Might Points).",
-            "id": "cef3ee653d97"
+            "id": "768c70a9bfdd"
           },
           {
             "name": "Lantern Gaze",
@@ -24302,7 +24313,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blinding light shines from its eyes to light its way. CrIg 25 (Base 5, +2 Sun, +2 Size); Lesser Power (25 levels).",
-            "id": "1a6d4ca7ad7b"
+            "id": "be0b22314aeb"
           }
         ],
         "vis": [
@@ -24310,7 +24321,7 @@
             "pawns": 9,
             "art": "Aquam",
             "where": "in the scales over its eyes",
-            "id": "6dc1f3857a95"
+            "id": "5cbdde79e285"
           }
         ],
         "equipment": "",
@@ -24627,7 +24638,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "0144adc013bf"
+            "id": "021847fbf5ae"
           },
           {
             "name": "Stomp",
@@ -24635,7 +24646,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "5b0e2a140eac"
+            "id": "f8c67fd823e9"
           },
           {
             "name": "Trunk (grapple)",
@@ -24643,7 +24654,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "e118b011a650"
+            "id": "ae3d59a46992"
           }
         ],
         "soak": 10,
@@ -24814,7 +24825,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He cannot be seen while he stands still, and shows himself whenever he moves. PeIm 25 (Base 4, +2 Sun, +2 Size, +1 constant effect), a Greater Power (25 levels, -3 Might cost, +2 Init).",
-            "id": "f2ed8baf1fdd"
+            "id": "0a3761722660"
           }
         ],
         "vis": [],

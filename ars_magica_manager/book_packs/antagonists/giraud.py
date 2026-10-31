@@ -301,7 +301,7 @@ def _household(b: Builder, baron: Character) -> dict[str, Character]:
         traits={"Brave": 3, "Loyal to Baron": 2, "Pragmatic": 1},
         summary=paragraphs(
             "The baron's younger brother and one of his vassal knights, "
-            "cut from the same cloth: the stronger man, but the slower. He "
+            "much his brother's kind: the stronger man, but the slower. He "
             "cannot read or write and has less intrigue and courtly grace, "
             "yet he is less ruled by his passions. He would rule as steward "
             "if the baron died before his heir came of age.",

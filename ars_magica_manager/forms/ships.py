@@ -19,6 +19,7 @@ from __future__ import annotations
 import random
 from collections.abc import Callable
 from dataclasses import fields as dataclass_fields
+from dataclasses import replace
 from typing import Any
 
 from .. import diaries, storage
@@ -66,7 +67,8 @@ def _float(values: dict[str, Any], key: str) -> float:
 def ship_from(values: dict[str, Any], base: Ship | None = None) -> Ship:
     """The ship a form's values describe (its other figures from `base`)."""
     start = base or Ship()
-    return Ship(
+    return replace(
+        start,
         ship_type=values.get("ship_type") or "",
         kind_name=values.get("kind_name") or "",
         size=_int(values, "size", start.size),
@@ -77,7 +79,6 @@ def ship_from(values: dict[str, Any], base: Ship | None = None) -> Ship:
         quality=values.get("quality") or start.quality,
         excellent_bonus=_int(values, "excellent_bonus", start.excellent_bonus),
         damage_lost=_int(values, "damage_lost"),
-        repaired=start.repaired,
         magnitudes=_int(values, "magnitudes"),
         captain_id=values.get("captain_id") or None,
         ballistae=_int(values, "ballistae"),
@@ -85,8 +86,6 @@ def ship_from(values: dict[str, Any], base: Ship | None = None) -> Ship:
         fighters_tons=_float(values, "fighters_tons"),
         close_to_home=bool(values.get("close_to_home")),
         home_port=values.get("home_port") or "",
-        stops=start.stops,
-        aboard=start.aboard,
     )
 
 

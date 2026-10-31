@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from ...models import Saga
 from .. import BookPack, register
-from ..builder import Builder
+from ..builder import Builder, mark_unconverted
 
 NAME = "Land of Fire and Ice"
 SOURCE_BOOK = "LFI"
@@ -57,6 +57,7 @@ def assemble(supplements: tuple[str, ...] = ()) -> Builder:
     b = Builder(NAME, source=SOURCE_BOOK, known="In the region")
     for name in PARTS:
         importlib.import_module(f"{__name__}.{name}").build(b)
+    mark_unconverted(b.saga)
     return b
 
 

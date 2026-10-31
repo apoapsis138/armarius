@@ -350,9 +350,9 @@ def _household(b: Builder) -> tuple[Character, Character, Character]:
     )
     b.stats(claude, _claude_block())
     claude.description.physical_description = (
-        "Of middling height and slight build, with a shaved head and a long, "
-        "dour face. His right arm ends at the elbow, the sleeve of his habit "
-        "folded and pinned over what remains."
+        "A slight man, neither tall nor short, bald by the razor, with a "
+        "long and sober face. His right arm stops at the elbow, and he "
+        "keeps the empty sleeve of his habit pinned up."
     )
     b.link(geoffroi, "characters", ysabeau, "his wife")
     b.link(geoffroi, "characters", claude, "his steward")
