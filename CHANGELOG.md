@@ -115,6 +115,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.62.1 — 2026-10-31
+
+### Pagina
+
+- Advance Season no longer offers to move a covenant to the place it is already at: it offers the next leg of the route that is a real move.
+- Whereabouts shows the aura a covenant really has at each stop, with its Boons, its own travelling aura and its regio counted.
+- A ship apart from the fleet says so on Possessions, with where she is and who is aboard.
+
 ## 3.62.0 — 2026-10-31
 
 ### Peregrinatio

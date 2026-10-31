@@ -14,6 +14,7 @@ from ars_magica_manager import (
     places,
     transfer,
 )
+from ars_magica_manager import ships as ship_text
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import advance
 from ars_magica_manager.forms import covenant as covenant_forms
@@ -675,3 +676,100 @@ def test_favonius_sails_in_travelling_places():
         n.name == "The harbour of Andros" and sites.waters_of(n) == mobile.PORT
         for n in saga.neighbours
     )
+
+
+def _asked(saga: Saga):
+    return mobile_covenants.Asked(saga.covenants[0])
+
+
+def test_where_next_never_offers_the_place_it_is_at():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    covenant.route = [RouteStop("isle"), RouteStop("cove")]
+    answers = mobile_covenants._answers(saga, _asked(saga))
+    assert answers[0] == ("Move on to Cove", mobile_covenants.MOVE_ON)
+    assert "Isle" not in answers[0][0]
+
+
+def test_moving_on_from_the_first_leg_goes_to_the_second_and_steps_past_both():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    covenant.route = [
+        RouteStop("isle"),
+        RouteStop("cove"),
+        RouteStop("sea"),
+    ]
+    mobile_covenants._log_covenant(saga, _asked(saga), mobile_covenants.MOVE_ON, None)
+    assert covenant.stops[-1].place_id == "cove" and covenant.route_at == 2
+
+
+def test_a_route_of_only_the_place_it_is_at_offers_no_move():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    covenant.route, covenant.circuit = [RouteStop("isle")], True
+    values = [v for _, v in mobile_covenants._answers(saga, _asked(saga))]
+    assert mobile_covenants.MOVE_ON not in values and mobile_covenants.STAY in values
+
+
+def test_the_first_leg_is_stayed_at_for_its_planned_seasons():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    covenant.route = [RouteStop("isle", seasons=2), RouteStop("cove")]
+    assert not mobile_covenants._due_to_move(saga, covenant)
+    covenant.stops.insert(0, CovenantStop(1219, "Winter", "isle"))
+    assert mobile_covenants._due_to_move(saga, covenant)
+
+
+def test_the_route_marks_the_next_leg_that_is_a_move():
+    saga = _saga()
+    covenant = saga.covenants[0]
+    covenant.stops.append(CovenantStop(1220, "Spring", "isle"))
+    covenant.route = [RouteStop("isle"), RouteStop("cove")]
+    assert "[b]Cove[/]" in mobile_covenants.route_text(saga, covenant)
+
+
+def test_whereabouts_shows_the_aura_in_effect_with_boons_and_a_travelling_place():
+    saga = _saga(place_id="deck")
+    covenant = saga.covenants[0]
+    saga.neighbours.append(_place("deck", 2, travels_with="c"))
+    covenant.stops += [
+        CovenantStop(1219, "Winter", "cove"),
+        CovenantStop(1220, "Spring", "isle"),
+    ]
+    places.sync(saga)
+    auras = [row[2] for row in mobile_covenants.grid(saga, covenant).rows]
+    assert auras == ["Magic 3", "Magic 2"]
+    assert realms.aura_of(covenant) == (3, "Magic")
+    assert mobile_covenants.where_now(saga, covenant).endswith("Magic 3")
+
+
+def test_whereabouts_keeps_a_covenants_own_regio_aura_at_every_stop():
+    saga = _saga(place_id="deck", place_level=1)
+    covenant = saga.covenants[0]
+    saga.neighbours.append(
+        _place("deck", 2, travels_with="c", levels=[{"aura": 3, "realm": "Magic"}])
+    )
+    covenant.stops.append(CovenantStop(1220, "Spring", "port"))
+    places.sync(saga)
+    assert mobile_covenants.grid(saga, covenant).rows[0][2] == "Magic 3"
+
+
+def test_a_ship_apart_says_so_on_her_card_and_row():
+    saga = _saga()
+    covenant = _with_ships(saga)
+    record = covenant.possessions[0]
+    assert ship_text.card(record, saga).apart == ""
+    assert ship_text.APART not in ship_text.row_label(record, saga)
+    record.ship.stops.append(CovenantStop(1220, "Spring", "isle"))
+    saga.characters.append(
+        Character(id="m", name="Cassius", type="magus", covenant_id="c")
+    )
+    record.ship.aboard.append("m")
+    assert ship_text.card(record, saga).apart == (
+        "Apart from the fleet: at Isle, Magic 3; aboard: Cassius"
+    )
+    assert ship_text.APART in ship_text.row_label(record, saga)

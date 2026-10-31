@@ -405,6 +405,21 @@ def aura_here(saga: Saga, found: Neighbour, level: int = 0) -> tuple[int, str]:
     return aura_at(*holding(saga, (found, level)))
 
 
+def stop_aura(saga: Saga, covenant: Covenant, stop: CovenantStop) -> tuple[int, str]:
+    """The aura that holds sway over `covenant` at `stop`, whenever that
+    is: the Place's, or its travelling Place's by holding()'s rule; (0, "")
+    for a Place gone."""
+    found = place(saga, stop.place_id)
+    if found is None:
+        return 0, ""
+    theirs = aura_at(found, stop.level)
+    own = place(saga, covenant.place_id)
+    if own is None or own.details.get(TRAVELS_WITH) != covenant.id:
+        return theirs
+    mine = aura_at(own, covenant.place_level)
+    return theirs if not covenant.place_level and theirs[0] > mine[0] else mine
+
+
 def boundary_botch_dice(saga: Saga, found: tuple[Neighbour, int] | None) -> int:
     """The extra botch dice a Magic Realm boundary adds, at a place and
     level, to every roll the Magic aura helps: its level, while the aura

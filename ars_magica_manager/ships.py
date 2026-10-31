@@ -73,6 +73,7 @@ def row_label(record: Possession, saga: Saga | None) -> str:
     ship = rules.ship_of(record)
     damage = damage_words(ship)
     padding = " " * max(0, _DAMAGE - len(damage))
+    apart = f"  ·  {APART}" if apart_words(saga, record) else ""
     return (
         f"{escape(fit(record.name or '(unnamed)', _NAME))}"
         f"{escape(fit(kind_words(ship), _KIND))}"
@@ -80,7 +81,7 @@ def row_label(record: Possession, saga: Saga | None) -> str:
         f"{fit(str(rules.crew(ship)), _CREW)}"
         f"{fit(ship.quality, _QUALITY)}"
         f"{damage_markup(ship)}{padding}"
-        f"{escape(captain_name(saga, ship))}"
+        f"{escape(captain_name(saga, ship))}{apart}"
     ).rstrip()
 
 
@@ -155,23 +156,31 @@ def detail_lines(record: Possession, saga: Saga | None) -> list[str]:
     lab = saga.laboratory(record.lab_id) if saga and record.lab_id else None
     if lab is not None:
         lines.append(_line("Laboratory aboard", escape(lab.name)))
-    if saga is not None and ship.stops:
-        lines.append(_apart_line(saga, record))
+    apart = apart_words(saga, record)
+    if apart:
+        lines.append(_line(APART, escape(apart)))
     return lines
 
 
-def _apart_line(saga: Saga, record: Possession) -> str:
-    """Where she is while apart from the fleet."""
+#: The label saying a ship has left the fleet.
+APART = "Apart from the fleet"
+
+
+def apart_words(saga: Saga | None, record: Possession) -> str:
+    """Where she is while apart from the fleet, and who is aboard (plain
+    words); "" for a ship sailing with it."""
     ship = rules.ship_of(record)
+    if saga is None or not ship.stops:
+        return ""
     where = sites.ship_stop(saga, record)
     words = "where she sails"
     if where is not None:
         aura, realm = sites.aura_here(saga, *where)
-        words = f"at {escape(where[0].name)}, {realm} {aura}"
+        words = f"at {where[0].name}, {realm} {aura}"
     magi = [c.name for c in saga.characters if c.id in ship.aboard]
     if magi:
-        words += f"; aboard: {escape(', '.join(magi))}"
-    return _line("Apart from the fleet", words)
+        words += f"; aboard: {', '.join(magi)}"
+    return words
 
 
 def _taken_from_cargo(ship: Ship) -> str:
@@ -245,10 +254,13 @@ class Card:
     tone: str  # a palette key
     body: str
     note: str
+    #: "Apart from the fleet: ...", or "" for a ship sailing with it.
+    apart: str = ""
 
 
 def card(record: Possession, saga: Saga | None) -> Card:
     ship = rules.ship_of(record)
+    apart = apart_words(saga, record)
     return Card(
         title=record.name or "(unnamed)",
         meta=f"{ship.kind_name or 'Ship'}, size {ship.size:+d}, {ship.tons} tons",
@@ -259,6 +271,7 @@ def card(record: Possession, saga: Saga | None) -> Card:
             f"{captain_name(saga, ship)}."
         ),
         note=record.description.strip(),
+        apart=f"{APART}: {apart}" if apart else "",
     )
 
 
@@ -278,7 +291,8 @@ def table_cells(record: Possession, saga: Saga | None) -> list[str]:
         ship.quality,
         damage_words(ship),
         captain_name(saga, ship),
+        apart_words(saga, record),
     ]
 
 
-TABLE_TITLES = ("Kind", "Cargo", "Crew", "Quality", "Damage", "Captain")
+TABLE_TITLES = ("Kind", "Cargo", "Crew", "Quality", "Damage", "Captain", "Apart")

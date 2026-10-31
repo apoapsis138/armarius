@@ -39,7 +39,7 @@ from .models import (
     season_order,
 )
 from .models.ships import Ship
-from .rules import mobile, sites
+from .rules import mobile, realms, sites
 from .rules import ships as ship_rules
 from .sections import WHEREABOUTS_SECTION
 
@@ -105,14 +105,14 @@ def where_now(saga: Saga, covenant: Covenant) -> str:
     aura, realm = sites.aura_here(saga, *where)
     place_id, level = _at(saga, covenant)
     named = places.where_text(saga, place_id, level)
-    return f"{named or where[0].name}, {realm} {aura}"
+    return f"{named or where[0].name}, {realm} {realms.with_boons(covenant, aura)}"
 
 
 def route_text(saga: Saga, covenant: Covenant) -> str:
     """The route in words, the next leg marked; "" for none."""
     if not covenant.route:
         return ""
-    upcoming = mobile.next_leg(covenant)
+    upcoming = mobile.next_leg_from(covenant, *_at(saga, covenant))
     legs = []
     for leg in covenant.route:
         words = places.where_text(saga, leg.place_id, leg.level)
@@ -164,7 +164,7 @@ def grid(saga: Saga, covenant: Covenant) -> Grid:
     rows: list[list[str]] = []
     for stop in _newest_first(covenant):
         found = sites.place(saga, stop.place_id)
-        aura = sites.aura_at(found, stop.level) if found is not None else (0, "")
+        aura = realms.aura_at_stop(saga, covenant, stop)
         state = (
             "Here now"
             if stop is in_force
@@ -326,7 +326,10 @@ def stop_live(saga: Saga, covenant: Covenant) -> Callable[[dict[str, Any]], str]
         found = sites.place(saga, place_id)
         if found is None:
             return ""
-        lines = [f"[b]Aura there:[/] {places.aura_text(found, level)}"]
+        aura, realm = realms.aura_at_stop(
+            saga, covenant, CovenantStop(saga.current_year, "", found.id, level)
+        )
+        lines = [f"[b]Aura there:[/] {realm} {aura}"]
         if fleet_afloat(covenant) and not sites.waters_of(found):
             lines.append(
                 "[$text-warning]This Place isn't marked with Waters: ships "
@@ -610,12 +613,12 @@ def _here(saga: Saga, entry: Asked) -> tuple[str | None, int]:
 
 def _answers(saga: Saga, entry: Asked) -> list[tuple[str, str]]:
     found: list[tuple[str, str]] = []
+    place_id, level = _here(saga, entry)
     if entry.record is None:
-        leg = mobile.next_leg(entry.covenant)
+        leg = mobile.next_leg_from(entry.covenant, place_id, level)
         if leg is not None:
             words = places.where_text(saga, leg.place_id, leg.level)
             found.append((f"Move on to {escape(words)}", MOVE_ON))
-    place_id, level = _here(saga, entry)
     here = places.where_text(saga, place_id, level)
     if here:
         found.append((f"Stay at {escape(here)}", STAY))
@@ -629,7 +632,12 @@ def _due_to_move(saga: Saga, covenant: Covenant) -> bool:
     stop = sites.covenant_stop(saga, covenant)
     if stop is None:
         return True
-    return mobile.seasons_here(covenant.stops, stop) >= mobile.planned_stay(covenant)
+    leg = mobile.next_leg(covenant)
+    at_leg = leg is not None and (leg.place_id, leg.level) == _at(saga, covenant)
+    planned = (
+        leg.seasons if leg is not None and at_leg else mobile.planned_stay(covenant)
+    )
+    return mobile.seasons_here(covenant.stops, stop) >= planned
 
 
 def _default(saga: Saga, entry: Asked, answers: list[tuple[str, str]]) -> str:
@@ -721,9 +729,11 @@ def _log_covenant(saga: Saga, entry: Asked, what: str, where: str | None) -> lis
     covenant = entry.covenant
     year, season = saga.current_year, saga.current_season
     if what == MOVE_ON:
-        leg = mobile.next_leg(covenant)
+        here = _at(saga, covenant)
+        leg = mobile.next_leg_from(covenant, *here)
         if leg is None:
             return []
+        mobile.step_past_here(covenant, *here)
         mobile.step_route(covenant)
         return _log_stop(
             saga, covenant, CovenantStop(year, season, leg.place_id, leg.level)

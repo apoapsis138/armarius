@@ -12,7 +12,7 @@ pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
 from gui_steps import answering, section_buttons
-from PySide6.QtWidgets import QApplication, QWidget
+from PySide6.QtWidgets import QApplication, QLabel, QWidget
 from screen_helpers import _sample_saga_with_covenant
 
 from ars_magica_manager import storage
@@ -45,9 +45,13 @@ def _window(*, stop: bool = True) -> tuple[MainWindow, str]:
             CovenantStop(saga.current_year, saga.current_season, "sound")
         )
     storage.save_saga(saga)
-    window = MainWindow(saga_ids=[saga.id])
+    return _window_of(saga.id)
+
+
+def _window_of(saga_id: str) -> tuple[MainWindow, str]:
+    window = MainWindow(saga_ids=[saga_id])
     window.open_covenant("cov1")
-    return window, saga.id
+    return window, saga_id
 
 
 def _page(window: MainWindow) -> CovenantPage:
@@ -92,3 +96,19 @@ def test_detach_and_rejoin_are_ship_buttons(app):
     buttons["Detach"].click()
     ship = storage.load_saga(saga_id).covenants[0].possessions[-1].ship
     assert [s.place_id for s in ship.stops] == ["sound"]
+
+
+def test_a_ship_apart_says_so_on_her_entry(app):
+    window, saga_id = _window()
+    saga = storage.load_saga(saga_id)
+    ship = saga.covenants[0].possessions[-1].ship
+    ship.stops.append(CovenantStop(saga.current_year, saga.current_season, "sound"))
+    storage.save_saga(saga)
+    window, _ = _window_of(saga_id)
+    page = _page(window)
+    page.codex.open_chapter("Possessions")
+    entry = page.codex.chapter(page.codex.chapters().index("Possessions")).findChildren(
+        ShipEntry
+    )[0]
+    words = [label.text() for label in entry.findChildren(QLabel)]
+    assert any("Apart from the fleet: at The Sound" in w for w in words)

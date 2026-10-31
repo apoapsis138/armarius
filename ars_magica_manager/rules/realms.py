@@ -30,7 +30,14 @@ from collections.abc import Mapping
 from typing import Any
 
 from .. import catalog, sourcebooks
-from ..models import REALMS, Character, Covenant, CovenantBoonHookDef, Saga
+from ..models import (
+    REALMS,
+    Character,
+    Covenant,
+    CovenantBoonHookDef,
+    CovenantStop,
+    Saga,
+)
 from . import effects, lunar, sites
 from .breakdown import Breakdown
 from .rounding import round_down
@@ -184,6 +191,19 @@ def aura_of(covenant: Covenant | None) -> tuple[int, str]:
         return 0, HERMETIC
     boons = catalog.load_covenant_boon_hook_catalog_by_id()
     return covenant_effective_aura(covenant, boons), covenant.aura_realm
+
+
+def with_boons(covenant: Covenant, aura: int) -> int:
+    """`aura`, somewhere `covenant` is, with what its Boons and Hooks add."""
+    boons = catalog.load_covenant_boon_hook_catalog_by_id()
+    return aura + covenant_effective_aura(covenant, boons) - covenant.aura
+
+
+def aura_at_stop(saga: Saga, covenant: Covenant, stop: CovenantStop) -> tuple[int, str]:
+    """A covenant's effective Aura at a stop, past or planned, and its
+    realm: what aura_of gives while the stop is in force."""
+    aura, realm = sites.stop_aura(saga, covenant, stop)
+    return (with_boons(covenant, aura), realm) if realm else (aura, realm)
 
 
 def host(saga: Saga, character: Character) -> Covenant | None:

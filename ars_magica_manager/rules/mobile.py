@@ -92,6 +92,35 @@ def next_leg(covenant: Covenant) -> RouteStop | None:
     return route[0] if covenant.circuit else None
 
 
+def _is_at(leg: RouteStop, place_id: str | None, level: int) -> bool:
+    return (leg.place_id, leg.level) == (place_id, level)
+
+
+def next_leg_from(
+    covenant: Covenant, place_id: str | None, level: int = 0
+) -> RouteStop | None:
+    """The next leg that isn't where it is now, since a leg it is already
+    at is no move; None with nowhere else to go."""
+    route = covenant.route
+    if not route:
+        return None
+    ahead = len(route) if covenant.circuit else len(route) - covenant.route_at
+    for offset in range(ahead):
+        leg = route[(covenant.route_at + offset) % len(route)]
+        if not _is_at(leg, place_id, level):
+            return leg
+    return None
+
+
+def step_past_here(covenant: Covenant, place_id: str | None, level: int = 0) -> None:
+    """Move past the legs it is already at."""
+    for _ in covenant.route:
+        leg = next_leg(covenant)
+        if leg is None or not _is_at(leg, place_id, level):
+            return
+        step_route(covenant)
+
+
 def step_route(covenant: Covenant) -> None:
     """Move past the next leg: round to the first on a circuit."""
     if not covenant.route:

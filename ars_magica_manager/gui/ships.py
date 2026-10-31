@@ -64,6 +64,10 @@ class ShipEntry(RuledEntry):
         body = text(shown.body, p["foreground"], serif(13.5))
         body.setWordWrap(True)
         column.addWidget(body)
+        if shown.apart:
+            away = text(shown.apart, p["heading"], serif(12.5, italic=True))
+            away.setWordWrap(True)
+            column.addWidget(away)
         if shown.note:
             note = _quiet(TextBlock(f"[i]{shown.note}[/]", p))
             note.setFont(serif(12, italic=True))

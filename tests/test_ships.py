@@ -258,7 +258,7 @@ def test_the_ships_list_rows_and_details():
         assert words in text
     card = ships.card(covenant.possessions[0], saga)
     assert (card.badge, card.tone) == ("7 of 9 damage", "text-warning")
-    assert pos.table("ship", entries).rows[1][-1] == ships.NO_CAPTAIN
+    assert pos.table("ship", entries).rows[1][-2:] == [ships.NO_CAPTAIN, ""]
 
 
 # -- Add / Edit Ship --
