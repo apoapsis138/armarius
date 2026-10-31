@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.62.1",
+  "app_version": "3.64.0",
   "kind": "pack",
   "name": "Land of Fire and Ice",
   "from_saga": "Land of Fire and Ice",
@@ -33,6 +33,7 @@
         "place_level": 2,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": null,
         "liege_id": null,
         "oath": "",
@@ -140,6 +141,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": null,
         "liege_id": null,
         "oath": "",
@@ -226,7 +228,7 @@
           "clauses": [],
           "seals": []
         },
-        "secrets": "Its symbol is a red griffon with claws raised, on a white field. Founded in 816. Its members: Victor filius Pralix, founder of House Ex Miscellanea, now possessing the body of Brighde; Ealasaid filia Morwena, died 889; Macomb filius Ealasaid, died 889; Liam the Shapeless, filius of Brude, disappeared 889; and Iain the Unbowed, filius Liam. All followed Ex Miscellanea (p. 88).\n\nThe players hold only Scartaris at first. Victor stays Disceptator but leaves the daily running to Iain, who gives funds and advice; Victor calls dreamscape councils only when he must, since holding Hetep takes most of his attention (p. 87).\n\nThe oath gives up every tie to another covenant for lasting loyalty to this one, and binds each member to its Charter, its council and its fellow members' lives, and to fight Damhan-allaidh and his servants until nothing of him or his work is left. By the Charter all property serves the covenant. The Disceptator is elected by the members and holds office until death or final Twilight, breaks ties and may delegate. The Council is all the members, meeting around solstices and equinoxes, or in an emergency at the Disceptator's call. Each member owes seven seasons of covenant work a Tribunal period unpaid, and further work earns three pawns a season; work is set by Petition to the Council. An expelled magus must leave within a day (p. 85).",
+        "secrets": "Its symbol is a red griffon with claws raised, on a white field. Founded in 816. Its members: Victor filius Pralix, a leading figure of House Ex Miscellanea, now possessing the body of Brighde; Ealasaid filia Morwena, died 889; Macomb filius Ealasaid, died 889; Liam the Shapeless, filius of Brude, disappeared 889; and Iain the Unbowed, filius Liam. All followed Ex Miscellanea (p. 88). The book's list styles Victor founder of the House, a title only: Pralix founded it (p. 71).\n\nThe players hold only Scartaris at first. Victor stays Disceptator but leaves the daily running to Iain, who gives funds and advice; Victor calls dreamscape councils only when he must, since holding Hetep takes most of his attention (p. 87).\n\nThe oath gives up every tie to another covenant for lasting loyalty to this one, and binds each member to its Charter, its council and its fellow members' lives, and to fight Damhan-Allaidh and his servants until nothing of him or his work is left. By the Charter all property serves the covenant. The Disceptator is elected by the members and holds office until death or final Twilight, breaks ties and may delegate. The Council is all the members, meeting around solstices and equinoxes, or in an emergency at the Disceptator's call. Each member owes seven seasons of covenant work a Tribunal period unpaid, and further work earns three pawns a season; work is set by Petition to the Council. An expelled magus must leave within a day (p. 85).",
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
@@ -4049,79 +4051,79 @@
             "kind": "places",
             "target_id": "thverar",
             "note": "A spring assembly site",
-            "id": "03444fd81786"
+            "id": "3a16952e8cba"
           },
           {
             "kind": "places",
             "target_id": "thorsnes",
             "note": "A spring assembly site",
-            "id": "a131a6a65da2"
+            "id": "6b4e9515a66f"
           },
           {
             "kind": "places",
             "target_id": "thorskafjardar",
             "note": "A spring assembly site",
-            "id": "77f5f56132ec"
+            "id": "d098261a96b4"
           },
           {
             "kind": "places",
             "target_id": "rangar",
             "note": "A spring assembly site",
-            "id": "c156cfc7cf61"
+            "id": "b2479ba43ac8"
           },
           {
             "kind": "places",
             "target_id": "arnes",
             "note": "A spring assembly site",
-            "id": "13e2ae010796"
+            "id": "c8def6956f92"
           },
           {
             "kind": "places",
             "target_id": "kjarlarnes",
             "note": "A spring assembly site",
-            "id": "3c5b328c13a3"
+            "id": "e92682d51ad1"
           },
           {
             "kind": "places",
             "target_id": "sunnudals",
             "note": "A spring assembly site",
-            "id": "03ec19db4313"
+            "id": "33040e525982"
           },
           {
             "kind": "places",
             "target_id": "mula",
             "note": "A spring assembly site",
-            "id": "850ca6136f27"
+            "id": "71d06c792539"
           },
           {
             "kind": "places",
             "target_id": "skaftafells",
             "note": "A spring assembly site",
-            "id": "f14f0691a570"
+            "id": "508bbc2db322"
           },
           {
             "kind": "places",
             "target_id": "hunavatns",
             "note": "A spring assembly site",
-            "id": "7a74c76c3a0c"
+            "id": "814641442905"
           },
           {
             "kind": "places",
             "target_id": "hegranes",
             "note": "A spring assembly site",
-            "id": "64d014771d83"
+            "id": "31d371b6daac"
           },
           {
             "kind": "places",
             "target_id": "vadla",
             "note": "A spring assembly site",
-            "id": "41e701217592"
+            "id": "6d0e73726348"
           },
           {
             "kind": "places",
             "target_id": "thingeyjar",
             "note": "A spring assembly site",
-            "id": "e97dc198fc9a"
+            "id": "982eae1a47bd"
           }
         ],
         "arms": {},
@@ -4153,7 +4155,7 @@
             "kind": "places",
             "target_id": "the_fall_things",
             "note": "Reports the Althing to the districts",
-            "id": "26b3fe5620ab"
+            "id": "36a62b3ac1db"
           }
         ],
         "arms": {},
@@ -4497,7 +4499,7 @@
             "kind": "places",
             "target_id": "holar",
             "note": "The bishop's see",
-            "id": "9f1c0561959a"
+            "id": "1e641ce72691"
           }
         ],
         "arms": {},
@@ -4840,7 +4842,7 @@
             "kind": "places",
             "target_id": "skalholt",
             "note": "Under its control",
-            "id": "bfc501469c10"
+            "id": "93784642c585"
           }
         ],
         "arms": {},
@@ -5039,19 +5041,19 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "380eb427019b"
+            "id": "ccd13a84fcf3"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "0a43624f034d"
+            "id": "e083a4b9fcf4"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Its women are galdrakona",
-            "id": "82ac717dbe1c"
+            "id": "d6cb5d865508"
           }
         ],
         "arms": {},
@@ -5083,31 +5085,31 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "34649ff07898"
+            "id": "f63a6f468100"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "999422fb02df"
+            "id": "48dc9e3aa227"
           },
           {
             "kind": "places",
             "target_id": "traditional_galdramen",
             "note": "Their model and their rivals",
-            "id": "d71c03071bd9"
+            "id": "c036494eac63"
           },
           {
             "kind": "places",
             "target_id": "holar_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "3c1f13adfac3"
+            "id": "caa115d0d3cd"
           },
           {
             "kind": "places",
             "target_id": "skalholt_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "92b466fa3809"
+            "id": "c3b51f4e3576"
           }
         ],
         "arms": {},
@@ -5139,13 +5141,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "b696222d45cf"
+            "id": "34495d939e72"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "c2ed61919020"
+            "id": "7584c03fd742"
           }
         ],
         "arms": {},
@@ -5178,7 +5180,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "77d4b652d937"
+            "id": "9374a53bec64"
           }
         ],
         "arms": {},
@@ -5210,7 +5212,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "1bccebc7d122"
+            "id": "a1432ad49712"
           }
         ],
         "arms": {},
@@ -5242,7 +5244,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "368f1aacf7c3"
+            "id": "565a23073ff0"
           }
         ],
         "arms": {},
@@ -5274,13 +5276,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "6053186da55a"
+            "id": "76aa35517138"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Among the women called volur",
-            "id": "dbcc428d3785"
+            "id": "74f346167380"
           }
         ],
         "arms": {},
@@ -5312,7 +5314,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "What the Order would mistake for it",
-            "id": "4038b7083a95"
+            "id": "d293a74449eb"
           }
         ],
         "arms": {},
@@ -5524,7 +5526,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_de_panne",
             "note": "Its harbour",
-            "id": "608858a29879"
+            "id": "9912f1861c09"
           }
         ],
         "arms": {},
@@ -5601,7 +5603,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_exeter",
             "note": "Its harbour",
-            "id": "8279e10c20b9"
+            "id": "a7a1f986104d"
           }
         ],
         "arms": {},
@@ -5677,7 +5679,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "One of the lost gateways of the Cult of Thoth stands here, leading to the Kerlingarfjoll valley. Hetep led Damhan-allaidh through it, he used it again to escape to Scotland after 808, and Victor found it in 845 and took its gatestone to Vindolanda (pp. 71-72). One of Lord Peter's ancestors served Damhan-allaidh here (p. 83)."
+        "secrets": "One of the lost gateways of the Cult of Thoth stands here, leading to the Kerlingarfjoll valley. Hetep led Damhan-Allaidh through it, he used it again to escape to Scotland after 808, and Victor found it in 845 and took its gatestone to Vindolanda (pp. 71-72). One of Lord Peter's ancestors served Damhan-Allaidh here (p. 83)."
       },
       {
         "id": "sir_ivain_of_de_panne",
@@ -5725,7 +5727,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Vindolanda joined it to guard Scotland against Damhan-allaidh's return (p. 72). His forces attacked its covenants in 889 and destroyed them all (pp. 72, 77)."
+        "secrets": "Vindolanda joined it to guard Scotland against Damhan-Allaidh's return (p. 72). His forces attacked its covenants in 889 and destroyed them all (pp. 72, 77)."
       },
       {
         "id": "the_thothian_watchers",
@@ -5868,29 +5870,29 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "472f7cb11ec8"
+            "id": "a884d0d6b971"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "f049842b3bbb"
+            "id": "98daf816255d"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "aac38e26af57"
+            "id": "d8f4094276df"
           }
         ],
         "arms": {},
-        "secrets": "The first arc, before the climax with Damhan-allaidh; its purpose is to draw the characters into Iceland's daily life, where magicians live beside farmers and godar, a small picture of what the Order might achieve in Europe (pp. 67-68). Chapters 11 to 14. Each story follows on the next by the years shown, but the dates are suggestions, not to be enforced, and other stories fill the time between (p. 75).\n\nIn 1210 Einar went to Norway to help Bjarke Odd-Karnor, and stayed seven years; he married Yrsa and had two sons. He sailed home a year ahead of them to repair his farmstead and renew his ties with the spirits. In 1218 Yrsa and the boys took ship at Bergen. Powerful Flambeau magi were aboard, going to destroy the Order of Odin. Their presence roused the landvaettir and the First Guardian, Pan Caudarax, who burned the ship and went home to Hekla. Einar does not see that the dragon was defending Iceland (pp. 69-70).\n\nEinar is cunning and ruthless, and the characters may pity him. Pan Caudarax is a huge dragon of the Hekla crater, not native to the north, in Iceland over a thousand years. Bard Snaefellsass, a powerful trollson, wants the two reconciled and holds himself guardian of the land the covenant stands on, so he may become a strong ally (p. 70).\n\nVis: Vindolanda soon has Rego and Vim sources; beyond that only stories (the Odadahraun among them) and aura extraction bring it. The annual Galdramen Hreppur meeting will haggle for vis, in rough terms such as fire, illusion, warding, weather (p. 75).\n\nThe book's dates disagree. The eggs hatch about twenty years after the settlement of 1222 (pp. 105-106), yet are two years from hatching in 1230 (pp. 76, 114). Page 106 puts the burned ship five years back, about 1217, where p. 70 says 1218."
+        "secrets": "The first arc, before the climax with Damhan-Allaidh; its purpose is to draw the characters into Iceland's daily life, where magicians live beside farmers and godar, a small picture of what the Order might achieve in Europe (pp. 67-68). Chapters 11 to 14. Each story follows on the next by the years shown, but the dates are suggestions, not to be enforced, and other stories fill the time between (p. 75).\n\nIn 1210 Einar went to Norway to help Bjarke Odd-Karnor, and stayed seven years; he married Yrsa and had two sons. He sailed home a year ahead of them to repair his farmstead and renew his ties with the spirits. In 1218 Yrsa and the boys took ship at Bergen. Powerful Flambeau magi were aboard, going to destroy the Order of Odin. Their presence roused the landvaettir and the First Guardian, Pan Caudarax, who burned the ship and went home to Hekla. Einar does not see that the dragon was defending Iceland (pp. 69-70).\n\nEinar is cunning and ruthless, and the characters may pity him. Pan Caudarax is a huge dragon of the Hekla crater, not native to the north, in Iceland over a thousand years. Bard Snaefellsass, a powerful trollson, wants the two reconciled and holds himself guardian of the land the covenant stands on, so he may become a strong ally (p. 70).\n\nVis: Vindolanda soon has Rego and Vim sources; beyond that only stories (the Odadahraun among them) and aura extraction bring it. The annual Galdramen Hreppur meeting will haggle for vis, in rough terms such as fire, illusion, warding, weather (p. 75).\n\nThe book's dates disagree. The eggs hatch about twenty years after the settlement of 1222 (pp. 105-106), yet are two years from hatching in 1230 (pp. 76, 114). Page 106 puts the burned ship five years back, about 1217, where p. 70 says 1218."
       },
       {
         "id": "spider_in_the_ice",
         "name": "Spider in the Ice",
         "kind": "threat",
-        "summary": "Driven by the Order's oldest feud. Damhan-allaidh, the Spider, and the demon Hetep plot from Iceland to bring the Order down, and a hidden valley temple of Thoth is the prize.\n\nThe book offers this as one saga, not as official Mythic history (p. 67).",
+        "summary": "Driven by the Order's oldest feud. Damhan-Allaidh, the Spider, and the demon Hetep plot from Iceland to bring the Order down, and a hidden valley temple of Thoth is the prize.\n\nThe book offers this as one saga, not as official Mythic history (p. 67).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5898,7 +5900,7 @@
         "place_id": "kerlingarfjoll_valley",
         "place_level": 0,
         "details": {
-          "antagonist": "Damhan-allaidh and the demon Hetep",
+          "antagonist": "Damhan-Allaidh and the demon Hetep",
           "moves": "Fixed dates",
           "position": 0,
           "stages": [
@@ -5917,8 +5919,8 @@
               "year": 1240,
               "season": "",
               "at": null,
-              "clues": "Her gauntlet is to trick Hetep into showing where Damhan-allaidh's body lies. He makes for Old Vindolanda and opens a hidden gatestone to Ealasaid's secret sanctum.",
-              "ignored": "As planned, Hetep tricks Brighde and gets away in Damhan-allaidh's body, and Victor must sacrifice himself to save her.",
+              "clues": "Her gauntlet is to trick Hetep into showing where Damhan-Allaidh's body lies. He makes for Old Vindolanda and opens a hidden gatestone to Ealasaid's secret sanctum.",
+              "ignored": "As planned, Hetep tricks Brighde and gets away in Damhan-Allaidh's body, and Victor must sacrifice himself to save her.",
               "stopped": "",
               "turned": ""
             },
@@ -5927,8 +5929,8 @@
               "year": 1256,
               "season": "",
               "at": null,
-              "clues": "Hetep and Damhan-allaidh break into the Kerlingarfjoll valley and the Obsidian Temple.",
-              "ignored": "Hetep corrupts the stelae and begins to corrupt all magical writing in the world, with Damhan-allaidh guarding the temple.",
+              "clues": "Hetep and Damhan-Allaidh break into the Kerlingarfjoll valley and the Obsidian Temple.",
+              "ignored": "Hetep corrupts the stelae and begins to corrupt all magical writing in the world, with Damhan-Allaidh guarding the temple.",
               "stopped": "Hetep is thwarted and the magi win.",
               "turned": ""
             },
@@ -5939,7 +5941,7 @@
               "at": null,
               "clues": "The magi finish Ealasaid's work on the Obsidian Gateway ritual. As things stand, they must help defend the stelae or break in to destroy them.",
               "ignored": "",
-              "stopped": "A last battle with Damhan-allaidh, Hetep or both ends the arc.",
+              "stopped": "A last battle with Damhan-Allaidh, Hetep or both ends the arc.",
               "turned": ""
             }
           ],
@@ -5952,65 +5954,65 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "084b1334805d"
+            "id": "4b3b33c55f12"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "2c5a491d0f90"
+            "id": "cdd1582c6900"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "c775d049ff09"
+            "id": "041b92dc8fea"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "6b6d94c86a73"
+            "id": "4c15dad4feec"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "7d9bba14030c"
+            "id": "7e993b4948ea"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "9eb147900313"
+            "id": "94e86e9e287a"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "06547ca9c47a"
+            "id": "519ddbe085ec"
           },
           {
             "kind": "characters",
             "target_id": "pralix",
             "note": "",
-            "id": "662a06a45684"
+            "id": "754f24ec659d"
           },
           {
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "",
-            "id": "0da799965ad0"
+            "id": "dd0e6823ecf7"
           },
           {
             "kind": "characters",
             "target_id": "macomb",
             "note": "",
-            "id": "f15023299ce9"
+            "id": "905903a1867e"
           }
         ],
         "arms": {},
-        "secrets": "The second arc: Chapter 9 brings the characters to Iceland and Chapters 15 to 17 end it, about forty years on (pp. 67-68). The fate of Damhan-allaidh, the valley temple and Vindolanda are at the storyguide's discretion. Its two seats are Iceland and De Panne, which suits a second storyguide (p. 70). Dates are suggestions (p. 75).\n\nThe valley. About 2000 BC priests of Thoth under the legendary Setna followed spirits to a mist-shrouded valley at Iceland's heart, and after years broke the mist with a spell. An obsidian block carved into an arch stood there. They built a temple round it and opened a gateway; few who entered came back, but those who did had multiplied power. They made lesser gateways, and when Egypt fell the priests were scattered and the ways lost (pp. 70-71).\n\nThe Spider. A Pictish magician drawn to goetia, he got a reed scroll naming Hetep in 680 and made a cardinal pact: ancient knowledge and the safest hiding place for his soul. Hetep took him by Carnac to the valley and hid inside him. Setna's spirit, for once deceived, let him study the seven stelae for four seasons while Hetep corrupted them; then Setna saw it, fought him, and he fled through the seven doors into the Glasvellir regio. He came out of the Snaefell crater in 730. The gate no longer answers him; Hetep says to wait for Setna to weaken (p. 71).\n\nThe wars. He refused the Order's offer, and his blood sacrifice and demon cults brought Flambeau and Tremere against him. He beat them in 808, then left by Carnac for Scotland. Pralix of Tytalus landed in Northumbria in May 814 and in two years beat him with local wizards; he escaped. She raised the Ordo Miscellanea from her army, and Trianoma brought it in as House Ex Miscellanea (p. 71).\n\nVindolanda. Victor, Pralix's apprentice, whose gauntlet was surviving the war, founded it on a supply fort of Hadrian's Wall with theurgists Ealasaid and Macomb and gruagachan Iain and Liam. In 845 he found the Carnac gate and brought its stone home; seven years on it was deciphered and the valley found. Ealasaid made Hermetic gatestones in three more years, and each magus built a linked sanctum: Victor's in the Scartaris peak of Snaefell, the others beneath the sea off Devon and in Snowdonia (p. 72).\n\nThe battle of wills. They captured Hetep in 875 and found him a fallen spirit of Thoth. Victor designed a spell of wills to turn him, which ends only with one's defeat, and the theurgists warded him in with him. It began in 888, and Iain's party left with the Scartaris gatestone. In 889 the Spider destroyed the Northern Guard and led the attack on Vindolanda; Ealasaid and Macomb died. Liam escaped. In 890 Tremere and Flambeau routed the Spider's forces, and he and Liam were buried in Ealasaid's collapsing sanctum under 50 meters of sea, their external souls keeping them alive. His last followers fled to Shetland and some to Iceland, and Hetep's minions still hunt the sanctum (pp. 71-73)."
+        "secrets": "The second arc: Chapter 9 brings the characters to Iceland and Chapters 15 to 17 end it, about forty years on (pp. 67-68). The fate of Damhan-Allaidh, the valley temple and Vindolanda are at the storyguide's discretion. Its two seats are Iceland and De Panne, which suits a second storyguide (p. 70). Dates are suggestions (p. 75).\n\nThe valley. About 2000 BC priests of Thoth under the legendary Setna followed spirits to a mist-shrouded valley at Iceland's heart, and after years broke the mist with a spell. An obsidian block carved into an arch stood there. They built a temple round it and opened a gateway; few who entered came back, but those who did had multiplied power. They made lesser gateways, and when Egypt fell the priests were scattered and the ways lost (pp. 70-71).\n\nThe Spider. A Pictish magician drawn to goetia, he got a reed scroll naming Hetep in 680 and made a cardinal pact: ancient knowledge and the safest hiding place for his soul. Hetep took him by Carnac to the valley and hid inside him. Setna's spirit, for once deceived, let him study the seven stelae for four seasons while Hetep corrupted them; then Setna saw it, fought him, and he fled through the seven doors into the Glasvellir regio. He came out of the Snaefell crater in 730. The gate no longer answers him; Hetep says to wait for Setna to weaken (p. 71).\n\nThe wars. He refused the Order's offer, and his blood sacrifice and demon cults brought Flambeau and Tremere against him. He beat them in 808, then left by Carnac for Scotland. Pralix of Tytalus landed in Northumbria in May 814 and in two years beat him with local wizards; he escaped. She raised the Ordo Miscellanea from her army, and Trianoma brought it in as House Ex Miscellanea (p. 71). The years are Heirs to Merlin's: founded 815, accepted 817 (p. 13).\n\nVindolanda. Victor, Pralix's apprentice, whose gauntlet was surviving the war, founded it on a supply fort of Hadrian's Wall with theurgists Ealasaid and Macomb and gruagachan Iain and Liam. In 845 he found the Carnac gate and brought its stone home; seven years on it was deciphered and the valley found. Ealasaid made Hermetic gatestones in three more years, and each magus built a linked sanctum: Victor's in the Scartaris peak of Snaefell, the others beneath the sea off Devon and in Snowdonia (p. 72).\n\nThe battle of wills. They captured Hetep in 875 and found him a fallen spirit of Thoth. Victor designed a spell of wills to turn him, which ends only with one's defeat, and the theurgists warded him in with him. It began in 888, and Iain's party left with the Scartaris gatestone. In 889 the Spider destroyed the Northern Guard and led the attack on Vindolanda; Ealasaid and Macomb died. Liam escaped. In 890 Tremere and Flambeau routed the Spider's forces, and he and Liam were buried in Ealasaid's collapsing sanctum under 50 meters of sea, their external souls keeping them alive. His last followers fled to Shetland and some to Iceland, and Hetep's minions still hunt the sanctum (pp. 71-73)."
       },
       {
         "id": "blood_of_innocence",
@@ -6083,7 +6085,7 @@
               "year": null,
               "season": "",
               "at": 6,
-              "clues": "Victor puts the magi to sleep (as Rego Mentem 25, Penetration +50) and meets them in his Morphean Landscape, at a round marble table with armed men of about 870 along the walls. He offers full membership and answers briefly: he made no pact, and sought Damhan-allaidh or his soulstone.",
+              "clues": "Victor puts the magi to sleep (as Rego Mentem 25, Penetration +50) and meets them in his Morphean Landscape, at a round marble table with armed men of about 870 along the walls. He offers full membership and answers briefly: he made no pact, and sought Damhan-Allaidh or his soulstone.",
               "ignored": "",
               "stopped": "They swear the oath and wake. His host is led to a grimoire of tunnelling spells, and they clear the tunnel in about 12 hours, coming out halfway up Snaefell's southern slope.",
               "turned": ""
@@ -6117,6 +6119,16 @@
               "ignored": "",
               "stopped": "Brighde can open the gate back to the manor if her father is dead, and the gatestone goes home to De Panne. Devon will not miss Lord Peter, and De Panne's burghers will back the magi.",
               "turned": ""
+            },
+            {
+              "title": "Registered in Normandy",
+              "year": null,
+              "season": "",
+              "at": 10,
+              "clues": "Wormhout now knows that Vindolanda survives, and the Quaesitor Iphimedeia comes to investigate. Iain and Victor, wary of the wider Order knowing their affairs, must reassure her.",
+              "ignored": "",
+              "stopped": "She agrees to register Vindolanda as a covenant of the Normandy Tribunal. Redcaps deliver to and collect from Iain's house in De Panne, forbidden to tell other magi where it is, and Wormhout stays an ally (p. 75).",
+              "turned": ""
             }
           ],
           "dormant": true
@@ -6128,91 +6140,91 @@
             "kind": "characters",
             "target_id": "lord_peter",
             "note": "",
-            "id": "a7ea1f09426f"
+            "id": "3589e649e7d8"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "9ca95fcdc10f"
+            "id": "6d84427768b1"
           },
           {
             "kind": "creatures",
             "target_id": "lord_peter_s_men",
             "note": "",
-            "id": "9da75ab334b0"
+            "id": "57fc58213b81"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "46302ec6d842"
+            "id": "1df59b53f6ab"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "7bae1ed204ae"
+            "id": "924e5571f5d3"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "",
-            "id": "508593f3e610"
+            "id": "015521d12fd4"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "",
-            "id": "86b3931b6b6f"
+            "id": "ee3d8e3c98de"
           },
           {
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "",
-            "id": "66b913c2e527"
+            "id": "91e13049cb68"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "de228ce9d821"
+            "id": "b24e5d7f6833"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "33289de3a87c"
+            "id": "55aa3a821f68"
           },
           {
             "kind": "characters",
             "target_id": "markus_of_verditius",
             "note": "",
-            "id": "36a175e63c0e"
+            "id": "cb4a09327111"
           },
           {
             "kind": "characters",
             "target_id": "cornelius_of_verditius",
             "note": "",
-            "id": "0a42bf7528ab"
+            "id": "b0aff90cbebe"
           },
           {
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "fc41880e002b"
+            "id": "8ca027015fb3"
           },
           {
             "kind": "creatures",
             "target_id": "thingmen",
             "note": "",
-            "id": "6005e1b3da8c"
+            "id": "a87e0bb6faeb"
           },
           {
             "kind": "creatures",
             "target_id": "walking_corpses",
             "note": "",
-            "id": "bed545ced722"
+            "id": "929e38161190"
           }
         ],
         "arms": {},
@@ -6243,7 +6255,7 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "31f37af9074a"
+            "id": "72b93deddf3c"
           }
         ],
         "arms": {},
@@ -6295,7 +6307,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Toframan, feminine tofrakona, is the Icelandic magicians' word for foreign magicians, whose power rests on no song, giant blood, runes or herbs, so the saga is the saga of the magi (p. 62).\n\nLand and weather (p. 62). Volcanic ground everywhere; rugged lowlands, and an interior of trolls, giants and violent spirits that bleakly offsets the summer meadows. Stick to the paths and the ponies. A day seldom passes without rain, sleet, hail or snow, above all in the west, and sun often follows.\n\nSociety (pp. 62-63). Everyone of rank knows everyone, and writes; even labourers follow the intrigues. Foreign magicians are endlessly discussed, and a magical attempt at privacy makes it worse. Secret crimes come out, for Icelanders despise those who disown their acts. Bread and ale are luxuries and a storgodi is a simple farmer, yet the freemen are proud: tenant farmers expect to be heard, abuse brings vengeance or a lawsuit, and reputations are national. If Mythic Iceland follows history the storgodi's feudal schemes fail and the Norwegian king must treat with the farmers themselves.\n\nPremises of the saga (pp. 68-69). High fantasy, with the characters as heroes. A mature Order: expansion is over, and Join or Die on the borders is a sport. The Oath is applied pragmatically, and quaesitores act when the Order is endangered. Commoners do not know of the Order; Jerbiton envoys keep the peace with Church and courts. Open magic breaks no Code but angers churchmen. Magi swear no feudal oath and strike deals with lords, but being in thing with a godi carries no feudal duty, as the characters may have to argue at Tribunal. Young magi expect hard terms from a covenant, and take them.\n\nVirtues and Flaws to refuse (p. 74): Quaesitor, Hedge Wizard, Infamous Master, Tormenting Master, Discredited Lineage, since the covenant is isolated; Secret Vis Source and Vis Obligation, since vis is scarce and shared.\n\nThe feud is the theme: Order against Damhan-allaidh, Einar against the dragon, and behind them the storgodi's mundane feud (pp. 18-19, 67). The arcs are linear in places, and meant to be left to the storyguide's nudging or dropped (p. 68)."
+        "secrets": "Toframan, feminine tofrakona, is the Icelandic magicians' word for foreign magicians, whose power rests on no song, giant blood, runes or herbs, so the saga is the saga of the magi (p. 62).\n\nLand and weather (p. 62). Volcanic ground everywhere; rugged lowlands, and an interior of trolls, giants and violent spirits that bleakly offsets the summer meadows. Stick to the paths and the ponies. A day seldom passes without rain, sleet, hail or snow, above all in the west, and sun often follows.\n\nSociety (pp. 62-63). Everyone of rank knows everyone, and writes; even labourers follow the intrigues. Foreign magicians are endlessly discussed, and a magical attempt at privacy makes it worse. Secret crimes come out, for Icelanders despise those who disown their acts. Bread and ale are luxuries and a storgodi is a simple farmer, yet the freemen are proud: tenant farmers expect to be heard, abuse brings vengeance or a lawsuit, and reputations are national. If Mythic Iceland follows history the storgodi's feudal schemes fail and the Norwegian king must treat with the farmers themselves.\n\nPremises of the saga (pp. 68-69). High fantasy, with the characters as heroes. A mature Order: expansion is over, and Join or Die on the borders is a sport. The Oath is applied pragmatically, and quaesitores act when the Order is endangered. Commoners do not know of the Order; Jerbiton envoys keep the peace with Church and courts. Open magic breaks no Code but angers churchmen. Magi swear no feudal oath and strike deals with lords, but being in thing with a godi carries no feudal duty, as the characters may have to argue at Tribunal. Young magi expect hard terms from a covenant, and take them.\n\nVirtues and Flaws to refuse (p. 74): Quaesitor, Hedge Wizard, Infamous Master, Tormenting Master, Discredited Lineage, since the covenant is isolated; Secret Vis Source and Vis Obligation, since vis is scarce and shared.\n\nThe feud is the theme: Order against Damhan-Allaidh, Einar against the dragon, and behind them the storgodi's mundane feud (pp. 18-19, 67). The arcs are linear in places, and meant to be left to the storyguide's nudging or dropped (p. 68)."
       },
       {
         "id": "vindolanda",
@@ -6343,7 +6355,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The first sanctum Vindolanda made, deep inside the southern peak of Snaefell, in a +5 magical aura. The volcano stands just over 1440 paces high near the tip of the Snaefellsnes peninsula, which runs some forty miles into the Atlantic; it can be seen a hundred miles off, and two main peaks stand north and south of its crater (pp. 88-89).\n\nWhen the Carnac gateway opened, the magi found the Temple valley and then Iceland, and learned how rich the island was in vis. The temple was plainly tied to Damhan-allaidh, so it was unsafe. Scartaris gave easy access to the vis in a place he did not know (p. 88).\n\nThere are only two laboratory areas, both taken by the elders Victor and Iain, and quarters for a handful of covenfolk. There is no vis supply, no servants but those the magi bring, and a library with only the basics on the Arts (p. 88). New magi must carve their own space from the mountain with the library's spells (p. 90).\n\nMagic items run the sanctum; most were bought from House Verditius with the vis found when Iceland was first explored, and a single tome in the library sets out how each works (p. 90). The brazier in the Gate Room gives light like sun through cloud to every room but the sancta, sleeping chambers and library, through window-like shapes in the ceilings; an Imaginem requisite shows open sky in them. It runs on unattended or may be switched twenty-four times a day. Its Creo and Perdo also hold the main rooms at one temperature, set by touch and concentration (p. 91). Sancta, library, private chambers and servants' quarters each have an item giving a strange shadowless light, switched twenty-four times a day (p. 91). Each room of the baths has a heating or cooling item set by touch and concentration, and all start inactive (p. 91). Lead-lined channels carry the bath water, and lead-lined drains take the overflow to a big bronze vat whose Perdo effect destroys everything inanimate but metal and gems (p. 91). A Structure version of Chamber of Spring Breezes keeps the air fresh (p. 91).\n\nThe whole peninsula is full of trolls, enemies of the covenant (p. 89; their statistics are on p. 30)."
+        "secrets": "The first sanctum Vindolanda made, deep inside the southern peak of Snaefell, in a +5 magical aura. The volcano stands just over 1440 paces high near the tip of the Snaefellsnes peninsula, which runs some forty miles into the Atlantic; it can be seen a hundred miles off, and two main peaks stand north and south of its crater (pp. 88-89).\n\nWhen the Carnac gateway opened, the magi found the Temple valley and then Iceland, and learned how rich the island was in vis. The temple was plainly tied to Damhan-Allaidh, so it was unsafe. Scartaris gave easy access to the vis in a place he did not know (p. 88).\n\nThere are only two laboratory areas, both taken by the elders Victor and Iain, and quarters for a handful of covenfolk. There is no vis supply, no servants but those the magi bring, and a library with only the basics on the Arts (p. 88). New magi must carve their own space from the mountain with the library's spells (p. 90).\n\nMagic items run the sanctum; most were bought from House Verditius with the vis found when Iceland was first explored, and a single tome in the library sets out how each works (p. 90). The brazier in the Gate Room gives light like sun through cloud to every room but the sancta, sleeping chambers and library, through window-like shapes in the ceilings; an Imaginem requisite shows open sky in them. It runs on unattended or may be switched twenty-four times a day. Its Creo and Perdo also hold the main rooms at one temperature, set by touch and concentration (p. 91). Sancta, library, private chambers and servants' quarters each have an item giving a strange shadowless light, switched twenty-four times a day (p. 91). Each room of the baths has a heating or cooling item set by touch and concentration, and all start inactive (p. 91). Lead-lined channels carry the bath water, and lead-lined drains take the overflow to a big bronze vat whose Perdo effect destroys everything inanimate but metal and gems (p. 91). A Structure version of Chamber of Spring Breezes keeps the air fresh (p. 91).\n\nThe whole peninsula is full of trolls, enemies of the covenant (p. 89; their statistics are on p. 30)."
       },
       {
         "id": "gate_room_scartaris",
@@ -6945,7 +6957,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The covenant restored the fort to its full splendor and hid it from mundane notice with illusions and a kind of The Shrouded Glen. South of the wall, it still allied with Loch Leglean in the Praeses Septentrionalis. Damhan-allaidh took it in 889, and a Hermetic army under Tremere and Flambeau magi then reduced it to rubble (p. 93).\n\nMany innocent locals and covenfolk died in that attack. Damhan-allaidh had penned them up to feed his sacrifices, and the Tremere and Flambeau leaders chose to leave no witnesses. His sacrifice and their murder both served Hell. The Shrouded Glen kept the dead from Christian burial, and every night their shades relive their end and beg for mercy. That stain overcame the magic aura, and an Infernal regio took its place (p. 93).\n\nFinding the site takes a Perception stress roll of 12+ past the corrupted illusion and Shrouded Glen, and anyone trying will likely suffer an accident. Ammon, once Hetep's minion, rules the three-level regio with a score of infernal beasts (p. 93).\n\nInfernally tainted Mentem vis can be harvested on the middle level: tiny white salt crystals, formed from the ghosts' tears, which the demon sends down to draw more magi; the book prints no amount. Magi distrust the source because the covenant that first claimed the site belonged to ill-fated Castrum Antiquum (Heirs to Merlin p. 15). Burnham holds the harvesting rights by a legal settlement, went once, read the history, and means to pass the site to the next naive young covenant it can steer into a swap (p. 93).\n\nThe gatestones lie on the top level under tons of rubble. Ammon bars magi from that level, so a spell must penetrate his Might to reach it. If the magi have followed Hetep here, the Sea Temple gatestone is already dug out and set up (pp. 93-94).\n\nOnce the infernal creatures are banished or killed, Christian burial for the victims of both Damhan-allaidh and the Order can destroy the regio, and within a decade the place becomes a two-level magical regio (+2, +4). Digging while the Infernal regio stands draws further attacks, and many workers die in accidents (p. 94).\n\nThe map (p. 93) shows the walled fort, with four barracks, stables on two sides, a granary, the headquarters, two storehouses and a catapult platform on one corner; beyond its wall stand the bath house, the mansio and the married quarters."
+        "secrets": "The covenant restored the fort to its full splendor and hid it from mundane notice with illusions and a kind of The Shrouded Glen. South of the wall, it still allied with Loch Leglean in the Praeses Septentrionalis. Damhan-Allaidh took it in 889, and a Hermetic army under Tremere and Flambeau magi then reduced it to rubble (p. 93).\n\nMany innocent locals and covenfolk died in that attack. Damhan-Allaidh had penned them up to feed his sacrifices, and the Tremere and Flambeau leaders chose to leave no witnesses. His sacrifice and their murder both served Hell. The Shrouded Glen kept the dead from Christian burial, and every night their shades relive their end and beg for mercy. That stain overcame the magic aura, and an Infernal regio took its place (p. 93).\n\nFinding the site takes a Perception stress roll of 12+ past the corrupted illusion and Shrouded Glen, and anyone trying will likely suffer an accident. Ammon, once Hetep's minion, rules the three-level regio with a score of infernal beasts (p. 93).\n\nInfernally tainted Mentem vis can be harvested on the middle level: tiny white salt crystals, formed from the ghosts' tears, which the demon sends down to draw more magi; the book prints no amount. Magi distrust the source because the covenant that first claimed the site belonged to ill-fated Castrum Antiquum (Heirs to Merlin p. 15). Burnham holds the harvesting rights by a legal settlement, went once, read the history, and means to pass the site to the next naive young covenant it can steer into a swap (p. 93).\n\nThe gatestones lie on the top level under tons of rubble. Ammon bars magi from that level, so a spell must penetrate his Might to reach it. If the magi have followed Hetep here, the Sea Temple gatestone is already dug out and set up (pp. 93-94).\n\nOnce the infernal creatures are banished or killed, Christian burial for the victims of both Damhan-Allaidh and the Order can destroy the regio, and within a decade the place becomes a two-level magical regio (+2, +4). Digging while the Infernal regio stands draws further attacks, and many workers die in accidents (p. 94).\n\nThe map (p. 93) shows the walled fort, with four barracks, stables on two sides, a granary, the headquarters, two storehouses and a catapult platform on one corner; beyond its wall stand the bath house, the mansio and the married quarters."
       },
       {
         "id": "glyder_fawr_sanctum",
@@ -6970,7 +6982,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Ealasaid's first sanctum and later Macomb's, about 100 paces under the peak in a powerful +7 magical aura. Fleeing threats from Diedne magi, she had left her Welsh home before Pralix reached Britain; when the magi of Vindolanda set up sancta far from their main site she reclaimed her ancestral lands, near Cad Gadu, and later left this one to Macomb on moving to the Sea Temple (p. 94).\n\nA cave system lower on the southern side gives on to the passage, but the way in through Macomb's lab is blocked for about ten paces and the lab cannot be crossed (pp. 94-95). The characters will most likely come by the gatestone in Old Vindolanda (p. 95).\n\nThe aura suited Macomb's and Ealasaid's ritual magic. They advised Victor on a temple to raise the site's power further, and it did better than they hoped, but the aura proved too strong for servants to live here safely, so covenfolk never used the quarters. Macomb's apprentice had one closet when Damhan-allaidh came (p. 95).\n\nMacomb died quickly. His apprentice called up elemental spirits and set them on the attacker; the fight brought down most of the sanctum and drove Damhan-allaidh off, but the apprentice was dead by then (p. 95).\n\nThe map (p. 95) shows on the upper level storage, a kitchen, a meeting hall, a latrine, a bath, servants' quarters, the gate room and the temple; on the lower level storage, vis storage, Macomb's quarters, Macomb's lab, Ealasaid's Gate, and the altar passageway.\n\nTwo earth elementals called by the apprentice remain: see Cadell and Enan."
+        "secrets": "Ealasaid's first sanctum and later Macomb's, about 100 paces under the peak in a powerful +7 magical aura. Fleeing threats from Diedne magi, she had left her Welsh home before Pralix reached Britain; when the magi of Vindolanda set up sancta far from their main site she reclaimed her ancestral lands, near Cad Gadu, and later left this one to Macomb on moving to the Sea Temple (p. 94).\n\nA cave system lower on the southern side gives on to the passage, but the way in through Macomb's lab is blocked for about ten paces and the lab cannot be crossed (pp. 94-95). The characters will most likely come by the gatestone in Old Vindolanda (p. 95).\n\nThe aura suited Macomb's and Ealasaid's ritual magic. They advised Victor on a temple to raise the site's power further, and it did better than they hoped, but the aura proved too strong for servants to live here safely, so covenfolk never used the quarters. Macomb's apprentice had one closet when Damhan-Allaidh came (p. 95).\n\nMacomb died quickly. His apprentice called up elemental spirits and set them on the attacker; the fight brought down most of the sanctum and drove Damhan-Allaidh off, but the apprentice was dead by then (p. 95).\n\nThe map (p. 95) shows on the upper level storage, a kitchen, a meeting hall, a latrine, a bath, servants' quarters, the gate room and the temple; on the lower level storage, vis storage, Macomb's quarters, Macomb's lab, Ealasaid's Gate, and the altar passageway.\n\nTwo earth elementals called by the apprentice remain: see Cadell and Enan."
       },
       {
         "id": "sea_temple_sanctum",
@@ -6995,7 +7007,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Ealasaid's sanctum and the magi's last and boldest work, about eight miles due west of the isle of Lundy, under the sea between Devon and Wales. Thothian spirits led her to a magical site suited to her research on the Obsidian Gateway, on condition that she alone should know where it lay. She drove a tunnel of nearly eight miles under the sea and cast Carve the Mythic Chambers about ten paces below the seabed. The crystal dome rose from the seabed over a magical spring (pp. 94, 122-123).\n\nJust before she died she had found the name of the spirit serving the Obsidian Gateway and had begun rebuilding its ritual. Damhan-allaidh surprised her under the dome, her theurgy too slow to save her, and raised her ghost to torture out where Victor and Hetep were. Months later a Tremere and Flambeau force beat his army and he fled here, hurt and spent, and found Liam freeing her ghost. The two gruagachan took beast shape and fought. Even so Liam lost. When he lay incapacitated her spirit ordered an earth elemental to shatter the dome: the fall crushed both men's bodies and flooded most of the structure, and her ghost, its purpose done, rested (p. 123).\n\nLiam and Damhan-allaidh have lain incapacitated under the rubble for over three hundred years, sea creatures feeding on their ever-mending bodies. Chapter 18's statistics are their state if freed and left to recover. Hermetic magic at Instant duration cannot mend their distortions, though spells may give brief relief, and both slowly lose their reason (pp. 122-123).\n\nVictor and Iain can tell the players nothing of where it lies. The way in is the gatestone at Old Vindolanda; the gatestone from Glyder Fawr is out of position (p. 123). The book also gives the trilithon from the valley (p. 96) and the exit tunnel (p. 124).\n\nThe library holds all that is needed to recreate Ealasaid's work on the Obsidian Gateway. Twenty sets of her lab notes, once translated and written up, each serve as a Quality 2 Tractatus in Occult Lore (or Theurgy, with The Mysteries), and all must be studied first. Her personal translation notes are hard going: each studies as a Summa, Quality 0, on Speak Ancient Egyptian (Level 4), Scribe Hieroglyphics (3), Speak Assyrian (3) or Scribe Cuneiform (3). Using the tablets in her lab takes at least 3 in both Speak Ancient Egyptian and Speak Assyrian and at least 2 in both Scribe Hieroglyphics and Scribe Cuneiform. The ritual must be designed at level 40 (p. 124).\n\nHetep frees Damhan-allaidh here in Brighde's Gauntlet, after casting a Creo Auram spell on the chamber; the Hermetic equivalent is Sanctuary Beneath the Waves, CrAu (req Re) 30, Touch, Moon, Room, which makes air on the bed of a large body of water within an existing enclosure with clear bounds (p. 122)."
+        "secrets": "Ealasaid's sanctum and the magi's last and boldest work, about eight miles due west of the isle of Lundy, under the sea between Devon and Wales. Thothian spirits led her to a magical site suited to her research on the Obsidian Gateway, on condition that she alone should know where it lay. She drove a tunnel of nearly eight miles under the sea and cast Carve the Mythic Chambers about ten paces below the seabed. The crystal dome rose from the seabed over a magical spring (pp. 94, 122-123).\n\nJust before she died she had found the name of the spirit serving the Obsidian Gateway and had begun rebuilding its ritual. Damhan-Allaidh surprised her under the dome, her theurgy too slow to save her, and raised her ghost to torture out where Victor and Hetep were. Months later a Tremere and Flambeau force beat his army and he fled here, hurt and spent, and found Liam freeing her ghost. The two gruagachan took beast shape and fought. Even so Liam lost. When he lay incapacitated her spirit ordered an earth elemental to shatter the dome: the fall crushed both men's bodies and flooded most of the structure, and her ghost, its purpose done, rested (p. 123).\n\nLiam and Damhan-Allaidh have lain incapacitated under the rubble for over three hundred years, sea creatures feeding on their ever-mending bodies. Chapter 18's statistics are their state if freed and left to recover. Hermetic magic at Instant duration cannot mend their distortions, though spells may give brief relief, and both slowly lose their reason (pp. 122-123).\n\nVictor and Iain can tell the players nothing of where it lies. The way in is the gatestone at Old Vindolanda; the gatestone from Glyder Fawr is out of position (p. 123). The book also gives the trilithon from the valley (p. 96) and the exit tunnel (p. 124).\n\nThe library holds all that is needed to recreate Ealasaid's work on the Obsidian Gateway. Twenty sets of her lab notes, once translated and written up, each serve as a Quality 2 Tractatus in Occult Lore (or Theurgy, with The Mysteries), and all must be studied first. Her personal translation notes are hard going: each studies as a Summa, Quality 0, on Speak Ancient Egyptian (Level 4), Scribe Hieroglyphics (3), Speak Assyrian (3) or Scribe Cuneiform (3). Using the tablets in her lab takes at least 3 in both Speak Ancient Egyptian and Speak Assyrian and at least 2 in both Scribe Hieroglyphics and Scribe Cuneiform. The ritual must be designed at level 40 (p. 124).\n\nHetep frees Damhan-Allaidh here in Brighde's Gauntlet, after casting a Creo Auram spell on the chamber; the Hermetic equivalent is Sanctuary Beneath the Waves, CrAu (req Re) 30, Touch, Moon, Room, which makes air on the bed of a large body of water within an existing enclosure with clear bounds (p. 122)."
       },
       {
         "id": "vindolanda_gate_sea_temple",
@@ -7300,7 +7312,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "A paved road runs about a hundred paces to the entrance, under five trilithons with enchanted lintels. Four are useless, their partners destroyed; the one farthest from the temple leads to Ealasaid's Lundy sanctum, and once stood in a cave near Carnac (p. 96).\n\nWithin stands the Obsidian Gateway, a solid block shaped into an arch eight paces wide, sixteen high and a meter thick. The Thothian priests found it, and it joins its twin in the Obsidian Temple. Hieroglyphics on the walls tell of Setna's journey here, the raising of the temple, and his passage through the gate into the presence of Thoth (p. 96).\n\nAny Gifted person who sees the Gate longs to go through. The first time a magus touches it he falls in a fit and sees Damhan-allaidh as he was in 681, shadow twisted and eyes darkened, stepping through after a ritual; a dark wave then runs from the gate, warping the hieroglyphics and wall images into demonic shapes; then the Order falls to diabolism, cunning folk burn, and crusaders put books and scholars to the torch and sword. It ends in a wordless plea for help. A magus who offers help rolls once on the Good Effects table (ArM4 p. 182), one who refuses on the Bad Effects table; either way he gains only one Twilight point (p. 97).\n\nCall of the Obsidian Serpent, ReVi 40 ritual (R: Spec, D: Spec, T: Ind), does not truly summon the daemon of the gate but draws its attention and asks it to come. It works only in this temple, on or around the last day of June; Ealasaid's notes give the date with Int + Artes Liberales 9+. It takes two hours, four from text, and must end at midday, timed by a shaft of light. The leader anoints the gate and declares his intent to summon its spirit, extols the spirit, chants the sacred words from Ealasaid's grimoire, and commands it to open as the light strikes the gateway's radial point. The oil takes eight pawns of Vim or Rego vis, serves as the ritual's vis, and takes a day in a lab. With The Mysteries, casting from text may need Theurgy 8; without Theurgy the spell must be learned and mastered. The gate then stays open while the caster concentrates (p. 97)."
+        "secrets": "A paved road runs about a hundred paces to the entrance, under five trilithons with enchanted lintels. Four are useless, their partners destroyed; the one farthest from the temple leads to Ealasaid's Lundy sanctum, and once stood in a cave near Carnac (p. 96).\n\nWithin stands the Obsidian Gateway, a solid block shaped into an arch eight paces wide, sixteen high and a meter thick. The Thothian priests found it, and it joins its twin in the Obsidian Temple. Hieroglyphics on the walls tell of Setna's journey here, the raising of the temple, and his passage through the gate into the presence of Thoth (p. 96).\n\nAny Gifted person who sees the Gate longs to go through. The first time a magus touches it he falls in a fit and sees Damhan-Allaidh as he was in 681, shadow twisted and eyes darkened, stepping through after a ritual; a dark wave then runs from the gate, warping the hieroglyphics and wall images into demonic shapes; then the Order falls to diabolism, cunning folk burn, and crusaders put books and scholars to the torch and sword. It ends in a wordless plea for help. A magus who offers help rolls once on the Good Effects table (ArM4 p. 182), one who refuses on the Bad Effects table; either way he gains only one Twilight point (p. 97).\n\nCall of the Obsidian Serpent, ReVi 40 ritual (R: Spec, D: Spec, T: Ind), does not truly summon the daemon of the gate but draws its attention and asks it to come. It works only in this temple, on or around the last day of June; Ealasaid's notes give the date with Int + Artes Liberales 9+. It takes two hours, four from text, and must end at midday, timed by a shaft of light. The leader anoints the gate and declares his intent to summon its spirit, extols the spirit, chants the sacred words from Ealasaid's grimoire, and commands it to open as the light strikes the gateway's radial point. The oil takes eight pawns of Vim or Rego vis, serves as the ritual's vis, and takes a day in a lab. With The Mysteries, casting from text may need Theurgy 8; without Theurgy the spell must be learned and mastered. The gate then stays open while the caster concentrates (p. 97)."
       },
       {
         "id": "cadell_and_enan",
@@ -7325,7 +7337,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Two earth elementals left from those Macomb's apprentice called. Cadell is eager for a fight but will not strike unprovoked. Enan is more thoughtful and tries to talk a party into leaving. Both are good-natured and hold back from lethal force unless seriously threatened. Magi who convince them they belong to Vindolanda are welcomed and told of the battle with Damhan-allaidh (p. 96).\n\nIf the magi want the site back, Enan raises the rent: the original deal with Vindolanda was one pawn each a year. They open at over six hundred pawns (one a year each), can be talked down to around sixty over the next decade, and for a suitable consideration may restore the site as well (p. 96). The book prints no statistics for them."
+        "secrets": "Two earth elementals left from those Macomb's apprentice called. Cadell is eager for a fight but will not strike unprovoked. Enan is more thoughtful and tries to talk a party into leaving. Both are good-natured and hold back from lethal force unless seriously threatened. Magi who convince them they belong to Vindolanda are welcomed and told of the battle with Damhan-Allaidh (p. 96).\n\nIf the magi want the site back, Enan raises the rent: the original deal with Vindolanda was one pawn each a year. They open at over six hundred pawns (one a year each), can be talked down to around sixty over the next decade, and for a suitable consideration may restore the site as well (p. 96). The book prints no statistics for them."
       },
       {
         "id": "the_trolls_of_snaefellsnes",
@@ -7428,7 +7440,7 @@
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "4c8b05d65cc6"
+            "id": "85f32e22b753"
           }
         ],
         "arms": {},
@@ -7630,55 +7642,55 @@
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "2a8eab0142af"
+            "id": "1603ad7ad7de"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "77137ca9b01c"
+            "id": "01cdb02f9547"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "941296530af1"
+            "id": "15abb6cef7ff"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "03833d9c3d80"
+            "id": "7fd2136611eb"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "5ef7c05abf5e"
+            "id": "18a2e47a7899"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "9636b8753e74"
+            "id": "15c4c86b014a"
           },
           {
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "",
-            "id": "df551f172ada"
+            "id": "f58ad51c6ddf"
           },
           {
             "kind": "creatures",
             "target_id": "disease_spirits",
             "note": "",
-            "id": "10cbd14bf201"
+            "id": "815928f6dd31"
           },
           {
             "kind": "creatures",
             "target_id": "unhatched_dragon_of_pan_caudarax",
             "note": "",
-            "id": "69662f95feac"
+            "id": "e435a4fd02d2"
           }
         ],
         "arms": {},
@@ -7822,73 +7834,73 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "23757ba546be"
+            "id": "87bca76fece9"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "0c173678f51b"
+            "id": "66da8377cc8f"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "9e99fe7cfd5e"
+            "id": "b698f26c8a70"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "",
-            "id": "d4dbbcaa867e"
+            "id": "d988ae43be9f"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "e34b9f948498"
+            "id": "5b78713db28f"
           },
           {
             "kind": "characters",
             "target_id": "signy_grettisdottir",
             "note": "",
-            "id": "dbae8dab5556"
+            "id": "a3d6cfefbd4c"
           },
           {
             "kind": "characters",
             "target_id": "arnor_arngeirsson",
             "note": "",
-            "id": "a2dd06902c9a"
+            "id": "25b31d22e01d"
           },
           {
             "kind": "characters",
             "target_id": "leif_beogart",
             "note": "",
-            "id": "860e62a7d979"
+            "id": "cce42aa9a230"
           },
           {
             "kind": "characters",
             "target_id": "father_halldor_ormsson",
             "note": "",
-            "id": "8e3943728a90"
+            "id": "c76d6d935ea8"
           },
           {
             "kind": "characters",
             "target_id": "father_vebrand_thoroddson",
             "note": "",
-            "id": "10c0d39d4a32"
+            "id": "a594ae1c2f9e"
           },
           {
             "kind": "characters",
             "target_id": "aldis_kolbeinsdottir",
             "note": "",
-            "id": "753aafa0fedd"
+            "id": "921d058c1bac"
           },
           {
             "kind": "characters",
             "target_id": "helga_grimsdottir",
             "note": "",
-            "id": "bc7dec52bdbe"
+            "id": "885512427c54"
           }
         ],
         "arms": {},
@@ -8038,7 +8050,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Five appear at Bard's feast: Suil Aon (sool-oon, One-Eye), Creagcas (kreg kos, Rock-Foot), Beinn (beyn, Mountain), Sruth Dubh (sroo-doo, Black Tide) and their leader Geamhradh Grian (gev-ra grean, Winter Sun). They speak Pictish, Jotunn and Gaelic. Use the giants' statistics of p. 31; none has magical abilities.\n\nDamhan-allaidh laid a geas on the clan after Victor took the Carnac gateway, seeking another road to the temple: they cannot leave Iceland until they have visited the Temple of Thoth in the Kerlingarfjoll valley. They have found the valley but not the way in. Bard wants them gone and knows nothing of it (p. 111).\n\nTelling them frees Iceland of them but may hand Damhan-allaidh vital secrets. One answer: set the Kerlingarfjoll gatestone outside the covenant and walk them through briefly, so the geas is met and they still cannot find the way in. Freed, they go home and refuse him further service; otherwise he forces them to one last service (pp. 111, 125)."
+        "secrets": "Five appear at Bard's feast: Suil Aon (sool-oon, One-Eye), Creagcas (kreg kos, Rock-Foot), Beinn (beyn, Mountain), Sruth Dubh (sroo-doo, Black Tide) and their leader Geamhradh Grian (gev-ra grean, Winter Sun). They speak Pictish, Jotunn and Gaelic. Use the giants' statistics of p. 31; none has magical abilities.\n\nDamhan-Allaidh laid a geas on the clan after Victor took the Carnac gateway, seeking another road to the temple: they cannot leave Iceland until they have visited the Temple of Thoth in the Kerlingarfjoll valley. They have found the valley but not the way in. Bard wants them gone and knows nothing of it (p. 111).\n\nTelling them frees Iceland of them but may hand Damhan-Allaidh vital secrets. One answer: set the Kerlingarfjoll gatestone outside the covenant and walk them through briefly, so the geas is met and they still cannot find the way in. Freed, they go home and refuse him further service; otherwise he forces them to one last service (pp. 111, 125)."
       },
       {
         "id": "bard_s_daughters",
@@ -8206,43 +8218,43 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "0aadc9369ddc"
+            "id": "c80c78349cb4"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "40be9f61c3dc"
+            "id": "5d12e192edf6"
           },
           {
             "kind": "characters",
             "target_id": "thordis",
             "note": "",
-            "id": "5b9dde2a636c"
+            "id": "91d8ce9bd2a0"
           },
           {
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "2c9dc42a89da"
+            "id": "e66286f6e62c"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "65cdfa63841b"
+            "id": "1b639b3711c7"
           },
           {
             "kind": "creatures",
             "target_id": "thorkel_red_cloak_s_son",
             "note": "",
-            "id": "a78e223f73ed"
+            "id": "58de1e599e0b"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "",
-            "id": "d35c43f82731"
+            "id": "77d37d61827b"
           }
         ],
         "arms": {},
@@ -8273,25 +8285,25 @@
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "beb6e0c600b9"
+            "id": "862d6930d398"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "b0d3765e982b"
+            "id": "f0ae11313b3d"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "",
-            "id": "ebef635a6fc0"
+            "id": "cd14ea3355bb"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "c8f749eb712c"
+            "id": "9c1d6ffe32a0"
           }
         ],
         "arms": {},
@@ -8325,7 +8337,7 @@
         "id": "the_gray_bull",
         "name": "The Gray Bull",
         "kind": "threat",
-        "summary": "Story seed (p. 112): Bard, fearing a supernatural attack, perhaps by Damhan-allaidh himself, asks the characters to 'rescue' Iceland's third guardian from the Dominion's grip.",
+        "summary": "Story seed (p. 112): Bard, fearing a supernatural attack, perhaps by Damhan-Allaidh himself, asks the characters to 'rescue' Iceland's third guardian from the Dominion's grip.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -8346,13 +8358,13 @@
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "",
-            "id": "9489a35bb358"
+            "id": "8632d17b76bf"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "49983bb9b89d"
+            "id": "0e18c40ba471"
           }
         ],
         "arms": {},
@@ -8621,49 +8633,49 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "6fa64b153d90"
+            "id": "b679ccefcaf9"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "1077c1a45e52"
+            "id": "151eac340b35"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "2e3177694c01"
+            "id": "8fa1d8f0c9e1"
           },
           {
             "kind": "characters",
             "target_id": "kar_liefsson",
             "note": "",
-            "id": "205d16b67e04"
+            "id": "30405e7ef60e"
           },
           {
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "",
-            "id": "df2bfa1ac139"
+            "id": "0481eeb6070a"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "e63592da54be"
+            "id": "f01012fd1584"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "4633d4fda654"
+            "id": "57152ddfe769"
           },
           {
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "",
-            "id": "a664cde70573"
+            "id": "bb5e5126523e"
           }
         ],
         "arms": {},
@@ -8700,7 +8712,7 @@
               "year": null,
               "season": "Spring",
               "at": 2,
-              "clues": "Hetep takes her and heads west. He meets the demonic crow Whisper (p. 83), who tells him Damhan-allaidh's last location in a tongue Brighde cannot understand, and resolves to take his old pawn as a host. The mirror lets the players see he is making for Old Vindolanda. If she tries the Leap he blocks her, and that fight does not end before Damhan-allaidh is found.",
+              "clues": "Hetep takes her and heads west. He meets the demonic crow Whisper (p. 83), who tells him Damhan-Allaidh's last location in a tongue Brighde cannot understand, and resolves to take his old pawn as a host. The mirror lets the players see he is making for Old Vindolanda. If she tries the Leap he blocks her, and that fight does not end before Damhan-Allaidh is found.",
               "ignored": "",
               "stopped": "",
               "turned": ""
@@ -8710,17 +8722,17 @@
               "year": null,
               "season": "",
               "at": 3,
-              "clues": "See p. 93. Hetep has dug up the Lundy Island gatestone and is freeing Damhan-allaidh; his minion Ammon guards the gateway and must be beaten.",
+              "clues": "See p. 93. Hetep has dug up the Lundy Island gatestone and is freeing Damhan-Allaidh; his minion Ammon guards the gateway and must be beaten.",
               "ignored": "",
               "stopped": "",
               "turned": ""
             },
             {
-              "title": "Damhan-allaidh's tomb",
+              "title": "Damhan-Allaidh's tomb",
               "year": null,
               "season": "",
               "at": 4,
-              "clues": "Hetep fills the chamber with air by Creo Auram, digs the body from the rubble, abandons Brighde, possesses his ally and pours in Infernal Might. Within a few rounds Damhan-allaidh wakes and tries to kill her before she can Leap.",
+              "clues": "Hetep fills the chamber with air by Creo Auram, digs the body from the rubble, abandons Brighde, possesses his ally and pours in Infernal Might. Within a few rounds Damhan-Allaidh wakes and tries to kill her before she can Leap.",
               "ignored": "",
               "stopped": "Quick players may save her. A player Brighde may fight it out as a dreamscape hunt for the Leap's hidden trigger, and should get away at the last moment unless very slow. A non-player Brighde may die here.",
               "turned": ""
@@ -8745,53 +8757,53 @@
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "d9c53286bc37"
+            "id": "6599fae6c861"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "29d3cfdf8a77"
+            "id": "5b5ada7160f5"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "5368e7d7cbd3"
+            "id": "fd9c60888e07"
           },
           {
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "9905ee018dd9"
+            "id": "68a91d8c157b"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "50fe64b4db2a"
+            "id": "c2a635eeda0b"
           },
           {
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "5f0087c45910"
+            "id": "329348431e3d"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "6c720b14d566"
+            "id": "eb93db4a7e83"
           }
         ],
         "arms": {},
-        "secrets": "Victor's plan. Demonic deceit defeats magic, but demons can be fooled, and only Hetep knows where Damhan-allaidh lies, whom Victor means to see destroyed. For one season a year he has taught her the Arts, and for the other three how to fight the demon he locked in her. On leaving her he goes back to his own body, still preserved in his Scartaris lab behind a ward that falls only at his death. Brighde lets Hetep seem to win; the player magi follow to the lair; she Leaps home by a waiting spell into the restored ward; Hetep is held in Victor's body, and Victor destroys it, holding the spirit for the Thothian Watchers (p. 84). That is his death and his choice, and it frees Brighde.\n\nHetep's plan. He has learnt to break free of her and can block the Leap. He bides his time; with Victor gone he means to take another host, kill her and escape.\n\nIf Brighde is a player character whose player refuses, Hetep escapes into one of the covenfolk and is pursued instead (p. 121).\n\nThe story should end with Damhan-allaidh and Hetep escaping. If Victor knew of Hetep's threat to the Magic Realm he would destroy himself at once, but nobody knows of it yet (p. 122)."
+        "secrets": "Victor's plan. Demonic deceit defeats magic, but demons can be fooled, and only Hetep knows where Damhan-Allaidh lies, whom Victor means to see destroyed. For one season a year he has taught her the Arts, and for the other three how to fight the demon he locked in her. On leaving her he goes back to his own body, still preserved in his Scartaris lab behind a ward that falls only at his death. Brighde lets Hetep seem to win; the player magi follow to the lair; she Leaps home by a waiting spell into the restored ward; Hetep is held in Victor's body, and Victor destroys it, holding the spirit for the Thothian Watchers (p. 84). That is his death and his choice, and it frees Brighde.\n\nHetep's plan. He has learnt to break free of her and can block the Leap. He bides his time; with Victor gone he means to take another host, kill her and escape.\n\nIf Brighde is a player character whose player refuses, Hetep escapes into one of the covenfolk and is pursued instead (p. 121).\n\nThe story should end with Damhan-Allaidh and Hetep escaping. If Victor knew of Hetep's threat to the Magic Realm he would destroy himself at once, but nobody knows of it yet (p. 122)."
       },
       {
         "id": "spider_through_mist",
         "name": "Spider Through Mist",
         "kind": "threat",
-        "summary": "Damhan-allaidh, possessed by Hetep, breaks into the Kerlingarfjoll valley and tries to pass the Obsidian Gateway; if he does, the sacred stelae are corrupted (pp. 125-126). Best about four years before the players can finish the Obsidian Gate ritual.",
+        "summary": "Damhan-Allaidh, possessed by Hetep, breaks into the Kerlingarfjoll valley and tries to pass the Obsidian Gateway; if he does, the sacred stelae are corrupted (pp. 125-126). Best about four years before the players can finish the Obsidian Gate ritual.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -8799,7 +8811,7 @@
         "place_id": "kerlingarfjoll_valley",
         "place_level": 0,
         "details": {
-          "antagonist": "Damhan-allaidh and Hetep",
+          "antagonist": "Damhan-Allaidh and Hetep",
           "moves": "A track",
           "position": 0,
           "stages": [
@@ -8824,7 +8836,7 @@
               "turned": ""
             },
             {
-              "title": "Damhan-allaidh succeeds",
+              "title": "Damhan-Allaidh succeeds",
               "year": null,
               "season": "",
               "at": 3,
@@ -8834,7 +8846,7 @@
               "turned": ""
             },
             {
-              "title": "Damhan-allaidh fails",
+              "title": "Damhan-Allaidh fails",
               "year": null,
               "season": "",
               "at": 4,
@@ -8853,25 +8865,25 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "8c7e140bd35c"
+            "id": "d05e9f74d2b8"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "b6aadc3422ef"
+            "id": "cfbcea033fb2"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "9e2a84b9c5e2"
+            "id": "983709ac20d3"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "075d1c7970da"
+            "id": "c4787b01eefd"
           }
         ],
         "arms": {},
@@ -8889,7 +8901,7 @@
         "place_id": "snaefellsnes",
         "place_level": 0,
         "details": {
-          "antagonist": "Damhan-allaidh",
+          "antagonist": "Damhan-Allaidh",
           "moves": "A track",
           "position": 0,
           "stages": [],
@@ -8899,7 +8911,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Needing allies, Damhan-allaidh tries to unite the Western Quarter's trolls, no easy task with so territorial and quarrelsome a people, and the characters live among them."
+        "secrets": "Needing allies, Damhan-Allaidh tries to unite the Western Quarter's trolls, no easy task with so territorial and quarrelsome a people, and the characters live among them."
       },
       {
         "id": "leiken_and_the_mara",
@@ -8923,7 +8935,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The mara are evil landvaettir, witch-spirits, led by Leiken, among the most powerful of the yarthkin (p. 33), who has joined Damhan-allaidh. After a few attacks Victor may be persuaded to let the characters fight them on their own terms in his Morphean Landscape. If he is dead, it is harder."
+        "secrets": "The mara are evil landvaettir, witch-spirits, led by Leiken, among the most powerful of the yarthkin (p. 33), who has joined Damhan-Allaidh. After a few attacks Victor may be persuaded to let the characters fight them on their own terms in his Morphean Landscape. If he is dead, it is harder."
       },
       {
         "id": "the_obsidian_temple",
@@ -8961,7 +8973,7 @@
         "place_id": "the_obsidian_temple",
         "place_level": 0,
         "details": {
-          "antagonist": "Damhan-allaidh and Hetep",
+          "antagonist": "Damhan-Allaidh and Hetep",
           "moves": "A track",
           "position": 0,
           "stages": [
@@ -8982,7 +8994,7 @@
               "at": 2,
               "clues": "With Einar and Gudmund, they sneak in as Gudmund besieges the city, and need only open the gates and hold them while the slaves' poison works. The fight at the gate should be hard.",
               "ignored": "",
-              "stopped": "Geirrod orders his people to stop and sues for terms. Unless a Setna's Blade was made for him he lives, and he gives up Damhan-allaidh's soulstone, frees the slaves and opens the ziggurat; Gudmund takes tribute in gold. Destroying the soulstone forces Hetep to Raise Corpse at once, binding him to the body so that he can possess no one; destroying the body lets the Thothian spirits take him.",
+              "stopped": "Geirrod orders his people to stop and sues for terms. Unless a Setna's Blade was made for him he lives, and he gives up Damhan-Allaidh's soulstone, frees the slaves and opens the ziggurat; Gudmund takes tribute in gold. Destroying the soulstone forces Hetep to Raise Corpse at once, binding him to the body so that he can possess no one; destroying the body lets the Thothian spirits take him.",
               "turned": ""
             },
             {
@@ -8990,7 +9002,7 @@
               "year": null,
               "season": "",
               "at": 3,
-              "clues": "Sphinxes and seven gates (easier with Geirrod beaten) lead to Damhan-allaidh and Hetep. If Damhan-allaidh still lives Hetep may try to possess magi and strong companions; resisted, he falls to the Thothian spirits.",
+              "clues": "Sphinxes and seven gates (easier with Geirrod beaten) lead to Damhan-Allaidh and Hetep. If Damhan-Allaidh still lives Hetep may try to possess magi and strong companions; resisted, he falls to the Thothian spirits.",
               "ignored": "",
               "stopped": "At the last the magi smash the emerald stelae to end the spread of the corruption.",
               "turned": ""
@@ -9000,7 +9012,7 @@
               "year": null,
               "season": "",
               "at": 4,
-              "clues": "The Gate spirit takes them to the stelae sanctum. Setna greets them, knows only that Damhan-allaidh is coming through the gates, and gives the Blade scroll. Investigation in Glasvellir shows what has passed. The sphinxes barred him, Geirrod would not help, so he bound Geirrod in magical iron, left snakes dripping venom on his faces to learn where the soulstone is, and made himself king of the trolls. He has since destroyed the three sphinxes, at great cost in trolls, and is at the ivory gate, the others left open.",
+              "clues": "The Gate spirit takes them to the stelae sanctum. Setna greets them, knows only that Damhan-Allaidh is coming through the gates, and gives the Blade scroll. Investigation in Glasvellir shows what has passed. The sphinxes barred him, Geirrod would not help, so he bound Geirrod in magical iron, left snakes dripping venom on his faces to learn where the soulstone is, and made himself king of the trolls. He has since destroyed the three sphinxes, at great cost in trolls, and is at the ivory gate, the others left open.",
               "ignored": "",
               "stopped": "",
               "turned": ""
@@ -9020,7 +9032,7 @@
               "year": null,
               "season": "",
               "at": 6,
-              "clues": "Or they return by the Gate, which they may do at will, and go to Glasvellir, tell Einar and Gudmund, and open the gates during the siege. The strongest trolls are dead or maimed, so the city is lightly held. It should still be hard, since success ends Damhan-allaidh and Hetep both.",
+              "clues": "Or they return by the Gate, which they may do at will, and go to Glasvellir, tell Einar and Gudmund, and open the gates during the siege. The strongest trolls are dead or maimed, so the city is lightly held. It should still be hard, since success ends Damhan-Allaidh and Hetep both.",
               "ignored": "",
               "stopped": "Gudmund frees his brother and leads the slaves to his realm, with a substantial tribute.",
               "turned": "They may do both at once, some defending the sanctum and some striking from outside, or may have chased him into Glasvellir after the valley fight. End it dramatically."
@@ -9035,61 +9047,61 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "b003003acaa3"
+            "id": "d2ca2800db1b"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "4a3fb2fb85d3"
+            "id": "801add9916ed"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_s_undead_form",
             "note": "",
-            "id": "0eb720db6a8f"
+            "id": "57d6a884a859"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "60a1894a3700"
+            "id": "edb2525de012"
           },
           {
             "kind": "creatures",
             "target_id": "the_golden_sphinxes",
             "note": "",
-            "id": "9b44436d21da"
+            "id": "bc6c715a47ce"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "a0981c104b6e"
+            "id": "281541749af1"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "f50d38402750"
+            "id": "9645bc85d354"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "b7b8873e134e"
+            "id": "368924c2fbf1"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "3db1949c95da"
+            "id": "2465845ed5f0"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "27824ca6ef44"
+            "id": "3d126a796ea3"
           }
         ],
         "arms": {},
@@ -9118,11 +9130,11 @@
             "kind": "places",
             "target_id": "the_harbour_of_bergen",
             "note": "Its harbour",
-            "id": "e79f4a3f36e7"
+            "id": "8b5279c693ed"
           }
         ],
         "arms": {},
-        "secrets": "Hadrianus and his two filii took ship here (Icelandic Wars p. 1); Land of Fire & Ice p. 70 also sails a ship of Flambeau magi from here. This is not the Bergen on R\u00fcgen."
+        "secrets": "Hadrianus and his two filii took ship here in 1214 (Icelandic Wars p. 1). The ship of Flambeau magi in Land of Fire & Ice p. 70 sailed from here on a separate voyage in 1218. This is not the Bergen on R\u00fcgen."
       },
       {
         "id": "the_haunted_scottish_island",
@@ -9149,34 +9161,10 @@
         "secrets": "The drowned body of Hadrianus came ashore here and his spirit walks the island. In 1224 a magus of Loch Leglean meets it and hears its broken story; having told it, the spirit rests (Icelandic Wars p. 2)."
       },
       {
-        "id": "durenmar",
-        "name": "Durenmar",
-        "kind": "place",
-        "summary": "The domus magna of House Bonisagus, in the Black Forest.",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "",
-        "place_id": null,
-        "place_level": 0,
-        "details": {
-          "aura": 0,
-          "tethers": "",
-          "status": "Known",
-          "known": "In the region",
-          "levels": []
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": "In 1230 Lavinia calls the War Tribunal here, open to all with an interest, to debate and organise a crusade against Iceland (Icelandic Wars p. 2)."
-      },
-      {
         "id": "sinus_wodinis",
         "name": "Sinus Wodinis",
         "kind": "place",
-        "summary": "A covenant of House Bjornaer on an island off the southeast coast of Norway, long out of touch with the Order. Its magi dislike strangers.",
+        "summary": "A covenant of House Bjornaer on a frozen bay of Norway's southern coast, long out of touch with the Order. Its magi dislike strangers.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -9194,7 +9182,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The Mythic Seas pp. 62-63 prints it. Crusaders may send to it for Bjornaer help; its magi may be allied with Norse wizards, and one may be a trollson (Icelandic Wars p. 9). The Mythic Seas sets it on a frozen bay of the southern coast, not an island."
+        "secrets": "The Mythic Seas pp. 62-63 prints it, and has it on a perpetually frozen bay. Crusaders may send to it for Bjornaer help; its magi may be allied with Norse wizards, and one may be a trollson (Icelandic Wars p. 9). That book places it on an island off the southeast coast; here that is only a rumour."
       },
       {
         "id": "the_southeastern_harbor",
@@ -9271,19 +9259,19 @@
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads it",
-            "id": "c57c87186f68"
+            "id": "f057830d16f5"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads it",
-            "id": "2b7ea60d05f1"
+            "id": "1e8a3c1663cc"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "Their pretext",
-            "id": "98cca232c095"
+            "id": "b49048ca0409"
           }
         ],
         "arms": {},
@@ -9381,9 +9369,9 @@
               "year": 1230,
               "season": "",
               "at": null,
-              "clues": "A few years after the ghost, letters reach every covenant of the northern Tribunals asking for help and for knowledge of Iceland. Lavinia then calls a special Tribunal at Durenmar, open to all with an interest.",
+              "clues": "A few years after the ghost, letters reach every covenant of the northern Tribunals asking for help and for knowledge of Iceland. Lavinia then calls a special Tribunal at Durenmar, in the Rhine Tribunal, open to all with an interest.",
               "ignored": "The Tribunal declares all Icelandic magicians enemies of the Order, their lives forfeit, in revenge for Hadrianus, and Lavinia rules that binding. Those who kept quiet will not be thanked by the winner.",
-              "stopped": "It cannot quite be stopped: the war party has the loudest voice, wanting a hedge-wizard hunt, glory or new vis. If the hreppur swears the Oath, Lavinia demands approval from a prima who refuses all contact as she readies for the end of the world, and voids it. Uproar follows; their peers leave, and Julius wins the certamen against the eldest open opponent.",
+              "stopped": "It cannot quite be stopped: the war party has the loudest voice, wanting a hedge-wizard hunt, glory or new vis. If the hreppur swears the Oath, Lavinia demands that the Primus of Ex Miscellanea approve each candidate, an approval that cannot be had, and voids it. Uproar follows; their peers leave, and Julius wins the certamen against the eldest open opponent.",
               "turned": "Well argued, the doubts spread: senior magi withdraw, leaving a controversial venture, and elders pledge to take it to the Grand Tribunal."
             },
             {
@@ -9486,155 +9474,149 @@
             "kind": "characters",
             "target_id": "hadrianus_of_flambeau",
             "note": "His death begins it",
-            "id": "cd99fcd7d383"
+            "id": "417f9741bdbb"
           },
           {
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads the crusade",
-            "id": "68bd688a8762"
+            "id": "548b9376d81b"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads the crusade",
-            "id": "1aeec33c20b6"
+            "id": "a1aeb19ae5cb"
           },
           {
             "kind": "characters",
             "target_id": "albinus_of_ex_miscellanea",
             "note": "The crusade's spirit master, or its enemy",
-            "id": "9fd71f2d291e"
+            "id": "09eb48005db9"
           },
           {
             "kind": "characters",
             "target_id": "vigdis",
             "note": "Warns of the attack on Scartaris",
-            "id": "67fde8ce0cf5"
+            "id": "c4ef412e7dd6"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "The second guardian",
-            "id": "b9142c93f205"
+            "id": "a6b9e8bc8e1d"
           },
           {
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "The third guardian",
-            "id": "d3a11d85b17a"
+            "id": "d6cb09e4e485"
           },
           {
             "kind": "creatures",
             "target_id": "the_guardian_host",
             "note": "Fights for each guardian",
-            "id": "19cd1258bea6"
+            "id": "7214ccd2b86b"
           },
           {
             "kind": "creatures",
             "target_id": "gull_hellirsson",
             "note": "Breaks the crusaders' Aegis",
-            "id": "2d864fd5d89e"
+            "id": "0a4368ca8c5d"
           },
           {
             "kind": "places",
             "target_id": "bergen",
             "note": "Hadrianus sailed from here",
-            "id": "ab566ab16ce8"
+            "id": "e6a6fa0fab2e"
           },
           {
             "kind": "places",
             "target_id": "the_haunted_scottish_island",
             "note": "Where his ghost walks",
-            "id": "3caaba35e884"
-          },
-          {
-            "kind": "places",
-            "target_id": "durenmar",
-            "note": "The War Tribunal of 1230",
-            "id": "fe5a20e911fa"
+            "id": "a83afcfbba10"
           },
           {
             "kind": "places",
             "target_id": "the_southeastern_harbor",
             "note": "Where the armada anchors",
-            "id": "230a070ff4f6"
+            "id": "07626788d787"
           },
           {
             "kind": "places",
             "target_id": "the_crusaders_mystic_tower",
             "note": "The crusaders' base",
-            "id": "5aab719f20ac"
+            "id": "84fe86b502db"
           },
           {
             "kind": "neighbours",
             "target_id": "the_hermetic_crusaders",
             "note": "The invaders",
-            "id": "b19427eddeba"
+            "id": "22b2f1bb6dc0"
           },
           {
             "kind": "neighbours",
             "target_id": "the_magi_against_the_crusade",
             "note": "Argue against it",
-            "id": "2989961e0e17"
+            "id": "54143758b6aa"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "The pretext",
-            "id": "58eddd058e9d"
+            "id": "adabe84d7384"
           },
           {
             "kind": "neighbours",
             "target_id": "the_loch_leglean_tribunal",
             "note": "Finds the ghost",
-            "id": "f101c63de23c"
+            "id": "aeb4975362fa"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "The first guardian",
-            "id": "6d481f44b692"
+            "id": "f5f36fd468fb"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "The fourth guardian",
-            "id": "385462613c1a"
+            "id": "4de2d81501cd"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "Leader of the hreppur, slain",
-            "id": "951a388673c5"
+            "id": "da747d9f3130"
           },
           {
             "kind": "neighbours",
             "target_id": "skalholt",
             "note": "Bishop Magnus's seat; the Gray Bull's pasture",
-            "id": "9e09b060f4e6"
+            "id": "de32b2e43656"
           },
           {
             "kind": "places",
             "target_id": "scartaris",
             "note": "Julius's target, and a trap",
-            "id": "b10d30d397a3"
+            "id": "280d00148396"
           },
           {
             "kind": "neighbours",
             "target_id": "the_norn_landvaettir",
             "note": "Coordinate the Icelandic assault",
-            "id": "edf5fc9fcfc1"
+            "id": "1fcecfeb543e"
           },
           {
             "kind": "neighbours",
             "target_id": "galdramen_hreppur",
             "note": "The war's target",
-            "id": "96488ce58146"
+            "id": "f7784154f7ed"
           }
         ],
         "arms": {},
-        "secrets": "Land of Fire & Ice pp. 29 and 63 foresee this war: killing great galdramen enrages the landvaettir lords, killing trollsynir enrages the giants, and the hreppur is the nearest thing to an Order of Odin that exists. The saga there is not official history (p. 67), and neither is this.\n\nLand of Fire & Ice p. 70 sets a ship of Flambeau magi from Bergen on fire in 1218, not 1214, and kills Einar Gamlisson's family with them. Both stand; the book's year is used here.\n\nAt the War Tribunal the characters may keep quiet, which the winner will remember; aid the crusade out of duty, ignorance or fear, for who else destroyed those covenants; or try for peace, which for Vindolanda means showing that it survives (p. 3). Many there want a hunt, glory or new vis, whatever is said. Whether Julius and Lavinia are renounced, punished or pardoned after a crusade ruled illegal is the storyguide's; their followers share it by rank (pp. 12-13)."
+        "secrets": "Land of Fire & Ice pp. 29 and 63 foresee this war: killing great galdramen enrages the landvaettir lords, killing trollsynir enrages the giants, and the hreppur is the nearest thing to an Order of Odin that exists. The saga there is not official history (p. 67), and neither is this.\n\nLand of Fire & Ice p. 70 tells of a separate voyage: in 1218 another ship of Flambeau magi from Bergen burns, and Einar Gamlisson's family dies with them. Hadrianus's is the voyage of 1214.\n\nAt the War Tribunal the characters may keep quiet, which the winner will remember; aid the crusade out of duty, ignorance or fear, for who else destroyed those covenants; or try for peace, which for Vindolanda means showing that it survives (p. 3). Many there want a hunt, glory or new vis, whatever is said. Whether Julius and Lavinia are renounced, punished or pardoned after a crusade ruled illegal is the storyguide's; their followers share it by rank (pp. 12-13)."
       },
       {
         "id": "icelandic_wars_the_ghost_in_the_isles",
@@ -9763,7 +9745,7 @@
               "year": null,
               "season": "",
               "at": 2,
-              "clues": "She recovers fast, insisting that the prima of Ex Miscellanea approve each candidate, and that prima sees no one.",
+              "clues": "She recovers fast, insisting that the Primus of Ex Miscellanea approve each candidate, an approval that cannot be had (see her record).",
               "ignored": "The membership is void. Senior magi dispute it; their peers leave Julius and Lavinia, and a certamen settles it for Julius.",
               "stopped": "",
               "turned": ""
@@ -9897,7 +9879,7 @@
               "clues": "A raid is not shameful in itself, but this target will hardly defend itself, so it may look cowardly; provoking a man as strong in law as a storgodi may also look bold.",
               "ignored": "The Bull stays tame.",
               "stopped": "",
-              "turned": "Outside the Dominion it bellows, the Host feeds it Might, and within minutes it is full size and gone to the highlands."
+              "turned": "Outside the Dominion it bellows, the Host feeds it Might, and over a matter of weeks, faster in a magical aura, it regains its full size and strides into the highlands (Land of Fire & Ice p. 112)."
             },
             {
               "title": "The case",
@@ -11854,25 +11836,25 @@
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "His father and parens",
-            "id": "a14f2cc36c4a"
+            "id": "d5cd3fc8d793"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Serves him",
-            "id": "252c6b91b129"
+            "id": "80e6273b06cb"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "His wife",
-            "id": "a5040a48936e"
+            "id": "858d072edc0f"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "His son",
-            "id": "3476be51d111"
+            "id": "75f78cde26c2"
           }
         ],
         "agents": [],
@@ -12051,7 +12033,7 @@
             "bad": false
           },
           {
-            "name": "Obsessed with destroying Damhan-allaidh",
+            "name": "Obsessed with destroying Damhan-Allaidh",
             "score": 6,
             "known": true,
             "type": "",
@@ -12129,20 +12111,20 @@
         },
         "portrait": "",
         "detail": "Full",
-        "summary": "A follower of Pralix, given his sigil when she defeated Damhan-allaidh in 816, whom the Order has long counted among the dead.",
-        "secrets": "In life he could bring anyone round to any position, with an understanding of people unmatched in his day, but a demon was beyond him. Hetep overwhelmed him and shut him in a hellish dream, where he suffered for sixty years until he outwitted the demon and seized the dreamscape. Since then each has argued the other's soul in the language of dreams, over grace and its rejection; Victor now rules the dream and Hetep must endure his constant calls to renounce Hell (p. 135).\n\nSpirit and body are parted, though he is technically alive, and the body would crumble within weeks if his ward failed, so he works by possession alone. Brighde, his friend's granddaughter, comes first, but everything he does bends toward destroying the Spider, and he will draw the magi into risky schemes in return for scraps of knowledge about Damhan-allaidh or Hetep (pp. 135-136).\n\nHe looks a tall man in Roman robes, frozen in the ward in his Scartaris laboratory (p. 82). Founder and Disceptator of Vindolanda, he entered the battle of wills in 888 (p. 72). Born in 782.\n\nMagic Might 50. Possession (ReMe 50, cost varies): any human in eye contact, or in sight of his body. Entry costs Might equal to the victim's Confidence + Stamina (+3 if Strong-Willed) + twice any True Faith. Parma Magica resists, using the highest of Corpus, Mentem or Vim, against his penetration of 50 + stress die; a Natural Resistance roll (Stamina + stress die) of 50 also stops it. In a Gifted host he uses his full magic without Might. He does not want a stolen body, and takes control or searches a mind only at need.\n\nMorphean Landscape (ReMe, 10 points): melds the dreams of up to twelve people into one under his control, for meetings. Mastery of the Mind (Me): any Mentem spell to level 50, including his own, and the Oneiromantic spells of The Mysteries if the troupe uses them. Mastery of the Image (Im): the same with Imaginem to level 30. Mastery of the Forms: other Forms to level 15. Each costs twice the spell's magnitude in Might, with no words or gestures, only a moment's thought.",
+        "summary": "A follower of Pralix, given his sigil when she defeated Damhan-Allaidh in 816, whom the Order has long counted among the dead.",
+        "secrets": "In life he could bring anyone round to any position, with an understanding of people unmatched in his day, but a demon was beyond him. Hetep overwhelmed him and shut him in a hellish dream, where he suffered for sixty years until he outwitted the demon and seized the dreamscape. Since then each has argued the other's soul in the language of dreams, over grace and its rejection; Victor now rules the dream and Hetep must endure his constant calls to renounce Hell (p. 135).\n\nSpirit and body are parted, though he is technically alive, and the body would crumble within weeks if his ward failed, so he works by possession alone. Brighde, his friend's granddaughter, comes first, but everything he does bends toward destroying the Spider, and he will draw the magi into risky schemes in return for scraps of knowledge about Damhan-Allaidh or Hetep (pp. 135-136).\n\nHe looks a tall man in Roman robes, frozen in the ward in his Scartaris laboratory (p. 82). Founder and Disceptator of Vindolanda, he entered the battle of wills in 888 (p. 72). Born in 782.\n\nThe book calls him founder of House Ex Miscellanea (pp. 84, 88). That is a title for a leading figure of the House: Pralix founded the Ordo Miscellanea and was its prima (p. 71; Heirs to Merlin p. 13).\n\nMagic Might 50. Possession (ReMe 50, cost varies): any human in eye contact, or in sight of his body. Entry costs Might equal to the victim's Confidence + Stamina (+3 if Strong-Willed) + twice any True Faith. Parma Magica resists, using the highest of Corpus, Mentem or Vim, against his penetration of 50 + stress die; a Natural Resistance roll (Stamina + stress die) of 50 also stops it. In a Gifted host he uses his full magic without Might. He does not want a stolen body, and takes control or searches a mind only at need.\n\nMorphean Landscape (ReMe, 10 points): melds the dreams of up to twelve people into one under his control, for meetings. Mastery of the Mind (Me): any Mentem spell to level 50, including his own, and the Oneiromantic spells of The Mysteries if the troupe uses them. Mastery of the Image (Im): the same with Imaginem to level 30. Mastery of the Forms: other Forms to level 15. Each costs twice the spell's magnitude in Might, with no words or gestures, only a moment's thought.",
         "links": [
           {
             "kind": "characters",
             "target_id": "pralix",
             "note": "His parens",
-            "id": "dc1a5baa1e14"
+            "id": "46366549da9a"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His prisoner",
-            "id": "9fd08beb4eeb"
+            "id": "5483ab209090"
           }
         ],
         "agents": [],
@@ -12575,13 +12557,13 @@
         "portrait": "",
         "detail": "Full",
         "summary": "A landed knight of Devon, tall and thin, with Norman features and a short black beard, who usually wears a long red cloak. His family came to England with the Conqueror.",
-        "secrets": "An English diabolist, promised more magical power for freeing Hetep. Found his grandfather's occult books on his death; Hell has watched his family since an ancestor served Damhan-allaidh near Carnac. He blackmails Falkes de Br\u00e9aut\u00e9, acting Earl of Devonshire (p. 83). The characters kill him in the opening adventure (p. 76).",
+        "secrets": "An English diabolist, promised more magical power for freeing Hetep. Found his grandfather's occult books on his death; Hell has watched his family since an ancestor served Damhan-Allaidh near Carnac. He blackmails Falkes de Br\u00e9aut\u00e9, acting Earl of Devonshire (p. 83). The characters kill him in the opening adventure (p. 76).",
         "links": [
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "His familiar",
-            "id": "26c39227bca0"
+            "id": "9464b8d8b980"
           }
         ],
         "agents": [],
@@ -12893,13 +12875,13 @@
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Her master, who possesses her",
-            "id": "ac7594e16eb0"
+            "id": "124b08b9cf14"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The demon held in her",
-            "id": "8fbbc646eb3f"
+            "id": "0f7b580ca31a"
           }
         ],
         "agents": [],
@@ -13087,8 +13069,8 @@
         },
         "portrait": "",
         "detail": "Sketch",
-        "summary": "The Tytalus maga who first beat Damhan-allaidh and founded House Ex Miscellanea.",
-        "secrets": "Victor's parens. Landed in Northumbria in May 814, beat Damhan-allaidh in 816, and raised the Ordo Miscellanea from the witches, druids, beast mages and spirit masters of her army, becoming prima when it joined the Order (p. 71).",
+        "summary": "The Tytalus maga who first beat Damhan-Allaidh and founded House Ex Miscellanea.",
+        "secrets": "Victor's parens. Landed in Northumbria in May 814, beat Damhan-Allaidh in 816, and raised the Ordo Miscellanea from the witches, druids, beast mages and spirit masters of her army, becoming prima when it joined the Order (p. 71). Heirs to Merlin p. 13 has the Ordo founded in 815 and accepted in 817, a year inside this book's campaign of 814 to 816; this pack follows 815.",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -13276,7 +13258,7 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "A theurgist of the old covenant of Vindolanda, long dead.",
-        "secrets": "Her line came down from the Romano-Celtic priests of Sulis Minerva at Bath. She worked out the Carnac gate and rebuilt the gatestones as Hermetic thaumaturgy. Filia of Morwena and parens of Macomb. She fled Wales from threats by Diedne magi, reclaimed her lands with a first sanctum under Glyder Fawr, left it to Macomb, and moved to the Sea Temple beneath the sea off Devon. Damhan-allaidh killed her there in 889, and her ghost brought the dome down on him and Liam (pp. 71-73, 88, 94, 123).",
+        "secrets": "Her line came down from the Romano-Celtic priests of Sulis Minerva at Bath. She worked out the Carnac gate and rebuilt the gatestones as Hermetic thaumaturgy. Filia of Morwena and parens of Macomb. She fled Wales from threats by Diedne magi, reclaimed her lands with a first sanctum under Glyder Fawr, left it to Macomb, and moved to the Sea Temple beneath the sea off Devon. Damhan-Allaidh killed her there in 889, and her ghost brought the dome down on him and Liam (pp. 71-73, 88, 94, 123).",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -13464,13 +13446,13 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "A theurgist of the old covenant of Vindolanda, long dead.",
-        "secrets": "Ealasaid's filius and an original member, whose sanctum was Glyder Fawr in Snowdonia. Damhan-allaidh killed him there in 889 (pp. 71-72, 94-95).",
+        "secrets": "Ealasaid's filius and an original member, whose sanctum was Glyder Fawr in Snowdonia. Damhan-Allaidh killed him there in 889 (pp. 71-72, 94-95).",
         "links": [
           {
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "His parens",
-            "id": "f70732386d35"
+            "id": "172cd57b92a2"
           }
         ],
         "agents": [],
@@ -13717,7 +13699,7 @@
             "kind": "characters",
             "target_id": "una",
             "note": "His wife",
-            "id": "1d7350a2f6f3"
+            "id": "ff812eb79de4"
           }
         ],
         "agents": [],
@@ -13954,7 +13936,7 @@
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "Her cat",
-            "id": "728adaad590d"
+            "id": "f7e4e70a2ae1"
           }
         ],
         "agents": [],
@@ -15941,7 +15923,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "1a57bf40316b"
+            "id": "ed7ffc22e25d"
           }
         ],
         "agents": [],
@@ -16136,7 +16118,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "21e0d21e1c33"
+            "id": "bbe18e8be603"
           }
         ],
         "agents": [],
@@ -16331,7 +16313,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "4b63aa8dc007"
+            "id": "e950eb5821ba"
           }
         ],
         "agents": [],
@@ -17600,13 +17582,13 @@
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "His wife",
-            "id": "90a0dc9825d8"
+            "id": "5e36692e9718"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "His daughter",
-            "id": "7c9a22561a09"
+            "id": "76fce13ff66a"
           }
         ],
         "agents": [],
@@ -18276,7 +18258,7 @@
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "His brother",
-            "id": "ef37d5e6847c"
+            "id": "a2a430e81cc2"
           }
         ],
         "agents": [],
@@ -18675,7 +18657,7 @@
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "His guide for the magi",
-            "id": "f2b906fb0585"
+            "id": "243e3163543b"
           }
         ],
         "agents": [],
@@ -19264,7 +19246,7 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "An archmagus of House Flambeau, teacher of two filii.",
-        "secrets": "In 1214 he heard of magicians working from Iceland and sailed from Bergen with his two filii. Their hostility roused the landvaettir watchers, and Pan Caudarax burned the ship. The filii died at once. Hadrianus lived through the flame and killed a band of landvaettir, then botched a spell and fell into brief Twilight, and was thrown in the sea and drowned (Icelandic Wars pp. 1-2).\n\nHis ghost haunts a Scottish island until 1224, when it tells a magus of Loch Leglean, incoherently, that forces of the Order of Odin killed him, and rests. A summoning to learn more sends him into Final Twilight (p. 2). He spoke of a dragon and other beasts, not of spirits, as the landvaettir took solid form to reach him past his Parma (p. 6).\n\nLand of Fire & Ice p. 70 tells a like story with no names: in 1218 powerful Flambeau magi on a ship from Bergen drew the dragon's fire, and Einar Gamlisson's wife and sons died with them. Both are kept; a troupe using both should make it one ship or two.",
+        "secrets": "In 1214 he heard of magicians working from Iceland and sailed from Bergen with his two filii. Their hostility roused the landvaettir watchers, and Pan Caudarax burned the ship. The filii died at once. Hadrianus lived through the flame and killed a band of landvaettir, then botched a spell and fell into brief Twilight, and was thrown in the sea and drowned (Icelandic Wars pp. 1-2).\n\nHis ghost haunts a Scottish island until 1224, when it tells a magus of Loch Leglean, incoherently, that forces of the Order of Odin killed him, and rests. A summoning to learn more sends him into Final Twilight (p. 2). He spoke of a dragon and other beasts, not of spirits, as the landvaettir took solid form to reach him past his Parma (p. 6).\n\nLand of Fire & Ice p. 70 tells of a separate voyage, with no names: in 1218 other powerful Flambeau magi on a ship from Bergen drew the dragon's fire, and Einar Gamlisson's wife and sons died with them.",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -19640,7 +19622,7 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "An archmaga and Quaesitor of House Guernicus, an Intellego specialist skilled in wards and necromancy.",
-        "secrets": "With Julius she prepares the invasion, calls the War Tribunal at Durenmar in 1230 and declares it legal and binding (Icelandic Wars pp. 2, 4). She has no offensive spells against magical spirits (p. 6).\n\nIf the hreppur swears the Oath she answers that joining a House needs its primus's consent, and demands the prima of Ex Miscellanea approve each candidate, knowing the prima will see no one (p. 4). She has witches' hearts brought to her to question their ghosts (p. 10). Her own divinations slowly show that Iceland's magicians knew nothing of any Order of Odin (p. 12).",
+        "secrets": "With Julius she prepares the invasion. In 1230 she calls the War Tribunal at Durenmar, the domus magna of House Bonisagus in the Rhine Tribunal, open to all with an interest, to debate and organise a crusade against Iceland, and declares it legal and binding (Icelandic Wars pp. 2, 4). She has no offensive spells against magical spirits (p. 6).\n\nIf the hreppur swears the Oath she answers that joining a House needs its primus's consent, demands that the Primus of Ex Miscellanea approve each candidate, an approval that cannot be had, and declares the membership invalid (p. 4). She has witches' hearts brought to her to question their ghosts (p. 10). Her own divinations slowly show that Iceland's magicians knew nothing of any Order of Odin (p. 12).\n\nThe book prints that Primus as an unnamed, reclusive prima who refuses all contact as she readies for the doom she has foretold for decades, which is what makes the demand impossible (p. 4). In the Stonehenge Tribunal's Order, which this pack follows, Immanola entered Final Twilight in 1216 and Ebroin has held the office since, so a troupe must settle why his approval cannot be had.",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -22230,7 +22212,7 @@
             "attack": 10,
             "defense": 15,
             "damage": -2,
-            "id": "2f15c317de8a"
+            "id": "ec5f970d9aff"
           }
         ],
         "soak": 1,
@@ -22289,7 +22271,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReAu 20. Flies ten times as fast as a normal bird and never tires.",
-            "id": "b4c7e2089c27"
+            "id": "28f7d9d29493"
           },
           {
             "name": "Mythic Perception",
@@ -22303,7 +22285,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 40. Sees through any disguise or illusion, and hears talk perfectly up to a mile away.",
-            "id": "df8ddc2bf4f2"
+            "id": "e5cdcfd5cc43"
           },
           {
             "name": "Eye Peck",
@@ -22317,7 +22299,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 30. A hit scratches an eye, the Might being spent after the attack lands. An infection sets in next day and lasts seven days, blinding that eye; a Medicine or Herbalism roll of 15+ saves it, or Restoration of the Defiled Body stops the infection and restores sight.",
-            "id": "73a0eb909a12"
+            "id": "6f8efb37ae16"
           }
         ],
         "vis": [
@@ -22325,7 +22307,7 @@
             "pawns": 4,
             "art": "Intellego",
             "where": "in its eyes",
-            "id": "6d3a92a152f6"
+            "id": "febc09b4ea2a"
           }
         ],
         "equipment": "",
@@ -22336,7 +22318,7 @@
         "place_id": "lord_peter_s_manor",
         "place_level": 0,
         "links": [],
-        "secrets": "Lord Peter's familiar, once Damhan-allaidh's messenger. Misheard messages have undone several masters. A coward, it goes back to spirit form as soon as anyone attacks it."
+        "secrets": "Lord Peter's familiar, once Damhan-Allaidh's messenger. Misheard messages have undone several masters. A coward, it goes back to spirit form as soon as anyone attacks it."
       },
       {
         "id": "lord_peter_s_men",
@@ -22393,7 +22375,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 2,
-            "id": "84d2a30e9245"
+            "id": "c93acfd59a64"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22401,7 +22383,7 @@
             "attack": 13,
             "defense": 12,
             "damage": 8,
-            "id": "c4259102e7b0"
+            "id": "c9730acc1bde"
           }
         ],
         "soak": 3,
@@ -22510,7 +22492,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 0,
-            "id": "6fad0c4f8ec6"
+            "id": "f398e5754142"
           },
           {
             "name": "Club",
@@ -22518,7 +22500,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 3,
-            "id": "9d7edec99f4a"
+            "id": "a448bf040389"
           }
         ],
         "soak": 7,
@@ -22563,7 +22545,7 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in the body; infernally tainted",
-            "id": "19305b98c0a1"
+            "id": "08ac569ed621"
           }
         ],
         "equipment": "",
@@ -22641,7 +22623,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 1,
-            "id": "1d5bdbe48235"
+            "id": "5fd5ced3e019"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22649,7 +22631,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 7,
-            "id": "22e6327ad46d"
+            "id": "eac3e36ad992"
           },
           {
             "name": "Long Spear",
@@ -22657,7 +22639,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 8,
-            "id": "dde8b472b51c"
+            "id": "93f34496c91c"
           },
           {
             "name": "Dagger",
@@ -22665,7 +22647,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "abbdd69db34d"
+            "id": "30bacea5850e"
           }
         ],
         "soak": 3,
@@ -22819,7 +22801,7 @@
             "attack": 16,
             "defense": 11,
             "damage": 12,
-            "id": "b3cebee8cd7c"
+            "id": "a80a0e5840db"
           }
         ],
         "soak": 10,
@@ -22864,7 +22846,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe 25, as the Hermetic spell (ArM4 p. 145).",
-            "id": "f6288719ab66"
+            "id": "85b383d54b1b"
           },
           {
             "name": "Control Regio",
@@ -22878,7 +22860,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 40. Decides who enters or leaves his regio; spells to travel between its levels must defeat his Infernal Might of 40.",
-            "id": "10ae56e92266"
+            "id": "f3292c42daa2"
           },
           {
             "name": "The Unblinking Eye",
@@ -22892,7 +22874,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InIm 30. Moves his sight to any point within the regio; neither Parma nor any Hermetic effect detects it.",
-            "id": "40a9c957690b"
+            "id": "636b57b32eab"
           },
           {
             "name": "Sow Discord",
@@ -22906,7 +22888,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe, MuMe 10. Quietly makes or changes the emotions of people in his regio, to steer his visitors. An Int roll of 9+, modified by relevant Personality Traits, recognizes the urge as unnatural.",
-            "id": "bc4a7952bb4a"
+            "id": "c966b6ba9bf6"
           },
           {
             "name": "Ill Fortune",
@@ -22920,7 +22902,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi 30. The victim botches automatically on any stress roll of 0.",
-            "id": "dacabd6b065f"
+            "id": "0d39fadcc7fa"
           }
         ],
         "vis": [
@@ -22928,19 +22910,19 @@
             "pawns": 8,
             "art": "Corpus",
             "where": "body",
-            "id": "26f1da568e7f"
+            "id": "7c66e4bff476"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "heart",
-            "id": "4d00b6a007bf"
+            "id": "f86ed81c21c0"
           },
           {
             "pawns": 4,
             "art": "Mentem",
             "where": "brain",
-            "id": "bd15aaf8fcde"
+            "id": "6f187e20f46e"
           }
         ],
         "equipment": "",
@@ -23056,7 +23038,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bites all exposed flesh. The storyguide rules on protection; armor does not add to Soak. Damage roll each round: loose clothes 9 + stress die; sturdy clothing 6; winter garb or hauberk 3; half armor 0; full armor -3; full armor with helm and gauntlets -6.",
-            "id": "3089ef06cb65"
+            "id": "6f1ffac84658"
           }
         ],
         "vis": [],
@@ -23162,7 +23144,7 @@
             "attack": 13,
             "defense": 15,
             "damage": -2,
-            "id": "4f13221a6f48"
+            "id": "1a88a820465d"
           },
           {
             "name": "Spiritual Form",
@@ -23170,7 +23152,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "221a97fd65a3"
+            "id": "610606efab6d"
           }
         ],
         "soak": 1,
@@ -23250,7 +23232,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sees in near-darkness.",
-            "id": "bd3708a5e5cb"
+            "id": "f930fa30cd7d"
           },
           {
             "name": "Grant Fertility",
@@ -23264,7 +23246,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrCo 30. A woman of childbearing age who lets her sleep in her lap for over a quarter of an hour conceives, provided the conception would not be immaculate. Fourth Edition: 1 points.",
-            "id": "4dfc1959acae"
+            "id": "faf8d750e680"
           },
           {
             "name": "Hamfaring",
@@ -23278,7 +23260,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 30, 1 point an hour. While she seems asleep, her spirit form hunts whatever spirits threaten her mistress. Fourth Edition: 1 points.",
-            "id": "5458addf241f"
+            "id": "eec909d3d764"
           }
         ],
         "vis": [
@@ -23286,7 +23268,7 @@
             "pawns": 4,
             "art": "Creo",
             "where": "in her body",
-            "id": "2886ef1addb4"
+            "id": "52ce2474d622"
           }
         ],
         "equipment": "",
@@ -23371,7 +23353,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 10, costing 10 permanent Might. The victim makes a Sta stress roll of 6+ or miscarries. Against the dragon eggs success takes extraordinary luck, but given time one spirit gets through. Fourth Edition: 10 points.",
-            "id": "f5c8c7d70351"
+            "id": "c8bda30751e2"
           }
         ],
         "vis": [],
@@ -23542,7 +23524,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "5ebdc5b334d0"
+            "id": "974cddc9f7b5"
           },
           {
             "name": "Club",
@@ -23550,7 +23532,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 11,
-            "id": "27ec5897a2db"
+            "id": "daeb0c6bcc49"
           },
           {
             "name": "Rock",
@@ -23558,7 +23540,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 10,
-            "id": "72f7fc3e46bf"
+            "id": "90c556c2cbf5"
           }
         ],
         "soak": 12,
@@ -23610,7 +23592,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "0266dc00f8f0"
+            "id": "a057f9cc8e2e"
           }
         ],
         "equipment": "A staff of rusted iron.",
@@ -23625,13 +23607,13 @@
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "His mother",
-            "id": "9dc448c77ee2"
+            "id": "6283e2bdddb8"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "His daughter",
-            "id": "fceb1e112eff"
+            "id": "522bcbba0aff"
           }
         ],
         "secrets": "The meanest of a mean lot, secure in his lordship with his mother Skrukka and his henchmen Gapi and Gljufra-Geir behind him (p. 113). He entraps a lone man before the truce begins, claims his life is forfeit, and offers a deal that Skrukka seals with a Curse.\n\nConverted: the book gives no combat table, only the standard troll's raised by 5 to Init, Atk and Dfn and by 3 to Damage; those totals are here, and his fatigue levels are the standard troll's. A Rock has no Defense (n/a), shown as 0. No more magic than the average troll.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -23750,7 +23732,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Approximates any Hermetic spell at 1 Might per 5 spell levels, to level 25 alone; trolls in a group share the cost of higher spells, at about a minute per 5 levels (p. 30). Fourth Edition: 1 points.",
-            "id": "d20f6adea70a"
+            "id": "9ebe9fffd48b"
           }
         ],
         "vis": [
@@ -23758,7 +23740,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "cdca9d7ee52a"
+            "id": "48bf1035a68b"
           }
         ],
         "equipment": "A short walking stick, the thighbone of a human priest.",
@@ -23836,7 +23818,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "bd766a3c4c10"
+            "id": "4f9fce505374"
           },
           {
             "name": "Club",
@@ -23844,7 +23826,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "5c75c1650e2f"
+            "id": "49ffb97a1e6c"
           },
           {
             "name": "Rock",
@@ -23852,7 +23834,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "ec5f85624ef7"
+            "id": "b789cc16dca8"
           }
         ],
         "soak": 11,
@@ -23904,7 +23886,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in her body (p. 30)",
-            "id": "7399d31cff49"
+            "id": "85b24adb1b5a"
           }
         ],
         "equipment": "",
@@ -24014,7 +23996,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "a giant's (p. 31)",
-            "id": "9337ffcd3db7"
+            "id": "49ed1787f3dd"
           }
         ],
         "equipment": "",
@@ -24029,7 +24011,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "His half-brother",
-            "id": "6efdcbdab810"
+            "id": "89cb127a86cb"
           }
         ],
         "secrets": "Their mother Mjoll married the giant Red-Cloak after the giant-king Hardverk killed her first husband. Bard broke Thorkel's leg in a duel. Violent, unprincipled and cunning, he has a bad name as a troublemaker; humans annoy him, no more (p. 113).\n\nPrinted abilities, described and not built: External Soul, Jotunn Affinity with Frost (blizzards) 20, Curse (bad luck) 10, Transform (into rocks) 15, Speak Jotunn (Clan of Hrym) 8, Potency 8. The book gives him no combat table.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -24107,7 +24089,7 @@
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "His brother",
-            "id": "8909402d835d"
+            "id": "234d482e5844"
           }
         ],
         "secrets": "An extremely ancient giant who calls himself the son of Mimir, which would make him cousin to Odin (Mimir's sister Bestla being Odin's mother). The claim cannot be tested. He has a wide range of powers, but does not own the regio or control its bounds. The book says no other characteristics should be needed (p. 118).\n\nHe may be magical or faerie: lineage and manners suggest fay, yet like landvaettir he is at home in a magic realm. The book leaves it deliberately open; Magic here is the printed realm of the regio, not a ruling.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -24185,10 +24167,10 @@
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "His lieutenant",
-            "id": "f176f303eed8"
+            "id": "2212ef9deec1"
           }
         ],
-        "secrets": "Not as strong as his brother, but formidable. He has a special power over fire: he handles molten metal bare-handed and flings it in combat. He has an External Soul, so unless the magi have made a Setna's Blade for him he survives a battle (pp. 118, 127-128). He knows where Damhan-allaidh's soulstone is. No other statistics are printed.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
+        "secrets": "Not as strong as his brother, but formidable. He has a special power over fire: he handles molten metal bare-handed and flings it in combat. He has an External Soul, so unless the magi have made a Setna's Blade for him he survives a battle (pp. 118, 127-128). He knows where Damhan-Allaidh's soulstone is. No other statistics are printed.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
         "id": "the_golden_sphinxes",
@@ -24234,7 +24216,7 @@
             "attack": 28,
             "defense": 21,
             "damage": 19,
-            "id": "f9cac0280528"
+            "id": "b4a6da65dd85"
           }
         ],
         "soak": 26,
@@ -24279,7 +24261,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrTe 30. Heals up to three wound levels a round at a Might point each, needing no action. Fourth Edition: 1 points.",
-            "id": "045e1323dd15"
+            "id": "4f40d991d556"
           },
           {
             "name": "Sense Intents",
@@ -24293,7 +24275,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 100. Senses the presence of benign or malevolent forces.",
-            "id": "21ebe01caedf"
+            "id": "683d839baf56"
           },
           {
             "name": "Binding Word",
@@ -24307,7 +24289,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 30. Holds any person or group to its word by controlling their bodies. Fourth Edition: 5 points.",
-            "id": "ca31ea104b36"
+            "id": "beb53a507934"
           },
           {
             "name": "Thoughts Within the Babble",
@@ -24321,7 +24303,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InMe 20. Speaks and understands any language.",
-            "id": "caeff0cb6d10"
+            "id": "1bd390dc3b00"
           }
         ],
         "vis": [
@@ -24329,7 +24311,7 @@
             "pawns": 50,
             "art": "Vim",
             "where": "in each, if destroyed",
-            "id": "15081e714098"
+            "id": "dcd19aa9af7a"
           }
         ],
         "equipment": "",
@@ -24445,7 +24427,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any spell effect the storyguide likes, up to half his current Might. Effects that would need vis cost 1 Might per magnitude; others cost nothing.",
-            "id": "e98178bef097"
+            "id": "8f6591f2d15f"
           }
         ],
         "vis": [],
@@ -24457,7 +24439,7 @@
         "place_id": "the_obsidian_temple",
         "place_level": 0,
         "links": [],
-        "secrets": "Might 120, reduced to 30 by long battle with Hetep's corruption.\n\nSon of Rameses II, the most learned man in Egypt and perhaps its greatest magician, schooled in secret texts beyond the priests of Amen-Ra. Proud, he took the book of Thoth from Nefrekeptah's tomb despite warnings; a terrible vision from Thoth made him return it and do penance. He rose in Thoth's favour and was given the stelae's guardianship, which his spirit has held for nearly two and a half millennia.\n\nHe has always seen Hetep's shadow in the magicians who tried to bring the poison in, until Damhan-allaidh. For four centuries he has fought it, and he can no longer bar Damhan-allaidh or stand against him. As the first to try to codify magical thought, he has become the embodiment of man's understanding of magic.\n\nSetna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: Ind. He supplies a papyrus scroll. It can only be invested in a weapon, never made a spell, and each weapon is for one named victim. Driven through the heart, whatever Magic Resistance stands against it, it destroys the soulstone and kills. In the end he can restore any magus Hetep's Sunder the Magician's Spirit has maimed, Iain included (p. 129)."
+        "secrets": "Might 120, reduced to 30 by long battle with Hetep's corruption.\n\nSon of Rameses II, the most learned man in Egypt and perhaps its greatest magician, schooled in secret texts beyond the priests of Amen-Ra. Proud, he took the book of Thoth from Nefrekeptah's tomb despite warnings; a terrible vision from Thoth made him return it and do penance. He rose in Thoth's favour and was given the stelae's guardianship, which his spirit has held for nearly two and a half millennia.\n\nHe has always seen Hetep's shadow in the magicians who tried to bring the poison in, until Damhan-Allaidh. For four centuries he has fought it, and he can no longer bar Damhan-Allaidh or stand against him. As the first to try to codify magical thought, he has become the embodiment of man's understanding of magic.\n\nSetna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: Ind. He supplies a papyrus scroll. It can only be invested in a weapon, never made a spell, and each weapon is for one named victim. Driven through the heart, whatever Magic Resistance stands against it, it destroys the soulstone and kills. In the end he can restore any magus Hetep's Sunder the Magician's Spirit has maimed, Iain included (p. 129)."
       },
       {
         "id": "hetep_s_undead_form",
@@ -24534,7 +24516,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "fb2a455bcedb"
+            "id": "6e88fb81e6d0"
           },
           {
             "name": "Claw",
@@ -24542,7 +24524,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "1806a2643600"
+            "id": "9a2663a79bbe"
           }
         ],
         "soak": 18,
@@ -24587,7 +24569,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi 50. As Hetep's own power of that name: a landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma.",
-            "id": "5cbdac5cdb06"
+            "id": "c8bf7ee9948d"
           },
           {
             "name": "Shapechange",
@@ -24601,7 +24583,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An) 40. Gives a host he possesses his own beast shape.",
-            "id": "1e793659653f"
+            "id": "e502923aca7f"
           },
           {
             "name": "Raise Corpse",
@@ -24615,7 +24597,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 25. Raises anyone he slays as walking dead.",
-            "id": "f6534098376b"
+            "id": "fe53cbdc2093"
           },
           {
             "name": "Infernal Spell",
@@ -24629,12 +24611,12 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The equivalent of spontaneous spells to level 30, at 1 Might per magnitude.",
-            "id": "25abdf6b776d"
+            "id": "218ec7c82c1c"
           }
         ],
         "vis": [],
         "equipment": "",
-        "appearance": "Damhan-allaidh's body, more hideous than in life: a huge skinless baboon running with putrefaction.",
+        "appearance": "Damhan-Allaidh's body, more hideous than in life: a huge skinless baboon running with putrefaction.",
         "notes": "As printed in Fourth Edition: Bite Init +16, Attack +13, Defense +16, Damage +19; Claw Init +16, Attack +13, Defense +16, Damage +16; Soak +26.",
         "source": "Land of Fire and Ice p. 128",
         "detail": "Full",
@@ -24645,13 +24627,13 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "His body",
-            "id": "7a7e5377f216"
+            "id": "0ccdea371339"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The same demon",
-            "id": "03b6f05dbe9d"
+            "id": "eaf9f68630ae"
           }
         ],
         "secrets": "Hetep is bound into his former servant's shell. Destroying it lets the Thothian watchers capture him at once (p. 128). Body levels OK, 0, 0, -1, -3, -5, Incapacitated. Presence is printed N/A, shown as 0. Might Form Corpus is this pack's reading."
@@ -24799,7 +24781,7 @@
             "attack": 3,
             "defense": 3,
             "damage": 7,
-            "id": "a0f0324a1830"
+            "id": "0071590392b0"
           },
           {
             "name": "Grapple",
@@ -24807,7 +24789,7 @@
             "attack": 3,
             "defense": 3,
             "damage": null,
-            "id": "3c1fb2b2e3b5"
+            "id": "064f572c2be7"
           },
           {
             "name": "Smother",
@@ -24815,7 +24797,7 @@
             "attack": null,
             "defense": 0,
             "damage": 10,
-            "id": "58f5c66d4981"
+            "id": "3dff013dbf75"
           }
         ],
         "soak": 21,
@@ -24969,7 +24951,7 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
-        "secrets": "A gruagach born in 749, father of Iain, reckoned dead by the magi after three centuries buried. Once recovered he is barely human, fighting for each breath in constant pain, and moves only by shapeshifting, into the one form he can hold for long. Endurance of the Berserkers, or any Corpus or Mentem effect that quells pain, gives him respite, and with it he can help the magi hunt Damhan-allaidh; without it he can only beg to die. Even so he will ask Iain to destroy his soulstone once the Spider is gone (p. 136).\n\nA fleshy thing with no shape, bones or organs, able to squeeze into small places, forever putting out and drawing in tentacles of flesh.\n\nMagic Resistance 51 printed, and no Might. Presence n/a in the block, 0 here. Student of Brude +1 is left out: the catalog's Student of a realm is not a teacher. Soak +41 includes the +40 of his invulnerability.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, a wholly monstrous look, no bones (hence the Characteristics, wrecked by three centuries buried), constant pain.\n\nShapeless Form, which he takes at will: Int +3, Per +1, Str +5, Sta +5, Dex -4, Qik -3, Size +5, Soak +50, tireless; Body levels OK, 0, 0, 0, -1, -1, -3, -3, -5, -5, Incapacitated. The Combat lines are this form's; the book gives Grapple no Defense or Damage and Smother only Damage. Each turn he may put out up to five pseudopods at one foe. If two or more strike in a round he may grapple and draw the victim in, and on success smothering starts next round, to Fatigue and then Body levels, armor no help.\nAbilities: Curse 3 to Curse-Throwing; Herbalism 5 to Profession: Herbalist.\n\nAbilities renamed: Enchanting Music 4 to Enchanting: Music; Fantastic Beast Lore 4 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Shapeshift 16 to Shapeshifter.\n\nAbilities with no counterpart: Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 30 xp spent on Organization Lore: Gruagachan.\n\nPowers with no Ability now, as printed: Geasa 3 (physical); Gruagach Wisdom 15 (new Talents); Potency 6 (shapeshift); Gift 8 (physical); Transform 7 (birds)."
+        "secrets": "A gruagach born in 749, father of Iain, reckoned dead by the magi after three centuries buried. Once recovered he is barely human, fighting for each breath in constant pain, and moves only by shapeshifting, into the one form he can hold for long. Endurance of the Berserkers, or any Corpus or Mentem effect that quells pain, gives him respite, and with it he can help the magi hunt Damhan-Allaidh; without it he can only beg to die. Even so he will ask Iain to destroy his soulstone once the Spider is gone (p. 136).\n\nA fleshy thing with no shape, bones or organs, able to squeeze into small places, forever putting out and drawing in tentacles of flesh.\n\nMagic Resistance 51 printed, and no Might. Presence n/a in the block, 0 here. Student of Brude +1 is left out: the catalog's Student of a realm is not a teacher. Soak +41 includes the +40 of his invulnerability.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, a wholly monstrous look, no bones (hence the Characteristics, wrecked by three centuries buried), constant pain.\n\nShapeless Form, which he takes at will: Int +3, Per +1, Str +5, Sta +5, Dex -4, Qik -3, Size +5, Soak +50, tireless; Body levels OK, 0, 0, 0, -1, -1, -3, -3, -5, -5, Incapacitated. The Combat lines are this form's; the book gives Grapple no Defense or Damage and Smother only Damage. Each turn he may put out up to five pseudopods at one foe. If two or more strike in a round he may grapple and draw the victim in, and on success smothering starts next round, to Fatigue and then Body levels, armor no help.\nAbilities: Curse 3 to Curse-Throwing; Herbalism 5 to Profession: Herbalist.\n\nAbilities renamed: Enchanting Music 4 to Enchanting: Music; Fantastic Beast Lore 4 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Shapeshift 16 to Shapeshifter.\n\nAbilities with no counterpart: Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 30 xp spent on Organization Lore: Gruagachan.\n\nPowers with no Ability now, as printed: Geasa 3 (physical); Gruagach Wisdom 15 (new Talents); Potency 6 (shapeshift); Gift 8 (physical); Transform 7 (birds)."
       },
       {
         "id": "hetep_the_corrupter",
@@ -25046,7 +25028,7 @@
             "attack": 15,
             "defense": 18,
             "damage": 10,
-            "id": "bb9e3c76dab7"
+            "id": "9416bc101a51"
           }
         ],
         "soak": 13,
@@ -25091,7 +25073,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi. A landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma. Hermetic magic has no cure while he remains in the mortal realm, and elsewhere he alone can give one, as a rule for a cardinal pact.",
-            "id": "9038df57f6cd"
+            "id": "0d6566d645c7"
           },
           {
             "name": "Shapechange",
@@ -25105,7 +25087,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An). Turns one he possesses into his natural body.",
-            "id": "ef48880c5ac1"
+            "id": "a608bfd255bc"
           },
           {
             "name": "Raise Corpse",
@@ -25119,7 +25101,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo. Raises anyone he kills as one of the walking dead.",
-            "id": "a6a2e32ab449"
+            "id": "e3671033196b"
           },
           {
             "name": "Infernal Spell",
@@ -25133,7 +25115,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works the like of spontaneous spells to level 30, at 1 Might a magnitude.",
-            "id": "d55115bc69b6"
+            "id": "f0fc02792678"
           },
           {
             "name": "Possession",
@@ -25147,7 +25129,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe. Any human in line of sight. Entry costs Might equal to the victim's Confidence + Stamina (+3 if Strong-Willed) + twice any True Faith. Parma resists, using the highest of Corpus, Mentem or Vim, against his penetration of 65 + stress die; a Natural Resistance roll (Stamina + stress die) of 60 also stops it. He can stay indefinitely. Hermetic magic cannot detect him; detection and exorcism are resisted by twice his current Might.",
-            "id": "4c063ca7cc2c"
+            "id": "9aa6b41fbd03"
           },
           {
             "name": "Corrupt Knowledge",
@@ -25161,7 +25143,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi, 1 point a day. Slowly corrupts a written work on magic he touches: a summa takes days equal to the experience it holds (55 for a level 10 summa), a libri quaestionum or tractatus days equal to its quality, an Authority a year and a day. A reader then gains an Occult Lore experience point a season, taken out of the study total, and a Personality Trait for the dark arts at the score those points give. Only Sense Holiness and Unholiness or a like divine gift shows the change.",
-            "id": "6f55c0faa3e6"
+            "id": "cbc4b12b4d22"
           }
         ],
         "vis": [
@@ -25169,7 +25151,7 @@
             "pawns": 18,
             "art": "Vim",
             "where": "in his heart, Infernally tainted",
-            "id": "68d73fa02042"
+            "id": "e652fd78aee4"
           }
         ],
         "equipment": "",
@@ -25180,11 +25162,11 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
-        "secrets": "Once a servant of Thoth, he betrayed his master for Hell and means to turn all magic to its service, working chiefly on magicians. His former kin kept watch: Setna caught him time and again hiding in those who came to Thoth's stelae, until Damhan-allaidh brought him into the sanctum. There he set to corrupting Thoth's own words, hoping to lay the magic realm at Hell's feet. Setna noticed before it was done and drove Damhan-allaidh out, but the corruption went on sapping Setna, and Hetep needed only time, until Pralix broke in on the Spider's preparations and in the end beat him. Victor of Vindolanda captured Hetep in 875. The two have been locked in a battle of wills ever since, beyond mortal understanding; for a century Victor has withstood all the demon can conjure. Hetep is no great thinker, and Victor has tricked him into letting slip that he was close to finishing some plot against the Order (pp. 137-138)."
+        "secrets": "Once a servant of Thoth, he betrayed his master for Hell and means to turn all magic to its service, working chiefly on magicians. His former kin kept watch: Setna caught him time and again hiding in those who came to Thoth's stelae, until Damhan-Allaidh brought him into the sanctum. There he set to corrupting Thoth's own words, hoping to lay the magic realm at Hell's feet. Setna noticed before it was done and drove Damhan-Allaidh out, but the corruption went on sapping Setna, and Hetep needed only time, until Pralix broke in on the Spider's preparations and in the end beat him. Victor of Vindolanda captured Hetep in 875. The two have been locked in a battle of wills ever since, beyond mortal understanding; for a century Victor has withstood all the demon can conjure. Hetep is no great thinker, and Victor has tricked him into letting slip that he was close to finishing some plot against the Order (pp. 137-138)."
       },
       {
         "id": "damhan_allaidh_the_spider",
-        "name": "Damhan-allaidh, the Spider",
+        "name": "Damhan-Allaidh, the Spider",
         "many": false,
         "how_many": "",
         "realm": "Magic",
@@ -25373,7 +25355,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "1426eef9f0e7"
+            "id": "f71b83cf0ac0"
           },
           {
             "name": "Claw",
@@ -25381,7 +25363,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "1c4054b7f639"
+            "id": "9c1d51487da7"
           }
         ],
         "soak": 11,
@@ -25623,7 +25605,7 @@
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His demon",
-            "id": "51d123246f11"
+            "id": "17c4d9737e9a"
           }
         ],
         "secrets": "The ancient gruagach, born in 570, whom the Order thinks dead. His name, said davan-alli, is Gaelic for the spider, and he is also called Dav'nalleous (pp. 70-71). His mind is close to ruin, and the scrap of humanity left in it longs to be free of him. Beast instinct usually rules and he obeys Hetep at a word. Brought to reflect on his state, by The Gift of Reason or fine roleplaying, he may turn on Hetep and seek God's grace. Only true remorse, unlikely as it is, would move God to undo the soul he hid away and let him rest (p. 139).\n\nNo longer human at all: hairless, crusted with pus and open sores, with a beast's head of huge jaw and fangs, a back too twisted to walk upright, and long iron-hard claws for hands and feet.\n\nMagic Resistance 77 printed, and no Might. Presence n/a in the block, 0 here; Intelligence and Perception are worn down by three centuries buried. Need Not Sleep +5 has no catalog entry and is kept here. Vulnerability (obsidian) and Vulnerable (Celtic holy relics) are Vulnerable to a substance.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, Offensive to Animals; a wholly monstrous look; clothes rot on his skin; fangs (+8 damage in Bite); a hunchback; iron-hard claws (+5 damage in Brawl); no body hair; skin crusted with old pus; swollen abdomen; open sores; constant pain. Body levels as printed: OK, 0, 0, -1, -3, -5, Incapacitated.\n\nHis Special Gruagach Abilities act like Hermetic Form and Technique pairs, each a separate skill casting spontaneous Hermetic-style spells. Result level = Ability + Characteristic + stress die if he spends a point of that Characteristic, or half that if not. A botch after spending loses the point for good; otherwise it comes back as Fatigue does. Parma or wards resist; Penetration equals the result after any halving. Incinerate: as Creo and Rego Ignem, true fire only, Presence (now only at half). Decay: as Perdo Animal and Corpus, Stamina. Enthrall: as Rego and Perdo Mentem, Intelligence. Sacrifice: as Creo Vim; each Body level drained gives a pawn of vis per 10 levels of result, only at Imbolc, Beltane, Lughnasa and Samhain. Shatter: as Perdo Herbam and Terram, Strength.\nVirtues and Flaws: Hatred (Major): the Order of Hermes; Fury as Wrathful (Major): when thwarted; Weakness (Minor): strong drink.\nAbilities: Herbalism 6 to Profession: Herbalist; Occult Lore 5 to Infernal Lore; Visions 3 to Premonitions; Curse 17 to Curse-Throwing.\n\nAbilities renamed: Enchanting Music 6 to Enchanting: Music; Fantastic Beast Lore 8 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Sense Holiness & Unholiness 7 to Sense Holiness and Unholiness; Shapeshift 20 to Shapeshifter.\n\nAbilities with no counterpart: Contortions' 140 xp spent on Athletics; Direction Sense's 50 xp spent on Area Lore: Scottish Highlands; Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 15 xp spent on Organization Lore: Gruagachan; Mimicry's 75 xp spent on Guile; Weather Sense's 50 xp spent on Wilderness Sense.\n\nPowers with no Ability now, as printed: Geasa 7 (physical); Gift 6 (characteristics); Gruagach Wisdom 30 (new Talents); Potency 6 (curse); Transform 20 (fish); Decay 15 (bone-breaking); Enthrall 10 (for sacrifice); Incinerate 13 (projection); Sacrifice 8 (human); Shatter 9 (explosion)."
@@ -25724,7 +25706,7 @@
             "attack": 8,
             "defense": 0,
             "damage": 40,
-            "id": "45c6ce60c701"
+            "id": "0aab9a5d1d5a"
           },
           {
             "name": "Bite",
@@ -25732,7 +25714,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 29,
-            "id": "ba09f39d6cd1"
+            "id": "339e50c56e8b"
           },
           {
             "name": "1st Claw",
@@ -25740,7 +25722,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "6afa80db57b5"
+            "id": "d132a4459cff"
           },
           {
             "name": "2nd Claw",
@@ -25748,7 +25730,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "a9ba3b2611de"
+            "id": "7e1bfda48d85"
           }
         ],
         "soak": 18,
@@ -25800,7 +25782,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg. A gout of fire over an area 10 paces wide and 30 long: intensely hot but with little force, so any cover blocks it.",
-            "id": "4bc26a1cb73c"
+            "id": "c9d25cebe0ec"
           },
           {
             "name": "Spellcasting",
@@ -25814,7 +25796,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts a range of spells as if he had the Arts Creo 20, Rego 10, Animal 20 and Imaginem 10.",
-            "id": "3a14b91a0504"
+            "id": "797613b46ce6"
           }
         ],
         "vis": [],
@@ -26107,7 +26089,7 @@
             "attack": 27,
             "defense": 24,
             "damage": 22,
-            "id": "38ed7f8fa276"
+            "id": "fcd0588b1a52"
           },
           {
             "name": "First Claw",
@@ -26115,7 +26097,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "d3043dfb4d71"
+            "id": "4c4270d44902"
           },
           {
             "name": "Second Claw",
@@ -26123,7 +26105,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "73fb9ef591b9"
+            "id": "87ef43223089"
           }
         ],
         "soak": 23,
@@ -26168,7 +26150,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes any weather up to 12th magnitude. CrAu, ReAu.",
-            "id": "fabf66a3a9a7"
+            "id": "d5b9e6c07a27"
           },
           {
             "name": "Spiritual Form",
@@ -26182,7 +26164,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "d9173401f821"
+            "id": "26f1477a5948"
           }
         ],
         "vis": [],
@@ -26282,7 +26264,7 @@
             "attack": 16,
             "defense": 15,
             "damage": 45,
-            "id": "ccfcc88c2393"
+            "id": "28d6ba7cb8b2"
           },
           {
             "name": "First Kick",
@@ -26290,7 +26272,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "67876a6da6c0"
+            "id": "b6accc2f90f2"
           },
           {
             "name": "Second Kick",
@@ -26298,7 +26280,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "a2b21d3cf874"
+            "id": "4ee22ecad516"
           }
         ],
         "soak": 36,
@@ -26343,7 +26325,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Changes its size at will from +2 to +8; away from its duty it roams the highlands at +2.",
-            "id": "aa00e413f36c"
+            "id": "776776159ef0"
           },
           {
             "name": "Spiritual Form",
@@ -26357,19 +26339,19 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "b97949ce54ab"
+            "id": "f66603f3f6fa"
           }
         ],
         "vis": [],
         "equipment": "",
-        "appearance": "Today a big bull of the Norse breed with a near-white coat. Freed from the Dominion, a vast aurochs.",
-        "notes": "The third guardian of Iceland, wandering the highlands for millennia until the Norse brought cattle. In 1105 it strayed into the fields of Skalholt after the bishop's cows, stayed too long in the Dominion, lost its power and was caught. It ages and dies, and its spirit passes to a gray bull calf of its own.\n\nThe block is its full power, Might 80 and Size +8. While the Dominion holds it, its Might is 20 and its Size +2.\n\nOnly the Gore is ordinary; both Kicks are Furious Attacks that can strike several foes in a round with no penalty. Body levels as printed: OK, 0, 0, 0, -1, -1, -1, -3, -3, -3, -5, -5, -5, Incapacitated. The Might Form is the pack's reading of its powers.\n\nAs printed in Fourth Edition: Gore Init +20, Attack +20, Defense +7, Damage +58; First Kick Init +15, Attack +20, Defense +7, Damage +48; Second Kick Init +15, Attack +20, Defense +7, Damage +48; Soak +68.",
+        "appearance": "Today a big bull of the Norse breed with a near-white coat. Freed from the Dominion, a huge aurochs the size of a house.",
+        "notes": "The third guardian of Iceland, wandering the highlands for millennia until the Norse brought cattle. In 1105 it strayed into the fields of Skalholt after the bishop's cows, stayed too long in the Dominion, lost its power and was caught. It ages and dies, and its spirit passes to a gray bull calf of its own.\n\nThe block is its full power, Might 80 and Size +8. While the Dominion holds it, its Might is 20 and its Size +2.\n\nOnly the Gore is ordinary; both Kicks are Furious Attacks that can strike several foes in a round with no penalty. Body levels as printed: OK, 0, 0, 0, -1, -1, -1, -3, -3, -3, -5, -5, -5, Incapacitated. The Might Form is the pack's reading of its powers.\n\nFreed, it is the size of a house (Land of Fire & Ice p. 7) and recovers over a matter of weeks, faster in a magical aura (p. 112).\n\nVariant: The Icelandic Wars has it stand over 120 feet at the shoulder and regain its full size within minutes once out of the Dominion, fed by the Host (pp. 7-8).\n\nAs printed in Fourth Edition: Gore Init +20, Attack +20, Defense +7, Damage +58; First Kick Init +15, Attack +20, Defense +7, Damage +48; Second Kick Init +15, Attack +20, Defense +7, Damage +48; Soak +68.",
         "source": "Land of Fire and Ice Icelandic Wars p. 6",
         "detail": "Full",
         "place_id": "skalholt",
         "place_level": 0,
         "links": [],
-        "secrets": "The Icelandic Wars has it stand over 120 feet at the shoulder and regain its full size within minutes once out of the Dominion, fed by the Host (pp. 7-8). Land of Fire & Ice has it the size of a house (p. 7) and growing over weeks (p. 112). Both are kept."
+        "secrets": ""
       },
       {
         "id": "the_guardian_host",
@@ -26454,7 +26436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each spirit can make a spell effect of a level equal to its permanent Might. Art and cost vary.",
-            "id": "205a1db6bdd8"
+            "id": "f3eb69e7659f"
           },
           {
             "name": "Grant Might",
@@ -26468,7 +26450,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the guardian temporary Might points. CrVi.",
-            "id": "6750da4ac353"
+            "id": "7d3591540eae"
           },
           {
             "name": "Heal Guardian",
@@ -26482,7 +26464,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Heals the guardian one Health level for every 10 Might spent, by touch. CrAn or CrCo.",
-            "id": "f205a5c62fd4"
+            "id": "6c373429ba10"
           },
           {
             "name": "Spiritual Form",
@@ -26496,7 +26478,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "7da48150a496"
+            "id": "2f435c33f205"
           },
           {
             "name": "Shapeshift",
@@ -26510,7 +26492,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes any form it likes, fighting while solid as a Beast of Virtue of that kind; a landvaettir of Might 40 or more can become a fantastic beast of like Might.",
-            "id": "2be8fa951645"
+            "id": "e12f75c990c5"
           }
         ],
         "vis": [],
@@ -26620,7 +26602,7 @@
             "attack": 22,
             "defense": 19,
             "damage": 35,
-            "id": "d8b775cde7e3"
+            "id": "2ecfa63b0938"
           },
           {
             "name": "Thrown Molten Gold",
@@ -26628,7 +26610,7 @@
             "attack": 13,
             "defense": 0,
             "damage": 50,
-            "id": "004a86bf7c19"
+            "id": "d60470840806"
           }
         ],
         "soak": 20,
@@ -26701,7 +26683,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works some fire effects directly, without calling on Jotunn spirits, with Stamina in place of Communication in his Jotunn Affinity casting total. CrIg, Te varies. His favourite conjures molten gold that he handles unharmed and throws.",
-            "id": "fd82104a9d4c"
+            "id": "0ee44eff4ecc"
           },
           {
             "name": "Immunity to Fire",
@@ -26715,7 +26697,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Jotunn Affinity has made him proof against all heat and flame.",
-            "id": "d82a9b688e13"
+            "id": "72290df3740c"
           },
           {
             "name": "Break Wards",
@@ -26729,7 +26711,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A power of the hammer, which must strike the target. The first blow dispels wards of 8th magnitude or less and breaks any barrier they guard; each later blow reaches a magnitude higher, to 20th. PeVi, Te.",
-            "id": "0db5c88eaafb"
+            "id": "fd8d6c84534f"
           }
         ],
         "vis": [],
@@ -26745,7 +26727,7 @@
             "kind": "neighbours",
             "target_id": "the_clan_of_geirrod",
             "note": "Speaks its Jotunn; leads the fire giants",
-            "id": "7d69d5a7a85b"
+            "id": "758b22ca3307"
           }
         ],
         "secrets": "A Hermetic scouting party attacked his son's regio home, killed his two granddaughters and took his son's beaten body to their tower. The son lives through his External Soul, and the magi cut him for vis; Gull takes it for a depraved game and wants Julius's forces dead (Icelandic Wars p. 11)."
@@ -26832,7 +26814,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "888b0a4decef"
+            "id": "52632a7b06d7"
           },
           {
             "name": "Club",
@@ -26840,7 +26822,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "7a929b137dd9"
+            "id": "a8830e5bd028"
           },
           {
             "name": "Rock",
@@ -26848,7 +26830,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "f627847eef7c"
+            "id": "d81735e469c4"
           }
         ],
         "soak": 11,
@@ -26928,7 +26910,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi. Anyone fighting a troll has exceedingly bad luck: a stress die botches on a 0 or a 2, twice the chance, and always with two extra botch dice.",
-            "id": "7da55fbd2205"
+            "id": "517125cb7e10"
           },
           {
             "name": "Gift of the Magic Arts",
@@ -26942,7 +26924,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "About one troll in 100, usually female and with Intelligence +1. Though they do not study the Hermetic Arts, they can approximate any Hermetic spell for 1 Might per 5 levels (the cost shown), up to level 25. Groups can share the Might of a higher spell, taking about a minute per 5 levels to cast it.",
-            "id": "67e35e86536d"
+            "id": "50b6699849ed"
           }
         ],
         "vis": [
@@ -26950,7 +26932,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in the body; more if particularly powerful",
-            "id": "9c31cd6068fc"
+            "id": "c0672cc357da"
           }
         ],
         "equipment": "",
@@ -27007,7 +26989,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 15,
-            "id": "071f38818101"
+            "id": "72f20c5ab2ea"
           },
           {
             "name": "Club",
@@ -27015,7 +26997,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 18,
-            "id": "a6b4a0714bfe"
+            "id": "eedd5cb28c5b"
           },
           {
             "name": "Boulder",
@@ -27023,7 +27005,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 17,
-            "id": "21f3af2f9bc1"
+            "id": "1454cbd5755d"
           }
         ],
         "soak": 9,
@@ -27082,7 +27064,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "in the body",
-            "id": "3f2076f3d11d"
+            "id": "3b40d345e731"
           }
         ],
         "equipment": "",
@@ -27198,7 +27180,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries itself to any point in the Mundane, Magic or Faerie Realms.",
-            "id": "89d5b15f6032"
+            "id": "cd400161d584"
           },
           {
             "name": "Gateway",
@@ -27212,7 +27194,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bridges the mundane and magical realms, swallowing or bringing up people and things while it stays incorporeal. With a magical archway, trilithon or the like this costs nothing; without one, 5 Might.",
-            "id": "37ecdddb4c77"
+            "id": "36e313326597"
           },
           {
             "name": "Knowledge of the Subterranean",
@@ -27226,7 +27208,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InTe 40. Sees or hears whatever happens under the earth, or knows where anything buried lies. Fourth Edition: 3 points.",
-            "id": "ab31191108ce"
+            "id": "600508769a71"
           },
           {
             "name": "Strong Willed",
@@ -27240,7 +27222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "No magic can compel it to act against its will.",
-            "id": "1fe62763e6a4"
+            "id": "e94b4beb28aa"
           }
         ],
         "vis": [],

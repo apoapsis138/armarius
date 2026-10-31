@@ -1084,7 +1084,7 @@ def _feast_of_thanks(b: Builder) -> None:
             place=_named(b, "Skalholt"),
             antagonist="Bishop Magnus Gizurarson",
             summary="Story seed (p. 112): Bard, fearing a supernatural attack, "
-            "perhaps by Damhan-allaidh himself, asks the characters to 'rescue' "
+            "perhaps by Damhan-Allaidh himself, asks the characters to 'rescue' "
             "Iceland's third guardian from the Dominion's grip.",
             secrets="The Bishop of Skalholt owns the bull and will not part with "
             "it, for its many fine calves have made him prosperous, so a raid "
@@ -1109,12 +1109,12 @@ def _scottish_giants(b: Builder) -> None:
             "(sroo-doo, Black Tide) and their leader Geamhradh Grian (gev-ra "
             "grean, Winter Sun). They speak Pictish, Jotunn and Gaelic. Use the "
             "giants' statistics of p. 31; none has magical abilities.",
-            "Damhan-allaidh laid a geas on the clan after Victor took the Carnac "
+            "Damhan-Allaidh laid a geas on the clan after Victor took the Carnac "
             "gateway, seeking another road to the temple: they cannot leave "
             "Iceland until they have visited the Temple of Thoth in the "
             "Kerlingarfjoll valley. They have found the valley but not the way "
             "in. Bard wants them gone and knows nothing of it (p. 111).",
-            "Telling them frees Iceland of them but may hand Damhan-allaidh "
+            "Telling them frees Iceland of them but may hand Damhan-Allaidh "
             "vital secrets. One answer: set the Kerlingarfjoll gatestone outside "
             "the covenant and walk them through briefly, so the geas is met and "
             "they still cannot find the way in. Freed, they go home and refuse "
@@ -1365,7 +1365,7 @@ def _glittering_plains(b: Builder) -> None:
             "power over fire: he handles molten metal bare-handed and flings it "
             "in combat. He has an External Soul, so unless the magi have made a "
             "Setna's Blade for him he survives a battle (pp. 118, 127-128). He "
-            "knows where Damhan-allaidh's soulstone is. No other statistics are "
+            "knows where Damhan-Allaidh's soulstone is. No other statistics are "
             "printed.",
             CORPUS_FORM,
         ),
@@ -1538,7 +1538,7 @@ def _brighdes_gauntlet(b: Builder) -> None:
             "120-124).",
             secrets=paragraphs(
                 "Victor's plan. Demonic deceit defeats magic, but demons can be "
-                "fooled, and only Hetep knows where Damhan-allaidh lies, whom "
+                "fooled, and only Hetep knows where Damhan-Allaidh lies, whom "
                 "Victor means to see destroyed. For one season a year he has "
                 "taught her the Arts, and for the other three how to fight the "
                 "demon he locked in her. On leaving her he goes back to his "
@@ -1555,7 +1555,7 @@ def _brighdes_gauntlet(b: Builder) -> None:
                 "If Brighde is a player character whose player refuses, Hetep "
                 "escapes into one of the covenfolk and is pursued instead (p. "
                 "121).",
-                "The story should end with Damhan-allaidh and Hetep escaping. If "
+                "The story should end with Damhan-Allaidh and Hetep escaping. If "
                 "Victor knew of Hetep's threat to the Magic Realm he would "
                 "destroy himself at once, but nobody knows of it yet (p. 122).",
             ),
@@ -1576,27 +1576,27 @@ def _brighdes_gauntlet(b: Builder) -> None:
                     at=2,
                     season="Spring",
                     clues="Hetep takes her and heads west. He meets the demonic "
-                    "crow Whisper (p. 83), who tells him Damhan-allaidh's last "
+                    "crow Whisper (p. 83), who tells him Damhan-Allaidh's last "
                     "location in a tongue Brighde cannot understand, and "
                     "resolves to take his old pawn as a host. The mirror lets "
                     "the players see he is making for Old Vindolanda. If she "
                     "tries the Leap he blocks her, and that fight does not end "
-                    "before Damhan-allaidh is found.",
+                    "before Damhan-Allaidh is found.",
                 ),
                 S(
                     "Old Vindolanda",
                     at=3,
                     clues="See p. 93. Hetep has dug up the Lundy Island gatestone "
-                    "and is freeing Damhan-allaidh; his minion Ammon guards the "
+                    "and is freeing Damhan-Allaidh; his minion Ammon guards the "
                     "gateway and must be beaten.",
                 ),
                 S(
-                    "Damhan-allaidh's tomb",
+                    "Damhan-Allaidh's tomb",
                     at=4,
                     clues="Hetep fills the chamber with air by Creo Auram, digs "
                     "the body from the rubble, abandons Brighde, possesses his "
                     "ally and pours in Infernal Might. Within a few rounds "
-                    "Damhan-allaidh wakes and tries to kill her before she can "
+                    "Damhan-Allaidh wakes and tries to kill her before she can "
                     "Leap.",
                     stopped="Quick players may save her. A player Brighde may "
                     "fight it out as a dreamscape hunt for the Leap's hidden "
@@ -1629,8 +1629,8 @@ def _spider_through_mist(b: Builder) -> None:
         b.threat(
             "Spider Through Mist",
             place=kerlingarfjoll,
-            antagonist="Damhan-allaidh and Hetep",
-            summary="Damhan-allaidh, possessed by Hetep, breaks into the "
+            antagonist="Damhan-Allaidh and Hetep",
+            summary="Damhan-Allaidh, possessed by Hetep, breaks into the "
             "Kerlingarfjoll valley and tries to pass the Obsidian Gateway; if he "
             "does, the sacred stelae are corrupted (pp. 125-126). Best about "
             "four years before the players can finish the Obsidian Gate ritual.",
@@ -1680,7 +1680,7 @@ def _spider_through_mist(b: Builder) -> None:
                     "and can be dealt with at leisure.",
                 ),
                 S(
-                    "Damhan-allaidh succeeds",
+                    "Damhan-Allaidh succeeds",
                     at=3,
                     clues="He opens the Gate, steps through and smashes it at "
                     "once, drives off its guardian spirit Setna, and Hetep "
@@ -1689,7 +1689,7 @@ def _spider_through_mist(b: Builder) -> None:
                     ignored="Run Into the Gateway's first section.",
                 ),
                 S(
-                    "Damhan-allaidh fails",
+                    "Damhan-Allaidh fails",
                     at=4,
                     clues="He flees to Snaefell and the Glasvellir tunnels, "
                     "claims Geirrod's protection and tries the Obsidian Temple "
@@ -1704,10 +1704,10 @@ def _spider_through_mist(b: Builder) -> None:
         b.threat(
             "The Spider Among the Trolls",
             place=_named(b, "Snaefellsnes"),
-            antagonist="Damhan-allaidh",
+            antagonist="Damhan-Allaidh",
             summary="Story seed (p. 125): trolls on Snaefellsnes, the thickest "
             "concentration in Iceland, are being gathered under one leader.",
-            secrets="Needing allies, Damhan-allaidh tries to unite the Western "
+            secrets="Needing allies, Damhan-Allaidh tries to unite the Western "
             "Quarter's trolls, no easy task with so territorial and quarrelsome "
             "a people, and the characters live among them.",
         )
@@ -1720,7 +1720,7 @@ def _spider_through_mist(b: Builder) -> None:
             "terrifying dreams, sapping their strength.",
             secrets="The mara are evil landvaettir, witch-spirits, led by "
             "Leiken, among the most powerful of the yarthkin (p. 33), who has "
-            "joined Damhan-allaidh. After a few attacks Victor may be persuaded "
+            "joined Damhan-Allaidh. After a few attacks Victor may be persuaded "
             "to let the characters fight them on their own terms in his Morphean "
             "Landscape. If he is dead, it is harder.",
         )
@@ -1876,8 +1876,8 @@ def _into_the_gateway(b: Builder) -> None:
             "stelae's guardianship, which his spirit has held for nearly two and "
             "a half millennia.",
             "He has always seen Hetep's shadow in the magicians who tried to "
-            "bring the poison in, until Damhan-allaidh. For four centuries he "
-            "has fought it, and he can no longer bar Damhan-allaidh or stand "
+            "bring the poison in, until Damhan-Allaidh. For four centuries he "
+            "has fought it, and he can no longer bar Damhan-Allaidh or stand "
             "against him. As the first to try to codify magical thought, he "
             "has become the embodiment of man's understanding of magic.",
             "Setna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: Ind. He "
@@ -1946,7 +1946,7 @@ def _into_the_gateway(b: Builder) -> None:
                 "Might per magnitude.",
             ),
         ],
-        appearance="Damhan-allaidh's body, more hideous than in life: a huge "
+        appearance="Damhan-Allaidh's body, more hideous than in life: a huge "
         "skinless baboon running with putrefaction.",
         secrets="Hetep is bound into his former servant's shell. Destroying it "
         "lets the Thothian watchers capture him at once (p. 128). Body levels "
@@ -1957,7 +1957,7 @@ def _into_the_gateway(b: Builder) -> None:
         b.threat(
             "Into the Gateway",
             place=temple,
-            antagonist="Damhan-allaidh and Hetep",
+            antagonist="Damhan-Allaidh and Hetep",
             summary="The magi finish Ealasaid's work on the Obsidian Gateway and "
             "must break into the Obsidian Temple to destroy the corrupted "
             "stelae, or defend them (pp. 127-132). Which half is played turns on "
@@ -1996,7 +1996,7 @@ def _into_the_gateway(b: Builder) -> None:
                     "should be hard.",
                     stopped="Geirrod orders his people to stop and sues for "
                     "terms. Unless a Setna's Blade was made for him he lives, "
-                    "and he gives up Damhan-allaidh's soulstone, frees the "
+                    "and he gives up Damhan-Allaidh's soulstone, frees the "
                     "slaves and opens the ziggurat; Gudmund takes tribute in "
                     "gold. Destroying the soulstone forces Hetep to Raise Corpse "
                     "at once, binding him to the body so that he can possess no "
@@ -2007,7 +2007,7 @@ def _into_the_gateway(b: Builder) -> None:
                     "Corrupted: into the Obsidian Temple",
                     at=3,
                     clues="Sphinxes and seven gates (easier with Geirrod beaten) "
-                    "lead to Damhan-allaidh and Hetep. If Damhan-allaidh still "
+                    "lead to Damhan-Allaidh and Hetep. If Damhan-Allaidh still "
                     "lives Hetep may try to possess magi and strong companions; "
                     "resisted, he falls to the Thothian spirits.",
                     stopped="At the last the magi smash the emerald stelae to "
@@ -2017,7 +2017,7 @@ def _into_the_gateway(b: Builder) -> None:
                     "Uncorrupted: the sanctum",
                     at=4,
                     clues="The Gate spirit takes them to the stelae sanctum. "
-                    "Setna greets them, knows only that Damhan-allaidh is coming "
+                    "Setna greets them, knows only that Damhan-Allaidh is coming "
                     "through the gates, and gives the Blade scroll. Investigation "
                     "in Glasvellir shows what has passed. The sphinxes barred "
                     "him, Geirrod would not help, so he bound Geirrod in magical "
@@ -2041,7 +2041,7 @@ def _into_the_gateway(b: Builder) -> None:
                     "and go to Glasvellir, tell Einar and Gudmund, and open the "
                     "gates during the siege. The strongest trolls are dead or "
                     "maimed, so the city is lightly held. It should still be "
-                    "hard, since success ends Damhan-allaidh and Hetep both.",
+                    "hard, since success ends Damhan-Allaidh and Hetep both.",
                     stopped="Gudmund frees his brother and leads the slaves to "
                     "his realm, with a substantial tribute.",
                     turned="They may do both at once, some defending the sanctum "

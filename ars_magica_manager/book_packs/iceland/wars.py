@@ -22,13 +22,15 @@ rest sits in secrets and dormant stories.
 - Places and factions the book names and no other part of this pack
   makes. Records of other parts (Pan Caudarax, Bard, Biorn Egilsson,
   Bishop Magnus, Skalholt, the hreppur, Vindolanda) are found by name for
-  links, and skipped when missing.
+  links, and skipped when missing. Durenmar is the Rhine's covenant, so
+  it is named in words and has no record here.
 - Links across both books: this part runs last, so it ties each story to
   its cast and the people to each other (`CAST`, `TIES`).
 
-Where Land of Fire & Ice differs (Hadrianus's voyage in 1214 against the
-ship of 1218, the Bull's size and how fast it grows) both are kept, in
-secrets."""
+Hadrianus's voyage of 1214 and the ship of Land of Fire & Ice's 1218 are
+two separate voyages. Where the books differ on the Bull's size and how
+fast it grows, Land of Fire & Ice stands and the Wars' figures are a
+variant in its notes."""
 
 from __future__ import annotations
 
@@ -108,9 +110,10 @@ def _places(b: Builder) -> dict[str, Neighbour]:
         "bergen": b.town(
             "Bergen",
             summary="A Norwegian port with ships bound for Iceland.",
-            secrets="Hadrianus and his two filii took ship here (Icelandic Wars "
-            "p. 1); Land of Fire & Ice p. 70 also sails a ship of Flambeau "
-            "magi from here. This is not the Bergen on Rügen.",
+            secrets="Hadrianus and his two filii took ship here in 1214 "
+            "(Icelandic Wars p. 1). The ship of Flambeau magi in Land of Fire "
+            "& Ice p. 70 sailed from here on a separate voyage in 1218. This "
+            "is not the Bergen on Rügen.",
         ),
         "island": b.place(
             "The Haunted Scottish Island",
@@ -123,24 +126,17 @@ def _places(b: Builder) -> dict[str, Neighbour]:
             realm="",
             status="Rumoured",
         ),
-        "durenmar": b.place(
-            "Durenmar",
-            summary="The domus magna of House Bonisagus, in the Black Forest.",
-            secrets="In 1230 Lavinia calls the War Tribunal here, open to all "
-            "with an interest, to debate and organise a crusade against "
-            "Iceland (Icelandic Wars p. 2).",
-            realm="",
-        ),
         "sinus_wodinis": b.place(
             "Sinus Wodinis",
-            summary="A covenant of House Bjornaer on an island off the "
-            "southeast coast of Norway, long out of touch with the Order. Its "
+            summary="A covenant of House Bjornaer on a frozen bay of "
+            "Norway's southern coast, long out of touch with the Order. Its "
             "magi dislike strangers.",
-            secrets="The Mythic Seas pp. 62-63 prints it. "
+            secrets="The Mythic Seas pp. 62-63 prints it, and has it on a "
+            "perpetually frozen bay. "
             "Crusaders may send to it for Bjornaer help; its magi may "
             "be allied with Norse wizards, and one may be a trollson "
-            "(Icelandic Wars p. 9). The Mythic Seas sets it on a frozen bay "
-            "of the southern coast, not an island.",
+            "(Icelandic Wars p. 9). That book places it on an island off the "
+            "southeast coast; here that is only a rumour.",
             realm="",
             status="Rumoured",
         ),
@@ -201,11 +197,10 @@ def _people(b: Builder) -> dict[str, Any]:
             "him into Final Twilight (p. 2). He spoke of a dragon and other "
             "beasts, not of spirits, as the landvaettir took solid form to "
             "reach him past his Parma (p. 6).",
-            "Land of Fire & Ice p. 70 tells a like story with no names: in "
-            "1218 powerful Flambeau magi on a ship from Bergen drew the "
-            "dragon's fire, and Einar Gamlisson's wife and sons died with "
-            "them. Both are kept; a troupe using both should make it one "
-            "ship or two.",
+            "Land of Fire & Ice p. 70 tells of a separate voyage, with no "
+            "names: in 1218 other powerful Flambeau magi on a ship from "
+            "Bergen drew the dragon's fire, and Einar Gamlisson's wife and "
+            "sons died with them.",
         ),
     )
     julius = b.magus(
@@ -235,17 +230,26 @@ def _people(b: Builder) -> dict[str, Any]:
         summary="An archmaga and Quaesitor of House Guernicus, an Intellego "
         "specialist skilled in wards and necromancy.",
         secrets=paragraphs(
-            "With Julius she prepares the invasion, calls the War Tribunal at "
-            "Durenmar in 1230 and declares it legal and binding (Icelandic "
-            "Wars pp. 2, 4). She has no offensive spells against magical "
-            "spirits (p. 6).",
+            "With Julius she prepares the invasion. In 1230 she calls the War "
+            "Tribunal at Durenmar, the domus magna of House Bonisagus in the "
+            "Rhine Tribunal, open to all with an interest, to debate and "
+            "organise a crusade against Iceland, and declares it legal and "
+            "binding (Icelandic Wars pp. 2, 4). She has no offensive spells "
+            "against magical spirits (p. 6).",
             "If the hreppur swears the Oath she answers that joining a House "
-            "needs its primus's consent, and demands the prima of Ex "
-            "Miscellanea approve each candidate, knowing the prima will see "
-            "no one (p. 4). She has witches' hearts brought to her to "
-            "question their ghosts (p. 10). Her own divinations slowly show "
-            "that Iceland's magicians knew nothing of any Order of Odin "
-            "(p. 12).",
+            "needs its primus's consent, demands that the Primus of Ex "
+            "Miscellanea approve each candidate, an approval that cannot be "
+            "had, and declares the membership invalid (p. 4). She has "
+            "witches' hearts brought to her to question their ghosts (p. "
+            "10). Her own divinations slowly show that Iceland's magicians "
+            "knew nothing of any Order of Odin (p. 12).",
+            "The book prints that Primus as an unnamed, reclusive prima who "
+            "refuses all contact as she readies for the doom she has foretold "
+            "for decades, which is what makes the demand impossible (p. 4). "
+            "In the Stonehenge Tribunal's Order, which this pack follows, "
+            "Immanola entered Final Twilight in 1216 and Ebroin has held the "
+            "office since, so a troupe must settle why his approval cannot "
+            "be had.",
         ),
     )
     albinus = b.magus(
@@ -475,7 +479,7 @@ def _creatures(b: Builder) -> dict[str, Creature]:
             b.power("Spiritual Form", 0, 5, "Vim", level=40, does=spiritual_form),
         ],
         appearance="Today a big bull of the Norse breed with a near-white "
-        "coat. Freed from the Dominion, a vast aurochs.",
+        "coat. Freed from the Dominion, a huge aurochs the size of a house.",
         notes=paragraphs(
             "The third guardian of Iceland, wandering the highlands for "
             "millennia until the Norse brought cattle. In 1105 it strayed "
@@ -489,12 +493,13 @@ def _creatures(b: Builder) -> dict[str, Creature]:
             "as printed: OK, 0, 0, 0, -1, -1, -1, -3, -3, -3, -5, -5, -5, "
             "Incapacitated. The Might Form is the pack's reading of its "
             "powers.",
+            "Freed, it is the size of a house (Land of Fire & Ice p. 7) and "
+            "recovers over a matter of weeks, faster in a magical aura (p. "
+            "112).",
+            "Variant: The Icelandic Wars has it stand over 120 feet at the "
+            "shoulder and regain its full size within minutes once out of the "
+            "Dominion, fed by the Host (pp. 7-8).",
         ),
-        secrets="The Icelandic Wars has it stand over 120 feet at the "
-        "shoulder and regain its full size within minutes once out of the "
-        "Dominion, fed by the Host (pp. 7-8). Land of Fire & Ice has it the "
-        "size of a house (p. 7) and growing over weeks (p. 112). Both are "
-        "kept.",
     )
     host = b.creature(
         "The Guardian Host",
@@ -687,9 +692,10 @@ def _war(b: Builder) -> Neighbour:
                 "trollsynir enrages the giants, and the hreppur is the "
                 "nearest thing to an Order of Odin that exists. The saga "
                 "there is not official history (p. 67), and neither is this.",
-                "Land of Fire & Ice p. 70 sets a ship of Flambeau magi from "
-                "Bergen on fire in 1218, not 1214, and kills Einar Gamlisson's "
-                "family with them. Both stand; the book's year is used here.",
+                "Land of Fire & Ice p. 70 tells of a separate voyage: in 1218 "
+                "another ship of Flambeau magi from Bergen burns, and Einar "
+                "Gamlisson's family dies with them. Hadrianus's is the voyage "
+                "of 1214.",
                 "At the War Tribunal the characters may keep quiet, which the "
                 "winner will remember; aid the crusade out of duty, ignorance "
                 "or fear, for who else destroyed those covenants; or try for "
@@ -721,7 +727,8 @@ def _war(b: Builder) -> Neighbour:
                     clues="A few years after the ghost, letters reach every "
                     "covenant of the northern Tribunals asking for help and "
                     "for knowledge of Iceland. Lavinia then calls a special "
-                    "Tribunal at Durenmar, open to all with an interest.",
+                    "Tribunal at Durenmar, in the Rhine Tribunal, open to all "
+                    "with an interest.",
                     ignored="The Tribunal declares all Icelandic magicians "
                     "enemies of the Order, their lives forfeit, in revenge "
                     "for Hadrianus, and Lavinia rules that binding. Those who "
@@ -729,8 +736,8 @@ def _war(b: Builder) -> Neighbour:
                     stopped="It cannot quite be stopped: the war party has "
                     "the loudest voice, wanting a hedge-wizard hunt, glory or "
                     "new vis. If the hreppur swears the Oath, Lavinia demands "
-                    "approval from a prima who refuses all contact as she "
-                    "readies for the end of the world, and voids it. Uproar "
+                    "that the Primus of Ex Miscellanea approve each candidate, "
+                    "an approval that cannot be had, and voids it. Uproar "
                     "follows; their peers leave, and Julius wins the certamen "
                     "against the eldest open opponent.",
                     turned="Well argued, the doubts spread: senior magi "
@@ -928,7 +935,6 @@ def _link_war(
     for key, note in (
         ("bergen", "Hadrianus sailed from here"),
         ("island", "Where his ghost walks"),
-        ("durenmar", "The War Tribunal of 1230"),
         ("harbor", "Where the armada anchors"),
         ("tower", "The crusaders' base"),
     ):
@@ -982,7 +988,7 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
     (
         "Spider in the Ice",
         (
-            "Damhan-allaidh, the Spider",
+            "Damhan-Allaidh, the Spider",
             "Hetep the Corrupter",
             "Victor filius Pralix",
             "Brighde Scot",
@@ -1082,7 +1088,7 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
             "Brighde Scot",
             "Victor filius Pralix",
             "Hetep the Corrupter",
-            "Damhan-allaidh, the Spider",
+            "Damhan-Allaidh, the Spider",
             "Whisper",
             "Ammon, Master of the Hidden Revels",
             "Liam the Shapeless",
@@ -1090,12 +1096,12 @@ CAST: tuple[tuple[str, tuple[str, ...]], ...] = (
     ),
     (
         "Spider Through Mist",
-        ("Damhan-allaidh, the Spider", "Hetep the Corrupter", "Geirrod", "Setna"),
+        ("Damhan-Allaidh, the Spider", "Hetep the Corrupter", "Geirrod", "Setna"),
     ),
     (
         "Into the Gateway",
         (
-            "Damhan-allaidh, the Spider",
+            "Damhan-Allaidh, the Spider",
             "Hetep the Corrupter",
             "Hetep's Undead Form",
             "Setna",
@@ -1134,8 +1140,8 @@ TIES: tuple[tuple[str, str, str], ...] = (
     ("Kollbjorn", "Skrukka", "His mother"),
     ("Kollbjorn", "Drit", "His daughter"),
     ("Thorkel Red-Cloak's Son", "Bard Snaefellsass Dumbson", "His half-brother"),
-    ("Damhan-allaidh, the Spider", "Hetep the Corrupter", "His demon"),
-    ("Hetep's Undead Form", "Damhan-allaidh, the Spider", "His body"),
+    ("Damhan-Allaidh, the Spider", "Hetep the Corrupter", "His demon"),
+    ("Hetep's Undead Form", "Damhan-Allaidh, the Spider", "His body"),
     ("Hetep's Undead Form", "Hetep the Corrupter", "The same demon"),
     ("Gudmund of Glasvellir", "Geirrod", "His brother"),
     ("Geirrod", "Jarl Agdi", "His lieutenant"),
@@ -1245,8 +1251,9 @@ def _seeds_before_the_sailing(b: Builder) -> None:
             S(
                 "Lavinia's ruling",
                 at=2,
-                clues="She recovers fast, insisting that the prima of Ex "
-                "Miscellanea approve each candidate, and that prima sees no one.",
+                clues="She recovers fast, insisting that the Primus of Ex "
+                "Miscellanea approve each candidate, an approval that cannot "
+                "be had (see her record).",
                 ignored="The membership is void. Senior magi dispute it; their "
                 "peers leave Julius and Lavinia, and a certamen settles it for "
                 "Julius.",
@@ -1322,8 +1329,9 @@ def _seeds_of_the_voyage(b: Builder) -> None:
                 "look bold.",
                 ignored="The Bull stays tame.",
                 turned="Outside the Dominion it bellows, the Host feeds it "
-                "Might, and within minutes it is full size and gone to the "
-                "highlands.",
+                "Might, and over a matter of weeks, faster in a magical aura, "
+                "it regains its full size and strides into the highlands "
+                "(Land of Fire & Ice p. 112).",
             ),
             S(
                 "The case",

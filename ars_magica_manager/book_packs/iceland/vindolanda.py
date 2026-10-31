@@ -351,7 +351,7 @@ def _scartaris(b: Builder, home: Neighbour) -> Neighbour:
             "north and south of its crater (pp. 88-89).",
             "When the Carnac gateway opened, the magi found the Temple "
             "valley and then Iceland, and learned how rich the island was "
-            "in vis. The temple was plainly tied to Damhan-allaidh, so it "
+            "in vis. The temple was plainly tied to Damhan-Allaidh, so it "
             "was unsafe. Scartaris gave easy access to the vis in a place "
             "he did not know (p. 88).",
             "There are only two laboratory areas, both taken by the elders "
@@ -399,11 +399,11 @@ def _old_vindolanda(b: Builder, home: Neighbour) -> Neighbour:
             "The covenant restored the fort to its full splendor and hid it "
             "from mundane notice with illusions and a kind of The Shrouded "
             "Glen. South of the wall, it still allied with Loch Leglean in "
-            "the Praeses Septentrionalis. Damhan-allaidh took it in 889, "
+            "the Praeses Septentrionalis. Damhan-Allaidh took it in 889, "
             "and a Hermetic army under Tremere and Flambeau magi then "
             "reduced it to rubble (p. 93).",
             "Many innocent locals and covenfolk died in that attack. "
-            "Damhan-allaidh had penned them up to feed his sacrifices, and "
+            "Damhan-Allaidh had penned them up to feed his sacrifices, and "
             "the Tremere and Flambeau leaders chose to leave no witnesses. "
             "His sacrifice and their murder both served Hell. The Shrouded "
             "Glen kept the dead from Christian burial, and every night "
@@ -430,7 +430,7 @@ def _old_vindolanda(b: Builder, home: Neighbour) -> Neighbour:
             "Sea Temple gatestone is already dug out and set up (pp. "
             "93-94).",
             "Once the infernal creatures are banished or killed, Christian "
-            "burial for the victims of both Damhan-allaidh and the Order "
+            "burial for the victims of both Damhan-Allaidh and the Order "
             "can destroy the regio, and within a decade the place becomes a "
             "two-level magical regio (+2, +4). Digging while the Infernal "
             "regio stands draws further attacks, and many workers die in "
@@ -494,10 +494,10 @@ def _glyder_fawr(b: Builder, home: Neighbour) -> Neighbour:
             "and it did better than they hoped, but the aura proved too "
             "strong for servants to live here safely, so covenfolk never "
             "used the quarters. Macomb's apprentice had one closet when "
-            "Damhan-allaidh came (p. 95).",
+            "Damhan-Allaidh came (p. 95).",
             "Macomb died quickly. His apprentice called up elemental spirits "
             "and set them on the attacker; the fight brought down most of "
-            "the sanctum and drove Damhan-allaidh off, but the apprentice "
+            "the sanctum and drove Damhan-Allaidh off, but the apprentice "
             "was dead by then (p. 95).",
             "The map (p. 95) shows on the upper level storage, a kitchen, a "
             "meeting hall, a latrine, a bath, servants' quarters, the gate "
@@ -532,7 +532,7 @@ def _sea_temple(b: Builder, home: Neighbour) -> Neighbour:
             "122-123).",
             "Just before she died she had found the name of the spirit "
             "serving the Obsidian Gateway and had begun rebuilding its "
-            "ritual. Damhan-allaidh surprised her under the dome, her "
+            "ritual. Damhan-Allaidh surprised her under the dome, her "
             "theurgy too slow to save her, and raised her ghost to torture "
             "out where Victor and Hetep were. Months later a Tremere and "
             "Flambeau force beat his army and he fled here, hurt and spent, "
@@ -541,7 +541,7 @@ def _sea_temple(b: Builder, home: Neighbour) -> Neighbour:
             "her spirit ordered an earth elemental to shatter the dome: the "
             "fall crushed both men's bodies and flooded most of the "
             "structure, and her ghost, its purpose done, rested (p. 123).",
-            "Liam and Damhan-allaidh have lain incapacitated under the "
+            "Liam and Damhan-Allaidh have lain incapacitated under the "
             "rubble for over three hundred years, sea creatures feeding on "
             "their ever-mending bodies. Chapter 18's statistics are their "
             "state if freed and left to recover. Hermetic magic at Instant "
@@ -563,7 +563,7 @@ def _sea_temple(b: Builder, home: Neighbour) -> Neighbour:
             "lab takes at least 3 in both Speak Ancient Egyptian and Speak "
             "Assyrian and at least 2 in both Scribe Hieroglyphics and Scribe "
             "Cuneiform. The ritual must be designed at level 40 (p. 124).",
-            "Hetep frees Damhan-allaidh here in Brighde's Gauntlet, after "
+            "Hetep frees Damhan-Allaidh here in Brighde's Gauntlet, after "
             "casting a Creo Auram spell on the chamber; the Hermetic "
             "equivalent is Sanctuary Beneath the Waves, CrAu (req Re) 30, "
             "Touch, Moon, Room, which makes air on the bed of a large body "
@@ -652,7 +652,7 @@ def _valley(b: Builder) -> Neighbour:
             "through the gate into the presence of Thoth (p. 96).",
             "Any Gifted person who sees the Gate longs to go through. The "
             "first time a magus touches it he falls in a fit and sees "
-            "Damhan-allaidh as he was in 681, shadow twisted and eyes "
+            "Damhan-Allaidh as he was in 681, shadow twisted and eyes "
             "darkened, stepping through after a ritual; a dark wave then "
             "runs from the gate, warping the hieroglyphics and wall images "
             "into demonic shapes; then the Order falls to diabolism, cunning "
@@ -702,12 +702,13 @@ def _covenant(b: Builder, home: Neighbour) -> Covenant:
         ),
         secrets=paragraphs(
             "Its symbol is a red griffon with claws raised, on a white field. "
-            "Founded in 816. Its members: Victor filius Pralix, founder of "
-            "House Ex Miscellanea, now possessing the body of Brighde; "
-            "Ealasaid filia Morwena, died 889; Macomb filius Ealasaid, died "
-            "889; Liam the Shapeless, filius of Brude, disappeared 889; and "
-            "Iain the Unbowed, filius Liam. All followed Ex Miscellanea (p. "
-            "88).",
+            "Founded in 816. Its members: Victor filius Pralix, a leading "
+            "figure of House Ex Miscellanea, now possessing the body of "
+            "Brighde; Ealasaid filia Morwena, died 889; Macomb filius "
+            "Ealasaid, died 889; Liam the Shapeless, filius of Brude, "
+            "disappeared 889; and Iain the Unbowed, filius Liam. All followed "
+            "Ex Miscellanea (p. 88). The book's list styles Victor founder of "
+            "the House, a title only: Pralix founded it (p. 71).",
             "The players hold only Scartaris at first. Victor stays "
             "Disceptator but leaves the daily running to Iain, who gives "
             "funds and advice; Victor calls dreamscape councils only when "
@@ -715,7 +716,7 @@ def _covenant(b: Builder, home: Neighbour) -> Covenant:
             "87).",
             "The oath gives up every tie to another covenant for lasting "
             "loyalty to this one, and binds each member to its Charter, its "
-            "council and its fellow members' lives, and to fight Damhan-allaidh "
+            "council and its fellow members' lives, and to fight Damhan-Allaidh "
             "and his servants until nothing of him or his work is left. By the "
             "Charter all property serves the covenant. The Disceptator "
             "is elected by the members and holds office until death or "
@@ -996,7 +997,7 @@ def _stories(b: Builder, scartaris: Neighbour, old: Neighbour) -> None:
             "into leaving. Both are good-natured and hold back from lethal "
             "force unless seriously threatened. Magi who convince them they "
             "belong to Vindolanda are welcomed and told of the battle with "
-            "Damhan-allaidh (p. 96).",
+            "Damhan-Allaidh (p. 96).",
             "If the magi want the site back, Enan raises the rent: the "
             "original deal with Vindolanda was one pawn each a year. They "
             "open at over six hundred pawns (one a year each), can be "

@@ -159,7 +159,7 @@ def _province(hibernia: Hibernia) -> None:
             "reached over the north-east, the Isle of Man and Kintyre, but "
             "it was failing when its druids were ground between Diedne, who "
             "hunted pagan priesthoods that would not join her House, and "
-            "Pralix, who stood with Damhan-Allaidh. A few túatha remain in "
+            "Pralix, who hunted the supporters of Damhan-Allaidh. A few túatha remain in "
             "the north of the province and about Drogheda, with scattered "
             "folk elsewhere in the north and west. They run a little shorter "
             "and darker than the Gaels, love clothes of many colours and "

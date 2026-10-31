@@ -115,6 +115,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.64.1 — 2026-10-31
+
+### Peregrinatio
+
+- The Iceland pack now agrees with the other packs: Ebroin's office in the Icelandic Wars, Pralix as founder of House Ex Miscellanea, the spelling Damhan-Allaidh, Durenmar as the Rhine's covenant, and Sinus Wodinis as *Mythic Seas* gives it. The Gray Bull follows *Land of Fire & Ice*, and Blood of Innocence ends with Vindolanda registered in Normandy.
+- Corrected the Hibernia pack: Pralix hunted Damhan-Allaidh's supporters.
+
 ## 3.64.0 — 2026-10-31
 
 ### Pagina

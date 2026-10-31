@@ -9,7 +9,7 @@ keeps the Gift and Hermetic Magus that `convert` gives every block, and
 his Might and powers are in words, as a character has no Might.
 
 Creatures: Hetep the Corrupter, Pan Caudarax and Bard Snaefellsass have a
-Might; Liam the Shapeless and Damhan-allaidh, gruagachs long past human,
+Might; Liam the Shapeless and Damhan-Allaidh, gruagachs long past human,
 have a printed Magic Resistance and no Might, so they are Magic creatures
 at Might 0 with the figure in their notes. Their Characteristics,
 Virtues, Abilities and traits go through `convert` too where the book
@@ -490,7 +490,7 @@ def _victor(b: Builder) -> None:
         house="house_ex_miscellanea",
         age=438,
         summary="A follower of Pralix, given his sigil when she defeated "
-        "Damhan-allaidh in 816, whom the Order has long counted among the dead.",
+        "Damhan-Allaidh in 816, whom the Order has long counted among the dead.",
         secrets=paragraphs(
             "In life he could bring anyone round to any position, with an "
             "understanding of people unmatched in his day, but a demon was "
@@ -505,10 +505,14 @@ def _victor(b: Builder) -> None:
             "works by possession alone. Brighde, his friend's granddaughter, "
             "comes first, but everything he does bends toward destroying the "
             "Spider, and he will draw the magi into risky schemes in return "
-            "for scraps of knowledge about Damhan-allaidh or Hetep (pp. 135-136).",
+            "for scraps of knowledge about Damhan-Allaidh or Hetep (pp. 135-136).",
             "He looks a tall man in Roman robes, frozen in the ward in his "
             "Scartaris laboratory (p. 82). Founder and Disceptator of Vindolanda, "
             "he entered the battle of wills in 888 (p. 72). Born in 782.",
+            "The book calls him founder of House Ex Miscellanea (pp. 84, 88). "
+            "That is a title for a leading figure of the House: Pralix "
+            "founded the Ordo Miscellanea and was its prima (p. 71; Heirs to "
+            "Merlin p. 13).",
             "Magic Might 50. Possession (ReMe 50, cost varies): any human in "
             "eye contact, or in sight of his body. Entry costs Might equal to "
             "the victim's Confidence + Stamina (+3 if Strong-Willed) + twice "
@@ -543,7 +547,7 @@ def _victor(b: Builder) -> None:
             "Focused": 3,
             "Otherworldly": 4,
             "Patient": 2,
-            "Obsessed with destroying Damhan-allaidh": 6,
+            "Obsessed with destroying Damhan-Allaidh": 6,
         },
         reputations={"Long Dead (the Order)": 3},
         notes="The book prints no Arts, Abilities, Virtues or Flaws: his powers, "
@@ -642,7 +646,7 @@ def _liam(b: Builder) -> None:
             "pain, and moves only by shapeshifting, into the one form he can hold "
             "for long. Endurance of the Berserkers, or any Corpus or Mentem effect "
             "that quells pain, gives him respite, and with it he can help the magi "
-            "hunt Damhan-allaidh; without it he can only beg to die. Even so he "
+            "hunt Damhan-Allaidh; without it he can only beg to die. Even so he "
             "will ask Iain to destroy his soulstone once the Spider is gone (p. "
             "136).",
             "A fleshy thing with no shape, bones or organs, able to squeeze "
@@ -751,10 +755,10 @@ def _hetep(b: Builder) -> None:
         "means to turn all magic to its service, working chiefly on "
         "magicians. His former kin kept watch: Setna caught him time and "
         "again hiding in those who came to Thoth's stelae, until "
-        "Damhan-allaidh brought him into the sanctum. There he set to "
+        "Damhan-Allaidh brought him into the sanctum. There he set to "
         "corrupting Thoth's own words, hoping to lay the magic realm at "
         "Hell's feet. Setna noticed before it was done and drove "
-        "Damhan-allaidh out, but the corruption went on sapping Setna, and "
+        "Damhan-Allaidh out, but the corruption went on sapping Setna, and "
         "Hetep needed only time, until Pralix broke in on the Spider's "
         "preparations and in the end beat him. Victor of Vindolanda captured "
         "Hetep in 875. The two have been locked in a battle of wills ever "
@@ -870,7 +874,7 @@ def _damhan_allaidh(b: Builder) -> None:
         ),
     )
     spider = b.creature(
-        "Damhan-allaidh, the Spider",
+        "Damhan-Allaidh, the Spider",
         page="pp. 138-139",
         realm="Magic",
         size=1,

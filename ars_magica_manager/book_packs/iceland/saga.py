@@ -383,10 +383,10 @@ def _carnac(b: Builder) -> None:
         summary="The great megaliths of Carnac, in France.",
         secrets=(
             "One of the lost gateways of the Cult of Thoth stands here, leading "
-            "to the Kerlingarfjoll valley. Hetep led Damhan-allaidh through it, "
+            "to the Kerlingarfjoll valley. Hetep led Damhan-Allaidh through it, "
             "he used it again to escape to Scotland after 808, and Victor found "
             "it in 845 and took its gatestone to Vindolanda (pp. 71-72). One of "
-            "Lord Peter's ancestors served Damhan-allaidh here (p. 83)."
+            "Lord Peter's ancestors served Damhan-Allaidh here (p. 83)."
         ),
     )
 
@@ -409,7 +409,7 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
         secrets=paragraphs(
             "An English diabolist, promised more magical power for freeing "
             "Hetep. Found his grandfather's occult books on his death; Hell has "
-            "watched his family since an ancestor served Damhan-allaidh near "
+            "watched his family since an ancestor served Damhan-Allaidh near "
             "Carnac. He blackmails Falkes de Bréauté, acting Earl of Devonshire "
             "(p. 83). The characters kill him in the opening adventure (p. 76).",
         ),
@@ -552,14 +552,16 @@ def _founders(b: Builder) -> None:
         house=TYTALUS,
         age=None,
         summary=(
-            "The Tytalus maga who first beat Damhan-allaidh and founded House "
+            "The Tytalus maga who first beat Damhan-Allaidh and founded House "
             "Ex Miscellanea."
         ),
         secrets=(
             "Victor's parens. Landed in Northumbria in May 814, beat "
-            "Damhan-allaidh in 816, and raised the Ordo Miscellanea from the "
+            "Damhan-Allaidh in 816, and raised the Ordo Miscellanea from the "
             "witches, druids, beast mages and spirit masters of her army, "
-            "becoming prima when it joined the Order (p. 71)."
+            "becoming prima when it joined the Order (p. 71). Heirs to Merlin "
+            "p. 13 has the Ordo founded in 815 and accepted in 817, a year "
+            "inside this book's campaign of 814 to 816; this pack follows 815."
         ),
     )
     b.magus(
@@ -574,7 +576,7 @@ def _founders(b: Builder) -> None:
             "as Hermetic thaumaturgy. Filia of Morwena and parens of Macomb. "
             "She fled Wales from threats by Diedne magi, reclaimed her lands "
             "with a first sanctum under Glyder Fawr, left it to Macomb, and "
-            "moved to the Sea Temple beneath the sea off Devon. Damhan-allaidh "
+            "moved to the Sea Temple beneath the sea off Devon. Damhan-Allaidh "
             "killed her there in 889, and her ghost brought the dome down on him "
             "and Liam (pp. 71-73, 88, 94, 123)."
         ),
@@ -587,7 +589,7 @@ def _founders(b: Builder) -> None:
         summary="A theurgist of the old covenant of Vindolanda, long dead.",
         secrets=(
             "Ealasaid's filius and an original member, whose sanctum was Glyder "
-            "Fawr in Snowdonia. Damhan-allaidh killed him there in 889 (pp. "
+            "Fawr in Snowdonia. Damhan-Allaidh killed him there in 889 (pp. "
             "71-72, 94-95)."
         ),
     )
@@ -748,7 +750,7 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "itself."
         ),
         secrets=(
-            "Lord Peter's familiar, once Damhan-allaidh's messenger. Misheard "
+            "Lord Peter's familiar, once Damhan-Allaidh's messenger. Misheard "
             "messages have undone several masters. A coward, it goes back to "
             "spirit form as soon as anyone attacks it."
         ),
@@ -851,7 +853,7 @@ def _groups(b: Builder) -> None:
         "The Praeses Septentrionalis",
         summary="The Northern Guard, an old league of Hermetic covenants.",
         secrets=(
-            "Vindolanda joined it to guard Scotland against Damhan-allaidh's "
+            "Vindolanda joined it to guard Scotland against Damhan-Allaidh's "
             "return (p. 72). His forces attacked its covenants in 889 and "
             "destroyed them all (pp. 72, 77)."
         ),
@@ -953,7 +955,7 @@ def _arcs(b: Builder) -> None:
                 NOT_HISTORY,
             ),
             secrets=paragraphs(
-                "The first arc, before the climax with Damhan-allaidh; its "
+                "The first arc, before the climax with Damhan-Allaidh; its "
                 "purpose is to draw the characters into Iceland's daily life, "
                 "where magicians live beside farmers and godar, a small picture "
                 "of what the Order might achieve in Europe (pp. 67-68). Chapters "
@@ -1029,12 +1031,12 @@ def _arcs(b: Builder) -> None:
     dormant(
         b.threat(
             "Spider in the Ice",
-            antagonist="Damhan-allaidh and the demon Hetep",
+            antagonist="Damhan-Allaidh and the demon Hetep",
             moves=DATED,
             realm="Infernal",
             place=_found(b, "Kerlingarfjoll"),
             summary=paragraphs(
-                "Driven by the Order's oldest feud. Damhan-allaidh, the Spider, "
+                "Driven by the Order's oldest feud. Damhan-Allaidh, the Spider, "
                 "and the demon Hetep plot from Iceland to bring the Order down, "
                 "and a hidden valley temple of Thoth is the prize.",
                 NOT_HISTORY,
@@ -1042,7 +1044,7 @@ def _arcs(b: Builder) -> None:
             secrets=paragraphs(
                 "The second arc: Chapter 9 brings the characters to Iceland and "
                 "Chapters 15 to 17 end it, about forty years on (pp. 67-68). The "
-                "fate of Damhan-allaidh, the valley temple and Vindolanda are at "
+                "fate of Damhan-Allaidh, the valley temple and Vindolanda are at "
                 "the storyguide's discretion. Its two seats are Iceland and De "
                 "Panne, which suits a second storyguide (p. 70). Dates are "
                 "suggestions (p. 75).",
@@ -1070,7 +1072,8 @@ def _arcs(b: Builder) -> None:
                 "Tytalus landed in Northumbria in May 814 and in two years beat "
                 "him with local wizards; he escaped. She raised the Ordo "
                 "Miscellanea from her army, and Trianoma brought it in as House "
-                "Ex Miscellanea (p. 71).",
+                "Ex Miscellanea (p. 71). The years are Heirs to Merlin's: "
+                "founded 815, accepted 817 (p. 13).",
                 "Vindolanda. Victor, Pralix's apprentice, whose gauntlet was "
                 "surviving the war, founded it on a supply fort of Hadrian's "
                 "Wall with theurgists Ealasaid and Macomb and gruagachan Iain "
@@ -1111,19 +1114,19 @@ def _arcs(b: Builder) -> None:
                     "Brighde's Gauntlet",
                     year=1240,
                     clues="Her gauntlet is to trick Hetep into showing where "
-                    "Damhan-allaidh's body lies. He makes for Old Vindolanda and "
+                    "Damhan-Allaidh's body lies. He makes for Old Vindolanda and "
                     "opens a hidden gatestone to Ealasaid's secret sanctum.",
                     ignored="As planned, Hetep tricks Brighde and gets away in "
-                    "Damhan-allaidh's body, and Victor must sacrifice himself to "
+                    "Damhan-Allaidh's body, and Victor must sacrifice himself to "
                     "save her.",
                 ),
                 S(
                     "Spider Through Mist",
                     year=1256,
-                    clues="Hetep and Damhan-allaidh break into the Kerlingarfjoll "
+                    clues="Hetep and Damhan-Allaidh break into the Kerlingarfjoll "
                     "valley and the Obsidian Temple.",
                     ignored="Hetep corrupts the stelae and begins to corrupt all "
-                    "magical writing in the world, with Damhan-allaidh guarding "
+                    "magical writing in the world, with Damhan-Allaidh guarding "
                     "the temple.",
                     stopped="Hetep is thwarted and the magi win.",
                 ),
@@ -1133,7 +1136,7 @@ def _arcs(b: Builder) -> None:
                     clues="The magi finish Ealasaid's work on the Obsidian "
                     "Gateway ritual. As things stand, they must help defend the "
                     "stelae or break in to destroy them.",
-                    stopped="A last battle with Damhan-allaidh, Hetep or both "
+                    stopped="A last battle with Damhan-Allaidh, Hetep or both "
                     "ends the arc.",
                 ),
             ],
@@ -1232,7 +1235,7 @@ def _blood_of_innocence(b: Builder, wormhout: Any) -> None:
                     "Penetration +50) and meets them in his Morphean Landscape, at "
                     "a round marble table with armed men of about 870 along the "
                     "walls. He offers full membership and answers briefly: he made "
-                    "no pact, and sought Damhan-allaidh or his soulstone.",
+                    "no pact, and sought Damhan-Allaidh or his soulstone.",
                     stopped="They swear the oath and wake. His host is led to a "
                     "grimoire of tunnelling spells, and they clear the tunnel in "
                     "about 12 hours, coming out halfway up Snaefell's southern "
@@ -1271,6 +1274,18 @@ def _blood_of_innocence(b: Builder, wormhout: Any) -> None:
                     "father is dead, and the gatestone goes home to De Panne. "
                     "Devon will not miss Lord Peter, and De Panne's burghers will "
                     "back the magi.",
+                ),
+                S(
+                    "Registered in Normandy",
+                    at=10,
+                    clues="Wormhout now knows that Vindolanda survives, and the "
+                    "Quaesitor Iphimedeia comes to investigate. Iain and Victor, "
+                    "wary of the wider Order knowing their affairs, must "
+                    "reassure her.",
+                    stopped="She agrees to register Vindolanda as a covenant of "
+                    "the Normandy Tribunal. Redcaps deliver to and collect from "
+                    "Iain's house in De Panne, forbidden to tell other magi "
+                    "where it is, and Wormhout stays an ally (p. 75).",
                 ),
             ],
         )
@@ -1366,7 +1381,7 @@ def _advice(b: Builder) -> None:
                 "Infamous Master, Tormenting Master, Discredited Lineage, since "
                 "the covenant is isolated; Secret Vis Source and Vis Obligation, "
                 "since vis is scarce and shared.",
-                "The feud is the theme: Order against Damhan-allaidh, Einar "
+                "The feud is the theme: Order against Damhan-Allaidh, Einar "
                 "against the dragon, and behind them the storgodi's mundane feud "
                 "(pp. 18-19, 67). The arcs are linear in places, and meant to be "
                 "left to the storyguide's nudging or dropped (p. 68).",
