@@ -7,6 +7,8 @@ from __future__ import annotations
 from typing import Any
 
 from ...models import Neighbour
+from ...rules import egyptian_tombs as et
+from ...tombs import TombCurse, TombTrap, TombWard
 from ..builder import (
     Builder,
     characteristics,
@@ -508,20 +510,8 @@ def _cairo_buildings(b: Builder, w: World) -> None:
             "14: this path is for the unGifted, who must take an Ordeal at "
             "every Initiation, yet two of these have none; the errata leave it "
             "to the troupe.",
-            "Child of the House (Major General Virtue, p. 61; not in the "
-            "catalog): raised by the House, studying four seasons a year under "
-            "the finest teachers until active service. In the Later Life stage "
-            "of advanced creation the character may spend 30 xp a year on any "
-            "Ability that needs no Supernatural Virtue. Fanatically loyal to "
-            "the sultan, or perhaps only to the House, and able to hide it; "
-            "must take the Code of Honor Major Flaw.",
-            "Agent of the Sultan (Major General Virtue, p. 61; not in the "
-            "catalog): whatever resources the sultan's advisers think "
-            "necessary, in a way the equal of Wealthy. Three seasons a year of "
-            "training between assignments unless a cover needs work; agents in "
-            "Cairo may use the House's facilities if the advisers agree. No "
-            "agent may leave the service; one who has faked his death, say, "
-            "has Dark Secret.",
+            "Its pupils and agents take the Virtues Child of the House and "
+            "Agent of the Sultan (p. 61).",
         ),
         secrets=(
             "Some suggest the House's leaders have undergone, or at least "
@@ -1778,15 +1768,10 @@ def _nubian_powers(b: Builder, w: World) -> None:
             "Merchant if they transport or Mercenary Captain if they capture, "
             "and are likely Well-Traveled (p. 75).",
             "Playing it (p. 75): slave stories need care for modern "
-            "sensibilities. Favored Slave (Minor Social Status Flaw) and "
-            "Chattel Slave (Major Story and Social Status Flaw) are printed on "
-            "p. 76 and are not in the catalog; they differ from Guardians of "
-            "the Forests' p. 102. A favored slave is wholly his master's, with "
-            "no belongings but what he is given, but fed and decently housed. "
-            "A chattel slave has this and no special standing, and stories "
-            "come of it; the player settles the source of the tension, and how "
-            "the character can be with the others, such as being on loan. Not "
-            "for grogs. Reasons for a lax master: an inherited slave who "
+            "sensibilities. A slave character takes the Favored Slave or "
+            "Chattel Slave Flaw (p. 76), which differ from Guardians of the "
+            "Forests' Slave (p. 102). Reasons for a lax master: an inherited "
+            "slave who "
             "cannot be freed without insult, a long loyal line, a vital skill, "
             "a self-sale to avert a worse fate. Stories for a chattel slave: "
             "escaped and hunted; seeking captured family; a dead master no one "
@@ -3188,6 +3173,7 @@ def _artanyeszame(b: Builder, w: World) -> None:
         "confidence": (2, 5),
         "traditions": [LEARNED, DEDUN],
         "virtues_flaws": [
+            "Learned Magician",
             "Transformed Human",
             "Corpse Magic",
             "Strong Verbal Charms",
@@ -3260,8 +3246,7 @@ def _artanyeszame(b: Builder, w: World) -> None:
             "+2, Str 0, Sta +1, Dex +1, Qik -1. His court bought him Might 16; "
             "the nine Improved Might came by consuming vis (Realms of Power: "
             "Magic p. 52).",
-            "Learned Magician, his printed Social Status, is not in the "
-            "catalog. Harnessed Magic is a Hermetic Virtue lost with the Gift. "
+            "Harnessed Magic is a Hermetic Virtue lost with the Gift. "
             "Transformed Human, Unnatural Vitality, Dedun's Blessing, "
             "Enfeebled and his Vow came by Initiation. His Enemies are the "
             "Mortuary Society of Kassala.",
@@ -3555,10 +3540,8 @@ def _pyramid(b: Builder, w: World) -> None:
             "Weteriken, is posed in a chamber as if at audience, paying homage "
             "to the central throne where he broods. Magic aura 6, aligned to "
             "the dead. The book scores the lair as a covenant site, for 259 "
-            "Build Points overall (p. 92).",
-            "Boons: Aura x2 (Site, Minor), Seclusion (Site, Minor). Hooks: "
-            "Evil Custom (Site, Minor), Inhuman Covenfolk (Residents, Minor), "
-            "Seed of Madness (Residents, Minor).",
+            "Build Points overall (p. 92); the Tomb tab holds its curse, "
+            "enchantments and traps.",
             "Covenfolk: the three bouda sisters and a dozen magical hyenas, "
             "some with Magic Sensitivity, who can find Corpus vis in the "
             "necropolis's long-buried dead, and are prone to bouts of madness.",
@@ -3570,35 +3553,107 @@ def _pyramid(b: Builder, w: World) -> None:
             "of Vim a year (paint flecks from magical texts), 4 of Corpus "
             "(bodies robbed by hyenas), 1 of Ignem (glass exposed to the dawn "
             "sun on the rising of Sirius).",
-            "Curse (18): whoever comes in impure, his flesh shall rot and his "
-            "bones fail. A Greater Malediction that inflicts Enfeebled. His "
-            "Might makes him immune, and his purification rite protects his "
-            "servants. PeCo 45; Pen 0, 1/day; Base 30, +1 Touch, +2 Room.",
-            "Enchantments (52). Shroud of Sands (Ease 11, 10 Build Points): a "
-            "cloak of sandstone disks on twine, moving up to ten thousand "
-            "cubic paces of sand, enough to bury the pyramid or dig out the "
-            "tunnel to the burial chamber; slow, and a threat only to the "
-            "immobile. ReTe 25 (Base 1, +2 Voice, +1 Conc, +1 Part, +3 Size; "
-            "+5 24 uses/day). Glory of the Royal Lion (Ease 14, 16): a statue "
-            "of Apedemak whose lit eyes hold one looker a round, until its "
-            "uses end, motionless save to keep facing it, even out of sight; "
-            "they starve unless released by a Meroitic command word. ReCo 40 "
-            "(Base 5, +1 Eye, +3 Moon, +1 release; +4 12/day, +6 Pen 12). "
-            "Sovereign Ward Against Wandering Shadows (Ease 24, 24): no spirit "
-            "of Might 25 or less enters or leaves the pyramid if it "
-            "Penetrates; Artanyeszame gained his Might inside and is immune. "
-            "ReMe 57 (Base 25, +0 Touch, +0 Sun, +3 Structure; +1 2/day, +3 "
-            "environmental trigger, +13 Pen 26).",
-            "Traps (55). The steps to the burial chamber recede into a smooth "
-            "20 pace ramp ending on a hard floor, +30 damage; Str + Athletics "
-            "- Encumbrance against 9 to catch the sides (15 Build Points). A "
-            "false burial chamber of fake treasure, good for an ambush; Per + "
-            "Bargain against 9 to see through it from outside (6). A rain of "
-            "poisoned darts: 1-6 each, each a Light Wound unless Stamina beats "
-            "6 (average 3 Light Wounds; 19). A falling stone slab, +15 damage, "
-            "which traps people on the wrong side; Qik + Athletics - "
-            "Encumbrance against 12 to dive clear (15).",
         ),
+    )
+    b.tomb(
+        w["arrakkamani"],
+        kind="major_monarch",
+        boons="Aura x2 (Site, Minor), Seclusion (Site, Minor)",
+        hooks="Evil Custom (Site, Minor), Inhuman Covenfolk (Residents, Minor), "
+        "Seed of Madness (Residents, Minor)",
+        hook_points=3,
+        other="library 45, specialists 56, vis sources 35",
+        other_bp=136,
+        curses=[
+            TombCurse(
+                name="Those That Enter My Tomb in Their Impurity",
+                kind=et.GREATER,
+                art="PeCo",
+                level=45,
+                rdt="Touch, Special, Room",
+                uses=1,
+                condition="Those that enter the tomb in their impurity",
+                excoriation="Their flesh shall decay and their bones perish: the "
+                "Enfeebled Major Flaw. Written in Meroitic on the entrance. "
+                "Artanyeszame's Might makes him immune, and his purification rite "
+                "protects his servants. (Base 30, +1 Touch, +2 Room.)",
+            ),
+        ],
+        wards=[
+            TombWard(
+                name="Shroud of Sands",
+                art="ReTe",
+                level=25,
+                uses="24/day",
+                effect="A cloak of sandstone disks on twine, moving up to ten "
+                "thousand cubic paces of sand, enough to bury the pyramid or dig "
+                "out the tunnel to the burial chamber; slow, and a threat only to "
+                "the immobile (Base 1, +2 Voice, +1 Conc, +1 Part, +3 Size; +5 24 "
+                "uses/day).",
+            ),
+            TombWard(
+                name="Glory of the Royal Lion",
+                art="ReCo",
+                level=40,
+                penetration=12,
+                uses="12/day",
+                effect="A statue of Apedemak whose lit eyes hold one looker a "
+                "round, until its uses end, motionless save to keep facing it, "
+                "even out of sight; they starve unless released (Base 5, +1 Eye, "
+                "+3 Moon, +1 release; +4 12/day, +6 Pen 12).",
+                deactivation="A command word in Meroitic releases those held",
+            ),
+            TombWard(
+                name="Sovereign Ward Against Wandering Shadows",
+                kind=et.WARD,
+                art="ReMe",
+                level=57,
+                penetration=26,
+                uses="constant",
+                ease=24,
+                effect="No spirit of Might 25 or less enters or leaves the pyramid "
+                "if it Penetrates. Queen Weteriken, trapped by it, claims to have "
+                "enchanted it herself; Artanyeszame gained his Might inside and is "
+                "immune (Base 25, +0 Touch, +0 Sun, +3 Structure; +1 2/day, +3 "
+                "environmental trigger, +13 Pen 26).",
+            ),
+        ],
+        traps=[
+            TombTrap(
+                name="The Receding Steps",
+                harm="fatal",
+                ease=9,
+                roll="Str + Athletics - Encumbrance",
+                text="The steps to the burial chamber recede into a smooth 20 pace "
+                "ramp ending on a hard floor, +30 damage; the roll catches the "
+                "sides.",
+            ),
+            TombTrap(
+                name="The False Burial Chamber",
+                harm="scare",
+                ease=9,
+                roll="Per + Bargain",
+                text="Filled with fake treasure, and good for an ambush; the roll "
+                "sees through it from outside.",
+            ),
+            TombTrap(
+                name="The Rain of Poisoned Darts",
+                harm="minor",
+                further_bp=2 * et.HARMS["minor"].build_points,
+                ease=6,
+                roll="Sta",
+                text="Each person is struck by 1-6 darts, each a Light Wound "
+                "unless the roll is made (average 3 Light Wounds).",
+            ),
+            TombTrap(
+                name="The Falling Slab",
+                harm="serious",
+                ease=12,
+                roll="Qik + Athletics - Encumbrance",
+                text="A massive stone slab, +15 damage, which traps people on the "
+                "wrong side; the roll dives clear.",
+            ),
+        ],
     )
 
 
@@ -3820,6 +3875,7 @@ def _scorpion_fish(b: Builder, w: World) -> None:
                 "Aquatic",
                 "Large Teeth",
                 "Pursuit Predator",
+                "Swallow Whole",
                 "Thick Fur/Thick Scales",
                 "Tough Hide",
             ],
@@ -3845,20 +3901,14 @@ def _scorpion_fish(b: Builder, w: World) -> None:
         notes=paragraphs(
             "Ferocity applies in shallow water. Wound ranges: -1 (1-10), -3 "
             "(11-20), -5 (21-30), Incapacitated (31-40), Dead (41+).",
-            "Swallow Whole, a Quality by the errata (p. 87; the book prints it "
-            "under Powers; not in the catalog): it can swallow any creature of "
-            "Size 0 or less, which can struggle only with Brawl and cannot "
-            "breathe, needing deprivation rolls (ArM5 p. 180) even if it "
-            "escapes the grapple. After three rounds the victim reaches the "
-            "stomach, for +9 acid a round, +36 if wholly immersed (ArM5 p. "
-            "181). A Strength + Athletics roll each round braces against it: 6 "
-            "half immersion (triple), 9 a limb (double), 12 a splash (normal). "
-            "A second creature can go down only once the first has reached the "
-            "stomach. The arithmetic is in rules/africa.py.",
+            "Swallow Whole is a Quality by the errata (p. 87); the book prints "
+            "it under Powers. It takes any creature of Size 0 or less, which "
+            "can struggle only with Brawl. The arithmetic is in "
+            "rules/africa.py.",
             "Small ones, two feet or so, sometimes turn up in fishermen's "
             "nets; these are the figures for a twenty-foot horror. With the "
-            "Fast Swimmer Quality (+3 to speed rolls when swimming; not in the "
-            "catalog) the block serves for the Red Sea's giant sharks.",
+            "Fast Swimmer Quality the block serves for the Red Sea's giant "
+            "sharks.",
             "Giant eels use the elephant-eating serpent (p. 23) with the "
             "Aquatic Quality and the Slippery Quality twice: Swim 5, "
             "water-breathing and +9 to Defense Totals in a grapple.",

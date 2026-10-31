@@ -6,6 +6,9 @@ import random
 import pytest
 
 from ars_magica_manager import neighbours, tombs
+from ars_magica_manager.book_packs import africa as africa_pack
+from ars_magica_manager.book_packs import nile as nile_pack
+from ars_magica_manager.book_packs.builder import Builder
 from ars_magica_manager.commands import Confirm, Form, Refuse
 from ars_magica_manager.forms import neighbour as neighbour_forms
 from ars_magica_manager.models import Character, Neighbour, Saga
@@ -269,33 +272,335 @@ def test_edit_tomb_refuses_more_than_ten_points_of_hooks():
     assert form.validate(values) is None
 
 
-def test_overcome_it_rolls_against_the_traps_ease_factor():
+def _values(form: Form, **changes: object) -> dict[str, object]:
+    return {**{f.key: f.value for f in form.fields()}, **changes}
+
+
+def _party_saga(place: Neighbour) -> Saga:
+    saga = _saga(place)
+    corvinus = Character(id="corvinus", name="Corvinus", type="magus")
+    corvinus.characteristics.quickness = 3
+    saga.characters.append(corvinus)
+    return saga
+
+
+def test_overcome_it_goes_in_order_and_ends_in_the_diary():
+    """pp. 32-33: the one in danger first, each rolls for his own action
+    against an Ease Factor moved for it, and the trap goes last."""
+    place = _tomb()
+    saga = _party_saga(place)
+    opening = tombs.overcome_trap(saga, place, 0, random.Random(3))
+    assert isinstance(opening, Form) and opening.live is not None
+    values = _values(opening, who="gregor", with_corvinus=True)
+    assert "Order: Gregor, Corvinus, then it acts" in opening.live(values)
+    first = opening.apply(values)
+    assert isinstance(first, Form) and first.live is not None
+    assert first.title.startswith("Gregor Acts")
+    moved = _values(first, adjust=-3, roll="Qik + Athletics", action="vaults clear")
+    assert "Quickness 1 + Athletics 0 + stress die against 9" in first.live(moved)
+    second = first.apply(moved)
+    assert isinstance(second, Form) and second.title.startswith("Corvinus Acts")
+    assert second.live is not None
+    assert "Gregor, vaults clear," in second.live(_values(second))
+    last = second.apply(_values(second, fast_cast=True))
+    assert isinstance(last, Form) and last.title.startswith("It Acts")
+    labels = [f.label for f in last.fields()]
+    assert "Corvinus is helped, or out of its reach" in labels
+    assert last.live is not None
+    assert "Corvinus" in last.live(_values(last))
+    ended = last.apply(_values(last, outcome="He lands on a ledge."))
+    assert isinstance(ended, list)
+    written = tombs.place_events.diary(place)[-1]["text"]
+    assert written.startswith("Gregor, vaults clear,")
+    assert "Fast-Cast" in written
+    assert written.endswith("He lands on a ledge.")
+    assert tombs.traps(place)[0]["sprung"] is True
+
+
+def test_one_who_is_helped_does_not_suffer_it():
+    assert et.suffering(["Gregor", "Viktor"], {"Viktor"}) == ["Gregor"]
     place = _tomb()
     saga = _saga(place)
-    form = tombs.overcome_trap(saga, place, 0, random.Random(3))
-    assert isinstance(form, Form) and form.live is not None
-    values = {f.key: f.value for f in form.fields()}
-    values.update(who="gregor", in_danger=True, adjust=-3, roll="Qik + Athletics")
-    live = form.live(values)
-    assert "adjusted to 9" in live
-    assert "Quickness 1 + Athletics 0 + stress die against 9" in live
-    assert "Order: Gregor, then the trap" in live
-    step = form.apply(values)
+    gregor = saga.character("gregor")
+    assert gregor is not None
+    spring = tombs.Springing(
+        saga,
+        place,
+        tombs._trap_obstacle(tombs.traps(place)[0]),
+        [gregor],
+        random.Random(1),
+        [tombs.Acted(gregor, "Gregor fails.", False)],
+    )
+    form = tombs.it_acts(spring)
+    form.apply(_values(form, spared_gregor=True))
+    assert "Nobody suffered Drop." in tombs.place_events.diary(place)[-1]["text"]
+
+
+class _Rolls(random.Random):
+    """A generator whose die always shows `face` (a stress die's 1 rolls
+    again; 0 may botch)."""
+
+    def __init__(self, face: int) -> None:
+        super().__init__(0)
+        self.face = face
+
+    def randint(self, a: int, b: int) -> int:
+        return self.face
+
+
+def test_a_spotted_trap_can_be_dealt_with_unsprung():
+    """p. 44: seen first, there is time; dealing with it stops it springing."""
+    place = _tomb()
+    place.details["tomb_traps"][0]["spot"] = 6
+    saga = _saga(place)
+    saga.character("gregor").characteristics.perception = 3
+    opening = tombs.overcome_trap(saga, place, 0, _Rolls(9))
+    assert isinstance(opening, Form)
+    seen = opening.apply(
+        _values(opening, who="gregor", look=True, light="Perfect light")
+    )
+    assert isinstance(seen, Form) and seen.title.startswith("Spotted")
+    assert seen.live is not None
+    assert "against 3: spots it" in seen.live({})
+    seen.apply({"then": tombs.DEAL})
+    assert tombs.traps(place)[0]["sprung"] is True
+
+
+def test_nobody_spotting_it_goes_straight_to_the_actions():
+    place = _tomb()
+    saga = _saga(place)
+    opening = tombs.overcome_trap(saga, place, 0, _Rolls(2))
+    assert isinstance(opening, Form)
+    step = opening.apply(
+        _values(opening, who="gregor", look=True, light="Near darkness")
+    )
+    assert isinstance(step, Form) and step.title.startswith("Gregor Acts")
+    assert step.live is not None
+    assert "sees nothing" in step.live(_values(step))
+
+
+def test_a_sprung_trap_is_reset_before_it_springs_again():
+    place = _tomb()
+    saga = _saga(place)
+    trap = tombs.traps(place)[0]
+    trap["sprung"] = True
+    assert "sprung" in tombs.traps_grid(saga, place).rows[0][2]
+    step = tombs.overcome_trap(saga, place, 0)
     assert isinstance(step, Confirm)
     step.apply()
-    written = tombs.place_events.diary(place)[-1]["text"]
-    assert written.startswith("Gregor") and written.endswith("against Drop.")
+    assert "sprung" not in trap
+    trap.update(sprung=True, once=True)
+    assert isinstance(tombs.overcome_trap(saga, place, 0), Refuse)
 
 
-def test_a_fast_cast_spell_is_not_rolled_against_the_trap():
+def test_a_trap_that_resets_itself_is_offered_as_reset():
     place = _tomb()
     saga = _saga(place)
-    form = tombs.overcome_trap(saga, place, 0)
-    assert isinstance(form, Form) and form.live is not None
-    values = {f.key: f.value for f in form.fields()}
-    values.update(who="gregor", fast_cast=True)
-    assert "Fast-Cast" in form.live(values)
-    assert isinstance(form.apply(values), list)
+    gregor = saga.character("gregor")
+    trap = tombs.traps(place)[0]
+    trap["resets"] = True
+    spring = tombs.Springing(
+        saga, place, tombs._trap_obstacle(trap), [gregor], random.Random(1)
+    )
+    fields = {f.key: f for f in tombs.it_acts(spring).fields()}
+    assert fields["left"].value == tombs.RESET
+    trap.pop("resets")
+    trap["once"] = True
+    fields = {f.key: f for f in tombs.it_acts(spring).fields()}
+    assert [value for _label, value in fields["left"].options] == [tombs.SPRUNG]
+
+
+def test_a_talisman_or_ward_is_overcome_like_a_trap():
+    """pp. 35, 42: its Ease Factor, and Magic Resistance passes it."""
+    place = _tomb()
+    saga = _saga(place)
+    opening = tombs.overcome_ward(saga, place, 1, random.Random(1))
+    assert isinstance(opening, Form)
+    assert "look" not in {f.key for f in opening.fields()}
+    action = opening.apply(_values(opening, who="gregor"))
+    assert isinstance(action, Form)
+    last = action.apply(_values(action, resistance=0))
+    assert isinstance(last, Form)
+    assert not [f for f in last.fields() if f.key.startswith("spared_")]
+    last.apply(_values(last))
+    written = tombs.place_events.diary(place)[-1]["text"]
+    assert "passes untouched" in written and "Nobody suffered Turn." in written
+
+
+def test_an_enchantment_in_nobodys_way_has_no_ease_factor():
+    place = _tomb()
+    place.details["tomb_wards"].append(
+        {"name": "Face", "kind": et.NO_OBSTACLE, "art": "CrIm", "level": 15}
+    )
+    saga = _saga(place)
+    assert tombs.ward_ease(tombs.wards(place)[-1]) is None
+    assert tombs.wards_grid(saga, place).rows[-1][3] == "no roll, 6 BP"
+    assert tombs.spent(place)["talismans and wards"] == 34
+    assert isinstance(tombs.overcome_ward(saga, place, 2), Refuse)
+
+
+def test_a_printed_ease_factor_stands_beside_the_rule():
+    """Arrakkamani's ward, p. 92: level 57 prints 24, not 9 + 12."""
+    ward: tombs.TombWard = {"name": "S", "kind": et.WARD, "level": 57}
+    assert tombs.ward_ease(ward) == 21
+    assert tombs.ward_ease({**ward, "ease": 24}) == 24
+
+
+def test_a_trap_treated_as_several_pays_for_each_harm():
+    """p. 46: the pit, 9 + 6 at Ease Factor 12; p. 92: the darts, three
+    minor injuries at Ease Factor 6."""
+    assert et.trap_build_points("serious", 12, 6) == 21
+    assert et.trap_build_points("minor", 6, 12) == 19
+    assert tombs.trap_points({"name": "P", "harm": "serious", "ease": 12}) == 15
+    assert (
+        tombs.trap_points({"name": "P", "harm": "serious", "ease": 12, "further_bp": 6})
+        == 21
+    )
+
+
+def test_a_roll_may_take_off_encumbrance():
+    gregor = Character(id="g", name="Gregor", type="grog")
+    gregor.characteristics.quickness = 2
+    value, words = tombs.roll_score(gregor, "Qik + Athletics - Encumbrance")
+    assert value == 2 and words.endswith("- Encumbrance 0")
+    assert tombs.roll_problem("Qik + Athletics - Encumbrance") is None
+    assert tombs.roll_problem("") is None
+    assert tombs.roll_problem("Qik + Athletics - Wounds") is not None
+    assert tombs.roll_problem("Luck + Dice") is not None
+
+
+def test_a_place_of_examples_has_no_budget_and_is_not_offered():
+    place = _tomb()
+    place.details["tomb_kind"] = et.EXAMPLES.key
+    saga = _saga(place)
+    assert "too many" not in tombs.tomb_text(saga, place)
+    assert [f.label for f in tombs.tomb_facts(saga, place)] == ["Kind", "Build Points"]
+    assert et.EXAMPLES.key not in et.KINDS
+
+
+def test_the_places_own_aura_shows_when_boons_raise_it():
+    place = _tomb()
+    place.details["aura"] = 6
+    facts = {f.label: f.value for f in tombs.tomb_facts(_saga(place), place)}
+    assert facts["Magic aura"] == "6 (base 4; raised by Boons or its site)"
+
+
+# -- the book's records in the packs --
+
+
+@pytest.fixture(scope="module")
+def nile() -> Saga:
+    return nile_pack.assemble().saga
+
+
+def _place(saga: Saga, name: str) -> Neighbour:
+    return next(n for n in saga.neighbours if n.name == name)
+
+
+@pytest.mark.parametrize(
+    ("name", "kind", "spent"),
+    [
+        # p. 46: its fear curse by the rule, 10, not the printed 6.
+        (
+            "The Tomb of Queen Cleopatra",
+            "major_monarch",
+            {
+                "curses": 42,
+                "talismans and wards": 76,
+                "traps": 45,
+                "other resources": 325,
+            },
+        ),
+        # p. 92: 259 overall, so its enchantments are 50, not the printed 52.
+        (
+            "The Pyramid of Arrakkamani",
+            "major_monarch",
+            {
+                "curses": 18,
+                "talismans and wards": 50,
+                "traps": 55,
+                "other resources": 136,
+            },
+        ),
+    ],
+)
+def test_the_books_tombs_add_up_as_printed(nile, name, kind, spent):
+    place = _place(nile, name)
+    assert tombs.is_tomb(place) and place.details["tomb_kind"] == kind
+    assert tombs.spent(place) == spent
+
+
+def test_the_pyramids_records_cost_what_the_book_prints(nile):
+    place = _place(nile, "The Pyramid of Arrakkamani")
+    assert [tombs.trap_points(t) for t in tombs.traps(place)] == [15, 6, 19, 15]
+    assert [tombs.ward_points(w) for w in tombs.wards(place)] == [10, 16, 24]
+    assert [tombs.ward_ease(w) for w in tombs.wards(place)] == [11, 14, 24]
+
+
+def test_the_book_prints_each_examples_cost_and_ease_factor(nile):
+    traps = {
+        t["name"]: tombs.trap_points(t)
+        for t in tombs.traps(_place(nile, "Traps of the Tombs"))
+    }
+    assert traps == {
+        "Labyrinth": 4,
+        "Prison Room": 7,
+        "Rock Fall": 9,
+        "Medicinal Powders": 12,
+        "Head Wires": 15,
+        "Head Wires behind a Pit": 21,
+        "Dead Drop": 18,
+    }
+    talismans = tombs.wards(_place(nile, "Talismans of the Tombs"))
+    assert [(tombs.ward_ease(w), tombs.ward_points(w)) for w in talismans] == [
+        (14, 16),
+        (10, 8),
+        (None, 6),
+        (12, 12),
+    ]
+    wards = tombs.wards(_place(nile, "Wards of the Tombs"))
+    assert [tombs.ward_ease(w) for w in wards] == [17, 15, 19]
+    curses = tombs.curses(_place(nile, "Curses of the Tombs"))
+    assert [c["name"] for c in curses][-1] == "The Hollow Promise of a Swift Death"
+    assert [tombs.curse_points(c) for c in curses] == [
+        18,
+        10,
+        18,
+        14,
+        14,
+        10,
+        10,
+        22,
+        4,
+    ]
+
+
+def test_the_cleopatra_pit_is_spotted_at_three_more_than_it_is_avoided(nile):
+    pit = tombs.traps(_place(nile, "The Tomb of Queen Cleopatra"))[1]
+    assert (pit["ease"], pit["spot"]) == (12, 15)
+
+
+def test_the_guilds_name_is_as_the_errata_has_it(nile):
+    """Errata p. 87."""
+    assert any("Al-Matalibeen" in n.name for n in nile.neighbours)
+    assert not any("Al-Majalibeen" in n.name for n in nile.neighbours)
+
+
+def test_the_builder_refuses_a_record_the_rules_cant_cost():
+    place = Neighbour(id="p", name="P", kind="place")
+    with pytest.raises(ValueError, match="P, Bad"):
+        Builder.tomb(place, traps=[tombs.TombTrap(name="Bad", harm="no", ease=3)])
+    with pytest.raises(ValueError, match="P, Weak"):
+        Builder.tomb(
+            place, curses=[tombs.TombCurse(name="Weak", kind=et.GREATER, level=5)]
+        )
+
+
+def test_tin_hinans_tomb_is_marked_and_holds_only_what_the_book_prints():
+    place = _place(africa_pack.assemble().saga, "The Tomb of Tin Hinan")
+    assert tombs.is_tomb(place)
+    assert not tombs.traps(place) and not tombs.curses(place)
+    assert tombs.spent_total(place) == 0
 
 
 def test_overcome_it_needs_a_trap():

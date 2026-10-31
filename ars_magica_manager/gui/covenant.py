@@ -36,6 +36,7 @@ from .. import (
     guest_stays,
     hermetic_projects,
     manors,
+    mobile_covenants,
     seasons,
     town_charter,
     vis,
@@ -68,6 +69,7 @@ from ..sections import (
     COV_CHARTER_LORDS_SECTION,
     COV_CHARTER_TERMS_SECTION,
     GUESTS_SECTION,
+    WHEREABOUTS_SECTION,
 )
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
@@ -415,6 +417,7 @@ class CovenantPage(QWidget):
                 self.run,
             ),
             connections_section(self.saga, covenant, p, self.run),
+            *self._whereabouts(covenant),
         ]
         if not covenant.played:
             parts += relations(self.saga, covenant, p, self.run)
@@ -559,12 +562,14 @@ class CovenantPage(QWidget):
                             world_forms.what_matters_form(covenant)
                         )
                     },
+                    buttons=list(self.placer.buttons("Hooks")) if self.placer else [],
                 )
             )
         parts += relations(saga, covenant, p, self.run)
         # A sketch lists its guests only while it has some.
         if guest_stays.guests(saga, covenant):
             parts.append(self._guests(covenant))
+        parts += self._whereabouts(covenant)
         parts.append(connections_section(saga, covenant, p, self.run))
         parts.append(
             text(
@@ -703,6 +708,39 @@ class CovenantPage(QWidget):
         )
         parts.append(self._guests(covenant))
         return scrolling_page(p, *parts)
+
+    def _whereabouts(self, covenant: Covenant) -> list[QWidget]:
+        """Where it is now, its route and this season's vis, then its
+        stops, with Add, Edit, Delete and Plan Route: shown with a stop or
+        a Mobile Hook."""
+        if not mobile_covenants.shows(covenant):
+            return []
+        p, saga = self.p, self.saga
+        grid = mobile_covenants.grid(saga, covenant)
+        chooser = Chooser()
+        summary = TextBlock(mobile_covenants.summary_text(saga, covenant), p)
+        summary.setFont(serif(12.5))
+        widget = section(
+            mobile_covenants.title(covenant),
+            p,
+            summary,
+            table_view(grid.table(), p, chooser.choose)
+            if grid.rows
+            else _none(grid.empty, p),
+            buttons=[
+                *verb_buttons(
+                    mobile_covenants.ops(saga, covenant), chooser, self.run, p
+                ),
+                edit_button(
+                    mobile_covenants.ROUTE_TITLE,
+                    p,
+                    lambda: self.run(mobile_covenants.plan_route(saga, covenant)),
+                    "place",
+                ),
+            ],
+        )
+        widget.setObjectName(WHEREABOUTS_SECTION)
+        return [widget]
 
     def _guests(self, covenant: Covenant) -> QWidget:
         """The magi staying at the covenant as its guests, with Edit (their

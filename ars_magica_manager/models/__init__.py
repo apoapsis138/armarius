@@ -344,6 +344,8 @@ from .seasons import season_order as season_order
 from .ships import SHIP_QUALITIES as SHIP_QUALITIES
 from .ships import Ship as Ship
 from .spell_guideline import SpellGuidelineDef as SpellGuidelineDef
+from .stops import CovenantStop as CovenantStop
+from .stops import RouteStop as RouteStop
 from .tmre_alchemy import DIGEST_PRODUCTS as DIGEST_PRODUCTS
 from .tmre_alchemy import DIGEST_SPACES as DIGEST_SPACES
 from .tmre_alchemy import DIGEST_VIS as DIGEST_VIS

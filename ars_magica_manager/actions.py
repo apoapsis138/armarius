@@ -26,6 +26,7 @@ from . import (
     giving,
     guest_stays,
     hosting,
+    mobile_covenants,
     places,
     seasons,
     selling,
@@ -143,6 +144,7 @@ from .sections import (
     TRADITIONS_SECTION,
     TRAIT_SECTIONS,
     TRIBUNAL_INFO_SECTION,
+    WHEREABOUTS_SECTION,
 )
 
 if TYPE_CHECKING:
@@ -511,6 +513,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("s", "library_search", "Search the Great Library"),
     # A tomb's trap springs (Lands of the Nile).
     MenuItem("o", "overcome_trap", "Overcome It"),
+    MenuItem("o", "overcome_ward", "Overcome It"),
     # A place with a Faerie aura: crossing into the Faerie Realm.
     MenuItem("t", "cross_threshold", "Cross the Threshold"),
     # A covenant's ships (Hermetic Projects; City & Guild).
@@ -518,6 +521,12 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("c", "ship_combat", "Ship Combat"),
     MenuItem("f", "ship_fate", "Sunk or Taken"),
     MenuItem("b", "build_ship", "Build a Ship"),
+    MenuItem("x", "detach_ship", "Detach"),
+    MenuItem("j", "rejoin_ship", "Rejoin"),
+    # Where a covenant is: any covenant may log a stop; its route is planned
+    # on Whereabouts.
+    MenuItem("o", "add_stop", "Add a Stop"),
+    MenuItem("t", "plan_route", "Plan Route"),
     # Shaping the land by magic (Transforming Mythic Europe).
     MenuItem("l", "shape_land", "Shape the Land"),
     # A cleric's career (The Church).
@@ -616,11 +625,13 @@ MORE_SECTIONS: dict[str, str] = {
     "library_search": LIBRARY_RULES_SECTION,
     # A tomb's trap springs (Lands of the Nile).
     "overcome_trap": "section-nb-tomb-traps",
+    "overcome_ward": "section-nb-tomb-wards",
     # A covenant's ships: the chosen ship's stress check and combat.
     "ship_stress": "section-pos-ship",
     "ship_combat": "section-pos-ship",
     "ship_fate": "section-pos-ship",
     "build_ship": "section-pos-ship",
+    "plan_route": WHEREABOUTS_SECTION,
     # A cleric's career: the exorcism on Holy Orders.
     "perform_exorcism": ORDERS_SECTION,
     # Saga Content's Mystery Cults.
@@ -1770,6 +1781,31 @@ def _owes_fee(facts: ActionFacts, section: str) -> bool:
     )
 
 
+def _on_ship_row(
+    can: Callable[[Covenant, int | None], bool],
+) -> Callable[[ActionFacts, str], bool]:
+    """Offered on the Ships list, while `can` says so of the chosen ship."""
+
+    def rule(facts: ActionFacts, section: str) -> bool:
+        covenant = facts.selected_covenant
+        return (
+            section == "section-pos-ship"
+            and covenant is not None
+            and can(covenant, facts.chosen_row(section))
+        )
+
+    return rule
+
+
+def _logs_stop(facts: ActionFacts, section: str) -> bool:
+    """Add a Stop, for any covenant: on its top panel, as Whereabouts may
+    not show yet, and on Whereabouts."""
+    return facts.selected_covenant is not None and section in (
+        "section-cov-info",
+        WHEREABOUTS_SECTION,
+    )
+
+
 def _plans_journey(_facts: ActionFacts, section: str) -> bool:
     """Travel, the calculator: on Ahead, the Seasons page's or a
     covenant's."""
@@ -1823,6 +1859,9 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "forget_charter_template": _forgets_template,
     "end_membership": _ends_membership,
     "pay_fee": _owes_fee,
+    "add_stop": _logs_stop,
+    "detach_ship": _on_ship_row(mobile_covenants.can_detach),
+    "rejoin_ship": _on_ship_row(mobile_covenants.can_rejoin),
     "labor_story": _works_for_labor(lambda c: bool(merchants.work_abilities(c))),
     "invest_labor": _works_for_labor(merchants.earns_labor),
     # A grog's season of copying, on This Season: planned, then cleared.

@@ -23,13 +23,14 @@ SHEET_OPEN_WIDGET_BUDGET = {
     # The Agents and Religion tabs add their (unbuilt) panes.
     "character": 93,
     # The Manors and Charter panes (the town charter's sections moved off
-    # Attributes onto the Charter tab, unbuilt on opening).
-    "covenant": 67,
+    # Attributes onto the Charter tab, unbuilt on opening); the Whereabouts
+    # section: 5.
+    "covenant": 72,
     "familiar": 65,
     "laboratory": 50,
     # Its Overview tab's Connections section: 2; its Charter tab's
-    # (unbuilt) pane: 2.
-    "sketch_covenant": 54,
+    # (unbuilt) pane: 2; its Whereabouts section: 4.
+    "sketch_covenant": 58,
     # Each Tribunal's Secrets tab adds its (unbuilt) pane and its tab: 2.
     # The Rhine's Great Library tab adds its (unbuilt) pane and its tab: 2.
     # The Arguments tab (Transforming Mythic Europe) adds its (unbuilt)

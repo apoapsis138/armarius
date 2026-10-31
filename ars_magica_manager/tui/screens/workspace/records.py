@@ -80,6 +80,7 @@ from ....sections import (
     TABLES_SECTION,
     TOKENS_SECTION,
     TOMB_TRAPS_SECTION,
+    TOMB_WARDS_SECTION,
     TREASURY_SECTION,
 )
 from ..fields import (
@@ -772,6 +773,18 @@ class RecordActions(WorkspaceBase):
             self.app,
             tomb_rules.overcome_trap(self.saga, view.neighbour, row),
             lambda _end: self._commit(TOMB_TRAPS_SECTION, DIARY_SECTION),
+        )
+
+    def action_overcome_ward(self) -> None:
+        """More's Overcome It on a tomb's chosen talisman or ward."""
+        view = self._neighbour_sheet_view
+        row = view.section_row(TOMB_WARDS_SECTION) if view is not None else None
+        if view is None or row is None:
+            return
+        run_steps(
+            self.app,
+            tomb_rules.overcome_ward(self.saga, view.neighbour, row),
+            lambda _end: self._commit(TOMB_WARDS_SECTION, DIARY_SECTION),
         )
 
     # -- a lord's marriages --

@@ -106,6 +106,7 @@ def test_each_page_offers_what_applies_there():
         "In Creation / In Play",
         "Demote",
         # Transforming Mythic Europe in play.
+        "Add a Stop",
         "Shape the Land",
     ]
     assert _labels(menu_forms.new_items(page)) == [

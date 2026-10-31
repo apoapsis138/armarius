@@ -749,6 +749,62 @@ The covenant's animals, kept here for convenience. Livestock are not
 inhabitants: they count towards neither Total Inhabitants nor the points of
 inhabitants.
 
+### Whereabouts
+<!-- help: section-cov-whereabouts -->
+
+Where a covenant on the move is now, and where it has been. It shows on the
+Overview of a covenant with a stop, a route, or a Mobile Hook (Constantly
+Mobile, Erratically Mobile, Covenants pp. 9-10); those Hooks have no rules of
+their own, so this is what makes them count. **Add a Stop** is offered for
+every covenant.
+<!-- tui -->
+More (`m`) on a covenant offers **Add a Stop**. On Whereabouts, `a`, `e` and
+`d` add, edit and delete a stop, and More offers **Plan Route**.
+<!-- /tui -->
+<!-- gui -->
+**Add a Stop** sits beside the Hooks, and on a sketch beside What Matters.
+Whereabouts has Add, Edit, Delete and **Plan Route**.
+<!-- /gui -->
+
+A stop is a date and a Place of The Region with its level; open water is a sea
+Place with no aura. The latest stop not after the saga's date is where the
+covenant is, so a stop dated later waits for the date. The covenant's own
+Place stays its home, and **With no stops nothing changes**.
+
+**What follows the covenant.** Its aura is the aura of the stop, so casting,
+laboratories, vis study, aging and Warping all follow it. A Place set to
+**Travels with** the covenant (its own aura or regio, as the Favonius ships
+have) goes inside each stop's Place. On its surface the stronger of the two
+auras holds sway, with its realm (DE p. 410), and a tie keeps its own; inside
+its regio only the regio counts. A Dominion port of 3 beats a ship's Magic 2.
+This is a ruling for travelling Places: a fixed Place inside another keeps its
+own aura. If a covenant with a typed aura and no Place logs its first stop, tick
+**Its aura travels with it** to make that aura such a Place; otherwise the aura
+stays behind.
+
+**What stays behind.** The Aegis of the Hearth: a Boundary effect isn't mobile
+(Legends of Hermes p. 123). When Add a Stop or Advance Season moves the covenant
+its Aegis drops to 0, and the Diary says so under Defence & Magic. Editing or
+deleting a stop corrects the log and changes nothing else. Vis sources stay too:
+**Vis this season** names those harvested now and where they lie, so that the
+route can be planned round them. Whether the covenant got there is not checked.
+Neighbours, Tribunal and possessions don't change.
+
+**Ships.** On a covenant with a ship afloat, the stop form lists Places marked
+with **Waters** first, and warns of an unmarked Place without refusing it. A
+ship covenant holds an Aegis only docked at a Port for the whole season, not at
+an Anchorage: Edit Covenant refuses a higher Aegis anywhere else, and one still
+held away from a Port is lost when Advance Season keeps it there. That is this
+saga's ruling; the book only has its magi work at anchor (Through the Aegis
+p. 23).
+
+**Plan Route** lists the legs in order, with the seasons to stay at each, and
+**Circuit** goes back to the first after the last (Traveling Covenant, Covenants
+p. 27). A route is a plan: [Advance Season](help:advance-season) offers its next
+leg, and what really happened is logged as a stop.
+
+**See also:** [How to keep a covenant on the move](help:guide-mobile-covenant)
+
 ### Guests
 <!-- help: section-cov-guests -->
 
@@ -916,7 +972,11 @@ Choose a ship, then the buttons beside Add, Edit and Delete:
 
 - **Stress Check** (a storm, fire, naval combat or a magical attack, HP p. 53): a stress die + her captain's Profession + her quality (-1 Shoddy, +1 Superior, +3 Excellent, +5 Supernatural) + the magnitude of the total levels invested in her (all her effects' levels added together), -1 in poor weather or -3 in severe, -1 if repaired before, against 15 (City & Guild p. 77). Failing costs a damage level; a botch one, and one more for every botch die that shows a 0. The Diary records it.
 - **Ship Combat** (City & Guild pp. 86-87): choose their ship (another ship of the saga's, or one typed in) and what you mean to do. Each captain rolls a stress die + Intelligence + Profession + up to 3 for an experienced crew, + what favours his side (a faster ship, fog). The winner boards or slips away; a galley may ram (the rammed ship founders in 5 x a simple die minutes; a sailing ship that rams stays entangled) or shear oars (2 x a simple die rowers out of action). Artillery shoots as the ships close: a ballista kills a crewman a hit within 600 yards, a light catapult puts a simple die / 2 out of action within 200; each reloads in ten rounds. A boarding sets up a Fight in Conflicts for the two crews to fight as groups; the taller ship's men have +3 Attack and Defense until they are boarded. The Diary records it.
+- **Detach**: she sails on her own for a while, still of the covenant, since a covenant rests on its charter and not on being together (Guardians of the Forests p. 70; Through the Aegis pp. 11, 25). Say where she goes, and whether each magus of the laboratory aboard goes with her (ticked unless you say otherwise). Her laboratory and those who go take their aura from her stops, with no Current Location to set. Advance Season asks about her each season.
+- **Rejoin**: she comes back to the fleet, and her stops end. The Diary records both.
 - **Sunk or Taken**: what became of her after a fight or a storm. Sunk, or Taken (by whom), she shows so on the list and counts in no fleet battle; one taken by another covenant of the saga moves to its Possessions, afloat, and both Diaries say so. Choose Still afloat to undo it. The books give no rule for this (Tales of Power pp. 109-110 has a victor claim the ships he boards), so it is a record.
+
+**Laboratory aboard** names the lab she carries, so that it can leave with her.
 
 The captain's Profession is the best of his seafaring Professions (Sailor, Mariner, Captain, Ship, Navigator, Pilot). Sailing speed is City & Guild's 60 to 80 miles a day (about 30 by the Definitive Edition, p. 408).
 

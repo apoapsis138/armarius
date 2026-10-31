@@ -6,7 +6,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .... import storage
+from .... import places, storage
 from ....actions import (
     NodeKind,
 )
@@ -39,6 +39,7 @@ class SeasonActions(WorkspaceBase):
         summary)."""
         saga = self.saga
         saga.current_season, saga.current_year = season, year
+        places.sync(saga)
         storage.save_saga(saga)
         self._update_saga_clock()
         self._refresh_covenant_section("section-cov-info")

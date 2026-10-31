@@ -4,6 +4,7 @@ by the dialog contract tests; see dialog_contract_support.py."""
 
 import asyncio
 import inspect
+import random
 from collections.abc import Awaitable, Callable
 from dataclasses import dataclass
 
@@ -26,6 +27,7 @@ from ars_magica_manager import (
     siege_actions,
     staged_projects,
     storage,
+    tombs,
     vis,
 )
 from ars_magica_manager import economics as eco
@@ -687,6 +689,26 @@ async def _open_cover(ws) -> None:
     ws._run_steps(cover_forms.ops(ws.selected_character).add())
 
 
+def _with_harbour(ws) -> None:
+    """A Place to stop at, The Sound (in memory, saved only with the form)."""
+    if ws.saga.neighbour("the_sound") is None:
+        ws.saga.neighbours.append(
+            Neighbour("the_sound", "The Sound", kind="place", details={"aura": 2})
+        )
+
+
+def _open_add_stop(ws) -> None:
+    """More's Add a Stop, on any covenant."""
+    _with_harbour(ws)
+    ws.action_add_stop()
+
+
+def _open_plan_route(ws) -> None:
+    """More's Plan Route on Whereabouts."""
+    _with_harbour(ws)
+    ws.action_plan_route()
+
+
 async def _open_ship_fate(ws) -> None:
     """More's Sunk or Taken on the covenant's first ship, Seehund."""
     await _open_ship(ws, "fate")
@@ -932,6 +954,30 @@ def _with_cover(ws):
 def _with_hook(ws):
     """Suggest a Story from Rabenstein's Hook."""
     return hook_story_forms.story_form(ws.saga, ws.selected_covenant)
+
+
+def _leandro(ws):
+    return ws.saga.character("mag1")
+
+
+def _springing(ws, *, ward: bool = False, acted: bool = False) -> tombs.Springing:
+    """Overcome It part way through, on the sample tomb, for Leandro alone."""
+    place = ws.saga.neighbour("drachenfels")
+    obstacle = (
+        tombs.Obstacle("Turn the Interloper", 15, "its effect", penetration=0)
+        if ward
+        else tombs._trap_obstacle(tombs.traps(place)[0])
+    )
+    who = _leandro(ws)
+    spring = tombs.Springing(ws.saga, place, obstacle, [who], random.Random(1))
+    if acted:
+        spring.acted.append(tombs.Acted(who, "Leandro fails.", False))
+    return spring
+
+
+def _tomb_step(step) -> Opener:
+    """Open one of Overcome It's later steps directly."""
+    return Opener("place", _built(lambda ws: ws._run_steps(step(ws))))
 
 
 OPENERS: dict[str, Opener] = {
@@ -1836,11 +1882,25 @@ OPENERS: dict[str, Opener] = {
     "overcome trap": Opener(
         "place", _pick(lambda ws: ws.action_overcome_trap(), "nb-tomb-traps-list")
     ),
+    "overcome ward": Opener(
+        "place", _pick(lambda ws: ws.action_overcome_ward(), "nb-tomb-wards-list")
+    ),
+    "trap spotted": _tomb_step(
+        lambda ws: tombs.seen_form(_springing(ws), [_leandro(ws)])
+    ),
+    "character acts": _tomb_step(lambda ws: tombs.action_form(_springing(ws))),
+    "character faces ward": _tomb_step(
+        lambda ws: tombs.action_form(_springing(ws, ward=True))
+    ),
+    "trap acts": _tomb_step(lambda ws: tombs.it_acts(_springing(ws, acted=True))),
     # A covenant's ships (Hermetic Projects; City & Guild).
     "add ship": Opener("covenant", lambda ws: ws._possession_form("ship", None)),
     "ship stress check": Opener("covenant", lambda ws: _open_ship(ws, "stress")),
     "ship combat": Opener("covenant", lambda ws: _open_ship(ws, "combat")),
     "sunk or taken": Opener("covenant", _open_ship_fate),
+    "detach ship": Opener("covenant", lambda ws: _open_ship(ws, "detach")),
+    "add a stop": Opener("covenant", _open_add_stop),
+    "plan route": Opener("covenant", _open_plan_route),
     # Shaping the land by magic (Transforming Mythic Europe).
     "shape land": Opener("covenant", lambda ws: ws.action_shape_land()),
     "settle new land": Opener("covenant", lambda ws: _open_settle_land(ws)),
@@ -2491,6 +2551,9 @@ async def _open_ship(ws, which: str) -> None:
     await until(lambda: rows.selected_data_index == 0)
     if which == "stress":
         ws.action_ship_stress()
+    elif which == "detach":
+        _with_harbour(ws)
+        ws.action_detach_ship()
     elif which == "fate":
         ws.action_ship_fate()
     else:

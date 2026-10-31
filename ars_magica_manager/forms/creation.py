@@ -323,7 +323,9 @@ def template_key(kind: str) -> str:
 
 
 def _template_field(saga: Saga, kind: str) -> DialogField:
-    options = [(escape(t.name), t.id) for t in character_templates.templates_for(kind)]
+    options = [
+        (escape(t.name), t.id) for t in character_templates.templates_for(kind, saga)
+    ]
     if kind == "grog":
         options += [(escape(f"{t.name} (Grogs)"), t.id) for t in gt.templates(saga)]
         options += [
@@ -382,7 +384,7 @@ def character_create_live(values: dict[str, Any]) -> str:
             "[dim]None: the character starts In Creation, built step by step. "
             "A template asks for the book's choices first.[/]"
         )
-    if not character_templates.templates_for(kind):
+    if not character_templates.any_for(kind):
         return "[dim]The book has no templates for this type.[/]"
     return (
         "[dim]None: the character starts In Creation, built step by step. "

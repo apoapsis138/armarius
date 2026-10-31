@@ -5,15 +5,20 @@ The monuments, the Field of Reeds and the lost treasures are places; the
 Seekers' Guild, the monks and the old magicians factions; Gourneh a town and
 Al-Quisir a monastery. The creatures with printed blocks are in the Bestiary,
 and the book's story seeds are dormant threats. The book's example curses,
-wards, talismans, traps and tomb-building tables are listed in the secrets of
-places, as words. Rules the app already holds (Lector Priests, Cult of Dedun,
-Murabitin, Blood of the Old Gods) are cited by page."""
+wards, talismans and traps are real records on four places of examples, and
+Cleopatra's are on her tomb (Tomb tab); projectiles, pits and puzzles, whose
+cost varies or which the troupe plays, stay as words, and so do heka and the
+animated models, which are notes the app has no rule for (pp. 50-54). Rules the
+app already holds (Lector Priests, Cult of Dedun, Murabitin, Blood of the Old
+Gods) are cited by page."""
 
 from __future__ import annotations
 
 from typing import Any
 
 from ...models import BodyVis
+from ...rules import egyptian_tombs as et
+from ...tombs import TombCurse, TombTrap, TombWard
 from ..builder import (
     Builder,
     characteristics,
@@ -28,6 +33,28 @@ REGION = "In the region"
 LOCAL = "Locally"
 FATIGUE_NONE = "Never fatigued"
 SKULL = "in the skull of a dog or hyena, found when the body crumbles at death"
+
+#: Two records used twice: as the book's example and on Cleopatra's tomb.
+FEAR_CURSE = TombCurse(
+    name="I Shall Cast the Fear of Myself into Him",
+    art="CrMe",
+    level=25,
+    rdt="Touch, Sun, Room",
+    uses=1,
+    excoriation="Overwhelming dread of the tomb or its occupant; victims must flee "
+    "at once. (Base 4, +1 Touch, +2 Sun, +2 Room.)",
+)
+URAEUS = TombWard(
+    name="The Destroying Uraeus",
+    art="CrIg",
+    level=20,
+    uses="24/day",
+    effect="A rearing cobra statue spews fire, +10 damage to one person passing "
+    "without intoning the tomb owner's name. Unlike a Hermetic effect it can be "
+    "dodged, by diving aside (p. 42). R: Voice, D: Mom, T: Ind (Base 5, +2 Voice; "
+    "+5 24/day).",
+    deactivation="Intone the name of the tomb's owner in passing",
+)
 
 
 def _times(entry: Any, count: int) -> list[Any]:
@@ -55,7 +82,7 @@ def build(b: Builder) -> None:
 
 def _guild(b: Builder) -> None:
     b.faction(
-        "The Seekers' Guild (Al-Majalibeen)",
+        "The Seekers' Guild (Al-Matalibeen)",
         faction="Gild",
         decides="An emir chosen by the sultan, often from his most powerful "
         "councillors, leads the guild. Its members elect a chairman, the Naqeeb "
@@ -218,13 +245,10 @@ def _monuments(b: Builder) -> Any:
             "Unfed spirits (p. 31) travel the roads scrounging what humans have "
             "thrown away, which spiritually gives it to the next finder. They hate "
             "this, and may plague people with ill luck until offered libations.",
-            "Designing a tomb (pp. 40-44): a tomb is built like a covenant, with "
-            "Boons, Hooks and Build Points; statistics are needed only for a tomb "
-            "that will last in the saga. Up to 10 points of Hooks may buy Boons. "
-            "Major monarch: base Magic aura 5, 500 BP. Royal consort or minor "
-            "monarch: aura 4, 250 BP. Lesser royal or high priest: aura 3, 100 BP. "
-            "Non-royal dignitary: aura 3, 50 BP. Curses and enchanted items cost "
-            "2 BP per 5 levels. A library is usually wall inscriptions in Ancient "
+            "Designing a tomb (pp. 40-44): a place marked as a tomb has a Tomb "
+            "tab with the book's kinds, Build Points and costs; statistics are "
+            "needed only for a tomb that will last in the saga. A library is "
+            "usually wall inscriptions in Ancient "
             "Egyptian or Demotic, in hieroglyphs or hieratic: a history of the "
             "dead as Area Lore or Organization Lore, or spells as Magic Lore or "
             "Supernatural Abilities; a few hold scrolls in sealed jars. Specialists "
@@ -377,237 +401,351 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
 
 
 def _defenses(b: Builder, monuments: Any) -> None:
-    b.place(
-        "Curses of the Tombs",
-        known=REGION,
-        inside=monuments,
-        summary="Most tombs have at least one curse, and some carry long "
-        "maledictions promising many horrors to any who defile them. Lector "
-        "priests laid them with magic now forgotten, writing them in a prominent "
-        "place, usually in hieroglyphs, sometimes in Demotic. Each names a "
-        "condition, such as defacing the inscription, breaking the seal, entering "
-        "impure or disturbing the king, then one or more punishments.",
-        secrets=paragraphs(
-            "Curses (LotN pp. 34, 40-41). How literally the condition is taken is "
-            "left to the storyguide. A curse's excoriation is written as a "
-            "Hermetic enchantment, most often Range Touch, Target Room, triggered "
-            "when the condition is broken or someone tries to destroy the text; "
-            "the condition need not be one a Hermetic device could detect. Once "
-            "triggered as many times as its uses per day, the text may be safely "
-            "destroyed. Most have one use a day, and Penetration is rare. "
-            "Excoriations Hermetic magic cannot match are Greater or Lesser "
-            "Maledictions, with a Special Duration (no added magnitude): permanent "
-            "until dispelled, any Technique or Form, base level 30 or 10, and "
-            "those under them suffer Warping. A dire curse with no magical force "
-            "costs nothing. A curse costs 2 BP per 5 levels.",
-            "Level given for breaking the curse and for Build Points. All are 1/day, Pen 0, R: Touch, T: Room unless noted.",
-            "A Crocodile Shall Be Against Him in Water, a Snake on Land: ReAn 45, "
-            "D: Special (Base 30, +1 Touch, +2 Room). Greater Malediction. Spend "
-            "more than a night near water and a large crocodile comes; more than "
-            "a night far from it, a venomous snake. Each is an ordinary beast "
-            "bar its arrival; kill it and another comes.",
-            "He Shall Be Destroyed by Sekhmet: CrIg 25, D: Mom (Base 10, +1 Touch, "
-            "+2 Room). Arrows of fire hit each target automatically for +15 "
-            "damage.",
-            "He Shall Capsize and Drown at Sea: ReAq 45, D: Special (Base 30, +1 "
-            "Touch, +2 Room). Greater Malediction. Any boat the victim boards "
-            "sinks; in more than a foot of water he cannot keep his head above "
-            "the surface, and drowns.",
-            "He Shall Have No Successors: PeCo 35, D: Special (Base 20, +1 Touch, "
-            "+2 Room). Destroys the organs of generation. Other readings might "
-            "drive off apprentices or proteges, as a Lesser Malediction.",
-            "He Shall Meet Death by a Disease that No Doctor can Diagnose: PeCo "
-            "35, D: Mom (Base 20, +1 Touch, +2 Room). A major disease (Disease "
-            "Penalty -5); mundane medicine does not help Recovery rolls, only "
-            "magic.",
-            "He Shall Not Reach his Home, nor Embrace his Children: CrMe 25, D: "
-            "Special (Base 10, +1 Touch, +2 Room). Lesser Malediction, as the No "
-            "Sense of Direction Flaw; in the desert it can kill.",
-            "I Shall Cast the Fear of Myself into Him: CrMe 25, D: Sun (Base 4, "
-            "+1 Touch, +2 Sun, +2 Room). Overwhelming dread of the tomb or its "
-            "occupant; victims must flee at once.",
-            "I Shall Wring his Neck Like a Bird: PeCo 55, D: Sun (Base 30, +1 "
-            "Touch, +2 Sun, +2 Room). Spectral hands choke everyone affected; use "
-            "air deprivation (ArM5 p. 180) until cancelled or all are dead. "
-            "Another may cut a hole lower in the neck: Dex + Chirurgy stress roll "
-            "against 9, which leaves the Mute Flaw either way, and a botch kills. "
-            "A victim who escapes the room and makes a Deprivation roll breaks "
-            "the curse.",
-            "The Hollow Promise of a Swift Death: CrVi 9, constant effect, Pen 0; "
-            "R: Per, D: Sun, T: Ind (Base 3 taint with magic, +2 Sun; +3 "
-            "environmental trigger, +1 2/day). No curse at all: magical detection "
-            "sees a 30th-level curse. It may be made at other levels: a magnitude "
-            "up or down in the base effect appears as two up or down.",
+    """The book's example curses, wards, talismans and traps, each on a
+    place of examples: they are real records, but belong to no one tomb."""
+    b.tomb(
+        b.place(
+            "Curses of the Tombs",
+            known=REGION,
+            inside=monuments,
+            summary="Most tombs have at least one curse, and some carry long "
+            "maledictions promising many horrors to any who defile them. Lector "
+            "priests laid them with magic now forgotten, writing them in a "
+            "prominent place, usually in hieroglyphs, sometimes in Demotic. Each "
+            "names a condition, such as defacing the inscription, breaking the "
+            "seal, entering impure or disturbing the king, then one or more "
+            "punishments.",
+            secrets="How literally a condition is taken is left to the storyguide; "
+            "it need not be one a Hermetic device could detect (LotN pp. 34, 40). "
+            "All are 1/day, Pen 0, R: Touch, T: Room unless noted, and their levels "
+            "serve for breaking them as well as for Build Points (p. 41).",
         ),
+        kind=et.EXAMPLES.key,
+        curses=[
+            TombCurse(
+                name="A Crocodile Shall Be Against Him in Water, a Snake on Land",
+                kind=et.GREATER,
+                art="ReAn",
+                level=45,
+                rdt="Touch, Special, Room",
+                uses=1,
+                excoriation="Spend more than a night near water and a large "
+                "crocodile comes; more than a night far from it, a venomous "
+                "snake. Each is an ordinary beast bar its arrival; kill it and "
+                "another comes. (Base 30, +1 Touch, +2 Room.)",
+            ),
+            TombCurse(
+                name="He Shall Be Destroyed by Sekhmet",
+                art="CrIg",
+                level=25,
+                rdt="Touch, Mom, Room",
+                uses=1,
+                excoriation="Arrows of fire hit each target automatically for +15 "
+                "damage. (Base 10, +1 Touch, +2 Room.)",
+            ),
+            TombCurse(
+                name="He Shall Capsize and Drown at Sea",
+                kind=et.GREATER,
+                art="ReAq",
+                level=45,
+                rdt="Touch, Special, Room",
+                uses=1,
+                excoriation="Any boat the victim boards sinks; in more than a foot "
+                "of water he cannot keep his head above the surface, and drowns. "
+                "(Base 30, +1 Touch, +2 Room.)",
+            ),
+            TombCurse(
+                name="He Shall Have No Successors",
+                art="PeCo",
+                level=35,
+                rdt="Touch, Special, Room",
+                uses=1,
+                excoriation="Destroys the organs of generation. Other readings "
+                "might drive off apprentices or proteges, as a Lesser Malediction. "
+                "(Base 20, +1 Touch, +2 Room.)",
+            ),
+            TombCurse(
+                name="He Shall Meet Death by a Disease that No Doctor can Diagnose",
+                art="PeCo",
+                level=35,
+                rdt="Touch, Mom, Room",
+                uses=1,
+                excoriation="A major disease (Disease Penalty -5); mundane medicine "
+                "does not help Recovery rolls, only magic. (Base 20, +1 Touch, "
+                "+2 Room.)",
+            ),
+            TombCurse(
+                name="He Shall Not Reach his Home, nor Embrace his Children",
+                kind=et.LESSER,
+                art="CrMe",
+                level=25,
+                rdt="Touch, Special, Room",
+                uses=1,
+                excoriation="As the No Sense of Direction Flaw; in the desert it "
+                "can kill. (Base 10, +1 Touch, +2 Room.)",
+            ),
+            FEAR_CURSE,
+            TombCurse(
+                name="I Shall Wring his Neck Like a Bird",
+                art="PeCo",
+                level=55,
+                rdt="Touch, Sun, Room",
+                uses=1,
+                excoriation="Spectral hands choke everyone affected; use air "
+                "deprivation (ArM5 p. 180) until cancelled or all are dead. "
+                "Another may cut a hole lower in the neck: Dex + Chirurgy stress "
+                "roll against 9, which leaves the Mute Flaw either way, and a "
+                "botch kills. A victim who escapes the room and makes a "
+                "Deprivation roll breaks the curse. (Base 30, +1 Touch, +2 Sun, "
+                "+2 Room.)",
+            ),
+            TombCurse(
+                name="The Hollow Promise of a Swift Death",
+                art="CrVi",
+                level=9,
+                rdt="Per, Sun, Ind",
+                uses=2,
+                excoriation="No curse at all, and a constant effect: magical "
+                "detection sees a 30th-level curse. It may be made at other "
+                "levels: a magnitude up or down in the base effect appears as "
+                "two up or down. (Base 3 taint with magic, +2 Sun; +3 "
+                "environmental trigger, +1 2/day.)",
+            ),
+        ],
     )
-    b.place(
-        "Wards of the Tombs",
-        known=REGION,
-        inside=monuments,
-        summary="The favourite wards of Egypt hide a tomb from sight or nudge "
-        "people gently away. The books of treasure hunters are full of ways round "
-        "them: stand on a certain rock at dawn, say, wearing a headdress of red "
-        "feathers. Against the strongest such tricks fail.",
-        secrets=paragraphs(
-            "Wards (LotN pp. 35, 40). Most have a way to deactivate them for a "
-            "while, and they are likelier than other talismans to have "
+    b.tomb(
+        b.place(
+            "Wards of the Tombs",
+            known=REGION,
+            inside=monuments,
+            summary="The favourite wards of Egypt hide a tomb from sight or nudge "
+            "people gently away. The books of treasure hunters are full of ways "
+            "round them: stand on a certain rock at dawn, say, wearing a headdress "
+            "of red feathers. Against the strongest such tricks fail.",
+            secrets="Wards (LotN pp. 35, 40). Most have a way to deactivate them "
+            "for a while, and they are likelier than other talismans to have "
             "Penetration, since they are aimed at spirits. Books on bypassing the "
             "strongest are Initiation Scripts for Mystery Virtues, which may open "
             "a single site or, unknown to the reader, many: some grant Second "
             "Sight and teach regio crossing, others give resistance to talismans "
-            "of one substance or school. A ward can sometimes be overcome by "
-            "narrative means, at a base Ease Factor of 9 + magnitude; it repels "
-            "rather than harms, as when sand is about to turn to glass and seal "
-            "the tomb, or an illusion has a flaw.",
-            "Nothing But Sky and Sand: MuIm 39, Pen 0, constant effect; R: Touch, "
-            "D: Sun, T: Str (Base 5, +1 Touch, +2 Sun, +3 Structure; +3 "
-            "environmental trigger, +1 2/day). The structure seems a sand dune in "
-            "every way. Ease Factor 17 to avoid, for instance by spotting a stray "
-            "shadow or working out the stars that reveal it.",
-            "Turn the Interloper: ReCo 30, Pen 0, unlimited/day (Base 10, +2 "
-            "Voice; +10 unlimited uses). Spins anyone who triggers it, usually at "
-            "a doorway, through 180 degrees. Ease Factor 15, as by bracing "
-            "against it.",
-            "A Sovereign Ward Against Robbers: ReCo 49, Pen 0, constant effect "
-            "(Base 15, +1 Touch, +2 Sun, +3 Structure; +3 environmental trigger, "
-            "+1 2/day). Humans can hardly enter and cannot harm the structure "
-            "from outside. Ease Factor 19, as by forcing through, or throwing a "
-            "stone to dislodge the amulet behind it.",
+            "of one substance or school. A ward repels rather than harms, as when "
+            "sand is about to turn to glass and seal the tomb, or an illusion has "
+            "a flaw.",
         ),
+        kind=et.EXAMPLES.key,
+        wards=[
+            TombWard(
+                name="Nothing But Sky and Sand",
+                kind=et.WARD,
+                art="MuIm",
+                level=39,
+                uses="constant",
+                effect="The structure seems a sand dune in every way. R: Touch, D: "
+                "Sun, T: Str (Base 5, +1 Touch, +2 Sun, +3 Structure; +3 "
+                "environmental trigger, +1 2/day). Avoided, for instance, by "
+                "spotting a stray shadow or working out the stars that reveal it. "
+                "It may fail from one angle or under sprinkled water (p. 42).",
+            ),
+            TombWard(
+                name="Turn the Interloper",
+                kind=et.WARD,
+                art="ReCo",
+                level=30,
+                uses="unlimited",
+                effect="Spins anyone who triggers it, usually at a doorway, through "
+                "180 degrees (Base 10, +2 Voice; +10 unlimited uses). Avoided by "
+                "bracing against it.",
+            ),
+            TombWard(
+                name="A Sovereign Ward Against Robbers",
+                kind=et.WARD,
+                art="ReCo",
+                level=49,
+                uses="constant",
+                effect="Humans can hardly enter and cannot harm the structure from "
+                "outside (Base 15, +1 Touch, +2 Sun, +3 Structure; +3 environmental "
+                "trigger, +1 2/day). Overcome by forcing through, or throwing a "
+                "stone to dislodge the amulet behind it.",
+            ),
+        ],
     )
-    b.place(
-        "Talismans of the Tombs",
-        known=REGION,
-        inside=monuments,
-        summary="A talisman here is a small magic item set off by an expected "
-        "act: step through a door and the lintel pours fire on your head. "
-        "Most work on the gross elements rather than on emotion or luck. Their "
-        "makers could not resist their own work, so built in a way to put each to "
-        "sleep. Egyptian combat magic was poor, and Moses's contest with the "
-        "pharaoh's magicians was a sort of primitive certamen, but their lasting "
-        "curses, talismans and wards were sometimes exceptional, and always made "
-        "of opulent materials.",
-        secrets=paragraphs(
-            "Talismans (LotN pp. 33-35, 41-42). Ancient Egyptians had no general "
-            "Magic Resistance, so talismans aimed at people mostly have no "
-            "Penetration: even young magi ignore them, but grogs and equipment "
-            "do not. A particular spell effect usually renders one inert until "
+    b.tomb(
+        b.place(
+            "Talismans of the Tombs",
+            known=REGION,
+            inside=monuments,
+            summary="A talisman here is a small magic item set off by an expected "
+            "act: step through a door and the lintel pours fire on your head. "
+            "Most work on the gross elements rather than on emotion or luck. Their "
+            "makers could not resist their own work, so built in a way to put each "
+            "to sleep. Egyptian combat magic was poor, and Moses's contest with "
+            "the pharaoh's magicians was a sort of primitive certamen, but their "
+            "lasting curses, talismans and wards were sometimes exceptional, and "
+            "always made of opulent materials.",
+            secrets="Talismans (LotN pp. 33-35, 41-42). Ancient Egyptians had no "
+            "general Magic Resistance, so talismans aimed at people mostly have no "
+            "Penetration: even young magi ignore them, but grogs and equipment do "
+            "not. A particular spell effect usually renders one inert until "
             "sunset; in a laboratory a magus finds which, by trial or as with a "
-            "magic item's triggers (ArM5 p. 100). Design them by the Hermetic "
-            "item rules, or Learned Magic with the provisos of Chapter 5; few "
-            "relied on one-use seals or temporary amulets. Traps of this kind "
-            "have a base Ease Factor of 6 + magnitude, and characters whose Magic "
-            "Resistance equals the Penetration may pass automatically. Though "
-            "costed as Hermetic effects, they need not obey Hermetic limits: "
-            "unlike a Hermetic effect, a Destroying Uraeus's blast can be dodged, "
-            "and Nothing But Sky and Sand may fail from one angle or under "
-            "sprinkled water. Left in a strong aura, enchantments take Warping.",
-            "Apedemak's Strength: MuTe(Re) 40, 16 BP, Pen 0, unlimited/day; R: "
-            "Per, D: Conc, T: Ind (Base 5, +1 Conc, +1 stone, +1 size, +1 "
-            "requisite; +5 maintains concentration, +10 unlimited). Animates a "
-            "huge lion statue, which obeys one spoken order. Warped, it needs a "
-            "Com + Leadership roll against 9 to override its last order: attack "
-            "all who cross the threshold. Dogged, nearly indestructible, an "
-            "unskilled fighter. Ease Factor 14, as to hide or run.",
-            "The Destroying Uraeus: CrIg 20, 8 BP, Pen 0, 24/day; R: Voice, D: "
-            "Mom, T: Ind (Base 5, +2 Voice; +5 24/day). A rearing cobra statue "
-            "spews fire, +10 damage to one person passing without intoning the "
-            "tomb owner's name. Ease Factor 10 to dive aside.",
-            "On The Presentation of Face of Lost Companions: CrIm(In) 15, 6 BP, "
-            "Pen 0, 1/day; R: Touch, D: Conc, T: Ind (Base 2, +1 Touch, +1 Conc, "
-            "+1 legible words and moving image, +1 requisite; +5 maintain "
-            "concentration). After a fatal trap, an ochre-red image of the dead "
-            "person's face comes out of a wall nearby. One known version shouts a "
-            "warning in an old tongue against disturbing kings. It only frightens "
-            "and need not be defended against. Sinister versions enslave the "
-            "ghost as a guardian.",
-            "On Lowering the Waters: ReAq 28, 12 BP, Pen 16, 1/day; R: Touch, D: "
-            "Sun, T: Ind (Base 5, +1 Touch, +2 Sun; +8 Penetration 16). Many "
-            "tombs hold living water that strains to drown intruders. It is in "
-            "effect a Might 15 water elemental (Realms of Power: Magic), and "
-            "this talisman wakes and commands it. Ease Factor 12, as to trick "
-            "it with a new command.",
+            "magic item's triggers (ArM5 p. 100). Design them by the Hermetic item "
+            "rules, or Learned Magic with the provisos of Chapter 5; few relied on "
+            "one-use seals or temporary amulets. Though costed as Hermetic "
+            "effects, they need not obey Hermetic limits. Left in a strong aura, "
+            "enchantments take Warping.",
         ),
+        kind=et.EXAMPLES.key,
+        wards=[
+            TombWard(
+                name="Apedemak's Strength",
+                art="MuTe(Re)",
+                level=40,
+                uses="unlimited",
+                effect="Animates a huge lion statue, which obeys one spoken order. "
+                "Warped, it needs a Com + Leadership roll against 9 to override its "
+                "last order: attack all who cross the threshold. Dogged, nearly "
+                "indestructible, an unskilled fighter; to hide or run from it is "
+                "the roll against its Ease Factor. R: Per, D: Conc, T: Ind (Base 5, "
+                "+1 Conc, +1 stone, +1 size, +1 requisite; +5 maintains "
+                "concentration, +10 unlimited).",
+            ),
+            URAEUS,
+            TombWard(
+                name="On The Presentation of Face of Lost Companions",
+                kind=et.NO_OBSTACLE,
+                art="CrIm(In)",
+                level=15,
+                uses="1/day",
+                effect="After a fatal trap, an ochre-red image of the dead person's "
+                "face comes out of a wall nearby. One known version shouts a "
+                "warning in an old tongue against disturbing kings. Sinister "
+                "versions enslave the ghost as a guardian. R: Touch, D: Conc, T: "
+                "Ind (Base 2, +1 Touch, +1 Conc, +1 legible words and moving image, "
+                "+1 requisite; +5 maintain concentration).",
+            ),
+            TombWard(
+                name="On Lowering the Waters",
+                art="ReAq",
+                level=28,
+                penetration=16,
+                uses="1/day",
+                effect="Many tombs hold living water that strains to drown "
+                "intruders. It is in effect a Might 15 water elemental (Realms of "
+                "Power: Magic), and this talisman wakes and commands it; it may be "
+                "tricked with a new command. R: Touch, D: Sun, T: Ind (Base 5, +1 "
+                "Touch, +2 Sun; +8 Penetration 16).",
+            ),
+        ],
     )
-    b.place(
-        "Traps of the Tombs",
-        known=REGION,
-        inside=monuments,
-        summary=paragraphs(
-            "The plainest defence is to bar the way. Iron was rare, so passages "
-            "are choked with rubble, or in rich tombs with granite blocks so "
-            "hard the manuals say to quarry round them through the limestone. "
-            "Pits deter entry, and sloping passages may be filled with sand and "
-            "lime, soaked until it sets into a rough cement.",
-            "Architects hide entrances behind stone jackets, leave unfinished "
-            "chambers to send robbers home, and put a false wall or floor before "
-            "the sealed way to the true rooms. Bronze clockwork, hidden in walls, "
-            "floors, statues or arks, reloads projectiles, resets itself, moves "
-            "great objects and answers to pressure plates and levers.",
-            "Some rooms can only be passed by a puzzle, a lock and trap in one, "
-            "built to shut out those without leisure or letters: moves of a board "
-            "game, or hieroglyphs touched in order, with a sign or riddle "
-            "somewhere before the door. The favourite game was senet, played no "
-            "more in Mythic Africa; many seekers report rooms themed on "
-            "backgammon, though those who know its history doubt it, and some "
-            "suspect faeries.",
+    b.tomb(
+        b.place(
+            "Traps of the Tombs",
+            known=REGION,
+            inside=monuments,
+            summary=paragraphs(
+                "The plainest defence is to bar the way. Iron was rare, so passages "
+                "are choked with rubble, or in rich tombs with granite blocks so "
+                "hard the manuals say to quarry round them through the limestone. "
+                "Pits deter entry, and sloping passages may be filled with sand and "
+                "lime, soaked until it sets into a rough cement.",
+                "Architects hide entrances behind stone jackets, leave unfinished "
+                "chambers to send robbers home, and put a false wall or floor "
+                "before the sealed way to the true rooms. Bronze clockwork, hidden "
+                "in walls, floors, statues or arks, reloads projectiles, resets "
+                "itself, moves great objects and answers to pressure plates and "
+                "levers.",
+                "Some rooms can only be passed by a puzzle, a lock and trap in one, "
+                "built to shut out those without leisure or letters: moves of a "
+                "board game, or hieroglyphs touched in order, with a sign or riddle "
+                "somewhere before the door. The favourite game was senet, played no "
+                "more in Mythic Africa; many seekers report rooms themed on "
+                "backgammon, though those who know its history doubt it, and some "
+                "suspect faeries.",
+            ),
+            secrets=paragraphs(
+                "Spells that detect metal find mechanisms, and destroying one can "
+                "seize the trap (LotN p. 32).",
+                "Puzzles: Hermetic magi can subvert them, say with Rego from "
+                "outside the door. A dedicated magus might collect accounts to "
+                "deduce senet's rules, or some ghosts know the game. As a minigame, "
+                "play a real historical game; with combat-minded troupes put the "
+                "characters on the board to fight the pieces; let magic cheat "
+                "(p. 33).",
+                "Projectiles, cost varies: if not escaped that round, stress die + "
+                "weapon Damage (ArM5 p. 177), soaked. Several projectiles are "
+                "rolled and added; machines add +1 to +5 by human Strength "
+                "equivalent. Many are poisoned (p. 180).",
+                "Pits, cost varies: falling damage (ArM5 p. 181), plus the nearest "
+                "weapon's Damage for a dangerous floor: a 20-foot pit of sharp "
+                "stakes is stress die + 20 + 5, against stress die + Soak. An "
+                "architect's aim may add more.",
+            ),
         ),
-        secrets=paragraphs(
-            "The narrative rule (LotN pp. 32-33, 44). Each player frames one "
-            "interesting thing for his character to do and rolls only for it; the "
-            "troupe decides the roll, and the storyguide sets the Ease Factor "
-            "from the trap's base, up or down by 3, 6 or more (ArM5 p. 7). Magi "
-            "must Fast-Cast, adjudicated normally. Actions go in Quickness order, "
-            "the endangered character first and the trap last; a clash may need "
-            "an Action Priority Roll (Qik + Ability, Finesse if fast-casting). "
-            "Those who failed and were not helped suffer the trap.",
-            "A Per + Awareness roll may reveal a trap unsprung, allowing formulaic "
-            "or ritual magic. Awareness Ease Factors assume torches: -3 with "
-            "perfect light, +3 by one candle, +6 in near darkness. Spells that "
-            "detect metal find mechanisms, and destroying one can seize the trap. "
-            "Lords of Men users may use Evasion (p. 125), with the trap's Attack "
-            "as stress die + setter's Int + Profession, plus a weapon's Attack "
-            "modifier. Most mechanical traps need manual resetting.",
-            "Puzzles: Hermetic magi can subvert them, say with Rego from outside "
-            "the door. A dedicated magus might collect accounts to deduce senet's "
-            "rules, or some ghosts know the game. As a minigame, play a real "
-            "historical game; with combat-minded troupes put the characters on "
-            "the board to fight the pieces; let magic cheat (p. 33).",
-            "Trap cost (p. 44): delay or scare 3; minor injury (to +10) or "
-            "imprisonment 6; serious injury (to +15) 9; often fatal (+20 or more) "
-            "12. Modifier by ease of avoiding: Ease 3, 0; Ease 6, +1; Ease 9, +3; "
-            "Ease 12, +6; Ease 15, +9.",
-            "Labyrinth, cost 4: a maze of tunnels and identical passages. "
-            "Retracing steps is Int + Concentration against 6, and takes three "
-            "times as long as going in.",
-            "Prison Room, cost 7: a dead-end chamber with treasure or "
-            "inscriptions. Per + Awareness against 6 hears the mechanism in the "
-            "delay; otherwise a door too heavy to lift drops. The treasure is "
-            "painted wood, the inscriptions nonsense or taunts.",
-            "Rock Fall, cost 9: boulders roll on those climbing a slope. Qik + "
-            "Athletics - Encumbrance stress roll against 9, or +10 damage. Impact "
-            "as ArM5 p. 181. Larger falls cost more: an avalanche +24 and perhaps "
-            "suffocation (p. 180); rocks outweighing a character +21; about his "
-            "weight +18; smaller, about +1 per 10 pounds. Spiked balls do more, "
-            "sand, bones or the bodies of those left with the horses less.",
-            "Medicinal Powders, cost 12: fine poison in a sealed room, stirred "
-            "by the door and by movement. It sears and disfigures, a Medium "
-            "Wound, unless Stamina against 9. Others cost Fatigue, blind, "
-            "paralyse, or burn.",
-            "Projectiles, cost varies: if not escaped that round, stress die + "
-            "weapon Damage (ArM5 p. 177), soaked. Several projectiles are rolled "
-            "and added; machines add +1 to +5 by human Strength equivalent. Many "
-            "are poisoned (p. 180).",
-            "Head Wires, cost 15: neck-high wires, Per + Awareness against 15; "
-            "+9 damage that most armour does not stop. Strung behind an obvious "
-            "pit, so a jumper hits them, +18 and cost 21.",
-            "Dead Drop, cost 18: Per + Awareness against 12 spots a slightly "
-            "less worn paving stone; else a ten-pace fall to stone, +30.",
-            "Pits, cost varies: falling damage (ArM5 p. 181), plus the nearest "
-            "weapon's Damage for a dangerous floor: a 20-foot pit of sharp stakes "
-            "is stress die + 20 + 5, against stress die + Soak. An architect's "
-            "aim may add more.",
-        ),
+        kind=et.EXAMPLES.key,
+        traps=[
+            TombTrap(
+                name="Labyrinth",
+                harm="scare",
+                ease=6,
+                roll="Int + Concentration",
+                text="A maze of tunnels and identical passages. Retracing steps "
+                "takes three times as long as going in.",
+            ),
+            TombTrap(
+                name="Prison Room",
+                harm="minor",
+                ease=6,
+                roll="Per + Awareness",
+                once=True,
+                text="A dead-end chamber with treasure or inscriptions. The roll "
+                "hears the mechanism in the delay; otherwise a door too heavy to "
+                "lift drops. The treasure is painted wood, the inscriptions "
+                "nonsense or taunts.",
+            ),
+            TombTrap(
+                name="Rock Fall",
+                harm="minor",
+                ease=9,
+                roll="Qik + Athletics - Encumbrance",
+                text="Boulders roll on those climbing a slope: stress roll or +10 "
+                "damage. Impact as ArM5 p. 181. Larger falls cost more: an "
+                "avalanche +24 and perhaps suffocation (p. 180); rocks outweighing "
+                "a character +21; about his weight +18; smaller, about +1 per 10 "
+                "pounds. Spiked balls do more, sand, bones or the bodies of those "
+                "left with the horses less.",
+            ),
+            TombTrap(
+                name="Medicinal Powders",
+                harm="serious",
+                ease=9,
+                roll="Sta",
+                text="Fine poison in a sealed room, stirred by the door and by "
+                "movement. It sears and disfigures, a Medium Wound, unless the "
+                "roll is made. Others cost Fatigue, blind, paralyse, or burn.",
+            ),
+            TombTrap(
+                name="Head Wires",
+                harm="minor",
+                ease=15,
+                roll="Per + Awareness",
+                text="Neck-high wires, +9 damage that most armour does not stop.",
+            ),
+            TombTrap(
+                name="Head Wires behind a Pit",
+                harm="fatal",
+                ease=15,
+                roll="Per + Awareness",
+                text="Strung behind an obvious pit, so a jumper hits them: +18 "
+                "damage that most armour does not stop.",
+            ),
+            TombTrap(
+                name="Dead Drop",
+                harm="fatal",
+                ease=12,
+                roll="Per + Awareness",
+                text="A slightly less worn paving stone opens on a ten-pace fall "
+                "to stone, +30 damage.",
+            ),
+        ],
     )
 
 
@@ -820,13 +958,6 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
             "hidden way in the rear wall leads by a short corridor to a second, "
             "cursed door and the treasury of Ptolemaic Egypt: over ten thousand "
             "Mythic Pounds of gold, gems and ivory, a legendary source of income.",
-            "Details (p. 46): Magic aura 6. Boons: Wealth (Resources, Major); "
-            "Aura, Seclusion, Vivid Environment (Site, Minor); Edifice "
-            "(Fortifications, Minor). Hooks: Regio (Site, Major); Crumbling "
-            "(Fortifications, Minor); Guardians, Legendary Site (Surroundings, "
-            "Minor); Dwindling Resources (Resources, Minor). 484 Build Points: "
-            "curses 38, enchantments 76, library 141, specialists 105, traps 45, "
-            "vis sources 70, vis stocks 9.",
             "Library: later history of Roman Egypt, summa on Area Lore: Egypt, "
             "Koine Greek, Level 5, Quality 9. Medicinal herbs, tractatus on "
             "Medicine, Demotic, Quality 10. Healing spells, tractatus on the "
@@ -844,43 +975,9 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
             "year in the treasure chamber). Vis stocks: 10 Creo (unguents, pastes, "
             "medicines), 5 Imaginem (cosmetics, perfumes), 30 Terram (gold objects "
             "in the treasure room).",
-            "Curses: the Romans' curse, 32 BP, in the burial chamber, set off by "
-            "anyone speaking Latin, promises those who seek to disturb her boils, "
-            "sickness no medicine helps, and no children: boils that disfigure "
-            "but do no harm (PeCo 20; Pen 0, 1/day; Base 5, +1 Touch, +2 Room), a "
-            "Lesser Malediction as Fragile Constitution (PeCo 25) and He Shall "
-            "Have No Successors (PeCo 35). A clay seal on the treasure chamber "
-            "bears I Shall Cast the Fear of Myself into Him, 6 BP.",
-            "Enchantments: The Shrouded Oasis, on the compound walls, as The "
-            "Shrouded Glen (ArM5 p. 152): non-Hermetic, 50 levels, Pen 0, so it "
-            "only repels mundane hunters, Ease Factor 19, 20 BP; a magus "
-            "researching a breakthrough in enchanting Ritual effects can draw "
-            "insight from it. Two Statues of Sekhmet, as Destroying Uraeuses, "
-            "Ease Factor 10, 16 BP. The Djet, a twenty-foot statue of Osiris in "
-            "thirty fitted pieces of green stone: with burning incense in its "
-            "hand it answers one question from each person, who must truly want "
-            "the answer for himself. It knows only what some dead person knew, so "
-            "nothing of the future, and answers at random otherwise. It lies "
-            "scattered through the complex, one piece missing and unaccounted "
-            "for; assembling it takes skill, and instructions are in hieroglyphs "
-            "on the statue. Non-Hermetic, 100 levels, 40 BP.",
-            "Traps: (1) stone doors close off a stretch of corridor; opening them "
-            "brings a faint floral smell and dust eddying in the light. All within "
-            "must make Stamina against 9 or sleep for as many minutes as they "
-            "failed by, while immune mongooses swarm through ground-level holes "
-            "to eat them: a Light Wound each, worse by a step every two minutes. "
-            "Ease 9, 12 BP. (2) A covered pit before the burial chamber door is "
-            "safe at first, but walking on it arms it, taking about a minute. "
-            "Per + Awareness at +3 to the Ease Factor hears the arming; Dex + "
-            "Athletics - Encumbrance leaps clear when cautious, harder for those "
-            "fleeing the fear curse. Twelve feet deep with spikes: +12 from the "
-            "fall, +8 from each of up to four spikes (simple die 1-2 none, 3-4 "
-            "one, 5-6 two, 7-8 three, 9-10 four). Treated as two traps, Ease 12, "
-            "21 BP. (3) Stepping on the treasure chamber's threshold sends tons of "
-            "sand from the roof, to bury the treasure; it can be outrun by those "
-            "not yet inside. Per + Awareness to spot the trigger. Ease 15, 12 BP.",
         ),
     )
+    _cleopatra_tomb(b, tomb)
     queen = b.magus(
         "Cleopatra",
         covenant=None,
@@ -913,6 +1010,142 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
         "Might protected her from its concealing enchantment (LotN p. 44).",
     )
     b.link(nahrou, "knows of", tomb)
+
+
+def _cleopatra_tomb(b: Builder, tomb: Any) -> None:
+    """The book's details of her tomb (LotN p. 46). She was the last pharaoh,
+    and its 484 Build Points fit only a major monarch's 500; the fear curse
+    follows the rule for its level, so the curses come to 42."""
+    latin = "Anyone speaking Latin in the burial chamber"
+    b.tomb(
+        tomb,
+        kind="major_monarch",
+        boons="Wealth (Resources, Major); Aura, Seclusion, Vivid Environment "
+        "(Site, Minor); Edifice (Fortifications, Minor)",
+        hooks="Regio (Site, Major); Crumbling (Fortifications, Minor); Guardians, "
+        "Legendary Site (Surroundings, Minor); Dwindling Resources (Resources, "
+        "Minor)",
+        hook_points=7,
+        other="library 141, specialists 105, vis sources 70, vis stocks 9",
+        other_bp=325,
+        curses=[
+            TombCurse(
+                name="The Romans' Curse: boils",
+                art="PeCo",
+                level=20,
+                rdt="Touch, Room",
+                uses=1,
+                condition=latin,
+                excoriation="Boils that leave those who seek to disturb her "
+                "hideous, but do no harm (Base 5, +1 Touch, +2 Room).",
+            ),
+            TombCurse(
+                name="The Romans' Curse: sickness",
+                kind=et.LESSER,
+                art="PeCo",
+                level=25,
+                rdt="Touch, Special, Room",
+                uses=1,
+                condition=latin,
+                excoriation="As the Fragile Constitution Flaw: a sickness no "
+                "medicine helps.",
+            ),
+            TombCurse(
+                name="The Romans' Curse: no children",
+                art="PeCo",
+                level=35,
+                rdt="Touch, Special, Room",
+                uses=1,
+                condition=latin,
+                excoriation="As He Shall Have No Successors.",
+            ),
+            {
+                **FEAR_CURSE,
+                "condition": "Anyone who breaks the clay seal on the treasure chamber",
+            },
+        ],
+        wards=[
+            TombWard(
+                name="The Shrouded Oasis",
+                kind=et.WARD,
+                art="Non-Hermetic",
+                level=50,
+                effect="On the compound walls, as The Shrouded Glen (ArM5 p. 152). "
+                "With Penetration 0 it only repels mundane hunters. A magus "
+                "researching a breakthrough in enchanting Ritual effects can draw "
+                "insight from it.",
+            ),
+            TombWard(
+                name="First Statue of Sekhmet",
+                art="CrIg",
+                level=20,
+                uses="24/day",
+                effect="As a Destroying Uraeus: bow drawn, it looses a fiery arrow "
+                "a round at anyone in the temple.",
+                deactivation="Intone Cleopatra's name",
+            ),
+            TombWard(
+                name="Second Statue of Sekhmet",
+                art="CrIg",
+                level=20,
+                uses="24/day",
+                effect="As a Destroying Uraeus: bow drawn, it looses a fiery arrow "
+                "a round at anyone in the temple.",
+                deactivation="Intone Cleopatra's name",
+            ),
+            TombWard(
+                name="The Djet",
+                kind=et.NO_OBSTACLE,
+                art="Non-Hermetic",
+                level=100,
+                effect="A twenty-foot statue of Osiris in thirty fitted pieces of "
+                "green stone: with burning incense in its hand it answers one "
+                "question from each person, who must truly want the answer for "
+                "himself. It knows only what some dead person knew, so nothing of "
+                "the future, and answers at random otherwise. It lies scattered "
+                "through the complex, one piece missing and unaccounted for; "
+                "assembling it takes skill, and instructions are in hieroglyphs "
+                "on the statue.",
+            ),
+        ],
+        traps=[
+            TombTrap(
+                name="The Soporific Corridor",
+                harm="serious",
+                ease=9,
+                roll="Sta",
+                text="Two stone doors close off a stretch of corridor; opening "
+                "them brings a faint floral smell and dust eddying in the light. "
+                "All within must make the roll or sleep for as many minutes as "
+                "they failed by, while immune mongooses swarm through ground-level "
+                "holes to eat them: a Light Wound each, worse by a step every two "
+                "minutes.",
+            ),
+            TombTrap(
+                name="The Covered Pit",
+                harm="serious",
+                further_bp=et.HARMS["minor"].build_points,
+                ease=12,
+                roll="Dex + Athletics - Encumbrance",
+                spot=15,
+                text="Before the burial chamber door: safe at first, but walking on "
+                "it arms it, taking about a minute. Per + Awareness at +3 to the "
+                "Ease Factor hears the arming; the roll leaps clear when cautious, "
+                "harder for those fleeing the fear curse. Twelve feet deep with "
+                "spikes: +12 from the fall, +8 from each of up to four spikes "
+                "(simple die 1-2 none, 3-4 one, 5-6 two, 7-8 three, 9-10 four).",
+            ),
+            TombTrap(
+                name="The Sand of the Treasure Chamber",
+                harm="scare",
+                ease=15,
+                roll="Per + Awareness",
+                once=True,
+                text="Stepping on the threshold sends tons of sand from the roof, "
+                "to bury the treasure; it can be outrun by those not yet inside.",
+            ),
+        ],
+    )
 
 
 # -- the Bestiary --

@@ -28,11 +28,12 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
+from ...rules import mobile, sites
 from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
-    from ...models import Neighbour, Tribunal
+    from ...models import Covenant, Neighbour, Tribunal
     from . import Theban
 
 BJORNAER = "house_bjornaer"
@@ -1300,23 +1301,59 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
 # -------------------------------------------------------------- Favonius
 
 
-def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
-    p = theban.places
-    p["favonius_fleet"] = b.place(
-        "The fleet of Favonius",
-        inside=p["islands"],
+def _sanctum_ship(b: Builder, name: str, around: Neighbour, words: str) -> Neighbour:
+    """A sanctum ship of Dryops's wood: an aura and a regio exactly her
+    size (The Sundered Eagle p. 84)."""
+    return b.place(
+        name,
+        inside=around,
         aura=2,
         levels=[
             Builder.level(
-                "The sanctum ships' hidden laboratories",
+                "The hidden laboratories",
                 3,
-                enter="By a secret way built into each sanctum ship",
-                notes=(
-                    "A regio exactly the size of each ship made of Dryops's "
-                    "wood, holding the magi's laboratories."
-                ),
+                enter="By a secret way built into the ship",
+                notes="A regio exactly the size of the ship, holding the magi's "
+                "laboratories.",
             )
         ],
+        summary=words,
+    )
+
+
+def _travelling(b: Builder, p: dict[str, Neighbour], favonius: Covenant) -> None:
+    """The fleet and its two sanctum ships go with the covenant, and
+    Andros is its home port (The Sundered Eagle pp. 77, 84). No route is
+    printed."""
+    for key in ("favonius_fleet", "philomela", "tereus"):
+        p[key].details[sites.TRAVELS_WITH] = favonius.id
+    harbour = b.place(
+        "The harbour of Andros",
+        inside=p["andros"],
+        summary="One of the two great ports of the Cyclades, famed for its "
+        "shipwrights, and the home base of the ship-borne covenant of Favonius.",
+    )
+    harbour.details[sites.WATERS] = mobile.PORT
+
+
+def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
+    p = theban.places
+    p["philomela"] = _sanctum_ship(
+        b,
+        "The Philomela",
+        p["islands"],
+        "Memnos's first ship, of Dryops's wood, holding two laboratories in her regio.",
+    )
+    p["tereus"] = _sanctum_ship(
+        b,
+        "The Tereus",
+        p["islands"],
+        "The second sanctum ship, of Dryops's wood, holding three "
+        "laboratories in her regio.",
+    )
+    p["favonius_fleet"] = b.place(
+        "The fleet of Favonius",
+        inside=p["islands"],
         summary=paragraphs(
             "Four round ships and a dozen or so lesser vessels, always on "
             "the move round the Aegean, with Andros as home port. The two "
@@ -1423,7 +1460,7 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Favonius",
         tribunal=tribunal,
         founded=1190,
-        place=p["favonius_fleet"],
+        place=p["philomela"],
         summary=summary,
         what_matters=what_matters,
         notes=paragraphs(patron),
@@ -1433,6 +1470,7 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         season="Summer",
     )
     theban.covenants["favonius"] = favonius
+    _travelling(b, p, favonius)
     b.book(
         favonius,
         "The library of Favonius",

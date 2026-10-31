@@ -46,6 +46,20 @@ def _places_round(saga: Saga, ids: set[str]) -> set[str]:
     return found
 
 
+def _travels_by(covenant: Covenant) -> set[str]:
+    """The Places on a covenant's stops, its route and its ships' stops."""
+    return {
+        *(s.place_id for s in covenant.stops),
+        *(s.place_id for s in covenant.route),
+        *(
+            s.place_id
+            for record in covenant.possessions
+            if record.ship is not None
+            for s in record.ship.stops
+        ),
+    }
+
+
 def contents(
     saga: Saga, tribunals: list[Tribunal], covenants: list[Covenant]
 ) -> tuple[list[Covenant], list[Neighbour]]:
@@ -58,7 +72,14 @@ def contents(
     members = [c for c in saga.covenants if c.tribunal_id in chosen_ids]
     taken = members + [c for c in covenants if c not in members]
     covenant_ids = {c.id for c in taken}
-    place_ids = _places_round(saga, {c.place_id for c in taken if c.place_id})
+    place_ids = _places_round(
+        saga,
+        {
+            *(c.place_id for c in taken if c.place_id),
+            *(place_id for c in taken for place_id in _travels_by(c)),
+            *(p.id for c in taken for p in sites.travelling_places(saga, c)),
+        },
+    )
     found: list[Neighbour] = []
     for neighbour in saga.neighbours:
         if (
@@ -481,6 +502,15 @@ BASE_YEAR = "base_year"
 LEAVE_OUT = ""
 
 
+def is_book_of_magi(data: dict[str, Any]) -> bool:
+    """A pack of nothing but magi at their ages, which comes in by that
+    choice alone, not a pack where only some people have versions."""
+    versions = data.get(VARIANTS)
+    return versions is not None and all(
+        c["id"] in versions for c in _held(data, "characters")
+    )
+
+
 def variant_key(character_id: str) -> str:
     """The import form's key for which age a magus comes in at."""
     return f"variant_{character_id}"
@@ -527,13 +557,19 @@ def _age(character: dict[str, Any], data: dict[str, Any]) -> int:
 
 
 def choose_variants(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
-    """`data` with each magus at the age chosen, born that many years before
-    the base year, and those left out gone."""
+    """`data` with each magus at the version chosen, born that many years
+    before the base year, those left out gone, and anyone with only one
+    version as they are."""
     year = int(values.get(BASE_YEAR) or 1220)
+    magi = is_book_of_magi(data)
     chosen = []
     for held in _held(data, "characters"):
         versions = data[VARIANTS].get(held["id"], [])
-        label = values.get(variant_key(held["id"]), LEAVE_OUT)
+        key = variant_key(held["id"])
+        if not versions or (key not in values and not magi):
+            chosen.append(held)
+            continue
+        label = values.get(key, LEAVE_OUT)
         version = next((v for v in versions if v["label"] == label), None)
         if version is None:
             continue
@@ -696,7 +732,7 @@ def import_fields(data: dict[str, Any], saga: Saga | None = None) -> list[Dialog
     """Import a Content Pack: a tick for each group the pack holds any
     of, all ticked, then one for each of its stories the saga doesn't
     have, to begin. A group the pack has nothing of isn't asked about."""
-    if VARIANTS in data:
+    if is_book_of_magi(data):
         return variant_fields(data, saga)
     fields = []
     for group in GROUPS:
@@ -717,6 +753,8 @@ def import_fields(data: dict[str, Any], saga: Saga | None = None) -> list[Dialog
         fields += story_fields(data, saga, show_if=_with_world)
         if saga is not None:
             fields += take_story_fields(data, saga)
+    if VARIANTS in data:
+        fields += variant_fields(data, saga)
     return fields
 
 
@@ -753,7 +791,9 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
     comes in as the book's sketch instead. A story left unticked comes
     in dormant."""
     if VARIANTS in data:
-        return choose_variants(data, values)
+        data = choose_variants(data, values)
+        if is_book_of_magi(data):
+            return data
     data = _dormant(data, values)
     taken = [
         n["id"] for n in _held(data, "neighbours") if values.get(take_key(n["id"]))
@@ -1024,7 +1064,7 @@ def available(*folders: Path) -> list[PackChoice]:
             if (
                 data.get("kind") == PACK
                 and not is_overlay(data)
-                and VARIANTS not in data
+                and not is_book_of_magi(data)
             ):
                 found.append((choice_label(data, path.stem), str(path), data))
     return found
@@ -1061,7 +1101,7 @@ def after_import(saga: Saga, data: dict[str, Any]) -> list[str]:
     title = sourcebooks.title_of(book)
     _take_stories(saga, data)
     found = _follow_overlays(saga)
-    if VARIANTS in data:
+    if is_book_of_magi(data):
         stem = str(data.get("key") or "")
         if stem and stem not in saga.overlays:
             saga.overlays.append(stem)

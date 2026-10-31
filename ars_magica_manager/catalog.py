@@ -52,6 +52,7 @@ LAB_FEATURE_CATALOG_PATH = DATA_DIR / "lab_feature_catalog.json"
 WEAPON_ARMOR_CATALOG_PATH = DATA_DIR / "weapon_armor_catalog.json"
 SHAPE_MATERIAL_CATALOG_PATH = DATA_DIR / "shape_material_catalog.json"
 CHARACTER_TEMPLATE_CATALOG_PATH = DATA_DIR / "character_template_catalog.json"
+PACK_TEMPLATE_CATALOG_PATH = DATA_DIR / "pack_template_catalog.json"
 GROG_TEMPLATE_CATALOG_PATH = DATA_DIR / "grog_template_catalog.json"
 ANIMAL_TEMPLATE_CATALOG_PATH = DATA_DIR / "animal_template_catalog.json"
 GOODS_CATALOG_PATH = DATA_DIR / "goods_catalog.json"
@@ -503,6 +504,22 @@ def load_character_template_catalog_by_id(
     path: Path = CHARACTER_TEMPLATE_CATALOG_PATH,
 ) -> Mapping[str, CharacterTemplateDef]:
     return _cached_by_id(path, CharacterTemplateDef.from_dict)
+
+
+def load_pack_template_catalog(
+    path: Path = PACK_TEMPLATE_CATALOG_PATH,
+) -> list[CharacterTemplateDef]:
+    """The build templates derived from a pack's records."""
+    return list(_cached_entries(path, CharacterTemplateDef.from_dict))
+
+
+def write_pack_templates(
+    path: Path, attribution: str, entries: list[dict[str, Any]]
+) -> None:
+    text = json.dumps(
+        {"attribution": attribution, "entries": entries}, ensure_ascii=False, indent=1
+    )
+    path.write_text(text + "\n", encoding="utf-8")
 
 
 def load_grog_template_catalog(

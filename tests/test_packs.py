@@ -8,11 +8,20 @@ from pathlib import Path
 
 from support import everything_saga, menu
 
-from ars_magica_manager import packs, storage, threats, transfer
+from ars_magica_manager import (
+    book_packs,
+    catalog,
+    character_templates,
+    packs,
+    storage,
+    threats,
+    transfer,
+)
+from ars_magica_manager.book_packs import templates
 from ars_magica_manager.commands import Refuse
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import saga as saga_forms
-from ars_magica_manager.models import Saga
+from ars_magica_manager.models import Character, CharacterTemplateDef, Saga
 
 
 def _rhine_pack(saga: Saga) -> dict:
@@ -412,3 +421,63 @@ def test_a_story_told_differently_is_the_importer_s_choice():
     taken = packs.narrow(data, {packs.take_key(story["id"]): True})
     packs.after_import(saga, taken)
     assert len(crusade.details["stages"]) == len(story["details"]["stages"])
+
+
+def test_some_people_with_versions_come_in_beside_those_without():
+    data = book_packs.data(book_packs.PACKS["antagonists"])
+    assert not packs.is_book_of_magi(data)
+    everyone = len(data["saga"]["characters"])
+    assert len(packs.narrow(data, {})["saga"]["characters"]) == everyone
+    fields = {f.key for f in packs.import_fields(data, Saga(id="s", name="S"))}
+    key = packs.variant_key("hannelore")
+    assert key in fields and "people" in fields
+    left = packs.narrow(data, {key: packs.LEAVE_OUT})
+    assert len(left["saga"]["characters"]) == everyone - 1
+    chosen = packs.narrow(data, {key: "Spoiled Daughter", packs.BASE_YEAR: 1220})
+    held = next(c for c in chosen["saga"]["characters"] if c["id"] == "hannelore")
+    assert held["background"]["year_born"] == 1204
+
+
+def test_the_pack_templates_are_what_the_pack_builds():
+    b = book_packs.PACKS["antagonists"].assemble()
+    assert catalog.load_pack_template_catalog() == [
+        CharacterTemplateDef.from_dict(e) for e in templates.entries(b)
+    ]
+
+
+def test_an_antagonist_template_needs_its_book_and_copies_the_record():
+    saga = Saga(id="s", name="S", books_in_play=[])
+    assert not [
+        t for t in character_templates.templates_for("magus", saga) if t.source == "Ant"
+    ]
+    saga.books_in_play = ["Ant"]
+    galerius = next(
+        t
+        for t in character_templates.templates_for("magus", saga)
+        if t.name.startswith("Antagonist - Galerius")
+    )
+    character = Character(id="c", name="N", type="magus")
+    character_templates.apply(saga, character, galerius, {})
+    printed = next(
+        c
+        for c in book_packs.PACKS["antagonists"].assemble().saga.characters
+        if c.name == "Galerius of House Guernicus"
+    )
+    assert character.characteristics == printed.characteristics
+    assert {a.name: a.xp for a in character.abilities} == {
+        a.name: a.xp for a in printed.abilities
+    }
+    assert {k: v.xp for k, v in character.arts.items()} == {
+        k: v.xp for k, v in printed.arts.items() if v.xp
+    }
+    assert len(character.spells_known) == len(printed.spells_known)
+    assert character.spells_known and saga.spells
+
+
+def test_the_iceland_pack_holds_vindolanda_with_no_tribunal():
+    data = transfer.read(packs.SHIPPED_DIR / "iceland.amm.json")
+    assert not data["saga"]["tribunals"]
+    vindolanda = next(c for c in data["saga"]["covenants"] if c["name"] == "Vindolanda")
+    assert vindolanda["place_id"] and not vindolanda["tribunal_id"]
+    stories = [n for n in data["saga"]["neighbours"] if n["kind"] == threats.THREAT]
+    assert all(n["details"].get(threats.DORMANT) for n in stories)

@@ -11,7 +11,7 @@ import pytest
 from support import build_all_tabs, wait_until
 from textual.widgets import Checkbox, Input, Select, TabPane, TextArea, Tree
 
-from ars_magica_manager import battles, place_events, sieges, storage
+from ars_magica_manager import battles, place_events, sieges, storage, tombs
 from ars_magica_manager import goods as gd
 from ars_magica_manager import mystery_cults as cult_core
 from ars_magica_manager.models import (
@@ -72,6 +72,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.models.hermetic_projects import ProjectStage
 from ars_magica_manager.models.menagerie import Beast, Breeding
+from ars_magica_manager.models.stops import CovenantStop
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import (
     ConfirmScreen,
@@ -1408,8 +1409,8 @@ TOMB_LISTS: dict[str, ListCase] = {
 async def test_a_tombs_lists_act_on_the_chosen_row(name):
     """In one session on a place's Tomb tab: e edits the chosen row, d
     asks about the chosen row before deleting it; on Traps, More's
-    Overcome It rolls for the chosen trap and Write puts it in the place's
-    diary."""
+    Overcome It walks through the chosen trap and its last step puts it in
+    the place's diary."""
     case = TOMB_LISTS[name]
     storage.save_saga(_tomb_saga())
     app = ArsMagicaManagerApp()
@@ -1428,8 +1429,7 @@ async def test_a_tombs_lists_act_on_the_chosen_row(name):
                 await _press(pilot, app, "o", FieldsDialog)
             assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
             assert "Drop [stone]" in str(app.screen.query_one("#fields-live").render())
-            app.screen.query_one("#btn-save").press()
-            await _confirm_write(pilot, app)
+            await _next_steps(pilot, app, 3)
 
             def diary() -> list:
                 return (
@@ -1440,6 +1440,8 @@ async def test_a_tombs_lists_act_on_the_chosen_row(name):
 
             assert await wait_until(pilot, lambda: len(diary()) == 1)
             assert "Drop [stone]" in diary()[0]["text"]
+            sprung = storage.load_saga("test_saga").neighbour("grave")
+            assert tombs.traps(sprung)[0]["sprung"] is True
             assert await wait_until(pilot, lambda: app.screen is workspace)
 
         await _choose_row(pilot, view, case, 1)
@@ -1449,10 +1451,13 @@ async def test_a_tombs_lists_act_on_the_chosen_row(name):
         assert await wait_until(pilot, lambda: len(_saved(case)) == 1)
 
 
-async def _confirm_write(pilot, app) -> None:
-    """Answer Write on the roll's question."""
-    assert await wait_until(pilot, lambda: isinstance(app.screen, ConfirmScreen))
-    await pilot.press("y")
+async def _next_steps(pilot, app, steps: int) -> None:
+    """Save `steps` forms in a row, each one the step after the last."""
+    for _step in range(steps):
+        dialog = app.screen
+        assert isinstance(dialog, FieldsDialog)
+        dialog.query_one("#btn-save").press()
+        assert await wait_until(pilot, lambda d=dialog: app.screen is not d)
 
 
 # -- A covenant's History tab --
@@ -2223,3 +2228,34 @@ async def test_a_tribunals_arguments_act_on_the_chosen_row():
 def _list_text(view, list_id: str) -> str:
     rows = view.query_one(f"#{list_id}", SelectableList)
     return " ".join(str(markup) for _index, markup in rows._rows)
+
+
+async def test_whereabouts_acts_on_the_chosen_stop():
+    """e and d act on the stop chosen, newest first; More offers Plan Route."""
+    saga = _saga()
+    saga.neighbours.append(
+        Neighbour("sound", "The Sound", kind="place", details={"aura": 1})
+    )
+    saga.covenants[0].stops = [
+        CovenantStop(1219, "Spring", "sound", note="First"),
+        CovenantStop(1219, "Summer", "sound", note="Second"),
+    ]
+    storage.save_saga(saga)
+    case = ListCase(
+        ("covenant", "cov1"),
+        "section-cov-whereabouts",
+        "cov-whereabouts-list",
+        lambda s: s.covenants[0].stops,
+    )
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 70)) as pilot:
+        workspace, view = await _open(pilot, app, case)
+        await _choose_row(pilot, view, case, 1)
+        await _press(pilot, app, "e", FieldsDialog)
+        assert "Spring 1219" in str(app.screen.query_one("#fields-title").render())
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+        await _press(pilot, app, "d", ConfirmScreen)
+        await pilot.press("y")
+        assert await wait_until(pilot, lambda: app.screen is workspace)
+    assert [s.note for s in storage.load_saga(saga.id).covenants[0].stops] == ["Second"]

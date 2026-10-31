@@ -24,6 +24,7 @@ from .... import (
     guest_stays,
     hermetic_projects,
     manors,
+    mobile_covenants,
     seasons,
     town_charter,
     tribunal_packages,
@@ -74,6 +75,7 @@ from ....sections import (
     GUESTS_SECTION,
     MAGI_SECTION,
     WHAT_MATTERS_SECTION,
+    WHEREABOUTS_SECTION,
 )
 from ..widgets import (
     DetailsPanel,
@@ -124,6 +126,7 @@ class CovenantSheetView(KindTabsView):
             }
         self.core_ops.update(charter_forms.charter_ops(saga, covenant))
         self.core_ops.update(guest_stays.section_ops(saga, covenant))
+        self.core_ops.update(mobile_covenants.section_ops(saga, covenant))
         self.core_ops.update(secrets_ops(covenant))
         # A covenant's Hermetic Projects: their tab, once one is begun.
         self.shows_projects = not self.sketch and hermetic_projects.has_projects(
@@ -146,6 +149,12 @@ class CovenantSheetView(KindTabsView):
         on("section-cov-info", self._refresh_info)
         on("section-cov-description", self._refresh_description)
         on("section-cov-reputations", self._refresh_reputations)
+        # A stop changes the aura, and may lose the Aegis in the Diary.
+        on(WHEREABOUTS_SECTION, self._refresh_info)
+        on(
+            WHEREABOUTS_SECTION,
+            lambda: SheetView.refresh_section(self, "tab-cov-diary"),
+        )
         on("section-inh-loyalty", self._refresh_loyalty_text)
         on(("section-inh-population", "section-inh-misc"), self._refresh_population)
         # An Aura Boon changes the Aura in the info panel, and so Loyalty.
@@ -295,7 +304,40 @@ class CovenantSheetView(KindTabsView):
         # A sketch lists its guests only while it has some.
         if guest_stays.guests(saga, covenant):
             yield from self._guests()
+        yield from self._whereabouts()
         yield from self._connections(covenant)
+
+    def _whereabouts(self) -> ComposeResult:
+        """Where it is now, its route, this season's vis and its stops:
+        shown with a stop or a Mobile Hook."""
+        saga, covenant = self.saga, self.covenant
+        boons = ("section-cov-boons", "section-cov-hooks")
+
+        def show() -> None:
+            self.query_one(f"#{WHEREABOUTS_SECTION}").display = mobile_covenants.shows(
+                covenant
+            )
+
+        with SheetSection(
+            title=self._titled(
+                WHEREABOUTS_SECTION,
+                WHEREABOUTS_SECTION,
+                lambda: mobile_covenants.title(covenant),
+            ),
+            id=WHEREABOUTS_SECTION,
+        ) as section:
+            section.display = mobile_covenants.shows(covenant)
+            yield self._static(
+                WHEREABOUTS_SECTION,
+                lambda: mobile_covenants.summary_text(saga, covenant),
+                id="cov-whereabouts-text",
+            )
+            yield self._list(
+                WHEREABOUTS_SECTION,
+                lambda: mobile_covenants.grid(saga, covenant).lines(),
+                id="cov-whereabouts-list",
+            )
+        self._on_refresh((WHEREABOUTS_SECTION, *boons), show)
 
     def _guests(self, group: str | None = None) -> ComposeResult:
         """The magi staying at the covenant as its guests."""
@@ -350,6 +392,7 @@ class CovenantSheetView(KindTabsView):
                 with SheetSection(title="Description", id="section-cov-description"):
                     yield Static(self._description_text(), id="cov-description-content")
                 yield from self._connections(self.covenant)
+                yield from self._whereabouts()
                 with SheetSection(
                     title=self._titled(
                         "section-cov-reputations",

@@ -145,6 +145,8 @@ The forests, ruins, crags and regiones of the region: where each is,
 its aura, how many regio levels it has and how far the troupe has got
 with it. Add, edit or delete one; see [A place](help:tab-nb-place).
 
+A place's form also has **Waters** (Open water, Anchorage or Port), which a ship's stops use, and **Travels with**, for a place that moves with a covenant, as a ship does. See **How to keep a covenant on the move**.
+
 # A neighbour
 <!-- help: neighbour -->
 
@@ -1579,6 +1581,11 @@ prices curses by the rule.
 ## Talismans and Wards
 <!-- help: section-nb-tomb-wards -->
 
+A third kind, **No obstacle**, neither harms nor repels, and has no Ease
+Factor (the Face of Lost Companions, p. 42). **Ease Factor, if another**
+keeps one the book prints apart from the rule. **Overcome It** works on a
+talisman or ward as on a trap.
+
 A **talisman** harms or imprisons, and is overcome without magic
 against 6 + its magnitude; a **ward** repels or hides, against 9 + its
 magnitude (Lands of the Nile pp. 35, 42). Anyone whose Magic Resistance
@@ -1593,17 +1600,23 @@ or delete one.
 A trap costs Build Points for its harm (3 to delay or scare, 6 for a
 minor injury or imprisonment, 9 for a serious injury, 12 if often
 fatal) plus 0, 1, 3, 6 or 9 for an Ease Factor to avoid of 3, 6, 9, 12
-or 15 (Lands of the Nile p. 44).
+or 15 (Lands of the Nile p. 44). A trap treated as several pays for each
+harm once: put what the others cost under **Further harms' Build
+Points**, as the book's covered pit does (a serious and a minor injury,
+p. 46). **The roll to avoid it** and **Ease Factor to spot it** keep what
+the book gives, where it gives them. Most mechanical traps are reset by
+hand, and some work only once.
 
 <!-- tui -->
-More (`m`) > **Overcome It** rolls for one character when the chosen trap
-springs.
+More (`m`) > **Overcome It** walks the party through the chosen trap when
+it springs.
 <!-- /tui -->
 <!-- gui -->
-**Overcome It** rolls for one character when the chosen trap springs.
+**Overcome It** walks the party through the chosen trap when it springs.
 <!-- /gui -->
 
-Add, edit or delete one.
+Add, edit or delete one. A puzzle is a trap and lock in one: keep it in
+the trap's words, for the troupe to play (p. 33).
 
 ### Egyptian craftwork
 <!-- help: tomb-craftwork -->
@@ -1620,19 +1633,38 @@ reds for fire, red for curses and for Apep and Seth (pp. 55-56).
 ## Overcome It
 <!-- help: overcome-trap -->
 
-When a trap springs, each character says one thing he does and rolls
-only for that, against the trap's Ease Factor, which the storyguide moves
-by 3 or 6 either way for the action (Lands of the Nile pp. 32-33). The
-troupe settles the order: usually the one the trap is springing on (**In
-danger**) acts first, the rest by Quickness, and the trap last. The
-troupe also settles who helps whom, since one character's action may
-save another; those who fail and aren't helped suffer it. Overcome It
-rolls one character's action at a time, so roll each in the order
-agreed. A magus answers with **a Fast-Cast spell**, judged on its own, not
-against the trap. **Light** gives the Ease Factor of spotting the trigger
-first (Per + Awareness), which gives time to deal with it: −3 in perfect
-light, +3 by a single flame, +6 in near darkness (p. 44). **Roll** rolls a
-stress die and offers to write the outcome in the place's diary.
+A tomb is fixed once built, so only the rolls vary. Overcome It takes
+one step at a time (Lands of the Nile pp. 32-33, 44), and cancelling any
+step writes nothing. It works on a trap, and on a talisman or ward, which
+the same rules resolve (pp. 35, 42).
+
+1. **Who is there.** Choose who is in danger and tick who is with him.
+   Ticking **They look for it first** rolls Per + Awareness for each of
+   them against the Ease Factor to spot it: 3 less in perfect light, 3
+   more by a single flame, 6 more in near darkness. If someone sees it,
+   they have combat rounds to deal with it, and magi time for formulaic
+   or ritual magic: say whether they deal with it, leave it be, or it
+   springs all the same.
+2. **Each character acts**, the one in danger first, the rest by
+   Quickness, and sees how those before him did. He says one thing he
+   does; the troupe agrees **His roll** (a Characteristic + Ability,
+   `- Encumbrance` if it counts; blank if the action needs none), and the
+   storyguide moves the Ease Factor by 3, 6 or more for that action. A
+   magus answers with **a Fast-Cast spell**, judged on its own: cast it
+   from his sheet. Against a talisman or ward, Magic Resistance of at
+   least its Penetration passes it untouched. If two actions clash, the
+   troupe settles it by an Action Priority Roll (Qik + an Ability,
+   Finesse for a fast-caster).
+3. **It acts last.** Tick anyone another character helped, or who was out
+   of its reach: the rest suffer it. The app says what the record says of
+   the harm; the storyguide rolls any damage. Say what came of it, and
+   whether the trap stays sprung or is reset. **Write** puts it all in the
+   place's diary.
+
+A trap left sprung can't spring again: Overcome It offers to reset it
+first, unless it works only once. With Lords of Men's Evasion, a trap's
+Attack is a stress die + its setter's Int + Profession, + a like weapon's
+Attack (p. 44).
 
 ## Diary tab
 <!-- help: tab-nb-place-diary -->

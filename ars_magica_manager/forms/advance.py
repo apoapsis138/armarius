@@ -8,8 +8,9 @@ it's done, whether each contested resource whose security lapsed was
 secured, what each experiment's results are (Experiment Results: which
 roll stands, its effects, Discoveries and special results, and whether to
 take a Discovery its risk can reach), and whether each magus setting up a
-new laboratory spends the next season finishing it. Only then is the season played out (seasons.finish_season)
-and the date moved on. The last step ends with `Played`: what the season
+new laboratory spends the next season finishing it, and where each
+mobile covenant goes next. Only then is the season played out
+(seasons.finish_season) and the date moved on, and the moves logged. The last step ends with `Played`: what the season
 did and the line saying so, for the front-end to show the season's
 results.
 """
@@ -21,7 +22,7 @@ from collections.abc import Callable
 from dataclasses import dataclass, replace
 from typing import Any
 
-from .. import aging_due, seasons, tribunal_terms, world_turns
+from .. import aging_due, mobile_covenants, seasons, tribunal_terms, world_turns
 from .. import economics as eco
 from ..commands import Command, Confirm, Form
 from ..form_spec import DialogField
@@ -592,7 +593,13 @@ def _world_turns(
 
     def played() -> Any:
         return charter_forms.season_reminder(
-            saga, lambda: _finish(saga, worked, secured, finish, lost, backup, rng)
+            saga,
+            lambda: mobile_covenants.season_step(
+                saga,
+                lambda moves: _finish(
+                    saga, worked, secured, finish, lost, backup, rng, moves
+                ),
+            ),
         )
 
     found = world_turns.season_proposals(saga, rng())
@@ -609,10 +616,11 @@ def _finish(
     lost: tuple[SeasonPlan, ...],
     backup: Backup,
     rng: Callable[[], random.Random],
+    moves: mobile_covenants.Moves = (),
 ) -> Played:
     """Play the season out in the rules' order and move the date on (the
-    caller saves); then plan the second season of each new laboratory
-    `finish` names."""
+    caller saves); then log where each mobile covenant went, and plan the
+    second season of each new laboratory `finish` names."""
     whose = [
         (c.name, seasons.plan_summary(saga, c, p))
         for p in lost
@@ -620,6 +628,7 @@ def _finish(
     ]
     done = seasons.finish_season(saga, worked, secured, rng(), backup=backup, lost=lost)
     message = f"It is now {saga.current_season} {saga.current_year}."
+    moved = mobile_covenants.log_moves(saga, moves)
     if done.applied:
         message += (
             f" Seasons applied for {', '.join(c.name for c in done.applied)}"
@@ -649,7 +658,8 @@ def _finish(
             f" {character.name} survived a disease Crisis: place the Aging "
             "Point (More on Aging & Warping, or asked before the next season)."
         )
-    return Played(done, escape(message), bool(worked or done.year_end))
+    said = " ".join((escape(message), *moved))
+    return Played(done, said, bool(worked or done.year_end))
 
 
 def records_note(saga: Saga) -> str:

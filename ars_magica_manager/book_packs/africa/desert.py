@@ -9,8 +9,8 @@ none of its own. Sijilmasa belongs to the coasts part; its desert facts are
 words in the Tanezrouft. The Camel of Virtue and the other beasts of the
 appendix are not in this part's pages.
 
-Tombs, curses and the Garamantian initiation are the book's examples in
-words. The realm interpretations and the two courses of the Nile are
+The Garamantian tombs and initiation are words: the book prints no curse,
+ward or trap for them, and nothing to build a tomb from. The realm interpretations and the two courses of the Nile are
 choices for a troupe, so they are dormant threats, as the story seeds are."""
 
 from __future__ import annotations

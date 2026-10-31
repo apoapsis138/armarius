@@ -303,7 +303,7 @@ def _aligned_lines(
 ) -> list[Line]:
     """The aura again, when the lab's Magic aura is aligned with the
     total's Technique or Form (RoP: Magic p. 16)."""
-    kind = sites.kind_where(sites.lab_place(saga, lab))
+    kind = sites.kind_where(saga, sites.lab_place(saga, lab))
     if not kind:
         return []
     aura, realm = _place_aura(saga, lab, covenant, boons)

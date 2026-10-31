@@ -4,14 +4,15 @@
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Books in Play (47 of 47)
+    ▼ Books in Play (49 of 49)
 
         In play  Book       Title
       ○ always   DE         Ars Magica Definitive Edition
       ○ yes      A&A        Art & Academe
       ○ yes      AM         Ancient Magic
+      ○ yes      Ant        Antagonists
       ○ yes      App        Apprentices
-      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal        ▆▆
+      ○ yes      AtD        Against the Dark: The Transylvanian Tribunal
       ○ yes      B&S        Blood and Sand: The Levant Tribunal
       ○ yes      BS&S       Between Sand and Sea: Mythic Africa
       ○ yes      C&G        City & Guild
@@ -20,7 +21,6 @@
       ○ yes      D&B        The Dragon and the Bear: The Novgorod Tribunal
       ○ yes      DI         Dies Irae
       ○ yes      F&F        Faith & Flame: The Provençal Tribunal
-      ○ yes      GGHS       The Grand Grimoire of Hermetic Spells
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Saga Sources (0)
@@ -50,10 +50,10 @@
     ▼ Catalogs (7)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1374        0
+      ○ Virtues & Flaws              yes          1395        0
       ○ Laboratory Virtues & Flaws   yes           134        0
       ○ Boons & Hooks                yes           222        0
-      ○ Abilities                    yes           272        0
+      ○ Abilities                    yes           273        0
       ○ Spells                       yes          1316        0
       ○ Shapes & Materials           yes           247        0
       ○ Goods                        yes            77        0

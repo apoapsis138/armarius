@@ -22,7 +22,11 @@ aura typed on the covenant is kept, and comes back if it is moved out.
 A place may be marked a ruined covenant (a fallen covenant's site,
 ruins.py): it shows a ruin, and can be founded anew.
 
+A place may travel with a covenant: its own aura or regio, moved inside
+each stop's Place (rules.mobile).
+
 Kept in Neighbour.details: "ruined", "aura", "tethers", "status", "known",
+"waters", "travels_with",
 "claimed_by", the aura's kind by its realm ("alignment", "tints" or
 "divine_kind", rules.aura_kinds), "world" and "boundary" (the realm it lies
 in and its Magic Realm boundary, rules.otherworlds), "levels" (each
@@ -56,18 +60,32 @@ from .models import (
 )
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
-from .rules import aura_kinds, faerie_threshold, lunar, otherworlds, realms, senses
+from .rules import (
+    aura_kinds,
+    faerie_threshold,
+    lunar,
+    mobile,
+    otherworlds,
+    realms,
+    senses,
+)
 from .rules.lab import ability_score
 from .rules.sites import (
     EFFECT_TYPES,
     PLACE,
     REGIO_KINDS,
+    TRAVELS_WITH,
+    WATERS,
     AuraEffect,
     RegioLevel,
     all_places,
     aura_at,
+    aura_here,
     aura_kind_at,
     boundary_at,
+    covenant_place,
+    covenant_stop,
+    covenants_at,
     effects,
     is_place,
     kind_effects,
@@ -75,6 +93,9 @@ from .rules.sites import (
     place,
     realm_of,
     regio_kind,
+    travelling_places,
+    travels,
+    waters_of,
     whole_number,
     world_at,
 )
@@ -150,7 +171,7 @@ def within(saga: Saga, outer: Neighbour) -> set[str]:
 
 def here_records(saga: Saga, outer: Neighbour) -> list[Any]:
     """The records placed in `outer`, places last."""
-    found: list[Any] = [c for c in saga.covenants if c.place_id == outer.id]
+    found: list[Any] = list(covenants_at(saga, outer))
     found += [lab for lab in saga.laboratories if lab.place_id == outer.id]
     found += [n for n in saga.neighbours if n.place_id == outer.id and not is_place(n)]
     found += [c for c in saga.creatures if c.place_id == outer.id]
@@ -248,10 +269,26 @@ def aura_text(place: Neighbour, level: int = 0) -> str:
     return f"{realm} {aura}"
 
 
+def _forget_gone(saga: Saga) -> None:
+    """Take Places since deleted off the stops and routes, and a covenant
+    since deleted off the Places that travelled with it."""
+    kept = {p.id for p in all_places(saga)}
+    for covenant in saga.covenants:
+        covenant.stops = [s for s in covenant.stops if s.place_id in kept]
+        covenant.route = [s for s in covenant.route if s.place_id in kept]
+        for record in covenant.possessions:
+            if record.ship is not None:
+                record.ship.stops = [s for s in record.ship.stops if s.place_id in kept]
+    for found in all_places(saga):
+        if travels(found) and saga.covenant(found.details[TRAVELS_WITH]) is None:
+            del found.details[TRAVELS_WITH]
+
+
 def sync(saga: Saga) -> None:
-    """Give each placed covenant its place's aura, keeping the one typed
-    on it; restore that one when it is no longer placed. Records placed
-    somewhere since deleted are placed nowhere."""
+    """Give each placed covenant the aura where it is now, keeping the
+    one typed on it; restore that one when it is no longer placed. Each
+    Place that travels with a covenant goes inside its stop in force.
+    Records placed somewhere since deleted are placed nowhere."""
     for record in [
         *saga.covenants,
         *saga.laboratories,
@@ -260,13 +297,18 @@ def sync(saga: Saga) -> None:
     ]:
         if record.place_id is not None and place(saga, record.place_id) is None:
             record.place_id, record.place_level = None, 0
+    _forget_gone(saga)
     for covenant in saga.covenants:
-        found = place(saga, covenant.place_id)
-        if found is not None:
+        stop = covenant_stop(saga, covenant)
+        if stop is not None:
+            for moving in travelling_places(saga, covenant):
+                moving.place_id, moving.place_level = stop.place_id, stop.level
+        where = covenant_place(saga, covenant)
+        if where is not None:
             if covenant.own_aura is None:
                 covenant.own_aura = covenant.aura
                 covenant.own_realm = covenant.aura_realm
-            covenant.aura, covenant.aura_realm = aura_at(found, covenant.place_level)
+            covenant.aura, covenant.aura_realm = aura_here(saga, *where)
         elif covenant.own_aura is not None:
             covenant.aura = covenant.own_aura
             covenant.aura_realm = covenant.own_realm or "Magic"
@@ -383,11 +425,13 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
     moon = lunar.aura_text(surface) if surface_realm == lunar.LUNAR else ""
     return [
         Fact("Aura", aura_text(place)),
+        *travelling_facts(saga, place),
         *([Fact("Aura kind", kind)] if kind else []),
         *([Fact("Lies in", lies_in)] if lies_in else []),
         *([Fact("Lunar aura", moon)] if moon else []),
         *([Fact("Threshold", threshold)] if threshold else []),
         Fact("Regio", regio),
+        *([Fact("Waters", waters_of(place))] if waters_of(place) else []),
         *([Fact("Can see", "; ".join(seen))] if seen else []),
         *([Fact("Within", "; ".join(hazards))] if hazards else []),
         Fact("Gazetteer", status),
@@ -399,6 +443,25 @@ def facts(saga: Saga, place: Neighbour) -> list[Fact]:
         Fact("Tethers", d.get("tethers", "")),
         Fact("Here", ", ".join(r.name for r in found), references.refs(*found)),
     ]
+
+
+def travelling_facts(saga: Saga, place: Neighbour) -> list[Fact]:
+    """Whom a travelling Place goes with, and the aura holding sway on its
+    surface where it is now, while that isn't its own."""
+    if not travels(place):
+        return []
+    covenant = saga.covenant(place.details[TRAVELS_WITH])
+    found = [
+        Fact(
+            "Travels with",
+            covenant.name if covenant is not None else "",
+            references.refs(covenant),
+        )
+    ]
+    here = aura_here(saga, place)
+    if here != aura_at(place):
+        found.append(Fact("Aura here", f"{here[1]} {here[0]}"))
+    return found
 
 
 def level_kind_text(place: Neighbour, level: int) -> str:
@@ -548,6 +611,35 @@ def kind_fields(d: Mapping[str, Any]) -> list[DialogField]:
     ]
 
 
+def travel_fields(saga: Saga, d: Mapping[str, Any]) -> list[DialogField]:
+    """What a Place offers ships, and the covenant it travels with."""
+    return [
+        DialogField(
+            WATERS,
+            "Waters",
+            "select",
+            d.get(WATERS) or None,
+            options=pairs(mobile.WATERS),
+            allow_blank=True,
+            placeholder="(not said)",
+            hint="For a ship covenant's stops: a warning if it stops at a "
+            "Place not marked, and only at a Port can it hold an Aegis.",
+        ),
+        DialogField(
+            TRAVELS_WITH,
+            "Travels with",
+            "select",
+            d.get(TRAVELS_WITH),
+            options=[(escape(c.name), c.id) for c in saga.covenants],
+            allow_blank=True,
+            placeholder="(stays where it is)",
+            hint="A covenant's own aura or regio, such as a ship's: each stop "
+            "moves this Place, and the stronger aura holds sway on its "
+            "surface (DE p. 410).",
+        ),
+    ]
+
+
 def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
     """What New Place and Edit add to the common fields."""
     d = place.details if place is not None else {}
@@ -569,6 +661,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
         ),
         *world_fields(saga, d),
         *kind_fields(d),
+        *travel_fields(saga, d),
         DialogField(
             "tethers",
             "Tethers",

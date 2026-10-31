@@ -120,14 +120,17 @@ def write_all(folder: Path = PACKS_DIR) -> list[Path]:
         packs.write(folder / overlays.path_of(o).name, overlays.data(o))
         for o in overlays.OVERLAYS.values()
     ]
+    templates.write(PACKS["antagonists"].assemble())
     return written
 
 
 from . import (  # noqa: F401
     africa,
     alps,
+    antagonists,
     cradle,
     hibernia,
+    iceland,
     legends_of_hermes,
     levant,
     magi_of_hermes,
@@ -138,6 +141,7 @@ from . import (  # noqa: F401
     provence,
     rhine,
     stonehenge,
+    templates,
     theban,
     transylvania,
 )

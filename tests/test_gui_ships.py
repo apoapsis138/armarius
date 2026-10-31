@@ -93,6 +93,8 @@ def test_ships_come_first_in_possessions_as_ledger_entries(app):
         "Stress Check",
         "Ship Combat",
         "Sunk or Taken",
+        "Detach",
+        "Rejoin",
         "Build a Ship",
     ]
     entries[0].clicked()

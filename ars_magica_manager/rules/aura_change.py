@@ -222,7 +222,7 @@ def _top(place: Neighbour) -> tuple[int, list[Any]]:
 
 def _here(saga: Saga, place: Neighbour) -> tuple[set[str], set[str]]:
     """The covenants at the place, and the characters who live there."""
-    covenants = {c.id for c in saga.covenants if c.place_id == place.id}
+    covenants = {c.id for c in sites.covenants_at(saga, place)}
     people = {c.id for c in saga.characters if c.covenant_id in covenants}
     return covenants, people
 

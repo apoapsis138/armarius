@@ -1022,14 +1022,56 @@ CONTRACTS: dict[str, Contract] = {
         live={"#fields-live": "15 Build Points"},
         shown={"#nb-tomb-traps-list": "Head Wires"},
     ),
-    # Roll asks before writing the outcome in the place's diary: the form
-    # alone writes nothing.
+    # Overcome It writes nothing until its last step.
     "overcome trap": Contract(
-        prefill={"Harder or easier": "0", "His roll": "Qik + Athletics"},
-        edits={"Who acts": "mag1", "Harder or easier": "-3"},
+        prefill={"They look for it first": False},
+        edits={"Who is in danger": "mag1", "They look for it first": True},
         saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
         expected="Leandro found the path backwards.",
+        live={"#fields-live": "Per + Awareness against 12"},
+    ),
+    "overcome ward": Contract(
+        prefill={},
+        edits={"Who is in danger": "mag1"},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="Leandro found the path backwards.",
+        live={"#fields-live": "passes untouched"},
+    ),
+    "trap spotted": Contract(
+        prefill={"What then": "deal"},
+        edits={"What then": "leave"},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="Leandro found The Dead Drop before it sprang, and left it be.",
+        live={"#fields-live": "formulaic or ritual"},
+    ),
+    "character acts": Contract(
+        prefill={"His roll": "Qik + Athletics - Encumbrance", "Harder or easier": "0"},
+        edits={"What he does": "Leaps back", "Harder or easier": "-3"},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="Leandro found the path backwards.",
+        invalid={"His roll": "Luck + Dice"},
         live={"#fields-live": "adjusted to 9"},
+    ),
+    "character faces ward": Contract(
+        prefill={"His Magic Resistance": ""},
+        edits={"His Magic Resistance": "5"},
+        saved=lambda s: s.neighbour("drachenfels").details["diary"][-1]["text"],
+        expected="Leandro found the path backwards.",
+        live={"#fields-live": "passes it untouched"},
+    ),
+    "trap acts": Contract(
+        prefill={"The trap is": "sprung", "What came of it": ""},
+        edits={"What came of it": "A long fall."},
+        saved=lambda s: (
+            s.neighbour("drachenfels").details["tomb_traps"][0]["sprung"],
+            s.neighbour("drachenfels").details["diary"][-1]["text"],
+        ),
+        expected=(
+            True,
+            "Leandro fails. Leandro suffered The Dead Drop. A long fall.",
+        ),
+        live={"#fields-live": "Leandro suffers it"},
+        shown={"#nb-tomb-traps-list": "sprung"},
     ),
     # The Rhine's Great Library at Durenmar (Guardians of the Forests).
     "search the great library": Contract(

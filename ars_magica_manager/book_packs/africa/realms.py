@@ -9,8 +9,8 @@ adds the named people, spirits, creatures, places and stories.
 
 A being the book describes without numbers is a Bestiary record whose notes
 say so. A Virtue, Flaw or Quality the catalog lacks is left off the block and
-named in the creature's notes: Crushing Jaws, Smell Water and Survive Without
-Water, and the Inenden status of Merin ag Gwafa. Thick Feathers, Thick Skin
+named in the creature's notes: the Inenden status of Merin ag Gwafa, which the
+book prints no rules for. Thick Feathers, Thick Skin
 and Thick Scales are the catalog's Thick Fur/Thick Scales. By the errata
 (p. 86) the waral's Cunning, Communication, Soak and Survival are corrected,
 the camel's powers are New Qualities, and "Transvestite" reads "Gender
@@ -487,6 +487,9 @@ def _dead(b: Builder) -> None:
             "their good fortune comes from her."
         ),
     )
+    # Queen of the Berber, her aura the 5 of a major monarch's tomb; the book
+    # prints no curse, ward, trap or Build Points for it (p. 92).
+    b.tomb(tomb, kind="major_monarch")
     b.creature(
         "Tin Hinan the Shade",
         page="p. 93",
@@ -2593,7 +2596,7 @@ def _beasts(b: Builder) -> None:
         how_many="Herds",
         block={
             "characteristics": characteristics(-2, 0, -4, -5, 1, 3, 0, -2),
-            "virtues_flaws": ["Herd Animal"],
+            "virtues_flaws": ["Herd Animal", "Smell Water", "Survive Without Water"],
             "abilities": [
                 ("Athletics", 4, "running"),
                 ("Awareness", 3, "predators"),
@@ -2612,9 +2615,6 @@ def _beasts(b: Builder) -> None:
             "by its air-after-rain scent, go long without drinking and can "
             "walk through mild sandstorms unharmed. Splayed feet carry them "
             "faster over sand than horses and tire them less.",
-            "New Qualities (errata p. 86; not in the catalog). Smell Water: "
-            "smells drinkable water up to two miles off. Survive Without "
-            "Water: lives up to two weeks without it.",
             "Riding camel, the mehari of the lower classes' races: add Fast "
             "Runner (+3 to running) and Improved Characteristics, Quickness "
             "+0. War camel: add Aggressive, Pack Animal and Ferocity (when "
@@ -2738,6 +2738,7 @@ def _beasts(b: Builder) -> None:
                 "Sharp Ears",
                 "Infamous",
                 "Pack Mentality",
+                "Crushing Jaws",
                 "Fast Runner",
                 "Pack Animal",
                 "Pack/Herd Leader",
@@ -2773,9 +2774,7 @@ def _beasts(b: Builder) -> None:
             "antelope on the plains. Its habit of disembowelling prey earns "
             "its name as a killer.",
             "Its Strength is misprinted; -3 is what its bite's Damage +1 "
-            "requires (teeth +1, Crushing Jaws +3). Crushing Jaws (p. 139) is "
-            "not in the catalog: +3 Damage to any bite, already in the block; "
-            "a Grapple can hold the jaws shut. Natural weapon: teeth Init 0, "
+            "requires (teeth +1, Crushing Jaws +3). Natural weapon: teeth Init 0, "
             "Atk +3, Def +1, Dam +1. Puissant Brawl +2 is in the block. All "
             "get +3 to running and can pursue prey long and far.",
             "Bjornaer heartbeast: choleric with a melancholic aspect.",
@@ -2910,6 +2909,7 @@ def _beasts(b: Builder) -> None:
                 "Social Handicap",
                 "Nocturnal",
                 "Crafty",
+                "Crushing Jaws",
                 "Keen Eyesight",
                 "Large Teeth",
                 "Mimicry",
@@ -2944,10 +2944,8 @@ def _beasts(b: Builder) -> None:
             "a pack if raised with hounds; the Egyptians used them to hunt "
             "desert game. Greater African ones (Size +1) are ridden by jinn or "
             "witches, and ghuls often take the shape.",
-            "Its Social Handicap is an unpleasant odor. Crushing Jaws (p. 139), "
-            "not in the catalog, adds +3 Damage to any bite and is in the "
-            "block; a Grapple can hold the jaws shut. Natural weapon: bite "
-            "Init 0, Atk +4, Def +1, Dam +3 (+6 with the Quality).",
+            "Its Social Handicap is an unpleasant odor. Natural weapon: bite "
+            "Init 0, Atk +4, Def +1, Dam +3 (+6 with Crushing Jaws, p. 139).",
         ),
     )
     b.creature(
@@ -3104,7 +3102,7 @@ def _beasts(b: Builder) -> None:
             "86). Presence is -6, or +3 for Loathsome Appearance. Ferocity "
             "defends food or a fresh kill, with Confidence 1 (3) in that only. "
             "The Bite's Damage includes +3 from Crushing Jaws (p. 139), which "
-            "its Qualities do not list and the catalog does not hold.",
+            "its Qualities do not list.",
         ),
     )
     b.creature(

@@ -49,6 +49,7 @@ from ..sections import (
     STAGED_SECTION,
     TABLES_SECTION,
     TOMB_TRAPS_SECTION,
+    TOMB_WARDS_SECTION,
     TOWER_SECTION,
 )
 from ..sheets import region as region_sheet
@@ -368,12 +369,20 @@ class KindChapters:
                     lambda row: manors.winter_roll(saga, n, row),
                 )
             ],
-            # A tomb's trap springs (Lands of the Nile).
+            # A tomb's trap springs, or its talisman or ward stands in the
+            # way (Lands of the Nile).
             TOMB_TRAPS_SECTION: [
                 (
                     "Overcome It",
                     "threat",
                     lambda row: tombs.overcome_trap(saga, n, row),
+                )
+            ],
+            TOMB_WARDS_SECTION: [
+                (
+                    "Overcome It",
+                    "threat",
+                    lambda row: tombs.overcome_ward(saga, n, row),
                 )
             ],
             # A covenant's Hermetic Projects: the project the tab shows.

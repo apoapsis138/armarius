@@ -14,6 +14,7 @@ from collections.abc import Callable, Sequence
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
+from .. import mobile_covenants
 from .. import ships as ship_text
 from ..forms import possession as possession_forms
 from ..forms import ship_build
@@ -140,6 +141,18 @@ def ships_section(
             "threat",
             lambda row: ship_forms.mark_fate(saga, covenant, row),
             lambda row: row < len(rules.ships_of(covenant)),
+        ),
+        (
+            mobile_covenants.DETACH_TITLE,
+            "place",
+            lambda row: mobile_covenants.detach_form(saga, covenant, row),
+            lambda row: mobile_covenants.can_detach(covenant, row),
+        ),
+        (
+            mobile_covenants.REJOIN_TITLE,
+            "place",
+            lambda row: mobile_covenants.rejoin_form(saga, covenant, row),
+            lambda row: mobile_covenants.can_rejoin(covenant, row),
         ),
     ]
     widget = section(

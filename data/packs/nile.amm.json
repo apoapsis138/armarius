@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.59.0",
+  "app_version": "3.60.0",
   "kind": "pack",
   "name": "Lands of the Nile",
   "from_saga": "Lands of the Nile",
@@ -1066,8 +1066,8 @@
         "secrets": "Every lost cow came from Megabari lands: stolen spoils among which came carnivorous bulls, now loose in the herds of Makuria."
       },
       {
-        "id": "the_seekers_guild_al_majalibeen",
-        "name": "The Seekers' Guild (Al-Majalibeen)",
+        "id": "the_seekers_guild_al_matalibeen",
+        "name": "The Seekers' Guild (Al-Matalibeen)",
         "kind": "faction",
         "summary": "Explorers have stripped riches from Egypt's monuments for longer than anyone remembers. Old adventurers write popular books, sold in most towns, or take apprentices who pay in advance; desperate men try their luck untrained; in some districts digging for treasure is a sport, and a plague to those who would keep the monuments whole.\n\nCenturies ago, in a time of drought or war, Egypt's impoverished rulers turned this trade into a guild. A man who gives steadily to the royal treasury has the ear of the emir, which brings humble folk close to the sultan's inner circle, and the emir or his allies may choose such men as agents.\n\nThe guildhall's scrolls tell how to disarm tomb defences, give charms against curses and rote readings of the hieroglyphs that matter, and describe the usual decoys and hiding places. Other texts list sites, both cleared ones ready for new residents and ones not fully looted.\n\nLocals call hieroglyphs by many names: the Pen of Copts, of the Temples, of Talismans, of South Arabia, of Priests and of Hermes.",
         "detail": "Sketch",
@@ -1134,7 +1134,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Auras (LotN pp. 31, 40): ancient tombs often have Magic auras, from their preternatural tether and fine sites. Each century a grave site was in use gives a tether of 1, to a maximum of 5; the aura equals the tether, may be raised by impressive natural features, and is often lower where the monuments have decayed. The stele is a vestige of the Magic Realm, usually aligned to Mentem, of a level equal to the tomb's aura. An intact mummy is an Arcane Connection for its ka, giving a Familiarity Bonus of 15 to the Vestige Travel Total; mortals using the vestige gain nothing. See Realms of Power: Magic pp. 8-10, 20-24.\n\nKa-work (pp. 27, 30): a ghost can manifest as part of its form anything in its grave goods or painted on its walls, if not stolen or defaced, and these things can affect mortals at its choice. Hermetic magic cannot sense the ba, perhaps because of the Limit of the Soul, or use the spells written to protect it. Hermetic magi may use the serdab tunnel with shapeshifting or Intellego; treasure guides leave it out, as it is no use to thieves.\n\nCarving equipment (p. 31): in a very few tombs the best grave goods are carving tools, with which a ghost makes likenesses that become real for it, including food, so it escapes the fate of the unfed. A rough carving of archers calls up faerie reinforcements. In later tombs a new object takes one round; in earlier ones, five minutes, as the carving must closely match known forms; in the earliest, a miniature statue, up to half an hour. Many tomb owners have a small servitor statue use the tools for them.\n\nUnfed spirits (p. 31) travel the roads scrounging what humans have thrown away, which spiritually gives it to the next finder. They hate this, and may plague people with ill luck until offered libations.\n\nDesigning a tomb (pp. 40-44): a tomb is built like a covenant, with Boons, Hooks and Build Points; statistics are needed only for a tomb that will last in the saga. Up to 10 points of Hooks may buy Boons. Major monarch: base Magic aura 5, 500 BP. Royal consort or minor monarch: aura 4, 250 BP. Lesser royal or high priest: aura 3, 100 BP. Non-royal dignitary: aura 3, 50 BP. Curses and enchanted items cost 2 BP per 5 levels. A library is usually wall inscriptions in Ancient Egyptian or Demotic, in hieroglyphs or hieratic: a history of the dead as Area Lore or Organization Lore, or spells as Magic Lore or Supernatural Abilities; a few hold scrolls in sealed jars. Specialists cost BP as usual; a tomb guardian costs its highest Martial Ability or Brawl; ghosts may be specialists or teachers.\n\nVis and Boons (p. 44): vis left as grave goods is paid for as a vis stock if the tomb becomes a character's home, and helps an akh offset the penalty of high Might on Study Totals for Transformation. Tombs may also be vis sources, Corpus most often. The Boons and Hooks of ArM5 pp. 72-74 and Covenants pp. 6-27 mostly suit; Wealth means the grave goods are intact, perhaps Unknown to the tomb's residents. In Nubia every tomb should buy Seclusion, for fear of the dead.\n\nDedun (p. 39): Temple Priests and Undying Ones of the Cult of Dedun use tombs as homes and temples, the font of power gained at Initiation as temple priest and the home of their ghoulish court; adherents gather there once a month. Detail the tomb's resources when a player character seeks that Initiation, or for an Undying One as villain or ally. Such a resident may hold altar priests and adherents as specialists (p. 42).\n\nThe book offers both simple tombs and labyrinthine necropolises; treat simple ones as early, poor, or built after a long drought (p. 27)."
+        "secrets": "Auras (LotN pp. 31, 40): ancient tombs often have Magic auras, from their preternatural tether and fine sites. Each century a grave site was in use gives a tether of 1, to a maximum of 5; the aura equals the tether, may be raised by impressive natural features, and is often lower where the monuments have decayed. The stele is a vestige of the Magic Realm, usually aligned to Mentem, of a level equal to the tomb's aura. An intact mummy is an Arcane Connection for its ka, giving a Familiarity Bonus of 15 to the Vestige Travel Total; mortals using the vestige gain nothing. See Realms of Power: Magic pp. 8-10, 20-24.\n\nKa-work (pp. 27, 30): a ghost can manifest as part of its form anything in its grave goods or painted on its walls, if not stolen or defaced, and these things can affect mortals at its choice. Hermetic magic cannot sense the ba, perhaps because of the Limit of the Soul, or use the spells written to protect it. Hermetic magi may use the serdab tunnel with shapeshifting or Intellego; treasure guides leave it out, as it is no use to thieves.\n\nCarving equipment (p. 31): in a very few tombs the best grave goods are carving tools, with which a ghost makes likenesses that become real for it, including food, so it escapes the fate of the unfed. A rough carving of archers calls up faerie reinforcements. In later tombs a new object takes one round; in earlier ones, five minutes, as the carving must closely match known forms; in the earliest, a miniature statue, up to half an hour. Many tomb owners have a small servitor statue use the tools for them.\n\nUnfed spirits (p. 31) travel the roads scrounging what humans have thrown away, which spiritually gives it to the next finder. They hate this, and may plague people with ill luck until offered libations.\n\nDesigning a tomb (pp. 40-44): a place marked as a tomb has a Tomb tab with the book's kinds, Build Points and costs; statistics are needed only for a tomb that will last in the saga. A library is usually wall inscriptions in Ancient Egyptian or Demotic, in hieroglyphs or hieratic: a history of the dead as Area Lore or Organization Lore, or spells as Magic Lore or Supernatural Abilities; a few hold scrolls in sealed jars. Specialists cost BP as usual; a tomb guardian costs its highest Martial Ability or Brawl; ghosts may be specialists or teachers.\n\nVis and Boons (p. 44): vis left as grave goods is paid for as a vis stock if the tomb becomes a character's home, and helps an akh offset the penalty of high Might on Study Totals for Transformation. Tombs may also be vis sources, Corpus most often. The Boons and Hooks of ArM5 pp. 72-74 and Covenants pp. 6-27 mostly suit; Wealth means the grave goods are intact, perhaps Unknown to the tomb's residents. In Nubia every tomb should buy Seclusion, for fear of the dead.\n\nDedun (p. 39): Temple Priests and Undying Ones of the Cult of Dedun use tombs as homes and temples, the font of power gained at Initiation as temple priest and the home of their ghoulish court; adherents gather there once a month. Detail the tomb's resources when a player character seeks that Initiation, or for an Undying One as villain or ally. Such a resident may hold altar priests and adherents as specialists (p. 42).\n\nThe book offers both simple tombs and labyrinthine necropolises; treat simple ones as early, poor, or built after a long drought (p. 27)."
       },
       {
         "id": "the_field_of_reeds",
@@ -1320,13 +1320,99 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "tomb": true,
+          "tomb_kind": "examples",
+          "tomb_boons": "",
+          "tomb_hooks": "",
+          "tomb_hook_points": 0,
+          "tomb_other": "",
+          "tomb_other_bp": 0,
+          "tomb_curses": [
+            {
+              "name": "A Crocodile Shall Be Against Him in Water, a Snake on Land",
+              "kind": "Greater Malediction",
+              "art": "ReAn",
+              "level": 45,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "excoriation": "Spend more than a night near water and a large crocodile comes; more than a night far from it, a venomous snake. Each is an ordinary beast bar its arrival; kill it and another comes. (Base 30, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "He Shall Be Destroyed by Sekhmet",
+              "art": "CrIg",
+              "level": 25,
+              "rdt": "Touch, Mom, Room",
+              "uses": 1,
+              "excoriation": "Arrows of fire hit each target automatically for +15 damage. (Base 10, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "He Shall Capsize and Drown at Sea",
+              "kind": "Greater Malediction",
+              "art": "ReAq",
+              "level": 45,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "excoriation": "Any boat the victim boards sinks; in more than a foot of water he cannot keep his head above the surface, and drowns. (Base 30, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "He Shall Have No Successors",
+              "art": "PeCo",
+              "level": 35,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "excoriation": "Destroys the organs of generation. Other readings might drive off apprentices or proteges, as a Lesser Malediction. (Base 20, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "He Shall Meet Death by a Disease that No Doctor can Diagnose",
+              "art": "PeCo",
+              "level": 35,
+              "rdt": "Touch, Mom, Room",
+              "uses": 1,
+              "excoriation": "A major disease (Disease Penalty -5); mundane medicine does not help Recovery rolls, only magic. (Base 20, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "He Shall Not Reach his Home, nor Embrace his Children",
+              "kind": "Lesser Malediction",
+              "art": "CrMe",
+              "level": 25,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "excoriation": "As the No Sense of Direction Flaw; in the desert it can kill. (Base 10, +1 Touch, +2 Room.)"
+            },
+            {
+              "name": "I Shall Cast the Fear of Myself into Him",
+              "art": "CrMe",
+              "level": 25,
+              "rdt": "Touch, Sun, Room",
+              "uses": 1,
+              "excoriation": "Overwhelming dread of the tomb or its occupant; victims must flee at once. (Base 4, +1 Touch, +2 Sun, +2 Room.)"
+            },
+            {
+              "name": "I Shall Wring his Neck Like a Bird",
+              "art": "PeCo",
+              "level": 55,
+              "rdt": "Touch, Sun, Room",
+              "uses": 1,
+              "excoriation": "Spectral hands choke everyone affected; use air deprivation (ArM5 p. 180) until cancelled or all are dead. Another may cut a hole lower in the neck: Dex + Chirurgy stress roll against 9, which leaves the Mute Flaw either way, and a botch kills. A victim who escapes the room and makes a Deprivation roll breaks the curse. (Base 30, +1 Touch, +2 Sun, +2 Room.)"
+            },
+            {
+              "name": "The Hollow Promise of a Swift Death",
+              "art": "CrVi",
+              "level": 9,
+              "rdt": "Per, Sun, Ind",
+              "uses": 2,
+              "excoriation": "No curse at all, and a constant effect: magical detection sees a 30th-level curse. It may be made at other levels: a magnitude up or down in the base effect appears as two up or down. (Base 3 taint with magic, +2 Sun; +3 environmental trigger, +1 2/day.)"
+            }
+          ],
+          "tomb_wards": [],
+          "tomb_traps": []
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Curses (LotN pp. 34, 40-41). How literally the condition is taken is left to the storyguide. A curse's excoriation is written as a Hermetic enchantment, most often Range Touch, Target Room, triggered when the condition is broken or someone tries to destroy the text; the condition need not be one a Hermetic device could detect. Once triggered as many times as its uses per day, the text may be safely destroyed. Most have one use a day, and Penetration is rare. Excoriations Hermetic magic cannot match are Greater or Lesser Maledictions, with a Special Duration (no added magnitude): permanent until dispelled, any Technique or Form, base level 30 or 10, and those under them suffer Warping. A dire curse with no magical force costs nothing. A curse costs 2 BP per 5 levels.\n\nLevel given for breaking the curse and for Build Points. All are 1/day, Pen 0, R: Touch, T: Room unless noted.\n\nA Crocodile Shall Be Against Him in Water, a Snake on Land: ReAn 45, D: Special (Base 30, +1 Touch, +2 Room). Greater Malediction. Spend more than a night near water and a large crocodile comes; more than a night far from it, a venomous snake. Each is an ordinary beast bar its arrival; kill it and another comes.\n\nHe Shall Be Destroyed by Sekhmet: CrIg 25, D: Mom (Base 10, +1 Touch, +2 Room). Arrows of fire hit each target automatically for +15 damage.\n\nHe Shall Capsize and Drown at Sea: ReAq 45, D: Special (Base 30, +1 Touch, +2 Room). Greater Malediction. Any boat the victim boards sinks; in more than a foot of water he cannot keep his head above the surface, and drowns.\n\nHe Shall Have No Successors: PeCo 35, D: Special (Base 20, +1 Touch, +2 Room). Destroys the organs of generation. Other readings might drive off apprentices or proteges, as a Lesser Malediction.\n\nHe Shall Meet Death by a Disease that No Doctor can Diagnose: PeCo 35, D: Mom (Base 20, +1 Touch, +2 Room). A major disease (Disease Penalty -5); mundane medicine does not help Recovery rolls, only magic.\n\nHe Shall Not Reach his Home, nor Embrace his Children: CrMe 25, D: Special (Base 10, +1 Touch, +2 Room). Lesser Malediction, as the No Sense of Direction Flaw; in the desert it can kill.\n\nI Shall Cast the Fear of Myself into Him: CrMe 25, D: Sun (Base 4, +1 Touch, +2 Sun, +2 Room). Overwhelming dread of the tomb or its occupant; victims must flee at once.\n\nI Shall Wring his Neck Like a Bird: PeCo 55, D: Sun (Base 30, +1 Touch, +2 Sun, +2 Room). Spectral hands choke everyone affected; use air deprivation (ArM5 p. 180) until cancelled or all are dead. Another may cut a hole lower in the neck: Dex + Chirurgy stress roll against 9, which leaves the Mute Flaw either way, and a botch kills. A victim who escapes the room and makes a Deprivation roll breaks the curse.\n\nThe Hollow Promise of a Swift Death: CrVi 9, constant effect, Pen 0; R: Per, D: Sun, T: Ind (Base 3 taint with magic, +2 Sun; +3 environmental trigger, +1 2/day). No curse at all: magical detection sees a 30th-level curse. It may be made at other levels: a magnitude up or down in the base effect appears as two up or down."
+        "secrets": "How literally a condition is taken is left to the storyguide; it need not be one a Hermetic device could detect (LotN pp. 34, 40). All are 1/day, Pen 0, R: Touch, T: Room unless noted, and their levels serve for breaking them as well as for Build Points (p. 41)."
       },
       {
         "id": "wards_of_the_tombs",
@@ -1344,13 +1430,48 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "tomb": true,
+          "tomb_kind": "examples",
+          "tomb_boons": "",
+          "tomb_hooks": "",
+          "tomb_hook_points": 0,
+          "tomb_other": "",
+          "tomb_other_bp": 0,
+          "tomb_curses": [],
+          "tomb_wards": [
+            {
+              "name": "Nothing But Sky and Sand",
+              "kind": "Ward",
+              "art": "MuIm",
+              "level": 39,
+              "uses": "constant",
+              "effect": "The structure seems a sand dune in every way. R: Touch, D: Sun, T: Str (Base 5, +1 Touch, +2 Sun, +3 Structure; +3 environmental trigger, +1 2/day). Avoided, for instance, by spotting a stray shadow or working out the stars that reveal it. It may fail from one angle or under sprinkled water (p. 42)."
+            },
+            {
+              "name": "Turn the Interloper",
+              "kind": "Ward",
+              "art": "ReCo",
+              "level": 30,
+              "uses": "unlimited",
+              "effect": "Spins anyone who triggers it, usually at a doorway, through 180 degrees (Base 10, +2 Voice; +10 unlimited uses). Avoided by bracing against it."
+            },
+            {
+              "name": "A Sovereign Ward Against Robbers",
+              "kind": "Ward",
+              "art": "ReCo",
+              "level": 49,
+              "uses": "constant",
+              "effect": "Humans can hardly enter and cannot harm the structure from outside (Base 15, +1 Touch, +2 Sun, +3 Structure; +3 environmental trigger, +1 2/day). Overcome by forcing through, or throwing a stone to dislodge the amulet behind it."
+            }
+          ],
+          "tomb_traps": []
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Wards (LotN pp. 35, 40). Most have a way to deactivate them for a while, and they are likelier than other talismans to have Penetration, since they are aimed at spirits. Books on bypassing the strongest are Initiation Scripts for Mystery Virtues, which may open a single site or, unknown to the reader, many: some grant Second Sight and teach regio crossing, others give resistance to talismans of one substance or school. A ward can sometimes be overcome by narrative means, at a base Ease Factor of 9 + magnitude; it repels rather than harms, as when sand is about to turn to glass and seal the tomb, or an illusion has a flaw.\n\nNothing But Sky and Sand: MuIm 39, Pen 0, constant effect; R: Touch, D: Sun, T: Str (Base 5, +1 Touch, +2 Sun, +3 Structure; +3 environmental trigger, +1 2/day). The structure seems a sand dune in every way. Ease Factor 17 to avoid, for instance by spotting a stray shadow or working out the stars that reveal it.\n\nTurn the Interloper: ReCo 30, Pen 0, unlimited/day (Base 10, +2 Voice; +10 unlimited uses). Spins anyone who triggers it, usually at a doorway, through 180 degrees. Ease Factor 15, as by bracing against it.\n\nA Sovereign Ward Against Robbers: ReCo 49, Pen 0, constant effect (Base 15, +1 Touch, +2 Sun, +3 Structure; +3 environmental trigger, +1 2/day). Humans can hardly enter and cannot harm the structure from outside. Ease Factor 19, as by forcing through, or throwing a stone to dislodge the amulet behind it."
+        "secrets": "Wards (LotN pp. 35, 40). Most have a way to deactivate them for a while, and they are likelier than other talismans to have Penetration, since they are aimed at spirits. Books on bypassing the strongest are Initiation Scripts for Mystery Virtues, which may open a single site or, unknown to the reader, many: some grant Second Sight and teach regio crossing, others give resistance to talismans of one substance or school. A ward repels rather than harms, as when sand is about to turn to glass and seal the tomb, or an illusion has a flaw."
       },
       {
         "id": "talismans_of_the_tombs",
@@ -1368,13 +1489,55 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "tomb": true,
+          "tomb_kind": "examples",
+          "tomb_boons": "",
+          "tomb_hooks": "",
+          "tomb_hook_points": 0,
+          "tomb_other": "",
+          "tomb_other_bp": 0,
+          "tomb_curses": [],
+          "tomb_wards": [
+            {
+              "name": "Apedemak's Strength",
+              "art": "MuTe(Re)",
+              "level": 40,
+              "uses": "unlimited",
+              "effect": "Animates a huge lion statue, which obeys one spoken order. Warped, it needs a Com + Leadership roll against 9 to override its last order: attack all who cross the threshold. Dogged, nearly indestructible, an unskilled fighter; to hide or run from it is the roll against its Ease Factor. R: Per, D: Conc, T: Ind (Base 5, +1 Conc, +1 stone, +1 size, +1 requisite; +5 maintains concentration, +10 unlimited)."
+            },
+            {
+              "name": "The Destroying Uraeus",
+              "art": "CrIg",
+              "level": 20,
+              "uses": "24/day",
+              "effect": "A rearing cobra statue spews fire, +10 damage to one person passing without intoning the tomb owner's name. Unlike a Hermetic effect it can be dodged, by diving aside (p. 42). R: Voice, D: Mom, T: Ind (Base 5, +2 Voice; +5 24/day).",
+              "deactivation": "Intone the name of the tomb's owner in passing"
+            },
+            {
+              "name": "On The Presentation of Face of Lost Companions",
+              "kind": "No obstacle",
+              "art": "CrIm(In)",
+              "level": 15,
+              "uses": "1/day",
+              "effect": "After a fatal trap, an ochre-red image of the dead person's face comes out of a wall nearby. One known version shouts a warning in an old tongue against disturbing kings. Sinister versions enslave the ghost as a guardian. R: Touch, D: Conc, T: Ind (Base 2, +1 Touch, +1 Conc, +1 legible words and moving image, +1 requisite; +5 maintain concentration)."
+            },
+            {
+              "name": "On Lowering the Waters",
+              "art": "ReAq",
+              "level": 28,
+              "penetration": 16,
+              "uses": "1/day",
+              "effect": "Many tombs hold living water that strains to drown intruders. It is in effect a Might 15 water elemental (Realms of Power: Magic), and this talisman wakes and commands it; it may be tricked with a new command. R: Touch, D: Sun, T: Ind (Base 5, +1 Touch, +2 Sun; +8 Penetration 16)."
+            }
+          ],
+          "tomb_traps": []
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Talismans (LotN pp. 33-35, 41-42). Ancient Egyptians had no general Magic Resistance, so talismans aimed at people mostly have no Penetration: even young magi ignore them, but grogs and equipment do not. A particular spell effect usually renders one inert until sunset; in a laboratory a magus finds which, by trial or as with a magic item's triggers (ArM5 p. 100). Design them by the Hermetic item rules, or Learned Magic with the provisos of Chapter 5; few relied on one-use seals or temporary amulets. Traps of this kind have a base Ease Factor of 6 + magnitude, and characters whose Magic Resistance equals the Penetration may pass automatically. Though costed as Hermetic effects, they need not obey Hermetic limits: unlike a Hermetic effect, a Destroying Uraeus's blast can be dodged, and Nothing But Sky and Sand may fail from one angle or under sprinkled water. Left in a strong aura, enchantments take Warping.\n\nApedemak's Strength: MuTe(Re) 40, 16 BP, Pen 0, unlimited/day; R: Per, D: Conc, T: Ind (Base 5, +1 Conc, +1 stone, +1 size, +1 requisite; +5 maintains concentration, +10 unlimited). Animates a huge lion statue, which obeys one spoken order. Warped, it needs a Com + Leadership roll against 9 to override its last order: attack all who cross the threshold. Dogged, nearly indestructible, an unskilled fighter. Ease Factor 14, as to hide or run.\n\nThe Destroying Uraeus: CrIg 20, 8 BP, Pen 0, 24/day; R: Voice, D: Mom, T: Ind (Base 5, +2 Voice; +5 24/day). A rearing cobra statue spews fire, +10 damage to one person passing without intoning the tomb owner's name. Ease Factor 10 to dive aside.\n\nOn The Presentation of Face of Lost Companions: CrIm(In) 15, 6 BP, Pen 0, 1/day; R: Touch, D: Conc, T: Ind (Base 2, +1 Touch, +1 Conc, +1 legible words and moving image, +1 requisite; +5 maintain concentration). After a fatal trap, an ochre-red image of the dead person's face comes out of a wall nearby. One known version shouts a warning in an old tongue against disturbing kings. It only frightens and need not be defended against. Sinister versions enslave the ghost as a guardian.\n\nOn Lowering the Waters: ReAq 28, 12 BP, Pen 16, 1/day; R: Touch, D: Sun, T: Ind (Base 5, +1 Touch, +2 Sun; +8 Penetration 16). Many tombs hold living water that strains to drown intruders. It is in effect a Might 15 water elemental (Realms of Power: Magic), and this talisman wakes and commands it. Ease Factor 12, as to trick it with a new command."
+        "secrets": "Talismans (LotN pp. 33-35, 41-42). Ancient Egyptians had no general Magic Resistance, so talismans aimed at people mostly have no Penetration: even young magi ignore them, but grogs and equipment do not. A particular spell effect usually renders one inert until sunset; in a laboratory a magus finds which, by trial or as with a magic item's triggers (ArM5 p. 100). Design them by the Hermetic item rules, or Learned Magic with the provisos of Chapter 5; few relied on one-use seals or temporary amulets. Though costed as Hermetic effects, they need not obey Hermetic limits. Left in a strong aura, enchantments take Warping."
       },
       {
         "id": "traps_of_the_tombs",
@@ -1392,13 +1555,74 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "tomb": true,
+          "tomb_kind": "examples",
+          "tomb_boons": "",
+          "tomb_hooks": "",
+          "tomb_hook_points": 0,
+          "tomb_other": "",
+          "tomb_other_bp": 0,
+          "tomb_curses": [],
+          "tomb_wards": [],
+          "tomb_traps": [
+            {
+              "name": "Labyrinth",
+              "harm": "scare",
+              "ease": 6,
+              "roll": "Int + Concentration",
+              "text": "A maze of tunnels and identical passages. Retracing steps takes three times as long as going in."
+            },
+            {
+              "name": "Prison Room",
+              "harm": "minor",
+              "ease": 6,
+              "roll": "Per + Awareness",
+              "once": true,
+              "text": "A dead-end chamber with treasure or inscriptions. The roll hears the mechanism in the delay; otherwise a door too heavy to lift drops. The treasure is painted wood, the inscriptions nonsense or taunts."
+            },
+            {
+              "name": "Rock Fall",
+              "harm": "minor",
+              "ease": 9,
+              "roll": "Qik + Athletics - Encumbrance",
+              "text": "Boulders roll on those climbing a slope: stress roll or +10 damage. Impact as ArM5 p. 181. Larger falls cost more: an avalanche +24 and perhaps suffocation (p. 180); rocks outweighing a character +21; about his weight +18; smaller, about +1 per 10 pounds. Spiked balls do more, sand, bones or the bodies of those left with the horses less."
+            },
+            {
+              "name": "Medicinal Powders",
+              "harm": "serious",
+              "ease": 9,
+              "roll": "Sta",
+              "text": "Fine poison in a sealed room, stirred by the door and by movement. It sears and disfigures, a Medium Wound, unless the roll is made. Others cost Fatigue, blind, paralyse, or burn."
+            },
+            {
+              "name": "Head Wires",
+              "harm": "minor",
+              "ease": 15,
+              "roll": "Per + Awareness",
+              "text": "Neck-high wires, +9 damage that most armour does not stop."
+            },
+            {
+              "name": "Head Wires behind a Pit",
+              "harm": "fatal",
+              "ease": 15,
+              "roll": "Per + Awareness",
+              "text": "Strung behind an obvious pit, so a jumper hits them: +18 damage that most armour does not stop."
+            },
+            {
+              "name": "Dead Drop",
+              "harm": "fatal",
+              "ease": 12,
+              "roll": "Per + Awareness",
+              "text": "A slightly less worn paving stone opens on a ten-pace fall to stone, +30 damage."
+            }
+          ]
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The narrative rule (LotN pp. 32-33, 44). Each player frames one interesting thing for his character to do and rolls only for it; the troupe decides the roll, and the storyguide sets the Ease Factor from the trap's base, up or down by 3, 6 or more (ArM5 p. 7). Magi must Fast-Cast, adjudicated normally. Actions go in Quickness order, the endangered character first and the trap last; a clash may need an Action Priority Roll (Qik + Ability, Finesse if fast-casting). Those who failed and were not helped suffer the trap.\n\nA Per + Awareness roll may reveal a trap unsprung, allowing formulaic or ritual magic. Awareness Ease Factors assume torches: -3 with perfect light, +3 by one candle, +6 in near darkness. Spells that detect metal find mechanisms, and destroying one can seize the trap. Lords of Men users may use Evasion (p. 125), with the trap's Attack as stress die + setter's Int + Profession, plus a weapon's Attack modifier. Most mechanical traps need manual resetting.\n\nPuzzles: Hermetic magi can subvert them, say with Rego from outside the door. A dedicated magus might collect accounts to deduce senet's rules, or some ghosts know the game. As a minigame, play a real historical game; with combat-minded troupes put the characters on the board to fight the pieces; let magic cheat (p. 33).\n\nTrap cost (p. 44): delay or scare 3; minor injury (to +10) or imprisonment 6; serious injury (to +15) 9; often fatal (+20 or more) 12. Modifier by ease of avoiding: Ease 3, 0; Ease 6, +1; Ease 9, +3; Ease 12, +6; Ease 15, +9.\n\nLabyrinth, cost 4: a maze of tunnels and identical passages. Retracing steps is Int + Concentration against 6, and takes three times as long as going in.\n\nPrison Room, cost 7: a dead-end chamber with treasure or inscriptions. Per + Awareness against 6 hears the mechanism in the delay; otherwise a door too heavy to lift drops. The treasure is painted wood, the inscriptions nonsense or taunts.\n\nRock Fall, cost 9: boulders roll on those climbing a slope. Qik + Athletics - Encumbrance stress roll against 9, or +10 damage. Impact as ArM5 p. 181. Larger falls cost more: an avalanche +24 and perhaps suffocation (p. 180); rocks outweighing a character +21; about his weight +18; smaller, about +1 per 10 pounds. Spiked balls do more, sand, bones or the bodies of those left with the horses less.\n\nMedicinal Powders, cost 12: fine poison in a sealed room, stirred by the door and by movement. It sears and disfigures, a Medium Wound, unless Stamina against 9. Others cost Fatigue, blind, paralyse, or burn.\n\nProjectiles, cost varies: if not escaped that round, stress die + weapon Damage (ArM5 p. 177), soaked. Several projectiles are rolled and added; machines add +1 to +5 by human Strength equivalent. Many are poisoned (p. 180).\n\nHead Wires, cost 15: neck-high wires, Per + Awareness against 15; +9 damage that most armour does not stop. Strung behind an obvious pit, so a jumper hits them, +18 and cost 21.\n\nDead Drop, cost 18: Per + Awareness against 12 spots a slightly less worn paving stone; else a ten-pace fall to stone, +30.\n\nPits, cost varies: falling damage (ArM5 p. 181), plus the nearest weapon's Damage for a dangerous floor: a 20-foot pit of sharp stakes is stress die + 20 + 5, against stress die + Soak. An architect's aim may add more."
+        "secrets": "Spells that detect metal find mechanisms, and destroying one can seize the trap (LotN p. 32).\n\nPuzzles: Hermetic magi can subvert them, say with Rego from outside the door. A dedicated magus might collect accounts to deduce senet's rules, or some ghosts know the game. As a minigame, play a real historical game; with combat-minded troupes put the characters on the board to fight the pieces; let magic cheat (p. 33).\n\nProjectiles, cost varies: if not escaped that round, stress die + weapon Damage (ArM5 p. 177), soaked. Several projectiles are rolled and added; machines add +1 to +5 by human Strength equivalent. Many are poisoned (p. 180).\n\nPits, cost varies: falling damage (ArM5 p. 181), plus the nearest weapon's Damage for a dangerous floor: a 20-foot pit of sharp stakes is stress die + 20 + 5, against stress die + Soak. An architect's aim may add more."
       },
       {
         "id": "ghosts_of_the_tombs",
@@ -1497,13 +1721,117 @@
               "enter": "Open on the eve of the anniversary of Cleopatra's death, 12 August; at other times a Regio Sight roll against 23 (ArM5 p. 189).",
               "notes": "Each year on that night hordes of asps with a small Faerie Might pour out to fight the mongooses. What lies within is left to the storyguide."
             }
+          ],
+          "tomb": true,
+          "tomb_kind": "major_monarch",
+          "tomb_boons": "Wealth (Resources, Major); Aura, Seclusion, Vivid Environment (Site, Minor); Edifice (Fortifications, Minor)",
+          "tomb_hooks": "Regio (Site, Major); Crumbling (Fortifications, Minor); Guardians, Legendary Site (Surroundings, Minor); Dwindling Resources (Resources, Minor)",
+          "tomb_hook_points": 7,
+          "tomb_other": "library 141, specialists 105, vis sources 70, vis stocks 9",
+          "tomb_other_bp": 325,
+          "tomb_curses": [
+            {
+              "name": "The Romans' Curse: boils",
+              "art": "PeCo",
+              "level": 20,
+              "rdt": "Touch, Room",
+              "uses": 1,
+              "condition": "Anyone speaking Latin in the burial chamber",
+              "excoriation": "Boils that leave those who seek to disturb her hideous, but do no harm (Base 5, +1 Touch, +2 Room)."
+            },
+            {
+              "name": "The Romans' Curse: sickness",
+              "kind": "Lesser Malediction",
+              "art": "PeCo",
+              "level": 25,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "condition": "Anyone speaking Latin in the burial chamber",
+              "excoriation": "As the Fragile Constitution Flaw: a sickness no medicine helps."
+            },
+            {
+              "name": "The Romans' Curse: no children",
+              "art": "PeCo",
+              "level": 35,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "condition": "Anyone speaking Latin in the burial chamber",
+              "excoriation": "As He Shall Have No Successors."
+            },
+            {
+              "name": "I Shall Cast the Fear of Myself into Him",
+              "art": "CrMe",
+              "level": 25,
+              "rdt": "Touch, Sun, Room",
+              "uses": 1,
+              "excoriation": "Overwhelming dread of the tomb or its occupant; victims must flee at once. (Base 4, +1 Touch, +2 Sun, +2 Room.)",
+              "condition": "Anyone who breaks the clay seal on the treasure chamber"
+            }
+          ],
+          "tomb_wards": [
+            {
+              "name": "The Shrouded Oasis",
+              "kind": "Ward",
+              "art": "Non-Hermetic",
+              "level": 50,
+              "effect": "On the compound walls, as The Shrouded Glen (ArM5 p. 152). With Penetration 0 it only repels mundane hunters. A magus researching a breakthrough in enchanting Ritual effects can draw insight from it."
+            },
+            {
+              "name": "First Statue of Sekhmet",
+              "art": "CrIg",
+              "level": 20,
+              "uses": "24/day",
+              "effect": "As a Destroying Uraeus: bow drawn, it looses a fiery arrow a round at anyone in the temple.",
+              "deactivation": "Intone Cleopatra's name"
+            },
+            {
+              "name": "Second Statue of Sekhmet",
+              "art": "CrIg",
+              "level": 20,
+              "uses": "24/day",
+              "effect": "As a Destroying Uraeus: bow drawn, it looses a fiery arrow a round at anyone in the temple.",
+              "deactivation": "Intone Cleopatra's name"
+            },
+            {
+              "name": "The Djet",
+              "kind": "No obstacle",
+              "art": "Non-Hermetic",
+              "level": 100,
+              "effect": "A twenty-foot statue of Osiris in thirty fitted pieces of green stone: with burning incense in its hand it answers one question from each person, who must truly want the answer for himself. It knows only what some dead person knew, so nothing of the future, and answers at random otherwise. It lies scattered through the complex, one piece missing and unaccounted for; assembling it takes skill, and instructions are in hieroglyphs on the statue."
+            }
+          ],
+          "tomb_traps": [
+            {
+              "name": "The Soporific Corridor",
+              "harm": "serious",
+              "ease": 9,
+              "roll": "Sta",
+              "text": "Two stone doors close off a stretch of corridor; opening them brings a faint floral smell and dust eddying in the light. All within must make the roll or sleep for as many minutes as they failed by, while immune mongooses swarm through ground-level holes to eat them: a Light Wound each, worse by a step every two minutes."
+            },
+            {
+              "name": "The Covered Pit",
+              "harm": "serious",
+              "further_bp": 6,
+              "ease": 12,
+              "roll": "Dex + Athletics - Encumbrance",
+              "spot": 15,
+              "text": "Before the burial chamber door: safe at first, but walking on it arms it, taking about a minute. Per + Awareness at +3 to the Ease Factor hears the arming; the roll leaps clear when cautious, harder for those fleeing the fear curse. Twelve feet deep with spikes: +12 from the fall, +8 from each of up to four spikes (simple die 1-2 none, 3-4 one, 5-6 two, 7-8 three, 9-10 four)."
+            },
+            {
+              "name": "The Sand of the Treasure Chamber",
+              "harm": "scare",
+              "ease": 15,
+              "roll": "Per + Awareness",
+              "once": true,
+              "text": "Stepping on the threshold sends tons of sand from the roof, to bury the treasure; it can be outrun by those not yet inside."
+            }
           ]
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "It is no pyramid but a walled compound at Taposiris Magna, a lonely bay west of Alexandria, far from any trade route. A handful know the place, among them the jinniyya Nahrou, whose Might shielded her from the concealing enchantment (LotN p. 44).\n\nThe Garden: fifteen-foot walls with one great pylon gate, carved with Isis and with cows, cats, lionesses, vultures and hippopotamuses for the goddesses. Inside is a temple of Isis and a rich garden of food and medicinal herbs, dates, bananas and other fruit, feeding families of mongooses. Warping has made some of these Magic Animals, who rule the rival clans like royalty. The pool at the centre is the regio's entrance. The asps' bodies are vis, usually eaten quickly by the magical mongooses for Transformation.\n\nThe Temple: its roof rests on columns carved as four handmaidens, each face many times repeated. Walls hold spells of midwifery and healing in Koine Greek and Ancient Egyptian, some studied as texts on the Arts of Learned Magicians, though not quite the same Arts; Quality is what a 13th-century magician can draw from them. Two statues of Sekhmet, bows drawn, each loose a fiery arrow a round at anyone in the temple unless Cleopatra's name is intoned. Four priestess handmaidens died to guard her, and their ghosts haunt the place, sorceresses in healing, in destruction, in transformation and in control and enchantment.\n\nThe Tomb: an inclined passage from the temple levels off, with the soporific trap, then turns at the pit. The burial chamber, directly under the temple's statue of Isis, has a cursed door. The body lies under a net of pure gold, in a painted wooden coffin shaped like the queen, in a gold sarcophagus, in a stone sepulcher, ringed by four goddess statues with heads of vulture, lioness, crocodile and asp. A hidden way in the rear wall leads by a short corridor to a second, cursed door and the treasury of Ptolemaic Egypt: over ten thousand Mythic Pounds of gold, gems and ivory, a legendary source of income.\n\nDetails (p. 46): Magic aura 6. Boons: Wealth (Resources, Major); Aura, Seclusion, Vivid Environment (Site, Minor); Edifice (Fortifications, Minor). Hooks: Regio (Site, Major); Crumbling (Fortifications, Minor); Guardians, Legendary Site (Surroundings, Minor); Dwindling Resources (Resources, Minor). 484 Build Points: curses 38, enchantments 76, library 141, specialists 105, traps 45, vis sources 70, vis stocks 9.\n\nLibrary: later history of Roman Egypt, summa on Area Lore: Egypt, Koine Greek, Level 5, Quality 9. Medicinal herbs, tractatus on Medicine, Demotic, Quality 10. Healing spells, tractatus on the Learned Magician Form Salutem, Demotic, Quality 11. Magical wards, summa on the Learned Magician Technique Tueor, Demotic, Level 10, Quality 7. Eight formulae for pharmaceutical theriacs, Demotic, 5 BP each (Art & Academe p. 77). Creation myth, tractatus on Faerie Lore, Demotic, Quality 7. Handmaidens' diaries on crumbling papyrus: three tractatus on Charm, Etiquette and Intrigue, Koine Greek, Quality 5.\n\nSpecialists: four ghostly priestesses, each with the equivalent of one Hermetic Technique at 20; five mongoose monarchs, Leadership 5.\n\nVis sources, a year: 5 Animal (slain asps), 2 Aquam (the pool), 3 Herbam (exotic fruit), 1 Ignem (a potsherd exposed to a Destroying Uraeus), 3 Terram (an item worth at least 10 Mythic Pounds left a year in the treasure chamber). Vis stocks: 10 Creo (unguents, pastes, medicines), 5 Imaginem (cosmetics, perfumes), 30 Terram (gold objects in the treasure room).\n\nCurses: the Romans' curse, 32 BP, in the burial chamber, set off by anyone speaking Latin, promises those who seek to disturb her boils, sickness no medicine helps, and no children: boils that disfigure but do no harm (PeCo 20; Pen 0, 1/day; Base 5, +1 Touch, +2 Room), a Lesser Malediction as Fragile Constitution (PeCo 25) and He Shall Have No Successors (PeCo 35). A clay seal on the treasure chamber bears I Shall Cast the Fear of Myself into Him, 6 BP.\n\nEnchantments: The Shrouded Oasis, on the compound walls, as The Shrouded Glen (ArM5 p. 152): non-Hermetic, 50 levels, Pen 0, so it only repels mundane hunters, Ease Factor 19, 20 BP; a magus researching a breakthrough in enchanting Ritual effects can draw insight from it. Two Statues of Sekhmet, as Destroying Uraeuses, Ease Factor 10, 16 BP. The Djet, a twenty-foot statue of Osiris in thirty fitted pieces of green stone: with burning incense in its hand it answers one question from each person, who must truly want the answer for himself. It knows only what some dead person knew, so nothing of the future, and answers at random otherwise. It lies scattered through the complex, one piece missing and unaccounted for; assembling it takes skill, and instructions are in hieroglyphs on the statue. Non-Hermetic, 100 levels, 40 BP.\n\nTraps: (1) stone doors close off a stretch of corridor; opening them brings a faint floral smell and dust eddying in the light. All within must make Stamina against 9 or sleep for as many minutes as they failed by, while immune mongooses swarm through ground-level holes to eat them: a Light Wound each, worse by a step every two minutes. Ease 9, 12 BP. (2) A covered pit before the burial chamber door is safe at first, but walking on it arms it, taking about a minute. Per + Awareness at +3 to the Ease Factor hears the arming; Dex + Athletics - Encumbrance leaps clear when cautious, harder for those fleeing the fear curse. Twelve feet deep with spikes: +12 from the fall, +8 from each of up to four spikes (simple die 1-2 none, 3-4 one, 5-6 two, 7-8 three, 9-10 four). Treated as two traps, Ease 12, 21 BP. (3) Stepping on the treasure chamber's threshold sends tons of sand from the roof, to bury the treasure; it can be outrun by those not yet inside. Per + Awareness to spot the trigger. Ease 15, 12 BP."
+        "secrets": "It is no pyramid but a walled compound at Taposiris Magna, a lonely bay west of Alexandria, far from any trade route. A handful know the place, among them the jinniyya Nahrou, whose Might shielded her from the concealing enchantment (LotN p. 44).\n\nThe Garden: fifteen-foot walls with one great pylon gate, carved with Isis and with cows, cats, lionesses, vultures and hippopotamuses for the goddesses. Inside is a temple of Isis and a rich garden of food and medicinal herbs, dates, bananas and other fruit, feeding families of mongooses. Warping has made some of these Magic Animals, who rule the rival clans like royalty. The pool at the centre is the regio's entrance. The asps' bodies are vis, usually eaten quickly by the magical mongooses for Transformation.\n\nThe Temple: its roof rests on columns carved as four handmaidens, each face many times repeated. Walls hold spells of midwifery and healing in Koine Greek and Ancient Egyptian, some studied as texts on the Arts of Learned Magicians, though not quite the same Arts; Quality is what a 13th-century magician can draw from them. Two statues of Sekhmet, bows drawn, each loose a fiery arrow a round at anyone in the temple unless Cleopatra's name is intoned. Four priestess handmaidens died to guard her, and their ghosts haunt the place, sorceresses in healing, in destruction, in transformation and in control and enchantment.\n\nThe Tomb: an inclined passage from the temple levels off, with the soporific trap, then turns at the pit. The burial chamber, directly under the temple's statue of Isis, has a cursed door. The body lies under a net of pure gold, in a painted wooden coffin shaped like the queen, in a gold sarcophagus, in a stone sepulcher, ringed by four goddess statues with heads of vulture, lioness, crocodile and asp. A hidden way in the rear wall leads by a short corridor to a second, cursed door and the treasury of Ptolemaic Egypt: over ten thousand Mythic Pounds of gold, gems and ivory, a legendary source of income.\n\nLibrary: later history of Roman Egypt, summa on Area Lore: Egypt, Koine Greek, Level 5, Quality 9. Medicinal herbs, tractatus on Medicine, Demotic, Quality 10. Healing spells, tractatus on the Learned Magician Form Salutem, Demotic, Quality 11. Magical wards, summa on the Learned Magician Technique Tueor, Demotic, Level 10, Quality 7. Eight formulae for pharmaceutical theriacs, Demotic, 5 BP each (Art & Academe p. 77). Creation myth, tractatus on Faerie Lore, Demotic, Quality 7. Handmaidens' diaries on crumbling papyrus: three tractatus on Charm, Etiquette and Intrigue, Koine Greek, Quality 5.\n\nSpecialists: four ghostly priestesses, each with the equivalent of one Hermetic Technique at 20; five mongoose monarchs, Leadership 5.\n\nVis sources, a year: 5 Animal (slain asps), 2 Aquam (the pool), 3 Herbam (exotic fruit), 1 Ignem (a potsherd exposed to a Destroying Uraeus), 3 Terram (an item worth at least 10 Mythic Pounds left a year in the treasure chamber). Vis stocks: 10 Creo (unguents, pastes, medicines), 5 Imaginem (cosmetics, perfumes), 30 Terram (gold objects in the treasure room)."
       },
       {
         "id": "the_coptic_monks_and_their_libraries",
@@ -2530,7 +2858,7 @@
         "id": "the_house",
         "name": "The House",
         "kind": "faction",
-        "summary": "A school, said to lie in the citadel's grounds, that prepares agents for the sultan's service. It seems to take few students, perhaps twelve at a time, and no one outside is sure what they learn. Egypt's finest smith is trained here and kept on to teach his successor; so is an alchemist, though some Coptic monks might contest his claim to be the greatest; so are diplomats and, it is rumoured, assassins. Some think the teaching changes with the troubles the sultan's advisers foresee (p. 61). It is in effect a machine for intense teaching, which also trains specialists in how to teach.\n\nTeacher of the House (Mystery Initiation path, p. 61). The mystagogue needs Lore of the House, an Organization Lore; its Ability also covers the House's history, students, missions and resources. Gifted initiates may have faster paths; most use these. Good Teacher: Presence + Lore of the House 6, a ritual Ordeal with items from the ancient House, the Flaw of loyalty; script +9 for the total of 15. Affinity with Teaching: Presence + Lore 8; a pilgrimage to find a great and charismatic teacher and a hard task spreading his message; script +7 (place and time +3, quest +3, loss of time +1). Improved or Great Communication: Presence + Lore 8; a rite at an ancient library invoking the goddess Seshat, whom the initiate must persuade with Communication + Charm against 12. Failure means being Spirited Away to keep her library in Faerie until the next solar eclipse in Egypt, which astrologers can foretell. Success, or escape, gives 3 Characteristic points for Communication, or the Great Characteristic Virtue if it is already 3; script +7. Errata p. 14: this path is for the unGifted, who must take an Ordeal at every Initiation, yet two of these have none; the errata leave it to the troupe.\n\nChild of the House (Major General Virtue, p. 61; not in the catalog): raised by the House, studying four seasons a year under the finest teachers until active service. In the Later Life stage of advanced creation the character may spend 30 xp a year on any Ability that needs no Supernatural Virtue. Fanatically loyal to the sultan, or perhaps only to the House, and able to hide it; must take the Code of Honor Major Flaw.\n\nAgent of the Sultan (Major General Virtue, p. 61; not in the catalog): whatever resources the sultan's advisers think necessary, in a way the equal of Wealthy. Three seasons a year of training between assignments unless a cover needs work; agents in Cairo may use the House's facilities if the advisers agree. No agent may leave the service; one who has faked his death, say, has Dark Secret.",
+        "summary": "A school, said to lie in the citadel's grounds, that prepares agents for the sultan's service. It seems to take few students, perhaps twelve at a time, and no one outside is sure what they learn. Egypt's finest smith is trained here and kept on to teach his successor; so is an alchemist, though some Coptic monks might contest his claim to be the greatest; so are diplomats and, it is rumoured, assassins. Some think the teaching changes with the troubles the sultan's advisers foresee (p. 61). It is in effect a machine for intense teaching, which also trains specialists in how to teach.\n\nTeacher of the House (Mystery Initiation path, p. 61). The mystagogue needs Lore of the House, an Organization Lore; its Ability also covers the House's history, students, missions and resources. Gifted initiates may have faster paths; most use these. Good Teacher: Presence + Lore of the House 6, a ritual Ordeal with items from the ancient House, the Flaw of loyalty; script +9 for the total of 15. Affinity with Teaching: Presence + Lore 8; a pilgrimage to find a great and charismatic teacher and a hard task spreading his message; script +7 (place and time +3, quest +3, loss of time +1). Improved or Great Communication: Presence + Lore 8; a rite at an ancient library invoking the goddess Seshat, whom the initiate must persuade with Communication + Charm against 12. Failure means being Spirited Away to keep her library in Faerie until the next solar eclipse in Egypt, which astrologers can foretell. Success, or escape, gives 3 Characteristic points for Communication, or the Great Characteristic Virtue if it is already 3; script +7. Errata p. 14: this path is for the unGifted, who must take an Ordeal at every Initiation, yet two of these have none; the errata leave it to the troupe.\n\nIts pupils and agents take the Virtues Child of the House and Agent of the Sultan (p. 61).",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -4081,7 +4409,7 @@
         "id": "the_nubian_slave_trade",
         "name": "The Nubian Slave Trade",
         "kind": "faction",
-        "summary": "Slaves are all three kingdoms' chief export. They come from the Slavelands, the vast pasture south and west of Alodia, with its peaceful unorganised herders, trekked hundreds of miles and driven north to Egypt (p. 77). Details of those peoples are in chapter 9.\n\nThe Christian kingdoms promote the trade yet abhor keeping slaves. Most bishops think it unbecoming and do nothing. The chief excuse is the Baqt, though it has weakened since 1172 and takes only a third of the slaves passing through; the rest are for profit. Promoters call the captives barely better than beasts, or say slavery is a better life than the Slavelands' wild beasts and cannibals. When the Baqt is missed it is rarely conscience, but refusal to pay the slavers' prices, no will to regulate them, and few ways to undercut them; sometimes famine or disease in the Slavelands, and rarely a whole lost expedition (p. 77).\n\nOwning slaves is legal but not acceptable in any Nubian kingdom. Unlike Europe's, slave owners in Egypt and Nubia need no Virtue, and may hold what suits their wealth; a Christian owner in a Christian kingdom has a Local Reputation of 1. Slavers take Merchant if they transport or Mercenary Captain if they capture, and are likely Well-Traveled (p. 75).\n\nPlaying it (p. 75): slave stories need care for modern sensibilities. Favored Slave (Minor Social Status Flaw) and Chattel Slave (Major Story and Social Status Flaw) are printed on p. 76 and are not in the catalog; they differ from Guardians of the Forests' p. 102. A favored slave is wholly his master's, with no belongings but what he is given, but fed and decently housed. A chattel slave has this and no special standing, and stories come of it; the player settles the source of the tension, and how the character can be with the others, such as being on loan. Not for grogs. Reasons for a lax master: an inherited slave who cannot be freed without insult, a long loyal line, a vital skill, a self-sale to avert a worse fate. Stories for a chattel slave: escaped and hunted; seeking captured family; a dead master no one knows of; crimes hidden from the master or forced by him; a favoured slave envied; a master's enemies striking through him. Those truly free of their master count as free Aithiopians.\n\nA free Aithiopian marks himself apart: Outsider if he keeps tribal ways, Outcast if he has taken local ones, in any saga outside the Slavelands. He will be taken for a slave in any Arab land, but without a Story Flaw that can usually be settled. Story Flaws may tie him here: Dependents or a True Love sold north, Close Family Ties, a former owner as Enemy, a Feud with his captor. A campaigner against slavery likely has Driven, Temporal Influence or Social Contacts, and Enemies. Abolishing the trade means renegotiating or ending the Baqt; petitioning the Church is a fine start, and what the bishops ask in return may make stories.",
+        "summary": "Slaves are all three kingdoms' chief export. They come from the Slavelands, the vast pasture south and west of Alodia, with its peaceful unorganised herders, trekked hundreds of miles and driven north to Egypt (p. 77). Details of those peoples are in chapter 9.\n\nThe Christian kingdoms promote the trade yet abhor keeping slaves. Most bishops think it unbecoming and do nothing. The chief excuse is the Baqt, though it has weakened since 1172 and takes only a third of the slaves passing through; the rest are for profit. Promoters call the captives barely better than beasts, or say slavery is a better life than the Slavelands' wild beasts and cannibals. When the Baqt is missed it is rarely conscience, but refusal to pay the slavers' prices, no will to regulate them, and few ways to undercut them; sometimes famine or disease in the Slavelands, and rarely a whole lost expedition (p. 77).\n\nOwning slaves is legal but not acceptable in any Nubian kingdom. Unlike Europe's, slave owners in Egypt and Nubia need no Virtue, and may hold what suits their wealth; a Christian owner in a Christian kingdom has a Local Reputation of 1. Slavers take Merchant if they transport or Mercenary Captain if they capture, and are likely Well-Traveled (p. 75).\n\nPlaying it (p. 75): slave stories need care for modern sensibilities. A slave character takes the Favored Slave or Chattel Slave Flaw (p. 76), which differ from Guardians of the Forests' Slave (p. 102). Reasons for a lax master: an inherited slave who cannot be freed without insult, a long loyal line, a vital skill, a self-sale to avert a worse fate. Stories for a chattel slave: escaped and hunted; seeking captured family; a dead master no one knows of; crimes hidden from the master or forced by him; a favoured slave envied; a master's enemies striking through him. Those truly free of their master count as free Aithiopians.\n\nA free Aithiopian marks himself apart: Outsider if he keeps tribal ways, Outcast if he has taken local ones, in any saga outside the Slavelands. He will be taken for a slave in any Arab land, but without a Story Flaw that can usually be settled. Story Flaws may tie him here: Dependents or a True Love sold north, Close Family Ties, a former owner as Enemy, a Feud with his captor. A campaigner against slavery likely has Driven, Temporal Influence or Social Contacts, and Enemies. Abolishing the trade means renegotiating or ending the Baqt; petitioning the Church is a fine start, and what the bishops ask in return may make stories.",
         "detail": "Sketch",
         "ruler": "",
         "answers_to": null,
@@ -5934,13 +6262,91 @@
           "tethers": "",
           "status": "Known",
           "known": "Locally",
-          "levels": []
+          "levels": [],
+          "tomb": true,
+          "tomb_kind": "major_monarch",
+          "tomb_boons": "Aura x2 (Site, Minor), Seclusion (Site, Minor)",
+          "tomb_hooks": "Evil Custom (Site, Minor), Inhuman Covenfolk (Residents, Minor), Seed of Madness (Residents, Minor)",
+          "tomb_hook_points": 3,
+          "tomb_other": "library 45, specialists 56, vis sources 35",
+          "tomb_other_bp": 136,
+          "tomb_curses": [
+            {
+              "name": "Those That Enter My Tomb in Their Impurity",
+              "kind": "Greater Malediction",
+              "art": "PeCo",
+              "level": 45,
+              "rdt": "Touch, Special, Room",
+              "uses": 1,
+              "condition": "Those that enter the tomb in their impurity",
+              "excoriation": "Their flesh shall decay and their bones perish: the Enfeebled Major Flaw. Written in Meroitic on the entrance. Artanyeszame's Might makes him immune, and his purification rite protects his servants. (Base 30, +1 Touch, +2 Room.)"
+            }
+          ],
+          "tomb_wards": [
+            {
+              "name": "Shroud of Sands",
+              "art": "ReTe",
+              "level": 25,
+              "uses": "24/day",
+              "effect": "A cloak of sandstone disks on twine, moving up to ten thousand cubic paces of sand, enough to bury the pyramid or dig out the tunnel to the burial chamber; slow, and a threat only to the immobile (Base 1, +2 Voice, +1 Conc, +1 Part, +3 Size; +5 24 uses/day)."
+            },
+            {
+              "name": "Glory of the Royal Lion",
+              "art": "ReCo",
+              "level": 40,
+              "penetration": 12,
+              "uses": "12/day",
+              "effect": "A statue of Apedemak whose lit eyes hold one looker a round, until its uses end, motionless save to keep facing it, even out of sight; they starve unless released (Base 5, +1 Eye, +3 Moon, +1 release; +4 12/day, +6 Pen 12).",
+              "deactivation": "A command word in Meroitic releases those held"
+            },
+            {
+              "name": "Sovereign Ward Against Wandering Shadows",
+              "kind": "Ward",
+              "art": "ReMe",
+              "level": 57,
+              "penetration": 26,
+              "uses": "constant",
+              "ease": 24,
+              "effect": "No spirit of Might 25 or less enters or leaves the pyramid if it Penetrates. Queen Weteriken, trapped by it, claims to have enchanted it herself; Artanyeszame gained his Might inside and is immune (Base 25, +0 Touch, +0 Sun, +3 Structure; +1 2/day, +3 environmental trigger, +13 Pen 26)."
+            }
+          ],
+          "tomb_traps": [
+            {
+              "name": "The Receding Steps",
+              "harm": "fatal",
+              "ease": 9,
+              "roll": "Str + Athletics - Encumbrance",
+              "text": "The steps to the burial chamber recede into a smooth 20 pace ramp ending on a hard floor, +30 damage; the roll catches the sides."
+            },
+            {
+              "name": "The False Burial Chamber",
+              "harm": "scare",
+              "ease": 9,
+              "roll": "Per + Bargain",
+              "text": "Filled with fake treasure, and good for an ambush; the roll sees through it from outside."
+            },
+            {
+              "name": "The Rain of Poisoned Darts",
+              "harm": "minor",
+              "further_bp": 12,
+              "ease": 6,
+              "roll": "Sta",
+              "text": "Each person is struck by 1-6 darts, each a Light Wound unless the roll is made (average 3 Light Wounds)."
+            },
+            {
+              "name": "The Falling Slab",
+              "harm": "serious",
+              "ease": 12,
+              "roll": "Qik + Athletics - Encumbrance",
+              "text": "A massive stone slab, +15 damage, which traps people on the wrong side; the roll dives clear."
+            }
+          ]
         },
         "attitudes": [],
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "Artanyeszame's home. His court of the dead, of strength 181 over four dozen corpses, among them King Arrakkamani and his mother Weteriken, is posed in a chamber as if at audience, paying homage to the central throne where he broods. Magic aura 6, aligned to the dead. The book scores the lair as a covenant site, for 259 Build Points overall (p. 92).\n\nBoons: Aura x2 (Site, Minor), Seclusion (Site, Minor). Hooks: Evil Custom (Site, Minor), Inhuman Covenfolk (Residents, Minor), Seed of Madness (Residents, Minor).\n\nCovenfolk: the three bouda sisters and a dozen magical hyenas, some with Magic Sensitivity, who can find Corpus vis in the necropolis's long-buried dead, and are prone to bouts of madness.\n\nLibrary (45 Build Points): Inscription on Petitioning the Dead, a summa on Corpse Magic, Level 8, Quality 6; Initiation Script for Corpse Magic, Script Bonus +15. Specialists (56): two altar priests (Magic Lore 5), four grave guardians (Single Weapon 4), the ghost of Queen Weteriken, the three bouda. Vis (35): 2 pawns of Vim a year (paint flecks from magical texts), 4 of Corpus (bodies robbed by hyenas), 1 of Ignem (glass exposed to the dawn sun on the rising of Sirius).\n\nCurse (18): whoever comes in impure, his flesh shall rot and his bones fail. A Greater Malediction that inflicts Enfeebled. His Might makes him immune, and his purification rite protects his servants. PeCo 45; Pen 0, 1/day; Base 30, +1 Touch, +2 Room.\n\nEnchantments (52). Shroud of Sands (Ease 11, 10 Build Points): a cloak of sandstone disks on twine, moving up to ten thousand cubic paces of sand, enough to bury the pyramid or dig out the tunnel to the burial chamber; slow, and a threat only to the immobile. ReTe 25 (Base 1, +2 Voice, +1 Conc, +1 Part, +3 Size; +5 24 uses/day). Glory of the Royal Lion (Ease 14, 16): a statue of Apedemak whose lit eyes hold one looker a round, until its uses end, motionless save to keep facing it, even out of sight; they starve unless released by a Meroitic command word. ReCo 40 (Base 5, +1 Eye, +3 Moon, +1 release; +4 12/day, +6 Pen 12). Sovereign Ward Against Wandering Shadows (Ease 24, 24): no spirit of Might 25 or less enters or leaves the pyramid if it Penetrates; Artanyeszame gained his Might inside and is immune. ReMe 57 (Base 25, +0 Touch, +0 Sun, +3 Structure; +1 2/day, +3 environmental trigger, +13 Pen 26).\n\nTraps (55). The steps to the burial chamber recede into a smooth 20 pace ramp ending on a hard floor, +30 damage; Str + Athletics - Encumbrance against 9 to catch the sides (15 Build Points). A false burial chamber of fake treasure, good for an ambush; Per + Bargain against 9 to see through it from outside (6). A rain of poisoned darts: 1-6 each, each a Light Wound unless Stamina beats 6 (average 3 Light Wounds; 19). A falling stone slab, +15 damage, which traps people on the wrong side; Qik + Athletics - Encumbrance against 12 to dive clear (15)."
+        "secrets": "Artanyeszame's home. His court of the dead, of strength 181 over four dozen corpses, among them King Arrakkamani and his mother Weteriken, is posed in a chamber as if at audience, paying homage to the central throne where he broods. Magic aura 6, aligned to the dead. The book scores the lair as a covenant site, for 259 Build Points overall (p. 92); the Tomb tab holds its curse, enchantments and traps.\n\nCovenfolk: the three bouda sisters and a dozen magical hyenas, some with Magic Sensitivity, who can find Corpus vis in the necropolis's long-buried dead, and are prone to bouts of madness.\n\nLibrary (45 Build Points): Inscription on Petitioning the Dead, a summa on Corpse Magic, Level 8, Quality 6; Initiation Script for Corpse Magic, Script Bonus +15. Specialists (56): two altar priests (Magic Lore 5), four grave guardians (Single Weapon 4), the ghost of Queen Weteriken, the three bouda. Vis (35): 2 pawns of Vim a year (paint flecks from magical texts), 4 of Corpus (bodies robbed by hyenas), 1 of Ignem (glass exposed to the dawn sun on the rising of Sirius)."
       },
       {
         "id": "the_master_of_abu_hamad",
@@ -6406,7 +6812,7 @@
             "kind": "places",
             "target_id": "ceto_s_well",
             "note": "Ceto's old hunting ground",
-            "id": "f4f3cb056939"
+            "id": "25799bbb0e4b"
           }
         ],
         "arms": {},
@@ -9181,7 +9587,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_imhotep",
             "note": "",
-            "id": "ba4f3ff2c938"
+            "id": "db71003cae34"
           }
         ],
         "agents": [],
@@ -9376,7 +9782,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_marcus_antonius",
             "note": "",
-            "id": "27347a0607de"
+            "id": "22778778a2d7"
           }
         ],
         "agents": [],
@@ -9759,7 +10165,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "ff01e7c5e134"
+            "id": "918699a29168"
           }
         ],
         "agents": [],
@@ -9954,7 +10360,7 @@
             "kind": "knows of",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "7a623e24779d"
+            "id": "c0b372ecf316"
           }
         ],
         "agents": [],
@@ -10184,6 +10590,14 @@
           }
         ],
         "virtues_flaws": [
+          {
+            "vf_id": "vf_learned_magician",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
           {
             "vf_id": "vf_transformed_human",
             "params": {},
@@ -10886,7 +11300,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Magic Might 25 (Corpus). Season: Winter. Magic Human: Transformed Human. Characteristics before aging: Int +2, Per +1, Pre -1, Com +2, Str 0, Sta +1, Dex +1, Qik -1. His court bought him Might 16; the nine Improved Might came by consuming vis (Realms of Power: Magic p. 52).\n\nLearned Magician, his printed Social Status, is not in the catalog. Harnessed Magic is a Hermetic Virtue lost with the Gift. Transformed Human, Unnatural Vitality, Dedun's Blessing, Enfeebled and his Vow came by Initiation. His Enemies are the Mortuary Society of Kassala.\n\nCombat: Scepter (mace) Init -2, Attack +4, Defense 0, Damage +5. Soak 0. Fatigue OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+). Encumbrance 1 (1). Equipment: robes, sceptre.\n\nPowers. Chariot of the Winds: 1 point, Init -2, Auram. A wind carries him where he likes at up to 40 miles an hour; hovering takes Concentration rolls. Cr(Re)Au 30 (Base 5, +1 Touch, +1 Conc, +2 highly unnatural, +1 requisite); Greater Power (30 levels, -2 cost, +2 Init).\n\nLord of the Incorporeal: variable points, Init minus (Might cost + 1), Mentem. Any non-Ritual spell of level 50 or less to do with ghosts, at 1 Might a magnitude: often Whispers Through the Black Gate (3 points, ArM5 p. 130), Vision of the Haunting Spirit (8, p. 150), Lay to Rest the Haunting Spirit (1-5, p. 150) and Coerce the Spirit of the Night (4, p. 152), and more exotic uses such as restoring a ghost's memories or giving it a passing body. Focus Power x2, with Improved Powers to raise the limit.\n\nRestore the Faded Tapestry of Youth: 4 points, Init -6, Corpus. The Dungeon Master: 1 point, Init -4, Imaginem. Both as the Undying Ones' common powers (p. 101): the first sheds his aging points for about an hour, with one Characteristic one above his best (Cr(Mu)Co(Me) 45); the second lets him see and hear anything in a structure he touches (InIm 15). The printed Inits use his Qik before aging.\n\nHe casts charms as Hermetic Formulaic spells (Communication + Technique + Form + aura) through Strong Verbal Charms. His formularies hold many hundreds of spells, castable as Spontaneous spells at (Casting Score + stress die) / 2 after tens of minutes finding the right charm (Hedge Magic Revised Edition, chapter 5).\n\nVis: sources of seven pawns a year, and usually ten pawns on him. His corpse holds 5 pawns of Vim in his withered heart.",
+          "biography": "Magic Might 25 (Corpus). Season: Winter. Magic Human: Transformed Human. Characteristics before aging: Int +2, Per +1, Pre -1, Com +2, Str 0, Sta +1, Dex +1, Qik -1. His court bought him Might 16; the nine Improved Might came by consuming vis (Realms of Power: Magic p. 52).\n\nHarnessed Magic is a Hermetic Virtue lost with the Gift. Transformed Human, Unnatural Vitality, Dedun's Blessing, Enfeebled and his Vow came by Initiation. His Enemies are the Mortuary Society of Kassala.\n\nCombat: Scepter (mace) Init -2, Attack +4, Defense 0, Damage +5. Soak 0. Fatigue OK, 0, -1, -3, -5, Unconscious. Wounds -1 (1-5), -3 (6-10), -5 (11-15), Incapacitated (16-20), Dead (21+). Encumbrance 1 (1). Equipment: robes, sceptre.\n\nPowers. Chariot of the Winds: 1 point, Init -2, Auram. A wind carries him where he likes at up to 40 miles an hour; hovering takes Concentration rolls. Cr(Re)Au 30 (Base 5, +1 Touch, +1 Conc, +2 highly unnatural, +1 requisite); Greater Power (30 levels, -2 cost, +2 Init).\n\nLord of the Incorporeal: variable points, Init minus (Might cost + 1), Mentem. Any non-Ritual spell of level 50 or less to do with ghosts, at 1 Might a magnitude: often Whispers Through the Black Gate (3 points, ArM5 p. 130), Vision of the Haunting Spirit (8, p. 150), Lay to Rest the Haunting Spirit (1-5, p. 150) and Coerce the Spirit of the Night (4, p. 152), and more exotic uses such as restoring a ghost's memories or giving it a passing body. Focus Power x2, with Improved Powers to raise the limit.\n\nRestore the Faded Tapestry of Youth: 4 points, Init -6, Corpus. The Dungeon Master: 1 point, Init -4, Imaginem. Both as the Undying Ones' common powers (p. 101): the first sheds his aging points for about an hour, with one Characteristic one above his best (Cr(Mu)Co(Me) 45); the second lets him see and hear anything in a structure he touches (InIm 15). The printed Inits use his Qik before aging.\n\nHe casts charms as Hermetic Formulaic spells (Communication + Technique + Form + aura) through Strong Verbal Charms. His formularies hold many hundreds of spells, castable as Spontaneous spells at (Casting Score + stress die) / 2 after tens of minutes finding the right charm (Hedge Magic Revised Edition, chapter 5).\n\nVis: sources of seven pawns a year, and usually ten pawns on him. His corpse holds 5 pawns of Vim in his withered heart.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -14314,7 +14728,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "a3681e149da6"
+            "id": "a4ca4ee0cbbb"
           }
         ],
         "agents": [],
@@ -14703,7 +15117,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "d94884eededf"
+            "id": "efe40e54fde9"
           }
         ],
         "agents": [],
@@ -15209,7 +15623,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "2ae5cc926dc6"
+            "id": "9889fd18907b"
           }
         ],
         "agents": [],
@@ -15569,7 +15983,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "48f74469a730"
+            "id": "f8cb146acd2f"
           }
         ],
         "agents": [],
@@ -16066,7 +16480,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "248df3a57a42"
+            "id": "6d0e4f7ff720"
           }
         ],
         "agents": [],
@@ -16452,7 +16866,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "c1ee17cfc617"
+            "id": "b705c96e5271"
           }
         ],
         "agents": [],
@@ -16588,6 +17002,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_overrun",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_tough_hide",
             "params": {},
             "id": "",
@@ -16626,7 +17048,7 @@
             "attack": 10,
             "defense": 4,
             "damage": 13,
-            "id": "d4d55d8d0671"
+            "id": "a7bca76b4bc3"
           },
           {
             "name": "Stomp",
@@ -16634,7 +17056,7 @@
             "attack": 9,
             "defense": 0,
             "damage": 11,
-            "id": "d40b7c9e9c95"
+            "id": "8f9ae9789f92"
           }
         ],
         "soak": 6,
@@ -16698,7 +17120,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A huge pig-like beast with a wide mouth of long, peg-like tusks, five feet at the shoulder, up to twelve feet long, over 5000 pounds.",
-        "notes": "Dozing in the mud it looks gentle, but it is fierce, territorial and shares the river with nobody. It gives way only to boats larger than itself, and overturns smaller ones by rising under them. By night it grazes on land, and people die when it thinks its way back to the water is cut off. It walks backwards into fields to fool trackers.\n\nFerocity applies against those in its way. Natural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +4, Def +2, Dam +5.\n\nNew Quality, Overrun (the errata's reading): only when it charged and exerted itself. If the attack hits, the foe rolls Dex + Athletics stress against Damage Total before soak + its Size - his Size. On failure he lands its Size in feet away with falling damage, and spends his next action rising; it normally tramples him next. A prone man cannot parry and defends with Brawl.",
+        "notes": "Dozing in the mud it looks gentle, but it is fierce, territorial and shares the river with nobody. It gives way only to boats larger than itself, and overturns smaller ones by rising under them. By night it grazes on land, and people die when it thinks its way back to the water is cut off. It walks backwards into fields to fool trackers.\n\nFerocity applies against those in its way. Natural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +4, Def +2, Dam +5.\n\nOverrun is the errata's reading (p. 86).",
         "source": "Lands of the Nile p. 18",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -16993,7 +17415,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 8,
-            "id": "9b44bb5a7096"
+            "id": "be9fafbf0fb8"
           }
         ],
         "soak": 12,
@@ -17059,7 +17481,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. Anyone who meets its eyes when it has raised its head falls dead; lifting the head takes a round. PeCo(An) 40 (Base 30, +1 Eye, +1 requisite), a Greater Power (40 levels, -2 Might cost).",
-            "id": "8cb25f401d81"
+            "id": "8d12f1523deb"
           },
           {
             "name": "Noxious Breath",
@@ -17073,7 +17495,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Plants it breathes on turn poisonous to people and animals and streak with black. An eater rolls Stamina stress against 9 or takes a Light Wound and is violently ill for a day; a botch makes it Medium. Medicine, not Chirurgy, treats it. PeHe 15 (Base 3, +2 Voice, +2 Group), a Lesser Power (15 levels, -3 Might cost with 5 mastery points from Improved Powers).",
-            "id": "63d96fcb30e1"
+            "id": "7acc27d1788d"
           },
           {
             "name": "Paralyzing Stench",
@@ -17087,7 +17509,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. It breathes out a foul choking cloud, and in the next round any human or animal within 3 paces who can smell it loses all bodily movement until it stops huffing or moves off. ReCo(An) 25 (Base 5, +1 Conc, +2 Scent, +1 requisite), a Lesser Power (25 levels, -2 Might cost and +2 Init with 20 mastery points from Improved Powers).",
-            "id": "6af0872855d2"
+            "id": "8d5299fe69ac"
           }
         ],
         "vis": [
@@ -17095,7 +17517,7 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its eyes",
-            "id": "00b5dfee6aab"
+            "id": "85f695704d48"
           }
         ],
         "equipment": "",
@@ -17226,6 +17648,22 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_crushing_jaws",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_roll_attack",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_thick_fur_thick_scales",
             "params": {},
             "id": "",
@@ -17283,7 +17721,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 12,
-            "id": "fc38b35eab61"
+            "id": "af07d5c7662c"
           }
         ],
         "soak": 12,
@@ -17357,26 +17795,11 @@
             "xp_table": "ability"
           }
         ],
-        "powers": [
-          {
-            "name": "Death Roll",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. The round after a successful bite it may roll, twisting off flesh for +6 damage with no attack roll; the victim soaks without armour's Protection. More often it drags him under to drown, waiting by its Amphibious Quality. Each round he may try to break free by overcoming a Grapple of Strength 10, and if he does it is likely to bite again.",
-            "id": "c3c0e2d73280"
-          }
-        ],
+        "powers": [],
         "vis": [],
         "equipment": "",
         "appearance": "Fifteen to eighteen feet of thick scales, in yellows, greens and browns that hide it perfectly in water or out. Its name is said to come from the yellow of the crocus.",
-        "notes": "The corkendrile is the feared killer of the Nile and its tributaries. It dreads the mongoose, which finds its nest to kill the young and will even crawl down its throat. These figures are for fifteen feet; thirty-foot (Size +5) or larger beasts are reported. This is tougher than the crocodile of Magi of Hermes p. 11.\n\nFerocity applies in ambush. Also has Crushing Jaws (p. 22): +3 damage on a bite, but a successful Grapple holds its jaws shut. Natural weapon: Init 0, Atk +4, Def +1, Dam +3, before Crushing Jaws. Its scales count as Protection 5 besides its Virtues and Qualities.\n\nIt holds its breath half an hour moderately active, two hours inactive. +3 to Stealth when still or slow in water. If it takes its victim unawares it automatically wins Initiative and has +3 to Attack Totals in the first round.",
+        "notes": "The corkendrile is the feared killer of the Nile and its tributaries. It dreads the mongoose, which finds its nest to kill the young and will even crawl down its throat. These figures are for fifteen feet; thirty-foot (Size +5) or larger beasts are reported. This is tougher than the crocodile of Magi of Hermes p. 11.\n\nFerocity applies in ambush. Natural weapon: Init 0, Atk +4, Def +1, Dam +3, before Crushing Jaws (p. 22). Its scales count as Protection 5 besides its Virtues and Qualities. Roll Attack is the book's Death Roll (errata p. 87).\n\nIt holds its breath half an hour moderately active, two hours inactive. +3 to Stealth when still or slow in water. If it takes its victim unawares it automatically wins Initiative and has +3 to Attack Totals in the first round.",
         "source": "Lands of the Nile p. 19",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -17532,6 +17955,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_overrun",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_sharp_ears_quality",
             "params": {},
             "id": "",
@@ -17540,7 +17971,23 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_thick_fur_thick_scales",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_tough_hide",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_trunk",
             "params": {},
             "id": "",
             "temporary": false,
@@ -17578,7 +18025,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "9cbf666bff3f"
+            "id": "0144adc013bf"
           },
           {
             "name": "Stomp",
@@ -17586,7 +18033,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "2898251979be"
+            "id": "5b0e2a140eac"
           },
           {
             "name": "Trunk (grapple)",
@@ -17594,7 +18041,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "59e1b71ae8f3"
+            "id": "e118b011a650"
           }
         ],
         "soak": 10,
@@ -17661,40 +18108,11 @@
             "xp_table": "ability"
           }
         ],
-        "powers": [
-          {
-            "name": "Trunk",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Handles things like a human hand; tasks needing two hands are at -3.",
-            "id": "6cbf82438828"
-          },
-          {
-            "name": "Overrun",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Only when it charged and exerted itself. If the attack hits, the foe rolls Dex + Athletics stress against Damage Total before soak + its Size - his Size. On failure he lands its Size in feet away with falling damage and spends his next action rising; it normally tramples him next. A prone man cannot parry and defends with Brawl.",
-            "id": "e3df733bd089"
-          }
-        ],
+        "powers": [],
         "vis": [],
         "equipment": "",
         "appearance": "The African elephant stands up to 12 feet, 22 feet long, up to 14,000 pounds. These are the fiercer male's figures; a female can weigh half as much, with small, useless tusks.",
-        "notes": "Once down an elephant cannot get up, so it sleeps leaning on a tree, and hunters cut part way through its favourite. Dragons and great serpents by the Nile prey on it, yet a pig's squeal terrifies it. It has no wish to mate: the pair must eat of one mandragora root. A cow carries two years and bears one calf, and an elephant may live three hundred years.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Also has Thick Skin. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.\n\nOnly the herd leader has Leadership, and the Pack/Herd Leader Quality rather than Herd Animal.\n\nFemale: Size +4, -2 Strength, +1 Quickness; no Aggressive, Extra Natural Weapons or Large Horns (Tusks) Qualities and no Ferocity; Brawl 4 (dodge); no Tusk attack; Communication -5.",
+        "notes": "Once down an elephant cannot get up, so it sleeps leaning on a tree, and hunters cut part way through its favourite. Dragons and great serpents by the Nile prey on it, yet a pig's squeal terrifies it. It has no wish to mate: the pair must eat of one mandragora root. A cow carries two years and bears one calf, and an elephant may live three hundred years.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.\n\nOnly the herd leader has Leadership, and the Pack/Herd Leader Quality rather than Herd Animal.\n\nFemale: Size +4, -2 Strength, +1 Quickness; no Aggressive, Extra Natural Weapons or Large Horns (Tusks) Qualities and no Ferocity; Brawl 4 (dodge); no Tusk attack; Communication -5.",
         "source": "Lands of the Nile p. 20",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -17842,7 +18260,7 @@
             "attack": 8,
             "defense": 9,
             "damage": -4,
-            "id": "edec1c573d70"
+            "id": "090b31d2cf19"
           }
         ],
         "soak": 3,
@@ -18081,7 +18499,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "d1e9db290810"
+            "id": "4d1251c9c9aa"
           },
           {
             "name": "Dodge",
@@ -18089,7 +18507,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "b658879e2a3d"
+            "id": "f3425bb1dc37"
           }
         ],
         "soak": 3,
@@ -18160,7 +18578,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "The striped hyena has a massive torso and short hind legs that slope its back, a short muzzle on a large head, and a long, thick, stiff neck.",
-        "notes": "The dhubba lives across the Levant, North Africa, Iraq, Persia and beyond. It can be tamed like a dog, even running in a pack if raised with hounds; though not sacred in ancient Egypt, it hunted desert game there. Greater African beasts (Size +1) are often ridden by jinn or witches, and ghuls often take its shape.\n\nAlso has Crushing Jaws, a new Quality (p. 22): for an animal whose bite is far stronger than the rest of it. +3 Damage on any bite, already in the Bite line, but the muscles that open the mouth are weak and a human can hold it shut with a successful Grapple. Natural weapon: Init 0, Atk +4, Def +1, Dam +3, raised to +6 by Crushing Jaws.",
+        "notes": "The dhubba lives across the Levant, North Africa, Iraq, Persia and beyond. It can be tamed like a dog, even running in a pack if raised with hounds; though not sacred in ancient Egypt, it hunted desert game there. Greater African beasts (Size +1) are often ridden by jinn or witches, and ghuls often take its shape.\n\nNatural weapon: Init 0, Atk +4, Def +1, Dam +3, raised to +6 by Crushing Jaws (p. 22), already in the Bite line.",
         "source": "Lands of the Nile p. 22",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -18309,7 +18727,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "0cd96712ed4b"
+            "id": "3dc0b04f199b"
           },
           {
             "name": "Kick (as hoof)",
@@ -18317,7 +18735,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 2,
-            "id": "eb2187143ef6"
+            "id": "cecff8c7e707"
           },
           {
             "name": "Thrown Stone",
@@ -18325,7 +18743,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 6,
-            "id": "8d94e2d5cd10"
+            "id": "d02f4fbe92bb"
           }
         ],
         "soak": 4,
@@ -18483,6 +18901,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_constriction",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_grapple",
             "params": {},
             "id": "",
@@ -18500,6 +18926,14 @@
           },
           {
             "vf_id": "vf_slippery",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_swallow_whole",
             "params": {},
             "id": "",
             "temporary": false,
@@ -18535,7 +18969,7 @@
             "attack": 10,
             "defense": 6,
             "damage": 9,
-            "id": "05e724d869e6"
+            "id": "b9c59e006c33"
           },
           {
             "name": "Grapple",
@@ -18543,7 +18977,7 @@
             "attack": 8,
             "defense": 12,
             "damage": null,
-            "id": "cffd63e4daae"
+            "id": "72d9705f5ea2"
           }
         ],
         "soak": 3,
@@ -18610,40 +19044,11 @@
             "xp_table": "ability"
           }
         ],
-        "powers": [
-          {
-            "name": "Constriction",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Only on a victim of Size +5 or less, by the grappling rules (ArM5 p. 174). While it holds, the victim is deprived of air (ArM5 p. 180) and makes a Stamina check every five rounds. On later rounds it may keep constricting and also bite, at the victim, adding Grapple Strength to the Attack Total, or at someone else. It usually constricts one at a time.",
-            "id": "39ff5ef3f5dc"
-          },
-          {
-            "name": "Swallow Whole",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Swallows anything of Size -1 or less. Prey not first subdued can struggle, still constricted, and must make deprivation rolls even if it escapes the grapple. After three rounds it reaches the stomach: acid does +9 a round, and full immersion makes that +36 (ArM5 p. 181). Each round Strength + Athletics may brace him: 6 half immersion (triple), 9 a limb (double), 12 a splash (normal). It cannot swallow again until the last meal reaches the stomach.",
-            "id": "9ca07a3b292d"
-          }
-        ],
+        "powers": [],
         "vis": [],
         "equipment": "",
         "appearance": "Over 45 feet long and nearly two feet through at the thickest, mottled brown with swirls of olive, black and yellow.",
-        "notes": "They lie in ravines at the foot of hills and deep caves, and gather to feed at rivers where elephants come. Several often attack one elephant as an untrained group; all may grapple, but only one can constrict. They take other prey gladly. One lassoes the legs in a knot of its tail, then smothers the beast, spending a Fatigue level on its first bite and another when it throws its coils. It takes hours to work a dead creature of up to Size +5 into its jaws.\n\nThe Grapple's Defense includes +6 for Slippery. Natural weapon: Init 0, Atk +3, Def +1, Dam +1. If it takes its victim unawares it automatically wins Initiative and has +3 to Attack Totals in the first round. +3 to Stealth when still, and +3 to Perception by smell.",
+        "notes": "They lie in ravines at the foot of hills and deep caves, and gather to feed at rivers where elephants come. Several often attack one elephant as an untrained group; all may grapple, but only one can constrict. They take other prey gladly. One lassoes the legs in a knot of its tail, then smothers the beast, spending a Fatigue level on its first bite and another when it throws its coils. It takes hours to work a dead creature of up to Size +5 into its jaws.\n\nConstriction takes a victim of Size +5 or less; Swallow Whole takes prey of Size -1 or less alive. Prey not first subdued by Constriction can struggle, still constricted (errata p. 87: both are Qualities).\n\nThe Grapple's Defense includes +6 for Slippery. Natural weapon: Init 0, Atk +3, Def +1, Dam +1. If it takes its victim unawares it automatically wins Initiative and has +3 to Attack Totals in the first round. +3 to Stealth when still, and +3 to Perception by smell.",
         "source": "Lands of the Nile p. 23",
         "detail": "Full",
         "place_id": "the_nile_valley",
@@ -18783,7 +19188,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "03c99bd7b7f4"
+            "id": "dd289ccce1e1"
           },
           {
             "name": "Evasion",
@@ -18791,7 +19196,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "a636e145c8f2"
+            "id": "bcd701a22040"
           }
         ],
         "soak": 1,
@@ -20160,7 +20565,7 @@
             "attack": 13,
             "defense": 8,
             "damage": 11,
-            "id": "5b901b259e97"
+            "id": "f42c5e3d450b"
           },
           {
             "name": "Teeth",
@@ -20168,7 +20573,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 8,
-            "id": "083de6fe20f6"
+            "id": "535649401397"
           }
         ],
         "soak": 12,
@@ -20255,7 +20660,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps the animals round it calm and quiet while it kills, up to 50 cows or the like. ReAn 45 (Base 10, +2 Voice, +2 Sun, +2 Group, +1 Size), a Greater Power (45 levels, -3 Might cost, +3 Init with Improved Powers).",
-            "id": "7e7294cfc8ca"
+            "id": "91d9f1c113a1"
           }
         ],
         "vis": [],
@@ -20628,7 +21033,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 12,
-            "id": "b85ce71217bf"
+            "id": "e3350b6fb41e"
           },
           {
             "name": "Bite",
@@ -20636,7 +21041,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 8,
-            "id": "bfb4e1df4d63"
+            "id": "74307e28484b"
           }
         ],
         "soak": 6,
@@ -20702,7 +21107,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its war cry, like a wolf's howl, a hyena's mocking laugh or a setbeast's chitter by various reports. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "191f47693f0a"
+            "id": "5744c2bac48d"
           },
           {
             "name": "Damaging Effect",
@@ -20716,7 +21121,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes all its weapons exceptionally sharp for two minutes: Damage +5. (Base 5, +1 Part, +1 Diameter; base below the Hermetic level, as Realms of Power: Faerie p. 58.)",
-            "id": "7ccb18be6412"
+            "id": "3ed66a2feeab"
           },
           {
             "name": "Decapitate",
@@ -20730,7 +21135,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cleanly removes the head of a victim struck in combat. (Base 40 instant death, +1 Touch, 5 levels on cost.)",
-            "id": "ea69239a6d61"
+            "id": "43013f67f5e9"
           }
         ],
         "vis": [
@@ -20738,7 +21143,7 @@
             "pawns": 5,
             "art": "",
             "where": "in the skull of a dog or hyena, found when the body crumbles at death",
-            "id": "50aebff1985f"
+            "id": "5e6a8d0d09c2"
           }
         ],
         "equipment": "Knives of obsidian or alchemically toughened bronze; light Egyptian armour (boots, pectoral, greaves) or clothes, jewellery.",
@@ -20898,7 +21303,7 @@
             "attack": 17,
             "defense": 4,
             "damage": 27,
-            "id": "694e079bd3cd"
+            "id": "1ff8b12099b5"
           },
           {
             "name": "Bite",
@@ -20906,7 +21311,7 @@
             "attack": 14,
             "defense": 1,
             "damage": 24,
-            "id": "79a45382d203"
+            "id": "8adc540be050"
           }
         ],
         "soak": 8,
@@ -20972,7 +21377,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its hunting roar, like a tremendous lion's, deep enough to rattle the bones. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "e23495921633"
+            "id": "4b383e9b929c"
           },
           {
             "name": "Spirit Away",
@@ -20986,7 +21391,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable Might, Init n/a. See Realms of Power: Faerie ch. 2: sweeps mortals into Faerie, more easily as they transgress sacred or moral bounds. Its lands there look much like Giza at dawn, where it hunts and eats its victims. It has +10 Might in Faerie.",
-            "id": "01d90930d0ac"
+            "id": "2f224ea640c5"
           },
           {
             "name": "Extend Glamour",
@@ -21000,7 +21405,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. A God of Dawn: in Faerie it may make it dawn at will, gaining 10 Might, and uses cascading dawns to strip away effects that end at dawn: magi must let Parma Magica fail or spend each round on the ritual. It also tells it where its quarry is. It must penetrate, but few can resist its Might.",
-            "id": "9176e0b8ce60"
+            "id": "36af66249b05"
           }
         ],
         "vis": [
@@ -21008,7 +21413,7 @@
             "pawns": 13,
             "art": "",
             "where": "the skull of a pharaoh built into it",
-            "id": "7923d7e979fd"
+            "id": "f62a85b2cdd4"
           }
         ],
         "equipment": "",
@@ -21163,7 +21568,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 3,
-            "id": "c62800c858bc"
+            "id": "cf87cd5eabf1"
           },
           {
             "name": "Agricultural or craft tool",
@@ -21171,7 +21576,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 6,
-            "id": "6f1737a94318"
+            "id": "fbdfc2024827"
           }
         ],
         "soak": 1,
@@ -21237,7 +21642,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stops mothers making milk for their babies. (ReCo 3, the symptoms of a minor illness, Art & Academe p. 57, +1 Touch, +2 Sun; Realms of Power: Magic p. 102.)",
-            "id": "c8720505078c"
+            "id": "c376ddb9dc0e"
           },
           {
             "name": "Dream Manipulation",
@@ -21251,7 +21656,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enters a victim's dreams, and though it cannot change them at once, can darken them and add frights. (After the weaker Envisioning, Realms of Power: The Infernal p. 32.)",
-            "id": "23a243e1f401"
+            "id": "35f1d2cc10f2"
           },
           {
             "name": "Ghost Touch",
@@ -21265,7 +21670,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost, Init Qik - Might spent. Moves objects not held or fastened: 5 pounds for 1 point, doubled per extra point. Hurled, it uses Thrown Weapon, damage +5 per point. With a Martial Ability it may fight through the power, on its own Abilities and Characteristics; physical attacks must Penetrate. It lasts until the object is dropped. (Focus power, ReTe25, Realms of Power: Magic p. 102.)",
-            "id": "8eccb1c21ae0"
+            "id": "fd3768f26c5a"
           },
           {
             "name": "Lesser Eidolon",
@@ -21279,7 +21684,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An immaterial illusory form to deal with mortals, lasting until no longer needed: a see-through image of the person at their best, so a man has a wise old face and a twenty-year-old's belly. (CrIm15: Base 2, +1 Touch, +2 Conc, +2 move at command, 1 intricacy; redesigned from Realms of Power: Magic p. 102.)",
-            "id": "1a0a4b7cb154"
+            "id": "e64af7204290"
           },
           {
             "name": "Possession",
@@ -21293,7 +21698,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 or more points. If it penetrates, the mut directly controls the victim. A supernatural power of the host, spells included, costs 1 Might per magnitude. An act against the host's nature means beating her Personality Trait roll with a stress die + Might spent; the storyguide may modify the trait (Entrancement, ArM5 p. 65). Both costs apply if both are true. Under direct control she has the mut's Magic Resistance but is stopped by wards that would stop it; acting freely she has neither. (Realms of Power: Faerie p. 71.)",
-            "id": "8dcfee34e215"
+            "id": "a1767d03e01b"
           }
         ],
         "vis": [
@@ -21301,7 +21706,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "a prized possession",
-            "id": "6dae5b915b4e"
+            "id": "7e667db6e0f1"
           }
         ],
         "equipment": "Clothes and grave goods. The ghost's weapon reappears in its hand when needed. Some soldier ghosts wear armour.",
@@ -21570,7 +21975,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 5,
-            "id": "56c7c4c8083d"
+            "id": "a66249315255"
           }
         ],
         "soak": 0,
@@ -21622,7 +22027,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a statue of itself as a body. (ReTe 25; Personal Power, 25 levels, -3 Might cost, +2 Init from Improved Powers.)",
-            "id": "ff0d6e9f0244"
+            "id": "368c9f46ca4e"
           },
           {
             "name": "Thief after death",
@@ -21636,7 +22041,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries material objects in his hands. (Base 3, +1 Touch, +1 Conc; Lesser Power, 10 levels, -1 Might cost.)",
-            "id": "22f6ec74ea2e"
+            "id": "23f339f8e6b3"
           },
           {
             "name": "Strangler",
@@ -21650,7 +22055,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Chokes a victim with his hands, costing a Fatigue level. (PeCo 15: Base 10, +1 Touch; Lesser Power, 15 levels, -3 Might cost, +1 Init.)",
-            "id": "e1708da7caea"
+            "id": "ab3c65d0d460"
           }
         ],
         "vis": [
@@ -21658,7 +22063,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "hand",
-            "id": "63365f2b8818"
+            "id": "88a128a648e8"
           }
         ],
         "equipment": "",
@@ -21869,7 +22274,7 @@
             "attack": 17,
             "defense": 14,
             "damage": 12,
-            "id": "025452551f52"
+            "id": "a70deb40a47c"
           },
           {
             "name": "Kick",
@@ -21877,7 +22282,7 @@
             "attack": 8,
             "defense": 5,
             "damage": 11,
-            "id": "978769d84b60"
+            "id": "e68c42d6e148"
           }
         ],
         "soak": 21,
@@ -21914,7 +22319,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReTe30; Personal Powers x2 (30 levels, -3 Might cost, +1 Init).",
-            "id": "cde22139aabd"
+            "id": "aa59a9ff9548"
           }
         ],
         "vis": [
@@ -21922,7 +22327,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "axe",
-            "id": "434bc323ef9a"
+            "id": "602347e0ef9f"
           }
         ],
         "equipment": "Axe; breastplate (Egyptians did not use full scale armour).",
@@ -22468,7 +22873,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 16,
-            "id": "ba93f7aef47e"
+            "id": "bc28d76306d5"
           },
           {
             "name": "Bow",
@@ -22476,7 +22881,7 @@
             "attack": 8,
             "defense": 4,
             "damage": 8,
-            "id": "de18e158190e"
+            "id": "92057c4ef505"
           }
         ],
         "soak": 11,
@@ -22710,7 +23115,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Creates a swarm of 60,000 mice under his complete control. (Base 15, +2 Sun, +2 Group, +1 control as a Rego requisite, +2 mice can turn immaterial to pass barriers, as Muto Mentem requisites.)",
-            "id": "29c27ace0e31"
+            "id": "e335c9c58a43"
           },
           {
             "name": "Immateriality",
@@ -22724,7 +23129,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Immaterial until sunrise or nightfall. (Base 30, +2 Sun.)",
-            "id": "1b453fb4459e"
+            "id": "134a7e3fd5ef"
           },
           {
             "name": "Invisibility",
@@ -22738,7 +23143,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility, ArM5 p. 146. (Base 4, +2 Sun, +1 moving image, 5 levels spent to reduce cost.)",
-            "id": "9b38a913b97f"
+            "id": "0da8e2f61233"
           },
           {
             "name": "Lord of the Black",
@@ -22752,7 +23157,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Black (fresh water, rain, fertile earth and the like), at 1 Might per Hermetic magnitude.",
-            "id": "d7a8f04a7ac5"
+            "id": "b1c1201d8aec"
           },
           {
             "name": "Lord of the Red",
@@ -22766,7 +23171,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Red (barren Terram, parching winds and the like), at 1 Might per Hermetic magnitude.",
-            "id": "5e0072bc5a23"
+            "id": "03cfaab8d36f"
           },
           {
             "name": "Silent Motion",
@@ -22780,7 +23185,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: he moves without sound. (Base 3, +2 Sun, +1 constant, 5 levels spent to reduce cost.)",
-            "id": "c2355cb34f1e"
+            "id": "5ac17bdd524f"
           }
         ],
         "vis": [
@@ -22788,7 +23193,7 @@
             "pawns": 10,
             "art": "Rego",
             "where": "a small mouse statuette found implausibly in the brain",
-            "id": "a0cc14eda32f"
+            "id": "7277a0ed5928"
           }
         ],
         "equipment": "Palace in the Field of Reeds, mace, robes, vast amounts of money. Sometimes a full suit of heavy armour.",
@@ -22901,6 +23306,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_swallow_whole",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_thick_fur_thick_scales",
             "params": {},
             "id": "",
@@ -22948,7 +23361,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 13,
-            "id": "07a490b0bd4f"
+            "id": "f690e8bf43ee"
           }
         ],
         "soak": 10,
@@ -23012,7 +23425,7 @@
         "vis": [],
         "equipment": "",
         "appearance": "A hideous red fish over six paces long, with a toad's mouth full of razor teeth and a body covered in rough nodules and long spines.",
-        "notes": "Ferocity applies in shallow water. Wound ranges: -1 (1-10), -3 (11-20), -5 (21-30), Incapacitated (31-40), Dead (41+).\n\nSwallow Whole, a Quality by the errata (p. 87; the book prints it under Powers; not in the catalog): it can swallow any creature of Size 0 or less, which can struggle only with Brawl and cannot breathe, needing deprivation rolls (ArM5 p. 180) even if it escapes the grapple. After three rounds the victim reaches the stomach, for +9 acid a round, +36 if wholly immersed (ArM5 p. 181). A Strength + Athletics roll each round braces against it: 6 half immersion (triple), 9 a limb (double), 12 a splash (normal). A second creature can go down only once the first has reached the stomach. The arithmetic is in rules/africa.py.\n\nSmall ones, two feet or so, sometimes turn up in fishermen's nets; these are the figures for a twenty-foot horror. With the Fast Swimmer Quality (+3 to speed rolls when swimming; not in the catalog) the block serves for the Red Sea's giant sharks.\n\nGiant eels use the elephant-eating serpent (p. 23) with the Aquatic Quality and the Slippery Quality twice: Swim 5, water-breathing and +9 to Defense Totals in a grapple.",
+        "notes": "Ferocity applies in shallow water. Wound ranges: -1 (1-10), -3 (11-20), -5 (21-30), Incapacitated (31-40), Dead (41+).\n\nSwallow Whole is a Quality by the errata (p. 87); the book prints it under Powers. It takes any creature of Size 0 or less, which can struggle only with Brawl. The arithmetic is in rules/africa.py.\n\nSmall ones, two feet or so, sometimes turn up in fishermen's nets; these are the figures for a twenty-foot horror. With the Fast Swimmer Quality the block serves for the Red Sea's giant sharks.\n\nGiant eels use the elephant-eating serpent (p. 23) with the Aquatic Quality and the Slippery Quality twice: Swim 5, water-breathing and +9 to Defense Totals in a grapple.",
         "source": "Lands of the Nile p. 97",
         "detail": "Full",
         "place_id": "the_red_sea",
@@ -23196,6 +23609,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_crushing_jaws",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_keen_eyesight",
             "params": {},
             "id": "",
@@ -23287,7 +23708,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 6,
-            "id": "d8753642a5a6"
+            "id": "ffead1d48784"
           },
           {
             "name": "Dodge",
@@ -23295,7 +23716,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "06d15ff70e5a"
+            "id": "7ecd608f6cf4"
           }
         ],
         "soak": 3,
@@ -23396,7 +23817,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs an emotion in all who hear it, commonly fear, lust or wrath, or deepens one already felt. A stress roll on a fitting Personality Trait against Ease Factor 9 overcomes it. CrMe 30 (Base 4, +2 Voice, +2 Sun, +2 Group); Lesser Power x2 (50 levels, -4 Might points).",
-            "id": "90ac9fd0034c"
+            "id": "41d3c5aec2bb"
           },
           {
             "name": "Skin of Man or Beast",
@@ -23410,7 +23831,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the form of a man or woman of the area. MuAn 20 (Base 10, +2 Sun); Personal Power (20 levels, -1 Might point).",
-            "id": "dd1362bd1076"
+            "id": "b68a5b49a9c7"
           }
         ],
         "vis": [
@@ -23418,12 +23839,12 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its tongue",
-            "id": "18b90d26d2c0"
+            "id": "a2ad6c3f1213"
           }
         ],
         "equipment": "",
         "appearance": "A striped hyena, deep in the chest with short hind legs and a sloping back, a big short-muzzled head on a thick stiff neck. It often makes its eyes glow red.",
-        "notes": "Ethiopians say hereditary blacksmiths turn into hyenas and dig up Christian dead at midnight. Unlike the shapeshifting bouda of the Maghreb (BS&S), the bouda here are hyena-spirits that possess people and drive them to lust, murder or rage; debterah make amulets against them. They may be faeries harvesting vitality, or weak tempter demons.\n\nCrushing Jaws is not in the catalog: a hyena's bite is Init 0, Atk +4, Def +1, Dam +3, and the Quality raises the damage bonus to +6, which is the +6 shown. As a companion it must swap Incognizant for Narrowly or Highly Cognizant and take another Flaw, such as a Personality Flaw.",
+        "notes": "Ethiopians say hereditary blacksmiths turn into hyenas and dig up Christian dead at midnight. Unlike the shapeshifting bouda of the Maghreb (BS&S), the bouda here are hyena-spirits that possess people and drive them to lust, murder or rage; debterah make amulets against them. They may be faeries harvesting vitality, or weak tempter demons.\n\nA hyena's bite is Init 0, Atk +4, Def +1, Dam +3, and Crushing Jaws raises the damage bonus to +6, which is the +6 shown. As a companion it must swap Incognizant for Narrowly or Highly Cognizant and take another Flaw, such as a Personality Flaw.",
         "source": "Lands of the Nile p. 109",
         "detail": "Full",
         "place_id": "debarwa",
@@ -23730,7 +24151,7 @@
             "attack": 11,
             "defense": 10,
             "damage": 24,
-            "id": "e849e0160bce"
+            "id": "20d11e9ed4bd"
           },
           {
             "name": "Fangs",
@@ -23738,7 +24159,7 @@
             "attack": 14,
             "defense": -5,
             "damage": 22,
-            "id": "34d790fe2f2a"
+            "id": "10dc927f3306"
           }
         ],
         "soak": 16,
@@ -23825,7 +24246,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: +5 Damage to anyone within one pace. MuAu 25 (Base 5, +1 Part, +2 Sun, +1 Constant); Lesser Power (25 levels). No Initiative is printed.",
-            "id": "fc1903dfe008"
+            "id": "1ea3f00b1742"
           },
           {
             "name": "Venomous Bite (non-magical)",
@@ -23839,7 +24260,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Compare its attack advantage to the target's armor Protection, not Soak. If it exceeds that, add adder venom (ArM5 p. 180), wound or no wound.",
-            "id": "793e355e0877"
+            "id": "2cee1c196d09"
           },
           {
             "name": "Flight",
@@ -23853,7 +24274,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Flies, with Athletics for hard maneuvers, but cannot fight at full speed, nor fly heavily encumbered or with a passenger of its Size or more unless another faerie shares the load. ReAn 40 (Base 15, +2 Sun, +3 Size); Personal Power x2 (40 levels, -2 Might Cost).",
-            "id": "ccccc3eae5b9"
+            "id": "d1ee470ab7b8"
           },
           {
             "name": "Fiery Breath",
@@ -23867,7 +24288,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A gout of flame: +20 damage to all in a 60-degree arc 50 paces long. CrIg 40 (Base 15, +2 Voice, +2 Size, +1 Unnatural Shape); Lesser Power x2 (40 levels, -2 Might Points).",
-            "id": "21d523d84d03"
+            "id": "cef3ee653d97"
           },
           {
             "name": "Lantern Gaze",
@@ -23881,7 +24302,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blinding light shines from its eyes to light its way. CrIg 25 (Base 5, +2 Sun, +2 Size); Lesser Power (25 levels).",
-            "id": "7c88c47010c5"
+            "id": "1a6d4ca7ad7b"
           }
         ],
         "vis": [
@@ -23889,7 +24310,7 @@
             "pawns": 9,
             "art": "Aquam",
             "where": "in the scales over its eyes",
-            "id": "835b27f9470e"
+            "id": "6dc1f3857a95"
           }
         ],
         "equipment": "",
@@ -24058,6 +24479,14 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_overrun",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_sharp_ears_quality",
             "params": {},
             "id": "",
@@ -24066,7 +24495,23 @@
             "ends_season": ""
           },
           {
+            "vf_id": "vf_thick_fur_thick_scales",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_tough_hide",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_trunk",
             "params": {},
             "id": "",
             "temporary": false,
@@ -24182,7 +24627,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "9cbf666bff3f"
+            "id": "0144adc013bf"
           },
           {
             "name": "Stomp",
@@ -24190,7 +24635,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "2898251979be"
+            "id": "5b0e2a140eac"
           },
           {
             "name": "Trunk (grapple)",
@@ -24198,7 +24643,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "59e1b71ae8f3"
+            "id": "e118b011a650"
           }
         ],
         "soak": 10,
@@ -24358,34 +24803,6 @@
         ],
         "powers": [
           {
-            "name": "Trunk",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Handles things like a human hand; tasks needing two hands are at -3.",
-            "id": "6cbf82438828"
-          },
-          {
-            "name": "Overrun",
-            "might_cost": 0,
-            "init": 0,
-            "form": "",
-            "range": "",
-            "duration": "",
-            "target": "",
-            "level": null,
-            "penetration_bonus": 0,
-            "quality": "",
-            "description": "Non-magical. Only when it charged and exerted itself. If the attack hits, the foe rolls Dex + Athletics stress against Damage Total before soak + its Size - his Size. On failure he lands its Size in feet away with falling damage and spends his next action rising; it normally tramples him next. A prone man cannot parry and defends with Brawl.",
-            "id": "e3df733bd089"
-          },
-          {
             "name": "Invisibility of the Standing Elephant",
             "might_cost": 0,
             "init": -5,
@@ -24397,13 +24814,13 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He cannot be seen while he stands still, and shows himself whenever he moves. PeIm 25 (Base 4, +2 Sun, +2 Size, +1 constant effect), a Greater Power (25 levels, -3 Might cost, +2 Init).",
-            "id": "cd04b89e8012"
+            "id": "f2ed8baf1fdd"
           }
         ],
         "vis": [],
         "equipment": "",
         "appearance": "Very old, his skin more wrinkled than any elephant's and hanging from a thin frame, with immense tusks that touch the ground and curl up at the tips.",
-        "notes": "Elephants grow wiser with age, until they are sages of all that is under the sun, and tribesmen say such a one can vanish at will. He reasons as a man does and is a Magic Animal, otherwise an elephant.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Also has Thick Skin. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.",
+        "notes": "Elephants grow wiser with age, until they are sages of all that is under the sun, and tribesmen say such a one can vanish at will. He reasons as a man does and is a Magic Animal, otherwise an elephant.\n\nNatural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +6, Def +4, Dam +3; the trunk only grapples. Ferocity defends its family; Fear is of a pig's squeal. Excellent hearing and a sense of vibration through the trunk give +3 on rolls of hearing.",
         "source": "Lands of the Nile p. 20",
         "detail": "Full",
         "place_id": null,

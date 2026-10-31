@@ -134,11 +134,11 @@ def test_a_boundary_adds_botch_dice_to_casting_and_the_lab():
     before = lab_rules.botch_conditions(saga, magus)
     assert sites.character_boundary_botch_dice(saga, magus) == 0
     keep.place_id, keep.place_level = "drachenfels", 0
-    assert sites.boundary_botch_dice((drachenfels, 0)) == 4
+    assert sites.boundary_botch_dice(saga, (drachenfels, 0)) == 4
     assert sites.character_boundary_botch_dice(saga, magus) == 4
     lab = saga.laboratories[0]
     assert sites.lab_boundary_botch_dice(saga, lab) == 4
-    assert sites.boundary_botch_dice((drachenfels, 1)) == 0  # a Faerie level
+    assert sites.boundary_botch_dice(saga, (drachenfels, 1)) == 0  # a Faerie level
     aura, safety = lab_rules.botch_conditions(saga, magus)
     assert aura == lab_rules.lab_aura(saga, lab)[0] + 4
     assert (aura, safety) != before

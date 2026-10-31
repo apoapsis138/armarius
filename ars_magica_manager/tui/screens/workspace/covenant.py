@@ -13,6 +13,7 @@ from .... import (
     guest_stays,
     hermetic_projects,
     menagerie,
+    mobile_covenants,
     seasons,
     sourcebooks,
     staged_projects,
@@ -51,6 +52,7 @@ from ....sections import (
     CLAUSES_SECTION,
     GUESTS_SECTION,
     PROJECTS_SECTION,
+    WHEREABOUTS_SECTION,
 )
 from ..fields import FieldsDialog
 from ..forms import (
@@ -792,6 +794,36 @@ class CovenantActions(WorkspaceBase):
             self.app,
             hook_story_forms.story_form(self.saga, covenant),
             lambda _end: self._commit("section-cov-hooks", "tab-cov-diary"),
+        )
+
+    def action_detach_ship(self) -> None:
+        """More's Detach for the chosen ship."""
+        self._on_ship(mobile_covenants.detach_form)
+
+    def action_rejoin_ship(self) -> None:
+        """More's Rejoin for the chosen ship."""
+        self._on_ship(mobile_covenants.rejoin_form)
+
+    def action_add_stop(self) -> None:
+        """More's Add a Stop, on any covenant."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            mobile_covenants.add_stop(self.saga, covenant),
+            lambda _end: self._commit(WHEREABOUTS_SECTION),
+        )
+
+    def action_plan_route(self) -> None:
+        """More's Plan Route on Whereabouts."""
+        covenant = self.selected_covenant
+        if covenant is None:
+            return
+        run_steps(
+            self.app,
+            mobile_covenants.plan_route(self.saga, covenant),
+            lambda _end: self._commit(WHEREABOUTS_SECTION),
         )
 
     def action_ship_stress(self) -> None:

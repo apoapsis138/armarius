@@ -12,7 +12,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import boon_hook_text, catalog, places, sourcebooks, vassals
+from .. import boon_hook_text, catalog, mobile_covenants, places, sourcebooks, vassals
 from .. import covenants as cov_rules
 from .. import economics as eco
 from ..commands import Choice, Choose, Confirm, Form, SectionOps, notes
@@ -71,7 +71,7 @@ def covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
     """Edit Covenant: its name, Tribunal, founding, Aegis, living
     conditions, aura (unless its place gives it one), place and season."""
     cov = covenant
-    placed = sites.place(saga, cov.place_id) is not None
+    placed = sites.covenant_place(saga, cov) is not None
     fields = [
         DialogField("name", "Name", "text", cov.name, required=True),
         tribunal_field(saga, cov.tribunal_id),
@@ -154,7 +154,10 @@ def covenant_form(saga: Saga, covenant: Covenant) -> Form:
         "Edit Covenant",
         lambda: covenant_fields(saga, covenant),
         apply,
-        validate=lambda values: vassals.problem(saga, covenant, values),
+        validate=lambda values: (
+            vassals.problem(saga, covenant, values)
+            or mobile_covenants.aegis_problem(saga, covenant, values)
+        ),
     )
 
 

@@ -14,14 +14,16 @@ from typing import Any, TypedDict, cast
 from ..models import (
     Character,
     Covenant,
+    CovenantStop,
     Laboratory,
     Modifier,
     Neighbour,
+    Possession,
     Saga,
     VirtueFlawInstance,
     details_list,
 )
-from . import aura_kinds, lunar, otherworlds
+from . import aura_kinds, lunar, mobile, otherworlds
 from . import effects as fx
 
 SOURCE = (
@@ -33,6 +35,9 @@ SOURCE = (
 
 #: The kind of neighbour a place is.
 PLACE = "place"
+#: The details that say which covenant a Place travels with (its id), and
+#: what it offers ships (rules.mobile.WATERS).
+TRAVELS_WITH, WATERS = "travels_with", "waters"
 
 
 @dataclass(frozen=True)
@@ -260,14 +265,90 @@ def aura_kind_at(place: Neighbour, level: int = 0) -> str:
     return aura_kinds.kind_of(details, realm)
 
 
-def kind_where(where: tuple[Neighbour, int] | None) -> str:
-    """The aura's kind at a place and level (from lab_place,
-    character_place...); "" for nowhere."""
-    return aura_kind_at(*where) if where is not None else ""
+def kind_where(saga: Saga, where: tuple[Neighbour, int] | None) -> str:
+    """The kind of the aura holding sway at a place and level (from
+    lab_place, character_place...); "" for nowhere."""
+    return aura_kind_at(*holding(saga, where)) if where is not None else ""
+
+
+def travels(found: Neighbour) -> bool:
+    """Whether a Place travels with a covenant (own aura or regio): each
+    stop moves it inside the stop's Place."""
+    return bool(found.details.get(TRAVELS_WITH))
+
+
+def travelling_places(saga: Saga, covenant: Covenant) -> list[Neighbour]:
+    """The Places that travel with `covenant`."""
+    return [p for p in all_places(saga) if p.details.get(TRAVELS_WITH) == covenant.id]
+
+
+def waters_of(found: Neighbour) -> str:
+    """What a Place offers ships (rules.mobile.WATERS); "" for not said."""
+    return str(found.details.get(WATERS) or "")
+
+
+def covenant_stop(saga: Saga, covenant: Covenant) -> CovenantStop | None:
+    """The covenant's stop in force at the saga's date."""
+    return mobile.stop_in_force(covenant.stops, saga.current_year, saga.current_season)
+
+
+def _stop_place(saga: Saga, stop: CovenantStop | None) -> tuple[Neighbour, int] | None:
+    if stop is None:
+        return None
+    found = place(saga, stop.place_id)
+    return (found, stop.level) if found is not None else None
+
+
+def ship_stop(saga: Saga, record: Possession) -> tuple[Neighbour, int] | None:
+    """Where a ship apart from the fleet is: her stop in force; None for a
+    ship sailing with it."""
+    ship = record.ship
+    if ship is None:
+        return None
+    return _stop_place(
+        saga, mobile.stop_in_force(ship.stops, saga.current_year, saga.current_season)
+    )
+
+
+def ship_with_lab(saga: Saga, lab: Laboratory) -> Possession | None:
+    """The ship of its covenant that carries `lab`, if one does."""
+    covenant = saga.covenant(lab.covenant_id)
+    if covenant is None:
+        return None
+    return next(
+        (p for p in covenant.possessions if p.ship is not None and p.lab_id == lab.id),
+        None,
+    )
+
+
+def ship_aboard(saga: Saga, character: Character) -> Possession | None:
+    """The ship apart from the fleet that `character` went with, if any."""
+    covenant = saga.covenant(character.covenant_id)
+    if covenant is None:
+        return None
+    return next(
+        (
+            p
+            for p in covenant.possessions
+            if p.ship is not None and p.ship.stops and character.id in p.ship.aboard
+        ),
+        None,
+    )
+
+
+def lab_ship_place(saga: Saga, lab: Laboratory) -> tuple[Neighbour, int] | None:
+    """Where the ship carrying `lab` is, while she is apart from the
+    fleet."""
+    record = ship_with_lab(saga, lab)
+    return ship_stop(saga, record) if record is not None else None
 
 
 def lab_place(saga: Saga, lab: Laboratory) -> tuple[Neighbour, int] | None:
-    """Where a laboratory is: its own place, or its covenant's."""
+    """Where a laboratory is: aboard a ship apart from the fleet, its own
+    place, or its covenant's."""
+    apart = lab_ship_place(saga, lab)
+    if apart is not None:
+        return apart
     found = place(saga, lab.place_id)
     if found is not None:
         return found, lab.place_level
@@ -276,23 +357,61 @@ def lab_place(saga: Saga, lab: Laboratory) -> tuple[Neighbour, int] | None:
 
 
 def covenant_place(saga: Saga, covenant: Covenant) -> tuple[Neighbour, int] | None:
-    found = place(saga, covenant.place_id)
-    return (found, covenant.place_level) if found is not None else None
+    """Where a covenant is now: a Place that travels with it, wherever
+    that has got to; else its stop in force; else its own place."""
+    own = place(saga, covenant.place_id)
+    if own is not None and own.details.get(TRAVELS_WITH) == covenant.id:
+        return own, covenant.place_level
+    return _stop_place(saga, covenant_stop(saga, covenant)) or (
+        (own, covenant.place_level) if own is not None else None
+    )
+
+
+def covenants_at(saga: Saga, found: Neighbour) -> list[Covenant]:
+    """The covenants at `found` now."""
+    return [
+        c
+        for c in saga.covenants
+        if (where := covenant_place(saga, c)) is not None and where[0].id == found.id
+    ]
 
 
 def character_place(saga: Saga, character: Character) -> tuple[Neighbour, int] | None:
-    """Where a character lives: their covenant's place."""
+    """Where a character lives: aboard a ship apart from the fleet, or
+    their covenant's place."""
+    record = ship_aboard(saga, character)
+    apart = ship_stop(saga, record) if record is not None else None
+    if apart is not None:
+        return apart
     covenant = saga.covenant(character.covenant_id)
     return covenant_place(saga, covenant) if covenant is not None else None
 
 
-def boundary_botch_dice(found: tuple[Neighbour, int] | None) -> int:
+def holding(saga: Saga, where: tuple[Neighbour, int]) -> tuple[Neighbour, int]:
+    """Whose aura holds sway at a place and level. On the surface of a
+    Place travelling with a covenant, the stronger of its own and the
+    aura of the Place around it, and a tie keeps its own (DE p. 410, the
+    stronger realm); inside its regio, and at any fixed Place, its own."""
+    found, level = where
+    around = place(saga, found.place_id)
+    if level or around is None or not travels(found):
+        return where
+    theirs = aura_at(around, found.place_level)[0]
+    return (around, found.place_level) if theirs > aura_at(found)[0] else where
+
+
+def aura_here(saga: Saga, found: Neighbour, level: int = 0) -> tuple[int, str]:
+    """The aura that holds sway at `level` of `found`, and its realm."""
+    return aura_at(*holding(saga, (found, level)))
+
+
+def boundary_botch_dice(saga: Saga, found: tuple[Neighbour, int] | None) -> int:
     """The extra botch dice a Magic Realm boundary adds, at a place and
     level, to every roll the Magic aura helps: its level, while the aura
     there is Magic (RoP: Magic p. 22); 0 elsewhere or for no place."""
     if found is None:
         return 0
-    where, level = found
+    where, level = holding(saga, found)
     if aura_at(where, level)[1] != "Magic":
         return 0
     return otherworlds.boundary_botch_dice(boundary_at(where, level))
@@ -301,26 +420,24 @@ def boundary_botch_dice(found: tuple[Neighbour, int] | None) -> int:
 def character_boundary_botch_dice(saga: Saga, character: Character) -> int:
     """A boundary's botch dice where the character lives (their covenant's
     place), for the rolls their home aura helps, such as casting."""
-    return boundary_botch_dice(character_place(saga, character))
+    return boundary_botch_dice(saga, character_place(saga, character))
 
 
 def lab_boundary_botch_dice(saga: Saga, lab: Laboratory) -> int:
     """A boundary's botch dice where `lab` stands: its own place, else its
     covenant's."""
-    own = place(saga, lab.place_id)
-    if own is not None:
-        return boundary_botch_dice((own, lab.place_level))
-    covenant = saga.covenant(lab.covenant_id)
-    return boundary_botch_dice(
-        covenant_place(saga, covenant) if covenant is not None else None
-    )
+    return boundary_botch_dice(saga, lab_place(saga, lab))
 
 
 def lab_aura(saga: Saga, lab: Laboratory) -> tuple[int, str] | None:
     """The aura of a laboratory placed somewhere of its own (a lab built
-    in a regio); None when it takes its covenant's."""
+    in a regio, or aboard a ship apart from the fleet); None when it takes
+    its covenant's."""
+    apart = lab_ship_place(saga, lab)
+    if apart is not None:
+        return aura_here(saga, *apart)
     found = place(saga, lab.place_id)
-    return aura_at(found, lab.place_level) if found is not None else None
+    return aura_here(saga, found, lab.place_level) if found is not None else None
 
 
 @dataclass(frozen=True)

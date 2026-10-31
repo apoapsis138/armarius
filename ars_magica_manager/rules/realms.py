@@ -159,7 +159,10 @@ def home_in_regio(saga: Saga, character: Character) -> bool:
     """Whether the character's covenant stands on a regio level above the
     mundane one, where a foreign aura's botch dice double (DE p. 421)."""
     covenant = saga.covenant(character.covenant_id)
-    return covenant is not None and bool(covenant.place_id) and covenant.place_level > 0
+    if covenant is None:
+        return False
+    where = sites.covenant_place(saga, covenant)
+    return where is not None and where[1] > 0
 
 
 def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
@@ -167,6 +170,10 @@ def home_aura(saga: Saga, character: Character) -> tuple[int, str]:
     effective Aura (its Boons and Hooks included); 0 Magic without one. The
     one place this is worked out (casting totals, vis study,
     aging and warping all use it)."""
+    ship = sites.ship_aboard(saga, character)
+    apart = sites.ship_stop(saga, ship) if ship is not None else None
+    if apart is not None:
+        return sites.aura_here(saga, *apart)
     return aura_of(saga.covenant(character.covenant_id))
 
 
@@ -215,7 +222,7 @@ def present_aura_kind(saga: Saga, character: Character) -> str:
         return ""
     staying = host(saga, character)
     if staying is not None:
-        return sites.kind_where(sites.covenant_place(saga, staying))
+        return sites.kind_where(saga, sites.covenant_place(saga, staying))
     return home_aura_kind(saga, character)
 
 
@@ -228,7 +235,7 @@ def home_aura_kind(saga: Saga, character: Character) -> str:
     """The kind of the aura a character lives in (rules.aura_kinds: a
     Magic aura's alignment, a Faerie one's tints, a Divine one's source),
     read from their covenant's place; "" when it isn't placed."""
-    return sites.kind_where(sites.character_place(saga, character))
+    return sites.kind_where(saga, sites.character_place(saga, character))
 
 
 #: The realm of a Supernatural Virtue or Flaw whose name doesn't say it

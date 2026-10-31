@@ -1845,6 +1845,7 @@ MARKS: dict[str, Charge] = {
     "Living Language": living_language,
     "Music": music,
     "Mystery Cult Lore": mystery_cult_lore,
+    "Church Lore": organization_lore,
     "Organization Lore": organization_lore,
     "Profession": profession,
     "Ride": ride,
@@ -2033,6 +2034,9 @@ DETAILS: dict[str, Charge] = {
     ),
     "Medicine": lambda: line((30, 62), (70, 62)),
     "Organization Lore": lambda: union(
+        line((36, 26), (64, 26), w=1.2), line((36, 42), (60, 42), w=1.2)
+    ),
+    "Church Lore": lambda: union(
         line((36, 26), (64, 26), w=1.2), line((36, 42), (60, 42), w=1.2)
     ),
     "Parma Magica": lambda: line((30, 34), (70, 34)),

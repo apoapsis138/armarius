@@ -17569,6 +17569,279 @@
       "source": "HoH:S",
       "summary": "A Flambeau sworn to the milites' code: 5 experience points in House Acclaim, brothers-in-arms, and the Primus's orders.",
       "description": "A magus of House Flambeau who has publicly sworn the milites' oath to uphold the Code of Garus or a like code of honour (Houses of Hermes: Societates pp. 31-32). He gains 5 experience points in House Acclaim, and other milites treat him as a brother-in-arms and help him, though leaning on them too heavily costs House Acclaim; they may ask his help in turn. He has sworn to obey the Primus of House Flambeau, who may order him at any time, but never about his vote or what he says at Tribunal; fulfilling a direct order earns House Acclaim. With the storyguide's leave a character may take the Flaw after creation by joining the House and swearing the oath."
+    },
+    {
+      "id": "vf_child_of_the_house",
+      "name": "Child of the House",
+      "type": "Virtue",
+      "category": "General",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LotN",
+      "summary": "Brought up and schooled by the sultan's House: 30 xp a year in Later Life on any Ability needing no Supernatural Virtue; must take Code of Honor (Major).",
+      "description": "The character grew up in the House, the citadel school that readies agents for the sultan, and studied all year round under excellent teachers until sent out as an agent. In the Later Life stage of advanced creation he has 30 experience points a year, to spend on any Ability that does not depend on a Supernatural Virtue. Children of the House are wholly devoted to the sultan, or perhaps only to the House, and can hide it; they must take the Code of Honor Major Flaw. (Lands of the Nile p. 61)"
+    },
+    {
+      "id": "vf_agent_of_the_sultan",
+      "name": "Agent of the Sultan",
+      "type": "Virtue",
+      "category": "General",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LotN",
+      "summary": "Has whatever the sultan's advisers think needful, much like Wealthy: three seasons a year of training unless a cover needs work; cannot leave the service.",
+      "description": "The sultan's advisers provide whatever they think the agent needs, which makes this something like the Wealthy Virtue. Unless a cover identity demands work, he has three seasons a year to train between assignments, and in Cairo may use the House's facilities if the advisers think that a good use of them. The service cannot be left: one who has, say, feigned his death has the Dark Secret Flaw. (Lands of the Nile p. 61)"
+    },
+    {
+      "id": "vf_favored_slave",
+      "name": "Favored Slave",
+      "type": "Flaw",
+      "category": "Social Status",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "LotN",
+      "summary": "A slave of the Nile lands with a sheltered life: wholly your master's and owning only what he gives, but fed and decently housed.",
+      "description": "You belong entirely to your master and will likely be freed only for some rare service, if at all; disobedience can be punished harshly. You own nothing of note beyond what he gives you. Meals and decent lodging are assured, which does not make up for your status. This suits a slave with a lax owner, such as another player character. It differs from Guardians of the Forests' Slave. (Lands of the Nile pp. 75-76)"
+    },
+    {
+      "id": "vf_chattel_slave",
+      "name": "Chattel Slave",
+      "type": "Flaw",
+      "category": "Story",
+      "extra_categories": [
+        "Social Status"
+      ],
+      "tier": "Major",
+      "cost": -3,
+      "source": "LotN",
+      "summary": "A slave with no special standing, and stories come of it: settle the tension with your owner and how you can be with the others. Not for grogs.",
+      "description": "You have the burdens of Favored Slave and no special standing among slaves, and your stories come from this. Choose the source of the tension with your owner when you take the Flaw, and explain how you can regularly be with the other player characters: being on loan from a friendly master is one way. It suits an escaped slave still being hunted; one truly out of a master's reach is treated as a free Aithiopian, and probably has the Outcast Flaw instead. As a Major Story Flaw it is not for grogs. (Lands of the Nile pp. 75-76)"
+    },
+    {
+      "id": "vf_learned_magician",
+      "name": "Learned Magician",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "LotN; HMRE",
+      "summary": "A learned magician outside the Mathematici of Bologna; needs a Technique and a Form, and a mundane Social Status as well.",
+      "description": "The Social Status Lands of the Nile prints for a learned magician of no named school (p. 91). It works as Hedge Magic Revised Edition's Mathematicus of Bologna (p. 80): he needs at least one Hedge Technique and one Form, and should also have a mundane Social Status."
+    },
+    {
+      "id": "vf_freed_slave",
+      "name": "Freed Slave",
+      "type": "Flaw",
+      "category": "Social Status",
+      "tier": "Minor",
+      "cost": -1,
+      "source": "BS&S",
+      "summary": "Freed, or born to freed slaves: branded as such, of low standing and paid little, unless you join the army or become a clerk.",
+      "description": "You were freed by your master, or your parents were freed slaves. A brand shows you are no runaway, and also shows your low standing. Your work is paid, but poorly, and the army or a clerk's post may be your only way out of poverty. The Haratan of the Banu Khalida have this Flaw. (Between Sand and Sea p. 37)"
+    },
+    {
+      "id": "vf_abid",
+      "name": "'Abid",
+      "type": "Flaw",
+      "category": "Social Status",
+      "tier": "Major",
+      "cost": -3,
+      "source": "BS&S",
+      "summary": "A member of the Banu Khalida's slave caste; the book names the Flaw and prints no rules for it.",
+      "description": "You belong to the 'Abid, the slave caste at the bottom of Banu Khalida society. The book names this Major Social Status Flaw without printing its rules; the troupe may take Slave or Chattel Slave as a guide. (Between Sand and Sea pp. 36-37)"
+    },
+    {
+      "id": "vf_attribute_duplication",
+      "name": "Attribute Duplication",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "audience": [
+        "faerie"
+      ],
+      "source": "Ant",
+      "summary": "The Queen of Gold and Glass's package of powers: unusual uses of Arcane Connections, and crafting mortal attributes into her minions. Not for player faeries.",
+      "description": "A bundle of several Major Virtues, entered here as one, that gives the Queen of Gold and Glass the non-Hermetic powers her stories need. She uses Arcane Connections in unusual ways and makes her minions, and can build into them a mortal attribute they have witnessed if she holds a symbolic object of that person, though not an Infernal or Divine attribute. Not suited to player faeries. (Antagonists p. 122)"
+    },
+    {
+      "id": "vf_supernaturally_fragile",
+      "name": "Supernaturally Fragile",
+      "type": "Flaw",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": -3,
+      "modifiers": [
+        {
+          "applies_to": "soak",
+          "amount": -9
+        }
+      ],
+      "source": "Ant",
+      "summary": "A body of living glass: -9 to Soak.",
+      "description": "The character's body is made of living glass, and her Soak falls by 9. (Antagonists p. 122)"
+    },
+    {
+      "id": "vf_antaeus_bloodline",
+      "name": "Antaeus' Bloodline",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "BS&S",
+      "summary": "Ages as Faerie Blood, with one of +1 Strength, +1 Brawl or +1 Soak.",
+      "description": "A descendant of the giant Antaeus, who ages as with Faerie Blood. One of +1 Strength (to at most +3), +1 Brawl or +1 Soak. The player settles at creation whether the line is Magic or Faerie, and cannot change it. (Between Sand and Sea p. 50)"
+    },
+    {
+      "id": "vf_antaeus_bloodline_major",
+      "name": "Antaeus' Bloodline",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "BS&S",
+      "summary": "Ages as Strong Faerie Blood, with +1 Strength, Brawl and Soak, Large and Magic Sensitivity, but loses them off the ground.",
+      "description": "A descendant of the giant Antaeus, who ages as with Strong Faerie Blood. +1 Strength (to at most +3), +1 Brawl and +1 Soak together, with the Large and Magic Sensitivity Virtues and the Major Flaw Greater Malediction (must be touching the ground). Off the ground those bonuses go and Soak falls by 2, though he stays the same size. The player settles at creation whether the line is Magic or Faerie, and cannot change it. (Between Sand and Sea p. 50)"
+    },
+    {
+      "id": "vf_crushing_jaws",
+      "name": "Crushing Jaws",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN; BS&S",
+      "summary": "+3 Damage to any bite, but a successful Grapple holds the jaws shut.",
+      "description": "The muscles that close the mouth are far stronger than the rest of the beast, and those that open it are weak. Add 3 to the Damage of any bite; a human can hold the jaws shut with a successful Grapple. (Lands of the Nile p. 22; Between Sand and Sea p. 139)"
+    },
+    {
+      "id": "vf_swallow_whole",
+      "name": "Swallow Whole",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN",
+      "summary": "Swallows prey up to a Size set by its block; the victim cannot breathe, then acid does +9 a round, +36 if immersed.",
+      "description": "The creature swallows prey alive, up to a Size its description gives. Nothing can breathe inside, so deprivation rolls apply (ArM5 p. 180). Three rounds on the victim reaches the stomach, where acid does +9 damage a round, or +36 if wholly immersed (ArM5 p. 181). Each round he may roll Strength + Athletics to brace: Ease Factor 6 for half immersion (triple damage), 9 for a limb (double), 12 for a splash (normal). It cannot swallow again until the last meal reaches the stomach. (Lands of the Nile pp. 23, 97; a Quality by Errata p. 87)"
+    },
+    {
+      "id": "vf_constriction",
+      "name": "Constriction",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN",
+      "summary": "A grapple that smothers: the victim is deprived of air, and later rounds it may bite as well, adding Grapple Strength to hit him.",
+      "description": "Uses the grappling rules (ArM5 p. 174) on a victim up to a Size its description gives. While the hold lasts he is deprived of air (ArM5 p. 180), with a Stamina check every five rounds. On later rounds it can keep constricting and also bite, adding its Grapple Strength to the Attack Total against the victim, or bite someone else. It constricts one creature at a time. (Lands of the Nile p. 23; a Quality by Errata p. 87)"
+    },
+    {
+      "id": "vf_overrun",
+      "name": "Overrun",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN",
+      "summary": "After a charge that hits, the foe rolls Dex + Athletics or is knocked flying, takes falling damage and must spend an action rising.",
+      "description": "Applies only when the creature charged and exerted itself. If the attack hits, the foe makes a Dexterity + Athletics stress roll against Damage Total before soak + the creature's Size - his Size. On failure he lands as many feet away as its Size, with falling damage, and spends his next action rising; it normally tramples him next. A prone character cannot parry and defends with Brawl. (Lands of the Nile p. 20; a Quality by Errata pp. 86-87)"
+    },
+    {
+      "id": "vf_trunk",
+      "name": "Trunk",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN",
+      "summary": "Handles things like a human hand; tasks needing two hands are at -3.",
+      "description": "The trunk handles objects as a human hand does, though tasks needing two hands are at -3. (Lands of the Nile p. 20; a Quality by Errata p. 87)"
+    },
+    {
+      "id": "vf_roll_attack",
+      "name": "Roll Attack",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN",
+      "summary": "The round after a bite it rolls, tearing flesh for +6 with no attack roll, or drags the victim under to drown.",
+      "description": "Printed as Death Roll. The round after a successful bite, the creature may roll and twist away flesh for +6 damage with no attack roll; the victim soaks without armor's Protection, the teeth being through it. More often it drags him under and waits, by its Amphibious Quality, for him to drown. Each round he may try to break free by overcoming a Grapple of Strength 10. (Lands of the Nile p. 19; renamed a Quality by Errata p. 87)"
+    },
+    {
+      "id": "vf_fast_swimmer",
+      "name": "Fast Swimmer",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "LotN; ML",
+      "summary": "+3 to all rolls involving speed while swimming.",
+      "description": "Add 3 to all rolls involving speed when swimming. (Lands of the Nile p. 97; Mythic Locations p. 58)"
+    },
+    {
+      "id": "vf_smell_water",
+      "name": "Smell Water",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "BS&S",
+      "summary": "Smells drinkable water up to two miles off.",
+      "description": "The creature can smell drinkable water up to two miles away. (Between Sand and Sea p. 136; a Quality by Errata p. 86)"
+    },
+    {
+      "id": "vf_survive_without_water",
+      "name": "Survive Without Water",
+      "type": "Quality",
+      "category": "Mundane Beast",
+      "tier": "Free",
+      "cost": 0,
+      "audience": [
+        "animal"
+      ],
+      "source": "BS&S",
+      "summary": "Lives up to two weeks without water.",
+      "description": "The creature can live up to two weeks without water. (Between Sand and Sea p. 136; a Quality by Errata p. 86)"
+    },
+    {
+      "id": "vf_gift_of_thumbs",
+      "name": "Gift of Thumbs",
+      "type": "Quality",
+      "category": "Magic",
+      "tier": "Minor",
+      "cost": 1,
+      "audience": [
+        "magic being"
+      ],
+      "source": "BS&S; TtA",
+      "summary": "Negates a Magic Animal's inherent No Hands, as Gift of Speech negates its Mute.",
+      "description": "This Quality removes the No Hands Flaw inherent in a Magic Animal, as Gift of Speech removes its Mute Flaw. (Between Sand and Sea p. 46; Through the Aegis p. 12)"
     }
   ]
 }

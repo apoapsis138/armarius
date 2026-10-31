@@ -335,6 +335,7 @@ After you choose Advance, the app may ask:
 - For each experiment whose Extraordinary Results need the storyguide's word, what they are: which of two rolls stands, what each side or modified effect is, what a Discovery teaches, what a special result becomes, and whether to take a Discovery the risk can reach (see [Experiment Results](help:advance-experiment-results)).
 - For a magus finishing a recreation of a flawed spell, whether to retire the flawed one (see [Retire Flawed Spells](help:advance-retire-flawed)).
 - For a magus setting up a new laboratory, whether they would like to finish it next season (see [A new laboratory](help:advance-new-lab)).
+- For each player covenant on the move, and each of its ships apart from the fleet: move on to the route's next leg, stay, or go somewhere else (see [Whereabouts](help:section-cov-whereabouts)). The answer is logged as a stop in the new season, and a move costs the covenant its Aegis.
 
 Cancelling any of these leaves the date and the saga as they were.
 

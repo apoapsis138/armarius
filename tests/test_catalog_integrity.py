@@ -66,6 +66,15 @@ def test_no_text_was_mis_decoded():
                 assert "�" not in text, (name, entry.id, text)
 
 
+def test_a_corrected_spell_name_keeps_its_id():
+    """Saves hold the id, so fixing a name must leave it alone."""
+    spell = catalog.load_spell_catalog_by_id()[
+        "spell_ominous_evitation_of_the_weighty_stone"
+    ]
+    assert spell.name == "Ominous Levitation of the Weighty Stone"
+    assert (spell.source, spell.page) == ("HoH:S", "38")
+
+
 def test_the_shared_catalogs_cannot_be_changed_by_accident():
     """Every caller gets the same cached catalog, so a change would reach
     them all: the by-id maps are read-only and the definitions frozen."""

@@ -180,6 +180,8 @@ CHARTER_SECTION = "section-cov-charter"
 CLAUSES_SECTION = "section-cov-clauses"
 #: The magi staying at a covenant as its guests (guest_stays).
 GUESTS_SECTION = "section-cov-guests"
+#: Where a mobile covenant is and has been (mobile_covenants).
+WHEREABOUTS_SECTION = "section-cov-whereabouts"
 #: A covenant's own town charter (the Chartered Town Boon) and the towns
 #: it charters (the Charter Lord Hook), on its Charter tab too.
 COV_CHARTER_LORDS_SECTION = "section-cov-charter-lords"
@@ -373,6 +375,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CHARTER_SECTION: frozenset({"edit"}),
     CLAUSES_SECTION: frozenset({"add", "edit", "remove"}),
     GUESTS_SECTION: frozenset({"edit"}),
+    WHEREABOUTS_SECTION: frozenset({"add", "edit", "remove"}),
     MANORS_SECTION: frozenset({"add", "edit", "remove"}),
     ESTABLISHMENTS_SECTION: frozenset({"add", "edit", "remove"}),
     HOUSEHOLD_SECTION: frozenset({"edit"}),

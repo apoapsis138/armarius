@@ -1,7 +1,11 @@
 """A place marked as a tomb, designed like a covenant (Lands of the Nile
 pp. 32-35, 40-46): its kind, aura and Build Points, its curses, its
 talismans and wards, and its traps, on the place's Tomb tab, and More's
-Overcome It when a trap springs. The rules are rules.egyptian_tombs.
+Overcome It when a trap springs or a talisman or ward stands in the way.
+The rules are rules.egyptian_tombs. The tomb is fixed once built; Overcome
+It holds only what varies: who is there, what each does and rolls, who
+suffers it, and whether the trap stays sprung. A puzzle stays as words on
+its place, played by the troupe.
 
 A place is marked a tomb by the Tomb box on its form; only then is the
 tab shown. The tomb doesn't set the place's own aura: its burial
@@ -12,18 +16,22 @@ Kept in Neighbour.details: "tomb" (the mark), "tomb_kind", "tomb_centuries",
 "tomb_decay", "tomb_hooks", "tomb_hook_points", "tomb_boons",
 "tomb_other", "tomb_other_bp" and "tomb_description", and the lists
 "tomb_curses" (TombCurse), "tomb_wards" (TombWard) and "tomb_traps"
-(TombTrap).
+(TombTrap). A place of a book's examples has the "examples" kind, which
+has no budget.
 
 Pattern: the tab is one more place kind tab (neighbour_lists.KindTab),
 the Strategy the Regio and Roll Tables tabs use: a block and three
 KindLists, each with its `_*_fields` builder. Build Points are small
 rule functions over the book's two tables, which the lists, the forms'
-inspectors and the tomb's total all read."""
+inspectors and the tomb's total all read. Overcome It is one form a step:
+each builds the next from a Springing, which keeps what has been said so
+far (Command, as every multi-step action here)."""
 
 from __future__ import annotations
 
 import random
 from collections.abc import Callable
+from dataclasses import dataclass, field
 from typing import Any, Required, TypedDict, cast
 
 from . import place_events, sourcebooks
@@ -36,6 +44,7 @@ from .neighbour_lists import KindBlock, KindList, KindTab, LedgerEntry
 from .references import Fact
 from .rules import dice
 from .rules import egyptian_tombs as et
+from .rules.derived import carried_load, encumbrance
 from .rules.lab import ability_score
 from .rules.sites import whole_number
 from .sections import (
@@ -77,16 +86,30 @@ class TombWard(TypedDict, total=False):
     uses: str
     effect: str
     deactivation: str
+    #: The Ease Factor printed, where it isn't 6 or 9 + the magnitude (0:
+    #: the rule's).
+    ease: int
 
 
 class TombTrap(TypedDict, total=False):
-    """A trap: what it does, and the Ease Factor to avoid it."""
+    """A trap: what it does, the Ease Factor to avoid it, and the roll
+    and Ease Factor to spot it where the book gives them."""
 
     name: Required[str]
     harm: str
     ease: int
     text: str
     resets: bool
+    #: It works once, and can't be reset.
+    once: bool
+    #: Build Points of further harms, for a trap treated as several.
+    further_bp: int
+    #: The roll the book gives for avoiding it ("Qik + Athletics - Encumbrance").
+    roll: str
+    #: The Ease Factor to spot it, where it isn't the trap's own (0: its own).
+    spot: int
+    #: It has gone off and isn't reset yet.
+    sprung: bool
 
 
 def is_tomb(place: Neighbour) -> bool:
@@ -127,12 +150,17 @@ def trap_points(trap: TombTrap) -> int:
     ease = whole_number(trap.get("ease")) or 3
     if harm not in et.HARMS or ease not in et.AVOID:
         return 0
-    return et.trap_build_points(harm, ease)
+    return et.trap_build_points(harm, ease, whole_number(trap.get("further_bp")))
 
 
-def ward_ease(ward: TombWard) -> int:
-    return et.overcome_ease(
-        ward.get("kind") or et.TALISMAN, whole_number(ward.get("level"))
+def ward_ease(ward: TombWard) -> int | None:
+    """The Ease Factor to overcome an enchantment without magic: the one
+    printed if any, else the rule's; None when it is no obstacle."""
+    kind = ward.get("kind") or et.TALISMAN
+    if kind == et.NO_OBSTACLE:
+        return None
+    return whole_number(ward.get("ease")) or et.overcome_ease(
+        kind, whole_number(ward.get("level"))
     )
 
 
@@ -153,6 +181,8 @@ def spent_total(place: Neighbour) -> int:
 def _spent_line(place: Neighbour) -> str:
     """How many of the tomb's Build Points are spent, as markup."""
     total, allowed = spent_total(place), _kind(place).build_points
+    if allowed == 0:
+        return f"{total} in all"
     words = f"{total} of the tomb's {allowed} spent"
     if total > allowed:
         return f"[$text-error]{words}: {total - allowed} too many[/]"
@@ -165,18 +195,21 @@ def _spent_line(place: Neighbour) -> str:
 def tomb_facts(_saga: Saga, place: Neighbour) -> list[Fact]:
     d = place.details
     found = _kind(place)
+    if found is et.EXAMPLES:
+        return [
+            Fact("Kind", found.name),
+            Fact("Build Points", f"{spent_total(place)} in all"),
+        ]
     decay = whole_number(d.get("tomb_decay"))
     aura = et.tomb_aura(found.key, decay)
+    own = whole_number(d.get("aura"))
     centuries = whole_number(d.get("tomb_centuries"))
     hook_points = whole_number(d.get("tomb_hook_points"))
     hooks = str(d.get("tomb_hooks") or "").strip()
     return [
         Fact("Kind", found.name),
         Fact("Build Points", f"{spent_total(place)} of {found.build_points}"),
-        Fact(
-            "Magic aura",
-            f"{aura} (base {found.aura}; decayed)" if decay > 0 else str(aura),
-        ),
+        Fact("Magic aura", _aura_words(aura, found.aura, decay, own)),
         Fact(
             "Tethers",
             f"a burial ground {centuries} centur{'y' if centuries == 1 else 'ies'} "
@@ -192,6 +225,14 @@ def tomb_facts(_saga: Saga, place: Neighbour) -> list[Fact]:
         ),
         Fact("Boons", str(d.get("tomb_boons") or "").strip()),
     ]
+
+
+def _aura_words(aura: int, base: int, decay: int, own: int) -> str:
+    """The tomb's Magic aura, or the place's own where Boons or a fine
+    site raise it above that (p. 40)."""
+    if own > aura:
+        return f"{own} (base {base}; raised by Boons or its site)"
+    return f"{aura} (base {base}; decayed)" if decay > 0 else str(aura)
 
 
 def tomb_text(_saga: Saga, place: Neighbour) -> str:
@@ -219,13 +260,16 @@ def tomb_prose(_saga: Saga, place: Neighbour) -> str:
 
 def _tomb_fields(_saga: Saga, place: Neighbour) -> list[DialogField]:
     d = place.details
+    kinds = list(et.KINDS.values())
+    if d.get("tomb_kind") == et.EXAMPLES.key:
+        kinds.append(et.EXAMPLES)
     return [
         DialogField(
             "tomb_kind",
             "Kind",
             "select",
             d.get("tomb_kind") or et.DEFAULT_KIND,
-            options=[(k.name, k.key) for k in et.KINDS.values()],
+            options=[(k.name, k.key) for k in kinds],
             hint="Its base Magic aura and Build Points (LotN p. 40).",
         ),
         DialogField(
@@ -249,14 +293,22 @@ def _tomb_fields(_saga: Saga, place: Neighbour) -> list[DialogField]:
             hint="At most 10, spent on Boons.",
         ),
         DialogField("tomb_hooks", "Hooks", "text", d.get("tomb_hooks") or ""),
-        DialogField("tomb_boons", "Boons", "text", d.get("tomb_boons") or ""),
+        DialogField(
+            "tomb_boons",
+            "Boons",
+            "text",
+            d.get("tomb_boons") or "",
+            hint="Wealth: its grave goods are intact, perhaps Unknown. A tomb in "
+            "Nubia should buy Seclusion (LotN p. 44).",
+        ),
         DialogField(
             "tomb_other",
             "Other resources",
             "text",
             d.get("tomb_other") or "",
             placeholder="e.g. inscriptions 21, a guardian ghost 6, vis 20",
-            hint="Inscriptions, guardians, ghosts and vis, at a covenant's costs.",
+            hint="Inscriptions, ghosts and vis at a covenant's costs; a guardian "
+            "at its highest Martial Ability or Brawl (LotN p. 42).",
         ),
         DialogField(
             "tomb_other_bp",
@@ -366,6 +418,8 @@ def _others(place: Neighbour, entry: object, own: int) -> str:
     """The tomb's Build Points with `entry` costing `own`, as markup."""
     total = spent_total(place) - _points_of(place, entry) + own
     allowed = _kind(place).build_points
+    if allowed == 0:
+        return f"{total} in all"
     words = f"{total} of the tomb's {allowed} spent"
     return f"[$text-error]{words}[/]" if total > allowed else words
 
@@ -455,10 +509,11 @@ def curse_info(_saga: Saga, place: Neighbour, index: int) -> str:
     curse = found[index]
     hollow = (curse.get("kind") or et.EFFECT) == et.HOLLOW
     points = curse_points(curse)
-    lines = [
-        f"[$label]Condition:[/] [i]{escape(curse.get('condition') or '')}[/]",
-        f"[$label]Excoriation:[/] {escape(curse.get('excoriation') or '')}",
-    ]
+    lines = [f"[$label]Excoriation:[/] {escape(curse.get('excoriation') or '')}"]
+    if curse.get("condition"):
+        lines.insert(
+            0, f"[$label]Condition:[/] [i]{escape(curse.get('condition', ''))}[/]"
+        )
     if not hollow:
         lines.append(f"[$label]Effect:[/] {escape(_curse_meta(curse))}")
         if curse.get("rdt"):
@@ -613,7 +668,7 @@ def wards_grid(_saga: Saga, place: Neighbour) -> Grid:
                 w["name"],
                 _ward_effect(w),
                 w.get("kind") or et.TALISMAN,
-                f"EF {ward_ease(w)}, {ward_points(w)} BP",
+                f"{_ward_ease_words(w)}, {ward_points(w)} BP",
             ]
             for w in found
         ],
@@ -621,6 +676,11 @@ def wards_grid(_saga: Saga, place: Neighbour) -> Grid:
         "No talismans or wards yet.",
         caps=[30, 16, 12, 0],
     )
+
+
+def _ward_ease_words(ward: TombWard) -> str:
+    ease = ward_ease(ward)
+    return "no roll" if ease is None else f"EF {ease}"
 
 
 def _ward_meta(ward: TombWard) -> str:
@@ -633,7 +693,7 @@ def wards_ledger(_saga: Saga, place: Neighbour) -> list[LedgerEntry]:
             w["name"],
             rubric="¶",
             meta=_ward_meta(w),
-            badge=f"EF {ward_ease(w)}",
+            badge=_ward_ease_words(w),
             tone="text-warning",
             body=escape(w.get("effect") or ""),
             note=f"[i]{escape(w.get('deactivation') or '')}[/]"
@@ -651,6 +711,22 @@ def _resistance_line(penetration: int) -> str:
     return f"anyone whose Magic Resistance is at least {penetration} passes untouched."
 
 
+def _overcome_line(ward: TombWard, kind: str, level: int, penetration: int) -> str:
+    """How an enchantment is overcome, as markup."""
+    ease = ward_ease(ward)
+    if ease is None:
+        return "[$label]To overcome it:[/] it stands in nobody's way."
+    why = (
+        "as printed"
+        if whole_number(ward.get("ease"))
+        else f"{et.OVERCOME_BASE.get(kind, 6)} + magnitude {et.magnitude(level)}"
+    )
+    return (
+        f"[$label]To overcome it without magic:[/] Ease Factor {ease} ({why}); "
+        + _resistance_line(penetration)
+    )
+
+
 def ward_info(_saga: Saga, place: Neighbour, index: int) -> str:
     found = wards(place)
     if index >= len(found):
@@ -664,9 +740,7 @@ def ward_info(_saga: Saga, place: Neighbour, index: int) -> str:
         + (f", {escape(ward.get('uses', ''))}" if ward.get("uses") else ""),
         escape(ward.get("effect") or ""),
         "",
-        f"[$label]To overcome it without magic:[/] Ease Factor {ward_ease(ward)} "
-        f"({et.OVERCOME_BASE.get(kind, 6)} + magnitude {et.magnitude(level)}); "
-        + _resistance_line(penetration),
+        _overcome_line(ward, kind, level, penetration),
     ]
     if ward.get("deactivation"):
         lines.append(f"[$label]Deactivated:[/] {escape(ward.get('deactivation', ''))}")
@@ -690,7 +764,8 @@ def _ward_fields(entry: TombWard | None) -> list[DialogField]:
             "select",
             w.get("kind") or et.TALISMAN,
             options=pairs(et.ENCHANTMENT_KINDS),
-            hint="A talisman harms or imprisons; a ward repels or hides.",
+            hint="A talisman harms or imprisons; a ward repels or hides; some "
+            "do neither, and need no defence (LotN p. 42).",
         ),
         DialogField("art", "Art", "text", w.get("art", ""), placeholder="e.g. ReCo"),
         DialogField("level", "Level", "int", whole_number(w.get("level"))),
@@ -718,6 +793,14 @@ def _ward_fields(entry: TombWard | None) -> list[DialogField]:
             hint="A talisman, by a spell effect; a ward, by a deed at a place "
             "and time (LotN p. 35).",
         ),
+        DialogField(
+            "ease",
+            "Ease Factor, if another",
+            "int",
+            whole_number(w.get("ease")),
+            hint="0 for 6 or 9 + its magnitude; else what the book or the "
+            "storyguide sets.",
+        ),
     ]
 
 
@@ -726,6 +809,8 @@ def _ward_problem(values: dict[str, Any]) -> str | None:
         return "An enchantment has a level of at least 1."
     if (values.get("penetration") or 0) < 0:
         return "Penetration can't be below 0."
+    if (values.get("ease") or 0) < 0:
+        return "An Ease Factor can't be below 0."
     return None
 
 
@@ -734,12 +819,21 @@ def _ward_live(place: Neighbour, entry: TombWard | None, values: dict[str, Any])
     level = values.get("level") or 0
     points = et.enchantment_build_points(level)
     penetration = values.get("penetration") or 0
-    return (
-        f"Ease Factor {et.overcome_ease(kind, level)} to overcome it without magic "
-        f"({et.OVERCOME_BASE.get(kind, 6)} + magnitude {et.magnitude(level)}); "
-        f"{_resistance_line(penetration)}\n"
+    tail = (
         f"[b]{points} Build Points[/]; {_others(place, entry, points)}.\n"
         f"[dim]{L} pp. 35, 41-42.[/]"
+    )
+    if kind == et.NO_OBSTACLE:
+        return f"It stands in nobody's way.\n{tail}"
+    ease = values.get("ease") or et.overcome_ease(kind, level)
+    why = (
+        "set by hand"
+        if values.get("ease")
+        else f"{et.OVERCOME_BASE.get(kind, 6)} + magnitude {et.magnitude(level)}"
+    )
+    return (
+        f"Ease Factor {ease} to overcome it without magic ({why}); "
+        f"{_resistance_line(penetration)}\n{tail}"
     )
 
 
@@ -776,15 +870,22 @@ def traps_grid(_saga: Saga, place: Neighbour) -> Grid:
             [
                 t["name"],
                 _harm_name(t),
-                f"EF {whole_number(t.get('ease'))}",
+                f"EF {whole_number(t.get('ease'))}"
+                + (", sprung" if t.get("sprung") else ""),
                 f"{trap_points(t)} BP",
             ]
             for t in found
         ],
         list(range(len(found))),
         "No traps yet.",
-        caps=[26, 38, 8, 0],
+        caps=[26, 38, 14, 0],
     )
+
+
+def _trap_note(trap: TombTrap) -> str:
+    if trap.get("sprung"):
+        return "[i]Sprung, and not reset.[/]"
+    return "[i]Resets itself.[/]" if trap.get("resets") else ""
 
 
 def traps_ledger(_saga: Saga, place: Neighbour) -> list[LedgerEntry]:
@@ -796,29 +897,36 @@ def traps_ledger(_saga: Saga, place: Neighbour) -> list[LedgerEntry]:
             badge=f"{trap_points(t)} BP",
             tone="label",
             body=escape(t.get("text") or ""),
-            note="[i]Resets itself.[/]" if t.get("resets") else "",
+            note=_trap_note(t),
             subtitle=_harm_name(t),
         )
         for t in traps(place)
     ]
 
 
-def _trap_cost_line(harm: str, ease: int) -> str:
+def _trap_cost_line(harm: str, ease: int, further: int = 0) -> str:
     found = et.HARMS[harm]
+    more = f" + {further} for its further harms" if further else ""
     return (
-        f"{found.build_points} for the harm + {et.AVOID[ease]} for Ease Factor "
-        f"{ease} = {et.trap_build_points(harm, ease)}"
+        f"{found.build_points} for the harm{more} + {et.AVOID[ease]} for Ease "
+        f"Factor {ease} = {et.trap_build_points(harm, ease, further)}"
     )
 
 
 TRAP_RULE = (
     "When it springs, each character says one thing he does and rolls for it "
-    "against the Ease Factor, adjusted by 3 or 6 for the action; in Quickness "
-    "order, the one in danger first, the trap last. A magus answers with a "
-    "Fast-Cast spell. Spotting it first (Per + Awareness) gives time to deal "
-    "with it: −3 with perfect light, +3 by a candle, +6 in near darkness "
-    f"({L} pp. 32-33, 44)."
+    "against the Ease Factor, adjusted by 3, 6 or more for the action; in "
+    "Quickness order, the one in danger first, the trap last. A magus answers "
+    "with a Fast-Cast spell. Spotting it first (Per + Awareness) gives time to "
+    "deal with it: −3 with perfect light, +3 by a candle, +6 in near darkness "
+    f"({L} pp. 32-33, 44). {et.EVASION}"
 )
+
+
+def _resets_words(trap: TombTrap) -> str:
+    if trap.get("once"):
+        return "works only once"
+    return "by itself" if trap.get("resets") else "by hand"
 
 
 def trap_info(_saga: Saga, place: Neighbour, index: int) -> str:
@@ -833,19 +941,23 @@ def trap_info(_saga: Saga, place: Neighbour, index: int) -> str:
         escape(trap.get("text") or ""),
         "",
     ]
+    if trap.get("roll"):
+        lines.append(f"[$label]Avoided by:[/] {escape(trap.get('roll', ''))}")
+    if trap.get("spot"):
+        lines.append(f"[$label]To spot it:[/] Ease Factor {trap.get('spot')}")
     if harm in et.HARMS and ease in et.AVOID:
-        lines.append(f"[$label]Build Points:[/] {_trap_cost_line(harm, ease)}")
-    lines.append(
-        "[$label]Resets:[/] "
-        + ("by itself" if trap.get("resets") else "by hand, or works only once")
-    )
+        cost = _trap_cost_line(harm, ease, whole_number(trap.get("further_bp")))
+        lines.append(f"[$label]Build Points:[/] {cost}")
+    lines.append(f"[$label]Resets:[/] {_resets_words(trap)}")
+    if trap.get("sprung"):
+        lines.append("[$label]Now:[/] sprung, and not reset")
     lines.append(f"[dim]{TRAP_RULE}[/]")
     return "\n".join(lines)
 
 
 def _trap_fields(entry: TombTrap | None) -> list[DialogField]:
     t: TombTrap = entry or {"name": ""}
-    return [
+    found = [
         DialogField("name", "Name", "text", t.get("name", ""), required=True),
         DialogField(
             "harm",
@@ -864,13 +976,41 @@ def _trap_fields(entry: TombTrap | None) -> list[DialogField]:
                 for ease, words in et.AVOID_WORDS.items()
             ],
         ),
+        DialogField(
+            "further_bp",
+            "Further harms' Build Points",
+            "int",
+            whole_number(t.get("further_bp")),
+            hint="For a trap treated as several: what its other harms cost.",
+        ),
+        DialogField(
+            "roll",
+            "The roll to avoid it",
+            "text",
+            t.get("roll", ""),
+            placeholder="e.g. Qik + Athletics - Encumbrance",
+            hint="Offered first when it springs; the troupe may agree another.",
+        ),
+        DialogField(
+            "spot",
+            "Ease Factor to spot it",
+            "int",
+            whole_number(t.get("spot")),
+            hint="0 for the trap's own; assumes torches or lanterns.",
+        ),
         DialogField("text", "How it works", "area", t.get("text", "")),
         DialogField("resets", "Resets itself", "check", bool(t.get("resets"))),
+        DialogField("once", "Works only once", "check", bool(t.get("once"))),
     ]
+    if entry is not None:
+        found.append(DialogField("sprung", "Sprung", "check", bool(t.get("sprung"))))
+    return found
 
 
 def _trap_values(values: dict[str, Any]) -> dict[str, Any]:
-    return {**values, "ease": whole_number(values.get("ease")) or 3}
+    kept = {**values, "ease": whole_number(values.get("ease")) or 3}
+    kept["roll"] = str(kept.get("roll") or "").strip()
+    return kept
 
 
 def _trap_problem(values: dict[str, Any]) -> str | None:
@@ -878,7 +1018,11 @@ def _trap_problem(values: dict[str, Any]) -> str | None:
         return "Choose what the trap does."
     if whole_number(values.get("ease")) not in et.AVOID:
         return "Choose the Ease Factor to avoid it."
-    return None
+    if (values.get("further_bp") or 0) < 0 or (values.get("spot") or 0) < 0:
+        return "Build Points and Ease Factors can't be below 0."
+    if values.get("resets") and values.get("once"):
+        return "A trap that works only once doesn't reset itself."
+    return roll_problem(str(values.get("roll") or ""))
 
 
 def _trap_live(place: Neighbour, entry: TombTrap | None, values: dict[str, Any]) -> str:
@@ -886,10 +1030,11 @@ def _trap_live(place: Neighbour, entry: TombTrap | None, values: dict[str, Any])
     ease = whole_number(values.get("ease")) or 3
     if harm not in et.HARMS or ease not in et.AVOID:
         return ""
-    points = et.trap_build_points(harm, ease)
+    further = values.get("further_bp") or 0
+    points = et.trap_build_points(harm, ease, further)
     return (
-        f"{_trap_cost_line(harm, ease).rsplit(' = ', 1)[0]} = [b]{points} Build "
-        f"Points[/]; {_others(place, entry, points)}.\n"
+        f"{_trap_cost_line(harm, ease, further).rsplit(' = ', 1)[0]} = [b]{points} "
+        f"Build Points[/]; {_others(place, entry, points)}.\n"
         f"[dim]{L} p. 44. Most mechanical traps must be reset by hand.[/]"
     )
 
@@ -909,19 +1054,19 @@ def trap_ops(saga: Saga, place: Neighbour) -> SectionOps:
 
 # -- Overcome It --
 
-#: The rolls a character most often makes against a trap (pp. 33, 43):
-#: a Characteristic and an Ability, or a Characteristic alone.
+#: Rolls the book names against traps (pp. 33, 43, 46, 92), for a hint:
+#: the troupe agrees each one, and any Characteristic + Ability will do.
 ROLLS: tuple[str, ...] = (
-    "Qik + Athletics",
-    "Dex + Athletics",
-    "Str + Athletics",
-    "Str + Brawl",
+    "Qik + Athletics - Encumbrance",
+    "Dex + Athletics - Encumbrance",
+    "Str + Athletics - Encumbrance",
     "Per + Awareness",
     "Int + Concentration",
     "Com + Leadership",
     "Sta",
-    "Str",
 )
+
+_ENCUMBRANCE = "encumbrance"
 
 _CHARACTERISTICS: dict[str, str] = {
     "Int": "intelligence",
@@ -935,10 +1080,32 @@ _CHARACTERISTICS: dict[str, str] = {
 }
 
 
+def _roll_parts(roll: str) -> tuple[str, str, bool]:
+    """A roll's Characteristic, Ability ("" for none) and whether it takes
+    off Encumbrance."""
+    head, minus, tail = roll.partition(" - ")
+    short, _, ability = (part.strip() for part in head.partition("+"))
+    return short, ability, bool(minus) and tail.strip().lower() == _ENCUMBRANCE
+
+
+def roll_problem(roll: str) -> str | None:
+    """Why a roll can't be read ("" is no roll, and fine)."""
+    text = roll.strip()
+    if not text:
+        return None
+    short, _ability, less = _roll_parts(text)
+    if short not in _CHARACTERISTICS:
+        names = ", ".join(_CHARACTERISTICS)
+        return f"A roll starts with a Characteristic ({names}), as in {ROLLS[0]}."
+    if " - " in text and not less:
+        return "The only thing a roll here takes off is Encumbrance."
+    return None
+
+
 def roll_score(character: Character, roll: str) -> tuple[int, str]:
-    """A character's Characteristic + Ability for `roll` ("Qik +
-    Athletics", or "Sta" alone), and how it reads."""
-    short, _, ability = (part.strip() for part in roll.partition("+"))
+    """A character's Characteristic + Ability for `roll` ("Qik + Athletics
+    - Encumbrance", or "Sta" alone), and how it reads."""
+    short, ability, less = _roll_parts(roll)
     name = _CHARACTERISTICS.get(short)
     if name is None:
         raise ValueError(f"No Characteristic is called {short!r}.")
@@ -948,26 +1115,264 @@ def roll_score(character: Character, roll: str) -> tuple[int, str]:
         score, bonus = ability_score(character, ability)
         value += score + bonus
         parts.append(f"{ability} {score + bonus}")
-    return value, " + ".join(parts)
+    words = " + ".join(parts)
+    if less:
+        load = encumbrance(
+            carried_load(character.inventory), character.characteristics.strength
+        )
+        value -= load
+        words += f" - Encumbrance {load}"
+    return value, words
 
 
-def _overcome_fields(saga: Saga) -> list[DialogField]:
-    return [
+@dataclass(frozen=True)
+class Obstacle:
+    """What Overcome It faces: a trap, or a talisman or ward sprung like
+    one (LotN pp. 35, 42)."""
+
+    name: str
+    ease: int
+    harm: str
+    text: str = ""
+    #: The roll the book gives, offered first.
+    roll: str = ""
+    #: The Ease Factor to spot it first; None for one that can't be.
+    spot: int | None = None
+    #: What Magic Resistance must reach to pass it; None for a trap.
+    penetration: int | None = None
+    #: The trap itself, to mark sprung or reset.
+    trap: TombTrap | None = None
+
+
+def _trap_obstacle(trap: TombTrap) -> Obstacle:
+    ease = whole_number(trap.get("ease"))
+    return Obstacle(
+        trap["name"],
+        ease,
+        _harm_name(trap).lower(),
+        trap.get("text") or "",
+        trap.get("roll") or "",
+        whole_number(trap.get("spot")) or ease,
+        trap=trap,
+    )
+
+
+def _ward_obstacle(ward: TombWard, ease: int) -> Obstacle:
+    return Obstacle(
+        ward["name"],
+        ease,
+        "its effect",
+        ward.get("effect") or "",
+        penetration=whole_number(ward.get("penetration")),
+    )
+
+
+@dataclass
+class Acted:
+    """One character's turn: what the diary says of it, and whether it
+    took him clear."""
+
+    who: Character
+    line: str
+    clear: bool
+
+
+@dataclass
+class Springing:
+    """Overcome It under way: who is there, in acting order, and what has
+    been said so far. Nothing here is kept in the saga."""
+
+    saga: Saga
+    place: Neighbour
+    obstacle: Obstacle
+    party: list[Character]
+    rng: random.Random
+    acted: list[Acted] = field(default_factory=list)
+    #: How the look for it went, as plain lines.
+    spotting: list[str] = field(default_factory=list)
+
+
+def _party(saga: Saga) -> list[Character]:
+    """Who might be there: the player covenants' characters, or all of
+    them in a saga with none."""
+    played = {c.id for c in saga.covenants if c.played}
+    return [c for c in saga.characters if c.covenant_id in played] or saga.characters
+
+
+def _with_key(character: Character) -> str:
+    return f"with_{character.id}"
+
+
+def _chosen(
+    saga: Saga, values: dict[str, Any]
+) -> tuple[Character | None, list[Character]]:
+    """The one in danger, and everyone there, in acting order: he first,
+    then by Quickness (the trap acts after them all, p. 33)."""
+    danger = saga.character(values.get("who"))
+    if danger is None:
+        return None, []
+    there = {c.id: c for c in _party(saga) if values.get(_with_key(c))}
+    there[danger.id] = danger
+    order = et.action_order(
+        [(key, c.characteristics.quickness, c is danger) for key, c in there.items()]
+    )
+    return danger, [there[key] for key in order]
+
+
+def _opening_fields(saga: Saga, obstacle: Obstacle) -> list[DialogField]:
+    found = [
         DialogField(
             "who",
-            "Who acts",
+            "Who is in danger",
             "select",
             None,
             options=[(escape(c.name), c.id) for c in saga.characters],
             required=True,
+            hint="The one it is springing on acts first, whatever his Quickness.",
         ),
+        *(
+            DialogField(_with_key(c), f"With him: {escape(c.name)}", "check", False)
+            for c in _party(saga)
+        ),
+    ]
+    if obstacle.spot is None:
+        return found
+    return [
+        *found,
         DialogField(
-            "in_danger",
-            "In danger",
+            "look",
+            "They look for it first",
             "check",
             False,
-            hint="The one the trap is springing on acts first.",
+            hint="Per + Awareness for each of them, before it springs.",
         ),
+        DialogField(
+            "light",
+            "Light",
+            "select",
+            next(iter(et.LIGHT)),
+            options=pairs(tuple(et.LIGHT)),
+            show_if=lambda values: bool(values.get("look")),
+        ),
+    ]
+
+
+def _order_words(party: list[Character]) -> str:
+    return ", ".join([*(c.name for c in party), "then it acts"])
+
+
+def _opening_live(saga: Saga, obstacle: Obstacle, values: dict[str, Any]) -> str:
+    lines = [f"[b]{escape(obstacle.name)}[/], Ease Factor {obstacle.ease}."]
+    if obstacle.text:
+        lines.append(escape(obstacle.text))
+    _danger, party = _chosen(saga, values)
+    if party:
+        lines.append(f"Order: {escape(_order_words(party))}.")
+    if obstacle.penetration is not None:
+        words = _resistance_line(obstacle.penetration)
+        lines.append(words[0].upper() + words[1:])
+    if obstacle.spot is not None:
+        light = values.get("light") or next(iter(et.LIGHT))
+        lines.append(
+            f"[dim]Per + Awareness against {et.spot_ease(obstacle.spot, light)} "
+            f"to spot it ({escape(light.lower())}; {L} p. 44). {et.AWARE}[/]"
+        )
+    return "\n".join(lines)
+
+
+def _opening(
+    saga: Saga, place: Neighbour, obstacle: Obstacle, rng: random.Random
+) -> Form:
+    def apply(values: dict[str, Any]) -> Any:
+        danger, party = _chosen(saga, values)
+        if danger is None:
+            return Refuse("Overcome It", "Choose who is in danger.")
+        spring = Springing(saga, place, obstacle, party, rng)
+        if not values.get("look") or obstacle.spot is None:
+            return action_form(spring)
+        ease = et.spot_ease(obstacle.spot, values.get("light") or "")
+        seen = [c for c in party if _spots(spring, c, ease)]
+        if seen:
+            return seen_form(spring, seen)
+        return action_form(spring)
+
+    return Form(
+        f"Overcome It: {escape(obstacle.name)}",
+        lambda: _opening_fields(saga, obstacle),
+        apply,
+        live=lambda values: _opening_live(saga, obstacle, values),
+        inspector="It Stands in the Way",
+        save_label="Next",
+        help_id="overcome-trap",
+    )
+
+
+def _spots(spring: Springing, who: Character, ease: int) -> bool:
+    """Rolls `who`'s Per + Awareness against `ease`, noting how it went."""
+    score, words = roll_score(who, "Per + Awareness")
+    die = dice.stress_die(spring.rng, saga=spring.saga)
+    total = score + die.value
+    seen = total >= ease and not die.botched
+    spring.spotting.append(
+        f"{who.name}: {words} + {'a botch' if die.botched else die.value} = "
+        f"{total} against {ease}: {'spots it' if seen else 'sees nothing'}."
+    )
+    return seen
+
+
+LEAVE, DEAL, SPRINGS = "leave", "deal", "springs"
+
+
+def seen_form(spring: Springing, seen: list[Character]) -> Form:
+    """Someone spotted it unsprung: there is time to choose what to do."""
+    who = ", ".join(c.name for c in seen)
+    obstacle = spring.obstacle
+
+    def apply(values: dict[str, Any]) -> Any:
+        then = values.get("then")
+        if then == SPRINGS:
+            return action_form(spring)
+        if then == DEAL:
+            if obstacle.trap is not None:
+                obstacle.trap["sprung"] = True
+            line = f"{who} found {obstacle.name} before it sprang, and dealt with it."
+        else:
+            line = f"{who} found {obstacle.name} before it sprang, and left it be."
+        _write(spring, line)
+        return notes(line)
+
+    return Form(
+        f"Spotted: {escape(obstacle.name)}",
+        lambda: [
+            DialogField(
+                "then",
+                "What then",
+                "select",
+                DEAL,
+                options=[
+                    ("They deal with it", DEAL),
+                    ("They leave it be", LEAVE),
+                    ("It springs all the same", SPRINGS),
+                ],
+            )
+        ],
+        apply,
+        live=lambda _values: "\n".join(
+            [*(escape(line) for line in spring.spotting), f"[dim]{et.AWARE}[/]"]
+        ),
+        inspector="Before It Springs",
+        save_label="Go On",
+        help_id="overcome-trap",
+    )
+
+
+def _action_fields(spring: Springing) -> list[DialogField]:
+    obstacle = spring.obstacle
+
+    def by_roll(values: dict[str, Any]) -> bool:
+        return not values.get("fast_cast")
+
+    found = [
         DialogField(
             "action",
             "What he does",
@@ -980,148 +1385,289 @@ def _overcome_fields(saga: Saga) -> list[DialogField]:
             "A Fast-Cast spell",
             "check",
             False,
-            hint="A magus's spell is judged on its own, not against the trap.",
+            hint="A magus's spell is judged on its own, not against this.",
         ),
         DialogField(
             "roll",
             "His roll",
-            "select",
-            ROLLS[0],
-            options=pairs(ROLLS),
-            show_if=lambda values: not values.get("fast_cast"),
+            "text",
+            obstacle.roll or ROLLS[0],
+            hint="As the troupe agrees: Characteristic + Ability, - Encumbrance "
+            "if it counts. Blank for an action that needs no roll.",
+            show_if=by_roll,
         ),
         DialogField(
             "adjust",
             "Harder or easier",
             "int",
             0,
-            hint="The storyguide's adjustment for this action: 3 or 6 either way.",
-            show_if=lambda values: not values.get("fast_cast"),
+            hint="The storyguide's move for this action: 3, 6 or more either way.",
+            show_if=by_roll,
         ),
-        DialogField(
-            "light",
-            "Light",
-            "select",
-            next(iter(et.LIGHT)),
-            options=pairs(tuple(et.LIGHT)),
-            hint="For spotting its trigger first (Per + Awareness).",
-        ),
+    ]
+    if obstacle.penetration is not None:
+        found.append(
+            DialogField(
+                "resistance",
+                "His Magic Resistance",
+                "optint",
+                None,
+                hint="Blank for none: at least its Penetration, and he passes.",
+            )
+        )
+    return found
+
+
+def _so_far(spring: Springing) -> list[str]:
+    """What has happened so far, as markup lines."""
+    return [escape(line) for line in spring.spotting] + [
+        escape(acted.line) for acted in spring.acted
     ]
 
 
-def _order(saga: Saga, values: dict[str, Any]) -> str:
-    """Who acts in what order, with the one acting in danger: the player
-    covenants' characters by Quickness."""
-    who = saga.character(values.get("who"))
-    if who is None:
-        return ""
-    played = {c.id for c in saga.covenants if c.played}
-    party = [c for c in saga.characters if c.covenant_id in played or c is who]
-    order = et.action_order(
-        [
-            (
-                c.name,
-                c.characteristics.quickness,
-                c is who and bool(values.get("in_danger")),
-            )
-            for c in party
-        ]
-    )
-    return ", ".join(order) + ", then the trap"
-
-
-def _overcome_live(saga: Saga, trap: TombTrap, values: dict[str, Any]) -> str:
-    base = whole_number(trap.get("ease"))
-    lines = [f"[b]{escape(trap['name'])}[/], Ease Factor {base}"]
-    who = saga.character(values.get("who"))
-    if values.get("fast_cast"):
-        lines[0] += "."
+def _action_live(spring: Springing, who: Character, values: dict[str, Any]) -> str:
+    obstacle = spring.obstacle
+    base = obstacle.ease
+    lines = _so_far(spring)
+    if _passes(obstacle, values):
+        lines.append(f"{escape(who.name)} passes it untouched.")
+    elif values.get("fast_cast"):
         lines.append(et.FAST_CAST)
     else:
         ease = et.action_ease(base, values.get("adjust") or 0)
-        lines[0] += f", adjusted to {ease}." if ease != base else "."
-        if who is not None:
-            _score, words = roll_score(who, values.get("roll") or ROLLS[0])
+        moved = f", adjusted to {ease}" if ease != base else ""
+        roll = str(values.get("roll") or "").strip()
+        if not roll:
+            lines.append("No roll for this action.")
+        elif roll_problem(roll) is None:
+            _score, words = roll_score(who, roll)
             lines.append(f"{escape(words)} + stress die against {ease}.")
-    order = _order(saga, values)
-    if order:
-        lines.append(f"Order: {escape(order)}.")
-    lines.append(
-        f"Those who fail and aren't helped suffer it: {escape(_harm_name(trap).lower())}."
-    )
-    light = values.get("light") or next(iter(et.LIGHT))
-    lines.append(
-        f"[dim]Spotting its trigger first: Per + Awareness against "
-        f"{et.spot_ease(base, light)} ({escape(light.lower())}; {L} pp. 32-33, 44).[/]"
-    )
+        lines.insert(0, f"[b]{escape(obstacle.name)}[/], Ease Factor {base}{moved}.")
+    lines.append(f"Order: {escape(_order_words(spring.party))}.")
+    lines.append(f"[dim]{et.PRIORITY}[/]")
     return "\n".join(lines)
+
+
+def _passes(obstacle: Obstacle, values: dict[str, Any]) -> bool:
+    return obstacle.penetration is not None and et.passes_untouched(
+        values.get("resistance"), obstacle.penetration
+    )
+
+
+def _acted(spring: Springing, who: Character, values: dict[str, Any]) -> Acted:
+    """What `who`'s turn came to: rolled, unless he needs no roll."""
+    doing = str(values.get("action") or "").strip()
+    name = f"{who.name}, {doing}," if doing else who.name
+    obstacle = spring.obstacle
+    if _passes(obstacle, values):
+        return Acted(who, f"{name} passes untouched.", True)
+    if values.get("fast_cast"):
+        return Acted(who, f"{name} answers with a Fast-Cast spell.", False)
+    roll = str(values.get("roll") or "").strip()
+    if not roll:
+        return Acted(who, f"{name} makes no roll.", False)
+    ease = et.action_ease(obstacle.ease, values.get("adjust") or 0)
+    score, words = roll_score(who, roll)
+    die = dice.stress_die(spring.rng, saga=spring.saga)
+    total = score + die.value
+    rolled = f"{words} + {'a botch' if die.botched else die.value}"
+    if die.botched:
+        return Acted(who, f"{name} botches ({rolled}).", False)
+    clear = total >= ease
+    verb = "succeeds" if clear else "fails"
+    return Acted(who, f"{name} {verb} ({rolled} = {total} against {ease}).", clear)
+
+
+def action_form(spring: Springing) -> Form:
+    """The next character's turn: what he does and rolls; his roll is made
+    when he goes on, so those after him see how it went."""
+    who = spring.party[len(spring.acted)]
+
+    def apply(values: dict[str, Any]) -> Any:
+        spring.acted.append(_acted(spring, who, values))
+        if len(spring.acted) < len(spring.party):
+            return action_form(spring)
+        return it_acts(spring)
+
+    def problem(values: dict[str, Any]) -> str | None:
+        if values.get("fast_cast") or _passes(spring.obstacle, values):
+            return None
+        return roll_problem(str(values.get("roll") or ""))
+
+    return Form(
+        f"{escape(who.name)} Acts: {escape(spring.obstacle.name)}",
+        lambda: _action_fields(spring),
+        apply,
+        validate=problem,
+        live=lambda values: _action_live(spring, who, values),
+        inspector="The Trap Springs",
+        save_label="Roll",
+        help_id="overcome-trap",
+    )
+
+
+def _spared_key(character: Character) -> str:
+    return f"spared_{character.id}"
+
+
+def _caught(spring: Springing) -> list[Character]:
+    return [acted.who for acted in spring.acted if not acted.clear]
+
+
+def _suffering(spring: Springing, values: dict[str, Any]) -> list[str]:
+    caught = _caught(spring)
+    spared = {c.name for c in caught if values.get(_spared_key(c))}
+    return et.suffering([c.name for c in caught], spared)
+
+
+#: What a trap is left as.
+SPRUNG, RESET = "sprung", "reset"
+
+
+def _it_acts_fields(spring: Springing) -> list[DialogField]:
+    found = [
+        DialogField(
+            _spared_key(c),
+            f"{escape(c.name)} is helped, or out of its reach",
+            "check",
+            False,
+        )
+        for c in _caught(spring)
+    ]
+    found.append(DialogField("outcome", "What came of it", "text", ""))
+    trap = spring.obstacle.trap
+    if trap is None:
+        return found
+    left = [("Left sprung", SPRUNG)]
+    if not trap.get("once"):
+        left.append(("Reset", RESET))
+    found.append(
+        DialogField(
+            "left",
+            "The trap is",
+            "select",
+            RESET if trap.get("resets") else SPRUNG,
+            options=left,
+            hint="Most mechanical traps are reset by hand (LotN p. 44).",
+        )
+    )
+    return found
+
+
+def _it_acts_live(spring: Springing, values: dict[str, Any]) -> str:
+    obstacle = spring.obstacle
+    lines = _so_far(spring)
+    hurt = _suffering(spring, values)
+    if hurt:
+        names = escape(", ".join(hurt))
+        lines.append(
+            f"[b]{names} suffer{'s' if len(hurt) == 1 else ''} it:[/] {escape(obstacle.harm)}."
+        )
+        if obstacle.text:
+            lines.append(escape(obstacle.text))
+    else:
+        lines.append("[b]Nobody suffers it.[/]")
+    lines.append(f"[dim]{et.LAST_IN_THE_ROUND}[/]")
+    return "\n".join(lines)
+
+
+def it_acts(spring: Springing) -> Form:
+    """The last step: it acts on those who failed and weren't helped, and
+    the outcome goes in the place's diary."""
+    obstacle = spring.obstacle
+
+    def apply(values: dict[str, Any]) -> Any:
+        hurt = _suffering(spring, values)
+        trap = obstacle.trap
+        words = [acted.line for acted in spring.acted]
+        words.append(
+            f"{', '.join(hurt)} suffered {obstacle.name}."
+            if hurt
+            else f"Nobody suffered {obstacle.name}."
+        )
+        outcome = str(values.get("outcome") or "").strip()
+        if outcome:
+            words.append(outcome)
+        if trap is not None:
+            if values.get("left") == SPRUNG:
+                trap["sprung"] = True
+            else:
+                trap.pop("sprung", None)
+        _write(spring, " ".join(words))
+        return notes(words[-2] if outcome else words[-1])
+
+    return Form(
+        f"It Acts: {escape(obstacle.name)}",
+        lambda: _it_acts_fields(spring),
+        apply,
+        live=lambda values: _it_acts_live(spring, values),
+        inspector="Who Suffers It",
+        save_label="Write",
+        help_id="overcome-trap",
+    )
+
+
+def _write(spring: Springing, line: str) -> None:
+    place_events.diary(spring.place).append(
+        {
+            "year": spring.saga.current_year,
+            "season": spring.saga.current_season,
+            "text": line,
+        }
+    )
+
+
+def _reset_step(trap: TombTrap) -> Command:
+    """A trap already sprung is reset before it can spring again."""
+    if trap.get("once"):
+        return Refuse("Overcome It", f"{escape(trap['name'])} works only once.")
+
+    def reset() -> Any:
+        trap.pop("sprung", None)
+        return notes(f"{trap['name']} is reset.")
+
+    return Confirm(
+        f"{escape(trap['name'])} has sprung and isn't reset. Reset it?",
+        reset,
+        yes_label="Reset",
+        title="Overcome It",
+    )
 
 
 def overcome_trap(
     saga: Saga, place: Neighbour, index: int, rng: random.Random | None = None
 ) -> Command:
-    """More's Overcome It on the chosen trap: who acts, what he does and
-    his roll; Roll rolls a stress die against the trap's Ease Factor and
-    offers to write the outcome in the place's diary."""
+    """More's Overcome It on the chosen trap: who is there, whether they
+    look for it first, each character's action in order, then who suffers
+    it, written in the place's diary."""
     listed = traps(place)
     if index >= len(listed):
         return Refuse("Overcome It", "Choose a trap first.")
-    trap = listed[index]
     if not saga.characters:
         return Refuse("Overcome It", "The saga has no characters to act.")
+    trap = listed[index]
+    if trap.get("sprung"):
+        return _reset_step(trap)
+    return _opening(saga, place, _trap_obstacle(trap), rng or random.Random())
 
-    def apply(values: dict[str, Any]) -> Any:
-        who = saga.character(values.get("who"))
-        if who is None:
-            return Refuse("Overcome It", "Choose who acts.")
-        doing = str(values.get("action") or "").strip()
-        if values.get("fast_cast"):
-            return notes(
-                f"{escape(who.name)} answers {escape(trap['name'])} with a "
-                "Fast-Cast spell: cast it from his sheet. It is judged on its "
-                f"own, not against the trap's Ease Factor ({L} p. 33)."
-            )
-        ease = et.action_ease(whole_number(trap.get("ease")), values.get("adjust") or 0)
-        score, words = roll_score(who, values.get("roll") or ROLLS[0])
-        die = dice.stress_die(rng or random.Random(), saga=saga)
-        total = score + die.value
-        if die.botched:
-            outcome = "botches"
-        elif total >= ease:
-            outcome = f"succeeds ({total} against {ease})"
-        else:
-            outcome = f"fails ({total} against {ease})"
-        line = (
-            f"{who.name}{f', {doing},' if doing else ''} {outcome} against "
-            f"{trap['name']}."
+
+def overcome_ward(
+    saga: Saga, place: Neighbour, index: int, rng: random.Random | None = None
+) -> Command:
+    """More's Overcome It on the chosen talisman or ward: the same narrative
+    rules as a trap (LotN pp. 35, 42), with no sprung state to keep."""
+    listed = wards(place)
+    if index >= len(listed):
+        return Refuse("Overcome It", "Choose a talisman or ward first.")
+    if not saga.characters:
+        return Refuse("Overcome It", "The saga has no characters to act.")
+    ease = ward_ease(listed[index])
+    if ease is None:
+        return Refuse(
+            "Overcome It", f"{escape(listed[index]['name'])} stands in nobody's way."
         )
-
-        def write() -> None:
-            place_events.diary(place).append(
-                {
-                    "year": saga.current_year,
-                    "season": saga.current_season,
-                    "text": line,
-                }
-            )
-
-        return Confirm(
-            f"{escape(words)} + {'a botch' if die.botched else die.value} "
-            f"= {total}.\n\n[b]{escape(line)}[/]\n\nWrite it in "
-            f"{escape(place.name)}'s diary?",
-            write,
-            yes_label="Write",
-            title="Overcome It",
-        )
-
-    return Form(
-        f"Overcome It: {escape(trap['name'])}",
-        lambda: _overcome_fields(saga),
-        apply,
-        live=lambda values: _overcome_live(saga, trap, values),
-        inspector="The Trap Springs",
-        save_label="Roll",
-        help_id="overcome-trap",
+    return _opening(
+        saga, place, _ward_obstacle(listed[index], ease), rng or random.Random()
     )
 
 

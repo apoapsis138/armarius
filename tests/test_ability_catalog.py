@@ -78,6 +78,11 @@ def test_a_supernatural_or_hedge_ability_needs_the_virtue_that_grants_it():
     assert creation_access.may_learn(magus, "Kabbalah")
 
 
+def test_church_lore_is_in_the_catalog():
+    entry = catalog.load_ability_catalog_by_id()["ab_church_lore"]
+    assert entry.name == "Church Lore" and entry.category == "General"
+
+
 def test_theology_zoroastrian_follows_its_book():
     theology = catalog.load_ability_catalog_by_id()["ab_theology_zoroastrian"]
     assert (theology.name, theology.category) == ("Theology: Zoroastrian", "Academic")

@@ -8,10 +8,13 @@ Knows People Virtue are in the catalog. The Great Hunger and the Hope are
 book_packs.hunger's.
 
 A Virtue the catalog lacks is left out of a creature's block and named in
-its notes: Crushing Jaws (p. 22), Gluttonous, Overrun, Thick Skin. Thick
-Scales, Thick Fur and Thick Feathers are the catalog's Thick Fur/Thick
-Scales; Sex Shift is its Gender Shift. Where the book gives only changes to
-another block, the record holds what those changes state, and its combat
+its notes: Gluttonous, printed with no rules. By the errata (pp. 86-87)
+Overrun, Trunk, Roll Attack (the book's Death Roll), Constriction and Swallow
+Whole are Qualities, so they stand in the blocks and not among the powers.
+Thick Scales, Thick Fur, Thick Feathers and Thick Skin are the catalog's
+Thick Fur/Thick Scales; Sex Shift is its Gender Shift. Where the book gives
+only changes to another block, the record holds what those changes state, and
+its combat
 figures are left for the storyguide."""
 
 from __future__ import annotations
@@ -804,6 +807,7 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
                 "Extra Natural Weapons",
                 "Herd Animal",
                 "Large Teeth",
+                "Overrun",
                 "Tough Hide",
             ],
             "abilities": [
@@ -833,12 +837,7 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "Ferocity applies against those in its way. Natural weapons: "
             "Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk +4, Def "
             "+2, Dam +5.",
-            "New Quality, Overrun (the errata's reading): only when it charged "
-            "and exerted itself. If the attack hits, the foe rolls Dex + "
-            "Athletics stress against Damage Total before soak + its Size - "
-            "his Size. On failure he lands its Size in feet away with falling "
-            "damage, and spends his next action rising; it normally tramples "
-            "him next. A prone man cannot parry and defends with Brawl.",
+            "Overrun is the errata's reading (p. 86).",
         ),
         place=valley,
     )
@@ -969,6 +968,8 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
                 "Ambush Predator",
                 "Amphibious",
                 "Camouflage",
+                "Crushing Jaws",
+                "Roll Attack",
                 THICK,
                 "Tough Hide",
             ],
@@ -987,20 +988,6 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         attacks=[b.attack("Bite", 2, 10, 7, 12)],
         soak=12,
         fatigue_levels=FATIGUE,
-        powers=[
-            b.power(
-                "Death Roll",
-                0,
-                0,
-                "",
-                does="Non-magical. The round after a successful bite it may roll, "
-                "twisting off flesh for +6 damage with no attack roll; the "
-                "victim soaks without armour's Protection. More often it drags "
-                "him under to drown, waiting by its Amphibious Quality. Each "
-                "round he may try to break free by overcoming a Grapple of "
-                "Strength 10, and if he does it is likely to bite again.",
-            ),
-        ],
         appearance=(
             "Fifteen to eighteen feet of thick scales, in yellows, greens and "
             "browns that hide it perfectly in water or out. Its name is said "
@@ -1013,11 +1000,10 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "for fifteen feet; thirty-foot (Size +5) or larger beasts are "
             "reported. This is tougher than the crocodile of Magi of Hermes p. "
             "11.",
-            "Ferocity applies in ambush. Also has Crushing Jaws (p. 22): +3 "
-            "damage on a bite, but a successful Grapple holds its jaws shut. "
-            "Natural weapon: Init 0, Atk +4, Def +1, Dam +3, before Crushing "
-            "Jaws. Its scales count as Protection 5 besides its Virtues and "
-            "Qualities.",
+            "Ferocity applies in ambush. Natural weapon: Init 0, Atk +4, Def "
+            "+1, Dam +3, before Crushing Jaws (p. 22). Its scales count as "
+            "Protection 5 besides its Virtues and Qualities. Roll Attack is "
+            "the book's Death Roll (errata p. 87).",
             "It holds its breath half an hour moderately active, two hours "
             "inactive. +3 to Stealth when still or slow in water. " + SURPRISE,
         ),
@@ -1039,8 +1025,11 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "Herd Animal",
             *_times("Imposing Appearance", 2),
             HORNS,
+            "Overrun",
             "Sharp Ears",
+            THICK,
             "Tough Hide",
+            "Trunk",
         ],
         "abilities": [
             ("Athletics", 3, "running"),
@@ -1057,28 +1046,9 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         b.attack("Stomp", -3, 8, 2, 15),
         b.attack("Trunk (grapple)", -2, 5, 2, None),
     ]
-    trunk = b.power(
-        "Trunk",
-        0,
-        0,
-        "",
-        does="Non-magical. Handles things like a human hand; tasks needing two "
-        "hands are at -3.",
-    )
-    overrun = b.power(
-        "Overrun",
-        0,
-        0,
-        "",
-        does="Non-magical. Only when it charged and exerted itself. If the attack "
-        "hits, the foe rolls Dex + Athletics stress against Damage Total before "
-        "soak + its Size - his Size. On failure he lands its Size in feet away "
-        "with falling damage and spends his next action rising; it normally "
-        "tramples him next. A prone man cannot parry and defends with Brawl.",
-    )
     elephant_weapons = (
         "Natural weapons: Stomp Init -1, Atk +3, Def -1, Dam +3; Tusks Init 0, Atk "
-        "+6, Def +4, Dam +3; the trunk only grapples. Also has Thick Skin. "
+        "+6, Def +4, Dam +3; the trunk only grapples. "
         "Ferocity defends its family; Fear is of a pig's squeal. Excellent "
         "hearing and a sense of vibration through the trunk give +3 on rolls of "
         "hearing."
@@ -1094,7 +1064,6 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         attacks=attacks,
         soak=10,
         fatigue_levels=EXTRA_FIRST,
-        powers=[trunk, overrun],
         appearance=(
             "The African elephant stands up to 12 feet, 22 feet long, up to "
             "14,000 pounds. These are the fiercer male's figures; a female can "
@@ -1165,8 +1134,6 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         soak=10,
         fatigue_levels=EXTRA_FIRST,
         powers=[
-            trunk,
-            overrun,
             b.power(
                 "Invisibility of the Standing Elephant",
                 0,
@@ -1266,12 +1233,8 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "raised with hounds; though not sacred in ancient Egypt, it hunted "
             "desert game there. Greater African beasts (Size +1) are often "
             "ridden by jinn or witches, and ghuls often take its shape.",
-            "Also has Crushing Jaws, a new Quality (p. 22): for an animal whose "
-            "bite is far stronger than the rest of it. +3 Damage on any bite, "
-            "already in the Bite line, but the muscles that open the mouth are "
-            "weak and a human can hold it shut with a successful Grapple. "
             "Natural weapon: Init 0, Atk +4, Def +1, Dam +3, raised to +6 by "
-            "Crushing Jaws.",
+            "Crushing Jaws (p. 22), already in the Bite line.",
         ),
         place=valley,
     )
@@ -1348,9 +1311,11 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
                 "Aggressive",
                 "Ambush Predator",
                 "Camouflage",
+                "Constriction",
                 "Grapple",
                 "Keen Sense of Smell",
                 "Slippery",
+                "Swallow Whole",
                 "Tireless",
             ],
             "abilities": [
@@ -1366,35 +1331,6 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
         attacks=[b.attack("Bite", 0, 10, 6, 9), b.attack("Grapple", 0, 8, 12, None)],
         soak=3,
         fatigue_levels=EXTRA_TWO,
-        powers=[
-            b.power(
-                "Constriction",
-                0,
-                0,
-                "",
-                does="Non-magical. Only on a victim of Size +5 or less, by the "
-                "grappling rules (ArM5 p. 174). While it holds, the victim is "
-                "deprived of air (ArM5 p. 180) and makes a Stamina check every "
-                "five rounds. On later rounds it may keep constricting and also "
-                "bite, at the victim, adding Grapple Strength to the Attack "
-                "Total, or at someone else. It usually constricts one at a "
-                "time.",
-            ),
-            b.power(
-                "Swallow Whole",
-                0,
-                0,
-                "",
-                does="Non-magical. Swallows anything of Size -1 or less. Prey not "
-                "first subdued can struggle, still constricted, and must make "
-                "deprivation rolls even if it escapes the grapple. After three "
-                "rounds it reaches the stomach: acid does +9 a round, and full "
-                "immersion makes that +36 (ArM5 p. 181). Each round Strength + "
-                "Athletics may brace him: 6 half immersion (triple), 9 a limb "
-                "(double), 12 a splash (normal). It cannot swallow again until "
-                "the last meal reaches the stomach.",
-            ),
-        ],
         appearance=(
             "Over 45 feet long and nearly two feet through at the thickest, "
             "mottled brown with swirls of olive, black and yellow."
@@ -1408,6 +1344,10 @@ def _beasts(b: Builder, valley: Neighbour) -> None:
             "a Fatigue level on its first bite and another when it throws its "
             "coils. It takes hours to work a dead creature of up to Size +5 "
             "into its jaws.",
+            "Constriction takes a victim of Size +5 or less; Swallow Whole takes "
+            "prey of Size -1 or less alive. Prey not first subdued by "
+            "Constriction can struggle, still constricted (errata p. 87: both "
+            "are Qualities).",
             "The Grapple's Defense includes +6 for Slippery. Natural weapon: "
             "Init 0, Atk +3, Def +1, Dam +1. " + SURPRISE + " +3 to Stealth when "
             "still, and +3 to Perception by smell.",

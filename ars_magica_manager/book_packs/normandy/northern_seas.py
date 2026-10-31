@@ -4,19 +4,21 @@ chapter two: the covenant, its six magi and Carles's familiar, its
 companions and grogs, its fleet, laboratories, devices, library and vis,
 and the demon among its crews.
 
-It sails as a fleet, so it has no place of its own and an aura of 0
-(Missing Aura, Erratically Mobile); Barfleur is its home port. Stat
-blocks are the book's; the rest is a summary, not its words."""
+It sails as a fleet, so it has no place of its own: it opens at a sea
+Place with an aura of 0 (Missing Aura, Erratically Mobile), and no route
+is printed. Barfleur is its home port, a Port of The Region. Stat blocks
+are the book's; the rest is a summary, not its words."""
 
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
 from ... import storage
-from ...models import CharterClause, Familiar, ScoredTrait
+from ...models import CharterClause, CovenantStop, Familiar, ScoredTrait
 from ...models.holdings import Possession
 from ...models.ships import Ship
 from ...models.world import FULL
+from ...rules import mobile, sites
 from ..builder import (
     Builder,
     StatBlock,
@@ -1424,6 +1426,7 @@ def build(normandy: Normandy) -> None:
     b = normandy.b
     covenant = _covenant(normandy)
     normandy.covenants["northern_seas"] = covenant
+    _waters(normandy, covenant)
     people = _people(normandy, covenant)
     _fleet(b, covenant, people)
     _devices(covenant)
@@ -1438,6 +1441,29 @@ def stats(normandy: Normandy) -> None:
     b = normandy.b
     for key, _name, _kind, _age, block, _summary in (*MAGI, *PEOPLE):
         b.stats(normandy.magi[key], block, source=SOURCE)
+
+
+def _waters(normandy: Normandy, covenant: Covenant) -> None:
+    """The sea it opens at, whose base aura is the book's 0 (Through the
+    Aegis p. 11), and Barfleur's harbour, nominally its home port (p. 11):
+    Barfleur the town is no Place, and a stop names a Place."""
+    b = normandy.b
+    sea = b.place(
+        NAME,
+        summary="The seas the covenant sails, from the Rhine to Hibernia and "
+        "from Iceland to Iberia. They have no pervading aura: there are "
+        "auras out there, but small and widely scattered, and the magi are "
+        "charting them.",
+    )
+    sea.details[sites.WATERS] = mobile.OPEN_WATER
+    covenant.stops.append(CovenantStop(1220, "Spring", sea.id))
+    harbour = b.place(
+        "The harbour of Barfleur",
+        inside=normandy.places["cotentin"],
+        summary="The harbour of the town of Barfleur, nominally the home port "
+        "of the Northern Seas.",
+    )
+    harbour.details[sites.WATERS] = mobile.PORT
 
 
 def _covenant(normandy: Normandy) -> Covenant:

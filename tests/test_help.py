@@ -579,6 +579,7 @@ GUIDES = [
     "guide-religion",
     "guide-threat-clock",
     "guide-story-hook",
+    "guide-mobile-covenant",
     "guide-guest-stay",
     "guide-find-action",
     "guide-charter",

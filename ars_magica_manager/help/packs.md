@@ -585,7 +585,8 @@ The Cradle and the Crescent pack is built from *The Cradle and the Crescent*, a 
 
 - **Provence**: Bellaquin fell in 1202 and Lariander in 1209, and Tolosa Paratge's war had begun by 1214.
 - **Theban**: Didyma joins the Kretan phyle, Nestor, Io and Kaia are Polyaigos's magi, Catella trained in Constantinople, and Miletos lies inside Nicaea.
-- **Hibernia**: Cú Chonnacht leads Clan Mac Tire, and Tir na nÓg is an island of the Fomórach.
+- **Hibernia**: Cú Chonnacht leads Clan Mac Tire, and Tir na nÓg is an island of the Fomórach. The book names no booley, so the Clan has no stops; it shows Whereabouts by its Hook.
+- **Normandy**: the Northern Seas open in Spring 1220 at a sea Place of that name with an aura of 0, the book's base aura. No route is printed. Barfleur is a town, so its harbour is a Place of its own, marked a Port.
 - **Rhine**: the ruling of 780 gives covenants a veto on new foundations, the Sauerland lies near Dortmund, and Julia's sigil adds one to Fengheld's proxies.
 
 Lore follows Through the Aegis, then the Tribunal book, then the Definitive Edition; mechanics follow the Definitive Edition.
@@ -605,7 +606,25 @@ The pack follows the book: it has no Tribunal, because its stories can be set an
 
 The pack holds no Tribunal: these lands lie outside the Order. The book reflects what the thirteenth century believed about Egypt, and says so: its monuments, its tomb traps and its account of Islam are the setting's, not history. Its three covenant sites, Siwa Oasis, Ikhmindi and Adulis, are places, because a pact keeps covenants out of Africa until 1225. Tomb wards, curses, traps and the treasure hunters' game are the book's examples, in words, and aren't working rules yet. The Fifth Crusade follows this book's account in this pack. Where the book contradicts itself, the record says so and gives both.
 
+The tombs of Cleopatra and Arrakkamani are real Tomb tabs, and the book's example curses, wards, talismans and traps are records on four places of examples, which have no budget. Neither tomb's kind is printed: both are a major monarch's, as only 500 Build Points hold what the book spends on them. Cleopatra's fear curse costs 10 by the rule, not the 6 printed, so her tomb spends 488, not 484. Arrakkamani's enchantments come to 50, not the 52 printed, which fits the book's total of 259; his Sovereign Ward keeps the Ease Factor 24 printed, where the rule gives 21. Projectiles, pits and puzzles stay as words: their cost varies, or the troupe plays them.
+
 # Assumptions made for Between Sand and Sea
 <!-- help: pack-assumptions-africa -->
 
 The pack holds no Tribunal: Africa lies outside the Order. It covers the Atlantic to Siwa, and the book says plainly that this is Africa as thirteenth-century people imagined it, not history; its peoples and faiths are the setting's. A figure the book misprints is noted where it's used. The Painted Dog's Strength of -3 is worked out from its Bite, because the printed figure is unreadable. Where the book contradicts itself, the record says so and gives both.
+
+The Tomb of Tin Hinan is marked a tomb of a major monarch, as her aura of 5 fits, though the book gives no kind; it prints no curse, ward or trap for it. The other Berber and Garamantian tombs stay as words, as the book gives nothing to build them from.
+
+# Assumptions made for Land of Fire and Ice
+<!-- help: pack-assumptions-iceland -->
+
+The pack joins *Land of Fire & Ice* and *The Icelandic Wars*, Fourth Edition books converted by the Definitive Edition's appendix. It holds no Tribunal. Vindolanda and Wormhout are covenants with none, and each comes with its places. The book calls Vindolanda and its saga optional and not official history, so all of it is in secrets and dormant stories, and nothing in it replaces another pack's record.
+
+The appendix doesn't cover creatures, so their combat totals, Soak and power costs are as printed. A Might Form the book doesn't print is this pack's reading, and the record says so. Virtues, Abilities and powers with no Definitive Edition counterpart are named in the notes or kept under their printed names. Galdor and trollskap are described, and aren't working rules yet. Where the two books or one book's pages disagree, the record says so and gives both.
+
+# Assumptions made for Antagonists
+<!-- help: pack-assumptions-antagonists -->
+
+The pack holds no Tribunal: the book's opponents can be set in any saga. Each one's plots and hidden nature are in secrets, and their stories come in dormant. Where the book gives a person no name for a thing, or its name gives the plot away, the record has a plain name instead. A person printed in two versions, as Hannelore and the Friar or Monk are, is a choice on the import form. Spells whose printed level differs from the catalog's are the book's own spells. Where the book contradicts itself, the record says so and gives both.
+
+The people with printed stats are also templates on New Character, named **Antagonist -**, in any saga with the book in play.

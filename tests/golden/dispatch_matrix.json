@@ -18,7 +18,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Interests, Update from a File, In Creation / In Play, Demote, Arms, Go To, Begin Project",
+        "m": "MenuScreen: Export, Interests, Update from a File, In Creation / In Play, Demote, Arms, Go To, Add a Stop, Begin Project",
         "slash": "(disabled)"
       }
     },
@@ -39,6 +39,16 @@
         "e": "(disabled)",
         "d": "(disabled)",
         "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-whereabouts": {
+      "active": "section-cov-whereabouts",
+      "keys": {
+        "a": "FieldsDialog: Add a Stop: Keep",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Add a Stop, Plan Route",
         "slash": "(disabled)"
       }
     },
@@ -1460,7 +1470,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Covenant",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Go To",
+        "m": "MenuScreen: Export, Update from a File, Promote, Demote, Arms, Go To, Add a Stop",
         "slash": "(disabled)"
       }
     },
@@ -1511,6 +1521,16 @@
         "e": "(nothing)",
         "d": "(nothing)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-cov-whereabouts": {
+      "active": "section-cov-whereabouts",
+      "keys": {
+        "a": "FieldsDialog: Add a Stop: Fengheld",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Add a Stop, Plan Route",
         "slash": "(disabled)"
       }
     },
@@ -2872,7 +2892,7 @@
         "a": "FieldsDialog: Add a Talisman or Ward",
         "e": "FieldsDialog: Edit a Talisman or Ward",
         "d": "ConfirmScreen",
-        "m": "ChooseScreen: Go To",
+        "m": "MenuScreen: Go To, Overcome It",
         "slash": "(disabled)"
       }
     },

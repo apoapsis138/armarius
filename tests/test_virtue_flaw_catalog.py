@@ -30,6 +30,8 @@ KNOWN_BOOKS = {
     *("LoH", "MoH", "RM", "TSE", "ToME"),
     # The hedge traditions' books
     *("AM", "BS&S", "LotN", "TtA"),
+    # Mythic Locations, for the Fast Swimmer Quality
+    "ML",
 }
 
 
@@ -52,11 +54,12 @@ def test_catalog_counts_after_adding_the_supplements():
     # plus Magi of Hermes's Hermetic Metamorphosis, The Cradle and the
     # Crescent's four Solomonic breakthrough Virtues and Societates's Miles,
     # plus Through the Aegis's Faeborchless,
+    # plus 21 from the Nile, Africa and Antagonists packs' books,
     # less The Church's Brother-Priest, which is the DE's Brother Chaplain.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1374
+    assert len(entries) == 1395
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 808, "Flaw": 479, "Quality": 67, "Inferiority": 20}
+    assert counts == {"Virtue": 814, "Flaw": 484, "Quality": 77, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 
@@ -99,6 +102,43 @@ def test_the_jinni_free_virtue_is_for_spirits_of_its_book():
     assert set(jinni.audience) == {"faerie", "magic being"}
     assert sourcebooks.in_play(jinni.source, ["TC&TC"])
     assert not sourcebooks.in_play(jinni.source, [])
+
+
+@pytest.mark.parametrize(
+    ("vf_id", "kind", "tier", "cost", "source"),
+    [
+        ("vf_child_of_the_house", "Virtue", "Major", 3, "LotN"),
+        ("vf_agent_of_the_sultan", "Virtue", "Major", 3, "LotN"),
+        ("vf_favored_slave", "Flaw", "Minor", -1, "LotN"),
+        ("vf_chattel_slave", "Flaw", "Major", -3, "LotN"),
+        ("vf_learned_magician", "Virtue", "Free", 0, "LotN; HMRE"),
+        ("vf_freed_slave", "Flaw", "Minor", -1, "BS&S"),
+        ("vf_abid", "Flaw", "Major", -3, "BS&S"),
+        ("vf_attribute_duplication", "Virtue", "Major", 3, "Ant"),
+        ("vf_supernaturally_fragile", "Flaw", "Major", -3, "Ant"),
+        ("vf_antaeus_bloodline", "Virtue", "Minor", 1, "BS&S"),
+        ("vf_antaeus_bloodline_major", "Virtue", "Major", 3, "BS&S"),
+        ("vf_crushing_jaws", "Quality", "Free", 0, "LotN; BS&S"),
+        ("vf_swallow_whole", "Quality", "Free", 0, "LotN"),
+        ("vf_constriction", "Quality", "Free", 0, "LotN"),
+        ("vf_overrun", "Quality", "Free", 0, "LotN"),
+        ("vf_trunk", "Quality", "Free", 0, "LotN"),
+        ("vf_roll_attack", "Quality", "Free", 0, "LotN"),
+        ("vf_fast_swimmer", "Quality", "Free", 0, "LotN; ML"),
+        ("vf_smell_water", "Quality", "Free", 0, "BS&S"),
+        ("vf_survive_without_water", "Quality", "Free", 0, "BS&S"),
+        ("vf_gift_of_thumbs", "Quality", "Minor", 1, "BS&S; TtA"),
+    ],
+)
+def test_the_entries_the_packs_named_as_gaps(vf_id, kind, tier, cost, source):
+    e = by_id()[vf_id]
+    assert (e.type, e.tier, e.cost, e.source) == (kind, tier, cost, source)
+    assert e.summary and e.description
+
+
+def test_supernaturally_fragile_takes_nine_from_soak():
+    modifier = by_id()["vf_supernaturally_fragile"].modifiers[0]
+    assert (modifier.applies_to, modifier.amount) == ("soak", -9)
 
 
 def test_the_wrongly_filed_entries_are_fixed():

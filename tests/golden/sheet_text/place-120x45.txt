@@ -58,7 +58,7 @@
     ▼ The Tomb
 
       Kind: Tomb of a lesser royal or high priest  ·  Build Points: 40 of 100  ·
-      Magic aura: 3
+      Magic aura: 5 (base 3; raised by Boons or its site)
       Tethers: a burial ground 3 centuries in use: 3  ·  Hooks: —  ·  Boons: —
 
       Build Points: curses 10, talismans and wards 12, traps 18; 40 of the tomb's

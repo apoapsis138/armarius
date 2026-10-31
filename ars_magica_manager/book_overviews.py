@@ -182,6 +182,19 @@ OVERVIEWS: dict[str, str] = {
         "vanished laboratory and Thomae's flying castle. Each chapter frames "
         "stories of rediscovery and lists what magi remember, true or false."
     ),
+    "Ant": (
+        "Ten recurring opponents for any saga, from a baron who grows in power "
+        "over the years to a diabolist, a cult and a queen of the faeries. Each "
+        "comes with their background, plots and allies, so a troupe gets an "
+        "enemy worth meeting more than once."
+    ),
+    "LFI": (
+        "Iceland in the last century of its free state: a land of volcanoes, "
+        "glaciers and proud farmers with no king, where galdramen, giants, trolls"
+        " and landvaettir live beside the law. A troupe gets the island's "
+        "history and law, its native magicians, and two long story arcs, one "
+        "around a dragon's feud and one around an old enemy of the Order."
+    ),
     "LotN": (
         "The Nile valley in the thirteenth century, from Egypt through Nubia to"
         " Ethiopia, shown as its own people believed it to be. A troupe gets "

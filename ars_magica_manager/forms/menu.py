@@ -36,6 +36,7 @@ from .. import (
     health,
     labor,
     melee_events,
+    mobile_covenants,
     neighbours,
     packs,
     places,
@@ -235,12 +236,17 @@ NOT_ON_PAGES = frozenset(
         "library_search",
         # A tomb's trap springs: the Traps list's own button.
         "overcome_trap",
+        "overcome_ward",
         "cross_threshold",
         # A covenant's ships: the Ships list's own buttons.
         "ship_stress",
         "ship_combat",
         "ship_fate",
         "build_ship",
+        "detach_ship",
+        "rejoin_ship",
+        # The desktop draws it as Whereabouts' own button.
+        "plan_route",
         # A cleric's career: Holy Orders' own button.
         "perform_exorcism",
         # A covenant's Hermetic Projects: the tower's and the projects
@@ -621,6 +627,8 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "whereabouts": ((NodeKind.CHARACTER, "Current Location"),),
     "guest_stay": ((NodeKind.CHARACTER, "Current Location"),),
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
+    # Beside the Mobile Hooks, as the section shows only with a stop or one.
+    "add_stop": ((NodeKind.COVENANT, "Hooks"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
@@ -1112,6 +1120,7 @@ def set_date(saga: Saga) -> Form:
         if (season, year) == (saga.current_season, saga.current_year):
             return None
         saga.current_season, saga.current_year = season, year
+        places.sync(saga)
         return notes(f"Date set to {season} {year}.")
 
     return Form(
@@ -1889,6 +1898,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "whereabouts": _needs(_character, whereabouts_forms.where_form),
     "guest_stay": _needs(_character, guest_stays.stay_form),
     "suggest_story": _needs(_covenant, hook_story_forms.story_form),
+    "add_stop": _needs(_covenant, mobile_covenants.add_stop),
     "build_ship": _needs(_covenant, ship_build_forms.build_form),
     "cross_threshold": _needs(_neighbour, threshold_forms.threshold_form),
     "trait_roll": _needs(_character, trait_roll_forms.roll_form),

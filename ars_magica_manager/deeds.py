@@ -369,6 +369,8 @@ COVENANT_ACTIONS: dict[str, tuple[str, dict[str, str]]] = {
             "ship_stress": "A check against a storm, fire or attack.",
             "ship_combat": "One ship against another.",
             "ship_fate": "What became of a ship after a fight or a storm.",
+            "detach_ship": "A ship sailing apart from the fleet for a while.",
+            "rejoin_ship": "A ship coming back to the fleet.",
         },
     ),
 }

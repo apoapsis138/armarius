@@ -115,6 +115,35 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.61.0 — 2026-10-31
+
+### Peregrinatio
+
+- **Land of Fire and Ice**: Iceland as a region pack, with *The Icelandic Wars*: the island's quarters, law and Church, its people, giants, trolls and landvaettir, the galdramen and trollsynir, Vindolanda and Wormhout as covenants with no Tribunal, and the book's long stories, dormant until you begin one.
+- **Antagonists**: a pack of the book's ten recurring opponents, for any saga, with their plots in secrets and their stories dormant.
+- *Lands of the Nile* now holds real tomb records: Cleopatra's and Arrakkamani's tombs, and the book's example curses, wards, talismans and traps.
+- The Northern Seas and Favonius now travel: the Northern Seas opens at sea, and Favonius's fleet and ships are travelling places.
+
+### Gauntlet
+
+- With *Antagonists* in play, New Character offers its people with printed stats as templates, named **Antagonist -**.
+
+### Orbis
+
+- **Overcome It** now walks a trap from start to finish: who is in danger and who is with them, a look for the trap by the light there, each character's action in turn, and the trap last. It can leave the trap sprung or reset, and it goes in the diary. Talismans and wards can be overcome the same way.
+- A trap can be several traps' cost, say how it is spotted, and fire only once; an enchantment can be one that no one can overcome.
+- A place can say what waters it has (Open water, Anchorage or Port), and what travels with it.
+
+### Pagina
+
+- **Mobile covenants**: a covenant now has Whereabouts: a log of its stops, each a place in The Region, and a planned route, which can be a circuit. Advance Season asks whether it moves on, stays or goes elsewhere. A move drops the Aegis, its aura follows the stop, and a ship holds an Aegis only at a Port.
+- A ship can leave the fleet with the magi you choose, keep its own stops, and rejoin. Its laboratory and magi take their aura from where it is.
+
+### Florilegium
+
+- New Virtues, Flaws and Qualities from *Lands of the Nile*, *Between Sand and Sea* and *Antagonists*, among them Child of the House, Favored Slave, 'Abid, Crushing Jaws, Swallow Whole and Gift of Thumbs, plus Church Lore.
+- Corrected a misprint: Ominous Levitation of the Weighty Stone.
+
 ## 3.60.0 — 2026-10-31
 
 ### Peregrinatio

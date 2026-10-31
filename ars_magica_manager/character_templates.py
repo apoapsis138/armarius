@@ -18,7 +18,7 @@ from __future__ import annotations
 
 from dataclasses import replace
 
-from . import catalog, storage
+from . import catalog, sourcebooks, storage
 from . import possessions as pos
 from .markup import escape
 from .models import (
@@ -31,6 +31,7 @@ from .models import (
     Possession,
     Saga,
     ScoredTrait,
+    Spell,
     VirtueFlawInstance,
 )
 from .rules import aging, warping
@@ -44,17 +45,42 @@ SOURCE = (
 )
 
 
-def templates_for(character_type: str) -> list[CharacterTemplateDef]:
-    """The templates a new character of this type can start from."""
-    return [
-        t for t in catalog.load_character_template_catalog() if t.type == character_type
+def templates_for(
+    character_type: str, saga: Saga | None = None
+) -> list[CharacterTemplateDef]:
+    """The templates a new character of this type can start from: the
+    Definitive Edition's, and with `saga`, those of a book it has in play."""
+    return [t for t in _all(saga) if t.type == character_type]
+
+
+def any_for(character_type: str) -> bool:
+    """Whether any book offers this type a template."""
+    return bool(templates_for(character_type)) or any(
+        t.type == character_type for t in catalog.load_pack_template_catalog()
+    )
+
+
+def _all(saga: Saga | None) -> list[CharacterTemplateDef]:
+    found = catalog.load_character_template_catalog()
+    if saga is None:
+        return found
+    books = sourcebooks.saga_books(saga)
+    return found + [
+        t
+        for t in catalog.load_pack_template_catalog()
+        if sourcebooks.in_play(t.source, books)
     ]
 
 
 def find(template_id: str | None) -> CharacterTemplateDef | None:
     if not template_id:
         return None
-    return catalog.load_character_template_catalog_by_id().get(template_id)
+    found = catalog.load_character_template_catalog_by_id().get(template_id)
+    if found is not None:
+        return found
+    return next(
+        (t for t in catalog.load_pack_template_catalog() if t.id == template_id), None
+    )
 
 
 def blanks(template: CharacterTemplateDef) -> list[str]:
@@ -100,7 +126,7 @@ def apply(
         art: ArtScore(xp=art_xp(entry["score"]) + entry.get("xp", 0))
         for art, entry in template.arts.items()
     }
-    c.spells_known = [KnownSpell(_spell_id(saga, entry)) for entry in template.spells]
+    c.spells_known = [_known_spell(saga, entry) for entry in template.spells]
     c.inventory = []
     for entry in template.equipment:
         c.inventory.append(_possession(c, entry))
@@ -121,11 +147,21 @@ def _ability(entry: dict, values: dict[str, str]) -> Ability:
     )
 
 
+def _known_spell(saga: Saga, entry: dict) -> KnownSpell:
+    mastery = entry.get("mastery", 0)
+    return KnownSpell(
+        _spell_id(saga, entry), mastery_score=mastery, mastery_xp=ability_xp(mastery)
+    )
+
+
 def _spell_id(saga: Saga, entry: dict) -> str:
     """The spell's id: a catalog spell's own, or -- for a version the
-    catalog lacks -- the saga's own copy of it, made the first time."""
+    catalog lacks, or a book's own printing -- the saga's own copy of it,
+    made the first time."""
     if "spell_id" in entry:
         return entry["spell_id"]
+    if "spell" in entry:
+        return _printed_spell(saga, entry["spell"])
     for spell in saga.spells:
         if spell.name == entry["name"]:
             return spell.id
@@ -141,6 +177,17 @@ def _spell_id(saga: Saga, entry: dict) -> str:
             f"A version of {base.name} (Character Templates). " + base.description
         ),
     )
+    saga.spells.append(spell)
+    return spell.id
+
+
+def _printed_spell(saga: Saga, data: dict) -> str:
+    for spell in saga.spells:
+        if spell.name == data["name"]:
+            return spell.id
+    ids = [s.id for s in [*catalog.load_spell_catalog(), *saga.spells]]
+    spell = Spell.from_dict(data)
+    spell = replace(spell, id=storage.generate_unique_id(f"spell {spell.name}", ids))
     saga.spells.append(spell)
     return spell.id
 
@@ -189,9 +236,12 @@ def _biography(template: CharacterTemplateDef) -> str:
         for vf in template.virtues_flaws
         if vf.get("free")
     ]
+    book = sourcebooks.title_of(template.source)
     parts = [
         f"Built from the {template.name} template (Ars Magica Definitive "
         "Edition, Chapter Three: Characters, Character Templates)."
+        if template.source == "ArM5"
+        else f"Built from the {template.name} template ({book})."
     ]
     if free:
         parts.append(f"From the House: {', '.join(free)}.")

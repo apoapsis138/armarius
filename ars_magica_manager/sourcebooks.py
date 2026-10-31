@@ -27,6 +27,7 @@ SOURCEBOOKS: dict[str, str] = {
     CORE: "Ars Magica Definitive Edition",
     "A&A": "Art & Academe",
     "AM": "Ancient Magic",
+    "Ant": "Antagonists",
     "App": "Apprentices",
     "AtD": "Against the Dark: The Transylvanian Tribunal",
     # Atlas Games, 2002: a Fourth Edition Tribunal book, converted by the
@@ -53,6 +54,9 @@ SOURCEBOOKS: dict[str, str] = {
     "HtM": "Heirs to Merlin: The Stonehenge Tribunal",
     "L&L": "The Lion and the Lily: The Normandy Tribunal",
     "LoH": "Legends of Hermes",
+    # Atlas Games: a Fourth Edition region book, converted by the Definitive
+    # Edition's appendix when a pack uses it.
+    "LFI": "Land of Fire and Ice",
     "LotN": "Lands of the Nile",
     "LoM": "Lords of Men",
     "ML": "Mythic Locations",
@@ -117,13 +121,13 @@ BOOK_GROUPS: tuple[tuple[str, str, tuple[str, ...]], ...] = (
         ),
     ),
     ("Mythic Europe", "", ("TC", "LoM", "C&G", "A&A", "ML", "MC")),
-    # Not yet in the app: LFI, Land of Fire and Ice; UT, Ultima Thule.
+    # Not yet in the app: UT, Ultima Thule.
     ("The Lands Beyond", "", ("TC&TC", "LotN", "BS&S", "LFI", "UT")),
     ("Non-Hermetic Magic", "", ("HMRE", "AM", "RM")),
     (
         "Scenarios",
         "",
-        # Not yet in the app: Ant, Antagonists; Nig, Nigrasaxa; BMoG, The
+        # Not yet in the app: Nig, Nigrasaxa; BMoG, The
         # Black Monks of Glastonbury.
         ("Cal", "ToME", "TTT", "Ant", "Hooks", "ToP", "DI", "Nig", "BMoG"),
     ),

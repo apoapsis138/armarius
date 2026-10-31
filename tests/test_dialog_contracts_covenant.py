@@ -928,6 +928,40 @@ CONTRACTS: dict[str, Contract] = {
         shown={"#cov-clauses-list": "Amended Winter"},
         live={"#fields-live": "Amended"},
     ),
+    "add a stop": Contract(
+        prefill={"Note": ""},
+        edits={"Place": "the_sound", "Note": "Fog off the headland"},
+        saved=lambda s: [(stop.place_id, stop.note) for stop in covenant(s).stops],
+        expected=[("the_sound", "Fog off the headland")],
+        invalid={"Place": Select.NULL},
+        shown={
+            "#section-cov-whereabouts": "Whereabouts (1)",
+            "#cov-whereabouts-text": "The Sound",
+            "#cov-whereabouts-list": "Here now",
+        },
+        live={"#fields-live": "Aura there"},
+    ),
+    "plan route": Contract(
+        prefill={"Circuit": False},
+        edits={"Leg 1": "the_sound", "Seasons at leg 1": "2", "Circuit": True},
+        saved=lambda s: [
+            (leg.place_id, leg.seasons, covenant(s).circuit)
+            for leg in covenant(s).route
+        ],
+        expected=[("the_sound", 2, True)],
+    ),
+    "detach ship": Contract(
+        prefill={"Note": ""},
+        edits={"She goes to": "the_sound"},
+        saved=lambda s: [
+            stop.place_id
+            for p in covenant(s).possessions
+            if p.ship is not None
+            for stop in p.ship.stops
+        ],
+        expected=["the_sound"],
+        invalid={"She goes to": Select.NULL},
+    ),
     "pay the fee": Contract(
         prefill={"Pawns": "3"},
         edits={"Pawns": "2"},

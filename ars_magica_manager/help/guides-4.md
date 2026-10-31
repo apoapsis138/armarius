@@ -532,6 +532,16 @@ Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If t
 
 *Lands of the Nile* and *Between Sand and Sea* are region packs with no Tribunal, as *The Cradle and the Crescent* is. They can be imported together: they share the Great Hunger, the Hope and the pact of 1225, and those come in once. Their stories come in dormant, except the Fifth Crusade.
 
+### Iceland
+<!-- help: guide-book-packs-iceland -->
+
+*Land of Fire and Ice* is a region pack with no Tribunal, as *The Cradle and the Crescent* is, and it includes *The Icelandic Wars*. It brings the island, its people and law, the galdramen and trollsynir, and two long stories. The stories come in dormant, so nothing starts until you begin one.
+
+### Antagonists
+<!-- help: guide-book-packs-antagonists -->
+
+*Antagonists* is a pack of ten recurring opponents, with no Tribunal, for any saga. Its stories come in dormant, and a person printed in two versions is a choice on the import form. With the book in play, its people with printed stats are also templates on **New Character**, named **Antagonist -**: pick one to start from a copy of the printed record.
+
 ### Legends of Hermes
 <!-- help: guide-book-packs-legends -->
 
@@ -1147,6 +1157,33 @@ told, or grows into a threat.
    [How to set up a threat's clock](help:guide-threat-clock)).
 
 **See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
+
+# How to keep a covenant on the move
+<!-- help: guide-mobile-covenant -->
+
+Crisp Winds lives on a flotilla that follows a route round the Mediterranean,
+harvesting vis at auspicious times. It has the Constantly Mobile Hook.
+
+1. **Mark the water.** In The Region, add the sea and the harbours it uses as
+   Places: an **Open water** Place with no aura, and **Port** or **Anchorage**
+   in the **Waters** field of the rest. A town isn't a Place, so give a harbour
+   town a Place of its own.
+2. **Log where it is.** Add a Stop at the Place it is at now. Its aura is that
+   Place's from now on, and [Whereabouts](help:section-cov-whereabouts) shows on
+   its Overview.
+3. **Plan the route.** Plan Route lists each leg and the seasons to stay. Tick
+   **Circuit** if it goes round for ever.
+4. **Bring its own aura, if it has one.** Edit the Place that holds that aura or
+   regio and set **Travels with**. Place the covenant there, and its laboratories
+   in the regio's level.
+5. **Advance the season.** Advance Season asks: move on, stay, or go somewhere
+   else. Whatever you answer is logged as a stop.
+6. **Mind the Aegis.** A move leaves the Aegis behind, and a fleet can hold one
+   only at a Port. Cast it there, and it lasts as long as the fleet stays.
+7. **Send a ship away.** To part the fleet, set the ship's **Laboratory aboard**,
+   then choose her on Possessions and **Detach**. **Rejoin** brings her back.
+
+**See also:** [Whereabouts](help:section-cov-whereabouts), [Ships](help:section-pos-ship)
 
 # How to stay at another covenant
 <!-- help: guide-guest-stay -->

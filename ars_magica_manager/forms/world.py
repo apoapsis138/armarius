@@ -486,7 +486,7 @@ def sketch_covenant_fields(saga: Saga, covenant: Covenant) -> list[DialogField]:
             ),
             *(
                 []
-                if sites.place(saga, covenant.place_id) is not None
+                if sites.covenant_place(saga, covenant) is not None
                 else [DialogField("aura", "Aura", "int", covenant.aura)]
             ),
             places.where_field(saga, covenant, "Place"),

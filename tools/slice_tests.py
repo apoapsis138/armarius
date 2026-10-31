@@ -84,6 +84,12 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # A covenant on the move: its forms' contracts, its list, its sheet.
+    "ars_magica_manager/mobile_covenants.py": (
+        "test_dialog_contracts_covenant.py",
+        "test_list_flows.py",
+        "test_gui_mobile.py",
+    ),
     # The guides' gaps, round two: their forms' contracts.
     "ars_magica_manager/forms/grog_story.py": ("test_dialog_contracts_character.py",),
     "ars_magica_manager/melee_events.py": ("test_dialog_contracts_character.py",),

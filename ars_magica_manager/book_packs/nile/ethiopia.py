@@ -1238,6 +1238,7 @@ def _creatures(b: Builder, p: Places) -> None:
                 "Susceptible to Deprivation",
                 vf_ward("Folk Charms"),
                 "Crafty",
+                "Crushing Jaws",
                 "Keen Eyesight",
                 "Large Teeth",
                 "Mimicry",
@@ -1303,9 +1304,9 @@ def _creatures(b: Builder, p: Places) -> None:
             "people and drive them to lust, murder or rage; debterah make "
             "amulets against them. They may be faeries harvesting vitality, or "
             "weak tempter demons.",
-            "Crushing Jaws is not in the catalog: a hyena's bite is Init 0, Atk "
-            "+4, Def +1, Dam +3, and the Quality raises the damage bonus to "
-            "+6, which is the +6 shown. As a companion it must swap Incognizant "
+            "A hyena's bite is Init 0, Atk +4, Def +1, Dam +3, and Crushing "
+            "Jaws raises the damage bonus to +6, which is the +6 shown. As a "
+            "companion it must swap Incognizant "
             "for Narrowly or Highly Cognizant and take another Flaw, such as a "
             "Personality Flaw.",
         ),

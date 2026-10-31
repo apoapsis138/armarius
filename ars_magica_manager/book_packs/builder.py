@@ -14,11 +14,13 @@ diary entry, a book's description) keep theirs at their end under a
 
 from __future__ import annotations
 
+from collections.abc import Sequence
 from dataclasses import replace
 from functools import cache
 from typing import Any
 
 from .. import catalog, sourcebooks, storage
+from .. import tombs as tomb_rules
 from ..arms import Arms
 from ..arts import ART_LOOKUP
 from ..models import (
@@ -64,9 +66,11 @@ from ..models.world import FULL, SKETCH
 from ..places import RUINED
 from ..rules import aging, warping
 from ..rules import creation_access as access
+from ..rules import egyptian_tombs as et
 from ..rules.sites import PLACE
 from ..rules.xp import ability_xp, art_xp
 from ..threats import DORMANT
+from ..tombs import TombCurse, TombTrap, TombWard
 from ..tribunal_packages import rhine as rhine_package
 
 SECRETS = SECRETS_HEADING
@@ -745,6 +749,49 @@ class Builder:
             "notes": notes,
         }
 
+    @staticmethod
+    def tomb(
+        place: Neighbour,
+        *,
+        kind: str = et.DEFAULT_KIND,
+        boons: str = "",
+        hooks: str = "",
+        hook_points: int = 0,
+        other: str = "",
+        other_bp: int = 0,
+        curses: Sequence[TombCurse] = (),
+        wards: Sequence[TombWard] = (),
+        traps: Sequence[TombTrap] = (),
+    ) -> Neighbour:
+        """Marks `place` a tomb (Lands of the Nile pp. 40-46) and gives it
+        the curses, talismans, wards and traps the book prints, each
+        checked by the rules the Tomb tab's forms use. Other resources
+        are what the book prints for the library, specialists and vis."""
+        for curse in curses:
+            problem = et.curse_problem(
+                curse.get("kind") or et.EFFECT, curse.get("level") or 0
+            )
+            if problem is not None:
+                raise ValueError(f"{place.name}, {curse['name']}: {problem}")
+        for trap in traps:
+            if tomb_rules.trap_points(trap) == 0:
+                raise ValueError(f"{place.name}, {trap['name']}: no such harm or ease.")
+        place.details.update(
+            {
+                tomb_rules.TOMB: True,
+                "tomb_kind": kind,
+                "tomb_boons": boons,
+                "tomb_hooks": hooks,
+                "tomb_hook_points": hook_points,
+                "tomb_other": other,
+                "tomb_other_bp": other_bp,
+                tomb_rules.CURSES: [dict(c) for c in curses],
+                tomb_rules.WARDS: [dict(w) for w in wards],
+                tomb_rules.TRAPS: [dict(t) for t in traps],
+            }
+        )
+        return place
+
     def town(
         self,
         name: str,
@@ -1281,7 +1328,7 @@ class Builder:
 
 #: Books whose stat blocks keep a spell at its printed level and Arts as
 #: the magus's own spell, where the catalog's spell of that name differs.
-OWN_PRINTINGS = ("TtA", "MoH", "LoH")
+OWN_PRINTINGS = ("TtA", "MoH", "LoH", "Ant")
 
 #: A stat block as a book prints it, in the book's scores:
 #: "characteristics" {name: score}, "aging_points" {name: points} (the

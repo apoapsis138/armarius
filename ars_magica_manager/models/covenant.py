@@ -10,6 +10,7 @@ from .common import SEASONS, known_fields, move_secrets
 from .hermetic_projects import HermeticProject, projects_from
 from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
 from .land_shaping import LandProject
+from .stops import CovenantStop, RouteStop, route_from, stops_from
 from .traits import ScoredTrait, VirtueFlawInstance
 from .world import FULL, Attitude, Favour, Link
 
@@ -505,6 +506,16 @@ class Covenant:
     #: is told in, and the entries left out of it. Older saves load with
     #: none.
     history: dict[str, Any] = field(default_factory=dict)
+    #: Where it has been, by date: the latest stop not after the saga's
+    #: date is where it is now (rules.mobile). `place_id` stays its own
+    #: Place, a fixed home or a Place that travels with it. Older saves
+    #: load with none, and stay where they are.
+    stops: list[CovenantStop] = field(default_factory=list)
+    #: Where it means to go: `route_at` is the leg it goes to next, and a
+    #: `circuit` goes back to the first after the last.
+    route: list[RouteStop] = field(default_factory=list)
+    route_at: int = 0
+    circuit: bool = False
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Covenant:
@@ -593,6 +604,9 @@ class Covenant:
             )
         d["land_projects"] = [LandProject.from_dict(p) for p in land]
         d["history"] = history_from(d.get("history"), str(d.get("name") or ""))
+        owner = str(d.get("name") or d.get("id") or "a covenant")
+        d["stops"] = stops_from(d.get("stops"), owner)
+        d["route"] = route_from(d.get("route"), owner)
         return cls(**known_fields(cls, d))  # drops the retired `library_id`
 
 

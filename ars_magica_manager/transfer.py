@@ -58,6 +58,7 @@ from .models import (
     Spell,
     Tribunal,
 )
+from .rules import sites
 
 FORMAT = "armarius-export"
 #: The labels an import accepts: exports made before the app was Armarius
@@ -723,6 +724,27 @@ def _plan_tribunals(job: _Import) -> None:
         job.plan.tribunals.append(added)
 
 
+def _relink_stops(job: _Import, covenant: Covenant) -> None:
+    """A covenant's stops and route, and its ships', through the maps:
+    those at Places that aren't here are dropped."""
+
+    def kept(stops: list[Any]) -> list[Any]:
+        for stop in stops:
+            stop.place_id = job.link(NEIGHBOUR, stop.place_id) or ""
+        return [stop for stop in stops if stop.place_id]
+
+    covenant.stops = kept(covenant.stops)
+    covenant.route = kept(covenant.route)
+    for record in covenant.possessions:
+        if record.ship is not None:
+            record.ship.stops = kept(record.ship.stops)
+            record.ship.aboard = [
+                who
+                for old in record.ship.aboard
+                if (who := job.link(CHARACTER, old)) is not None
+            ]
+
+
 def _relink(job: _Import, record: Any) -> None:
     """A record's place, attitudes, favours and links, through the maps:
     those to records that aren't here are dropped (a favour's names
@@ -774,6 +796,7 @@ def _plan_covenants(job: _Import) -> None:
         covenant.tribunal_id = job.tribunal_map.get(covenant.tribunal_id or "")
         covenant.liege_id = job.link(COVENANT, covenant.liege_id)
         _relink(job, covenant)
+        _relink_stops(job, covenant)
         for held in covenant.boons_hooks:
             held.vf_id = job.entry(held.vf_id)
         for person in covenant.inhabitants:
@@ -789,7 +812,7 @@ def _plan_covenants(job: _Import) -> None:
         for possession in covenant.possessions:
             if possession.lab_id:
                 possession.lab_id = job.link(LABORATORY, possession.lab_id)
-                if possession.lab_id is None:
+                if possession.lab_id is None and possession.ship is None:
                     continue  # only the extras of a laboratory that isn't here
             if possession.location_kind in (CHARACTER, LABORATORY):
                 place = job.link(possession.location_kind, possession.location_id)
@@ -1000,6 +1023,10 @@ def _plan_neighbours(job: _Import) -> None:
         neighbour.id = job.record_map[NEIGHBOUR][neighbour.id]
         neighbour.answers_to = job.link(NEIGHBOUR, neighbour.answers_to)
         neighbour.ruler = _ruler(job, neighbour.ruler)
+        if sites.TRAVELS_WITH in neighbour.details:
+            covenant = job.link(COVENANT, neighbour.details.pop(sites.TRAVELS_WITH))
+            if covenant is not None:
+                neighbour.details[sites.TRAVELS_WITH] = covenant
         _relink(job, neighbour)
         job.plan.neighbours.append(neighbour)
 

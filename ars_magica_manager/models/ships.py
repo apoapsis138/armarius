@@ -9,10 +9,11 @@ combat).
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from .common import known_fields
+from .stops import CovenantStop, stops_from
 
 #: How well a ship is made (C&G p. 77; HP p. 53): its base damage levels
 #: and its stress-check modifier follow from it. Supernatural is City &
@@ -72,6 +73,11 @@ class Ship:
     fate: str = ""
     fate_by: str = ""
     fate_when: str = ""
+    #: Her own stops while she is apart from the fleet: none means she
+    #: sails with it. `aboard` is the magi (character ids) who went with
+    #: her when she left.
+    stops: list[CovenantStop] = field(default_factory=list)
+    aboard: list[str] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any], name: str) -> Ship:
@@ -106,4 +112,9 @@ class Ship:
         if isinstance(fighters, bool) or not isinstance(fighters, int | float):
             raise ValueError(f"Ship {name}: fighters_tons must be a number")
         d["fighters_tons"] = float(fighters)
+        d["stops"] = stops_from(d.get("stops"), f"Ship {name}")
+        aboard = d.get("aboard") or []
+        if not isinstance(aboard, list):
+            raise ValueError(f"Ship {name}: aboard must be a list of characters")
+        d["aboard"] = [str(who) for who in aboard]
         return cls(**d)

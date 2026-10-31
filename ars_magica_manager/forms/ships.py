@@ -85,6 +85,8 @@ def ship_from(values: dict[str, Any], base: Ship | None = None) -> Ship:
         fighters_tons=_float(values, "fighters_tons"),
         close_to_home=bool(values.get("close_to_home")),
         home_port=values.get("home_port") or "",
+        stops=start.stops,
+        aboard=start.aboard,
     )
 
 
@@ -190,6 +192,21 @@ def ship_fields(
             attr(ship, "close_to_home", False),
         ),
         DialogField("home_port", "Home port", "text", attr(ship, "home_port", "")),
+        DialogField(
+            "lab_id",
+            "Laboratory aboard",
+            "select",
+            attr(record, "lab_id", None),
+            options=[
+                (escape(lab.name), lab.id)
+                for lab in saga.laboratories
+                if lab.covenant_id == covenant.id
+            ],
+            allow_blank=True,
+            placeholder="(none)",
+            hint="Away from the fleet, this laboratory and the magi who go "
+            "with her take their aura from where she is.",
+        ),
         description_field(attr(record, "description", "")),
     ]
 
@@ -269,6 +286,7 @@ def save_ship(
         covenant.possessions.append(record)
     record.name = values.get("name") or ""
     record.description = values.get("description") or ""
+    record.lab_id = values.get("lab_id") or None
     record.ship = ship
     return record
 

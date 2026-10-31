@@ -1,0 +1,3536 @@
+{
+ "attribution": "Antagonists, by Atlas Games: derived from this app's pack. Based on the material for Ars Magica, ©1993–2024, licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons Attribution-ShareAlike 4.0 International license 4.0 (\"CC-BY-SA 4.0\").",
+ "entries": [
+  {
+   "id": "ant_baron_geoffroi_d_arques",
+   "name": "Antagonist - Baron Geoffroi d'Arques",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 1,
+    "perception": 0,
+    "strength": 1,
+    "stamina": 1,
+    "presence": 1,
+    "communication": 0,
+    "dexterity": 2,
+    "quickness": 0
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 32,
+   "apparent_age": 32,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    1
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_landed_noble",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_knight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wealthy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_driven_major",
+     "params": {
+      "detail": "Learn all there is about the supernatural"
+     }
+    },
+    {
+     "vf_id": "vf_oath_of_fealty",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_reckless",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Driven",
+     3
+    ],
+    [
+     "Brave",
+     2
+    ],
+    [
+     "Chivalrous",
+     1
+    ]
+   ],
+   "reputations": [
+    [
+     "Prudhomme (nobles of England and France)",
+     3
+    ],
+    [
+     "Excellent soldier (the continental tourney circuit)",
+     2
+    ],
+    [
+     "Lord of Arques (Normandy population)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Animal Handling",
+     "score": 0,
+     "xp": 30,
+     "specialty": "falconry"
+    },
+    {
+     "name": "Area Lore: Arques",
+     "score": 0,
+     "xp": 30,
+     "specialty": "nobles"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "arithmetic"
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 15,
+     "specialty": "running"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 30,
+     "specialty": "battle"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "fist"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 15,
+     "specialty": "first impressions"
+    },
+    {
+     "name": "Chirurgy",
+     "score": 0,
+     "xp": 5,
+     "specialty": "sword wounds"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "noble"
+    },
+    {
+     "name": "Living Language: French",
+     "score": 0,
+     "xp": 75,
+     "specialty": "giving orders"
+    },
+    {
+     "name": "Great Weapon",
+     "score": 0,
+     "xp": 50,
+     "specialty": "great sword"
+    },
+    {
+     "name": "Hunt",
+     "score": 0,
+     "xp": 50,
+     "specialty": "deer"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 50,
+     "specialty": "noble courts"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 30,
+     "specialty": "church ceremonies"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 50,
+     "specialty": "in battle"
+    },
+    {
+     "name": "Music",
+     "score": 0,
+     "xp": 15,
+     "specialty": "singing"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 75,
+     "specialty": "in combat"
+    },
+    {
+     "name": "Single Weapon",
+     "score": 0,
+     "xp": 75,
+     "specialty": "long sword"
+    },
+    {
+     "name": "Survival",
+     "score": 0,
+     "xp": 5,
+     "specialty": "forests"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_ysabeau",
+   "name": "Antagonist - Ysabeau",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 1,
+    "perception": 0,
+    "strength": -1,
+    "stamina": -1,
+    "presence": 2,
+    "communication": 2,
+    "dexterity": 2,
+    "quickness": -1
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 25,
+   "apparent_age": 25,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    0
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_gentleman_woman",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_privileged_upbringing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_temporal_influence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_dependent",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_humble",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Humble",
+     2
+    ],
+    [
+     "Protective",
+     2
+    ],
+    [
+     "Honest",
+     1
+    ]
+   ],
+   "reputations": [
+    [
+     "Geoffroi's wife (within the county)",
+     3
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Animal Handling",
+     "score": 0,
+     "xp": 5,
+     "specialty": "horses"
+    },
+    {
+     "name": "Area Lore: Arques",
+     "score": 0,
+     "xp": 15,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "music"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 15,
+     "specialty": "alertness"
+    },
+    {
+     "name": "Carouse",
+     "score": 0,
+     "xp": 15,
+     "specialty": "staying sober"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 75,
+     "specialty": "first impressions"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 75,
+     "specialty": "nobility"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 15,
+     "specialty": "nobles"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 30,
+     "specialty": "avoiding offence"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "church ceremonies"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 15,
+     "specialty": "servants"
+    },
+    {
+     "name": "Living Language: (Local)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "local dialect"
+    },
+    {
+     "name": "Music",
+     "score": 0,
+     "xp": 30,
+     "specialty": "sing"
+    },
+    {
+     "name": "Living Language: Norman French",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Arques dialect"
+    },
+    {
+     "name": "Organization Lore: Household",
+     "score": 0,
+     "xp": 30,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 30,
+     "specialty": "recreation"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_claude_de_f_camp",
+   "name": "Antagonist - Claude de Fécamp",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 2,
+    "perception": 2,
+    "strength": 0,
+    "stamina": 1,
+    "presence": -1,
+    "communication": 0,
+    "dexterity": -1,
+    "quickness": -1
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 28,
+   "apparent_age": 28,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    4
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_clerk",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_guardian_angel",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clear_thinker",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_sharp_ears",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_strong_willed",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oath_of_fealty",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_missing_hand",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_noncombatant",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_temperate",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weak_characteristics",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Loyal",
+     3
+    ],
+    [
+     "Taciturn",
+     2
+    ],
+    [
+     "Frivolous",
+     -1
+    ]
+   ],
+   "reputations": [
+    [
+     "Geoffroi's right-hand man (within Geoffroi's court)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: Arques",
+     "score": 0,
+     "xp": 30,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Area Lore: (Local)",
+     "score": 0,
+     "xp": 5,
+     "specialty": "geography"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "logic"
+    },
+    {
+     "name": "Profession: Steward",
+     "score": 0,
+     "xp": 50,
+     "specialty": "noble manors"
+    },
+    {
+     "name": "Church Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Living Language: (Local)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "local dialect"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 15,
+     "specialty": "nobility"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 30,
+     "specialty": "nobles"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 15,
+     "specialty": "discerning lies about his master"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 15,
+     "specialty": "alliances"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "academic usage"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 15,
+     "specialty": "household staff"
+    },
+    {
+     "name": "Living Language: Norman French",
+     "score": 0,
+     "xp": 75,
+     "specialty": "County of Rouen dialect"
+    },
+    {
+     "name": "Philosophiae",
+     "score": 0,
+     "xp": 15,
+     "specialty": "moral philosophy"
+    },
+    {
+     "name": "Theology: Christian",
+     "score": 0,
+     "xp": 30,
+     "specialty": "biblical knowledge"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_edwin_locke",
+   "name": "Antagonist - Edwin Locke",
+   "type": "mythic companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 1,
+    "perception": 0,
+    "strength": 0,
+    "stamina": 2,
+    "presence": 2,
+    "communication": 0,
+    "dexterity": 0,
+    "quickness": 0
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 40,
+   "apparent_age": 40,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    1,
+    8
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_magister_in_artibus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_type_summoning_major",
+     "params": {
+      "type": "Theurgical"
+     }
+    },
+    {
+     "vf_id": "vf_type_controlling_major",
+     "params": {
+      "type": "Theurgical"
+     }
+    },
+    {
+     "vf_id": "vf_clear_thinker",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_elementalist_air",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_elementalist_earth",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_elementalist_fire",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_elementalist_water",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_luck",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_art",
+     "params": {
+      "art": "Elementalist Controlling"
+     }
+    },
+    {
+     "vf_id": "vf_overconfident_major",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weak_elemental_resistance",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ability_block",
+     "params": {
+      "abilities": "Martial"
+     }
+    },
+    {
+     "vf_id": "vf_mentor",
+     "params": {
+      "detail": "Walter de Gray"
+     }
+    }
+   ],
+   "personality_traits": [
+    [
+     "Authoritative",
+     2
+    ],
+    [
+     "Ordered",
+     1
+    ],
+    [
+     "Choleric",
+     2
+    ],
+    [
+     "Melancholic",
+     2
+    ],
+    [
+     "Phlegmatic",
+     2
+    ],
+    [
+     "Sanguine",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Tutor at York Cathedral School (among academics)",
+     2
+    ],
+    [
+     "Elementalist of Repute (among elementalist societies)",
+     1
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 75,
+     "specialty": "grammar"
+    },
+    {
+     "name": "Carouse",
+     "score": 0,
+     "xp": 15,
+     "specialty": "games of chance"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "being witty"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 5,
+     "specialty": "the Church"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 15,
+     "specialty": "townsfolk"
+    },
+    {
+     "name": "Living Language: Greek",
+     "score": 0,
+     "xp": 30,
+     "specialty": "prose"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 75,
+     "specialty": "academic usage"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 15,
+     "specialty": "students"
+    },
+    {
+     "name": "Magic Lore",
+     "score": 0,
+     "xp": 15,
+     "specialty": "spirits"
+    },
+    {
+     "name": "Organization Lore: Order of Hermes",
+     "score": 0,
+     "xp": 5,
+     "specialty": "history"
+    },
+    {
+     "name": "Philosophiae",
+     "score": 0,
+     "xp": 75,
+     "specialty": "natural philosophy"
+    },
+    {
+     "name": "Teaching",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Philosophiae"
+    },
+    {
+     "name": "Area Lore: York",
+     "score": 0,
+     "xp": 5,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Elementalist Controlling",
+     "score": 0,
+     "xp": 120,
+     "specialty": null
+    },
+    {
+     "name": "Elementalist Summoning",
+     "score": 0,
+     "xp": 120,
+     "specialty": null
+    },
+    {
+     "name": "Elementalist Air",
+     "score": 0,
+     "xp": 50,
+     "specialty": null
+    },
+    {
+     "name": "Elementalist Earth",
+     "score": 0,
+     "xp": 30,
+     "specialty": null
+    },
+    {
+     "name": "Elementalist Fire",
+     "score": 0,
+     "xp": 50,
+     "specialty": null
+    },
+    {
+     "name": "Elementalist Water",
+     "score": 0,
+     "xp": 30,
+     "specialty": null
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_baron_giraud_le_cornu",
+   "name": "Antagonist - Baron Giraud Le Cornu",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 1,
+    "perception": 0,
+    "strength": 1,
+    "stamina": 2,
+    "presence": 2,
+    "communication": 1,
+    "dexterity": 1,
+    "quickness": 0
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 35,
+   "apparent_age": 35,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    0
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_landed_noble",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_knight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wealthy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_privileged_upbringing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_protection",
+     "params": {
+      "protector": "the count"
+     }
+    },
+    {
+     "vf_id": "vf_hatred_major",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oath_of_fealty",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pious",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Hates Rebels",
+     6
+    ],
+    [
+     "Brave",
+     3
+    ],
+    [
+     "Pious",
+     3
+    ],
+    [
+     "Calculating",
+     2
+    ],
+    [
+     "Loyal",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Hates Rebels (local)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Animal Handling",
+     "score": 0,
+     "xp": 30,
+     "specialty": "horses"
+    },
+    {
+     "name": "Area Lore: Own Barony",
+     "score": 0,
+     "xp": 50,
+     "specialty": "personalities"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "arithmetic"
+    },
+    {
+     "name": "Bows",
+     "score": 0,
+     "xp": 30,
+     "specialty": "short bow"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "first impressions"
+    },
+    {
+     "name": "Church Lore",
+     "score": 0,
+     "xp": 15,
+     "specialty": "relics"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 15,
+     "specialty": "property law"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 50,
+     "specialty": "court"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 50,
+     "specialty": "nobles"
+    },
+    {
+     "name": "Living Language: French",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Norman"
+    },
+    {
+     "name": "Great Weapon",
+     "score": 0,
+     "xp": 30,
+     "specialty": "long spear"
+    },
+    {
+     "name": "Hunt",
+     "score": 0,
+     "xp": 50,
+     "specialty": "wild boar"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 55,
+     "specialty": "alliances"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 30,
+     "specialty": "ecclesiastic"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 75,
+     "specialty": "armies"
+    },
+    {
+     "name": "Organization Lore: Nobles",
+     "score": 0,
+     "xp": 50,
+     "specialty": "politics"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 55,
+     "specialty": "battle"
+    },
+    {
+     "name": "Single Weapon",
+     "score": 0,
+     "xp": 75,
+     "specialty": "long sword"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 5,
+     "specialty": "liturgy"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_father_joseph_of_napoli",
+   "name": "Antagonist - Father Joseph of Napoli",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 3,
+    "perception": 0,
+    "strength": -2,
+    "stamina": -1,
+    "presence": 1,
+    "communication": 2,
+    "dexterity": 1,
+    "quickness": -1
+   },
+   "aging_points": {
+    "quickness": 1
+   },
+   "size": 0,
+   "age": 54,
+   "apparent_age": 44,
+   "decrepitude": [
+    0,
+    1
+   ],
+   "warping": [
+    3,
+    5
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_priest",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_inspirational",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_relic",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_temporal_influence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_well_traveled",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_commanding_aura",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_driven_major",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ability_block",
+     "params": {
+      "abilities": "Martial"
+     }
+    },
+    {
+     "vf_id": "vf_arthritis",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_visions",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_vow",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_weak_characteristics",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Driven",
+     6
+    ],
+    [
+     "Religious",
+     3
+    ]
+   ],
+   "reputations": [
+    [
+     "Papal Legate to the Order of Hermes (ecclesiastical)",
+     4
+    ],
+    [
+     "Quaesitor's notary (Hermetic)",
+     1
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: Naples",
+     "score": 0,
+     "xp": 30,
+     "specialty": "history"
+    },
+    {
+     "name": "Area Lore: Rhine Tribunal",
+     "score": 0,
+     "xp": 15,
+     "specialty": "covenant locations"
+    },
+    {
+     "name": "Area Lore: Rome",
+     "score": 0,
+     "xp": 15,
+     "specialty": "churches"
+    },
+    {
+     "name": "Area Lore: Rome Tribunal",
+     "score": 0,
+     "xp": 30,
+     "specialty": "covenant locations"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 5,
+     "specialty": "logic, reads Latin script"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 30,
+     "specialty": "spell effects"
+    },
+    {
+     "name": "Bargain",
+     "score": 0,
+     "xp": 30,
+     "specialty": "treaties"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 15,
+     "specialty": "covenant grogs"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 75,
+     "specialty": "magic"
+    },
+    {
+     "name": "Code of Hermes",
+     "score": 0,
+     "xp": 30,
+     "specialty": "mundane interference"
+    },
+    {
+     "name": "Concentration",
+     "score": 0,
+     "xp": 15,
+     "specialty": "meditation"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 75,
+     "specialty": "church use"
+    },
+    {
+     "name": "Dominion Lore",
+     "score": 0,
+     "xp": 5,
+     "specialty": "angels"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Hermetic"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 50,
+     "specialty": "magi"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 15,
+     "specialty": "written communication"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 75,
+     "specialty": "magi"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 75,
+     "specialty": "religious"
+    },
+    {
+     "name": "Living Language: Low German",
+     "score": 0,
+     "xp": 30,
+     "specialty": "travel"
+    },
+    {
+     "name": "Living Language: Italian",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Napoli dialect"
+    },
+    {
+     "name": "Magic Theory",
+     "score": 0,
+     "xp": 15,
+     "specialty": "spells"
+    },
+    {
+     "name": "Music",
+     "score": 0,
+     "xp": 5,
+     "specialty": "church"
+    },
+    {
+     "name": "Organization Lore: Church",
+     "score": 0,
+     "xp": 75,
+     "specialty": "papal curia"
+    },
+    {
+     "name": "Organization Lore: Order of Hermes",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Christian magi"
+    },
+    {
+     "name": "Profession: Scribe",
+     "score": 0,
+     "xp": 30,
+     "specialty": "copying"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 15,
+     "specialty": "long distances"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 30,
+     "specialty": "magic"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_bishop_orris",
+   "name": "Antagonist - Bishop Orris",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 1,
+    "perception": 0,
+    "strength": -1,
+    "stamina": -1,
+    "presence": 2,
+    "communication": 4,
+    "dexterity": -1,
+    "quickness": -1
+   },
+   "aging_points": {
+    "communication": 2,
+    "strength": 1,
+    "quickness": 1
+   },
+   "size": 0,
+   "age": 57,
+   "apparent_age": 47,
+   "decrepitude": [
+    1,
+    0
+   ],
+   "warping": [
+    1,
+    5
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_senior_clergy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_great_characteristic",
+     "params": {
+      "characteristic": "Communication"
+     }
+    },
+    {
+     "vf_id": "vf_inspirational",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_magic_sensitivity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_privileged_upbringing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "Magic Sensitivity"
+     }
+    },
+    {
+     "vf_id": "vf_sense_holiness_and_unholiness",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_meddler_major",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mistaken_identity",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clumsy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_lesser_malediction",
+     "params": {
+      "detail": "cannot distinguish evil from magic"
+     }
+    },
+    {
+     "vf_id": "vf_fear",
+     "params": {
+      "detail": "the Infernal; from Warping"
+     }
+    },
+    {
+     "vf_id": "vf_noncombatant",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_hearing",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Protective of Flock",
+     4
+    ],
+    [
+     "Paranoid About Hell's Intentions",
+     3
+    ],
+    [
+     "Brave",
+     2
+    ],
+    [
+     "Devoted to God",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Just (Local)",
+     4
+    ],
+    [
+     "Trustworthy (Ecclesiastic)",
+     3
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Dead Language: Ancient Greek",
+     "score": 0,
+     "xp": 30,
+     "specialty": "translation"
+    },
+    {
+     "name": "Area Lore: Diocese",
+     "score": 0,
+     "xp": 50,
+     "specialty": "parishes"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "rhetoric"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "invoking saints"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 75,
+     "specialty": "papal bulls"
+    },
+    {
+     "name": "Concentration",
+     "score": 0,
+     "xp": 30,
+     "specialty": "while praying"
+    },
+    {
+     "name": "Dominion Lore",
+     "score": 0,
+     "xp": 15,
+     "specialty": "Cantores"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 50,
+     "specialty": "the Church"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 50,
+     "specialty": "penitents"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 75,
+     "specialty": "church politics"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "liturgy"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 105,
+     "specialty": "holy influence"
+    },
+    {
+     "name": "Magic Sensitivity",
+     "score": 0,
+     "xp": 30,
+     "specialty": "practitioners of magic"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "exhortation"
+    },
+    {
+     "name": "Organization Lore: Church",
+     "score": 0,
+     "xp": 75,
+     "specialty": "clergy"
+    },
+    {
+     "name": "Organization Lore: Nobility",
+     "score": 0,
+     "xp": 30,
+     "specialty": "pious nobles"
+    },
+    {
+     "name": "Organization Lore: Order of Hermes",
+     "score": 0,
+     "xp": 2,
+     "specialty": "legal issues"
+    },
+    {
+     "name": "Philosophiae",
+     "score": 0,
+     "xp": 15,
+     "specialty": "theological concordance"
+    },
+    {
+     "name": "Profession: Preaching",
+     "score": 0,
+     "xp": 50,
+     "specialty": "swaying hearts"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 5,
+     "specialty": "on roads"
+    },
+    {
+     "name": "Sense Holiness and Unholiness",
+     "score": 0,
+     "xp": 15,
+     "specialty": "good"
+    },
+    {
+     "name": "Theology: Christian",
+     "score": 0,
+     "xp": 140,
+     "specialty": "biblical knowledge"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_galerius_of_house_guernicus",
+   "name": "Antagonist - Galerius of House Guernicus",
+   "type": "magus",
+   "house": "house_guernicus",
+   "characteristics": {
+    "intelligence": 4,
+    "perception": 2,
+    "strength": -2,
+    "stamina": 1,
+    "presence": 1,
+    "communication": 2,
+    "dexterity": -1,
+    "quickness": 0
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 54,
+   "apparent_age": 47,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    2,
+    5
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_the_gift",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_hermetic_magus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_flexible_formulaic_magic",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_affinity_with_art",
+     "params": {
+      "art": "Intellego"
+     }
+    },
+    {
+     "vf_id": "vf_great_characteristic",
+     "params": {
+      "characteristic": "Intelligence"
+     }
+    },
+    {
+     "vf_id": "vf_hermetic_prestige",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_skilled_parens",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_driven_major",
+     "params": {
+      "detail": "protect the Order of Hermes from internal threats"
+     }
+    },
+    {
+     "vf_id": "vf_restriction",
+     "params": {
+      "detail": "cannot cast under a cloudless sky"
+     }
+    },
+    {
+     "vf_id": "vf_ability_block",
+     "params": {
+      "abilities": "Martial Abilities"
+     }
+    },
+    {
+     "vf_id": "vf_obsessed",
+     "params": {
+      "detail": "finding evidence of criminality"
+     }
+    },
+    {
+     "vf_id": "vf_unimaginative_learner",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Driven to Protect the Order",
+     6
+    ],
+    [
+     "Loyal to Nightwing",
+     3
+    ],
+    [
+     "Suspicious",
+     3
+    ],
+    [
+     "Fastidious",
+     1
+    ],
+    [
+     "Forgiving",
+     -2
+    ]
+   ],
+   "reputations": [
+    [
+     "Aggressive Investigator (Hermetic)",
+     3
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "logic"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 30,
+     "specialty": "searching"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 5,
+     "specialty": "dodging"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 15,
+     "specialty": "laws and customs of Lorraine"
+    },
+    {
+     "name": "Code of Hermes",
+     "score": 0,
+     "xp": 75,
+     "specialty": "mundane relations"
+    },
+    {
+     "name": "Concentration",
+     "score": 0,
+     "xp": 15,
+     "specialty": "spell concentration"
+    },
+    {
+     "name": "Finesse",
+     "score": 0,
+     "xp": 15,
+     "specialty": "fine control"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 30,
+     "specialty": "mundanes"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 30,
+     "specialty": "impersonating mundanes"
+    },
+    {
+     "name": "Living Language: High German",
+     "score": 0,
+     "xp": 75,
+     "specialty": "expansive vocabulary"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 30,
+     "specialty": "rumormongering"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Hermetic usage"
+    },
+    {
+     "name": "Organization Lore: Order of Hermes",
+     "score": 0,
+     "xp": 30,
+     "specialty": "politics"
+    },
+    {
+     "name": "Magic Theory",
+     "score": 0,
+     "xp": 117,
+     "specialty": "Intellego"
+    },
+    {
+     "name": "Parma Magica",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Mentem"
+    },
+    {
+     "name": "Penetration",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Intellego"
+    },
+    {
+     "name": "Teaching",
+     "score": 0,
+     "xp": 5,
+     "specialty": "Magic Theory"
+    }
+   ],
+   "arts": {
+    "creo": {
+     "score": 0,
+     "xp": 28
+    },
+    "intellego": {
+     "score": 0,
+     "xp": 91
+    },
+    "muto": {
+     "score": 0,
+     "xp": 15
+    },
+    "perdo": {
+     "score": 0,
+     "xp": 21
+    },
+    "rego": {
+     "score": 0,
+     "xp": 15
+    },
+    "animal": {
+     "score": 0,
+     "xp": 15
+    },
+    "corpus": {
+     "score": 0,
+     "xp": 45
+    },
+    "herbam": {
+     "score": 0,
+     "xp": 15
+    },
+    "imaginem": {
+     "score": 0,
+     "xp": 28
+    },
+    "mentem": {
+     "score": 0,
+     "xp": 55
+    },
+    "vim": {
+     "score": 0,
+     "xp": 55
+    }
+   },
+   "spells": [
+    {
+     "mastery": 0,
+     "spell_id": "spell_the_inexorable_search"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_sight_of_the_molting_magus"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_whispers_through_the_black_gate"
+    },
+    {
+     "mastery": 0,
+     "spell": {
+      "id": "spell_the_whole_from_the_part",
+      "name": "The Whole from the Part",
+      "technique": "Intellego",
+      "form": "Corpus",
+      "level": 15,
+      "description": "From the stat block in Antagonists.",
+      "requisites": [],
+      "range": "",
+      "duration": "",
+      "target": "",
+      "ritual": false,
+      "base_level": null,
+      "source": "Ant",
+      "page": "",
+      "experimental_effects": [],
+      "details_missing": false
+     }
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_tangle_of_wood_and_thorns"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_the_ear_for_distant_voices"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_summoning_the_distant_image"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_aura_of_beguiling_appearance"
+    },
+    {
+     "mastery": 0,
+     "spell": {
+      "id": "spell_disguise_of_the_transformed_image",
+      "name": "Disguise of the Transformed Image",
+      "technique": "Muto",
+      "form": "Imaginem",
+      "level": 10,
+      "description": "From the stat block in Antagonists.",
+      "requisites": [],
+      "range": "",
+      "duration": "",
+      "target": "",
+      "ritual": false,
+      "base_level": null,
+      "source": "Ant",
+      "page": "",
+      "experimental_effects": [],
+      "details_missing": false
+     }
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_by_his_works"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_words_of_the_unbroken_silence"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_the_good_witness"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_frosty_breath_of_the_spoken_lie"
+    },
+    {
+     "mastery": 2,
+     "spell_id": "spell_posing_the_silent_question"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_thoughts_within_babble"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_aura_of_rightful_authority"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_trust_me"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_invisible_sling_of_vilano"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_bitter_taste_of_betrayal"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_sense_of_the_lingering_magic"
+    },
+    {
+     "mastery": 0,
+     "spell_id": "spell_maintaining_the_demanding_spell"
+    }
+   ],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_ingrid_of_house_tremere",
+   "name": "Antagonist - Ingrid of House Tremere",
+   "type": "magus",
+   "house": "house_tremere",
+   "characteristics": {
+    "intelligence": 2,
+    "perception": 0,
+    "strength": 0,
+    "stamina": 2,
+    "presence": 0,
+    "communication": 0,
+    "dexterity": 0,
+    "quickness": 1
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 36,
+   "apparent_age": 36,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    1
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_the_gift",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_hermetic_magus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_flawless_magic",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_affinity_with_ability",
+     "params": {
+      "ability": "Penetration"
+     }
+    },
+    {
+     "vf_id": "vf_minor_magical_focus",
+     "params": {
+      "focus": "certamen"
+     }
+    },
+    {
+     "vf_id": "vf_skilled_parens",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_strong_willed",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_favors",
+     "params": {
+      "detail": "to House Guernicus"
+     }
+    },
+    {
+     "vf_id": "vf_deficient_form",
+     "params": {
+      "form": "Mentem"
+     }
+    },
+    {
+     "vf_id": "vf_difficult_spontaneous_magic",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oversensitive",
+     "params": {
+      "detail": "to magi flaunting their power"
+     }
+    }
+   ],
+   "personality_traits": [
+    [
+     "Ambitious",
+     2
+    ],
+    [
+     "Brave",
+     2
+    ],
+    [
+     "Stubborn",
+     1
+    ]
+   ],
+   "reputations": [],
+   "abilities": [
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "astronomy"
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 30,
+     "specialty": "acrobatics"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 15,
+     "specialty": "bodyguarding"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "dagger"
+    },
+    {
+     "name": "Code of Hermes",
+     "score": 0,
+     "xp": 5,
+     "specialty": "Tribunal procedure"
+    },
+    {
+     "name": "Concentration",
+     "score": 0,
+     "xp": 30,
+     "specialty": "spell concentration"
+    },
+    {
+     "name": "Finesse",
+     "score": 0,
+     "xp": 30,
+     "specialty": "targeting"
+    },
+    {
+     "name": "Living Language: High German",
+     "score": 0,
+     "xp": 75,
+     "specialty": "storytelling"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Hermetic usage"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 5,
+     "specialty": "in combat"
+    },
+    {
+     "name": "Magic Theory",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Rego"
+    },
+    {
+     "name": "Parma Magica",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Ignem"
+    },
+    {
+     "name": "Penetration",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Rego"
+    }
+   ],
+   "arts": {
+    "creo": {
+     "score": 0,
+     "xp": 15
+    },
+    "muto": {
+     "score": 0,
+     "xp": 15
+    },
+    "perdo": {
+     "score": 0,
+     "xp": 55
+    },
+    "rego": {
+     "score": 0,
+     "xp": 45
+    },
+    "corpus": {
+     "score": 0,
+     "xp": 55
+    },
+    "terram": {
+     "score": 0,
+     "xp": 45
+    }
+   },
+   "spells": [
+    {
+     "mastery": 1,
+     "spell_id": "spell_bind_wound"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_gift_of_the_bear_s_fortitude"
+    },
+    {
+     "mastery": 3,
+     "spell_id": "spell_grip_of_the_choking_hand"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_invocation_of_weariness"
+    },
+    {
+     "mastery": 1,
+     "spell": {
+      "id": "spell_endurance_of_the_berserkers_duration_diameter",
+      "name": "Endurance of the Berserkers (Duration: Diameter)",
+      "technique": "Rego",
+      "form": "Corpus",
+      "level": 15,
+      "description": "From the stat block in Antagonists.",
+      "requisites": [],
+      "range": "",
+      "duration": "",
+      "target": "",
+      "ritual": false,
+      "base_level": null,
+      "source": "Ant",
+      "page": "",
+      "experimental_effects": [],
+      "details_missing": false
+     }
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_wizard_s_leap"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_the_crystal_dart"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_pit_of_the_gaping_earth"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_stone_to_falling_dust"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_invisible_sling_of_vilano"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_ominous_evitation_of_the_weighty_stone"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_trackless_step"
+    },
+    {
+     "mastery": 1,
+     "spell_id": "spell_the_unseen_porter"
+    }
+   ],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_hannelore_spoiled_daughter",
+   "name": "Antagonist - Hannelore, Spoiled Daughter",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 0,
+    "perception": 0,
+    "strength": 0,
+    "stamina": -1,
+    "presence": 1,
+    "communication": 3,
+    "dexterity": 0,
+    "quickness": 1
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 16,
+   "apparent_age": 16,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    0
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_gentleman_woman",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_unaffected_by_the_gift",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_curse_of_venus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_obsessed",
+     "params": {
+      "detail": "knowledge is power"
+     }
+    }
+   ],
+   "personality_traits": [
+    [
+     "Attracted to Power",
+     3
+    ],
+    [
+     "Inquisitive",
+     2
+    ],
+    [
+     "Sensible",
+     -3
+    ]
+   ],
+   "reputations": [
+    [
+     "Fierce Temper (Local)",
+     1
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "writing"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 15,
+     "specialty": "mannerisms"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "dagger"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "men"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "courtly manners"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 15,
+     "specialty": "men"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 30,
+     "specialty": "lying to relatives"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "reading"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "local dialect"
+    },
+    {
+     "name": "Noble Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "positions of authority"
+    },
+    {
+     "name": "Philosophiae",
+     "score": 0,
+     "xp": 15,
+     "specialty": "ethics"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 15,
+     "specialty": "while hawking"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_hannelore_the_diabolist",
+   "name": "Antagonist - Hannelore, The Diabolist",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 0,
+    "perception": 0,
+    "strength": 0,
+    "stamina": -1,
+    "presence": 1,
+    "communication": 3,
+    "dexterity": 0,
+    "quickness": 1
+   },
+   "aging_points": {
+    "presence": 1,
+    "communication": 1
+   },
+   "size": 0,
+   "age": 21,
+   "apparent_age": 21,
+   "decrepitude": [
+    0,
+    2
+   ],
+   "warping": [
+    5,
+    2
+   ],
+   "confidence": [
+    2,
+    6
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_diabolist",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_gentleman_woman",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_ceremony_ropi",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_diablerie",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_incantation",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_malediction",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_psychomachia",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_affinity_with_ability",
+     "params": {
+      "ability": "Incantation"
+     }
+    },
+    {
+     "vf_id": "vf_arcane_lore",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_educated",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_infernal_blessing",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mentored_by_demons",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mentored_by_demons",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mentored_by_demons",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mentored_by_demons",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_mentored_by_demons",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_puissant_ability",
+     "params": {
+      "ability": "Incantation"
+     }
+    },
+    {
+     "vf_id": "vf_self_confident",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_unaffected_by_the_gift",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_curse_of_venus",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_hatred_major",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_restriction",
+     "params": {
+      "detail": "maleficia won't work on children"
+     }
+    },
+    {
+     "vf_id": "vf_fragile_constitution",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_obsessed",
+     "params": {
+      "detail": "knowledge is power"
+     }
+    },
+    {
+     "vf_id": "vf_tainted_with_evil",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Hateful",
+     5
+    ],
+    [
+     "Attracted to Power",
+     3
+    ],
+    [
+     "Inquisitive",
+     2
+    ],
+    [
+     "Sensible",
+     -3
+    ]
+   ],
+   "reputations": [
+    [
+     "Ambitious (Infernal)",
+     3
+    ],
+    [
+     "Fierce Temper (Local)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "writing"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 15,
+     "specialty": "mannerisms"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "dagger"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "men"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "courtly manners"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 15,
+     "specialty": "men"
+    },
+    {
+     "name": "Guile",
+     "score": 0,
+     "xp": 30,
+     "specialty": "lying to relatives"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "reading"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "local dialect"
+    },
+    {
+     "name": "Noble Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "positions of authority"
+    },
+    {
+     "name": "Philosophiae",
+     "score": 0,
+     "xp": 15,
+     "specialty": "ethics"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 15,
+     "specialty": "while hawking"
+    },
+    {
+     "name": "Ceremony",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Diablerie"
+    },
+    {
+     "name": "Infernal Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "powers"
+    },
+    {
+     "name": "Penetration",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Malediction"
+    },
+    {
+     "name": "Incantation",
+     "score": 0,
+     "xp": 225,
+     "specialty": "affecting self"
+    },
+    {
+     "name": "Diablerie",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Infernal blessings"
+    },
+    {
+     "name": "Malediction",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Personality Flaws"
+    },
+    {
+     "name": "Psychomachia",
+     "score": 0,
+     "xp": 50,
+     "specialty": "lustful actions"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_friar_or_monk_of_the_abbey_friar,_travelling",
+   "name": "Antagonist - Friar or Monk of the Abbey, Friar, travelling",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 0,
+    "perception": 0,
+    "strength": 1,
+    "stamina": 2,
+    "presence": 1,
+    "communication": 1,
+    "dexterity": 1,
+    "quickness": 2
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 34,
+   "apparent_age": 34,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    4
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_mendicant_friar",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clear_thinker",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_well_traveled",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_monastic_vows",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_compassionate",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Pious",
+     3
+    ],
+    [
+     "Dedicated",
+     2
+    ],
+    [
+     "Loyal",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Trustworthy (local)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: (Native Area)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "towns and villages"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "rhetoric"
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 15,
+     "specialty": "hiking"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "Dodge"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 15,
+     "specialty": "peasants"
+    },
+    {
+     "name": "Church Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "local diocese"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 5,
+     "specialty": "regulations for the clergy"
+    },
+    {
+     "name": "Dominion Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "saints"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Church"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 105,
+     "specialty": "members of the diocese"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 15,
+     "specialty": "parishes"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 30,
+     "specialty": "preaching"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "religious phrases"
+    },
+    {
+     "name": "Living Language: (Second)",
+     "score": 0,
+     "xp": 50,
+     "specialty": "conversation"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": null
+    },
+    {
+     "name": "Profession: (Or Craft)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "appropriate to position in abbey"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 15,
+     "specialty": "scripture"
+    },
+    {
+     "name": "Area Lore: (Travel Area)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "travel routes"
+    },
+    {
+     "name": "Chirurgy",
+     "score": 0,
+     "xp": 15,
+     "specialty": "sword wounds"
+    },
+    {
+     "name": "Stealth",
+     "score": 0,
+     "xp": 5,
+     "specialty": "hiding in brush"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_friar_or_monk_of_the_abbey_monk,_cloistered",
+   "name": "Antagonist - Friar or Monk of the Abbey, Monk, cloistered",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 0,
+    "perception": 0,
+    "strength": 1,
+    "stamina": 2,
+    "presence": 1,
+    "communication": 1,
+    "dexterity": 1,
+    "quickness": 2
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 34,
+   "apparent_age": 34,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    4
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_priest",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_clear_thinker",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_long_winded",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_monastic_vows",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_compassionate",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Pious",
+     3
+    ],
+    [
+     "Dedicated",
+     2
+    ],
+    [
+     "Loyal",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Trustworthy (local)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: (Native Area)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "towns and villages"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 15,
+     "specialty": "rhetoric"
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 15,
+     "specialty": "hiking"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "Dodge"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 15,
+     "specialty": "peasants"
+    },
+    {
+     "name": "Church Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "local diocese"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 5,
+     "specialty": "regulations for the clergy"
+    },
+    {
+     "name": "Dominion Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "saints"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "Church"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 105,
+     "specialty": "members of the diocese"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 15,
+     "specialty": "parishes"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 30,
+     "specialty": "preaching"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 50,
+     "specialty": "religious phrases"
+    },
+    {
+     "name": "Living Language: (Second)",
+     "score": 0,
+     "xp": 50,
+     "specialty": "conversation"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": null
+    },
+    {
+     "name": "Profession: (Or Craft)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "appropriate to position in abbey"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 15,
+     "specialty": "scripture"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_the_prior_of_the_abbey",
+   "name": "Antagonist - The Prior of the Abbey",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 2,
+    "perception": 1,
+    "strength": 0,
+    "stamina": 2,
+    "presence": 1,
+    "communication": 2,
+    "dexterity": -1,
+    "quickness": -2
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 43,
+   "apparent_age": 43,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    2
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_senior_clergy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_monastic_vows",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_intuition",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_regular",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_temporal_influence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_vow",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Organized",
+     3
+    ],
+    [
+     "Calculating",
+     2
+    ],
+    [
+     "Dedicated",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Trustworthy (local)",
+     4
+    ],
+    [
+     "Wise (regional)",
+     4
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: (Native Area)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "towns and villages"
+    },
+    {
+     "name": "Artes Liberales",
+     "score": 0,
+     "xp": 30,
+     "specialty": null
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 5,
+     "specialty": "hiking"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 15,
+     "specialty": "Dodge"
+    },
+    {
+     "name": "Carouse",
+     "score": 0,
+     "xp": 5,
+     "specialty": "remaining sober"
+    },
+    {
+     "name": "Charm",
+     "score": 0,
+     "xp": 30,
+     "specialty": "clergy"
+    },
+    {
+     "name": "Church Lore",
+     "score": 0,
+     "xp": 50,
+     "specialty": "local diocese"
+    },
+    {
+     "name": "Civil and Canon Law",
+     "score": 0,
+     "xp": 50,
+     "specialty": "regulations for the clergy"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 75,
+     "specialty": null
+    },
+    {
+     "name": "Dominion Lore",
+     "score": 0,
+     "xp": 30,
+     "specialty": "saints"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 50,
+     "specialty": "Church"
+    },
+    {
+     "name": "Folk Ken",
+     "score": 0,
+     "xp": 50,
+     "specialty": "member of the diocese"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 30,
+     "specialty": "parishes"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 30,
+     "specialty": "preaching"
+    },
+    {
+     "name": "Living Language: (Second)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "conversation"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": null
+    },
+    {
+     "name": "Profession: (Unspecified)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "autocrat"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 30,
+     "specialty": null
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  },
+  {
+   "id": "ant_penitent_knight",
+   "name": "Antagonist - Penitent Knight",
+   "type": "companion",
+   "house": "",
+   "characteristics": {
+    "intelligence": 0,
+    "perception": -1,
+    "strength": 2,
+    "stamina": 2,
+    "presence": 1,
+    "communication": 0,
+    "dexterity": 2,
+    "quickness": 1
+   },
+   "aging_points": {},
+   "size": 0,
+   "age": 26,
+   "apparent_age": 26,
+   "decrepitude": [
+    0,
+    0
+   ],
+   "warping": [
+    0,
+    0
+   ],
+   "confidence": [
+    1,
+    3
+   ],
+   "virtues_flaws": [
+    {
+     "vf_id": "vf_knight",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_wealthy",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_affinity_with_ability",
+     "params": {
+      "ability": "Single Weapon"
+     }
+    },
+    {
+     "vf_id": "vf_improved_characteristics",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_tough",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_warrior",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_oath_of_fealty",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_continence",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_pious",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_poor_student",
+     "params": {}
+    },
+    {
+     "vf_id": "vf_vow",
+     "params": {
+      "detail": "complete the abbot's task"
+     }
+    },
+    {
+     "vf_id": "vf_wrathful",
+     "params": {}
+    }
+   ],
+   "personality_traits": [
+    [
+     "Pious",
+     2
+    ],
+    [
+     "Wrathful",
+     2
+    ]
+   ],
+   "reputations": [
+    [
+     "Pious (local)",
+     2
+    ],
+    [
+     "Wrathful (region)",
+     2
+    ]
+   ],
+   "abilities": [
+    {
+     "name": "Area Lore: (Native Area)",
+     "score": 0,
+     "xp": 50,
+     "specialty": "castles"
+    },
+    {
+     "name": "Area Lore: (Travel Area)",
+     "score": 0,
+     "xp": 30,
+     "specialty": "travel routes"
+    },
+    {
+     "name": "Athletics",
+     "score": 0,
+     "xp": 50,
+     "specialty": "armored"
+    },
+    {
+     "name": "Awareness",
+     "score": 0,
+     "xp": 5,
+     "specialty": "battle"
+    },
+    {
+     "name": "Brawl",
+     "score": 0,
+     "xp": 50,
+     "specialty": "dodge"
+    },
+    {
+     "name": "Chirurgy",
+     "score": 0,
+     "xp": 5,
+     "specialty": "sword wounds"
+    },
+    {
+     "name": "Etiquette",
+     "score": 0,
+     "xp": 30,
+     "specialty": "court"
+    },
+    {
+     "name": "Great Weapon",
+     "score": 0,
+     "xp": 50,
+     "specialty": "lance"
+    },
+    {
+     "name": "Hunt",
+     "score": 0,
+     "xp": 30,
+     "specialty": "boar"
+    },
+    {
+     "name": "Intrigue",
+     "score": 0,
+     "xp": 15,
+     "specialty": "court"
+    },
+    {
+     "name": "Leadership",
+     "score": 0,
+     "xp": 50,
+     "specialty": "small groups"
+    },
+    {
+     "name": "Dead Language: Latin",
+     "score": 0,
+     "xp": 5,
+     "specialty": "religious phrases"
+    },
+    {
+     "name": "Living Language: (Second)",
+     "score": 0,
+     "xp": 50,
+     "specialty": "commands"
+    },
+    {
+     "name": "Living Language: (Native)",
+     "score": 0,
+     "xp": 75,
+     "specialty": "commands"
+    },
+    {
+     "name": "Ride",
+     "score": 0,
+     "xp": 30,
+     "specialty": "battle"
+    },
+    {
+     "name": "Single Weapon",
+     "score": 0,
+     "xp": 75,
+     "specialty": "Long sword"
+    },
+    {
+     "name": "Theology",
+     "score": 0,
+     "xp": 15,
+     "specialty": "scripture"
+    }
+   ],
+   "arts": {},
+   "spells": [],
+   "equipment": [],
+   "source": "Ant"
+  }
+ ]
+}

@@ -11,7 +11,7 @@ from dataclasses import dataclass
 from .markup import escape, fit
 from .models import Possession, Saga
 from .models.ships import Ship
-from .rules import equipment, journeys
+from .rules import equipment, journeys, sites
 from .rules import ships as rules
 
 _NAME = 18
@@ -152,7 +152,26 @@ def detail_lines(record: Possession, saga: Saga | None) -> list[str]:
     lines.append(_line("Speed", _speed(ship)))
     if ship.home_port:
         lines.append(_line("Home port", escape(ship.home_port)))
+    lab = saga.laboratory(record.lab_id) if saga and record.lab_id else None
+    if lab is not None:
+        lines.append(_line("Laboratory aboard", escape(lab.name)))
+    if saga is not None and ship.stops:
+        lines.append(_apart_line(saga, record))
     return lines
+
+
+def _apart_line(saga: Saga, record: Possession) -> str:
+    """Where she is while apart from the fleet."""
+    ship = rules.ship_of(record)
+    where = sites.ship_stop(saga, record)
+    words = "where she sails"
+    if where is not None:
+        aura, realm = sites.aura_here(saga, *where)
+        words = f"at {escape(where[0].name)}, {realm} {aura}"
+    magi = [c.name for c in saga.characters if c.id in ship.aboard]
+    if magi:
+        words += f"; aboard: {escape(', '.join(magi))}"
+    return _line("Apart from the fleet", words)
 
 
 def _taken_from_cargo(ship: Ship) -> str:

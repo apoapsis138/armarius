@@ -474,6 +474,7 @@ def _pithecousa(b: Builder) -> Neighbour:
                 ("Baneful Circumstances", {"circumstance": "new moon"}),
                 ("Essential Virtue", {"trait": "Presence"}),
                 "Gift of Speech",
+                "Gift of Thumbs",
                 "Improved Abilities",
                 "Improved Abilities",
                 "Personal Power",
@@ -540,9 +541,7 @@ def _pithecousa(b: Builder) -> Neighbour:
             "with a darker face."
         ),
         notes=paragraphs(
-            "Reputations: none. Gift of Thumbs (Minor Magical Quality): negates "
-            "the Magic Animal's inherent No Hands, as Gift of Speech negates "
-            "Mute. Not in the catalog.",
+            "Reputations: none.",
             "A mundane monkey: remove Magic Animal, Might, Magical Qualities and "
             "Inferiorities (with the Essential Traits and Powers) and vis, and "
             "lower Quickness by one. The satyrus (Simia in Latin) is the "
@@ -643,14 +642,8 @@ def _rif(b: Builder, maghreb: Neighbour) -> dict[str, Neighbour]:
             "Lore: Maghreb (Quality 6) and on Magic Lore (Quality 6), hard to "
             "find, in heirloom collections in Italy, Iberia and Constantinople "
             "(p. 50).",
-            "Of Kings and Giants, Antaeus' Bloodline (Major or Minor Supernatural "
-            "Virtue, p. 50, not in the catalog): ages as Faerie Blood (Minor) or "
-            "Strong Faerie Blood (Major). Minor gives one of +1 Strength (to at "
-            "most +3), +1 Brawl or +1 Soak. Major gives all three, plus Large "
-            "and Magic Sensitivity, and the Major Flaw Greater Malediction (must "
-            "be touching the ground): off the ground the bonuses go and Soak "
-            "falls by 2, though the size remains. The player chooses a Magic or "
-            "Faerie alignment for good.",
+            "His descendants may have the Virtue Antaeus' Bloodline, Major or "
+            "Minor (p. 50, Of Kings and Giants).",
         ),
     )
     _place(
