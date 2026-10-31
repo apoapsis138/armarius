@@ -61,12 +61,14 @@ class BookPack:
 PACKS: dict[str, BookPack] = {}
 
 
-def _finished(assemble: Callable[..., Builder]) -> Callable[..., Builder]:
-    """`assemble`, with what every pack keeps out of its public text."""
+def _finished(key: str, assemble: Callable[..., Builder]) -> Callable[..., Builder]:
+    """`assemble`, with the pack's waters, and what every pack keeps out of
+    its public text."""
 
     @wraps(assemble)
     def finished(*args: Any) -> Builder:
         b = assemble(*args)
+        waters.chart(key, b, *args)
         builder.hide_holdings(b.saga)
         return b
 
@@ -74,7 +76,7 @@ def _finished(assemble: Callable[..., Builder]) -> Callable[..., Builder]:
 
 
 def register(pack: BookPack) -> None:
-    PACKS[pack.key] = replace(pack, assemble=_finished(pack.assemble))
+    PACKS[pack.key] = replace(pack, assemble=_finished(pack.key, pack.assemble))
 
 
 def data(pack: BookPack) -> dict[str, Any]:
@@ -158,4 +160,5 @@ from . import (  # noqa: F401
     templates,
     theban,
     transylvania,
+    waters,
 )

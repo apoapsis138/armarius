@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.62.1",
   "kind": "pack",
   "name": "The Contested Isle: the Hibernian Tribunal",
   "from_saga": "The Contested Isle: the Hibernian Tribunal",
@@ -637,7 +637,7 @@
             "kind": "creatures",
             "target_id": "f_orl_ir_the_true_mare",
             "note": "its magi try, so far in vain, to breed a true mare",
-            "id": "b79f6ba71b0c"
+            "id": "3d9285e45748"
           }
         ],
         "unnamed_magi": 0,
@@ -1254,7 +1254,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "b9cdd3225160"
+            "id": "90140bf7cc82"
           },
           {
             "title": "May Praesis's new masters show the G\u00e1e Bulg?",
@@ -1286,7 +1286,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "23d452e534f8"
+            "id": "51ff9df7806e"
           },
           {
             "title": "The test of the Treaty of Cnoc Maol R\u00e9idh",
@@ -1318,7 +1318,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "c734e427bb6b"
+            "id": "73162e2f7688"
           },
           {
             "title": "Reforming the Peripheral Code",
@@ -1350,7 +1350,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "714fd2977c44"
+            "id": "ff5408cf69b5"
           },
           {
             "title": "The ambassadors' votes",
@@ -1382,7 +1382,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "560d03ca6be2"
+            "id": "1a1c4a36ef52"
           },
           {
             "title": "L\u00e1mbaird and the Normans",
@@ -1414,7 +1414,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "e100cabcfe25"
+            "id": "111ab03edfe3"
           },
           {
             "title": "The Ua Cathail against Elk's Run",
@@ -1446,7 +1446,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1118a3fc968b"
+            "id": "6b95f607407d"
           },
           {
             "title": "Guillaume's raids into Connacht",
@@ -1478,7 +1478,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "aa7e9d600b34"
+            "id": "3ddd01dcd730"
           },
           {
             "title": "Igneous Drake's killings",
@@ -1510,7 +1510,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "2d3de2b68aa8"
+            "id": "7e8cadb4e192"
           },
           {
             "title": "Faol\u00e1n in Connacht",
@@ -1542,7 +1542,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1f45a2ec8e1b"
+            "id": "df6f7f9b396c"
           },
           {
             "title": "A Redcap who votes",
@@ -1574,7 +1574,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1b5dc0454593"
+            "id": "da3d3d915bc2"
           },
           {
             "title": "Who maimed Con\u00e1n Derg?",
@@ -1606,7 +1606,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "636a0ac905b9"
+            "id": "a371f995bf31"
           },
           {
             "title": "Access to the Red Book of Cloyne",
@@ -1638,7 +1638,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "13309b1b0e54"
+            "id": "226cc02d1b83"
           }
         ],
         "rulings": [
@@ -1647,231 +1647,231 @@
             "year": 898,
             "says": "At its first meeting as a Tribunal of its own, Hibernia made the Treaty with the hedge wizards of Connacht binding, with every private treaty then standing between a druid and a magus. Most of the Code is made of treaties like it: particular bargains between named parties, not general rules, so a Munster case of 1134 need not decide a like case in 1220. The English call this unworkable and ask for change at every meeting. Its clauses are on the Treaties list.",
             "case_id": "",
-            "id": "2e1cb0986252"
+            "id": "f88c9904322b"
           },
           {
             "title": "Treaties",
             "year": null,
             "says": "Anyone with the right to be heard at Tribunal may make a treaty: a magus, a covenant, the Order, the Tuatha D\u00e9, the Coill Tr\u00ed and so on. A treaty may be for a time, for ever, or until a stated condition frees the parties. The parties reach it themselves with a Quaesitor's help, and the Tribunal's part is to see that they agree. No treaty may break the Code or bind a magus against the Oath. A hedge wizard who wants a treaty or a hearing needs the Coill Tr\u00ed to sponsor him, and faeries and beasts treat only through their ambassador.",
             "case_id": "",
-            "id": "f675be8bf41c"
+            "id": "29f394c7d767"
           },
           {
             "title": "Founding a covenant",
             "year": null,
             "says": "Any magus may found a covenant by proving land, wealth and a cathach: a place to live that the magi have defended for a year, cattle (Ireland's old measure of wealth), and the trophy. Once all three have been held a year the covenant asks the Praeco to recognise it, its name and lands are written down at Leth Moga, and the Redcaps begin to call. Others may try to take the cathach in that year, and if they do the covenant cannot form; they must keep to the Code and may harm no resident without Wizard War.",
             "case_id": "",
-            "id": "ebbe068fbaa6"
+            "id": "8333e2c741e5"
           },
           {
             "title": "The cathach",
             "year": null,
             "says": "A cathach must answer to Intellego Vim as magical, though not necessarily Hermetic; it must have been taken, from the land, the magic realm or another magus, and how it was won becomes part of the covenant's story; it must be storied, legendary itself or made by a famous hand; and it must be shown at each meeting and be kept outside the Aegis of the Hearth between them. The custom goes back to the four founders of Circulus Ruber, who swore to hold their land and its treasures for a year. Great families keep cathaigh too.",
             "case_id": "",
-            "id": "c34f98462cc9"
+            "id": "e3242736b189"
           },
           {
             "title": "Holding another's cathach",
             "year": null,
             "says": "A magus found with a cathach another covenant justly claims is treated as if caught in a sanctum and loses his immunity, and the same holds for its cattle. A thief who means to claim the robbed covenant's resources must keep the cathach a year against all comers. Stealing every cathach could leave the meeting without a quorum, though magi without one can still be heard through allies who kept theirs.",
             "case_id": "",
-            "id": "397f1ea5560b"
+            "id": "c387c31cfb3d"
           },
           {
             "title": "Representation and votes",
             "year": null,
             "says": "No magus is represented without his covenant, and no covenant without its cathach, which must be carried to the meeting and kept on show. A magus whose covenant shows it has one vote and may lend it as a proxy as elsewhere.",
             "case_id": "",
-            "id": "fba9999a72dd"
+            "id": "f496ea17da03"
           },
           {
             "title": "Residency and vagrants",
             "year": null,
             "says": "A magus is resident, and votes, only through a recognised covenant. One outside any covenant is a vagrant, however long he has lived in Ireland: no Redcaps call, he has no voice, his property has no protection, and he may be exiled. Many solitary magi live so all the same; to vote, one must found a covenant of one, with land, cattle and a cathach.",
             "case_id": "",
-            "id": "13e1aaccaea9"
+            "id": "f17d433ba09f"
           },
           {
             "title": "No chapter houses or vassals",
             "year": null,
             "says": "Hibernia recognises neither chapter houses nor liege and vassal covenants. A magus who would leave his covenant must join or found another, or give up the Tribunal's protection.",
             "case_id": "",
-            "id": "3dfeb4052760"
+            "id": "9d2c825ee72c"
           },
           {
             "title": "A covenant's lands",
             "year": null,
             "says": "A covenant's lawful lands are its vis sources: all those a magus can walk round between sunrise and sunset, using no spell or enchanted device to go faster. Raiding them is depriving a magus of his magical power. Everything outside is common land: a covenant may mark a source there with its symbol, but must defend it itself, and certamen is often fought over such sources.",
             "case_id": "",
-            "id": "3da70515d893"
+            "id": "ac34df1516fa"
           },
           {
             "title": "Forfeiting immunity",
             "year": null,
             "says": "Slaying a magus outside Wizard War is a High Crime, with the usual defences. A magus forfeits his immunity by trying to take an apprentice from a covenant, taking a cathach, entering a sanctum, attacking a familiar, or raiding a covenant's protected vis.",
             "case_id": "",
-            "id": "29abf99d46b1"
+            "id": "55d5ecb9636e"
           },
           {
             "title": "Declaring Wizard War",
             "year": null,
             "says": "War is declared in person, in public and before witnesses, though not necessarily to its target, and it starts a month later; no letter of warning is needed. A declaration kept from its target on purpose has been ruled void. One declaration may name several enemies, and draw in the allies of either side, as in a war on 'Meadhbh and all who hold to the G\u00e1e Bulg'.",
             "case_id": "",
-            "id": "e2e5d71a95a6"
+            "id": "2fe2f234ffdc"
           },
           {
             "title": "Extended Wizard War",
             "year": null,
             "says": "No pause is required between months of War, and the Code presumes a War extended unless it is shown otherwise, so it lasts until one side dies, yields or makes a treaty. Most such Wars sink into raids and theft, fought by grogs and hired men, until someone calls a truce; submission is the aim more often than death.",
             "case_id": "",
-            "id": "3d1c924c7e91"
+            "id": "1518a4426e4f"
           },
           {
             "title": "Certamen",
             "year": null,
             "says": "The aggressor names the Technique and the defender the Form, as the Definitive Edition already has it; the Hibernian custom is that neither may veto the other's choice, and nothing limits who may challenge, when, or how often. Refusing a challenge shames a magus as anywhere, but using vis in a duel carries no stigma.",
             "case_id": "",
-            "id": "092dea800980"
+            "id": "1f157f332150"
           },
           {
             "title": "The ambassadors",
             "year": null,
             "says": "The Tribunal holds itself the magical authority over all Ireland, so each recognised supernatural faction may send a voting ambassador, confirmed at the Sacred Council and given a sigil for the meeting; its vote counts as any magus's. The Tuatha D\u00e9 confirm theirs at the Council; the Fom\u00f3rach and the Fir Bolg send royal kin; other faeries may send one or be spoken for by House Merinita; beasts of magic who speak and understand men may choose one, or a magus stands for them. The Infernal has never tested this right.",
             "case_id": "",
-            "id": "5f91b9246d14"
+            "id": "826826e1c1fa"
           },
           {
             "title": "Speaking creatures",
             "year": null,
             "says": "A creature that speaks any human tongue counts as a man and may be represented at Tribunal: no covenant should harm it or take from its territory without leave or a fair return. Even the Ordo Hiberniae keeps this loosely.",
             "case_id": "",
-            "id": "ecd042bb0ee6"
+            "id": "36318f0ed027"
           },
           {
             "title": "Allies of the Order",
             "year": null,
             "says": "The Fom\u00f3rach, the Tuatha D\u00e9, the Fir Bolg and, by the Treaty, the Coill Tr\u00ed are the Order's allies, and must be warned of Wizard War as a magus would be, so they can make terms first. A hedge wizard too must be declared on before he is attacked; killing one without it is assaulting the Order's allies. Magi who declared War on 'all hedge wizards' have been talked into letting it lapse.",
             "case_id": "",
-            "id": "cea674933e58"
+            "id": "5695d04103f1"
           },
           {
             "title": "The rights of hedge wizards",
             "year": null,
             "says": "A hedge wizard may claim one protected vis source; any others he uses are common land. Redcaps must carry the Order's messages to the Coill Tr\u00ed as to any covenant, but visits to single hedge wizards are a courtesy. A hedge wizard may ask a covenant to take him in, and is then expected to swear the Oath and join the Younger House.",
             "case_id": "",
-            "id": "e38da84cd6c9"
+            "id": "c2570b2e45af"
           },
           {
             "title": "Mundane interference",
             "year": null,
             "says": "Hibernia's Quaesitors take the Transitionalist view: in so small a Tribunal, with magi born among the people and kings long used to asking druids for counsel, dealings with mundanes cannot be helped. A charge of interference must show that the Order was put in danger.",
             "case_id": "",
-            "id": "093dcd4a69f9"
+            "id": "3b81b7a0a4b0"
           },
           {
             "title": "Guarding the auras",
             "year": null,
             "says": "Magic and Faerie auras, often tied to great events of Irish history, are in the Order's keeping. Defending one against mundanes who would spoil or destroy it, or punishing them for it, is not interference, and the Tribunal backs a strong hand. Drawing vis out of an aura is frowned on as bad husbandry.",
             "case_id": "",
-            "id": "58ddba3b1f7b"
+            "id": "fc0976fe4bd1"
           },
           {
             "title": "Scrying",
             "year": null,
             "says": "A scrying charge carries a heavy burden: without clear signs of magical spying found by a trustworthy witness, the Tribunal requires that the knowledge could not have been had without magic. Most magi accept some scrying as unavoidable and settle it privately.",
             "case_id": "",
-            "id": "ad0fe8df6498"
+            "id": "c33b2f12cbcd"
           },
           {
             "title": "The Presiding Quaesitor's veto",
             "year": null,
             "says": "The Presiding Quaesitor may set aside a decision only when it plainly conflicts with any reasonable reading of the Oath or the Code, which leaves Hibernia room to read the Code in its own way. Magvillus has reviewed the Hibernian Code many times, before and after the English came, and each time found its oddities lawful.",
             "case_id": "",
-            "id": "d1cd5350b991"
+            "id": "6e1faf17d10f"
           },
           {
             "title": "Apprentices and the macgn\u00edmartha",
             "year": null,
             "says": "One in the macgn\u00edmartha is outside the Code and no longer the parens's charge. A Bonisagus who wants another's apprentice must claim the child at a Tribunal, when the Coill Tr\u00ed or the parens first present them or at a later meeting, before the macgn\u00edmartha begins.",
             "case_id": "",
-            "id": "414a7cc39d84"
+            "id": "129fcf037278"
           },
           {
             "title": "Exile",
             "year": null,
             "says": "In place of casting a magus out of his House or the Order, Hibernia exiles him: he must leave the island or be Marched. An exile may ask to return if a resident magus will stand surety and plead for him; the Tribunal decides by free vote. A magus who flees overseas while under judgment has exiled himself, and must come back by the next meeting or be cast out of the Order.",
             "case_id": "",
-            "id": "80a2c5f26c1e"
+            "id": "fd523cf495b0"
           },
           {
             "title": "Sanctions, naidm and r\u00e1th",
             "year": null,
             "says": "Like Irish law, which avoids putting men to death, the Tribunal seldom calls a March or takes a familiar or talisman; it wants redress for the injured and better conduct, through fines, duties, restrictions and exile. A naidm is named to see the penalty paid, and those close to the offender, his covenant, parens and filii, stand surety (r\u00e1th), paying or suffering in his place if he defaults. A fine is rarely raw vis: more often the injured party is given use of the offender's vis source for a term.",
             "case_id": "",
-            "id": "89881724d36c"
+            "id": "b03ca71b197f"
           },
           {
             "title": "Trafficking with demons",
             "year": null,
             "says": "The only crime the Tribunal answers with a March as a matter of course. When the Oath's call to slay a magus is invoked, it is carried out in earnest, though Hibernian justice stops at the shore.",
             "case_id": "",
-            "id": "7e2fc6cd7997"
+            "id": "bf84cfdff949"
           },
           {
             "title": "Censuring creatures and the Coill Tr\u00ed",
             "year": null,
             "says": "A faerie or beast that sets the mundane world against the Order is punished as the case deserves: faeries have been chained, beasts driven from their haunts for a time or put to a covenant's service, and once a creature was bound into servitude, a sanction few want repeated. Members of the Coill Tr\u00ed, who have no Code, are judged case by case and may be made to serve, pay vis each season for a year, or keep out of a district, and their ambassador must see the judgment met.",
             "case_id": "",
-            "id": "cb30fb6b5650"
+            "id": "0e282ca712a3"
           },
           {
             "title": "The Mercer Houses",
             "year": null,
             "says": "Leth Moga and Leth Cuinn are not covenants: they keep no cathach, need no cattle, and stand because they serve the Tribunal, under many rulings of the Code that guarantee them.",
             "case_id": "",
-            "id": "dc09a2ad277c"
+            "id": "8517729ae182"
           },
           {
             "title": "The Red Book of Cloyne",
             "year": null,
             "says": "When magi asked in the twelfth century to use the Red Book as testimony, Diarmait of Leth Moga agreed that each Redcap's own witness may be called, but the book, which he inherited from his parens, is his own and lies under his sanctum marker. The Tribunal upheld this, and several magi resent it.",
             "case_id": "",
-            "id": "3b4ade8dfad5"
+            "id": "81e7a590bcd5"
           },
           {
             "title": "Revoke the Protection of Bonisagus",
             "year": null,
             "says": "Enchanting the effect into a device that anyone may use, or whose effect never runs out, is forbidden, lest it fall into the wrong hands. Casting the spell on a conscious magus outside Wizard War or a March may be taken as the first step of a killing.",
             "case_id": "",
-            "id": "7171f05ae64c"
+            "id": "03d28c45520c"
           },
           {
             "title": "The Battle of Teamhrach",
             "year": 980,
             "says": "Vigil was not punished for magically securing an alliance of M\u00e1el Sechnaill mac Domnaill with the kings of Leinster and Ulster against Olaf Cuaran of Dublin, nor for fighting beside them to drive the Norse from Tara: keeping Teamhrach from the northmen was held vital to the Tribunal's sanctity, though it was plain interference.",
             "case_id": "",
-            "id": "9bb726259dbc"
+            "id": "6e0617730a13"
           },
           {
             "title": "Ashenrise's cathach",
             "year": 1186,
             "says": "While the hall was in uproar and magi were declaring War on the newcomers, the Praeco Con\u00e1n Derg accepted the dug-up corpse of Rhiannon, a former Prima of Merinita, as Ashenrise's cathach: against those who said it was no magical treasure, he ruled that the raw vis grown in its bones made it one.",
             "case_id": "",
-            "id": "b06f0e737e1b"
+            "id": "67d9eb55a085"
           },
           {
             "title": "L\u00e1mbaird reprimanded",
             "year": 1193,
             "says": "L\u00e1mbaird's magi, suspected of helping the Wicklow clans against the English by magic, were reprimanded by the Tribunal but not sanctioned, since nothing tied the Order to the raids.",
             "case_id": "",
-            "id": "a4d85d10b3ce"
+            "id": "8bbb6b9600f7"
           },
           {
             "title": "The Grand Tribunal and Damisona",
             "year": 1195,
             "says": "At Durenmar the Grand Tribunal heard a long debate on whether Hibernia needed a Code modelled on Stonehenge's, against those who held a Tribunal free to set its own. Those whose apprentices, in their macgn\u00edmartha, had attacked Damisona of Jerbiton's party in 1190 and killed three grogs were found guilty only of a Low Crime, to Stonehenge's outrage.",
             "case_id": "",
-            "id": "e45f917f6075"
+            "id": "b3e5ebc2a6a7"
           }
         ],
         "treasury": [],
@@ -1883,7 +1883,7 @@
             "details": "The old tales tell of five peoples who took Ireland one after another (Cessair's, Parthol\u00f3n's, Nemed's, the Fir Bolg and the Tuatha D\u00e9) before the Sons of M\u00edl, the Gaels, won it for good and the Tuatha D\u00e9 went under the hills. Palladius's mission had already failed when Patrick, once a slave of Irish raiders, comes back to preach. He goes round the island from Leinster to Connacht, Ulster, Meath and Munster, outdoes the druids in a contest of wonders and drives them out, banishes the snakes and turns the people Christian; he lies today in Down Cathedral. (The book says only the fifth century, and that the sources disagree; 432 is the year tradition gives.)",
             "changes": [],
             "margin": "",
-            "id": "905dfea71e84"
+            "id": "e2765c6c5b49"
           },
           {
             "year": 450,
@@ -1892,7 +1892,7 @@
             "details": "At Aileach, Patrick baptises E\u00f3ghan son of Niall, from whom the Cen\u00e9l nE\u00f3ghain of T\u00edr E\u00f3ghain descend.",
             "changes": [],
             "margin": "",
-            "id": "306bb5879354"
+            "id": "37a5195add35"
           },
           {
             "year": 490,
@@ -1901,7 +1901,7 @@
             "details": "In the last years of the century Saint Brigid founds a double house of monks and nuns at Cill Dara and lights the fire that has burned there ever since. In Meath the ruling U\u00ed Enechglaiss are driven south to Arklow, and the U\u00ed Mael Sechlainn, the southern U\u00ed N\u00e9ill, take the land and give Ireland several high-kings. Saint Aebh's monastery is founded at Antrim about the same time. (The book says only the late fifth century.)",
             "changes": [],
             "margin": "",
-            "id": "78c16e9a942e"
+            "id": "b8905411a9a8"
           },
           {
             "year": 549,
@@ -1910,7 +1910,7 @@
             "details": "Saint Ciar\u00e1n, a founder of many monasteries, dies of the yellow plague at Clonmacnoise, his greatest house. (The book puts it early in the sixth century; the plague of Justinian came in the 540s.)",
             "changes": [],
             "margin": "",
-            "id": "7503f0758429"
+            "id": "f9fc7bafc795"
           },
           {
             "year": 555,
@@ -1919,7 +1919,7 @@
             "details": "Saint Comgall founds the abbey of Beannchor M\u00f3r, around which the town of Bangor grows.",
             "changes": [],
             "margin": "",
-            "id": "6651c03ade86"
+            "id": "ab7340858645"
           },
           {
             "year": 560,
@@ -1928,7 +1928,7 @@
             "details": "Saint Ruad\u00e1n, wronged by King Diarmait, foretells that the king will die in his own hall at Tara; the high-kings' seat begins its long decline. (The book says only the sixth century.)",
             "changes": [],
             "margin": "",
-            "id": "c2ef6473d8ec"
+            "id": "21cc05fa04f7"
           },
           {
             "year": 571,
@@ -1937,7 +1937,7 @@
             "details": "The Ulaidh beat the Osraighe at Tola, the first of the defeats that wear down the kingdom of Ossory.",
             "changes": [],
             "margin": "",
-            "id": "7ea9341fcb73"
+            "id": "f44eeaaa79e3"
           },
           {
             "year": 778,
@@ -1946,7 +1946,7 @@
             "details": "Two Tytalus and two Merinita magae come looking for the four treasures of the Tuatha D\u00e9. With a local ward-maker they dig a cauldron out of a mound at the Br\u00fa na B\u00f3inne and take it for the Dagda's. The high-king sends his druid and a warband against the grave robbers; the five hold a barrow against three days of assaults, and, true to their leader's boast, stay on the mound for a whole year.\n\nSecrets\nThe cauldron is not the Dagda's but the Cauldron of Llasar Llaes Gyfnewid, which raises a dead warrior to fight for one more day.",
             "changes": [],
             "margin": "",
-            "id": "72d9a2f1372e"
+            "id": "a5474f3b25ba"
           },
           {
             "year": 780,
@@ -1955,7 +1955,7 @@
             "details": "The four magae move to the Burren and raise a tower by magic on Hag's Head, among the Cliffs of Moher, vowing to hold it for a year. Local wizards and their kin fight hard to be rid of them, but with allies from the Rhine and Iberia the newcomers hold, and at the Tribunal of this year the covenant is founded, named for the red wards their helper drew. By the decade's end eight magi live there.",
             "changes": [],
             "margin": "",
-            "id": "528e55a5194e"
+            "id": "34353b565bd1"
           },
           {
             "year": 793,
@@ -1964,7 +1964,7 @@
             "details": "Diedne arrives seeking the druids for her House, and the chief druid Sechnassach, offended by a choice of joining or dying, sends her away. She leaves with threats he does not take seriously.",
             "changes": [],
             "margin": "",
-            "id": "b2e3768fe9d8"
+            "id": "66779c004f9c"
           },
           {
             "year": 795,
@@ -1973,7 +1973,7 @@
             "details": "Norse and Danish raiders begin to fall on the monasteries without warning, at first only in spring and summer. Within a generation they stay, turning the coastal trading posts into the towns of Dublin, Waterford, Wexford, Cork and Limerick, and they bring rune wizards with them. (The book says only the late eighth century.)",
             "changes": [],
             "margin": "",
-            "id": "3f6793117d62"
+            "id": "b395bc5657f3"
           },
           {
             "year": 797,
@@ -1982,7 +1982,7 @@
             "details": "Twenty-seven Diedne magi land near Wexford and split into three bands of nine to hunt the druids, offering each the same choice; most choose death. Quendalon (Cuin-dall\u00e1n), an Ulsterman of House Merinita, comes home from the Rhine to save what he can: some of the old wizards he takes into his House, others he hides in Connacht. Meanwhile the Diedne found covenants of their own and dig in. In the midst of the purge the druid Raghallach meets Petrifer of House Flambeau, attacks him on learning he is a magus, and is won over to the Order instead.",
             "changes": [],
             "margin": "",
-            "id": "ac8f960edf31"
+            "id": "89ee3c39bd0e"
           },
           {
             "year": 800,
@@ -1991,7 +1991,7 @@
             "details": "The druids who sing the giant to sleep in the Cuailnge mountains, at a place already old and already a burial ground for Ireland's magical powers, join the Order, and the covenant grows up around them. Ever since, Hibernia's magi have been laid to rest there. (The book gives no year, only that the druids joined the Order after the magi came.)",
             "changes": [],
             "margin": "",
-            "id": "93d0be94c2f8"
+            "id": "cfcb0a912788"
           },
           {
             "year": 806,
@@ -2000,7 +2000,7 @@
             "details": "Pralix, chasing followers of Damhan-Allaidh, meets Diedne on the shore of Lough Cuan. Diedne expects help with her purge; Pralix wants to recruit the druids without forcing them. Their argument becomes an illegal Wizard War that neither ever charges, and Nendrum monastery on Machaoi island is left in ruins, no one knows by which of them. About twenty of Ireland's stronger native wizards fight for Pralix against Damhan-Allaidh, and the survivors join her new order, the root of House Ex Miscellanea.",
             "changes": [],
             "margin": "",
-            "id": "3295e973ba92"
+            "id": "9d4f2a2cdfdd"
           },
           {
             "year": 816,
@@ -2009,7 +2009,7 @@
             "details": "After almost fifteen years of killing, Diedne tells the Tribunal that not one druid is left in Ireland. It is an exaggeration, but the old tradition is broken. (The history chapter counts seventeen years of pogrom from 793.)",
             "changes": [],
             "margin": "",
-            "id": "9ab06ab9492e"
+            "id": "415137e7a400"
           },
           {
             "year": 826,
@@ -2018,7 +2018,7 @@
             "details": "Petrifer and Raghallach of House Flambeau turn their camp in the Wicklow Mountains, a refuge for Raghallach's tradition, into the covenant of L\u00e1mbaird. Diedne's complaints at Tribunal fail, so she makes Wizard War on the druids in House Flambeau; only Raghallach and two others live to found the school of magical combat that bears his name.",
             "changes": [],
             "margin": "",
-            "id": "38d9d0f6b937"
+            "id": "744c3d77d889"
           },
           {
             "year": 830,
@@ -2027,7 +2027,7 @@
             "details": "Runesmiths from Dublin raid Vigil, then a Diedne covenant in the Sperrin foothills whose magi won their standing by killing the great black pig and keeping its tusks. Vigil recovers and helps defend other covenants against the northmen's wizards.",
             "changes": [],
             "margin": "",
-            "id": "47c293c72b93"
+            "id": "e948d41abd48"
           },
           {
             "year": 832,
@@ -2036,7 +2036,7 @@
             "details": "At the Grand Tribunal, Hibernia's magi name the Ostmen's wizards \"the Order of Odin.\" Unsure of their strength, the Order looks for peace: M\u00e1el-tuili of House Merinita meets the Dublin rune wizards and offers a large tribute, but they fall on his party and kill most of it, M\u00e1el-tuili among them. Skirmishes with rune wizards, raids on native druids and certamen in reprisal become the custom of the age.",
             "changes": [],
             "margin": "",
-            "id": "4c6448e8bfd0"
+            "id": "ed3e1a6892e5"
           },
           {
             "year": 844,
@@ -2045,7 +2045,7 @@
             "details": "Cormacan the Learned, Chief Bard of Ireland, brings an embassy from the high-king: his subjects, hedge wizards, complain of the Order's harassment. The Mercere Fedelmid Ua Heirm\u00e9ais is chosen to treat for the Order, and since Diedne's pogrom has shown that the Irish would rather die than join, he looks for another way. (The book names the high-king Congalach Cnogba, who in history reigned a century later.)",
             "changes": [],
             "margin": "",
-            "id": "7ac4936db0e9"
+            "id": "0bb7f7632c32"
           },
           {
             "year": 851,
@@ -2054,7 +2054,7 @@
             "details": "On the brink of open war over peace with the Coill Tr\u00ed, Primus Obregon declares that the Diedne will no longer shield their unworthy sodales, and Hibernia's Diedne shut themselves in their covenants. In their absence the other magi sign the Treaty of Cnoc Maol R\u00e9idh. The Diedne never accept it and keep entering Connacht, so hedge wizards seek out magi as personal protectors, one to one, on the model of amici.",
             "changes": [],
             "margin": "",
-            "id": "b5a9eb903cef"
+            "id": "b4386a0b1603"
           },
           {
             "year": 852,
@@ -2063,7 +2063,7 @@
             "details": "With House Diedne gone from the Tribunal's affairs, a band of Merinita magi sacks the Diedne Vigil and carries the boar's tusks to the far north, where they raise a new fortress and an unseen tower from which all Ireland can be watched, to hunt the rune wizards and their warriors. Fighting the Diedne and the northmen at once, Vigil makes pacts with the faeries and beasts of the northern sea that guard the coast to this day. (The book says only after 851.)",
             "changes": [],
             "margin": "",
-            "id": "94032d4561c8"
+            "id": "effa4ff253c7"
           },
           {
             "year": 855,
@@ -2072,7 +2072,7 @@
             "details": "Praesis is raised on an island in Lough Ree, on the border of Connacht and Meath, as a meeting place between the Order and the Coill Tr\u00ed. Within a century its purpose is mostly forgotten and its standing on the wane. (The book says only soon after the Treaty.)",
             "changes": [],
             "margin": "",
-            "id": "965671eefd9f"
+            "id": "657c968640c0"
           },
           {
             "year": 865,
@@ -2081,7 +2081,7 @@
             "details": "At the Grand Tribunal Hibernia's magi complain of raiders from England and Scotland, and are told their treaty with the hedge wizards is illegal. Ireland is joined to England and Scotland in the new Britannian Tribunal under its Peripheral Code, and the Irish plea that the Treaty alone keeps the native traditions alive is refused.",
             "changes": [],
             "margin": "",
-            "id": "14e39f4c203f"
+            "id": "d4229a64e3f4"
           },
           {
             "year": 898,
@@ -2090,7 +2090,7 @@
             "details": "Following the Tytalus lead, the Irish magi leave the Britannian Tribunal. The first Hibernian Tribunal ratifies the Treaty of Cnoc Maol R\u00e9idh and holds every private treaty between magus and hedge wizard binding; those who flouted them are brought to heel. The hedge wizards of Connacht are gathered into the Comman Cos\u00e1n Ch\u00edan, soon called the Coill Tr\u00ed, and those who quarrel with magi over resources are helped, or pushed, to move there. The same meeting gives rise to the two Mercer Houses: the Redcap Imag, wife of the abbot of Cloyne, is granted the southern house of Leth Moga and begins the Red Book of Cloyne, and Leth Cuinn is founded on Lough Neagh. Treaties, trophies and lawful raiding enter the Code as an outlet for the island's violence.",
             "changes": [],
             "margin": "",
-            "id": "bfade4f9a045"
+            "id": "5faec39b41ee"
           },
           {
             "year": 909,
@@ -2099,7 +2099,7 @@
             "details": "The high-king builds the stone cathedral at Clonmacnoise.",
             "changes": [],
             "margin": "",
-            "id": "e06afd7bd921"
+            "id": "c11083da4373"
           },
           {
             "year": 975,
@@ -2108,7 +2108,7 @@
             "details": "Mathgamain mac Cenn\u00e9tig, who won Cashel and Limerick for the D\u00e1l gCais, is killed, leaving his brother Brian B\u00f3ramha sole king of Munster.",
             "changes": [],
             "margin": "",
-            "id": "694952322c13"
+            "id": "9893e5784d3b"
           },
           {
             "year": 980,
@@ -2117,7 +2117,7 @@
             "details": "Olaf Cuaran, king of Dublin and Northumberland, threatens Tara. Vigil magically binds the kings of Leinster and Ulster in a pact with M\u00e1el Sechnaill mac Domnaill, then fights beside his army to rout the northmen and open the way to Dublin. The Tribunal lets this interference go unpunished, holding Tara's sanctity at stake.",
             "changes": [],
             "margin": "",
-            "id": "1bbd1dc4f8e8"
+            "id": "50b055eb5cb6"
           },
           {
             "year": 986,
@@ -2126,7 +2126,7 @@
             "details": "Another of the great plagues born in T\u00edr Chonaill sweeps Ireland, and the annals tell of demons dancing among the dead.",
             "changes": [],
             "margin": "",
-            "id": "b1c3afa3944b"
+            "id": "cd35310c4367"
           },
           {
             "year": 1002,
@@ -2135,7 +2135,7 @@
             "details": "Having beaten Munster's and Leinster's ruling clans, Brian marches into Ulster and the U\u00ed N\u00e9ill high-king gives up the title to him. Druids and hedge wizards of Munster march with his army, and the magi watch him so closely that the Schism War takes them by surprise.",
             "changes": [],
             "margin": "",
-            "id": "fef838c73f9c"
+            "id": "3b8b207616fc"
           },
           {
             "year": 1011,
@@ -2144,7 +2144,7 @@
             "details": "Of the Tribunal's six Diedne covenants, three prove empty, their magi fled abroad or gathered in the other three, and the Hibernian magi split their forces against them. The Diedne have allies ready: Salmon's Eye in Munster has Donn, and the Widow's Throat in Ulster has a Fom\u00f3ir fleet, five ships of which sail up the Shannon while five fall on Circulus Ruber. The magi regroup to save Circulus Ruber and beat the fleet at sea, then destroy the Widow's Throat; two months later their first attack on Lugh's Retreat, at the Shannon's source in the Dartry Mountains, fails. Vigil strikes its old enemies hard, taking heads, libraries and familiars, and L\u00e1mbaird draws Flambeau from abroad to fight, earning the name \"Lombard.\" (The book gives no years for these battles, only that they come before Clontarf.)",
             "changes": [],
             "margin": "",
-            "id": "27846eab5d7d"
+            "id": "676a709ac3db"
           },
           {
             "year": 1012,
@@ -2153,7 +2153,7 @@
             "details": "The Munster Diedne and Donn's host destroy Warbler's Way, a Merinita covenant in the woods by Lough Leane. The magi unite to answer, raze Salmon's Eye and drive Donn back to his island. So many dead are brought to Qui Sonant in these years that the record of who lies there is lost. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "95cc8b97c615"
+            "id": "f7637ae85d12"
           },
           {
             "year": 1013,
@@ -2162,7 +2162,7 @@
             "details": "Two years after the first assault the magi move on Lugh's Retreat again, joined this time by the druids and hedge wizards of Connacht, whom Mercere messengers had warned. Together they destroy it, killing Fom\u00f3ir and Diedne alike. The poets call it the Third Battle of Moytirra. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "1a2e261837e4"
+            "id": "09ad43f42af7"
           },
           {
             "year": 1014,
@@ -2171,7 +2171,7 @@
             "details": "Brian B\u00f3ramha marches on the Ostmen of Dublin. His dwarf druid, Mu\u00edrcheartach mac L\u00eda, warns L\u00e1mbaird's magi that druids calling themselves sons of Diedne ride with the army, and the Flambeau go to the battle. On Good Friday, while Irish and Ostmen fight at Clontarf, they hunt the Diedne down in a short and blazing duel that ends the House in Hibernia. The Ostmen are beaten for good, but Brian dies on the field and his army goes home too weak to rule the island. No one knows what became of the three Diedne bodies: Cliffheart says one is its cathach, and some say Qui Sonant buried each beside a rival.\n\nSecrets\nCliffheart's cathach is a Diedne magus turned to a standing stone, alive only while the spell holds; the magi renew it every year, since its ending would kill him at once.",
             "changes": [],
             "margin": "",
-            "id": "92b8f5446774"
+            "id": "48ae7e0ca37b"
           },
           {
             "year": 1015,
@@ -2180,7 +2180,7 @@
             "details": "Three Merinita survivors of Warbler's Way, who fought the Diedne for their alliance with Munster's Tuatha D\u00e9, settle on Cape Clear Island and found Cliffheart. (The book says only after Clontarf.)",
             "changes": [],
             "margin": "",
-            "id": "336601d6657e"
+            "id": "0ae851a0a9e7"
           },
           {
             "year": 1016,
@@ -2189,7 +2189,7 @@
             "details": "Fergal mac Cuircc of Leth Moga, having set down the Schism War in the Red Book of Cloyne, closes it to all but Redcaps so that the magi may forget their war; he goes on recording. (The book says only after the Schism War.)",
             "changes": [],
             "margin": "",
-            "id": "f1deebeb8257"
+            "id": "5814fa3497b8"
           },
           {
             "year": 1020,
@@ -2198,7 +2198,7 @@
             "details": "Raiding Ostmen winter at Cork; an U\u00ed Briain and mac C\u00e1rthaigh army storms the walls while its druids blast the earthworks with lightning, and Cork becomes the one Irish town to cast the Ostmen out.",
             "changes": [],
             "margin": "",
-            "id": "9f799497b985"
+            "id": "bf3addd6e979"
           },
           {
             "year": 1029,
@@ -2207,7 +2207,7 @@
             "details": "Back after seven years away, D\u00e1ire Farranta challenges his parens, the leader of Leth Cuinn, to Wizard War and wins with no spell cast, by feats of the clesrada. He exiles the other Redcaps, fills the house with his own kin and the faerie \u00daathach who taught him, and makes it an outpost of the Cult of Heroes, which his descendants still run.",
             "changes": [],
             "margin": "",
-            "id": "d031b0a62f33"
+            "id": "6113755a6137"
           },
           {
             "year": 1084,
@@ -2216,7 +2216,7 @@
             "details": "A plague called the Rogh R\u00e1mhach is said to kill a quarter of Ireland.",
             "changes": [],
             "margin": "",
-            "id": "3ae6d3071322"
+            "id": "52a3f4b28d7d"
           },
           {
             "year": 1096,
@@ -2225,7 +2225,7 @@
             "details": "A pestilence is prophesied to come out of the north of T\u00edr Chonaill. It never does.",
             "changes": [],
             "margin": "",
-            "id": "c60ab6dc3cdf"
+            "id": "4e7561cde426"
           },
           {
             "year": 1101,
@@ -2234,7 +2234,7 @@
             "details": "The King of Munster breaks the power of Aileach in T\u00edr E\u00f3ghain.",
             "changes": [],
             "margin": "",
-            "id": "53374301c9f3"
+            "id": "b37fe93e71f0"
           },
           {
             "year": 1124,
@@ -2243,7 +2243,7 @@
             "details": "Tairrdelbach U\u00ed Conchobhair builds a fort above Loch Lurgain as a naval base; Munster's kings destroy it in 1132 and again in 1149.",
             "changes": [],
             "margin": "",
-            "id": "839830999c65"
+            "id": "8703bc8ed078"
           },
           {
             "year": 1132,
@@ -2252,7 +2252,7 @@
             "details": "M\u00e1el M\u00e1ed\u00f3c, later Saint Malachy, becomes Archbishop of Armagh and sets about reforming a lax church. Diarmait Mac Murchada removes the abbess of Kildare and gives the post to his niece.",
             "changes": [],
             "margin": "",
-            "id": "fe2cc7c8a36b"
+            "id": "e1bcb927f9de"
           },
           {
             "year": 1135,
@@ -2261,7 +2261,7 @@
             "details": "Cong Abbey, burned early in the century, is rebuilt. (The book says about 1135.)",
             "changes": [],
             "margin": "",
-            "id": "c4a5fe617c09"
+            "id": "0c33763d31a4"
           },
           {
             "year": 1137,
@@ -2270,7 +2270,7 @@
             "details": "Malachy resigns Armagh to become Bishop of Down, ruling from Bangor and bringing Augustinian canons to Downpatrick.",
             "changes": [],
             "margin": "",
-            "id": "4a5fcd2b115f"
+            "id": "c6821dd8286c"
           },
           {
             "year": 1140,
@@ -2279,7 +2279,7 @@
             "details": "Malachy founds Mellifont, near Drogheda, on land from the King of Meath; it becomes mother of most of Ireland's Cistercian houses. He also founds the Augustinian abbey of Saint Mary at Trim.",
             "changes": [],
             "margin": "",
-            "id": "e834fab59ee4"
+            "id": "4efbf9d7d478"
           },
           {
             "year": 1142,
@@ -2288,7 +2288,7 @@
             "details": "Cistercians rebuild the old monastery at Newry, and a town grows up around it. Conchovor U\u00ed Briain builds Cahir castle.",
             "changes": [],
             "margin": "",
-            "id": "d9fe51c95063"
+            "id": "5e57eda8d75b"
           },
           {
             "year": 1148,
@@ -2297,7 +2297,7 @@
             "details": "Saint Malachy dies. Diarmait mac Murchadha founds a Cistercian house at Baltinglass with monks from Mellifont, and the place is called the Valley of Salvation.",
             "changes": [],
             "margin": "",
-            "id": "3fe2986c2230"
+            "id": "c60e96a7873f"
           },
           {
             "year": 1152,
@@ -2306,7 +2306,7 @@
             "details": "The Synod of Kells ratifies Malachy's reforms and divides Ireland into thirty-six sees under four archbishops, at Armagh, Cashel, Dublin and Tuam; Kildare's abbess is put under the bishop. Diarmait Mac Murchada, King of Leinster, carries off Derbforgaill, wife of Tighearn\u00e1n Ua Ruairc of Br\u00e9ifne, the Irish Helen, who is content to stay with him.",
             "changes": [],
             "margin": "",
-            "id": "106e941f2372"
+            "id": "39a87162dc59"
           },
           {
             "year": 1154,
@@ -2315,7 +2315,7 @@
             "details": "At the abbot of Mellifont's urging, a synod excommunicates and exiles Donnchadh Ua Maeleachlainn, King of Meath, and makes his brother Diarmaid king.",
             "changes": [],
             "margin": "",
-            "id": "4acefffd096a"
+            "id": "6ff922c9490e"
           },
           {
             "year": 1155,
@@ -2324,7 +2324,7 @@
             "details": "Pope Adrian's bull Laudabiliter, later read as granting Henry II the right to take Ireland and reform its church.",
             "changes": [],
             "margin": "",
-            "id": "06d06d481562"
+            "id": "8629214e9ad6"
           },
           {
             "year": 1159,
@@ -2333,7 +2333,7 @@
             "details": "Oswald of Bonisagus and Lugardis of Guernicus arrive from abroad with cattle, silver, unknown vis sources and the antlers of a giant elk, and claim a valley in the Slieve Aughty. Irish magi challenge the cathach and the vis; Oswald wagers for all he can ride round before sunset without a spell, throws down the antlers, and rides the living elk they become over the mountains until dusk. Elk's Run is founded. (The history chapter places it just after the Grand Tribunal of 1195; this pack follows the Munster chapter's 1159.)",
             "changes": [],
             "margin": "",
-            "id": "a56bf3c75fa0"
+            "id": "c0c1f0a7b71f"
           },
           {
             "year": 1160,
@@ -2342,7 +2342,7 @@
             "details": "Tempull M\u00f3r is finished at Doire. Derbforgaill endows the Nun's Church at Clonmacnoise. Domnall Mac Giolla Ph\u00e1draig founds a Benedictine house for Saint Nicholas's relics where Jerpoint now stands; it fails.",
             "changes": [],
             "margin": "",
-            "id": "e83605b7aa29"
+            "id": "b9b792bdea16"
           },
           {
             "year": 1161,
@@ -2351,7 +2351,7 @@
             "details": "From this year the Mac Diarmaids, patrons of Boyle, keep no druid at their court.",
             "changes": [],
             "margin": "",
-            "id": "437063765953"
+            "id": "17f819cb0056"
           },
           {
             "year": 1164,
@@ -2360,7 +2360,7 @@
             "details": "The U\u00ed Conchobhair build a castle at Tuam to tighten their hold on Connacht.",
             "changes": [],
             "margin": "",
-            "id": "47a55c771c05"
+            "id": "2e11b2ab1874"
           },
           {
             "year": 1166,
@@ -2369,7 +2369,7 @@
             "details": "Tighearn\u00e1n Ua Ruairc invades Leinster, Ossory rises, and Diarmait Mac Murchada loses his throne and flees to England. Henry II will not invade for him, so he hires English mercenaries, while the new high-king, Ruaidr\u00ed Ua Conchobair, takes Leinster.",
             "changes": [],
             "margin": "",
-            "id": "d90a1e1a54d1"
+            "id": "67c5973dd396"
           },
           {
             "year": 1168,
@@ -2378,7 +2378,7 @@
             "details": "Ruaidr\u00ed Ua Conchobair musters a great host at the Hill of Tlachtga, but Tlachtga does not show herself. Lorc\u00e1n Ua T\u00faathal makes Christchurch in Dublin an Augustinian priory.",
             "changes": [],
             "margin": "",
-            "id": "f0f0f3880752"
+            "id": "b5091aa2cf84"
           },
           {
             "year": 1169,
@@ -2387,7 +2387,7 @@
             "details": "Diarmait and Robert FitzStephen besiege Wexford, which the Bishop of Ferns persuades to open its gates, and win the Pass of Achad-ur from the Osraighe with a Norman cavalry charge.",
             "changes": [],
             "margin": "",
-            "id": "0e77eef0a672"
+            "id": "c6571e391f6c"
           },
           {
             "year": 1170,
@@ -2396,7 +2396,7 @@
             "details": "Strongbow, Earl of Pembroke, invades Leinster, puts Diarmait back on his throne and marries his daughter Aoife. The conquest stirs the Order's interest in Hibernia for the first time in a long while, House Tremere first among them.",
             "changes": [],
             "margin": "",
-            "id": "21137381b500"
+            "id": "410cc5802180"
           },
           {
             "year": 1171,
@@ -2405,7 +2405,7 @@
             "details": "Diarmait dies and Strongbow takes Leinster, against Brehon law. Henry II comes to bring his vassal to heel, takes Dublin, Wexford and Wicklow for the crown, receives the Irish kings' tribute and has a synod called at Cashel. The English close the abbey of Kildare when its last abbess dies. Tighearn\u00e1n Ua Ruairc parleys with Hugh de Lacy on Tlachtga and is killed, by murder or mishap. (History puts his death in 1172.)",
             "changes": [],
             "margin": "",
-            "id": "e447b086c2a8"
+            "id": "2379f9364743"
           },
           {
             "year": 1172,
@@ -2414,7 +2414,7 @@
             "details": "The last King of Meath is deposed and his kingdom granted to Hugh de Lacy; the U\u00ed Mael Sechlainn settle near Clonmacnoise. Henry II sails for France from Wexford, leaving its mills to the Templars. Bishop Tuathal Ua Connachtaig of Kells swears fealty to Henry, to much anger.",
             "changes": [],
             "margin": "",
-            "id": "508ecbaa76cf"
+            "id": "0618b4f8e91a"
           },
           {
             "year": 1174,
@@ -2423,7 +2423,7 @@
             "details": "Domnall M\u00f3r U\u00ed Briain burns Limerick rather than let the English have it.",
             "changes": [],
             "margin": "",
-            "id": "9512591d6571"
+            "id": "5e7eb26856fe"
           },
           {
             "year": 1175,
@@ -2432,7 +2432,7 @@
             "details": "Ruaidhri U\u00ed Conchobhair, unable to stop the English, seeks the Fir Bolg kings on \u00c1rainn Mh\u00f3r, who give him Fionntan's counsel. On 6 October he signs the Treaty of Windsor, owning Henry as ruler of Ireland and keeping Connacht for a yearly tribute still paid.",
             "changes": [],
             "margin": "",
-            "id": "f98f4485286a"
+            "id": "21e4f9a367b6"
           },
           {
             "year": 1177,
@@ -2441,7 +2441,7 @@
             "details": "John de Courcy, granted Ulster if he can win it, marches with twenty-two knights and some three hundred men and takes Down by surprise on 1 February. The King of Ulster, laid low by Macha's Birth-Pangs, returns with an army a week later and is routed, and de Courcy soon holds all the land east of the Bann. He sacks the abbey of Erenagh and builds castles at Belfast and Carrickfergus. Cork, held back from the English by mac C\u00e1rthaigh, is granted to Robert FitzStephen and Milo de Cogan, who take it by force.",
             "changes": [],
             "margin": "",
-            "id": "b59f1588cd00"
+            "id": "3d97f45d8205"
           },
           {
             "year": 1180,
@@ -2450,7 +2450,7 @@
             "details": "De Courcy founds the Cistercian abbey on Iniscourcy in penance for Erenagh and builds Dundrum castle. Donogh O'Donoghoe, king of the Osraighe, founds Jerpoint Abbey. Work begins on Clonfert's cathedral, where a magical mason's arch draws beasts of every realm to watch.",
             "changes": [],
             "margin": "",
-            "id": "1c61e72edabe"
+            "id": "fe49fa48afca"
           },
           {
             "year": 1181,
@@ -2459,7 +2459,7 @@
             "details": "The Templars build Connacht's only Temple House near Ballymote, close to the Br\u00e9ifne border.",
             "changes": [],
             "margin": "",
-            "id": "2a234a728ae6"
+            "id": "ed5ba3c10a49"
           },
           {
             "year": 1183,
@@ -2468,7 +2468,7 @@
             "details": "De Courcy founds a Benedictine cathedral priory at Downpatrick with monks from Chester.",
             "changes": [],
             "margin": "",
-            "id": "70c5500928fd"
+            "id": "082c0c5dd9fb"
           },
           {
             "year": 1184,
@@ -2477,7 +2477,7 @@
             "details": "Tuam's cathedral burns down; it has not been rebuilt.",
             "changes": [],
             "margin": "",
-            "id": "a8bdb18fd070"
+            "id": "2f931ddcc939"
           },
           {
             "year": 1185,
@@ -2486,7 +2486,7 @@
             "details": "Henry II makes his son John Lord of Ireland. John, seventeen, mocks the Irish kings who come to do him homage and pulls their beards. Gerald of Wales comes with him, and his books on the marvels of Ireland stir Stonehenge's magi to talk of reform. Ruaidr\u00ed Ua Conchobair gives up the high-kingship and retires to Cong. Aed Meith Ua N\u00e9ill seizes T\u00edr E\u00f3ghain from Aileach. Work begins on Saint Flannan's cathedral at Killaloe. Using minstrels, Helles and Pollices persuade Raymond le Gros that the U\u00ed Riain plan rebellion and, in the fighting, take Rhiannon's body from their chief's r\u00e1th. (The book gives no year for the theft.)",
             "changes": [],
             "margin": "",
-            "id": "b707b6c36b70"
+            "id": "3ce760079410"
           },
           {
             "year": 1186,
@@ -2495,7 +2495,7 @@
             "details": "Helles and Pollices, refugees from Normandy's fallen Moles Magna, with three sodales from Stonehenge, present the dancing corpse of Rhiannon, a former Prima of House Merinita, at Tara and announce their covenant, to live as guests in a FitzGerald knight's castle. The hall erupts and Wizard Wars are declared, but Con\u00e1n Derg, then praeco, accepts it, ruling that the raw vis grown in its bones makes it magical enough. Hugh de Lacy dies, and Walter de Lacy will take Meath. A church council at Dublin, called at Prince John's wish, shows how far English reform means to go.",
             "changes": [],
             "margin": "",
-            "id": "c34db68192e9"
+            "id": "80b7f56c5aa1"
           },
           {
             "year": 1186,
@@ -2504,7 +2504,7 @@
             "details": "Two months after the Tribunal, walking alone on the Connacht border, Con\u00e1n Derg loses his right arm to an attacker. Refusing to regrow it, he holds that a leader must be whole, gives up the office of praeco and leaves Hermetic politics. Some magi suspect Faisgia of Cliffheart, who often travels there; Con\u00e1n Derg will neither confirm nor deny it, and Faisgia scorns the charge.",
             "changes": [],
             "margin": "",
-            "id": "f906bfd76b32"
+            "id": "d642a99514dd"
           },
           {
             "year": 1187,
@@ -2513,7 +2513,7 @@
             "details": "Helles and Pollices hold Rhiannon's corpse for a year against all comers, and Ashenrise is a covenant at law. It has pressed for reform of the Code ever since.",
             "changes": [],
             "margin": "",
-            "id": "32664cc12cec"
+            "id": "ff9377dea5a2"
           },
           {
             "year": 1189,
@@ -2522,7 +2522,7 @@
             "details": "Fedelmid of Limerick, who saw visions of the magus-saint Nerius in an Alpine valley on pilgrimage to Rome, with his apprentice Indrechtach and Indrechtach's own pupil, brings a tiny tradition of the C\u00e9li D\u00e9 into House Ex Miscellanea and founds a monastery and covenant on the Saltee islands.",
             "changes": [],
             "margin": "",
-            "id": "2b646de2e2d9"
+            "id": "7e26c3701680"
           },
           {
             "year": 1190,
@@ -2531,7 +2531,7 @@
             "details": "Damisona of Jerbiton and her party are set upon by what seem to be young Irish magi, and three grogs die. Knowing nothing of the macgn\u00edmartha, Stonehenge cries out for something to be done about Hibernia. A great fire wrecks Dublin, and settlers from Bristol and Wales take the place of those who leave.",
             "changes": [],
             "margin": "",
-            "id": "098aaced3a00"
+            "id": "be9d63de8c0d"
           },
           {
             "year": 1193,
@@ -2540,7 +2540,7 @@
             "details": "L\u00e1mbaird's secret help to the Wicklow clans against the English is noticed, and the Tribunal reprimands the covenant without a sanction. Milvia of Bonisagus presides as praeco, as she has at every meeting since. Geoffrey fitz Robert founds Saint Mary's priory at Kells in Ossory.",
             "changes": [],
             "margin": "",
-            "id": "2fbf071199a5"
+            "id": "ab0935a8c1a5"
           },
           {
             "year": 1194,
@@ -2549,7 +2549,7 @@
             "details": "Domnall M\u00f3r U\u00ed Briain dies, and the English take Limerick and most of its lands. Drogheda-in-Meath receives its charter.",
             "changes": [],
             "margin": "",
-            "id": "b576516c175b"
+            "id": "1131ef398f0e"
           },
           {
             "year": 1195,
@@ -2558,7 +2558,7 @@
             "details": "Magi who want Hibernia reformed under a Code like Stonehenge's debate long against those who uphold a Tribunal's right to its own; Milvia leads the Hibernian delegation. The parentes of the apprentices who attacked Damisona in their macgn\u00edmartha are found guilty only of a Low Crime, to Stonehenge's fury. Traffic with the continent and appeals to Magvillus grow. William Marshal builds his castle at Kilkenny.",
             "changes": [],
             "margin": "",
-            "id": "64e052ec7222"
+            "id": "81c7fc43802f"
           },
           {
             "year": 1196,
@@ -2567,7 +2567,7 @@
             "details": "De Courcy defeats the King of T\u00edr Chonaill and takes tribute from his land.",
             "changes": [],
             "margin": "",
-            "id": "2a493fa8dbf8"
+            "id": "2fba3ac0e347"
           },
           {
             "year": 1197,
@@ -2576,7 +2576,7 @@
             "details": "Limerick receives its charter and is given to Philip de Braose.",
             "changes": [],
             "margin": "",
-            "id": "1b07c373f5c2"
+            "id": "d839392eb132"
           },
           {
             "year": 1198,
@@ -2585,7 +2585,7 @@
             "details": "Ruaidr\u00ed Ua Conchobair, the last High-King, dies at Cong and is buried at Clonmacnoise. After his brother is murdered at his court, de Courcy harries the north of Ulster and destroys Raphoe's cathedral. Archbishop John Comyns orders Saint Patrick's Cathedral built in Dublin.",
             "changes": [],
             "margin": "",
-            "id": "9dce8a64fc1f"
+            "id": "02bd056d9e2a"
           },
           {
             "year": 1199,
@@ -2594,7 +2594,7 @@
             "details": "John becomes King of England, to de Courcy's ruin (the book dates his accession to 1201). Desmond gives up its long sieges of Cork. When the English Bishop of Waterford, who had seized Lismore and driven out Bishop Felix, dies, Felix goes home, and the long quarrel of Waterford and Lismore begins.",
             "changes": [],
             "margin": "",
-            "id": "d065078962cb"
+            "id": "24d525fdcf77"
           },
           {
             "year": 1200,
@@ -2603,7 +2603,7 @@
             "details": "King John's Castle rises on King's Island in Limerick. The U\u00ed Mael Sechlainn build Temple Melaghlin at Clonmacnoise.",
             "changes": [],
             "margin": "",
-            "id": "856b854a68e9"
+            "id": "9c070740c5c1"
           },
           {
             "year": 1202,
@@ -2612,7 +2612,7 @@
             "details": "A papal legate dissolves the diocese of Mayo into Tuam, against its clergy's will. Bishop Felix O'Dulany moves Ossory's see to Kilkenny and begins a stone cathedral, dying the same year.",
             "changes": [],
             "margin": "",
-            "id": "e50d01c24e50"
+            "id": "0b7ded3092be"
           },
           {
             "year": 1203,
@@ -2621,7 +2621,7 @@
             "details": "Allied with Cathal Crobhdearg of Connacht, de Courcy is taken in rebellion by Hugh de Lacy, younger son of the Lord of Meath. William de Burgh attacks Cong Abbey, deep in Connacht.",
             "changes": [],
             "margin": "",
-            "id": "f3149baf7a8b"
+            "id": "2f9df48901da"
           },
           {
             "year": 1204,
@@ -2630,7 +2630,7 @@
             "details": "King John orders a castle built at Dublin. Bishop Malachy of Lismore, who escaped Waterford's prison and was restored by Innocent III, comes home to find his rival Robert dead.",
             "changes": [],
             "margin": "",
-            "id": "8daeb62d5e28"
+            "id": "59e297b9ba91"
           },
           {
             "year": 1205,
@@ -2639,7 +2639,7 @@
             "details": "In May King John makes Hugh de Lacy the first Earl of Ulster, with all the lands de Courcy held.",
             "changes": [],
             "margin": "",
-            "id": "fc132daac18d"
+            "id": "f19a555d9174"
           },
           {
             "year": 1206,
@@ -2648,7 +2648,7 @@
             "details": "King John creates the Liberty of Kildare to crush the deposed U\u00ed D\u00fanlainge, and summons the nobles to Naas to submit.",
             "changes": [],
             "margin": "",
-            "id": "54d39bba92d4"
+            "id": "b24004ba6d42"
           },
           {
             "year": 1207,
@@ -2657,7 +2657,7 @@
             "details": "Kilkenny and New Ross receive royal charters. Malachy, driven from Lismore again by the Welsh Bishop David of Waterford and confirmed again at Rome, returns to find David murdered.",
             "changes": [],
             "margin": "",
-            "id": "e9c63712ba69"
+            "id": "817ec3fdbe02"
           },
           {
             "year": 1208,
@@ -2666,7 +2666,7 @@
             "details": "A terrible plague kills many in Dublin.",
             "changes": [],
             "margin": "",
-            "id": "24dbd5f2baf1"
+            "id": "a30ee609cd27"
           },
           {
             "year": 1209,
@@ -2675,7 +2675,7 @@
             "details": "On Easter Monday the Ua Broin and Ua T\u00faathal fall on English settlers at their sport outside Dublin's walls and kill three hundred. The maga Swan of Ghent dies among them. Dublin still marks the day under arms.",
             "changes": [],
             "margin": "",
-            "id": "aa2f1f343701"
+            "id": "662f42937376"
           },
           {
             "year": 1210,
@@ -2684,7 +2684,7 @@
             "details": "King John grants Munster to his favourites, keeping Waterford, Limerick and Cork: the lands north of Waterford to Robert le Poer, Thomond to Philip de Braose, Desmond to Robert FitzStephen and Milo de Cogan, none of whom can take them. Kerry becomes a shire. Robert II is consecrated Bishop of Waterford, seizes Malachy, and has him tortured; no court dares convict him. John de Gray, the justiciar, builds a stone castle at Athlone, now Walter de Lacy's. (The book says ten years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "8a22eb6051f3"
+            "id": "d945a4a7d35c"
           },
           {
             "year": 1211,
@@ -2693,7 +2693,7 @@
             "details": "Walter de Lacy builds a motte and bailey at Kilmore, one of many for a push into Connacht. Geoffrey fitz Robert dies a hostage of William Marshal at Hereford.",
             "changes": [],
             "margin": "",
-            "id": "066a52952c90"
+            "id": "226adde019a2"
           },
           {
             "year": 1213,
@@ -2702,7 +2702,7 @@
             "details": "Praesis, wary of foreigners, accepts Holzner of Tytalus from the Rhine. He tries to steal the covenant's cathach, the G\u00e1e Bulg, and flee, and is caught and executed; Meadhbh, its leader, hangs his head by the hair from the palisade. His parens Ballack leaves the Rhine for Hibernia, persuades others that if the Tribunal will not punish Praesis they must take it by force, and declares Wizard War. (The Connacht chapter puts the theft two years after his arrival.)",
             "changes": [],
             "margin": "",
-            "id": "22e21fa97f93"
+            "id": "578fd13e1273"
           },
           {
             "year": 1214,
@@ -2711,7 +2711,7 @@
             "details": "Repulsed by a covenant stronger than it looked, Ballack's forces camp on Lough Ree's eastern shore, strip Praesis's vis sources and kill anyone who goes in or out. The siege keeps Praesis from the Tribunal at Tara, where it might have found allies; few intervene, since the Code allows the war, and the Tribunal debates while mercenaries and young magi on both sides die. At the same meeting Oswald of Elk's Run is granted a second, Irish-born apprentice. The mac C\u00e1rthaighs massacre U\u00ed S\u00failleabh\u00e1in nobles at a peace feast at Raheen, and within the year Desmond falls to a war between two mac C\u00e1rthaigh brothers. Glendalough's diocese is folded into Dublin's.",
             "changes": [],
             "margin": "",
-            "id": "a9c9ac4e0329"
+            "id": "776996c79117"
           },
           {
             "year": 1215,
@@ -2720,7 +2720,7 @@
             "details": "After four seasons of stalemate Ballack's nerve outlasts the defenders'. As the last of Praesis's allies flee, B\u00e1et\u00e1in Ua Traimair trades the cathach for Meadhbh's safe passage, and Ballack takes the covenant; Meadhbh claims sanctuary at Qui Sonant. The druids of Oireadh, once Praesis's friends, had already left Meadhbh over her demands. William Marshal the younger loses his wife.\n\nSecrets\nBallack has spent everything he had on the war and borrows vis and casting tablets from distant, powerful benefactors whose debts he is beginning to forget.",
             "changes": [],
             "margin": "",
-            "id": "adfa9b2b5da1"
+            "id": "545d60364767"
           },
           {
             "year": 1216,
@@ -2729,7 +2729,7 @@
             "details": "A visitation from C\u00eeteaux arrives to restore the Rule in Ireland, and Mellifont shuts its gates on it. Innocent III confirms the end of the diocese of Mayo. King John dies; his young son Henry III succeeds, and Waterford's bishop loses his protector, ending the Lismore quarrel for now.",
             "changes": [],
             "margin": "",
-            "id": "9fdbfe1f4855"
+            "id": "dddb76873fe9"
           },
           {
             "year": 1217,
@@ -2738,7 +2738,7 @@
             "details": "The Cistercian general chapter deposes Thomas, abbot of Mellifont, in name only: backed by his monks and daughter houses, he stays. Itinerant justices begin riding the Liberties to hold English assizes. Dublin pays the royal tallage.",
             "changes": [],
             "margin": "",
-            "id": "dd7c466fcd46"
+            "id": "1b5218007404"
           },
           {
             "year": 1218,
@@ -2747,7 +2747,7 @@
             "details": "Giolla Ernain Ua Martain, Chief Bard of Ireland, dies, and no successor has been chosen. Boyle's abbey church is consecrated. Ailbe Ua Mail Mhuaidh, Bishop of Ferns, writes a life of Saint Abb\u00e1n.",
             "changes": [],
             "margin": "",
-            "id": "48154821bceb"
+            "id": "f5516e07487f"
           },
           {
             "year": 1219,
@@ -2756,7 +2756,7 @@
             "details": "William Marshal dies, and his son William the younger takes up the regency. The Archbishop of Cashel leaves for Rome to plead the Irish clergy's case against the bar on Irish-born bishops.\n\nSecrets\nThe Pope has ruled the policy against Rome's will; the archbishop will be home with the order to drop it in August 1220, and word has not yet reached Henry de Londres.",
             "changes": [],
             "margin": "",
-            "id": "fc90dba3e054"
+            "id": "08974ea76b0b"
           },
           {
             "year": 1220,
@@ -2765,7 +2765,7 @@
             "details": "Archbishop Henry de Londres, viceroy in Dublin, declares he will put out Saint Brigid's sacred fire at Kildare to prove it a superstition, a blow at the U\u00ed D\u00fanlainge whose patroness she is.",
             "changes": [],
             "margin": "",
-            "id": "e2d2e16ca747"
+            "id": "bf96f46d173c"
           }
         ],
         "package_data": {
@@ -2801,31 +2801,31 @@
             },
             "ambassadors": [
               {
-                "id": "7292783bdeb7",
+                "id": "20da0bb4a7ba",
                 "faction": "The Fir Bolg",
                 "name": "Fothaid",
                 "confirmed": true
               },
               {
-                "id": "83e1d284ff19",
+                "id": "124e6171128f",
                 "faction": "The Fom\u00f3rach",
                 "name": "Ainid",
                 "confirmed": true
               },
               {
-                "id": "cdad2110c75f",
+                "id": "a5cafafbbcdd",
                 "faction": "The beasts of magic",
                 "name": "The Eagle King",
                 "confirmed": true
               },
               {
-                "id": "96106045fb8a",
+                "id": "dd0fe6fd90de",
                 "faction": "The Tuatha D\u00e9",
                 "name": "Mug Ruith",
                 "confirmed": true
               },
               {
-                "id": "e338fc009212",
+                "id": "8fd398ad3429",
                 "faction": "The Coill Tr\u00ed",
                 "name": "the Coill Tr\u00ed's ambassador",
                 "confirmed": true
@@ -2908,37 +2908,37 @@
             "kind": "creatures",
             "target_id": "dobhar_ch_the_king_otter",
             "note": "the king otter of the loughs",
-            "id": "b4bd1b0b305d"
+            "id": "93292bda8f34"
           },
           {
             "kind": "creatures",
             "target_id": "the_head_of_arastotail",
             "note": "the severed head of the magician Arastotail",
-            "id": "168658fdf569"
+            "id": "5a2561b8bc13"
           },
           {
             "kind": "creatures",
             "target_id": "harvest_thief",
             "note": "the tiny demons that spoil the crops",
-            "id": "2cd8d448520b"
+            "id": "215d89e94ad2"
           },
           {
             "kind": "creatures",
             "target_id": "the_sluagh",
             "note": "the spirits that carry off the dying",
-            "id": "9db409517e3a"
+            "id": "ba1928a82b31"
           },
           {
             "kind": "creatures",
             "target_id": "temoneth_messenger_of_delgnat_s_betrayal",
             "note": "the Fury of lust and betrayal",
-            "id": "1dc411c865a2"
+            "id": "6d0e5cfd3250"
           },
           {
             "kind": "creatures",
             "target_id": "saint_patrick_st_p_traig",
             "note": "the patron saint of Ireland",
-            "id": "cc75937e53b5"
+            "id": "b313e06adb0c"
           }
         ],
         "arms": {},
@@ -3120,43 +3120,43 @@
             "kind": "covenants",
             "target_id": "circulus_ruber",
             "note": "Leads the traditionalists",
-            "id": "fe1031a52bfa"
+            "id": "e38bce4d58b5"
           },
           {
             "kind": "covenants",
             "target_id": "cliffheart",
             "note": "Traditionalist; admits no English magi",
-            "id": "e72c9974afc1"
+            "id": "ea44215fc457"
           },
           {
             "kind": "covenants",
             "target_id": "l_mbaird",
             "note": "Fierce foe of the English agenda",
-            "id": "47ffe6ef8167"
+            "id": "beba330b2acb"
           },
           {
             "kind": "covenants",
             "target_id": "the_paruchia_of_nerius",
             "note": "Irish, though for a Christian Tribunal",
-            "id": "f04c045b3c9b"
+            "id": "20960b644396"
           },
           {
             "kind": "covenants",
             "target_id": "qui_sonant_pro_quieto",
             "note": "Traditionalist; neutral ground",
-            "id": "47da836e0b37"
+            "id": "373df60940d8"
           },
           {
             "kind": "covenants",
             "target_id": "vigil",
             "note": "Traditionalist",
-            "id": "8a52473afc60"
+            "id": "3bdb2b30b88e"
           },
           {
             "kind": "characters",
             "target_id": "con_n_derg",
             "note": "Former Praeco; held to the old Code",
-            "id": "20e760fd890f"
+            "id": "af3ee5d6436b"
           }
         ],
         "arms": {},
@@ -3188,31 +3188,31 @@
             "kind": "covenants",
             "target_id": "elk_s_run",
             "note": "English magi from Stonehenge",
-            "id": "b34c6aee83e0"
+            "id": "3f4bc368824b"
           },
           {
             "kind": "covenants",
             "target_id": "ashenrise",
             "note": "The reformers, from Moles Magna",
-            "id": "7f8f0804521b"
+            "id": "67c3f9f8d6dd"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "Taken by the English in the siege",
-            "id": "d3609ce032a9"
+            "id": "384728bd307f"
           },
           {
             "kind": "characters",
             "target_id": "helles",
             "note": "Leads the debate for reform",
-            "id": "4924870cc94c"
+            "id": "1596badb22fc"
           },
           {
             "kind": "characters",
             "target_id": "ballack",
             "note": "Took Praesis",
-            "id": "43f1b402dbce"
+            "id": "3c781a2f4ad3"
           }
         ],
         "arms": {},
@@ -3243,19 +3243,19 @@
             "kind": "creatures",
             "target_id": "ca_lte_mac_r_n_in",
             "note": "the faerie poet who walks Munster with his band",
-            "id": "794fbe2f02b5"
+            "id": "eaaa46ee7d42"
           },
           {
             "kind": "creatures",
             "target_id": "saint_senan_mac_geirrcinn",
             "note": "Saint Senan of Scattery Island",
-            "id": "2d9baa863e47"
+            "id": "532954fe7a02"
           },
           {
             "kind": "creatures",
             "target_id": "saint_cronan_of_tipperary",
             "note": "Saint Cronan of Roscrea",
-            "id": "f95d9b28204b"
+            "id": "6c2ce08604f0"
           }
         ],
         "arms": {},
@@ -3559,7 +3559,8 @@
           "tethers": "",
           "status": "Known",
           "known": "In the Tribunal",
-          "levels": []
+          "levels": [],
+          "waters": "Open water"
         },
         "attitudes": [],
         "favours": [],
@@ -4299,7 +4300,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_cork",
+            "note": "Its harbour",
+            "id": "f69006190474"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -4321,7 +4329,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_waterford",
+            "note": "Its harbour",
+            "id": "4557ed94adb2"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -4343,7 +4358,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_limerick",
+            "note": "Its harbour",
+            "id": "0d1d7766fed2"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -4387,7 +4409,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_tralee",
+            "note": "Its harbour",
+            "id": "1c3eefa1bd0a"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -4596,7 +4625,7 @@
             "kind": "creatures",
             "target_id": "saint_brigid_of_kildare_naomh_br_d",
             "note": "Saint Brigid, a patron of Ireland",
-            "id": "2b9c12c741d2"
+            "id": "3ce9055f5ec2"
           }
         ],
         "arms": {},
@@ -4699,7 +4728,7 @@
             "kind": "creatures",
             "target_id": "saint_abb_n",
             "note": "Saint Abb\u00e1n, venerated in Wexford and Ferns",
-            "id": "3bef936d41a4"
+            "id": "6d5445324ecd"
           }
         ],
         "arms": {},
@@ -4778,7 +4807,7 @@
             "kind": "creatures",
             "target_id": "saint_kevin_of_glendalough_saint_c_emgen",
             "note": "Saint Kevin, who founded Glendalough",
-            "id": "79d16d73d4c2"
+            "id": "c19c5fe36ffe"
           }
         ],
         "arms": {},
@@ -4914,7 +4943,7 @@
             "kind": "creatures",
             "target_id": "b_inn_the_great_white_cow",
             "note": "the white cow goddess of the Boyne",
-            "id": "25d864de0e2d"
+            "id": "1185e329a035"
           }
         ],
         "arms": {},
@@ -5405,7 +5434,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_dublin",
+            "note": "Its harbour",
+            "id": "5de2b5ed9a84"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5427,7 +5463,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_wexford",
+            "note": "Its harbour",
+            "id": "1b87c7fa5020"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5449,7 +5492,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_bannow",
+            "note": "Its harbour",
+            "id": "bb625651b8fc"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5471,7 +5521,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_new_ross",
+            "note": "Its harbour",
+            "id": "4bc3b283d3c3"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5515,7 +5572,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_wicklow",
+            "note": "Its harbour",
+            "id": "d434a9583486"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5537,7 +5601,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_arklow",
+            "note": "Its harbour",
+            "id": "7f070470f6c9"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -5674,7 +5745,7 @@
             "kind": "creatures",
             "target_id": "saint_abb_n",
             "note": "Saint Abb\u00e1n, venerated in Wexford and Ferns",
-            "id": "cbb12f095ba0"
+            "id": "021d5d7ad35f"
           }
         ],
         "arms": {},
@@ -5747,7 +5818,7 @@
             "kind": "creatures",
             "target_id": "saint_kevin_of_glendalough_saint_c_emgen",
             "note": "Saint Kevin, who founded Glendalough",
-            "id": "dec56473f67a"
+            "id": "d2c12853883f"
           }
         ],
         "arms": {},
@@ -5820,7 +5891,7 @@
             "kind": "creatures",
             "target_id": "saint_brigid_of_kildare_naomh_br_d",
             "note": "Saint Brigid, a patron of Ireland",
-            "id": "f286bf3d08ab"
+            "id": "c5849b995015"
           }
         ],
         "arms": {},
@@ -6129,7 +6200,7 @@
             "kind": "creatures",
             "target_id": "trooping_faerie",
             "note": "a gang of trooping faeries",
-            "id": "b0acb8d9cc2e"
+            "id": "048d8a40e75a"
           }
         ],
         "arms": {},
@@ -6232,7 +6303,7 @@
             "kind": "creatures",
             "target_id": "saint_ciar_n_of_clonmacnoise",
             "note": "Saint Ciar\u00e1n, who founded Clonmacnoise",
-            "id": "fcd34a1c9cbd"
+            "id": "8b90feb127e8"
           }
         ],
         "arms": {},
@@ -6480,7 +6551,7 @@
             "kind": "places",
             "target_id": "archdiocese_of_armagh",
             "note": "Founded by its old archbishop",
-            "id": "0f1000740851"
+            "id": "95f31f536ea2"
           }
         ],
         "arms": {},
@@ -6531,13 +6602,13 @@
             "kind": "books",
             "target_id": "the_book_of_kells",
             "note": "Kept here under close guard",
-            "id": "8ee11db1ab54"
+            "id": "bf967035da37"
           },
           {
             "kind": "books",
             "target_id": "the_battle_psalter_of_the_domhnaill",
             "note": "Left here for safe keeping",
-            "id": "52b44263724b"
+            "id": "73a331c69daa"
           }
         ],
         "arms": {},
@@ -6588,7 +6659,7 @@
             "kind": "creatures",
             "target_id": "saint_ciar_n_of_clonmacnoise",
             "note": "Saint Ciar\u00e1n, who founded Clonmacnoise",
-            "id": "edaaf1dd93ee"
+            "id": "cd67f7ac8a7f"
           }
         ],
         "arms": {},
@@ -6612,7 +6683,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_drogheda_in_meath",
+            "note": "Its harbour",
+            "id": "1ae78fcef6f9"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6710,19 +6788,19 @@
             "kind": "creatures",
             "target_id": "saint_columba_saint_colum_cille",
             "note": "Saint Columba, a patron of Ireland",
-            "id": "7974a1ac0609"
+            "id": "1cb006ebde0e"
           },
           {
             "kind": "creatures",
             "target_id": "saint_malachy_m_el_m_ed_c_ua_morgair",
             "note": "Saint Malachy, once Archbishop of Armagh",
-            "id": "f81fb6576aac"
+            "id": "0aa17a9018e8"
           },
           {
             "kind": "creatures",
             "target_id": "saint_dympna_st_damhna",
             "note": "Saint Dympna, whose staff is kept at Tydavnet",
-            "id": "76ef5e88b610"
+            "id": "94a62932b995"
           }
         ],
         "arms": {},
@@ -7089,7 +7167,7 @@
             "kind": "creatures",
             "target_id": "f_orl_ir_the_true_mare",
             "note": "true mares, born now and then of the old royal horses",
-            "id": "98382d881564"
+            "id": "a322e12b7fb1"
           }
         ],
         "arms": {},
@@ -7961,7 +8039,7 @@
             "kind": "creatures",
             "target_id": "saint_columba_saint_colum_cille",
             "note": "Saint Columba, a patron of Ireland",
-            "id": "9df82b0f20bf"
+            "id": "f9d10b1667f7"
           }
         ],
         "arms": {},
@@ -8183,7 +8261,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_donegal",
+            "note": "Its harbour",
+            "id": "efd5f47f65b2"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -8315,7 +8400,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_dundrum",
+            "note": "Its harbour",
+            "id": "bf26546b38d2"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -8539,13 +8631,13 @@
             "kind": "creatures",
             "target_id": "saint_brendan_the_navigator_naomh_breand_n",
             "note": "Saint Brendan the Navigator, whose relics lie at Clonfert",
-            "id": "6eee63612f70"
+            "id": "441b6e1b7527"
           },
           {
             "kind": "creatures",
             "target_id": "saint_grellan",
             "note": "Saint Grellan, guardian against the Fir Bolg",
-            "id": "4ad924c15b36"
+            "id": "34d308be5b14"
           }
         ],
         "arms": {},
@@ -8921,7 +9013,8 @@
           "tethers": "",
           "status": "Known",
           "known": "Locally",
-          "levels": []
+          "levels": [],
+          "waters": "Anchorage"
         },
         "attitudes": [],
         "favours": [],
@@ -8945,7 +9038,8 @@
           "tethers": "",
           "status": "Known",
           "known": "Locally",
-          "levels": []
+          "levels": [],
+          "waters": "Anchorage"
         },
         "attitudes": [],
         "favours": [],
@@ -9988,7 +10082,7 @@
             "kind": "creatures",
             "target_id": "saint_brendan_the_navigator_naomh_breand_n",
             "note": "Saint Brendan the Navigator, whose relics lie at Clonfert",
-            "id": "3ff10122af27"
+            "id": "72f3b6d70a69"
           }
         ],
         "arms": {},
@@ -10450,19 +10544,19 @@
             "kind": "characters",
             "target_id": "faol_n",
             "note": "Lives among the Coill Tr\u00ed in breach of the Treaty",
-            "id": "773178b35e13"
+            "id": "f9ee4fa1c8e9"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "May enter Connacht on three errands",
-            "id": "672d681f4c0d"
+            "id": "43a6ef7cfc31"
           },
           {
             "kind": "covenants",
             "target_id": "qui_sonant_pro_quieto",
             "note": "A haven for all under the Treaty",
-            "id": "0319f1f58a35"
+            "id": "ae2c14084b84"
           }
         ],
         "arms": {},
@@ -10625,19 +10719,19 @@
             "kind": "places",
             "target_id": "tech_dairbhre",
             "note": "Mug Ruith's home",
-            "id": "4ddf09b8999c"
+            "id": "8df1ce24a83e"
           },
           {
             "kind": "covenants",
             "target_id": "cliffheart",
             "note": "Studies the Tuatha D\u00e9",
-            "id": "ba758c430684"
+            "id": "fcf0bacfa301"
           },
           {
             "kind": "creatures",
             "target_id": "donn_the_dark_one",
             "note": "See the Bestiary",
-            "id": "2a8eb8363726"
+            "id": "2798a896afe7"
           }
         ],
         "arms": {},
@@ -10719,25 +10813,25 @@
             "kind": "characters",
             "target_id": "cliodna_inghean_hiolair",
             "note": "Brought the Eagle King to the Tribunal",
-            "id": "67a09464e4c2"
+            "id": "8943b678fd86"
           },
           {
             "kind": "covenants",
             "target_id": "l_mbaird",
             "note": "Tried to breed a f\u00edorl\u00e1ir",
-            "id": "a94f5f6bccec"
+            "id": "299bf6836735"
           },
           {
             "kind": "creatures",
             "target_id": "f_orl_ir_the_true_mare",
             "note": "See the Bestiary",
-            "id": "cad2b2febba8"
+            "id": "cac9b6cfec28"
           },
           {
             "kind": "creatures",
             "target_id": "dobhar_ch_the_king_otter",
             "note": "See the Bestiary",
-            "id": "d04892d8cad9"
+            "id": "6903d130279b"
           }
         ],
         "arms": {},
@@ -10769,19 +10863,19 @@
             "kind": "creatures",
             "target_id": "trooping_faerie",
             "note": "See the Bestiary",
-            "id": "d2df55014b26"
+            "id": "573ebfa231ac"
           },
           {
             "kind": "creatures",
             "target_id": "ca_lte_mac_r_n_in",
             "note": "See the Bestiary",
-            "id": "90210f88c690"
+            "id": "6b43bf00a1a8"
           },
           {
             "kind": "creatures",
             "target_id": "the_head_of_arastotail",
             "note": "See the Bestiary",
-            "id": "834d150b1045"
+            "id": "a234a1365bff"
           }
         ],
         "arms": {},
@@ -10812,7 +10906,7 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Its terminus at Tara",
-            "id": "0fe61ee3d814"
+            "id": "7f6994afc4dc"
           }
         ],
         "arms": {},
@@ -10843,7 +10937,7 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Its terminus at Tara",
-            "id": "46435ca8cd6e"
+            "id": "2e61c20993ef"
           }
         ],
         "arms": {},
@@ -10874,7 +10968,7 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Its terminus at Tara",
-            "id": "9bf864423713"
+            "id": "ef010435d10c"
           }
         ],
         "arms": {},
@@ -10905,7 +10999,7 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Its terminus at Tara",
-            "id": "b4481851fb82"
+            "id": "d59fd43d83d8"
           }
         ],
         "arms": {},
@@ -10936,7 +11030,7 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Its terminus at Tara",
-            "id": "53f8d3d5a855"
+            "id": "dbd8c43cebca"
           }
         ],
         "arms": {},
@@ -11033,7 +11127,7 @@
             "kind": "creatures",
             "target_id": "donn_the_dark_one",
             "note": "the death god, whose isle gathers the dead",
-            "id": "92c1607ff4ce"
+            "id": "38062699108c"
           }
         ],
         "arms": {},
@@ -11134,13 +11228,13 @@
             "kind": "places",
             "target_id": "armagh",
             "note": "Its seat",
-            "id": "131ca64f733e"
+            "id": "3269fb1ab921"
           },
           {
             "kind": "creatures",
             "target_id": "saint_malachy_m_el_m_ed_c_ua_morgair",
             "note": "Saint Malachy, once Archbishop of Armagh",
-            "id": "647812c7cb7c"
+            "id": "55f30e80a1c9"
           }
         ],
         "arms": {},
@@ -11169,7 +11263,7 @@
             "kind": "places",
             "target_id": "the_rock_of_cashel",
             "note": "Its seat",
-            "id": "d6f7dafdb38a"
+            "id": "a7dc3127a878"
           }
         ],
         "arms": {},
@@ -11198,13 +11292,13 @@
             "kind": "places",
             "target_id": "dublin",
             "note": "Its seat",
-            "id": "8b1cab135be2"
+            "id": "2885b64b34bf"
           },
           {
             "kind": "places",
             "target_id": "henry_de_londres_viceroy_of_ireland",
             "note": "Its archbishop is the king's viceroy",
-            "id": "bf5823a89a63"
+            "id": "c09db1e3c65e"
           }
         ],
         "arms": {},
@@ -11233,7 +11327,7 @@
             "kind": "places",
             "target_id": "tuam",
             "note": "Its seat",
-            "id": "b5f963dc05b0"
+            "id": "06659671c8bd"
           }
         ],
         "arms": {},
@@ -11266,25 +11360,25 @@
             "kind": "covenants",
             "target_id": "the_paruchia_of_nerius",
             "note": "Its Hermetic members",
-            "id": "76112b393121"
+            "id": "ee9ff1a762a8"
           },
           {
             "kind": "characters",
             "target_id": "fedelmid",
             "note": "Hermetic C\u00e9li D\u00e9; comarba Nerius",
-            "id": "7e376179220d"
+            "id": "83fd6ea881f2"
           },
           {
             "kind": "characters",
             "target_id": "indrechtach",
             "note": "Hermetic C\u00e9li D\u00e9",
-            "id": "df5213070b00"
+            "id": "041271231223"
           },
           {
             "kind": "places",
             "target_id": "the_coill_tr",
             "note": "Some sit in the T\u00faath R\u00f3n\u00e1in",
-            "id": "19f01c3d5f1b"
+            "id": "fd26e8ae305b"
           }
         ],
         "arms": {},
@@ -11526,61 +11620,61 @@
             "kind": "characters",
             "target_id": "guillaume_of_normandy",
             "note": "Leads the raids",
-            "id": "7541637f7299"
+            "id": "0270fe660f4f"
           },
           {
             "kind": "characters",
             "target_id": "ballack",
             "note": "Lord of Praesis",
-            "id": "bdbbaa85fbb8"
+            "id": "7c647c904beb"
           },
           {
             "kind": "characters",
             "target_id": "cacht",
             "note": "Waits for a new war",
-            "id": "1a2359a627ef"
+            "id": "0798d736eb38"
           },
           {
             "kind": "characters",
             "target_id": "b_et_in_ua_traimair",
             "note": "Shares a tower with his friends' killer",
-            "id": "9f2159769e62"
+            "id": "860121674e95"
           },
           {
             "kind": "characters",
             "target_id": "faol_n",
             "note": "Already in Connacht",
-            "id": "82e8de4521b3"
+            "id": "517400e96174"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "Where the raids begin",
-            "id": "6ec75174b5e4"
+            "id": "28e334e7c7bd"
           },
           {
             "kind": "covenants",
             "target_id": "elk_s_run",
             "note": "On the Connacht border",
-            "id": "fb874c62f6c3"
+            "id": "4f40b3d17b43"
           },
           {
             "kind": "places",
             "target_id": "connacht",
             "note": "The land closed to magi",
-            "id": "9fbd8e638ffb"
+            "id": "d2ce2e3b9ccf"
           },
           {
             "kind": "places",
             "target_id": "lough_ree",
             "note": "Praesis's lake",
-            "id": "3afc476a5339"
+            "id": "95cb8635739e"
           },
           {
             "kind": "places",
             "target_id": "br_ifne",
             "note": "Home of the mercenaries",
-            "id": "32ed3f471ce3"
+            "id": "e88cac932648"
           }
         ],
         "arms": {},
@@ -11641,67 +11735,67 @@
             "kind": "characters",
             "target_id": "milvia",
             "note": "The Praeco",
-            "id": "5b60c47f1053"
+            "id": "10ed301cefff"
           },
           {
             "kind": "characters",
             "target_id": "visioturpis",
             "note": "The Presiding Quaesitor",
-            "id": "71ce0f14e017"
+            "id": "afaefd91c38f"
           },
           {
             "kind": "characters",
             "target_id": "helles",
             "note": "Leads the reformers",
-            "id": "46f70578d40b"
+            "id": "3b475b4b61b2"
           },
           {
             "kind": "covenants",
             "target_id": "qui_sonant_pro_quieto",
             "note": "A haven under the Treaty",
-            "id": "6bf00f29371e"
+            "id": "29529fa42ca4"
           },
           {
             "kind": "covenants",
             "target_id": "vigil",
             "note": "Keeps the northern sea beasts",
-            "id": "82bd311401e6"
+            "id": "f29216f8ea46"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "Holds leave to enter",
-            "id": "1397e40a4d46"
+            "id": "15831388b9c7"
           },
           {
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Where it is tested",
-            "id": "9770cd5190b2"
+            "id": "4b6bfb6a0767"
           },
           {
             "kind": "places",
             "target_id": "connacht",
             "note": "The land it closes",
-            "id": "0d62d0b6e6c3"
+            "id": "f681b7ddb00a"
           },
           {
             "kind": "places",
             "target_id": "br_ifne",
             "note": "Across the river",
-            "id": "7247e5917610"
+            "id": "aed5b456bb93"
           },
           {
             "kind": "places",
             "target_id": "the_black_pig_s_dyke",
             "note": "Kept broken by the druids",
-            "id": "9d0ae4401c2a"
+            "id": "ea50f3cfd36a"
           },
           {
             "kind": "places",
             "target_id": "the_slieve_aughty",
             "note": "A border wanting a marker",
-            "id": "c6b4df3f0b7e"
+            "id": "5b62a083eb41"
           }
         ],
         "arms": {},
@@ -11772,79 +11866,79 @@
             "kind": "characters",
             "target_id": "helles",
             "note": "Leads the debate",
-            "id": "4c7df13448e9"
+            "id": "cc080626e195"
           },
           {
             "kind": "characters",
             "target_id": "pollices",
             "note": "Helles's fellow founder",
-            "id": "b90739df940c"
+            "id": "1324fab3d9ab"
           },
           {
             "kind": "characters",
             "target_id": "konstanczia",
             "note": "Tremere backing",
-            "id": "0e02863df681"
+            "id": "719ce0a312dc"
           },
           {
             "kind": "characters",
             "target_id": "dorj_n",
             "note": "Tremere backing",
-            "id": "2b19130ce4e9"
+            "id": "c64f635c116e"
           },
           {
             "kind": "characters",
             "target_id": "lugardis",
             "note": "Writes in Hibernia's defence",
-            "id": "25a2f919fc1d"
+            "id": "3dc6a2db4fff"
           },
           {
             "kind": "characters",
             "target_id": "igneous_drake",
             "note": "A grievance",
-            "id": "4b0ee72a4a39"
+            "id": "432b30c8b1b1"
           },
           {
             "kind": "characters",
             "target_id": "milvia",
             "note": "Neutral",
-            "id": "8ba90fc3a025"
+            "id": "7478fb7c5336"
           },
           {
             "kind": "covenants",
             "target_id": "ashenrise",
             "note": "The reformers' home",
-            "id": "57129a458701"
+            "id": "32c5b782f993"
           },
           {
             "kind": "covenants",
             "target_id": "elk_s_run",
             "note": "Leans on English nobles",
-            "id": "0d305a0f9b20"
+            "id": "4c0f89dea37d"
           },
           {
             "kind": "covenants",
             "target_id": "l_mbaird",
             "note": "The English Council's worry",
-            "id": "f00b44cfb7bf"
+            "id": "093ccb83146b"
           },
           {
             "kind": "covenants",
             "target_id": "circulus_ruber",
             "note": "Will not change",
-            "id": "7521c1ff73a2"
+            "id": "f996747b0f58"
           },
           {
             "kind": "covenants",
             "target_id": "cliffheart",
             "note": "Opposes English covenants",
-            "id": "e24999f52cb6"
+            "id": "5b42e9df6655"
           },
           {
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "Where it is fought",
-            "id": "d708f0a3975b"
+            "id": "5ceec3bfe624"
           }
         ],
         "arms": {},
@@ -11916,61 +12010,61 @@
             "kind": "characters",
             "target_id": "maoilfhinn_in_mac_lir",
             "note": "The plotter",
-            "id": "6218d6500e8a"
+            "id": "2a40ef789870"
           },
           {
             "kind": "characters",
             "target_id": "gr_inne_inghean_uait_ar",
             "note": "The sacrifice",
-            "id": "4bed0e831350"
+            "id": "3e63ebf2d2df"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_of_normandy",
             "note": "The unwitting weapon",
-            "id": "d0890360d643"
+            "id": "40af213d4bb2"
           },
           {
             "kind": "characters",
             "target_id": "inri_mac_cill_ni_mich_d_ire_boircech",
             "note": "Vigil's leader",
-            "id": "629f458b8861"
+            "id": "cf3f8cba44c0"
           },
           {
             "kind": "characters",
             "target_id": "dalton_ballaugh",
             "note": "Courted by Vigil's ambassador",
-            "id": "a94cce53e3bf"
+            "id": "6a23b541a742"
           },
           {
             "kind": "covenants",
             "target_id": "vigil",
             "note": "The covenant at stake",
-            "id": "e57f6124c8d1"
+            "id": "26365604eb2d"
           },
           {
             "kind": "covenants",
             "target_id": "l_mbaird",
             "note": "Courted",
-            "id": "6ca0987c99a2"
+            "id": "2b9a87844a70"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "Where the shards are sent",
-            "id": "89a7abb204f0"
+            "id": "1fa005f1940e"
           },
           {
             "kind": "places",
             "target_id": "inishtrahull",
             "note": "The refuge prepared",
-            "id": "ac9441485e51"
+            "id": "effc336854f2"
           },
           {
             "kind": "places",
             "target_id": "banbha_s_crown",
             "note": "Left behind if Vigil goes",
-            "id": "4c191366a2bd"
+            "id": "f10a2d5053f8"
           }
         ],
         "arms": {},
@@ -12042,43 +12136,43 @@
             "kind": "characters",
             "target_id": "ballack",
             "note": "The debtor",
-            "id": "13c3b634e1cd"
+            "id": "6c62ede0510d"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_of_normandy",
             "note": "Brings in Connacht's vis",
-            "id": "442eb9ea39a4"
+            "id": "3a940aec8be4"
           },
           {
             "kind": "characters",
             "target_id": "b_et_in_ua_traimair",
             "note": "The traitor who stayed",
-            "id": "f84ae479f4e2"
+            "id": "8595253d238d"
           },
           {
             "kind": "characters",
             "target_id": "meadhbh",
             "note": "Waits to return",
-            "id": "e601cf38dea7"
+            "id": "76ca28602eaa"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "The prize on loan",
-            "id": "aa195e7b30f0"
+            "id": "cba43a2b9d74"
           },
           {
             "kind": "covenants",
             "target_id": "qui_sonant_pro_quieto",
             "note": "Meadhbh's sanctuary",
-            "id": "c93aeefb1847"
+            "id": "540ab3e6ecca"
           },
           {
             "kind": "places",
             "target_id": "lough_ree",
             "note": "Its stripped sources",
-            "id": "5f51cf6a8d2a"
+            "id": "8f5ab304a5e7"
           }
         ],
         "arms": {},
@@ -12150,49 +12244,49 @@
             "kind": "creatures",
             "target_id": "donn_the_dark_one",
             "note": "The death god",
-            "id": "d5ccc337ea49"
+            "id": "c9f0affdc65d"
           },
           {
             "kind": "characters",
             "target_id": "faisgia",
             "note": "Hunts the Schism War's faeries",
-            "id": "d82856c9cf73"
+            "id": "4bb251144730"
           },
           {
             "kind": "covenants",
             "target_id": "cliffheart",
             "note": "Watches Teach Du\u00ednn",
-            "id": "c43eb11eb8d4"
+            "id": "df65c9cfd365"
           },
           {
             "kind": "covenants",
             "target_id": "circulus_ruber",
             "note": "In the army's path",
-            "id": "244aee37be9a"
+            "id": "9f733db29d4d"
           },
           {
             "kind": "places",
             "target_id": "teach_du_nn_the_house_of_donn",
             "note": "His island",
-            "id": "fd15431f9103"
+            "id": "bc296818c9b3"
           },
           {
             "kind": "places",
             "target_id": "salmon_s_eye_s_il_brad_in",
             "note": "His old allies",
-            "id": "2ff674140c92"
+            "id": "a4e8e2dbde87"
           },
           {
             "kind": "places",
             "target_id": "warbler_s_way_cos_n_ceolaire",
             "note": "His old victims",
-            "id": "32b43b816419"
+            "id": "760d3519a369"
           },
           {
             "kind": "places",
             "target_id": "cuailnge",
             "note": "The faerie-blooded children",
-            "id": "8dac445a2f25"
+            "id": "d4d62e21683e"
           }
         ],
         "arms": {},
@@ -12264,19 +12358,19 @@
             "kind": "places",
             "target_id": "rainn_thiar",
             "note": "The Gaileoin's island",
-            "id": "d915504fdd8f"
+            "id": "0afa6f67db1d"
           },
           {
             "kind": "places",
             "target_id": "tempull_bhean_in",
             "note": "The island's hidden holy place",
-            "id": "96a61296c2db"
+            "id": "3876acfa693d"
           },
           {
             "kind": "places",
             "target_id": "connacht",
             "note": "Closed to magi",
-            "id": "e0c3b4ab6062"
+            "id": "23fe8597d4c0"
           }
         ],
         "arms": {},
@@ -12348,37 +12442,37 @@
             "kind": "covenants",
             "target_id": "qui_sonant_pro_quieto",
             "note": "Sings the giant asleep",
-            "id": "81443e532212"
+            "id": "b746718d55fa"
           },
           {
             "kind": "characters",
             "target_id": "cantarus_an_t_iarbiteon",
             "note": "Master of the Songs",
-            "id": "9b1aee5621da"
+            "id": "b7f11a9ff4e7"
           },
           {
             "kind": "characters",
             "target_id": "finn_mac_cantarus_an_t_iarbiteon",
             "note": "Would-be heir",
-            "id": "57010aaff057"
+            "id": "175f0c337b36"
           },
           {
             "kind": "characters",
             "target_id": "turlough_cultas_cr_othamon",
             "note": "Keeper of the cemetery",
-            "id": "dc9efc51e0da"
+            "id": "2a5014ac1ffe"
           },
           {
             "kind": "characters",
             "target_id": "m_el_ruanaid_an_doire",
             "note": "Studies the songs' magic",
-            "id": "0275a71d8c9e"
+            "id": "57b3698c74b8"
           },
           {
             "kind": "places",
             "target_id": "cuailnge",
             "note": "The giant's ridge",
-            "id": "7d360dbd642f"
+            "id": "1034983fab9e"
           }
         ],
         "arms": {},
@@ -12440,25 +12534,25 @@
             "kind": "places",
             "target_id": "the_hill_of_tara",
             "note": "What he burns",
-            "id": "f7ed461eeae4"
+            "id": "4aa9175067cb"
           },
           {
             "kind": "places",
             "target_id": "the_mound_of_hostages",
             "note": "The Tuatha D\u00e9's mound on the hill",
-            "id": "d569945ca171"
+            "id": "aafaa587a86e"
           },
           {
             "kind": "places",
             "target_id": "connacht",
             "note": "His lair, closed to magi",
-            "id": "1e23ba887c2f"
+            "id": "6ede32742405"
           },
           {
             "kind": "covenants",
             "target_id": "circulus_ruber",
             "note": "Builds the meeting's camp",
-            "id": "78da68e2db75"
+            "id": "c88aef83e14b"
           }
         ],
         "arms": {},
@@ -12530,13 +12624,13 @@
             "kind": "places",
             "target_id": "the_br_na_b_inne",
             "note": "The granges",
-            "id": "07388af52b13"
+            "id": "76976efcecbb"
           },
           {
             "kind": "places",
             "target_id": "new_grange",
             "note": "Aonghus's mound",
-            "id": "1bfb838b84d6"
+            "id": "5b327ad0348a"
           }
         ],
         "arms": {},
@@ -12608,35 +12702,360 @@
             "kind": "places",
             "target_id": "oireadh",
             "note": "Where the Pact meets",
-            "id": "1343085d8a9b"
+            "id": "0ecdcc9f8194"
           },
           {
             "kind": "places",
             "target_id": "lough_conn",
             "note": "Umor's hills",
-            "id": "ca4d24a731d0"
+            "id": "e877ec2121f4"
           },
           {
             "kind": "places",
             "target_id": "rosbeg",
             "note": "Tuathal's forge",
-            "id": "74884468b1a3"
+            "id": "5355745294c8"
           },
           {
             "kind": "covenants",
             "target_id": "praesis",
             "note": "The Pact's old ally",
-            "id": "9b87214c6275"
+            "id": "5a23a4340316"
           },
           {
             "kind": "characters",
             "target_id": "meadhbh",
             "note": "Whom the Pact deserted",
-            "id": "8254a7a73cf6"
+            "id": "941ef21f6aef"
           }
         ],
         "arms": {},
         "secrets": "The Pact's true aim, hidden from the Order and the Coill Tr\u00ed alike, is a Parma Magica of its own. \u00c1dhamh needs 120 breakthrough points and has 15, and doubts he will live to finish; he keeps his notes for those who come after.\n\nTuathal's arts are Infernal in origin, which \u00c1dhamh has yet to discover."
+      },
+      {
+        "id": "the_harbour_of_cork",
+        "name": "The harbour of Cork",
+        "kind": "place",
+        "summary": "The harbour of the town of Cork.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_kingdom_of_desmond",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_waterford",
+        "name": "The harbour of Waterford",
+        "kind": "place",
+        "summary": "The harbour of the town of Waterford.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_liberty_of_waterford",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_limerick",
+        "name": "The harbour of Limerick",
+        "kind": "place",
+        "summary": "The harbour of the town of Limerick.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_liberty_of_limerick",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_wexford",
+        "name": "The harbour of Wexford",
+        "kind": "place",
+        "summary": "The harbour of the town of Wexford.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_county_of_wexford",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_bannow",
+        "name": "The harbour of Bannow",
+        "kind": "place",
+        "summary": "The harbour of the town of Bannow.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_county_of_wexford",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_new_ross",
+        "name": "The harbour of New Ross",
+        "kind": "place",
+        "summary": "The harbour of the town of New Ross.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_county_of_wexford",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_wicklow",
+        "name": "The harbour of Wicklow",
+        "kind": "place",
+        "summary": "The harbour of the town of Wicklow.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_wicklow_mountains",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_dublin",
+        "name": "The harbour of Dublin",
+        "kind": "place",
+        "summary": "The harbour of the town of Dublin.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_wicklow_mountains",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_arklow",
+        "name": "The harbour of Arklow",
+        "kind": "place",
+        "summary": "The harbour of the town of Arklow.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_wicklow_mountains",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_drogheda_in_meath",
+        "name": "The harbour of Drogheda-in-Meath",
+        "kind": "place",
+        "summary": "The harbour of the town of Drogheda-in-Meath.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "meath",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_donegal",
+        "name": "The harbour of Donegal",
+        "kind": "place",
+        "summary": "The harbour of the town of Donegal.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "t_r_chonaill",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_dundrum",
+        "name": "The harbour of Dundrum",
+        "kind": "place",
+        "summary": "The harbour of the town of Dundrum.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_earldom_of_ulster",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_tralee",
+        "name": "The harbour of Tralee",
+        "kind": "place",
+        "summary": "The harbour of the town of Tralee.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "kerry",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
       }
     ],
     "characters": [
@@ -22714,7 +23133,7 @@
             "kind": "characters",
             "target_id": "pollices",
             "note": "Fellow founder; fled Moles Magna with him",
-            "id": "9ddd9a46f67e"
+            "id": "3e023bdbae46"
           }
         ],
         "agents": [],
@@ -24978,7 +25397,7 @@
             "kind": "characters",
             "target_id": "konstanczia",
             "note": "Sodalis of House Tremere; came with him from Stonehenge",
-            "id": "e35f28d62ebb"
+            "id": "68c69dd84f43"
           }
         ],
         "agents": [],
@@ -26130,7 +26549,7 @@
             "kind": "characters",
             "target_id": "brian_chilldara",
             "note": "Close friend; apprenticed and gauntleted together",
-            "id": "73c6daa0f70f"
+            "id": "4929bdfea3d6"
           }
         ],
         "agents": [],
@@ -27996,7 +28415,7 @@
             "kind": "characters",
             "target_id": "indrechtach",
             "note": "His apprentice, trained in Holy Magic",
-            "id": "78268d838559"
+            "id": "d7a28a91cd0d"
           }
         ],
         "agents": [],
@@ -28721,7 +29140,7 @@
             "kind": "characters",
             "target_id": "c_emgen",
             "note": "Taught him Holy Magic",
-            "id": "e983811929ab"
+            "id": "a93a4019927c"
           }
         ],
         "agents": [],
@@ -32275,7 +32694,7 @@
             "kind": "characters",
             "target_id": "peter",
             "note": "Feud",
-            "id": "e5cf1f6570c2"
+            "id": "1b3af21d76bc"
           }
         ],
         "agents": [],
@@ -33519,7 +33938,7 @@
             "kind": "characters",
             "target_id": "dalton_ballaugh",
             "note": "Feud",
-            "id": "89244eaca485"
+            "id": "ae16d2082d06"
           }
         ],
         "agents": [],
@@ -34127,7 +34546,7 @@
             "kind": "characters",
             "target_id": "c_chonnacht_cluasach_mac_tire",
             "note": "Feud",
-            "id": "c40ef0cb790a"
+            "id": "1205edc532f5"
           }
         ],
         "agents": [],
@@ -37143,7 +37562,7 @@
             "kind": "characters",
             "target_id": "gr_inne_inghean_uait_ar",
             "note": "Feud",
-            "id": "c6bcbc9af7e6"
+            "id": "63cb37ad88cf"
           }
         ],
         "agents": [],
@@ -41513,7 +41932,7 @@
             "attack": 2,
             "defense": 6,
             "damage": 5,
-            "id": "7f15daf88b2e"
+            "id": "554ef56540bf"
           }
         ],
         "soak": 3,
@@ -41572,7 +41991,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ends a spell that is on her if she can double its level on a stress die + 55. PeVi 40, a Greater Power.",
-            "id": "bec7ec1e4357"
+            "id": "ec3b95199e97"
           },
           {
             "name": "Born in the Saddle",
@@ -41586,7 +42005,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Whoever rides her adds +3 to Ride rolls. MuCo 5, a Lesser Power.",
-            "id": "00333747e740"
+            "id": "a60654ec1026"
           },
           {
             "name": "Ward the Rider",
@@ -41600,7 +42019,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Her rider gains +5 Soak. She may keep it up as long as she likes, but regains the Might only once she lets it lapse, and each use gives the rider a Warping Point. MuCo 40, a Greater Power.",
-            "id": "112c9a93a848"
+            "id": "7675976afccf"
           }
         ],
         "vis": [
@@ -41608,7 +42027,7 @@
             "pawns": 4,
             "art": "Animal",
             "where": "one in each hoof",
-            "id": "193bd7f45b88"
+            "id": "49469e8f1ff8"
           }
         ],
         "equipment": "",
@@ -41904,7 +42323,7 @@
             "attack": 15,
             "defense": 11,
             "damage": 6,
-            "id": "811615f050ff"
+            "id": "12d14e5c4cf8"
           },
           {
             "name": "Grapple",
@@ -41912,7 +42331,7 @@
             "attack": 14,
             "defense": 9,
             "damage": null,
-            "id": "b52ec872207e"
+            "id": "8315ada2204d"
           }
         ],
         "soak": 2,
@@ -41999,7 +42418,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Falls at once on whoever deals it the killing blow, with +5 Penetration for each Fatigue level it had left (its Life Boost). Within a day the killer meets some deadly mishap, a falling bridge, a fire, a lightning stroke, which luck or skill may still let him survive. Counts as a level 50 spell for countering; a Ritual Power with no Hermetic equivalent.",
-            "id": "43e51b2dd2c6"
+            "id": "1fa5d999928a"
           }
         ],
         "vis": [
@@ -42007,7 +42426,7 @@
             "pawns": 2,
             "art": "Rego",
             "where": "in the fur that bears the cross",
-            "id": "d33a73c7573f"
+            "id": "75b3eca4779d"
           }
         ],
         "equipment": "",
@@ -42273,7 +42692,7 @@
             "attack": 3,
             "defense": -2,
             "damage": 6,
-            "id": "0920fe657538"
+            "id": "86b821aa5ce9"
           }
         ],
         "soak": 6,
@@ -42353,7 +42772,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A variable cost: adds Threshold points to those a mortal or a group has gathered (Realms of Power: Faerie).",
-            "id": "dd7869803b70"
+            "id": "9779c5ed9628"
           },
           {
             "name": "Allure",
@@ -42367,7 +42786,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 to Communication rolls to seduce.",
-            "id": "d395ab38010e"
+            "id": "6d9f04e43e51"
           },
           {
             "name": "Appear Human",
@@ -42381,7 +42800,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: she seems a lovely noblewoman, but hurt in the eye, the arm and the foot, wounds from gazing into the Well of Wisdom that will never heal. The book gives no Init.",
-            "id": "db01009ed4e0"
+            "id": "9c5089fdd3bd"
           },
           {
             "name": "Deluge of Rushing and Dashing",
@@ -42395,7 +42814,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The Hermetic spell, but only on the Boyne; she drowns those who betrayed her as they ford it.",
-            "id": "1b753780018a"
+            "id": "8ea098cdd6a2"
           },
           {
             "name": "Drowned Standing",
@@ -42409,7 +42828,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fills the target's lungs with Boyne water for +15 damage that armour cannot soak.",
-            "id": "937ce34c391f"
+            "id": "37b420dd9566"
           },
           {
             "name": "Guide",
@@ -42423,7 +42842,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Quietly steers a group toward deeds that help Meath at Leinster's cost, above all those that move wealth, power or office into Meath; the storyguide advises them as with Common Sense, but to her ends (Realms of Power: Faerie).",
-            "id": "ddfd389c9245"
+            "id": "48d981f8fd5e"
           }
         ],
         "vis": [
@@ -42431,7 +42850,7 @@
             "pawns": 7,
             "art": "Aquam",
             "where": "in her tail",
-            "id": "8c6327b4aa05"
+            "id": "6bfae1163986"
           }
         ],
         "equipment": "None.",
@@ -42647,7 +43066,7 @@
             "attack": 13,
             "defense": 9,
             "damage": 7,
-            "id": "e6b6aef3f67e"
+            "id": "30e4e931d02d"
           },
           {
             "name": "Short Spear (from chariot)",
@@ -42655,7 +43074,7 @@
             "attack": 16,
             "defense": 12,
             "damage": 7,
-            "id": "83ef07e61246"
+            "id": "cb81619752f7"
           },
           {
             "name": "Long Sword",
@@ -42663,7 +43082,7 @@
             "attack": 16,
             "defense": 11,
             "damage": 8,
-            "id": "2f89e45a2087"
+            "id": "89cd8668d964"
           },
           {
             "name": "Long Sword (from chariot)",
@@ -42671,7 +43090,7 @@
             "attack": 19,
             "defense": 14,
             "damage": 8,
-            "id": "c1f2d5f0f94e"
+            "id": "5843cfbcfd97"
           }
         ],
         "soak": 3,
@@ -42744,7 +43163,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a corpse that is the exact likeness of any man or woman he can see. Base 5, +1 Touch, +3 Moon.",
-            "id": "aa452c4f9f97"
+            "id": "4a98ff626cca"
           },
           {
             "name": "Bursting the Heart Vessel",
@@ -42758,7 +43177,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "At his touch the victim's heart bursts and he dies on the spot. Base 30, +1 Touch, the spare Greater Power levels lowering its cost.",
-            "id": "9a3926d2a272"
+            "id": "6d6ac88d10c5"
           },
           {
             "name": "Summon the Curtains of Donn",
@@ -42772,7 +43191,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fog pours from his fingertip into a bank a mile across, which then behaves as any fog; he hides his comings and goings in it. Built as Base 2 with +1 Touch, +2 Sun, +2 Group, +1 size and +1 for being somewhat unnatural.",
-            "id": "8a042b1af576"
+            "id": "3329a89163cf"
           },
           {
             "name": "Transform into Animal",
@@ -42786,7 +43205,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of a fish, a bull, a stag, a hawk or a boar, most often to fight his faerie foe Find. Base 10, +2 Sun, +1 size.",
-            "id": "0818fdc16d3f"
+            "id": "5c99bec9f461"
           }
         ],
         "vis": [
@@ -42794,7 +43213,7 @@
             "pawns": 10,
             "art": "Corpus",
             "where": "one in each severed head tied to his belt",
-            "id": "096499cc70a3"
+            "id": "a11da79101cb"
           }
         ],
         "equipment": "A warrior's arms and gear, and a chariot drawn by four horses.",
@@ -42923,7 +43342,7 @@
             "attack": 11,
             "defense": 14,
             "damage": 2,
-            "id": "7850e0eacfb4"
+            "id": "07fee1fd4db2"
           }
         ],
         "soak": 1,
@@ -42989,7 +43408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It flies, steering hard turns with Athletics. Base 4, +2 Sun.",
-            "id": "f1ffffa373ce"
+            "id": "f7373b6eeb95"
           },
           {
             "name": "Invisibility",
@@ -43003,7 +43422,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It turns invisible. Base 4, +2 Sun, +1 moving image.",
-            "id": "9c8683d813a3"
+            "id": "ff00415f3842"
           }
         ],
         "vis": [
@@ -43011,7 +43430,7 @@
             "pawns": 1,
             "art": "Herbam",
             "where": "in one of its thumbnails",
-            "id": "20250d804dfb"
+            "id": "fab04f1dc371"
           }
         ],
         "equipment": "Tattered clothes.",
@@ -43200,7 +43619,7 @@
             "attack": 8,
             "defense": 4,
             "damage": 6,
-            "id": "9bfcb8aa7463"
+            "id": "15d42ae7e1cc"
           },
           {
             "name": "Javelin",
@@ -43208,7 +43627,7 @@
             "attack": 7,
             "defense": 3,
             "damage": 6,
-            "id": "d8c127a11e78"
+            "id": "ce9ab10594ac"
           }
         ],
         "soak": 2,
@@ -43323,7 +43742,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He talks with an animal within reach of his voice. Base 10, +2 Voice, +1 Conc.",
-            "id": "749452d3b542"
+            "id": "4113a81b9060"
           },
           {
             "name": "Speed of the Deer",
@@ -43337,7 +43756,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He runs as fast as a deer, +3 to rolls for racing or speed. Base 15, +2 Sun.",
-            "id": "2a1c65e0dba9"
+            "id": "da429718dced"
           },
           {
             "name": "Removal of a Thousand Cares",
@@ -43351,7 +43770,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Like Pains of the Thousand Worries without the pain: the target turns idle and listless from joy. He often uses it when a tale is done, to prove he belongs among Ireland's poets, but needs no poem to use it. Base 4, +2 Voice, +3 Moon, +1 complex; four spare levels bring the cost to 0.",
-            "id": "ccffb27ed9a4"
+            "id": "d3aa641d5749"
           }
         ],
         "vis": [
@@ -43359,7 +43778,7 @@
             "pawns": 4,
             "art": "Mentem",
             "where": "in four strands of his golden hair",
-            "id": "f0f66f42fac9"
+            "id": "4c2fe89e6d3c"
           }
         ],
         "equipment": "A spear, a sword, and the old dress of an Irish noble.",
@@ -43506,7 +43925,7 @@
             "attack": null,
             "defense": 0,
             "damage": null,
-            "id": "acee59f4df40"
+            "id": "4f7ed704e5f6"
           }
         ],
         "soak": 2,
@@ -43572,7 +43991,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Brings a man round to agree with whatever case the head has put. MuMe Base 15, +2 Voice, +2 Sun.",
-            "id": "2b4f75f3a4e0"
+            "id": "3079669fdc53"
           },
           {
             "name": "Trust of the Master's Servant",
@@ -43586,7 +44005,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Like Trust of Childlike Faith: makes the target trust him, if someone holds the head and the target meets its eyes. PeMe Base 4, +1 Eye, +2 Sun.",
-            "id": "f13d22a5b33c"
+            "id": "b63deee49195"
           },
           {
             "name": "Master of Waves",
@@ -43600,7 +44019,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any Intellego, Rego, Muto or Perdo Aquam effect of level 25 or less, costing a Might Point a magnitude.",
-            "id": "f333808ab432"
+            "id": "ce166cdbbdaa"
           }
         ],
         "vis": [
@@ -43608,7 +44027,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in his eye-teeth",
-            "id": "1731ac83ea33"
+            "id": "9ee5f50b8f67"
           }
         ],
         "equipment": "",
@@ -43695,7 +44114,7 @@
             "attack": null,
             "defense": 16,
             "damage": null,
-            "id": "f98f230cf83d"
+            "id": "f7ff9913cad6"
           },
           {
             "name": "Bite",
@@ -43703,7 +44122,7 @@
             "attack": 8,
             "defense": 16,
             "damage": -19,
-            "id": "cd117899f5c7"
+            "id": "2bd2d875dd24"
           }
         ],
         "soak": 0,
@@ -43762,7 +44181,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a body, which it must do to gnaw through the crops.",
-            "id": "f4085e7d68e8"
+            "id": "cc3995aeb741"
           },
           {
             "name": "The Thief of Vitality",
@@ -43776,7 +44195,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Kills one plant of a grain or root crop, or one fruit in an orchard.",
-            "id": "218b62b739cf"
+            "id": "63ee602953d4"
           }
         ],
         "vis": [],
@@ -43880,7 +44299,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "296534076ca4"
+            "id": "1ce811a673ba"
           },
           {
             "name": "Large Teeth",
@@ -43888,7 +44307,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 3,
-            "id": "340ab0e87896"
+            "id": "ed52f2141c81"
           },
           {
             "name": "Grapple",
@@ -43896,7 +44315,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 0,
-            "id": "6034fb271578"
+            "id": "3a663a63d4f4"
           }
         ],
         "soak": 0,
@@ -43955,7 +44374,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Though bodiless, it can rattle shut doors and shutters, and does so at any west window barred against it.",
-            "id": "efae4e365493"
+            "id": "8f0eeea274a3"
           },
           {
             "name": "Come With Me",
@@ -43969,7 +44388,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Pulls the dying target's last breath, and his spirit with it. If it gets the spirit a mile off, the spirit becomes a Sluagh too; if it loses hold, another may pay the Might and try again.",
-            "id": "5a831448ca1a"
+            "id": "09c4fd5d6c9a"
           }
         ],
         "vis": [
@@ -43977,7 +44396,7 @@
             "pawns": 1,
             "art": "Mentem",
             "where": "Vis Infesta",
-            "id": "100e3e91a738"
+            "id": "d12bac6401c5"
           }
         ],
         "equipment": "",
@@ -44085,7 +44504,7 @@
             "attack": null,
             "defense": 4,
             "damage": null,
-            "id": "e679d8157f29"
+            "id": "f41e1fed173a"
           },
           {
             "name": "Large Claws",
@@ -44093,7 +44512,7 @@
             "attack": 12,
             "defense": 12,
             "damage": 8,
-            "id": "50193f0915e1"
+            "id": "4fb1426097ab"
           }
         ],
         "soak": 0,
@@ -44166,7 +44585,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Grants anyone the Berserk Virtue until they calm down.",
-            "id": "680c669a6bd4"
+            "id": "03cba6474529"
           },
           {
             "name": "The Betrayal Revealed",
@@ -44180,7 +44599,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once the target has brought himself to the edge of suspicion, makes him wholly certain of it.",
-            "id": "145f794e3c7a"
+            "id": "871a8bd9a9df"
           },
           {
             "name": "Coagulation",
@@ -44194,7 +44613,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The usual demonic power.",
-            "id": "6833029c69df"
+            "id": "4df8a16b7c12"
           },
           {
             "name": "Endurance of the Enraged",
@@ -44208,7 +44627,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She suffers no wound penalties save to Defense.",
-            "id": "06266f3c5746"
+            "id": "b6fa6d476cdc"
           },
           {
             "name": "Obsession",
@@ -44222,7 +44641,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The usual demonic power; her sin is lust.",
-            "id": "9f4ad9a73a32"
+            "id": "7f1509d20255"
           },
           {
             "name": "Possession",
@@ -44236,7 +44655,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The usual demonic power, at a variable cost.",
-            "id": "b9d50ad7cc9c"
+            "id": "2b538c145f18"
           },
           {
             "name": "Waxing Tide of Humors",
@@ -44250,7 +44669,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Passion swamps reason: the victim needs a stress roll against 9, adjusted by fitting Personality Traits, to master an anger, lust, wantonness or spite. She often follows a successful Obsession with it.",
-            "id": "e0d31e4c26d7"
+            "id": "13b028b056d9"
           }
         ],
         "vis": [
@@ -44258,7 +44677,7 @@
             "pawns": 6,
             "art": "Mentem",
             "where": "Vis Infesta",
-            "id": "f2596476e86c"
+            "id": "3dd92017c666"
           }
         ],
         "equipment": "",
@@ -44374,7 +44793,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A curse that crumbles a false stone idol lately worshipped into rubble.",
-            "id": "7aa59bf86c0b"
+            "id": "8d7ff94c9ca1"
           },
           {
             "name": "The Captive Made Free",
@@ -44388,7 +44807,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The ground shakes, prison walls crack, doors fly open and chains drop from captives or slaves.",
-            "id": "f00ff6bfd91f"
+            "id": "e44625ac21e9"
           },
           {
             "name": "The Unquenchable Fire",
@@ -44402,7 +44821,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blessed hearth fire that never goes out, even with no fuel left; fires lit from it are ordinary.",
-            "id": "d09789d5d307"
+            "id": "2234f537d569"
           },
           {
             "name": "The Sky Made Light",
@@ -44416,7 +44835,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "By day, clears away storm, cloud or magical foul weather until sunset.",
-            "id": "e7cac00c5e26"
+            "id": "49862e135384"
           }
         ],
         "vis": [],
@@ -44533,7 +44952,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Raises a wave fifty paces wide and ten high that can sweep a small island bare; or, more kindly, opens a spring of fresh water.",
-            "id": "673c7e346e42"
+            "id": "504abf620413"
           },
           {
             "name": "Counting Sheep",
@@ -44547,7 +44966,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A flock or herd that was lost, or given to the poor, is found to be whole again when counted.",
-            "id": "3941a1472e8b"
+            "id": "b1516f964249"
           },
           {
             "name": "Test of Truth",
@@ -44561,7 +44980,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A curse: until the petitioner has done questioning him, the victim can speak only truth, and an attempt to lie throws him down in fits. He may keep silent; even demons cannot lie under it.",
-            "id": "017a818f4beb"
+            "id": "f792ef1e86b7"
           }
         ],
         "vis": [],
@@ -44678,7 +45097,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Demon's Eternal Oblivion, but against Magic Animals: if it penetrates, the beast's Might falls for good by the saint's Might.",
-            "id": "8e124c2dfb1f"
+            "id": "687c07dcd1e6"
           },
           {
             "name": "Borne up by Angels",
@@ -44692,7 +45111,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "One falling to his death who calls on the saint, if heard, is caught by angels (Divine Might 15) who slow the fall and set him down gently.",
-            "id": "7b2c1659e8e5"
+            "id": "e8c085dad124"
           },
           {
             "name": "Multitude of Fish",
@@ -44706,7 +45125,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Waters whose fish have dwindled or gone become a place fish flock to, enriching the local fisherfolk.",
-            "id": "a3de89faa254"
+            "id": "56b11d15923d"
           },
           {
             "name": "Walk Upon the Waters",
@@ -44720,7 +45139,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The one blessed walks on waves or rivers as on stone, out to a boat and back again.",
-            "id": "4793e9e2a8b1"
+            "id": "d2d16eb8a747"
           }
         ],
         "vis": [],
@@ -44837,7 +45256,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Demon's Eternal Oblivion, but against Magic Animals: if it penetrates, the beast's Might falls for good by the saint's Might.",
-            "id": "89fb83661419"
+            "id": "811eb467169e"
           },
           {
             "name": "Counting Sheep",
@@ -44851,7 +45270,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A flock or herd that was lost, or given to the poor, is found to be whole again when counted.",
-            "id": "d450cca04b81"
+            "id": "cfd151993bfc"
           },
           {
             "name": "The Captive Made Free",
@@ -44865,7 +45284,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The ground shakes, prison walls crack, doors fly open and chains drop from captives or slaves.",
-            "id": "fb983327cc99"
+            "id": "55059e537a05"
           },
           {
             "name": "Still the Waves",
@@ -44879,7 +45298,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Water stops as if frozen, becalming a ship, holding back waves or halting a river until the curse is lifted; or a ship is blessed with one voyage free of storms.",
-            "id": "6774f7d5f8ab"
+            "id": "2be4bfa71f18"
           },
           {
             "name": "Walk Upon the Waters",
@@ -44893,7 +45312,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The one blessed walks on waves or rivers as on stone, out to a boat and back again.",
-            "id": "c833352e8df3"
+            "id": "f64f1dd6d29f"
           }
         ],
         "vis": [],
@@ -45010,7 +45429,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A flock or herd that was lost, or given to the poor, is found to be whole again when counted.",
-            "id": "92587d7afb25"
+            "id": "9b8d6a77d9fa"
           },
           {
             "name": "Protect the Wild Prey",
@@ -45024,7 +45443,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A wild beast the saint blesses scares off hounds and cannot be hurt by weapons until sunset.",
-            "id": "c9371e2db6fc"
+            "id": "64ff71fddafb"
           },
           {
             "name": "Strange Fruit",
@@ -45038,7 +45457,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any tree bears good fruit, out of season the first time; it breeds true, and its offspring fruit in season after.",
-            "id": "6b85ce7b7de9"
+            "id": "c3638532a329"
           },
           {
             "name": "Tame the Wild Beast",
@@ -45052,7 +45471,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the petitioner one divine animal companion, which does not age while the petitioner lives and helps as a friend would; betray or harm it and the saint curses the petitioner.",
-            "id": "6eaa37b69687"
+            "id": "e06d0871f3bc"
           }
         ],
         "vis": [],
@@ -45169,7 +45588,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Water can no longer harm the blessed book, which stays readable even after centuries on a lough bed.",
-            "id": "120f2e0f16fd"
+            "id": "f565bcfc0f63"
           },
           {
             "name": "Tame the Wild Beast",
@@ -45183,7 +45602,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the petitioner one divine animal companion, which does not age while the petitioner lives and helps as a friend would; betray or harm it and the saint curses the petitioner.",
-            "id": "8bc73f0e0c75"
+            "id": "6da9b57ad31c"
           }
         ],
         "vis": [],
@@ -45300,7 +45719,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Waters whose fish have dwindled or gone become a place fish flock to, enriching the local fisherfolk.",
-            "id": "4a46af881a36"
+            "id": "133ec292d168"
           }
         ],
         "vis": [],
@@ -45417,7 +45836,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Heals someone, not necessarily the petitioner, of insanity.",
-            "id": "f44c884d7284"
+            "id": "6b3c5065b4a5"
           },
           {
             "name": "Test of Truth",
@@ -45431,7 +45850,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A curse: until the petitioner has done questioning him, the victim can speak only truth, and an attempt to lie throws him down in fits. He may keep silent; even demons cannot lie under it.",
-            "id": "2f30c5e93094"
+            "id": "a21794e1624a"
           }
         ],
         "vis": [],
@@ -45548,7 +45967,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The petitioner looks like a natural feature, and feels and sounds like one too, hiding her from pursuers.",
-            "id": "0a824f379112"
+            "id": "fccf2a5b0116"
           },
           {
             "name": "Still the Waves",
@@ -45562,7 +45981,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Water stops as if frozen, becalming a ship, holding back waves or halting a river until the curse is lifted; or a ship is blessed with one voyage free of storms.",
-            "id": "35987137d5a0"
+            "id": "5142de9c7e76"
           },
           {
             "name": "Tame the Wild Beast",
@@ -45576,7 +45995,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the petitioner one divine animal companion, which does not age while the petitioner lives and helps as a friend would; betray or harm it and the saint curses the petitioner.",
-            "id": "627836b57c2b"
+            "id": "8ffe1694b0b3"
           }
         ],
         "vis": [],
@@ -45693,7 +46112,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A wild beast the saint blesses scares off hounds and cannot be hurt by weapons until sunset.",
-            "id": "4ba6980bec96"
+            "id": "e70c84f777f1"
           }
         ],
         "vis": [],
@@ -45810,7 +46229,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Demon's Eternal Oblivion, but against Magic Animals: if it penetrates, the beast's Might falls for good by the saint's Might.",
-            "id": "f4796cca761b"
+            "id": "5eda09dbb1b5"
           },
           {
             "name": "Call Forth the Waters",
@@ -45824,7 +46243,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Raises a wave fifty paces wide and ten high that can sweep a small island bare; or, more kindly, opens a spring of fresh water.",
-            "id": "cd9cb274bbdd"
+            "id": "41c73c83b4fc"
           }
         ],
         "vis": [],
@@ -45941,7 +46360,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The one blessed walks on waves or rivers as on stone, out to a boat and back again.",
-            "id": "9a3a5dde069e"
+            "id": "3440d72978e1"
           },
           {
             "name": "Tame the Wild Beast",
@@ -45955,7 +46374,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the petitioner one divine animal companion, which does not age while the petitioner lives and helps as a friend would; betray or harm it and the saint curses the petitioner.",
-            "id": "216941318509"
+            "id": "b47afb102e15"
           },
           {
             "name": "Bless the Book",
@@ -45969,7 +46388,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Water can no longer harm the blessed book, which stays readable even after centuries on a lough bed.",
-            "id": "cdda5fd6e0aa"
+            "id": "4c94502ce46a"
           },
           {
             "name": "The Sky Made Light",
@@ -45983,7 +46402,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "By day, clears away storm, cloud or magical foul weather until sunset.",
-            "id": "76326472dcc3"
+            "id": "9740c9500477"
           }
         ],
         "vis": [],
@@ -50072,7 +50491,7 @@
           "kind": "characters",
           "target_id": "pollices",
           "note": "Fellow founder; fled Moles Magna with him",
-          "id": "9ddd9a46f67e"
+          "id": "3e023bdbae46"
         }
       ],
       "agents": [],
@@ -50894,7 +51313,7 @@
           "kind": "characters",
           "target_id": "konstanczia",
           "note": "Sodalis of House Tremere; came with him from Stonehenge",
-          "id": "e35f28d62ebb"
+          "id": "68c69dd84f43"
         }
       ],
       "agents": [],
@@ -51329,7 +51748,7 @@
           "kind": "characters",
           "target_id": "brian_chilldara",
           "note": "Close friend; apprenticed and gauntleted together",
-          "id": "73c6daa0f70f"
+          "id": "4929bdfea3d6"
         }
       ],
       "agents": [],
@@ -52003,7 +52422,7 @@
           "kind": "characters",
           "target_id": "indrechtach",
           "note": "His apprentice, trained in Holy Magic",
-          "id": "78268d838559"
+          "id": "d7a28a91cd0d"
         }
       ],
       "agents": [],
@@ -53553,7 +53972,7 @@
           "kind": "characters",
           "target_id": "peter",
           "note": "Feud",
-          "id": "e5cf1f6570c2"
+          "id": "1b3af21d76bc"
         }
       ],
       "agents": [],
@@ -53998,7 +54417,7 @@
           "kind": "characters",
           "target_id": "dalton_ballaugh",
           "note": "Feud",
-          "id": "89244eaca485"
+          "id": "ae16d2082d06"
         }
       ],
       "agents": [],
@@ -54224,7 +54643,7 @@
           "kind": "characters",
           "target_id": "c_chonnacht_cluasach_mac_tire",
           "note": "Feud",
-          "id": "c40ef0cb790a"
+          "id": "1205edc532f5"
         }
       ],
       "agents": [],
@@ -55702,7 +56121,7 @@
           "kind": "characters",
           "target_id": "gr_inne_inghean_uait_ar",
           "note": "Feud",
-          "id": "c6bcbc9af7e6"
+          "id": "63cb37ad88cf"
         }
       ],
       "agents": [],

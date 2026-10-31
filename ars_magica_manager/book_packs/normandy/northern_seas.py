@@ -1445,8 +1445,8 @@ def stats(normandy: Normandy) -> None:
 
 def _waters(normandy: Normandy, covenant: Covenant) -> None:
     """The sea it opens at, whose base aura is the book's 0 (Through the
-    Aegis p. 11), and Barfleur's harbour, nominally its home port (p. 11):
-    Barfleur the town is no Place, and a stop names a Place."""
+    Aegis p. 11). Barfleur, nominally its home port (p. 11), has its harbour
+    from book_packs.waters."""
     b = normandy.b
     sea = b.place(
         NAME,
@@ -1457,13 +1457,6 @@ def _waters(normandy: Normandy, covenant: Covenant) -> None:
     )
     sea.details[sites.WATERS] = mobile.OPEN_WATER
     covenant.stops.append(CovenantStop(1220, "Spring", sea.id))
-    harbour = b.place(
-        "The harbour of Barfleur",
-        inside=normandy.places["cotentin"],
-        summary="The harbour of the town of Barfleur, nominally the home port "
-        "of the Northern Seas.",
-    )
-    harbour.details[sites.WATERS] = mobile.PORT
 
 
 def _covenant(normandy: Normandy) -> Covenant:

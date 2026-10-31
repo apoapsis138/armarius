@@ -791,7 +791,13 @@ route can be planned round them. Whether the covenant got there is not checked.
 Neighbours, Tribunal and possessions don't change.
 
 **Ships.** On a covenant with a ship afloat, the stop form lists Places marked
-with **Waters** first, and warns of an unmarked Place without refusing it. A
+with **Waters** first, and warns of an unmarked Place without refusing it. The
+book packs mark their ports, anchorages, seas and working rivers. A port town
+has a harbour Place beside it, which the town links to, since a stop must be a
+Place. A harbour holds its own aura and inherits none: Divine 3 for a town or
+city, Divine 2 for a village (Definitive Edition p. 418), unless the book prints
+another figure. So a ship's magi stop inside the Dominion, and a ship with its
+own aura gives way to a stronger port on the surface. A
 ship covenant holds an Aegis only docked at a Port for the whole season, not at
 an Anchorage: Edit Covenant refuses a higher Aegis anywhere else, and one still
 held away from a Port is lost when Advance Season keeps it there. That is this

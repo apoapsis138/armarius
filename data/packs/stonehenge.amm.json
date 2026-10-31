@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.58.0",
+  "app_version": "3.62.1",
   "kind": "pack",
   "name": "Heirs to Merlin: the Stonehenge Tribunal",
   "from_saga": "Heirs to Merlin: the Stonehenge Tribunal",
@@ -123,7 +123,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "burnham",
@@ -226,7 +230,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "cad_gadu",
@@ -329,7 +337,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "libellus",
@@ -432,7 +444,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "nigrasaxa",
@@ -535,7 +551,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "schola_pythagoranis",
@@ -638,7 +658,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "semitae",
@@ -741,7 +765,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "ungulus",
@@ -844,7 +872,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       },
       {
         "id": "voluntas",
@@ -926,7 +958,7 @@
             "kind": "places",
             "target_id": "wilton",
             "note": "Its village",
-            "id": "cf36ed14454b"
+            "id": "88a37fdb6389"
           }
         ],
         "unnamed_magi": 0,
@@ -954,7 +986,11 @@
         "hermetic_projects": [],
         "project_shown": "",
         "land_projects": [],
-        "history": {}
+        "history": {},
+        "stops": [],
+        "route": [],
+        "route_at": 0,
+        "circuit": false
       }
     ],
     "tribunals": [
@@ -980,21 +1016,21 @@
             "year": 1208,
             "says": "No covenant may put more than a reasonable amount of magically made silver into circulation in a year: two pounds for each resident, magus or mundane. Blackthorn, Burnham, Voluntas and others had made so much silver late last century that its value halved in twenty years; the Tribunal judged it interference with the mundanes. A move to punish those responsible failed easily. Gold, not used as coin in England, is not covered, but magi now know that making too much of a thing lowers its worth.",
             "case_id": "",
-            "id": "b0171ba18fd3"
+            "id": "ed2e909ec05a"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "Immanola, Prima of Ex Miscellanea and then the eldest magus, was barred from the office as likely to favour her own House, at Blackthorn's urging; Talion of Blackthorn has held it since, and the Tribunal meets at Blackthorn. The other covenants dislike it, but none has acted.",
             "case_id": "",
-            "id": "f34ce71fc3f7"
+            "id": "abceb960cd48"
           },
           {
             "title": "The meeting a year late",
             "year": 1201,
             "says": "The Tribunal meets a year after the rest of the Order, from the quorate meeting of 1201.",
             "case_id": "",
-            "id": "b2fc4749f29f"
+            "id": "c6817a5625c8"
           }
         ],
         "treasury": [],
@@ -1006,7 +1042,7 @@
             "details": "After the war on Damhan-Allaidh, Pralix founds the Ordo Miscellanea at Cad Gadu in North Wales.",
             "changes": [],
             "margin": "",
-            "id": "4cfb660e8c51"
+            "id": "04c397e1ba38"
           },
           {
             "year": 817,
@@ -1015,7 +1051,7 @@
             "details": "The Ordo Miscellanea joins the Order as House Ex Miscellanea, and the Stonehenge Tribunal is born. The Nameless Covenant of House Diedne is founded on Anglesey.",
             "changes": [],
             "margin": "",
-            "id": "86d36f83fd93"
+            "id": "c01b183affbf"
           },
           {
             "year": 818,
@@ -1024,7 +1060,7 @@
             "details": "Magi of House Tremere found Blackthorn in the Black Mountains of south Wales.",
             "changes": [],
             "margin": "",
-            "id": "84316eacc77d"
+            "id": "5b364d2b30fd"
           },
           {
             "year": 820,
@@ -1033,7 +1069,7 @@
             "details": "Flavia of Jerbiton founds Rosalba in the Yorkshire Dales.",
             "changes": [],
             "margin": "",
-            "id": "aadcb1c52bcf"
+            "id": "aff2a45ad3cf"
           },
           {
             "year": 821,
@@ -1042,7 +1078,7 @@
             "details": "Concordia, an attempt to weld the traditions of Ex Miscellanea together, is founded in the Lake District; it falls apart from its own tensions in 823.",
             "changes": [],
             "margin": "",
-            "id": "e3035d48d863"
+            "id": "c64ba7b6c3ae"
           },
           {
             "year": 852,
@@ -1051,7 +1087,7 @@
             "details": "A covenant in a Roman fort on Hadrian's Wall, which lasts until 1030 or 1031 and then vanishes without trace.",
             "changes": [],
             "margin": "",
-            "id": "22a181db7930"
+            "id": "70f7b99ac23f"
           },
           {
             "year": 863,
@@ -1060,7 +1096,7 @@
             "details": "Pralix disappears returning from a visit to her old domus magna (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "b95c0b00d86d"
+            "id": "3f5038a485a8"
           },
           {
             "year": 866,
@@ -1069,7 +1105,7 @@
             "details": "A covenant on the Isle of Man that lasts six months.",
             "changes": [],
             "margin": "",
-            "id": "403903f3abd5"
+            "id": "55fc2e14e751"
           },
           {
             "year": 873,
@@ -1078,7 +1114,7 @@
             "details": "Diana of Tremere of Blackthorn and William of Jerbiton of Rosalba fight a Wizard's War.",
             "changes": [],
             "margin": "",
-            "id": "cb3c0999bc4f"
+            "id": "c9c4b28606be"
           },
           {
             "year": 875,
@@ -1087,7 +1123,7 @@
             "details": "A covenant in north Cornwall, which lasts until 931: Tytalus diabolism is found there, and King Athelstan destroys it.",
             "changes": [],
             "margin": "",
-            "id": "c327babbebe8"
+            "id": "d6d9378a077f"
           },
           {
             "year": 893,
@@ -1096,7 +1132,7 @@
             "details": "Newly Gauntleted magi found Occulta in the East Anglian fens; it fails to find resources and collapses in 897, its magi joining other covenants.",
             "changes": [],
             "margin": "",
-            "id": "0f9b439992e5"
+            "id": "9083cdedae3d"
           },
           {
             "year": 896,
@@ -1105,7 +1141,7 @@
             "details": "A covenant in London, which lasts until about 952.",
             "changes": [],
             "margin": "",
-            "id": "9ddea080b9ae"
+            "id": "96757e57ea92"
           },
           {
             "year": 899,
@@ -1114,7 +1150,7 @@
             "details": "Blackthorn destroys Rosalba; its ruins are lost, and their defences are still active.",
             "changes": [],
             "margin": "",
-            "id": "3afb0b0bd566"
+            "id": "01916b4f5ac1"
           },
           {
             "year": 915,
@@ -1123,7 +1159,7 @@
             "details": "An undistinguished covenant in the Pennines that never has much of a summer and dies in 1100, unable to recruit.",
             "changes": [],
             "margin": "",
-            "id": "4f3717036302"
+            "id": "bb4a8e2fe599"
           },
           {
             "year": 938,
@@ -1132,7 +1168,7 @@
             "details": "A second covenant on the Isle of Man, destroyed within a year.",
             "changes": [],
             "margin": "",
-            "id": "3b8d6a82ad7a"
+            "id": "17c36db81fbf"
           },
           {
             "year": 946,
@@ -1141,7 +1177,7 @@
             "details": "A covenant in Kent, destroyed by House Diedne in 1008.",
             "changes": [],
             "margin": "",
-            "id": "b583ade1301c"
+            "id": "4cbdc7793e73"
           },
           {
             "year": 984,
@@ -1150,7 +1186,7 @@
             "details": "Magi of House Flambeau found Ungulus, \"the Claw\", in the Lake District.",
             "changes": [],
             "margin": "",
-            "id": "f7628f21b998"
+            "id": "61249e86d82d"
           },
           {
             "year": 998,
@@ -1159,7 +1195,7 @@
             "details": "An early victim of the Schism War, too poor to repel a Diedne assault in 1003.",
             "changes": [],
             "margin": "",
-            "id": "79b097dec254"
+            "id": "5a419143ef34"
           },
           {
             "year": 1011,
@@ -1168,7 +1204,7 @@
             "details": "The Diedne covenant on Anglesey falls in the Schism War; its records are struck from the Code.",
             "changes": [],
             "margin": "",
-            "id": "2d2a2a43335e"
+            "id": "89375b53a06c"
           },
           {
             "year": 1014,
@@ -1177,7 +1213,7 @@
             "details": "A covenant in caves near Blackthorn, which lasts until 1062.",
             "changes": [],
             "margin": "",
-            "id": "5ad860d840cb"
+            "id": "2524b9f17afd"
           },
           {
             "year": 1025,
@@ -1186,7 +1222,7 @@
             "details": "A Criamon covenant on the Isles of Scilly, destroyed in a storm in 1163.",
             "changes": [],
             "margin": "",
-            "id": "21e478f442dd"
+            "id": "61ec5ddf7900"
           },
           {
             "year": 1060,
@@ -1195,7 +1231,7 @@
             "details": "Gruffydd ap Llewelyn, who besieged Blackthorn from 1058 to 1062, sacks Cad Gadu; Diedne were suspected, though it is now thought coincidence. Cad Gadu is refounded in its regio's higher levels in 1065.",
             "changes": [],
             "margin": "",
-            "id": "9169fda61753"
+            "id": "5427e3c1f697"
           },
           {
             "year": 1062,
@@ -1204,7 +1240,7 @@
             "details": "Blackthorn takes Tagelyn's caves and moves into them; Tagelyn's survivors flee to Hibernia and found Ashenrise.",
             "changes": [],
             "margin": "",
-            "id": "6f4e1d897669"
+            "id": "fa8b1d75f1f2"
           },
           {
             "year": 1066,
@@ -1213,7 +1249,7 @@
             "details": "Founded in the East Anglian fens to drive William the Conqueror from England; it breaks the Code so blatantly that it is Marched whole and destroyed in 1068.",
             "changes": [],
             "margin": "",
-            "id": "9d83f7434042"
+            "id": "7efdd1cc8a9f"
           },
           {
             "year": 1083,
@@ -1222,7 +1258,7 @@
             "details": "Norman magi found Voluntas in the north.",
             "changes": [],
             "margin": "",
-            "id": "21a6ecf3cb2f"
+            "id": "317a2498a363"
           },
           {
             "year": 1100,
@@ -1231,7 +1267,7 @@
             "details": "Blackthorn claims Lux Draconis's property, the start of its enmity with Voluntas.",
             "changes": [],
             "margin": "",
-            "id": "8f81d83b3b46"
+            "id": "4f52d278cc09"
           },
           {
             "year": 1104,
@@ -1240,7 +1276,7 @@
             "details": "A covenant on the North York Moors, which lasts until 1107.",
             "changes": [],
             "margin": "",
-            "id": "85c22a3e4ba6"
+            "id": "1d7a673eed98"
           },
           {
             "year": 1111,
@@ -1249,7 +1285,7 @@
             "details": "A covenant in a cave under Salisbury Plain, which disintegrates in 1187.",
             "changes": [],
             "margin": "",
-            "id": "3de5e0efca5a"
+            "id": "185c65421b99"
           },
           {
             "year": 1133,
@@ -1258,7 +1294,7 @@
             "details": "Nature magi found Natura Antiqua in the East Anglian fens; Geoffrey de Mandeville destroys it in the civil war, in 1143.",
             "changes": [],
             "margin": "",
-            "id": "988ecb5c075f"
+            "id": "f7442f3c81d6"
           },
           {
             "year": 1141,
@@ -1267,7 +1303,7 @@
             "details": "Burnham is founded in the far north-east, with a grant of immunity from King Stephen.",
             "changes": [],
             "margin": "",
-            "id": "a2c9574e3114"
+            "id": "65fd57c2c54a"
           },
           {
             "year": 1151,
@@ -1276,7 +1312,7 @@
             "details": "The wandering covenant Semitae first appears at a meeting, led by Gerfallon of Criamon.",
             "changes": [],
             "margin": "",
-            "id": "835c83dc462a"
+            "id": "59acf9c5b430"
           },
           {
             "year": 1154,
@@ -1285,7 +1321,7 @@
             "details": "Flumen of Tremere of Blackthorn leads the Wild Hunt into iron-bound caves near Blackthorn and shuts it in.",
             "changes": [],
             "margin": "",
-            "id": "14ca0fd2e52f"
+            "id": "b7fd22cd1f2d"
           },
           {
             "year": 1160,
@@ -1294,7 +1330,7 @@
             "details": "A third try at a Manx covenant, destroyed by a dragon within six months; one magus is let go home with the message, \"Don't come back.\"",
             "changes": [],
             "margin": "",
-            "id": "04026bc82572"
+            "id": "4d253b348fc8"
           },
           {
             "year": 1182,
@@ -1303,7 +1339,7 @@
             "details": "Jerbiton magi found Schola Pythagoranis at Cambridge.",
             "changes": [],
             "margin": "",
-            "id": "9f3564b37bd7"
+            "id": "195e3c127d97"
           },
           {
             "year": 1187,
@@ -1312,7 +1348,7 @@
             "details": "Flumen of Blackthorn passes into Final Twilight, and his filia Goliard takes his place; Magnantrum falls apart the same year.",
             "changes": [],
             "margin": "",
-            "id": "f581cff36ed8"
+            "id": "afd65ba5eaf0"
           },
           {
             "year": 1194,
@@ -1321,7 +1357,7 @@
             "details": "Blackthorn hosts, Voluntas and Burnham stay away and Semitae cannot be found: the meeting is not quorate, and Stonehenge sends no one to the Grand Tribunal of 1195.",
             "changes": [],
             "margin": "",
-            "id": "b12fa0e1ee24"
+            "id": "c684536309ac"
           },
           {
             "year": 1195,
@@ -1330,7 +1366,7 @@
             "details": "Trutina the Quaesitor joins Burnham, and attends every meeting after.",
             "changes": [],
             "margin": "",
-            "id": "a586fea75ef0"
+            "id": "06e3863241f5"
           },
           {
             "year": 1200,
@@ -1339,7 +1375,7 @@
             "details": "No one attends the meeting of 1200.",
             "changes": [],
             "margin": "",
-            "id": "89f8a04a278a"
+            "id": "cd890839d86b"
           },
           {
             "year": 1201,
@@ -1348,7 +1384,7 @@
             "details": "Maximianus of Bonisagus founds Nigrasaxa; with Voluntas, Schola Pythagoranis and Ungulus he calls a second meeting, quorate, at Blackthorn. The Tribunal meets a year late from now on, and the Redcaps' network is reorganised.",
             "changes": [],
             "margin": "",
-            "id": "8dcf5310739c"
+            "id": "7ecc5ec18bf6"
           },
           {
             "year": 1208,
@@ -1357,7 +1393,7 @@
             "details": "The meeting rules that no covenant may circulate more than two pounds of magical silver a resident a year.",
             "changes": [],
             "margin": "",
-            "id": "94933986815a"
+            "id": "0174f7f4b8cb"
           },
           {
             "year": 1210,
@@ -1366,7 +1402,7 @@
             "details": "Stephen Eruditus of Jerbiton founds Libellus with six young magi.",
             "changes": [],
             "margin": "",
-            "id": "76de06003a94"
+            "id": "341d686f9a05"
           },
           {
             "year": 1216,
@@ -1375,7 +1411,7 @@
             "details": "Immanola, who has sat twelve years gazing into a pool at Cad Gadu, is declared to have entered Final Twilight; House Ex Miscellanea elects Ebroin Primus (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "87c5a0fc82b5"
+            "id": "1c988a535ed0"
           },
           {
             "year": 1220,
@@ -1384,7 +1420,7 @@
             "details": "William Fireheart of Flambeau, of Ungulus, loses a Wizard's War to a magus of Fudarus in the Normandy Tribunal, ending Ungulus's line of Flambeau magi.",
             "changes": [],
             "margin": "",
-            "id": "4642aefcfb19"
+            "id": "01baff123f95"
           }
         ],
         "package_data": {},
@@ -3818,7 +3854,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_exeter",
+            "note": "Its harbour",
+            "id": "2968bec8d3f1"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -4001,7 +4044,7 @@
             "kind": "characters",
             "target_id": "berechiah_ben_natronai_hanakdan",
             "note": "A natural magician",
-            "id": "4ec1e53c891b"
+            "id": "e3f6c89a5c9c"
           }
         ],
         "arms": {},
@@ -4042,25 +4085,25 @@
             "kind": "characters",
             "target_id": "gwrhyr",
             "note": "The island's owner",
-            "id": "19fbdbd7162c"
+            "id": "a95e473de686"
           },
           {
             "kind": "characters",
             "target_id": "culhwch",
             "note": "His adopted filius",
-            "id": "2040c826a1d0"
+            "id": "34c005905e97"
           },
           {
             "kind": "characters",
             "target_id": "ebroin",
             "note": "Not yet told",
-            "id": "314279de57fb"
+            "id": "24c5a37b7222"
           },
           {
             "kind": "covenants",
             "target_id": "cad_gadu",
             "note": "The covenant at risk",
-            "id": "4c8326718652"
+            "id": "a66a4a9d2a47"
           }
         ],
         "arms": {},
@@ -4090,13 +4133,13 @@
             "kind": "covenants",
             "target_id": "voluntas",
             "note": "Encroaching",
-            "id": "d5ab97ddd956"
+            "id": "1706daf9eb11"
           },
           {
             "kind": "covenants",
             "target_id": "ungulus",
             "note": "The covenant at risk",
-            "id": "40d72e0771fa"
+            "id": "62143eaf2c12"
           }
         ],
         "arms": {},
@@ -4126,19 +4169,19 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "One of the three",
-            "id": "c22cda381989"
+            "id": "996f77eb4766"
           },
           {
             "kind": "covenants",
             "target_id": "libellus",
             "note": "One of the three",
-            "id": "c9c3271be51e"
+            "id": "28c0047deed9"
           },
           {
             "kind": "covenants",
             "target_id": "nigrasaxa",
             "note": "One of the three",
-            "id": "513de7572f66"
+            "id": "bf3d51f7d419"
           }
         ],
         "arms": {},
@@ -4168,7 +4211,7 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "The covenant",
-            "id": "14def212c8ae"
+            "id": "7fbc6a1f36be"
           }
         ],
         "arms": {},
@@ -4198,19 +4241,19 @@
             "kind": "neighbours",
             "target_id": "nicola_de_hay",
             "note": "A party",
-            "id": "11039cf65951"
+            "id": "79836d644ea1"
           },
           {
             "kind": "neighbours",
             "target_id": "william_longespee_earl_of_salisbury",
             "note": "A party",
-            "id": "cb123326eabe"
+            "id": "9d1365e4b142"
           },
           {
             "kind": "neighbours",
             "target_id": "falkes_de_br_aut",
             "note": "A party",
-            "id": "b5692d34ad57"
+            "id": "c6cb17f414fb"
           }
         ],
         "arms": {},
@@ -4241,7 +4284,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "Its target",
-            "id": "1f5d4a6598ce"
+            "id": "9c27d4b305e8"
           }
         ],
         "arms": {},
@@ -4296,7 +4339,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "The accused",
-            "id": "d4fb0be5b0bf"
+            "id": "0c000fd75bff"
           }
         ],
         "arms": {},
@@ -4327,7 +4370,7 @@
             "kind": "covenants",
             "target_id": "burnham",
             "note": "The covenant",
-            "id": "92f711633d4f"
+            "id": "c1e1c32aa064"
           }
         ],
         "arms": {},
@@ -4382,9 +4425,34 @@
             "kind": "characters",
             "target_id": "junius",
             "note": "The maker",
-            "id": "7c637ae7c40a"
+            "id": "c11648911beb"
           }
         ],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_exeter",
+        "name": "The harbour of Exeter",
+        "kind": "place",
+        "summary": "The harbour of the town of Exeter.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "england",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
         "arms": {},
         "secrets": ""
       }
@@ -30521,7 +30589,7 @@
             "kind": "neighbours",
             "target_id": "the_bishop_of_hereford",
             "note": "The bishop he serves",
-            "id": "8fe01c4c9883"
+            "id": "67b133688e85"
           }
         ],
         "agents": [],
@@ -30747,6 +30815,7 @@
     "creatures": [],
     "enchanted_devices": [],
     "books_in_play": null,
+    "overlays": [],
     "sources": [],
     "hidden_catalogs": [],
     "hidden_entries": {},
@@ -30782,6 +30851,7 @@
     "saved_by": "",
     "marriages": []
   },
+  "key": "stonehenge",
   "book": "HtM",
   "source": "Heirs to Merlin: The Stonehenge Tribunal, by Atlas Games, content under the Creative Commons Attribution-ShareAlike 4.0 licence; summarised, not quoted.",
   "assumptions": "pack-assumptions-stonehenge",

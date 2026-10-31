@@ -1185,10 +1185,12 @@ written in the place's Description or Secrets: the book's minigame isn't a rule.
 Crisp Winds lives on a flotilla that follows a route round the Mediterranean,
 harvesting vis at auspicious times. It has the Constantly Mobile Hook.
 
-1. **Mark the water.** In The Region, add the sea and the harbours it uses as
-   Places: an **Open water** Place with no aura, and **Port** or **Anchorage**
-   in the **Waters** field of the rest. A town isn't a Place, so give a harbour
-   town a Place of its own.
+1. **Mark the water.** The book packs already mark their ports, anchorages and
+   seas. For anywhere else, add the sea and the harbours it uses as Places in
+   The Region: an **Open water** Place with no aura, and **Port** or
+   **Anchorage** in the **Waters** field of the rest. A town isn't a Place, so
+   give a harbour town a Place of its own, with the town's aura: Divine 3 for a
+   town or city, 2 for a village.
 2. **Log where it is.** Add a Stop at the Place it is at now. Its aura is that
    Place's from now on, and [Whereabouts](help:section-cov-whereabouts) shows on
    its Overview.

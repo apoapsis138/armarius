@@ -65,10 +65,10 @@ from ..models import (
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
 from ..places import RUINED
-from ..rules import aging, warping
+from ..rules import aging, mobile, warping
 from ..rules import creation_access as access
 from ..rules import egyptian_tombs as et
-from ..rules.sites import PLACE
+from ..rules.sites import PLACE, WATERS
 from ..rules.xp import ability_xp, art_xp
 from ..threats import DORMANT
 from ..tombs import TombCurse, TombTrap, TombWard
@@ -232,6 +232,11 @@ def dormant(threat: Neighbour) -> Neighbour:
     """Mark a threat as not yet begun: More, Begin This Story starts it."""
     threat.details[DORMANT] = True
     return threat
+
+
+#: The Divine aura over most of a town or city, and of a village (Definitive
+#: Edition p. 418).
+DIVINE_CITY_AURA, DIVINE_VILLAGE_AURA = 3, 2
 
 
 class Builder:
@@ -818,6 +823,37 @@ class Builder:
             arms=arms,
             details={"charter": charter, "population": population, "council": council},
         )
+
+    def harbour(self, town: Neighbour, *, aura: int = DIVINE_CITY_AURA) -> Neighbour:
+        """A Place for ships at `town`, beside it in its region, which the
+        town links to: a stop must be a Place, and none can sit in a Town."""
+        harbour = self.named_port(
+            town.name,
+            inside=self.saga.neighbour(town.place_id),
+            summary=f"The harbour of the town of {town.name}.",
+            aura=aura,
+        )
+        self.link(town, "places", harbour, "Its harbour")
+        return harbour
+
+    def named_port(
+        self,
+        name: str,
+        *,
+        inside: Neighbour | None,
+        summary: str,
+        aura: int = DIVINE_CITY_AURA,
+    ) -> Neighbour:
+        """A harbour Place, with its own Divine aura."""
+        harbour = self.place(
+            f"The harbour of {name}",
+            inside=inside,
+            summary=summary,
+            realm="Divine",
+            aura=aura,
+        )
+        harbour.details[WATERS] = mobile.PORT
+        return harbour
 
     def lord(
         self,

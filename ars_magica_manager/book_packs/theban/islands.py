@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ...rules import mobile, sites
+from ...rules import sites
 from ..builder import Builder, joined_lines, paragraphs, vf_art
 from ..generated import Profile, apply
 
@@ -1323,17 +1323,10 @@ def _sanctum_ship(b: Builder, name: str, around: Neighbour, words: str) -> Neigh
 
 def _travelling(b: Builder, p: dict[str, Neighbour], favonius: Covenant) -> None:
     """The fleet and its two sanctum ships go with the covenant, and
-    Andros is its home port (The Sundered Eagle pp. 77, 84). No route is
-    printed."""
+    Andros, whose harbour book_packs.waters adds, is its home port (The
+    Sundered Eagle pp. 77, 84). No route is printed."""
     for key in ("favonius_fleet", "philomela", "tereus"):
         p[key].details[sites.TRAVELS_WITH] = favonius.id
-    harbour = b.place(
-        "The harbour of Andros",
-        inside=p["andros"],
-        summary="One of the two great ports of the Cyclades, famed for its "
-        "shipwrights, and the home base of the ship-borne covenant of Favonius.",
-    )
-    harbour.details[sites.WATERS] = mobile.PORT
 
 
 def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:

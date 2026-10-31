@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.62.1",
   "kind": "pack",
   "name": "Lands of the Nile",
   "from_saga": "Lands of the Nile",
@@ -2494,7 +2494,8 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "waters": "Open water"
         },
         "attitudes": [],
         "favours": [],
@@ -2944,7 +2945,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_alexandria",
+            "note": "Its harbour",
+            "id": "3f93d789d5b0"
+          }
+        ],
         "arms": {},
         "secrets": "No one has noticed that the city's nights make no economic sense. Lamp oil is why other ports sleep, and there is no satisfactory explanation for the cheap oil here. Pilgrims think it one of the sultan's bounties; his servants assume nearby farms make it cheaply, and do not look, since a tax-free city could grow diamonds on trees for all the law cares. Across the Mediterranean the Quaesitores would be looking for a magus making it with Creo. If a covenant settles in Alexandria they will ask for a full investigation, and if unsatisfied send Quaesitores and hoplites, a plain message that Hermetic law now reaches North Africa (p. 63)."
       },
@@ -3014,7 +3022,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_damietta",
+            "note": "Its harbour",
+            "id": "4d20667582fe"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -3268,7 +3283,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_aydhab",
+            "note": "Its harbour",
+            "id": "774da8f6fe3f"
+          }
+        ],
         "arms": {},
         "secrets": "Most of the city seems to be falling under the sway of evil (p. 57)."
       },
@@ -3336,7 +3358,8 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "waters": "Open water"
         },
         "attitudes": [],
         "favours": [],
@@ -6097,7 +6120,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_badi",
+            "note": "Its harbour",
+            "id": "cf3d140b4fb5"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6119,7 +6149,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_sawakin",
+            "note": "Its harbour",
+            "id": "29b544a07976"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6739,7 +6776,7 @@
             "kind": "places",
             "target_id": "ceto_s_well",
             "note": "Ceto's old hunting ground",
-            "id": "c64c9316b47c"
+            "id": "e9d035598170"
           }
         ],
         "arms": {},
@@ -6907,7 +6944,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_adulis",
+            "note": "Its harbour",
+            "id": "9ea60980beb9"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6951,7 +6995,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_massawa",
+            "note": "Its harbour",
+            "id": "44d4569d971a"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -7411,7 +7462,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_zeila",
+            "note": "Its harbour",
+            "id": "b580bea35bac"
+          }
+        ],
         "arms": {},
         "secrets": "The mosque has a Divine aura of 5 (p. 117)."
       },
@@ -8421,7 +8479,8 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "waters": "Port"
         },
         "attitudes": [],
         "favours": [],
@@ -8470,7 +8529,8 @@
               "enter": "",
               "notes": "The book prints no aura here. It leads to a part of the Magic Realm much like the Ionian Sea."
             }
-          ]
+          ],
+          "waters": "Anchorage"
         },
         "attitudes": [],
         "favours": [],
@@ -9345,6 +9405,231 @@
         "links": [],
         "arms": {},
         "secrets": "They hold a Faith point, and no vis can be gathered while they lie there. Whoever moves them has dreams, and her spirit promises the vis sites' secrets once they reach the bishop in Adulis, if the magi can manage that unnoticed (p. 139)."
+      },
+      {
+        "id": "the_harbour_of_alexandria",
+        "name": "The harbour of Alexandria",
+        "kind": "place",
+        "summary": "The harbour of the town of Alexandria.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "egypt",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_damietta",
+        "name": "The harbour of Damietta",
+        "kind": "place",
+        "summary": "The harbour of the town of Damietta.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "egypt",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_aydhab",
+        "name": "The harbour of 'Aydhab",
+        "kind": "place",
+        "summary": "The harbour of the town of 'Aydhab.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "egypt",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_sawakin",
+        "name": "The harbour of Sawakin",
+        "kind": "place",
+        "summary": "The harbour of the town of Sawakin.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_red_sea_hills",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_badi",
+        "name": "The harbour of Badi",
+        "kind": "place",
+        "summary": "The harbour of the town of Badi.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_red_sea_hills",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_adulis",
+        "name": "The harbour of Adulis",
+        "kind": "place",
+        "summary": "The harbour of the town of Adulis.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "medri_bahri",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_massawa",
+        "name": "The harbour of Massawa",
+        "kind": "place",
+        "summary": "The harbour of the town of Massawa.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "medri_bahri",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_zeila",
+        "name": "The harbour of Zeila",
+        "kind": "place",
+        "summary": "The harbour of the town of Zeila.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "bet_amhara",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_qusayr",
+        "name": "The harbour of Qusayr",
+        "kind": "place",
+        "summary": "One of the rival ports of the Red Sea.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "egypt",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the region",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
       }
     ],
     "characters": [
@@ -9514,7 +9799,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_imhotep",
             "note": "",
-            "id": "62158f180fa3"
+            "id": "e3d373f7124f"
           }
         ],
         "agents": [],
@@ -9709,7 +9994,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_marcus_antonius",
             "note": "",
-            "id": "e5bf2ca2e30d"
+            "id": "5c3d7e75260d"
           }
         ],
         "agents": [],
@@ -10092,7 +10377,7 @@
             "kind": "buried at",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "8078ddff0ee3"
+            "id": "b1272fd7e64c"
           }
         ],
         "agents": [],
@@ -10287,7 +10572,7 @@
             "kind": "knows of",
             "target_id": "the_tomb_of_queen_cleopatra",
             "note": "",
-            "id": "a1a120293730"
+            "id": "ad196b463e20"
           }
         ],
         "agents": [],
@@ -14655,7 +14940,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "b3f03df1d03d"
+            "id": "bb66f06385d4"
           }
         ],
         "agents": [],
@@ -15044,7 +15329,7 @@
             "kind": "places",
             "target_id": "siwa_oasis",
             "note": "Lives by the oasis",
-            "id": "182c490b8906"
+            "id": "000153277cbc"
           }
         ],
         "agents": [],
@@ -15550,7 +15835,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "8169649a3f8e"
+            "id": "56ea1b7f6f77"
           }
         ],
         "agents": [],
@@ -15910,7 +16195,7 @@
             "kind": "places",
             "target_id": "ikhmindi",
             "note": "Lives here",
-            "id": "e7a719bfe1cd"
+            "id": "0df888a63a86"
           }
         ],
         "agents": [],
@@ -16407,7 +16692,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "0ef32d96a067"
+            "id": "21532744f611"
           }
         ],
         "agents": [],
@@ -16793,7 +17078,7 @@
             "kind": "places",
             "target_id": "the_village_south_of_adulis",
             "note": "Sails from here",
-            "id": "35ca19272414"
+            "id": "bac6fbf329a6"
           }
         ],
         "agents": [],
@@ -16975,7 +17260,7 @@
             "attack": 10,
             "defense": 4,
             "damage": 13,
-            "id": "0c32bb5ef46f"
+            "id": "690c02d69681"
           },
           {
             "name": "Stomp",
@@ -16983,7 +17268,7 @@
             "attack": 9,
             "defense": 0,
             "damage": 11,
-            "id": "b2bd31c45e98"
+            "id": "46b5fc434cd2"
           }
         ],
         "soak": 6,
@@ -17342,7 +17627,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 8,
-            "id": "b146efe28b5a"
+            "id": "9413e4e3fdc2"
           }
         ],
         "soak": 12,
@@ -17408,7 +17693,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. Anyone who meets its eyes when it has raised its head falls dead; lifting the head takes a round. PeCo(An) 40 (Base 30, +1 Eye, +1 requisite), a Greater Power (40 levels, -2 Might cost).",
-            "id": "cb318fc4b699"
+            "id": "d9714cfab6d6"
           },
           {
             "name": "Noxious Breath",
@@ -17422,7 +17707,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Plants it breathes on turn poisonous to people and animals and streak with black. An eater rolls Stamina stress against 9 or takes a Light Wound and is violently ill for a day; a botch makes it Medium. Medicine, not Chirurgy, treats it. PeHe 15 (Base 3, +2 Voice, +2 Group), a Lesser Power (15 levels, -3 Might cost with 5 mastery points from Improved Powers).",
-            "id": "3e6354ac0452"
+            "id": "7e13d24a050e"
           },
           {
             "name": "Paralyzing Stench",
@@ -17436,7 +17721,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Animal. It breathes out a foul choking cloud, and in the next round any human or animal within 3 paces who can smell it loses all bodily movement until it stops huffing or moves off. ReCo(An) 25 (Base 5, +1 Conc, +2 Scent, +1 requisite), a Lesser Power (25 levels, -2 Might cost and +2 Init with 20 mastery points from Improved Powers).",
-            "id": "ab780b751975"
+            "id": "84bf1e26e5bb"
           }
         ],
         "vis": [
@@ -17444,7 +17729,7 @@
             "pawns": 3,
             "art": "Perdo",
             "where": "in its eyes",
-            "id": "93a8f9ada09d"
+            "id": "2fd00d934e5c"
           }
         ],
         "equipment": "",
@@ -17648,7 +17933,7 @@
             "attack": 10,
             "defense": 7,
             "damage": 12,
-            "id": "d2a1747a92bf"
+            "id": "8a914760f32f"
           }
         ],
         "soak": 12,
@@ -17952,7 +18237,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "021847fbf5ae"
+            "id": "f6a6cd5316d2"
           },
           {
             "name": "Stomp",
@@ -17960,7 +18245,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "f8c67fd823e9"
+            "id": "558fbe833005"
           },
           {
             "name": "Trunk (grapple)",
@@ -17968,7 +18253,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "ae3d59a46992"
+            "id": "8346db353440"
           }
         ],
         "soak": 10,
@@ -18187,7 +18472,7 @@
             "attack": 8,
             "defense": 9,
             "damage": -4,
-            "id": "f741d9febd0f"
+            "id": "13ba5bef4750"
           }
         ],
         "soak": 3,
@@ -18428,7 +18713,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "893f3180633f"
+            "id": "0e5b99fa5cce"
           },
           {
             "name": "Dodge",
@@ -18436,7 +18721,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "051985b7db2e"
+            "id": "6c7e7f1b6832"
           }
         ],
         "soak": 3,
@@ -18656,7 +18941,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "5db785f9cf92"
+            "id": "4d17af058bb4"
           },
           {
             "name": "Kick (as hoof)",
@@ -18664,7 +18949,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 2,
-            "id": "04146a371a7d"
+            "id": "f70cc6697adf"
           },
           {
             "name": "Thrown Stone",
@@ -18672,7 +18957,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 6,
-            "id": "d135a8faefd8"
+            "id": "38dd077b0311"
           }
         ],
         "soak": 4,
@@ -18898,7 +19183,7 @@
             "attack": 10,
             "defense": 6,
             "damage": 9,
-            "id": "e539681457c1"
+            "id": "92732512a0f3"
           },
           {
             "name": "Grapple",
@@ -18906,7 +19191,7 @@
             "attack": 8,
             "defense": 12,
             "damage": null,
-            "id": "e235b0a7ebe7"
+            "id": "9c90206dd510"
           }
         ],
         "soak": 3,
@@ -19133,7 +19418,7 @@
             "attack": 11,
             "defense": 9,
             "damage": -3,
-            "id": "6e1133c0c186"
+            "id": "97790d7340a6"
           },
           {
             "name": "Evasion",
@@ -19141,7 +19426,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "261e626d4b13"
+            "id": "45e0319856e2"
           }
         ],
         "soak": 1,
@@ -20560,7 +20845,7 @@
             "attack": 13,
             "defense": 8,
             "damage": 11,
-            "id": "53b856bf56b8"
+            "id": "e63879615361"
           },
           {
             "name": "Teeth",
@@ -20568,7 +20853,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 8,
-            "id": "7a8f691197de"
+            "id": "08e32da15abc"
           }
         ],
         "soak": 12,
@@ -20655,7 +20940,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps the animals round it calm and quiet while it kills, up to 50 cows or the like. ReAn 45 (Base 10, +2 Voice, +2 Sun, +2 Group, +1 Size), a Greater Power (45 levels, -3 Might cost, +3 Init with Improved Powers).",
-            "id": "8dfe04591046"
+            "id": "017e2f995961"
           }
         ],
         "vis": [],
@@ -21044,7 +21329,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 12,
-            "id": "b0ade74c22ba"
+            "id": "ac7990c322c9"
           },
           {
             "name": "Bite",
@@ -21052,7 +21337,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 8,
-            "id": "e25ce8b5b838"
+            "id": "8abaa48498ae"
           }
         ],
         "soak": 6,
@@ -21118,7 +21403,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its war cry, like a wolf's howl, a hyena's mocking laugh or a setbeast's chitter by various reports. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "d93c59db3554"
+            "id": "02a0f4939c61"
           },
           {
             "name": "Damaging Effect",
@@ -21132,7 +21417,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes all its weapons exceptionally sharp for two minutes: Damage +5. (Base 5, +1 Part, +1 Diameter; base below the Hermetic level, as Realms of Power: Faerie p. 58.)",
-            "id": "411848855528"
+            "id": "984a4441a2f5"
           },
           {
             "name": "Decapitate",
@@ -21146,7 +21431,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cleanly removes the head of a victim struck in combat. (Base 40 instant death, +1 Touch, 5 levels on cost.)",
-            "id": "b244ba5c67e6"
+            "id": "e884570363f4"
           }
         ],
         "vis": [
@@ -21154,7 +21439,7 @@
             "pawns": 5,
             "art": "",
             "where": "in the skull of a dog or hyena, found when the body crumbles at death",
-            "id": "b8a5f112d709"
+            "id": "5f851d63cd66"
           }
         ],
         "equipment": "Knives of obsidian or alchemically toughened bronze; light Egyptian armour (boots, pectoral, greaves) or clothes, jewellery.",
@@ -21314,7 +21599,7 @@
             "attack": 17,
             "defense": 4,
             "damage": 27,
-            "id": "b96825338108"
+            "id": "0579a7b7a0d1"
           },
           {
             "name": "Bite",
@@ -21322,7 +21607,7 @@
             "attack": 14,
             "defense": 1,
             "damage": 24,
-            "id": "d29976fb7416"
+            "id": "c2ea2b7dae17"
           }
         ],
         "soak": 8,
@@ -21388,7 +21673,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyses completely all who hear its hunting roar, like a tremendous lion's, deep enough to rattle the bones. (Base 5, +2 Voice, +2 Sun, +2 Group.)",
-            "id": "7cf6993af709"
+            "id": "8faa9b5fa427"
           },
           {
             "name": "Spirit Away",
@@ -21402,7 +21687,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable Might, Init n/a. See Realms of Power: Faerie ch. 2: sweeps mortals into Faerie, more easily as they transgress sacred or moral bounds. Its lands there look much like Giza at dawn, where it hunts and eats its victims. It has +10 Might in Faerie.",
-            "id": "d8bcded4f6d8"
+            "id": "104c6398068f"
           },
           {
             "name": "Extend Glamour",
@@ -21416,7 +21701,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. A God of Dawn: in Faerie it may make it dawn at will, gaining 10 Might, and uses cascading dawns to strip away effects that end at dawn: magi must let Parma Magica fail or spend each round on the ritual. It also tells it where its quarry is. It must penetrate, but few can resist its Might.",
-            "id": "c792cc030284"
+            "id": "3c1f106e93fc"
           }
         ],
         "vis": [
@@ -21424,7 +21709,7 @@
             "pawns": 13,
             "art": "",
             "where": "the skull of a pharaoh built into it",
-            "id": "789a98d45e02"
+            "id": "a2b30e580ab7"
           }
         ],
         "equipment": "",
@@ -21579,7 +21864,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 3,
-            "id": "9f51a01a491e"
+            "id": "dadbc8d77fcb"
           },
           {
             "name": "Agricultural or craft tool",
@@ -21587,7 +21872,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 6,
-            "id": "5a8a4313d8aa"
+            "id": "f9fe8c24a261"
           }
         ],
         "soak": 1,
@@ -21653,7 +21938,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stops mothers making milk for their babies. (ReCo 3, the symptoms of a minor illness, Art & Academe p. 57, +1 Touch, +2 Sun; Realms of Power: Magic p. 102.)",
-            "id": "25aca995d7c3"
+            "id": "442dd4e8b763"
           },
           {
             "name": "Dream Manipulation",
@@ -21667,7 +21952,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enters a victim's dreams, and though it cannot change them at once, can darken them and add frights. (After the weaker Envisioning, Realms of Power: The Infernal p. 32.)",
-            "id": "7428a897d2fd"
+            "id": "bc97e10593e0"
           },
           {
             "name": "Ghost Touch",
@@ -21681,7 +21966,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost, Init Qik - Might spent. Moves objects not held or fastened: 5 pounds for 1 point, doubled per extra point. Hurled, it uses Thrown Weapon, damage +5 per point. With a Martial Ability it may fight through the power, on its own Abilities and Characteristics; physical attacks must Penetrate. It lasts until the object is dropped. (Focus power, ReTe25, Realms of Power: Magic p. 102.)",
-            "id": "2cfe4c1f1acc"
+            "id": "62288beb0f16"
           },
           {
             "name": "Lesser Eidolon",
@@ -21695,7 +21980,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An immaterial illusory form to deal with mortals, lasting until no longer needed: a see-through image of the person at their best, so a man has a wise old face and a twenty-year-old's belly. (CrIm15: Base 2, +1 Touch, +2 Conc, +2 move at command, 1 intricacy; redesigned from Realms of Power: Magic p. 102.)",
-            "id": "0eeabf5466e6"
+            "id": "ca7468082103"
           },
           {
             "name": "Possession",
@@ -21709,7 +21994,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 or more points. If it penetrates, the mut directly controls the victim. A supernatural power of the host, spells included, costs 1 Might per magnitude. An act against the host's nature means beating her Personality Trait roll with a stress die + Might spent; the storyguide may modify the trait (Entrancement, ArM5 p. 65). Both costs apply if both are true. Under direct control she has the mut's Magic Resistance but is stopped by wards that would stop it; acting freely she has neither. (Realms of Power: Faerie p. 71.)",
-            "id": "e66d62a3d095"
+            "id": "72c0461eaef0"
           }
         ],
         "vis": [
@@ -21717,7 +22002,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "a prized possession",
-            "id": "a1b850a4be72"
+            "id": "ebe63f2c3079"
           }
         ],
         "equipment": "Clothes and grave goods. The ghost's weapon reappears in its hand when needed. Some soldier ghosts wear armour.",
@@ -21986,7 +22271,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 5,
-            "id": "61db617ed284"
+            "id": "4b42d5e5cb19"
           }
         ],
         "soak": 0,
@@ -22038,7 +22323,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a statue of itself as a body. (ReTe 25; Personal Power, 25 levels, -3 Might cost, +2 Init from Improved Powers.)",
-            "id": "6b0c367b35ae"
+            "id": "84232b3b7b0e"
           },
           {
             "name": "Thief after death",
@@ -22052,7 +22337,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries material objects in his hands. (Base 3, +1 Touch, +1 Conc; Lesser Power, 10 levels, -1 Might cost.)",
-            "id": "6bc934ee6592"
+            "id": "42a1b857a200"
           },
           {
             "name": "Strangler",
@@ -22066,7 +22351,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Chokes a victim with his hands, costing a Fatigue level. (PeCo 15: Base 10, +1 Touch; Lesser Power, 15 levels, -3 Might cost, +1 Init.)",
-            "id": "ad8321e825dd"
+            "id": "3eb034009984"
           }
         ],
         "vis": [
@@ -22074,7 +22359,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "hand",
-            "id": "c7fa6887f9ad"
+            "id": "37ebba22a2ae"
           }
         ],
         "equipment": "",
@@ -22285,7 +22570,7 @@
             "attack": 17,
             "defense": 14,
             "damage": 12,
-            "id": "c17167330f33"
+            "id": "ab0aaa71693f"
           },
           {
             "name": "Kick",
@@ -22293,7 +22578,7 @@
             "attack": 8,
             "defense": 5,
             "damage": 11,
-            "id": "d9346043d59c"
+            "id": "2e5d186ca1c8"
           }
         ],
         "soak": 21,
@@ -22330,7 +22615,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReTe30; Personal Powers x2 (30 levels, -3 Might cost, +1 Init).",
-            "id": "b73f654bb85e"
+            "id": "162d4ab96793"
           }
         ],
         "vis": [
@@ -22338,7 +22623,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "axe",
-            "id": "1cd4fcf0bef1"
+            "id": "426120c3ee31"
           }
         ],
         "equipment": "Axe; breastplate (Egyptians did not use full scale armour).",
@@ -22884,7 +23169,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 16,
-            "id": "99118ed7c796"
+            "id": "b0c742de6896"
           },
           {
             "name": "Bow",
@@ -22892,7 +23177,7 @@
             "attack": 8,
             "defense": 4,
             "damage": 8,
-            "id": "33e2aeecafbb"
+            "id": "91dc36aa7d1b"
           }
         ],
         "soak": 11,
@@ -23126,7 +23411,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Creates a swarm of 60,000 mice under his complete control. (Base 15, +2 Sun, +2 Group, +1 control as a Rego requisite, +2 mice can turn immaterial to pass barriers, as Muto Mentem requisites.)",
-            "id": "6efdd06e1ae9"
+            "id": "4acca727fedd"
           },
           {
             "name": "Immateriality",
@@ -23140,7 +23425,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Immaterial until sunrise or nightfall. (Base 30, +2 Sun.)",
-            "id": "848f1de23085"
+            "id": "c511c30178a5"
           },
           {
             "name": "Invisibility",
@@ -23154,7 +23439,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility, ArM5 p. 146. (Base 4, +2 Sun, +1 moving image, 5 levels spent to reduce cost.)",
-            "id": "ada5a5b916e3"
+            "id": "bd37c1e86b8d"
           },
           {
             "name": "Lord of the Black",
@@ -23168,7 +23453,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Black (fresh water, rain, fertile earth and the like), at 1 Might per Hermetic magnitude.",
-            "id": "2e01ddd07e18"
+            "id": "7995d42d46f8"
           },
           {
             "name": "Lord of the Red",
@@ -23182,7 +23467,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: duplicates non-ritual Creo or Rego spells of the Magic of the Red (barren Terram, parching winds and the like), at 1 Might per Hermetic magnitude.",
-            "id": "90faeab80c8c"
+            "id": "a527d30054b5"
           },
           {
             "name": "Silent Motion",
@@ -23196,7 +23481,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: he moves without sound. (Base 3, +2 Sun, +1 constant, 5 levels spent to reduce cost.)",
-            "id": "8ed81e637e99"
+            "id": "5041e05b2c44"
           }
         ],
         "vis": [
@@ -23204,7 +23489,7 @@
             "pawns": 10,
             "art": "Rego",
             "where": "a small mouse statuette found implausibly in the brain",
-            "id": "67f5c3cbe02a"
+            "id": "0e59d0eef9c8"
           }
         ],
         "equipment": "Palace in the Field of Reeds, mace, robes, vast amounts of money. Sometimes a full suit of heavy armour.",
@@ -23372,7 +23657,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 13,
-            "id": "0876cb264e77"
+            "id": "20f90c192fd1"
           }
         ],
         "soak": 10,
@@ -23719,7 +24004,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 6,
-            "id": "f707b90f760e"
+            "id": "cacabf88b780"
           },
           {
             "name": "Dodge",
@@ -23727,7 +24012,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "769c19ffa860"
+            "id": "5c5375cc2474"
           }
         ],
         "soak": 3,
@@ -23828,7 +24113,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs an emotion in all who hear it, commonly fear, lust or wrath, or deepens one already felt. A stress roll on a fitting Personality Trait against Ease Factor 9 overcomes it. CrMe 30 (Base 4, +2 Voice, +2 Sun, +2 Group); Lesser Power x2 (50 levels, -4 Might points).",
-            "id": "765f2248411b"
+            "id": "5bff37026824"
           },
           {
             "name": "Skin of Man or Beast",
@@ -23842,7 +24127,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the form of a man or woman of the area. MuAn 20 (Base 10, +2 Sun); Personal Power (20 levels, -1 Might point).",
-            "id": "3847d38cc7a5"
+            "id": "491f8d692098"
           }
         ],
         "vis": [
@@ -23850,7 +24135,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its tongue",
-            "id": "27bc2e74313c"
+            "id": "2ede0cf7495a"
           }
         ],
         "equipment": "",
@@ -24162,7 +24447,7 @@
             "attack": 11,
             "defense": 10,
             "damage": 24,
-            "id": "0bfd30da214d"
+            "id": "8c9aeddf431b"
           },
           {
             "name": "Fangs",
@@ -24170,7 +24455,7 @@
             "attack": 14,
             "defense": -5,
             "damage": 22,
-            "id": "d2b271e71c45"
+            "id": "5701d02fe08e"
           }
         ],
         "soak": 16,
@@ -24257,7 +24542,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: +5 Damage to anyone within one pace. MuAu 25 (Base 5, +1 Part, +2 Sun, +1 Constant); Lesser Power (25 levels). No Initiative is printed.",
-            "id": "240cec35daa0"
+            "id": "6082d63c782f"
           },
           {
             "name": "Venomous Bite (non-magical)",
@@ -24271,7 +24556,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Compare its attack advantage to the target's armor Protection, not Soak. If it exceeds that, add adder venom (ArM5 p. 180), wound or no wound.",
-            "id": "3931e5fbe24a"
+            "id": "745c0e76dec1"
           },
           {
             "name": "Flight",
@@ -24285,7 +24570,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Flies, with Athletics for hard maneuvers, but cannot fight at full speed, nor fly heavily encumbered or with a passenger of its Size or more unless another faerie shares the load. ReAn 40 (Base 15, +2 Sun, +3 Size); Personal Power x2 (40 levels, -2 Might Cost).",
-            "id": "3f983bb86477"
+            "id": "aec5508a8269"
           },
           {
             "name": "Fiery Breath",
@@ -24299,7 +24584,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A gout of flame: +20 damage to all in a 60-degree arc 50 paces long. CrIg 40 (Base 15, +2 Voice, +2 Size, +1 Unnatural Shape); Lesser Power x2 (40 levels, -2 Might Points).",
-            "id": "768c70a9bfdd"
+            "id": "a35942d34553"
           },
           {
             "name": "Lantern Gaze",
@@ -24313,7 +24598,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blinding light shines from its eyes to light its way. CrIg 25 (Base 5, +2 Sun, +2 Size); Lesser Power (25 levels).",
-            "id": "be0b22314aeb"
+            "id": "7ea5f1fb6a60"
           }
         ],
         "vis": [
@@ -24321,7 +24606,7 @@
             "pawns": 9,
             "art": "Aquam",
             "where": "in the scales over its eyes",
-            "id": "5cbdde79e285"
+            "id": "771676056cfc"
           }
         ],
         "equipment": "",
@@ -24638,7 +24923,7 @@
             "attack": 12,
             "defense": 6,
             "damage": 15,
-            "id": "021847fbf5ae"
+            "id": "f6a6cd5316d2"
           },
           {
             "name": "Stomp",
@@ -24646,7 +24931,7 @@
             "attack": 8,
             "defense": 2,
             "damage": 15,
-            "id": "f8c67fd823e9"
+            "id": "558fbe833005"
           },
           {
             "name": "Trunk (grapple)",
@@ -24654,7 +24939,7 @@
             "attack": 5,
             "defense": 2,
             "damage": null,
-            "id": "ae3d59a46992"
+            "id": "8346db353440"
           }
         ],
         "soak": 10,
@@ -24825,7 +25110,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He cannot be seen while he stands still, and shows himself whenever he moves. PeIm 25 (Base 4, +2 Sun, +2 Size, +1 constant effect), a Greater Power (25 levels, -3 Might cost, +2 Init).",
-            "id": "0a3761722660"
+            "id": "303e08ddf0ea"
           }
         ],
         "vis": [],

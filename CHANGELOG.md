@@ -115,6 +115,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.63.0 — 2026-10-31
+
+### Peregrinatio
+
+- The packs now mark where ships can go: 112 ports, 9 anchorages and 12 seas, straits and working rivers, so a ship covenant has somewhere to stop.
+- Each port town has a harbour Place beside it, linked from the town, since a stop must be a Place. Ports the books only name, such as Varna and Collioure, have one too.
+- A harbour holds its own aura: Divine 3 for a town or city and 2 for a village, as the Definitive Edition gives them, or the book's figure where it prints one. Stopping at a port puts a ship's magi inside the Dominion, and the harbours of Andros and Barfleur now do the same.
+
 ## 3.62.1 — 2026-10-31
 
 ### Pagina

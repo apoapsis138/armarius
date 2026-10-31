@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.62.1",
   "kind": "pack",
   "name": "The Lion and the Lily: the Normandy Tribunal",
   "from_saga": "The Lion and the Lily: the Normandy Tribunal",
@@ -50,7 +50,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "d00e73dbe06c",
+            "id": "78fb315d89b3",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -60,7 +60,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "9392702a2c21",
+            "id": "4f2c9f77233e",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -123,19 +123,19 @@
             "kind": "creatures",
             "target_id": "mogidell_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "d07ca98e9463"
+            "id": "5940d19e9b7b"
           },
           {
             "kind": "creatures",
             "target_id": "kerseenn_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "f29010b9f40e"
+            "id": "ed279fab0cec"
           },
           {
             "kind": "creatures",
             "target_id": "arnev_great_spirit_of_ushant",
             "note": "Bound into the covenant's walls",
-            "id": "151ba399a6f6"
+            "id": "1bb62495ba80"
           }
         ],
         "unnamed_magi": 0,
@@ -197,7 +197,7 @@
             "params": {
               "detail": "Fudarus"
             },
-            "id": "48e1522668fe",
+            "id": "3e6bcce311ff",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -207,7 +207,7 @@
             "params": {
               "detail": "Fudarus"
             },
-            "id": "4fba4914d923",
+            "id": "bd909f11e161",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -217,7 +217,7 @@
             "params": {
               "detail": "Atramentum Renatus"
             },
-            "id": "ae1fff53df6d",
+            "id": "66e49921adf2",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -227,7 +227,7 @@
             "params": {
               "detail": "Atramentum Renatus"
             },
-            "id": "6298432d88da",
+            "id": "daf60913844e",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -345,7 +345,7 @@
             "params": {
               "detail": "Atsingani"
             },
-            "id": "c8091d715c84",
+            "id": "aa1ea7f9d25c",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -355,7 +355,7 @@
             "params": {
               "detail": "Atsingani"
             },
-            "id": "f26a6a84f916",
+            "id": "550097a9d873",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -473,7 +473,7 @@
             "params": {
               "detail": "Nidi"
             },
-            "id": "84b87f2d64b3",
+            "id": "48b9c8c9a2b6",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -483,7 +483,7 @@
             "params": {
               "detail": "Nidi"
             },
-            "id": "53391d65349c",
+            "id": "b60765bac448",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -601,7 +601,7 @@
             "params": {
               "detail": "Oleron"
             },
-            "id": "1aa1842d82dc",
+            "id": "8a6f7a174a1a",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -611,7 +611,7 @@
             "params": {
               "detail": "Oleron"
             },
-            "id": "2ca802e614ae",
+            "id": "eba6504c34fc",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -729,7 +729,7 @@
             "params": {
               "detail": "Montverte"
             },
-            "id": "6e1252542865",
+            "id": "088cc09563f1",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -739,7 +739,7 @@
             "params": {
               "detail": "Montverte"
             },
-            "id": "e6b53e4321b5",
+            "id": "477916347b09",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1071,7 +1071,7 @@
             "params": {
               "detail": "Spider's Palace"
             },
-            "id": "5086ba755282",
+            "id": "0b4a58139106",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1081,7 +1081,7 @@
             "params": {
               "detail": "Spider's Palace"
             },
-            "id": "adc092fe4ab8",
+            "id": "7b02998e325a",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1091,7 +1091,7 @@
             "params": {
               "detail": "Requies Aeterna"
             },
-            "id": "8c13b074aaf2",
+            "id": "2be5bd84fe0a",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1101,7 +1101,7 @@
             "params": {
               "detail": "Requies Aeterna"
             },
-            "id": "8a1d3a2a6990",
+            "id": "e3452e5eef0d",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1219,7 +1219,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "e6e75952ce3e",
+            "id": "60b483d66ee0",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1229,7 +1229,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "1ffb5bd78ccc",
+            "id": "cef539d4e8c8",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1347,7 +1347,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "2218da28e5a5",
+            "id": "10cb8ca26a5b",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1357,7 +1357,7 @@
             "params": {
               "detail": "Florum"
             },
-            "id": "513d3f14df63",
+            "id": "ce4a30b1a25c",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1475,7 +1475,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "687b9b76186e",
+            "id": "37740f30d221",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1485,7 +1485,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "247a027f32d2",
+            "id": "18ea3cbcf849",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1603,7 +1603,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "9b3b26bf0276",
+            "id": "e3ec1ae8685a",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1613,7 +1613,7 @@
             "params": {
               "detail": "Exspectatio"
             },
-            "id": "93e3f6afd10e",
+            "id": "ac6aaaf781bc",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1731,7 +1731,7 @@
             "params": {
               "detail": "Dragon's Rest"
             },
-            "id": "ab08787c5695",
+            "id": "0bf4dc1af917",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1741,7 +1741,7 @@
             "params": {
               "detail": "Dragon's Rest"
             },
-            "id": "0b81f7c14dc6",
+            "id": "2823288cb24f",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1751,7 +1751,7 @@
             "params": {
               "detail": "Cunfin"
             },
-            "id": "cb2516928b11",
+            "id": "518f8e3473cd",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1761,7 +1761,7 @@
             "params": {
               "detail": "Cunfin"
             },
-            "id": "b87c49ae93cb",
+            "id": "57d39284e4a5",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1879,7 +1879,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "893dc5ca0091",
+            "id": "9b22733c653a",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -1889,7 +1889,7 @@
             "params": {
               "detail": "Confluensis"
             },
-            "id": "f4b17da00a80",
+            "id": "b5c73dee4ce4",
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
@@ -2027,7 +2027,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "bc9d6842e328"
+            "id": "86c862dd5e16"
           },
           {
             "title": "Augustina of Tytalus, the Traitor",
@@ -2059,7 +2059,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "b3b02d2ef830"
+            "id": "cd8571ef2120"
           },
           {
             "title": "Fengheld's chapter at Cherbourg",
@@ -2091,7 +2091,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "a2e05ee71c37"
+            "id": "cf70ff29d1d6"
           },
           {
             "title": "A Proven\u00e7al claim by language",
@@ -2123,7 +2123,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "23011b75d4db"
+            "id": "67475e102293"
           },
           {
             "title": "Praeda's vis auction",
@@ -2155,7 +2155,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "979505fcd550"
+            "id": "656a05974112"
           },
           {
             "title": "Raiders from over the border",
@@ -2187,7 +2187,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "8c78da255722"
+            "id": "d0a7e1ae0b13"
           },
           {
             "title": "A covenant at the vacant castle",
@@ -2219,7 +2219,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "52e2057ef0cb"
+            "id": "467d5eff5041"
           }
         ],
         "rulings": [
@@ -2228,224 +2228,224 @@
             "year": 1025,
             "says": "Every vis source belongs to a covenant, never to a magus. A source within a day's return march of an established covenant is its seisin, harvested by it alone. Since 1109 the test is exact: a man on foot, with no magic, must go from the covenant's council chamber to the source and back between sunrise and sunset on a day within a month of an equinox. Covenants keep trained runners (cursores) to prove it before the Quaesitores (a fit man covers about 10 + twice his Athletics miles a day cross country, five fewer in wild country and five more on good roads). An unchallenged claim stands; roads built, forests cleared and even a hill moved have stretched the march, and rivals have done the reverse.",
             "case_id": "",
-            "id": "16a2fcdc8fde"
+            "id": "cfe4646df1bd"
           },
           {
             "title": "The Perthean Compact: legacies",
             "year": 1025,
             "says": "A source too far away to be a seisin may be voted the discoverer's legacy: exclusive harvest for seven years. Since 1032 the lease must be renewed by vote at each meeting, and fewer than half the renewals succeed; a source refused becomes a tropaeum. A new find is usually granted without contest, and a legacy may last for many terms when only its holders can reach it. Harvesting another's legacy is the High Crime of depriving a magus of his power, though pleas for mercy are nearly always granted. The holder may grant the harvest to whom it likes, including new magi settling within a day's march, which is how most covenants are founded.",
             "case_id": "",
-            "id": "f3f110f8beb2"
+            "id": "2c3dde0c7429"
           },
           {
             "title": "The Perthean Compact: tropaea",
             "year": 1032,
             "says": "Known sources that are neither seisins nor legacies, and need little effort to harvest, are tropaea, owned by the Tribunal in common and leased for seven years as prizes at the Tourney, with the same exclusive harvest as a legacy. A covenant that would settle within a day's march of one needs the Tribunal's vote, and if it wins, the tropaeum becomes its seisin.",
             "case_id": "",
-            "id": "0113c3444d18"
+            "id": "e2f31108e78f"
           },
           {
             "title": "The Perthean Compact: luctationes",
             "year": 1039,
             "says": "A Tribunal source whose harvest depends on the harvester's skill or daring is a luctatio, a contest open to any magus willing to try; success gives no right to later harvests. The list is public and a copy is kept at Confluensis, though how to win the vis need not be written down. Settling near one needs the Tribunal's leave, which is a little easier to get than for a tropaeum.",
             "case_id": "",
-            "id": "1ae20d080221"
+            "id": "6f6cb58be462"
           },
           {
             "title": "Interim leases and plundering",
             "year": 1025,
             "says": "Whoever finds a vis source reports it to a Quaesitor, who grants an interim lease until the next meeting declares it. An interim lease is not exclusive: a second finder may get one too, and the holders settle it between themselves until the Tribunal rules. Harvesting an unknown source without declaring it is plundering, a Low Crime punished harshly, with fines above three times the vis taken. Vis traded or lent by the Redcaps, once it belongs to magi, is outside the Compact, which governs only gathering.",
             "case_id": "",
-            "id": "1a8733e664c5"
+            "id": "912c8f83d11a"
           },
           {
             "title": "The Library of the Tribunal",
             "year": 1081,
             "says": "Books given to the Tribunal in common, a custom begun by Perpauca of Bonisagus, are kept at Confluensis, their list public, and no one may read them unless they win them at the Tourney. A book won is leased for seven years under a Cow and Calf oath (copies made belong to the Tribunal) and must come back in good order before the next meeting. A magus who gives an original book wins at the next Tourney the lease of one of similar worth, settled by certamen when two authors want the same book. Pamphlets on each spine tell a reader its Quality and Level.",
             "case_id": "",
-            "id": "9d6643e8dcc9"
+            "id": "3c4797c271c2"
           },
           {
             "title": "Mundane resources and raiding",
             "year": 1116,
             "says": "Confirming the rulings of 1081 and 1088: a covenant's food, consumables, building supplies, arms and armour and luxuries are not part of its magi's magical power, so raiding them is no Hermetic crime; books (finished or not), vis, enchanted items and laboratory supplies are. Livestock and covenfolk have no protection (1123), but apprentices, familiars and magical beasts do. A raider may not damage the covenant's buildings (1130) or break the Code in any way during the raid, and must challenge any magus escorting the goods to certamen: losing ends the raid, winning sends the escort a mile off until sunrise. Raids by magi of other Tribunals fall under this Code too, and the Tribunal judges foreign raiders who break it especially harshly.",
             "case_id": "",
-            "id": "da051ace903f"
+            "id": "9f0f82adfd14"
           },
           {
             "title": "The town senex",
             "year": 1200,
             "says": "The covenant nearest a town, its senex, has the better right there: if the senex's agents harm another covenant's interests in the town as a side effect, no ruin has been caused. The senex is the covenant where the town's church bells sound loudest, as a Quaesitor judges; a covenant that cannot hear them has no claim, so many towns have none. Made in Fudarus's favour against its vassal Atramentum over the artificers' guild of Le Conquet, and sometimes used to settle rival claims to urban vis.",
             "case_id": "",
-            "id": "0ed9dadc828a"
+            "id": "374c427c53a2"
           },
           {
             "title": "Urban covenants",
             "year": 1207,
             "says": "A covenant may sit in a town, and its magi's ordinary dealings with townsfolk ruin no one. A lord may grant a covenant a charter, but the magi may take none of its privileges, which would be fealty in all but name; paying a tax as a covenant is allowed, and seeking a charter to fix the limits of a lord's power is commended. Eligible covenfolk may vote and hold town office; magi may not. Made after several covenants took charters from King John and were then asked for soldiers. Fluvius's The Order and Towns (1208) is the standard commentary.",
             "case_id": "",
-            "id": "6ffc3c48697e"
+            "id": "d63f653ffa93"
           },
           {
             "title": "Mundane interference",
             "year": null,
             "says": "No ruling has ever been made. By long precedent a covenant is rarely convicted of meddling unless its actions bring mundane reprisals down on magi, and acting through a mundane 'mask' who never names his Hermetic sponsors protects it even when the mask is punished. Masks give no protection against a charge of depriving a magus of his power, so they cannot be used against a town's senex.",
             "case_id": "",
-            "id": "d2bee5a68890"
+            "id": "8532dea41900"
           },
           {
             "title": "Founding a covenant",
             "year": null,
             "says": "A new covenant needs exclusive access to vis sources yielding at least a pawn a year for each of its magi, and never fewer than four, at its founding (aura vis does not count; losing the source or gaining magi later does not undo it), and a council chamber named to the Tribunal: any meeting place will do, a room, a cave or a grove, but not within a day's journey of another covenant's, by tradition out of reach of the Seven League Stride. Chapter houses may not be used to dodge the Compact; Fengheld's at Cherbourg is treated as a coenobium. Vis owed to a liege still counts.",
             "case_id": "",
-            "id": "19a10f6b9e09"
+            "id": "20217932538b"
           },
           {
             "title": "Eremites and coenobia",
             "year": null,
             "says": "A solitary magus (an eremite) may own no seisin and lives on Tourney leases and luctationes. Magi who band together without meeting the vis rule are a coenobium, not a covenant: they own no seisin, rarely win a legacy, and enter the Tourney as solitary magi, and are looked down on for flouting the Tribunal's ways.",
             "case_id": "",
-            "id": "73a8baafbf5b"
+            "id": "9affb12f2dd0"
           },
           {
             "title": "Oaths of fealty between covenants",
             "year": null,
             "says": "A liege covenant has one oath that all its vassals swear: support from the vassal (usually a vis tithe and its magi's sigils as free proxies), protection from the liege (using those proxies wisely and answering calls for aid on stated terms). The oath is part of the Peripheral Code and enforceable; it ends by agreement or after one side wins a prosecution of the other for default. Covenants still may not swear fealty to a mundane lord. When a liege dies out, all its vassals are free.",
             "case_id": "",
-            "id": "349860892f5f"
+            "id": "1abe47f4b361"
           },
           {
             "title": "Personal vis",
             "year": 1144,
             "says": "Vis that grows in a magus's own person, in his hair, blood and so on, is his alone and outside the Compact. A personal source outside him is still subject to it.",
             "case_id": "",
-            "id": "2361a7379fe4"
+            "id": "0d3ba3241a17"
           },
           {
             "title": "The host drawn by lot",
             "year": null,
             "says": "Since the Schism War the covenant that hosts the next meeting, and the Tourney after it, is drawn by lot from the Tribunal's covenants, not chosen as the Praeco's home. The host finds a secluded Tourney ground within a day's travel, hidden from mundane eyes (the Tribunal can lend a casting tablet for a Moon-duration Shrouded Glen), and must declare its own event to Confluensis by Redcap by the summer solstice before the meeting.",
             "case_id": "",
-            "id": "42c42a8c814a"
+            "id": "afabf6e790fe"
           },
           {
             "title": "The Hermetic Tourney: entry and events",
             "year": null,
             "says": "Held after the meeting's business, usually over three days, with an even number of teams (the Redcaps recruit visitors to make it so) of at most five magi each, besides grogs and companions. A team that is not a recognised Normandy covenant stakes five pawns a magus, added to the prizes. A team starts with a point per member of its covenant (a coenobium's or visitor's magi one each). Six events: the hastiludium, a magical charge on village 'mounts' (20, 10 and 5 points to the semi-finalists); the certamen tournament (25, 15, 8); the dimicatio, forceless spells against a fast-cast defence, penetrating a Parma being a crime (23, 12, 6); each with a point for taking part; the melee of grogs rushing Creo Imaginem 'castles' with blunt weapons and no magic (6, then 2 for second to fourth, 1 for fifth; serious injury forfeits and is fined); the host's choice, a true test of magic it should not win (12, 8, 3, 3); and the deadly joust (20, 8, 3, 3), each with a point for taking part.",
             "case_id": "",
-            "id": "9c08eff891bd"
+            "id": "b4b53577dd35"
           },
           {
             "title": "The Hermetic Tourney: ranks and prizes",
             "year": 1151,
             "says": "Teams are ranked by points, ties going to the older covenant (or the earlier Gauntlet). Ranks win gold prize pawns, spent in rank order for leases until the next Tourney: at first one tropaeum or lump of one Art's vis and one book or item each, then again while pawns remain. A tropaeum costs a pawn for each pawn it yields; a book or item a pawn per 5 Build Points (no charged or limited items); a pawn buys at once 5 pawns of Form vis or 3 of Technique. First is the Siege of Normandy (31 pawns), second the Siege of Valor (24), seventh the Siege of Notatus (17), thirteenth the Siege of Shame (nothing, its prize going to the fourteenth, since an Iberian team disgraced the Tourney in 1151) and twenty-first the Siege of Alms (6 kept and 6 given to the teams below); each named rank brings a Hermetic Reputation of 2 for seven years. A prize not returned brings charges and a ban from the next Tourney.",
             "case_id": "",
-            "id": "cff677b39b91"
+            "id": "5e80e4f48e0a"
           },
           {
             "title": "The first meeting",
             "year": 871,
             "says": "The Tribunal of the West Franks first meets with Confluensis, Pagus, Baiocassium, Bibracte and Sinapis; Fudarus and Branugurix attend the Britannian Tribunal instead.",
             "case_id": "",
-            "id": "6cdfeb45f2ef"
+            "id": "c7eb0d493302"
           },
           {
             "title": "Adela of Jerbiton acquitted",
             "year": 885,
             "says": "Accused by a long-standing enemy of being court wizard to King Louis III from 879 to 881, Adela was acquitted, as nothing showed any danger to the Order from her friendship with the late king.",
             "case_id": "",
-            "id": "1df43a047e77"
+            "id": "4eb3e9369f53"
           },
           {
             "title": "Lotharingia divided",
             "year": 899,
             "says": "The Tribunal accepts the Grand Tribunal's decision, takes in part of the old Proven\u00e7al lands and reaches east to the Rhine Tribunal.",
             "case_id": "",
-            "id": "9788b9d909b2"
+            "id": "00bdb8efd8bc"
           },
           {
             "title": "The Normandy Tribunal",
             "year": 983,
             "says": "On Adrianus of Montverte's proposal, the Tribunal of the West Franks is renamed for the Duke of Normandy, foremost lord of its lands.",
             "case_id": "",
-            "id": "8acc2d291f3e"
+            "id": "d2148a4af562"
           },
           {
             "title": "Brittany claimed",
             "year": 1018,
             "says": "Fudarus, the last Breton covenant left after the Schism War, is welcomed to the 22nd meeting, and the Tribunal claims Brittany and all its magical resources.",
             "case_id": "",
-            "id": "271d781a2270"
+            "id": "99f84e4b1a1c"
           },
           {
             "title": "Nauche-Fleur and the baron",
             "year": 1095,
             "says": "Nauche-Fleur was found innocent of swearing fealty to its baron, as the oath was taken by an unGifted companion acting as lord of the manor for the magi.",
             "case_id": "",
-            "id": "31e7ff10a55a"
+            "id": "b81f05e67e2e"
           },
           {
             "title": "The border by language",
             "year": 1102,
             "says": "On a complaint from three Flambeau of Proven\u00e7al: where no clear border exists, disputed land goes by the language of its nearest settlement, langue d'o\u00efl to Normandy and otherwise to Proven\u00e7al. Upheld against Proven\u00e7al's protest at the Grand Tribunal of 1129.",
             "case_id": "",
-            "id": "7e9766434af4"
+            "id": "883d7daf6cb5"
           },
           {
             "title": "The Donatores admitted",
             "year": 1109,
             "says": "Quaesitor Muirgheal brings into the Order the hedge wizards he found fighting a plague of restless dead, as the Ex Miscellanea tradition of the Donatores Requietis Aeternae.",
             "case_id": "",
-            "id": "451cf516dc72"
+            "id": "c5560154e6c5"
           },
           {
             "title": "Koilios's raid; Praecepsus acquitted",
             "year": 1116,
             "says": "Quaesitor Lothaire upheld Koilios of Tytalus's raid of 1113 on Lapis Crudus's convoy of food and luxuries as no breach of the Code, fixing the custom of lawful raiding. Praecepsus of Flambeau, accused of cutting down the king's enemies with a Perdo sword in 1111, had no charge to answer, as no mundane could tell magic was involved.",
             "case_id": "",
-            "id": "428cef569f7c"
+            "id": "60de504dcfc6"
           },
           {
             "title": "Pandion's horses",
             "year": 1123,
             "says": "Pandion of Flambeau, who stole twelve horses from Antonin of Dragon's Rest, returned the one magical horse and paid ten pawns, keeping the other eleven as the spoils of a lawful raid: enchanted creatures count toward a magus's power, ordinary livestock and (as Lothaire added) covenfolk do not.",
             "case_id": "",
-            "id": "4d3e27ec8fd3"
+            "id": "3dc42ff1f202"
           },
           {
             "title": "Jacinth and Infelicitas",
             "year": 1130,
             "says": "Jacinth of Oleron, raiding Infelicitas, brought down its upper storey and two laboratories: convicted of deprivation (the charge of trying to kill a magus failed), he lost his familiar, and raiders were forbidden to damage a covenant's buildings.",
             "case_id": "",
-            "id": "2f9bbf0d3c5a"
+            "id": "c2faf8170df2"
           },
           {
             "title": "Lothaire accused",
             "year": 1144,
             "says": "Jacinth of Oleron accused Quaesitor Lothaire of profiting from raids by Montverte, Fudarus and their allies. He was cleared for want of substance but never regained his place as chief Quaesitor, and went to Magvillus.",
             "case_id": "",
-            "id": "de067063b26d"
+            "id": "196e66f8219a"
           },
           {
             "title": "Atlax and the Redcap's letters",
             "year": 1172,
             "says": "Atlax of Tytalus read the messages Redcap Camille carried while a guest at Fudarus. Quaesitor Whent held the covenant responsible and gave one of its legacies to House Mercere.",
             "case_id": "",
-            "id": "82f449a5c1ea"
+            "id": "41a151250082"
           },
           {
             "title": "Pernix acquitted; Camille fined",
             "year": 1179,
             "says": "Pernix of Merinita, accused by Visurgis of Tytalus of healing a fallen nobleman by magic, was acquitted, as only the man and three friendly monks knew. Camille of Mercere, accused by Buliste of using a knight to gather a legacy's vis (the knight confessed to doing devils' work, and only Atlax of Fudarus averted ruin), paid fifteen pawns to Fudarus, and the source was closed for thirty years.",
             "case_id": "",
-            "id": "0a96ae5fd360"
+            "id": "7a0c03fda051"
           },
           {
             "title": "Pugnatis expelled",
             "year": 1207,
             "says": "Convicted at the previous meeting of controlling the mayor of Laval by magic to reach a vis source and fined in enchanted items, Pugnatis came to neither this meeting nor with the items, and was expelled from the Order.",
             "case_id": "",
-            "id": "d510f96d17d4"
+            "id": "4e4e04d33205"
           }
         ],
         "treasury": [],
@@ -2457,7 +2457,7 @@
             "details": "For more than thirty years Trianoma journeys across Europe, seeking out wizards and bringing them to meet Bonisagus. Many of those she finds become Founders of the Order.",
             "changes": [],
             "margin": "",
-            "id": "cd7f2325237b"
+            "id": "6c7018865e64"
           },
           {
             "year": 767,
@@ -2466,7 +2466,7 @@
             "details": "Bonisagus and the other Founders take the Oath of Hermes, and the first gathering of the Order is held at Durenmar.",
             "changes": [],
             "margin": "",
-            "id": "f765eb50686d"
+            "id": "c16ff993ae7d"
           },
           {
             "year": 773,
@@ -2475,7 +2475,7 @@
             "details": "The Order settles how lesser Tribunals work: one needs at least twelve magi drawn from at least four covenants.",
             "changes": [],
             "margin": "",
-            "id": "e4fff5761521"
+            "id": "d35849ea1624"
           },
           {
             "year": 789,
@@ -2484,7 +2484,7 @@
             "details": "The Founder Jerbiton, who has taken on several apprentices of the emperor's mage-smith Carolinus, meets Charlemagne. The emperor's decree against sorcery and paganism that year spares magic of a kindly sort, such as Jerbiton's.",
             "changes": [],
             "margin": "",
-            "id": "dbd54caf1d10"
+            "id": "9439da301883"
           },
           {
             "year": 791,
@@ -2493,7 +2493,7 @@
             "details": "House Diedne raises its domus magna, Branugurix (in Breton Bren Gwrac'h), in a regio near Mount Dol in Brittany. It becomes the head of a line of Diedne vassal covenants.",
             "changes": [],
             "margin": "",
-            "id": "81f9c3c72c59"
+            "id": "803baf4ebe05"
           },
           {
             "year": 798,
@@ -2502,7 +2502,7 @@
             "details": "Tytalus carries off Hariste, the apprentice of his own former pupil Pralix, and raises the fortress of Fudarus on Ushant to keep her safe from Pralix's anger. He trains her to the Gauntlet in five years. Pralix takes over the running of House Tytalus.",
             "changes": [],
             "margin": "",
-            "id": "868d666f3fb2"
+            "id": "425dce21fa08"
           },
           {
             "year": 799,
@@ -2511,7 +2511,7 @@
             "details": "The Order's third Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "667935ac62cb"
+            "id": "28b7fc640e75"
           },
           {
             "year": 807,
@@ -2520,7 +2520,7 @@
             "details": "Tytalus walks out of Fudarus in a leper's robe and veil, staff in hand, visits his followers one last time and disappears into the Maddenhofen Woods of Bohemia. Hariste claims Fudarus and becomes the first Prima of House Tytalus; the covenant has housed the Primus ever since.",
             "changes": [],
             "margin": "",
-            "id": "f68114e48a3a"
+            "id": "5e14bf73635d"
           },
           {
             "year": 810,
@@ -2529,7 +2529,7 @@
             "details": "Confluensis is founded at the mouth of the Seine, on the site Dragon's Rest holds today.",
             "changes": [],
             "margin": "",
-            "id": "0b1157b7f3d7"
+            "id": "781d3e6b59d5"
           },
           {
             "year": 817,
@@ -2538,7 +2538,7 @@
             "details": "The Order's fourth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "57e0cbfae7a4"
+            "id": "458123614172"
           },
           {
             "year": 822,
@@ -2547,7 +2547,7 @@
             "details": "Bibracte, a vassal of Fudarus, is founded on Mount Beuvray in the Morvan by a few Diedne magi and one Tytalan.",
             "changes": [],
             "margin": "",
-            "id": "b27485a810ee"
+            "id": "007a80066761"
           },
           {
             "year": 832,
@@ -2556,7 +2556,7 @@
             "details": "The Grand Tribunal fixes its own meetings at every thirty-three years, and those of the regional Tribunals at every seven years from 836.",
             "changes": [],
             "margin": "",
-            "id": "8d298c5d910b"
+            "id": "f655ca022a74"
           },
           {
             "year": 840,
@@ -2565,7 +2565,7 @@
             "details": "Confluensis sponsors the vassal covenant of Pagus in a ruined Roman outpost near Cherbourg, overlooking the Channel. Its magi pour vis into restoring the Roman buildings and a dock.",
             "changes": [],
             "margin": "",
-            "id": "cea9d4141181"
+            "id": "0ea7c9aa7c5d"
           },
           {
             "year": 845,
@@ -2574,7 +2574,7 @@
             "details": "As Norse fleets sack Paris and the coasts, covenants suffer with the monasteries. Confluensis, then at the Seine's mouth, is raided a dozen times in a hundred years and its magi grow skilled at battle magic; Pagus loses many vis sources and never recovers; the Diedne covenants of the Breton coast are struck too. Some raids are led by Gifted shapechangers using runes, and talk of a Norse 'Order of Odin' begins, much of it from Confluensis.",
             "changes": [],
             "margin": "",
-            "id": "905eabb790a9"
+            "id": "b8267d0e268e"
           },
           {
             "year": 851,
@@ -2583,7 +2583,7 @@
             "details": "Baiocassium, a Diedne vassal of Branugurix, is founded in the forest near Bayeux. Its magi, heirs of Gaulish druids, stay on good terms with the local faeries.",
             "changes": [],
             "margin": "",
-            "id": "67cee246629c"
+            "id": "d2383b6f2f05"
           },
           {
             "year": 855,
@@ -2592,7 +2592,7 @@
             "details": "Sinapis is founded in Anjou, near the heart of France. It grows into an important liege covenant, head of a line of its own.",
             "changes": [],
             "margin": "",
-            "id": "08973f2b8250"
+            "id": "10bb26cbf59a"
           },
           {
             "year": 865,
@@ -2601,7 +2601,7 @@
             "details": "A stormy Grand Tribunal divides the Order into regional Tribunals, each free to make its own Peripheral Code, on House Mercere's argument that Redcaps should serve a region they know. The Tribunal of the West Franks is one of them. It takes in Gascony but neither Flanders nor Brittany: Brittany, independent since 846 and steeped in Celtic and druidic tradition, goes to the Britannian Tribunal. The eastern lands fall to a new Lotharingian Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "88cd97bc5670"
+            "id": "340c6b67a62c"
           },
           {
             "year": 871,
@@ -2610,7 +2610,7 @@
             "details": "The first meeting gathers Confluensis, Pagus, Baiocassium, Bibracte and Sinapis. Fudarus and Branugurix attend the Britannian Tribunal instead.",
             "changes": [],
             "margin": "",
-            "id": "e712fbed3191"
+            "id": "7c51d1fad360"
           },
           {
             "year": 875,
@@ -2619,7 +2619,7 @@
             "details": "The first generation of Sinapis's apprentices found Rotomagus near Rouen.",
             "changes": [],
             "margin": "",
-            "id": "ad4c606eb015"
+            "id": "53e9a8d911cf"
           },
           {
             "year": 885,
@@ -2628,7 +2628,7 @@
             "details": "Adela of Jerbiton, often at court, is charged with having been court wizard to King Louis III from 879 to 881. She blames a long feud with her accuser; nothing shows the Order was ever endangered by her friendship with the late king, and she is acquitted.",
             "changes": [],
             "margin": "",
-            "id": "3490473daeaa"
+            "id": "719d6bea4e9a"
           },
           {
             "year": 892,
@@ -2637,7 +2637,7 @@
             "details": "The Vikings sack Rouen and Rotomagus with it, less than a generation after its founding. Its one survivor leaves House Flambeau in shame for Ex Miscellanea.",
             "changes": [],
             "margin": "",
-            "id": "d0a7cb53b45c"
+            "id": "5ce58cdd20e9"
           },
           {
             "year": 898,
@@ -2646,7 +2646,7 @@
             "details": "Following the mundane partition of Lotharingia at Meersen in 870, the Rhine and West Frankish Tribunals had taken in its covenants, which welcomed the move. The seventh Grand Tribunal confirms it: the Lotharingian Tribunal ends, and its southern part becomes the Proven\u00e7al Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "716c967a0b13"
+            "id": "8c25c2045781"
           },
           {
             "year": 899,
@@ -2655,7 +2655,7 @@
             "details": "The West Franks vote to accept the Grand Tribunal's decision, take in part of the former Lotharingian lands and extend east to border the Rhine Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "2e00641b6f25"
+            "id": "848e9afdf0b0"
           },
           {
             "year": 907,
@@ -2664,7 +2664,7 @@
             "details": "Florum is founded in Flanders, on the site Spider's Palace now holds. Like Confluensis it suffers several Viking raids in its early years.",
             "changes": [],
             "margin": "",
-            "id": "5b0485fce582"
+            "id": "e7807881186c"
           },
           {
             "year": 913,
@@ -2673,7 +2673,7 @@
             "details": "Fudarus sponsors Ligurio, a vassal on the border of Aquitaine and Brittany in the Vend\u00e9e.",
             "changes": [],
             "margin": "",
-            "id": "f4584799aa62"
+            "id": "2fcf7c61d33a"
           },
           {
             "year": 920,
@@ -2682,7 +2682,7 @@
             "details": "Branugurix founds Kerguntuil on the Rose Coast of Brittany, by the stone said to be a petrified giant. Its magi study the Breton tales of giants, and its covenfolk grow larger than common folk.",
             "changes": [],
             "margin": "",
-            "id": "3dd9a8025fbd"
+            "id": "332e660e1a87"
           },
           {
             "year": 931,
@@ -2691,7 +2691,7 @@
             "details": "The Order's eighth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "5153cd9315b2"
+            "id": "b37b5859d7ef"
           },
           {
             "year": 936,
@@ -2700,7 +2700,7 @@
             "details": "Tired of Viking raids on their forest covenant, magi of Baiocassium make a spring sanctuary in a regio inside Bayeux. It becomes a covenant of its own, Baiocassium Minor, a vassal of Baiocassium.",
             "changes": [],
             "margin": "",
-            "id": "9ad8abc26426"
+            "id": "d4be3cc29e3d"
           },
           {
             "year": 941,
@@ -2709,7 +2709,7 @@
             "details": "Scandinavian converts to the Order found Montverte in Normandy. It becomes the head of one of the Tribunal's great lines.",
             "changes": [],
             "margin": "",
-            "id": "253f86d9ce54"
+            "id": "839fe6cf8468"
           },
           {
             "year": 961,
@@ -2718,7 +2718,7 @@
             "details": "House Guernicus finds Prima Tasgillia corrupted by the Infernal and seizes her, and a large share of her House, far from Fudarus; she is executed for diabolism. Her filia Kalliste, the new Prima, refuses the Quaesitores and Flambeau hoplites entry to a covenant whose members have already been cleared, but is made to give way; the search finds nothing. The wounds between Tytalus and Flambeau last for a century.",
             "changes": [],
             "margin": "",
-            "id": "95331ac9ce39"
+            "id": "2e61c94a4d6f"
           },
           {
             "year": 964,
@@ -2727,7 +2727,7 @@
             "details": "The Order's ninth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "77c2153c7950"
+            "id": "1f2b391e96f0"
           },
           {
             "year": 969,
@@ -2736,7 +2736,7 @@
             "details": "Bibracte had revived a cult of Vercingetorix and turned against all things Roman, banning Latin for Brythonic and then refusing to deal with magi of the 'Roman' Houses. With Fudarus weakened after the Betrayal, four Flambeau and Tremere magi of Montverte declare Wizard's War on its magi at once, charging them with devil-worship, and destroy the covenant.",
             "changes": [],
             "margin": "",
-            "id": "c35069d7a34a"
+            "id": "d3e2860b5d17"
           },
           {
             "year": 981,
@@ -2745,7 +2745,7 @@
             "details": "Branugurix founds its youngest and easternmost vassal, Caput Capra, on the Loire near Fleury, to guard the old druidic site there from the lawlessness of the age.",
             "changes": [],
             "margin": "",
-            "id": "3144f0272bad"
+            "id": "038d73fa2c10"
           },
           {
             "year": 983,
@@ -2754,7 +2754,7 @@
             "details": "With the Duke of Normandy foremost in the Tribunal's lands and the Franks fading as a people, the Tribunal adopts the proposal of Adrianus of Montverte and renames itself the Normandy Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "3598dab50b53"
+            "id": "73ad4ecb62a4"
           },
           {
             "year": 997,
@@ -2763,7 +2763,7 @@
             "details": "The Order's tenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "9d810d428b29"
+            "id": "9744bcf0c06c"
           },
           {
             "year": 998,
@@ -2772,7 +2772,7 @@
             "details": "Sinapis founds Aedes Salii on Jersey, named for the priests of Mars, as a base to coordinate the coming war in Normandy and the Stonehenge Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "c1965d668501"
+            "id": "8584db88e40f"
           },
           {
             "year": 1004,
@@ -2781,7 +2781,7 @@
             "details": "War is declared on House Diedne. Some of its worst battles are fought in Normandy and Brittany, and for a long while the Diedne have the upper hand. A Diedne force comes by sea to Fudarus, cannot break in and besieges it for months with three great summoned spirits, until Primus Klynoites wrests the spirits from them, destroys the besiegers and binds the spirits into the covenant's walls.",
             "changes": [],
             "margin": "",
-            "id": "7cd6d7d91311"
+            "id": "a2ef0b63e55f"
           },
           {
             "year": 1005,
@@ -2790,7 +2790,7 @@
             "details": "Caput Capra is the war's first casualty in the Tribunal; Confluensis still brings its apprentices to the scant ruins for their history lessons. Baiocassium Minor falls the same year.",
             "changes": [],
             "margin": "",
-            "id": "8c4cbc2195d4"
+            "id": "34ba778f96cf"
           },
           {
             "year": 1007,
@@ -2799,7 +2799,7 @@
             "details": "The Diedne covenant on the Rose Coast is wiped out.\n\nSecrets\nRumour says a Quaesitor later steered the Templars into building their chapel at Lanleff, to cleanse the district of the Diedne's supposed diabolic taint.",
             "changes": [],
             "margin": "",
-            "id": "969b05ebe871"
+            "id": "cc61fc6ac495"
           },
           {
             "year": 1008,
@@ -2808,7 +2808,7 @@
             "details": "Pagus, never recovered from the Viking raids, is destroyed by the magi of Baiocassium.",
             "changes": [],
             "margin": "",
-            "id": "5fb8261bb1af"
+            "id": "b2ebb89e7b32"
           },
           {
             "year": 1011,
@@ -2817,7 +2817,7 @@
             "details": "Baiocassium falls to the Order. Ligurio, Fudarus's vassal in the Vend\u00e9e, is crushed by giants hurling great boulders, thought to have been sent by Kerguntuil's magi before their end.",
             "changes": [],
             "margin": "",
-            "id": "1a21384df7a8"
+            "id": "a8911b3a54dc"
           },
           {
             "year": 1012,
@@ -2826,7 +2826,7 @@
             "details": "The war's last battle is fought at Branugurix. In its final moments the Diedne Primus somehow seals every entrance to the regio, and some of the Flambeau and Tremere attackers are never seen again. Diedne history and alleged crimes are later struck from the Tribunal's records, and House Guernicus guards the site's secrets.\n\nSecrets\nGuernicus's records hold the regio's exact location and the old way in. Rumour has it that some Diedne survive inside, and that someone is working to free them; the Quaesitores watch anyone who lingers around Mount Dol.",
             "changes": [],
             "margin": "",
-            "id": "6af944cdf622"
+            "id": "f00bf1c4db4d"
           },
           {
             "year": 1018,
@@ -2835,7 +2835,7 @@
             "details": "The Schism War over, the Quaesitores list the vis sources and books taken from the fallen covenants. Fudarus, the only Breton covenant left, comes to the Normandy Tribunal, which claims Brittany and its magical wealth. Pertheus of Tytalus wins the victors the right of conquest over the spoils, on condition that a contest be held in seven years to share them out again. The old Tytalus-Flambeau quarrel flares over the spoils.",
             "changes": [],
             "margin": "",
-            "id": "6b0c3f82f1d9"
+            "id": "7013ecaa6e05"
           },
           {
             "year": 1020,
@@ -2844,7 +2844,7 @@
             "details": "Confluensis sponsors a new vassal after the war, the Orchard of Sour Apples, on the Cotentin peninsula.",
             "changes": [],
             "margin": "",
-            "id": "da3ab6731be1"
+            "id": "7d372b35b80b"
           },
           {
             "year": 1021,
@@ -2853,7 +2853,7 @@
             "details": "Florum founds Lixivia in Champagne as the great fairs begin, a covenant of Redcaps and Gentle Gifted magi meant to broker trade between the Order and merchants and fetch whatever any covenant wanted.",
             "changes": [],
             "margin": "",
-            "id": "913c2a16ec60"
+            "id": "5667ec0f35b1"
           },
           {
             "year": 1025,
@@ -2862,7 +2862,7 @@
             "details": "With Northern Tytali and Southern Flambeau close to open war over the Diedne spoils, the Quaesitores back Pertheus of Tytalus, whose statutes pass over this and the next two meetings. Contested vis becomes the Tribunal's, competed for every seven years, and magi gain set rights over the vis near their covenants with a way to win more as they grow. The Compact is refined at later meetings. Three Flambeau-led covenants of the south call it a Tytalan swindle and go over to the Proven\u00e7al Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "b5236835706d"
+            "id": "d7ab018883b9"
           },
           {
             "year": 1028,
@@ -2871,7 +2871,7 @@
             "details": "Oleron is founded on its island off Aquitaine. It becomes the head of one of the Tribunal's great lines.",
             "changes": [],
             "margin": "",
-            "id": "72c952068208"
+            "id": "ba34916e964c"
           },
           {
             "year": 1030,
@@ -2880,7 +2880,7 @@
             "details": "The Order's eleventh Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "98dd621a78d2"
+            "id": "c81f87440aa5"
           },
           {
             "year": 1048,
@@ -2889,7 +2889,7 @@
             "details": "Fudarus founds Vexatores purely to goad Sinapis, twenty-one miles north of it, the least distance the law allows, on a vis source taken from the Diedne.",
             "changes": [],
             "margin": "",
-            "id": "47a5a1105c2c"
+            "id": "edd48ee718b7"
           },
           {
             "year": 1051,
@@ -2898,7 +2898,7 @@
             "details": "Confluensis moves to the Orchard of Sour Apples on the Cotentin, whose magi join their liege as the vassal covenant is wound up. Dragon's Rest is founded as a vassal of Confluensis on its old site at the Seine's mouth. By about this time the Tribunal has its modern borders.",
             "changes": [],
             "margin": "",
-            "id": "5b98daf3a0ad"
+            "id": "876c177feaa6"
           },
           {
             "year": 1063,
@@ -2907,7 +2907,7 @@
             "details": "The feud of Tytalus and Flambeau formally ends with House Flambeau withdrawing from all hostilities. Sinapis is abandoned as its members leave for Provence and Iberia, ending its line; Aedes Salii, left to the Flambeau after the Tremere went home, is disbanded, and two of its magi help found Lapis Crudus, a covenant shared by the two Houses and counted in the line of Sinapis.",
             "changes": [],
             "margin": "",
-            "id": "36171e53faa4"
+            "id": "74e6fc29bf06"
           },
           {
             "year": 1064,
@@ -2916,7 +2916,7 @@
             "details": "Never meant to last, Vexatores is abandoned once the quarrel it was built to serve is over.",
             "changes": [],
             "margin": "",
-            "id": "589e865282ed"
+            "id": "37733ede23ea"
           },
           {
             "year": 1072,
@@ -2925,7 +2925,7 @@
             "details": "Montverte sponsors Nauche-Fleur near Niort in Aquitaine, a covenant that keeps a school of arms and letters whose fees pay for its magi's lavish living.",
             "changes": [],
             "margin": "",
-            "id": "0421ca9572e9"
+            "id": "cd3a99d666ed"
           },
           {
             "year": 1081,
@@ -2934,7 +2934,7 @@
             "details": "Perpauca of Bonisagus, whose own covenant kept her great books from visitors, starts giving books to the Tribunal as a whole. Hers are declared the first books of the Library of the Normandy Tribunal, kept at Confluensis, and the right to read them becomes a prize of the Tourney. Other authors follow her lead.",
             "changes": [],
             "margin": "",
-            "id": "79f1bff7099c"
+            "id": "1995cd0dfe29"
           },
           {
             "year": 1095,
@@ -2943,7 +2943,7 @@
             "details": "Nauche-Fleur is accused of swearing fealty to its local baron. The magi answer that the oath was taken by an unGifted companion standing as lord of the manor in their name, and the Tribunal finds them innocent.",
             "changes": [],
             "margin": "",
-            "id": "c76b0998fcc0"
+            "id": "450b8b8c8f7e"
           },
           {
             "year": 1096,
@@ -2952,7 +2952,7 @@
             "details": "The Order's thirteenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "ff4bc2e77d9e"
+            "id": "3354252a6f84"
           },
           {
             "year": 1099,
@@ -2961,7 +2961,7 @@
             "details": "Rancrax of Tytalus loses a wager to his rival and, under its terms, must leave Fudarus; he founds Infelicitas as a vassal of Fudarus.",
             "changes": [],
             "margin": "",
-            "id": "898c6baa5207"
+            "id": "84c3493fda27"
           },
           {
             "year": 1100,
@@ -2970,7 +2970,7 @@
             "details": "Conventio Nidi is founded as a vassal of Oleron.",
             "changes": [],
             "margin": "",
-            "id": "f379b60438a9"
+            "id": "a1f2e82c7c44"
           },
           {
             "year": 1102,
@@ -2979,7 +2979,7 @@
             "details": "At the request of three Proven\u00e7al Flambeau, the Tribunal rules that, without any clear natural frontier, disputed ground belongs to Normandy if the nearest settlement speaks the langue d'oeil and to Proven\u00e7al if it speaks the langue d'oc.",
             "changes": [],
             "margin": "",
-            "id": "01681faa3ec9"
+            "id": "f43011fa47f5"
           },
           {
             "year": 1109,
@@ -2988,7 +2988,7 @@
             "details": "In Picardy Quaesitor Muirgheal finds hedge wizards fighting a plague of restless dead. Once the dead are laid, many of them are taken into the Order as the Donatores Requietis Aeternae, a tradition of House Ex Miscellanea.",
             "changes": [],
             "margin": "",
-            "id": "41742f649ddb"
+            "id": "dca60da27599"
           },
           {
             "year": 1116,
@@ -2997,7 +2997,7 @@
             "details": "Building on an earlier ruling on mundane resources, Quaesitor Lothaire holds that raiding a covenant's mundane resources is allowed. At the same meeting Praecepsus of Flambeau, accused of wielding a Perdo-enchanted sword for the king when the count of Meulan raided Paris in 1111, is cleared: nothing showed magic to mundane eyes, so there is no case to answer.",
             "changes": [],
             "margin": "",
-            "id": "536a1362db7d"
+            "id": "4cd3db707859"
           },
           {
             "year": 1117,
@@ -3006,7 +3006,7 @@
             "details": "Florum leaves its first site, and Spider's Palace is founded there as its vassal.",
             "changes": [],
             "margin": "",
-            "id": "1c89ffc93ba7"
+            "id": "bd86637816c3"
           },
           {
             "year": 1118,
@@ -3015,7 +3015,7 @@
             "details": "Lapis Crudus becomes trapped in its own regio and is given up for lost.",
             "changes": [],
             "margin": "",
-            "id": "94606e3e3a4a"
+            "id": "1e8bb5c63e4a"
           },
           {
             "year": 1123,
@@ -3024,7 +3024,7 @@
             "details": "Pandion of Flambeau is found guilty of taking twelve horses, one a magical beast, from Antonin of Dragon's Rest, a Redcap, and so lessening his magical power. He must return that one and pay ten pawns, but keeps the other eleven as spoils of a lawful raid. Enchanted creatures, familiars or not, count toward a magus's power and ordinary livestock does not; Quaesitor Lothaire later adds that covenfolk do not count either. The same year the Donatores found Requies Aeterna as a vassal of Florum.",
             "changes": [],
             "margin": "",
-            "id": "789f7030826d"
+            "id": "437361d1b8ce"
           },
           {
             "year": 1124,
@@ -3033,7 +3033,7 @@
             "details": "Distrusted by magi who doubted its motives, Lixivia became everyone's favourite target for raids and is driven into poverty and disbanded. Its Redcaps found Alcuin's Auberge, a small Mercer House in Tours, as a vassal of Florum.",
             "changes": [],
             "margin": "",
-            "id": "cbc0ca6325e8"
+            "id": "3bb82a2cfe5b"
           },
           {
             "year": 1129,
@@ -3042,7 +3042,7 @@
             "details": "Despite Proven\u00e7al protests, the Grand Tribunal upholds Normandy's ruling that language marks the border between the two Tribunals.",
             "changes": [],
             "margin": "",
-            "id": "31811347b2de"
+            "id": "057c7f7817c9"
           },
           {
             "year": 1130,
@@ -3051,7 +3051,7 @@
             "details": "Raiding Infelicitas, Jacinth of Oleron brought down its upper storey and wrecked two laboratories. The charge of trying to kill a magus by destroying the covenant is not proved, but he is convicted of deprivation. Quaesitor Lothaire rules that raiders may never damage a covenant's buildings and that a lawful raid does not excuse a breach of the Code. Jacinth escapes a March but loses his familiar.",
             "changes": [],
             "margin": "",
-            "id": "08fe29ad82c9"
+            "id": "4f1f1c9d820c"
           },
           {
             "year": 1136,
@@ -3060,7 +3060,7 @@
             "details": "Oleron sponsors Moles Magna on the edge of the Morvan, a covenant built inside a dam across a small tributary of the Yonne, hidden behind its own waterfall.",
             "changes": [],
             "margin": "",
-            "id": "f80afa3d4d70"
+            "id": "d2991c80e4fc"
           },
           {
             "year": 1144,
@@ -3069,7 +3069,7 @@
             "details": "Jacinth of Oleron accuses Quaesitor Lothaire of partisanship, naming raids by Montverte, Fudarus and their allies from which he profited. An inquiry clears him for want of substance, but he never regains his place as chief Quaesitor of Normandy and is invited to Magvillus in honour of his long service.",
             "changes": [],
             "margin": "",
-            "id": "65169dd8236c"
+            "id": "b8ead6fb4926"
           },
           {
             "year": 1158,
@@ -3078,7 +3078,7 @@
             "details": "Rancrax is killed in Wizard's War by a magus of Moles Magna, and the two magi left at Infelicitas have no wish to stay.",
             "changes": [],
             "margin": "",
-            "id": "651cfbe538db"
+            "id": "4be76da26f2e"
           },
           {
             "year": 1162,
@@ -3087,7 +3087,7 @@
             "details": "The Order's fifteenth Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "e06b8952e44d"
+            "id": "11810d57e443"
           },
           {
             "year": 1166,
@@ -3096,7 +3096,7 @@
             "details": "Its mundane dealings always controversial, Nauche-Fleur kept none of the apprentices it trained, and it dies when the last of its founders enters Final Twilight.",
             "changes": [],
             "margin": "",
-            "id": "d2619ca18da3"
+            "id": "d1e318ae9327"
           },
           {
             "year": 1172,
@@ -3105,7 +3105,7 @@
             "details": "Atlax of Tytalus is charged with stealing and reading the messages the Redcap Camille carried while a guest at Fudarus. Quaesitor Whent holds the covenant answerable for its magus, strips Fudarus of the lease of a legacy and gives it to House Mercere.",
             "changes": [],
             "margin": "",
-            "id": "ef24ebe5ec82"
+            "id": "ddfa1d9510d5"
           },
           {
             "year": 1179,
@@ -3114,7 +3114,7 @@
             "details": "Pernix of Merinita, accused by Visurgis of Tytalus of interfering with mundanes for healing a young noble thrown from his horse, is acquitted: only the noble and the abbot, prior and infirmarian of a friendly monastery knew. Camille of Mercere, accused by Buliste of Tytalus of using a local knight to gather the vis of one of his legacies, is convicted after the knight confessed to doing the devil's work and Atlax of Fudarus had to avert the ruin; Camille pays fifteen pawns to Fudarus and the source is closed for thirty years or more.",
             "changes": [],
             "margin": "",
-            "id": "b7669dbf26bf"
+            "id": "e0dfa579e9bf"
           },
           {
             "year": 1182,
@@ -3123,7 +3123,7 @@
             "details": "After heavy rain the river bursts the dam that housed Moles Magna and the covenant is swept away. Since its magi had magically strengthened the dam against exactly that, most think they angered some power of the river they held back.",
             "changes": [],
             "margin": "",
-            "id": "4080726a5c35"
+            "id": "6906b0c5570f"
           },
           {
             "year": 1187,
@@ -3132,7 +3132,7 @@
             "details": "Atsingani is founded in Anjou as a vassal of Montverte.",
             "changes": [],
             "margin": "",
-            "id": "99430e910ab4"
+            "id": "7566b408fb1e"
           },
           {
             "year": 1192,
@@ -3141,7 +3141,7 @@
             "details": "Cunfin is founded in Champagne as a vassal of Confluensis.",
             "changes": [],
             "margin": "",
-            "id": "33f69a4b74af"
+            "id": "301d6e3a188f"
           },
           {
             "year": 1195,
@@ -3150,7 +3150,7 @@
             "details": "The Order's sixteenth Grand Tribunal meets. About this time Prima Buliste of House Tytalus falls into a Twilight so deep she is taken for dead, and her rival Harpax, her fellow apprentice, is chosen as Primus and takes the Rod of the Primus from her sanctum.",
             "changes": [],
             "margin": "",
-            "id": "197e8f1fa7be"
+            "id": "5309c2c34076"
           },
           {
             "year": 1197,
@@ -3159,7 +3159,7 @@
             "details": "The Mercer House in Tours falls to raiders no one has identified.",
             "changes": [],
             "margin": "",
-            "id": "55a9345ae17e"
+            "id": "efd62bddeed8"
           },
           {
             "year": 1200,
@@ -3168,7 +3168,7 @@
             "details": "Buliste returns from Twilight, still wearing the Circlet of the Primus, and she and Harpax begin their struggle for the House; both are honoured as Primus and both rule Fudarus. Just as their battle begins, Fudarus sponsors the young vassal covenant of Atramentum.\n\nSecrets\nCynics hold that Atramentum's founders were duped into readying the site for the magi who would soon take it.",
             "changes": [],
             "margin": "",
-            "id": "de34869233fb"
+            "id": "b9e3324e2a31"
           },
           {
             "year": 1201,
@@ -3177,7 +3177,7 @@
             "details": "The other magi of Fudarus leave the two Primi to their quarrel and settle at Atramentum, ousting its young magi and renaming it Exspectatio, still counting themselves members of Fudarus. Atramentum's founders form Atramentum Renatus, a vassal of Exspectatio, in Champagne.",
             "changes": [],
             "margin": "",
-            "id": "c320298a7413"
+            "id": "0328c2436aea"
           },
           {
             "year": 1204,
@@ -3186,7 +3186,7 @@
             "details": "The covenant of Eboris is founded in Paris.",
             "changes": [],
             "margin": "",
-            "id": "21c916fa723a"
+            "id": "5f0b34340274"
           },
           {
             "year": 1207,
@@ -3195,7 +3195,7 @@
             "details": "The previous meeting convicted Pugnatis of controlling the mayor of Laval by magic to reach a vis source, and fined her a number of enchanted items. Neither she nor the items appear at this meeting, and she is cast out of the Order. Proctor of Guernicus presides, as he does again in 1214.",
             "changes": [],
             "margin": "",
-            "id": "050caf31a09c"
+            "id": "e7a25b94557b"
           },
           {
             "year": 1215,
@@ -3204,7 +3204,7 @@
             "details": "After nearly a century trapped in its regio, Lapis Crudus wins a kind of freedom and comes back into Hermetic affairs, reminding the Tribunal that the Diedne may still be waiting in theirs.",
             "changes": [],
             "margin": "",
-            "id": "48b210d92b52"
+            "id": "62b7e55005eb"
           },
           {
             "year": 1219,
@@ -3213,7 +3213,7 @@
             "details": "Renita of Bjornaer, Praeco of the Tribunal and leader of Confluensis, dies in the winter. Proctor, the Presiding Quaesitor, takes charge of Confluensis; who will be the next Praeco is open. Stellatus, the next eldest, has left for Iberia, leaving Celeres of Cunfin first in line.",
             "changes": [],
             "margin": "",
-            "id": "bf2b78f8fef9"
+            "id": "375558e39376"
           }
         ],
         "package_data": {
@@ -6258,7 +6258,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_st_malo",
+            "note": "Its harbour",
+            "id": "7110aba2c85a"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6280,7 +6287,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_dinan",
+            "note": "Its harbour",
+            "id": "780b293ce9dd"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6324,7 +6338,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_st_brieuc",
+            "note": "Its harbour",
+            "id": "b7f775eb69c0"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6522,7 +6543,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_brest",
+            "note": "Its harbour",
+            "id": "638876332c2a"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6544,7 +6572,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_landerneau",
+            "note": "Its harbour",
+            "id": "bacf11fc05a9"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -6632,7 +6667,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_redon",
+            "note": "Its harbour",
+            "id": "20cf88d60dd7"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -7734,7 +7776,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_barfleur",
+            "note": "Its harbour",
+            "id": "831455667d83"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -8704,7 +8753,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_angers",
+            "note": "Its harbour",
+            "id": "c803eb901780"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -9262,7 +9318,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_la_rochelle",
+            "note": "Its harbour",
+            "id": "395df8c7886c"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -9397,7 +9460,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_angoul_me",
+            "note": "Its harbour",
+            "id": "c4eb03a83e2f"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -9617,7 +9687,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_bergerac",
+            "note": "Its harbour",
+            "id": "301200ab4c88"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -9784,7 +9861,8 @@
               "enter": "Through the orchard of sour apples, the challenge ground on the mortal side",
               "notes": "A summer that never ends: a splendid castle where the magi and their chief servants live, a harbour town for the lesser servants, fields running out into an endless orchard of sweet apples, and the covenant's own sea. Roads seem to lead away but loop back after long detours; only two go anywhere, one to the mortal world and one to the Stone Couches, the earth-covered stone cenotaphs of the Sleepers.\n\nSecrets\nThe link to the mortal world fails if the champion does not answer a challenge by sunset of the next day."
             }
-          ]
+          ],
+          "waters": "Port"
         },
         "attitudes": [],
         "favours": [],
@@ -10863,7 +10941,7 @@
             "kind": "characters",
             "target_id": "anacr_n_king_of_the_beggars",
             "note": "Its king, the Grand Co\u00ebsre",
-            "id": "3c4972f580a0"
+            "id": "d7e2b1a3496d"
           }
         ],
         "arms": {},
@@ -10920,7 +10998,7 @@
             "kind": "covenants",
             "target_id": "eboris",
             "note": "Hosts the tour's first stage",
-            "id": "7ae5683400f2"
+            "id": "6a140ea9b612"
           }
         ],
         "arms": {},
@@ -10952,7 +11030,7 @@
             "kind": "covenants",
             "target_id": "lapis_crudus",
             "note": "Bound to it by Aries's pact",
-            "id": "62752399d1af"
+            "id": "a08715bd8c7c"
           }
         ],
         "arms": {},
@@ -11409,7 +11487,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_bruges",
+            "note": "Its harbour",
+            "id": "14e2910761c6"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -11453,7 +11538,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_ghent",
+            "note": "Its harbour",
+            "id": "b33b85ca1a08"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -11519,7 +11611,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_antwerp",
+            "note": "Its harbour",
+            "id": "916cd01910db"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -11900,7 +11999,14 @@
         },
         "attitudes": [],
         "favours": [],
-        "links": [],
+        "links": [
+          {
+            "kind": "places",
+            "target_id": "the_harbour_of_boulogne",
+            "note": "Its harbour",
+            "id": "b7f81b1fe2a5"
+          }
+        ],
         "arms": {},
         "secrets": ""
       },
@@ -13753,13 +13859,13 @@
             "kind": "creatures",
             "target_id": "the_boar_king",
             "note": "Its lord",
-            "id": "15f6abbe4a08"
+            "id": "1bd11b3ba92d"
           },
           {
             "kind": "characters",
             "target_id": "salvirius",
             "note": "The Boar King's adviser",
-            "id": "5c445c601f8b"
+            "id": "92e9564c5e0b"
           }
         ],
         "arms": {},
@@ -13791,13 +13897,13 @@
             "kind": "characters",
             "target_id": "queen_skuld",
             "note": "Hierophant",
-            "id": "c63ed6b93834"
+            "id": "afc3ddd7af9c"
           },
           {
             "kind": "characters",
             "target_id": "thormod",
             "note": "A leading member, in secret",
-            "id": "957a86acd155"
+            "id": "0a0ff9e20781"
           }
         ],
         "arms": {},
@@ -13829,13 +13935,13 @@
             "kind": "characters",
             "target_id": "augustina",
             "note": "A member, in secret",
-            "id": "d170adf6e074"
+            "id": "49d7b79c4d3a"
           },
           {
             "kind": "characters",
             "target_id": "buliste",
             "note": "A member, to distract Harpax",
-            "id": "056091d7b9cb"
+            "id": "475b5d81f4df"
           }
         ],
         "arms": {},
@@ -13892,19 +13998,19 @@
             "kind": "covenants",
             "target_id": "florum",
             "note": "Its architect in Normandy",
-            "id": "6c126ef2c209"
+            "id": "df1021c8105d"
           },
           {
             "kind": "covenants",
             "target_id": "spider_s_palace",
             "note": "Supports its liege Florum",
-            "id": "8f6c23ed4cb3"
+            "id": "89d63183867c"
           },
           {
             "kind": "covenants",
             "target_id": "requies_aeterna",
             "note": "Expected to follow Florum",
-            "id": "1a2c3d5096be"
+            "id": "811ca237bfeb"
           }
         ],
         "arms": {},
@@ -13985,13 +14091,13 @@
             "kind": "creatures",
             "target_id": "the_boar_king",
             "note": "The antagonist",
-            "id": "2bd8fdc954b5"
+            "id": "2a104291f693"
           },
           {
             "kind": "characters",
             "target_id": "salvirius",
             "note": "Makes the King's offers",
-            "id": "41b51507651e"
+            "id": "7833f423f05a"
           }
         ],
         "arms": {},
@@ -14072,25 +14178,25 @@
             "kind": "characters",
             "target_id": "queen_skuld",
             "note": "The antagonist",
-            "id": "0f0a345509c7"
+            "id": "3ac62888bab3"
           },
           {
             "kind": "characters",
             "target_id": "thormod",
             "note": "A leading member of the cult",
-            "id": "1f1da31d4da7"
+            "id": "dce7c0bd8f87"
           },
           {
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Thormod's covenant; Norse-descended magi",
-            "id": "5ecb8670abcd"
+            "id": "8e45f9a68e07"
           },
           {
             "kind": "places",
             "target_id": "atramentum",
             "note": "Skuld's covenant before she left",
-            "id": "00041a0a929a"
+            "id": "ecaf8de12d9c"
           }
         ],
         "arms": {},
@@ -14171,37 +14277,37 @@
             "kind": "characters",
             "target_id": "augustina",
             "note": "The Traitor",
-            "id": "abe30b9ab96a"
+            "id": "9637f8c8fa58"
           },
           {
             "kind": "characters",
             "target_id": "harpax",
             "note": "Primus, holding Fudarus",
-            "id": "bdaddb86cd4e"
+            "id": "b864ba06ae8e"
           },
           {
             "kind": "characters",
             "target_id": "buliste",
             "note": "Prima, holding the House's web of spies",
-            "id": "c654c00a349c"
+            "id": "482cada1bc71"
           },
           {
             "kind": "characters",
             "target_id": "porphyrion",
             "note": "A third contender",
-            "id": "9fb779bb5a16"
+            "id": "c24c77215946"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Augustina's covenant",
-            "id": "e24b3a0432ad"
+            "id": "a5ff09008d71"
           },
           {
             "kind": "covenants",
             "target_id": "fudarus",
             "note": "The House's seat the Primi contest",
-            "id": "9aa59179bc68"
+            "id": "858f2afc9be1"
           }
         ],
         "arms": {},
@@ -14282,31 +14388,31 @@
             "kind": "covenants",
             "target_id": "florum",
             "note": "Leads the movement in Normandy",
-            "id": "6b8e7a1cef00"
+            "id": "e50485cce325"
           },
           {
             "kind": "covenants",
             "target_id": "spider_s_palace",
             "note": "Florum's vassal, an enthusiast",
-            "id": "43f1bb65e596"
+            "id": "b61c756c97cd"
           },
           {
             "kind": "covenants",
             "target_id": "requies_aeterna",
             "note": "Florum's vassal, indifferent",
-            "id": "92d3d2ae175e"
+            "id": "2e4d50ace226"
           },
           {
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Plots with Waddenzee to wreck it",
-            "id": "1837f9ec068f"
+            "id": "983dfc429236"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Works to defeat it",
-            "id": "665294a1f18a"
+            "id": "3f3561a41145"
           }
         ],
         "arms": {},
@@ -14461,13 +14567,13 @@
             "kind": "characters",
             "target_id": "celeres",
             "note": "Lives by the code of chivalry",
-            "id": "efc69e9f1d85"
+            "id": "148c306ea725"
           },
           {
             "kind": "covenants",
             "target_id": "cunfin",
             "note": "Keeps the Grail Library",
-            "id": "58c586af95b2"
+            "id": "cc4b68d3e05c"
           }
         ],
         "arms": {},
@@ -14538,7 +14644,7 @@
             "kind": "covenants",
             "target_id": "montverte",
             "note": "Founded by Norsemen",
-            "id": "411b0c678e4f"
+            "id": "e1bd7917bfb6"
           }
         ],
         "arms": {},
@@ -14683,23 +14789,423 @@
             "kind": "covenants",
             "target_id": "eboris",
             "note": "Senex of Paris",
-            "id": "463705bd6ff2"
+            "id": "0c01e222aabc"
           },
           {
             "kind": "covenants",
             "target_id": "confluensis",
             "note": "Masks among the Seine shippers",
-            "id": "5377d6b70dee"
+            "id": "13cbec3a85c0"
           },
           {
             "kind": "covenants",
             "target_id": "fudarus",
             "note": "Masks in the Dyers' Guild",
-            "id": "d0e2ab70a0ec"
+            "id": "156ed36364ae"
           }
         ],
         "arms": {},
         "secrets": "The strong will prey on the weak: young covenants become vassals at a rising price, some lieges fail, and some covenants may seek lieges outside the Tribunal. A coalition may set out to colonise Denmark, West Africa or a vis-rich Tribunal. Old wards set in the Schism War or the Corruption of Tytalus will crack as the Dominion rises."
+      },
+      {
+        "id": "the_harbour_of_st_malo",
+        "name": "The harbour of St Malo",
+        "kind": "place",
+        "summary": "The harbour of the town of St Malo.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "county_of_rennes",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_st_brieuc",
+        "name": "The harbour of St Brieuc",
+        "kind": "place",
+        "summary": "The harbour of the town of St Brieuc.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "county_of_rennes",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_brest",
+        "name": "The harbour of Brest",
+        "kind": "place",
+        "summary": "The harbour of the town of Brest.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "lordship_of_l_on",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_redon",
+        "name": "The harbour of Redon",
+        "kind": "place",
+        "summary": "The harbour of the town of Redon.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "county_of_nantes",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_barfleur",
+        "name": "The harbour of Barfleur",
+        "kind": "place",
+        "summary": "The harbour of the town of Barfleur.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "the_cotentin_peninsula",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_la_rochelle",
+        "name": "The harbour of La Rochelle",
+        "kind": "place",
+        "summary": "The harbour of the town of La Rochelle.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "aquitaine",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_bergerac",
+        "name": "The harbour of Bergerac",
+        "kind": "place",
+        "summary": "The harbour of the town of Bergerac.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "aquitaine",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_bruges",
+        "name": "The harbour of Bruges",
+        "kind": "place",
+        "summary": "The harbour of the town of Bruges.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "flanders",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_antwerp",
+        "name": "The harbour of Antwerp",
+        "kind": "place",
+        "summary": "The harbour of the town of Antwerp.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "flanders",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_boulogne",
+        "name": "The harbour of Boulogne",
+        "kind": "place",
+        "summary": "The harbour of the town of Boulogne.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "picardy",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_landerneau",
+        "name": "The harbour of Landerneau",
+        "kind": "place",
+        "summary": "The harbour of the town of Landerneau.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "lordship_of_l_on",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_dinan",
+        "name": "The harbour of Dinan",
+        "kind": "place",
+        "summary": "The harbour of the town of Dinan.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "county_of_rennes",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_angers",
+        "name": "The harbour of Angers",
+        "kind": "place",
+        "summary": "The harbour of the town of Angers.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "anjou",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_angoul_me",
+        "name": "The harbour of Angoul\u00eame",
+        "kind": "place",
+        "summary": "The harbour of the town of Angoul\u00eame.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "aquitaine",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_ghent",
+        "name": "The harbour of Ghent",
+        "kind": "place",
+        "summary": "The harbour of the town of Ghent.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "flanders",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
+      },
+      {
+        "id": "the_harbour_of_damme",
+        "name": "The harbour of Damme",
+        "kind": "place",
+        "summary": "The harbour on the Zwin estuary, five miles from Bruges and joined to it by canal.",
+        "detail": "Sketch",
+        "ruler": "",
+        "answers_to": null,
+        "realm": "Divine",
+        "place_id": "flanders",
+        "place_level": 0,
+        "details": {
+          "aura": 3,
+          "tethers": "",
+          "status": "Known",
+          "known": "In the Tribunal",
+          "levels": [],
+          "waters": "Port"
+        },
+        "attitudes": [],
+        "favours": [],
+        "links": [],
+        "arms": {},
+        "secrets": ""
       }
     ],
     "characters": [
@@ -48502,7 +49008,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 1,
-            "id": "e0ca45365533"
+            "id": "3631c5610d85"
           },
           {
             "name": "Club",
@@ -48510,7 +49016,7 @@
             "attack": 6,
             "defense": 5,
             "damage": 2,
-            "id": "07f700c8daef"
+            "id": "dff4da0cfecd"
           },
           {
             "name": "Stone (thrown)",
@@ -48518,7 +49024,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 1,
-            "id": "ab4151708dd5"
+            "id": "94ef701219cc"
           }
         ],
         "soak": 3,
@@ -48619,7 +49125,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Only the stronger korrigan have it. The korred becomes a lovely young woman for an hour, or until it spends the same Might again to change back. In that shape: Int -2, Per +1, Pre +2, Com +1, Str -1, Sta 0, Dex 0, Qik -1, Size 0; Club Init +0, Attack +2, Defense +0, Damage +2; Stone (thrown) Init -1, Attack +3, Defense +1, Damage +1.",
-            "id": "48858eef3908"
+            "id": "5b841f10d2de"
           }
         ],
         "vis": [
@@ -48627,7 +49133,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its hooves",
-            "id": "66b2c8a03a50"
+            "id": "badfacf419e6"
           }
         ],
         "equipment": "Usually none.",
@@ -48799,7 +49305,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 1,
-            "id": "0a242fdcba44"
+            "id": "a228e96beebd"
           }
         ],
         "soak": 2,
@@ -48865,7 +49371,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Animal or Mentem. Works like Panic of the Trembling Heart, but reaches as far as the bark is heard.",
-            "id": "42d3dde972e6"
+            "id": "0e1e80393fc7"
           },
           {
             "name": "Dreadful Howl",
@@ -48879,7 +49385,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Animal or Mentem. Works like Weight of a Thousand Hells, but lasts until sunrise or sunset and reaches as far as the howl is heard.",
-            "id": "abc2a2450e78"
+            "id": "38a6624468ab"
           }
         ],
         "vis": [
@@ -48887,7 +49393,7 @@
             "pawns": 1,
             "art": "",
             "where": "in its tongue (1 or 2 pawns)",
-            "id": "486eb0ec5486"
+            "id": "f6de3752872b"
           }
         ],
         "equipment": "",
@@ -49014,7 +49520,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "61f74ecd903c"
+            "id": "fea1011cc831"
           },
           {
             "name": "Presence",
@@ -49028,7 +49534,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "ae49932a1ef3"
+            "id": "5cb2e5e95fc5"
           },
           {
             "name": "Mastery of Mist",
@@ -49042,7 +49548,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with mist and fog.",
-            "id": "737b844396c4"
+            "id": "104de65951e9"
           }
         ],
         "vis": [],
@@ -49170,7 +49676,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "b09a86027247"
+            "id": "009103b94e92"
           },
           {
             "name": "Presence",
@@ -49184,7 +49690,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "78c2340c53c9"
+            "id": "454167d00221"
           },
           {
             "name": "Mastery of Misdirection",
@@ -49198,7 +49704,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with misdirection and concealment.",
-            "id": "1509963eb703"
+            "id": "f2b4c318ce69"
           }
         ],
         "vis": [],
@@ -49326,7 +49832,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. Unseen and untouchable, and beyond the reach of the physical world; a spell can aim at the spirit only if the caster can sense it is there.",
-            "id": "99949e3b3136"
+            "id": "dad8121cf9aa"
           },
           {
             "name": "Presence",
@@ -49340,7 +49846,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on. The spirit knows all that happens on Ushant.",
-            "id": "263622b7c7e6"
+            "id": "638965d67b36"
           },
           {
             "name": "Mastery of Storms",
@@ -49354,7 +49860,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 8 points: one per magnitude. Matches any non-Ritual spell of level 40 or less dealing with gales, rain and other foul weather.",
-            "id": "597b63743cea"
+            "id": "8f440424c111"
           }
         ],
         "vis": [],
@@ -49474,7 +49980,7 @@
             "attack": 7,
             "defense": 8,
             "damage": 1,
-            "id": "12cd1b46946a"
+            "id": "c40438837bab"
           },
           {
             "name": "Stone (thrown)",
@@ -49482,7 +49988,7 @@
             "attack": 5,
             "defense": 4,
             "damage": 1,
-            "id": "88ded789c492"
+            "id": "32c855742be4"
           }
         ],
         "soak": 3,
@@ -49576,7 +50082,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Conjures silver coins that gleam in the moonlight among the stones. They vanish at dawn; the Nains use them as bait to draw the greedy into an ambush.",
-            "id": "8e1b032db5a7"
+            "id": "0c13554024f0"
           },
           {
             "name": "Deadly Dance",
@@ -49590,7 +50096,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to ten victims must dance wildly with the Nains until sunrise. Each hour: Stamina stress roll against 6, or lose a long-term Fatigue level; once unconscious, a Light Wound instead. On a botch, two levels lost per 0 rolled (or the Wound worsens by one level per 0). Many dance to death.",
-            "id": "31fcba5c176e"
+            "id": "170e18b858cf"
           },
           {
             "name": "Magician's Desire Denied",
@@ -49604,7 +50110,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes a pebble, leaf or the like seem to hold vis to an Intellego Vim spell. The false vis vanishes at dawn or when Sense the Nature of Vis is cast on it.",
-            "id": "3c15e42cf665"
+            "id": "dd5d975c3989"
           }
         ],
         "vis": [
@@ -49612,7 +50118,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its hooves",
-            "id": "073762e2f638"
+            "id": "24b1184342c9"
           }
         ],
         "equipment": "Usually none.",
@@ -49701,7 +50207,7 @@
             "attack": null,
             "defense": 4,
             "damage": null,
-            "id": "bce95bd7f44c"
+            "id": "8cc93616dc13"
           },
           {
             "name": "Broom (improvised bludgeon)",
@@ -49709,7 +50215,7 @@
             "attack": 6,
             "defense": 3,
             "damage": -3,
-            "id": "13f4af840cd2"
+            "id": "2cf283230092"
           }
         ],
         "soak": 0,
@@ -49831,7 +50337,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on, indoors only. The lutin knows everything in the room it is in, how many and where, by look alone, not by use (a wand is just a little stick). It finds things hidden by mundane means or by magic of magnitude 1 or less; to find a person with Magic Resistance it must penetrate.",
-            "id": "a6b3c4f18937"
+            "id": "6c974a906dc8"
           },
           {
             "name": "Soap and Suds",
@@ -49845,7 +50351,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Indoors only. The floor of the lutin's room turns soapy: anyone moving quickly there, fighting included, rolls Dexterity against 6 each round or slips.",
-            "id": "a627524835ad"
+            "id": "1762370b8b35"
           }
         ],
         "vis": [
@@ -49853,7 +50359,7 @@
             "pawns": 1,
             "art": "Aquam",
             "where": "in its heart",
-            "id": "cd2c0dcc3035"
+            "id": "d4bf1d9666c3"
           }
         ],
         "equipment": "Household things: a broom, a shovel or a cloth.",
@@ -49962,7 +50468,7 @@
             "attack": 13,
             "defense": 9,
             "damage": 11,
-            "id": "5a156c42bd19"
+            "id": "6e90c227fcb7"
           },
           {
             "name": "Boar Spear (mounted)",
@@ -49970,7 +50476,7 @@
             "attack": 16,
             "defense": 12,
             "damage": 11,
-            "id": "a8702ebb2435"
+            "id": "cb2ec4d5c6ff"
           },
           {
             "name": "Tusks (gore)",
@@ -49978,7 +50484,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "5952d14d3a84"
+            "id": "e99e36e5897a"
           }
         ],
         "soak": 10,
@@ -50156,7 +50662,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on; Animal, Herbam or Mentem. He can speak with any beast or plant of the woods, and they carry out his orders as best they can.",
-            "id": "1ae04ff4cfbb"
+            "id": "f2bb226e7dc5"
           },
           {
             "name": "Sylvan Sanctity",
@@ -50170,7 +50676,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He learns roughly where and how many human intruders are in his forest; too many to follow in full, but he easily spots anyone entering a usually empty part. Must penetrate, though magi's grogs seldom resist. Used daily, and the forest's heart is days deep, so he is ready for visitors.",
-            "id": "4e05a6a18aa5"
+            "id": "1c2d02dbfeb2"
           },
           {
             "name": "Ancient Rage",
@@ -50184,7 +50690,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A frothing fury for a day: +3 to Attack and Soak, -3 to Defense, no Wound Penalties short of Incapacitated. He attacks at the least provocation and may neither retreat nor spare anyone.",
-            "id": "46be463ba089"
+            "id": "45d32faf63cb"
           },
           {
             "name": "Impaled by the Thorn",
@@ -50198,7 +50704,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus and Mentem. He hurls a boar spear at a human he can see; it hits without a roll, and if it penetrates the victim is frozen, unable to move, sense, think or cast, and does not age. Pulling the spear out ends it but deals a Heavy Wound, unless magic finds a way round that.",
-            "id": "6f1d94a6a447"
+            "id": "1b83ecafd1aa"
           },
           {
             "name": "Call of the Hunter",
@@ -50212,7 +50718,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He appears anywhere in his forest.",
-            "id": "e2127412c277"
+            "id": "287e576eddaf"
           }
         ],
         "vis": [
@@ -50220,13 +50726,13 @@
             "pawns": 4,
             "art": "Animal",
             "where": "in his left tusk",
-            "id": "ebb9670ee7d7"
+            "id": "a88965b1cc93"
           },
           {
             "pawns": 4,
             "art": "Animal",
             "where": "in his right tusk",
-            "id": "66c37587c9ec"
+            "id": "ee1e2c10aad3"
           }
         ],
         "equipment": "Several boar spears; his court can give him anything else he wants, though some of it may be glamour.",

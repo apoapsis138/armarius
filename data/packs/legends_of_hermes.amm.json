@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.61.0",
+  "app_version": "3.62.1",
   "kind": "pack",
   "name": "Legends of Hermes",
   "from_saga": "Legends of Hermes",
@@ -241,7 +241,8 @@
           "tethers": "",
           "status": "Known",
           "known": "In the region",
-          "levels": []
+          "levels": [],
+          "waters": "Port"
         },
         "attitudes": [],
         "favours": [],
@@ -2091,7 +2092,7 @@
             "kind": "places",
             "target_id": "the_new_valley_of_santa_lucia",
             "note": "Where the village is moving",
-            "id": "61e07d3b7b1f"
+            "id": "0026254a10ac"
           }
         ],
         "arms": {},
@@ -9531,7 +9532,7 @@
             "kind": "places",
             "target_id": "the_wreck_of_thomae_s_castle",
             "note": "His castle, and his remains",
-            "id": "b0636b54ee92"
+            "id": "b5c7db46383d"
           }
         ],
         "agents": [],
@@ -9726,7 +9727,7 @@
             "kind": "characters",
             "target_id": "roberto",
             "note": "Took his medal",
-            "id": "13fbed5880e6"
+            "id": "87e41ee29e1f"
           }
         ],
         "agents": [],
@@ -10109,13 +10110,13 @@
             "kind": "characters",
             "target_id": "roberto",
             "note": "His son",
-            "id": "47d26f147b9a"
+            "id": "cc02228ba5e2"
           },
           {
             "kind": "places",
             "target_id": "santa_lucia",
             "note": "One of its three councilors",
-            "id": "285b75b950b0"
+            "id": "129df61e73f8"
           }
         ],
         "agents": [],
@@ -10310,7 +10311,7 @@
             "kind": "characters",
             "target_id": "thomae_of_tytalus",
             "note": "Made a medal for him; holds an Arcane Connection",
-            "id": "155f0b8cf6e3"
+            "id": "9e6ca83cf7b9"
           }
         ],
         "agents": [],
@@ -10863,7 +10864,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Creo or Rego Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "432042848c09"
+            "id": "64fbab5cd54c"
           },
           {
             "name": "Eidolon",
@@ -10877,7 +10878,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will, and she always keeps it. Realms of Power: Magic p. 102.",
-            "id": "d29ad3f17c35"
+            "id": "8ca1621ea559"
           },
           {
             "name": "Ghost Touch",
@@ -10891,7 +10892,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: moves objects not held or fastened down, 5 pounds for 1 Might point, doubling with each further point. In constant use, mostly beyond her control, and often drains her Might. Init 0 minus the points spent. Realms of Power: Magic p. 102.",
-            "id": "78016f5fb30c"
+            "id": "8f2f992da25a"
           },
           {
             "name": "Master of Vim",
@@ -10905,7 +10906,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: changes or destroys weak sources of magic she can perceive, as any Muto or Perdo Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "04635e691aa0"
+            "id": "104bab6c0f86"
           }
         ],
         "vis": [],
@@ -11055,7 +11056,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: by spending all her Might she inhabits a target, her Personality Traits overlaying and adding to the host's. Thus she has held novices through the years.",
-            "id": "122fc11931ce"
+            "id": "cfd76f0898e6"
           },
           {
             "name": "Grant (Visions)",
@@ -11069,7 +11070,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual Power, used automatically on possession: gives the host the Visions Minor Story Flaw (ArM5 p. 60). Through it her memories of Hermetic work surface in the host.",
-            "id": "6a9384aaac5a"
+            "id": "3a723833e026"
           },
           {
             "name": "Grant (Enfeebled)",
@@ -11083,7 +11084,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual Power x2, used automatically on possession: gives the host the Enfeebled Major Flaw (ArM5 p. 53).",
-            "id": "32ec22af8017"
+            "id": "6027fe31bc29"
           }
         ],
         "vis": [],
@@ -11490,7 +11491,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual; no Hermetic equivalent. Blesses the target with the Insight of the Realms Virtue for as long as she chooses. She regains the Might only by withdrawing the gift, and until then she in effect does not exist, reaching the world only by that withdrawal.",
-            "id": "a762501c0865"
+            "id": "9dd6f34ad05c"
           }
         ],
         "vis": [],
@@ -12005,7 +12006,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Creo or Rego Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "779c9b0daad6"
+            "id": "8d9728dd455b"
           },
           {
             "name": "Eidolon",
@@ -12019,7 +12020,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will, and she always keeps it. Realms of Power: Magic p. 102.",
-            "id": "8dcbb8d1e075"
+            "id": "47c92233a3c8"
           },
           {
             "name": "Ghost Touch",
@@ -12033,7 +12034,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: moves objects not held or fastened down, 5 pounds for 1 Might point, doubling with each further point. In constant use, mostly beyond her control, and often drains her Might. Init 0 minus the points spent. Realms of Power: Magic p. 102.",
-            "id": "ef1f96db1496"
+            "id": "ed6e38892dde"
           },
           {
             "name": "Master of Vim",
@@ -12047,7 +12048,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: changes or destroys weak sources of magic she can perceive, as any Muto or Perdo Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "b7dcb1533dc5"
+            "id": "c641e09d764c"
           },
           {
             "name": "Hell's Onslaught",
@@ -12061,7 +12062,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: as Pilum of Fire, +15 damage. Excess levels lower its cost, raise its initiative and master it, so she can loose two bolts together.",
-            "id": "fd7d6d14a1ab"
+            "id": "6c844050cb12"
           },
           {
             "name": "Master of Stone",
@@ -12075,7 +12076,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Muto or Perdo Terram effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "e3fe412b76df"
+            "id": "54fb21d8b8fe"
           }
         ],
         "vis": [],
@@ -12270,7 +12271,7 @@
             "attack": null,
             "defense": 0,
             "damage": null,
-            "id": "9870bc83b7ba"
+            "id": "2988a15e727a"
           }
         ],
         "soak": 0,
@@ -12448,7 +12449,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: illusory props and sounds, as any Creo or Rego Imaginem effect of level 10 or less, at 1 Might point a magnitude. Never truly lifelike: they convey an idea or feeling. Init 0 minus the points spent.",
-            "id": "81e3faa8abd0"
+            "id": "6deb6ea5d135"
           },
           {
             "name": "Eidolon",
@@ -12462,7 +12463,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will. Realms of Power: Magic p. 102.",
-            "id": "d77cb1311629"
+            "id": "93b7e343793f"
           },
           {
             "name": "Master of Illusion",
@@ -12476,7 +12477,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: alters the look of what he touches, as any Muto or Perdo Imaginem effect of level 10 or less, at 1 Might point a magnitude, always like stage props, scenery or costume. Init 0 minus the points spent.",
-            "id": "670d9d667ee9"
+            "id": "b5a0680f9b99"
           }
         ],
         "vis": [],
@@ -12620,7 +12621,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 3,
-            "id": "cbd9782786e6"
+            "id": "d9c7cc8b6789"
           }
         ],
         "soak": 2,
@@ -12714,7 +12715,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: a brewed potion adds Threshold Points to a character's Threshold Total, 1 Might point each. The character must already have a Threshold Total, and she cannot supply all the points needed. Init is its magnitude divided by 2.",
-            "id": "440932bf6fca"
+            "id": "729e167f4243"
           },
           {
             "name": "The Malicious Brew",
@@ -12728,7 +12729,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: brews any Perdo Corpus effect with an Individual target up to 9th magnitude into a poison, Might points equal to magnitude. It grows toward a set moment (sunset, full moon, cockcrow), giving time for a cure. Intelligence + Medicine simple roll against 9 tells how long the target has. She regains the Might when the effect ends.",
-            "id": "89c36c5872a0"
+            "id": "6aa590d725a4"
           },
           {
             "name": "The Merciful Brew",
@@ -12742,7 +12743,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lesser Power: a healing potion, as Purification of the Festering Wounds but with a Duration of Season, so it serves those recovering from heavy wounds. It instantly relieves a Malicious Brew. Might points equal to magnitude, regained when the effect ends.",
-            "id": "0d9bb1b3a07a"
+            "id": "dc209a0a1a52"
           }
         ],
         "vis": [
@@ -12750,7 +12751,7 @@
             "pawns": 3,
             "art": "Aquam",
             "where": "in her legs",
-            "id": "a229757aaa04"
+            "id": "5b83c71cca8c"
           }
         ],
         "equipment": "",
@@ -12948,7 +12949,7 @@
             "attack": 6,
             "defense": 4,
             "damage": 4,
-            "id": "c73e12fb1365"
+            "id": "6960f74cde50"
           },
           {
             "name": "Long spear",
@@ -12956,7 +12957,7 @@
             "attack": 9,
             "defense": 5,
             "damage": 11,
-            "id": "5f23535c6d96"
+            "id": "5636bfc8c05b"
           }
         ],
         "soak": 5,
@@ -13078,7 +13079,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual; no Hermetic equivalent. Enforces an oath freely sworn between two or more parties, penetrating the Magic Resistance of all. If one acts against it the others know at once. A human oath-breaker sees Arganthonios in every reflective surface; one who ignores that is struck blind, as the Flaw. That ends through powers that destroy mystical effects, by fulfilling the oath, by a new oath with the wronged faerie, or by destroying all the oath's other parties. Faeries cannot break oaths, though some roles seek loopholes.",
-            "id": "e3e74bc1e257"
+            "id": "96445eceb9f1"
           }
         ],
         "vis": [
@@ -13086,7 +13087,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in the crown he wears",
-            "id": "113bd0ca7628"
+            "id": "68d8fece0aa6"
           }
         ],
         "equipment": "A silver crown of laurel leaves, too large for a mortal head. A great spear with a silver shaft, an ivory head and a binding hung with peacock feathers.",
@@ -13284,7 +13285,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 0,
-            "id": "62e426510dc8"
+            "id": "0423ec35a4b3"
           }
         ],
         "soak": 4,
@@ -13371,7 +13372,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sees through the boundaries between regio levels. Improved Powers has brought its cost to 0 and raised its initiative.",
-            "id": "a45a1a787c7d"
+            "id": "51d0e3d774ee"
           }
         ],
         "vis": [],
@@ -13476,7 +13477,7 @@
             "attack": 9,
             "defense": 3,
             "damage": 3,
-            "id": "f6b3a26f2d75"
+            "id": "196bca43feb1"
           }
         ],
         "soak": 0,
@@ -13874,7 +13875,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: any non-Ritual weather effect up to level 25, at 1 Might per spell magnitude. A Slow Power, taking an extra round to prepare.",
-            "id": "1590d86758ce"
+            "id": "1569e7ecd1a8"
           },
           {
             "name": "Raise the Tempest",
@@ -13888,7 +13889,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrAu 50 (base 5, +3 Sight, +1 Concentration, +2 Group, +3 Size), Greater Power, -5 Might from Improved Powers. A hurricane ten miles across, like Wrath of Whirling Winds and Water, which builds over several minutes and dies soon after the power ends.",
-            "id": "e856ca5ac99f"
+            "id": "ed5e8dbf9dc5"
           }
         ],
         "vis": [
@@ -13896,7 +13897,7 @@
             "pawns": 4,
             "art": "Auram",
             "where": "in storm spume",
-            "id": "22b65ad634db"
+            "id": "0ad304e19286"
           }
         ],
         "equipment": "",
@@ -14293,7 +14294,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 30 (base 5, +2 Voice, +3 Moon), Greater Power, -3 Might cost. If it penetrates, a disembodied spirit carries out her commands as best it can. It may try to break free when asked for anything complex, dangerous or against its nature: Intelligence + a fitting Personality Trait against Ease Factor 14 (9 + magnitude of her Might).",
-            "id": "f54dbcc48b01"
+            "id": "0a601d9ef8f5"
           },
           {
             "name": "Control Human",
@@ -14307,7 +14308,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 35 (base 20, +2 Voice, +1 Concentration), Greater Power, -3 Might cost. As Command Spirit, on a person, with the same chance to break free.",
-            "id": "c82fcfddfeab"
+            "id": "a40cde4368e6"
           },
           {
             "name": "Crafter of Illusion",
@@ -14321,7 +14322,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: any Creo or Rego Imaginem spell up to level 25, at 1 Might per magnitude.",
-            "id": "08cc26e6d17f"
+            "id": "6b84b37df18d"
           },
           {
             "name": "Greater Eidolon",
@@ -14335,7 +14336,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(In)Im 30 (base 2, +3 Sight, +1 Concentration, +2 move at command, +1 intricacy, +1 Intellego requisite), Greater Power, -3 Might, +1 Init. An image she can see and hear through, anywhere she can see, moving and speaking as she directs even out of sight or after she Travels, until she has no more use for it: a youth in loose robes with short white hair and a high clear voice. In the villa it often appears inside a mirror.",
-            "id": "c7bc19f9bf15"
+            "id": "fd3125fb63a1"
           },
           {
             "name": "Ghost Touch",
@@ -14349,7 +14350,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: moves objects not held or fastened down, up to 5 pounds for 1 Might and double for each further point, until released. She cannot use or throw them as weapons.",
-            "id": "895b05e87f82"
+            "id": "3207ce5401e7"
           },
           {
             "name": "Travel",
@@ -14363,7 +14364,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 35 (base 15, +4 Special, as Arcane), Personal Power x2, -3 Might. Brings her to any place she can see, knows well or has an Arcane Connection to, much like a maga's ReCo travel spells.",
-            "id": "104049912418"
+            "id": "f255572db76a"
           }
         ],
         "vis": [
@@ -14371,7 +14372,7 @@
             "pawns": 5,
             "art": "Mentem",
             "where": "in reflections",
-            "id": "6ee1bd2ca64b"
+            "id": "0da7fb284f58"
           }
         ],
         "equipment": "",
@@ -14736,7 +14737,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "d079e9c26ae9"
+            "id": "e6b5ba63ca5a"
           },
           {
             "name": "Fist (Man)",
@@ -14744,7 +14745,7 @@
             "attack": 14,
             "defense": 12,
             "damage": 8,
-            "id": "6c44519df09d"
+            "id": "d9a3d7b9ec0a"
           },
           {
             "name": "Bite (Man)",
@@ -14752,7 +14753,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 2,
-            "id": "503cf02ca8a2"
+            "id": "60b644307316"
           },
           {
             "name": "Dodge (Serpent)",
@@ -14760,7 +14761,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "8880480657f0"
+            "id": "c3b8fd3c6e09"
           },
           {
             "name": "Fist (Serpent)",
@@ -14768,7 +14769,7 @@
             "attack": 14,
             "defense": 10,
             "damage": 12,
-            "id": "6f16c6f3cf01"
+            "id": "189f968d408c"
           },
           {
             "name": "Bite (Serpent)",
@@ -14776,7 +14777,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 6,
-            "id": "bb68a91cb76e"
+            "id": "3b25dd326ebc"
           },
           {
             "name": "Constrict (Serpent)",
@@ -14784,7 +14785,7 @@
             "attack": 12,
             "defense": 7,
             "damage": null,
-            "id": "36b3794308b6"
+            "id": "3a5f6ae56546"
           }
         ],
         "soak": 10,
@@ -14934,7 +14935,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He may, and is usually forced to, take human form for a Sun or until he ends it. It loses the serpent's Size +2, Str +4 and Qik -2, and has the Large Virtue, Size +1 with no change to his Characteristics. A Slow Power.",
-            "id": "d74d363d5768"
+            "id": "79acf5f912cc"
           }
         ],
         "vis": [
@@ -14942,7 +14943,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his tattoos",
-            "id": "8c35cd7f58ac"
+            "id": "17e75c25c1f6"
           }
         ],
         "equipment": "",
@@ -15149,7 +15150,7 @@
             "attack": null,
             "defense": 14,
             "damage": null,
-            "id": "06fa0bcbc3b0"
+            "id": "9afd3826c713"
           },
           {
             "name": "Fist of Flame",
@@ -15157,7 +15158,7 @@
             "attack": 3,
             "defense": 8,
             "damage": 5,
-            "id": "ed395759207d"
+            "id": "9322dc35e525"
           }
         ],
         "soak": 8,
@@ -15251,7 +15252,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 25 (base 5, +2 Voice, +2 Group), Greater Power, -2 Might cost. As the spell: +10 damage to all in a 60-degree arc as far as her voice carries.",
-            "id": "ec72c7d98a49"
+            "id": "3a22c3f50257"
           },
           {
             "name": "Continual Flame",
@@ -15265,7 +15266,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 15 (base 3, +1 Touch, +3 Moon), Greater Power, -1 Might cost. Leaves a flame, candle- to torch-sized, on anything she touches, which burns a month with no fuel.",
-            "id": "af2f02e0ac8b"
+            "id": "f8ca798b332c"
           },
           {
             "name": "Crafter of Ignem",
@@ -15279,7 +15280,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-3 points (15 levels, +1 add 5 to maximum level, +1 Init): any non-Ritual Creo or Rego Ignem spell up to level 15, at 1 Might per magnitude.",
-            "id": "c8142bc38182"
+            "id": "e9edeee971f4"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -15293,7 +15294,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(Re)Ig 25 (base 5, +1 Touch, +2 Sun, +1 requisite), Greater Power, -1 Might cost. Makes and animates a body of elemental fire until the duration ends or she dissolves it. Slain in it she is killed, leaving 2 small rubies holding vis; injured, she can dissolve it to escape death.",
-            "id": "1077ea5d7df6"
+            "id": "74b4d1b6b3cd"
           },
           {
             "name": "Flight of the Hummingbird",
@@ -15307,7 +15308,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReIg 10, Personal Power, -1 Might cost. She flies in any direction by concentrating, and if that lapses she stops but does not fall. The block's reckoning says base 4, +2 Sun, against a printed Duration of Concentration.",
-            "id": "d5a15c3b1981"
+            "id": "5a4c4ce53848"
           },
           {
             "name": "Hurl Flame",
@@ -15321,7 +15322,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 10 (base 4, +2 Voice), Greater Power, -1 Might cost. A torch-sized flame from her tiny hands, +5 damage where it strikes.",
-            "id": "4f60566c3b8a"
+            "id": "25ccf20f27cc"
           }
         ],
         "vis": [
@@ -15329,7 +15330,7 @@
             "pawns": 2,
             "art": "Ignem",
             "where": "in her ruby eyes",
-            "id": "807b8f822e6e"
+            "id": "010b6004a97f"
           }
         ],
         "equipment": "",
@@ -15480,7 +15481,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIm 25 (base 1, +2 Voice, +1 Concentration, +2 Group, +2 move at command, +1 intricacy), Greater Power, -3 Might, +2 Init. Music or simpler sounds, from one to ten voices. It favours bell chimes and plaintive melodies.",
-            "id": "1a88dd12ebad"
+            "id": "9fcc28910377"
           }
         ],
         "vis": [
@@ -15488,7 +15489,7 @@
             "pawns": 1,
             "art": "Imaginem",
             "where": "in a chime which falls to the ground",
-            "id": "92b55a29efa7"
+            "id": "358e6fb458b2"
           }
         ],
         "equipment": "",
@@ -15699,7 +15700,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(In)Im(Me) 35 (base 2, +2 Voice, +1 Concentration, +2 Group, +2 move at command, +1 intricacy, +1 Intellego requisite; the Mentem requisite is free), Greater Power, -3 Might cost. Believable figures who deal with a victim and companions, guessing by magic what they should say: compare its Perception + Finesse with the victim's roll, usually Perception + Awareness, or another Ability fitting the figure. It must penetrate to take something familiar from a victim, and concentrates a round first, as a Slow Power.",
-            "id": "0c24a39946ba"
+            "id": "934188ec16dd"
           },
           {
             "name": "Warper of Imaginem",
@@ -15713,7 +15714,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Muto or Rego Imaginem spell up to level 5, for 1 Might.",
-            "id": "777a76bc1b4f"
+            "id": "f6e6415735d9"
           }
         ],
         "vis": [
@@ -15721,7 +15722,7 @@
             "pawns": 1,
             "art": "Imaginem",
             "where": "in a shard of glass",
-            "id": "5f724cf737de"
+            "id": "cdcaf8a29bd5"
           }
         ],
         "equipment": "",
@@ -15915,7 +15916,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Mu(Re)Te 10. Greater Power, -1 Might and +1 Init from Improved Powers.",
-            "id": "30b010bfbf8d"
+            "id": "9bb11ffed142"
           },
           {
             "name": "The Earth's Carbuncle",
@@ -15929,7 +15930,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Re(Mu)Te 15. Greater Power, -2 Might and +1 Init from Improved Powers.",
-            "id": "b5563c75f36c"
+            "id": "3e26e9b9e213"
           },
           {
             "name": "Hands of the Grasping Earth",
@@ -15943,7 +15944,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Re(Mu)Te 15. Greater Power, -2 Might and +1 Init from Improved Powers.",
-            "id": "c098c14d80d1"
+            "id": "af6aad9bcebc"
           },
           {
             "name": "Pit of the Gaping Earth",
@@ -15957,7 +15958,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, reduced to Range Touch, PeTe 10. Greater Power, -1 Might and +1 Init from Improved Powers.",
-            "id": "524dd465d3cc"
+            "id": "7ea962772c67"
           },
           {
             "name": "Sense the Feet That Tread the Earth",
@@ -15971,7 +15972,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InTe 25 (base 4, +1 Touch, +1 Part, +3 Size), Greater Power, -3 Might, +2 Init. By thought alone he feels what moves on the ground within a mile, enough for the whole island: direction, distance, weight, number and manner of movement.",
-            "id": "0fc016ec5538"
+            "id": "6381f13c7e8c"
           }
         ],
         "vis": [
@@ -15979,7 +15980,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "in sharp flints",
-            "id": "bb675bdb247d"
+            "id": "7fe936368416"
           }
         ],
         "equipment": "",
@@ -16296,7 +16297,7 @@
             "attack": 21,
             "defense": 13,
             "damage": 9,
-            "id": "72a38a8c4cd8"
+            "id": "efdc8faf4087"
           }
         ],
         "soak": 12,
@@ -16376,7 +16377,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 6 points, Init is minus the Might cost, form variable. Duplicates any spell of snow, ice or cold of level 30 or less, at 1 Might per magnitude. A Focus Power: 5 mastery points raise the maximum level.",
-            "id": "f40fa1d6022a"
+            "id": "4889b04435b1"
           }
         ],
         "vis": [
@@ -16384,7 +16385,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "feathers",
-            "id": "d8c8ac520045"
+            "id": "804575f56fcd"
           }
         ],
         "equipment": "",
@@ -16681,7 +16682,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "a1ce65651efd"
+            "id": "8194839953a1"
           }
         ],
         "soak": -1,
@@ -16761,7 +16762,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Malus's power, but only for the Hortulus tribe.",
-            "id": "fde26d2e14ca"
+            "id": "0ef0159dbb72"
           },
           {
             "name": "Healing",
@@ -16775,7 +16776,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target's worst wound improves by one level at once. The points come from Might Score, not the pool (Realms of Power: Magic p. 39). Ritual Power x2.",
-            "id": "b94aad541596"
+            "id": "12b06b63fe0a"
           }
         ],
         "vis": [
@@ -16783,7 +16784,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "seeds",
-            "id": "7927b38e350d"
+            "id": "15c493dc42a4"
           }
         ],
         "equipment": "",
@@ -17041,7 +17042,7 @@
             "attack": null,
             "defense": 10,
             "damage": null,
-            "id": "61e3a1d62bff"
+            "id": "ce9bc95c0834"
           }
         ],
         "soak": 2,
@@ -17128,7 +17129,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus or Animal. Deadly to all who hear it; deafness is a sound defense. Unlike a Mandrake of Virtue it can do this at any time. PeCo(An) 50 (Base 30, +3 Sound, +1 Animal requisite): Greater Power (50 levels), Improved Powers (5 mastery points, +3 Init, -2 Might cost).",
-            "id": "4456c8df6a88"
+            "id": "d0a662985d47"
           },
           {
             "name": "Rally the Wooden Troops",
@@ -17142,7 +17143,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Malus's power, but only for the Venenarium tribe.",
-            "id": "e3651f4846ed"
+            "id": "a6100dc6d2a6"
           },
           {
             "name": "Unwholesome Lust",
@@ -17156,7 +17157,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target burns with lust for someone the plant picks as it acts, and can do nothing but pursue them until it ends. CrMe 20 (Base 4, +2 Voice, +2 Sun): Greater Power (20 levels, -5 for Reduced Powers, -1 Might cost).",
-            "id": "ac43cc762283"
+            "id": "67e76af51779"
           }
         ],
         "vis": [
@@ -17164,7 +17165,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "root",
-            "id": "18a4d4b278cd"
+            "id": "83fd6a0ca51a"
           }
         ],
         "equipment": "",
@@ -17407,7 +17408,7 @@
             "attack": 9,
             "defense": 6,
             "damage": 12,
-            "id": "2e4a777aec97"
+            "id": "274eb7e94329"
           }
         ],
         "soak": 12,
@@ -17473,7 +17474,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sets nearby trees and plants walking; in this Garden they also gain Cunning 0. Up to 10 Groups of Herbam: 10,000 herbs (Size -6), 100 bushes (Size 0), 10 small trees (Size +3) or one 25-foot tree (Size +6). May fire as many times a round as the Mastery Ability, paying Might each time. Malus can move only Curtilagium plants. ReHe 35 (Base 5, +1 Touch, +2 Sun, +2 Group, +1 Size): Greater Power (35 levels, -2 Might cost, Multicast mastery power).",
-            "id": "640233a1977a"
+            "id": "ed62b0634f91"
           },
           {
             "name": "Creeping Chasm",
@@ -17487,7 +17488,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Thrusts its roots deep and duplicates the spell of the same name. ReTe 35: Greater Power (35 levels, +3 Init).",
-            "id": "5919d482a3a0"
+            "id": "8940b8b9ffb9"
           }
         ],
         "vis": [
@@ -17495,7 +17496,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "apples",
-            "id": "6044efb31892"
+            "id": "fda7011fbd63"
           }
         ],
         "equipment": "",
@@ -17783,7 +17784,7 @@
             "attack": 13,
             "defense": 13,
             "damage": 7,
-            "id": "bfbacfbbf440"
+            "id": "8e87872c8e14"
           }
         ],
         "soak": 13,
@@ -17849,7 +17850,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Weaves up to eight limbs from its tendrils, and may be treated as a trained group of four, adding +12 to Attack or Defense. Every two limbs strangling shrink the group by one. Cr(Re)He 10 (Base 1, +2 Sun, +2 Group, +1 requisite): Lesser Power (10 levels, -2 Might cost, +1 Init).",
-            "id": "8afa5f22e6d4"
+            "id": "7348c54012dc"
           },
           {
             "name": "Strangle the Life",
@@ -17863,7 +17864,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fingers of wire close on the throat and drain life. Each round the victim makes a Deprivation roll against an Ease Factor of Dodder's Strength roll. Up to eight at once, a limb each. To escape, beat its Grapple Attack with your own. PeCo 30 (Base 10, +1 Touch, +1 Conc, +2 Group): Greater Power (30 levels, -2 Might cost, +2 Init).",
-            "id": "df2bc0fe88c9"
+            "id": "509a47d7ae56"
           },
           {
             "name": "Wear Corpse",
@@ -17877,7 +17878,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Worms into a human corpse of Size -1 to +1, moves it, and keeps it from decay. It can use its other powers inside, but cannot heal the corpse, or pass as human for long. Re(Cr)Co 35 (Base 10, +1 Touch, +2 Sun, +1 constant, +1 requisite): Greater Power (35 levels, -3 Might cost).",
-            "id": "b8e636bd905b"
+            "id": "3128652cf9d4"
           }
         ],
         "vis": [
@@ -17885,7 +17886,7 @@
             "pawns": 5,
             "art": "Perdo",
             "where": "tendrils",
-            "id": "3d7376edd377"
+            "id": "ce3c389ddb09"
           }
         ],
         "equipment": "",
@@ -18070,7 +18071,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. Any non-ritual Creo or Rego Aquam spell of level 20 or less, one Might point per magnitude. Present throughout the valley, it can make most effects Personal or Touch.",
-            "id": "5a2206f1a86f"
+            "id": "b1378eb62517"
           },
           {
             "name": "Emissary of Foam and Sand",
@@ -18084,7 +18085,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Aquam and Terram. Shapes within itself a human form of sand and water that speaks and handles things slowly and clumsily. Inanimate, it cannot be hurt as a creature can, but a strong current or a large object disperses it. It may leave the valley, though the spirit cannot perceive or control it more than a little way past its borders. (Base 5, +1 Conc, +1 Part, +1 Rego requisite, Terram requisite free; Lesser Power, 1 Mastery Point to lower Might; cost 20.)",
-            "id": "7b21fcd6a95f"
+            "id": "e30bf8349fa0"
           },
           {
             "name": "Master of Water",
@@ -18098,7 +18099,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. Any non-ritual Muto or Perdo Aquam spell of level 20 or less, one Might point per magnitude. As Crafter of Water for Range.",
-            "id": "dfe0a3f427cc"
+            "id": "6361c8476169"
           },
           {
             "name": "Presence",
@@ -18112,7 +18113,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Aware of all that passes in the valley, and present everywhere in it (Realms of Power: Magic pp. 103, 106).",
-            "id": "842c9e784e4d"
+            "id": "a4facad9308a"
           }
         ],
         "vis": [
@@ -18120,7 +18121,7 @@
             "pawns": 2,
             "art": "Aquam",
             "where": "stones buried in the grotto, each year",
-            "id": "fbace746d168"
+            "id": "3d89071882c9"
           }
         ],
         "equipment": "",
@@ -18199,7 +18200,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 6,
-            "id": "82a5f32046cc"
+            "id": "d81094de1908"
           },
           {
             "name": "Javelin",
@@ -18207,7 +18208,7 @@
             "attack": 4,
             "defense": 5,
             "damage": 7,
-            "id": "90e305dee4de"
+            "id": "e0f0d1286efe"
           }
         ],
         "soak": 4,
@@ -18301,7 +18302,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory image of its former self, moving and speaking as it directs. It cannot help making one: remade each morning, lasting until a temporary end in battle or the next morning (Realms of Power: Magic p. 102).",
-            "id": "77d5719cdf60"
+            "id": "55e06f3ffe37"
           },
           {
             "name": "Ghost Touch",
@@ -18315,7 +18316,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points, Init -1 minus points spent. Moves objects not held or fastened: 1 point for five pounds, each further point doubling it. Hurled, Thrown Weapon and +5 damage a point. It can fight with an object on its usual totals, though it rarely does, keeping this for handling things (Realms of Power: Magic p. 102).",
-            "id": "657cfc54a251"
+            "id": "126eb240edab"
           },
           {
             "name": "Strike",
@@ -18329,7 +18330,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For one Diameter its sword strikes as a material object. The attack is magical and must penetrate Magic Resistance. Lesser Power with no direct Hermetic equivalent, treated as level 15; 2 Mastery Points reduce the cost.",
-            "id": "fcbd63f67944"
+            "id": "b490642367c7"
           }
         ],
         "vis": [],
@@ -18387,7 +18388,7 @@
             "attack": 6,
             "defense": 3,
             "damage": 11,
-            "id": "3602e487d9b4"
+            "id": "f47df33ad362"
           },
           {
             "name": "Crossbow",
@@ -18395,7 +18396,7 @@
             "attack": 4,
             "defense": -1,
             "damage": 7,
-            "id": "4a89e8eab39f"
+            "id": "6f2ef6e39654"
           }
         ],
         "soak": 0,
@@ -18513,7 +18514,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 5,
-            "id": "9bcae99669d5"
+            "id": "5bcba6b929ed"
           }
         ],
         "soak": 0,
@@ -18628,7 +18629,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves objects not held or fastened down; so they work the Staves of the Wooden Soldiers.",
-            "id": "182e212903a6"
+            "id": "31b1d0422f51"
           },
           {
             "name": "Ghostly Tongues",
@@ -18642,7 +18643,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes sound as if it had a body with a voice.",
-            "id": "85b1c27ed9da"
+            "id": "d5d1d1e7c664"
           }
         ],
         "vis": [
@@ -18650,7 +18651,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "the statue in the sanctum",
-            "id": "536d090c5f8f"
+            "id": "c65785792894"
           }
         ],
         "equipment": "",
@@ -18745,7 +18746,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 5,
-            "id": "a08d592cbdb1"
+            "id": "3658fc3c10d2"
           }
         ],
         "soak": 0,
@@ -18860,7 +18861,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves objects not held or fastened down; so they work the Staves of the Wooden Soldiers.",
-            "id": "f2ebadcd01eb"
+            "id": "e66d02181727"
           },
           {
             "name": "Ghostly Tongues",
@@ -18874,7 +18875,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes sound as if it had a body with a voice.",
-            "id": "fc9fe0f97fc1"
+            "id": "3f28a6686c1f"
           }
         ],
         "vis": [
@@ -18882,7 +18883,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "the statue in the sanctum",
-            "id": "4f0235dffcca"
+            "id": "b1846f81117a"
           }
         ],
         "equipment": "",
@@ -19037,7 +19038,7 @@
             "attack": 10,
             "defense": 9,
             "damage": 1,
-            "id": "e47314851470"
+            "id": "5206ddbef50d"
           }
         ],
         "soak": 7,
@@ -19103,7 +19104,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes outright a human who meets its gaze. Base 5, +1 Eye, +1 Concentration.",
-            "id": "3648b8699b65"
+            "id": "072df23c7cef"
           },
           {
             "name": "Grasp Ghosts",
@@ -19117,7 +19118,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Seizes a ghost and drags it to the castle, where a ring of hounds keeps it from leaving. Base 5, +1 Touch, +2 Sun.",
-            "id": "7ffb4e348f43"
+            "id": "4035f1ccce01"
           },
           {
             "name": "Hands of the Animal",
@@ -19131,7 +19132,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Carries and handles a thing as if with human hands of Strength +5. It must concentrate to do more than carry, to drop a thing, or to take up another. Base 3 (ReTe), +1 Touch, +2 Sun, +1 constant.",
-            "id": "bdfeb5af2df2"
+            "id": "1604c463224d"
           }
         ],
         "vis": [
@@ -19139,7 +19140,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in finial",
-            "id": "a08fb2d5e8ac"
+            "id": "31a08f736b8a"
           }
         ],
         "equipment": "",
@@ -19302,7 +19303,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 3,
-            "id": "77908bcfb6c2"
+            "id": "5e5c73406def"
           },
           {
             "name": "Grapple",
@@ -19310,7 +19311,7 @@
             "attack": 2,
             "defense": 7,
             "damage": null,
-            "id": "595da00bbb46"
+            "id": "68cd2604fb75"
           },
           {
             "name": "Large Claws",
@@ -19318,7 +19319,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 6,
-            "id": "b07311e77700"
+            "id": "7597107d223f"
           }
         ],
         "soak": 1,
@@ -19398,7 +19399,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "heart",
-            "id": "ae122202ad77"
+            "id": "bc29f91bd5f7"
           }
         ],
         "equipment": "",
@@ -19637,7 +19638,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 8,
-            "id": "01ba7130aa64"
+            "id": "61a9937e0851"
           },
           {
             "name": "Grapple",
@@ -19645,7 +19646,7 @@
             "attack": 7,
             "defense": 9,
             "damage": null,
-            "id": "5c2c5e75812c"
+            "id": "18a35e6f7c50"
           },
           {
             "name": "Large Claws",
@@ -19653,7 +19654,7 @@
             "attack": 14,
             "defense": 12,
             "damage": 8,
-            "id": "3b815efaeb59"
+            "id": "11ecf98167cc"
           }
         ],
         "soak": 7,
@@ -19754,7 +19755,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "a6f540dbf080"
+            "id": "7c7e25ee2e4f"
           }
         ],
         "vis": [
@@ -19762,7 +19763,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "heart",
-            "id": "a1db9c917a8a"
+            "id": "b5e05fc778e9"
           }
         ],
         "equipment": "",
@@ -20141,7 +20142,7 @@
             "attack": 15,
             "defense": 14,
             "damage": 11,
-            "id": "c1d622e9f352"
+            "id": "03e362875a6a"
           },
           {
             "name": "Grapple",
@@ -20149,7 +20150,7 @@
             "attack": 12,
             "defense": 11,
             "damage": null,
-            "id": "f409805fa754"
+            "id": "f6b9d86265b6"
           },
           {
             "name": "Large Claws",
@@ -20157,7 +20158,7 @@
             "attack": 17,
             "defense": 16,
             "damage": 20,
-            "id": "4abd20f9339b"
+            "id": "b5ba4d10da35"
           }
         ],
         "soak": 11,
@@ -20258,7 +20259,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "a6f540dbf080"
+            "id": "7c7e25ee2e4f"
           }
         ],
         "vis": [
@@ -20266,7 +20267,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "heart",
-            "id": "44af8f7c3905"
+            "id": "a12858ffcd54"
           }
         ],
         "equipment": "",
@@ -20429,7 +20430,7 @@
             "attack": 5,
             "defense": 8,
             "damage": 3,
-            "id": "7fffe73980ae"
+            "id": "34be751ad267"
           },
           {
             "name": "Grapple",
@@ -20437,7 +20438,7 @@
             "attack": 4,
             "defense": 9,
             "damage": null,
-            "id": "cd6f21a64ff8"
+            "id": "48a430df4008"
           },
           {
             "name": "Large Claws",
@@ -20445,7 +20446,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 6,
-            "id": "e7e80c146c31"
+            "id": "ab04031b7895"
           }
         ],
         "soak": 3,
@@ -20525,7 +20526,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "heart",
-            "id": "5d38685d12c4"
+            "id": "f6f00395b200"
           }
         ],
         "equipment": "",
@@ -20764,7 +20765,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 8,
-            "id": "a82c64cfcda9"
+            "id": "57f71ee89c35"
           },
           {
             "name": "Grapple",
@@ -20772,7 +20773,7 @@
             "attack": 9,
             "defense": 11,
             "damage": null,
-            "id": "4a3916cc7b55"
+            "id": "fb96cd2ee935"
           },
           {
             "name": "Large Claws",
@@ -20780,7 +20781,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 8,
-            "id": "75bf31f9d55f"
+            "id": "bc8806cdb4fc"
           }
         ],
         "soak": 9,
@@ -20881,7 +20882,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "a6f540dbf080"
+            "id": "7c7e25ee2e4f"
           }
         ],
         "vis": [
@@ -20889,7 +20890,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "heart",
-            "id": "7e99acfe6ebb"
+            "id": "21e0572ff4ab"
           }
         ],
         "equipment": "",
@@ -21268,7 +21269,7 @@
             "attack": 14,
             "defense": 13,
             "damage": 8,
-            "id": "99a74ad7e5c6"
+            "id": "97136404217a"
           },
           {
             "name": "Grapple",
@@ -21276,7 +21277,7 @@
             "attack": 15,
             "defense": 15,
             "damage": null,
-            "id": "b214635b66c9"
+            "id": "74a166f506a0"
           },
           {
             "name": "Large Claws",
@@ -21284,7 +21285,7 @@
             "attack": 16,
             "defense": 15,
             "damage": 11,
-            "id": "1e1e0c4147bc"
+            "id": "a7dc5508b379"
           },
           {
             "name": "Large Horns",
@@ -21292,7 +21293,7 @@
             "attack": 17,
             "defense": 18,
             "damage": 16,
-            "id": "ef02de06d775"
+            "id": "1ee8f0561542"
           }
         ],
         "soak": 15,
@@ -21393,7 +21394,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "a6f540dbf080"
+            "id": "7c7e25ee2e4f"
           }
         ],
         "vis": [
@@ -21401,7 +21402,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "heart",
-            "id": "25a945520670"
+            "id": "0aff2403eed0"
           }
         ],
         "equipment": "",
@@ -21625,7 +21626,7 @@
             "attack": 5,
             "defense": 1,
             "damage": 3,
-            "id": "5389286a2bd0"
+            "id": "80ebe77ea796"
           },
           {
             "name": "Dodge",
@@ -21633,7 +21634,7 @@
             "attack": null,
             "defense": 2,
             "damage": null,
-            "id": "18b1aa2672c0"
+            "id": "094f02ea17c0"
           }
         ],
         "soak": 5,
@@ -21856,7 +21857,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 7,
-            "id": "ce2136c3bdb7"
+            "id": "86e65fa47cb6"
           },
           {
             "name": "Dodge",
@@ -21864,7 +21865,7 @@
             "attack": null,
             "defense": 2,
             "damage": null,
-            "id": "293d07db315a"
+            "id": "f7ef645c9e58"
           }
         ],
         "soak": 6,
@@ -22207,7 +22208,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its freezing touch does +10 damage, and metal armor gives no benefit against it.",
-            "id": "43302b4c76da"
+            "id": "400ef45dac37"
           },
           {
             "name": "Charge of the Angry Winds",
@@ -22221,7 +22222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell of that name, adding the elemental's Strength to every Ease Factor for acting within the wind.",
-            "id": "beaa4762bcda"
+            "id": "7537baf96197"
           },
           {
             "name": "Drown",
@@ -22235,7 +22236,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It wraps a victim and fills her lungs with ice, forcing a Deprivation roll (ArM5 pp. 180-181). She may break free by the Grappling rules (ArM5 p. 174).",
-            "id": "09095ea0bb17"
+            "id": "193559153ba5"
           }
         ],
         "vis": [
@@ -22243,7 +22244,7 @@
             "pawns": 4,
             "art": "Auram",
             "where": "body",
-            "id": "9b37c05a83fa"
+            "id": "2d7876d9b55a"
           }
         ],
         "equipment": "",
@@ -22320,7 +22321,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "f76696e38675"
+            "id": "3d450ef2844b"
           }
         ],
         "soak": 7,
@@ -22365,7 +22366,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives it a body, a spiked ball of icicles a yard wide. Forming takes a round; it can shed the body almost at once.",
-            "id": "7c045e42fd38"
+            "id": "7e62d9c6902a"
           },
           {
             "name": "Elemental Control of Air",
@@ -22379,7 +22380,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any Creo, Muto or Rego Auram effect at 1 Might a magnitude (variable cost), minor effects only, of level no more than its Might Score. It hides paths, wipes footprints, cuts visibility and smothers cries for help to part stragglers from a group.",
-            "id": "78040310dca4"
+            "id": "37c1c9ac5331"
           },
           {
             "name": "Envisioning",
@@ -22393,7 +22394,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Small changes to a victim's dreams, making them darker and more ominous.",
-            "id": "da9ed6f46967"
+            "id": "629e22816ff7"
           },
           {
             "name": "Obsession",
@@ -22407,7 +22408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and the demon spends Might in reply, it may force spiritual doubt. At the next crisis of worthiness the storyguide rolls a simple die +3, the player a simple die + a suitable Personality Trait, with adjustments for a harsh environment. If the demon's total is higher the character gains Doubt +1. Acting on that score puts him in a state of sin, and the demon coagulates and kills him.",
-            "id": "fbca0d8e92a9"
+            "id": "e09653f39419"
           }
         ],
         "vis": [
@@ -22415,7 +22416,7 @@
             "pawns": 2,
             "art": "",
             "where": "body",
-            "id": "8008858c6752"
+            "id": "a8d9cd455c6a"
           }
         ],
         "equipment": "",

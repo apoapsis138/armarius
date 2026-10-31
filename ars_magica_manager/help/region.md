@@ -145,7 +145,7 @@ The forests, ruins, crags and regiones of the region: where each is,
 its aura, how many regio levels it has and how far the troupe has got
 with it. Add, edit or delete one; see [A place](help:tab-nb-place).
 
-A place's form also has **Waters** (Open water, Anchorage or Port), which a ship's stops use, and **Travels with**, for a place that moves with a covenant, as a ship does. See **How to keep a covenant on the move**.
+A place's form also has **Waters** (Open water, Anchorage or Port), which a ship's stops use (the book packs mark theirs, and a port town has a harbour Place beside it), and **Travels with**, for a place that moves with a covenant, as a ship does. See **How to keep a covenant on the move**.
 
 # A neighbour
 <!-- help: neighbour -->
