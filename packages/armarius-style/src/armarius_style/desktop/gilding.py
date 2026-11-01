@@ -24,10 +24,10 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QApplication, QScrollBar, QStyle, QStyleOptionSlider
 
+from ..palettes import PIGMENTS, WASH, Palette
 from .illumination import gold
 from .ornaments import HEDERA_RIGHT, _leaf, corner_flourishes
 from .paper import paper, shade
-from .themes import PIGMENTS, WASH, Palette
 
 
 def wash(p: Palette, left: float, right: float, alpha: int = WASH) -> QLinearGradient:

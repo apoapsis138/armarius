@@ -10,28 +10,21 @@ from __future__ import annotations
 from functools import cache
 from pathlib import Path
 
+from armarius_style.desktop.fonts import register_fonts
+from armarius_style.fonts import DISPLAY, SERIF, UI
 from PySide6.QtCore import QByteArray, QRectF, QSize, Qt
-from PySide6.QtGui import QFontDatabase, QIcon, QPainter, QPixmap
+from PySide6.QtGui import QIcon, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 
 from .. import artwork
 
-#: The families the style sheets name, once registered.
-SERIF = "EB Garamond"
-DISPLAY = "Uncial Antiqua"
-#: Labels, numbers and tables: Windows's own UI face, else the system's.
-UI = "Segoe UI"
-
-
-def register_fonts() -> list[str]:
-    """Register the bundled fonts with Qt; the families it couldn't load
-    (the app falls back to a system serif for them)."""
-    failed = []
-    for family, paths in artwork.FONTS.items():
-        for path in paths:
-            if QFontDatabase.addApplicationFont(str(path)) < 0:
-                failed.append(family)
-    return sorted(set(failed))
+#: What the app's other modules take from armarius_style through here.
+__all__ = [
+    "DISPLAY",
+    "SERIF",
+    "UI",
+    "register_fonts",
+]
 
 
 @cache

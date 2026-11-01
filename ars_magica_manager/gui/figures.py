@@ -16,6 +16,7 @@ import math
 import random
 from collections.abc import Callable, Mapping, Sequence
 
+from armarius_style.desktop.paper import lift, shade
 from PySide6.QtCore import QEvent, QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QColor,
@@ -43,7 +44,6 @@ from ..sheets import laboratory as cs_lab
 from . import motion, pictures
 from .markup_html import to_html
 from .medallions import figure_medallion, paint_season
-from .paper import lift, shade
 from .themes import Palette
 from .widgets import mix, serif, text
 

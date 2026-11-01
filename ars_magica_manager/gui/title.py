@@ -9,6 +9,15 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from armarius_style.desktop import gilding
+from armarius_style.desktop.illumination import IlluminatedInitial
+from armarius_style.desktop.ornaments import (
+    Headpiece,
+    ShortRule,
+    Tailpiece,
+    corner_flourishes,
+)
+from armarius_style.desktop.paper import Paper
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QFont,
@@ -27,10 +36,7 @@ from PySide6.QtWidgets import (
 )
 
 from .. import title_page as tp
-from . import gilding, motion, pictures
-from .illumination import IlluminatedInitial
-from .ornaments import Headpiece, ShortRule, Tailpiece, corner_flourishes
-from .paper import Paper
+from . import motion, pictures
 from .themes import Palette, wash_style
 from .widgets import serif, text
 

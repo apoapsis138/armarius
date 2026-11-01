@@ -5,7 +5,7 @@ The window's body is a sheet of laid paper (grain, fibres, a little
 mottling and the faint chain lines of the mould; vellum by candlelight in
 the dark theme; ruled drafting vellum for a record In Creation), darker
 toward its edges. Plain widgets are transparent
-(themes.style_sheet), so the paper shows through them; cards, seals and
+(sheet.style_sheet), so the paper shows through them; cards, seals and
 the inspector sit on it with a soft shadow.
 """
 
@@ -25,7 +25,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGraphicsDropShadowEffect, QWidget
 
-from .themes import Palette
+from ..palettes import Palette
 
 #: The side of one tile of paper, in pixels.
 TILE = 512

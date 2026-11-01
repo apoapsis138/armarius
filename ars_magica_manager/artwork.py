@@ -24,8 +24,8 @@ it to its theme. Two sets:
 - icons/: Phosphor Icons at Light weight (MIT), copied by
   tools/fetch_icons.py, for everything else.
 
-app/ holds the app icon, made from the Order of Hermes sigil, and fonts/
-the typefaces (SIL Open Font License): EB Garamond for headings (in small
+app/ holds the app icon, made from the Order of Hermes sigil. The typefaces
+(SIL Open Font License) are armarius_style's: EB Garamond for headings (in small
 caps) and rules prose, Uncial Antiqua for one decorative flourish. Labels,
 numbers and tables use the system's own UI font (Segoe UI on Windows).
 """
@@ -35,7 +35,14 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
+from armarius_style.fonts import FONTS
+
 from .arts import ARTS
+
+#: What the app's other modules take from armarius_style through here.
+__all__ = [
+    "FONTS",
+]
 
 if TYPE_CHECKING:
     from .models import Character
@@ -73,15 +80,6 @@ SIGIL = ASSETS / "app" / "sigil.png"
 SOUNDS: dict[str, Path] = {
     cue: SOUNDS_DIR / f"{cue}.wav"
     for cue in ("page", "page-long", "quill", "coins", "chest", "seal", "tock")
-}
-
-#: The bundled typefaces' files, by family name.
-FONTS: dict[str, tuple[Path, ...]] = {
-    "EB Garamond": (
-        ASSETS / "fonts" / "EBGaramond-wght.ttf",
-        ASSETS / "fonts" / "EBGaramond-Italic-wght.ttf",
-    ),
-    "Uncial Antiqua": (ASSETS / "fonts" / "UncialAntiqua-Regular.ttf",),
 }
 
 #: Each Art's symbol.

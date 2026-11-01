@@ -1,8 +1,7 @@
 """The windows' own frame, in place of the system's title bar: the
 minimise, maximise and close glyphs drawn on the paper, a strip that
 moves the window (a double-click maximises it), and thin grips along the
-edges and corners that resize it. The main window and every popup
-(forms.py) are framed this way.
+edges and corners that resize it.
 
 Moving and resizing go through the system (QWindow.startSystemMove and
 startSystemResize), and snapping.py gives the window back the styles
@@ -19,11 +18,10 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from . import pictures, snapping
-from .themes import Palette
+from .. import fonts
+from ..palettes import Palette
+from . import snapping
 
-#: The name over the middle of every window's title bar.
-APP_NAME = "Armarius"
 MINIMISE, MAXIMISE, CLOSE = "minimise", "maximise", "close"
 #: The width of a resizing grip along an edge, in pixels.
 GRIP = 6
@@ -159,7 +157,7 @@ class DragStrip(QWidget):
         self.title = title
         self.maximises = maximises
         self.p = p
-        self.setFont(QFont(pictures.DISPLAY, 13))
+        self.setFont(QFont(fonts.DISPLAY, 13))
 
     def set_palette(self, p: Palette) -> None:
         self.p = p

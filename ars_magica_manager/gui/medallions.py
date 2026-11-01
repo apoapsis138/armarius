@@ -17,6 +17,9 @@ import math
 import random
 from collections.abc import Callable
 
+from armarius_style.desktop.illumination import gold
+from armarius_style.desktop.ornaments import Headpiece
+from armarius_style.desktop.paper import shade
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QBrush,
@@ -37,9 +40,6 @@ from PySide6.QtWidgets import QHBoxLayout, QWidget
 
 from .. import medallions
 from ..models import Saga
-from .illumination import gold
-from .ornaments import Headpiece
-from .paper import shade
 from .pictures import SERIF
 from .themes import DRAWN, PIGMENTS, SEASON_PIGMENTS, Palette
 

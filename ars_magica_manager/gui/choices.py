@@ -10,6 +10,7 @@ rubric's red and the gilt, which stay with headings and selections.
 
 from __future__ import annotations
 
+from armarius_style.desktop.paper import shade
 from PySide6.QtCore import QEvent, QModelIndex, QObject, QPointF, QRectF, QSize, Qt
 from PySide6.QtGui import (
     QBrush,
@@ -32,7 +33,6 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .paper import shade
 from .themes import Palette, murex
 
 #: A row of an open list, and where its margin rule runs.

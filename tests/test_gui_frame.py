@@ -11,6 +11,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from armarius_style.desktop.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
 from PySide6.QtCore import Qt
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
@@ -24,7 +25,6 @@ from ars_magica_manager.gui.forms import (
     NoticeDialog,
     step_dialog,
 )
-from ars_magica_manager.gui.frame import CLOSE, GRIP, MAXIMISE, MINIMISE, TopStrip
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.window import MainWindow
 
@@ -103,7 +103,7 @@ def test_the_title_page_has_the_window_buttons_too(app):
 
 
 def test_other_systems_leave_native_messages_to_qt(app):
-    from ars_magica_manager.gui import snapping
+    from armarius_style.desktop import snapping
 
     window = _window(app)
     # Snap's styles and frame are Windows's; elsewhere nothing is answered.

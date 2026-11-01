@@ -122,6 +122,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.1 — 2026-11-01
+
+### Fundamenta
+
+- The app's look (its colours, ornaments, page pieces and fonts) now lives in a small package of its own, so Armarius's solo assistant can share it. Nothing changes on screen.
+
 ## 3.65.0 — 2026-11-01
 
 ### Hedge Magic

@@ -23,8 +23,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QPushButton, QWidget
 
-from . import pictures
-from .themes import Palette
+from .. import fonts
+from ..palettes import Palette
 
 HEDERA, HEDERA_LEFT, HEDERA_RIGHT = "❦", "☙", "❧"
 
@@ -47,7 +47,7 @@ def _fading(colour: str, x0: float, x1: float, width: float) -> QPen:
 def _leaf(painter: QPainter, x: float, y: float, leaf: str, size: float, colour: str):
     """Draw a fleuron centred on (x, y); its width. The font sets its
     fleurons low in the line, so they are raised to sit on the centre."""
-    painter.setFont(QFont(pictures.SERIF, round(size)))
+    painter.setFont(QFont(fonts.SERIF, round(size)))
     painter.setPen(QColor(colour))
     width = painter.fontMetrics().horizontalAdvance(leaf)
     box = QRectF(x - width, y - size * 1.7, 2 * width, size * 3)
@@ -256,7 +256,7 @@ def gloss_box(painter: QPainter, rect: QRectF, p: Palette, heading: str) -> floa
     x = r.left() + InspectorFrame.MARGIN - 8
     painter.drawLine(QPointF(x, r.top() + 44), QPointF(x, r.bottom() - 14))
     cy = r.top() + 22
-    font = QFont(pictures.SERIF)
+    font = QFont(fonts.SERIF)
     font.setPointSizeF(16)
     font.setBold(True)
     font.setCapitalization(QFont.Capitalization.SmallCaps)

@@ -6,6 +6,8 @@ NOTICE.md."""
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
+from armarius_style import fonts
+
 from ars_magica_manager import ROOT, artwork, catalog
 from ars_magica_manager.arts import ARTS
 from ars_magica_manager.models import Character
@@ -129,5 +131,5 @@ def test_notice_credits_the_artwork_icons_fonts_and_sounds():
     assert "CC0" in (artwork.SOUNDS_DIR / "LICENSE.txt").read_text(encoding="utf-8")
     assert (artwork.ICONS / "LICENSE.txt").is_file()
     for family in artwork.FONTS:
-        licence = artwork.ASSETS / "fonts" / f"{family.replace(' ', '')}-OFL.txt"
+        licence = fonts.ASSETS / "fonts" / f"{family.replace(' ', '')}-OFL.txt"
         assert "SIL Open Font License" in licence.read_text(encoding="utf-8")

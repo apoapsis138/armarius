@@ -22,6 +22,16 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import shiboken6
+from armarius_style.desktop import gilding, snapping
+from armarius_style.desktop.frame import (
+    MAXIMISE,
+    DragStrip,
+    Grips,
+    TopStrip,
+    WindowButtons,
+    native_frame_event,
+)
+from armarius_style.desktop.paper import Paper
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
 from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
@@ -66,16 +76,15 @@ from ..forms import printing as print_forms
 from ..forms import saga as saga_forms
 from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
+from ..paths import APP_NAME
 from ..sheets import laboratory as ls
 from . import (
     choices,
-    gilding,
     medallions,
     motion,
     pictures,
     print_sheet,
     printing,
-    snapping,
     sounds,
 )
 from .bestiary import CreaturePage
@@ -84,15 +93,6 @@ from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .forms import NoticeDialog, answer, run_steps, step_dialog
-from .frame import (
-    APP_NAME,
-    MAXIMISE,
-    DragStrip,
-    Grips,
-    TopStrip,
-    WindowButtons,
-    native_frame_event,
-)
 from .help import HelpPage
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls
@@ -100,7 +100,6 @@ from .markup_html import plain
 from .medallions import SeasonHeadpiece
 from .menus import Placer
 from .pages import SagaPage, SagaShelf
-from .paper import Paper
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage

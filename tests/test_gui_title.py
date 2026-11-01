@@ -10,6 +10,7 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
+from armarius_style.desktop.illumination import paint_initial
 from PySide6.QtCore import QRectF
 from PySide6.QtGui import QColor, QImage, QPainter
 from PySide6.QtWidgets import QApplication
@@ -19,7 +20,6 @@ from ars_magica_manager import settings, storage
 from ars_magica_manager import title_page as tp
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.help import HelpPage
-from ars_magica_manager.gui.illumination import paint_initial
 from ars_magica_manager.gui.pages import SagaPage, SagaShelf
 from ars_magica_manager.gui.themes import PALETTES
 from ars_magica_manager.gui.title import GiltTitle, TitleScreen

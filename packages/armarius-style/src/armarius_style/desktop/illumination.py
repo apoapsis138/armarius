@@ -28,8 +28,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QWidget
 
-from . import pictures
-from .themes import BURNISH, PIGMENTS, Palette
+from .. import fonts
+from ..palettes import BURNISH, PIGMENTS, Palette
 
 LAPIS = QColor(PIGMENTS["lapis"])
 LAPIS_DEEP = QColor(PIGMENTS["lapis-deep"])
@@ -371,7 +371,7 @@ def _paint_letter(
     """The letter in the uncial face, in burnished gold: a shadow, a white
     pen-line and an ink edge round it, tooled with fine punched dots, and
     a few glints where the light catches it."""
-    font = QFont(pictures.DISPLAY)
+    font = QFont(fonts.DISPLAY)
     font.setPixelSize(round(inner.height()))
     shape = QPainterPath()
     shape.addText(0, 0, font, letter)

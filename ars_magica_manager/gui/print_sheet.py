@@ -14,6 +14,7 @@ from collections.abc import Callable
 from functools import cache
 from pathlib import Path
 
+from armarius_style.desktop.paper import paper
 from PySide6.QtCore import QByteArray, QMarginsF, QPointF, QRectF, QSizeF, Qt
 from PySide6.QtGui import (
     QColor,
@@ -32,7 +33,6 @@ from PySide6.QtSvg import QSvgRenderer
 from .. import artwork
 from .. import print_layout as pl
 from . import marks, pictures
-from .paper import paper
 from .themes import SCRIPTORUM, Palette
 
 #: The palette a sheet is printed in.
