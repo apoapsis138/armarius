@@ -29,7 +29,7 @@
       (none recorded)                                                             ▅▅
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Traditions Offered (93 of 93)
+    ▼ Traditions Offered (95 of 95)
 
         On       Book       Tradition
       ○ yes      DE         Nemthengacha
@@ -50,10 +50,10 @@
     ▼ Catalogs (7)
 
         Catalog                      Offered   Entries   Hidden
-      ○ Virtues & Flaws              yes          1395        0
+      ○ Virtues & Flaws              yes          1411        0
       ○ Laboratory Virtues & Flaws   yes           134        0
       ○ Boons & Hooks                yes           222        0
-      ○ Abilities                    yes           273        0
+      ○ Abilities                    yes           290        0
       ○ Spells                       yes          1316        0
       ○ Shapes & Materials           yes           247        0
       ○ Goods                        yes            77        0

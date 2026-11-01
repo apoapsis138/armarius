@@ -471,19 +471,21 @@ def _thords_feast(b: Builder) -> None:
 def _hreppur_people(b: Builder) -> None:
     member = "Attends the hreppur at Eldborg."
     council = "A member of the galdramen hreppur's council."
-    _sketch(
+    signy = _sketch(
         b,
         "Signy Grettisdottir",
         age=196,
         summary=council,
         traits={"Quick Temper": 3, "Distrustful": 2, "Boorish": 1, "Cautious": 1},
-        secrets="A trollsdottir of the council: Magic Resistance 63, Size +2, looks "
+        secrets="A trollsdottir of the council: printed Magic Resistance 63, "
+        "dropped as no hedge wizard has one (Hedge Magic RE p. 9), Size +2, looks "
         "37, printed Confidence 3. Her giant mother raised her and she never "
         "met her outlawed father. She picked fights until age taught her some "
         "caution, and trollsynir magic has left her looking more troll than "
         "human. She has come to back her descendant Arnor Arngeirsson in his "
         "dispute, and the attack on the eggs worries her (p. 103).",
     )
+    signy.traditions = ["trad_trollsynir"]
     _sketch(
         b,
         "Arnor Arngeirsson",
@@ -514,20 +516,22 @@ def _hreppur_people(b: Builder) -> None:
         "with the Odd-Karnors. Size +0, printed Confidence 4. He has come only "
         "to make plain that he had no part in the attack on the eggs (p. 103).",
     )
-    _sketch(
+    biorn = _sketch(
         b,
         "Biorn Egilsson",
         age=106,
         summary="Leader of the galdramen hreppur.",
         traits={"Detached": 3, "Fair": 2, "Respectful": 3},
         secrets="Iceland's oldest galdraman, a deft politician: Size +1, looks "
-        "85, printed Confidence 3, Twilight Points 19. Most galdramen have made "
+        "85, printed Confidence 3, Twilight Points 19, which are Warping 6 now "
+        "(DE p. 538). Most galdramen have made "
         "the long hamfaring (Final Twilight) by his age, and he knows his "
         "fylgja's call cannot be refused for ever. He wants peace for those to "
         "come, and finds the quarrel between the two Christian schools the "
         "hardest to settle (p. 104). He sees no reason the magi should not "
         "belong, and offers vis rights if they appease the dragon (p. 105).",
     )
+    biorn.traditions = ["trad_galdramen"]
     _sketch(
         b,
         "Father Halldor Ormsson",

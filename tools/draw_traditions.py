@@ -1170,6 +1170,35 @@ def muspelli() -> QPainterPath:
     return over(sword, blaze, 2.4)
 
 
+def galdramen() -> QPainterPath:
+    """The wooden platform a galdraman sings from, and the song rising."""
+    platform = union(
+        rect(22, 70, 56, 7),
+        poly((28, 77), (35, 77), (31, 92), (24, 92)),
+        poly((65, 77), (72, 77), (76, 92), (69, 92)),
+    )
+    song = union(
+        _tongue([(50, 64), (38, 52), (62, 38), (50, 12)], 7),
+        _tongue([(34, 62), (24, 50), (38, 38), (28, 22)], 5),
+        _tongue([(66, 62), (76, 50), (62, 38), (72, 22)], 5),
+    )
+    return union(platform, song)
+
+
+def trollsynir() -> QPainterPath:
+    """A giant's mountains, cut with a jagged crack of ice."""
+    peaks = union(
+        poly((6, 86), (34, 26), (58, 86)),
+        poly((36, 86), (66, 12), (94, 86)),
+    )
+    crack = union(
+        bar(66, 26, 58, 44, 4),
+        bar(58, 44, 70, 58, 4),
+        bar(70, 58, 62, 80, 4),
+    )
+    return over(crack, peaks, 2.4)
+
+
 def soqotran_sorcerers() -> QPainterPath:
     """The dragon's blood tree of Soqotra."""
     crown = union(ellipse(10, 14, 80, 30), rect(10, 28, 80, 4))
@@ -1492,6 +1521,8 @@ FIGURES: dict[str, Callable[[], QPainterPath]] = {
     "trad_amazon_sorceresses": amazon_sorceresses,
     "trad_augustan_brotherhood": augustan_brotherhood,
     "trad_muspelli": muspelli,
+    "trad_galdramen": galdramen,
+    "trad_trollsynir": trollsynir,
     "trad_soqotran_sorcerers": soqotran_sorcerers,
     "trad_canaanite_necromancers": canaanite_necromancers,
     "trad_defixio_cults": defixio_cults,

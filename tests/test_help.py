@@ -570,6 +570,7 @@ GUIDES = [
     "guide-fights",
     "guide-sieges",
     "guide-hedge-magic",
+    "guide-galdor",
     "guide-homebrew-source",
     "guide-tribunal",
     "guide-formatting",

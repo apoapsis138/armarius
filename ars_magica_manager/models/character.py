@@ -556,6 +556,7 @@ TRADITION_ITEM_KINDS: tuple[str, ...] = (
     "potion",
     "tattoo",
     "wondrous item",
+    "bound item",
 )
 
 
@@ -722,6 +723,11 @@ class BoundBeing:
     bonus: int = 0
     applies_to: str = ""
     notes: str = ""
+    #: A deal with a spirit lord: the service agreed, the pawns of vis it
+    #: tithes a year, and the favour owed besides.
+    service: str = ""
+    vis_yearly: int = 0
+    favour: str = ""
 
     def __post_init__(self) -> None:
         if self.applies_to not in BOND_APPLIES:

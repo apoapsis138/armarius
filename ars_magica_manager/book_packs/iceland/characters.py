@@ -53,6 +53,7 @@ ABILITY_NAMES = {
     "Farming": "Profession: Farmer",
     "Fantastic Beast Lore": "Magic Lore",
     "Hermes History": "Organization Lore: Order of Hermes",
+    "Hamfaring": "Hamfarir",
     "Icelandic Law": "Common Law",
     "Mediterranean Area Lore": "Area Lore: Mediterranean",
     "Norse Theology": "Theology: Pagan",
@@ -60,7 +61,23 @@ ABILITY_NAMES = {
     "Sense Holiness & Unholiness": "Sense Holiness and Unholiness",
     "Shapechange": "Shapeshifter",
     "Shapeshift": "Shapeshifter",
+    # Goetic Summoning aligned to the Magic Realm (RoP:M p. 110), as Hedge
+    # Magic's Spirit Masters use it; the book's Einar calls trolls.
+    "Summoning": "(Magic) Summoning",
 }
+#: What a traditional galdraman has free (Land of Fire & Ice p. 46), after
+#: the two entries `_sheet` takes off a block.
+GALDRAMAN: list[str | tuple[str, dict[str, str]]] = [
+    "The Gift",
+    "Galdraman",
+    "Free Expression",
+    "Second Sight",
+    "Premonitions",
+    "Galdor Conjuring",
+    "Galdor Enchantment",
+    ("Deleterious Circumstances", {"circumstance": "touching the ground"}),
+]
+TRADITIONS = ("trad_galdramen",)
 #: Printed Abilities with no catalog counterpart, and the catalog Ability
 #: their whole experience is spent on, as the appendix spreads a removed
 #: Ability's experience (DE p. 538). The catalog's Empathy is a Faerie
@@ -81,12 +98,9 @@ SPENT_ON = {
 POWERS = {
     "Decay",
     "Enthrall",
-    "Galdor Wisdom",
     "Geasa",
     "Gift",
     "Gruagach Wisdom",
-    "Hamfarir",
-    "Hamfaring",
     "Incinerate",
     "Jotunn Affinity with Frost",
     "Potency",
@@ -141,10 +155,19 @@ def _top_up(record: Character | Creature, stat: StatBlock) -> None:
         ability.xp += stat["spare_xp"].get(ability.name, 0)
 
 
-def _sheet(key: str, block: Fourth, *, hermetic: bool = False) -> StatBlock:
+def _sheet(
+    key: str,
+    block: Fourth,
+    *,
+    hermetic: bool = False,
+    working: frozenset[str] = frozenset(),
+) -> StatBlock:
     """The converted block. Only a Hermetic magus keeps the Gift and
     Hermetic Magus that `convert` gives every block; the clauses about
-    Twilight and a printed Confidence go where the book has neither."""
+    Twilight and a printed Confidence go where the book has neither.
+    `working`: arcane powers that this character's sheet does use, so stay
+    Abilities."""
+    powers_of = POWERS - working
     moved = [
         f"{name} {score} to {ABILITY_NAMES[name]}"
         for name, score, _ in block.abilities
@@ -153,14 +176,14 @@ def _sheet(key: str, block: Fourth, *, hermetic: bool = False) -> StatBlock:
     powers = [
         f"{name} {score}" + (f" ({specialty})" if specialty else "")
         for name, score, specialty in block.abilities
-        if name in POWERS
+        if name in powers_of
     ]
     renamed = replace(
         block,
         abilities=[
             (ABILITY_NAMES.get(name, name), score, specialty)
             for name, score, specialty in block.abilities
-            if name not in POWERS and name not in SPENT_ON
+            if name not in powers_of and name not in SPENT_ON
         ],
     )
     stat, _ = convert(key, renamed, area=AREA)
@@ -215,9 +238,10 @@ def _person(
     secrets: str,
     covenant: Covenant | None = None,
     born: int | None = None,
+    working: frozenset[str] = frozenset(),
 ) -> Character:
     """A companion of the book, with no House; `born` where the block's
-    age is not the age in the pack's year."""
+    age is not the age in the pack's year; `working` as for `_sheet`."""
     person = b.magus(
         name,
         covenant=covenant,
@@ -227,7 +251,7 @@ def _person(
         type="companion",
         secrets=secrets,
     )
-    stat = _sheet(key, block)
+    stat = _sheet(key, block, working=working)
     return b.stats(person, stat, source="LFI")
 
 
@@ -918,6 +942,11 @@ def _einar(b: Builder) -> None:
             confidence=4,
             twilight=0,
             decrepitude=0,
+            granted=[
+                *GALDRAMAN,
+                ("Enchanting {ability}", {"ability": "music"}),
+            ],
+            traditions=TRADITIONS,
             virtues=[
                 ("Great Characteristic", 4, "Communication"),
                 ("Driving Goal", -1, "revenge"),
@@ -926,6 +955,15 @@ def _einar(b: Builder) -> None:
             ],
             abilities=[
                 ("Galdor Wisdom", 12, "yfel-galdor"),
+                ("Yfel-galdor", 7, ""),
+                ("Mal-galdor", 5, ""),
+                ("Hug-galdor", 2, ""),
+                ("Sig-galdor", 2, ""),
+                ("Lim-galdor", 3, ""),
+                ("Biarg-galdor", 10, ""),
+                ("Orlog-galdor", 11, ""),
+                ("Ol-galdor", 5, ""),
+                ("Brun-galdor", 3, ""),
                 ("Second Sight", 6, "fate-spirits"),
                 ("Premonitions", 6, "violence"),
                 ("Brawl", 3, "fist"),
@@ -959,11 +997,11 @@ def _einar(b: Builder) -> None:
                 "The block is for 1231, when he is most likely met, aged 76; "
                 "the record's birth year is the book's 1155. He looks in his "
                 "late fifties.",
-                "Enchanting Music, Summoning and Hamfarir came by initiation. "
-                "Galdraman Songs: Yfel-galdor (curse songs) 7, Mal-galdor (speech) "
-                "5, Hug-galdor (mind) 2, Sig-galdor (victory) 2, Lim-galdor "
-                "(healing) 3, Biarg-galdor (birth) 10, Orlog-galdor (fate) 11, "
-                "Ol-galdor (warding) 5, Brun-galdor (weather) 3.",
+                "Enchanting Music, Summoning and Hamfarir came by initiation, "
+                "though the book's list of initiations has no Summoning (p. 50). "
+                "The worked example on p. 48 gives him Com 2, Sing 8, Galdor "
+                "Wisdom 8 and Ol-galdor 6 against this block's 5, 11, 12 and 5: "
+                "this block is for 1231.",
                 _combat(
                     [
                         ("Brawl (fist)", 4, 3, 3, 0, 6),
@@ -979,12 +1017,13 @@ def _einar(b: Builder) -> None:
                 "Duration; a Leather Hat that makes him invisible while he "
                 "stands still. He should have many minor items, above all "
                 "healing potions in the form of woven bandages (p. 139).",
-                "Secret Hiding Place +1, Curse +4 and Potency +2 have no catalog "
-                "entries and are kept here; Incredible Communication +4 is "
-                "Great Communication, with his printed +5 kept.",
+                "Secret Hiding Place +1 has no catalog entry and is kept here; "
+                "Incredible Communication +4 is Great Communication, with his "
+                "printed +5 kept.",
             ),
         ),
         born=1155,
+        working=frozenset({"Potency"}),
         summary="A distinguished Icelander who looks in his late fifties, with "
         "straight black hair, rare among the Norse, a neat beard, a blue robe "
         "embroidered in knots and a voice like honey that talks people round.",
@@ -1095,6 +1134,14 @@ def _pan_caudarax(b: Builder) -> None:
     )
 
 
+#: Bard's printed Talents, which stay named powers of a creature (p. 141).
+BARD_TALENTS: tuple[tuple[str, int], ...] = (
+    ("Jotunn Affinity with Frost", 17),
+    ("Transform", 16),
+    ("Gift", 5),
+)
+
+
 def _bard(b: Builder) -> None:
     stat = _creature_sheet(
         "bard",
@@ -1129,6 +1176,9 @@ def _bard(b: Builder) -> None:
                 "Leader (giants of Iceland)": 8,
             },
             notes="External Soul is printed among his Abilities with no score. "
+            "His Might 71 is the book's Magic Resistance, the sum of three "
+            "Talents and External Soul's +20 (p. 53), which a creature may keep "
+            "and a trollson character may not (Hedge Magic RE p. 9). "
             "The book prints no Combat, Soak or levels for him. His natural "
             "Size is +3; the block's +2 is the eight-foot shape he has worn "
             "so long it is second nature, and he often goes smaller among "
@@ -1146,6 +1196,17 @@ def _bard(b: Builder) -> None:
         block=stat,
         age="260",
         confidence=CONFIDENCE,
+        powers=[
+            Builder.power(
+                name,
+                0,
+                0,
+                "Aquam" if "Frost" in name else "Vim",
+                does=f"{name} {score}, as the book prints the Talent: at its "
+                "cost in Might as the storyguide sets it.",
+            )
+            for name, score in BARD_TALENTS
+        ],
         place=_place(b, "The Singing Cave", "Snaefellsnes"),
         appearance="Very handsome, with blond hair going silver-gray, blue "
         "eyes, broad shoulders and a guileless smile. He wears a plain tunic "
@@ -1254,7 +1315,10 @@ def _vifil(b: Builder) -> None:
             confidence=3,
             twilight=0,
             decrepitude=0,
+            granted=GALDRAMAN,
+            traditions=TRADITIONS,
             virtues=[
+                ("Bondi", 1),
                 ("Close Family Ties", 1),
                 ("Social Contacts", 1, "Galdramen"),
                 ("Lame", -2),
@@ -1269,6 +1333,10 @@ def _vifil(b: Builder) -> None:
                 ("Craft: Weapon-smithing", 2, "spearheads"),
                 ("Farming", 3, "animals"),
                 ("Galdor Wisdom", 5, "conjuring"),
+                ("Biarg-galdor", 4, ""),
+                ("Lim-galdor", 3, ""),
+                ("Ol-galdor", 5, ""),
+                ("Brun-galdor", 4, ""),
                 ("Hamfaring", 3, ""),
                 ("Legend Lore", 3, ""),
                 ("Longshaft Weapon", 2, "long spear"),
@@ -1288,8 +1356,6 @@ def _vifil(b: Builder) -> None:
             traits={"Generous": 3, "Brave": 2, "Honorable": 1},
             reputations={"Generous (people of Snaefellsnes)": 2},
             notes=paragraphs(
-                "Galdraman Songs: Biarg-galdor 4, Lim-galdor 3, Ol-galdor 5, "
-                "Brun-galdor 4.",
                 _combat(
                     [
                         ("Brawl (fist)", 0, 2, -1, 0, 3),
@@ -1300,9 +1366,9 @@ def _vifil(b: Builder) -> None:
                 ),
                 f"Fatigue {FATIGUE}; Body {BODY}.",
                 "Magical equipment: a Bracelet of Magic Resistance, +15 (p. 142).",
-                "Bondi +1 and Cursed (magic used for personal gain has double "
-                "botch risk) -2 have no catalog entries and are kept here. "
-                "Close Family Ties, a +1 Virtue here, is a Flaw in the catalog.",
+                "Cursed (magic used for personal gain has double botch risk) -2 "
+                "has no catalog entry and is kept here. Close Family Ties, a +1 "
+                "Virtue here, is a Flaw in the catalog.",
             ),
         ),
         summary="A tall, thin, affable farmer and smith of Snaefellsnes with "

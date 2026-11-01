@@ -622,7 +622,11 @@ The Tomb of Tin Hinan is marked a tomb of a major monarch, as her aura of 5 fits
 
 The pack joins *Land of Fire & Ice* and *The Icelandic Wars*, Fourth Edition books converted by the Definitive Edition's appendix. It holds no Tribunal. Vindolanda and Wormhout are covenants with none, and each comes with its places. The book calls Vindolanda and its saga optional and not official history, so all of it is in secrets and dormant stories, and nothing in it replaces another pack's record.
 
-The appendix doesn't cover creatures, so they are converted by this app's own rules, measured on creatures printed in both editions. A Might Form the book doesn't print is this pack's reading, and the record says so. Virtues, Abilities and powers with no Definitive Edition counterpart are named in the notes or kept under their printed names. Galdor and trollskap are described, and aren't working rules yet. Where the two books or one book's pages disagree, the record says so and gives both.
+The appendix doesn't cover creatures, so they are converted by this app's own rules, measured on creatures printed in both editions. A Might Form the book doesn't print is this pack's reading, and the record says so. Virtues, Abilities and powers with no Definitive Edition counterpart are named in the notes or kept under their printed names.
+
+Galdor and trollskap are working rules. Hedge Magic Revised Edition has spoken on trollsynir, so they are the gruagach Arts with Jotnar for Pictish, and only traditional galdor is a tradition of its own. Einar and Vifil have working sheets, Biorn and Signy are sketches of their traditions, and Bard stays a creature, whose Might of 71 is the book's Magic Resistance and whose Talents are named powers. No character has a Magic Resistance, which Hedge Magic forbids a hedge tradition, and Twilight Points are Warping. A character's trollskap totals fall from the printed, as Potency is gone. Curses keep the book's scale. A rank is its own Social Status, as a godi has no serfs or men-at-arms. Tiers are read from the printed points: +1 and +2 Minor, +3 and up Major, and a galdraman's apprenticeship is the 160 xp his printed scores cost. See [how to play a galdraman](help:guide-galdor).
+
+Where the two books or one book's pages disagree, the record says so and gives both.
 
 # Assumptions made for Antagonists
 <!-- help: pack-assumptions-antagonists -->

@@ -889,22 +889,10 @@ def _groups(b: Builder) -> None:
             "great farmers and chieftains, and those with no standing."
         ),
         secrets=paragraphs(
-            "The book's social-class Virtues and Flaws (pp. 65-66), with Fourth "
-            "Edition points, have no entries in the catalog:",
-            "Freeman +0: freeborn, no land or milk animals; must find a place "
-            "in a household or as a hut-man. Bondi +1: rents land a year at a "
-            "time and may choose an assembly, usually the landlord's godi. "
-            "Landowner +2: also owns land, pays thing-tax, may attend the thing, "
-            "and may have to ride with his godi to the Althing or pay toward it. "
-            "Storbondi +3: rich and influential, with tenant farms and churches, "
-            "and Temporal Influence free. Godi +4: holds a godord, appoints "
-            "judges and panels, sits on the law council, and has Temporal "
-            "Influence free. Storgodi +5: several godords and a riki, one of the "
-            "five competing families, rich but unable to keep men-at-arms.",
-            "Freedman -1: a dependant of his former owner, with Bad Reputation "
-            "(Freedman) 3. Slave -2: property, outside the law. Outlaw -3 to -5: "
-            "by the power of the accuser, from a bondi's to a godi's, who hunts "
-            "him to the end; killing three other outlaws earns a reprieve.",
+            "The ranks are Social Status Virtues and Flaws now: Bondi, Landowner, "
+            "Storbondi, Godi and Storgodi; a freeman is a Laborer, a freedman a "
+            "Freed Slave, and Slave and Outlaw are as they are elsewhere (pp. "
+            "65-66). A godi has no serfs or men-at-arms, so he is no Landed Noble.",
             "Every Icelander starts with Icelandic Law 2 and Legend Lore 2. The "
             "wealthy, from landowner up, are usually Educated, which they pay "
             "for (p. 66).",

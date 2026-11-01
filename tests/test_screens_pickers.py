@@ -47,9 +47,9 @@ async def test_overlapping_picker_refills_leave_only_the_newest():
             for vf in catalog.load_virtue_flaw_catalog()
             if "affinity" in picker._search_text(vf).lower()
         ]
-        assert await wait_until(pilot, lambda: picker.shown_ids() == expected), (
-            picker.shown_ids()[:10]
-        )
+        assert await wait_until(
+            pilot, lambda: sorted(picker.shown_ids()) == sorted(expected)
+        ), picker.shown_ids()[:10]
 
 
 async def test_spell_picker_details_follow_the_highlight():

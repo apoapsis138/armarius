@@ -21,6 +21,8 @@ KNOWN_BOOKS = {
     *("DE", "HoH:TL", "HoH:MC", "TMRE", "App", "RoP:M", "RoP:F", "RoP:D"),
     *("RoP:I", "C&G", "LoM", "TC", "GotF", "L&L", "AtD", "TCI", "A&A"),
     *("F&F", "Grogs"),
+    # Land of Fire & Ice, the Iceland pack's book
+    "LFI",
     # Sanctuary of Ice, the Greater Alps pack's book
     "SoI",
     # Secrets in Sand, Blood and Sand's free web supplement
@@ -54,12 +56,13 @@ def test_catalog_counts_after_adding_the_supplements():
     # plus Magi of Hermes's Hermetic Metamorphosis, The Cradle and the
     # Crescent's four Solomonic breakthrough Virtues and Societates's Miles,
     # plus Through the Aegis's Faeborchless,
-    # plus 21 from the Nile, Africa and Antagonists packs' books,
+    # plus 21 from the Nile, Africa and Antagonists packs' books, plus 16
+    # from Land of Fire & Ice,
     # less The Church's Brother-Priest, which is the DE's Brother Chaplain.
     entries = catalog.load_virtue_flaw_catalog()
-    assert len(entries) == 1395
+    assert len(entries) == 1411
     counts = Counter(e.type for e in entries)
-    assert counts == {"Virtue": 814, "Flaw": 484, "Quality": 77, "Inferiority": 20}
+    assert counts == {"Virtue": 830, "Flaw": 484, "Quality": 77, "Inferiority": 20}
     assert sum(e.source == "DE" for e in entries) == 660
 
 

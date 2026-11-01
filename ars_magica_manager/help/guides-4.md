@@ -535,7 +535,7 @@ Conscientia joins Durenmar, whether the Rhine pack comes in first or later. If t
 ### Iceland
 <!-- help: guide-book-packs-iceland -->
 
-*Land of Fire and Ice* is a region pack with no Tribunal, as *The Cradle and the Crescent* is, and it includes *The Icelandic Wars*. It brings the island, its people and law, the galdramen and trollsynir, and two long stories. The stories come in dormant, so nothing starts until you begin one.
+*Land of Fire and Ice* is a region pack with no Tribunal, as *The Cradle and the Crescent* is, and it includes *The Icelandic Wars*. It brings the island, its people and law, the galdramen and trollsynir ([how to play one](help:guide-galdor)), and two long stories. The stories come in dormant, so nothing starts until you begin one.
 
 ### Antagonists
 <!-- help: guide-book-packs-antagonists -->
@@ -779,6 +779,27 @@ Each Art's score comes from its XP on the table its book gives it: most hedge Ar
 
 **See also:** [A tradition's chapter](help:tradition-chapter), [Traditions Offered](help:section-traditions), [Abilities tab](help:tab-abilities)
 
+
+# How to play a galdraman
+<!-- help: guide-galdor -->
+
+Iceland's two magus-equivalents are hedge wizards here. They are Gifted companions, the equal of a magus at the table (Hedge Magic RE p. 11), with no Magic Resistance and no Twilight. Both come with *Land of Fire and Ice* in play.
+
+**A traditional galdraman** takes the tradition Traditional Galdramen, whose chapter is Galdor. His Virtues come free: Free Expression, Second Sight, Premonitions, Galdor Conjuring and Galdor Enchantment. On the worksheet, give him The Gift, then use the Concept step's Add the tradition's Virtues. Take Deleterious Circumstances (touching the ground) as well; the totals are halved on the ground either way. Spend his xp on Galdor Wisdom, Music, Bargain and two Song Talents; a Song can't pass Galdor Wisdom. It goes up by practice and experience, never by teaching.
+
+1. **Sing** with [Conjure a Spirit](help:galdor-conjure) for anything up to Concentration.
+2. **Go to a lord** with [Bargain with a Lord](help:galdor-bargain) for anything longer. The deal stays in Bound Beings, with the vis it tithes a year.
+3. **Make things** with [Bind an Item](help:galdor-bind), after a deal.
+
+For longevity, strike a deal with biarg-galdor, conjure the biarg spirit as a ritual, and enter the conjuring total as a Longevity Ritual on his sheet; the mead takes a pawn a decade of his age each year. The app doesn't track Galdor Wisdom falling to 0 in another country.
+
+Curse and Hamfarir roll through [Cast a Power](help:hedge-cast). Curse has its Ease Factors as guidelines. A nidstong is a Curse that rolls daily while it stands.
+
+**A trollson** takes the tradition Trollsynir, whose chapter is Trollskap. He casts as a gruagach, with Jotnar for Pictish (see [hedge wizards](help:guide-hedge-magic)). He must have Giant Blood and No Tattoo Magic.
+
+**Fylgjur.** Premonitions brings a fylgja, of Might 10 and Size -3 at most; a trollson's is the Fetch. Take Mighty Fylgja as often as you like for 10 Might and the next of Phantom, Spirit Voice and Corporeality, and Large Fylgja for its Size: the first allows Size 0, and each more +1. The chapter's Bound Beings shows what he has. Hamfarir is the Virtue that lets him use them.
+
+**Other Icelanders.** A schooled galdraman is a Learned Magician and a seithkona a Folk Witch with Hamfarir. A bondi, a landowner or a godi takes that Social Status, which sits beside Galdraman if he is both.
 
 # How to keep homebrew in a source
 <!-- help: guide-homebrew-source -->

@@ -187,6 +187,8 @@ TRADITION_SYMBOLS: dict[str, Path] = {
         "amazon_sorceresses",
         "augustan_brotherhood",
         "muspelli",
+        "galdramen",
+        "trollsynir",
         "soqotran_sorcerers",
         "canaanite_necromancers",
         "defixio_cults",

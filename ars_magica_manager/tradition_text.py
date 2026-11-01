@@ -10,8 +10,8 @@ from __future__ import annotations
 from dataclasses import dataclass
 
 from .markup import escape
-from .models import CastingRule, Character, Saga, TraditionDef
-from .rules import faerie_rites, holy_powers, infernalists, maleficia
+from .models import CastingRule, Character, InitiationRule, Saga, TraditionDef
+from .rules import faerie_rites, galdor, holy_powers, infernalists, maleficia
 from .rules import hedge_casting as hc
 from .rules import hedge_effects as he
 from .rules import hedge_warping as hw
@@ -341,6 +341,8 @@ def _initiation_lines(character: Character, tradition: TraditionDef) -> list[str
     rule = tradition.initiation
     if rule is None:
         return []
+    if rule.roll_less:
+        return _quest_lines(rule)
     lore = rule.lore or "Lore"
     lines = [
         f"[b]Initiation[/] Total: {rule.characteristic} + {escape(lore)} + the "
@@ -356,6 +358,22 @@ def _initiation_lines(character: Character, tradition: TraditionDef) -> list[str
         lines.append(
             f"  {escape(script.name)}{who}: {total} vs {script.ease_factor}; "
             f"gains {escape(script.gains)}; Ordeal {escape(script.ordeal)}."
+        )
+        if script.notes:
+            lines.append(f"    [dim]{escape(script.notes)}[/]")
+    if rule.notes:
+        lines.append(f"[dim]{escape(rule.notes)}[/]")
+    return lines
+
+
+def _quest_lines(rule: InitiationRule) -> list[str]:
+    """Initiations with no roll: what each gives and asks."""
+    lines = ["[b]Initiation[/] No Initiation Total."]
+    for script in rule.scripts:
+        needs = "".join(f", {escape(n)} {least}" for n, least in script.requires)
+        lines.append(
+            f"  {escape(script.name)}{needs}: gains {escape(script.gains)}; Ordeal "
+            f"{escape(script.ordeal)}."
         )
         if script.notes:
             lines.append(f"    [dim]{escape(script.notes)}[/]")
@@ -480,6 +498,8 @@ def _bond_cells(character: Character, tradition: TraditionDef) -> list[list[str]
             if being.applies_to and being.bonus
             else ""
         )
+        if being.kind == galdor.DEAL:
+            adds = escape(galdor.deal_words(being))
         rows.append([escape(being.name), escape(being.kind), adds])
     return rows
 
@@ -511,11 +531,16 @@ def bond_rows(
     ]
 
 
-def bonds_text(tradition: TraditionDef) -> str:
-    """The bonds the tradition's book describes."""
+def bonds_text(tradition: TraditionDef, character: Character | None = None) -> str:
+    """The bonds the tradition's book describes, after what the character's
+    own come to, where the tradition works that out."""
     if not tradition.bonds:
         return "[dim]The tradition's book describes no bond.[/]"
-    lines = []
+    lines = (
+        [escape(line) for line in tt.bond_notes(character, tradition.id)]
+        if character is not None
+        else []
+    )
     for bond in tradition.bonds:
         lines.append(f"[b]{escape(bond.name)}[/] {escape(bond.how)}")
         if bond.feeds:

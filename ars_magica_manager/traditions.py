@@ -200,9 +200,19 @@ def set_book_on(saga: Saga, book: str, on: bool) -> None:
             set_on(saga, tradition.id, on)
 
 
+#: A Virtue that gives a character part of a tradition's training: its
+#: chapter shows for them, though they aren't a member (LFI pp. 46, 49).
+TRAINED_BY = {
+    "vf_galdor_conjuring": "trad_galdramen",
+    "vf_galdor_enchantment": "trad_galdramen",
+}
+
+
 def of(character: Character) -> list[TraditionDef]:
     """The traditions the character belongs to that the catalog knows."""
-    found = (find(i) for i in character.traditions)
+    held = [v.vf_id for v in character.virtues_flaws]
+    partly = [TRAINED_BY[v] for v in held if v in TRAINED_BY]
+    found = (find(i) for i in dict.fromkeys([*character.traditions, *partly]))
     return [t for t in found if t is not None]
 
 
@@ -239,6 +249,7 @@ ROLE_HEADINGS: dict[str, str] = {
     "Method": "Methods",
     "Power": "Powers",
     "Rune": "Runes",
+    "Song": "Song Talents",
     "Practice": "Practice Arts",
     "Foe": "Foe Arts",
     "": "Abilities",

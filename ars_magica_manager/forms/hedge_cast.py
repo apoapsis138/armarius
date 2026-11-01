@@ -26,13 +26,13 @@ HELP_ID = "hedge-cast"
 
 
 def _rules(character: Character) -> list[tuple[TraditionDef, int, str]]:
-    """(tradition, rule index, the choice's value) for every non-lab
-    casting rule of the character's traditions."""
+    """(tradition, rule index, the choice's value) for every casting rule
+    of the character's traditions that Cast a Power rolls."""
     return [
         (t, i, f"{t.id}|{i}")
         for t in access.traditions_of(character)
         for i, rule in enumerate(t.casting)
-        if not rule.lab
+        if hc.plain_casting(rule)
     ]
 
 

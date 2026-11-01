@@ -122,6 +122,26 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.0 — 2026-11-01
+
+### Hedge Magic
+
+- **Galdramen**: a new tradition from *Land of Fire & Ice*, with ten Songs and three new actions: Conjure a Spirit, Bargain with a Lord (with an optional roll) and Bind an Item. Its Virtues show the Galdor chapter even for someone without the full tradition.
+- **Trollsynir**: a new tradition on the Gruagach Arts, with the Jotnar language, as *Hedge Magic* describes them.
+- Mighty Fylgja and Large Fylgja can be taken as many times as you like, and the sheet shows the Might, powers and Size they reach.
+
+### Florilegium
+
+- Iceland's ranks, from Bondi to Storgodi, as Social Status Virtues, with new Abilities and Virtues for galdor and (Magic) Summoning.
+
+### Peregrinatio
+
+- Einar and Vifil have working sheets, and the Iceland pack's magic now points to these rules.
+
+### Glossa
+
+- A new guide: **How to play a galdraman**.
+
 ## 3.64.2 — 2026-10-31
 
 ### Glossa

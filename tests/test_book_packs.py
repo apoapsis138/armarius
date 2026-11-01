@@ -158,6 +158,14 @@ def _content(data: dict[str, Any]) -> dict[str, Any]:
     )
 
 
+def _sections(data: dict[str, Any]) -> list[dict[str, Any]]:
+    """An overlay's sections, each pack read as _content reads one."""
+    return [
+        packs.without_random_ids({**section, "pack": _content(section["pack"])})
+        for section in data[packs.OVERLAY]
+    ]
+
+
 def test_every_shipped_pack_is_what_its_module_builds():
     """data/packs holds what book_packs builds, so a fix to a book's module
     can't sit unshipped: rebuild with tools/build_packs.py."""
@@ -169,9 +177,9 @@ def test_every_shipped_pack_is_what_its_module_builds():
     ]
     assert not stale, f"rebuild with tools/build_packs.py: {stale}"
     for overlay in overlays.OVERLAYS.values():
-        shipped = packs.without_random_ids(transfer.read(overlays.path_of(overlay)))
-        built = packs.without_random_ids(json.loads(json.dumps(overlays.data(overlay))))
-        assert shipped[packs.OVERLAY] == built[packs.OVERLAY], overlay.key
+        shipped = _sections(transfer.read(overlays.path_of(overlay)))
+        built = _sections(json.loads(json.dumps(overlays.data(overlay))))
+        assert shipped == built, overlay.key
 
 
 def test_the_rhine_pack_imports_clean_into_a_new_saga():

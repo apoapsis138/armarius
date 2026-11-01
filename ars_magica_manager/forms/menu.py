@@ -112,6 +112,7 @@ from . import creation as creation_forms
 from . import creature as creature_forms
 from . import criamon as criamon_forms
 from . import faerie_dealings as faerie_forms
+from . import galdor as galdor_forms
 from . import gauntlet as gauntlet_forms
 from . import goetic as goetic_forms
 from . import grog_story as grog_story_forms
@@ -602,6 +603,9 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "edit_traditions": ((NodeKind.CHARACTER, "Abilities"),),
     "disputatio": ((NodeKind.CHARACTER, deeds.SCHOLARLY),),
     "hedge_cast": ((NodeKind.CHARACTER, "Abilities"),),
+    "galdor_conjure": ((NodeKind.CHARACTER, "Abilities"),),
+    "galdor_bargain": ((NodeKind.CHARACTER, "Abilities"),),
+    "galdor_bind": ((NodeKind.CHARACTER, "Abilities"),),
     # Beside Health's Edit buttons.
     "take_harm": ((NodeKind.CHARACTER, "Health"),),
     "recovery_roll": ((NodeKind.CHARACTER, "Health"),),
@@ -1878,6 +1882,9 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "edit_traditions": _needs(_character, character_traditions),
     "disputatio": _needs(_character, disputations.disputatio_form),
     "hedge_cast": _needs(_character, hedge_cast_forms.cast_form),
+    "galdor_conjure": _needs(_character, galdor_forms.conjure_form),
+    "galdor_bargain": _needs(_character, galdor_forms.bargain_form),
+    "galdor_bind": _needs(_character, galdor_forms.bind_form),
     "take_harm": _needs(_character, health.take_harm_form),
     "recovery_roll": _needs(_character, health.recovery_form),
     "end_session": _needs(_character, session_end.end_session_form),

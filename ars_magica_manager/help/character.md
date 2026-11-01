@@ -2236,6 +2236,69 @@ that may fall short at a Fatigue level says so. A botch's zeroes give a
 Warping Point each (DE pp. 227, 389; Hedge Magic RE pp. 37, 96), which can bring on the character's answer
 to Warping as any other event does. The casting goes in the Diary.
 
+## Conjure a Spirit
+<!-- help: galdor-conjure -->
+
+More beside a galdraman's Abilities: a song calls a spirit to work one
+effect (*Land of Fire & Ice* pp. 46-48). Choose the **Song Talent**, type
+the **Effect level**, which the Hermetic guidelines set and the storyguide
+has the last word on, and the **Duration**, Momentary or Concentration. The
+level's magnitude can't be more than the Song. Tick **A ritual effect**
+where a magus would need a ritual: the song takes 15 minutes a magnitude in
+place of one, and the spirit takes a pawn of vis a magnitude. Tick
+**Touching the ground** if he isn't on a platform, a chair or a table: it
+halves the total.
+
+The total is Com + Music + Galdor Wisdom + the Song + the aura + a stress
+die, and it must be greater than the level. Landvaettir count as Faerie
+in every aura but a Magic one, so a Dominion hurts as a faerie would feel
+it. The spirit's Might is the total, and Penetration is reckoned as the
+Definitive Edition does. With **Hours he holds the song**, the app rolls
+Sta + Music for each hour, against 6 + the hours: up to 3 short costs a
+Fatigue level, and worse ends the song. A total of twice the level leaves a
+Concentration effect working on for a die of hours. No vis boosts a song.
+It goes in the Diary, and a botch's zeroes give Warping Points.
+
+## Bargain with a Lord
+<!-- help: galdor-bargain -->
+
+More beside a galdraman's Abilities. Anything longer than Concentration
+comes from a lord of the landvaettir, in the wilds, and he has to agree
+(*Land of Fire & Ice* p. 48). Write **The lord** and **The service**, the
+**Vis a year** it tithes if it lasts over a year, and any **Favour owed**.
+The book's price is about double the magnitude, reckoned at Sun Duration,
+and a skilled galdraman asks less.
+
+Usually the lord agrees or refuses in play: say which. A deal he agrees to
+goes in the Galdor chapter's Bound Beings, where you can change it. To
+leave it to the dice, choose **Roll the Bargain**, *Houses of Hermes:
+Societates* p. 136: Com + Bargain + a stress die, against 18 with its
+modifiers for the terms, how long the service lasts, any duty he takes on,
+and the vis offered, +2 a pawn under the standard and -2 over. He summoned
+nothing, so no Summoning Strength adds. Failure is no deal. A botch gives
+him Supernatural Nuisance from a weak lord and Plagued by Supernatural
+Entity from a stronger one, for at least a month.
+
+A missed tithe or service breaks a deal and may bring reprisals.
+
+## Bind an Item
+<!-- help: galdor-bind -->
+
+More beside a galdraman's Abilities, once a deal with a lord is on his
+sheet (*Land of Fire & Ice* p. 49). He needs no laboratory, only the tools
+to make the item, and the spirit is bound as he makes it. **For his
+lifetime** the total must reach double the level plus the Effect Frequency
+Table's levels, and the Duration is Momentary or Concentration; Constant
+Use adds 5 to a Concentration effect's level. **A single service** needs
+only the level, and lasts a year and a day.
+
+The total is Com + Music + Galdor Wisdom + the Song + the item's bonuses +
+the aura + a stress die, with Galdor Wisdom and the Song each no higher
+than the **Craft used**. Craft: Runes, the book's Scribe Runes, may stand as
+the Craft and inscribes a ready-made item, but adds nothing. The Song must
+be at least the magnitude. The spirit takes about the vis a magus would
+spend, first. The item goes on the chapter's Effects and Items.
+
 ## A tradition's chapter
 <!-- help: tradition-chapter -->
 

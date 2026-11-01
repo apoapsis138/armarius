@@ -382,7 +382,7 @@ class CharacterSheetView(SheetView):
                     )
                     yield self._static(
                         bonds,
-                        lambda: tradition_text.bonds_text(tradition),
+                        lambda: tradition_text.bonds_text(tradition, self.character),
                         id=f"trad-{tradition.id}-bond-rules",
                     )
                 with SheetSection(

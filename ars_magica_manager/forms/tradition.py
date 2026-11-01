@@ -19,6 +19,7 @@ from ..models import (
     TraditionDef,
     TraditionEffect,
 )
+from ..rules import galdor
 from ..rules import hedge_casting as hc
 from ..rules import hedge_effects as he
 from ..rules import hedge_warping as hw
@@ -325,8 +326,34 @@ def bond_fields(
             options=_APPLIES,
             required=True,
         ),
+        DialogField(
+            "service",
+            "The service",
+            "text",
+            existing.service if existing else "",
+            show_if=_a_deal,
+        ),
+        DialogField(
+            "vis_yearly",
+            "Vis a year",
+            "int",
+            existing.vis_yearly if existing else 0,
+            show_if=_a_deal,
+        ),
+        DialogField(
+            "favour",
+            "Favour owed",
+            "text",
+            existing.favour if existing else "",
+            show_if=_a_deal,
+        ),
         DialogField("notes", "Notes", "area", existing.notes if existing else ""),
     ]
+
+
+def _a_deal(values: dict[str, Any]) -> bool:
+    """A bond that is a deal with a spirit lord."""
+    return values.get("kind") == galdor.DEAL
 
 
 def bond_from(
@@ -341,12 +368,18 @@ def bond_from(
     applies = values.get("applies_to") or "none"
     made.applies_to = "" if applies == "none" else applies
     made.notes = values.get("notes") or ""
+    deal = _a_deal(values)
+    made.service = (values.get("service") or "") if deal else ""
+    made.vis_yearly = (values.get("vis_yearly") or 0) if deal else 0
+    made.favour = (values.get("favour") or "") if deal else ""
     return made
 
 
 def bond_problem(values: dict[str, Any]) -> str | None:
     if (values.get("bonus") or 0) and values.get("applies_to") in (None, "", "none"):
         return "Say what the bonus adds to."
+    if (values.get("vis_yearly") or 0) < 0:
+        return "Pawns of vis can't be fewer than 0."
     return None
 
 

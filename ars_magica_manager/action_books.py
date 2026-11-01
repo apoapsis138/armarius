@@ -20,6 +20,10 @@ if TYPE_CHECKING:
 
 #: Action -> the books that bring it (any one in play is enough).
 ACTION_BOOKS: dict[str, tuple[str, ...]] = {
+    # Land of Fire & Ice: galdor (pp. 46-49).
+    "galdor_conjure": ("LFI",),
+    "galdor_bargain": ("LFI",),
+    "galdor_bind": ("LFI",),
     # Art & Academe: disputation, ligatures, the apothecary, careers.
     "disputatio": ("A&A",),
     "make_ligature": ("A&A",),

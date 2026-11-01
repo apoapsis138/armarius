@@ -1193,7 +1193,7 @@ class CharacterSheet(QWidget):
                 table_view(bond_rows, p, bonds.choose)
                 if bond_rows.rows
                 else TextBlock("[dim]None bound.[/]", p),
-                TextBlock(tradition_text.bonds_text(tradition), p),
+                TextBlock(tradition_text.bonds_text(tradition, c), p),
                 buttons=verb_buttons(
                     tradition_forms.bond_ops(self.saga, c, tradition),
                     bonds,

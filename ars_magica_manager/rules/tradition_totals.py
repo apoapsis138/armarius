@@ -30,7 +30,7 @@ from __future__ import annotations
 from collections.abc import Callable
 
 from ..models import Character, Saga
-from . import folk_witches, hyperborean
+from . import folk_witches, galdor, hyperborean
 from . import hedge_casting as hc
 from .casting import magnitude
 from .rounding import round_down, round_up
@@ -164,10 +164,20 @@ POOL_NOTES: dict[str, Callable[[Character], list[str]]] = {
 WARPING_NOTES: dict[str, Callable[[Character, int], list[str]]] = {
     hyperborean.TRADITION_ID: hyperborean.illumination_lines,
 }
+#: Worked-out lines at the head of a tradition's bonds, by tradition id.
+BOND_NOTES: dict[str, Callable[[Character], list[str]]] = {
+    galdor.TRADITION_ID: galdor.fylgja_lines,
+    galdor.TROLLSYNIR_ID: galdor.fylgja_lines,
+}
 
 
 def pool_notes(character: Character, tradition_id: str, pool: str) -> list[str]:
     found = POOL_NOTES.get(f"{tradition_id}:{pool}")
+    return found(character) if found is not None else []
+
+
+def bond_notes(character: Character, tradition_id: str) -> list[str]:
+    found = BOND_NOTES.get(tradition_id)
     return found(character) if found is not None else []
 
 

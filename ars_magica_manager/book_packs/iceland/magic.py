@@ -7,20 +7,20 @@ Galdramen, Schooled Galdramen, Trollsynir, Vitkir of Iceland, Volur,
 Visindamen, Seithkonur and The Order of Odin, a name other packs share. Dormant stories hold the book's seeds for these
 people.
 
-The powers are described, not built: the rules text of each record gives
-Fourth Edition mechanics as printed, cited by page, for a later story to
-convert. No Virtue, Ability or spell is entered, so nothing here depends
-on the catalogs."""
+The rules are the catalog's: Traditional Galdramen and Trollsynir are
+traditions, with the Virtues and Abilities their book gives, and each
+record here points to them. What remains in words is what has no place
+on a sheet: the hreppur's laws, nidstong and the lifting of Curses."""
 
 from __future__ import annotations
 
 from ...models import Neighbour
 from ..builder import Builder, dormant, joined_lines, paragraphs
 
-#: Heads the rules of every record that gives printed mechanics.
-UNCONVERTED = (
-    "Fourth Edition rules as printed, described and not converted: ArM4 "
-    "page references are the book's own."
+#: Where a record's magic is now.
+RULES_ARE_THE_CATALOGS = (
+    "The rules are on the sheet of anyone who belongs to the tradition; "
+    "Help has How to play a galdraman."
 )
 
 
@@ -172,77 +172,16 @@ def _icelandic_magicians(b: Builder) -> Neighbour:
             "it down on the spot.",
         ),
         rules=joined_lines(
-            UNCONVERTED,
-            "This record gathers the limits and Supernatural Virtues the book "
-            "gives Iceland's wizards in common (pp. 45, 54-61); those peculiar "
-            "to Norse magic are for Norse characters, at the storyguide's "
-            "careful choice.",
-            "Limits (p. 45): no Virtue or Flaw tied to a Hermetic Art, the "
-            "Order of Hermes or another magical tradition. Trollsynir also "
-            "have no other shapeshifting power (Skinchanger, Lycanthrope, "
-            "Heartbeast, Will Over Form) and nothing of a realm at odds with "
-            "theirs (Faerie Magic, Faerie Blood, True Faith).",
-            "Mighty Fylgja, variable (pp. 54-55): Premonitions already "
-            "brings a fylgja of Magic Might 10. Each point adds 10 Might and "
-            "a power in order: Phantom (seen and heard as an apparition, an "
-            "hour per point of Might spent), Spirit Voice (speaks, any "
-            "language at 3, may carry Curses at no more than the Hamfarir "
-            "score), Corporeality (physical form as a Beast of Virtue, 5 "
-            "Might an hour). Each works only during Hamfarir. Size is -3 at "
-            "most; +1 buys up to Size +0, then one point per Size. A bear "
-            "(Size +2) of Might 40, corporeal, costs +6.",
-            "Etin Bride, +2 (p. 55): the trollsynir's Gentle Gift, for women only.",
-            "Hamfarir, +2 (pp. 55-56): needs Premonitions; gives the Talent "
-            "at 1. Int + Hamfarir of 9+ sends the mind out in the fylgja's "
-            "body while the flesh lies in trance: unseen, immaterial, up to "
-            "a day's travel an hour (nine times its animal's speed), slower "
-            "to see the world, understanding speech as at 3 but not writing. "
-            "Int + Hamfarir against the sleeper's Sta + 3 enters a dream. "
-            "Second Sight, Magic Sensitivity and Intellego can find it; Vim "
-            "and Mentem affect it. It lasts Hamfarir hours, then the body "
-            "loses a Fatigue level each 20 minutes; collapse returns the "
-            "spirit at the cost of a point of Stamina, curable only by "
-            "magic, leaving the fylgja where it was. A trapped fylgja means "
-            "no Hamfarir or Premonitions until freed. The trance counts as "
-            "effeminate; men do it in private.",
-            "Potency, +2 (p. 56): a Talent from 1, raised by story "
-            "experience, automatic for trollsynir, trolls and giants. It "
-            "invokes a magical language (Speak Jotunn or Scribe Runes, the "
-            "only two in Iceland) and may not exceed that language's score. "
-            "It aids Curse, Gift, Jotunn Affinity, Shapeshift, Svonhverfing "
-            "and Transform.",
-            "Jotunn Affinity, +4 (pp. 56-57): a Talent from 1; at most one; "
-            "Large at least, Giant Blood advised. Stress die + Com + Affinity "
-            "+ Speak Jotunn + Potency + Aura against the Hermetic level, in "
-            "one round, limited as a spontaneous spell. A ritual effect needs "
-            "a site strong in the force, 15 minutes a magnitude, a botch die "
-            "a magnitude and a Fatigue roll an hour. No vis ever; base "
-            "ranges; durations past Moon are ritual. Sea (Aquam, weather at "
-            "sea, fog), Storms (violent Auram and Aquam weather), Frost "
-            "(cold in Auram, Aquam or Ignem), Fire (Ignem or Auram fire, "
-            "smoke, heat), Earth (Terram over earth, sand, clay and stone, "
-            "not metal or gems).",
-            "Gift, +4 (pp. 57-58): a Talent from 1 granting abilities, traits "
-            "or Virtues to oneself or others, each lost on a set prohibition. "
-            "Stress die + Int + Gift + Speak Jotunn or Scribe Runes + Potency, "
-            "beating an Ease Factor of 3, and the recipient's Magic Resistance "
-            "(Vim Parma) counts even if willing. Add 7 a Characteristic point, 3 an "
-            "Ability point, 7 a Virtue or Flaw point; prohibition +3 specific, "
-            "+0 general, -3 sweeping; poetic justice 14 either way. A 0 zeroes "
-            "the total. Failing by 7 or more lets the storyguide lay a Curse "
-            "on the caster at that Ease Factor. Speech needs the target "
-            "present; runes need only reach him. Knacks in Arcane Abilities "
-            "and self-improvement are warned off; the storyguide may veto "
-            "(p. 57).",
-            "Curse, +4 (pp. 57-59): a Talent from 1 lowering scores or Virtues "
-            "or laying Flaws, always with a condition that ends it, even by "
-            "chance. Same roll, Ease Factor 7, plus 3 to cap an Ability, 14 "
-            "zero rolls, 21 always botch, 28 sicken slowly, 35 sicken fast; 7 "
-            "a Characteristic point, Flaw point or Virtue point; condition "
-            "+14 specific, +7 general, +0 sweeping; Magic Resistance; poetic "
-            "justice. Gifts and Curses cannot counter each other. Spoken, "
-            "within earshot; written, on an object near the victim. A failure "
-            "by 7 or more may rebound.",
+            RULES_ARE_THE_CATALOGS,
+            "Limits (p. 45): those peculiar to Norse magic are for Norse "
+            "characters, at the storyguide's careful choice. Hermetic Virtues are "
+            "open to the Gifted (Hedge Magic RE p. 12); trollsynir have no other "
+            "shapeshifting power and nothing of a realm at odds with theirs.",
+            "Virtues: Mighty Fylgja and Large Fylgja, Hamfarir, Potency, Curse, "
+            "Jotunn Affinity with Earth, Galdor Conjuring, Galdor Enchantment. The "
+            "book's other Talents are the gruagach Arts, or Rival Magic's Winter's "
+            "Breath, Storm's Eye, Wildfire and Sjonhverfing. The book's Gift has no "
+            "Ability: keep its score in notes (pp. 57-58).",
             "Nidstong (pp. 57-59): a tall rune-cut pole topped with a horse's "
             "skull, set overlooking the victims' land; it can strike groups. "
             "A casting roll daily against each target until it succeeds, "
@@ -254,37 +193,6 @@ def _icelandic_magicians(b: Builder) -> Neighbour:
             "Intellego Vim of 20+ shows the Ease Factor, and a Perdo Vim "
             "ritual above the casting total dispels it, at the risk of "
             "catching it on a botch.",
-            "Svonhverfing, +4 (pp. 59-60): illusion, mainly sight, a Talent "
-            "from 1; Personal, Concentration, Individual as a base. Stress "
-            "die + Int + Svonhverfing + language + Potency + Aura, Ease Factor "
-            "12: Size above -3 +1 a point; complex +3; moving +3, directed "
-            "+6; sound +3 or +6; blur +3; invisibility +6 to +12, never "
-            "truly hidden; Touch +3, Reach +6, Near +9. Speech takes 1-3 "
-            "rounds; runes a minute or more, with +6 to hold it. Jotunn "
-            "Affinity with Fire gives +3.",
-            "Galdor Conjuring and Galdor Enchantment, +5 each (pp. 59-60): "
-            "free to galdramen; others may buy them with the storyguide's "
-            "leave, as partial training, and then initiate only Song Talents.",
-            "Shapeshift and Transform, +5, +4 to trollsynir (pp. 60-61): "
-            "separate Talents, not the narrower +3 Shapeshift of Ultima "
-            "Thule. Stress die + Int + Talent + language + Potency + Aura. "
-            "Shapeshift has Ease Factor 6 and alters oneself; failure bars "
-            "that form until dawn; a return to one's own needs 3+. Transform "
-            "has 10, plus Magic Resistance (Corpus Parma), and holds the victim "
-            "until magic "
-            "frees him, by level 20 from animal, 30 from plant, 35 from "
-            "inanimate. No angelic, demonic, faerie or specific forms. Add "
-            "for Size difference +1, +3, +6, +10, +15, +21; Reptile +1, Fish "
-            "or Bird +3, Insect or Wood +6, Stone +10, Metal +15; man-made "
-            "+6, complex +15; supernatural + Might; all equipment +6. A "
-            "shifter keeps as many sure forms as his score, for those he "
-            "beats without a roll. Second Sight and Sight of the True Form "
-            "see through them. Clothing and small metal change with the "
-            "target, though a changed object's magic stops working until it is "
-            "back in its own form; larger metal falls away, and armour bursts "
-            "on two Sizes' "
-            "growth, +5 damage in scale, +10 in chain. Inanimate forms keep "
-            "only touch and hearing.",
             "Sun Duration (p. 51): in Iceland D: Sun lasts to the next "
             "sunrise or sunset, from about 23 hours at midsummer to 1, and "
             "further north longer. Optionally a full turn of the sky breaks "
@@ -297,6 +205,7 @@ def _traditional_galdramen(b: Builder) -> Neighbour:
     return b.faction(
         "Traditional Galdramen",
         faction="Hedge coven",
+        tradition="trad_galdramen",
         realm="Magic",
         wants=(
             "Good standing with the landvaettir lords, whose servants do "
@@ -323,71 +232,13 @@ def _traditional_galdramen(b: Builder) -> Neighbour:
             "last does not bring it home.",
         ),
         rules=joined_lines(
-            UNCONVERTED,
-            "A player's galdraman fills a magus slot and pays for Virtues as "
-            "one (pp. 45-50, 54).",
-            "Free Virtues (p. 46): Free Expression, Second Sight, "
-            "Premonitions, Galdor Conjuring, Galdor Enchantment. Flaw: Major "
-            "Deleterious Circumstances touching the ground. The Gift's "
-            "social penalties apply; Gentle Gift or Blatant Gift may be "
-            "taken.",
-            "Starting Abilities: Galdor Wisdom 4, Premonitions 1, Singing 4, "
-            "Speak West Norse 5, Second Sight 2, Legend Lore 2, two Song "
-            "Talents of choice at 4 and 2, Bargain 2. Experience: Age + 10.",
-            "Galdor Wisdom (pp. 46, 54): an Arcane Knowledge of the "
-            "landvaettir, needing Galdor Conjuring or Enchanting. In a new "
-            "country it falls to zero, returning a level a season. "
-            "Specialties: Enchantment, Conjuring. Their magic takes auras as "
-            "the landvaettir do (p. 32).",
-            "Song Talents (p. 46): one for each kind of spirit; raised only "
-            "by practice or experience, capped at Galdor Wisdom. A season of "
-            "galdor gives 1 experience in Sing, Galdor Wisdom or that Song.",
-            "The songs (p. 47): Yfel-galdor, curses, ill luck and wounds. "
-            "Mal-galdor, persuasive or commanding speech. Hug-galdor, "
-            "emotions and reading minds. Sig-galdor, battle, from keen "
-            "weapons to courage. Lim-galdor, wounds and bones. Biarg-galdor, "
-            "disease, guarding people, beasts and crops, and age. "
-            "Orlog-galdor, future, past, far places, and hiding from such "
-            "sight. Svart-galdor, the dead questioned or raised. Ol-galdor, "
-            "driving off hostile beings, and protection from Curses. "
-            "Brun-galdor, weather. Others may exist.",
-            "Galdor Conjuring (pp. 46-48): set the level by Hermetic "
-            "guidelines (the storyguide has the last word), duration "
-            "Momentary or Concentration, no magnitude above the Song Talent. "
-            "Non-ritual: 1 minute a magnitude. Ritual: 15 minutes and 1 pawn "
-            "a magnitude to the spirit. No vis to boost. Stress die + Com + "
-            "Sing + Galdor Wisdom + Song Talent + Aura must beat the level; "
-            "halved on the ground. The result is the spirit's Might and "
-            "Penetration. Concentration holds while he sings: Sta + Singing "
-            "hourly, Ease Factor 6 + hours; a miss by up to 3 loses Fatigue, "
-            "worse ends the song. Distractions use Int + Singing, +3 on the "
-            "ground. Twice the level means a quality die of hours' work after "
-            "the song ends.",
-            "Bargaining (p. 48): longer durations are won from a landvaettir "
-            "lord in the wilds with praise-songs, vis and service, a day a "
-            "magnitude or up to a season. Reckon the level at D: Sun. Past a "
-            "year it asks yearly vis, about double the magnitude, which good "
-            "bargaining lowers. The conjuring roll is then made on the spot "
-            "and the spirit fed. A missed tithe breaks the deal. Worked "
-            "example: a level 30 path ward, 12 pawns bargained to 9, a yearly "
-            "tithe and a favour owed.",
+            RULES_ARE_THE_CATALOGS,
+            "The tradition's chapter is Galdor; its More has Conjure a Spirit, "
+            "Bargain with a Lord and Bind an Item (pp. 45-50, 54).",
             "Health (pp. 48-49): no Instant effects. Lim- and biarg-galdor "
             "spirits add the magnitude to recovery rolls, attending at least "
             "12 hours in 24; a ritual conjuring with vis can rival Hermetic "
             "cures.",
-            "Galdor Enchantment (p. 49): after a bargain, a spirit is bound "
-            "while the item is made, with no lab. For life: as lesser "
-            "enchanted items, low-Might spirits, Momentary or Concentration, "
-            "+5 for Constant Use, no tithe, vis about as for the Hermetic item, total at double "
-            "the level plus frequency. For one service: as a potion, lasting "
-            "a year and a day, total at the level. Total: stress die + Com + "
-            "Sing + Galdor Wisdom + Song Talent + Form and Effect Bonuses + "
-            "Aura. The Craft score limits Galdor Wisdom and Song Talent; "
-            "Scribe Runes may stand as Craft, on ready-made items too, but "
-            "adds nothing. The Song Talent must equal the magnitude; no lab is "
-            "needed, only the time to make the item, though a lifetime bargain "
-            "usually takes two or three months, and the spirit, paid first, may "
-            "set elaborate terms for the item's care and use.",
             "Longevity (pp. 49-50): with biarg-galdor, a lord grants it for "
             "a service besides vis, by anyone's hand. He then drinks mead "
             "with a pawn per decade of age and conjures a biarg spirit by "
@@ -396,15 +247,6 @@ def _traditional_galdramen(b: Builder) -> Neighbour:
             "services: pull down a Christian shrine on magical ground, free a "
             "captive spirit, drive out a diabolist who tortures spirits, make "
             "a charm to clean a stream.",
-            "Galdor Initiation (p. 50): learned from a lord through quests: "
-            "Ars Notoria (at +3, Galdor Wisdom for Hermetic Theurgy), Curse, "
-            "Enchanting Music, Galdor Songs (+2), Gift, Healer, Hamfarir, "
-            "Potency, Svonhverfing. Needs Galdor Wisdom 3 per Virtue point "
-            "(a supporter's will serve) and story experience of the Virtue's "
-            "pyramid cost, 3 for a Song, 10 for Svonhverfing. Gained at 1.",
-            "Twilight (p. 50): points as Hermetic magi, from longevity "
-            "bargains and on magic botches. Stress dice send galdramen on the "
-            "Long Hamfaring, Final Twilight, sooner than most magi.",
             "Hermetic Potential (p. 51): one who joins the Order learns "
             "Parma Magica but no Arts. Optionally, with the Mysteries, a "
             "crippled theurgic magic may be shared with a Hermetic theurgist.",
@@ -416,6 +258,7 @@ def _schooled_galdramen(b: Builder) -> Neighbour:
     return b.faction(
         "Schooled Galdramen",
         faction="Hedge coven",
+        tradition="trad_learned_magicians",
         realm="Magic",
         wants="To rival the traditional galdramen",
         offers="The same services, worked with Christian learning",
@@ -433,11 +276,9 @@ def _schooled_galdramen(b: Builder) -> Neighbour:
             "issue of it.",
         ),
         rules=joined_lines(
-            UNCONVERTED,
-            "Iceland's equivalent of Hedge Magic's Natural Magicians (pp. 45, "
-            "51). Their sacred phrases are synthemata.",
-            "They follow the Natural Magicians' rules (Hedge Magic, p. 40), "
-            "but conjure magical spirits to make the effect. The only "
+            "Learned Magicians (Hedge Magic RE, Chapter 5), Iceland's Natural "
+            "Magicians (pp. 45, 51), whose sacred phrases are synthemata.",
+            "They conjure magical spirits to make the effect. The only "
             "differences: they use the normal magical interaction table, "
             "and they have the Gift.",
         ),
@@ -453,6 +294,7 @@ def _trollsynir(b: Builder) -> Neighbour:
     return b.faction(
         "Trollsynir",
         faction="Other",
+        tradition="trad_trollsynir",
         realm="Magic",
         decides="No one: they have no formal organisation (p. 54)",
         wants="Mostly to be left alone, away from men",
@@ -473,61 +315,12 @@ def _trollsynir(b: Builder) -> Neighbour:
             "soulstones first.",
         ),
         rules=joined_lines(
-            UNCONVERTED,
-            "A player's trollson fills a magus slot and pays for Virtues as "
-            "one (pp. 45, 52-54).",
-            "Free (p. 52): Potency, Shapeshift, Giant Blood; Sheltered "
-            "Upbringing, and usually the Blatant Gift, which Etin Bride can "
-            "ease, neither counting toward the Flaw total. Choose one of "
-            "Curse, Gift, Transform, Jotunn Affinity or Svonhverfing. Up to "
-            "10 points each of balancing Virtues and Flaws besides.",
-            "Starting Abilities: Speak Jotunn 5, Shapeshift 4, a magical "
-            "Talent 3, Trollson Lore 2, Trollskap Wisdom 4, Speak West Norse "
-            "3, Survival 3, Potency 2. Experience: Age + 10.",
-            "Trollskap (p. 52): magic of Exceptional Talents, always on stress "
-            "dice, unable to touch spirits or the dead. Necromancer or "
-            "Summoner may be had, but not as trollskap: only at creation or "
-            "by story. Once initiated, a trollson can never learn Galdor "
-            "Conjuring, Enchantment or Hermetic magic.",
-            "Afflictions (pp. 52-53): botching a primary magical Talent gives "
-            "a Trollskap Affliction at 0, or +1 to one, from Horns, Fangs, "
-            "Claws, Blue Skin, Obsession, Rage, Icy Aura and the like; five "
-            "at most, 6 at most each. So do External Soul healing botches and "
-            "initiation zeroes. With five at 6, further points go to a Troll "
-            "trait, and at +6 the character flees, lost. Giants are immune. "
-            "Non-player trollsynir gain about a point each five years.",
-            "Magic Resistance (p. 53): the sum of the primary Talents held at "
-            "creation, three at most, always Shapeshift, +20 with an External "
-            "Soul. Example: 17 + 18 + 16 + 20 = 71.",
-            "Trollskap Initiation (p. 53): a season or more among Jotunn "
-            "spirits. Stress die + Int + Trollskap Wisdom, no aura, Ease "
-            "Factor 10 a Virtue point, Wisdom 3 a Virtue point. Each further "
-            "season adds a stress die. Gained at 1. A zero gives an "
-            "Affliction level and a botch check; a botch restarts it. "
-            "Available: Curse, Divination, Dousing, Empathy, Enchanting "
-            "Music, Entrancement, External Soul, Gift, Hamfarir, Healer, Hex, "
-            "Jotunn Affinity (of their clan), Magic Sensitivity, Premonitions, "
-            "Second Sight, Shapeshift, Svonhverfing, Transform, Visions.",
-            "External Soul, +4 (pp. 53-54): initiation only. The soul goes "
-            "into an object, for good; while it is whole he cannot be killed, "
-            "dismembered, burned or aged, only incapacitated, but any scratch "
-            "to it kills him. Recovery totals under 9 lose the next roll, a "
-            "botch two and adds an Affliction. Magic Resistance +20. It hides "
-            "the arcane connection: a Hermetic ritual to find it must be "
-            "researched, beat his Magic Resistance and have him present.",
-            "Speak Jotunn (p. 54): the giants' magical language, near to "
-            "Pictish; a gruagach and a trollson converse at -1. Adds with "
-            "Potency to many Talents; needs Potency to learn. Specialties: "
-            "Insults, Praise.",
-            "Scribe Runes (p. 54): needs Potency. The runes are cut, rubbed "
-            "with blood and spoken. A magical language for Talents Potency "
-            "aids, except Jotunn Affinity; slower than speech, with other "
-            "advantages. Specialties: a Talent.",
-            "Trollskap Wisdom (p. 54): for initiation and new Talents. "
-            "Specialties: Curses, Divinations, Illusions.",
-            "Trollson Lore (p. 54): knows famous trollsynir, serves as Giant "
-            "Lore, and tells a clan. Specialties: jotunn, a Clan, female "
-            "magicians.",
+            RULES_ARE_THE_CATALOGS,
+            "The Fifth Edition trollsynir of Hedge Magic RE p. 76: the gruagach "
+            "Arts through the Jotnar tongue, with a Trollskap chapter. No Magic "
+            "Resistance (Hedge Magic RE p. 9) and no Potency, so totals fall from "
+            "the book's; Afflictions are Transformation's bad results. A printed "
+            "figure stays in a record's notes.",
         ),
     )
 
@@ -584,13 +377,16 @@ def _seithkonur(b: Builder) -> Neighbour:
     return b.faction(
         "Seithkonur",
         faction="Hedge coven",
+        tradition="trad_folk_witches",
         realm="Magic",
         summary=paragraphs(
             "Women magicians, among the volur, each of whom can borrow her "
             "fylgja's body and go abroad in it. The hreppur allows them only "
             "half the fee of a galdraman, half an ounce a day.",
         ),
-        rules="The book leaves their ways to Ultima Thule. Pp. 28, 45, 55.",
+        rules="Folk Witches (Hedge Magic RE, Chapter 3), each with a fylgja and "
+        "Hamfarir, Second Sight and Legend Lore instead of Visions and the "
+        "faerie versions. Pp. 28, 45, 55, 65.",
     )
 
 

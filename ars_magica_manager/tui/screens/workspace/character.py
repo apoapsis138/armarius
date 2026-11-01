@@ -49,6 +49,7 @@ from ....forms import craft_magic as craft_forms
 from ....forms import criamon as criamon_forms
 from ....forms import experimental_effects
 from ....forms import faerie_dealings as faerie_forms
+from ....forms import galdor as galdor_forms
 from ....forms import gauntlet as gauntlet_forms
 from ....forms import goetic as goetic_forms
 from ....forms import grog_story as grog_story_forms
@@ -91,7 +92,7 @@ from ....models import (
     replace_raw_vis,
 )
 from ....rules import activities as season_rules
-from ....rules import disease
+from ....rules import disease, galdor
 from ....sections import (
     AGENTS_SECTION,
     CHAR_AHEAD_SECTION,
@@ -259,7 +260,51 @@ class CharacterActions(WorkspaceBase):
         run_steps(
             self.app,
             hedge_cast_forms.cast_form(self.saga, character),
-            lambda _end: self._commit("section-aging"),
+            lambda end: self._commit_told(end, "section-aging", "tab-diary"),
+        )
+
+    def action_galdor_conjure(self) -> None:
+        """More's Conjure a Spirit: a song rolled, kept in the Diary."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            galdor_forms.conjure_form(self.saga, character),
+            lambda end: self._commit_told(
+                end, "section-aging", "section-char-health", "tab-diary"
+            ),
+        )
+
+    def action_galdor_bargain(self) -> None:
+        """More's Bargain with a Lord: a deal kept with the tradition's
+        bound beings."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            galdor_forms.bargain_form(self.saga, character),
+            lambda end: self._commit_told(
+                end, traditions.bonds_section(galdor.TRADITION_ID), "tab-diary"
+            ),
+        )
+
+    def action_galdor_bind(self) -> None:
+        """More's Bind an Item: a spirit bound, the item kept with the
+        tradition's effects."""
+        character = self.selected_character
+        if character is None:
+            return
+        run_steps(
+            self.app,
+            galdor_forms.bind_form(self.saga, character),
+            lambda end: self._commit_told(
+                end,
+                traditions.effects_section(galdor.TRADITION_ID),
+                "section-aging",
+                "tab-diary",
+            ),
         )
 
     def action_trait_roll(self) -> None:

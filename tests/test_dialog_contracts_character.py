@@ -10,11 +10,15 @@ from dialog_contract_support import (
     Contract,
     character,
     familiar,
+    field_widget,
     laboratory,
     last_gear,
     run_contract,
+    save_button,
+    set_field,
 )
 from dialog_openers import new_app, open_dialog
+from support import wait_until
 from textual.widgets import Select
 
 from ars_magica_manager import catalog
@@ -987,6 +991,38 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"A wealthy family's gift": "4"},
         live={"#fields-live": "Hermetic Arts earn none"},
     ),
+    # Galdor (Land of Fire & Ice).
+    "conjure a spirit": Contract(
+        prefill={"Song Talent": "Ol-galdor", "Effect level": "0"},
+        edits={"Effect level": "5", "Die": "7"},
+        saved=lambda s: character(s).diary[-1].name,
+        expected="Conjured: Ol-galdor",
+        invalid=[{"Effect level": "high"}, {"Effect level": "30"}],
+    ),
+    "bargain with a lord": Contract(
+        prefill={"The lord": "", "Vis a year": "0", "His answer": "agrees"},
+        edits={"The lord": "The Brun lord", "The service": "A ward", "Vis a year": "9"},
+        saved=lambda s: (
+            character(s).bound_beings[-1].name,
+            character(s).bound_beings[-1].service,
+            character(s).bound_beings[-1].vis_yearly,
+        ),
+        expected=("The Brun lord", "A ward", 9),
+        invalid=[
+            {"The lord": ""},
+            {"The lord": "X", "The service": "Y", "Vis a year": "-1"},
+        ],
+    ),
+    "bind an item": Contract(
+        prefill={"The item": "", "Binding": "lifetime", "Deal": "The Ol lord"},
+        edits={"The item": "Blue Cloak", "Effect level": "5", "Die": "9"},
+        saved=lambda s: (
+            character(s).tradition_effects[-1].name,
+            character(s).tradition_effects[-1].kind,
+        ),
+        expected=("Blue Cloak", "bound item"),
+        invalid=[{"The item": ""}, {"The item": "X", "Effect level": "30"}],
+    ),
     # Dealing with faeries (RoP: Faerie).
     "ars fabulosa": Contract(
         prefill={"Power": "(Faerie) Summoning", "The faerie's Might": "10"},
@@ -1555,3 +1591,43 @@ async def test_weapon_forms_offer_the_books_tables_for_their_sheet(name, tables)
     assert [value for _, value in book.options] == [
         w.id for w in catalog.load_weapon_catalog(tables=tables)
     ]
+
+
+# -- galdor on the terminal --
+
+
+async def test_conjure_a_spirit_says_what_came():
+    """The roll's result is told, as Cast a Power's is on the desktop: it
+    isn't only in the Diary."""
+    app = new_app()
+    async with app.run_test(size=(140, 70)) as pilot:
+        base, dialog = await open_dialog(pilot, app, "conjure a spirit")
+        for label, value in {"Effect level": "5", "Die": "7"}.items():
+            set_field(field_widget(dialog, label, {}), value)
+        await pilot.pause()
+        save_button(dialog).press()
+        assert await wait_until(pilot, lambda: app.screen is base)
+        await pilot.pause()
+        told = [n.message for n in app._notifications]
+    assert any("A spirit of Might" in message for message in told)
+
+
+@pytest.mark.parametrize("action", ["conjure", "bind"])
+async def test_a_galdor_form_with_nothing_to_choose_opens(action):
+    """No Song, deal or Craft: a terminal Select can't be empty unless it may
+    be blank, so the form must allow that and refuse on Save."""
+    app = new_app()
+    async with app.run_test(size=(140, 70)) as pilot:
+        base, dialog = await open_dialog(pilot, app, "conjure a spirit")
+        await dialog.dismiss(None)
+        await pilot.pause()
+        magus = base.selected_character
+        magus.abilities = []
+        magus.bound_beings = []
+        getattr(base, f"action_galdor_{action}")()
+        assert await wait_until(pilot, lambda: app.screen is not base)
+        await pilot.pause()
+        form = app.screen
+        save_button(form).press()
+        await pilot.pause()
+        assert app.screen is form

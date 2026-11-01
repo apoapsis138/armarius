@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.64.0",
+  "app_version": "3.64.2",
   "kind": "pack",
   "name": "Land of Fire and Ice",
   "from_saga": "Land of Fire and Ice",
@@ -4051,79 +4051,79 @@
             "kind": "places",
             "target_id": "thverar",
             "note": "A spring assembly site",
-            "id": "3a16952e8cba"
+            "id": "2e4ac319c330"
           },
           {
             "kind": "places",
             "target_id": "thorsnes",
             "note": "A spring assembly site",
-            "id": "6b4e9515a66f"
+            "id": "3469cba92660"
           },
           {
             "kind": "places",
             "target_id": "thorskafjardar",
             "note": "A spring assembly site",
-            "id": "d098261a96b4"
+            "id": "ad45282ca095"
           },
           {
             "kind": "places",
             "target_id": "rangar",
             "note": "A spring assembly site",
-            "id": "b2479ba43ac8"
+            "id": "b53b825e0af6"
           },
           {
             "kind": "places",
             "target_id": "arnes",
             "note": "A spring assembly site",
-            "id": "c8def6956f92"
+            "id": "03139601e30d"
           },
           {
             "kind": "places",
             "target_id": "kjarlarnes",
             "note": "A spring assembly site",
-            "id": "e92682d51ad1"
+            "id": "f2a008f2dc3f"
           },
           {
             "kind": "places",
             "target_id": "sunnudals",
             "note": "A spring assembly site",
-            "id": "33040e525982"
+            "id": "63d4a352afba"
           },
           {
             "kind": "places",
             "target_id": "mula",
             "note": "A spring assembly site",
-            "id": "71d06c792539"
+            "id": "3e0d4ddf0f1c"
           },
           {
             "kind": "places",
             "target_id": "skaftafells",
             "note": "A spring assembly site",
-            "id": "508bbc2db322"
+            "id": "237c7c520a82"
           },
           {
             "kind": "places",
             "target_id": "hunavatns",
             "note": "A spring assembly site",
-            "id": "814641442905"
+            "id": "9b4b74b91c24"
           },
           {
             "kind": "places",
             "target_id": "hegranes",
             "note": "A spring assembly site",
-            "id": "31d371b6daac"
+            "id": "4e65d814b63e"
           },
           {
             "kind": "places",
             "target_id": "vadla",
             "note": "A spring assembly site",
-            "id": "6d0e73726348"
+            "id": "5ae03d2d9e4f"
           },
           {
             "kind": "places",
             "target_id": "thingeyjar",
             "note": "A spring assembly site",
-            "id": "982eae1a47bd"
+            "id": "e22def2295d7"
           }
         ],
         "arms": {},
@@ -4155,7 +4155,7 @@
             "kind": "places",
             "target_id": "the_fall_things",
             "note": "Reports the Althing to the districts",
-            "id": "36a62b3ac1db"
+            "id": "e2e8a73c653d"
           }
         ],
         "arms": {},
@@ -4499,7 +4499,7 @@
             "kind": "places",
             "target_id": "holar",
             "note": "The bishop's see",
-            "id": "1e641ce72691"
+            "id": "9455bd61d33d"
           }
         ],
         "arms": {},
@@ -4842,7 +4842,7 @@
             "kind": "places",
             "target_id": "skalholt",
             "note": "Under its control",
-            "id": "93784642c585"
+            "id": "aced3f09de71"
           }
         ],
         "arms": {},
@@ -5005,7 +5005,7 @@
           "faction": "Other",
           "decides": "",
           "members": null,
-          "rules": "Fourth Edition rules as printed, described and not converted: ArM4 page references are the book's own.\nThis record gathers the limits and Supernatural Virtues the book gives Iceland's wizards in common (pp. 45, 54-61); those peculiar to Norse magic are for Norse characters, at the storyguide's careful choice.\nLimits (p. 45): no Virtue or Flaw tied to a Hermetic Art, the Order of Hermes or another magical tradition. Trollsynir also have no other shapeshifting power (Skinchanger, Lycanthrope, Heartbeast, Will Over Form) and nothing of a realm at odds with theirs (Faerie Magic, Faerie Blood, True Faith).\nMighty Fylgja, variable (pp. 54-55): Premonitions already brings a fylgja of Magic Might 10. Each point adds 10 Might and a power in order: Phantom (seen and heard as an apparition, an hour per point of Might spent), Spirit Voice (speaks, any language at 3, may carry Curses at no more than the Hamfarir score), Corporeality (physical form as a Beast of Virtue, 5 Might an hour). Each works only during Hamfarir. Size is -3 at most; +1 buys up to Size +0, then one point per Size. A bear (Size +2) of Might 40, corporeal, costs +6.\nEtin Bride, +2 (p. 55): the trollsynir's Gentle Gift, for women only.\nHamfarir, +2 (pp. 55-56): needs Premonitions; gives the Talent at 1. Int + Hamfarir of 9+ sends the mind out in the fylgja's body while the flesh lies in trance: unseen, immaterial, up to a day's travel an hour (nine times its animal's speed), slower to see the world, understanding speech as at 3 but not writing. Int + Hamfarir against the sleeper's Sta + 3 enters a dream. Second Sight, Magic Sensitivity and Intellego can find it; Vim and Mentem affect it. It lasts Hamfarir hours, then the body loses a Fatigue level each 20 minutes; collapse returns the spirit at the cost of a point of Stamina, curable only by magic, leaving the fylgja where it was. A trapped fylgja means no Hamfarir or Premonitions until freed. The trance counts as effeminate; men do it in private.\nPotency, +2 (p. 56): a Talent from 1, raised by story experience, automatic for trollsynir, trolls and giants. It invokes a magical language (Speak Jotunn or Scribe Runes, the only two in Iceland) and may not exceed that language's score. It aids Curse, Gift, Jotunn Affinity, Shapeshift, Svonhverfing and Transform.\nJotunn Affinity, +4 (pp. 56-57): a Talent from 1; at most one; Large at least, Giant Blood advised. Stress die + Com + Affinity + Speak Jotunn + Potency + Aura against the Hermetic level, in one round, limited as a spontaneous spell. A ritual effect needs a site strong in the force, 15 minutes a magnitude, a botch die a magnitude and a Fatigue roll an hour. No vis ever; base ranges; durations past Moon are ritual. Sea (Aquam, weather at sea, fog), Storms (violent Auram and Aquam weather), Frost (cold in Auram, Aquam or Ignem), Fire (Ignem or Auram fire, smoke, heat), Earth (Terram over earth, sand, clay and stone, not metal or gems).\nGift, +4 (pp. 57-58): a Talent from 1 granting abilities, traits or Virtues to oneself or others, each lost on a set prohibition. Stress die + Int + Gift + Speak Jotunn or Scribe Runes + Potency, beating an Ease Factor of 3, and the recipient's Magic Resistance (Vim Parma) counts even if willing. Add 7 a Characteristic point, 3 an Ability point, 7 a Virtue or Flaw point; prohibition +3 specific, +0 general, -3 sweeping; poetic justice 14 either way. A 0 zeroes the total. Failing by 7 or more lets the storyguide lay a Curse on the caster at that Ease Factor. Speech needs the target present; runes need only reach him. Knacks in Arcane Abilities and self-improvement are warned off; the storyguide may veto (p. 57).\nCurse, +4 (pp. 57-59): a Talent from 1 lowering scores or Virtues or laying Flaws, always with a condition that ends it, even by chance. Same roll, Ease Factor 7, plus 3 to cap an Ability, 14 zero rolls, 21 always botch, 28 sicken slowly, 35 sicken fast; 7 a Characteristic point, Flaw point or Virtue point; condition +14 specific, +7 general, +0 sweeping; Magic Resistance; poetic justice. Gifts and Curses cannot counter each other. Spoken, within earshot; written, on an object near the victim. A failure by 7 or more may rebound.\nNidstong (pp. 57-59): a tall rune-cut pole topped with a horse's skull, set overlooking the victims' land; it can strike groups. A casting roll daily against each target until it succeeds, with no backlash or botch while it stands; the last rolls count when it falls.\nLifting a Curse (p. 59): the maker beats the first roll; or the condition is met. A Curse holder beating the total, or an Intellego Vim of the 7th magnitude, learns the condition. Intellego Vim of 20+ shows the Ease Factor, and a Perdo Vim ritual above the casting total dispels it, at the risk of catching it on a botch.\nSvonhverfing, +4 (pp. 59-60): illusion, mainly sight, a Talent from 1; Personal, Concentration, Individual as a base. Stress die + Int + Svonhverfing + language + Potency + Aura, Ease Factor 12: Size above -3 +1 a point; complex +3; moving +3, directed +6; sound +3 or +6; blur +3; invisibility +6 to +12, never truly hidden; Touch +3, Reach +6, Near +9. Speech takes 1-3 rounds; runes a minute or more, with +6 to hold it. Jotunn Affinity with Fire gives +3.\nGaldor Conjuring and Galdor Enchantment, +5 each (pp. 59-60): free to galdramen; others may buy them with the storyguide's leave, as partial training, and then initiate only Song Talents.\nShapeshift and Transform, +5, +4 to trollsynir (pp. 60-61): separate Talents, not the narrower +3 Shapeshift of Ultima Thule. Stress die + Int + Talent + language + Potency + Aura. Shapeshift has Ease Factor 6 and alters oneself; failure bars that form until dawn; a return to one's own needs 3+. Transform has 10, plus Magic Resistance (Corpus Parma), and holds the victim until magic frees him, by level 20 from animal, 30 from plant, 35 from inanimate. No angelic, demonic, faerie or specific forms. Add for Size difference +1, +3, +6, +10, +15, +21; Reptile +1, Fish or Bird +3, Insect or Wood +6, Stone +10, Metal +15; man-made +6, complex +15; supernatural + Might; all equipment +6. A shifter keeps as many sure forms as his score, for those he beats without a roll. Second Sight and Sight of the True Form see through them. Clothing and small metal change with the target, though a changed object's magic stops working until it is back in its own form; larger metal falls away, and armour bursts on two Sizes' growth, +5 damage in scale, +10 in chain. Inanimate forms keep only touch and hearing.\nSun Duration (p. 51): in Iceland D: Sun lasts to the next sunrise or sunset, from about 23 hours at midsummer to 1, and further north longer. Optionally a full turn of the sky breaks it, at just under 24 hours.",
+          "rules": "The rules are on the sheet of anyone who belongs to the tradition; Help has How to play a galdraman.\nLimits (p. 45): those peculiar to Norse magic are for Norse characters, at the storyguide's careful choice. Hermetic Virtues are open to the Gifted (Hedge Magic RE p. 12); trollsynir have no other shapeshifting power and nothing of a realm at odds with theirs.\nVirtues: Mighty Fylgja and Large Fylgja, Hamfarir, Potency, Curse, Jotunn Affinity with Earth, Galdor Conjuring, Galdor Enchantment. The book's other Talents are the gruagach Arts, or Rival Magic's Winter's Breath, Storm's Eye, Wildfire and Sjonhverfing. The book's Gift has no Ability: keep its score in notes (pp. 57-58).\nNidstong (pp. 57-59): a tall rune-cut pole topped with a horse's skull, set overlooking the victims' land; it can strike groups. A casting roll daily against each target until it succeeds, with no backlash or botch while it stands; the last rolls count when it falls.\nLifting a Curse (p. 59): the maker beats the first roll; or the condition is met. A Curse holder beating the total, or an Intellego Vim of the 7th magnitude, learns the condition. Intellego Vim of 20+ shows the Ease Factor, and a Perdo Vim ritual above the casting total dispels it, at the risk of catching it on a botch.\nSun Duration (p. 51): in Iceland D: Sun lasts to the next sunrise or sunset, from about 23 hours at midsummer to 1, and further north longer. Optionally a full turn of the sky breaks it, at just under 24 hours.",
           "wants": "",
           "offers": ""
         },
@@ -5030,9 +5030,10 @@
           "faction": "Hedge coven",
           "decides": "",
           "members": null,
-          "rules": "Fourth Edition rules as printed, described and not converted: ArM4 page references are the book's own.\nA player's galdraman fills a magus slot and pays for Virtues as one (pp. 45-50, 54).\nFree Virtues (p. 46): Free Expression, Second Sight, Premonitions, Galdor Conjuring, Galdor Enchantment. Flaw: Major Deleterious Circumstances touching the ground. The Gift's social penalties apply; Gentle Gift or Blatant Gift may be taken.\nStarting Abilities: Galdor Wisdom 4, Premonitions 1, Singing 4, Speak West Norse 5, Second Sight 2, Legend Lore 2, two Song Talents of choice at 4 and 2, Bargain 2. Experience: Age + 10.\nGaldor Wisdom (pp. 46, 54): an Arcane Knowledge of the landvaettir, needing Galdor Conjuring or Enchanting. In a new country it falls to zero, returning a level a season. Specialties: Enchantment, Conjuring. Their magic takes auras as the landvaettir do (p. 32).\nSong Talents (p. 46): one for each kind of spirit; raised only by practice or experience, capped at Galdor Wisdom. A season of galdor gives 1 experience in Sing, Galdor Wisdom or that Song.\nThe songs (p. 47): Yfel-galdor, curses, ill luck and wounds. Mal-galdor, persuasive or commanding speech. Hug-galdor, emotions and reading minds. Sig-galdor, battle, from keen weapons to courage. Lim-galdor, wounds and bones. Biarg-galdor, disease, guarding people, beasts and crops, and age. Orlog-galdor, future, past, far places, and hiding from such sight. Svart-galdor, the dead questioned or raised. Ol-galdor, driving off hostile beings, and protection from Curses. Brun-galdor, weather. Others may exist.\nGaldor Conjuring (pp. 46-48): set the level by Hermetic guidelines (the storyguide has the last word), duration Momentary or Concentration, no magnitude above the Song Talent. Non-ritual: 1 minute a magnitude. Ritual: 15 minutes and 1 pawn a magnitude to the spirit. No vis to boost. Stress die + Com + Sing + Galdor Wisdom + Song Talent + Aura must beat the level; halved on the ground. The result is the spirit's Might and Penetration. Concentration holds while he sings: Sta + Singing hourly, Ease Factor 6 + hours; a miss by up to 3 loses Fatigue, worse ends the song. Distractions use Int + Singing, +3 on the ground. Twice the level means a quality die of hours' work after the song ends.\nBargaining (p. 48): longer durations are won from a landvaettir lord in the wilds with praise-songs, vis and service, a day a magnitude or up to a season. Reckon the level at D: Sun. Past a year it asks yearly vis, about double the magnitude, which good bargaining lowers. The conjuring roll is then made on the spot and the spirit fed. A missed tithe breaks the deal. Worked example: a level 30 path ward, 12 pawns bargained to 9, a yearly tithe and a favour owed.\nHealth (pp. 48-49): no Instant effects. Lim- and biarg-galdor spirits add the magnitude to recovery rolls, attending at least 12 hours in 24; a ritual conjuring with vis can rival Hermetic cures.\nGaldor Enchantment (p. 49): after a bargain, a spirit is bound while the item is made, with no lab. For life: as lesser enchanted items, low-Might spirits, Momentary or Concentration, +5 for Constant Use, no tithe, vis about as for the Hermetic item, total at double the level plus frequency. For one service: as a potion, lasting a year and a day, total at the level. Total: stress die + Com + Sing + Galdor Wisdom + Song Talent + Form and Effect Bonuses + Aura. The Craft score limits Galdor Wisdom and Song Talent; Scribe Runes may stand as Craft, on ready-made items too, but adds nothing. The Song Talent must equal the magnitude; no lab is needed, only the time to make the item, though a lifetime bargain usually takes two or three months, and the spirit, paid first, may set elaborate terms for the item's care and use.\nLongevity (pp. 49-50): with biarg-galdor, a lord grants it for a service besides vis, by anyone's hand. He then drinks mead with a pawn per decade of age and conjures a biarg spirit by ritual: a longevity potion of the conjuring total. Yearly mead renews it; it never fails, even on an aging result. Typical services: pull down a Christian shrine on magical ground, free a captive spirit, drive out a diabolist who tortures spirits, make a charm to clean a stream.\nGaldor Initiation (p. 50): learned from a lord through quests: Ars Notoria (at +3, Galdor Wisdom for Hermetic Theurgy), Curse, Enchanting Music, Galdor Songs (+2), Gift, Healer, Hamfarir, Potency, Svonhverfing. Needs Galdor Wisdom 3 per Virtue point (a supporter's will serve) and story experience of the Virtue's pyramid cost, 3 for a Song, 10 for Svonhverfing. Gained at 1.\nTwilight (p. 50): points as Hermetic magi, from longevity bargains and on magic botches. Stress dice send galdramen on the Long Hamfaring, Final Twilight, sooner than most magi.\nHermetic Potential (p. 51): one who joins the Order learns Parma Magica but no Arts. Optionally, with the Mysteries, a crippled theurgic magic may be shared with a Hermetic theurgist.",
+          "rules": "The rules are on the sheet of anyone who belongs to the tradition; Help has How to play a galdraman.\nThe tradition's chapter is Galdor; its More has Conjure a Spirit, Bargain with a Lord and Bind an Item (pp. 45-50, 54).\nHealth (pp. 48-49): no Instant effects. Lim- and biarg-galdor spirits add the magnitude to recovery rolls, attending at least 12 hours in 24; a ritual conjuring with vis can rival Hermetic cures.\nLongevity (pp. 49-50): with biarg-galdor, a lord grants it for a service besides vis, by anyone's hand. He then drinks mead with a pawn per decade of age and conjures a biarg spirit by ritual: a longevity potion of the conjuring total. Yearly mead renews it; it never fails, even on an aging result. Typical services: pull down a Christian shrine on magical ground, free a captive spirit, drive out a diabolist who tortures spirits, make a charm to clean a stream.\nHermetic Potential (p. 51): one who joins the Order learns Parma Magica but no Arts. Optionally, with the Mysteries, a crippled theurgic magic may be shared with a Hermetic theurgist.",
           "wants": "Good standing with the landvaettir lords, whose servants do their work, and their old lore left unmolested",
-          "offers": "Spirits called by song for healing, weather, sight of far places, wards on a path or a farm, and curses"
+          "offers": "Spirits called by song for healing, weather, sight of far places, wards on a path or a farm, and curses",
+          "tradition": "trad_galdramen"
         },
         "attitudes": [],
         "favours": [],
@@ -5041,19 +5042,19 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "ccd13a84fcf3"
+            "id": "154c0f06c107"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "e083a4b9fcf4"
+            "id": "8f321e716537"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Its women are galdrakona",
-            "id": "d6cb5d865508"
+            "id": "6aeb3581a4b7"
           }
         ],
         "arms": {},
@@ -5074,9 +5075,10 @@
           "faction": "Hedge coven",
           "decides": "",
           "members": null,
-          "rules": "Fourth Edition rules as printed, described and not converted: ArM4 page references are the book's own.\nIceland's equivalent of Hedge Magic's Natural Magicians (pp. 45, 51). Their sacred phrases are synthemata.\nThey follow the Natural Magicians' rules (Hedge Magic, p. 40), but conjure magical spirits to make the effect. The only differences: they use the normal magical interaction table, and they have the Gift.",
+          "rules": "Learned Magicians (Hedge Magic RE, Chapter 5), Iceland's Natural Magicians (pp. 45, 51), whose sacred phrases are synthemata.\nThey conjure magical spirits to make the effect. The only differences: they use the normal magical interaction table, and they have the Gift.",
           "wants": "To rival the traditional galdramen",
-          "offers": "The same services, worked with Christian learning"
+          "offers": "The same services, worked with Christian learning",
+          "tradition": "trad_learned_magicians"
         },
         "attitudes": [],
         "favours": [],
@@ -5085,31 +5087,31 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "f63a6f468100"
+            "id": "8d61f1ced955"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "48dc9e3aa227"
+            "id": "9af4fb0e543e"
           },
           {
             "kind": "places",
             "target_id": "traditional_galdramen",
             "note": "Their model and their rivals",
-            "id": "c036494eac63"
+            "id": "44d09d95cb6d"
           },
           {
             "kind": "places",
             "target_id": "holar_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "caa115d0d3cd"
+            "id": "86873d484779"
           },
           {
             "kind": "places",
             "target_id": "skalholt_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "c3b51f4e3576"
+            "id": "1c7983121b79"
           }
         ],
         "arms": {},
@@ -5130,9 +5132,10 @@
           "faction": "Other",
           "decides": "No one: they have no formal organisation (p. 54)",
           "members": null,
-          "rules": "Fourth Edition rules as printed, described and not converted: ArM4 page references are the book's own.\nA player's trollson fills a magus slot and pays for Virtues as one (pp. 45, 52-54).\nFree (p. 52): Potency, Shapeshift, Giant Blood; Sheltered Upbringing, and usually the Blatant Gift, which Etin Bride can ease, neither counting toward the Flaw total. Choose one of Curse, Gift, Transform, Jotunn Affinity or Svonhverfing. Up to 10 points each of balancing Virtues and Flaws besides.\nStarting Abilities: Speak Jotunn 5, Shapeshift 4, a magical Talent 3, Trollson Lore 2, Trollskap Wisdom 4, Speak West Norse 3, Survival 3, Potency 2. Experience: Age + 10.\nTrollskap (p. 52): magic of Exceptional Talents, always on stress dice, unable to touch spirits or the dead. Necromancer or Summoner may be had, but not as trollskap: only at creation or by story. Once initiated, a trollson can never learn Galdor Conjuring, Enchantment or Hermetic magic.\nAfflictions (pp. 52-53): botching a primary magical Talent gives a Trollskap Affliction at 0, or +1 to one, from Horns, Fangs, Claws, Blue Skin, Obsession, Rage, Icy Aura and the like; five at most, 6 at most each. So do External Soul healing botches and initiation zeroes. With five at 6, further points go to a Troll trait, and at +6 the character flees, lost. Giants are immune. Non-player trollsynir gain about a point each five years.\nMagic Resistance (p. 53): the sum of the primary Talents held at creation, three at most, always Shapeshift, +20 with an External Soul. Example: 17 + 18 + 16 + 20 = 71.\nTrollskap Initiation (p. 53): a season or more among Jotunn spirits. Stress die + Int + Trollskap Wisdom, no aura, Ease Factor 10 a Virtue point, Wisdom 3 a Virtue point. Each further season adds a stress die. Gained at 1. A zero gives an Affliction level and a botch check; a botch restarts it. Available: Curse, Divination, Dousing, Empathy, Enchanting Music, Entrancement, External Soul, Gift, Hamfarir, Healer, Hex, Jotunn Affinity (of their clan), Magic Sensitivity, Premonitions, Second Sight, Shapeshift, Svonhverfing, Transform, Visions.\nExternal Soul, +4 (pp. 53-54): initiation only. The soul goes into an object, for good; while it is whole he cannot be killed, dismembered, burned or aged, only incapacitated, but any scratch to it kills him. Recovery totals under 9 lose the next roll, a botch two and adds an Affliction. Magic Resistance +20. It hides the arcane connection: a Hermetic ritual to find it must be researched, beat his Magic Resistance and have him present.\nSpeak Jotunn (p. 54): the giants' magical language, near to Pictish; a gruagach and a trollson converse at -1. Adds with Potency to many Talents; needs Potency to learn. Specialties: Insults, Praise.\nScribe Runes (p. 54): needs Potency. The runes are cut, rubbed with blood and spoken. A magical language for Talents Potency aids, except Jotunn Affinity; slower than speech, with other advantages. Specialties: a Talent.\nTrollskap Wisdom (p. 54): for initiation and new Talents. Specialties: Curses, Divinations, Illusions.\nTrollson Lore (p. 54): knows famous trollsynir, serves as Giant Lore, and tells a clan. Specialties: jotunn, a Clan, female magicians.",
+          "rules": "The rules are on the sheet of anyone who belongs to the tradition; Help has How to play a galdraman.\nThe Fifth Edition trollsynir of Hedge Magic RE p. 76: the gruagach Arts through the Jotnar tongue, with a Trollskap chapter. No Magic Resistance (Hedge Magic RE p. 9) and no Potency, so totals fall from the book's; Afflictions are Transformation's bad results. A printed figure stays in a record's notes.",
           "wants": "Mostly to be left alone, away from men",
-          "offers": "Rarely, and from a very few, their powers to men's benefit"
+          "offers": "Rarely, and from a very few, their powers to men's benefit",
+          "tradition": "trad_trollsynir"
         },
         "attitudes": [],
         "favours": [],
@@ -5141,13 +5144,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "34495d939e72"
+            "id": "958ba59a383a"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "7584c03fd742"
+            "id": "4f05db3f7d83"
           }
         ],
         "arms": {},
@@ -5180,7 +5183,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "9374a53bec64"
+            "id": "35630aef0909"
           }
         ],
         "arms": {},
@@ -5212,7 +5215,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "a1432ad49712"
+            "id": "b7c1f74560df"
           }
         ],
         "arms": {},
@@ -5244,7 +5247,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "565a23073ff0"
+            "id": "34ec288ba327"
           }
         ],
         "arms": {},
@@ -5265,9 +5268,10 @@
           "faction": "Hedge coven",
           "decides": "",
           "members": null,
-          "rules": "The book leaves their ways to Ultima Thule. Pp. 28, 45, 55.",
+          "rules": "Folk Witches (Hedge Magic RE, Chapter 3), each with a fylgja and Hamfarir, Second Sight and Legend Lore instead of Visions and the faerie versions. Pp. 28, 45, 55, 65.",
           "wants": "",
-          "offers": ""
+          "offers": "",
+          "tradition": "trad_folk_witches"
         },
         "attitudes": [],
         "favours": [],
@@ -5276,13 +5280,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "76aa35517138"
+            "id": "a94f01e7338b"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Among the women called volur",
-            "id": "74f346167380"
+            "id": "33e100a31ff1"
           }
         ],
         "arms": {},
@@ -5314,7 +5318,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "What the Order would mistake for it",
-            "id": "d293a74449eb"
+            "id": "80ab7ecb2a74"
           }
         ],
         "arms": {},
@@ -5526,7 +5530,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_de_panne",
             "note": "Its harbour",
-            "id": "9912f1861c09"
+            "id": "9a30b656c739"
           }
         ],
         "arms": {},
@@ -5603,7 +5607,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_exeter",
             "note": "Its harbour",
-            "id": "a7a1f986104d"
+            "id": "f1afa3582aa1"
           }
         ],
         "arms": {},
@@ -5802,7 +5806,7 @@
         "favours": [],
         "links": [],
         "arms": {},
-        "secrets": "The book's social-class Virtues and Flaws (pp. 65-66), with Fourth Edition points, have no entries in the catalog:\n\nFreeman +0: freeborn, no land or milk animals; must find a place in a household or as a hut-man. Bondi +1: rents land a year at a time and may choose an assembly, usually the landlord's godi. Landowner +2: also owns land, pays thing-tax, may attend the thing, and may have to ride with his godi to the Althing or pay toward it. Storbondi +3: rich and influential, with tenant farms and churches, and Temporal Influence free. Godi +4: holds a godord, appoints judges and panels, sits on the law council, and has Temporal Influence free. Storgodi +5: several godords and a riki, one of the five competing families, rich but unable to keep men-at-arms.\n\nFreedman -1: a dependant of his former owner, with Bad Reputation (Freedman) 3. Slave -2: property, outside the law. Outlaw -3 to -5: by the power of the accuser, from a bondi's to a godi's, who hunts him to the end; killing three other outlaws earns a reprieve.\n\nEvery Icelander starts with Icelandic Law 2 and Legend Lore 2. The wealthy, from landowner up, are usually Educated, which they pay for (p. 66).\n\nIceland-born characters (pp. 64-65). Magus-equivalents: Trollson, traditional galdraman. Mythic companions: seithkona (a Hedge Magic cunning-woman with a fylgja and Hamfarir instead of Visions, and Second Sight and Legend Lore instead of the faerie versions), schooled galdraman (Natural Magician), spirit master. Companions: witch, seeress or wiseman, viking (anachronistic by 1220), skald, shapeshifter, bondi, godi. Grogs: berserker (almost unknown by now), laborer, tenant farmer, thrall.\n\nThe book's Fourth Edition Virtue lists (p. 65). Witch (heid), often with a Jotunn Affinity, some with Scribe Runes, Shapeshift or Transform: Bane Maker +2, Magical Animal Companion +2, Herbalism +1, Bad Reputation (pagan) -1, Tainted with Evil -2. Seeress (volva) or wiseman (visindaman): Divination +4, Visions +2, Second Sight +1, Premonitions +1. Viking: Mercenary Leader +3 or Wealthy Merchant +3, Ways of the Sea +4, Well Traveled +1, Social Contacts +1, Berserk +1, Fury -3, Judged Unfairly -1. Skald: Audio Eidetic Memory +3, Free Expression +1, Inspirational +1. Shapeshifter: Shapeshifter +5, Skinchanger +2 or Lycanthrope -3, Outcast -1. Bondi: Bondi +1, Landowner +2, Storbondi +3, Social Contacts +1, Obligations -1. Godi: Godi +4, Prestigious Family +1, Feud -1 to -4. Berserker: Berserk +1, Fury -3, Outcast -1. Laborer: Freeman or Freedman. Tenant farmer: Bondi. Thrall: Slave.\n\nMagi should come from the Order's heartlands, at first; at most one player should fill the magus slot with a native magician. One character needs Premonitions for Spider in the Ice."
+        "secrets": "The ranks are Social Status Virtues and Flaws now: Bondi, Landowner, Storbondi, Godi and Storgodi; a freeman is a Laborer, a freedman a Freed Slave, and Slave and Outlaw are as they are elsewhere (pp. 65-66). A godi has no serfs or men-at-arms, so he is no Landed Noble.\n\nEvery Icelander starts with Icelandic Law 2 and Legend Lore 2. The wealthy, from landowner up, are usually Educated, which they pay for (p. 66).\n\nIceland-born characters (pp. 64-65). Magus-equivalents: Trollson, traditional galdraman. Mythic companions: seithkona (a Hedge Magic cunning-woman with a fylgja and Hamfarir instead of Visions, and Second Sight and Legend Lore instead of the faerie versions), schooled galdraman (Natural Magician), spirit master. Companions: witch, seeress or wiseman, viking (anachronistic by 1220), skald, shapeshifter, bondi, godi. Grogs: berserker (almost unknown by now), laborer, tenant farmer, thrall.\n\nThe book's Fourth Edition Virtue lists (p. 65). Witch (heid), often with a Jotunn Affinity, some with Scribe Runes, Shapeshift or Transform: Bane Maker +2, Magical Animal Companion +2, Herbalism +1, Bad Reputation (pagan) -1, Tainted with Evil -2. Seeress (volva) or wiseman (visindaman): Divination +4, Visions +2, Second Sight +1, Premonitions +1. Viking: Mercenary Leader +3 or Wealthy Merchant +3, Ways of the Sea +4, Well Traveled +1, Social Contacts +1, Berserk +1, Fury -3, Judged Unfairly -1. Skald: Audio Eidetic Memory +3, Free Expression +1, Inspirational +1. Shapeshifter: Shapeshifter +5, Skinchanger +2 or Lycanthrope -3, Outcast -1. Bondi: Bondi +1, Landowner +2, Storbondi +3, Social Contacts +1, Obligations -1. Godi: Godi +4, Prestigious Family +1, Feud -1 to -4. Berserker: Berserk +1, Fury -3, Outcast -1. Laborer: Freeman or Freedman. Tenant farmer: Bondi. Thrall: Slave.\n\nMagi should come from the Order's heartlands, at first; at most one player should fill the magus slot with a native magician. One character needs Premonitions for Spider in the Ice."
       },
       {
         "id": "fire_and_song",
@@ -5870,19 +5874,19 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "a884d0d6b971"
+            "id": "dd758c527cc8"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "98daf816255d"
+            "id": "48f77c5bde54"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "d8f4094276df"
+            "id": "b42b9e8d8c83"
           }
         ],
         "arms": {},
@@ -5954,61 +5958,61 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "4b3b33c55f12"
+            "id": "46a152ff7836"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "cdd1582c6900"
+            "id": "314e45631a28"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "041b92dc8fea"
+            "id": "f21b509b5f7a"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "4c15dad4feec"
+            "id": "ade7e341592f"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "7e993b4948ea"
+            "id": "f7e79693ad1a"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "94e86e9e287a"
+            "id": "fb3e22156df8"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "519ddbe085ec"
+            "id": "15f1470e3367"
           },
           {
             "kind": "characters",
             "target_id": "pralix",
             "note": "",
-            "id": "754f24ec659d"
+            "id": "2918dde1aa8e"
           },
           {
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "",
-            "id": "dd0e6823ecf7"
+            "id": "916085d01124"
           },
           {
             "kind": "characters",
             "target_id": "macomb",
             "note": "",
-            "id": "905903a1867e"
+            "id": "a03480230d7d"
           }
         ],
         "arms": {},
@@ -6140,91 +6144,91 @@
             "kind": "characters",
             "target_id": "lord_peter",
             "note": "",
-            "id": "3589e649e7d8"
+            "id": "8b96e9d1e320"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "6d84427768b1"
+            "id": "3f3088c98dca"
           },
           {
             "kind": "creatures",
             "target_id": "lord_peter_s_men",
             "note": "",
-            "id": "57fc58213b81"
+            "id": "3f2a4122a3b6"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "1df59b53f6ab"
+            "id": "983bdc7e8b22"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "924e5571f5d3"
+            "id": "cff625a334a7"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "",
-            "id": "015521d12fd4"
+            "id": "4379af21973c"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "",
-            "id": "ee3d8e3c98de"
+            "id": "2cec3c754acf"
           },
           {
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "",
-            "id": "91e13049cb68"
+            "id": "a8c29264e985"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "b24e5d7f6833"
+            "id": "bba3154a522b"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "55aa3a821f68"
+            "id": "1942318d1a22"
           },
           {
             "kind": "characters",
             "target_id": "markus_of_verditius",
             "note": "",
-            "id": "cb4a09327111"
+            "id": "b28ab786f739"
           },
           {
             "kind": "characters",
             "target_id": "cornelius_of_verditius",
             "note": "",
-            "id": "b0aff90cbebe"
+            "id": "11890220a8cb"
           },
           {
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "8ca027015fb3"
+            "id": "a2a6074fce33"
           },
           {
             "kind": "creatures",
             "target_id": "thingmen",
             "note": "",
-            "id": "a87e0bb6faeb"
+            "id": "b63bcac8aad2"
           },
           {
             "kind": "creatures",
             "target_id": "walking_corpses",
             "note": "",
-            "id": "929e38161190"
+            "id": "54eb70a07b58"
           }
         ],
         "arms": {},
@@ -6255,7 +6259,7 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "72b93deddf3c"
+            "id": "b4978c70fcd2"
           }
         ],
         "arms": {},
@@ -7440,7 +7444,7 @@
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "85f32e22b753"
+            "id": "e93c7ed22b03"
           }
         ],
         "arms": {},
@@ -7642,55 +7646,55 @@
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "1603ad7ad7de"
+            "id": "c10da3e5f8a8"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "01cdb02f9547"
+            "id": "d08ac7d68e33"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "15abb6cef7ff"
+            "id": "d6b9dda2c5d2"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "7fd2136611eb"
+            "id": "b632434e1114"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "18a2e47a7899"
+            "id": "146ebbd3161b"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "15c4c86b014a"
+            "id": "228c157f9d01"
           },
           {
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "",
-            "id": "f58ad51c6ddf"
+            "id": "237e9925284e"
           },
           {
             "kind": "creatures",
             "target_id": "disease_spirits",
             "note": "",
-            "id": "815928f6dd31"
+            "id": "16314dfa86ac"
           },
           {
             "kind": "creatures",
             "target_id": "unhatched_dragon_of_pan_caudarax",
             "note": "",
-            "id": "e435a4fd02d2"
+            "id": "b3c359c90057"
           }
         ],
         "arms": {},
@@ -7834,73 +7838,73 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "87bca76fece9"
+            "id": "c0b582389adc"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "66da8377cc8f"
+            "id": "588239395e7b"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "b698f26c8a70"
+            "id": "2769df0874ab"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "",
-            "id": "d988ae43be9f"
+            "id": "59ee28426f9c"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "5b78713db28f"
+            "id": "4864dfba7f07"
           },
           {
             "kind": "characters",
             "target_id": "signy_grettisdottir",
             "note": "",
-            "id": "a3d6cfefbd4c"
+            "id": "d04a6ca85086"
           },
           {
             "kind": "characters",
             "target_id": "arnor_arngeirsson",
             "note": "",
-            "id": "25b31d22e01d"
+            "id": "d6a7cb90eb8e"
           },
           {
             "kind": "characters",
             "target_id": "leif_beogart",
             "note": "",
-            "id": "cce42aa9a230"
+            "id": "632d7726a149"
           },
           {
             "kind": "characters",
             "target_id": "father_halldor_ormsson",
             "note": "",
-            "id": "c76d6d935ea8"
+            "id": "198b01cbb6e6"
           },
           {
             "kind": "characters",
             "target_id": "father_vebrand_thoroddson",
             "note": "",
-            "id": "a594ae1c2f9e"
+            "id": "9b73c6523b20"
           },
           {
             "kind": "characters",
             "target_id": "aldis_kolbeinsdottir",
             "note": "",
-            "id": "921d058c1bac"
+            "id": "13e20660565c"
           },
           {
             "kind": "characters",
             "target_id": "helga_grimsdottir",
             "note": "",
-            "id": "885512427c54"
+            "id": "22aa216be8d6"
           }
         ],
         "arms": {},
@@ -8218,43 +8222,43 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "c80c78349cb4"
+            "id": "e3d215b3438c"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "5d12e192edf6"
+            "id": "9f1166fa1dab"
           },
           {
             "kind": "characters",
             "target_id": "thordis",
             "note": "",
-            "id": "91d8ce9bd2a0"
+            "id": "4fb07cf76bc3"
           },
           {
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "e66286f6e62c"
+            "id": "463e0f325535"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "1b639b3711c7"
+            "id": "cf9fe3877fa7"
           },
           {
             "kind": "creatures",
             "target_id": "thorkel_red_cloak_s_son",
             "note": "",
-            "id": "58de1e599e0b"
+            "id": "8f2212bc4624"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "",
-            "id": "77d37d61827b"
+            "id": "505c59e5deb2"
           }
         ],
         "arms": {},
@@ -8285,25 +8289,25 @@
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "862d6930d398"
+            "id": "f9031091054e"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "f0ae11313b3d"
+            "id": "e1a2530f2d42"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "",
-            "id": "cd14ea3355bb"
+            "id": "facc2cccae51"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "9c1d6ffe32a0"
+            "id": "4170747eff5e"
           }
         ],
         "arms": {},
@@ -8358,13 +8362,13 @@
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "",
-            "id": "8632d17b76bf"
+            "id": "e66b690b553e"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "0e18c40ba471"
+            "id": "dd381edf3999"
           }
         ],
         "arms": {},
@@ -8633,49 +8637,49 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "b679ccefcaf9"
+            "id": "e03548b7a921"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "151eac340b35"
+            "id": "b418efd71c06"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "8fa1d8f0c9e1"
+            "id": "26dd3589ba9b"
           },
           {
             "kind": "characters",
             "target_id": "kar_liefsson",
             "note": "",
-            "id": "30405e7ef60e"
+            "id": "8fe7a8e186fe"
           },
           {
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "",
-            "id": "0481eeb6070a"
+            "id": "024d856295bc"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "f01012fd1584"
+            "id": "ae8fcf951fd5"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "57152ddfe769"
+            "id": "d3652ac26f9d"
           },
           {
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "",
-            "id": "bb5e5126523e"
+            "id": "9f5baf650fab"
           }
         ],
         "arms": {},
@@ -8757,43 +8761,43 @@
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "6599fae6c861"
+            "id": "ed5c7dc537bf"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "5b5ada7160f5"
+            "id": "5d7925417db7"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "fd9c60888e07"
+            "id": "a599c6041d24"
           },
           {
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "68a91d8c157b"
+            "id": "797cb3e4b1f9"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "c2a635eeda0b"
+            "id": "cdc60560cfa1"
           },
           {
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "329348431e3d"
+            "id": "26b289bb07f2"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "eb93db4a7e83"
+            "id": "882eaee80e1c"
           }
         ],
         "arms": {},
@@ -8865,25 +8869,25 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "d05e9f74d2b8"
+            "id": "9c14c0a5847e"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "cfbcea033fb2"
+            "id": "1212086d3f98"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "983709ac20d3"
+            "id": "aca149357344"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "c4787b01eefd"
+            "id": "bc00036b6538"
           }
         ],
         "arms": {},
@@ -9047,61 +9051,61 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "d2ca2800db1b"
+            "id": "aab09afbf464"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "801add9916ed"
+            "id": "f5c1b67c33d0"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_s_undead_form",
             "note": "",
-            "id": "57d6a884a859"
+            "id": "058ec448a33c"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "edb2525de012"
+            "id": "3ad34636cf26"
           },
           {
             "kind": "creatures",
             "target_id": "the_golden_sphinxes",
             "note": "",
-            "id": "bc6c715a47ce"
+            "id": "007afa195df9"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "281541749af1"
+            "id": "21fa2ad25fcf"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "9645bc85d354"
+            "id": "f3a5c5d6c7f3"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "368924c2fbf1"
+            "id": "63d44ba526d7"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "2465845ed5f0"
+            "id": "c4900af1c739"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "3d126a796ea3"
+            "id": "aa48330c7e65"
           }
         ],
         "arms": {},
@@ -9130,7 +9134,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_bergen",
             "note": "Its harbour",
-            "id": "8b5279c693ed"
+            "id": "0d822ec4bc9a"
           }
         ],
         "arms": {},
@@ -9259,19 +9263,19 @@
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads it",
-            "id": "f057830d16f5"
+            "id": "3852ae11b831"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads it",
-            "id": "1e8a3c1663cc"
+            "id": "0ea50ce48730"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "Their pretext",
-            "id": "b49048ca0409"
+            "id": "061b784ac53c"
           }
         ],
         "arms": {},
@@ -9474,145 +9478,145 @@
             "kind": "characters",
             "target_id": "hadrianus_of_flambeau",
             "note": "His death begins it",
-            "id": "417f9741bdbb"
+            "id": "6ff42de8fd44"
           },
           {
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads the crusade",
-            "id": "548b9376d81b"
+            "id": "71d075d2d929"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads the crusade",
-            "id": "a1aeb19ae5cb"
+            "id": "3efa2afc5371"
           },
           {
             "kind": "characters",
             "target_id": "albinus_of_ex_miscellanea",
             "note": "The crusade's spirit master, or its enemy",
-            "id": "09eb48005db9"
+            "id": "b680ca8f0b1a"
           },
           {
             "kind": "characters",
             "target_id": "vigdis",
             "note": "Warns of the attack on Scartaris",
-            "id": "c4ef412e7dd6"
+            "id": "aef5bd7251d0"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "The second guardian",
-            "id": "a6b9e8bc8e1d"
+            "id": "76ca17034dfd"
           },
           {
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "The third guardian",
-            "id": "d6cb09e4e485"
+            "id": "886926d530de"
           },
           {
             "kind": "creatures",
             "target_id": "the_guardian_host",
             "note": "Fights for each guardian",
-            "id": "7214ccd2b86b"
+            "id": "90f6940b31f2"
           },
           {
             "kind": "creatures",
             "target_id": "gull_hellirsson",
             "note": "Breaks the crusaders' Aegis",
-            "id": "0a4368ca8c5d"
+            "id": "fb36a208f830"
           },
           {
             "kind": "places",
             "target_id": "bergen",
             "note": "Hadrianus sailed from here",
-            "id": "e6a6fa0fab2e"
+            "id": "a3105f5e7425"
           },
           {
             "kind": "places",
             "target_id": "the_haunted_scottish_island",
             "note": "Where his ghost walks",
-            "id": "a83afcfbba10"
+            "id": "8517a75f5472"
           },
           {
             "kind": "places",
             "target_id": "the_southeastern_harbor",
             "note": "Where the armada anchors",
-            "id": "07626788d787"
+            "id": "40496dcc1183"
           },
           {
             "kind": "places",
             "target_id": "the_crusaders_mystic_tower",
             "note": "The crusaders' base",
-            "id": "84fe86b502db"
+            "id": "44fcc678e2c6"
           },
           {
             "kind": "neighbours",
             "target_id": "the_hermetic_crusaders",
             "note": "The invaders",
-            "id": "22b2f1bb6dc0"
+            "id": "9bfddf6add24"
           },
           {
             "kind": "neighbours",
             "target_id": "the_magi_against_the_crusade",
             "note": "Argue against it",
-            "id": "54143758b6aa"
+            "id": "c9289b26e58e"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "The pretext",
-            "id": "adabe84d7384"
+            "id": "e2c1a82e1474"
           },
           {
             "kind": "neighbours",
             "target_id": "the_loch_leglean_tribunal",
             "note": "Finds the ghost",
-            "id": "aeb4975362fa"
+            "id": "f5a3d81c3c87"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "The first guardian",
-            "id": "f5f36fd468fb"
+            "id": "e917c220324a"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "The fourth guardian",
-            "id": "4de2d81501cd"
+            "id": "5b2dd8623e0d"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "Leader of the hreppur, slain",
-            "id": "da747d9f3130"
+            "id": "32519e3a0905"
           },
           {
             "kind": "neighbours",
             "target_id": "skalholt",
             "note": "Bishop Magnus's seat; the Gray Bull's pasture",
-            "id": "de32b2e43656"
+            "id": "b1f9c9dbee47"
           },
           {
             "kind": "places",
             "target_id": "scartaris",
             "note": "Julius's target, and a trap",
-            "id": "280d00148396"
+            "id": "c179f1672a8d"
           },
           {
             "kind": "neighbours",
             "target_id": "the_norn_landvaettir",
             "note": "Coordinate the Icelandic assault",
-            "id": "1fcecfeb543e"
+            "id": "a3342c9ed76b"
           },
           {
             "kind": "neighbours",
             "target_id": "galdramen_hreppur",
             "note": "The war's target",
-            "id": "f7784154f7ed"
+            "id": "602433b10f47"
           }
         ],
         "arms": {},
@@ -11836,25 +11840,25 @@
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "His father and parens",
-            "id": "d5cd3fc8d793"
+            "id": "48a27b12227f"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Serves him",
-            "id": "80e6273b06cb"
+            "id": "053a83c8c6b6"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "His wife",
-            "id": "858d072edc0f"
+            "id": "a7c28603b9c4"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "His son",
-            "id": "75f78cde26c2"
+            "id": "492c0269c98e"
           }
         ],
         "agents": [],
@@ -12118,13 +12122,13 @@
             "kind": "characters",
             "target_id": "pralix",
             "note": "His parens",
-            "id": "46366549da9a"
+            "id": "ebf78224cb97"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His prisoner",
-            "id": "5483ab209090"
+            "id": "95fad19fd3a1"
           }
         ],
         "agents": [],
@@ -12563,7 +12567,7 @@
             "kind": "creatures",
             "target_id": "whisper",
             "note": "His familiar",
-            "id": "9464b8d8b980"
+            "id": "4d58607afb24"
           }
         ],
         "agents": [],
@@ -12875,13 +12879,13 @@
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Her master, who possesses her",
-            "id": "124b08b9cf14"
+            "id": "a2aa4e3cc1a9"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The demon held in her",
-            "id": "0f7b580ca31a"
+            "id": "96cd068ed059"
           }
         ],
         "agents": [],
@@ -13452,7 +13456,7 @@
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "His parens",
-            "id": "172cd57b92a2"
+            "id": "3b6af4838a0d"
           }
         ],
         "agents": [],
@@ -13699,7 +13703,7 @@
             "kind": "characters",
             "target_id": "una",
             "note": "His wife",
-            "id": "ff812eb79de4"
+            "id": "4580fd1f45e9"
           }
         ],
         "agents": [],
@@ -13936,7 +13940,7 @@
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "Her cat",
-            "id": "f7e4e70a2ae1"
+            "id": "14cb3b1e2d2b"
           }
         ],
         "agents": [],
@@ -13983,7 +13987,9 @@
         "arts": {},
         "abilities": [],
         "virtues_flaws": [],
-        "traditions": [],
+        "traditions": [
+          "trad_trollsynir"
+        ],
         "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
@@ -14166,7 +14172,7 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "A member of the galdramen hreppur's council.",
-        "secrets": "A trollsdottir of the council: Magic Resistance 63, Size +2, looks 37, printed Confidence 3. Her giant mother raised her and she never met her outlawed father. She picked fights until age taught her some caution, and trollsynir magic has left her looking more troll than human. She has come to back her descendant Arnor Arngeirsson in his dispute, and the attack on the eggs worries her (p. 103).",
+        "secrets": "A trollsdottir of the council: printed Magic Resistance 63, dropped as no hedge wizard has one (Hedge Magic RE p. 9), Size +2, looks 37, printed Confidence 3. Her giant mother raised her and she never met her outlawed father. She picked fights until age taught her some caution, and trollsynir magic has left her looking more troll than human. She has come to back her descendant Arnor Arngeirsson in his dispute, and the attack on the eggs worries her (p. 103).",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -14660,7 +14666,9 @@
         "arts": {},
         "abilities": [],
         "virtues_flaws": [],
-        "traditions": [],
+        "traditions": [
+          "trad_galdramen"
+        ],
         "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
@@ -14833,7 +14841,7 @@
         "portrait": "",
         "detail": "Sketch",
         "summary": "Leader of the galdramen hreppur.",
-        "secrets": "Iceland's oldest galdraman, a deft politician: Size +1, looks 85, printed Confidence 3, Twilight Points 19. Most galdramen have made the long hamfaring (Final Twilight) by his age, and he knows his fylgja's call cannot be refused for ever. He wants peace for those to come, and finds the quarrel between the two Christian schools the hardest to settle (p. 104). He sees no reason the magi should not belong, and offers vis rights if they appease the dragon (p. 105).",
+        "secrets": "Iceland's oldest galdraman, a deft politician: Size +1, looks 85, printed Confidence 3, Twilight Points 19, which are Warping 6 now (DE p. 538). Most galdramen have made the long hamfaring (Final Twilight) by his age, and he knows his fylgja's call cannot be refused for ever. He wants peace for those to come, and finds the quarrel between the two Christian schools the hardest to settle (p. 104). He sees no reason the magi should not belong, and offers vis rights if they appease the dragon (p. 105).",
         "links": [],
         "agents": [],
         "agency_xp": 0,
@@ -15923,7 +15931,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "ed7ffc22e25d"
+            "id": "2cb4e9cb221d"
           }
         ],
         "agents": [],
@@ -16118,7 +16126,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "bbe18e8be603"
+            "id": "87778ca58f6b"
           }
         ],
         "agents": [],
@@ -16313,7 +16321,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "e950eb5821ba"
+            "id": "fd02a95974f9"
           }
         ],
         "agents": [],
@@ -17582,13 +17590,13 @@
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "His wife",
-            "id": "5e36692e9718"
+            "id": "ef82ac1a62ad"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "His daughter",
-            "id": "76fce13ff66a"
+            "id": "fe75c037e8a5"
           }
         ],
         "agents": [],
@@ -17906,6 +17914,76 @@
         "arts": {},
         "abilities": [
           {
+            "name": "Galdor Wisdom",
+            "category": "Arcane",
+            "xp": 390,
+            "specialty": "yfel-galdor",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Yfel-galdor",
+            "category": "Supernatural",
+            "xp": 28,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Mal-galdor",
+            "category": "Supernatural",
+            "xp": 15,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Hug-galdor",
+            "category": "Supernatural",
+            "xp": 3,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Sig-galdor",
+            "category": "Supernatural",
+            "xp": 3,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Lim-galdor",
+            "category": "Supernatural",
+            "xp": 6,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Biarg-galdor",
+            "category": "Supernatural",
+            "xp": 55,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Orlog-galdor",
+            "category": "Supernatural",
+            "xp": 66,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Ol-galdor",
+            "category": "Supernatural",
+            "xp": 15,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Brun-galdor",
+            "category": "Supernatural",
+            "xp": 6,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
             "name": "Second Sight",
             "category": "Supernatural",
             "xp": 105,
@@ -17934,11 +18012,18 @@
             "xp_table": "ability"
           },
           {
-            "name": "Summoning",
-            "category": "Hedge Art",
+            "name": "(Magic) Summoning",
+            "category": "Supernatural",
             "xp": 10,
             "specialty": "trolls",
             "xp_table": "art"
+          },
+          {
+            "name": "Hamfarir",
+            "category": "Supernatural",
+            "xp": 75,
+            "specialty": "distant travel",
+            "xp_table": "ability"
           },
           {
             "name": "Music",
@@ -17983,15 +18068,22 @@
             "xp_table": "ability"
           },
           {
-            "name": "Curse-Throwing",
+            "name": "Curse",
             "category": "Supernatural",
             "xp": 50,
             "specialty": "infertility",
             "xp_table": "ability"
           },
           {
-            "name": "Artes Liberales",
-            "category": "Academic",
+            "name": "Craft: Runes",
+            "category": "General",
+            "xp": 30,
+            "specialty": "curses",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Potency",
+            "category": "Supernatural",
             "xp": 30,
             "specialty": "curses",
             "xp_table": "ability"
@@ -18011,8 +18103,8 @@
             "xp_table": "ability"
           },
           {
-            "name": "Living Language: Jotunn",
-            "category": "General",
+            "name": "Jotnar",
+            "category": "Arcane",
             "xp": 75,
             "specialty": "trolls",
             "xp_table": "ability"
@@ -18033,6 +18125,82 @@
           }
         ],
         "virtues_flaws": [
+          {
+            "vf_id": "vf_the_gift",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdraman",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_free_expression",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_second_sight",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_premonitions",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdor_conjuring",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdor_enchantment",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_deleterious_circumstances",
+            "params": {
+              "circumstance": "touching the ground"
+            },
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_enchanting_ability",
+            "params": {
+              "ability": "music"
+            },
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
           {
             "vf_id": "vf_great_characteristic",
             "params": {
@@ -18060,7 +18228,31 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_curse_throwing",
+            "vf_id": "vf_magic_summoning",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_curse",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_hamfarir",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_potency",
             "params": {},
             "id": "",
             "temporary": false,
@@ -18068,7 +18260,9 @@
             "ends_season": ""
           }
         ],
-        "traditions": [],
+        "traditions": [
+          "trad_galdramen"
+        ],
         "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
@@ -18108,7 +18302,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "The block is for 1231, when he is most likely met, aged 76; the record's birth year is the book's 1155. He looks in his late fifties.\n\nEnchanting Music, Summoning and Hamfarir came by initiation. Galdraman Songs: Yfel-galdor (curse songs) 7, Mal-galdor (speech) 5, Hug-galdor (mind) 2, Sig-galdor (victory) 2, Lim-galdor (healing) 3, Biarg-galdor (birth) 10, Orlog-galdor (fate) 11, Ol-galdor (warding) 5, Brun-galdor (weather) 3.\n\nCombat as printed (Fourth Edition): Brawl (fist): Init +4, Attack +3, Defense +3, Damage +0, Fatigue +6; Axe and Round Shield: Init +6, Attack +6, Defense +10, Damage +6, Fatigue +7. Soak 12 with the magical cloak.\n\nFatigue OK, 0, -1, -3, -5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated.\n\nMagical equipment: a Blue Cloak of warding songs (+20 magic resistance, +10 Soak); a Scarf of Red Wool, an effect like Trust of Childlike Faith at Target Group 12 times a day; a Scarf of Yellow Wool, Aura of Rightful Authority at Constant Duration; a Leather Hat that makes him invisible while he stands still. He should have many minor items, above all healing potions in the form of woven bandages (p. 139).\n\nSecret Hiding Place +1, Curse +4 and Potency +2 have no catalog entries and are kept here; Incredible Communication +4 is Great Communication, with his printed +5 kept.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 76 as printed; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Great Characteristic as Great Communication; Driving Goal as Driven (Minor): revenge; Sense of Doom dropped (not in the catalog).\nAbilities: Sing 11 to Music; Legend Lore 6 to Area Lore: Iceland; Weapon and Shield 4 to Single Weapon; Curse 4 to Curse-Throwing; Scribe Runes 3 to Artes Liberales.\n\nAbilities renamed: Enchanting Music 5 to Enchanting: Music; Norse Theology 5 to Theology: Pagan.\n\nPowers with no Ability now, as printed: Galdor Wisdom 12 (yfel-galdor); Hamfarir 5 (distant travel); Potency 3 (curses).",
+          "biography": "The block is for 1231, when he is most likely met, aged 76; the record's birth year is the book's 1155. He looks in his late fifties.\n\nEnchanting Music, Summoning and Hamfarir came by initiation, though the book's list of initiations has no Summoning (p. 50). The worked example on p. 48 gives him Com 2, Sing 8, Galdor Wisdom 8 and Ol-galdor 6 against this block's 5, 11, 12 and 5: this block is for 1231.\n\nCombat as printed (Fourth Edition): Brawl (fist): Init +4, Attack +3, Defense +3, Damage +0, Fatigue +6; Axe and Round Shield: Init +6, Attack +6, Defense +10, Damage +6, Fatigue +7. Soak 12 with the magical cloak.\n\nFatigue OK, 0, -1, -3, -5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated.\n\nMagical equipment: a Blue Cloak of warding songs (+20 magic resistance, +10 Soak); a Scarf of Red Wool, an effect like Trust of Childlike Faith at Target Group 12 times a day; a Scarf of Yellow Wool, Aura of Rightful Authority at Constant Duration; a Leather Hat that makes him invisible while he stands still. He should have many minor items, above all healing potions in the form of woven bandages (p. 139).\n\nSecret Hiding Place +1 has no catalog entry and is kept here; Incredible Communication +4 is Great Communication, with his printed +5 kept.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 76 as printed; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 4. Characteristics and Arts as printed; no rebalancing.\nVirtues and Flaws: Great Characteristic as Great Communication; Driving Goal as Driven (Minor): revenge; Sense of Doom dropped (not in the catalog).\nAbilities: Sing 11 to Music; Legend Lore 6 to Area Lore: Iceland; Weapon and Shield 4 to Single Weapon; Scribe Runes 3 to Craft: Runes.\n\nAbilities renamed: Enchanting Music 5 to Enchanting: Music; Summoning 4 to (Magic) Summoning; Norse Theology 5 to Theology: Pagan.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -18258,7 +18452,7 @@
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "His brother",
-            "id": "a2a430e81cc2"
+            "id": "ce3ac3b9a015"
           }
         ],
         "agents": [],
@@ -18657,7 +18851,7 @@
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "His guide for the magi",
-            "id": "243e3163543b"
+            "id": "1dc956470604"
           }
         ],
         "agents": [],
@@ -18743,6 +18937,48 @@
             "category": "General",
             "xp": 30,
             "specialty": "animals",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Galdor Wisdom",
+            "category": "Arcane",
+            "xp": 75,
+            "specialty": "conjuring",
+            "xp_table": "ability"
+          },
+          {
+            "name": "Biarg-galdor",
+            "category": "Supernatural",
+            "xp": 10,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Lim-galdor",
+            "category": "Supernatural",
+            "xp": 6,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Ol-galdor",
+            "category": "Supernatural",
+            "xp": 15,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Brun-galdor",
+            "category": "Supernatural",
+            "xp": 10,
+            "specialty": null,
+            "xp_table": "art"
+          },
+          {
+            "name": "Hamfarir",
+            "category": "Supernatural",
+            "xp": 30,
+            "specialty": null,
             "xp_table": "ability"
           },
           {
@@ -18832,6 +19068,80 @@
         ],
         "virtues_flaws": [
           {
+            "vf_id": "vf_the_gift",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdraman",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_free_expression",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_second_sight",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_premonitions",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdor_conjuring",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_galdor_enchantment",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_deleterious_circumstances",
+            "params": {
+              "circumstance": "touching the ground"
+            },
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
+            "vf_id": "vf_bondi",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
+          },
+          {
             "vf_id": "vf_close_family_ties",
             "params": {},
             "id": "",
@@ -18872,9 +19182,19 @@
             "temporary": false,
             "ends_year": null,
             "ends_season": ""
+          },
+          {
+            "vf_id": "vf_hamfarir",
+            "params": {},
+            "id": "",
+            "temporary": false,
+            "ends_year": null,
+            "ends_season": ""
           }
         ],
-        "traditions": [],
+        "traditions": [
+          "trad_galdramen"
+        ],
         "sihr_realm": "",
         "tradition_effects": [],
         "powers": [],
@@ -18914,7 +19234,7 @@
           "eyes": "",
           "handedness": "right",
           "physical_description": "",
-          "biography": "Galdraman Songs: Biarg-galdor 4, Lim-galdor 3, Ol-galdor 5, Brun-galdor 4.\n\nCombat as printed (Fourth Edition): Brawl (fist): Init +0, Attack +2, Defense -1, Damage +0, Fatigue +3; Long Spear: Init +6, Attack +10, Defense +2, Damage +6, Fatigue +5; Longsword and Round Shield: Init +3, Attack +6, Defense +8, Damage +4, Fatigue +5. Soak +8 with armor.\n\nFatigue OK, 0, -1, -3, -5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated.\n\nMagical equipment: a Bracelet of Magic Resistance, +15 (p. 142).\n\nBondi +1 and Cursed (magic used for personal gain has double botch risk) -2 have no catalog entries and are kept here. Close Family Ties, a +1 Virtue here, is a Flaw in the catalog.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 45 as printed; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nAbilities: Craft: Jewelry-making 4 to Craft: Jeweler; Craft: Weapon-smithing 2 to Craft: Weaponsmith; Legend Lore 3 to Area Lore: Iceland; Longshaft Weapon 2 to Great Weapon; Occult Lore 2 to Infernal Lore; Sing 5 to Music; Weapon and Shield 2 to Single Weapon.\n\nAbilities renamed: Farming 3 to Profession: Farmer; Icelandic Law 2 to Common Law.\n\nPowers with no Ability now, as printed: Galdor Wisdom 5 (conjuring); Hamfaring 3.",
+          "biography": "Combat as printed (Fourth Edition): Brawl (fist): Init +0, Attack +2, Defense -1, Damage +0, Fatigue +3; Long Spear: Init +6, Attack +10, Defense +2, Damage +6, Fatigue +5; Longsword and Round Shield: Init +3, Attack +6, Defense +8, Damage +4, Fatigue +5. Soak +8 with armor.\n\nFatigue OK, 0, -1, -3, -5, Unconscious; Body OK, 0, -1, -3, -5, Incapacitated.\n\nMagical equipment: a Bracelet of Magic Resistance, +15 (p. 142).\n\nCursed (magic used for personal gain has double botch risk) -2 has no catalog entry and is kept here. Close Family Ties, a +1 Virtue here, is a Flaw in the catalog.\nConverted from the Fourth Edition block by the Definitive Edition's appendix: age 45 as printed; Confidence 1 (3 points), the Definitive Edition's baseline, not the old 3. Characteristics and Arts as printed; no rebalancing.\nAbilities: Craft: Jewelry-making 4 to Craft: Jeweler; Craft: Weapon-smithing 2 to Craft: Weaponsmith; Legend Lore 3 to Area Lore: Iceland; Longshaft Weapon 2 to Great Weapon; Occult Lore 2 to Infernal Lore; Sing 5 to Music; Weapon and Shield 2 to Single Weapon.\n\nAbilities renamed: Farming 3 to Profession: Farmer; Hamfaring 3 to Hamfarir; Icelandic Law 2 to Common Law.",
           "complexion": "",
           "complexion_minor": ""
         },
@@ -22212,7 +22532,7 @@
             "attack": 10,
             "defense": 15,
             "damage": -2,
-            "id": "ec5f970d9aff"
+            "id": "76c0901592ae"
           }
         ],
         "soak": 1,
@@ -22271,7 +22591,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReAu 20. Flies ten times as fast as a normal bird and never tires.",
-            "id": "28f7d9d29493"
+            "id": "77e990e7e308"
           },
           {
             "name": "Mythic Perception",
@@ -22285,7 +22605,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 40. Sees through any disguise or illusion, and hears talk perfectly up to a mile away.",
-            "id": "e5cdcfd5cc43"
+            "id": "abd996cacee6"
           },
           {
             "name": "Eye Peck",
@@ -22299,7 +22619,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 30. A hit scratches an eye, the Might being spent after the attack lands. An infection sets in next day and lasts seven days, blinding that eye; a Medicine or Herbalism roll of 15+ saves it, or Restoration of the Defiled Body stops the infection and restores sight.",
-            "id": "6f8efb37ae16"
+            "id": "751a2b69291f"
           }
         ],
         "vis": [
@@ -22307,7 +22627,7 @@
             "pawns": 4,
             "art": "Intellego",
             "where": "in its eyes",
-            "id": "febc09b4ea2a"
+            "id": "4e4d7aba9878"
           }
         ],
         "equipment": "",
@@ -22375,7 +22695,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 2,
-            "id": "c93acfd59a64"
+            "id": "97ddf188d443"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22383,7 +22703,7 @@
             "attack": 13,
             "defense": 12,
             "damage": 8,
-            "id": "c9730acc1bde"
+            "id": "9f9822a5bef2"
           }
         ],
         "soak": 3,
@@ -22492,7 +22812,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 0,
-            "id": "f398e5754142"
+            "id": "a3444ed2189e"
           },
           {
             "name": "Club",
@@ -22500,7 +22820,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 3,
-            "id": "a448bf040389"
+            "id": "c7c20175fc3f"
           }
         ],
         "soak": 7,
@@ -22545,7 +22865,7 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in the body; infernally tainted",
-            "id": "08ac569ed621"
+            "id": "e40c20da5b9e"
           }
         ],
         "equipment": "",
@@ -22623,7 +22943,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 1,
-            "id": "5fd5ced3e019"
+            "id": "47d6397cc563"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22631,7 +22951,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 7,
-            "id": "eac3e36ad992"
+            "id": "550552868ea8"
           },
           {
             "name": "Long Spear",
@@ -22639,7 +22959,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 8,
-            "id": "93f34496c91c"
+            "id": "be25b13ddbde"
           },
           {
             "name": "Dagger",
@@ -22647,7 +22967,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "30bacea5850e"
+            "id": "f241ccd616b1"
           }
         ],
         "soak": 3,
@@ -22801,7 +23121,7 @@
             "attack": 16,
             "defense": 11,
             "damage": 12,
-            "id": "a80a0e5840db"
+            "id": "4198581b07d7"
           }
         ],
         "soak": 10,
@@ -22846,7 +23166,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe 25, as the Hermetic spell (ArM4 p. 145).",
-            "id": "85b383d54b1b"
+            "id": "8d2d21c2e230"
           },
           {
             "name": "Control Regio",
@@ -22860,7 +23180,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 40. Decides who enters or leaves his regio; spells to travel between its levels must defeat his Infernal Might of 40.",
-            "id": "f3292c42daa2"
+            "id": "0b64eddf21b9"
           },
           {
             "name": "The Unblinking Eye",
@@ -22874,7 +23194,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InIm 30. Moves his sight to any point within the regio; neither Parma nor any Hermetic effect detects it.",
-            "id": "636b57b32eab"
+            "id": "98cf93bd09c7"
           },
           {
             "name": "Sow Discord",
@@ -22888,7 +23208,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe, MuMe 10. Quietly makes or changes the emotions of people in his regio, to steer his visitors. An Int roll of 9+, modified by relevant Personality Traits, recognizes the urge as unnatural.",
-            "id": "c966b6ba9bf6"
+            "id": "c021a9ffd443"
           },
           {
             "name": "Ill Fortune",
@@ -22902,7 +23222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi 30. The victim botches automatically on any stress roll of 0.",
-            "id": "0d39fadcc7fa"
+            "id": "125e63b1beee"
           }
         ],
         "vis": [
@@ -22910,19 +23230,19 @@
             "pawns": 8,
             "art": "Corpus",
             "where": "body",
-            "id": "7c66e4bff476"
+            "id": "7ce3f952eb88"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "heart",
-            "id": "f86ed81c21c0"
+            "id": "5e9495b1fb82"
           },
           {
             "pawns": 4,
             "art": "Mentem",
             "where": "brain",
-            "id": "6f187e20f46e"
+            "id": "cf8d60f356dc"
           }
         ],
         "equipment": "",
@@ -23038,7 +23358,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bites all exposed flesh. The storyguide rules on protection; armor does not add to Soak. Damage roll each round: loose clothes 9 + stress die; sturdy clothing 6; winter garb or hauberk 3; half armor 0; full armor -3; full armor with helm and gauntlets -6.",
-            "id": "6f1ffac84658"
+            "id": "cb91e59ba4ea"
           }
         ],
         "vis": [],
@@ -23144,7 +23464,7 @@
             "attack": 13,
             "defense": 15,
             "damage": -2,
-            "id": "1a88a820465d"
+            "id": "e0b86f8607e7"
           },
           {
             "name": "Spiritual Form",
@@ -23152,7 +23472,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "610606efab6d"
+            "id": "ed5c2922fbb1"
           }
         ],
         "soak": 1,
@@ -23232,7 +23552,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sees in near-darkness.",
-            "id": "f930fa30cd7d"
+            "id": "ae0dedfd35c4"
           },
           {
             "name": "Grant Fertility",
@@ -23246,7 +23566,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrCo 30. A woman of childbearing age who lets her sleep in her lap for over a quarter of an hour conceives, provided the conception would not be immaculate. Fourth Edition: 1 points.",
-            "id": "faf8d750e680"
+            "id": "d069819aaeaa"
           },
           {
             "name": "Hamfaring",
@@ -23260,7 +23580,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 30, 1 point an hour. While she seems asleep, her spirit form hunts whatever spirits threaten her mistress. Fourth Edition: 1 points.",
-            "id": "eec909d3d764"
+            "id": "bacad8f04e3a"
           }
         ],
         "vis": [
@@ -23268,7 +23588,7 @@
             "pawns": 4,
             "art": "Creo",
             "where": "in her body",
-            "id": "52ce2474d622"
+            "id": "aa9d9fd84144"
           }
         ],
         "equipment": "",
@@ -23353,7 +23673,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 10, costing 10 permanent Might. The victim makes a Sta stress roll of 6+ or miscarries. Against the dragon eggs success takes extraordinary luck, but given time one spirit gets through. Fourth Edition: 10 points.",
-            "id": "c8bda30751e2"
+            "id": "25487f8afadb"
           }
         ],
         "vis": [],
@@ -23524,7 +23844,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "974cddc9f7b5"
+            "id": "be07dde1491a"
           },
           {
             "name": "Club",
@@ -23532,7 +23852,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 11,
-            "id": "daeb0c6bcc49"
+            "id": "8b2a1c98a63e"
           },
           {
             "name": "Rock",
@@ -23540,7 +23860,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 10,
-            "id": "90c556c2cbf5"
+            "id": "629259cd00dc"
           }
         ],
         "soak": 12,
@@ -23592,7 +23912,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "a057f9cc8e2e"
+            "id": "a9cf60900493"
           }
         ],
         "equipment": "A staff of rusted iron.",
@@ -23607,13 +23927,13 @@
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "His mother",
-            "id": "6283e2bdddb8"
+            "id": "9d0e6d367830"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "His daughter",
-            "id": "522bcbba0aff"
+            "id": "85b6e2d1813e"
           }
         ],
         "secrets": "The meanest of a mean lot, secure in his lordship with his mother Skrukka and his henchmen Gapi and Gljufra-Geir behind him (p. 113). He entraps a lone man before the truce begins, claims his life is forfeit, and offers a deal that Skrukka seals with a Curse.\n\nConverted: the book gives no combat table, only the standard troll's raised by 5 to Init, Atk and Dfn and by 3 to Damage; those totals are here, and his fatigue levels are the standard troll's. A Rock has no Defense (n/a), shown as 0. No more magic than the average troll.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -23732,7 +24052,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Approximates any Hermetic spell at 1 Might per 5 spell levels, to level 25 alone; trolls in a group share the cost of higher spells, at about a minute per 5 levels (p. 30). Fourth Edition: 1 points.",
-            "id": "9ebe9fffd48b"
+            "id": "f5b418ee973d"
           }
         ],
         "vis": [
@@ -23740,7 +24060,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "48bf1035a68b"
+            "id": "152d0e136a9d"
           }
         ],
         "equipment": "A short walking stick, the thighbone of a human priest.",
@@ -23818,7 +24138,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "4f9fce505374"
+            "id": "3b283453eba9"
           },
           {
             "name": "Club",
@@ -23826,7 +24146,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "49ffb97a1e6c"
+            "id": "c59454005bcf"
           },
           {
             "name": "Rock",
@@ -23834,7 +24154,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "b789cc16dca8"
+            "id": "21b0c1f205df"
           }
         ],
         "soak": 11,
@@ -23886,7 +24206,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in her body (p. 30)",
-            "id": "85b24adb1b5a"
+            "id": "6332ccb3641c"
           }
         ],
         "equipment": "",
@@ -23996,7 +24316,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "a giant's (p. 31)",
-            "id": "49ed1787f3dd"
+            "id": "955588451522"
           }
         ],
         "equipment": "",
@@ -24011,7 +24331,7 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "His half-brother",
-            "id": "89cb127a86cb"
+            "id": "4fe694897ecc"
           }
         ],
         "secrets": "Their mother Mjoll married the giant Red-Cloak after the giant-king Hardverk killed her first husband. Bard broke Thorkel's leg in a duel. Violent, unprincipled and cunning, he has a bad name as a troublemaker; humans annoy him, no more (p. 113).\n\nPrinted abilities, described and not built: External Soul, Jotunn Affinity with Frost (blizzards) 20, Curse (bad luck) 10, Transform (into rocks) 15, Speak Jotunn (Clan of Hrym) 8, Potency 8. The book gives him no combat table.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -24089,7 +24409,7 @@
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "His brother",
-            "id": "234d482e5844"
+            "id": "fd0bf82ffdf5"
           }
         ],
         "secrets": "An extremely ancient giant who calls himself the son of Mimir, which would make him cousin to Odin (Mimir's sister Bestla being Odin's mother). The claim cannot be tested. He has a wide range of powers, but does not own the regio or control its bounds. The book says no other characteristics should be needed (p. 118).\n\nHe may be magical or faerie: lineage and manners suggest fay, yet like landvaettir he is at home in a magic realm. The book leaves it deliberately open; Magic here is the printed realm of the regio, not a ruling.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -24167,7 +24487,7 @@
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "His lieutenant",
-            "id": "2212ef9deec1"
+            "id": "1ef60fa490ae"
           }
         ],
         "secrets": "Not as strong as his brother, but formidable. He has a special power over fire: he handles molten metal bare-handed and flings it in combat. He has an External Soul, so unless the magi have made a Setna's Blade for him he survives a battle (pp. 118, 127-128). He knows where Damhan-Allaidh's soulstone is. No other statistics are printed.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
@@ -24216,7 +24536,7 @@
             "attack": 28,
             "defense": 21,
             "damage": 19,
-            "id": "b4a6da65dd85"
+            "id": "008e2eecf89b"
           }
         ],
         "soak": 26,
@@ -24261,7 +24581,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrTe 30. Heals up to three wound levels a round at a Might point each, needing no action. Fourth Edition: 1 points.",
-            "id": "4f40d991d556"
+            "id": "1cd25ce607e8"
           },
           {
             "name": "Sense Intents",
@@ -24275,7 +24595,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 100. Senses the presence of benign or malevolent forces.",
-            "id": "683d839baf56"
+            "id": "1bd1b3cde275"
           },
           {
             "name": "Binding Word",
@@ -24289,7 +24609,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 30. Holds any person or group to its word by controlling their bodies. Fourth Edition: 5 points.",
-            "id": "beb53a507934"
+            "id": "709637b1f460"
           },
           {
             "name": "Thoughts Within the Babble",
@@ -24303,7 +24623,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InMe 20. Speaks and understands any language.",
-            "id": "1bd390dc3b00"
+            "id": "93547fad6d0e"
           }
         ],
         "vis": [
@@ -24311,7 +24631,7 @@
             "pawns": 50,
             "art": "Vim",
             "where": "in each, if destroyed",
-            "id": "dcd19aa9af7a"
+            "id": "903b57be63f1"
           }
         ],
         "equipment": "",
@@ -24427,7 +24747,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any spell effect the storyguide likes, up to half his current Might. Effects that would need vis cost 1 Might per magnitude; others cost nothing.",
-            "id": "8f6591f2d15f"
+            "id": "51611aa2e421"
           }
         ],
         "vis": [],
@@ -24516,7 +24836,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "6e88fb81e6d0"
+            "id": "2819e9698e13"
           },
           {
             "name": "Claw",
@@ -24524,7 +24844,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "9a2663a79bbe"
+            "id": "db98c2f242ea"
           }
         ],
         "soak": 18,
@@ -24569,7 +24889,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi 50. As Hetep's own power of that name: a landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma.",
-            "id": "c8bf7ee9948d"
+            "id": "a3f6993ef5e5"
           },
           {
             "name": "Shapechange",
@@ -24583,7 +24903,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An) 40. Gives a host he possesses his own beast shape.",
-            "id": "e502923aca7f"
+            "id": "9353ce24d7f3"
           },
           {
             "name": "Raise Corpse",
@@ -24597,7 +24917,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 25. Raises anyone he slays as walking dead.",
-            "id": "fe53cbdc2093"
+            "id": "a97041eb87e8"
           },
           {
             "name": "Infernal Spell",
@@ -24611,7 +24931,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The equivalent of spontaneous spells to level 30, at 1 Might per magnitude.",
-            "id": "218ec7c82c1c"
+            "id": "fdc74eb59d63"
           }
         ],
         "vis": [],
@@ -24627,13 +24947,13 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "His body",
-            "id": "0ccdea371339"
+            "id": "6f1a119e281d"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The same demon",
-            "id": "eaf9f68630ae"
+            "id": "82e723aa7043"
           }
         ],
         "secrets": "Hetep is bound into his former servant's shell. Destroying it lets the Thothian watchers capture him at once (p. 128). Body levels OK, 0, 0, -1, -3, -5, Incapacitated. Presence is printed N/A, shown as 0. Might Form Corpus is this pack's reading."
@@ -24714,7 +25034,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_curse_throwing",
+            "vf_id": "vf_curse",
             "params": {},
             "id": "",
             "temporary": false,
@@ -24781,7 +25101,7 @@
             "attack": 3,
             "defense": 3,
             "damage": 7,
-            "id": "0071590392b0"
+            "id": "3d1fc5043378"
           },
           {
             "name": "Grapple",
@@ -24789,7 +25109,7 @@
             "attack": 3,
             "defense": 3,
             "damage": null,
-            "id": "064f572c2be7"
+            "id": "398b8ce4f910"
           },
           {
             "name": "Smother",
@@ -24797,7 +25117,7 @@
             "attack": null,
             "defense": 0,
             "damage": 10,
-            "id": "3dff013dbf75"
+            "id": "07482bd3903c"
           }
         ],
         "soak": 21,
@@ -24857,7 +25177,7 @@
             "xp_table": "ability"
           },
           {
-            "name": "Curse-Throwing",
+            "name": "Curse",
             "category": "Supernatural",
             "xp": 30,
             "specialty": "characteristics",
@@ -24951,7 +25271,7 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
-        "secrets": "A gruagach born in 749, father of Iain, reckoned dead by the magi after three centuries buried. Once recovered he is barely human, fighting for each breath in constant pain, and moves only by shapeshifting, into the one form he can hold for long. Endurance of the Berserkers, or any Corpus or Mentem effect that quells pain, gives him respite, and with it he can help the magi hunt Damhan-Allaidh; without it he can only beg to die. Even so he will ask Iain to destroy his soulstone once the Spider is gone (p. 136).\n\nA fleshy thing with no shape, bones or organs, able to squeeze into small places, forever putting out and drawing in tentacles of flesh.\n\nMagic Resistance 51 printed, and no Might. Presence n/a in the block, 0 here. Student of Brude +1 is left out: the catalog's Student of a realm is not a teacher. Soak +41 includes the +40 of his invulnerability.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, a wholly monstrous look, no bones (hence the Characteristics, wrecked by three centuries buried), constant pain.\n\nShapeless Form, which he takes at will: Int +3, Per +1, Str +5, Sta +5, Dex -4, Qik -3, Size +5, Soak +50, tireless; Body levels OK, 0, 0, 0, -1, -1, -3, -3, -5, -5, Incapacitated. The Combat lines are this form's; the book gives Grapple no Defense or Damage and Smother only Damage. Each turn he may put out up to five pseudopods at one foe. If two or more strike in a round he may grapple and draw the victim in, and on success smothering starts next round, to Fatigue and then Body levels, armor no help.\nAbilities: Curse 3 to Curse-Throwing; Herbalism 5 to Profession: Herbalist.\n\nAbilities renamed: Enchanting Music 4 to Enchanting: Music; Fantastic Beast Lore 4 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Shapeshift 16 to Shapeshifter.\n\nAbilities with no counterpart: Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 30 xp spent on Organization Lore: Gruagachan.\n\nPowers with no Ability now, as printed: Geasa 3 (physical); Gruagach Wisdom 15 (new Talents); Potency 6 (shapeshift); Gift 8 (physical); Transform 7 (birds)."
+        "secrets": "A gruagach born in 749, father of Iain, reckoned dead by the magi after three centuries buried. Once recovered he is barely human, fighting for each breath in constant pain, and moves only by shapeshifting, into the one form he can hold for long. Endurance of the Berserkers, or any Corpus or Mentem effect that quells pain, gives him respite, and with it he can help the magi hunt Damhan-Allaidh; without it he can only beg to die. Even so he will ask Iain to destroy his soulstone once the Spider is gone (p. 136).\n\nA fleshy thing with no shape, bones or organs, able to squeeze into small places, forever putting out and drawing in tentacles of flesh.\n\nMagic Resistance 51 printed, and no Might. Presence n/a in the block, 0 here. Student of Brude +1 is left out: the catalog's Student of a realm is not a teacher. Soak +41 includes the +40 of his invulnerability.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, a wholly monstrous look, no bones (hence the Characteristics, wrecked by three centuries buried), constant pain.\n\nShapeless Form, which he takes at will: Int +3, Per +1, Str +5, Sta +5, Dex -4, Qik -3, Size +5, Soak +50, tireless; Body levels OK, 0, 0, 0, -1, -1, -3, -3, -5, -5, Incapacitated. The Combat lines are this form's; the book gives Grapple no Defense or Damage and Smother only Damage. Each turn he may put out up to five pseudopods at one foe. If two or more strike in a round he may grapple and draw the victim in, and on success smothering starts next round, to Fatigue and then Body levels, armor no help.\nAbilities: Herbalism 5 to Profession: Herbalist.\n\nAbilities renamed: Enchanting Music 4 to Enchanting: Music; Fantastic Beast Lore 4 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Shapeshift 16 to Shapeshifter.\n\nAbilities with no counterpart: Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 30 xp spent on Organization Lore: Gruagachan.\n\nPowers with no Ability now, as printed: Geasa 3 (physical); Gruagach Wisdom 15 (new Talents); Potency 6 (shapeshift); Gift 8 (physical); Transform 7 (birds)."
       },
       {
         "id": "hetep_the_corrupter",
@@ -25028,7 +25348,7 @@
             "attack": 15,
             "defense": 18,
             "damage": 10,
-            "id": "9416bc101a51"
+            "id": "67418178915d"
           }
         ],
         "soak": 13,
@@ -25073,7 +25393,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi. A landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma. Hermetic magic has no cure while he remains in the mortal realm, and elsewhere he alone can give one, as a rule for a cardinal pact.",
-            "id": "0d6566d645c7"
+            "id": "bfcc144cbbe8"
           },
           {
             "name": "Shapechange",
@@ -25087,7 +25407,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An). Turns one he possesses into his natural body.",
-            "id": "a608bfd255bc"
+            "id": "3f51b747fdbb"
           },
           {
             "name": "Raise Corpse",
@@ -25101,7 +25421,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo. Raises anyone he kills as one of the walking dead.",
-            "id": "e3671033196b"
+            "id": "653e156ead9b"
           },
           {
             "name": "Infernal Spell",
@@ -25115,7 +25435,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works the like of spontaneous spells to level 30, at 1 Might a magnitude.",
-            "id": "f0fc02792678"
+            "id": "9f58be578cad"
           },
           {
             "name": "Possession",
@@ -25129,7 +25449,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe. Any human in line of sight. Entry costs Might equal to the victim's Confidence + Stamina (+3 if Strong-Willed) + twice any True Faith. Parma resists, using the highest of Corpus, Mentem or Vim, against his penetration of 65 + stress die; a Natural Resistance roll (Stamina + stress die) of 60 also stops it. He can stay indefinitely. Hermetic magic cannot detect him; detection and exorcism are resisted by twice his current Might.",
-            "id": "9aa6b41fbd03"
+            "id": "7f0567b07c0d"
           },
           {
             "name": "Corrupt Knowledge",
@@ -25143,7 +25463,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi, 1 point a day. Slowly corrupts a written work on magic he touches: a summa takes days equal to the experience it holds (55 for a level 10 summa), a libri quaestionum or tractatus days equal to its quality, an Authority a year and a day. A reader then gains an Occult Lore experience point a season, taken out of the study total, and a Personality Trait for the dark arts at the score those points give. Only Sense Holiness and Unholiness or a like divine gift shows the change.",
-            "id": "cbc4b12b4d22"
+            "id": "8acf0452513f"
           }
         ],
         "vis": [
@@ -25151,7 +25471,7 @@
             "pawns": 18,
             "art": "Vim",
             "where": "in his heart, Infernally tainted",
-            "id": "e652fd78aee4"
+            "id": "fb81bf87f852"
           }
         ],
         "equipment": "",
@@ -25270,7 +25590,7 @@
             "ends_season": ""
           },
           {
-            "vf_id": "vf_curse_throwing",
+            "vf_id": "vf_curse",
             "params": {},
             "id": "",
             "temporary": false,
@@ -25355,7 +25675,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "f71b83cf0ac0"
+            "id": "be14ba4d7fab"
           },
           {
             "name": "Claw",
@@ -25363,7 +25683,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "9c1d51487da7"
+            "id": "ca7f162554fc"
           }
         ],
         "soak": 11,
@@ -25535,7 +25855,7 @@
             "xp_table": "ability"
           },
           {
-            "name": "Curse-Throwing",
+            "name": "Curse",
             "category": "Supernatural",
             "xp": 765,
             "specialty": "physical",
@@ -25605,10 +25925,10 @@
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His demon",
-            "id": "17c4d9737e9a"
+            "id": "c06670836d59"
           }
         ],
-        "secrets": "The ancient gruagach, born in 570, whom the Order thinks dead. His name, said davan-alli, is Gaelic for the spider, and he is also called Dav'nalleous (pp. 70-71). His mind is close to ruin, and the scrap of humanity left in it longs to be free of him. Beast instinct usually rules and he obeys Hetep at a word. Brought to reflect on his state, by The Gift of Reason or fine roleplaying, he may turn on Hetep and seek God's grace. Only true remorse, unlikely as it is, would move God to undo the soul he hid away and let him rest (p. 139).\n\nNo longer human at all: hairless, crusted with pus and open sores, with a beast's head of huge jaw and fangs, a back too twisted to walk upright, and long iron-hard claws for hands and feet.\n\nMagic Resistance 77 printed, and no Might. Presence n/a in the block, 0 here; Intelligence and Perception are worn down by three centuries buried. Need Not Sleep +5 has no catalog entry and is kept here. Vulnerability (obsidian) and Vulnerable (Celtic holy relics) are Vulnerable to a substance.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, Offensive to Animals; a wholly monstrous look; clothes rot on his skin; fangs (+8 damage in Bite); a hunchback; iron-hard claws (+5 damage in Brawl); no body hair; skin crusted with old pus; swollen abdomen; open sores; constant pain. Body levels as printed: OK, 0, 0, -1, -3, -5, Incapacitated.\n\nHis Special Gruagach Abilities act like Hermetic Form and Technique pairs, each a separate skill casting spontaneous Hermetic-style spells. Result level = Ability + Characteristic + stress die if he spends a point of that Characteristic, or half that if not. A botch after spending loses the point for good; otherwise it comes back as Fatigue does. Parma or wards resist; Penetration equals the result after any halving. Incinerate: as Creo and Rego Ignem, true fire only, Presence (now only at half). Decay: as Perdo Animal and Corpus, Stamina. Enthrall: as Rego and Perdo Mentem, Intelligence. Sacrifice: as Creo Vim; each Body level drained gives a pawn of vis per 10 levels of result, only at Imbolc, Beltane, Lughnasa and Samhain. Shatter: as Perdo Herbam and Terram, Strength.\nVirtues and Flaws: Hatred (Major): the Order of Hermes; Fury as Wrathful (Major): when thwarted; Weakness (Minor): strong drink.\nAbilities: Herbalism 6 to Profession: Herbalist; Occult Lore 5 to Infernal Lore; Visions 3 to Premonitions; Curse 17 to Curse-Throwing.\n\nAbilities renamed: Enchanting Music 6 to Enchanting: Music; Fantastic Beast Lore 8 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Sense Holiness & Unholiness 7 to Sense Holiness and Unholiness; Shapeshift 20 to Shapeshifter.\n\nAbilities with no counterpart: Contortions' 140 xp spent on Athletics; Direction Sense's 50 xp spent on Area Lore: Scottish Highlands; Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 15 xp spent on Organization Lore: Gruagachan; Mimicry's 75 xp spent on Guile; Weather Sense's 50 xp spent on Wilderness Sense.\n\nPowers with no Ability now, as printed: Geasa 7 (physical); Gift 6 (characteristics); Gruagach Wisdom 30 (new Talents); Potency 6 (curse); Transform 20 (fish); Decay 15 (bone-breaking); Enthrall 10 (for sacrifice); Incinerate 13 (projection); Sacrifice 8 (human); Shatter 9 (explosion)."
+        "secrets": "The ancient gruagach, born in 570, whom the Order thinks dead. His name, said davan-alli, is Gaelic for the spider, and he is also called Dav'nalleous (pp. 70-71). His mind is close to ruin, and the scrap of humanity left in it longs to be free of him. Beast instinct usually rules and he obeys Hetep at a word. Brought to reflect on his state, by The Gift of Reason or fine roleplaying, he may turn on Hetep and seek God's grace. Only true remorse, unlikely as it is, would move God to undo the soul he hid away and let him rest (p. 139).\n\nNo longer human at all: hairless, crusted with pus and open sores, with a beast's head of huge jaw and fangs, a back too twisted to walk upright, and long iron-hard claws for hands and feet.\n\nMagic Resistance 77 printed, and no Might. Presence n/a in the block, 0 here; Intelligence and Perception are worn down by three centuries buried. Need Not Sleep +5 has no catalog entry and is kept here. Vulnerability (obsidian) and Vulnerable (Celtic holy relics) are Vulnerable to a substance.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, Offensive to Animals; a wholly monstrous look; clothes rot on his skin; fangs (+8 damage in Bite); a hunchback; iron-hard claws (+5 damage in Brawl); no body hair; skin crusted with old pus; swollen abdomen; open sores; constant pain. Body levels as printed: OK, 0, 0, -1, -3, -5, Incapacitated.\n\nHis Special Gruagach Abilities act like Hermetic Form and Technique pairs, each a separate skill casting spontaneous Hermetic-style spells. Result level = Ability + Characteristic + stress die if he spends a point of that Characteristic, or half that if not. A botch after spending loses the point for good; otherwise it comes back as Fatigue does. Parma or wards resist; Penetration equals the result after any halving. Incinerate: as Creo and Rego Ignem, true fire only, Presence (now only at half). Decay: as Perdo Animal and Corpus, Stamina. Enthrall: as Rego and Perdo Mentem, Intelligence. Sacrifice: as Creo Vim; each Body level drained gives a pawn of vis per 10 levels of result, only at Imbolc, Beltane, Lughnasa and Samhain. Shatter: as Perdo Herbam and Terram, Strength.\nVirtues and Flaws: Hatred (Major): the Order of Hermes; Fury as Wrathful (Major): when thwarted; Weakness (Minor): strong drink.\nAbilities: Herbalism 6 to Profession: Herbalist; Occult Lore 5 to Infernal Lore; Visions 3 to Premonitions.\n\nAbilities renamed: Enchanting Music 6 to Enchanting: Music; Fantastic Beast Lore 8 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Sense Holiness & Unholiness 7 to Sense Holiness and Unholiness; Shapeshift 20 to Shapeshifter.\n\nAbilities with no counterpart: Contortions' 140 xp spent on Athletics; Direction Sense's 50 xp spent on Area Lore: Scottish Highlands; Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 15 xp spent on Organization Lore: Gruagachan; Mimicry's 75 xp spent on Guile; Weather Sense's 50 xp spent on Wilderness Sense.\n\nPowers with no Ability now, as printed: Geasa 7 (physical); Gift 6 (characteristics); Gruagach Wisdom 30 (new Talents); Potency 6 (curse); Transform 20 (fish); Decay 15 (bone-breaking); Enthrall 10 (for sacrifice); Incinerate 13 (projection); Sacrifice 8 (human); Shatter 9 (explosion)."
       },
       {
         "id": "pan_caudarax_dragon_of_hekla",
@@ -25706,7 +26026,7 @@
             "attack": 8,
             "defense": 0,
             "damage": 40,
-            "id": "0aab9a5d1d5a"
+            "id": "29d0a57d9f55"
           },
           {
             "name": "Bite",
@@ -25714,7 +26034,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 29,
-            "id": "339e50c56e8b"
+            "id": "3eddc3603533"
           },
           {
             "name": "1st Claw",
@@ -25722,7 +26042,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "d132a4459cff"
+            "id": "f9238caacc17"
           },
           {
             "name": "2nd Claw",
@@ -25730,7 +26050,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "7e1bfda48d85"
+            "id": "af97c2bf6be5"
           }
         ],
         "soak": 18,
@@ -25782,7 +26102,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg. A gout of fire over an area 10 paces wide and 30 long: intensely hot but with little force, so any cover blocks it.",
-            "id": "c9d25cebe0ec"
+            "id": "dcaf79aac28f"
           },
           {
             "name": "Spellcasting",
@@ -25796,7 +26116,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts a range of spells as if he had the Arts Creo 20, Rego 10, Animal 20 and Imaginem 10.",
-            "id": "797613b46ce6"
+            "id": "2bec0d2fcd4e"
           }
         ],
         "vis": [],
@@ -25984,18 +26304,61 @@
             "xp_table": "ability"
           },
           {
-            "name": "Living Language: Jotunn",
-            "category": "General",
+            "name": "Jotnar",
+            "category": "Arcane",
             "xp": 275,
             "specialty": "Clan of Hrym",
             "xp_table": "ability"
           }
         ],
-        "powers": [],
+        "powers": [
+          {
+            "name": "Jotunn Affinity with Frost",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Aquam",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "quality": "",
+            "description": "Jotunn Affinity with Frost 17, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
+            "id": "797dc3583b11"
+          },
+          {
+            "name": "Transform",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Vim",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "quality": "",
+            "description": "Transform 16, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
+            "id": "7c71b59de42b"
+          },
+          {
+            "name": "Gift",
+            "might_cost": 0,
+            "init": 0,
+            "form": "Vim",
+            "range": "",
+            "duration": "",
+            "target": "",
+            "level": null,
+            "penetration_bonus": 0,
+            "quality": "",
+            "description": "Gift 5, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
+            "id": "4552edacaeab"
+          }
+        ],
         "vis": [],
         "equipment": "",
         "appearance": "Very handsome, with blond hair going silver-gray, blue eyes, broad shoulders and a guileless smile. He wears a plain tunic and leggings with a walrus-hide belt, a cowled gray fur cloak outdoors, and often carries an iron-shod staff, with a huge gray dog, Snati, at his side.",
-        "notes": "External Soul is printed among his Abilities with no score. The book prints no Combat, Soak or levels for him. His natural Size is +3; the block's +2 is the eight-foot shape he has worn so long it is second nature, and he often goes smaller among men. The Might Form, unprinted, is Aquam, for his frost, this pack's reading.\nAbilities: Climb 6 to Athletics.\n\nAbilities renamed: Shapeshift 18 to Shapeshifter.\n\nPowers with no Ability now, as printed: Jotunn Affinity with Frost 17 (stopping snowfall); Transform 16 (dog); Gift 5 (virtues); Potency 10 (Transform).",
+        "notes": "External Soul is printed among his Abilities with no score. His Might 71 is the book's Magic Resistance, the sum of three Talents and External Soul's +20 (p. 53), which a creature may keep and a trollson character may not (Hedge Magic RE p. 9). The book prints no Combat, Soak or levels for him. His natural Size is +3; the block's +2 is the eight-foot shape he has worn so long it is second nature, and he often goes smaller among men. The Might Form, unprinted, is Aquam, for his frost, this pack's reading.\nAbilities: Climb 6 to Athletics.\n\nAbilities renamed: Shapeshift 18 to Shapeshifter.\n\nPowers with no Ability now, as printed: Jotunn Affinity with Frost 17 (stopping snowfall); Transform 16 (dog); Gift 5 (virtues); Potency 10 (Transform).",
         "source": "Land of Fire and Ice p. 141",
         "detail": "Full",
         "place_id": "the_singing_cave",
@@ -26089,7 +26452,7 @@
             "attack": 27,
             "defense": 24,
             "damage": 22,
-            "id": "fcd0588b1a52"
+            "id": "fbb38e2d7104"
           },
           {
             "name": "First Claw",
@@ -26097,7 +26460,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "4c4270d44902"
+            "id": "9f791ebdde5b"
           },
           {
             "name": "Second Claw",
@@ -26105,7 +26468,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "87ef43223089"
+            "id": "30ff74f8a89a"
           }
         ],
         "soak": 23,
@@ -26150,7 +26513,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes any weather up to 12th magnitude. CrAu, ReAu.",
-            "id": "d5b9e6c07a27"
+            "id": "855bdaeb90b5"
           },
           {
             "name": "Spiritual Form",
@@ -26164,7 +26527,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "26f1477a5948"
+            "id": "84369647af91"
           }
         ],
         "vis": [],
@@ -26264,7 +26627,7 @@
             "attack": 16,
             "defense": 15,
             "damage": 45,
-            "id": "28d6ba7cb8b2"
+            "id": "f8bc722d621c"
           },
           {
             "name": "First Kick",
@@ -26272,7 +26635,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "b6accc2f90f2"
+            "id": "6a24cd761061"
           },
           {
             "name": "Second Kick",
@@ -26280,7 +26643,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "4ee22ecad516"
+            "id": "d76d09da9b0b"
           }
         ],
         "soak": 36,
@@ -26325,7 +26688,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Changes its size at will from +2 to +8; away from its duty it roams the highlands at +2.",
-            "id": "776776159ef0"
+            "id": "be7c7d58cafc"
           },
           {
             "name": "Spiritual Form",
@@ -26339,7 +26702,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "f66603f3f6fa"
+            "id": "0c10e0e8daa3"
           }
         ],
         "vis": [],
@@ -26436,7 +26799,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each spirit can make a spell effect of a level equal to its permanent Might. Art and cost vary.",
-            "id": "f3eb69e7659f"
+            "id": "532525637378"
           },
           {
             "name": "Grant Might",
@@ -26450,7 +26813,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the guardian temporary Might points. CrVi.",
-            "id": "7d3591540eae"
+            "id": "716c817c7814"
           },
           {
             "name": "Heal Guardian",
@@ -26464,7 +26827,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Heals the guardian one Health level for every 10 Might spent, by touch. CrAn or CrCo.",
-            "id": "6c373429ba10"
+            "id": "a8fddde1eac6"
           },
           {
             "name": "Spiritual Form",
@@ -26478,7 +26841,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "2f435c33f205"
+            "id": "f5ad5d2f6b4f"
           },
           {
             "name": "Shapeshift",
@@ -26492,7 +26855,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes any form it likes, fighting while solid as a Beast of Virtue of that kind; a landvaettir of Might 40 or more can become a fantastic beast of like Might.",
-            "id": "e12f75c990c5"
+            "id": "95c228b389af"
           }
         ],
         "vis": [],
@@ -26602,7 +26965,7 @@
             "attack": 22,
             "defense": 19,
             "damage": 35,
-            "id": "2ecfa63b0938"
+            "id": "e94760952f97"
           },
           {
             "name": "Thrown Molten Gold",
@@ -26610,7 +26973,7 @@
             "attack": 13,
             "defense": 0,
             "damage": 50,
-            "id": "d60470840806"
+            "id": "33813546b94d"
           }
         ],
         "soak": 20,
@@ -26683,7 +27046,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works some fire effects directly, without calling on Jotunn spirits, with Stamina in place of Communication in his Jotunn Affinity casting total. CrIg, Te varies. His favourite conjures molten gold that he handles unharmed and throws.",
-            "id": "0ee44eff4ecc"
+            "id": "ac31a4a06c9a"
           },
           {
             "name": "Immunity to Fire",
@@ -26697,7 +27060,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Jotunn Affinity has made him proof against all heat and flame.",
-            "id": "72290df3740c"
+            "id": "1721f402a41c"
           },
           {
             "name": "Break Wards",
@@ -26711,7 +27074,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A power of the hammer, which must strike the target. The first blow dispels wards of 8th magnitude or less and breaks any barrier they guard; each later blow reaches a magnitude higher, to 20th. PeVi, Te.",
-            "id": "fd8d6c84534f"
+            "id": "4234dde5e266"
           }
         ],
         "vis": [],
@@ -26727,7 +27090,7 @@
             "kind": "neighbours",
             "target_id": "the_clan_of_geirrod",
             "note": "Speaks its Jotunn; leads the fire giants",
-            "id": "758b22ca3307"
+            "id": "a9a921632dd3"
           }
         ],
         "secrets": "A Hermetic scouting party attacked his son's regio home, killed his two granddaughters and took his son's beaten body to their tower. The son lives through his External Soul, and the magi cut him for vis; Gull takes it for a depraved game and wants Julius's forces dead (Icelandic Wars p. 11)."
@@ -26814,7 +27177,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "52632a7b06d7"
+            "id": "5c2a561e65a6"
           },
           {
             "name": "Club",
@@ -26822,7 +27185,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "a8830e5bd028"
+            "id": "7ca87be09640"
           },
           {
             "name": "Rock",
@@ -26830,7 +27193,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "d81735e469c4"
+            "id": "3a1cefba1153"
           }
         ],
         "soak": 11,
@@ -26910,7 +27273,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi. Anyone fighting a troll has exceedingly bad luck: a stress die botches on a 0 or a 2, twice the chance, and always with two extra botch dice.",
-            "id": "517125cb7e10"
+            "id": "df865018ebaa"
           },
           {
             "name": "Gift of the Magic Arts",
@@ -26924,7 +27287,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "About one troll in 100, usually female and with Intelligence +1. Though they do not study the Hermetic Arts, they can approximate any Hermetic spell for 1 Might per 5 levels (the cost shown), up to level 25. Groups can share the Might of a higher spell, taking about a minute per 5 levels to cast it.",
-            "id": "50b6699849ed"
+            "id": "b851eb48e059"
           }
         ],
         "vis": [
@@ -26932,7 +27295,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in the body; more if particularly powerful",
-            "id": "c0672cc357da"
+            "id": "da5ac0257699"
           }
         ],
         "equipment": "",
@@ -26989,7 +27352,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 15,
-            "id": "72f20c5ab2ea"
+            "id": "61cd43c5942b"
           },
           {
             "name": "Club",
@@ -26997,7 +27360,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 18,
-            "id": "eedd5cb28c5b"
+            "id": "79f16d8c15d3"
           },
           {
             "name": "Boulder",
@@ -27005,7 +27368,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 17,
-            "id": "1454cbd5755d"
+            "id": "e54f7737da85"
           }
         ],
         "soak": 9,
@@ -27064,7 +27427,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "in the body",
-            "id": "3b40d345e731"
+            "id": "71fbd306a1f5"
           }
         ],
         "equipment": "",
@@ -27180,7 +27543,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries itself to any point in the Mundane, Magic or Faerie Realms.",
-            "id": "cd400161d584"
+            "id": "57dc54e63025"
           },
           {
             "name": "Gateway",
@@ -27194,7 +27557,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bridges the mundane and magical realms, swallowing or bringing up people and things while it stays incorporeal. With a magical archway, trilithon or the like this costs nothing; without one, 5 Might.",
-            "id": "36e313326597"
+            "id": "27793184ca2e"
           },
           {
             "name": "Knowledge of the Subterranean",
@@ -27208,7 +27571,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InTe 40. Sees or hears whatever happens under the earth, or knows where anything buried lies. Fourth Edition: 3 points.",
-            "id": "600508769a71"
+            "id": "96f4c30dd030"
           },
           {
             "name": "Strong Willed",
@@ -27222,7 +27585,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "No magic can compel it to act against its will.",
-            "id": "e94b4beb28aa"
+            "id": "829788e14dcc"
           }
         ],
         "vis": [],

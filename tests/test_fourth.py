@@ -85,8 +85,8 @@ def test_an_affinity_feeds_the_art_it_served():
 
 def test_a_talent_brings_its_virtue():
     stat, _ = convert("x", _block([("Curse", 4, "")]), area="Rhine Tribunal")
-    assert _scores(stat) == {"Curse-Throwing": 4}
-    assert "Curse-Throwing" in stat["virtues_flaws"]
+    assert _scores(stat) == {"Curse": 4}
+    assert "Curse" in stat["virtues_flaws"]
 
 
 def test_a_spell_is_swapped_only_if_hermetic_magic_cannot_cast_it():

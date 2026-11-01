@@ -17842,6 +17842,186 @@
       "source": "BS&S; TtA",
       "summary": "Negates a Magic Animal's inherent No Hands, as Gift of Speech negates its Mute.",
       "description": "This Quality removes the No Hands Flaw inherent in a Magic Animal, as Gift of Speech removes its Mute Flaw. (Between Sand and Sea p. 46; Through the Aegis p. 12)"
+    },
+    {
+      "id": "vf_galdor_conjuring",
+      "name": "Galdor Conjuring",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "Summons spirits by song to work magic; free to traditional galdramen.",
+      "description": "Lets you sing spirits up to work effects, by Com + Music + Galdor Wisdom + Song Talent + aura (LFI pp. 46-48). Free to traditional galdramen; others take it as partial training, and can then be initiated into Song Talents only (LFI pp. 59-60)."
+    },
+    {
+      "id": "vf_galdor_enchantment",
+      "name": "Galdor Enchantment",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "Binds spirits in items by song; free to traditional galdramen.",
+      "description": "Lets you bind a spirit into an item as you make it, after a bargain with a landvaettir lord (LFI p. 49). Free to traditional galdramen; others take it as partial training, and can then be initiated into Song Talents only (LFI p. 60)."
+    },
+    {
+      "id": "vf_hamfarir",
+      "name": "Hamfarir",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LFI",
+      "summary": "Grants Hamfarir 1: go abroad in your fylgja's body; needs Premonitions.",
+      "description": "You can borrow your fylgja's body and travel in it while your own lies in trance (LFI pp. 55-56). Needs Premonitions. Grants Hamfarir 1. Unlike Hedge Magic's Nightwalker and Hamr (HMRE p. 104), the fylgja is not the magician's own body made solid, and there are no battles to answer."
+    },
+    {
+      "id": "vf_potency",
+      "name": "Potency",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LFI",
+      "summary": "Grants Potency 1: a magical language aids Curse and its like.",
+      "description": "You know how to invoke the power of a magical language, which adds to Curse and the like, up to your score in that language (LFI p. 56). Raised by story experience. Trollsynir don't take it: Hedge Magic RE's Arts do its work (HMRE p. 76)."
+    },
+    {
+      "id": "vf_curse",
+      "name": "Curse",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "Grants Curse 1: lay Curses that end on a stated condition.",
+      "description": "You can lay Curses that lower scores or Virtues or add Flaws, each with a condition that ends it (LFI pp. 57-59). Grants Curse 1. A nidstong strikes groups and rolls daily while it stands."
+    },
+    {
+      "id": "vf_jotunn_affinity_with_earth",
+      "name": "Jotunn Affinity with Earth",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "Grants the Affinity at 1: hurl boulders and tear the earth by invoking a giant ancestor.",
+      "description": "Rock-giant blood gives you power over elemental earth (LFI pp. 56-57). Total: Com + Affinity + Jotnar + aura + stress die against the Hermetic level, in a round, limited as a spontaneous spell. A ritual effect needs a strong site, 15 minutes and a botch die a magnitude, and a Fatigue roll an hour. Never vis. Large at least; one Affinity only."
+    },
+    {
+      "id": "vf_magic_summoning",
+      "name": "(Magic) Summoning",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Major",
+      "cost": 3,
+      "source": "RoP:M",
+      "summary": "Grants (Magic) Summoning at 0: the Goetic Art of Summoning aligned to the Magic Realm.",
+      "description": "The Art of Summoning, aligned to the Magic Realm, to call spirits to you (RoP:M p. 110)."
+    },
+    {
+      "id": "vf_mighty_fylgja",
+      "name": "Mighty Fylgja",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "max_per_parameter": null,
+      "source": "LFI",
+      "summary": "Your fylgja gains +10 Might and the next power: Phantom, Spirit Voice, Corporeality.",
+      "description": "Each copy, in place of one of the book's Virtue points, adds 10 to your fylgja's Might and its next power, all usable only during Hamfarir. Phantom: a ghostly apparition, an hour a point of Might spent. Spirit Voice: it speaks any language at 3 and can carry Curses, at no more than Hamfarir. Corporeality: a Beast of Virtue's body, 5 Might an hour (LFI pp. 54-55)."
+    },
+    {
+      "id": "vf_large_fylgja",
+      "name": "Large Fylgja",
+      "type": "Virtue",
+      "category": "Supernatural",
+      "tier": "Minor",
+      "cost": 1,
+      "repeatable": true,
+      "max_per_parameter": null,
+      "source": "LFI",
+      "summary": "Your fylgja may be larger: the first copy allows Size 0, each more +1.",
+      "description": "A standard fylgja is Size -3 at most. The first copy allows forms up to Size 0, and each further copy one Size more (LFI p. 55). A bear of Size +2 and Might 40 that can become corporeal is six Virtues in all, three of each."
+    },
+    {
+      "id": "vf_galdraman",
+      "name": "Galdraman",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "LFI",
+      "summary": "A traditional galdraman of Iceland, a Gifted companion the equal of a magus.",
+      "description": "The Social Status of a traditional galdraman, who conjures the landvaettir by song. A Gifted companion, whom LFI p. 46 sets equal to a magus (HMRE p. 11). It goes with other Social Statuses: a galdraman may also be a bondi or a godi."
+    },
+    {
+      "id": "vf_trollson",
+      "name": "Trollson",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "LFI",
+      "summary": "Practises trollskap, the gruagach Arts of the Norse giants' kin.",
+      "description": "The Social Status of a trollson or trollsdottir, raised to the magic of giant blood (HMRE p. 76; LFI p. 52). It goes with other Social Statuses."
+    },
+    {
+      "id": "vf_bondi",
+      "name": "Bondi",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Free",
+      "cost": 0,
+      "source": "LFI",
+      "summary": "An Icelandic householder renting his land a year at a time.",
+      "description": "You rent land for a year at a time and keep your own household. If you can't support your family or stock the landowner must. You may choose your assembly, though it is usually your landlord's godi (LFI pp. 21, 65)."
+    },
+    {
+      "id": "vf_landowner",
+      "name": "Landowner",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LFI",
+      "summary": "An Icelandic bondi who owns land, pays thing-tax and may attend the thing.",
+      "description": "As a bondi, and you own land and pay thing-tax. You may take part in the thing, and may be asked to ride with your godi to the Althing or pay toward those who do (LFI p. 66)."
+    },
+    {
+      "id": "vf_storbondi",
+      "name": "Storbondi",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Minor",
+      "cost": 1,
+      "source": "LFI",
+      "summary": "A rich Icelandic big farmer with tenant farms; Temporal Influence free.",
+      "description": "A rich and influential farmer, with tenant farms and likely churches of your own, and Temporal Influence with no further cost. Tenants and friends may ask you to speak in court (LFI p. 66)."
+    },
+    {
+      "id": "vf_godi",
+      "name": "Godi",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "An Icelandic chieftain holding a godord; Temporal Influence free. No serfs or men-at-arms.",
+      "description": "You hold a godord: a large farm and tenant farms, the right to appoint judges and panels, a seat on the law council, and Temporal Influence with no further cost. Thingmen's suits come to you and you enforce your judgments. A godi has no serfs or men-at-arms, so this is not Landed Noble (LFI pp. 21, 66)."
+    },
+    {
+      "id": "vf_storgodi",
+      "name": "Storgodi",
+      "type": "Virtue",
+      "category": "Social Status",
+      "tier": "Major",
+      "cost": 3,
+      "source": "LFI",
+      "summary": "A great godi of Iceland with a riki; rich, but unable to keep men-at-arms.",
+      "description": "You usually hold more than one godord, control a riki and belong to one of the five competing families. You own many farms, but have little right to taxes, so you can't easily keep men-at-arms (LFI p. 66). Thord Sturluson's block prints it at +4 against this page's +5."
     }
   ]
 }

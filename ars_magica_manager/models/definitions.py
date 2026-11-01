@@ -557,7 +557,7 @@ class TraditionTraining:
 
 #: How a casting kind finds its scores (rules.hedge_casting.KINDS): a
 #: Technique and a Form; one Ability; the lowest of the runes a script uses.
-CASTING_KINDS: tuple[str, ...] = ("art_pair", "ability", "rune")
+CASTING_KINDS: tuple[str, ...] = ("art_pair", "ability", "rune", "song")
 #: The die a casting total adds.
 CASTING_DICE: tuple[str, ...] = ("stress", "simple", "none")
 #: How many pawns of vis a casting may use: each Art's score (the Hermetic
@@ -598,6 +598,9 @@ class CastingRule:
     #: adds the best (Refining's Medicine, Philosophiae or a realm Lore).
     adds: list[str] = field(default_factory=list)
     best_of: list[str] = field(default_factory=list)
+    #: An Ability no score the rule uses may count above (Galdor Wisdom
+    #: caps a Song Talent, Land of Fire & Ice p. 46).
+    capped_by: str = ""
     die: str = "stress"
     divisor: int = 1
     #: The division rounds up instead of down (storm wizards' ice
@@ -962,6 +965,9 @@ class TraditionDef:
     #: The book(s) it's from (sourcebooks), as on the other catalogs.
     source: str = "HMRE"
     realm: str = "Magic"
+    #: The realm its magic reads an aura as outside a Magic aura, when not
+    #: `realm`: the landvaettir's Faerie (Land of Fire & Ice p. 33).
+    outside_magic: str = ""
     #: What kind of tradition it is (TRADITION_CATEGORIES), cutting across
     #: the books; set by hand from them, not worked out from its rules.
     category: str = HEDGE_TRADITION

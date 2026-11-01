@@ -132,6 +132,9 @@ OPENS_ABILITY: dict[str, tuple[str, ...]] = {
     "vf_master_of_form_creatures": ("Magic Lore",),
     "vf_magical_fascination": ("Magic Lore", "Faerie Lore"),
     "vf_outsider": ("Magic Lore", "Faerie Lore"),
+    # Land of Fire & Ice p. 54.
+    "vf_galdor_conjuring": ("Galdor Wisdom",),
+    "vf_galdor_enchantment": ("Galdor Wisdom",),
 }
 
 
@@ -395,12 +398,28 @@ def opened_types(character: Character, *, apprenticed: bool = False) -> set[str]
     return types
 
 
+#: The Song Talents, which either galdor Virtue opens (rules.galdor.SONGS).
+SONG_TALENTS: tuple[str, ...] = (
+    "Yfel-galdor",
+    "Mal-galdor",
+    "Hug-galdor",
+    "Sig-galdor",
+    "Lim-galdor",
+    "Biarg-galdor",
+    "Orlog-galdor",
+    "Svart-galdor",
+    "Ol-galdor",
+    "Brun-galdor",
+)
 #: Virtues granting a Supernatural Ability of another name: Divination &
 #: Augury and Hermetic Dream Interpreter give Divination (The Mysteries
 #: Revised Edition pp. 59, 62).
 GRANTS_SUPERNATURAL: dict[str, tuple[str, ...]] = {
     "vf_divination_and_augury": ("Divination",),
     "vf_hermetic_dream_interpreter": ("Divination",),
+    # Partial training in galdor, for one outside it (Land of Fire & Ice p. 59).
+    "vf_galdor_conjuring": SONG_TALENTS,
+    "vf_galdor_enchantment": SONG_TALENTS,
 }
 
 

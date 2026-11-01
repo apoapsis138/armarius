@@ -68,6 +68,7 @@ from ars_magica_manager.models import (
     Battle,
     BattleSide,
     Book,
+    BoundBeing,
     Case,
     Character,
     CharterClause,
@@ -1802,6 +1803,9 @@ OPENERS: dict[str, Opener] = {
     "an artist's career": Opener("character", lambda ws: _open_career(ws, "artist")),
     "a scholar's career": Opener("character", lambda ws: _open_career(ws, "scholar")),
     # Dealing with faeries (RoP: Faerie).
+    "conjure a spirit": Opener("character", lambda ws: _open_galdor(ws, "conjure")),
+    "bargain with a lord": Opener("character", lambda ws: _open_galdor(ws, "bargain")),
+    "bind an item": Opener("character", lambda ws: _open_galdor(ws, "bind")),
     "ars fabulosa": Opener("character", lambda ws: _open_faerie(ws, "ars")),
     "a faerie bargain": Opener("character", lambda ws: _open_faerie(ws, "bargain")),
     "an offer to faerie": Opener("character", lambda ws: _open_faerie(ws, "offer")),
@@ -2357,6 +2361,32 @@ def _open_career(ws, which: str) -> None:
         ws.action_artist_career()
     else:
         ws.action_scholar_career()
+
+
+def _open_galdor(ws, which: str) -> None:
+    """Conjure a Spirit, Bargain with a Lord or Bind an Item on Leandro,
+    made a galdraman with Ol-galdor 5, Galdor Wisdom 5, Craft: Runes 5 and
+    a deal."""
+    character = ws.selected_character
+    if "trad_galdramen" not in character.traditions:
+        character.traditions.append("trad_galdramen")
+        character.virtues_flaws += [
+            VirtueFlawInstance("vf_galdor_conjuring"),
+            VirtueFlawInstance("vf_galdor_enchantment"),
+        ]
+        character.abilities += [
+            Ability("Ol-galdor", xp=15, xp_table="art"),
+            Ability("Galdor Wisdom", xp=75),
+            Ability("Craft: Runes", xp=75),
+        ]
+        character.bound_beings.append(
+            BoundBeing("The Ol lord", "trad_galdramen", "Deal with a lord")
+        )
+    {
+        "conjure": ws.action_galdor_conjure,
+        "bargain": ws.action_galdor_bargain,
+        "bind": ws.action_galdor_bind,
+    }[which]()
 
 
 def _open_faerie(ws, which: str) -> None:

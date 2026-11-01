@@ -184,16 +184,26 @@ def _abilities(
 KINDS: dict[str, Callable[[Character, TraditionDef, CastingRule], list[Casting]]] = {
     "art_pair": _art_pairs,
     "ability": _abilities,
+    # A song is cast by its own forms (forms.galdor), with its rules on
+    # the ground, Duration and bargains, not by Cast a Power.
+    "song": _abilities,
     # A rune script uses the lowest of its runes; each held rune is the
     # most a script of it alone can use.
     "rune": _abilities,
 }
 
 
+def plain_casting(rule: CastingRule) -> bool:
+    """Whether Cast a Power rolls the rule: not a Lab Total, nor a song."""
+    return not rule.lab and rule.kind != "song"
+
+
 def can_cast(character: Character) -> bool:
     """Whether one of the character's traditions has a way of casting
     (not only a Lab Total) for More's Cast a Power."""
-    return any(not rule.lab for t in traditions_of(character) for rule in t.casting)
+    return any(
+        plain_casting(rule) for t in traditions_of(character) for rule in t.casting
+    )
 
 
 def castings(
@@ -250,9 +260,11 @@ SIHR_VERSIONS: dict[str, str] = {
 
 #: The other summoning arts a sahir may roll in place of Sihr that belong
 #: to a realm of their own (The Cradle and the Crescent pp. 31-32). (Spirit)
-#: Summoning has Faerie and Magic versions too; the Infernal is the usual.
+#: Summoning has Faerie and Magic versions too (Realms of Power: Magic p.
+#: 110); the Infernal is the usual.
 SUMMONING_REALMS: dict[str, str] = {
     "(Faerie) Summoning": realms.FAERIE,
+    "(Magic) Summoning": realms.HERMETIC,
     "Summoning": realms.INFERNAL,
 }
 
@@ -289,6 +301,8 @@ def power_realm(
     Cradle and the Crescent pp. 30-31); the books don't say what it does
     to an aligned Sihr, so its own realm is one more to choose from."""
     own = _own_realm(character, tradition, rule, uses)
+    if tradition.outside_magic and aura_realm != realms.HERMETIC:
+        own = tradition.outside_magic
     if not any(vf.vf_id == realms.YATU_MAGIC for vf in character.virtues_flaws):
         return own
     return max(
@@ -324,7 +338,7 @@ def casting_score(
         lines.append(Line(label, amount=score(character, low), source=SOURCE))
     else:
         for name in uses:
-            lines.append(_used(character, name))
+            lines.append(_capped(character, rule, _used(character, name)))
     characteristic = characteristic_for(rule, uses)
     if characteristic:
         value = getattr(character.characteristics, characteristic.lower(), 0)
@@ -363,6 +377,14 @@ def casting_score(
             )
         )
     return Breakdown(total=sum(line.amount or 0 for line in lines), lines=lines)
+
+
+def _capped(character: Character, rule: CastingRule, line: Line) -> Line:
+    """A score no higher than the Ability that caps the rule's scores."""
+    if not rule.capped_by or (line.amount or 0) <= score(character, rule.capped_by):
+        return line
+    cap = score(character, rule.capped_by)
+    return Line(f"{line.label} (capped by {rule.capped_by})", amount=cap, source=SOURCE)
 
 
 def _used(character: Character, name: str) -> Line:

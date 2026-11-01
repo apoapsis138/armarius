@@ -24,7 +24,10 @@ The readings every Fourth Edition pack shares:
   Living Language (DE p. 168). An Affinity Ability's points go to the Art
   it served, at the same cost, as 4e prices Abilities as 5e prices Arts.
 - A Talent DE keeps as a Supernatural Ability brings its Virtue
-  (Curse-Throwing, Hex, Shapeshifter).
+  (Curse-Throwing, Hex, Shapeshifter), as do Land of Fire & Ice's Curse,
+  Hamfarir and Potency, and (Magic) Summoning. A printed Curse is that
+  Ability, on the book's own scale: DE's Curse-Throwing only moves curses
+  from one person to another.
 - Spells at the catalog's level and Art. A spell the catalog lacks stays,
   as the magus's own at its printed level; only what Hermetic magic can no
   longer do is swapped, for a spell of the same level (DE p. 538). A
@@ -255,7 +258,6 @@ ABILITIES: dict[str, str] = {
     "Certamen": "Penetration",
     "Verditius Magic": "Magic Theory",
     "Visions": "Premonitions",
-    "Curse": "Curse-Throwing",
 }
 #: Printed Abilities that are one skill with their replacement, so the
 #: better score stands rather than the two adding up.
@@ -276,7 +278,21 @@ AFFINITY_ARTS = {
 #: The Arts an Affinity with the elements may serve: its magus's best.
 ELEMENTS = ("Aquam", "Auram", "Ignem", "Terram")
 #: Abilities that come with the Supernatural Virtue of the same name.
-VIRTUE_ABILITIES = {"Curse-Throwing", "Hex", "Shapeshifter"}
+VIRTUE_ABILITIES = {
+    "(Magic) Summoning",
+    "Curse",
+    "Curse-Throwing",
+    "Hamfarir",
+    "Hex",
+    "Potency",
+    "Shapeshifter",
+}
+#: Printed languages that are magic, not speech (Land of Fire & Ice p. 54):
+#: Jotunn is the trollsynir's Jotnar (Hedge Magic RE p. 76).
+MAGICAL_LANGUAGES = {"Speak Jotunn": "Jotnar"}
+#: Scribe Runes is a skill of carving, which galdor takes as a Craft (Land
+#: of Fire & Ice p. 49), and the vitkir's Craft: Runes.
+RUNES = {"Scribe Runes": "Craft: Runes"}
 
 #: Printed spells the catalog has under another name.
 SPELL_RENAMES: dict[str, str] = {
@@ -617,7 +633,9 @@ def _tongue(block: Fourth) -> str:
     spoken = [
         (score, name.removeprefix("Speak "))
         for name, score, _ in block.abilities
-        if name.startswith("Speak ") and name != "Speak Latin"
+        if name.startswith("Speak ")
+        and name != "Speak Latin"
+        and name not in MAGICAL_LANGUAGES
     ]
     return f"Living Language: {max(spoken)[1]}"
 
@@ -645,7 +663,11 @@ def _abilities(
             said.append(f"{name} {score} to {art}, {points} xp")
             continue
         one_skill = False
-        if name.startswith("Scribe "):
+        if name in RUNES:
+            new = RUNES[name]
+        elif name in MAGICAL_LANGUAGES:
+            new = MAGICAL_LANGUAGES[name]
+        elif name.startswith("Scribe "):
             new, one_skill = "Artes Liberales", True
         elif name.startswith("Speak "):
             tongue = name.removeprefix("Speak ")

@@ -79,6 +79,7 @@ from .rules import (
     casting,
     covenfolk,
     faiths,
+    galdor,
     hedge_casting,
     house_magic,
     merchants,
@@ -330,6 +331,9 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("t", "edit_traditions", "Traditions"),
     MenuItem("d", "disputatio", "Disputatio"),
     MenuItem("c", "hedge_cast", "Cast a Power"),
+    MenuItem("j", "galdor_conjure", "Conjure a Spirit"),
+    MenuItem("q", "galdor_bargain", "Bargain with a Lord"),
+    MenuItem("z", "galdor_bind", "Bind an Item"),
     MenuItem("f", "edit_fatigue", "Edit Fatigue"),
     MenuItem("h", "take_harm", "Take Harm"),
     MenuItem("y", "recovery_roll", "Recovery Roll"),
@@ -993,6 +997,17 @@ def _casts_hedge_magic(facts: ActionFacts) -> bool:
     )
 
 
+def _sings(wanted: Callable[[Character], bool], facts: ActionFacts) -> bool:
+    """A character with the galdor Virtue the action needs."""
+    character = facts.selected_character
+    return (
+        facts.selected_kind == NodeKind.CHARACTER
+        and facts.on_record()
+        and character is not None
+        and wanted(character)
+    )
+
+
 def _joins_traditions(facts: ActionFacts) -> bool:
     """A full or sketched character, with a tradition the saga offers or
     one they belong to."""
@@ -1439,6 +1454,9 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "edit_traditions": _joins_traditions,
     "disputatio": _disputes,
     "hedge_cast": _casts_hedge_magic,
+    "galdor_conjure": partial(_sings, galdor.conjures),
+    "galdor_bargain": partial(_sings, galdor.bargains),
+    "galdor_bind": partial(_sings, galdor.enchants),
     "give_silver": _gives_silver,
     "export_record": _exports_record,
     "edit_interests": _has_interests,
