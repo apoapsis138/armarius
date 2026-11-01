@@ -122,6 +122,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.5 — 2026-11-01
+
+### Illuminatio
+
+- Bluetooth speakers and headphones no longer swallow the sounds: while the sounds are on and Armarius is the active window, it keeps the audio device awake with silence, so a page turn is heard every time.
+
 ## 3.65.4 — 2026-11-01
 
 ### Fundamenta

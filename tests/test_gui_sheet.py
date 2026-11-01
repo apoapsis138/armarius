@@ -834,6 +834,34 @@ def test_a_refused_entry_knocks(app, monkeypatch):
     assert heard.cues == ["tock"]
 
 
+class _Link:
+    """An audio link that writes down whether it is held."""
+
+    def __init__(self) -> None:
+        self.held = False
+
+    def hold(self) -> None:
+        self.held = True
+
+    def release(self) -> None:
+        self.held = False
+
+
+def test_the_audio_link_is_held_only_while_the_app_is_active_and_sounds_are_on(
+    app, monkeypatch
+):
+    link = _Link()
+    player = sounds.Windows(link)
+    monkeypatch.setattr(sounds, "_player", player)
+    player._follow(Qt.ApplicationState.ApplicationActive)
+    assert link.held
+    player._follow(Qt.ApplicationState.ApplicationInactive)
+    assert not link.held
+    player._follow(Qt.ApplicationState.ApplicationActive)
+    sounds.set_enabled(False)
+    assert not link.held
+
+
 def test_the_sounds_are_silent_under_test_and_remember_being_turned_off(monkeypatch):
     monkeypatch.setattr(sounds, "_player", None)
     assert isinstance(sounds._chosen(), sounds.Silent)
