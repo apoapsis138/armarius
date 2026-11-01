@@ -122,6 +122,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.3 — 2026-11-01
+
+### Illuminatio
+
+- The title page's name and every illuminated letter are now in Manufacturing Consent, a blackletter face. Other headings keep their lettering.
+
 ## 3.65.2 — 2026-11-01
 
 ### Florilegium

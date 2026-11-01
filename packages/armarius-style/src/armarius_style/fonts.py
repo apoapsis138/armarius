@@ -1,6 +1,7 @@
 """The bundled typefaces (SIL Open Font License, NOTICE.md): EB Garamond
 for headings, in small caps, and prose; Uncial Antiqua for one decorative
-flourish. Labels, numbers and tables use the system's own UI font.
+flourish; Manufacturing Consent for a title page's name and illuminated
+initials. Labels, numbers and tables use the system's own UI font.
 """
 
 from __future__ import annotations
@@ -12,6 +13,7 @@ ASSETS = Path(__file__).resolve().parent / "assets"
 #: The families the style sheets name, once registered.
 SERIF = "EB Garamond"
 DISPLAY = "Uncial Antiqua"
+TITLE = "Manufacturing Consent"
 #: Labels, numbers and tables: Windows's own UI face, else the system's.
 UI = "Segoe UI"
 
@@ -22,4 +24,5 @@ FONTS: dict[str, tuple[Path, ...]] = {
         ASSETS / "fonts" / "EBGaramond-Italic-wght.ttf",
     ),
     DISPLAY: (ASSETS / "fonts" / "UncialAntiqua-Regular.ttf",),
+    TITLE: (ASSETS / "fonts" / "ManufacturingConsent-Regular.ttf",),
 }

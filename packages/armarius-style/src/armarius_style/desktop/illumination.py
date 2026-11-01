@@ -368,10 +368,10 @@ def _paint_knotwork(painter: QPainter, band_out: QRectF, band: float) -> None:
 def _paint_letter(
     painter: QPainter, inner: QRectF, letter: str, rng: random.Random
 ) -> None:
-    """The letter in the uncial face, in burnished gold: a shadow, a white
+    """The letter in the title face, in burnished gold: a shadow, a white
     pen-line and an ink edge round it, tooled with fine punched dots, and
     a few glints where the light catches it."""
-    font = QFont(fonts.DISPLAY)
+    font = QFont(fonts.TITLE)
     font.setPixelSize(round(inner.height()))
     shape = QPainterPath()
     shape.addText(0, 0, font, letter)
