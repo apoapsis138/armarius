@@ -17,9 +17,6 @@ import math
 import random
 from collections.abc import Callable
 
-from armarius_style.desktop.illumination import gold
-from armarius_style.desktop.ornaments import Headpiece
-from armarius_style.desktop.paper import shade
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import (
     QBrush,
@@ -41,6 +38,9 @@ from PySide6.QtWidgets import QHBoxLayout, QWidget
 from .. import medallions
 from ..models import Saga
 from .pictures import SERIF
+from .style.illumination import gold
+from .style.ornaments import Headpiece
+from .style.paper import shade
 from .themes import DRAWN, PIGMENTS, SEASON_PIGMENTS, Palette
 
 LEAD = QColor(DRAWN["lead"])

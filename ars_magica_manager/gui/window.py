@@ -22,16 +22,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 import shiboken6
-from armarius_style.desktop import gilding, snapping
-from armarius_style.desktop.frame import (
-    MAXIMISE,
-    DragStrip,
-    Grips,
-    TopStrip,
-    WindowButtons,
-    native_frame_event,
-)
-from armarius_style.desktop.paper import Paper
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
 from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
@@ -103,6 +93,16 @@ from .pages import SagaPage, SagaShelf
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
 from .seasons import SeasonsPage
+from .style import gilding, snapping
+from .style.frame import (
+    MAXIMISE,
+    DragStrip,
+    Grips,
+    TopStrip,
+    WindowButtons,
+    native_frame_event,
+)
+from .style.paper import Paper
 from .themes import (
     PALETTES,
     Palette,

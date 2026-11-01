@@ -18,8 +18,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import fonts
-from ..palettes import Palette
+from ...style import fonts
+from ...style.palettes import Palette
 from . import snapping
 
 MINIMISE, MAXIMISE, CLOSE = "minimise", "maximise", "close"

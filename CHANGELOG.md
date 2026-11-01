@@ -122,6 +122,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.4 — 2026-11-01
+
+### Fundamenta
+
+- The app's look lives inside the app again rather than in a package of its own. The solo assistant keeps its own copy from now on, so the two can go their own ways. Nothing changes on screen.
+
 ## 3.65.3 — 2026-11-01
 
 ### Illuminatio

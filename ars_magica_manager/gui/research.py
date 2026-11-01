@@ -11,7 +11,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from armarius_style.desktop.ornaments import Headpiece
 from PySide6.QtCore import QPointF, QRectF, Qt
 from PySide6.QtGui import QColor, QPainter, QPaintEvent, QPen
 from PySide6.QtWidgets import QHBoxLayout, QWidget
@@ -23,6 +22,7 @@ from ..markup import escape
 from ..models import Breakthrough, Character, ResearchAttempt, Saga
 from ..rules import research
 from .editing import Chooser, choose_cards, verb_buttons
+from .style.ornaments import Headpiece
 from .themes import Palette
 from .widgets import (
     Card,

@@ -1,11 +1,11 @@
 """The desktop's Scriptorum themes: the palettes and style sheet are
-armarius_style's; which theme was chosen last is the app's.
+in `style`; which theme was chosen last is the app's.
 """
 
 from __future__ import annotations
 
-from armarius_style.desktop.sheet import style_sheet
-from armarius_style.palettes import (
+from .. import settings
+from ..style.palettes import (
     BURNISH,
     DRAFTING,
     DRAFTING_DARK,
@@ -26,10 +26,9 @@ from armarius_style.palettes import (
     murex,
     wash_style,
 )
+from .style.sheet import style_sheet
 
-from .. import settings
-
-#: What the app's other modules take from armarius_style through here.
+#: What the app's other modules take from style through here.
 __all__ = [
     "BURNISH",
     "DRAFTING",

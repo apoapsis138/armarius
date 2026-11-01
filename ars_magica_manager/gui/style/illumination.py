@@ -28,8 +28,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QWidget
 
-from .. import fonts
-from ..palettes import BURNISH, PIGMENTS, Palette
+from ...style import fonts
+from ...style.palettes import BURNISH, PIGMENTS, Palette
 
 LAPIS = QColor(PIGMENTS["lapis"])
 LAPIS_DEEP = QColor(PIGMENTS["lapis-deep"])

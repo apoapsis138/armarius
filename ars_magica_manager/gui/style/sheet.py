@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from ..palettes import Palette, wash_style
+from ...style.palettes import Palette, wash_style
 
 
 def style_sheet(p: Palette, serif: str) -> str:

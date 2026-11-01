@@ -1,56 +1,24 @@
-"""The package stands alone, and each part of it loads and draws."""
+"""The look: each part of it loads and draws."""
 
-import ast
 import os
 import subprocess
 import sys
-from pathlib import Path
 
 import pytest
 
-SRC = Path(__file__).resolve().parent.parent / "src" / "armarius_style"
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-
-
-def _imports(path: Path) -> set[str]:
-    names: set[str] = set()
-    for node in ast.walk(ast.parse(path.read_text(encoding="utf-8"))):
-        if isinstance(node, ast.Import):
-            names |= {alias.name.split(".")[0] for alias in node.names}
-        elif isinstance(node, ast.ImportFrom) and node.level == 0 and node.module:
-            names.add(node.module.split(".")[0])
-    return names
-
-
-def test_only_the_front_end_parts_import_a_ui_library():
-    wrong = []
-    for path in SRC.rglob("*.py"):
-        found = _imports(path)
-        if "ars_magica_manager" in found:
-            wrong.append(f"{path.name} imports Armarius")
-        allowed = (
-            {"PySide6"}
-            if "desktop" in path.parts
-            else {"textual"}
-            if path.name == "terminal.py"
-            else set()
-        )
-        ui = found & {"PySide6", "textual", "rich"}
-        if ui - allowed:
-            wrong.append(f"{path.name} imports {sorted(ui - allowed)}")
-    assert not wrong, wrong
 
 
 def test_the_plain_modules_load_with_no_ui_library():
     code = (
-        "import sys; import armarius_style.palettes, armarius_style.fonts;"
+        "import sys; import ars_magica_manager.style.palettes, ars_magica_manager.style.fonts;"
         "assert not {'PySide6', 'textual'} & set(sys.modules)"
     )
     subprocess.run([sys.executable, "-c", code], check=True)
 
 
 def test_every_font_is_bundled_with_its_licence():
-    from armarius_style import fonts
+    from ars_magica_manager.style import fonts
 
     for paths in fonts.FONTS.values():
         assert all(path.is_file() for path in paths)
@@ -59,7 +27,7 @@ def test_every_font_is_bundled_with_its_licence():
 
 
 def test_each_drafting_palette_has_every_colour():
-    from armarius_style import palettes as pal
+    from ars_magica_manager.style import palettes as pal
 
     for palette in pal.PALETTES:
         drafting = pal.for_mode(palette, True)
@@ -71,8 +39,9 @@ def test_each_drafting_palette_has_every_colour():
 
 async def test_the_app_css_parses_under_both_themes():
     pytest.importorskip("textual")
-    from armarius_style import terminal
     from textual.app import App
+
+    from ars_magica_manager.tui import style as terminal
 
     class Sample(App[None]):
         CSS = terminal.APP_CSS
@@ -94,12 +63,13 @@ async def test_the_app_css_parses_under_both_themes():
 
 def test_every_page_piece_paints():
     pytest.importorskip("PySide6")
-    from armarius_style import fonts, palettes
-    from armarius_style.desktop import frame, gilding, ornaments, paper, pieces
-    from armarius_style.desktop.fonts import register_fonts
-    from armarius_style.desktop.illumination import IlluminatedInitial
-    from armarius_style.desktop.sheet import style_sheet
     from PySide6.QtWidgets import QApplication, QVBoxLayout, QWidget
+
+    from ars_magica_manager.gui.style import frame, gilding, ornaments, paper, pieces
+    from ars_magica_manager.gui.style.fonts import register_fonts
+    from ars_magica_manager.gui.style.illumination import IlluminatedInitial
+    from ars_magica_manager.gui.style.sheet import style_sheet
+    from ars_magica_manager.style import fonts, palettes
 
     app = QApplication.instance() or QApplication([])
     assert register_fonts() == []

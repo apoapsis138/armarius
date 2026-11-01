@@ -1,7 +1,7 @@
 """Every colour the app shows comes from the active theme, so
 switching themes never leaves text unreadable. Markup and CSS use the
 theme's variables ($text-error, $text-success, $text-muted, ...); named and
-hex colours appear only in themes.py, where the palettes are defined."""
+hex colours appear only in themes.py, style/palettes.py and tui/style.py, where the palettes are\ndefined."""
 
 import re
 from pathlib import Path
@@ -42,7 +42,7 @@ def _names_a_colour(text: str) -> bool:
 
 def _source_lines():
     for path in sorted(PACKAGE.rglob("*.py")):
-        if path.name == "themes.py":
+        if path.name in ("themes.py", "palettes.py", "style.py"):
             continue
         for number, line in enumerate(path.read_text(encoding="utf-8").splitlines(), 1):
             yield f"{path.relative_to(PACKAGE)}:{number}: {line.strip()}", line

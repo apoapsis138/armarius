@@ -21,21 +21,6 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
-from armarius_style.desktop import snapping
-from armarius_style.desktop.frame import (
-    CLOSE,
-    MAXIMISE,
-    DragStrip,
-    Grips,
-    WindowButtons,
-    native_frame_event,
-)
-from armarius_style.desktop.ornaments import (
-    FleuronRule,
-    InspectorFrame,
-    corner_flourishes,
-)
-from armarius_style.desktop.paper import Paper, lift
 from PySide6.QtCore import QByteArray, QEvent, QRectF, Qt
 from PySide6.QtGui import (
     QColor,
@@ -85,6 +70,21 @@ from ..form_spec import DialogField, FieldError, ListEditor
 from ..paths import APP_NAME
 from . import heraldry, sounds
 from .markup_html import plain, to_html
+from .style import snapping
+from .style.frame import (
+    CLOSE,
+    MAXIMISE,
+    DragStrip,
+    Grips,
+    WindowButtons,
+    native_frame_event,
+)
+from .style.ornaments import (
+    FleuronRule,
+    InspectorFrame,
+    corner_flourishes,
+)
+from .style.paper import Paper, lift
 from .themes import Palette
 from .widgets import (
     ClickableCard,

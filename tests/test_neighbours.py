@@ -255,10 +255,10 @@ def test_the_desktop_filter_bar_narrows_the_region_s_cards():
 def test_the_desktop_opens_the_threat_that_is_due():
     pytest.importorskip("PySide6")
     os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
-    from armarius_style.desktop.ornaments import FleuronButton
     from PySide6.QtWidgets import QApplication
 
     from ars_magica_manager.gui.pages import SagaPage
+    from ars_magica_manager.gui.style.ornaments import FleuronButton
     from ars_magica_manager.gui.themes import PALETTES
 
     QApplication.instance() or QApplication([])

@@ -6,11 +6,10 @@ NOTICE.md."""
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
-from armarius_style import fonts
-
 from ars_magica_manager import ROOT, artwork, catalog
 from ars_magica_manager.arts import ARTS
 from ars_magica_manager.models import Character
+from ars_magica_manager.style import fonts
 
 SVG = "{http://www.w3.org/2000/svg}"
 SVGS = sorted(artwork.ASSETS.rglob("*.svg"))

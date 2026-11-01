@@ -23,8 +23,6 @@ FRONT_ENDS = {
     "gui": frozenset({"PySide6", "shiboken6"}),
 }
 UI_LIBRARIES = frozenset().union(*FRONT_ENDS.values())
-#: The parts of the shared style package that need a front-end's library.
-STYLE_FRONT_ENDS = {"armarius_style.terminal": "tui", "armarius_style.desktop": "gui"}
 
 
 def _module_name(path: Path, root: Path = ROOT) -> str:
@@ -79,9 +77,6 @@ def _breaks_the_boundary(module: str, front_end: str | None = None) -> bool:
     library = module.split(".")[0]
     if library in UI_LIBRARIES and library not in allowed:
         return True
-    for part, owner in STYLE_FRONT_ENDS.items():
-        if module.startswith(part) and owner != front_end:
-            return True
     return _front_end(module) not in (None, front_end)
 
 
@@ -136,9 +131,9 @@ def test_the_check_catches_one_front_end_importing_the_other():
     assert _breaks_the_boundary("textual.app", "gui")
     assert not _breaks_the_boundary("textual.app", "tui")
     assert not _breaks_the_boundary(f"{PACKAGE}.form_spec", "gui")
-    assert _breaks_the_boundary("armarius_style.desktop.paper", "tui")
-    assert _breaks_the_boundary("armarius_style.terminal")
-    assert not _breaks_the_boundary("armarius_style.palettes")
+    assert _breaks_the_boundary(f"{PACKAGE}.gui.style.paper", "tui")
+    assert _breaks_the_boundary(f"{PACKAGE}.tui.style")
+    assert not _breaks_the_boundary(f"{PACKAGE}.style.palettes")
 
 
 # -- the core's layers --

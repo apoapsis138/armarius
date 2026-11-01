@@ -10,15 +10,15 @@ from __future__ import annotations
 from functools import cache
 from pathlib import Path
 
-from armarius_style.desktop.fonts import register_fonts
-from armarius_style.fonts import DISPLAY, SERIF, TITLE, UI
 from PySide6.QtCore import QByteArray, QRectF, QSize, Qt
 from PySide6.QtGui import QIcon, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
 
 from .. import artwork
+from ..style.fonts import DISPLAY, SERIF, TITLE, UI
+from .style.fonts import register_fonts
 
-#: What the app's other modules take from armarius_style through here.
+#: What the app's other modules take from style through here.
 __all__ = [
     "DISPLAY",
     "SERIF",

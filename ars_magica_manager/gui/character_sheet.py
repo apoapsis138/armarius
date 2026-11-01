@@ -17,7 +17,6 @@ import re
 from collections.abc import Callable, Sequence
 from typing import Any
 
-from armarius_style.desktop.ornaments import FleuronRule
 from PySide6.QtCore import QModelIndex, QRectF, QSize, QSortFilterProxyModel, Qt
 from PySide6.QtGui import (
     QBrush,
@@ -148,6 +147,7 @@ from .medallions import Medallion
 from .menus import Placer
 from .pages import action_rows, card_grid, familiar_card
 from .research import research_chapter
+from .style.ornaments import FleuronRule
 from .themes import Palette
 from .timeline import Calendar, legend, season_text
 from .widgets import (

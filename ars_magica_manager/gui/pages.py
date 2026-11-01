@@ -12,7 +12,6 @@ from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, TypedDict, Unpack
 
-from armarius_style.desktop.ornaments import FleuronButton, ShortRule
 from PySide6.QtCore import Qt, QTimer
 from PySide6.QtWidgets import (
     QGridLayout,
@@ -52,6 +51,7 @@ from ..sheets import tribunal as tribunal_sheet
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
+from .style.ornaments import FleuronButton, ShortRule
 from .themes import Palette
 from .widgets import (
     CARDS_ACROSS,

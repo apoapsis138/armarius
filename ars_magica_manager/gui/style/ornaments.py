@@ -23,8 +23,8 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QPushButton, QWidget
 
-from .. import fonts
-from ..palettes import Palette
+from ...style import fonts
+from ...style.palettes import Palette
 
 HEDERA, HEDERA_LEFT, HEDERA_RIGHT = "❦", "☙", "❧"
 

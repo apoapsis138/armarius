@@ -10,8 +10,6 @@ import pytest
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from armarius_style.desktop.ornaments import FleuronRule, Headpiece, Tailpiece
-from armarius_style.desktop.paper import Paper, _paper, paper
 from gui_steps import answering, section_buttons
 from PySide6.QtCore import Qt
 from PySide6.QtGui import QColor, QPalette
@@ -38,6 +36,8 @@ from ars_magica_manager.gui.laboratory import LaboratoryPage
 from ars_magica_manager.gui.markup_html import plain, to_html
 from ars_magica_manager.gui.pages import SagaPage
 from ars_magica_manager.gui.saga_content import SagaContentPage
+from ars_magica_manager.gui.style.ornaments import FleuronRule, Headpiece, Tailpiece
+from ars_magica_manager.gui.style.paper import Paper, _paper, paper
 from ars_magica_manager.gui.themes import PALETTES, SCRIPTORUM
 from ars_magica_manager.gui.timeline import SEASON
 from ars_magica_manager.gui.widgets import (

@@ -4,7 +4,6 @@ from __future__ import annotations
 
 from typing import ClassVar
 
-from armarius_style.terminal import APP_CSS
 from textual.app import App
 from textual.binding import Binding, BindingType
 
@@ -15,6 +14,7 @@ from ..settings import load_settings, update_settings
 from .screens import SagaPickerScreen
 from .screens.help import HelpScreen, help_context
 from .screens.title import TitleScreen
+from .style import APP_CSS
 from .themes import SCRIPTORUM, SCRIPTORUM_DARK, app_variable_defaults
 
 #: Theme applied on first launch, or if a saved theme name is no longer registered.

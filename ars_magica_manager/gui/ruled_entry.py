@@ -6,11 +6,11 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
-from armarius_style.desktop.ornaments import ledger_entry
 from PySide6.QtCore import QRectF, Qt
 from PySide6.QtGui import QMouseEvent, QPainter, QPaintEvent
 from PySide6.QtWidgets import QHBoxLayout, QWidget
 
+from .style.ornaments import ledger_entry
 from .themes import Palette
 
 

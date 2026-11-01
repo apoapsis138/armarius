@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from PySide6.QtGui import QFontDatabase
 
-from ..fonts import FONTS
+from ...style.fonts import FONTS
 
 
 def register_fonts() -> list[str]:

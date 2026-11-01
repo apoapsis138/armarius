@@ -8,7 +8,6 @@ from __future__ import annotations
 
 from collections.abc import Callable, Sequence
 
-from armarius_style.desktop.ornaments import InspectorFrame
 from PySide6.QtCore import Qt
 from PySide6.QtWidgets import QHBoxLayout, QVBoxLayout, QWidget
 
@@ -69,6 +68,7 @@ from .heraldry import arms_section
 from .manage import RecordControls
 from .pages import page_header
 from .ruled_entry import RuledEntry
+from .style.ornaments import InspectorFrame
 from .themes import Palette
 from .widgets import (
     Codex,

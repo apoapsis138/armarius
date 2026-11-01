@@ -20,8 +20,8 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import fonts
-from ..palettes import Palette
+from ...style import fonts
+from ...style.palettes import Palette
 from . import gilding
 from .ornaments import FleuronRule, Tailpiece, corner_flourishes
 from .paper import lift, translucent

@@ -14,7 +14,6 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
-from armarius_style.desktop.paper import paper
 from PySide6.QtCore import QMarginsF, QPoint, QRect, QRectF, QSize, Qt
 from PySide6.QtGui import (
     QColor,
@@ -37,6 +36,7 @@ from .. import print_layout as pl
 from . import pictures
 from .bookmark import Ribbon
 from .editing import Section
+from .style.paper import paper
 from .themes import SCRIPTORUM, Palette, style_sheet
 from .widgets import Codex, NewCard, serif
 

@@ -12,7 +12,6 @@ import shiboken6
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from armarius_style.desktop.paper import Paper
 from gui_steps import answering
 from PySide6.QtCore import QEvent
 from PySide6.QtGui import QPixmap
@@ -25,6 +24,7 @@ from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet
 from ars_magica_manager.gui.manage import ModeToggle
 from ars_magica_manager.gui.motion import fade_from
+from ars_magica_manager.gui.style.paper import Paper
 from ars_magica_manager.gui.themes import DRAFTING, PALETTES
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage

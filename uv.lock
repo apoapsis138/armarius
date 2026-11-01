@@ -137,31 +137,10 @@ wheels = [
 ]
 
 [[package]]
-name = "armarius-style"
-version = "1.0.0"
-source = { editable = "packages/armarius-style" }
-
-[package.metadata]
-requires-dist = [
-    { name = "pyside6-essentials", marker = "extra == 'desktop'", specifier = ">=6.12" },
-    { name = "textual", marker = "extra == 'terminal'", specifier = ">=8.2.8" },
-]
-provides-extras = ["terminal", "desktop"]
-
-[package.metadata.requires-dev]
-dev = [
-    { name = "pyright", specifier = ">=1.1.414" },
-    { name = "pytest", specifier = ">=8.0.0" },
-    { name = "pytest-asyncio", specifier = ">=0.24.0" },
-    { name = "ruff", specifier = ">=0.16.8" },
-]
-
-[[package]]
 name = "ars-magica-manager"
-version = "3.65.3"
+version = "3.65.4"
 source = { virtual = "." }
 dependencies = [
-    { name = "armarius-style" },
     { name = "asyncssh" },
     { name = "platformdirs" },
     { name = "textual" },
@@ -190,7 +169,6 @@ gui = [
 
 [package.metadata]
 requires-dist = [
-    { name = "armarius-style", editable = "packages/armarius-style" },
     { name = "asyncssh", specifier = ">=2.24.1" },
     { name = "platformdirs", specifier = ">=4.11.9" },
     { name = "textual", specifier = ">=8.2.8" },

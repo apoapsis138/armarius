@@ -25,7 +25,7 @@ from PySide6.QtGui import (
 )
 from PySide6.QtWidgets import QGraphicsDropShadowEffect, QWidget
 
-from ..palettes import Palette
+from ...style.palettes import Palette
 
 #: The side of one tile of paper, in pixels.
 TILE = 512

@@ -155,7 +155,7 @@ their recordists:
 Changes made: each was converted from Freesound's preview to mono 44.1 kHz
 WAV, its silence trimmed, and its level evened with the others.
 
-**The fonts** in `packages/armarius-style/src/armarius_style/assets/fonts/` are under the SIL Open
+**The fonts** in `ars_magica_manager/style/assets/fonts/` are under the SIL Open
 Font License, version 1.1, with each font's licence beside it: EB Garamond,
 © 2017 The EB Garamond Project Authors; Uncial Antiqua, © 2011 Brian J.
 Bonislawsky DBA Astigmatic (AOETI), Reserved Font Name "Uncial Antiqua";

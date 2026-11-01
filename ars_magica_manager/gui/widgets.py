@@ -11,23 +11,6 @@ from __future__ import annotations
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
-from armarius_style.desktop import gilding
-from armarius_style.desktop.ornaments import corner_flourishes
-from armarius_style.desktop.paper import lift, shade, translucent
-from armarius_style.desktop.pieces import (
-    CARDS_ACROSS,
-    Card,
-    GiltName,
-    badge,
-    card_grid,
-    chapter_title,
-    chip,
-    display_name,
-    mix,
-    scrolling_page,
-    serif,
-    text,
-)
 from PySide6.QtCore import (
     QModelIndex,
     QObject,
@@ -81,9 +64,26 @@ from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
 from . import marks, motion, pictures, sounds
 from .markup_html import cell_style, to_html
+from .style import gilding
+from .style.ornaments import corner_flourishes
+from .style.paper import lift, shade, translucent
+from .style.pieces import (
+    CARDS_ACROSS,
+    Card,
+    GiltName,
+    badge,
+    card_grid,
+    chapter_title,
+    chip,
+    display_name,
+    mix,
+    scrolling_page,
+    serif,
+    text,
+)
 from .themes import HOVER_WASH, WASH, Palette
 
-#: What the app's other modules take from armarius_style through here.
+#: What the app's other modules take from style through here.
 __all__ = [
     "CARDS_ACROSS",
     "Card",

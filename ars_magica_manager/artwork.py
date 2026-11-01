@@ -25,7 +25,7 @@ it to its theme. Two sets:
   tools/fetch_icons.py, for everything else.
 
 app/ holds the app icon, made from the Order of Hermes sigil. The typefaces
-(SIL Open Font License) are armarius_style's: EB Garamond for headings (in small
+(SIL Open Font License) are in `style/`: EB Garamond for headings (in small
 caps) and rules prose, Uncial Antiqua for one decorative flourish, and
 Manufacturing Consent for the title page's name and illuminated initials. Labels,
 numbers and tables use the system's own UI font (Segoe UI on Windows).
@@ -36,11 +36,10 @@ from __future__ import annotations
 from pathlib import Path
 from typing import TYPE_CHECKING
 
-from armarius_style.fonts import FONTS
-
 from .arts import ARTS
+from .style.fonts import FONTS
 
-#: What the app's other modules take from armarius_style through here.
+#: What the app's other modules take from style through here.
 __all__ = [
     "FONTS",
 ]

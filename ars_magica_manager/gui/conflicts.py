@@ -18,10 +18,6 @@ from __future__ import annotations
 import math
 from collections.abc import Callable
 
-from armarius_style.desktop import gilding, illumination
-from armarius_style.desktop.illumination import gold
-from armarius_style.desktop.ornaments import gloss_box, ledger_entry
-from armarius_style.desktop.paper import shade
 from PySide6.QtCore import QPointF, QRectF, QSize, Qt
 from PySide6.QtGui import (
     QBrush,
@@ -47,6 +43,10 @@ from ..rules import options as rule_options
 from ..rules import siege as siege_rules
 from . import heraldry, pictures
 from . import medallions as drawn
+from .style import gilding, illumination
+from .style.illumination import gold
+from .style.ornaments import gloss_box, ledger_entry
+from .style.paper import shade
 from .themes import DRAWN, PIGMENTS, Palette
 from .widgets import edit_button, scrolling_page
 
