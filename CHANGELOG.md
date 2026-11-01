@@ -122,6 +122,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.65.2 — 2026-11-01
+
+### Florilegium
+
+- (Form) Resistance as ten Abilities, one per Form, from *Realms of Power: Magic*.
+
+### Peregrinatio
+
+- The Great Desert's scorpion has its Ignem Resistance as a real Ability, and Liam and Damhan-Allaidh have the Arcane Pictish, not a living language.
+
 ## 3.65.1 — 2026-11-01
 
 ### Fundamenta

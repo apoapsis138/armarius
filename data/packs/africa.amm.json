@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.62.1",
+  "app_version": "3.65.1",
   "kind": "pack",
   "name": "Between Sand and Sea",
   "from_saga": "Between Sand and Sea",
@@ -373,7 +373,7 @@
             "kind": "places",
             "target_id": "the_banu_sulaym",
             "note": "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
-            "id": "4affd9018b46"
+            "id": "7aa837cce5ec"
           }
         ],
         "arms": {},
@@ -403,7 +403,7 @@
             "kind": "places",
             "target_id": "mythic_africa",
             "note": "Holds Cyrenaica and Tripolitania",
-            "id": "cd1403bc22e0"
+            "id": "d0241ce10679"
           }
         ],
         "arms": {},
@@ -2537,7 +2537,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_anfa",
             "note": "Its harbour",
-            "id": "d81d088a754f"
+            "id": "a764c04b4e6e"
           }
         ],
         "arms": {},
@@ -2566,7 +2566,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_asfi",
             "note": "Its harbour",
-            "id": "8d0baee645f9"
+            "id": "0aafb384f39c"
           }
         ],
         "arms": {},
@@ -2824,7 +2824,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tangier",
             "note": "Its harbour",
-            "id": "f170e4704f02"
+            "id": "06bf18af769c"
           }
         ],
         "arms": {},
@@ -3153,7 +3153,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tunis",
             "note": "Its harbour",
-            "id": "b0c718995401"
+            "id": "bcc6e8d62aa2"
           }
         ],
         "arms": {},
@@ -3182,7 +3182,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tripoli",
             "note": "Its harbour",
-            "id": "7c5e81be155a"
+            "id": "a1afe53c0e0e"
           }
         ],
         "arms": {},
@@ -3211,7 +3211,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_mahdia",
             "note": "Its harbour",
-            "id": "46c9be0c8346"
+            "id": "6fc1c5a1efe4"
           }
         ],
         "arms": {},
@@ -3240,7 +3240,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sfax",
             "note": "Its harbour",
-            "id": "49b51f7e3e36"
+            "id": "e83afbfb2d4e"
           }
         ],
         "arms": {},
@@ -3269,7 +3269,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sharshal",
             "note": "Its harbour",
-            "id": "91f654bfec91"
+            "id": "cc8e2783a470"
           }
         ],
         "arms": {},
@@ -3298,7 +3298,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_en_nassria",
             "note": "Its harbour",
-            "id": "1edd42eac737"
+            "id": "420bcbe380d5"
           }
         ],
         "arms": {},
@@ -4175,7 +4175,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sidi_rafaa",
             "note": "Its harbour",
-            "id": "8db9335ef5c2"
+            "id": "d84b57f42c29"
           }
         ],
         "arms": {},
@@ -6069,7 +6069,7 @@
             "kind": "places",
             "target_id": "the_central_great_desert",
             "note": "Passes by the Central Great Desert",
-            "id": "d7e640b7703a"
+            "id": "c8d74940c4b4"
           }
         ],
         "arms": {},
@@ -12314,7 +12314,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "420256e91e47"
+            "id": "094740280b85"
           },
           {
             "name": "Evasion",
@@ -12322,7 +12322,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "adea2ccdcd3e"
+            "id": "d4694e333f93"
           }
         ],
         "soak": 1,
@@ -12395,7 +12395,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a minor natural ability or mundane Quality of an animal he sees, such as a frog's swimming, a cat's night vision, horns, spines or a bear's pelt, but no major change like wings. One at a time; a second replaces the first. It lasts indefinitely, but he loses a Might point each sunrise and sunset while he keeps it, regained in three hours or less in a Magic aura. MuAn 25 (Base 4, +2 Sun, +1 Part, +1 Constant effect, +1 can change ability possessed); Personal Power (25 levels, -2 Might cost).",
-            "id": "78cf202b7680"
+            "id": "659a98a3757c"
           },
           {
             "name": "Mimic the Man",
@@ -12409,7 +12409,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Copies any sound exactly, even human speech, without understanding it. MuIm 3 (Base 1, +1 Conc, +1 Complexity); Personal Power (3 levels, -1 Might cost, +1 Init).",
-            "id": "aae0ea23fbec"
+            "id": "5335c7dab406"
           }
         ],
         "vis": [
@@ -12417,7 +12417,7 @@
             "pawns": 2,
             "art": "Muto",
             "where": "one pawn in each hand",
-            "id": "44e635624b5e"
+            "id": "d7695e9265ad"
           }
         ],
         "equipment": "",
@@ -12861,7 +12861,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 12,
-            "id": "2977070ca5d7"
+            "id": "853a61c2d939"
           },
           {
             "name": "Bite",
@@ -12869,7 +12869,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 11,
-            "id": "7eff342f5c20"
+            "id": "5d2415779f9f"
           }
         ],
         "soak": 10,
@@ -13061,7 +13061,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "With a moment's concentration he learns the physical state of any Beast of Virtue whose token he holds. InAn 35 (Base 3, +4 Arc, +4 Boundary); Ritual Power x2. Might spent so is recovered only by resting in a Magic aura of 4 or higher.",
-            "id": "ef5deda14cc1"
+            "id": "88792af06ce4"
           },
           {
             "name": "Routing Bellow",
@@ -13075,7 +13075,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that makes men and beasts who hear it flee in fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "110339c0645f"
+            "id": "648dd882102a"
           },
           {
             "name": "Circle of Beast Warding",
@@ -13089,7 +13089,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ring traced in the earth that no mundane beast of Size +4 or less may cross; he thinks it unsporting for hunting. ReAn 20 (Base 2, +1 Touch, +2 Ring, +3 Size); Lesser Power (20 levels, +5xp Penetration).",
-            "id": "2aa616c530cc"
+            "id": "84bf9dc0f88a"
           },
           {
             "name": "Cowing Snarl",
@@ -13103,7 +13103,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A man or beast of his size or less, caught by his gaze, kneels in fear. ReAn 25 (Base 4, +1 Eye, +1 Diam, +2 Size, +1 Mentem requisite); Lesser Power (25 levels), Improved Powers x3 (-5 Might cost, +10 Initiative).",
-            "id": "0da039ad0289"
+            "id": "0a10b0bbef6c"
           },
           {
             "name": "Trackless Step",
@@ -13117,7 +13117,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His sweeping tail erases his tracks as he walks. ReTe 10 (Base 4, +1 Touch, +1 Conc); Lesser Power (10 levels, +15xp Concentration).",
-            "id": "26b6412658d3"
+            "id": "d0ca78ad3573"
           },
           {
             "name": "Hunter's Pounce",
@@ -13131,7 +13131,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaps up to 50 paces. ReAn 25 (Base 15, +2 Size); Personal Power (25 levels).",
-            "id": "da700a209506"
+            "id": "de1c87b87d88"
           },
           {
             "name": "Sleep with Eyes Open",
@@ -13145,7 +13145,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He sleeps with open eyes and is hard to surprise. ReAn 20 (Base 4, +2 Sun, +2 Size); Personal Power (20 levels, -1 Might cost).",
-            "id": "d987d5893bd1"
+            "id": "84ffb313dc1e"
           }
         ],
         "vis": [
@@ -13153,7 +13153,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in his mane",
-            "id": "49690aec46d5"
+            "id": "383200d36f05"
           }
         ],
         "equipment": "",
@@ -13613,7 +13613,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 13,
-            "id": "6f4104e75c82"
+            "id": "eaece0dae82d"
           },
           {
             "name": "Teeth",
@@ -13621,7 +13621,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "20f0cf09f6f8"
+            "id": "4fae5a899a0d"
           },
           {
             "name": "Grapple",
@@ -13629,7 +13629,7 @@
             "attack": 11,
             "defense": 9,
             "damage": null,
-            "id": "4f2012047819"
+            "id": "d7f4ca39a794"
           }
         ],
         "soak": 13,
@@ -13765,7 +13765,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that freezes men and beasts who hear it, trembling with fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "d09a4155219e"
+            "id": "d3e9cda90aaa"
           },
           {
             "name": "Thunderous Swipe",
@@ -13779,7 +13779,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blow that throws anything up to his own size 5 paces; Dex against Ease Factor 12 to stay standing. Thrown straight up or into something hard, the target takes falling damage (+1 per 2 feet, +7 at most). It may join a claw attack. ReAn 25 (Base 10, +1 Touch, +1 Size, +1 Corpus requisite); Lesser Power (25 levels), Improved Powers (-5 Might cost).",
-            "id": "ef161d6f1c8e"
+            "id": "9f8312397f5c"
           }
         ],
         "vis": [
@@ -13787,7 +13787,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his claws",
-            "id": "faa23eaacf9a"
+            "id": "db018fb8b4f6"
           }
         ],
         "equipment": "",
@@ -14162,7 +14162,7 @@
             "attack": null,
             "defense": 1,
             "damage": null,
-            "id": "a9ba250b0d24"
+            "id": "9edbf9523fef"
           },
           {
             "name": "Fist",
@@ -14170,7 +14170,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 16,
-            "id": "6a8123ca4824"
+            "id": "a675d34b3f9d"
           },
           {
             "name": "Kick",
@@ -14178,7 +14178,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 13,
-            "id": "7c30399c616d"
+            "id": "ea9acb017b91"
           },
           {
             "name": "Cudgel",
@@ -14186,7 +14186,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 17,
-            "id": "632edeace808"
+            "id": "8b776d291dcd"
           },
           {
             "name": "Thrown Stone",
@@ -14194,7 +14194,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 15,
-            "id": "fb0567ef8393"
+            "id": "41267db51fe2"
           }
         ],
         "soak": 16,
@@ -14295,7 +14295,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He looks and sounds like a Size 0 man. MuIm 25 (Base 2, +4 size, +2 Sun, +1 Moving Image); Improved Powers: -3 Might cost.",
-            "id": "2fdb2f98630e"
+            "id": "d6eb8315022b"
           },
           {
             "name": "Friend of the Desert",
@@ -14309,7 +14309,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He ignores heat and fire damage of +15 or less. ReIg (Base 4, +2 for +15 or less, +2 Sun, +1 size; the book gives no total); Improved Powers: -2 Might cost; Slow Power.",
-            "id": "c16def269c5f"
+            "id": "5d290e0bb256"
           }
         ],
         "vis": [
@@ -14317,7 +14317,7 @@
             "pawns": 4,
             "art": "Ignem",
             "where": "in his heart",
-            "id": "f4a5c722f029"
+            "id": "60b6b1249eba"
           }
         ],
         "equipment": "Acacia wood cudgel, sack of salt, gold, trinkets",
@@ -14423,7 +14423,7 @@
             "attack": 7,
             "defense": 4,
             "damage": 5,
-            "id": "ba03939cb7f3"
+            "id": "6a341c01d0a6"
           },
           {
             "name": "Grapple",
@@ -14431,7 +14431,7 @@
             "attack": 3,
             "defense": 6,
             "damage": null,
-            "id": "dc084e137888"
+            "id": "5041eff45223"
           }
         ],
         "soak": 11,
@@ -14706,7 +14706,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "d74388c19c9e"
+            "id": "8facee7dd300"
           },
           {
             "name": "Bite",
@@ -14714,7 +14714,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 8,
-            "id": "e060f6e8f8fb"
+            "id": "c1c02ebdb25c"
           }
         ],
         "soak": 3,
@@ -14822,7 +14822,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its gaze fills a victim with the wish to chase it until sunrise or sunset. ReMe 15 (Base 4, +1 Eye, +2 Sun): Lesser Power (15 levels, -2 Might cost).",
-            "id": "db31e718fda8"
+            "id": "03ec3ce21d2d"
           },
           {
             "name": "Gone to Ground",
@@ -14836,7 +14836,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Teleports to a place within 500 paces to which it has an Arcane Connection. ReAn 20 (Base 20): Personal Power (20 levels, -1 Might cost). Not while observed.",
-            "id": "18097764ca31"
+            "id": "cd066e56a924"
           },
           {
             "name": "Unsporting Stalker",
@@ -14850,7 +14850,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blends into the terrain, +3 to vision-based Stealth checks. MuIm 3 (Base 1, +1 Diam, +1 moving images): Personal Power (5 levels, -1 Might cost, +15xp Concentration). The book prints Duration Conc but prices +1 Diam.",
-            "id": "409c87df8c97"
+            "id": "2327589dcc9b"
           }
         ],
         "vis": [
@@ -14858,7 +14858,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "0e0aca2ab02b"
+            "id": "626177130841"
           }
         ],
         "equipment": "",
@@ -15070,7 +15070,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 0,
-            "id": "846cf9cb3d98"
+            "id": "b3d8f0218763"
           },
           {
             "name": "Grapple",
@@ -15078,7 +15078,7 @@
             "attack": 9,
             "defense": 0,
             "damage": null,
-            "id": "edb84056c2a9"
+            "id": "53092c29d6c1"
           },
           {
             "name": "Sting",
@@ -15086,7 +15086,7 @@
             "attack": 9,
             "defense": 2,
             "damage": -3,
-            "id": "a5f654d66272"
+            "id": "fcfb6fd2fd8a"
           }
         ],
         "soak": 4,
@@ -15160,6 +15160,13 @@
             "xp_table": "ability"
           },
           {
+            "name": "Ignem Resistance",
+            "category": "Supernatural",
+            "xp": 50,
+            "specialty": "solar heat",
+            "xp_table": "ability"
+          },
+          {
             "name": "Penetration",
             "category": "Arcane",
             "xp": 75,
@@ -15194,7 +15201,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers an exceptionally debilitating poison (Stamina roll against Ease Factor 6, Incapacitating), wounded or not.",
-            "id": "d6ed398de96b"
+            "id": "690501ef31f5"
           },
           {
             "name": "Drive Berserk",
@@ -15208,7 +15215,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch drives the target to attack everything nearby for a Diameter. CrMe 10 (Base 4, +1 Touch, +1 Diameter): Lesser Power (10 levels, -1 Might cost, 5xp Concentration, +5xp Penetration).",
-            "id": "f834d04e2e37"
+            "id": "2c1cbdb9eda3"
           },
           {
             "name": "Lie in Wait",
@@ -15222,7 +15229,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sitting still, it looks like a plain rock or small dune. MuIm 10 (Base 5, +1 Conc): Personal Power (10 levels, -1 Might cost, +10xp Concentration).",
-            "id": "4a5e4e455201"
+            "id": "951a0c48ea8b"
           }
         ],
         "vis": [
@@ -15230,12 +15237,12 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its stinger",
-            "id": "6d2eb7aa4ff6"
+            "id": "f78ea65246f9"
           }
         ],
         "equipment": "",
         "appearance": "A dull black or slate grey creature with crab-like chitinous legs, glossy obsidian eyes, oversized pincers and a barbed tail arched over its back; as big as a healthy dog or a six-year-old child.",
-        "notes": "Natural Weapons: pincers Init +0, Atk +3, Def +3, Dam +4; tail sting Init +4, Atk +2, Def -6, Dam +1. The book prints Grapple Defense as +* and Sting Damage as -3* with no key, so Grapple Defense is 0 here. Ignem Resistance 4 (solar heat) has no entry in the Ability catalog. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12), Dead (13+).\n\nCruel and belligerent, it hunts warm creatures sleeping by fires or on sunny rocks, and lurks under the sand to sting what steps over it.\n\nEnrichment: its stinger set on a willow handle, anointed with Alkhad gourd sap and left a month plunged in a dune, carried as a token, gives Greater Immunity to Venom. The Tuareg claim the creeping Alkhad or Tadjalt plant and its inedible gourds cure scorpion venom; the cut gourd's milky sap is said to purge poison.",
+        "notes": "Natural Weapons: pincers Init +0, Atk +3, Def +3, Dam +4; tail sting Init +4, Atk +2, Def -6, Dam +1. The book prints Grapple Defense as +* and Sting Damage as -3* with no key, so Grapple Defense is 0 here. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), Incapacitated (10-12), Dead (13+).\n\nCruel and belligerent, it hunts warm creatures sleeping by fires or on sunny rocks, and lurks under the sand to sting what steps over it.\n\nEnrichment: its stinger set on a willow handle, anointed with Alkhad gourd sap and left a month plunged in a dune, carried as a token, gives Greater Immunity to Venom. The Tuareg claim the creeping Alkhad or Tadjalt plant and its inedible gourds cure scorpion venom; the cut gourd's milky sap is said to purge poison.",
         "source": "Between Sand and Sea: Mythic Africa pp. 81-82",
         "detail": "Full",
         "place_id": "the_great_desert",
@@ -15307,7 +15314,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "3d5a7b503b31"
+            "id": "5dd3e175ce4c"
           }
         ],
         "soak": 7,
@@ -15352,7 +15359,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form in one round, most often a wave of grinding stones, and may discorporate almost at once. Its rocky body can hide trails and landmarks.",
-            "id": "aeb3d4556c8a"
+            "id": "128fdd55b1d5"
           },
           {
             "name": "Elemental Control of Water",
@@ -15366,7 +15373,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: any Creo, Muto or Rego Aquam effect at 1 Might a magnitude, minor effects of level no higher than its Might. It taunts those dying of thirst.",
-            "id": "d9f27bb95e9f"
+            "id": "0c1dca7731d6"
           },
           {
             "name": "Envisioning",
@@ -15380,7 +15387,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Subtly alters dreams to make them more ominous and depressing.",
-            "id": "c660caa4f93a"
+            "id": "fc4bcde36225"
           },
           {
             "name": "Obsession",
@@ -15394,7 +15401,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and it spends Might, then at the next crisis of worthiness the storyguide rolls a simple die +3 and the player a simple die + a suitable Personality Trait - adjustments for harsh surroundings. If the demon's total is higher, the character gains Doubt +1; acting on it puts him in a state of sin, and the demon then coagulates and kills him.",
-            "id": "1c29c746f69b"
+            "id": "7cdb2380177c"
           }
         ],
         "vis": [
@@ -15402,7 +15409,7 @@
             "pawns": 2,
             "art": "Perdo",
             "where": "tainted, in its body",
-            "id": "a34f611980b3"
+            "id": "bca31f5606f1"
           }
         ],
         "equipment": "",
@@ -15589,7 +15596,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 2,
-            "id": "bb1ea606c5fc"
+            "id": "f828b7b1757d"
           }
         ],
         "soak": -1,
@@ -15655,7 +15662,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 on all rolls to impress others. Base 3, +1 Touch, +2 Sun.",
-            "id": "d5047913637f"
+            "id": "e522ddd4eefe"
           },
           {
             "name": "Grant Major Flaw (Wildness)",
@@ -15669,7 +15676,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover grows helpless before all faeries, and suffers a different random Minor Personality Flaw each scene, stilled briefly by ecstatic experience such as dance, music or wandering dry riverbeds in hope of meeting faeries again.",
-            "id": "400516b1acdb"
+            "id": "762096a923ee"
           },
           {
             "name": "Grant Minor Flaw (Impotence)",
@@ -15683,7 +15690,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover cannot have sex with others.",
-            "id": "47f651f2acd3"
+            "id": "ac945821a450"
           },
           {
             "name": "Guide",
@@ -15697,7 +15704,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leads a character into danger like the Common Sense Virtue, but serving her ends. ReMe Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "8f67abc7211a"
+            "id": "4720a0d5d5a5"
           },
           {
             "name": "Hound",
@@ -15711,7 +15718,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her the direction and distance of her human quarry. InCo Base 3, +4 Arc, +1 Conc.",
-            "id": "fa65ab25b186"
+            "id": "e83eef0b7255"
           },
           {
             "name": "Invisibility",
@@ -15725,7 +15732,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility (ArM5 p. 146). Base 4, +2 Sun, +1 moving image. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "14b1ec532353"
+            "id": "2263a0618e6e"
           },
           {
             "name": "Pine Away",
@@ -15739,7 +15746,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A major disease, Ease Factor 15, causing a Light Wound, treatable with Faerie Lore or Medicine; the victim loses the will and the vitality to live. Base 30 (5 + 25 virulence), +2 Voice.",
-            "id": "e1ba88cdf4c2"
+            "id": "c4b683ee6945"
           },
           {
             "name": "Silent Motion",
@@ -15753,7 +15760,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: she moves without a sound. Base 3, +2 Sun, +1 constant. The book prints '1 point, Init 0, Mentem' before '1 point, constant, Imaginem'.",
-            "id": "1796329c63a3"
+            "id": "e7bd36d7b95d"
           },
           {
             "name": "Steal Judgment",
@@ -15767,7 +15774,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes almost any lie she tells; an Intelligence roll against Ease Factor 6 resists, easier for truly incredible lies. Base 4, +1 Eye, +2 Sun. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "ca7d421fbffc"
+            "id": "9d180430f988"
           }
         ],
         "vis": [
@@ -15775,7 +15782,7 @@
             "pawns": 9,
             "art": "",
             "where": "bones of a goat",
-            "id": "3e79533a05a4"
+            "id": "c086a82584b4"
           }
         ],
         "equipment": "Any trappings of a woman of wealth and dubious virtue.",
@@ -16149,7 +16156,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "2e6352be2158"
+            "id": "efeed6b3f2ae"
           },
           {
             "name": "Falchion",
@@ -16157,7 +16164,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 5,
-            "id": "0f1f6ff0f6b3"
+            "id": "c671815cfe48"
           },
           {
             "name": "Fist",
@@ -16165,7 +16172,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 2,
-            "id": "fe9492276cbf"
+            "id": "d0b08a227e02"
           }
         ],
         "soak": 2,
@@ -16371,7 +16378,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Constant effect. With a few moments' concentration he learns anything that happens within the bounds of the Great Desert.",
-            "id": "2375131ce83c"
+            "id": "8851a56f76a0"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -16385,7 +16392,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Cr(Re)Co).",
-            "id": "8b41dccd5c0b"
+            "id": "d9405d58de81"
           },
           {
             "name": "Eidolon",
@@ -16399,7 +16406,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory form material beings can see and hear. It moves and speaks as he directs and lasts until he has no use for it.",
-            "id": "715cf98179a6"
+            "id": "4fd792a9463e"
           },
           {
             "name": "Master of Sandstorms",
@@ -16413,7 +16420,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points, a point a magnitude: any non-ritual Creo, Muto or Rego Auram effect up to 7th magnitude, with Terram or Ignem prerequisites as he likes.",
-            "id": "021ffea74445"
+            "id": "5a3e3111b5e5"
           },
           {
             "name": "Master of Thirst",
@@ -16427,7 +16434,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Draws most of the water out of any object (PeAq(Co)).",
-            "id": "228f54aa096f"
+            "id": "e9c5e5e2b26b"
           }
         ],
         "vis": [
@@ -16435,7 +16442,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "in the dust on his clothes or in his cyclone",
-            "id": "8917d7149e08"
+            "id": "5d107d4d88d2"
           }
         ],
         "equipment": "",
@@ -16817,7 +16824,7 @@
             "attack": 0,
             "defense": -3,
             "damage": -2,
-            "id": "5cb99970ea4c"
+            "id": "418fa5cca8a0"
           }
         ],
         "soak": 2,
@@ -16981,7 +16988,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Lesser Power, -5 Might cost).",
-            "id": "3e065078d801"
+            "id": "494c2d98afb4"
           },
           {
             "name": "Focus Power (Divination)",
@@ -16995,7 +17002,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Intellego Corpus, Imaginem or Vim effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "ca17570e18d7"
+            "id": "39c3269fa907"
           },
           {
             "name": "Focus Power (Destruction)",
@@ -17009,7 +17016,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Perdo Animal, Corpus or Terram effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "ef254e846092"
+            "id": "cfc35015bb59"
           },
           {
             "name": "Invisibility",
@@ -17023,7 +17030,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She, or someone she touches, turns invisible at will, though Second Sight still sees her. The effect is PeIm 15; the book also says the Lesser Power's 25 levels.",
-            "id": "bd4009f28eb5"
+            "id": "2b83315f6cd2"
           },
           {
             "name": "Ritual Focus Power (Healing)",
@@ -17037,7 +17044,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Creo Corpus ritual effects up to 7th magnitude, paid for with any fitting vis she holds. Its Initiative is (2 x magnitude) - 3.",
-            "id": "00f3898f1dbb"
+            "id": "1cbd451dad59"
           }
         ],
         "vis": [
@@ -17045,7 +17052,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in her bracelets",
-            "id": "4155103175b8"
+            "id": "81097d96b478"
           }
         ],
         "equipment": "",
@@ -17265,7 +17272,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "c35e1b881846"
+            "id": "1dd5b4b9dc44"
           },
           {
             "name": "Fist",
@@ -17273,7 +17280,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 1,
-            "id": "ed0fa863f9ee"
+            "id": "9526d999455b"
           },
           {
             "name": "Sling",
@@ -17281,7 +17288,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 5,
-            "id": "0cbcdfd23b14"
+            "id": "c68b66cc192c"
           }
         ],
         "soak": 2,
@@ -17361,7 +17368,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch, a tunnel a pace deep. Used over and over to build warrens, and to loosen stones for the great burial mounds (PeTe; 2 mastery points on Might cost, 1 on Initiative).",
-            "id": "ab17a80ce79a"
+            "id": "f7ce16bcabb0"
           }
         ],
         "vis": [
@@ -17369,7 +17376,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in its hands",
-            "id": "7b99627f8b81"
+            "id": "550b6a262323"
           }
         ],
         "equipment": "Any small thing that caught its interest, a camel-hide loincloth, and a sling wound round the waist or worn as a sash with a stone ready.",
@@ -18202,7 +18209,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 4,
-            "id": "3495f6f1693f"
+            "id": "9e04168c50d9"
           },
           {
             "name": "Great Sword",
@@ -18210,7 +18217,7 @@
             "attack": 21,
             "defense": 17,
             "damage": 13,
-            "id": "d7289dc6cb2e"
+            "id": "1d381701b557"
           }
         ],
         "soak": 4,
@@ -18332,7 +18339,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once in a body, he shifts to any human form, even with animal parts such as curling ram's horns, and dissolves them at will. A natural change: Magic Resistance does not stop physical attacks.",
-            "id": "4bdde7d92a94"
+            "id": "b8fe76747516"
           },
           {
             "name": "Know the Places of Men",
@@ -18346,7 +18353,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Intellego Corpus or Imaginem effects up to 10th magnitude.",
-            "id": "a966bccfce8a"
+            "id": "f309ddafa15c"
           },
           {
             "name": "Master of Flame",
@@ -18360,7 +18367,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Ignem effects up to 10th magnitude.",
-            "id": "bac8f9bf76e6"
+            "id": "83621b45cad8"
           },
           {
             "name": "Summon the Herd of Destruction",
@@ -18374,7 +18381,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ritual power (ReMe 15, +4 Arc, +3 Moon, +2 Group): 10 ghostly war elephants who obey him, or one he names, for Moon Duration. They understand only Punic.",
-            "id": "88dba5aaae24"
+            "id": "10e49b903af6"
           },
           {
             "name": "Coagulation",
@@ -18388,7 +18395,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form, which he may dissolve at will.",
-            "id": "09fcef822a28"
+            "id": "1ee12a21c84f"
           },
           {
             "name": "Envisioning",
@@ -18402,7 +18409,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point to appear in a sleeper's dreams, 5 for a waking dream. So he often spoke to his worshippers.",
-            "id": "88de84783cb5"
+            "id": "c5e64b7285e7"
           },
           {
             "name": "His Master's Voice",
@@ -18416,7 +18423,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: summons demons or corrupt beasts to him, 1 point for each point of their Infernal Might, so rarely used. He has no control over what comes.",
-            "id": "85aba2b00331"
+            "id": "c398381227d5"
           },
           {
             "name": "Obsession",
@@ -18430,7 +18437,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points: imposes the Obsession Traits of Greed, Merciless Ambition and Pride (Realms of Power: The Infernal pp. 31-32).",
-            "id": "9bcdb43c1a2c"
+            "id": "6b47397082e0"
           },
           {
             "name": "Possession",
@@ -18444,7 +18451,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: as Realms of Power: The Infernal. Might moved into a Possession Pool stays there until the possession ends. The more Might, the more he can do and the weaker the Penetration. Each portion is an independent copy of his mind using any Power its pool can pay for. He may give the host Magic Resistance equal to the Pool, or hide within and pass wards. Forcing the host, or using its powers, draws on the pool (1 point a magnitude or Ability point, or the Might the victim spent; a questionable act must beat the host's Trait on stress die + Might spent). The possession ends at pool 0. Vim spells drain the pool but must Penetrate his full Might.",
-            "id": "da4241352679"
+            "id": "0181280fb4d2"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -18458,7 +18465,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: conceals the Infernal nature of a power or aura as Magical or Faerie, or as wholly mundane, even from Sense Holiness and Unholiness, for as long as what it masks. It costs the masked Power's cost, or its magnitude if it costs no Might.",
-            "id": "c67a15eac0af"
+            "id": "ace8f9e9b19d"
           },
           {
             "name": "Wealth of Nations",
@@ -18472,7 +18479,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Summons riches of intrinsic value up to 50 pounds of gold from somewhere else, a royal treasury or the purse of the man beside you, chosen to corrupt most.",
-            "id": "6d9720e4a2f5"
+            "id": "ca1f5ca5c058"
           }
         ],
         "vis": [
@@ -18480,13 +18487,13 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in his curling horns",
-            "id": "4fdf38ff3ce0"
+            "id": "b5f5810cb8d6"
           },
           {
             "pawns": 20,
             "art": "Vim",
             "where": "vis infesta, carried on long stays abroad",
-            "id": "8de19dba103a"
+            "id": "e22055938641"
           }
         ],
         "equipment": "",
@@ -18573,7 +18580,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 0,
-            "id": "b195827e8c33"
+            "id": "c5bb769ad613"
           }
         ],
         "soak": 0,
@@ -18618,7 +18625,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 or more points, if it penetrates, the victim is possessed and under her direct control. Using the host's magic costs 1 Might per magnitude; a questionable act against the host's nature needs a stress die + Might spent over the host's Personality Trait roll (see Entrancement, ArM5 p. 65, for modifiers), and both costs apply together. Under her direct control the host has her Magic Resistance and is stopped by wards against her; acting freely, the host has neither. The costs follow Realms of Power: Magic, not Hermetic magic.",
-            "id": "d34cad5105ae"
+            "id": "2685a5a68f80"
           }
         ],
         "vis": [
@@ -18626,7 +18633,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in the fingernails of the possession victim",
-            "id": "893d6e7b9aec"
+            "id": "99d97e439f5b"
           }
         ],
         "equipment": "Someone else's body and all her goods.",
@@ -19166,7 +19173,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 3. Any voice of man or creature, in any language it knows, in any shape (MuIm).",
-            "id": "d2c1e9df6906"
+            "id": "72e618205e0b"
           },
           {
             "name": "Trembling Fear of the Predator's Gaze",
@@ -19180,7 +19187,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. While it holds his eye the target cannot run or dodge, though he can use his hands or call out; he loses his Quickness from Defense and takes -3 (ReCo).",
-            "id": "b7632d3aa274"
+            "id": "36564b31ab6e"
           },
           {
             "name": "Rending Fangs",
@@ -19194,7 +19201,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 3. Its bite destroys leather, bone, wood, cloth, stone or metal it can get its teeth round. With an attack it takes a point of Protection off armour, or instead of one it breaks a weapon or shield if it beats Defense by 3 or more, doing no damage; not together with Ripping Jaws (PeTe(An, He)).",
-            "id": "ff868d96311d"
+            "id": "70bf1637b127"
           },
           {
             "name": "Ripping Jaws",
@@ -19208,7 +19215,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 2. The victim takes -3 to all recovery rolls until fully healed, for any wound; Incapacitating Wounds leave scars that never fade (PeCo).",
-            "id": "2d8aea1542b6"
+            "id": "2dcc7f36c7ca"
           },
           {
             "name": "The Beast Between",
@@ -19222,7 +19229,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. 3 points or Fatigue; Initiative Qik - 2. A hyena's head, claws, fur and tail on a man's upright frame, human mental Characteristics and a hyena's physical ones, usable hands, Protection +2. Bite of the hybrid form: Init 0, Attack +3, Defense +1, Damage +4. Ended early by changing shape (MuCo, free Animal requisite).",
-            "id": "9b6bf21c65d0"
+            "id": "1459b02d750a"
           }
         ],
         "vis": [],
@@ -19484,7 +19491,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 9,
-            "id": "305b8c78d103"
+            "id": "160cfa9db666"
           },
           {
             "name": "Bite",
@@ -19492,7 +19499,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 8,
-            "id": "2cc6d942505e"
+            "id": "0aea27c82f95"
           }
         ],
         "soak": 3,
@@ -19586,7 +19593,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Or Crafter's Healing, below. 1 point a magnitude, Initiative variable: any non-Ritual Creo, Muto, Rego or Perdo Terram spell, within its motif as a blacksmith.",
-            "id": "7783a4f71982"
+            "id": "c9867d2cc639"
           },
           {
             "name": "Crafter's Healing",
@@ -19600,7 +19607,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In place of Blacksmithing, as the Major Supernatural Virtue (City & Guild p. 71).",
-            "id": "c3ce6df1fbf0"
+            "id": "0402c321268b"
           },
           {
             "name": "Looked at Thrice",
@@ -19614,7 +19621,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Trembling Fear of the Predator's Gaze.",
-            "id": "6e6942d196eb"
+            "id": "feff47940892"
           },
           {
             "name": "The Shadow Stays the Hound",
@@ -19628,7 +19635,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes a dog the werehyena's shadow falls on (Base 5, +2 Sight, +1 Conc).",
-            "id": "7a5545bbf98c"
+            "id": "4a341fa4d0f4"
           },
           {
             "name": "Transform into Human",
@@ -19642,7 +19649,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Human form for Duration: Sun, and only at sunrise (Personal, MuAn(Co)).",
-            "id": "5cd85aaa5541"
+            "id": "bb5e2250df64"
           }
         ],
         "vis": [
@@ -19650,7 +19657,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in its tools",
-            "id": "62f1a3b5b784"
+            "id": "1e2cb32f67c3"
           }
         ],
         "equipment": "Blacksmith tools, apron.",
@@ -19920,7 +19927,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Any sound, speech, song or music comes from the head, no louder than a human could make; only suppressing the power silences it (CrIm).",
-            "id": "ee1ef57b5080"
+            "id": "024fb4874347"
           }
         ],
         "vis": [],
@@ -20305,7 +20312,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. He makes out detail at any distance as if a foot away, and judges distance to an inch or so at several miles (InIm, Personal Power x2).",
-            "id": "d7e166c9d41c"
+            "id": "de990830b591"
           }
         ],
         "vis": [],
@@ -20452,7 +20459,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. A short-term Fatigue level for flight as fast as a running horse. Every minute a Stamina + Concentration roll against 6 or another Fatigue level; none when Dazed. Athletics steers (ReCo).",
-            "id": "77684a765990"
+            "id": "236e6938f413"
           }
         ],
         "vis": [],
@@ -20621,7 +20628,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. The eyes shine like a lantern for five paces, without hurting sight; only closing them or a Confidence point shuts it off (CrIg; printed Greater Power, 10 levels, -2 cost).",
-            "id": "e1bcfa405e54"
+            "id": "7def79865d5d"
           },
           {
             "name": "The Sun's Breath",
@@ -20635,7 +20642,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 1. Heats a thing no bigger than her head: metal glows red, water boils, the flammable ignites. It cools normally (CrIg).",
-            "id": "3886895c0b49"
+            "id": "67a66dd3c53f"
           },
           {
             "name": "The Sun's Shout",
@@ -20649,7 +20656,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 1. Spits a dart of fire for +5 damage if it Penetrates (CrIg).",
-            "id": "b18ff16a455a"
+            "id": "57f75ee8d2f5"
           }
         ],
         "vis": [],
@@ -20804,7 +20811,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Moves freely in complete darkness, as the Hermetic spell (ArM5 p. 127; InAu).",
-            "id": "ce2f4c768fae"
+            "id": "53a4ea2a201d"
           }
         ],
         "vis": [],
@@ -22176,7 +22183,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 2,
-            "id": "ab2cd6f7bc02"
+            "id": "634909892523"
           }
         ],
         "soak": 3,
@@ -22464,7 +22471,7 @@
             "attack": 8,
             "defense": 3,
             "damage": 5,
-            "id": "9491f4467df5"
+            "id": "0f70ae045ba4"
           }
         ],
         "soak": 2,
@@ -22544,7 +22551,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns it into dromedary or Bactrian form and back, changing its Characteristics and non-magical Qualities to suit (MuAn; Base 5, +2 Sun).",
-            "id": "70095f2c8f6b"
+            "id": "303495606b58"
           },
           {
             "name": "Keep the Simoon at Bay",
@@ -22558,7 +22565,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shields the camel, its herd and any riders from the simoon, the scorching wind and sandstorm of the deep desert (ReAu).",
-            "id": "9e0116f32248"
+            "id": "657d6fd8c5f0"
           },
           {
             "name": "Scent the Distant Waters of the Oasis",
@@ -22572,7 +22579,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Finds any natural water on the path it is travelling, by simple Perception rolls against 6, once a day on long journeys; invoked again if the water is more than half a day off (InAq; Base 2, +2 Road, +2 Smell, +2 Sun).",
-            "id": "f7134dfd9516"
+            "id": "58057ca6ee21"
           },
           {
             "name": "Subtle Taste of Poison and Purity",
@@ -22586,7 +22593,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ArM5 p. 122); poison does not harm it, a Magical Animal, so it tastes fouled water safely (InAq).",
-            "id": "e751ce992896"
+            "id": "6615287aa0fa"
           }
         ],
         "vis": [],
@@ -22775,7 +22782,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "11df7d5da4d8"
+            "id": "5d133fe241e2"
           },
           {
             "name": "Bite",
@@ -22783,7 +22790,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 1,
-            "id": "03fa6767ed74"
+            "id": "80b0072af202"
           }
         ],
         "soak": 2,
@@ -22978,7 +22985,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "3a4c9ce35c77"
+            "id": "bee26f7f4f68"
           },
           {
             "name": "Bite",
@@ -22986,7 +22993,7 @@
             "attack": 9,
             "defense": 10,
             "damage": -5,
-            "id": "50ee08b31534"
+            "id": "2181f930068a"
           }
         ],
         "soak": -1,
@@ -23204,7 +23211,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 2,
-            "id": "f666c1e5ba2b"
+            "id": "caffd6505666"
           },
           {
             "name": "Hooves",
@@ -23212,7 +23219,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 1,
-            "id": "9d8f46f3f000"
+            "id": "5493ea18ad70"
           }
         ],
         "soak": 1,
@@ -23452,7 +23459,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "df53eff17bf6"
+            "id": "b772364b28be"
           },
           {
             "name": "Dodge",
@@ -23460,7 +23467,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "71600305b5d6"
+            "id": "8f34dd47d3d5"
           }
         ],
         "soak": 3,
@@ -23741,7 +23748,7 @@
             "attack": null,
             "defense": 6,
             "damage": null,
-            "id": "aee65b2bead8"
+            "id": "06742de6f593"
           },
           {
             "name": "Bite",
@@ -23749,7 +23756,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -2,
-            "id": "470dccbff782"
+            "id": "d5c18574ba7b"
           }
         ],
         "soak": 2,
@@ -24073,7 +24080,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 9,
-            "id": "0b85aaeddaae"
+            "id": "903a330ccc5e"
           },
           {
             "name": "Grapple",
@@ -24081,7 +24088,7 @@
             "attack": 7,
             "defense": 4,
             "damage": null,
-            "id": "e081fba07581"
+            "id": "250c56bd65d8"
           }
         ],
         "soak": 8,
@@ -24147,7 +24154,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 12 or Incapacitating, whether or not the bite wounds. Boots do not stop it, and it serves well on a victim held in its locking bite.",
-            "id": "4f8ffd843e63"
+            "id": "a5503b7610b5"
           }
         ],
         "vis": [],
@@ -24302,7 +24309,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "614bf9de7b92"
+            "id": "7abece794824"
           },
           {
             "name": "Kick (as hoof)",
@@ -24310,7 +24317,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "24fef805f679"
+            "id": "69f393da4831"
           }
         ],
         "soak": 3,
@@ -24506,7 +24513,7 @@
             "attack": 10,
             "defense": 14,
             "damage": -6,
-            "id": "2dcf6712096d"
+            "id": "f64c4d292264"
           },
           {
             "name": "Grapple",
@@ -24514,7 +24521,7 @@
             "attack": 7,
             "defense": 11,
             "damage": null,
-            "id": "b28651a9ada5"
+            "id": "5b14f593db29"
           },
           {
             "name": "Sting",
@@ -24522,7 +24529,7 @@
             "attack": 10,
             "defense": 6,
             "damage": -9,
-            "id": "1fc59a472668"
+            "id": "4d2e53ad00d7"
           }
         ],
         "soak": 4,
@@ -24602,7 +24609,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 6 or Incapacitating, whether or not the sting wounds. High leather boots and other simple measures hinder it.",
-            "id": "ebcc4b0026d6"
+            "id": "3fd6495ee4ee"
           }
         ],
         "vis": [],
@@ -24820,7 +24827,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 11,
-            "id": "dbfbb330cd57"
+            "id": "86ea58168a0b"
           },
           {
             "name": "Trample",
@@ -24828,7 +24835,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 9,
-            "id": "6499a4da57e2"
+            "id": "6682cb0eaf75"
           }
         ],
         "soak": 11,
@@ -24894,7 +24901,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A natural power. It spends a Fatigue level to charge over flat ground with its horn, adding its Combat Ability to its Attack roll; anything smaller it strikes is knocked prone (Lords of Men p. 123).",
-            "id": "d082809358ca"
+            "id": "db62e4c86788"
           }
         ],
         "vis": [],
@@ -25051,7 +25058,7 @@
             "attack": 6,
             "defense": 10,
             "damage": -4,
-            "id": "419a1b03e3bb"
+            "id": "b6a6bb7ef4f6"
           },
           {
             "name": "Beak",
@@ -25059,7 +25066,7 @@
             "attack": 6,
             "defense": 7,
             "damage": -3,
-            "id": "3a0f80cf847f"
+            "id": "4f85d2684cc2"
           },
           {
             "name": "Stone (dropped)",
@@ -25067,7 +25074,7 @@
             "attack": -1,
             "defense": 0,
             "damage": null,
-            "id": "723599cbbc03"
+            "id": "0c7ca67a4c0b"
           },
           {
             "name": "Stone (bludgeon)",
@@ -25075,7 +25082,7 @@
             "attack": 0,
             "defense": 6,
             "damage": -2,
-            "id": "74812034736e"
+            "id": "0d01c847ed7e"
           }
         ],
         "soak": 3,

@@ -1521,6 +1521,7 @@ def _creatures(b: Builder, desert: Neighbour, garama: Neighbour) -> None:
                 ("Concentration", 2, "remaining still"),
                 ("Guile", 1, "lying"),
                 ("Hunt", 3, "small game"),
+                ("Ignem Resistance", 4, "solar heat"),
                 ("Penetration", 5, "Animal"),
                 ("Stealth", 4, "ambush"),
                 ("Survival", 3, "desert"),
@@ -1580,8 +1581,7 @@ def _creatures(b: Builder, desert: Neighbour, garama: Neighbour) -> None:
             "Natural Weapons: pincers Init +0, Atk +3, Def +3, Dam +4; tail "
             "sting Init +4, Atk +2, Def -6, Dam +1. The book prints Grapple "
             "Defense as +* and Sting Damage as -3* with no key, so Grapple "
-            "Defense is 0 here. Ignem Resistance 4 (solar heat) has no entry "
-            "in the Ability catalog. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), "
+            "Defense is 0 here. Wounds: -1 (1-3), -3 (4-6), -5 (7-9), "
             "Incapacitated (10-12), Dead (13+).",
             "Cruel and belligerent, it hunts warm creatures sleeping by fires "
             "or on sunny rocks, and lurks under the sand to sting what steps "

@@ -26,7 +26,8 @@ it to its theme. Two sets:
 
 app/ holds the app icon, made from the Order of Hermes sigil. The typefaces
 (SIL Open Font License) are armarius_style's: EB Garamond for headings (in small
-caps) and rules prose, Uncial Antiqua for one decorative flourish. Labels,
+caps) and rules prose, Uncial Antiqua for one decorative flourish, and
+Manufacturing Consent for the title page's name and illuminated initials. Labels,
 numbers and tables use the system's own UI font (Segoe UI on Windows).
 """
 

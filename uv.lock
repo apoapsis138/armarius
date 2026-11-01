@@ -158,7 +158,7 @@ dev = [
 
 [[package]]
 name = "ars-magica-manager"
-version = "3.65.1"
+version = "3.65.2"
 source = { virtual = "." }
 dependencies = [
     { name = "armarius-style" },

@@ -289,7 +289,7 @@ VIRTUE_ABILITIES = {
 }
 #: Printed languages that are magic, not speech (Land of Fire & Ice p. 54):
 #: Jotunn is the trollsynir's Jotnar (Hedge Magic RE p. 76).
-MAGICAL_LANGUAGES = {"Speak Jotunn": "Jotnar"}
+MAGICAL_LANGUAGES = {"Speak Jotunn": "Jotnar", "Speak Pictish": "Pictish"}
 #: Scribe Runes is a skill of carving, which galdor takes as a Craft (Land
 #: of Fire & Ice p. 49), and the vitkir's Craft: Runes.
 RUNES = {"Scribe Runes": "Craft: Runes"}

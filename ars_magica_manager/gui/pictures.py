@@ -11,7 +11,7 @@ from functools import cache
 from pathlib import Path
 
 from armarius_style.desktop.fonts import register_fonts
-from armarius_style.fonts import DISPLAY, SERIF, UI
+from armarius_style.fonts import DISPLAY, SERIF, TITLE, UI
 from PySide6.QtCore import QByteArray, QRectF, QSize, Qt
 from PySide6.QtGui import QIcon, QPainter, QPixmap
 from PySide6.QtSvg import QSvgRenderer
@@ -22,6 +22,7 @@ from .. import artwork
 __all__ = [
     "DISPLAY",
     "SERIF",
+    "TITLE",
     "UI",
     "register_fonts",
 ]

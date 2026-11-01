@@ -126,7 +126,7 @@ class TitleScreen(Paper):
         )
         column.addSpacing(10)
         #: The book's name in gilt-edged letters.
-        self.name = GiltTitle(page.name, p, QFont(pictures.DISPLAY, 64))
+        self.name = GiltTitle(page.name, p, QFont(pictures.TITLE, 64))
         column.addWidget(self.name)
         column.addSpacing(4)
         column.addWidget(ShortRule(p))

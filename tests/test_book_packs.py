@@ -13,6 +13,7 @@ from ars_magica_manager.book_packs import builder, overlays
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.models import Character, Saga
 from ars_magica_manager.models.common import split_secrets
+from ars_magica_manager.rules import creation_access as access
 from ars_magica_manager.tribunal_packages import normandy as normandy_package
 from ars_magica_manager.tribunal_packages import rhine as rhine_package
 
@@ -1457,3 +1458,9 @@ def test_no_pack_says_its_vis_or_books_in_public():
                 )
             ]
     assert not found, found
+
+
+def test_form_resistance_is_its_own_ability_for_each_form():
+    entry = access.ability_def("Ignem Resistance")
+    assert entry is not None and entry.category == "Supernatural"
+    assert access.ability_def("Brawl").name == "Brawl"
