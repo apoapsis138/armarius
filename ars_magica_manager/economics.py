@@ -17,7 +17,7 @@ from typing import Any
 from . import catalog, storage
 from . import inhabitants as inh
 from . import possessions as pos
-from .covenants import covenant_modifiers
+from .covenants import contested_now, covenant_modifiers
 from .markup import aligned, escape, markdown_text, problem, todo
 from .models import (
     INCOME_EFFECT_MULTIPLIERS,
@@ -25,6 +25,7 @@ from .models import (
     SANCTUM_USAGES,
     Covenant,
     CovenantBoonHookDef,
+    CovenantDiaryEntry,
     Economics,
     EnchantedDevice,
     IncomeSource,
@@ -175,6 +176,21 @@ class Row:
     status: str = ""
     #: Names of the `Economics` attributes the user types for this row.
     typed: tuple[str, ...] = ()
+    #: The most any one craft may save on this row, if a craft may.
+    cap: int | None = None
+
+
+@dataclass(frozen=True)
+class CraftLine:
+    """One craft's share of the Cost Savings: what its people's work is
+    worth, the cap on that craft, and what it saves."""
+
+    name: str
+    row: str
+    worth: int
+    cap: int | None
+    saves: int
+    note: str
 
 
 @dataclass
@@ -190,6 +206,7 @@ class Summary:
     cost_savings: int
     total_expenditure: int
     surplus_deficit: int  # Total Income - Total Expenditure
+    crafts: list[CraftLine]
 
 
 #: The expenditure rows worked out from the covenant: (key, name, rule).
@@ -220,7 +237,12 @@ _CALCULATED_ROWS: tuple[tuple[str, str, str], ...] = (
 _TYPED_EXPENDITURE_ROWS: tuple[tuple[str, str, str, str], ...] = (
     ("tithes", "Tithes", "Debts and taxes", "tithes"),
     ("inflation", "Inflation", "Increases yearly", "inflation"),
-    ("sundry", "Sundry", "At least 1 pound of sundries every year", "sundry"),
+    (
+        "sundry",
+        "Sundry",
+        "At least 1 pound of sundries every year, and the year's purchases",
+        "sundry",
+    ),
 )
 
 
@@ -249,6 +271,96 @@ def _typed_row(
     )
 
 
+def craft_cap(limit: float, cost: float) -> int:
+    """The most one craft may save on a row: its share of the row's cost,
+    in whole pounds rounded down, as Covenants' worked example does
+    (p. 68: 20% of 32 pounds is 6 per craft, 50% of 9 is 4)."""
+    return round_down(limit * cost)
+
+
+def _craft_of(index: int, entry: covenfolk.InhabitantEntry) -> tuple[str, str]:
+    """The craft an entry belongs to: a field plus the Ability or work its
+    people share."""
+    craft = (entry.linked_ability or entry.responsibility).strip().lower()
+    return entry.field_of_work, craft or f"#{index}"
+
+
+def _craft_worth(
+    craftspeople: list[covenfolk.InhabitantEntry],
+) -> dict[tuple[str, str], float]:
+    """What each saving craft's people are worth a year, before its cap."""
+    worth: dict[tuple[str, str], float] = {}
+    for index, entry in enumerate(craftspeople):
+        if entry.field_of_work in CRAFT_SAVINGS:
+            key = _craft_of(index, entry)
+            worth[key] = worth.get(key, 0.0) + (
+                craft_saving_each(entry) * entry.quantity
+            )
+    return worth
+
+
+def _craft_lines(
+    craftspeople: list[covenfolk.InhabitantEntry], costs: dict[str, float]
+) -> list[CraftLine]:
+    """Each craft as Cost Savings counts it, those that save nothing too."""
+    row_names = {key: name for key, name, _ in _CALCULATED_ROWS}
+    worth = _craft_worth(craftspeople)
+    people: dict[tuple[str, str], list[str]] = {}
+    for index, entry in enumerate(craftspeople):
+        people.setdefault(_craft_of(index, entry), []).append(
+            f"{entry.name or '(unnamed)'}, "
+            f"{entry.responsibility or entry.linked_ability} {entry.skill_value}"
+        )
+    lines = []
+    for key, names in people.items():
+        name = "; ".join(names)
+        if key not in worth:
+            lines.append(
+                CraftLine(name, key[0] or "None", 0, None, 0, "Saves no costs")
+            )
+            continue
+        row_key, limit = CRAFT_SAVINGS[key[0]]
+        value = round_away_from_zero(worth[key])
+        cap = craft_cap(limit, costs[row_key])
+        spare = value - cap
+        note = (
+            f"£{spare} over the cap: another {row_names[row_key]} craft could use it"
+            if spare > 0
+            else ""
+        )
+        lines.append(
+            CraftLine(name, row_names[row_key], value, cap, min(value, cap), note)
+        )
+    return lines
+
+
+def entry_savings(saga: Saga, covenant: Covenant) -> list[str]:
+    """What each craftsperson entry saves a year, in the craftspeople's list
+    order: its worth, or the cap when its craft's cap cuts it."""
+    craftspeople = covenfolk.entries_for_kind(saga, covenant, "craftsperson")
+    caps = {r.key: r.cap or 0 for r in summarize(saga, covenant).expenditure}
+    worth = _craft_worth(craftspeople)
+    sharing: dict[tuple[str, str], int] = {}
+    for index, entry in enumerate(craftspeople):
+        key = _craft_of(index, entry)
+        sharing[key] = sharing.get(key, 0) + 1
+    shown = []
+    for index, entry in enumerate(craftspeople):
+        if entry.field_of_work not in CRAFT_SAVINGS:
+            shown.append("0")
+            continue
+        key = _craft_of(index, entry)
+        cap = caps[CRAFT_SAVINGS[entry.field_of_work][0]]
+        each = craft_saving_each(entry) * entry.quantity
+        if round_away_from_zero(worth[key]) <= cap:
+            shown.append(str(each))
+        elif sharing[key] == 1:
+            shown.append(f"{cap} (cap)")
+        else:
+            shown.append(f"{each} (craft capped at {cap})")
+    return shown
+
+
 def _labor_savings(
     saga: Saga,
     covenant: Covenant,
@@ -259,22 +371,14 @@ def _labor_savings(
     expenditure row), each within its limit of the row's cost."""
     # Craftspeople: each craft (a field plus the Ability or work they share)
     # saves at most its limit of that category's cost.
-    per_craft: dict[tuple[str, str], float] = {}
-    craftsmen = 0
-    for index, entry in enumerate(craftspeople):
-        if entry.field_of_work not in CRAFT_SAVINGS:
-            continue
-        craftsmen += entry.quantity
-        craft = (entry.linked_ability or entry.responsibility).strip().lower()
-        key = (entry.field_of_work, craft or f"#{index}")
-        per_craft[key] = per_craft.get(key, 0.0) + (
-            craft_saving_each(entry) * entry.quantity
-        )
+    craftsmen = sum(
+        e.quantity for e in craftspeople if e.field_of_work in CRAFT_SAVINGS
+    )
     craft_by_row: dict[str, float] = {}
-    for (field_of_work, _), amount in per_craft.items():
+    for (field_of_work, _), amount in _craft_worth(craftspeople).items():
         row_key, limit = CRAFT_SAVINGS[field_of_work]
         craft_by_row[row_key] = craft_by_row.get(row_key, 0.0) + min(
-            amount, limit * costs[row_key]
+            amount, craft_cap(limit, costs[row_key])
         )
 
     laborers = covenfolk.other_covenfolk_count(saga, covenant, "Laborer")
@@ -436,21 +540,27 @@ def _labor_rows(
     ]
 
 
+def income_now(saga: Saga, source: IncomeSource, loyalty: int) -> float:
+    """What a source gives this year. A contested one gives nothing until
+    it is secured; one the covenfolk work for is halved with their
+    productivity."""
+    if contested_now(source, saga.current_year):
+        return 0
+    if source.covenfolk_work and loyalty <= -inh.PRODUCTIVITY_LOYALTY:
+        return source.current_income * PRODUCTIVITY_HALVED
+    return source.current_income
+
+
 def _income(saga: Saga, eco: Economics, loyalty: int) -> int:
-    """The year's income. A contested source gives nothing until it is
-    secured; one the covenfolk work for is halved with their productivity."""
+    """The year's income."""
     return round_away_from_zero(
-        sum(
-            s.current_income
-            * (
-                PRODUCTIVITY_HALVED
-                if s.covenfolk_work and loyalty <= -inh.PRODUCTIVITY_LOYALTY
-                else 1
-            )
-            for s in eco.income_sources
-            if not s.contested or (s.secured_until or 0) >= saga.current_year
-        )
+        sum(income_now(saga, s, loyalty) for s in eco.income_sources)
     )
+
+
+def purchases_total(eco: Economics) -> int:
+    """The year's purchases in whole pounds, as they go onto Sundry."""
+    return round_away_from_zero(sum(p.pounds for p in eco.purchases))
 
 
 def summarize(saga: Saga, covenant: Covenant) -> Summary:
@@ -528,6 +638,10 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         building_boons,
         (magi, book_crafts, scribes),
     )
+    caps = {
+        row_key: craft_cap(limit, costs[row_key])
+        for row_key, limit in CRAFT_SAVINGS.values()
+    }
     expenditure = [
         Row(
             key,
@@ -538,9 +652,12 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
             eco.notes.get(key, ""),
             basis[key],
             note=f"x{wage_multiplier:g}" if key == "wages" else "",
+            cap=caps.get(key),
         )
         for key, name, rule in _CALCULATED_ROWS
     ] + [_typed_row(eco, *row) for row in _TYPED_EXPENDITURE_ROWS]
+    sundry = next(row for row in expenditure if row.key == "sundry")
+    sundry.first += purchases_total(eco)
 
     savings = [
         *_labor_rows(
@@ -588,6 +705,7 @@ def summarize(saga: Saga, covenant: Covenant) -> Summary:
         cost_savings=cost_savings,
         total_expenditure=total_expenditure,
         surplus_deficit=surplus_deficit,
+        crafts=_craft_lines(craftspeople, costs),
     )
 
 
@@ -597,6 +715,72 @@ DEFICIT_STATUS = "Covenant operating at a deficit"
 BROKE_STATUS = (
     "Covenant is broke - see rulebook for narrative and mechanical consequences"
 )
+
+
+#: The expenditure a covenant in trouble may leave unpaid (DE p. 196).
+NEGLECTED_ROWS = ("buildings", "laboratories", "weapons")
+
+#: A row of the ways out of a deficit: what to do, what it saves, its price.
+WayOut = tuple[str, str, str]
+
+#: Magi who give up their better living cost 3 points each (DE p. 190).
+IMPOVERISHED_MAGUS_POINTS = 3
+#: A miserly salary: half Wages (Covenants p. 38).
+MISERLY_SALARY = "Half salary"
+
+
+def ways_out(saga: Saga, covenant: Covenant, summary: Summary) -> list[WayOut]:
+    """How a covenant short of silver may cut its outgoings (DE pp. 195-196),
+    with this covenant's figures where the book gives a way to work them
+    out. Nothing unless Wealth can't cover the deficit."""
+    if summary.wealth + summary.surplus_deficit >= 0:
+        return []
+    ways: list[WayOut] = []
+    multiplier = WAGE_MULTIPLIERS.get(covenant.loyalty.money, 1.0)
+    miserly = WAGE_MULTIPLIERS[MISERLY_SALARY]
+    if multiplier > miserly:
+        points = inh.base_loyalty(saga, covenant) + inh.total_modifiers(saga, covenant)
+        lost = inh.MONEY_LOYALTY_POINTS.get(
+            covenant.loyalty.money, 0
+        ) - inh.MONEY_LOYALTY_POINTS.get(MISERLY_SALARY, 0)
+        saved = summary.inhabitant_points * 2 / 10 * (multiplier - miserly)
+        ways.append(
+            (
+                "Miserly wages",
+                f"about £{round_down(saved)}",
+                f"-{lost} Loyalty points: Prevailing "
+                f"{inh.prevailing_loyalty_score(points):+d} falls to "
+                f"{inh.prevailing_loyalty_score(points - lost):+d}",
+            )
+        )
+    magi = covenfolk.headcount(covenfolk.entries_for_kind(saga, covenant, "magus"))
+    spare = covenfolk.kind_points("magus", covenant) - IMPOVERISHED_MAGUS_POINTS
+    if magi and spare > 0:
+        ways.append(
+            (
+                "Magi give up their comforts",
+                f"about £{magi * spare}",
+                "No better Living Conditions; as low as covenfolk, a poor "
+                "Reputation spreads",
+            )
+        )
+    ways.append(
+        (
+            "Let covenfolk go",
+            "varies",
+            "Disgruntled vagabonds with a grudge; mind the Servants and "
+            "Teamsters needed",
+        )
+    )
+    largest = max(r.first for r in summary.expenditure if r.key in NEGLECTED_ROWS)
+    ways.append(
+        (
+            "Neglect a whole category",
+            f"up to £{largest}",
+            "Buildings, Laboratories or Weapons go unmaintained",
+        )
+    )
+    return ways
 
 
 def emergency_status(surplus_deficit: int, wealth: int) -> str:
@@ -621,6 +805,31 @@ def draw_from_wealth(covenant: Covenant, amount: int) -> None:
     covenant.economics.wealth -= amount
 
 
+def inflation_rise(eco: Economics, spent: int) -> int:
+    """What a year's spending adds to Inflation: a pound per hundred, unless
+    spending fell or this is the first year on record (DE p. 193)."""
+    if eco.last_expenditure is None or spent < eco.last_expenditure:
+        return 0
+    return round_down(spent / INFLATION_PER)
+
+
+def _file_purchases(saga: Saga, covenant: Covenant) -> None:
+    """The year's purchases into the Diary, leaving the list empty."""
+    eco = covenant.economics
+    for purchase in eco.purchases:
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                saga.current_year,
+                purchase.season,
+                purchase.name,
+                purchase.note or purchase.kind,
+                category="Purchases & Sales",
+                pounds=-purchase.pounds,
+            )
+        )
+    eco.purchases = []
+
+
 def close_year(saga: Saga, covenant: Covenant) -> int:
     """The end of the year (Winter -> Spring): add the year's surplus to
     Wealth, or take a deficit the Emergency Savings didn't cover from it
@@ -634,10 +843,10 @@ def close_year(saga: Saga, covenant: Covenant) -> int:
     change = summary.surplus_deficit
     eco.wealth += change
     spent = summary.total_expenditure
-    if eco.last_expenditure is not None and spent >= eco.last_expenditure:
-        eco.inflation += round_down(spent / INFLATION_PER)
+    eco.inflation += inflation_rise(eco, spent)
     eco.last_expenditure = spent
     eco.emergency_savings = 0
+    _file_purchases(saga, covenant)
     # The year's Ritual castings are spent; the store of magical grain is
     # eaten and rots (Transforming Mythic Europe p. 121).
     eco.ritual_magnitudes = 0

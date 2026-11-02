@@ -464,6 +464,41 @@ GRAIN_CARE: tuple[str, ...] = ("Protected well", "Protected", "Covered only")
 BREAD_SHARES: tuple[str, ...] = ("Half", "Three quarters")
 
 
+#: What a purchase is, as the Price List heads them (Covenants p. 71), and
+#: goods bought from the catalog. Saved with each purchase so that what is
+#: bought can later reach the place it belongs.
+PURCHASE_GOODS = "Goods"
+PURCHASE_KINDS: tuple[str, ...] = (
+    "Animals",
+    "Books",
+    "Buildings",
+    PURCHASE_GOODS,
+    "Hermetic Items",
+    "Hospitality",
+    "Labor",
+    "Land",
+    "Precious Materials",
+    "Travel",
+    "Weapons and Armor",
+    "Other",
+)
+
+
+@dataclass
+class Purchase:
+    """One line of The Year's Purchases: it adds to Sundry until the year
+    closes, then goes into the Diary."""
+
+    id: str
+    name: str = ""
+    pounds: float = 0.0
+    kind: str = PURCHASE_KINDS[-1]  # one of PURCHASE_KINDS
+    season: str = "Spring"
+    #: The catalog good it came from, if it was bought from Goods.
+    good_id: str = ""
+    note: str = ""
+
+
 @dataclass
 class Economics:
     """What is stored for the covenant's Economics tab. Every figure that can be
@@ -499,10 +534,15 @@ class Economics:
     magic_grain: int = 0
     grain_care: str = GRAIN_CARE[-1]
     bread_share: str = BREAD_SHARES[0]
+    #: The year's purchases, cleared when the year closes.
+    purchases: list[Purchase] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Economics:
         d = known_fields(cls, data)
+        d["purchases"] = [
+            Purchase(**known_fields(Purchase, p)) for p in d.get("purchases", [])
+        ]
         d["income_sources"] = [
             IncomeSource(**known_fields(IncomeSource, s))
             for s in d.get("income_sources", [])

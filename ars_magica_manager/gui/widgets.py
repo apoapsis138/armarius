@@ -65,7 +65,7 @@ from ..arts import ART_ABBREVIATIONS, ARTS, FORMS, TECHNIQUES
 from ..tables import Table
 from ..tribunal_packages.rhine import gild_tree
 from . import marks, motion, pictures, sounds
-from .markup_html import cell_style, to_html
+from .markup_html import cell_style, struck, to_html
 from .style import gilding
 from .style.ornaments import corner_flourishes
 from .style.paper import lift, shade, translucent
@@ -256,6 +256,8 @@ class Pips(QWidget):
 
 #: A table row's height, in pixels.
 ROW_HEIGHT = 30
+#: Marks a table's total row (Table.footed), for RuledRows to rule it off.
+FOOT_ROLE = Qt.ItemDataRole.UserRole + 7
 
 
 class TallRows(QStyledItemDelegate):
@@ -432,6 +434,13 @@ class RuledRows(QStyledItemDelegate):
                 painter, rect.left() + 7, rect.center().y(), p["heading"]
             )
             painter.setOpacity(1.0)
+        if index.data(FOOT_ROLE):
+            # A total: a double rule above it, as a ledger closes a column.
+            painter.setPen(QPen(QColor(p["accent"]), 0.9))
+            for top in (rect.top() + 0.5, rect.top() + 3.5):
+                painter.drawLine(
+                    QPointF(rect.left(), top), QPointF(rect.right() + 1, top)
+                )
         y = rect.bottom() + 0.5
         painter.setPen(QPen(shade(p["rule"], 170), 0.8))
         painter.drawLine(QPointF(rect.left(), y), QPointF(rect.right() + 1, y))
@@ -966,7 +975,10 @@ def _table_model(table: Table, p: Palette) -> QStandardItemModel:
             font = serif(12.5) if c == 0 else cell.font()
             font.setBold(bold or heading)
             font.setItalic(italic)
+            font.setStrikeOut(table.markup and struck(cell_of(row, c)))
             cell.setFont(font)
+            if table.footed and r == len(rows) - 1:
+                cell.setData(True, FOOT_ROLE)
             if colour is not None:
                 cell.setForeground(QBrush(QColor(colour)))
             if heading:

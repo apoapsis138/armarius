@@ -247,14 +247,14 @@ def test_loyalty_of_minus_six_halves_the_covenfolks_savings():
     ] + [Inhabitant(id=f"g{i}", kind="turb", name=f"G{i}") for i in range(40)]
     before = {r.key: r.savings for r in economics.summarize(saga, covenant).savings}
     # 4 laborers save 4; the rare smith 6, capped at 20% of Consumables
-    # (56 points: 11.2), so 2.24, rounded up to 3.
-    assert (before["laborers"], before["craftspeople"]) == (4, 3)
+    # (56 points: 11.2), so 2.24, rounded down to 2.
+    assert (before["laborers"], before["craftspeople"]) == (4, 2)
     assert inhabitants.prevailing_loyalty(saga, covenant) > -6
     covenant.loyalty.actions_and_events = -200
     assert inhabitants.prevailing_loyalty(saga, covenant) <= -6
     halved = {r.key: r for r in economics.summarize(saga, covenant).savings}
-    # Halved: 2 and 1.12, rounded up to 2.
-    assert (halved["laborers"].savings, halved["craftspeople"].savings) == (2, 2)
+    # Halved: 2 and 1.
+    assert (halved["laborers"].savings, halved["craftspeople"].savings) == (2, 1)
     assert "productivity halved" in halved["laborers"].basis
     assert inhabitants.productivity_note(6).startswith("Prevailing Loyalty +6")
 

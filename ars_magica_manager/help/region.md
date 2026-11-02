@@ -662,9 +662,9 @@ shapes the field in his favour.
 
 **At sea: a fleet battle.** Set *Fought* to *At sea* and the battle is
 fought between fleets (Tales of Power p. 106). Each army then ticks its
-ships: when an army is a covenant, every ship on its Possessions is
+ships: when an army is a covenant, every ship on its Inventory (Possessions in the terminal) is
 listed (all ticked at first; a wrecked one is left out of the count), and
-*other ships* counts those kept on no covenant's Possessions (a pirate
+*other ships* counts those kept on no covenant's Inventory (a pirate
 fleet, ships hired). Weight of Numbers counts ships, not combat groups: 3
 ships against 2 is +1 (Lords of Men p. 105's ratios). Combat groups left
 blank are the picked ships' crews and fighting men in groups of five.

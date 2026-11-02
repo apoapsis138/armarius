@@ -60,7 +60,7 @@ def _window() -> tuple[MainWindow, str]:
 def _page(window: MainWindow) -> CovenantPage:
     page = window.page()
     assert isinstance(page, CovenantPage)
-    page.codex.open_chapter("Possessions")
+    page.codex.open_chapter("Inventory")
     return page
 
 
@@ -72,7 +72,7 @@ def _words(widget) -> str:
 
 
 def _chapter(page: CovenantPage):
-    return page.codex.chapter(page.codex.chapters().index("Possessions"))
+    return page.codex.chapter(page.codex.chapters().index("Inventory"))
 
 
 def test_ships_come_first_in_possessions_as_ledger_entries(app):

@@ -86,7 +86,7 @@ def test_the_treasury_sets_income_against_expenditure():
     assert account.balance == account.income - account.expenditure
     titles = [g.title for g in account.groups]
     assert titles == ["Sources of Income (1)", "Yearly Expenditure", "Cost Savings"]
-    assert account.groups[0].table.rows == [["Mill", "Typical", "40", ""]]
+    assert account.groups[0].table.rows == [["Mill", "", "Typical", "40", "", ""]]
 
 
 def test_the_library_puts_each_book_on_its_shelf():

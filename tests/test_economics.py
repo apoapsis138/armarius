@@ -354,7 +354,7 @@ def test_one_craft_cannot_save_more_than_its_limit_but_two_crafts_can():
     cov.inhabitants += smiths
     summary = eco.summarize(saga, cov)
     cost = _row(summary.expenditure, "consumables")
-    assert cost.first == 22 and cost.savings == 5  # capped at ~20% of 21.6, rounded up
+    assert cost.first == 22 and cost.savings == 4  # capped at 20% of 21.6, rounded down
 
     cov.inhabitants.append(
         Inhabitant(
@@ -367,7 +367,7 @@ def test_one_craft_cannot_save_more_than_its_limit_but_two_crafts_can():
         )
     )
     cost = _row(eco.summarize(saga, cov).expenditure, "consumables")
-    assert cost.first == 22 and cost.savings == 9  # two crafts, each capped
+    assert cost.first == 22 and cost.savings == 8  # two crafts, each capped
 
 
 def test_books_and_no_field_save_nothing_and_a_linked_ability_sets_the_score():

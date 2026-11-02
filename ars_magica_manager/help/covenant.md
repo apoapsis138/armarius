@@ -556,7 +556,17 @@ follow.
 
 Who lives at the covenant, and how loyal they are.
 <!-- gui -->
-On the desktop this is the **Covenfolk** chapter.
+On the desktop this is the **Covenfolk** chapter. Loyalty shows four
+figures in a row (Base Loyalty, Modifiers, Loyalty Points and the Prevailing
+score), a line on what the score means and how many points the next one
+needs (Covenants p. 37), and the situational modifiers as a ledger.
+Household follows, with two ledgers: **Staffing** (the Teamsters and
+Servants the covenant has against what it needs, read as Met, Shortfall of
+2 or Excess of 1, then its Laborers and the devices doing servants' and
+teamsters' work) and **Inhabitants** (each group's people, points and
+what they cost a year, closed by the total). Click any figure or line and
+the Inspector shows its working and its rule: Money, for instance, lists
+each salary with its Loyalty points and what it does to Wages.
 <!-- /gui -->
 
 **You type:** the Loyalty choices (Equipment, Money, Pension, Familiarity,
@@ -637,8 +647,9 @@ Teamsters and Turbula, all typed with
 <!-- gui -->
 **Edit Miscellaneous** beside The Household.
 <!-- /gui -->
-The app keeps them as a record
-and does not work anything out from them.
+Magic Servants and Magic Teamsters lower the Servants and Teamsters needed,
+one each: a device doing that work stands in for a person (DE p. 195;
+Covenants p. 68). The others are kept as a record.
 
 ### Magi
 <!-- help: section-inh-magus -->
@@ -707,7 +718,9 @@ sheet), a Field of Work, whether they are rare, and a Quantity. Their Field
 of Work decides which cost they save on the Economics tab: a common
 craftsperson saves 1 plus half their skill a year, a rare one their skill.
 A craftsperson working on Books saves nothing but adds to Writing
-Materials.
+Materials. Saves shows what each one saves a year; "(cap)" means the
+craft's cap on its cost, a share of that cost rounded down (Covenants p.
+68), cuts it.
 
 ### Turb
 <!-- help: section-inh-turb -->
@@ -947,6 +960,10 @@ is changed on that record.
 
 ## Possessions tab
 <!-- help: tab-cov-possessions -->
+<!-- gui -->
+
+On the desktop this is the **Inventory** chapter.
+<!-- /gui -->
 
 What the covenant owns: land, sanctums, arms and armour, vis, other items
 and enchanted devices.
@@ -1041,6 +1058,11 @@ can be marked as a Contested Resource (advancing then asks whether it was
 secured once its security lapses, and an unsecured one gives nothing) or as
 a Dwindling Resource, which loses a tenth of the pawns it gave when it
 began dwindling at the end of each year, so it is gone after ten years.
+<!-- gui -->
+An unsettled source shows as contested income does in the Treasury: a red
+**!**, its Pawns struck through beside a 0, and its Standing. **Settle**
+records the story that secures it for five years.
+<!-- /gui -->
 How many pawns to give one is the troupe's choice: a low-yield source gives
 1, 2 or 4 a year in a low-, moderate- or high-vis saga, a moderate one 2,
 4 or 8, a high-yield one (about a magus's year of vis) 4, 8 or 16
@@ -1231,7 +1253,12 @@ The covenant's yearly finances: what it earns, what it spends, what it
 saves, and what it has in store.
 <!-- gui -->
 On the desktop this is the **Treasury** chapter: the year's income,
-expenditure and balance at the top, then Wealth and the tables.
+expenditure and balance at the top, then Wealth and the tables. A line
+under them says what settling any unsettled income would bring. When Wealth
+can't cover a deficit, **Covering the Deficit** lists the book's ways out,
+with this covenant's figures (DE pp. 195-196): miserly wages and what they
+do to Loyalty, the magi giving up their comforts, letting covenfolk go, or
+neglecting a whole category.
 <!-- /gui -->
 
 **You type:** Wealth, the sources of income, Tithes, Inflation and Sundry,
@@ -1271,6 +1298,14 @@ expenditure before and after cost savings, and the Surplus/Deficit. At the
 end of each year the surplus is added to Wealth, and a deficit that
 Emergency Savings didn't cover is taken from it (see Cost Savings).
 
+<!-- gui -->
+On the desktop, Wealth also shows **Can Afford**, the rule of thumb that a
+covenant can afford about a point of inhabitants for each pound of income
+(DE p. 191), and what next year's Inflation will rise by. The points sit
+under their own heading, **What the Year Is Reckoned On**, since they aren't
+money.
+<!-- /gui -->
+
 ### Land Works
 <!-- help: section-eco-land -->
 
@@ -1288,7 +1323,16 @@ Greater or Legendary). Leave Current Income blank to use the Type's usual
 income. A source can be marked as a Contested Resource, which gives nothing
 until it is secured, or a Dwindling Resource, which loses a tenth of the
 income it gave when it began dwindling at the end of each year (gone after
-ten years).
+ten years). One story secures a contested resource for five years (DE p.
+181).
+<!-- gui -->
+
+An unsettled source carries a red **!**, its Income struck through with the
+0 it gives beside it, and Standing says what contests it. **Settle**, beside
+the section's title, records the story that ended it: the year, and what
+settled it. Income comes back at once, Standing says when it is secured
+through, and the Diary records it. When that year passes, the mark returns.
+<!-- /gui -->
 <!-- tui -->
 More's **Improve Income** applies one year's Income Modification to the
 chosen source:
@@ -1328,14 +1372,29 @@ details panel shows how the chosen row was worked out.
 <!-- /tui -->
 <!-- gui -->
 **Edit** on those rows edits only their note. Tithes, Inflation and Sundry
-are typed with **Edit** (Sundry is at least 1 pound a year). The inspector
-shows how the row clicked was worked out.
+are typed with **Edit** (Sundry is at least 1 pound a year, before the
+year's purchases). The table gives each row's cap per craft, what it costs
+after savings, and how it is reckoned; the inspector has the rule.
 <!-- /gui -->
 
 Writing Materials cost a pound a year for every magus, scribe, bookbinder
 and illuminator (DE p. 194): magi, craftspeople working on Books, and
 specialists whose Ability or responsibility names a scribe, bookbinder,
 illuminator or copyist (a scribe is a specialist, DE p. 190).
+
+### The Year's Purchases
+<!-- help: section-eco-purchases; gui -->
+
+What the covenant has bought this year. **Buy from Goods** picks a priced
+good from the Goods catalog, then its quality and how much; **Add** enters
+anything else, with its kind and pounds (Covenants p. 71 has the Price
+List). The last line is the Pound of Enumerus, the pound of petty costs
+nobody can account for (Covenants p. 70), which **Edit** on Sundry changes.
+
+All of it goes onto Sundry. When the year closes, each purchase is written
+in the Diary under Purchases & Sales and the list starts again. A purchase
+doesn't yet put what was bought anywhere: add a weapon to Inventory, or land
+to a manor, yourself.
 
 ### Cost Savings
 <!-- help: section-eco-savings -->

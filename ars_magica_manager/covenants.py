@@ -15,7 +15,9 @@ from .models import (
     Covenant,
     CovenantBoonHookDef,
     CovenantSituationDef,
+    IncomeSource,
     Modifier,
+    Possession,
     VirtueFlawInstance,
     boon_hook_params,
     new_instance_id,
@@ -323,6 +325,47 @@ def link_resource(
         )
         if not still:
             setattr(old, flag, False)
+
+
+#: One story secures a contested resource for five years (DE p. 181).
+SECURED_YEARS = 5
+
+
+def contested_now(resource: Possession | IncomeSource, year: int) -> bool:
+    """Whether a contested resource gives nothing this year: not secured
+    through it."""
+    return resource.contested and (resource.secured_until or 0) < year
+
+
+def settle_resource(resource: Possession | IncomeSource, year: int) -> None:
+    """A story in `year` secures the resource, that year included."""
+    resource.secured_until = year + SECURED_YEARS - 1
+
+
+def contest_detail(covenant: Covenant, source_id: str) -> str:
+    """What the Resource Hook on a source is about, without the source's
+    own name when its detail opens with it ("the Rents: the baron's penny")."""
+    for instance in covenant.boons_hooks:
+        if instance.params.get(BOON_HOOK_RESOURCE) == source_id:
+            detail = str(instance.params.get(BOON_HOOK_DETAIL) or "")
+            return detail.split(": ", 1)[-1]
+    return ""
+
+
+def resource_standing(
+    covenant: Covenant, resource: Possession | IncomeSource, year: int
+) -> str:
+    """A contested resource's standing in words: unsettled, or until when
+    it is secured ("" for a resource nobody contests)."""
+    if not resource.contested:
+        return ""
+    detail = contest_detail(covenant, resource.id)
+    state = (
+        "Contested, unsettled"
+        if contested_now(resource, year)
+        else f"Secured through {resource.secured_until}"
+    )
+    return f"{state}: {detail}" if detail else state
 
 
 def unlinked_resource_hooks(

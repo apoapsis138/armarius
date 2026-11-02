@@ -246,4 +246,4 @@ def test_a_covenants_interests_take_manors_off_its_page(app):
     saga.covenants[0].interests_off = ["Manors"]
     window = _window(saga)
     assert "Manors" not in _page(window).chapters()
-    assert "Possessions" in _page(window).chapters()
+    assert "Inventory" in _page(window).chapters()

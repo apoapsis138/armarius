@@ -816,6 +816,15 @@ def test_minimum_servants_and_teamsters_follow_the_formulas():
     assert covenfolk.minimum_teamsters(saga, cov) == 3
 
 
+def test_magic_servants_and_teamsters_lower_the_minimums():
+    saga, cov = _saga()
+    cov.inhabitants.append(Inhabitant(id="t", kind="turb", name="Turb", quantity=17))
+    cov.population.magic_servants = 4
+    cov.population.magic_teamsters = 5
+    assert covenfolk.minimum_servants(saga, cov) == 2
+    assert covenfolk.minimum_teamsters(saga, cov) == 0
+
+
 def test_laborers_reduce_the_minimum_teamsters_but_not_servants():
     saga, cov = _saga()
     cov.inhabitants += [

@@ -735,6 +735,20 @@ CONTRACTS: dict[str, Contract] = {
         expected=3,
         invalid={"Amount": "0"},  # at least 1
     ),
+    "settle a contested resource": Contract(
+        prefill={"What settled it": ""},
+        edits={"Settled in (year)": "1220", "What settled it": "The baron paid"},
+        saved=lambda s: covenant(s).economics.income_sources[-1].secured_until,
+        expected=1224,
+        invalid={"Settled in (year)": "soon"},
+    ),
+    "add a purchase": Contract(
+        prefill={"What": ""},
+        edits={"What": "A warhorse", "Pounds": "16"},
+        saved=lambda s: covenant(s).economics.purchases[-1].pounds,
+        expected=16.0,
+        invalid={"Pounds": "0"},
+    ),
     "edit magic savings": Contract(
         prefill={"Savings": "0"},
         edits={"Savings": "20"},

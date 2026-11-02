@@ -258,7 +258,7 @@ The **People** chapter shows the covenant's characters as cards; the [Covenfolk]
 The [Possessions tab](help:tab-cov-possessions) (`5`) holds what the covenant owns. Each list adds with `a`, edits with `e` and deletes with `d`.
 <!-- /tui -->
 <!-- gui -->
-The [Possessions](help:tab-cov-possessions) chapter holds what the covenant owns. Each list has **Add**, **Edit** and **Delete**.
+The [Inventory](help:tab-cov-possessions) chapter holds what the covenant owns. Each list has **Add**, **Edit** and **Delete**.
 <!-- /gui -->
 
 <!-- tui -->
@@ -273,7 +273,7 @@ The [Possessions](help:tab-cov-possessions) chapter holds what the covenant owns
 1. **Ships:** add each on [Ships](help:section-pos-ship) from the book's table of ships; her damage levels, crew and artillery are worked out, and Stress Check and Ship Combat roll for her.
 2. **Property and items:** [Properties and Land](help:section-pos-property) and [Items](help:section-pos-item) are a record only. [Weapons](help:section-pos-weapon) and [Armor](help:section-pos-armor) can be chosen from the catalogue, and feed the Weapons cost in the Treasury.
 3. **Sanctums:** every laboratory of the covenant is listed under [Sanctums](help:section-pos-sanctum) automatically; set only its Usage here.
-4. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
+4. **Vis sources:** add each on [Vis Sources](help:section-pos-vis_source) with its Art, Season and pawns, and mark it Contested or Dwindling if it is. An unsettled one shows a red **!** and gives nothing until a story settles it: click it, then **Settle**. In its season each year, the harvest is added to the Raw Vis Stores and written in the Diary.
 5. **Raw vis:** [Raw Vis Stores](help:section-pos-vis_store) lists the covenant's vis by Art. To hand vis to a laboratory, a magus or another covenant, click the store, then **Give** beside Add, Edit and Delete. Type the **Pawns** and choose **To**, then choose Give. Both Diaries record it.
 6. **Enchanted devices:** [Enchanted Devices](help:section-cov-devices) has **Instill** and **Use Charge** buttons beside Add, Edit and Delete, for the row last clicked.
 <!-- /gui -->
@@ -293,9 +293,10 @@ The [Economics tab](help:tab-cov-economics) (`6`) shows a year's finances. Most 
 The [Treasury](help:tab-cov-economics) chapter shows a year's finances: the year's income, expenditure and Surplus or Deficit at the top. Most figures are worked out from the rest of the sheet.
 
 1. On [Wealth](help:section-eco-wealth), click **Edit** to type the pounds in store.
-2. On [Sources of Income](help:section-eco-income), **Add** adds an enterprise with its Type; leave Current Income blank to use the Type's usual income. To apply a year's Income Modification, click the source and then **Improve**: pick the Annual Improvement Effect, check the Projected Income, and choose Commit.
+2. On [Sources of Income](help:section-eco-income), **Add** adds an enterprise with its Type; leave Current Income blank to use the Type's usual income. To apply a year's Income Modification, click the source and then **Improve**: pick the Annual Improvement Effect, check the Projected Income, and choose Commit. A contested source shows a red **!** and gives nothing: once a story settles it, click it and then **Settle**.
 3. On [Yearly Expenditure](help:section-eco-expenditure), click Tithes, Inflation or Sundry and then **Edit** to type it. The other rows are worked out; Edit on them edits only their note.
-4. On [Cost Savings](help:section-eco-savings), laborers' and craftspeople's savings come from the Covenfolk chapter. Click Magic and then **Edit** to type its savings.
+4. On [Cost Savings](help:section-eco-savings), laborers' and craftspeople's savings come from the Covenfolk chapter. Click Magic and then **Edit** to type its savings. **Craft by Craft** shows what each craft is worth against its cap.
+5. To buy something, go to [The Year's Purchases](help:section-eco-purchases): **Buy from Goods** picks from the Goods catalog, **Add** enters anything else, with the price from Covenants p. 71. It all goes onto Sundry, and into the Diary when the year closes. Add what you bought to Inventory yourself.
 <!-- /gui -->
 
 **At the end of each year,** when Winter is advanced, the surplus is added to Wealth and Emergency Savings start again at 0.

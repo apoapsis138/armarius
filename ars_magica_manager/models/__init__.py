@@ -256,6 +256,8 @@ from .holdings import LOYALTY_MONEY as LOYALTY_MONEY
 from .holdings import LOYALTY_MONEY_DEFAULT as LOYALTY_MONEY_DEFAULT
 from .holdings import OTHER_COVENFOLK_ROLES as OTHER_COVENFOLK_ROLES
 from .holdings import POSSESSION_KINDS as POSSESSION_KINDS
+from .holdings import PURCHASE_GOODS as PURCHASE_GOODS
+from .holdings import PURCHASE_KINDS as PURCHASE_KINDS
 from .holdings import SANCTUM_USAGE_DEFAULT as SANCTUM_USAGE_DEFAULT
 from .holdings import SANCTUM_USAGES as SANCTUM_USAGES
 from .holdings import Economics as Economics
@@ -264,6 +266,7 @@ from .holdings import Inhabitant as Inhabitant
 from .holdings import Loyalty as Loyalty
 from .holdings import Population as Population
 from .holdings import Possession as Possession
+from .holdings import Purchase as Purchase
 from .laboratory import FEATURE_VIRTUE_POINTS as FEATURE_VIRTUE_POINTS
 from .laboratory import FOCUS_FLAWS as FOCUS_FLAWS
 from .laboratory import ITEM_DEVICE_PARAM as ITEM_DEVICE_PARAM

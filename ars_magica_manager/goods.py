@@ -97,6 +97,27 @@ def per_ounce(price: float) -> float:
     return price / (TABLE_POUNDS_PER_TON * OUNCES_PER_POUND)
 
 
+def buying_unit(good: GoodDef) -> str:
+    """What a good's buying prices are for."""
+    return "ounce" if good.per_ounce else good.sold_by
+
+
+def buying_prices(good: GoodDef) -> list[tuple[str, float]]:
+    """(quality, pounds a buying_unit) for each quality it can be bought
+    at. A common good's price is in pence, the middle of its range."""
+    if good.pence is not None:
+        pence = sum(good.pence) / len(good.pence)
+        return [
+            (quality, pence * multiple / PENCE_PER_POUND)
+            for quality, multiple in COMMON_MULTIPLIERS
+        ]
+    printed = good.per_ounce or good.prices
+    found = [
+        (quality, price_value(words)) for quality, words in zip(QUALITIES, printed)
+    ]
+    return [(quality, value) for quality, value in found if value is not None]
+
+
 def listed(saga: Saga) -> list[GoodDef]:
     """The goods the saga's Goods tab lists, in order: the catalog's
     commodities by class (bulk, manufactured, luxury), then its common

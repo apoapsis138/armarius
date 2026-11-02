@@ -428,6 +428,7 @@ def test_a_save_from_before_a_field_existed_loads_with_its_default(model, minima
 def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
     """A diary entry, and a charter with a clause and a magus's seal."""
     covenant.diary.append(CovenantDiaryEntry(1220))
+    covenant.economics.purchases.append(models.Purchase("p", "Hay", 1.0))
     covenant.stops.append(CovenantStop(1220, "Spring", "somewhere"))
     covenant.route.append(RouteStop("somewhere"))
     covenant.charter_of_covenant = CovenantCharter(

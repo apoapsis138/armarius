@@ -39,6 +39,7 @@ from ars_magica_manager.forms import animal as animal_forms
 from ars_magica_manager.forms import certamen_duel as certamen_forms
 from ars_magica_manager.forms import charter as charter_forms
 from ars_magica_manager.forms import choice_templates as choice_forms
+from ars_magica_manager.forms import covenant as cov_forms
 from ars_magica_manager.forms import covers as cover_forms
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import (
@@ -79,6 +80,7 @@ from ars_magica_manager.models import (
     DeepCover,
     GuestStay,
     HermeticProject,
+    IncomeSource,
     KnownSpell,
     LandProject,
     Marriage,
@@ -766,6 +768,18 @@ def _open_meeting_step(row: int, list_id: str):
         await _pick(lambda ws: ws._core_verb(section, "edit"), list_id, row)(ws)
 
     return opener
+
+
+def _settle_contested(ws) -> None:
+    """Settle a contested source of income."""
+    covenant = ws.selected_covenant
+    source = IncomeSource("rents", "Rents", contested=True)
+    covenant.economics.income_sources.append(source)
+    ws._run_steps(cov_forms.settle_form(ws.saga, covenant, source))
+
+
+def _add_purchase(ws) -> None:
+    ws._run_steps(cov_forms.purchase_ops(ws.saga, ws.selected_covenant).add())
 
 
 def _economics_row(which: str, key: str):
@@ -1611,6 +1625,8 @@ OPENERS: dict[str, Opener] = {
     ),
     "edit tithes": Opener("covenant", _economics_row("expenditure", "tithes")),
     "edit sundry": Opener("covenant", _economics_row("expenditure", "sundry")),
+    "settle a contested resource": Opener("covenant", _settle_contested),
+    "add a purchase": Opener("covenant", _add_purchase),
     "edit magic savings": Opener("covenant", _economics_row("savings", "magic")),
     "edit loyalty": Opener("covenant", lambda ws: ws._edit_loyalty()),
     "edit population": Opener("covenant", lambda ws: ws._edit_population()),

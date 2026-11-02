@@ -15,7 +15,17 @@ from typing import Any
 from .. import boon_hook_text, catalog, mobile_covenants, places, sourcebooks, vassals
 from .. import covenants as cov_rules
 from .. import economics as eco
-from ..commands import Choice, Choose, Confirm, Form, SectionOps, notes
+from .. import goods as gd
+from ..commands import (
+    Choice,
+    Choose,
+    Confirm,
+    Form,
+    SectionOps,
+    delete,
+    names,
+    notes,
+)
 from ..covenants import boon_hook_is_unknown
 from ..form_spec import EMPHASIS_HINT, DialogField, description_field, pairs
 from ..markup import escape
@@ -27,10 +37,16 @@ from ..models import (
     GRAIN_CARE,
     INCOME_TYPE_DEFAULTS,
     INCOME_TYPES,
+    PURCHASE_GOODS,
+    PURCHASE_KINDS,
     SEASONS,
     Covenant,
     CovenantBoonHookDef,
+    CovenantDiaryEntry,
+    GoodDef,
     IncomeSource,
+    Possession,
+    Purchase,
     Saga,
     VirtueFlawInstance,
     boon_hook_params,
@@ -521,6 +537,172 @@ def income_form(covenant: Covenant, source: IncomeSource | None) -> Form:
     )
 
 
+def settle_form(
+    saga: Saga, covenant: Covenant, resource: Possession | IncomeSource
+) -> Form:
+    """Record the story that settled a contested resource: it is secured
+    for five years from then, and the Diary says so."""
+    name = resource.name or "This resource"
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        year = values["year"]
+        cov_rules.settle_resource(resource, year)
+        secured = f"Secured through {resource.secured_until}."
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                year,
+                saga.current_season,
+                f"{name} settled",
+                " ".join(part for part in (values["story"], secured) if part),
+                category="Covenant Season",
+            )
+        )
+        return notes(f"{escape(name)}: {secured}")
+
+    return Form(
+        f"Settle {escape(name)}",
+        lambda: [
+            DialogField("year", "Settled in (year)", "int", saga.current_year),
+            DialogField("story", "What settled it", "text", ""),
+        ],
+        apply,
+        live=lambda values: (
+            f"Secured through {int(values.get('year') or 0) + cov_rules.SECURED_YEARS - 1}"
+            f": one story secures it for {cov_rules.SECURED_YEARS} years (DE p. 181)."
+        ),
+        save_label="Settle",
+    )
+
+
+def purchase_fields(saga: Saga, purchase: Purchase | None) -> list[DialogField]:
+    return [
+        DialogField(
+            "name", "What", "text", purchase.name if purchase else "", required=True
+        ),
+        DialogField(
+            "kind",
+            "Kind",
+            "select",
+            purchase.kind if purchase else PURCHASE_KINDS[-1],
+            options=pairs(PURCHASE_KINDS),
+            required=True,
+        ),
+        DialogField(
+            "pounds",
+            "Pounds",
+            "optfloat",
+            purchase.pounds if purchase else None,
+            required=True,
+            hint="The Price List: Covenants p. 71.",
+        ),
+        DialogField(
+            "season",
+            "Season",
+            "select",
+            purchase.season if purchase else saga.current_season,
+            options=pairs(SEASONS),
+            required=True,
+        ),
+        DialogField("note", "Note", "text", purchase.note if purchase else ""),
+    ]
+
+
+def _pounds_problem(values: dict[str, Any]) -> str | None:
+    return "A purchase costs something." if (values["pounds"] or 0) <= 0 else None
+
+
+def purchase_form(saga: Saga, covenant: Covenant, purchase: Purchase | None) -> Form:
+    """Add or edit a line of The Year's Purchases."""
+
+    def apply(values: dict[str, Any]) -> None:
+        if purchase is None:
+            covenant.economics.purchases.append(
+                Purchase(f"purchase_{new_instance_id()}", **values)
+            )
+            return
+        for key, value in values.items():
+            setattr(purchase, key, value)
+
+    return Form(
+        "Add a Purchase" if purchase is None else f"Edit {escape(purchase.name)}",
+        lambda: purchase_fields(saga, purchase),
+        apply,
+        validate=_pounds_problem,
+    )
+
+
+def _buy_good_form(saga: Saga, covenant: Covenant, good: GoodDef) -> Form:
+    """How much of a good, and of what quality."""
+    prices = dict(gd.buying_prices(good))
+    unit = gd.buying_unit(good)
+
+    def cost(values: dict[str, Any]) -> float:
+        return prices[values["quality"]] * (values.get("quantity") or 0)
+
+    def apply(values: dict[str, Any]) -> None:
+        quality, quantity = values["quality"], values["quantity"]
+        covenant.economics.purchases.append(
+            Purchase(
+                f"purchase_{new_instance_id()}",
+                f"{good.name} ({quality}), {gd.number(quantity)} {unit}",
+                cost(values),
+                PURCHASE_GOODS,
+                saga.current_season,
+                good.id,
+            )
+        )
+
+    return Form(
+        f"Buy {escape(good.name)}",
+        lambda: [
+            DialogField(
+                "quality",
+                "Quality",
+                "select",
+                "Standard" if "Standard" in prices else next(iter(prices)),
+                options=[
+                    (f"{quality}: £{gd.number(price)} a {unit}", quality)
+                    for quality, price in prices.items()
+                ],
+                required=True,
+            ),
+            DialogField(
+                "quantity", f"How many ({unit})", "optfloat", 1.0, required=True
+            ),
+        ],
+        apply,
+        validate=lambda values: (
+            None if (values["quantity"] or 0) > 0 else "Buy at least some of it."
+        ),
+        live=lambda values: f"£{gd.number(cost(values))} onto this year's Sundry.",
+        save_label="Buy",
+    )
+
+
+def buy_from_goods(saga: Saga, covenant: Covenant) -> Choose:
+    """Choose a priced good from the Goods catalog, then how much."""
+    return Choose(
+        "Buy from Goods",
+        lambda: [
+            Choice(escape(good.name), good, escape(good.note))
+            for good in gd.listed(saga)
+            if gd.buying_prices(good)
+        ],
+        lambda good: _buy_good_form(saga, covenant, good),
+    )
+
+
+def purchase_ops(saga: Saga, covenant: Covenant) -> SectionOps:
+    """The Year's Purchases: Add, Edit and Delete. Buy from Goods adds too."""
+    entries = covenant.economics.purchases
+    return SectionOps(
+        add=lambda: purchase_form(saga, covenant, None),
+        edit=lambda index: purchase_form(saga, covenant, entries[index]),
+        remove=lambda index: delete(entries, index, entries[index].name),
+        rows=names(entries),
+    )
+
+
 def income_ops(covenant: Covenant) -> SectionOps:
     """Sources of Income: Add, Edit and Delete."""
     sources = covenant.economics.income_sources
@@ -539,7 +721,7 @@ def income_ops(covenant: Covenant) -> SectionOps:
 ECONOMICS_TYPED_LABELS: dict[str, str] = {
     "tithes": "Amount (pounds a year)",
     "inflation": "Amount (pounds a year)",
-    "sundry": "Amount (pounds a year, at least 1)",
+    "sundry": "Amount (pounds a year, at least 1, before purchases)",
     "magic_savings": "Savings (pounds a year)",
     "emergency_savings": "Savings (pounds a year)",
 }

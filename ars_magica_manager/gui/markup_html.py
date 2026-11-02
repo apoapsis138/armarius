@@ -116,6 +116,16 @@ def plain(text: str) -> str:
     return _TAG.sub("", text).replace("\\[", "[")
 
 
+def struck(text: str) -> bool:
+    """Whether a table cell's markup strikes its words through."""
+    return any(
+        not match.group(1)
+        and _looks_like_markup(match.group(2))
+        and "s" in match.group(2).split()
+        for match in _TAG.finditer(text)
+    )
+
+
 def cell_style(text: str, palette: Palette) -> tuple[str, str | None, bool, bool]:
     """A table cell's markup as its plain words, and the colour (None: the
     table's own), boldness and italics its tags ask for anywhere in it: a

@@ -1229,7 +1229,7 @@ harvesting vis at auspicious times. It has the Constantly Mobile Hook.
 6. **Mind the Aegis.** A move leaves the Aegis behind, and a fleet can hold one
    only at a Port. Cast it there, and it lasts as long as the fleet stays.
 7. **Send a ship away.** To part the fleet, set the ship's **Laboratory aboard**,
-   then choose her on Possessions and **Detach**. **Rejoin** brings her back.
+   then choose her on Inventory (Possessions in the terminal) and **Detach**. **Rejoin** brings her back.
 
 **See also:** [Whereabouts](help:section-cov-whereabouts), [Ships](help:section-pos-ship)
 

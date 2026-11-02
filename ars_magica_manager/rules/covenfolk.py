@@ -400,18 +400,23 @@ def other_covenfolk_count(saga: Saga, covenant: Covenant, role: str) -> int:
 
 def minimum_servants(saga: Saga, covenant: Covenant) -> int:
     """2 Servants for every 10 points of inhabitants or part of 10,
-    excluding Servants, Laborers and Teamsters themselves."""
+    excluding Servants, Laborers and Teamsters themselves, less the Magic
+    Servants: devices that do a servant's work (DE p. 195; Covenants
+    p. 68, where magic items take the place of 4 of 20 servants)."""
     points = inhabitant_points(
         saga, covenant, exclude_roles=("Servant", "Laborer", "Teamster")
     )
-    return SERVANTS_PER_TEN * round_away_from_zero(points / 10)
+    needed = SERVANTS_PER_TEN * round_away_from_zero(points / 10)
+    return max(needed - covenant.population.magic_servants, 0)
 
 
 def minimum_teamsters(saga: Saga, covenant: Covenant) -> int:
     """1 Teamster for every 10 points of inhabitants (excluding Laborers and
-    Teamsters), after subtracting twice the number of Laborers."""
+    Teamsters), after subtracting twice the number of Laborers, less the
+    Magic Teamsters (DE p. 195)."""
     points = inhabitant_points(saga, covenant, exclude_roles=("Laborer", "Teamster"))
     points -= TEAMSTER_POINTS_PER_LABORER * other_covenfolk_count(
         saga, covenant, "Laborer"
     )
-    return round_away_from_zero(max(points, 0) / 10)
+    needed = round_away_from_zero(max(points, 0) / 10)
+    return max(needed - covenant.population.magic_teamsters, 0)

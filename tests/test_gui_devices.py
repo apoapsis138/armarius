@@ -140,7 +140,7 @@ def test_a_covenants_charged_item_uses_a_charge(app):
     )
     window = _window(saga)
     window.open_covenant(covenant.id)
-    window.page().codex.open_chapter("Possessions")
+    window.page().codex.open_chapter("Inventory")
     _choose(window, 0)
     buttons = _devices(window)
     assert buttons["Use Charge"].isEnabled()

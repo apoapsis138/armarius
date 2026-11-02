@@ -5,6 +5,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 
+from ..covenants import contested_now, settle_resource
 from ..grids import Grid
 from ..markup import escape
 from ..models import (
@@ -80,17 +81,13 @@ def lapsed_resources(saga: Saga) -> list[tuple[str, str]]:
     found: list[tuple[str, str]] = []
     for covenant in filter(takes_part_in_play, saga.covenants):
         for source in _vis_sources(covenant):
-            if (
-                source.contested
-                and source.season == saga.current_season
-                and (source.secured_until or 0) < year
-            ):
+            if contested_now(source, year) and source.season == saga.current_season:
                 found.append(
                     (source.id, f"{covenant.name}'s {source.name or 'vis source'}")
                 )
         if saga.current_season == SEASONS[-1]:
             for income in covenant.economics.income_sources:
-                if income.contested and (income.secured_until or 0) < year:
+                if contested_now(income, year):
                     found.append(
                         (
                             income.id,
@@ -135,7 +132,7 @@ def available(resource: Possession | IncomeSource, year: int) -> bool:
     """Whether a vis or income source gives anything this year: not contested,
     or secured through it: an unaddressed contested resource isn't
     available until it is addressed."""
-    return not resource.contested or (resource.secured_until or 0) >= year
+    return not contested_now(resource, year)
 
 
 def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLine]:
@@ -151,7 +148,7 @@ def covenant_season(saga: Saga, secured: dict[str, bool]) -> list[SeasonRecordLi
         resources = [*_vis_sources(covenant), *covenant.economics.income_sources]
         for resource in resources:
             if secured.get(resource.id):
-                resource.secured_until = year + 4
+                settle_resource(resource, year)
         harvested: list[str] = []
         for source in _vis_sources(covenant):
             if source.season != season or not source.art or source.pawns <= 0:

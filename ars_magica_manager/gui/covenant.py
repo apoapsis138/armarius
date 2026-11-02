@@ -45,6 +45,7 @@ from .. import (
 from .. import books as bk
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
+from .. import covenfolk_ledger as ledger
 from .. import inhabitants as inh
 from .. import possessions as pos
 from .. import saga_overview as ov
@@ -62,8 +63,16 @@ from ..forms import menu as menu_forms
 from ..forms import possession as possession_forms
 from ..forms import season as season_forms
 from ..forms import world as world_forms
-from ..models import FULL, INHABITANT_KINDS, LINE, POSSESSION_KINDS, Covenant, Saga
-from ..references import Fact
+from ..models import (
+    FULL,
+    INHABITANT_KINDS,
+    LINE,
+    POSSESSION_KINDS,
+    Covenant,
+    IncomeSource,
+    Possession,
+    Saga,
+)
 from ..rules import library
 from ..sections import (
     COV_CHARTER_LORDS_SECTION,
@@ -74,6 +83,7 @@ from ..sections import (
 from ..sheets import character as cs
 from ..sheets import covenant as cvs
 from ..sheets import familiar as fs
+from ..tables import Table
 from .ahead import ahead_section, undertakings_section
 from .bookmark import with_bookmark
 from .character_sheet import (
@@ -81,7 +91,6 @@ from .character_sheet import (
     columns_text,
     connections_section,
     device_section,
-    label_values,
     secrets_chapter,
     section,
     side_by_side,
@@ -107,6 +116,7 @@ from .figures import (
 )
 from .heraldry import arms_section, neighbours_arms
 from .manage import RecordControls
+from .markup_html import plain
 from .medallions import Medallion
 from .menus import Placer
 from .pages import (
@@ -129,7 +139,6 @@ from .widgets import (
     Codex,
     Symbol,
     badge,
-    cells_table,
     chapter_title,
     display_name,
     edit_button,
@@ -140,6 +149,21 @@ from .widgets import (
     tier_badge,
 )
 from .world import relations, table_section
+
+#: The Treasury section's id, its help topic.
+PURCHASES_SECTION = "section-eco-purchases"
+
+
+def _titled(title: str, widget: QWidget, p: Palette) -> QWidget:
+    """A ledger titled inside its section: room above the title in small
+    capitals, and the title close to its ledger."""
+    box = QWidget()
+    column = QVBoxLayout(box)
+    column.setContentsMargins(0, 14, 0, 0)
+    column.setSpacing(2)
+    column.addWidget(text(title, p["heading"], serif(13.5, caps=True)))
+    column.addWidget(widget)
+    return box
 
 
 def _none(words: str, p: Palette) -> QLabel:
@@ -242,8 +266,9 @@ class CovenantPage(QWidget):
             chapters.append(("Laboratories", "laboratory", lambda: self._labs(labs)))
         if covenant is not None and full:
             chapters += [
-                ("Possessions", "vis", lambda: self._possessions(covenant)),
+                ("Library", "library", lambda: self._library(covenant)),
                 ("Treasury", "income", lambda: self._treasury(covenant)),
+                ("Inventory", "vis", lambda: self._possessions(covenant)),
             ]
             if deeds.MANORS not in deeds.covenant_interests_off(covenant):
                 chapters.append(
@@ -254,19 +279,19 @@ class CovenantPage(QWidget):
                 chapters.append(
                     ("Projects", "covenant", lambda: self._projects(covenant)),
                 )
-            chapters.append(("Library", "library", lambda: self._library(covenant)))
         if full:
             chapters.append(("Seasons", "season", self._seasons))
         if covenant is not None and full:
             chapters += [
                 ("Diary", "year", lambda: self._diary(covenant)),
                 ("History", "history", lambda: self._history(covenant)),
-                ("Build", "covenant", lambda: self._build(covenant)),
             ]
         if covenant is not None:
             chapters.append(
                 ("Secrets", "secrets", lambda: secrets_chapter(covenant, p, self.run))
             )
+        if covenant is not None and full:
+            chapters.append(("Build", "covenant", lambda: self._build(covenant)))
         for name, concept, build in chapters:
             self.codex.add(name, concept, build())
         if covenant is not None and controls is not None:
@@ -663,51 +688,53 @@ class CovenantPage(QWidget):
         return scrolling_page(p, *parts)
 
     def _covenfolk(self, covenant: Covenant) -> QWidget:
-        """Loyalty and how it is reached, the household's numbers, and a
-        table for each kind of inhabitant."""
-        p, saga = self.p, self.saga
-        loyalty = cvs.loyalty(saga, covenant)
-        standing = Card(p)
-        standing.column.addWidget(text("Loyalty", p["heading"], serif(13, bold=True)))
-        standing.column.addWidget(
-            fact_grid(
-                [
-                    Fact("Governance", loyalty.governance),
-                    Fact("Base Points", str(loyalty.base)),
-                    Fact("Modifiers", f"{loyalty.modifiers:+d}"),
-                    Fact("Loyalty Points", str(loyalty.points)),
-                    Fact("Prevailing Score", f"{loyalty.score:+d}"),
-                ],
-                p,
-                3,
-            )
-        )
-        modifiers = Card(p)
-        _title, situation = inh.loyalty_right_text(saga, covenant).split("\n", 1)
-        modifiers.column.addWidget(
-            text("Situational Modifiers", p["heading"], serif(13, bold=True))
-        )
-        modifiers.column.addWidget(label_values(situation, p))
-        household = Card(p)
-        household.column.addWidget(label_values(inh.population_text(saga, covenant), p))
-        left, right = inh.misc_text(covenant)
-        household.column.addWidget(
-            side_by_side(label_values(left, p), label_values(right, p), spacing=18)
-        )
-        run = self.run
+        """Loyalty's four figures over its situational modifiers, the
+        Household's staffing and inhabitants, and a table for each kind of
+        inhabitant; choosing a figure or a line shows its working in the
+        Inspector (covenfolk_ledger)."""
+        p, saga, run = self.p, self.saga, self.run
         parts: list[QWidget] = [
             section(
                 "Loyalty",
                 p,
-                side_by_side(standing, modifiers, spacing=14),
+                self._loyalty_figures(covenant),
+                text(
+                    ledger.meaning_line(saga, covenant),
+                    p["label"],
+                    serif(11.5, italic=True),
+                    wrap=True,
+                ),
+                self._ledger(
+                    "Loyalty",
+                    ["Situational Modifier", "Setting"],
+                    ledger.modifier_lines(saga, covenant),
+                ),
                 edits={
                     "Edit": lambda: run(inhabitant_forms.loyalty_form(saga, covenant))
                 },
             ),
             section(
-                "The Household",
+                "Household",
                 p,
-                household,
+                _titled(
+                    "Staffing",
+                    self._ledger(
+                        "Staffing",
+                        ["Role", "Have", "Needed", "Standing"],
+                        ledger.staffing_lines(saga, covenant),
+                    ),
+                    p,
+                ),
+                _titled(
+                    "Inhabitants",
+                    self._ledger(
+                        "Inhabitants",
+                        ["Group", "People", "Points", "£ a Year"],
+                        ledger.household_lines(saga, covenant),
+                        footed=True,
+                    ),
+                    p,
+                ),
                 edits={
                     "Edit Inhabitants": lambda: run(
                         inhabitant_forms.population_form(saga, covenant)
@@ -725,6 +752,57 @@ class CovenantPage(QWidget):
         )
         parts.append(self._guests(covenant))
         return scrolling_page(p, *parts)
+
+    def _loyalty_figures(self, covenant: Covenant) -> QWidget:
+        """Base Loyalty, Modifiers, Loyalty Points and the Prevailing score
+        as four small cards in a row; choosing one shows its working."""
+        p = self.p
+        cards = []
+        figures = ledger.figures(self.saga, covenant)
+        for figure in figures:
+            card = ClickableCard(p, pad=8)
+            number = text(figure.value, p["heading"], serif(17, bold=True))
+            number.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            label = text(figure.caption, p["label"], serif(9.5, caps=True))
+            label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+            card.column.addWidget(number)
+            card.column.addWidget(label)
+            cards.append(card)
+
+        def choose(chosen: int) -> None:
+            for i, card in enumerate(cards):
+                card.set_chosen(i == chosen)
+            figure = figures[chosen]
+            self.inspect(f"{figure.caption}  {figure.value}", "Loyalty", figure.detail)
+
+        for i, card in enumerate(cards):
+            card.clicked = lambda i=i: choose(i)
+        return card_grid(cards, len(cards))
+
+    def _ledger(
+        self,
+        heading: str,
+        columns: list[str],
+        lines: Sequence[ledger.Line],
+        *,
+        footed: bool = False,
+    ) -> QWidget:
+        """A ledger of `lines`, its last column on the right; choosing a
+        line shows its working in the Inspector under `heading`."""
+        table = Table(
+            columns,
+            [[line.name, *line.cells] for line in lines],
+            markup=True,
+            stretch=0,
+            footed=footed,
+        )
+
+        def show(row: int) -> None:
+            if 0 <= row < len(lines):
+                line = lines[row]
+                self.inspect(line.name, heading, line.detail)
+
+        return table_view(table, self.p, show)
 
     def _add_stop(self, covenant: Covenant) -> list[QPushButton]:
         """Add a Stop, until Whereabouts shows with an Add of its own."""
@@ -813,28 +891,37 @@ class CovenantPage(QWidget):
         ]
 
     def _group(
-        self, group: cvs.Group, ops: SectionOps | None, more: Sequence[RowVerb] = ()
+        self,
+        group: cvs.Group,
+        ops: SectionOps | None,
+        more: Sequence[RowVerb] = (),
+        lead: Sequence[QWidget] = (),
     ) -> QWidget:
+        """A table under its title; `lead` are buttons before its verbs."""
         p = self.p
         chooser = Chooser()
+        column = 1 if group.kind == "purchases" else 0
 
         def show(row: int) -> None:
             chooser.choose(row)
             if 0 <= row < len(group.details):
                 self.inspect(
-                    group.table.rows[row][0],
+                    plain(group.table.rows[row][column]),
                     group.title.split(" (")[0],
                     group.details[row],
                 )
 
-        buttons = (
-            verb_buttons(ops, chooser, self.run, p, more=more)
-            if ops is not None
-            else []
-        )
+        buttons = [
+            *lead,
+            *(
+                verb_buttons(ops, chooser, self.run, p, more=more)
+                if ops is not None
+                else []
+            ),
+        ]
         if not group.table.rows:
             return section(group.title, p, _none("None recorded.", p), buttons=buttons)
-        view = cells_table(group.table.columns, group.table.rows, p, show)
+        view = table_view(group.table, p, show)
         self.tables[group.kind] = view
         return section(group.title, p, view, buttons=buttons)
 
@@ -871,10 +958,29 @@ class CovenantPage(QWidget):
             card_grid(listed, 2) if listed else _none("No laboratories yet.", p),
         )
 
+    def _settle_verb(
+        self, covenant: Covenant, sources: Sequence[Possession | IncomeSource]
+    ) -> RowVerb:
+        """Settle: the contested resource at the chosen row."""
+        saga = self.saga
+        return (
+            "Settle",
+            "charter",
+            lambda row: covenant_forms.settle_form(saga, covenant, sources[row]),
+            lambda row: row < len(sources) and sources[row].contested,
+        )
+
     def _possessions(self, covenant: Covenant) -> QWidget:
         saga = self.saga
 
         def more(kind: str) -> list[RowVerb]:
+            if kind == "vis_source":
+                sources = [
+                    e.record
+                    for e in pos.entries_for_kind(saga, covenant, kind)
+                    if e.record is not None
+                ]
+                return [self._settle_verb(covenant, sources)]
             if kind == "vis_store":
                 return [
                     give_verb(saga, giving.VIS, covenant, lambda: vis.held(covenant))
@@ -915,11 +1021,10 @@ class CovenantPage(QWidget):
             ),
         )
 
-    def _treasury(self, covenant: Covenant) -> QWidget:
-        """The year's account as a ledger: what comes in against what goes
-        out and the balance, the covenant's wealth, then the tables."""
+    def _year_account(self, figures: cvs.Treasury, covenant: Covenant) -> list[QWidget]:
+        """The year's three figures, what settling would bring, and how to
+        cover a deficit Wealth can't."""
         p = self.p
-        figures = cvs.treasury(self.saga, covenant)
         account = []
         for caption, value, colour in (
             ("Annual Income", f"{figures.income} £", p["text-success"]),
@@ -942,18 +1047,46 @@ class CovenantPage(QWidget):
             chapter_title(f"The Year's Account  ·  {self.saga.current_year}", p),
             card_grid(account, 3),
         ]
-        if figures.status:
+        if figures.settling:
+            parts.append(
+                text(figures.settling, p["label"], serif(12.5, italic=True), wrap=True)
+            )
+        if figures.ways_out.rows:
+            short = Card(p)
+            short.column.addWidget(
+                text(
+                    f"£{-figures.balance - covenant.economics.wealth} "
+                    "short once Wealth is spent. The book's ways out (DE pp. 195-196):",
+                    p["text-error"],
+                    serif(12.5),
+                    wrap=True,
+                )
+            )
+            short.column.addWidget(table_view(figures.ways_out, p, lambda _row: None))
+            parts.append(section("Covering the Deficit", p, short))
+        elif figures.status:
             parts.append(text(figures.status, p["text-error"], serif(13), wrap=True))
+        return parts
+
+    def _treasury(self, covenant: Covenant) -> QWidget:
+        """The year's account as a ledger: what comes in against what goes
+        out and the balance, the covenant's wealth, then the tables."""
+        p = self.p
         saga = self.saga
-        parts.append(
+        figures = cvs.treasury(saga, covenant)
+        parts = self._year_account(figures, covenant)
+        parts += [
             section(
                 "Wealth",
                 p,
-                fact_grid(figures.wealth, p, 6),
+                fact_grid(figures.wealth, p, 5),
                 edits={"Edit": lambda: self.run(covenant_forms.wealth_form(covenant))},
                 buttons=self.placer.buttons("Wealth") if self.placer else [],
-            )
-        )
+            ),
+            section(
+                "What the Year Is Reckoned On", p, fact_grid(figures.reckoned, p, 3)
+            ),
+        ]
 
         def ops(kind: str) -> SectionOps:
             if kind == "income":
@@ -961,21 +1094,56 @@ class CovenantPage(QWidget):
             return covenant_forms.economics_row_ops(saga, covenant, kind)
 
         def more(kind: str) -> list[RowVerb]:
-            if kind != "income" or not menu_forms.lives_at(
-                "improve", NodeKind.COVENANT, "Income"
-            ):
+            if kind != "income":
                 return []
             sources = covenant.economics.income_sources
-            return [
-                (
-                    "Improve",
-                    "income",
-                    lambda row: menu_forms.improve_form(saga, sources[row], covenant),
-                    lambda _row: True,
+            verbs = [self._settle_verb(covenant, sources)]
+            if menu_forms.lives_at("improve", NodeKind.COVENANT, "Income"):
+                verbs.insert(
+                    0,
+                    (
+                        "Improve",
+                        "income",
+                        lambda row: menu_forms.improve_form(
+                            saga, sources[row], covenant
+                        ),
+                        lambda _row: True,
+                    ),
                 )
-            ]
+            return verbs
 
         parts += self._groups(figures.groups, ops, more)
+        if figures.crafts.rows:
+            parts.append(
+                section(
+                    "Craft by Craft",
+                    p,
+                    table_view(figures.crafts, p, lambda _row: None),
+                )
+            )
+        purchases = self._group(
+            figures.purchases,
+            covenant_forms.purchase_ops(saga, covenant),
+            lead=[
+                edit_button(
+                    "Buy from Goods",
+                    p,
+                    lambda: self.run(covenant_forms.buy_from_goods(saga, covenant)),
+                    "income",
+                )
+            ],
+        )
+        purchases.setObjectName(PURCHASES_SECTION)
+        parts.append(purchases)
+        parts.append(
+            text(
+                "These go onto Sundry. When the year closes each purchase is written "
+                "in the Diary under Purchases & Sales, and the list starts again.",
+                p["label"],
+                serif(12, italic=True),
+                wrap=True,
+            )
+        )
         if covenant.land_projects:
             land = section(
                 "Land Works",

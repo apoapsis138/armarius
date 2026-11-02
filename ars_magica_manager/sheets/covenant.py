@@ -14,7 +14,7 @@ from collections.abc import Callable, Sequence
 from dataclasses import dataclass
 from typing import Any
 
-from .. import catalog, tribunal_packages, tribunals, vassals, world
+from .. import catalog, goods, tribunal_packages, tribunals, vassals, world
 from .. import covenant_build as cov_build
 from .. import covenant_diary as cov_diary
 from .. import economics as eco
@@ -23,10 +23,13 @@ from .. import possessions as pos
 from ..covenants import (
     UNKNOWN_HOOK_POINTS,
     boon_hook_is_unknown,
+    contested_now,
     covenant_boon_points,
     covenant_hook_points,
+    resource_standing,
 )
 from ..forms import world as world_forms
+from ..markup import escape
 from ..models import (
     INHABITANT_KINDS,
     LINE,
@@ -34,11 +37,14 @@ from ..models import (
     Book,
     Covenant,
     CovenantDiaryEntry,
+    IncomeSource,
+    Possession,
     Saga,
 )
 from ..references import Fact
 from ..rules import covenfolk, library, living, realms
 from ..rules.realms import covenant_effective_aura
+from ..rules.rounding import round_away_from_zero
 from ..tables import Table
 from .laboratory import Aura
 
@@ -259,15 +265,85 @@ def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
         entries = covenfolk.entries_for_kind(saga, covenant, kind)
         if not entries:
             continue
+        table = _table(_INHABITANT_COLUMNS[kind], entries)
+        if kind == "craftsperson":
+            # What each saves goes before Year Born (DE pp. 194-195).
+            saves = eco.entry_savings(saga, covenant)
+            table = Table(
+                [*table.columns[:-1], "Saves", table.columns[-1]],
+                [
+                    [*row[:-1], saved, row[-1]]
+                    for row, saved in zip(table.rows, saves, strict=True)
+                ],
+            )
         groups.append(
             Group(
                 kind,
                 f"{inh.KIND_TITLES[kind]} ({covenfolk.headcount(entries)})",
-                _table(_INHABITANT_COLUMNS[kind], entries),
+                table,
                 [inh.detail_text(e, saga.current_year) for e in entries],
             )
         )
     return groups
+
+
+def _vis_sources_table(
+    saga: Saga, covenant: Covenant, entries: Sequence[pos.PossessionEntry]
+) -> Table:
+    """The vis sources, a contested one as income shows it: its mark, its
+    pawns struck through with what it gives beside them, and its standing."""
+    plain = pos.table("vis_source", entries)
+    pawns = plain.columns.index("Pawns")
+    year = saga.current_year
+    rows = []
+    for row, entry in zip(plain.rows, entries, strict=True):
+        source = entry.record
+        assert source is not None  # the Possessions list only holds records
+        cells = [escape(cell) for cell in row]
+        unsettled = contested_now(source, year)
+        tone = "$text-error" if unsettled else "$text-success"
+        standing = resource_standing(covenant, source, year)
+        rows.append(
+            [
+                cells[0],
+                CONTESTED_MARK if unsettled else "",
+                *cells[1:pawns],
+                f"[s]{cells[pawns]}[/]" if unsettled else cells[pawns],
+                "[b $text-error]0[/]" if unsettled else "",
+                *cells[pawns + 1 :],
+                f"[i {tone}]{escape(standing)}[/]" if standing else "",
+            ]
+        )
+    columns = plain.columns
+    return Table(
+        [
+            columns[0],
+            "",
+            *columns[1:pawns],
+            columns[pawns],
+            "",
+            *columns[pawns + 1 :],
+            "Standing",
+        ],
+        rows,
+        markup=True,
+        stretch=len(columns) + 2,
+    )
+
+
+def _standing_line(
+    saga: Saga, covenant: Covenant, resource: Possession | IncomeSource
+) -> str:
+    """A contested resource's standing, opening its details."""
+    standing = resource_standing(covenant, resource, saga.current_year)
+    return f"[b]{escape(standing)}[/]\n\n" if standing else ""
+
+
+def _with_standing(saga: Saga, covenant: Covenant, entry: pos.PossessionEntry) -> str:
+    record = entry.record
+    return (
+        _standing_line(saga, covenant, record) if record is not None else ""
+    ) + pos.detail_text(entry)
 
 
 def possession_groups(saga: Saga, covenant: Covenant) -> list[Group]:
@@ -278,12 +354,17 @@ def possession_groups(saga: Saga, covenant: Covenant) -> list[Group]:
         entries = pos.entries_for_kind(saga, covenant, kind, by_id)
         if not entries:
             continue
+        contested = kind == "vis_source" and any(
+            e.record is not None and e.record.contested for e in entries
+        )
         groups.append(
             Group(
                 kind,
                 f"{pos.KIND_TITLES[kind]} ({len(entries)})",
-                pos.table(kind, entries),
-                [pos.detail_text(e) for e in entries],
+                _vis_sources_table(saga, covenant, entries)
+                if contested
+                else pos.table(kind, entries),
+                [_with_standing(saga, covenant, e) for e in entries],
             )
         )
     return groups
@@ -300,21 +381,156 @@ class Treasury:
     balance: int  # income less expenditure
     status: str  # running at a deficit or broke, or ""
     groups: list[Group]  # Sources of Income, Yearly Expenditure, Cost Savings
+    reckoned: list[Fact]  # the points the costs are worked out from
+    settling: str  # what settling its contested income would do, or ""
+    ways_out: Table  # how to cover a deficit Wealth can't; no rows otherwise
+    crafts: Table
+    purchases: Group
 
 
-def _ledger(first: str, rows: list[eco.Row]) -> Table:
+#: A contested resource's mark in a table, as an accountant's in the margin.
+CONTESTED_MARK = "[b $text-error]![/]"
+
+
+def _income_table(saga: Saga, covenant: Covenant) -> Table:
+    """The sources of income; a source that gives less than its income
+    this year shows that struck through with what it gives beside it, and
+    a contested one its mark and standing."""
+    sources = covenant.economics.income_sources
+    year = saga.current_year
+    loyalty = inh.prevailing_loyalty(saga, covenant)
+    rows = []
+    for s in sources:
+        now = round_away_from_zero(eco.income_now(saga, s, loyalty))
+        short = now != s.current_income
+        open_contest = contested_now(s, year)
+        tone = "$text-error" if open_contest else "$text-success"
+        standing = resource_standing(covenant, s, year)
+        rows.append(
+            [
+                escape(s.name or "(unnamed)"),
+                CONTESTED_MARK if open_contest else "",
+                escape(s.type),
+                f"[s]{s.current_income}[/]" if short else str(s.current_income),
+                f"[b $text-error]{now}[/]" if short else "",
+                f"[i {tone}]{escape(standing)}[/]" if standing else escape(s.note),
+            ]
+        )
     return Table(
-        ["Name", first, "Savings", "Notes"],
+        ["Name", "", "Type", "Income", "", "Standing"], rows, markup=True, stretch=5
+    )
+
+
+def _expenditure_table(rows: list[eco.Row], purchased: int) -> Table:
+    def working(row: eco.Row) -> str:
+        how = "" if row.basis == "typed" else row.basis
+        if row.key == "provisions":
+            saved = round_away_from_zero(row.first * eco.LABORER_LIMIT)
+            how += f"; laborers may save {saved}"
+        if row.key == "sundry":
+            how = f"£{row.first - purchased} a year"
+            how += f" + £{purchased} of the year's purchases" if purchased else ""
+        return " ".join(part for part in (how, row.notes) if part).replace("\n", " ")
+
+    return Table(
+        ["Name", "Cost", "Cap per Craft", "Savings", "Total", "How It's Reckoned"],
         [
             [
                 r.name + (f" ({r.note})" if r.note else ""),
                 eco.money(r.first),
+                "-" if r.cap is None else str(r.cap),
                 eco.money(r.savings),
-                (r.status or r.notes).replace("\n", " "),
+                eco.money(r.first - r.savings),
+                working(r),
+            ]
+            for r in rows
+        ],
+        stretch=5,
+    )
+
+
+def _savings_table(rows: list[eco.Row]) -> Table:
+    return Table(
+        ["Name", "Quantity", "Savings", "Notes"],
+        [
+            [
+                r.name,
+                eco.money(r.first),
+                eco.money(r.savings),
+                r.notes.replace("\n", " "),
             ]
             for r in rows
         ],
     )
+
+
+def _crafts_table(lines: list[eco.CraftLine]) -> Table:
+    return Table(
+        ["Name", "Row", "Worth", "Cap", "Saves", "Notes"],
+        [
+            [
+                c.name,
+                c.row,
+                str(c.worth),
+                "-" if c.cap is None else str(c.cap),
+                str(c.saves),
+                c.note,
+            ]
+            for c in lines
+        ],
+        stretch=5,
+    )
+
+
+def _settling_text(saga: Saga, covenant: Covenant, balance: int) -> str:
+    """What the unsettled income would bring, if any is."""
+    waiting = [
+        s
+        for s in covenant.economics.income_sources
+        if contested_now(s, saga.current_year)
+    ]
+    gain = sum(s.current_income for s in waiting)
+    if not gain:
+        return ""
+    after = balance + gain
+    result = f"a £{after} surplus" if after >= 0 else f"a £{-after} deficit"
+    names = " and ".join(s.name or "(unnamed)" for s in waiting)
+    return f"Settling {names} would bring £{gain} a year and make this {result}."
+
+
+def _purchases_group(summary: eco.Summary, covenant: Covenant) -> Group:
+    """The year's purchases, then the sundries every year has, which is
+    not a line to choose."""
+    economics = covenant.economics
+    entries = economics.purchases
+    rows = [[p.season, p.name, p.kind, goods.number(p.pounds)] for p in entries]
+    rows.append(["All year", ENUMERUS, "Always", str(economics.sundry)])
+    return Group(
+        "purchases",
+        "The Year's Purchases",
+        Table(
+            ["When", "What", "Kind", "£"],
+            rows,
+            [*range(len(entries)), None],
+            stretch=1,
+        ),
+        [
+            "\n".join(
+                line
+                for line in (
+                    f"[b]{escape(p.kind)}[/], {escape(p.season)}: "
+                    f"£{goods.number(p.pounds)}",
+                    escape(p.note),
+                )
+                if line
+            )
+            for p in entries
+        ],
+    )
+
+
+#: A pound of petty costs nobody can account for (Covenants p. 70).
+ENUMERUS = "The Pound of Enumerus"
 
 
 def treasury(saga: Saga, covenant: Covenant) -> Treasury:
@@ -324,36 +540,41 @@ def treasury(saga: Saga, covenant: Covenant) -> Treasury:
         Group(
             "income",
             f"Sources of Income ({len(sources)})",
-            Table(
-                ["Name", "Type", "Income", "Note"],
-                [
-                    [s.name or "(unnamed)", s.type, str(s.current_income), s.note]
-                    for s in sources
-                ],
-            ),
-            [eco.source_detail_text(s) for s in sources],
+            _income_table(saga, covenant),
+            [
+                _standing_line(saga, covenant, s) + eco.source_detail_text(s)
+                for s in sources
+            ],
         ),
         Group(
             "expenditure",
             "Yearly Expenditure",
-            _ledger("Cost", summary.expenditure),
+            _expenditure_table(
+                summary.expenditure, eco.purchases_total(covenant.economics)
+            ),
             [eco.row_detail_text(r, "Cost") for r in summary.expenditure],
         ),
         Group(
             "savings",
             "Cost Savings",
-            _ledger("Quantity", summary.savings),
+            _savings_table(summary.savings),
             [eco.row_detail_text(r, "Quantity") for r in summary.savings],
         ),
     ]
     money = eco.money
+    rise = eco.inflation_rise(covenant.economics, summary.total_expenditure)
     wealth = [
-        Fact("Wealth", str(summary.wealth)),
-        Fact("Inhabitants", money(summary.inhabitant_points)),
-        Fact("Laboratories", money(summary.laboratory_points)),
-        Fact("Weapons & Armor", money(summary.gear_points)),
+        Fact("Wealth", f"{summary.wealth} £"),
         Fact("Before Savings", money(summary.before_savings)),
         Fact("Cost Savings", money(summary.cost_savings)),
+        # A covenant can afford about a point for each pound (DE p. 191).
+        Fact("Can Afford", f"about {money(summary.income)} points"),
+        Fact("Next Year's Inflation", f"+{rise}"),
+    ]
+    reckoned = [
+        Fact("Points of Inhabitants", money(summary.inhabitant_points)),
+        Fact("Points of Laboratories", money(summary.laboratory_points)),
+        Fact("Points of Weapons & Armor", money(summary.gear_points)),
     ]
     return Treasury(
         wealth,
@@ -362,6 +583,15 @@ def treasury(saga: Saga, covenant: Covenant) -> Treasury:
         summary.surplus_deficit,
         eco.emergency_status(summary.surplus_deficit, summary.wealth),
         groups,
+        reckoned,
+        _settling_text(saga, covenant, summary.surplus_deficit),
+        Table(
+            ["Way Out", "Saves", "What It Costs"],
+            [list(way) for way in eco.ways_out(saga, covenant, summary)],
+            stretch=2,
+        ),
+        _crafts_table(summary.crafts),
+        _purchases_group(summary, covenant),
     )
 
 

@@ -105,8 +105,8 @@ def test_whereabouts_stays_away_without_a_stop_or_hook_but_add_a_stop_is_there(a
 def test_detach_and_rejoin_are_ship_buttons(app):
     window, saga_id = _window()
     page = _page(window)
-    page.codex.open_chapter("Possessions")
-    page.codex.chapter(page.codex.chapters().index("Possessions")).findChildren(
+    page.codex.open_chapter("Inventory")
+    page.codex.chapter(page.codex.chapters().index("Inventory")).findChildren(
         ShipEntry
     )[0].clicked()
     buttons = section_buttons(page, "Ships")
@@ -125,8 +125,8 @@ def test_a_ship_apart_says_so_on_her_entry(app):
     storage.save_saga(saga)
     window, _ = _window_of(saga_id)
     page = _page(window)
-    page.codex.open_chapter("Possessions")
-    entry = page.codex.chapter(page.codex.chapters().index("Possessions")).findChildren(
+    page.codex.open_chapter("Inventory")
+    entry = page.codex.chapter(page.codex.chapters().index("Inventory")).findChildren(
         ShipEntry
     )[0]
     words = [label.text() for label in entry.findChildren(QLabel)]

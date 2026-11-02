@@ -26,6 +26,8 @@ class Table:
     keys: list[int | None] | None = None
     markup: bool = False
     stretch: int = 0
+    #: Its last row is a total, set off above by a double rule.
+    footed: bool = False
 
     def key(self, row: int) -> int | None:
         """What choosing row `row` picks."""

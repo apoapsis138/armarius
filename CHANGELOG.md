@@ -122,6 +122,26 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.68.0 — 2026-11-02
+
+### Illuminatio
+
+- A covenant's chapters run in a new order: Overview, Charter, People, Covenfolk, Laboratories, Library, Treasury, Inventory, Manors, Projects, Seasons, Diary, History, Secrets, Build, Manage. Possessions is now called Inventory on the desktop.
+- The Treasury shows its working. Yearly Expenditure gives each row's cap per craft, its total after savings and how it is reckoned; Craft by Craft sets what each craft is worth against its cap; Wealth adds what the covenant can afford and next year's Inflation, and the points it is all reckoned on sit under their own heading.
+- When Wealth can't cover a deficit, Covering the Deficit lists the book's ways out with the covenant's own figures, in place of the old warning.
+- Contested income and vis sources carry a red ! with the figure struck through and the 0 they give beside it, and say what contests them or how long they are secured. Settle records the story that settled one: it is secured for five years and the Diary says so.
+- The Year's Purchases lists what the covenant buys, from the Goods catalog (Buy from Goods) or entered by hand, and adds it to Sundry with the Pound of Enumerus. When the year closes each purchase goes into the Diary under Purchases & Sales.
+- The Covenfolk chapter is redrawn. Loyalty shows its four figures in a row, what the score means and how far the next one is, then the situational modifiers as a ledger. Household has a Staffing ledger, reading Met, Shortfall of 2 or Excess of 1 in words, and an Inhabitants ledger with what each group costs a year, closed by its total. Click any figure or line to see its working and rule in the Inspector. Craftspeople show what each one saves.
+
+### Computus
+
+- Magic Servants and Magic Teamsters now lower the servants and teamsters a covenant needs, one each.
+- The most one craft may save on a cost is rounded down, as the book's worked example does, so a single craftsman can no longer save more than his share.
+
+### Glossa
+
+- Help and the covenant how-tos describe the new Treasury, Inventory, Settle, The Year's Purchases and the Covenfolk ledgers.
+
 ## 3.67.0 — 2026-11-01
 
 ### Illuminatio
