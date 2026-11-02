@@ -630,9 +630,11 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     # At the top of Hermetic Magic, under where the character is now.
     "whereabouts": ((NodeKind.CHARACTER, "Current Location"),),
     "guest_stay": ((NodeKind.CHARACTER, "Current Location"),),
+    # On the Hooks' points line, not their title's, where it would wrap.
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
-    # Beside the Mobile Hooks, as the section shows only with a stop or one.
-    "add_stop": ((NodeKind.COVENANT, "Hooks"),),
+    # With the covenant's description, as Whereabouts shows only with a stop
+    # or a Mobile Hook.
+    "add_stop": ((NodeKind.COVENANT, "The Covenant"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),

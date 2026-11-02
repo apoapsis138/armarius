@@ -122,6 +122,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.67.0 — 2026-11-01
+
+### Illuminatio
+
+- Boons and Hooks line up again. Suggest a Story moves to the line under the Hooks' title, beside their points, so the title row no longer wraps.
+- Add a Stop moves beside The Covenant's Edit Description (beside What Matters on a sketch), and goes away once Whereabouts shows, as its Add does the same.
+- The Minor, Major and Free pills are one fixed size on every card, however long the card's name runs.
+
 ## 3.66.0 — 2026-11-01
 
 ### Illuminatio

@@ -137,12 +137,27 @@ from .widgets import (
     serif,
     table_view,
     text,
+    tier_badge,
 )
 from .world import relations, table_section
 
 
 def _none(words: str, p: Palette) -> QLabel:
     return text(words, p["dim"], serif(12.5, italic=True))
+
+
+def _points_line(total: QLabel, buttons: Sequence[QWidget], height: int) -> QWidget:
+    """The line under a Boons or Hooks title: its points, and the section's
+    rarer buttons at the far end, so they leave the title's own row alone."""
+    line = QWidget()
+    line.setMinimumHeight(height)
+    row = QHBoxLayout(line)
+    row.setContentsMargins(0, 0, 0, 0)
+    row.setSpacing(2)
+    row.addWidget(total, 1)
+    for button in buttons:
+        row.addWidget(button)
+    return line
 
 
 def _choose_cards_by(
@@ -356,6 +371,10 @@ class CovenantPage(QWidget):
             if boons == hooks
             else p["text-error"]
         )
+        # Both columns' lines are as tall as the Hooks' buttons, so their
+        # first cards stay level.
+        placed = self.placer.buttons("Hooks") if self.placer else []
+        line_height = max((b.sizeHint().height() for b in placed), default=0)
         columns = []
         for kind, points, tone in (
             ("Boon", boons, "text-success"),
@@ -367,24 +386,18 @@ class CovenantPage(QWidget):
             stack.setSpacing(10)
             chooser = Chooser()
             ops = covenant_forms.boon_hook_ops(self.saga, covenant, kind)
-            placed = (
-                list(self.placer.buttons("Hooks"))
-                if kind == "Hook" and self.placer
-                else []
-            )
             heading = section(
-                f"{kind}s",
-                p,
-                buttons=[*verb_buttons(ops, chooser, self.run, p), *placed],
+                f"{kind}s", p, buttons=verb_buttons(ops, chooser, self.run, p)
             )
             stack.addWidget(heading)
+            total = text(
+                f"{points:g} {'point' if points == 1 else 'points'}"
+                + (" spent" if kind == "Boon" else " provided"),
+                balance,
+                serif(12, italic=True),
+            )
             stack.addWidget(
-                text(
-                    f"{points:g} {'point' if points == 1 else 'points'}"
-                    + (" spent" if kind == "Boon" else " provided"),
-                    balance,
-                    serif(12, italic=True),
-                )
+                _points_line(total, placed if kind == "Hook" else [], line_height)
             )
             cards = cvs.boon_hook_cards(covenant, kind)
             frames = [self._boon_hook_card(covenant, card, p[tone]) for card in cards]
@@ -403,6 +416,7 @@ class CovenantPage(QWidget):
                 "The Covenant",
                 p,
                 prose(covenant.notes.strip(), p),
+                buttons=self._add_stop(covenant),
                 edits={
                     "Edit Description": lambda: self.run(
                         covenant_forms.description_form(covenant)
@@ -562,7 +576,10 @@ class CovenantPage(QWidget):
                             world_forms.what_matters_form(covenant)
                         )
                     },
-                    buttons=list(self.placer.buttons("Hooks")) if self.placer else [],
+                    buttons=[
+                        *(self.placer.buttons("Hooks") if self.placer else []),
+                        *self._add_stop(covenant),
+                    ],
                 )
             )
         parts += relations(saga, covenant, p, self.run)
@@ -592,7 +609,7 @@ class CovenantPage(QWidget):
         top.addWidget(
             text(card.name, p["foreground"], serif(13.5, bold=True), wrap=True), 1
         )
-        top.addWidget(badge(card.tier, p["dim"] if card.tier == "Free" else colour, p))
+        top.addWidget(tier_badge(card.tier, colour, p), 0, Qt.AlignmentFlag.AlignTop)
         frame.column.addLayout(top)
         words = card.category or "—"
         if card.note:
@@ -708,6 +725,12 @@ class CovenantPage(QWidget):
         )
         parts.append(self._guests(covenant))
         return scrolling_page(p, *parts)
+
+    def _add_stop(self, covenant: Covenant) -> list[QPushButton]:
+        """Add a Stop, until Whereabouts shows with an Add of its own."""
+        if self.placer is None or mobile_covenants.shows(covenant):
+            return []
+        return self.placer.buttons("The Covenant")
 
     def _whereabouts(self, covenant: Covenant) -> list[QWidget]:
         """Where it is now, its route and this season's vis, then its

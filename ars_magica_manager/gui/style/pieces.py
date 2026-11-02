@@ -199,6 +199,10 @@ def card_grid(cards: Sequence[QWidget], across: int = CARDS_ACROSS) -> QWidget:
     return box
 
 
+#: Every tier pill's size, wide enough for Minor and Major.
+TIER_BADGE = QSize(52, 18)
+
+
 def badge(words: str, colour: str, p: Palette) -> QLabel:
     """A filled pill: a Virtue's tier."""
     label = QLabel(words)
@@ -206,6 +210,15 @@ def badge(words: str, colour: str, p: Palette) -> QLabel:
         f"color:{p['background']}; background:{colour}; border-radius:8px;"
         " padding:1px 8px; font-size:8.5pt; font-weight:600"
     )
+    return label
+
+
+def tier_badge(tier: str, colour: str, p: Palette) -> QLabel:
+    """A Virtue's, Flaw's, Boon's or Hook's tier, as a pill of one size
+    whatever its word or the card beside it; a Free one is dimmed."""
+    label = badge(tier, p["dim"] if tier == "Free" else colour, p)
+    label.setFixedSize(TIER_BADGE)
+    label.setAlignment(Qt.AlignmentFlag.AlignCenter)
     return label
 
 

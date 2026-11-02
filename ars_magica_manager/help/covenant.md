@@ -341,7 +341,7 @@ Hooks are the troupe's story ideas (DE p. 181).
 More's **Suggest a Story** (`m`, `y`) on the Hooks
 <!-- /tui -->
 <!-- gui -->
-**Suggest a Story** beside the Hooks
+**Suggest a Story**, on the line under the Hooks' title,
 <!-- /gui -->
 takes one of the covenant's Hooks and proposes a story from it: its title
 is drawn from the Hook's name and the detail typed on it, and the panel
@@ -762,8 +762,9 @@ More (`m`) on a covenant offers **Add a Stop**. On Whereabouts, `a`, `e` and
 `d` add, edit and delete a stop, and More offers **Plan Route**.
 <!-- /tui -->
 <!-- gui -->
-**Add a Stop** sits beside the Hooks, and on a sketch beside What Matters.
-Whereabouts has Add, Edit, Delete and **Plan Route**.
+**Add a Stop** sits beside The Covenant's Edit Description, and on a sketch
+beside What Matters, until Whereabouts shows. Whereabouts has Add, Edit, Delete
+and **Plan Route**.
 <!-- /gui -->
 
 A stop is a date and a Place of The Region with its level; open water is a sea

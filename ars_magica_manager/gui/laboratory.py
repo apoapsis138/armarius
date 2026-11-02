@@ -79,7 +79,6 @@ from .widgets import (
     Codex,
     Symbol,
     arts_heat_grid,
-    badge,
     chapter_title,
     display_name,
     edit_button,
@@ -89,6 +88,7 @@ from .widgets import (
     serif,
     table_view,
     text,
+    tier_badge,
 )
 
 #: The chapters, in order, with each one's icon (artwork.ICON_NAMES).
@@ -434,7 +434,7 @@ class LaboratoryPage(QWidget):
         top.addWidget(
             text(card.name, p["foreground"], serif(13.5, bold=True), wrap=True), 1
         )
-        top.addWidget(badge(card.tier, p["dim"] if card.tier == "Free" else colour, p))
+        top.addWidget(tier_badge(card.tier, colour, p), 0, Qt.AlignmentFlag.AlignTop)
         frame.column.addLayout(top)
         if card.summary:
             frame.column.addWidget(text(card.summary, p["label"], wrap=True))

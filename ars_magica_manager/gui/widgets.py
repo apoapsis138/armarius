@@ -82,6 +82,7 @@ from .style.pieces import (
     scrolling_page,
     serif,
     text,
+    tier_badge,
 )
 from .themes import HOVER_WASH, WASH, Palette
 
@@ -99,6 +100,7 @@ __all__ = [
     "scrolling_page",
     "serif",
     "text",
+    "tier_badge",
 ]
 
 #: The item-data role holding an experience bar's (fraction, text).

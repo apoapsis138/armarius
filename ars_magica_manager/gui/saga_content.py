@@ -69,6 +69,7 @@ from .widgets import (
     table_style,
     table_view,
     text,
+    tier_badge,
 )
 
 CHAPTERS = (
@@ -483,7 +484,7 @@ class SagaContentPage(QWidget):
             top.addWidget(text(rule.name, p["foreground"], serif(13.5, bold=True)))
             top.addStretch(1)
             top.addWidget(
-                badge(rule.tier, p["dim"] if rule.tier == "Free" else colour, p)
+                tier_badge(rule.tier, colour, p), 0, Qt.AlignmentFlag.AlignTop
             )
             card.column.addLayout(top)
             card.column.addWidget(

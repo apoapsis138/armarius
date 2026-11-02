@@ -162,7 +162,6 @@ from .widgets import (
     TallRows,
     XpBarDelegate,
     arts_heat_grid,
-    badge,
     chapter_title,
     chip,
     display_name,
@@ -171,6 +170,7 @@ from .widgets import (
     serif,
     table_view,
     text,
+    tier_badge,
 )
 from .widgets import (
     table_style as _table_style,
@@ -2155,7 +2155,7 @@ def vf_card(
     top = QHBoxLayout()
     top.addWidget(text(card.name, p["foreground"], serif(13.5, bold=True)))
     top.addStretch(1)
-    top.addWidget(badge(card.tier, p["dim"] if card.tier == "Free" else colour, p))
+    top.addWidget(tier_badge(card.tier, colour, p), 0, Qt.AlignmentFlag.AlignTop)
     frame.column.addLayout(top)
     if card.summary:
         frame.column.addWidget(text(card.summary, p["label"], wrap=True))
