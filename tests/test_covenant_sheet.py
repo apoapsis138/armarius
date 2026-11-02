@@ -64,10 +64,16 @@ def test_inhabitants_are_tables_by_kind_with_their_details():
     )
     groups = {g.kind: g for g in cvs.inhabitant_groups(saga, covenant)}
     assert list(groups) == ["magus", "turb"]
-    assert groups["magus"].table.columns == ["Name", "House", "Year Born", "Gift"]
+    assert groups["magus"].table.columns == [
+        "Name",
+        "House",
+        "Year Born",
+        "Gift",
+        "Year Arrived",
+    ]
     turb = groups["turb"]
     assert turb.title == "Turb (6)"
-    assert turb.table.rows == [["The watch", "Walls", "6"]]
+    assert turb.table.rows == [["The watch", "Walls", "6", ""]]  # no founding year
     assert "Walls" in turb.details[0]
 
 

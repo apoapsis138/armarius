@@ -122,6 +122,18 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.70.0 — 2026-11-02
+
+### Illuminatio
+
+- Every list of people, magi and companions too, has a Year Arrived column. A line whose people came in different years shows Varies, with an indented row under it for each group: how many and when. A year in italics is newcomers still growing used to the Gift.
+- Edit on a covenfolk line has a year for each group of its people, so they can be re-dated; groups given the same year merge. Magi and companions take a Year arrived on their Edit.
+- Someone added in play arrives in the saga's current year unless you change it; while a covenant is being created its people start as here since the founding.
+
+### Glossa
+
+- Help covers the Year Arrived column, re-dating, and that recruits and departures go into the covenant's Diary.
+
 ## 3.69.0 — 2026-11-02
 
 ### Computus

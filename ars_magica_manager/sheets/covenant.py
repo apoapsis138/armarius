@@ -258,6 +258,50 @@ class Group:
     details: list[str]
 
 
+ARRIVING_KINDS = inh.ARRIVING_KINDS
+VARIES = "Varies"
+
+
+def _with_arrivals(
+    saga: Saga, covenant: Covenant, entries: Sequence[Any], table: Table
+) -> Table:
+    """`table` (plain cells) with a Year Arrived column, as markup: a line
+    whose people came in one year shows it; a split line shows Varies and,
+    under it, an indented row for each group with its count and year. A
+    sub-row chooses its line. Newcomers still growing used to the Gift are
+    in italics."""
+    founded = covenant.year_founded or 0
+    columns = [*table.columns, "Year Arrived"]
+    qty = columns.index("Qty") if "Qty" in columns else None
+    rows: list[list[str]] = []
+    keys: list[int | None] = []
+    for index, (row, entry) in enumerate(zip(table.rows, entries, strict=True)):
+        cohorts = inh.entry_cohorts(entry, founded)
+
+        def year(came: int, entry: Any = entry) -> str:
+            shown = str(came) if came else ""
+            new = entry.kind in inh.FAMILIARITY_KINDS and inh.still_new(
+                saga, covenant, came
+            )
+            return f"[i]{shown}[/]" if new and shown else shown
+
+        main = year(cohorts[0][1]) if len(cohorts) == 1 else VARIES
+        rows.append([*(escape(cell) for cell in row), main])
+        keys.append(index)
+        if len(cohorts) < 2:
+            continue
+        for count, came in cohorts:
+            cells = [""] * len(columns)
+            if qty is not None:
+                cells[qty] = f"[dim]{count}[/]"
+            else:
+                cells[0] = f"[dim]    {count} of them[/]"
+            cells[-1] = f"[dim]{year(came)}[/]"
+            rows.append(cells)
+            keys.append(index)
+    return Table(columns, rows, keys, markup=True)
+
+
 def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
     """Each kind of inhabitant the covenant has, Magi first."""
     groups = []
@@ -269,13 +313,16 @@ def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
         if kind == "craftsperson":
             # What each saves goes before Year Born (DE pp. 194-195).
             saves = eco.entry_savings(saga, covenant)
+            born = table.columns.index("Year Born")
             table = Table(
-                [*table.columns[:-1], "Saves", table.columns[-1]],
+                [*table.columns[:born], "Saves", *table.columns[born:]],
                 [
-                    [*row[:-1], saved, row[-1]]
+                    [*row[:born], saved, *row[born:]]
                     for row, saved in zip(table.rows, saves, strict=True)
                 ],
             )
+        if kind in ARRIVING_KINDS:
+            table = _with_arrivals(saga, covenant, entries, table)
         groups.append(
             Group(
                 kind,

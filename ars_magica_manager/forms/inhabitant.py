@@ -27,6 +27,7 @@ from ..models import (
     Character,
     Covenant,
     CovenantDiaryEntry,
+    Inhabitant,
     Saga,
 )
 from ..rules import covenfolk
@@ -282,12 +283,50 @@ def inhabitant_form(
     kind: str,
     entry: covenfolk.InhabitantEntry | None,
     grog: Character | None = None,
+    year: int | None = None,
 ) -> Form:
     """Add (`entry` None; for `grog`, if one was chosen) or edit one
-    inhabitant."""
+    inhabitant. A new one arrives in `year` (the saga's year, as a rule)
+    unless the form says otherwise; a covenant still being created starts
+    its people as here since the founding."""
+    arriving = entry is None and year is not None and kind in inh.ARRIVING_KINDS
+
+    dated = entry is not None and (
+        (entry.record is not None and kind in inh.FAMILIARITY_KINDS)
+        or kind in covenfolk.AUTO_KINDS
+    )
+
+    def fields() -> list[DialogField]:
+        found = inhabitant_fields(kind, entry, grog)
+        if dated and entry is not None:
+            found += arrival_fields(covenant, entry)
+        if arriving:
+            found.append(
+                DialogField(
+                    f"{ARRIVED}new",
+                    "Year arrived",
+                    "optint",
+                    None if covenant.in_creation else year,
+                    hint="Blank: here since the covenant's founding"
+                    + (f" ({covenant.year_founded})" if covenant.year_founded else "")
+                    + ".",
+                )
+            )
+        return found
 
     def apply(values: dict[str, Any]) -> None:
+        years = {k: values.pop(k) for k in list(values) if k.startswith(ARRIVED)}
+        created = entry is not None and entry.record is None
         inh.save_entry(covenant, kind, entry, values, grog)
+        if arriving:
+            inh.set_arrival(
+                covenant, covenant.inhabitants[-1], years.get(f"{ARRIVED}new")
+            )
+        if dated and entry is not None:
+            # A character listed from a sheet gets its record on first edit.
+            record = covenant.inhabitants[-1] if created else entry.record
+            if record is not None:
+                redate(covenant, record, years)
 
     def problem(values: dict[str, Any]) -> str | None:
         arrived = sum(a.count for a in entry.arrivals) if entry is not None else 0
@@ -300,10 +339,80 @@ def inhabitant_form(
 
     return Form(
         form_title(kind, entry),
-        lambda: inhabitant_fields(kind, entry, grog),
+        fields,
         apply,
         validate=problem,
     )
+
+
+#: The key that opens each arrival's year field in an edit form.
+ARRIVED = "arrived_"
+
+
+def arrival_fields(
+    covenant: Covenant, entry: covenfolk.InhabitantEntry
+) -> list[DialogField]:
+    """A year for each group of a line: those here since the founding
+    (blank) and each later arrival, so a group can be re-dated."""
+    founded = covenant.year_founded
+    if entry.kind in covenfolk.AUTO_KINDS:
+        came = entry.arrivals[0].year if entry.arrivals else None
+        return [
+            DialogField(
+                f"{ARRIVED}founding" if came is None else f"{ARRIVED}0",
+                "Year arrived",
+                "optint",
+                came,
+                hint="Blank: here since the covenant's founding"
+                + (f" ({founded})" if founded else "")
+                + ".",
+            )
+        ]
+    arrived = sum(a.count for a in entry.arrivals)
+    fields = []
+    if entry.quantity > arrived:
+        fields.append(
+            DialogField(
+                f"{ARRIVED}founding",
+                f"Year {entry.quantity - arrived} came (here since the founding)",
+                "optint",
+                None,
+                hint="Blank: here since the covenant's founding"
+                + (f" ({founded})" if founded else "")
+                + ". Type a year to date them as newcomers.",
+            )
+        )
+    fields += [
+        DialogField(
+            f"{ARRIVED}{i}",
+            f"Year {a.count} came",
+            "optint",
+            a.year,
+            hint="Blank or the founding year: here since the founding.",
+        )
+        for i, a in enumerate(entry.arrivals)
+    ]
+    return fields
+
+
+def redate(covenant: Covenant, record: Inhabitant, years: dict[str, Any]) -> None:
+    """Re-date a line's groups from the edit form's years: a group dated at
+    or before the founding (or blank) is counted as here since then, and
+    groups of the same year merge. Its people stay as many."""
+    founded = covenant.year_founded or 0
+    groups: list[tuple[int, int | None]] = []
+    arrived = sum(a.count for a in record.arrivals)
+    if record.quantity > arrived:
+        groups.append((record.quantity - arrived, years.get(f"{ARRIVED}founding")))
+    groups += [
+        (a.count, years.get(f"{ARRIVED}{i}", a.year))
+        for i, a in enumerate(record.arrivals)
+    ]
+    by_year: dict[int, int] = {}
+    for count, year in groups:
+        if year is not None and year > founded:
+            by_year[year] = by_year.get(year, 0) + count
+    record.arrivals = [Arrival(count, year) for year, count in sorted(by_year.items())]
 
 
 def recruit_form(
@@ -443,14 +552,16 @@ def add_inhabitant(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose:
         return _add_from_sheets(saga, covenant, kind)
     grogs = inh.available_grogs(saga, covenant, kind) if inh.takes_grogs(kind) else []
     if not grogs:
-        return inhabitant_form(covenant, kind, None)
+        return inhabitant_form(covenant, kind, None, year=saga.current_year)
     return Choose(
         f"Add a {inh.KIND_SINGULAR[kind]}",
         lambda: (
             [Choice(new_entry_label(kind), None)]
             + [Choice(grog_label(g), g, search=g.name) for g in grogs]
         ),
-        lambda grog: inhabitant_form(covenant, kind, None, grog),
+        lambda grog: inhabitant_form(
+            covenant, kind, None, grog, year=saga.current_year
+        ),
     )
 
 
@@ -459,7 +570,7 @@ def _add_from_sheets(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose
     joins it (and the covenant), or a new entry with no sheet."""
     people = inh.addable_characters(saga, covenant, kind)
     if not people:
-        return inhabitant_form(covenant, kind, None)
+        return inhabitant_form(covenant, kind, None, year=saga.current_year)
 
     def label(character: Character) -> str:
         home = saga.covenant(character.covenant_id)
@@ -469,18 +580,21 @@ def _add_from_sheets(saga: Saga, covenant: Covenant, kind: str) -> Form | Choose
             return f"{escape(character.name)}  (of {escape(home.name)})"
         return escape(character.name)
 
+    # Someone taken in now arrives now, unless the covenant is being made.
+    arrival = None if covenant.in_creation else saga.current_year
+
     def chosen(character: Character | None) -> Form | Confirm | None:
         if character is None:
-            return inhabitant_form(covenant, kind, None)
+            return inhabitant_form(covenant, kind, None, year=saga.current_year)
         home = saga.covenant(character.covenant_id)
         if home is not None and home is not covenant:
             return Confirm(
                 f"Move {escape(character.name)} from {escape(home.name)} to "
                 f"{escape(covenant.name)}?",
-                lambda: inh.take_in(covenant, kind, character),
+                lambda: inh.take_in(covenant, kind, character, arrival),
                 yes_label="Move",
             )
-        inh.take_in(covenant, kind, character)
+        inh.take_in(covenant, kind, character, arrival)
         return None
 
     return Choose(

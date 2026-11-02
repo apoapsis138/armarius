@@ -936,8 +936,10 @@ class CovenantPage(QWidget):
         def show(row: int) -> None:
             chooser.choose(row)
             if 0 <= row < len(group.details):
+                keys = group.table.keys
+                first = keys.index(row) if keys is not None else row
                 self.inspect(
-                    plain(group.table.rows[row][column]),
+                    plain(group.table.rows[first][column]),
                     group.title.split(" (")[0],
                     group.details[row],
                 )

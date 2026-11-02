@@ -17,6 +17,7 @@ from .models import (
     INHABITANT_KINDS,
     LOYALTY_EQUIPMENT,
     LOYALTY_MONEY,
+    Arrival,
     Character,
     Covenant,
     Inhabitant,
@@ -151,13 +152,37 @@ def addable_characters(saga: Saga, covenant: Covenant, kind: str) -> list[Charac
     ]
 
 
-def take_in(covenant: Covenant, kind: str, character: Character) -> None:
+def take_in(
+    covenant: Covenant, kind: str, character: Character, year: int | None = None
+) -> None:
     """Put a character on `kind`'s list: they join the covenant, and count
-    as an inhabitant again if they had been taken off."""
+    as an inhabitant again if they had been taken off. `year`, when given,
+    is when they arrive."""
     character.covenant_id = covenant.id
+    found = None
     for record in covenant.inhabitants:
         if record.kind == kind and record.character_id == character.id:
             record.departed = False
+            found = record
+    if year is None:
+        return
+    if found is None:
+        found = Inhabitant(
+            id=_listed_record_id(covenant, kind, character.name),
+            kind=kind,
+            character_id=character.id,
+        )
+        covenant.inhabitants.append(found)
+    set_arrival(covenant, found, year)
+
+
+def set_arrival(covenant: Covenant, record: Inhabitant, year: int | None) -> None:
+    """Date a whole line's arrival: after the founding they are newcomers;
+    blank, or at or before the founding, they have been here since it."""
+    founded = covenant.year_founded or 0
+    record.arrivals = (
+        [Arrival(record.quantity, year)] if year is not None and year > founded else []
+    )
 
 
 def total_inhabitants(saga: Saga, covenant: Covenant) -> int:
@@ -228,6 +253,8 @@ FAMILIARITY_KINDS: tuple[str, ...] = (
     "turb",
     "inhabitant",
 )
+#: The kinds whose people have a year they arrived (not the animals).
+ARRIVING_KINDS: tuple[str, ...] = ("magus", "companion", *FAMILIARITY_KINDS)
 
 
 def _cohorts(saga: Saga, covenant: Covenant) -> list[tuple[int, int]]:
@@ -253,9 +280,21 @@ def entry_cohorts(entry: InhabitantEntry, founded: int) -> list[tuple[int, int]]
     return cohorts + [(a.count, max(founded, a.year)) for a in entry.arrivals]
 
 
+def still_new(saga: Saga, covenant: Covenant, came: int) -> bool:
+    """Whether covenfolk who came in `came` are still growing used to the
+    Gift (those here since the founding never are)."""
+    founded = covenant.year_founded or saga.current_year
+    cap = max(0, -base_loyalty(saga, covenant))
+    grown = FAMILIARITY_PER_YEAR * max(0, saga.current_year - came)
+    return came > founded and grown < cap
+
+
 def arrival_text(saga: Saga, covenant: Covenant, entry: InhabitantEntry) -> str:
     """When a line's people came, and each group's familiarity with the
     Gift (the Inspector's Arrivals; "" for a kind it doesn't concern)."""
+    if entry.kind in ("magus", "companion"):
+        came = entry.arrivals[0].year if entry.arrivals else None
+        return "[b]Arrived:[/] " + (str(came) if came else "here since the founding")
     if entry.kind not in FAMILIARITY_KINDS:
         return ""
     founded = covenant.year_founded or saga.current_year

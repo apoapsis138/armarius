@@ -729,7 +729,22 @@ here since the covenant's founding until someone joins them.
 clicked: how many and the year they came. **Depart** takes people away:
 you choose which arrival they belong to (those here since the founding,
 or those who joined in a given year), how many, and why. Both write the
-Diary under Inhabitants, and a line everyone has left is removed. Click a
+covenant's Diary under Inhabitants, and a line everyone has left is
+removed. To re-date people already on a line, **Edit** it: it has a year
+for each group, blank for those here since the founding. Change a year to
+re-date that group; groups given the same year merge.
+
+Someone added to a list in play arrives in the saga's current year: the
+add form shows it as **Year arrived**, which you can change, or clear for
+someone who has been here since the founding. While a covenant is being
+created its people start as here since the founding.
+
+Every list of people, magi and companions too, has a **Year Arrived**
+column (a magus's or companion's is set with Edit: blank for here since the
+founding). A line whose people came in different years shows **Varies**,
+with an indented row under it for each group: how many and when; clicking
+one chooses its line. A year in italics is newcomers still growing used to
+the Gift. Click a
 line to see in the Inspector when each group arrived and how used to the
 Gift they are yet.
 <!-- /gui -->
