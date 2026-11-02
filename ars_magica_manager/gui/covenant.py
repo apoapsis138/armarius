@@ -441,7 +441,6 @@ class CovenantPage(QWidget):
                 "The Covenant",
                 p,
                 prose(covenant.notes.strip(), p),
-                buttons=self._add_stop(covenant),
                 edits={
                     "Edit Description": lambda: self.run(
                         covenant_forms.description_form(covenant)
@@ -601,10 +600,7 @@ class CovenantPage(QWidget):
                             world_forms.what_matters_form(covenant)
                         )
                     },
-                    buttons=[
-                        *(self.placer.buttons("Hooks") if self.placer else []),
-                        *self._add_stop(covenant),
-                    ],
+                    buttons=self.placer.buttons("Hooks") if self.placer else [],
                 )
             )
         parts += relations(saga, covenant, p, self.run)
@@ -834,12 +830,6 @@ class CovenantPage(QWidget):
                 self.inspect(line.name, heading, line.detail)
 
         return table_view(table, self.p, show)
-
-    def _add_stop(self, covenant: Covenant) -> list[QPushButton]:
-        """Add a Stop, until Whereabouts shows with an Add of its own."""
-        if self.placer is None or mobile_covenants.shows(covenant):
-            return []
-        return self.placer.buttons("The Covenant")
 
     def _whereabouts(self, covenant: Covenant) -> list[QWidget]:
         """Where it is now, its route and this season's vis, then its

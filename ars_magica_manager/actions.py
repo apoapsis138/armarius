@@ -83,6 +83,7 @@ from .rules import (
     hedge_casting,
     house_magic,
     merchants,
+    mobile,
     options,
     philosophy,
 )
@@ -527,8 +528,8 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "build_ship", "Build a Ship"),
     MenuItem("x", "detach_ship", "Detach"),
     MenuItem("j", "rejoin_ship", "Rejoin"),
-    # Where a covenant is: any covenant may log a stop; its route is planned
-    # on Whereabouts.
+    # Where a covenant is: a mobile covenant logs its stops; its route is
+    # planned on Whereabouts.
     MenuItem("o", "add_stop", "Add a Stop"),
     MenuItem("t", "plan_route", "Plan Route"),
     # Shaping the land by magic (Transforming Mythic Europe).
@@ -1816,11 +1817,13 @@ def _on_ship_row(
 
 
 def _logs_stop(facts: ActionFacts, section: str) -> bool:
-    """Add a Stop, for any covenant: on its top panel, as Whereabouts may
-    not show yet, and on Whereabouts."""
-    return facts.selected_covenant is not None and section in (
-        "section-cov-info",
-        WHEREABOUTS_SECTION,
+    """Add a Stop: on Whereabouts, and on the top panel of a covenant with
+    a Mobile Hook, as a covenant that never moves has no stops to log."""
+    covenant = facts.selected_covenant
+    if covenant is None:
+        return False
+    return section == WHEREABOUTS_SECTION or (
+        section == "section-cov-info" and mobile.has_mobile_hook(covenant)
     )
 
 

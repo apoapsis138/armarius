@@ -799,16 +799,15 @@ inhabitants.
 Where a covenant on the move is now, and where it has been. It shows on the
 Overview of a covenant with a stop, a route, or a Mobile Hook (Constantly
 Mobile, Erratically Mobile, Covenants pp. 9-10); those Hooks have no rules of
-their own, so this is what makes them count. **Add a Stop** is offered for
-every covenant.
+their own, so this is what makes them count. **Add a Stop** is offered only
+to a covenant with a Mobile Hook, or on Whereabouts once it shows: a covenant
+that never moves has no stops to log.
 <!-- tui -->
-More (`m`) on a covenant offers **Add a Stop**. On Whereabouts, `a`, `e` and
-`d` add, edit and delete a stop, and More offers **Plan Route**.
+More (`m`) on a mobile covenant offers **Add a Stop**. On Whereabouts, `a`, `e`
+and `d` add, edit and delete a stop, and More offers **Plan Route**.
 <!-- /tui -->
 <!-- gui -->
-**Add a Stop** sits beside The Covenant's Edit Description, and on a sketch
-beside What Matters, until Whereabouts shows. Whereabouts has Add, Edit, Delete
-and **Plan Route**.
+Whereabouts has Add (Add a Stop), Edit, Delete and **Plan Route**.
 <!-- /gui -->
 
 A stop is a date and a Place of The Region with its level; open water is a sea

@@ -1,6 +1,6 @@
 """The desktop's Whereabouts: on a covenant's Overview with a stop or a
-Mobile Hook, with Add, Edit, Delete and Plan Route; Add a Stop beside The
-Covenant until Whereabouts shows; and Detach and Rejoin on the Ships list."""
+Mobile Hook, with Add, Edit, Delete and Plan Route; no Add a Stop on a
+covenant that isn't mobile; and Detach and Rejoin on the Ships list."""
 
 from __future__ import annotations
 
@@ -90,16 +90,12 @@ def test_whereabouts_shows_with_a_stop_and_plans_a_route(app):
     assert [leg.place_id for leg in covenant.route] == ["sound"] and covenant.circuit
 
 
-def test_whereabouts_stays_away_without_a_stop_or_hook_but_add_a_stop_is_there(app):
-    window, saga_id = _window(stop=False)
+def test_a_covenant_that_isnt_mobile_has_no_whereabouts_or_add_a_stop(app):
+    window, _ = _window(stop=False)
     page = _page(window)
     assert not page.findChildren(QWidget, WHEREABOUTS_SECTION)
-    assert "Add a Stop" not in section_buttons(page, "Hooks")
-    buttons = section_buttons(page, "The Covenant")
-    assert "Add a Stop" in buttons
-    answering(window, {"where": "sound"})
-    buttons["Add a Stop"].click()
-    assert storage.load_saga(saga_id).covenants[0].stops[0].place_id == "sound"
+    for name in ("Hooks", "The Covenant"):
+        assert "Add a Stop" not in section_buttons(page, name)
 
 
 def test_detach_and_rejoin_are_ship_buttons(app):

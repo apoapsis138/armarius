@@ -3,13 +3,14 @@ front-end offers them, without a front-end (forms/menu.py)."""
 
 from __future__ import annotations
 
+from dataclasses import replace
 from pathlib import Path
 from typing import Any
 
 from screen_helpers import _saga_with_familiar, _sample_saga_with_covenant
 
 from ars_magica_manager import commands, deeds, form_spec
-from ars_magica_manager.actions import NodeKind
+from ars_magica_manager.actions import NodeKind, available
 from ars_magica_manager.forms import creation as creation_forms
 from ars_magica_manager.forms import importing as import_forms
 from ars_magica_manager.forms import menu as menu_forms
@@ -19,6 +20,7 @@ from ars_magica_manager.models import (
     KnownSpell,
     Saga,
     Spell,
+    VirtueFlawInstance,
 )
 
 
@@ -106,7 +108,6 @@ def test_each_page_offers_what_applies_there():
         "In Creation / In Play",
         "Demote",
         # Transforming Mythic Europe in play.
-        "Add a Stop",
         "Shape the Land",
     ]
     assert _labels(menu_forms.new_items(page)) == [
@@ -120,6 +121,25 @@ def test_each_page_offers_what_applies_there():
     assert menu_forms.new_items(familiar) == []
     deleted = menu_forms.deletes(familiar)
     assert deleted is not None and deleted.name == "Ashwing"
+
+
+def _offers_add_a_stop(saga: Saga) -> bool:
+    """Whether More on the covenant's top panel offers Add a Stop."""
+    page = _page(saga, NodeKind.COVENANT, covenant_id="cov1")
+    return available("add_stop", replace(page, section="section-cov-info"))
+
+
+def test_only_a_mobile_covenant_is_offered_add_a_stop():
+    saga = _sample_saga_with_covenant()
+    assert not _offers_add_a_stop(saga)
+    saga.covenants[0].boons_hooks.append(
+        VirtueFlawInstance("covbh_hook_minor_erratically_mobile")
+    )
+    assert _offers_add_a_stop(saga)
+    # A sketch names its Mobile Hook in What Matters.
+    saga.covenants[0].boons_hooks.clear()
+    saga.covenants[0].what_matters = "Constantly Mobile: it sails the Baltic."
+    assert _offers_add_a_stop(saga)
 
 
 def test_a_companion_has_no_hermetic_commands():

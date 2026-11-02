@@ -122,6 +122,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.70.1 — 2026-11-02
+
+### Pagina
+
+- Add a Stop is offered only to a covenant on the move: one with Constantly or Erratically Mobile, attached or named in a sketch's What Matters. On the desktop, Whereabouts' Add does it, so the spare button beside Edit Description is gone.
+
+### Glossa
+
+- Help on Whereabouts and the mobile covenant how-to say Add a Stop needs a Mobile Hook.
+
 ## 3.70.0 — 2026-11-02
 
 ### Illuminatio

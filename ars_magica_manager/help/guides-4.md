@@ -1212,9 +1212,10 @@ harvesting vis at auspicious times. It has the Constantly Mobile Hook.
    **Anchorage** in the **Waters** field of the rest. A town isn't a Place, so
    give a harbour town a Place of its own, with the town's aura: Divine 3 for a
    town or city, 2 for a village.
-2. **Log where it is.** Add a Stop at the Place it is at now. Its aura is that
-   Place's from now on, and [Whereabouts](help:section-cov-whereabouts) shows on
-   its Overview.
+2. **Log where it is.** With its Mobile Hook,
+   [Whereabouts](help:section-cov-whereabouts) shows on its Overview: Add a Stop
+   there at the Place it is at now. Its aura is that Place's from now on. A
+   covenant without a Mobile Hook isn't offered Add a Stop.
 3. **Plan the route.** Plan Route lists each leg and the seasons to stay. Tick
    **Circuit** if it goes round for ever.
 4. **Bring its own aura, if it has one.** Edit the Place that holds that aura or

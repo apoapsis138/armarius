@@ -177,6 +177,8 @@ NOT_ON_PAGES = frozenset(
         "roll_table",
         # The desktop draws it as the Open Stories' own button.
         "grow_story",
+        # The desktop's Whereabouts draws it as its Add.
+        "add_stop",
         "battle_event",
         "redeem_gratitude",
         "buy_manor",
@@ -632,9 +634,6 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "guest_stay": ((NodeKind.CHARACTER, "Current Location"),),
     # On the Hooks' points line, not their title's, where it would wrap.
     "suggest_story": ((NodeKind.COVENANT, "Hooks"),),
-    # With the covenant's description, as Whereabouts shows only with a stop
-    # or a Mobile Hook.
-    "add_stop": ((NodeKind.COVENANT, "The Covenant"),),
     "trait_roll": ((NodeKind.CHARACTER, "Personality Traits"),),
     # The Shared tick in a known spell's form.
     "share_spell": ((NodeKind.CHARACTER, "Known Spells"),),
