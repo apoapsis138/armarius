@@ -315,7 +315,7 @@ def year_end_grogs(saga: Saga) -> list[SeasonRecordLine]:
         if not chosen:
             details = (
                 "No yearly update was set up: the saga's default, 2 xp of "
-                "Exposure a season in their highest Ability (Edit Saga)."
+                "Exposure a season in their highest Ability (the saga's settings)."
             ) + (
                 f" {awards} story award(s) and copying season(s) took a season "
                 "each (Grogs p. 67)."

@@ -553,7 +553,7 @@ def manage_items(page: Page) -> list[ManageItem]:
     return items
 
 
-#: Edit Saga: in the saga page's Saga Management, where the terminal's e
+#: Edit Saga: in the saga page's Saga Settings, where the terminal's e
 #: edits it.
 EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
 
@@ -566,7 +566,7 @@ EDIT_SAGA = MenuItem("e", "edit_saga", "Edit Saga")
 #: is one a record's page offers itself (ON_THE_PAGE) or a section's own
 #: button (NOT_ON_PAGES).
 PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
-    "edit_saga": ((NodeKind.SAGA, "Saga Management"),),
+    "edit_saga": ((NodeKind.SAGA, "Saga Settings"),),
     # On a covenant, books straight into its library.
     "import_data": ((NodeKind.SAGA, "Saga Management"), (NodeKind.COVENANT, "Library")),
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
@@ -732,8 +732,6 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
 
 #: The saga page's Saga Management: each entry with what it does.
 SAGA_MANAGEMENT: dict[str, str] = {
-    "edit_saga": "Its name, storyguide and description, whether season "
-    "records are kept, and the optional rules of the books in play.",
     "import_data": "Bring books, spells or records in from a file, such as "
     "another saga's export or a list of books.",
     "export_cult": "Write one of the saga's own Mystery Cults, its degrees "
@@ -1926,7 +1924,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "found_covenant": _found_command,
     "begin_story": _begin_command,
     "delay_threat": _delay_command,
-    "edit_saga": lambda page: creation_forms.edit_saga_form(page.saga),
+    "edit_saga": lambda page: creation_forms.saga_details_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),
     "create_neighbour": lambda page: neighbour_forms.new_neighbour(page.saga),

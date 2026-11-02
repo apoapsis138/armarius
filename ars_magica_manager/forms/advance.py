@@ -338,7 +338,7 @@ def _gaps(
                 "",
                 "info",
                 "Nothing is planned for these characters this season. Each "
-                "can take the saga's default (Edit Saga), do nothing, or be "
+                "can take the saga's default (the saga's settings), do nothing, or be "
                 "planned now.",
             )
             if missing
@@ -667,6 +667,6 @@ def records_note(saga: Saga) -> str:
     return (
         "Kept under Seasons."
         if saga.keep_season_records
-        else "Season records are off (Edit Saga): each character's Diary "
+        else "Season records are off (the saga's settings): each character's Diary "
         "still has theirs."
     )

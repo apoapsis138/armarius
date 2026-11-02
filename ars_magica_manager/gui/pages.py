@@ -51,6 +51,7 @@ from ..sheets import tribunal as tribunal_sheet
 from . import pictures
 from .figures import fact_grid
 from .menus import Placer
+from .saga_settings import SettingsChapter
 from .style.ornaments import FleuronButton, ShortRule
 from .themes import Palette
 from .widgets import (
@@ -877,7 +878,7 @@ class SagaPage(QWidget):
     covenants and what the reader has bookmarked), The Covenants (its
     covenants, and the characters and laboratories that belong to none,
     each list ending in a New card), The Region (its Tribunals and
-    neighbours), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, and Saga Management."""
+    neighbours), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, its Saga Settings, and Saga Management."""
 
     def __init__(
         self,
@@ -954,6 +955,10 @@ class SagaPage(QWidget):
         self.codex.add(
             "Rules and Content", "library", self._rules_and_content(open_content)
         )
+        self.settings = SettingsChapter(
+            saga, p, self.codex, run, self._buttons("Saga Settings")
+        )
+        self.codex.add("Saga Settings", "edit", self.settings.page)
         self.codex.add("Saga Management", "manage", self._management())
         column.addWidget(self.codex, 1)
 

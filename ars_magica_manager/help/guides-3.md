@@ -30,17 +30,17 @@ The saga is saved as soon as it is made, and every change after that is saved as
 3. Back on the saga node, press `e` (the footer calls it Edit Saga).
 <!-- /tui -->
 <!-- gui -->
-1. [The saga's page](help:saga) has eight chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Bestiary, Conflicts, Seasons, Rules and Content, and Saga Management.
+1. [The saga's page](help:saga) has nine chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Bestiary, Conflicts, Seasons, Rules and Content, Saga Settings and Saga Management.
 2. In **Rules and Content**, click the **Saga Content** card. On its **Books** chapter, click **Edit** on Books in Play and tick the books your troupe uses (or click one card's **In play** chip to switch just that book): catalog pickers then hide Virtues, spells and other entries from books not in play, and everything a supplement adds (its activities, optional rules and kinds of books) switches off with it. See [Saga Content](help:saga-content).
-3. Click the saga's name in the trail to go back to its page, open its **Saga Management** chapter and click **Edit Saga**.
+3. Click the saga's name in the trail to go back to its page, open its **Saga Settings** chapter. A card's switch changes it at once, and clicking the card explains it in the Inspector.
 <!-- /gui -->
-4. It lists the optional rules, each off until you tick it: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Any spell parameter and Extended book Quality. The line under each says what it does.
+4. It lists the optional rules, each off until you turn it on: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Any spell parameter and Extended book Quality. The line under each says what it does.
 5. **Keep season records** keeps a record of each season under Seasons. Leave it on unless you only want the characters' Diaries to keep them.
-   **Season medallions** chooses how the desktop draws the seasons as medallions (on the band at the top of every page, the Seasons page, the calendars and a siege's page): stained glass (the default), an illuminated letter's adornment, a wax seal, Limoges enamel, a Book of Hours roundel, or pen and wash.
-   **Magi / Companions / Grogs with nothing planned** say what a season left unplanned gives when it is advanced: Work / Exposure (the default) or Nothing. **Be notified when and which non-player characters do not have seasonal activity** (off by default) makes Advance Season name non-player characters with nothing planned too. See [Unplanned seasons](help:advance-unplanned).
-6. Save. The saga's summary now lists your books and the optional rules turned on.
+   **Medallion style** chooses how the desktop draws the seasons as medallions (on the band at the top of every page, the Seasons page, the calendars and a siege's page): stained glass (the default), an illuminated letter's adornment, a wax seal, Limoges enamel, a Book of Hours roundel, or pen and wash.
+   **Magi / Companions / Grogs with nothing planned** say what a season left unplanned gives when it is advanced: Work / Exposure (the default) or Nothing. **Name Idle Non-Player Characters** (on the terminal, Be notified when and which non-player characters do not have seasonal activity) (off by default) makes Advance Season name non-player characters with nothing planned too. See [Unplanned seasons](help:advance-unplanned).
+6. On the terminal, Save. The saga's summary now lists your books and the optional rules turned on.
 
-You can come back to Edit Saga at any time.
+You can come back to these settings at any time.
 
 ### Make the first covenant
 <!-- help: guide-getting-started-covenant -->
@@ -316,7 +316,7 @@ Checks never stop an edit. They only matter when you move the record to In Play.
 <!-- gui -->
 2. Or, from the record's page, click the **In Creation** button in its header.
 <!-- /gui -->
-3. If the saga has **Enforce creation rules strictly** turned on in Edit Saga, a record with a warning stays In Creation and a message says how many rules it breaks. Advice never stops it.
+3. If the saga has **Enforce creation rules strictly** turned on in the saga's settings, a record with a warning stays In Creation and a message says how many rules it breaks. Advice never stops it.
 <!-- tui -->
 4. The "(creating)" mark leaves the tree node. A covenant keeps what its Build Points were spent on, shown in the Initial column of its Build tab.
 <!-- /tui -->

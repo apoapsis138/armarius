@@ -78,7 +78,7 @@ class SeasonsPage(QWidget):
                     "No seasons recorded yet: they're kept as seasons are "
                     "advanced (Advance in the top bar)."
                     if saga.keep_season_records
-                    else "Season records are off (Edit Saga): new seasons "
+                    else "Season records are off (the saga's settings): new seasons "
                     "aren't kept here.",
                     p["dim"],
                     serif(12, italic=True),

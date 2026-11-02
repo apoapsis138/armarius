@@ -914,7 +914,7 @@ On the last day, each case is ruled on. A ruling can be **Written out** (it star
 
 > Keep holds the Rhine ford's vis for 7 years, until it is debated again.
 
-The {years} blank sets a term. With a written-out ruling, its **term** (in years) sets one the same way. The templates are the saga's own: add or change them on Edit Saga, **Ruling templates**, where any word in braces is a blank to fill.
+The {years} blank sets a term. With a written-out ruling, its **term** (in years) sets one the same way. The templates are the saga's own: add or change them in the saga's settings, **Ruling templates**, where any word in braces is a blank to fill.
 
 ### Closing, and what comes back
 <!-- help: guide-tribunal-closing -->
@@ -1103,11 +1103,11 @@ A Burning City, an Intangible Assassin or a Living Corpse is followed stage by s
 A character's faith decides what the [Religion tab](help:tab-religion) offers him: the saints and the Church for a Christian, God's aid for a Jew or a Muslim, a yazata for a Mazdean. Each action is offered only to one the books allow.
 
 <!-- tui -->
-1. **Set his religion.** Open his Religion tab, focus Faith and press `e` (or set Religion on Biographical Detail). Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Edit Saga).
+1. **Set his religion.** Open his Religion tab, focus Faith and press `e` (or set Religion on Biographical Detail). Blank counts as Christian. The tab is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
 2. **See what he may do.** With focus in Faith, press `m` (More). Only the actions his faith offers him, and that he qualifies for, are listed.
 <!-- /tui -->
 <!-- gui -->
-1. **Set his religion.** Open his Religion chapter (after Virtues & Flaws) and click Edit Religion beside Faith, or set Religion on Biographical Detail. Blank counts as Christian. The chapter is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Edit Saga).
+1. **Set his religion.** Open his Religion chapter (after Virtues & Flaws) and click Edit Religion beside Faith, or set Religion on Biographical Detail. Blank counts as Christian. The chapter is there while Realms of Power: The Divine, The Church or another book that gives the faiths their rites is in play (Saga Content).
 2. **See what he may do.** The buttons beside Faith are the actions his faith offers him, and that he qualifies for.
 <!-- /gui -->
 3. **Anyone of his faith.** A Christian may Invoke a Saint (no Ability or Virtue needed, RoP: The Divine p. 87), choose his Patron Saint (anyone may have one), and with The Church in play take an Indulgence, Vigil or Fast (The Church pp. 11-13). Devotion Points are for one who holds a Devotion or has a positive Pious trait (or the Pious Flaw) to begin one (pp. 12-13). A Mazdean invokes a yazata the same way, with The Cradle and the Crescent.

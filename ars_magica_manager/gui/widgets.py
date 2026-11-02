@@ -24,6 +24,7 @@ from PySide6.QtGui import (
     QBrush,
     QColor,
     QFont,
+    QFontMetrics,
     QIcon,
     QMouseEvent,
     QPainter,
@@ -43,6 +44,7 @@ from PySide6.QtWidgets import (
     QHBoxLayout,
     QHeaderView,
     QLabel,
+    QListView,
     QListWidget,
     QListWidgetItem,
     QPushButton,
@@ -439,6 +441,63 @@ class RuledRows(QStyledItemDelegate):
         painter.restore()
 
 
+class TitledRows(QStyledItemDelegate):
+    """A list's rows as a ledger's two columns: what comes before a row's
+    first ": " in rubric, the rest ruled up beside it in ink. A list whose
+    rows aren't all written so shows them whole. Wrap in RuledRows."""
+
+    SEPARATOR = ": "
+    #: The gap between the two columns, and the height added to a row.
+    GAP, AIR = 14, 8
+
+    def __init__(self, view: QAbstractItemView, p: Palette) -> None:
+        super().__init__(view)
+        self.p = p
+        #: Where the second column starts: 0 while the rows have no titles.
+        self.column = 0
+
+    def measure(self, rows: list[str]) -> None:
+        """Set the second column from `rows`, as they are about to show."""
+        self.column = 0
+        if rows and all(self.SEPARATOR in row for row in rows):
+            metrics = QFontMetrics(serif(12.5, bold=True))
+            self.column = self.GAP + max(
+                metrics.horizontalAdvance(row.partition(self.SEPARATOR)[0])
+                for row in rows
+            )
+
+    def sizeHint(
+        self, option: QStyleOptionViewItem, index: QModelIndex | QPersistentModelIndex
+    ) -> QSize:
+        size = super().sizeHint(option, index)
+        return QSize(size.width(), QFontMetrics(serif(12.5)).height() + self.AIR)
+
+    def paint(
+        self,
+        painter: QPainter,
+        option: QStyleOptionViewItem,
+        index: QModelIndex | QPersistentModelIndex,
+    ) -> None:
+        words = str(index.data())
+        rect = option.rect.adjusted(2, 0, -2, 0)
+        flags = Qt.AlignmentFlag.AlignLeft | Qt.AlignmentFlag.AlignVCenter
+        painter.save()
+        painter.setFont(serif(12.5))
+        painter.setPen(QColor(self.p["foreground"]))
+        if self.column:
+            title, _, rest = words.partition(self.SEPARATOR)
+            room = rect.adjusted(self.column, 0, 0, 0)
+            rest = QFontMetrics(painter.font()).elidedText(
+                rest, Qt.TextElideMode.ElideRight, room.width()
+            )
+            painter.drawText(room, flags, rest)
+            painter.setFont(serif(12.5, bold=True))
+            painter.setPen(QColor(self.p["heading"]))
+            words = title
+        painter.drawText(rect, flags, words)
+        painter.restore()
+
+
 class InkingIn(QWidget):
     """Laid over the inspector while a new item inks in: the bare leaf,
     fading away to show the words on it (for the first part of `at`, 0
@@ -503,9 +562,16 @@ class Inspector(QFrame):
         self.body.setWordWrap(True)
         self.body.setAlignment(Qt.AlignmentFlag.AlignTop)
         self.body.setTextInteractionFlags(Qt.TextInteractionFlag.TextSelectableByMouse)
+        words = QWidget()
+        self.under = QVBoxLayout(words)
+        self.under.setContentsMargins(0, 0, 0, 0)
+        self.under.addWidget(self.body)
+        self.under.addStretch(1)
+        #: What `show_item` put under the words.
+        self.extra: QWidget | None = None
         area = QScrollArea()
         area.setWidgetResizable(True)
-        area.setWidget(self.body)
+        area.setWidget(words)
         area.setStyleSheet("background:transparent")
         column.addWidget(area, 1)
         self.ink = InkingIn(self, p)
@@ -544,11 +610,19 @@ class Inspector(QFrame):
         markup: str,
         symbol: Symbol = None,
         action: QWidget | None = None,
+        extra: QWidget | None = None,
     ) -> None:
         """Show an item: `symbol` is an Art's or House's SVG, drawn small in
         the heading colour, or a picture already drawn (an Ability's mark),
-        shown at its own size; `action` goes at the top right (a switch)."""
+        shown at its own size; `action` goes at the top right (a switch),
+        and `extra` under the words (pictures of the choices)."""
         self._ink_in()
+        if self.extra is not None:
+            self.extra.setParent(None)
+            self.extra.deleteLater()
+        self.extra = extra
+        if extra is not None:
+            self.under.insertWidget(1, extra)
         if self.action is not None:
             self.action.setParent(None)
             self.action.deleteLater()
@@ -735,8 +809,9 @@ class Codex(QSplitter):
         markup: str,
         symbol: Symbol = None,
         action: QWidget | None = None,
+        extra: QWidget | None = None,
     ) -> None:
-        self.inspector.show_item(title, subtitle, markup, symbol, action)
+        self.inspector.show_item(title, subtitle, markup, symbol, action, extra)
 
 
 def table_style(view: QAbstractItemView, p: Palette) -> None:
@@ -769,7 +844,9 @@ def table_style(view: QAbstractItemView, p: Palette) -> None:
     spread = Spread(view)
     view.setItemDelegate(RuledRows(inner, p, margin=margin, spread=spread))
     model = view.model()
-    for column in range(model.columnCount() if model is not None else 0):
+    # A list has one column, and no delegates of its own to wrap.
+    wrapped = model is not None and not isinstance(view, QListView)
+    for column in range(model.columnCount() if wrapped else 0):
         own = view.itemDelegateForColumn(column)
         if isinstance(own, QStyledItemDelegate) and not isinstance(own, RuledRows):
             view.setItemDelegateForColumn(

@@ -140,7 +140,7 @@ People marked departed on the Inhabitants tab are left out of this tab and aren'
 People marked departed in the Covenfolk chapter are left out of this chapter and aren't planned.
 <!-- /gui -->
 
-Anyone still left with nothing planned isn't lost: when the season is advanced, the saga's default for their kind applies (Edit Saga: Work / Exposure, or Nothing). Advance Season names the player characters with nothing planned and asks about each; non-player characters take the default quietly, unless **Be notified when and which non-player characters do not have seasonal activity** is ticked. See [Unplanned seasons](help:advance-unplanned).
+Anyone still left with nothing planned isn't lost: when the season is advanced, the saga's default for their kind applies (the saga's settings: Work / Exposure, or Nothing). Advance Season names the player characters with nothing planned and asks about each; non-player characters take the default quietly, unless **Name Idle Non-Player Characters** (on the terminal, Be notified when and which non-player characters do not have seasonal activity) is ticked. See [Unplanned seasons](help:advance-unplanned).
 
 ### Advancing the season
 <!-- help: guide-seasons-advance -->
@@ -166,7 +166,7 @@ See [Advance Season](help:advance-season) for how the plans are applied.
 1. When anything happened, the [Season Summary](help:season-summary) ("The Season's Results") opens: one line per person, grouped by covenant, with the activity and what it gave. A plan that couldn't be carried out says why. Press Enter, Escape or Close to close it.
 2. A message names the new date and whose seasons were applied. The date in the header moves on.
 3. Each character's **Diary** tab (`7`) has an entry for the season, as does the laboratory's Diary tab (`6`) for lab work and the covenant's Diary tab (`9`) for vis harvests.
-4. With Keep season records on (Edit Saga), the season is also kept under [Seasons](help:seasons) in the tree. Choose it and press Enter to browse past seasons, newest first.
+4. With Keep season records on (the saga's settings), the season is also kept under [Seasons](help:seasons) in the tree. Choose it and press Enter to browse past seasons, newest first.
 
 The season's plans are removed once applied, so every This Season section starts empty again. Lab work that takes several seasons stays scheduled on the laboratory's Planning tab.
 <!-- /tui -->
@@ -174,7 +174,7 @@ The season's plans are removed once applied, so every This Season section starts
 1. When anything happened, the saga's [Seasons](help:seasons) page opens on its **Just played** chapter (the [Season Summary](help:season-summary)): one row per person, grouped by covenant, with the activity and what it gave. A plan that couldn't be carried out says why. When nothing happened, a message says so instead.
 2. The date on the Advance Season button moves on.
 3. Each character's **Diary** chapter has an entry for the season, as does the Diary in the laboratory's Seasons chapter for lab work and the covenant's Diary chapter for vis harvests.
-4. With Keep season records on (Edit Saga), the season is also kept on the [Seasons](help:seasons) page. To browse past seasons later, open the saga's **Seasons** chapter and click **The Seasons Played**; the rail lists them newest first.
+4. With Keep season records on (the saga's settings), the season is also kept on the [Seasons](help:seasons) page. To browse past seasons later, open the saga's **Seasons** chapter and click **The Seasons Played**; the rail lists them newest first.
 
 The season's plans are removed once applied, so every This Season section starts empty again. Lab work that takes several seasons stays scheduled in the laboratory's Planning list.
 <!-- /gui -->

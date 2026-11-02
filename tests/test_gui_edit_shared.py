@@ -160,13 +160,13 @@ def test_a_creature_and_a_neighbour_open_their_steps_as_windows(app):
 
 
 def test_saga_management_opens_edit_saga_as_a_window(app):
-    """A chapter's own buttons (Saga Management's Edit Saga) open their
+    """A chapter's own buttons (Saga Settings' Edit Saga) open their
     steps as windows too."""
     saga = _sample_saga_with_covenant()
     window = _window(saga)
     window.open_saga(saga.id)
     page = window.page()
-    page.codex.open_chapter("Saga Management")  # type: ignore[union-attr]
+    page.codex.open_chapter("Saga Settings")  # type: ignore[union-attr]
     asked = answering(window, None)
     next(b for b in buttons(page, "Edit Saga")).click()
     assert asked and asked[0].isWindow()

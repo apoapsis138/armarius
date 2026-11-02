@@ -89,10 +89,12 @@ from .themes import Palette
 from .widgets import (
     ClickableCard,
     Inspector,
+    TitledRows,
     ToggleSwitch,
     card_grid,
     filter_choice,
     serif,
+    table_style,
     text,
 )
 
@@ -609,6 +611,10 @@ class _PickerField(QWidget):
         self.form._changed(self.spec)()
 
 
+#: How wide a list asked to show many rows is drawn.
+LONG_LIST_WIDTH = 900
+
+
 class _ListField(QWidget):
     """A picker field holding a small list: its entries, with Add, Edit
     and Delete for the one chosen (each entry's steps as windows)."""
@@ -624,8 +630,13 @@ class _ListField(QWidget):
         column.setSpacing(4)
         self.list = QListWidget()
         self.list.setSelectionMode(QAbstractItemView.SelectionMode.SingleSelection)
+        if spec.rows > 6:
+            self.list.setMinimumWidth(LONG_LIST_WIDTH)
         self.list.itemDoubleClicked.connect(lambda _item: self.edit())
         self.list.currentRowChanged.connect(lambda _row: self._enable())
+        self.rows = TitledRows(self.list, form.p)
+        self.list.setItemDelegate(self.rows)
+        table_style(self.list, form.p)
         column.addWidget(self.list)
         row = QHBoxLayout()
         row.setContentsMargins(0, 0, 0, 0)
@@ -645,15 +656,22 @@ class _ListField(QWidget):
 
     def _show(self, chosen: int | None = None) -> None:
         self.list.clear()
-        for item in self.value:
-            self.list.addItem(plain(self.editor.row(item)))
+        shown = [plain(self.editor.row(item)) for item in self.value]
+        self.rows.measure(shown)
+        self.list.addItems(shown)
+        for row, words in enumerate(shown):
+            self.list.item(row).setToolTip(words)
         if not self.value:
             self.list.addItem("(none)")
             self.list.item(0).setFlags(Qt.ItemFlag.NoItemFlags)
         elif chosen is not None:
             self.list.setCurrentRow(min(chosen, len(self.value) - 1))
         rows = max(1, len(self.value))
-        self.list.setFixedHeight(min(6, rows) * 22 + 2 * self.list.frameWidth() + 4)
+        self.list.setFixedHeight(
+            min(self.spec.rows, rows) * max(22, self.list.sizeHintForRow(0))
+            + 2 * self.list.frameWidth()
+            + 4
+        )
         self._enable()
 
     def _chosen(self) -> int | None:

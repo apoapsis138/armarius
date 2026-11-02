@@ -221,6 +221,7 @@ def saga_field(saga: Saga) -> DialogField:
         [dict(t) for t in templates(saga)],
         display=lambda items: f"{len(items)} template{'' if len(items) == 1 else 's'}",
         items=ListEditor(row, entry_form, "Ruling Templates"),
+        rows=16,
         hint="The outcomes a Tribunal's rulings are written from, each with "
         "blanks filled in at the meeting.",
     )

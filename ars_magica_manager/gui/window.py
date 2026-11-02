@@ -177,6 +177,7 @@ _TAB_PREFIX = {
     TRIBUNAL: "tab-trib-",
     NEIGHBOUR: "tab-nb-",
     CREATURE: "tab-cr-",
+    SAGA: "saga-",
     CHARACTER: "tab-",
 }
 _OTHER_TABS = tuple(v for k, v in _TAB_PREFIX.items() if k != CHARACTER)

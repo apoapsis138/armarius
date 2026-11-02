@@ -1483,7 +1483,7 @@ Books), a summa as tall as its level; click a book to see its figures and
 its Owner (the covenant, a laboratory, or a character) in the inspector.
 <!-- /gui -->
 
-With the Large Library rule on (Edit Saga), a summa's or tractatus's
+With the Large Library rule on (the saga's settings), a summa's or tractatus's
 details also give the library's Level and Quality in its subject, worked
 out from every summa and tractatus the covenant holds on it, as Read's
 "the whole library" uses them (Transforming Mythic Europe p. 105).
@@ -1591,7 +1591,7 @@ enchantment. Its effects are instilled like any device's. The Quality in a book'
 details shows what it is read at and why ("10 (written 9; commentary +1)"), and its **Kind**
 line names the opus and form.
 
-With the optional rule **Extended book Quality** (Edit Saga), a book's
+With the optional rule **Extended book Quality** (the saga's settings), a book's
 Quality is built from parts (Covenants, Extended Suggestions on the Quality
 of Books): the author gives Communication + 3 instead of + 6 (a season of
 writing makes the book that way), and the book form gains its

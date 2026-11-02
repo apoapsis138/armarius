@@ -45,6 +45,8 @@ from .character import CHARACTER_TYPE_OPTIONS
 
 #: Saga-form keys for the optional rules: the prefix plus the option's key.
 RULE_OPTION_PREFIX = "rule_option__"
+#: What Edit Saga asks on the desktop.
+SAGA_DETAILS = ("name", "storyguide", "description")
 
 
 def saga_fields(saga: Saga | None) -> list[DialogField]:
@@ -148,12 +150,12 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
         fields.append(
             DialogField(
                 "medallions",
-                "Season medallions",
+                "Medallion style",
                 "select",
                 medallions.chosen(saga),
                 options=medallions.options(),
-                hint="How the desktop draws the seasons (on a siege's season "
-                "track): stained glass, an illuminated letter's adornment, a wax "
+                hint="How the desktop draws every medallion, the seasons' and "
+                "figures' such as an aura: stained glass, an illuminated letter's adornment, a wax "
                 "seal, Limoges enamel, a Book of Hours roundel, or pen and wash.",
             )
         )
@@ -210,6 +212,15 @@ def apply_saga(saga: Saga, values: dict[str, Any]) -> None:
 def edit_saga_form(saga: Saga) -> Form:
     return Form(
         "Edit Saga", lambda: saga_fields(saga), lambda values: apply_saga(saga, values)
+    )
+
+
+def saga_details_form(saga: Saga) -> Form:
+    """Edit Saga on the desktop, whose Saga Settings chapter has the rest."""
+    return Form(
+        "Edit Saga",
+        lambda: [f for f in saga_fields(saga) if f.key in SAGA_DETAILS],
+        lambda values: apply_saga(saga, values),
     )
 
 

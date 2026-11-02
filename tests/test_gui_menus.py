@@ -100,6 +100,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
         "Conflicts",
         "Seasons",
         "Rules and Content",
+        "Saga Settings",
         "Saga Management",
     ]
     # The Troupe gathers what is already made, so it makes nothing.
@@ -116,8 +117,10 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
     assert list(_new(window)) == ["New Creature"]
     _saga_chapter(window, "Seasons")
     assert "Set Date" in _buttons(window)
+    _saga_chapter(window, "Saga Settings")
+    assert "Edit Saga" in _buttons(window)
     _saga_chapter(window, "Saga Management")
-    assert {"Edit Saga", "Import"} <= set(_buttons(window))
+    assert "Import" in _buttons(window)
     # Nothing is left for New and More; Bind Familiar is on a covenant
     # or a magus.
     assert _menus(window) == {}

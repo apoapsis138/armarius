@@ -76,10 +76,10 @@ Study; Writing & books; Work & trade; Teaching & apprentices; Faith; Order & cov
 - **Search**: type any part of an activity's name or summary.
 - **Recent**: the character's last three activities, from their plans and Diary, head the list until a Type or Book is chosen or a search typed.
 <!-- tui -->
-- F3 also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Edit Saga).
+- F3 also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Saga Content).
 <!-- /tui -->
 <!-- gui -->
-- **Show everything** also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Edit Saga).
+- **Show everything** also lists the activities of sourcebooks not in play in this saga, marked; they can't be planned until the book is in play (Saga Content).
 <!-- /gui -->
 
 The highlighted activity's summary, Type, sourcebook and rule are shown beside the list; the list itself shows only names. Choosing one closes the list and the form shows the fields it needs.
@@ -366,14 +366,14 @@ Every chart roll of 0 rolls botch dice: 1, plus the risk modifier, plus the labo
 ### Unplanned seasons
 <!-- help: advance-unplanned -->
 
-A season left with nothing planned takes the saga's default for that kind of character, set in Edit Saga:
+A season left with nothing planned takes the saga's default for that kind of character, set in the saga's settings:
 
 - **Magi** and **Companions with nothing planned**: **Work / Exposure** (the default) gives 2 xp of Exposure in their profession (an Ability named Profession: ...), else a magus's Magic Theory (if they have a score in it), else their highest Ability that isn't a language. The Diary entry is marked "(default)". **Nothing** leaves the season empty.
 - **Grogs with nothing planned**: a grog with no [yearly update](help:grog-year) gains 2 xp of Exposure a season in their highest Ability, 8 when Winter is advanced, marked "Yearly update (default)". **Nothing** gives them nothing.
 
 Advance Season's **Unplanned Seasons** step names each player character (one with a Player) who has nothing planned, with a choice: **Default** (what the saga's default gives them), **Nothing this season**, or **Plan it now**, which opens [Plan Season](help:plan-season) for them and then carries on with the season. A plan that can't be carried out is listed too, with the reason: **Leave it** skips it, as before, or **Plan it again now** opens it to change. Cancelling any of these leaves the date and the saga as they were, apart from plans already saved.
 
-Non-player characters with nothing planned aren't named: they take the default. Tick **Be notified when and which non-player characters do not have seasonal activity** in Edit Saga to have them named and asked about too.
+Non-player characters with nothing planned aren't named: they take the default. Tick **Name Idle Non-Player Characters** (on the terminal, Be notified when and which non-player characters do not have seasonal activity) in the saga's settings to have them named and asked about too.
 
 ### Interruptions
 <!-- help: advance-interrupted -->
@@ -692,7 +692,7 @@ The steps run in a fixed order:
   you fill them: "{party} holds {what} for {years} years, until it is
   debated again" becomes "Keep holds the Rhine ford's vis for 7 years,
   until it is debated again". A {years} blank sets the term. The
-  templates are the saga's own, kept on Edit Saga ([the
+  templates are the saga's own, kept in the saga's settings ([the
   saga](help:saga), Ruling templates), where you can add, change and remove them; a blank
   is any word in braces. They include the Code's penalties (Houses of
   Hermes: True Lineages pp. 59-61): Damages, a fine shared a third to
@@ -882,7 +882,7 @@ under Seasons in the tree.
 <!-- gui -->
 on the Seasons page.
 <!-- /gui -->
-If season records are off (Edit Saga), each character's Diary still has their entry.
+If season records are off (the saga's settings), each character's Diary still has their entry.
 
 **See also:** [Advance Season](help:advance-season), [Seasons](help:seasons), [How to plan and run a season](help:guide-seasons)
 
@@ -1012,7 +1012,7 @@ It is written in the Diary as one entry and can't be undone.
 
 The last step has **Move to In Play**. It lists every check that doesn't pass and asks before moving the record. A covenant with Build Points left over is told how many: moving it to In Play turns them into Mythic Pounds in its Wealth, 10 pounds for each Build Point (the rate money is bought at). The books don't say what becomes of unspent Build Points (without bought money a covenant starts with no significant cash, Covenants p. 56), so turning them into money is the app's own rule, at the rate Covenants gives for buying a starting reserve. To keep the covenant poor, go back and spend them first.
 
-Checks never stop an edit. If the saga has **Enforce creation rules strictly** turned on (Edit Saga), a record that breaks a rule it must follow stays In Creation until that is fixed. Advice never stops it.
+Checks never stop an edit. If the saga has **Enforce creation rules strictly** turned on (the saga's settings), a record that breaks a rule it must follow stays In Creation until that is fixed. Advice never stops it.
 
 **See also:** [Characters group](help:character-group), [The saga](help:saga), [How to create a character, covenant or laboratory](help:guide-creation)
 

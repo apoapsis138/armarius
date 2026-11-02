@@ -1125,7 +1125,7 @@ def _library_problems(
     if not rule_options.is_on(saga, rule_options.LARGE_LIBRARY):
         return [
             "Studying the whole library is the Large Library optional rule "
-            "(Transforming Mythic Europe p. 105): turn it on in Edit Saga."
+            "(Transforming Mythic Europe p. 105): turn it on in the saga's settings."
         ]
     if library_figures(saga, character, subject) is None:
         return [

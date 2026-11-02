@@ -145,7 +145,9 @@ def check_form(
     if fight is None:
         return Refuse(CHECK_TITLE, "Choose a fight first.")
     if not options.is_on(saga, options.MORALE_DISCIPLINE):
-        return Refuse(CHECK_TITLE, "Turn on Morale and Discipline in Edit Saga.")
+        return Refuse(
+            CHECK_TITLE, "Turn on Morale and Discipline in the saga's settings."
+        )
     if not _groups(fight):
         return Refuse(CHECK_TITLE, "The fight has no group to check.")
     dice_ = rng or random.Random()

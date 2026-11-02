@@ -54,6 +54,9 @@ class DialogField:
     allow_blank: bool = False
     placeholder: str = ""
     hint: str = ""
+    #: A "picker" field's list (`items`): the most rows it shows before it
+    #: scrolls. Above the usual six, the desktop draws it wider too.
+    rows: int = 6
     #: Shown only while this returns True for the form's current values;
     #: re-checked as the user edits. A hidden field is left out of the
     #: result and isn't checked.

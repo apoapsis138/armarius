@@ -110,7 +110,7 @@ class SeasonsSheetView(SheetView):
                 ):
                     if not saga.keep_season_records:
                         yield Static(
-                            "[$label]Season records are off (Edit Saga): new "
+                            "[$label]Season records are off (the saga's settings): new "
                             "seasons aren't kept here.[/]",
                             id="season-records-off",
                         )

@@ -2037,7 +2037,7 @@ class Rulings(Step):
                         ("Written out", ""),
                         *((t["name"], t["name"]) for t in offered),
                     ],
-                    hint="A template's blanks are asked next (Edit Saga keeps "
+                    hint="A template's blanks are asked next (The saga's settings keep "
                     "the templates).",
                 ),
                 DialogField(

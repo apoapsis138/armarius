@@ -412,6 +412,7 @@ def test_places_sets_out_where_each_action_is_offered():
             "Unassigned Characters",
             "Unassigned Laboratories",
             "Seasons",
+            "Saga Settings",
             "Saga Management",
         )
     } == {
@@ -419,8 +420,8 @@ def test_places_sets_out_where_each_action_is_offered():
         "Unassigned Characters": ["New Character"],
         "Unassigned Laboratories": ["New Laboratory"],
         "Seasons": ["Set Date"],
+        "Saga Settings": ["Edit Saga"],
         "Saga Management": [
-            "Edit Saga",
             "Import",
             "Export Saga",
             "Export Pack",

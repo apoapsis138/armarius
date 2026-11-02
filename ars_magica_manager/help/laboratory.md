@@ -894,7 +894,7 @@ recur (DE p. 240).
 
 A spell started from one with a parameter the magus can't use takes the
 standard one it costs as. With the optional rule **Any spell parameter**
-(Edit Saga), the lists also offer **Other...**: any Range, Duration or
+(the saga's settings), the lists also offer **Other...**: any Range, Duration or
 Target, with the magnitudes it adds typed in.
 
 ### Starting from a spell

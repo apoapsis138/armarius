@@ -122,6 +122,18 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.66.0 — 2026-11-01
+
+### Illuminatio
+
+- The saga has a new Saga Settings chapter, drawn as cards under headings like Books in Play: Saga Details, Seasons, Optional Rules (sorted by what they touch, each naming its book) and Tribunal. A card says briefly what it does and has its switch at the upper right, which takes effect at once; click the card to read it in full in the Inspector. A rule whose book is out of play is greyed out. Edit Saga now changes only the name, storyguide and description.
+- Season medallions is now Medallion Style, as it draws every medallion, an aura's and a Loyalty's too. Clicking it shows an example of each set in the Inspector.
+- Ruling Templates opens wider and longer, and the small lists in forms are ruled as a ledger; rows written as a title and words show the title in red in a column of its own.
+
+### Glossa
+
+- Help no longer says a book is put in play in Edit Saga: that is Saga Content.
+
 ## 3.65.5 — 2026-11-01
 
 ### Illuminatio

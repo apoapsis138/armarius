@@ -172,7 +172,7 @@ it.
 
 <!-- gui -->
 The siege's page shows the seasons it has run as medallions, drawn in
-the set the saga chooses (Edit Saga, Season medallions): stained glass,
+the set the saga chooses (the saga's settings, Medallion style): stained glass,
 an illuminated letter's adornment, a wax seal, Limoges enamel, a Book of
 Hours roundel, or pen and wash. Its gauges are bound in cord and read
 off the book's own steps: the Garrison's 10, 20 and 40 groups, the four
@@ -209,7 +209,7 @@ A sally against the soldiers takes as many groups as you say (p. 115).
 ## Discipline, Morale and rallying
 <!-- help: group-morale -->
 
-With **Morale and Discipline for combat groups** on (Edit Saga's rules;
+With **Morale and Discipline for combat groups** on (the saga's settings;
 Lords of Men pp. 134-135), a fight's groups have a spirit as well as
 wounds. **Discipline or Morale** (More on a fight) rolls the group
 leader's Presence + Leadership + a stress die, + the lowest Loyal

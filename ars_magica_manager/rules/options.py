@@ -54,11 +54,24 @@ LARGE_LIBRARY = "large_library"
 MORALE_DISCIPLINE = "morale_discipline"
 
 
+#: The headings of Saga Settings' optional rules, in order.
+DICE = "Dice and Combat"
+MAGI = "Magi and Characters"
+REALMS = "Realms and Auras"
+LIBRARY = "Books and the Library"
+COVENANTS = "Covenants and Charters"
+GROUPS = (DICE, MAGI, REALMS, LIBRARY, COVENANTS)
+
+
 @dataclass(frozen=True)
 class RuleOption:
     key: str
     label: str
-    #: What turning it on does, in a line.
+    #: What it does in a few words, for its card on Saga Settings.
+    brief: str
+    #: The heading it comes under on Saga Settings.
+    group: str
+    #: What turning it on does, in full.
     effect: str
     #: The rule it changes, as cited in the rules reference.
     source: str
@@ -71,6 +84,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="simple_dice_only",
         label="Simple dice only",
+        brief="Simple dice replace stress dice: no explosions, no botches.",
+        group=DICE,
         effect=(
             "Every stress die is replaced by a simple die: no exploding 1s "
             "and no botches, so skill counts for more."
@@ -80,6 +95,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="dominion_magic_resistance",
         label="Dominion Magic Resistance",
+        brief="The faithful resist magic in a Dominion aura.",
+        group=REALMS,
         effect=(
             "Every Christian, Jew and Muslim has Magic Resistance of 5 x the "
             "local Dominion aura."
@@ -89,6 +106,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="harsher_infernal_vis",
         label="Harsher Infernal vis",
+        brief="Infernal vis in casting adds more botch dice.",
+        group=REALMS,
         effect=(
             "Infernal vis in casting uses Realms of Power: The Infernal's vis "
             "sordida: +3 botch dice per pawn instead of doubling the botch dice."
@@ -102,6 +121,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="income_per_magus",
         label="Starting income by number of magi",
+        brief="A new covenant's income rises or falls with its number of magi.",
+        group=COVENANTS,
         effect=(
             "A new covenant's starting income assumes six magi: its main "
             "source gains or loses 15 pounds a year for each magus over or "
@@ -115,6 +136,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="strict_creation",
         label="Enforce creation rules strictly",
+        brief="A record that breaks a creation rule stays In Creation.",
+        group=MAGI,
         effect=(
             "A covenant, laboratory or character In Creation can't move to "
             "In Play while it breaks a creation rule the book says it must "
@@ -128,6 +151,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=ANY_SPELL_PARAMETER,
         label="Any spell parameter",
+        brief="Invent Spell can take any Range, Duration or Target.",
+        group=MAGI,
         effect=(
             "Invent Spell offers Other...: any Range, Duration or Target, its "
             "magnitudes typed, not only those a Virtue, a breakthrough or a "
@@ -141,6 +166,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=EXTENDED_BOOK_QUALITY,
         label="Extended book Quality",
+        brief="A book's Quality is built up from its makers and materials.",
+        group=LIBRARY,
         effect=(
             "A book's Quality is built from parts: the author gives "
             "Communication + 3 instead of + 6, and a skilled scribe, binder "
@@ -156,6 +183,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=RESEARCH_AIDS_STACK,
         label="Research aids stack",
+        brief="Realia and expert correspondence both add to research.",
+        group=LIBRARY,
         effect=(
             "A realia collection's +1 and an expert correspondence's level "
             "both add to a library's research on the same subject; off, the "
@@ -170,6 +199,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="bruises",
         label="Bruises",
+        brief="Non-lethal blows leave bruises instead of costing Fatigue.",
+        group=DICE,
         effect=(
             "Non-lethal blows deal bruises instead of costing Fatigue: a "
             "bruise's penalty works as a wound's, it heals within hours, and "
@@ -181,6 +212,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="art_academe_medicine",
         label="Art & Academe medicine",
+        brief="A disease is its own record, with stages and its own treatment.",
+        group=MAGI,
         effect=(
             "A disease is its own record instead of a wound: it has a stage "
             "(Minor, Serious, Major, Critical), a Severity and its own Ease "
@@ -200,6 +233,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="dominion_growth",
         label="Dominion growth",
+        brief="A church's aura grows with its years of worship.",
+        group=REALMS,
         effect=(
             "A church's aura grows with the years of worship (3, then 4 after "
             "a year, 5 after a decade), fades once worship stops, and rises "
@@ -214,6 +249,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="aura_change",
         label="Auras change",
+        brief="Each winter a Magic aura may strengthen or weaken.",
+        group=REALMS,
         effect=(
             "Each winter a Magic aura's yearly modifier (its tethers, the "
             "magic worked there, vis spent and extracted, auras around it) "
@@ -232,6 +269,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=STANDARD_APPRENTICESHIP,
         label="Standard apprenticeship model",
+        brief="A magus part way through apprenticeship has experience by the year.",
+        group=MAGI,
         effect=(
             "A magus created part way through his apprenticeship has, for "
             "each year of it so far, 19 xp for the first 12 years and 6 xp "
@@ -250,6 +289,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key="cantations_in_play",
         label="Learning cantations in play",
+        brief="A spontaneous spell cast often enough can be learned as formulaic.",
+        group=MAGI,
         effect=(
             "A spontaneous spell cast in play at least as many times as its "
             "level may be bought as a formulaic spell with that adventure's "
@@ -266,6 +307,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=HAZARDOUS_LAB_TEXTS,
         label="Hazardous Laboratory Texts",
+        brief="A Lab Text badly copied by magic is risky rather than useless.",
+        group=LIBRARY,
         effect=(
             "A Lab Text copied by magic below the Finesse Total that copies it "
             "flawlessly isn't useless: each use makes an extra Experimentation "
@@ -280,6 +323,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=NO_MAGICAL_LAB_TEXTS,
         label="No magical copying of Lab Texts",
+        brief="Every Lab Text is copied by hand.",
+        group=LIBRARY,
         effect=(
             "Lab Texts are too sensitive to scribal errors to copy with Rego "
             "craft magic: each is written by hand."
@@ -293,6 +338,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=LARGE_LIBRARY,
         label="Rules for a Large Library",
+        brief="A library's holding of a subject is one Level and Quality.",
+        group=LIBRARY,
         effect=(
             "Each subject of a covenant's library has one Level and Quality, "
             "its best summa raised by the other books near it; Read a book "
@@ -306,6 +353,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=MORALE_DISCIPLINE,
         label="Morale and Discipline for combat groups",
+        brief="Combat groups can break, until their leader rallies them.",
+        group=DICE,
         effect=(
             "Combat groups make Discipline and Morale rolls on the leader's "
             "Presence + Leadership; failing, they are disordered (a trained "
@@ -320,6 +369,8 @@ OPTIONS: tuple[RuleOption, ...] = (
     RuleOption(
         key=CHARTER_STRENGTH,
         label="Charter Strength",
+        brief="A charter has two scores, and loopholes can be sought in it.",
+        group=COVENANTS,
         effect=(
             "A charter between a lord and a town or covenant has two scores, "
             "the lord's and the other side's, rolled by each side's notaries "

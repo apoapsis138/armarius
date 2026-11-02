@@ -809,9 +809,9 @@ ROOM = 3.35
 
 
 class Medallion(QWidget):
-    """One season's medallion in the saga's set, `radius` across with
-    room round it for any set's ivy and the present season's glow; with
-    its name under it when `caption`."""
+    """One season's medallion in the saga's set (or the set `drawn_as`),
+    `radius` across with room round it for any set's ivy and the present
+    season's glow; with its name under it when `caption`."""
 
     def __init__(
         self,
@@ -823,9 +823,11 @@ class Medallion(QWidget):
         radius: float = 31,
         now: bool = False,
         caption: bool = False,
+        drawn_as: str = "",
     ) -> None:
         super().__init__()
         self.saga, self.season, self.year, self.p = saga, season, year, p
+        self.drawn_as = drawn_as
         self.radius, self.now, self.caption = radius, now, caption
         side = math.ceil(radius * ROOM)
         self.setFixedSize(side, side + 20 if caption else side)
@@ -835,9 +837,9 @@ class Medallion(QWidget):
         painter = QPainter(self)
         painter.setRenderHint(QPainter.RenderHint.Antialiasing)
         side = self.width()
-        paint_season(
+        paint(
             painter,
-            self.saga,
+            self.drawn_as or medallions.chosen(self.saga),
             QPointF(side / 2, side / 2),
             self.radius,
             self.season,

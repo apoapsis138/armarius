@@ -147,7 +147,7 @@ The desktop version shows one page at a time, the way a book is read: the Sagas,
 The trail at the top left names the pages above the one on show, for example "Sagas › Matrix › Keep › Leandro". Click one to go back to it.
 
 - **Sagas** shows every saga as a card. Click one to open it.
-- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The Covenants** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its Tribunals and neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players.
+- A saga's page opens on **The Troupe**: the player characters, the covenants the troupe plays and the pages you have bookmarked, each a click from its page (see [The Troupe](help:saga-troupe)). **The Covenants** shows its covenants as cards, then the characters and laboratories that belong to no covenant. **The Region** holds its Tribunals and neighbours and **The Bestiary** its creatures. **Seasons** sets the date and opens the seasons played; **Rules and Content** opens Saga Content; **Saga Settings** holds its details, seasons, optional rules and ruling templates; **Saga Management** holds Import, Export Saga, Export Pack and Host for Players.
 - A covenant's page lists its people, laboratories and possessions; click a person or a laboratory to open their page. A magus's familiar opens from the magus's page.
 
 A covenant, laboratory or character still being made is In Creation: its page is drawn on drafting vellum, and its header has the In Creation / In Play switch and the Creation Worksheet.
@@ -180,7 +180,7 @@ The Inspector, on the right of a record's page, shows whatever you last clicked 
 
 The button beside Help switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop remembers your choice on this computer and opens in it next time.
 
-While a saga is open, the headpiece band under the top bar carries the present season's medallion at its centre, drawn in the set the saga chooses (Edit Saga, Season medallions). The same medallions mark the seasons elsewhere: the Seasons page's title and each past season's heading, each season's column in Ahead (on the Seasons page and a covenant's Seasons chapter), a covenant's header (its own Covenant Season, beside its Magic Aura and Loyalty, with no words), the title of a covenant's Seasons chapter, a character's This Season, the column heads of a character's and a laboratory's calendar, and a siege's track. The present season's medallion glows. They change with the season when it is advanced, and with the set when Edit Saga changes it.
+While a saga is open, the headpiece band under the top bar carries the present season's medallion at its centre, drawn in the set the saga chooses (the saga's settings, Medallion style). The same medallions mark the seasons elsewhere: the Seasons page's title and each past season's heading, each season's column in Ahead (on the Seasons page and a covenant's Seasons chapter), a covenant's header (its own Covenant Season, beside its Magic Aura and Loyalty, with no words), the title of a covenant's Seasons chapter, a character's This Season, the column heads of a character's and a laboratory's calendar, and a siege's track. The present season's medallion glows. A figure drawn as a medallion, such as an aura or a Loyalty, takes the same set in its own colour. They change with the season when it is advanced, and with the set when the saga's settings change it.
 
 The speaker beside the theme turns the sounds on or off, and the app remembers which. Sounds are kept for moments that mean something: a page turning when you open a chapter (a longer one for a record or page), a quill when a form is saved, coins in a Treasury, a chest for the Inventory, a wax seal when the season advances, and a dull knock when an entry is refused. Plain button presses stay silent. While the sounds are on and Armarius is the active window, it keeps the audio device awake with silence, so Bluetooth speakers and headphones don't lose the start of each sound. The sounds play on Windows only.
 
@@ -195,22 +195,22 @@ The pages move a little, never in your way: the Inspector's new item inks in on 
 The top node of the tree. It shows the saga's own details and what it holds.
 <!-- /tui -->
 <!-- gui -->
-The saga's page, opened from its card on the Sagas page. It has eight chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The Covenants** shows its
+The saga's page, opened from its card on the Sagas page. It has nine chapters, and opens on the first. **The Troupe** gathers the player characters, the covenants the troupe plays and the pages you have bookmarked (see [The Troupe](help:saga-troupe)). **The Covenants** shows its
 Covenants, Unassigned Characters and Unassigned Laboratories as cards, each
 heading ending in a blank card (New Covenant, New Character, New
 Laboratory) that makes one more. A covenant's card shows its aura with its Boons and
 Hooks counted (each Aura Boon adds 1, Definitive Edition p. 183), the same total its
 page shows. **The Region** holds its Tribunals, each a card with a New Tribunal card after them, and its neighbours, and **The Bestiary** its creatures (see [The Region](help:region) and [The Bestiary](help:bestiary)). **Conflicts** lists its fights and sieges (see [Conflicts](help:conflicts)). **Seasons** sets the date (Set Date) and
-opens the seasons played; **Rules and Content** opens Saga Content; and
-**Saga Management** holds Edit Saga, Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
+opens the seasons played; **Rules and Content** opens Saga Content; **Saga Settings** holds its details, its seasons, its optional rules and its ruling templates (see [Saga Settings](help:saga-settings)); and
+**Saga Management** holds Import, Export Saga, Export Pack and Host for Players. A familiar is bound on its
 magus or in their laboratory.
 <!-- /gui -->
 
 <!-- tui -->
-**You type:** with `e` (Edit Saga): the Name, Storyguide and Description; whether to Keep season records; the optional rules of the books in play, each off until you turn it on; and the **Ruling templates** a Tribunal's rulings are written from (see [Hold Tribunal](help:hold-tribunal)): `Enter` opens the list, where each can be added, changed or removed. The books in play are chosen on [Saga Content](help:section-books-in-play).
+**You type:** with `e` (the saga's settings): the Name, Storyguide and Description; whether to Keep season records; the optional rules of the books in play, each off until you turn it on; and the **Ruling templates** a Tribunal's rulings are written from (see [Hold Tribunal](help:hold-tribunal)): `Enter` opens the list, where each can be added, changed or removed. The books in play are chosen on [Saga Content](help:section-books-in-play).
 <!-- /tui -->
 <!-- gui -->
-**You type:** with **Edit Saga**, in Saga Management: the Name, Storyguide and Description; whether to Keep season records; the optional rules of the books in play, each off until you turn it on; and the **Ruling templates** a Tribunal's rulings are written from (see [Hold Tribunal](help:hold-tribunal)): its button opens the list, where each can be added, changed or removed. The books in play are chosen on [Saga Content](help:section-books-in-play).
+**You type:** the Name, Storyguide and Description, with **Edit Saga** on [Saga Settings](help:saga-settings), where everything else about the saga is set too. The books in play are chosen on [Saga Content](help:section-books-in-play).
 <!-- /gui -->
 
 **The app works out:** the counts of covenants, characters, laboratories, books and spells, and a summary of the books in play and the optional rules turned on ("none (the book's standard rules)" when none is).
@@ -225,15 +225,28 @@ magus or in their laboratory.
 - **Current date**: the season and year the saga is in, under its name. It is also shown on Advance Season, in the top bar of every page.
 <!-- /gui -->
 - **Books in play**: the sourcebooks the troupe uses, and how many of the saga's own sources are in play. They are chosen on [Saga Content](help:section-books-in-play), which says what a book out of play switches off.
-- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described beside it in Edit Saga; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps). Learning cantations in play (Apprentices) is offered only while that book is in play, off by default: see [Learn a Cantation](help:learn-cantation). Hazardous Laboratory Texts and No magical copying of Lab Texts (Transforming Mythic Europe pp. 103-104) are offered only while that book is in play. With the first, a Lab Text copied by magic below the Finesse Total that copies it flawlessly isn't useless: each use of it makes an extra Experimentation roll, its risk modifier half the pages spoiled in ten (the season's Diary entry gives it). With the second, Copy books by magic refuses Lab Texts: each is written by hand. Charter Strength (Transforming Mythic Europe p. 36) is offered only while that book is in play: a charter between a lord and a town or covenant has two scores; More's Draft the Charter and Seek a Loophole on its lords.
+- **Optional rules**: Simple dice only, Dominion Magic Resistance, Harsher Infernal vis, Starting income by number of magi, Enforce creation rules strictly, Extended book Quality, Bruises, Dominion growth and Auras change. Each one's effect is described on its card in the saga's settings; Harsher Infernal vis (Realms of Power: The Infernal), Extended book Quality (Covenants), Dominion growth (Realms of Power: The Divine) and Auras change (Realms of Power: Magic) are offered only while their book is in play. With Dominion Magic Resistance on, a Christian, Jew or Muslim (or anyone whose religion is left blank) living in a Dominion aura shows Magic Resistance of 5 x that aura on their sheet. Simple dice only and Dominion Magic Resistance are house rules the Definitive Edition offers as examples (Chapter 16: Sagas, Rules Questions, p. 524), not rules of the game; Extended book Quality comes from Covenants' Library chapter. Standard apprenticeship model (Apprentices) is offered only while that book is in play, off by default: see the Apprenticeship step of [the Creation Worksheet](help:creation-worksheet-steps). Learning cantations in play (Apprentices) is offered only while that book is in play, off by default: see [Learn a Cantation](help:learn-cantation). Hazardous Laboratory Texts and No magical copying of Lab Texts (Transforming Mythic Europe pp. 103-104) are offered only while that book is in play. With the first, a Lab Text copied by magic below the Finesse Total that copies it flawlessly isn't useless: each use of it makes an extra Experimentation roll, its risk modifier half the pages spoiled in ten (the season's Diary entry gives it). With the second, Copy books by magic refuses Lab Texts: each is written by hand. Charter Strength (Transforming Mythic Europe p. 36) is offered only while that book is in play: a charter between a lord and a town or covenant has two scores; More's Draft the Charter and Seek a Loophole on its lords.
 <!-- tui -->
 - **Keep season records**: when on, each season applied is kept under Seasons in the tree. When off, only the characters' Diaries keep them.
 <!-- /tui -->
 <!-- gui -->
 - **Keep season records**: when on, each season applied is kept on the Seasons page. When off, only the characters' Diaries keep them.
 
-On the desktop, the books in play are counted on the Saga Content card in Rules and Content, and the optional rules turned on are shown in Edit Saga.
+On the desktop, the books in play are counted on the Saga Content card in Rules and Content, and the optional rules turned on are shown on [Saga Settings](help:saga-settings).
 <!-- /gui -->
+
+### Saga Settings
+<!-- help: saga-settings; gui -->
+
+Everything about the saga that can be set, on one chapter of its page, as cards under their sections' headings: **Saga Details**, **Seasons**, **Optional Rules** and **Tribunal**.
+
+- **Saga Details** shows the Name, Storyguide and Description; **Edit Saga** changes them.
+- A card's first line names the setting, and the line under it says briefly what it does. Click the card to read it in full in the Inspector, with its source for an optional rule.
+- A **switch** at a card's upper right turns the setting on or off at once, as a book's chip does on Books in Play; there is no Save. The Inspector has the same switch.
+- A **chip** at the upper right shows a setting chosen from a list (what idle magi, companions and grogs do, the set of Medallion Style, or the Ruling Templates): click it to change it.
+- Clicking **Medallion Style** shows an example of every set in the Inspector, with the one in use marked. The set draws every medallion on the desktop: the seasons', and the figures', such as an aura or a covenant's Loyalty.
+- **Ruling Templates** opens as a ledger, each template's name in red beside its words. A row too long for the window ends in dots: hover over it, or maximise the window, to read it all.
+- **Optional Rules** are sorted by what they touch, each naming its book. All are off until you turn them on. A rule whose book is out of play is greyed out and can't be switched; it counts as off, and your choice is kept for when the book comes back. Books are chosen on [Saga Content](help:section-books-in-play).
 
 ### The Troupe
 <!-- help: saga-troupe; gui -->
@@ -491,7 +504,7 @@ The desktop doesn't list them yet: open the saga in the terminal version to see 
 # Seasons
 <!-- help: seasons -->
 
-The saga's record of past seasons: what everyone did each season and what it gave them. A record is added each time a season is applied with [Advance Season](help:advance-season), as long as Keep season records is on in Edit Saga.
+The saga's record of past seasons: what everyone did each season and what it gave them. A record is added each time a season is applied with [Advance Season](help:advance-season), as long as Keep season records is on in the saga's settings.
 
 **You type:** nothing; the records are written by the app.
 
@@ -714,7 +727,7 @@ Click a card itself to see the book in the inspector.
 
 A book's details give a short overview of it, how much it holds, and its special rules: its optional rules by name, and for a supplement its season activities, kinds of book and traditions. A saga source's give what it holds and what cites it.
 
-While a book is out of play, everything it adds is switched off: the pickers leave out its Virtues, Flaws, spells and other entries; the season plan leaves out its activities (a plan already made keeps its activity); its optional rules are left off Edit Saga and count as off (the choice is kept for when the book comes back); and the library's book form leaves out its kinds of books and their fields (a book already using one keeps it). The Library tab's research bonuses need Covenants.
+While a book is out of play, everything it adds is switched off: the pickers leave out its Virtues, Flaws, spells and other entries; the season plan leaves out its activities (a plan already made keeps its activity); its optional rules are greyed out on Saga Settings (the terminal's Edit Saga leaves them off) and count as off (the choice is kept for when the book comes back); and the library's book form leaves out its kinds of books and their fields (a book already using one keeps it). The Library tab's research bonuses need Covenants.
 
 ### Saga Sources
 <!-- help: section-saga-sources -->
