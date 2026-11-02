@@ -220,14 +220,99 @@ def governance_names(covenant: Covenant) -> list[str]:
 FAMILIARITY_PER_YEAR = 2
 
 
+#: The covenfolk whose familiarity with the Gift counts: everyone but the
+#: magi, the companions (who choose their own loyalty) and the animals.
+FAMILIARITY_KINDS: tuple[str, ...] = (
+    "specialist",
+    "craftsperson",
+    "turb",
+    "inhabitant",
+)
+
+
+def _cohorts(saga: Saga, covenant: Covenant) -> list[tuple[int, int]]:
+    """The covenfolk as (how many, the year they came), those here since
+    the founding (or with no year) counted from the founding."""
+    founded = covenant.year_founded or saga.current_year
+    cohorts = [
+        cohort
+        for kind in FAMILIARITY_KINDS
+        for e in entries_for_kind(saga, covenant, kind)
+        for cohort in entry_cohorts(e, founded)
+    ]
+    if covenant.population.other_people:
+        cohorts.append((covenant.population.other_people, founded))
+    return cohorts
+
+
+def entry_cohorts(entry: InhabitantEntry, founded: int) -> list[tuple[int, int]]:
+    """A line's people as (how many, the year they came): those here since
+    the founding, then each later arrival."""
+    arrived = sum(a.count for a in entry.arrivals)
+    cohorts = [(entry.quantity - arrived, founded)] if entry.quantity > arrived else []
+    return cohorts + [(a.count, max(founded, a.year)) for a in entry.arrivals]
+
+
+def arrival_text(saga: Saga, covenant: Covenant, entry: InhabitantEntry) -> str:
+    """When a line's people came, and each group's familiarity with the
+    Gift (the Inspector's Arrivals; "" for a kind it doesn't concern)."""
+    if entry.kind not in FAMILIARITY_KINDS:
+        return ""
+    founded = covenant.year_founded or saga.current_year
+    cap = max(0, -base_loyalty(saga, covenant))
+    lines = []
+    for count, came in entry_cohorts(entry, founded):
+        grown = min(FAMILIARITY_PER_YEAR * max(0, saga.current_year - came), cap)
+        when = (
+            f"here since the founding ({founded})"
+            if came == founded
+            else f"joined {came}"
+        )
+        state = (
+            f", still growing used to the Gift ({grown} of {cap} Familiarity)"
+            if grown < cap
+            else ""
+        )
+        lines.append(f"{count} {when}{state}")
+    return "[b]Arrivals:[/]\n" + "\n".join(lines)
+
+
+def newcomers(saga: Saga, covenant: Covenant) -> tuple[int, int]:
+    """(covenfolk who came after the founding and are not yet used to the
+    Gift, all covenfolk)."""
+    cap = max(0, -base_loyalty(saga, covenant))
+    cohorts = _cohorts(saga, covenant)
+    founded = covenant.year_founded or saga.current_year
+    new = sum(
+        n
+        for n, came in cohorts
+        if came > founded
+        and FAMILIARITY_PER_YEAR * max(0, saga.current_year - came) < cap
+    )
+    return new, sum(n for n, _ in cohorts)
+
+
 def familiarity(saga: Saga, covenant: Covenant) -> int:
     """Familiarity: 2 Loyalty points for each year since the covenant was
-    founded, at most what the magi's Gift takes off (Base Loyalty), plus
-    the typed adjustment (DE p. 186)."""
+    founded, at most what the magi's Gift takes off (Base Loyalty; DE p.
+    186), plus the typed adjustment. New covenfolk dilute it by their share
+    of the covenfolk (Covenants pp. 37, 40), and grow used to the Gift at the
+    same 2 a year from when they came, so it climbs back to its most: the
+    average over the covenfolk of each one's own familiarity."""
     grown = 0
     if covenant.year_founded is not None:
-        years = max(0, saga.current_year - covenant.year_founded)
-        grown = min(FAMILIARITY_PER_YEAR * years, max(0, -base_loyalty(saga, covenant)))
+        cap = max(0, -base_loyalty(saga, covenant))
+
+        def since(year: int) -> int:
+            return min(FAMILIARITY_PER_YEAR * max(0, saga.current_year - year), cap)
+
+        cohorts = _cohorts(saga, covenant)
+        people = sum(n for n, _ in cohorts)
+        grown = (
+            round_nearest(sum(n * since(came) for n, came in cohorts) / people)
+            if people
+            else since(covenant.year_founded)
+        )
     return grown + covenant.loyalty.familiarity
 
 

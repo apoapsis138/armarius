@@ -749,6 +749,24 @@ CONTRACTS: dict[str, Contract] = {
         expected=16.0,
         invalid={"Pounds": "0"},
     ),
+    "recruit to a covenfolk line": Contract(
+        prefill={"How many joined": "1", "Note": ""},
+        edits={"How many joined": "2"},
+        saved=lambda s: next(
+            r.quantity for r in covenant(s).inhabitants if r.id == "watch"
+        ),
+        expected=5,
+        invalid={"How many joined": "0"},
+    ),
+    "depart from a covenfolk line": Contract(
+        prefill={"How many": "1", "Why": ""},
+        edits={"How many": "2", "Why": "Died of old age"},
+        saved=lambda s: next(
+            r.quantity for r in covenant(s).inhabitants if r.id == "watch"
+        ),
+        expected=1,
+        invalid={"How many": "9"},
+    ),
     "edit magic savings": Contract(
         prefill={"Savings": "0"},
         edits={"Savings": "20"},

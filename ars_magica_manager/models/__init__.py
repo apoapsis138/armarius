@@ -260,6 +260,7 @@ from .holdings import PURCHASE_GOODS as PURCHASE_GOODS
 from .holdings import PURCHASE_KINDS as PURCHASE_KINDS
 from .holdings import SANCTUM_USAGE_DEFAULT as SANCTUM_USAGE_DEFAULT
 from .holdings import SANCTUM_USAGES as SANCTUM_USAGES
+from .holdings import Arrival as Arrival
 from .holdings import Economics as Economics
 from .holdings import IncomeSource as IncomeSource
 from .holdings import Inhabitant as Inhabitant

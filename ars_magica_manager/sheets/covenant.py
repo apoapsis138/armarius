@@ -281,7 +281,17 @@ def inhabitant_groups(saga: Saga, covenant: Covenant) -> list[Group]:
                 kind,
                 f"{inh.KIND_TITLES[kind]} ({covenfolk.headcount(entries)})",
                 table,
-                [inh.detail_text(e, saga.current_year) for e in entries],
+                [
+                    "\n\n".join(
+                        part
+                        for part in (
+                            inh.detail_text(e, saga.current_year),
+                            inh.arrival_text(saga, covenant, e),
+                        )
+                        if part
+                    )
+                    for e in entries
+                ],
             )
         )
     return groups

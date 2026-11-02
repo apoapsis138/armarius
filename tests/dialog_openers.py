@@ -51,6 +51,7 @@ from ars_magica_manager.forms import (
 )
 from ars_magica_manager.forms import grogs as grog_forms
 from ars_magica_manager.forms import hook_stories as hook_story_forms
+from ars_magica_manager.forms import inhabitant as inhabitant_forms
 from ars_magica_manager.forms import land_shaping as land_forms
 from ars_magica_manager.forms import threshold as threshold_forms
 from ars_magica_manager.forms import trait_roll as trait_roll_forms
@@ -81,6 +82,7 @@ from ars_magica_manager.models import (
     GuestStay,
     HermeticProject,
     IncomeSource,
+    Inhabitant,
     KnownSpell,
     LandProject,
     Marriage,
@@ -99,7 +101,7 @@ from ars_magica_manager.models import (
 )
 from ars_magica_manager.models.criamon import Stigma
 from ars_magica_manager.models.menagerie import Beast, Breeding
-from ars_magica_manager.rules import creation_xp, hermetic_law
+from ars_magica_manager.rules import covenfolk, creation_xp, hermetic_law
 from ars_magica_manager.rules import devotion as devotion_rules
 from ars_magica_manager.rules import divine_state as ds
 from ars_magica_manager.rules import mysticism as my
@@ -776,6 +778,29 @@ def _settle_contested(ws) -> None:
     source = IncomeSource("rents", "Rents", contested=True)
     covenant.economics.income_sources.append(source)
     ws._run_steps(cov_forms.settle_form(ws.saga, covenant, source))
+
+
+def _covenfolk_line(ws):
+    """A turb line of 3, as the covenfolk forms act on."""
+    covenant = ws.selected_covenant
+    covenant.inhabitants.append(
+        Inhabitant(id="watch", kind="turb", name="The watch", quantity=3)
+    )
+    return next(
+        e
+        for e in covenfolk.entries_for_kind(ws.saga, covenant, "turb")
+        if e.record is not None and e.record.id == "watch"
+    )
+
+
+def _recruit(ws) -> None:
+    line = _covenfolk_line(ws)
+    ws._run_steps(inhabitant_forms.recruit_form(ws.saga, ws.selected_covenant, line))
+
+
+def _depart(ws) -> None:
+    line = _covenfolk_line(ws)
+    ws._run_steps(inhabitant_forms.depart_form(ws.saga, ws.selected_covenant, line))
 
 
 def _add_purchase(ws) -> None:
@@ -1627,6 +1652,8 @@ OPENERS: dict[str, Opener] = {
     "edit sundry": Opener("covenant", _economics_row("expenditure", "sundry")),
     "settle a contested resource": Opener("covenant", _settle_contested),
     "add a purchase": Opener("covenant", _add_purchase),
+    "recruit to a covenfolk line": Opener("covenant", _recruit),
+    "depart from a covenfolk line": Opener("covenant", _depart),
     "edit magic savings": Opener("covenant", _economics_row("savings", "magic")),
     "edit loyalty": Opener("covenant", lambda ws: ws._edit_loyalty()),
     "edit population": Opener("covenant", lambda ws: ws._edit_population()),

@@ -8,7 +8,7 @@ from typing import Any, TypedDict
 from ..arts import ART_BY_NAME
 from .common import SEASONS, known_fields, move_secrets
 from .hermetic_projects import HermeticProject, projects_from
-from .holdings import Economics, Inhabitant, Loyalty, Population, Possession
+from .holdings import Arrival, Economics, Inhabitant, Loyalty, Population, Possession
 from .land_shaping import LandProject
 from .stops import CovenantStop, RouteStop, route_from, stops_from
 from .traits import ScoredTrait, VirtueFlawInstance
@@ -38,6 +38,13 @@ STORY_EVENT = "Story Event"
 #: A Story Event's Status: still to be told, told, or grown into a
 #: threat of the Region (open_stories).
 STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved", "Grown into a threat")
+
+
+def _inhabitant_from_dict(data: dict[str, Any]) -> Inhabitant:
+    """An inhabitant line, its arrivals made records."""
+    d = known_fields(Inhabitant, data)
+    d["arrivals"] = [Arrival(**known_fields(Arrival, a)) for a in d.get("arrivals", [])]
+    return Inhabitant(**d)
 
 
 @dataclass
@@ -569,9 +576,7 @@ class Covenant:
                 "of interest names."
             )
         d["interests_off"] = off
-        d["inhabitants"] = [
-            Inhabitant(**known_fields(Inhabitant, i)) for i in d.get("inhabitants", [])
-        ]
+        d["inhabitants"] = [_inhabitant_from_dict(i) for i in d.get("inhabitants", [])]
         d["loyalty"] = Loyalty(**known_fields(Loyalty, d.get("loyalty") or {}))
         d["population"] = Population(
             **known_fields(Population, d.get("population") or {})

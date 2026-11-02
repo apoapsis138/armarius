@@ -73,7 +73,7 @@ from ..models import (
     Possession,
     Saga,
 )
-from ..rules import library
+from ..rules import covenfolk, library
 from ..sections import (
     COV_CHARTER_LORDS_SECTION,
     COV_CHARTER_TERMS_SECTION,
@@ -745,10 +745,41 @@ class CovenantPage(QWidget):
                 },
             ),
         ]
+
+        def more(kind: str) -> list[RowVerb]:
+            if kind not in inh.FAMILIARITY_KINDS:
+                return []
+
+            def entries() -> list:
+                return covenfolk.entries_for_kind(saga, covenant, kind)
+
+            def has(row: int) -> bool:
+                return row < len(entries())
+
+            return [
+                (
+                    "Recruit",
+                    "add",
+                    lambda row: inhabitant_forms.recruit_form(
+                        saga, covenant, entries()[row]
+                    ),
+                    has,
+                ),
+                (
+                    "Depart",
+                    "delete",
+                    lambda row: inhabitant_forms.depart_form(
+                        saga, covenant, entries()[row]
+                    ),
+                    has,
+                ),
+            ]
+
         parts += self._every_kind(
             cvs.inhabitant_groups(saga, covenant),
             {kind: inh.KIND_TITLES[kind] for kind in INHABITANT_KINDS},
             lambda kind: inhabitant_forms.inhabitant_ops(saga, covenant, kind),
+            more,
         )
         parts.append(self._guests(covenant))
         return scrolling_page(p, *parts)

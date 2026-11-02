@@ -156,6 +156,17 @@ def _options(options: tuple[str, ...], points: dict[str, int], chosen: str) -> s
     )
 
 
+def _newcomers_text(saga: Saga, covenant: Covenant) -> str:
+    new, everyone = inh.newcomers(saga, covenant)
+    if not new:
+        return ""
+    return (
+        f"\n\n[b]{new} of {everyone}[/] covenfolk are newcomers still "
+        "growing used to the Gift: Recruit and Depart on each list keep when "
+        "they came."
+    )
+
+
 def modifier_lines(saga: Saga, covenant: Covenant) -> list[Line]:
     """Each situational modifier, its setting, and its rule."""
     loyalty = covenant.loyalty
@@ -212,8 +223,11 @@ def modifier_lines(saga: Saga, covenant: Covenant) -> list[Line]:
             "Familiarity",
             (str(inh.familiarity(saga, covenant)),),
             f"{inh.FAMILIARITY_PER_YEAR} points a year since the covenant was "
-            "founded, at most enough to cancel Base Loyalty; many new covenfolk "
-            "dilute it (Covenants p. 40).",
+            "founded, at most enough to cancel Base Loyalty (DE p. 186). "
+            "Newcomers dilute it by their share of the covenfolk, and grow used "
+            f"to the Gift at the same {inh.FAMILIARITY_PER_YEAR} a year from when "
+            "they came, so it climbs back (Covenants pp. 37, 40)."
+            + _newcomers_text(saga, covenant),
         ),
         Line(
             "Reputation",

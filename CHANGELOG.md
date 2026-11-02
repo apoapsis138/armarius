@@ -122,6 +122,20 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.69.0 — 2026-11-02
+
+### Computus
+
+- New covenfolk dilute Familiarity. Each covenfolk line remembers when its people came; Familiarity is the average across the covenfolk, each group growing used to the Gift at 2 points a year from when it arrived, so recruits pull it down and it climbs back to its most. Companions and animals don't count.
+
+### Illuminatio
+
+- Recruit and Depart sit beside Add, Edit and Delete on the Specialists, Craftspeople, Turb and Other Covenfolk lists. Recruit adds people to a line with the year they came; Depart takes people away from the group you choose (those here since the founding, or a year's arrivals), with why. Both write the Diary, and a line everyone has left is removed. Click a line to see in the Inspector when each group came and how used to the Gift they are.
+
+### Glossa
+
+- Help describes newcomers, Recruit and Depart.
+
 ## 3.68.0 — 2026-11-02
 
 ### Illuminatio

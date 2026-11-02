@@ -13,7 +13,7 @@ from typing import Any
 
 from .. import catalog, covenant_diary
 from .. import inhabitants as inh
-from ..commands import Choice, Choose, Confirm, Form, SectionOps
+from ..commands import Choice, Choose, Confirm, Form, SectionOps, notes
 from ..form_spec import DialogField, description_field, pairs, year_born_field
 from ..markup import escape
 from ..models import (
@@ -23,8 +23,10 @@ from ..models import (
     LOYALTY_EQUIPMENT,
     LOYALTY_MONEY,
     OTHER_COVENFOLK_ROLES,
+    Arrival,
     Character,
     Covenant,
+    CovenantDiaryEntry,
     Saga,
 )
 from ..rules import covenfolk
@@ -287,11 +289,140 @@ def inhabitant_form(
     def apply(values: dict[str, Any]) -> None:
         inh.save_entry(covenant, kind, entry, values, grog)
 
+    def problem(values: dict[str, Any]) -> str | None:
+        arrived = sum(a.count for a in entry.arrivals) if entry is not None else 0
+        if values.get("quantity", 1) < arrived:
+            return (
+                f"{arrived} of them are recorded as arriving later: take people "
+                "away with Depart instead."
+            )
+        return inh.form_problem(values)
+
     return Form(
         form_title(kind, entry),
         lambda: inhabitant_fields(kind, entry, grog),
         apply,
-        validate=inh.form_problem,
+        validate=problem,
+    )
+
+
+def recruit_form(
+    saga: Saga, covenant: Covenant, entry: covenfolk.InhabitantEntry
+) -> Form:
+    """More people join a line: how many, and when. They dilute Familiarity
+    until they grow used to the Gift (Covenants pp. 37, 40)."""
+    record = entry.record
+    assert record is not None  # the covenfolk lists hold only records
+    name = entry.name or inh.KIND_SINGULAR[entry.kind]
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        count, year = values["count"], values["year"]
+        record.quantity += count
+        same = next((a for a in record.arrivals if a.year == year), None)
+        if same is not None:
+            same.count += count
+        else:
+            record.arrivals.append(Arrival(count, year))
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                year,
+                saga.current_season,
+                f"{count} joined {name}",
+                values["note"],
+                category="Inhabitants",
+            )
+        )
+        return notes(f"{count} joined {escape(name)}: now {record.quantity}.")
+
+    return Form(
+        f"Recruit to {escape(name)}",
+        lambda: [
+            DialogField("count", "How many joined", "int", 1, required=True),
+            DialogField(
+                "year", "Year they came", "int", saga.current_year, required=True
+            ),
+            DialogField("note", "Note", "text", ""),
+        ],
+        apply,
+        validate=lambda values: None if values["count"] >= 1 else "At least one joins.",
+        save_label="Recruit",
+    )
+
+
+def depart_form(
+    saga: Saga, covenant: Covenant, entry: covenfolk.InhabitantEntry
+) -> Form:
+    """Some of a line leave: you choose which arrival they came with, how
+    many, and why."""
+    record = entry.record
+    assert record is not None  # the covenfolk lists hold only records
+    name = entry.name or inh.KIND_SINGULAR[entry.kind]
+    founded = covenant.year_founded or saga.current_year
+    arrived = sum(a.count for a in record.arrivals)
+    groups: list[tuple[str, str, int]] = []
+    if record.quantity > arrived:
+        groups.append(
+            (
+                "founding",
+                f"Here since the founding ({record.quantity - arrived})",
+                record.quantity - arrived,
+            )
+        )
+    groups += [
+        (str(i), f"Joined {max(founded, a.year)} ({a.count})", a.count)
+        for i, a in enumerate(record.arrivals)
+    ]
+    sizes = {key: size for key, _label, size in groups}
+
+    def problem(values: dict[str, Any]) -> str | None:
+        count = values["count"]
+        if count < 1:
+            return "At least one leaves."
+        if count > sizes[values["group"]]:
+            return f"That group has only {sizes[values['group']]}."
+        return None
+
+    def apply(values: dict[str, Any]) -> list[str]:
+        count, group = values["count"], values["group"]
+        if group != "founding":
+            arrival = record.arrivals[int(group)]
+            arrival.count -= count
+            if not arrival.count:
+                record.arrivals.remove(arrival)
+        record.quantity -= count
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                saga.current_year,
+                saga.current_season,
+                f"{count} left {name}",
+                values["why"],
+                category="Inhabitants",
+            )
+        )
+        if not record.quantity:
+            covenant.inhabitants.remove(record)
+            return notes(f"Everyone in {escape(name)} has gone: the line is removed.")
+        return notes(f"{count} left {escape(name)}: now {record.quantity}.")
+
+    return Form(
+        f"Depart from {escape(name)}",
+        lambda: [
+            DialogField(
+                "group",
+                "Who leaves",
+                "select",
+                groups[0][0],
+                options=[(label, key) for key, label, _size in groups],
+                required=True,
+            ),
+            DialogField("count", "How many", "int", 1, required=True),
+            DialogField(
+                "why", "Why", "text", "", hint="Died of old age, dismissed, ran off..."
+            ),
+        ],
+        apply,
+        validate=problem,
+        save_label="Depart",
     )
 
 

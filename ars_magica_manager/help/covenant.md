@@ -604,8 +604,10 @@ Money from the choices you make with
 (a Pension adds to Money, and its **Pensioners** each cost half Wages),
 Specialists (below), Familiarity (worked out: 2 points for every year
 since the covenant's Year Founded, at most what the magi's Gift takes off,
-DE p. 186; the **Familiarity adjustment** you type changes it, for
-instance when new covenfolk dilute it), Reputation, Actions and events (the
+DE p. 186; newcomers dilute it by their share of the covenfolk and grow
+used to the Gift at the same 2 a year from when they arrived, so it climbs
+back to its most, Covenants pp. 37, 40; the **Familiarity adjustment** you
+type changes it further), Reputation, Actions and events (the
 Diary's Loyalty points plus any you type), and Magical Influence.
 
 Specialists: the Presence and Ability of the covenant's Turb Captain,
@@ -718,7 +720,21 @@ sheet), a Field of Work, whether they are rare, and a Quantity. Their Field
 of Work decides which cost they save on the Economics tab: a common
 craftsperson saves 1 plus half their skill a year, a rare one their skill.
 A craftsperson working on Books saves nothing but adds to Writing
-Materials. Saves shows what each one saves a year; "(cap)" means the
+Materials.
+
+Specialists, craftspeople, the turb and other covenfolk are counted as
+here since the covenant's founding until someone joins them.
+<!-- gui -->
+**Recruit**, beside a list's Add, Edit and Delete, adds people to the line
+clicked: how many and the year they came. **Depart** takes people away:
+you choose which arrival they belong to (those here since the founding,
+or those who joined in a given year), how many, and why. Both write the
+Diary under Inhabitants, and a line everyone has left is removed. Click a
+line to see in the Inspector when each group arrived and how used to the
+Gift they are yet.
+<!-- /gui -->
+Newcomers dilute Familiarity until they grow used to the Gift (see
+Loyalty). Saves shows what each one saves a year; "(cap)" means the
 craft's cap on its cost, a share of that cost rounded down (Covenants p.
 68), cuts it.
 

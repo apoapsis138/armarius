@@ -429,6 +429,11 @@ def _add_diary_and_charter(covenant: Covenant, magus_id: str) -> None:
     """A diary entry, and a charter with a clause and a magus's seal."""
     covenant.diary.append(CovenantDiaryEntry(1220))
     covenant.economics.purchases.append(models.Purchase("p", "Hay", 1.0))
+    covenant.inhabitants.append(
+        models.Inhabitant(
+            id="arr", kind="turb", quantity=2, arrivals=[models.Arrival(1, 1220)]
+        )
+    )
     covenant.stops.append(CovenantStop(1220, "Spring", "somewhere"))
     covenant.route.append(RouteStop("somewhere"))
     covenant.charter_of_covenant = CovenantCharter(

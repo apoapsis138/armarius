@@ -304,6 +304,14 @@ class Possession:
 
 
 @dataclass
+class Arrival:
+    """Some of an inhabitant line who came to the covenant in one year."""
+
+    count: int
+    year: int
+
+
+@dataclass
 class Inhabitant:
     """One stored entry on a covenant's Inhabitants tab.
 
@@ -330,6 +338,10 @@ class Inhabitant:
     name: str = ""
     character_id: str | None = None
     year_born: int | None = None
+    #: Those of `quantity` who came after the covenant's founding, by when;
+    #: the rest have been here since it. Newcomers dilute Familiarity until
+    #: they grow used to the Gift.
+    arrivals: list[Arrival] = field(default_factory=list)
     house: str | None = None  # NPC magus: a house_catalog.json id
     gift: str = ""  # manual (non-sheet) magus: one of GIFT_CHOICES, or ""
     quantity: int = 1

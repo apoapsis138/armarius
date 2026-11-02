@@ -12,6 +12,7 @@ from typing import Any
 from ..models import (
     COMPANION_TYPES,
     INHABITANT_KINDS,
+    Arrival,
     Character,
     Covenant,
     Inhabitant,
@@ -139,6 +140,10 @@ class InhabitantEntry:
         if self.auto and self.character is not None:
             return self.character.name
         return self._own("name", "")
+
+    @property
+    def arrivals(self) -> list[Arrival]:
+        return self._own("arrivals", [])
 
     @property
     def year_born(self) -> int | None:
