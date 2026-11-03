@@ -17,6 +17,7 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
     _show_library_tab,
+    _show_tab,
     _wait_for_screen,
 )
 from support import build_all_tabs, choose, menu, wait_until
@@ -27,7 +28,6 @@ from textual.widgets import (
     Input,
     Select,
     Static,
-    TabbedContent,
     Tree,
 )
 
@@ -165,8 +165,7 @@ async def test_adding_a_book_for_a_laboratory_shows_it_in_the_lab_inventory():
 
         await _select(pilot, app, ("laboratory", "lab1"))
         lab_view = app.screen._laboratory_sheet_view
-        lab_view.query_one(TabbedContent).active = "tab-lab-inventory"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-lab-inventory")
         assert _book_names(app) == ["Summa [Aquam]"]
         section = lab_view.query_one("#section-lab-books", Collapsible)
         assert section.title == "Books (1)"
@@ -339,8 +338,7 @@ async def test_character_books_section_and_delete_confirms():
     async with app.run_test(size=(140, 50)) as pilot:
         await _select_character(pilot, app)
         view = app.screen._character_sheet_view
-        view.query_one(TabbedContent).active = "tab-inventory"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-inventory")
         section = view.query_one("#section-books", Collapsible)
         assert section.title == "Books (1)"
         assert _book_names(app) == ["Pocket Tract"]

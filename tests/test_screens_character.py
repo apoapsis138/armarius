@@ -17,6 +17,7 @@ from screen_helpers import (
     _select_character,
     _select_covenant,
     _select_laboratory,
+    _show_tab,
     _wait_for_picker_ready,
     _wait_for_screen,
 )
@@ -282,7 +283,9 @@ async def test_arts_and_spells_tabs_are_absent_for_non_magi():
         # lands on the top panel) opens Edit Character Info rather than
         # doing nothing.
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(
+            pilot, app, FieldsDialog
+        )  # mounted, before the app closes
         assert _is_form(app.screen, "Edit Character Info")
 
 
@@ -302,9 +305,7 @@ async def test_switching_tabs_moves_a_a_e_with_the_tab():
         await _open_section(pilot, app, "section-aging")
         assert app.screen._active_section() == "section-aging"
 
-        view = app.screen._character_sheet_view
-        view.query_one(TabbedContent).active = "tab-planning"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-planning")
         assert app.screen._active_section() == "section-char-season"
         await pilot.press("e")
         await pilot.pause()
@@ -312,8 +313,7 @@ async def test_switching_tabs_moves_a_a_e_with_the_tab():
         await pilot.press("escape")
         await pilot.pause()
 
-        view.query_one(TabbedContent).active = "tab-diary"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-diary")
         assert app.screen._active_section() == "tab-diary"
 
 
@@ -854,8 +854,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
         )
         # Switch to Inventory: its list already reflects the addition, even
         # though it wasn't the active tab when the add happened.
-        view.query_one(TabbedContent).active = "tab-inventory"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-inventory")
         assert any(
             "Creo: 5 pawn(s)" in row for row in rows(view, "raw-vis-list-inventory")
         )
@@ -885,8 +884,7 @@ async def test_raw_vis_stays_live_across_both_tabs():
         await pilot.pause()
 
         assert "none recorded" in rows(view, "raw-vis-list-hermetic")[0]
-        view.query_one(TabbedContent).active = "tab-inventory"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-inventory")
         assert "none recorded" in rows(view, "raw-vis-list-inventory")[0]
 
     saga = storage.load_saga("test_saga")

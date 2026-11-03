@@ -122,6 +122,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.70.2 — 2026-11-03
+
+### Fundamenta
+
+- The terminal's screen tests no longer fail now and then when the whole suite runs in parallel: after a tab switch they wait for its focus to arrive, and a test that ends on a form waits for the form to finish opening.
+
+### Scriptorum
+
+- Switching a sheet's tab redraws the terminal's key bar once, not twice when the computer is busy.
+
 ## 3.70.1 — 2026-11-02
 
 ### Pagina

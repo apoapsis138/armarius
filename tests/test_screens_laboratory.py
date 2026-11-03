@@ -14,6 +14,7 @@ from screen_helpers import (
     _saga_with_bare_laboratory,
     _select_character,
     _select_laboratory,
+    _wait_for_screen,
 )
 from support import build_all_tabs, strip_markup, wait_until
 from textual.widgets import (
@@ -293,7 +294,9 @@ async def test_clicking_a_lab_top_panel_section_makes_it_active():
         assert app.screen._active_section() == "section-lab-characteristics"
 
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(
+            pilot, app, FieldsDialog
+        )  # mounted, before the app closes
         assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
 
 
@@ -312,7 +315,9 @@ async def test_lab_top_panel_edit_buttons_open_edit_dialogs():
         await pilot.pause()
 
         view.query_one("#btn-lab-characteristics-edit", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(
+            pilot, app, FieldsDialog
+        )  # mounted, before the app closes
         assert _is_form(app.screen, "Edit Laboratory Characteristics (manual value)")
 
 

@@ -1,9 +1,9 @@
 """The terminal laboratory's Research tab: its owner's research under way,
 shown while there is any."""
 
-from screen_helpers import _saga_with_bare_laboratory, _select_laboratory
+from screen_helpers import _saga_with_bare_laboratory, _select_laboratory, _show_tab
 from support import strip_markup, wait_until
-from textual.widgets import Static, TabbedContent
+from textual.widgets import Static
 
 from ars_magica_manager import storage
 from ars_magica_manager.models import Breakthrough, ResearchAttempt
@@ -42,9 +42,7 @@ async def test_a_lab_shows_its_owner_s_research_under_way():
         await _select_laboratory(pilot, app)
         view = app.screen._laboratory_sheet_view
         assert "tab-lab-research" in view.tab_ids
-        view.query_one(TabbedContent).active = "tab-lab-research"
-        goals = await wait_until(pilot, lambda: view.query("#lab-research-goals-list"))
-        assert goals
+        await _show_tab(pilot, app, "tab-lab-research")
         # Only the goal begun: Parma Condensa isn't under way.
         rows = view.query_one("#lab-research-goals-list", SelectableList)
         assert rows.row_count == 1

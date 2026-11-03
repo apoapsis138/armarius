@@ -14,6 +14,7 @@ from screen_helpers import (
     _saga_with_people,
     _save_dialog,
     _select_covenant,
+    _show_tab,
     _wait_for_screen,
     _wait_until_active,
 )
@@ -26,7 +27,6 @@ from textual.widgets import (
     ListView,
     Select,
     Static,
-    TabbedContent,
 )
 
 from ars_magica_manager import economics as eco
@@ -63,11 +63,7 @@ def _saga_for_economics() -> Saga:
 
 
 async def _show_economics_tab(pilot, app) -> None:
-    view = app.screen._covenant_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-economics"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-cov-economics")
 
 
 async def _open_eco_section(pilot, app, which: str) -> None:

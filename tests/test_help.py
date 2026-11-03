@@ -2,6 +2,7 @@
 of every sheet has help, and ? / F1 open Help on what has focus."""
 
 import pytest
+from screen_helpers import _show_tab
 from support import NODES, build_all_tabs, everything_saga, screen_lines, wait_until
 from textual.widgets import Markdown, OptionList, TabbedContent, TextArea, Tree
 
@@ -423,8 +424,7 @@ async def test_question_mark_opens_help_on_the_focused_section():
         assert await wait_until(pilot, lambda: workspace._character_sheet_view)
         view = workspace._character_sheet_view
         await build_all_tabs(pilot, view)
-        view.query_one(TabbedContent).active = "tab-hermetic"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-hermetic")
         view.query_one("#section-arts").focus_section()
         await wait_until(pilot, lambda: workspace._active_section() == "section-arts")
 

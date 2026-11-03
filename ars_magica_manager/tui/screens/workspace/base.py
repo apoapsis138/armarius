@@ -1332,9 +1332,13 @@ class WorkspaceBase(Screen[None]):
             # would clear the focus _show_*_detail() just set.
             initial = not view.initial_tab_seen
             view.initial_tab_seen = True
-        if not self._focus_go_section():
-            self._focus_first_section(initial=initial)
-        self.refresh_bindings()
+        # A focus move refreshes the bindings when it lands (see
+        # on_descendant_focus); refreshing here as well would rebuild the
+        # Footer twice when the PC is busy -- once for the old focus on the
+        # new tab, then again once focus arrives.
+        moved = self._focus_go_section() or self._focus_first_section(initial=initial)
+        if not moved:
+            self.refresh_bindings()
 
     def go_to(self, place: str) -> bool:
         """Help's Go there: open `place` (a tab's or section's id, as the
@@ -1375,7 +1379,7 @@ class WorkspaceBase(Screen[None]):
 
     def _focus_go_section(self) -> bool:
         """Focus the section Go there asked for, if there is one and the
-        sheet has it."""
+        sheet has it; True when that moves focus."""
         section_id, self._go_section = self._go_section, None
         view = self._current_sheet_view()
         if section_id is None or view is None:
@@ -1383,11 +1387,18 @@ class WorkspaceBase(Screen[None]):
         found = _section_named(view, section_id)
         if found is None:
             return False
-        section_stop(found).focus()
-        return True
+        return self._focus_stop(section_stop(found))
 
-    def _focus_first_section(self, *, initial: bool = False) -> None:
-        """Give the sheet a focused section, so a / e / d work straight away.
+    def _focus_stop(self, widget: Widget) -> bool:
+        """Focus `widget`; True when that moves focus (it wasn't focused
+        already), so a DescendantFocus will follow."""
+        moved = widget is not self.app.focused
+        widget.focus()
+        return moved
+
+    def _focus_first_section(self, *, initial: bool = False) -> bool:
+        """Give the sheet a focused section, so a / e / d work straight away;
+        True when that moves focus to another widget.
 
         When a sheet is first shown (`initial`), focus its first section
         anywhere -- the always-visible top panel. On a later tab switch, focus
@@ -1402,25 +1413,25 @@ class WorkspaceBase(Screen[None]):
         only then falls back to the top panel."""
         view = self._current_sheet_view()
         if view is None:
-            return
+            return False
         stop: Widget | None = None
         if not initial or self.selected_kind == NodeKind.LABORATORY:
             try:
                 tabbed = view.query_one(TabbedContent)
                 if not tabbed.active:
-                    return
+                    return False
                 stop = view.tab_first_stop(view.query_one(f"#{tabbed.active}", TabPane))
             except NoMatches:
                 stop = None
             if stop is None and not initial:
                 self.screen.set_focus(None)
-                return
+                return False
         if stop is None:
             try:
                 stop = section_stop(view.query(Collapsible).first())
             except NoMatches:
-                return
-        stop.focus()
+                return False
+        return self._focus_stop(stop)
 
     def on_descendant_focus(self, event: DescendantFocus) -> None:
         # Focus can move between Collapsible sections within the same tab

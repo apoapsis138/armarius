@@ -4,10 +4,11 @@ then a Christian's Petitions, where Add makes his first petition."""
 from screen_helpers import (
     _sample_saga_with_covenant,
     _select_character,
+    _show_tab,
     _wait_for_screen,
 )
 from support import build_all_tabs, wait_until
-from textual.widgets import Input, Select, TabbedContent
+from textual.widgets import Input, Select
 
 from ars_magica_manager import storage
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
@@ -23,8 +24,7 @@ async def test_a_first_petition_is_added_on_the_religion_tab():
         view = app.screen._character_sheet_view  # type: ignore[attr-defined]
         assert "tab-religion" in view.tab_ids
         await build_all_tabs(pilot, view)
-        view.query_one(TabbedContent).active = "tab-religion"
-        await pilot.pause()
+        await _show_tab(pilot, app, "tab-religion")
         view.query_one("#section-char-petitions", SheetSection).focus_section()
         await pilot.press("a")
         await _wait_for_screen(pilot, app, FieldsDialog)

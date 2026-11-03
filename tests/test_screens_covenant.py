@@ -21,6 +21,7 @@ from screen_helpers import (
     _select_covenant,
     _select_laboratory,
     _wait_for_picker_ready,
+    _wait_for_screen,
 )
 from support import (
     build_all_tabs,
@@ -157,7 +158,9 @@ async def test_opening_a_covenant_focuses_info_panel_so_edit_hotkey_works():
         await wait_until(pilot, lambda: app.screen._active_section() == "tab-cov-diary")
         assert app.screen._active_section() == "tab-cov-diary"
         view.query_one("#btn-cov-edit", Button).press()
-        await pilot.pause()
+        await _wait_for_screen(
+            pilot, app, FieldsDialog
+        )  # mounted, before the app closes
         assert _is_form(app.screen, "Edit Covenant")
 
 
@@ -1331,7 +1334,9 @@ async def test_reputation_keys_work_from_the_list_without_a_picker():
         # The focused list has its first row chosen: 'e' edits it, no
         # "which one?".
         await pilot.press("e")
-        await pilot.pause()
+        await _wait_for_screen(
+            pilot, app, FieldsDialog
+        )  # mounted, before the app closes
         assert isinstance(app.screen, FieldsDialog)
 
 

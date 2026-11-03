@@ -7,11 +7,12 @@ from screen_helpers import (
     _saga_with_bare_laboratory,
     _save_dialog,
     _select_covenant,
+    _show_tab,
     _wait_for_screen,
     _wait_until_active,
 )
 from support import wait_until
-from textual.widgets import Button, Collapsible, Input, Select, Static, TabbedContent
+from textual.widgets import Button, Collapsible, Input, Select, Static
 
 from ars_magica_manager import possessions as pos
 from ars_magica_manager import storage
@@ -26,11 +27,7 @@ from ars_magica_manager.tui.screens import (
 
 
 async def _show_possessions_tab(pilot, app) -> None:
-    view = app.screen._covenant_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-possessions"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-cov-possessions")
 
 
 async def _open_pos_section(pilot, app, kind: str) -> None:

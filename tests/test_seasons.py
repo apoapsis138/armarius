@@ -7,6 +7,7 @@ import json
 import random
 from dataclasses import asdict
 
+from screen_helpers import _show_tab
 from support import build_all_tabs, everything_saga, strip_markup, wait_until
 from textual.widgets import Button, Collapsible, Select, Static, TabbedContent, Tree
 
@@ -435,10 +436,7 @@ async def _open_season(pilot, app) -> None:
     tree.select_node(_find(tree, ("character", "mag1")))
     await wait_until(pilot, lambda: app.screen._character_sheet_view is not None)
     view = app.screen._character_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-planning"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-planning")
     section_stop(view.query_one("#section-char-season", Collapsible)).focus()
     await wait_until(
         pilot, lambda: app.screen._active_section() == "section-char-season"

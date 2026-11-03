@@ -3,6 +3,7 @@ section, a click that focuses before it collapses, the tab numbers, Esc stepping
 / e / d everywhere, the More and New menus, / to filter, and what the footer and the row
 above it say."""
 
+from screen_helpers import _show_tab
 from support import NODES, everything_saga, menu, screen_lines, wait_until
 from textual.widgets import Button, Collapsible, Input, TabbedContent, Tree
 from textual.widgets._collapsible import CollapsibleTitle
@@ -54,20 +55,6 @@ async def _open(pilot, app, kind: str) -> WorkspaceScreen:
         assert await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     return workspace
-
-
-async def _show_tab(pilot, workspace, tab_id: str) -> None:
-    """Open `tab_id` and let the focus it brings land."""
-    view = workspace._current_sheet_view()
-    view.query_one(TabbedContent).active = tab_id
-    assert await wait_until(
-        pilot,
-        lambda: (
-            workspace.app.focused is not None
-            and view.query_one(f"#{tab_id}") in workspace.app.focused.ancestors
-        ),
-    )
-    await pilot.pause()
 
 
 def _footer(app) -> str:
@@ -287,7 +274,7 @@ async def test_a_list_tab_moves_into_its_list():
         workspace = await _open(pilot, app, "saga_content")
         books = workspace.query_one("#content-books-list", SelectableList)
         assert await wait_until(pilot, lambda: app.focused is books)
-        await _show_tab(pilot, workspace, "tab-content-spells")
+        await _show_tab(pilot, workspace.app, "tab-content-spells")
         spells = workspace.query_one("#spell-list", SelectableList)
         assert await wait_until(pilot, lambda: app.focused is spells)
         assert await wait_until(pilot, lambda: spells.selected_data_index is not None)
@@ -301,7 +288,7 @@ async def test_virtues_and_flaws_use_a_e_and_d_like_any_other_list():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app, "character")
-        await _show_tab(pilot, workspace, "tab-vf")
+        await _show_tab(pilot, workspace.app, "tab-vf")
         assert workspace._active_section() == "section-vf-virtues"
         footer = _footer(app)
         assert footer.lstrip().startswith("a Add  e Edit  d Delete")
@@ -329,7 +316,7 @@ async def test_the_keys_that_were_retired_do_nothing():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app, "character")
-        await _show_tab(pilot, workspace, "tab-vf")
+        await _show_tab(pilot, workspace.app, "tab-vf")
         for key in ("A", "v", "V", "ctrl+d", "r", "i", "u", "s", "x", "I", "T", "F"):
             await pilot.press(key)
             await pilot.pause()
@@ -541,7 +528,7 @@ async def test_slash_moves_to_the_spell_search():
     app = ArsMagicaManagerApp()
     async with app.run_test(size=(140, 60)) as pilot:
         workspace = await _open(pilot, app, "saga_content")
-        await _show_tab(pilot, workspace, "tab-content-spells")
+        await _show_tab(pilot, workspace.app, "tab-content-spells")
         assert await wait_until(pilot, lambda: "/ Filter" in _footer(app))
         await pilot.press("slash")
         search = workspace.query_one("#spell-search", Input)
@@ -580,7 +567,7 @@ async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():
             "Quit",
         ]
         # The right side stays put as focus moves; the left follows it.
-        await _show_tab(pilot, workspace, "tab-vf")
+        await _show_tab(pilot, workspace.app, "tab-vf")
         moved = _footer(app)
         assert moved.split("▏", 1)[1] == footer.split("▏", 1)[1]
         assert moved.split("▏", 1)[0].split() == [
@@ -616,7 +603,7 @@ async def test_the_row_above_the_footer_says_where_focus_is():
         assert _where(app).split("Theme:")[0].strip() == "Leandro"
         assert _where(app).rstrip().endswith("Theme: Scriptorum")
 
-        await _show_tab(pilot, workspace, "tab-vf")
+        await _show_tab(pilot, workspace.app, "tab-vf")
         view = workspace._current_sheet_view()
         virtues = view.query_one("#vf-virtues-list", SelectableList)
         assert await wait_until(pilot, lambda: virtues.chosen_text in _where(app))

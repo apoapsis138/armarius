@@ -95,6 +95,36 @@ async def _wait_until_active(pilot, app, section_id: str) -> None:
     )
 
 
+async def _show_tab(pilot, app, tab_id: str) -> None:
+    """Switch the sheet on show to `tab_id` and wait for the switch to finish.
+
+    A switch builds the tab, then the workspace focuses its first stop (or
+    clears focus when it has none), and that focus lands a few message-loop
+    turns after the switch. Under load one pause isn't enough for it, so a
+    test that focused or chose a row of its own straight after could have
+    it taken back. Wait for that focus instead: it is the switch's last
+    step."""
+    view = app.screen._current_sheet_view()
+    assert view is not None, "no sheet is currently shown"
+    await wait_until(pilot, lambda: view.initial_tab_seen)
+    await pilot.pause()
+    tabbed = view.query_one(TabbedContent)
+    if tabbed.active == tab_id:
+        return  # no switch, so nothing will move focus
+    pane = view.query_one(f"#{tab_id}")
+    before = app.focused
+    tabbed.active = tab_id
+
+    def landed() -> bool:
+        focused = app.focused
+        if focused is None:  # a tab with nothing to focus
+            return before is not None and bool(pane.children)
+        return pane in focused.ancestors
+
+    assert await wait_until(pilot, landed), f"switching to {tab_id!r} never settled"
+    await pilot.pause()
+
+
 async def _focus_section(pilot, app, collapsible, section_id: str) -> None:
     """Focus `collapsible` until `section_id` is what a / e / d act on, and
     stays so. Under load a sheet's own first focus can land after ours and
@@ -245,9 +275,7 @@ async def _open_section(pilot, app, section_id: str) -> None:
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     if section_id not in ("section-char-info", "section-char-characteristics"):
-        tab_id = _SECTION_TAB[section_id]
-        view.query_one(TabbedContent).active = tab_id
-        await pilot.pause()
+        await _show_tab(pilot, app, _SECTION_TAB[section_id])
     if section_id != _SECTION_TAB[section_id]:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
         await _focus_section(pilot, app, collapsible, section_id)
@@ -290,8 +318,7 @@ async def _open_lab_section(pilot, app, section_id: str) -> None:
         await _focus_section(pilot, app, collapsible, section_id)
         return
     tab_id = _LAB_SECTION_TAB[section_id]
-    view.query_one(TabbedContent).active = tab_id
-    await pilot.pause()
+    await _show_tab(pilot, app, tab_id)
     if section_id != tab_id:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
         await _focus_section(pilot, app, collapsible, section_id)
@@ -523,8 +550,7 @@ async def _open_familiar_section(pilot, app, section_id: str) -> None:
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
     tab_id = _FAM_SECTION_TAB[section_id]
-    view.query_one(TabbedContent).active = tab_id
-    await pilot.pause()
+    await _show_tab(pilot, app, tab_id)
     if section_id != tab_id:
         collapsible = view.query_one(f"#{section_id}", Collapsible)
         await _focus_section(pilot, app, collapsible, section_id)
@@ -557,8 +583,7 @@ async def _open_cov_section(pilot, app, section_id: str) -> None:
     assert view is not None, "no covenant sheet is currently shown"
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-overview"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-cov-overview")
     collapsible = view.query_one(f"#{section_id}", Collapsible)
     await _focus_section(pilot, app, collapsible, section_id)
 
@@ -625,11 +650,7 @@ def _saga_with_people() -> Saga:
 
 
 async def _show_inhabitants_tab(pilot, app) -> None:
-    view = app.screen._covenant_sheet_view
-    await wait_until(pilot, lambda: view.initial_tab_seen)
-    await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-inhabitants"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-cov-inhabitants")
 
 
 async def _open_inh_section(pilot, app, section_id: str) -> None:
@@ -681,8 +702,7 @@ async def _show_library_tab(pilot, app) -> None:
     view = app.screen._covenant_sheet_view
     await wait_until(pilot, lambda: view.initial_tab_seen)
     await pilot.pause()
-    view.query_one(TabbedContent).active = "tab-cov-library"
-    await pilot.pause()
+    await _show_tab(pilot, app, "tab-cov-library")
     section_stop(view.query_one("#section-lib-books", Collapsible)).focus()
     await wait_until(pilot, lambda: app.screen._active_section() == "section-lib-books")
 
