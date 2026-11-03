@@ -7,6 +7,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field
 from typing import Any
 
+from .atlas import AtlasMap, Pin
 from .books import Book, Codex
 from .character import Character, LabTextAccess
 from .common import known_fields
@@ -188,6 +189,11 @@ class Saga:
     #: The saga's marriages and betrothals (marriages.py), each shown on
     #: the page of every house it joins.
     marriages: list[Marriage] = field(default_factory=list)
+    #: The Atlas (atlas.py): the maps that belong to no Tribunal, and the
+    #: pins on every map, the pack's and the troupe's. Older saves load
+    #: without.
+    maps: list[AtlasMap] = field(default_factory=list)
+    pins: list[Pin] = field(default_factory=list)
 
     def covenant(self, covenant_id: str | None) -> Covenant | None:
         """The covenant with this id, if there is one."""
@@ -292,6 +298,8 @@ class Saga:
                     book.owner_id = library.get("covenant_id")
         # The saga's marriages.
         d["marriages"] = [Marriage.from_dict(m) for m in d.get("marriages") or []]
+        d["maps"] = [AtlasMap.from_dict(m) for m in d.get("maps") or []]
+        d["pins"] = [Pin.from_dict(pin) for pin in d.get("pins") or []]
         # Older saves listed the traditions turned on, each off until
         # turned on; they move to the default, every one on.
         d.pop("traditions", None)

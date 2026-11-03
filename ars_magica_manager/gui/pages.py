@@ -49,6 +49,7 @@ from ..sheets import region as region_sheet
 from ..sheets import saga_content as scs
 from ..sheets import tribunal as tribunal_sheet
 from . import pictures
+from .atlas import AtlasChapter
 from .figures import fact_grid
 from .menus import Placer
 from .saga_settings import SettingsChapter
@@ -91,6 +92,9 @@ class SagaHooks(TypedDict, total=False):
     open_creature: Open
     open_familiar: Open
     run: Callable[[Command], None]
+    #: Runs a command and calls back with what it ended with, instead of
+    #: drawing the page again (the Atlas keeps its place on the map).
+    run_ended: Callable[[Command, Callable[[object], None]], None]
     open_fight: Open
     open_siege: Open
 
@@ -878,7 +882,7 @@ class SagaPage(QWidget):
     covenants and what the reader has bookmarked), The Covenants (its
     covenants, and the characters and laboratories that belong to none,
     each list ending in a New card), The Region (its Tribunals and
-    neighbours), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, its Saga Settings, and Saga Management."""
+    neighbours), The Atlas (its maps and the records pinned on them), The Bestiary (its creatures), its Conflicts (fights and sieges), its Seasons, its Rules and Content, its Saga Settings, and Saga Management."""
 
     def __init__(
         self,
@@ -940,6 +944,13 @@ class SagaPage(QWidget):
                 self._new("Tribunals"),
                 run,
             ),
+        )
+        # The Atlas is built when first opened: its maps are large pictures.
+        run_ended = hooks.get("run_ended", lambda command, _ended: run(command))
+        self.codex.add(
+            "The Atlas",
+            "atlas",
+            lambda: AtlasChapter(saga, p, run, run_ended, self.codex.inspect),
         )
         self.codex.add(
             "The Bestiary",

@@ -23,7 +23,7 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import world
+from .. import atlas, world
 from ..actions import NodeKind
 from ..commands import Command
 from ..forms import menu as menu_forms
@@ -47,6 +47,7 @@ ICONS: dict[str, str] = {
     "export_record": "export",
     "update_record": "update",
     "edit_interests": "deeds",
+    "show_on_map": "atlas",
     DELETE_RECORD: "delete",
 }
 
@@ -61,6 +62,18 @@ BOOKMARKED: dict[NodeKind, str] = {
     NodeKind.NEIGHBOUR: "neighbour",
     NodeKind.CREATURE: "creature",
 }
+
+#: The records Show on Map finds on the Atlas, by the kind a Ref names.
+ON_MAPS: dict[NodeKind, str] = {
+    NodeKind.COVENANT: "covenants",
+    NodeKind.LABORATORY: "laboratories",
+    NodeKind.NEIGHBOUR: "neighbours",
+    NodeKind.CREATURE: "creatures",
+}
+
+#: Show on Map: the desktop's own, as only it draws the Atlas.
+SHOW_ON_MAP = "Show on Map"
+SHOW_ON_MAP_DETAIL = "Open the saga's Atlas on the map this shows on, at its pin."
 
 #: Print to PDF: the desktop's own, as only it draws the page for paper.
 PRINT = "Print to PDF"
@@ -84,6 +97,8 @@ class RecordControls:
     toggle_mode: Callable[[Moded], None]
     worksheet: Callable[[str], None]
     print_pdf: Callable[[], None] | None = None
+    #: Open the Atlas on a record's pin: its Ref kind and id.
+    show_on_map: Callable[[str, str], None] | None = None
 
     def chapter(self, p: Palette) -> QWidget:
         return manage_chapter(self, p)
@@ -127,9 +142,13 @@ def manage_chapter(controls: RecordControls, p: Palette) -> QWidget:
                 _runs(controls, item.action, then),
             )
         )
+    at_end = len(entries) - (entries[-1][0] == DELETE_RECORD if entries else 0)
     if controls.print_pdf is not None:
-        at = len(entries) - (entries[-1][0] == DELETE_RECORD if entries else 0)
-        entries.insert(at, ("print", PRINT, PRINT_DETAIL, controls.print_pdf))
+        entries.insert(at_end, ("print", PRINT, PRINT_DETAIL, controls.print_pdf))
+        at_end += 1
+    shown = _show_on_map(controls)
+    if shown is not None:
+        entries.insert(at_end, ("show_on_map", SHOW_ON_MAP, SHOW_ON_MAP_DETAIL, shown))
     for row, (action, label, detail, go) in enumerate(entries):
         deleting = action == DELETE_RECORD
         button = edit_button(label, p, go, ICONS.get(action, "export"))
@@ -148,6 +167,18 @@ def manage_chapter(controls: RecordControls, p: Palette) -> QWidget:
             1,
         )
     return scrolling_page(p, chapter_title("Manage", p), grid_box)
+
+
+def _show_on_map(controls: RecordControls) -> Callable[[], None] | None:
+    """Show on Map, for a record the Atlas shows on one of its maps."""
+    page, show = controls.page, controls.show_on_map
+    kind = ON_MAPS.get(page.kind) if page.kind is not None else None
+    record = page.record_to_delete()
+    if show is None or kind is None or record is None:
+        return None
+    if not atlas.maps_showing(page.saga, kind, record.id):
+        return None
+    return lambda: show(kind, record.id)
 
 
 def _runs(

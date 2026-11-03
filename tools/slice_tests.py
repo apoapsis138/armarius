@@ -84,6 +84,14 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # A shield painted: the arms sections, the Hall's banners, a battle's
+    # sides and the Atlas's lords.
+    "ars_magica_manager/gui/shields.py": (
+        "test_arms.py",
+        "test_hall.py",
+        "test_gui_conflicts.py",
+        "test_gui_atlas.py",
+    ),
     # A covenant on the move: its forms' contracts, its list, its sheet.
     "ars_magica_manager/mobile_covenants.py": (
         "test_dialog_contracts_covenant.py",

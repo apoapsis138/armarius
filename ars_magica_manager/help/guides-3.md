@@ -30,7 +30,7 @@ The saga is saved as soon as it is made, and every change after that is saved as
 3. Back on the saga node, press `e` (the footer calls it Edit Saga).
 <!-- /tui -->
 <!-- gui -->
-1. [The saga's page](help:saga) has nine chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Bestiary, Conflicts, Seasons, Rules and Content, Saga Settings and Saga Management.
+1. [The saga's page](help:saga) has ten chapters, listed in the rail on the left: The Troupe, The Covenants, The Region, The Atlas, The Bestiary, Conflicts, Seasons, Rules and Content, Saga Settings and Saga Management.
 2. In **Rules and Content**, click the **Saga Content** card. On its **Books** chapter, click **Edit** on Books in Play and tick the books your troupe uses (or click one card's **In play** chip to switch just that book): catalog pickers then hide Virtues, spells and other entries from books not in play, and everything a supplement adds (its activities, optional rules and kinds of books) switches off with it. See [Saga Content](help:saga-content).
 3. Click the saga's name in the trail to go back to its page, open its **Saga Settings** chapter. A card's switch changes it at once, and clicking the card explains it in the Inspector.
 <!-- /gui -->
@@ -112,7 +112,7 @@ Giving a laboratory to a magus who already had one frees their old laboratory, a
 1. **The trail.** The top left of the window names the pages above the one on show, such as "Sagas › Matrix › Keep › Leandro". Click one to go back to it. A card opens the page it stands for: a covenant, a person, a laboratory or a familiar. See [The trail and the pages](help:workspace-tree).
 2. **Chapters.** A page is a book of chapters, listed in the rail on its left; click one to show it.
 3. **The buttons that act.** A section's **Add** adds to it, and **Edit** and **Delete** act on the row or card last clicked in it (they stay greyed out until there is one; Delete asks first). Forms open in a window of their own over the page. See [What the buttons act on](help:workspace-keys).
-4. **Making and managing.** A **New** card at the end of a page's cards makes one more (New Covenant, New Character, New Laboratory), and the rarer actions are buttons in the chapter or section they act on. A record's own **Manage** chapter holds Export, Update from a File, Print to PDF and Delete.
+4. **Making and managing.** A **New** card at the end of a page's cards makes one more (New Covenant, New Character, New Laboratory), and the rarer actions are buttons in the chapter or section they act on. A record's own **Manage** chapter holds Export, Update from a File, Print to PDF, Show on Map (for a record on one of the saga's maps) and Delete.
 5. **The top bar.** **Advance Season** shows the saga's date and plays the season out; **Help** opens help on the page on show; the button beside it switches the theme, the speaker turns the sounds on or off, and the sparkle beside it reduces motion.
 6. **The Inspector.** The right of a page shows whatever you last clicked in full, with the rules text of a Virtue, Flaw or spell. See [The Inspector and the theme](help:workspace-status).
 7. **Your troupe, close at hand.** Fill in each player character's **Player** in their Biographical Detail (in their Description chapter), and they gather on the saga's first chapter, **The Troupe**, a click from their sheets. For any other page you keep going back to (a rival magus, a Tribunal, a neighbour), open it and click the ribbon at the right of its header to bookmark it: it joins The Troupe too. See [The Troupe](help:saga-troupe).
@@ -143,6 +143,9 @@ On a topic about a chapter of the page you came from, **Go there** under the top
 - [How to bind and keep a familiar](help:guide-familiars).
 - [How to import and export](help:guide-import-export): moving records between sagas.
 - [How to start a saga from a sourcebook](help:guide-book-packs): the shipped content packs.
+<!-- gui -->
+- [How to add a map and place its records](help:guide-atlas): the saga's Atlas.
+<!-- /gui -->
 
 **See also:** [Saga picker](help:saga-picker), [The workspace](help:workspace), [The saga](help:saga), [Keys](help:keys)
 

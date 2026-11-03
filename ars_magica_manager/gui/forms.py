@@ -69,7 +69,7 @@ from ..commands import (
 )
 from ..form_spec import DialogField, FieldError, ListEditor
 from ..paths import APP_NAME
-from . import heraldry, sounds
+from . import shields, sounds
 from .markup_html import plain, to_html
 from .style import snapping
 from .style.frame import (
@@ -546,7 +546,7 @@ class FieldsDialog(_Sheet):
             drawn = self.picture(current)
             if drawn is not None:
                 self.picture_label.setPixmap(
-                    heraldry.pixmap(drawn, 96, self.p["accent"])
+                    shields.pixmap(drawn, 96, self.p["accent"])
                 )
             self.picture_label.setVisible(drawn is not None)
         if hasattr(self, "area"):

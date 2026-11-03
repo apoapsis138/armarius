@@ -40,6 +40,11 @@ def portraits_dir() -> Path:
     return paths.data_dir() / paths.PORTRAITS
 
 
+def maps_dir() -> Path:
+    """Where a map's picture is copied when it is chosen (atlas.py)."""
+    return paths.data_dir() / paths.MAPS
+
+
 def slugify(text: str) -> str:
     slug = _SLUG_RE.sub("_", text.strip().lower()).strip("_")
     return slug or "id"

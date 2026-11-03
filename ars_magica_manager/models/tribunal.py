@@ -8,6 +8,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Any, TypedDict
 
+from .atlas import AtlasMap
 from .common import Change, known_fields, move_secrets
 from .polemic import Argument
 from .traits import new_instance_id
@@ -231,6 +232,9 @@ class Tribunal:
     # Polemic (Transforming Mythic Europe pp. 27-35): the arguments meant
     # for coming meetings, each with its texts. Older saves load without.
     arguments: list[Argument] = field(default_factory=list)
+    #: Its maps (the Atlas: atlas.py), each a picture of its region; the
+    #: pins on them are the saga's. Older saves load without.
+    maps: list[AtlasMap] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> Tribunal:
@@ -249,4 +253,5 @@ class Tribunal:
             for e in d.get("diary", [])
         ]
         d["arguments"] = [Argument.from_dict(a) for a in d.get("arguments") or []]
+        d["maps"] = [AtlasMap.from_dict(m) for m in d.get("maps") or []]
         return cls(**d)

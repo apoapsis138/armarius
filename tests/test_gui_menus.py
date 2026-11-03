@@ -96,6 +96,7 @@ def test_the_saga_page_sets_out_its_actions_in_its_chapters(app):
         "The Troupe",
         "The Covenants",
         "The Region",
+        "The Atlas",
         "The Bestiary",
         "Conflicts",
         "Seasons",

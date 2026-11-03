@@ -68,6 +68,7 @@ from ..markup import escape
 from ..models import Character, Covenant, Familiar, Laboratory, Saga
 from ..paths import APP_NAME
 from ..sheets import laboratory as ls
+from . import atlas as atlas_page
 from . import (
     choices,
     medallions,
@@ -1015,6 +1016,7 @@ class MainWindow(QMainWindow):
                 open_creature=self.open_creature,
                 open_familiar=self.open_familiar,
                 run=self.run,
+                run_ended=lambda command, ended: self.run(command, ended=ended),
                 open_fight=self.open_fight,
                 open_siege=self.open_siege,
             )
@@ -1118,7 +1120,14 @@ class MainWindow(QMainWindow):
             self.toggle_mode,
             self.open_worksheet,
             self.print_pdf,
+            self.show_on_map,
         )
+
+    def show_on_map(self, kind: str, record_id: str) -> None:
+        """Open the saga page's Atlas on the record's pin."""
+        atlas_page.show_on_map(kind, record_id)
+        self._chapters[Place(SAGA)] = "The Atlas"
+        self.go([Place(SHELF), Place(SAGA)])
 
     def print_pdf(self) -> None:
         """Print the record on show to a PDF: its options first (the

@@ -17,8 +17,8 @@ apprentice a magus; a *scriptorium* is where books are written; a
 *sodales* are fellow magi of the Order, as the troupe's players are to
 the storyguide; an *illuminatio* is the painted and gilded copy of a
 manuscript; the *orbis* is the world; a *concilium* is a council;
-*insignia* are marks of honour; and a *peregrinatio* is a journey into
-other lands. Each major version has a name of its own: an *incipit* is
+*insignia* are marks of honour; a *peregrinatio* is a journey into
+other lands; and a *mappa mundi* is a medieval map of the world. Each major version has a name of its own: an *incipit* is
 the opening words of a manuscript, a *folio* a sheet folded into leaves,
 a *codex* the bound book, and a *nomen novum* a new name.
 
@@ -48,6 +48,7 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Insignia | Heraldry and the app's artwork |
 | Peregrinatio | The Tribunal packs: each Tribunal book, ready to import |
 | Hedge Magic | The non-Hermetic traditions: their Arts, chapters and rules |
+| Mappa Mundi | The Atlas: the saga's maps and the records pinned on them |
 
 ## Editions
 
@@ -121,6 +122,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | Milestone | Version | What it marked |
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
+
+## 3.71.0 — 2026-11-03
+
+### Mappa Mundi
+
+- The desktop's saga page has a new chapter, **The Atlas**: the saga's maps, each with a pin for the covenants, places, towns, lords and creatures on it. Scroll to zoom and drag to look around. Hovering a pin shows the record in the Inspector, clicking it opens the record's page, and Back returns to the map where you left it.
+- A map belongs to its Tribunal (a Tribunal can have several, such as the whole region and a city drawn larger), or to the saga for a region with none. **New Map** takes its name, Tribunal, picture (PNG, WebP or JPEG, copied into a maps folder beside the saga files) and a credit line; **Edit Map** swaps in a new picture and every pin keeps its place.
+- A map not drawn yet shows a placeholder: parchment with a lettered and numbered grid, a compass rose and the map's name, in the shape of the map to come, so pins placed now land close when the picture arrives.
+- **Place on Map** puts a covenant, neighbour or creature where you click; drag a pin to move it; right-click it to open it, make it secret or take it off the map. Anything without a pin of its own shows at the pin of what it sits in (a laboratory at its covenant, a covenant in a forest at the forest), and a mobile covenant follows its stop as the seasons pass.
+- **Table view** leaves the secret pins off, for a screen your players can see. A secret pin has a dashed ring.
+- A covenant's, laboratory's, neighbour's or creature's **Manage** chapter has **Show on Map**, which opens the Atlas on its pin.
 
 ## 3.70.3 — 2026-11-03
 

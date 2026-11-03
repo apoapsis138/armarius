@@ -559,7 +559,7 @@ def _add_players_sources_and_codex(saga: Saga) -> None:
     saga.books[0].codex_id = "codex"
 
 
-def _saga_with_every_record() -> Saga:
+def _saga_with_every_record() -> Saga:  # noqa: PLR0915
     """everything_saga() plus one of each saved record it lacks, so every
     dataclass a saga file holds appears at least once."""
     saga = everything_saga()
@@ -714,6 +714,11 @@ def _saga_with_every_record() -> Saga:
     # A marriage (Lords of Men pp. 10-11).
     saga.marriages.append(
         models.Marriage(bride="Adelheid", groom_ref="neighbour:gottfried", lands=2)
+    )
+    # The Atlas: a map of its own and a pin on it.
+    saga.maps, saga.pins = (
+        [models.AtlasMap("rhine", "The Rhine", "ab.png", 30, 20)],
+        [models.Pin("rhine", "neighbours", "gottfried", 0.5, 0.25)],
     )
     return saga
 

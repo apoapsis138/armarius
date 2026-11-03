@@ -13,6 +13,8 @@ from .arms import ArmorPieceDef as ArmorPieceDef
 from .artwork import ART_WOUNDS as ART_WOUNDS
 from .artwork import ARTWORK_BASES as ARTWORK_BASES
 from .artwork import ArtworkPlan as ArtworkPlan
+from .atlas import AtlasMap as AtlasMap
+from .atlas import Pin as Pin
 from .books import BOOK_OWNER_KINDS as BOOK_OWNER_KINDS
 from .books import BOOK_TYPES as BOOK_TYPES
 from .books import LAB_TEXT_KINDS as LAB_TEXT_KINDS

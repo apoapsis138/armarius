@@ -34,7 +34,7 @@ from PySide6.QtWidgets import QHBoxLayout, QPushButton, QVBoxLayout, QWidget
 
 from .. import artwork, hall, meeting
 from ..models import Case, Saga, Tribunal
-from . import heraldry, motion, pictures
+from . import motion, pictures, shields
 from .themes import OPENING_CARD, Palette
 from .widgets import serif, text
 
@@ -202,7 +202,7 @@ class GrandHall(QWidget):
         colours: dict[str, QColor],
     ) -> None:
         rect = QRectF(at.x() - size / 2, at.y() - size * 0.6, size, size)
-        outline = heraldry.shield_path(rect)
+        outline = shields.shield_path(rect)
         fill = QColor(colours[seat.side if called else meeting.UNDECIDED])
         if not called:
             fill.setAlpha(90)
@@ -255,14 +255,14 @@ class GrandHall(QWidget):
         painter.drawText(banner, Qt.AlignmentFlag.AlignCenter, name)
         if bench.arms is not None:
             shield = 20.0
-            heraldry.paint(
+            shields.paint(
                 painter,
                 bench.arms,
                 QRectF(
                     -shield / 2,
-                    -9 - shield * heraldry.HEIGHT - 4,
+                    -9 - shield * shields.HEIGHT - 4,
                     shield,
-                    shield * heraldry.HEIGHT,
+                    shield * shields.HEIGHT,
                 ),
                 p["accent"],
             )
@@ -509,18 +509,18 @@ class OpeningCard(QWidget):
         vignette.setColorAt(0, middle)
         vignette.setColorAt(1, edge)
         painter.fillRect(self.rect(), vignette)
-        shields = self.card.arms[: self.hung]
-        if shields:
+        hung = self.card.arms[: self.hung]
+        if hung:
             size = 40.0
             gap = 20.0
             row_width = len(self.card.arms) * (size + gap) - gap
             top = self.shields.geometry().top() + 6
             left = (self.width() - row_width) / 2
-            for i, (_name, found) in enumerate(shields):
-                heraldry.paint(
+            for i, (_name, found) in enumerate(hung):
+                shields.paint(
                     painter,
                     found,
-                    QRectF(left + i * (size + gap), top, size, size * heraldry.HEIGHT),
+                    QRectF(left + i * (size + gap), top, size, size * shields.HEIGHT),
                     OPENING_CARD["button"],
                 )
         painter.end()

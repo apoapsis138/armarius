@@ -41,8 +41,8 @@ from ..models import FATIGUE_LEVELS, WALLS, Fight, Saga, Siege
 from ..rules import fight as fight_rules
 from ..rules import options as rule_options
 from ..rules import siege as siege_rules
-from . import heraldry, pictures
 from . import medallions as drawn
+from . import pictures, shields
 from .style import gilding, illumination
 from .style.illumination import gold
 from .style.ornaments import gloss_box, ledger_entry
@@ -388,7 +388,7 @@ class FightBody(QWidget):
         arms = _arms_of(
             self.saga, record.covenant_id if record else "", DEFAULT_ARMS[min(side, 1)]
         )
-        heraldry.paint(g, arms, QRectF(area.left(), 10, 58, 68), p["foreground"])
+        shields.paint(g, arms, QRectF(area.left(), 10, 58, 68), p["foreground"])
         name = fight_rules.side_name(fight, side)
         f = font(21, bold=True)
         _text(
@@ -1000,9 +1000,7 @@ class SiegeBody(QWidget):
         rows: list[tuple[str, str]],
     ) -> float:
         p = self.p
-        heraldry.paint(
-            g, arms, QRectF(area.left(), area.top(), 56, 66), p["foreground"]
-        )
+        shields.paint(g, arms, QRectF(area.left(), area.top(), 56, 66), p["foreground"])
         f = font(20, bold=True)
         _text(
             g,
@@ -1222,7 +1220,7 @@ class SiegeBody(QWidget):
         keep = QRectF(cx - 46, cy - 44, 92, 82)
         g.setBrush(QBrush(STONE))
         g.drawRect(keep)
-        heraldry.paint(
+        shields.paint(
             g,
             garrison_arms(self.saga, self.siege),
             QRectF(cx - 20, keep.top() + 12, 40, 48),

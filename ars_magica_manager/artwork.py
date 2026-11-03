@@ -300,12 +300,15 @@ ICON_NAMES: dict[str, str] = {
 #: An app concept to an icon the app draws itself (drawn/), in place of
 #: a Phosphor one: a ruined covenant's broken turret (tools/draw_ruin.py),
 #: the key of a covenant's Overview and the sealed charter of its
-#: Charter (tools/draw_charter_icons.py), and the faiths' icons
+#: Charter (tools/draw_charter_icons.py), the Atlas's folded map
+#: (tools/draw_map_icon.py), and the faiths' icons
 #: (tools/draw_faith_icons.py).
 DRAWN_ICONS: dict[str, Path] = {
     "ruin": DRAWN / "ruin.svg",
     "key": DRAWN / "key.svg",
     "charter": DRAWN / "charter.svg",
+    # The Atlas's folded map (tools/draw_map_icon.py).
+    "atlas": DRAWN / "map.svg",
     # The Religion chapter's faiths (tools/draw_faith_icons.py); a
     # Christian's is Phosphor's church.
     "star_of_david": DRAWN / "star_of_david.svg",
