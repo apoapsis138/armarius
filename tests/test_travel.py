@@ -3,6 +3,7 @@ Definitive Edition pp. 403-404, 408) and the words of its inspector."""
 
 import pytest
 
+from ars_magica_manager import atlas
 from ars_magica_manager.forms import travel as travel_forms
 from ars_magica_manager.models import Character, Covenant, Neighbour, Saga
 from ars_magica_manager.rules import journeys as tr
@@ -363,3 +364,24 @@ def test_close_records_nothing():
     assert "Set Out: Anna, Brun; arriving Autumn 1220" in text
     assert saga.calendar == []
     assert all(not c.diary for c in saga.characters)
+
+
+def test_from_and_to_fill_the_miles_from_the_atlas():
+    saga = Saga(
+        "s",
+        "S",
+        covenants=[Covenant("cov", "s", "Durenmar")],
+        neighbours=[Neighbour("town", "Basel", kind="town")],
+    )
+    fields = {f.key: f for f in travel_forms.travel_fields(saga, "cov")}
+    fills = fields["end"].fills
+    assert fills is not None
+    values = {"start": "cov", "end": "town", "measure": tr.ROUTE}
+    assert fills(values) == {}
+    m = atlas.add_map(saga, "The Rhine", None, width=4, height=2)
+    atlas.place_pin(saga, m.id, "covenants", "cov", 0.0, 0.5)
+    atlas.place_pin(saga, m.id, "neighbours", "town", 0.5, 0.5)
+    assert fills(values) == {}
+    atlas.set_scale(m, (0.0, 1.0), (0.25, 1.0), 10, "miles")
+    assert fills(values) == {"miles": 20, "measure": tr.DIRECT}
+    assert fields["start"].fills is not None

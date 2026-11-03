@@ -123,6 +123,14 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.73.0 — 2026-11-03
+
+### Mappa Mundi
+
+- **Set Scale** on the Atlas: click the two ends of a map's scale bar and say how long it is, in leagues or miles. A league is three miles (Grand Grimoire of Hermetic Spells p. 48; Transforming Mythic Europe p. 108).
+- **Measure**, once a map has a scale: click two pins or points to see how far apart they are, in leagues and miles, in a straight line.
+- The **Travel** calculator fills in the miles, as the crow flies, when From and To are both on a map with a scale, and measures them as a direct distance so the winding way is allowed for.
+
 ## 3.72.0 — 2026-11-03
 
 ### Illuminatio

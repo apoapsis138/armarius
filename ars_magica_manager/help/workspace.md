@@ -598,8 +598,15 @@ works out a journey.
 In Undertakings, below Ahead on the Seasons page and a covenant's Seasons
 chapter, **Travel** works out a journey.
 <!-- /gui -->
-Choose **From** and **To** (the saga's covenants, towns and places: they
-only name the journey), then how the distance is **Measured**:
+Choose **From** and **To** (the saga's covenants, towns and places),
+then how the distance is **Measured**. When From and To are both on a
+map of the saga's Atlas that has a scale (the Atlas is the desktop's),
+choosing them fills in the **Miles**, as the crow flies, and sets
+Measured to Direct distance: the divisors below then allow for the
+winding way. Otherwise type the miles as measured on the troupe's map.
+<!-- gui -->
+See [Scale and distance](help:atlas-scale).
+<!-- /gui -->
 
 - **Direct distance, as the crow flies**, as you would measure it on a
   map: road travel takes the miles / 12 days, a barge / 8 with the

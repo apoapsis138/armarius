@@ -11,7 +11,7 @@ A chapter of the saga's page, on the desktop only: the saga's maps, each with a 
 
 A record with no pin of its own on the map is shown at the pin of what it sits in, however far out: a laboratory at its covenant's pin, a covenant built in a forest at the forest's, a regio's creature at its place's. The Inspector says where ("at the Black Forest"). A mobile covenant follows its stop in force, so its pin moves with it as the seasons pass, even past a pin of its own.
 
-**See also:** [Maps](help:atlas-maps), [Pins](help:atlas-pins), [How to add a map and place its records](help:guide-atlas)
+**See also:** [Maps](help:atlas-maps), [Pins](help:atlas-pins), [Scale and distance](help:atlas-scale), [How to add a map and place its records](help:guide-atlas)
 
 ### Maps
 <!-- help: atlas-maps; gui -->
@@ -43,6 +43,16 @@ The pins belong to the saga. A Tribunal pack may bring a pin for each of its cov
 - **Right-click** a pin to open its record, make it **Secret** (left off the Table view) or **take it off the map**. A pack's pin taken off stays off when the pack is imported again; placing the record again brings it back.
 - A record's page has **Show on Map** in its **Manage** chapter while it shows on a map: it opens the Atlas on that map, its pin ringed.
 
+### Scale and distance
+<!-- help: atlas-scale; gui -->
+
+A drawn map is to no projection, so the Atlas measures it by its own scale bar.
+
+- **Set Scale**: click one end of the map's scale bar, then the other, and say how long the bar is, in **leagues** or **miles**. A league is three miles (Grand Grimoire of Hermetic Spells p. 48; Transforming Mythic Europe p. 108: the Definitive Edition uses leagues for its spells' reach but gives no length). Set it again at any time; a new picture of the same map keeps it.
+- **Measure**, once the map has a scale: click a pin or any point, then another. A dashed line joins them, with how far apart they are in leagues and miles, **in a straight line**. Roads and rivers wind, so the way itself is longer. Esc clears it.
+- The line under the map says what the scale bar stands for.
+- The [Travel](help:travel) calculator uses it: choose From and To that are both on a map with a scale, and it fills in the miles as the crow flies.
+
 ### Place on Map
 <!-- help: atlas-place; gui -->
 
@@ -69,6 +79,8 @@ To use a better export later, click **Edit Map** and choose the new picture: the
 1. Click **Place on Map**, and choose a covenant, neighbour or creature.
 2. Click where it is on the map. Its pin appears there.
 3. Drag a pin to move it, or right-click it to make it secret or take it off the map.
+
+If the map has a scale bar, click **Set Scale**, click the bar's two ends and type its length: Measure then shows distances, and the Travel calculator fills in its miles.
 
 Laboratories, and anything else that sits in a place, need no pins of their own: each shows at the pin of its covenant or place. Before showing the map to your players, tick **Table view**.
 

@@ -139,7 +139,8 @@ def test_place_on_map_puts_a_record_where_the_map_is_clicked(app, tmp_path):
     assert view is not None
     answering(window, "Basel")
     _buttons(chapter)["Place on Map"].click()
-    assert view.placing == ("neighbours", "town", "Basel")
+    assert view.picking is not None
+    assert view.picking.record == ("neighbours", "town", "Basel")
     assert "Click where Basel is" in chapter.line.text()
     spot = view.mapFromScene(QPointF(150, 25))
     QTest.mouseClick(view.viewport(), Qt.MouseButton.LeftButton, pos=QPoint(spot))
@@ -147,7 +148,7 @@ def test_place_on_map_puts_a_record_where_the_map_is_clicked(app, tmp_path):
     assert pin is not None
     assert pin.x == pytest.approx(0.75, abs=0.02)
     assert pin.y == pytest.approx(0.25, abs=0.02)
-    assert ["Basel"] in _names(chapter) and view.placing is None
+    assert ["Basel"] in _names(chapter) and view.picking is None
 
 
 def test_a_pin_is_moved_made_secret_and_taken_off(app, tmp_path):
@@ -215,3 +216,40 @@ def test_show_on_map_opens_the_atlas_at_the_records_pin(app, tmp_path):
     assert isinstance(chapter, atlas_page.AtlasChapter)
     assert chapter.view is not None and chapter.view.chosen is not None
     assert "The Tower" in [s.ref.name for s in chapter.view.chosen.here]
+
+
+def _click(view, x: float, y: float) -> None:
+    spot = view.mapFromScene(QPointF(x, y))
+    QTest.mouseClick(view.viewport(), Qt.MouseButton.LeftButton, pos=QPoint(spot))
+
+
+def test_set_scale_from_the_bar_then_measure_between_pins(app, tmp_path):
+    saga = _saga(tmp_path)
+    window = _window(saga)
+    chapter = _atlas(window)
+    assert "Measure" not in _buttons(chapter)
+    assert "No scale yet" in chapter.line.text()
+    view = chapter.view
+    assert view is not None
+    _buttons(chapter)["Set Scale"].click()
+    _click(view, 0, 90)
+    assert "other end of the scale bar" in chapter.line.text()
+    # The bar is a quarter of the map's 200-pixel width: 10 leagues.
+    answering(window, {"length": "10", "unit": "leagues"})
+    _click(view, 50, 90)
+    rhine = storage.load_saga(saga.id).tribunals[0].maps[0]
+    assert rhine.scale_miles == 30
+    assert rhine.scale_bar == pytest.approx([0, 0.9, 0.25, 0.9], abs=0.01)
+    # The chapter is drawn again, with Measure: let the new map settle.
+    QApplication.processEvents()
+    view = chapter.view
+    assert view is not None
+    assert "the bar is 10 leagues (30 miles)" in chapter.line.text()
+    _buttons(chapter)["Measure"].click()
+    # From the forest's pin (50, 25) to Durenmar's (100, 50): 55.9 pixels.
+    _click(view, 51, 24)
+    _click(view, 101, 51)
+    assert "11 leagues (34 miles) in a straight line" in chapter.line.text()
+    assert len(view.measured) == 3
+    QTest.keyClick(view, Qt.Key.Key_Escape)
+    assert view.measured == []

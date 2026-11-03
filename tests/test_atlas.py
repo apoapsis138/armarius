@@ -13,6 +13,7 @@ import pytest
 
 from ars_magica_manager import atlas, storage
 from ars_magica_manager.models import (
+    AtlasMap,
     Covenant,
     CovenantStop,
     Creature,
@@ -281,3 +282,53 @@ def test_a_map_with_no_picture_keeps_a_placeholders_shape():
     [alps] = saga.maps
     assert (rhine.width, rhine.height) == (4, 3)
     assert (alps.width, alps.height) == atlas.PLACEHOLDER_SHAPE
+
+
+def test_a_scale_bar_gives_straight_line_distances_in_leagues_and_miles():
+    m = AtlasMap("rhine", "The Rhine", width=400, height=200)
+    assert atlas.miles_between(m, (0, 0), (1, 1)) is None
+    with pytest.raises(ValueError, match="apart"):
+        atlas.set_scale(m, (0.1, 0.9), (0.1, 0.9), 10, "leagues")
+    # The bar is 100 pixels long and marked 10 leagues: 30 miles.
+    atlas.set_scale(m, (0.0, 0.9), (0.25, 0.9), 10, "leagues")
+    assert m.scale_miles == 30
+    # 300 pixels across and 100 down make 316 pixels: 94.9 miles.
+    miles = atlas.miles_between(m, (0.0, 0.0), (0.75, 0.5))
+    assert miles == pytest.approx(94.87, abs=0.01)
+    assert atlas.distance_words(miles) == "32 leagues (95 miles) in a straight line"
+    assert atlas.distance_words(3) == "1 league (3 miles) in a straight line"
+    assert atlas.distance_words(1) == "0.3 leagues (1 mile) in a straight line"
+    atlas.set_scale(m, (0.0, 0.9), (0.25, 0.9), 12, "miles")
+    assert "the bar is 4 leagues (12 miles)" in atlas.scale_words(m)
+
+
+def test_the_scale_form_sets_the_scale_and_refuses_a_bar_of_nothing():
+    m = AtlasMap("rhine", "The Rhine", width=3, height=2)
+    form = atlas.scale_form(m, (0.1, 0.5), (0.4, 0.5))
+    assert form.validate is not None
+    assert form.validate({"length": 0, "unit": "miles"}) == "Give a length above 0."
+    form.apply({"length": 20, "unit": "miles"})
+    assert (m.scale_bar, m.scale_miles) == ([0.1, 0.5, 0.4, 0.5], 20)
+
+
+def test_two_records_are_measured_on_a_map_with_a_scale_that_shows_both():
+    saga = _saga()
+    blank = atlas.add_map(saga, "Unscaled", "rhine", width=4, height=2)
+    scaled = atlas.add_map(saga, "Scaled", "rhine", width=4, height=2)
+    for m in (blank, scaled):
+        atlas.place_pin(saga, m.id, "neighbours", "forest", 0.0, 0.0)
+        atlas.place_pin(saga, m.id, "neighbours", "town", 0.75, 0.0)
+    assert atlas.miles_apart(saga, ("covenants", "cov"), ("neighbours", "town")) is None
+    atlas.set_scale(scaled, (0.0, 1.0), (0.25, 1.0), 1, "leagues")
+    # Durenmar is in the forest, so it is measured from the forest's pin.
+    assert atlas.miles_apart(
+        saga, ("covenants", "cov"), ("neighbours", "town")
+    ) == pytest.approx(9)
+    assert (
+        atlas.miles_apart(saga, ("covenants", "cov"), ("creatures", "nobody")) is None
+    )
+
+
+def test_a_damaged_scale_is_reported_when_loading():
+    with pytest.raises(ValueError, match="scale bar"):
+        AtlasMap.from_dict({"id": "m", "name": "M", "scale_bar": [1, 2]})

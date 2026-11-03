@@ -43,6 +43,7 @@ from PySide6.QtWidgets import (
     QGraphicsSceneContextMenuEvent,
     QGraphicsSceneHoverEvent,
     QGraphicsSceneMouseEvent,
+    QGraphicsSimpleTextItem,
     QGraphicsView,
     QHBoxLayout,
     QLayout,
@@ -227,6 +228,21 @@ def _compass(g: QPainter, centre: QPointF, radius: float, p: Palette) -> None:
     g.restore()
 
 
+#: What a Picking's clicks are for.
+PLACE, SCALE, MEASURE = "place", "scale", "measure"
+
+
+@dataclass
+class Picking:
+    """Clicks on the map gathered for a step: the spot to put a record
+    down (its kind, id and name), the two ends of the scale bar, or two
+    points to measure between."""
+
+    purpose: str
+    record: tuple[str, str, str] | None = None
+    points: list[tuple[float, float]] = field(default_factory=list)
+
+
 class PinItem(QGraphicsObject):
     """The records shown at one spot of the map: one marker, the first
     record's mark, with a count when more share it, and the first's name
@@ -339,8 +355,11 @@ class MapView(QGraphicsView):
         self.chapter, self.p, self.map = chapter, chapter.p, atlas_map
         self.chosen: PinItem | None = None
         self.pins: list[PinItem] = []
-        #: The record Place on Map is waiting to put down, if any.
-        self.placing: tuple[str, str, str] | None = None
+        #: What clicks on the map are for while Place on Map, Set Scale or
+        #: Measure waits for them; None while they pan and open pins.
+        self.picking: Picking | None = None
+        #: The line and words a measurement left on the map.
+        self.measured: list[QGraphicsItem] = []
         self.setScene(QGraphicsScene(self))
         self.setRenderHint(QPainter.RenderHint.Antialiasing)
         self.setRenderHint(QPainter.RenderHint.SmoothPixmapTransform)
@@ -469,33 +488,114 @@ class MapView(QGraphicsView):
         self.keep()
 
     def mousePressEvent(self, event: QMouseEvent) -> None:
-        if self.placing is not None and event.button() == Qt.MouseButton.LeftButton:
-            kind, record_id, _name = self.placing
-            self.placing = None
-            self.viewport().unsetCursor()
-            self.chapter.put_down(
-                kind,
-                record_id,
-                self.fraction(self.mapToScene(event.position().toPoint())),
+        picking = self.picking
+        if picking is None or event.button() != Qt.MouseButton.LeftButton:
+            super().mousePressEvent(event)
+            return
+        at_ = self.mapToScene(event.position().toPoint())
+        if picking.purpose == MEASURE:
+            # A click on a pin measures from the pin itself: the nearest of
+            # those under the click, as a label may reach over another pin.
+            under = [
+                item
+                for item in self.items(event.position().toPoint())
+                if isinstance(item, PinItem)
+            ]
+            if under:
+                clicked = at_
+                at_ = min(
+                    under, key=lambda item: (item.pos() - clicked).manhattanLength()
+                ).pos()
+        picking.points.append(self.fraction(at_))
+        if picking.purpose == PLACE and picking.record is not None:
+            kind, record_id, _name = picking.record
+            self.stop_picking(quietly=True)
+            self.chapter.put_down(kind, record_id, picking.points[0])
+            return
+        if len(picking.points) == 1:
+            self.clear_measured()
+            self._mark_point(at_)
+            self.chapter.say(
+                "Now click the other end of the scale bar (Esc stops)."
+                if picking.purpose == SCALE
+                else "Now click where to measure to (Esc stops)."
             )
             return
-        super().mousePressEvent(event)
+        a, b = picking.points
+        self.stop_picking(quietly=True)
+        if picking.purpose == SCALE:
+            self.clear_measured()
+            self.chapter.scale_from(a, b)
+        else:
+            self.measure(a, b)
 
     def keyPressEvent(self, event: QKeyEvent) -> None:
-        if self.placing is not None and event.key() == Qt.Key.Key_Escape:
-            self.stop_placing()
+        if event.key() == Qt.Key.Key_Escape and (self.picking or self.measured):
+            self.stop_picking()
+            self.clear_measured()
             return
         super().keyPressEvent(event)
 
-    def start_placing(self, kind: str, record_id: str, name: str) -> None:
-        self.placing = (kind, record_id, name)
+    def start_picking(self, picking: Picking) -> None:
+        self.picking = picking
         self.viewport().setCursor(Qt.CursorShape.CrossCursor)
         self.setFocus()
 
-    def stop_placing(self) -> None:
-        self.placing = None
+    def stop_picking(self, *, quietly: bool = False) -> None:
+        self.picking = None
         self.viewport().unsetCursor()
-        self.chapter.say("")
+        if not quietly:
+            self.chapter.say("")
+
+    # Measuring
+
+    def _point(self, fraction: tuple[float, float]) -> QPointF:
+        return QPointF(fraction[0] * self.size_[0], fraction[1] * self.size_[1])
+
+    def _mark_point(self, at_: QPointF) -> None:
+        ring = QPen(QColor(self.p["heading"]), 2.5)
+        ring.setCosmetic(True)
+        dot = self.scene().addEllipse(QRectF(-6, -6, 12, 12), ring)
+        dot.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        dot.setPos(at_)
+        dot.setZValue(0.5)
+        self.measured.append(dot)
+
+    def clear_measured(self) -> None:
+        for item in self.measured:
+            self.scene().removeItem(item)
+        self.measured = []
+
+    def measure(self, a: tuple[float, float], b: tuple[float, float]) -> None:
+        """A dashed line between two points of the map, with how far apart
+        they are, in a straight line, at its middle."""
+        miles = at.miles_between(self.map, a, b)
+        if miles is None:
+            return
+        start, end = self._point(a), self._point(b)
+        line = QPen(QColor(self.p["heading"]), 2.5, Qt.PenStyle.DashLine)
+        line.setCosmetic(True)
+        # Under the pins, so it runs from one to the other.
+        drawn = self.scene().addLine(start.x(), start.y(), end.x(), end.y(), line)
+        drawn.setZValue(0.5)
+        self.measured.append(drawn)
+        words = at.distance_words(miles)
+        # The words on a pale label beside the line's middle.
+        text = QGraphicsSimpleTextItem(words)
+        text.setFont(serif(11, bold=True))
+        text.setBrush(QBrush(QColor(self.p["heading"])))
+        box = text.boundingRect().adjusted(-6, -3, 6, 3)
+        wash = QColor(self.p["background"])
+        wash.setAlpha(225)
+        label = self.scene().addRect(
+            box, QPen(QColor(self.p["accent"]), 1), QBrush(wash)
+        )
+        text.setParentItem(label)
+        label.setFlag(QGraphicsItem.GraphicsItemFlag.ItemIgnoresTransformations)
+        label.setPos((start + end) / 2 + QPointF(12, 8))
+        label.setZValue(3)
+        self.measured.append(label)
+        self.chapter.say(f"{words[0].upper()}{words[1:]}. Esc clears it.")
 
     # What the pins do
 
@@ -553,6 +653,7 @@ class AtlasChapter(QWidget):
         self.saga, self.p = saga, p
         self.run, self.run_ended, self._inspect = run, run_ended, inspect
         self.view: MapView | None = None
+        self.view_map: AtlasMap | None = None
         self.column = QVBoxLayout(self)
         self.column.setContentsMargins(4, 0, 4, 4)
         self.column.setSpacing(8)
@@ -574,7 +675,7 @@ class AtlasChapter(QWidget):
                     empty(inner)
 
         empty(self.column)
-        self.view = None
+        self.view, self.view_map = None, None
 
     def _fill(self, focus: tuple[str, str] | None = None) -> None:
         """Draw the chapter for the map chosen (one showing `focus`, the
@@ -601,6 +702,7 @@ class AtlasChapter(QWidget):
             buttons += [
                 ("Edit Map", "edit", lambda: self._edit_map(chosen)),
                 ("Place on Map", "add", self.place),
+                ("Set Scale", "edit", self.set_scale),
                 ("Remove Map", "delete", lambda: self._remove_map(chosen)),
             ]
         for words, concept, act in buttons:
@@ -621,6 +723,7 @@ class AtlasChapter(QWidget):
             )
             self.column.addStretch(1)
             return
+        self.view_map = chosen
         self.column.addLayout(self._controls())
         self.view = MapView(self, chosen)
         self.column.addWidget(self.view, 1)
@@ -702,6 +805,8 @@ class AtlasChapter(QWidget):
         self.table.toggled.connect(self._table_view)
         row.addWidget(self.table)
         row.addStretch(1)
+        if self.view_map is not None and at.has_scale(self.view_map):
+            row.addWidget(edit_button("Measure", self.p, self.measure, "search"))
         row.addWidget(edit_button("Fit", self.p, self._fit, "search"))
         return row
 
@@ -743,7 +848,8 @@ class AtlasChapter(QWidget):
             credit = self.view.map.credit
             words = (
                 (f"{credit}.  " if credit else "")
-                + "Scroll to zoom, drag to look around; hover a pin to see it, "
+                + at.scale_words(self.view.map)
+                + "  Scroll to zoom, drag to look around; hover a pin to see it, "
                 "click to open it, drag one to move it."
                 + ("  Table view: secret pins are left off." if KEPT.table else "")
             )
@@ -783,6 +889,32 @@ class AtlasChapter(QWidget):
             self.view.keep()
         self.run(Act(lambda: Go(shown.ref)))
 
+    def set_scale(self) -> None:
+        """Set Scale: click the two ends of the map's scale bar, then say
+        how long it is."""
+        if self.view is not None:
+            self.view.start_picking(Picking(SCALE))
+            self.say("Click one end of the map's scale bar (Esc stops).")
+
+    def scale_from(self, a: tuple[float, float], b: tuple[float, float]) -> None:
+        """The scale bar's ends are clicked: ask its length, then draw the
+        chapter again with Measure."""
+        view = self.view
+        if view is None:
+            return
+        if a == b:
+            self.say("The scale bar's two ends should be apart: Set Scale again.")
+            return
+        self.run_ended(at.scale_form(view.map, a, b), lambda _done: self._fill())
+
+    def measure(self) -> None:
+        """Measure: click two points (or pins) to see how far apart they
+        are in a straight line."""
+        if self.view is not None:
+            self.view.clear_measured()
+            self.view.start_picking(Picking(MEASURE))
+            self.say("Click a pin or a point to measure from (Esc stops).")
+
     def place(self) -> None:
         """Place on Map: choose a record, then click where it is."""
         view = self.view
@@ -792,7 +924,7 @@ class AtlasChapter(QWidget):
         def chosen(done: object) -> None:
             if isinstance(done, Picked) and view is self.view:
                 kind, record_id, name = done.value
-                view.start_placing(kind, record_id, name)
+                view.start_picking(Picking(PLACE, (kind, record_id, name)))
                 self.say(
                     f"Click where {plain(escape(name))} is on the map (Esc stops)."
                 )

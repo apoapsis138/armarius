@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from .. import diaries
+from .. import atlas, diaries
 from .. import goods as gd
 from ..commands import Choice, Choose, Form, Picked, notes
 from ..form_spec import DialogField, ListEditor
@@ -107,6 +107,30 @@ def _follows_who(start: int = 0) -> Callable[[dict[str, Any]], dict[str, Any]]:
     return fills
 
 
+def _ref(saga: Saga, value: str | None) -> tuple[str, str] | None:
+    """A From or To choice as a record's kind and id, as _place_name
+    reads it: a covenant's, else a neighbour's."""
+    if not value:
+        return None
+    return ("covenants" if saga.covenant(value) else "neighbours", value)
+
+
+def _from_the_atlas(saga: Saga) -> Callable[[dict[str, Any]], dict[str, Any]]:
+    """From and To fill the miles in, measured as the crow flies, when both
+    are pinned on one of the Atlas's maps with a scale."""
+
+    def fills(values: dict[str, Any]) -> dict[str, Any]:
+        here, there = _ref(saga, values.get("start")), _ref(saga, values.get("end"))
+        if here is None or there is None or here == there:
+            return {}
+        miles = atlas.miles_apart(saga, here, there)
+        if miles is None:
+            return {}
+        return {"miles": max(1, round(miles)), "measure": tr.DIRECT}
+
+    return fills
+
+
 def travel_fields(saga: Saga, start: str | None = None) -> list[DialogField]:
     """The form: where from and to, how the distance is measured, the
     miles and the means (or two named ports), who goes, the party and its
@@ -116,9 +140,23 @@ def travel_fields(saga: Saga, start: str | None = None) -> list[DialogField]:
     name = traveller_name(saga)
     return [
         DialogField(
-            "start", "From", "select", start, options=offered, allow_blank=True
+            "start",
+            "From",
+            "select",
+            start,
+            options=offered,
+            allow_blank=True,
+            fills=_from_the_atlas(saga),
         ),
-        DialogField("end", "To", "select", None, options=offered, allow_blank=True),
+        DialogField(
+            "end",
+            "To",
+            "select",
+            None,
+            options=offered,
+            allow_blank=True,
+            fills=_from_the_atlas(saga),
+        ),
         DialogField(
             "measure",
             "Measured",
@@ -131,7 +169,8 @@ def travel_fields(saga: Saga, start: str | None = None) -> list[DialogField]:
             "Miles",
             "optint",
             None,
-            hint="The saga keeps no distances: measure them on the troupe's map.",
+            hint="Filled in, as the crow flies, when From and To are both on a map "
+            "of the Atlas with a scale; else measure them on the troupe's map.",
             show_if=_by_distance,
         ),
         DialogField(

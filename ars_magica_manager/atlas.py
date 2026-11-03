@@ -15,6 +15,15 @@ laboratory in its covenant, a regio on its forest); and a mobile
 covenant follows the Place of its stop in force, even past a pin of its
 own. Nothing derived is kept, so nothing goes stale.
 
+A map's scale is set from its own scale bar (two points and the length
+the bar stands for), since a drawn map is to no projection: distances
+are straight lines across the picture, never latitude and longitude.
+
+SOURCE: a league is three miles (Grand Grimoire of Hermetic Spells p. 48;
+Transforming Mythic Europe p. 108). The Definitive Edition uses leagues
+for its ranges and transport spells but gives no length; its travel
+times are in miles (p. 408). The Errata says nothing of either.
+
 Pattern: a pin is a references.Ref drawn at a position, so each
 front-end opens it with the kind-to-opener dict it already has for
 links (Strategy, reduced to a dict). The Table view, for a screen the
@@ -25,6 +34,7 @@ every record shown at it, is left off.
 from __future__ import annotations
 
 import hashlib
+import math
 import shutil
 import struct
 from collections.abc import Callable, Collection, Iterator
@@ -69,8 +79,9 @@ KIND_LABELS: dict[str, str] = {
 #: before the form says to check the pins.
 _PROPORTION_SLACK = 0.01
 
-#: The form's own help page.
+#: The forms' own help pages.
 HELP_ID = "atlas-map-form"
+SCALE_HELP_ID = "atlas-scale"
 
 
 # -- pictures --
@@ -384,6 +395,137 @@ def maps_showing(saga: Saga, kind: str, record_id: str) -> list[AtlasMap]:
             for s in shown_pins(saga, m.id, kinds=(kind,))
         )
     ]
+
+
+# -- the scale --
+
+#: Miles in a league (see SOURCE).
+LEAGUE_MILES = 3.0
+#: The units a scale bar's length is typed in, and their miles.
+UNITS: dict[str, float] = {"leagues": LEAGUE_MILES, "miles": 1.0}
+
+Point = tuple[float, float]
+
+
+def has_scale(atlas_map: AtlasMap) -> bool:
+    return len(atlas_map.scale_bar) == 4 and atlas_map.scale_miles > 0
+
+
+def _span(atlas_map: AtlasMap, a: Point, b: Point) -> float:
+    """How far apart two points of the map are, in the picture's own
+    units (its shape: its pixels, or a placeholder's sides)."""
+    width, height = _shape(atlas_map)
+    return math.hypot((a[0] - b[0]) * width, (a[1] - b[1]) * height)
+
+
+def set_scale(
+    atlas_map: AtlasMap, a: Point, b: Point, length: float, unit: str
+) -> None:
+    """The map's scale: its bar runs from `a` to `b` and stands for
+    `length` `unit`s."""
+    if length <= 0 or unit not in UNITS:
+        raise ValueError("A scale bar's length should be above 0, in leagues or miles.")
+    if _span(atlas_map, a, b) == 0:
+        raise ValueError("A scale bar's two ends should be apart.")
+    atlas_map.scale_bar = [a[0], a[1], b[0], b[1]]
+    atlas_map.scale_miles = length * UNITS[unit]
+
+
+def miles_between(atlas_map: AtlasMap, a: Point, b: Point) -> float | None:
+    """The straight-line miles between two points of the map; None while
+    it has no scale."""
+    if not has_scale(atlas_map):
+        return None
+    x1, y1, x2, y2 = atlas_map.scale_bar
+    bar = _span(atlas_map, (x1, y1), (x2, y2))
+    return _span(atlas_map, a, b) / bar * atlas_map.scale_miles
+
+
+def _figure(value: float) -> str:
+    return f"{value:.1f}".rstrip("0").rstrip(".") if value < 10 else f"{value:.0f}"
+
+
+def distance_words(miles: float) -> str:
+    """A distance as the Atlas says it: leagues, then miles."""
+    leagues = miles / LEAGUE_MILES
+    league_word = "league" if _figure(leagues) == "1" else "leagues"
+    mile_word = "mile" if _figure(miles) == "1" else "miles"
+    return (
+        f"{_figure(leagues)} {league_word} ({_figure(miles)} {mile_word}) "
+        "in a straight line"
+    )
+
+
+def scale_words(atlas_map: AtlasMap) -> str:
+    """What the map's scale bar stands for."""
+    if not has_scale(atlas_map):
+        return "No scale yet: Set Scale measures the map's scale bar."
+    leagues = atlas_map.scale_miles / LEAGUE_MILES
+    return (
+        f"Scale: the bar is {_figure(leagues)} leagues "
+        f"({_figure(atlas_map.scale_miles)} miles)."
+    )
+
+
+def _spot(saga: Saga, map_id: str, kind: str, record_id: str) -> Point | None:
+    shown = next(
+        (s for s in shown_pins(saga, map_id, kinds=(kind,)) if s.ref.id == record_id),
+        None,
+    )
+    return (shown.x, shown.y) if shown is not None else None
+
+
+def miles_apart(saga: Saga, a: tuple[str, str], b: tuple[str, str]) -> float | None:
+    """The straight-line miles between two records (each a Ref's kind and
+    id), on the first map with a scale that shows both; None when none
+    does."""
+    for atlas_map, _tribunal in maps(saga):
+        if not has_scale(atlas_map):
+            continue
+        here, there = _spot(saga, atlas_map.id, *a), _spot(saga, atlas_map.id, *b)
+        if here is not None and there is not None:
+            return miles_between(atlas_map, here, there)
+    return None
+
+
+def scale_fields(atlas_map: AtlasMap) -> list[DialogField]:
+    """Set Scale's form: what the bar just measured stands for."""
+    leagues = atlas_map.scale_miles / LEAGUE_MILES if has_scale(atlas_map) else None
+    return [
+        DialogField(
+            "length",
+            "The bar is",
+            "optfloat",
+            leagues,
+            required=True,
+            hint="The length its scale bar is marked with.",
+        ),
+        DialogField(
+            "unit",
+            "In",
+            "select",
+            "leagues",
+            options=[("Leagues (3 miles each)", "leagues"), ("Miles", "miles")],
+        ),
+    ]
+
+
+def scale_form(atlas_map: AtlasMap, a: Point, b: Point) -> Form:
+    """After the bar's two ends are clicked: how long it is."""
+
+    def problem(values: dict[str, Any]) -> str | None:
+        length = values.get("length")
+        return None if length is not None and length > 0 else "Give a length above 0."
+
+    return Form(
+        f"Scale of {escape(atlas_map.name)}",
+        lambda: scale_fields(atlas_map),
+        lambda values: set_scale(
+            atlas_map, a, b, values["length"], values.get("unit") or "leagues"
+        ),
+        validate=problem,
+        help_id=SCALE_HELP_ID,
+    )
 
 
 # -- the pins --

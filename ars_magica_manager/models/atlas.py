@@ -11,7 +11,7 @@ Which pins a map shows is atlas.py's.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from typing import Any
 
 from .common import known_fields
@@ -21,7 +21,9 @@ from .common import known_fields
 class AtlasMap:
     """A map: its name, its picture (the copy's file name in the maps
     folder, "" for none yet) and the picture's size in pixels, and the
-    credit line it is shown with."""
+    credit line it is shown with. Its scale, once set, is the two ends of
+    its scale bar (fractions of its width and height: x1, y1, x2, y2) and
+    how many miles the bar stands for."""
 
     id: str
     name: str
@@ -29,6 +31,8 @@ class AtlasMap:
     width: int = 0
     height: int = 0
     credit: str = ""
+    scale_bar: list[float] = field(default_factory=list)
+    scale_miles: float = 0.0
 
     @classmethod
     def from_dict(cls, data: dict[str, Any]) -> AtlasMap:
@@ -38,6 +42,18 @@ class AtlasMap:
         for key in ("width", "height"):
             if not isinstance(d.get(key, 0), int):
                 raise ValueError(f"The map {d['name']}'s {key} should be a number.")
+        bar = d.get("scale_bar") or []
+        if len(bar) not in (0, 4) or not all(
+            isinstance(n, int | float) and not isinstance(n, bool) for n in bar
+        ):
+            raise ValueError(f"The map {d['name']}'s scale bar should be four numbers.")
+        d["scale_bar"] = [float(n) for n in bar]
+        miles = d.get("scale_miles", 0.0)
+        if isinstance(miles, bool) or not isinstance(miles, int | float) or miles < 0:
+            raise ValueError(
+                f"The map {d['name']}'s scale should be a number of miles."
+            )
+        d["scale_miles"] = float(miles)
         return cls(**d)
 
 
