@@ -87,7 +87,7 @@ under the charter's sections, its blanks made fill-ins, and a doubled
 **The Technique, Form and House symbols** in
 `ars_magica_manager/assets/symbols/` are adapted from the released images
 on Atlas Games's [Open Ars Magica](https://atlas-games.com/arsmagica/openars)
-page, and **the app icon** in `ars_magica_manager/assets/app/` from its
+page, and **the sigil** in `ars_magica_manager/assets/app/` from its
 Order of Hermes sigil. Based on the material for Ars Magica, ©1993–2024,
 licensed by Trident, Inc. d/b/a Atlas Games®, under Creative Commons
 Attribution-ShareAlike 4.0 International license 4.0 ("CC-BY-SA 4.0").
@@ -96,8 +96,8 @@ These adaptations are available under CC BY-SA 4.0 too.
 **Changes made:** the symbols were trimmed, centred on a square and traced
 from the original black-and-white bitmaps to vector outlines (SVG), drawn
 in a single colour that the app tints to its theme. House Guernicus has no
-released symbol and shows the Quaesitor symbol. The sigil was scaled down
-and made into an icon file, and its light parts are cut out of a block as
+released symbol and shows the Quaesitor symbol. The sigil was scaled down,
+and its light parts are cut out of a block as
 the Code of Hermes Ability's mark.
 
 **The Ability marks** are drawn by the app's own code

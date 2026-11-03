@@ -53,7 +53,3 @@ def pixmap(path: Path, colour: str, size: int, ratio: float = 1.0) -> QPixmap:
 def icon(concept: str, colour: str, size: int = 20) -> QIcon:
     """A concept's Phosphor icon (artwork.ICON_NAMES) as a QIcon."""
     return QIcon(pixmap(artwork.icon(concept), colour, size, 2.0))
-
-
-def app_icon() -> QIcon:
-    return QIcon(str(artwork.APP_ICON))

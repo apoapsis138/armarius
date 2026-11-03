@@ -12,6 +12,8 @@ Enter takes the first of them. Choose with the arrow keys and Enter, and `q` qui
 <!-- /tui -->
 <!-- gui -->
 Click one; Enter takes the first of them, as the line under the buttons says. The window's own buttons, at its top right, minimise, maximise and close it.
+
+The same illuminated A is the app's icon, on the Windows taskbar and in Alt-Tab. `run-gui.bat` opens the app with no console window behind it.
 <!-- /gui -->
 
 **You type:** nothing here; you choose where to go.

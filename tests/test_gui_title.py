@@ -19,6 +19,13 @@ from ars_magica_manager import settings, storage
 from ars_magica_manager import title_page as tp
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.help import HelpPage
+from ars_magica_manager.gui.icon import (
+    APP_USER_MODEL_ID,
+    INITIAL,
+    SIZES,
+    app_icon,
+    icon_pixmap,
+)
 from ars_magica_manager.gui.pages import SagaPage, SagaShelf
 from ars_magica_manager.gui.style.illumination import paint_initial
 from ars_magica_manager.gui.themes import PALETTES
@@ -121,3 +128,18 @@ def test_the_name_and_frame_are_gilt(app):
     page = title.grab().toImage()
     frame = page.pixelColor(28, page.height() // 2)
     assert frame.red() > frame.blue() + 60
+
+
+def test_the_icon_is_the_illuminated_a_at_every_size(app: QApplication) -> None:
+    icon = app_icon()
+    assert sorted(s.width() for s in icon.availableSizes()) == sorted(SIZES)
+    image = icon_pixmap(256).toImage()
+    colours = {
+        image.pixelColor(x, y).name()
+        for x in range(0, 256, 3)
+        for y in range(0, 256, 3)
+    }
+    # The letter must not gild the whole panel: its quartered ground shows.
+    assert any(int(c[5:7], 16) > int(c[1:3], 16) + 40 for c in colours)
+    assert INITIAL == "A"
+    assert APP_USER_MODEL_ID == "Armarius.Desktop"

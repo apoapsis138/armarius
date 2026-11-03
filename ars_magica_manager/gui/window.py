@@ -85,6 +85,7 @@ from .covenant import CovenantPage
 from .familiar import FamiliarPage
 from .forms import NoticeDialog, answer, run_steps, step_dialog
 from .help import HelpPage
+from .icon import app_icon
 from .laboratory import LaboratoryPage
 from .manage import Moded, RecordControls
 from .markup_html import plain
@@ -255,7 +256,7 @@ class MainWindow(QMainWindow):
     def __init__(self, saga_ids: list[str] | None = None) -> None:
         super().__init__()
         self.setWindowTitle("Armarius")
-        self.setWindowIcon(pictures.app_icon())
+        self.setWindowIcon(app_icon())
         # The window draws its own title bar (frame.py).
         self.setWindowFlag(Qt.WindowType.FramelessWindowHint)
         self.palette_index = saved_theme()

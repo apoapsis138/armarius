@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.72.0 — 2026-11-03
+
+### Illuminatio
+
+- The app's icon is now the title page's illuminated A, gilded on its quartered ground, on the Windows taskbar and in Alt-Tab, as Sortilegus shows its S. It is drawn by the app itself, sharp at every size.
+- `run-gui.bat` opens Armarius with no console window left behind it, so the taskbar shows Armarius alone rather than a Command Prompt beside it.
+
 ## 3.71.0 — 2026-11-03
 
 ### Mappa Mundi

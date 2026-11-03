@@ -46,7 +46,7 @@ def _registered() -> set[Path]:
         | set(artwork.TRADITION_SYMBOLS.values())
         | {artwork.SAGA_CULT_SYMBOL}
         | {artwork.icon(concept) for concept in artwork.ICON_NAMES}
-        | {artwork.APP_ICON, artwork.SIGIL}
+        | {artwork.SIGIL}
         | {path for paths in artwork.FONTS.values() for path in paths}
         | set(artwork.SOUNDS.values())
         | set(artwork.CHARGE_DRAWINGS.values())

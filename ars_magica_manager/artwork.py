@@ -24,7 +24,8 @@ it to its theme. Two sets:
 - icons/: Phosphor Icons at Light weight (MIT), copied by
   tools/fetch_icons.py, for everything else.
 
-app/ holds the app icon, made from the Order of Hermes sigil. The typefaces
+app/ holds the Order of Hermes sigil, the Code of Hermes Ability's mark (the
+app icon is the title page's illuminated A, drawn in code). The typefaces
 (SIL Open Font License) are in `style/`: EB Garamond for headings (in small
 caps) and rules prose, Uncial Antiqua for one decorative flourish, and
 Manufacturing Consent for the title page's name and illuminated initials. Labels,
@@ -68,9 +69,7 @@ CHARGE_DRAWINGS: dict[str, Path] = {
     "Tree": CHARGES / "tree.svg",
 }
 
-#: The app's window and taskbar icon (a Windows .ico of several sizes), and
-#: the sigil as a picture.
-APP_ICON = ASSETS / "app" / "sigil.ico"
+#: The Order of Hermes sigil as a picture.
 SIGIL = ASSETS / "app" / "sigil.png"
 
 #: The desktop version's sounds, by cue (CC0 recordings from Freesound,
