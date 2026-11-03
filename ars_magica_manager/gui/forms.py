@@ -21,6 +21,7 @@ from collections.abc import Callable
 from pathlib import Path
 from typing import Any
 
+import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, QRectF, Qt
 from PySide6.QtGui import (
     QColor,
@@ -122,6 +123,10 @@ class _Page(Paper):
         corner_flourishes(painter, QRectF(self.rect()), self.p, 18)
 
 
+#: The windows closed and waiting for Qt to delete them (_Sheet.exec).
+_closed: list[QDialog] = []
+
+
 class _Sheet(QDialog):
     """A dialog on paper, as a window over the page: the app's title bar
     (frame.py, in place of the system's), its title over a hedera rule, a
@@ -163,6 +168,18 @@ class _Sheet(QDialog):
         self.save = QPushButton(action)
         self.save.setDefault(True)
         self.ask: Ask = lambda dialog: dialog.exec()
+
+    def exec(self) -> int:
+        """Show the window and wait. exec() hands a dialog to Python, away
+        from its parent, and a window refers to itself, so the collector
+        would free it with the buttons it holds and delete them twice: it
+        is kept in `_closed` until Qt has deleted it, which is safe. What
+        it holds can still be read until the event loop next runs."""
+        _closed[:] = [sheet for sheet in _closed if shiboken6.isValid(sheet)]
+        result = super().exec()
+        _closed.append(self)
+        self.deleteLater()
+        return result
 
     def unsaved(self) -> bool:
         """Whether leaving now would lose changes: a window that tracks

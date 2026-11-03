@@ -122,6 +122,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.70.3 — 2026-11-03
+
+### Illuminatio
+
+- Deleting a saga no longer closes the app. A window that had just closed could be tidied away at the wrong moment and take the app with it; closed windows are now kept until they are safely gone. This may also be what closed the app once after saving a form.
+
 ## 3.70.2 — 2026-11-03
 
 ### Fundamenta

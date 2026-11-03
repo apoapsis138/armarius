@@ -4,14 +4,17 @@ window, and grips that resize it."""
 
 from __future__ import annotations
 
+import gc
 import os
+import weakref
 
 import pytest
 
 pytest.importorskip("PySide6")
 os.environ.setdefault("QT_QPA_PLATFORM", "offscreen")
 
-from PySide6.QtCore import Qt
+import shiboken6
+from PySide6.QtCore import QEvent, Qt, QTimer
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication
 
@@ -177,6 +180,23 @@ def test_a_forms_save_never_asks(app):
     form.show()
     form.try_save()
     assert form.values == {"a": "new"}
+
+
+def test_a_closed_window_stays_from_the_collector_until_qt_deletes_it(app):
+    """The collector freeing a closed window crashed the app (a double
+    delete of its buttons), most often as the shelf was rebuilt after
+    deleting a saga."""
+    window = _window(app)
+    sheet = NoticeDialog("A Notice", "Words.", PALETTES[0], window)
+    QTimer.singleShot(0, sheet.accept)
+    sheet.exec()
+    held = weakref.ref(sheet)
+    del sheet
+    gc.collect()
+    assert held() is not None
+    QApplication.sendPostedEvents(None, QEvent.Type.DeferredDelete)
+    assert not shiboken6.isValid(held())
+    window.close()
 
 
 def test_a_calculators_close_never_asks(app):
