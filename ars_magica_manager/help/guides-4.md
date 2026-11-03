@@ -263,12 +263,12 @@ This guide covers moving records between sagas, bringing books and spells in fro
 <!-- tui -->
 1. In the tree, select the covenant, laboratory or character you want to move. Leave focus on its tree node or on the panel at the top of its sheet.
 2. Press `m` (More) and choose **Export**.
-3. In the Export dialog, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. The line above Export warns when the file exists and will be replaced.
+3. In the Export dialog, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line above Export warns when the file exists and will be replaced.
 <!-- /tui -->
 <!-- gui -->
 1. Open the page of the covenant, laboratory or character you want to move.
 2. Open its **Manage** chapter and click **Export**.
-3. In the Export form, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. The line under the fields warns when the file exists and will be replaced.
+3. In the Export form, check the **File**. It starts in the app's exports folder (`exports`, in Armarius in your OneDrive folder) with a name made from the record's name; `.amm.json` is added if you give no `.json` ending. A character with a portrait goes as a zip, `.amm.zip`, holding the file and the portrait. The line under the fields warns when the file exists and will be replaced.
 <!-- /gui -->
 4. For a covenant, tick **With its laboratories and characters** to take them too.
 5. Choose **Export**.
@@ -297,7 +297,7 @@ The record keeps its place in the saga; see [Updating a record from a file](help
 1. Open the saga that should receive the record, and select [the saga](help:saga) at the top of the tree.
 2. Press `m` (More) and choose **Import**. The [Import Data](help:import-data) dialog opens.
 3. Choose **Characters**, **Covenants** or **Laboratories**, matching what the file holds.
-4. Choose the file. The file picker starts in the exports folder; Enter opens a folder or picks a file, and you can also type a path in the box at the top.
+4. Choose the file, a `.amm.json` or a `.amm.zip`. The file picker starts in the exports folder; Enter opens a folder or picks a file, and you can also type a path in the box at the top.
 <!-- /tui -->
 <!-- gui -->
 1. Open the saga that should receive the record, on [its page](help:saga).

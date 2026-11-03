@@ -320,7 +320,7 @@ def _path(values: dict[str, Any]) -> Path:
     """The form's file, with the export suffix if it has none."""
     name = (values.get("file") or "").strip().strip('"')
     path = Path(name).expanduser()
-    if name and not path.name.lower().endswith(".json"):
+    if name and not path.name.lower().endswith((".json", ".zip")):
         path = path.with_name(path.name + transfer.SUFFIX)
     return path
 
@@ -376,7 +376,8 @@ def export_pack(
         if deliver is not None:
             return deliver(path.name, data)
         try:
-            write(path, data)
+            # A zip with its maps when its Tribunals have pictures.
+            written = transfer.write_export(path, data)
         except OSError as problem_:
             return Refuse(
                 "Export Pack",
@@ -384,7 +385,7 @@ def export_pack(
             )
         return notes(
             f"Exported {escape(data['name'])} ({escape(summary(data))}) to "
-            f"{escape(str(path))}."
+            f"{escape(str(written))}."
         )
 
     return Form(
@@ -1192,7 +1193,7 @@ def start_from(
     if data["kind"] != PACK:
         raise ValueError("it is not a content pack")
     data = _dormant(data, values or {})
-    plan = transfer.plan_import(saga, data)
+    plan = transfer.plan_import(saga, data, pictures=transfer.Pictures(path))
     transfer.apply(saga, plan)
     found = notes(escape(f"Started from {plan.name}: {summary(data)}."))
     for overlay in shipped_overlays():

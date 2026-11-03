@@ -123,6 +123,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.74.0 — 2026-11-03
+
+### Mappa Mundi
+
+- Exports carry their pictures. A character's export takes their portrait, and Export Saga and Export Pack take the maps (and portraits) their records have: such an export is written as a zip, `.amm.zip`, holding the same file and the pictures. An export with no pictures is still a plain `.amm.json`.
+- Import reads a `.amm.zip` as it reads a `.amm.json`: its maps are copied into the maps folder (one already there is kept) and each portrait under its character's new name, so a map made on one computer shows on another. Imported maps get ids of their own, never one of this saga's.
+
+### Scriptorum
+
+- The terminal's file list for Import and Update from a File shows `.zip` exports beside `.json` ones.
+
 ## 3.73.0 — 2026-11-03
 
 ### Mappa Mundi

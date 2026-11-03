@@ -1077,6 +1077,8 @@ What goes with it:
 
 Season plans, season records and lab projects under way stay behind.
 
+**Pictures go too.** An export whose records have pictures on this computer (a character's portrait; with Export Saga or a pack, a Tribunal's maps) is written as a zip, `.amm.zip`, holding the same file and its pictures, so they reach the other computer. Import reads a `.amm.zip` as it reads a `.amm.json`, copying its maps into the maps folder (one already there is kept: a map is named by its picture's bytes) and each portrait under its character's new name. A file sent to a browser is the JSON alone, without its pictures.
+
 <!-- tui -->
 **Export Saga**, in More on the saga node, writes the whole saga to one file in the same shape: every record and what it holds. Import it into another saga with Import, **A Whole Saga**. In a browser copy, the file downloads instead. Only the storyguide can use it. **Export a Cult** beside it writes one of the saga's own Mystery Cults to a file, for Import's **A Mystery Cult**.
 <!-- /tui -->
@@ -1110,7 +1112,8 @@ Tribunal is not asked about. **With their characters** adds the
 covenants' characters and laboratories and each Tribunal's Praeco and
 Presiding Quaesitor; **With the calendar** the covenants' calendar
 entries and the saga's own. The line above Export says what the pack
-holds.
+holds. A pack whose Tribunals have maps with pictures is written as a
+zip, `.amm.zip`, with the maps in it (see Exporting, above).
 
 A Tribunal's meeting under way stays behind, and its Diary comes without
 what its entries changed.

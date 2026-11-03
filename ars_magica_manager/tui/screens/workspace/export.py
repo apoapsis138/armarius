@@ -50,7 +50,9 @@ class ExportActions(WorkspaceBase):
                 )
                 return
             try:
-                transfer.export_to(path, self.saga, record, with_members=with_members)
+                path = transfer.export_to(
+                    path, self.saga, record, with_members=with_members
+                )
             except OSError as problem:
                 self.notify(
                     f"Couldn't write {escape(path.name)}: {escape(str(problem))}",

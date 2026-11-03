@@ -101,7 +101,7 @@ def choose_file(saga: Saga, kind: str, covenant: Covenant | None = None) -> Choo
     if kind in RECORD_IMPORTS:
         wanted = transfer.KIND_LABELS[RECORD_IMPORTS[kind]].lower()
         start = storage.exports_dir() if storage.exports_dir().is_dir() else Path.cwd()
-        return ChooseFile(f"Import a {wanted}", ".json", start, read)
+        return ChooseFile(f"Import a {wanted}", ".json", start, read, more=(".zip",))
     if kind == "spells":
         return ChooseFile(
             "Import spells (into the saga's own spells)", ".csv", Path.cwd(), read
@@ -240,9 +240,10 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
                 f"it holds a {found.lower()}, not a {wanted}: choose "
                 f"{labels[entry]} in the Import list"
             )
+        pictures = transfer.Pictures(path)
         if kind == transfer.PACK:
-            return _import_pack(saga, data)
-        plan = transfer.plan_import(saga, data)
+            return _import_pack(saga, data, pictures)
+        plan = transfer.plan_import(saga, data, pictures=pictures)
     except (OSError, ValueError, KeyError, TypeError) as problem:
         return Refuse(
             TITLE, f"Couldn't import {escape(path.name)}: {escape(str(problem))}"
@@ -268,7 +269,9 @@ def _confirm_import(
     )
 
 
-def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
+def _import_pack(
+    saga: Saga, data: dict[str, Any], pictures: transfer.Pictures | None = None
+) -> Command:
     """Import a Content Pack: which of its parts to bring in (its
     Tribunals and covenants always come), then the preview to confirm.
     A pack with nothing to leave out goes straight to the preview."""
@@ -276,12 +279,14 @@ def _import_pack(saga: Saga, data: dict[str, Any]) -> Command:
         return _import_overlay(saga, data)
     fields = packs.import_fields(data, saga)
     if not fields:
-        return _confirm_import(saga, transfer.plan_import(saga, data), data)
+        return _confirm_import(
+            saga, transfer.plan_import(saga, data, pictures=pictures), data
+        )
 
     def apply(values: dict[str, Any]) -> Command:
         try:
             chosen = packs.narrow(data, values)
-            plan = transfer.plan_import(saga, chosen)
+            plan = transfer.plan_import(saga, chosen, pictures=pictures)
         except (ValueError, KeyError, TypeError) as problem:
             return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
         return _confirm_import(saga, plan, chosen)
@@ -354,7 +359,11 @@ def update_record(saga: Saga, record: transfer.Record) -> Command:
         )
 
     return ChooseFile(
-        f"Update {record.name} from a {kind}'s export", ".json", start, read
+        f"Update {record.name} from a {kind}'s export",
+        ".json",
+        start,
+        read,
+        more=(".zip",),
     )
 
 

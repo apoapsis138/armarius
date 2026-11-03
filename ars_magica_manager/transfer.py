@@ -34,16 +34,19 @@ way stay behind.
 from __future__ import annotations
 
 import json
+import zipfile
 from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass, field, replace
 from pathlib import Path
 from typing import Any, TypedDict
 
-from . import __version__, catalog, places, storage
+from . import __version__, catalog, places, portraits, storage
+from .atlas import maps as atlas_maps
 from .files import write_atomic
 from .models import (
     ITEM_DEVICE_PARAM,
     REALMS,
+    AtlasMap,
     Book,
     CalendarEntry,
     Character,
@@ -65,6 +68,12 @@ FORMAT = "armarius-export"
 #: carry the older one.
 FORMATS = (FORMAT, "ars-magica-manager-export")
 SUFFIX = ".amm.json"
+#: An export that carries pictures (maps, portraits): a zip of the same
+#: JSON file and the pictures, each in its folder (PICTURE_FOLDERS).
+ZIP_SUFFIX = ".amm.zip"
+#: Where an export's pictures sit, in the zip and beside a shipped pack:
+#: the maps folder's and the portraits folder's names.
+MAPS, PORTRAITS = "maps", "portraits"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
 #: The kind of a whole saga's export, and of a content pack's.
 SAGA, PACK = "saga", "pack"
@@ -299,13 +308,63 @@ def _covenant_stubs(
     return stubs
 
 
+def pictures_named(data: dict[str, Any]) -> list[tuple[str, str]]:
+    """The pictures an export's records name, as (folder, file name): its
+    Tribunals' and the saga's maps, and its characters' portraits."""
+    saga = data.get("saga") or {}
+    found: list[tuple[str, str]] = []
+    holders = [*(saga.get("tribunals") or []), saga]
+    for holder in holders:
+        for atlas_map in holder.get("maps") or []:
+            if atlas_map.get("picture"):
+                found.append((MAPS, str(atlas_map["picture"])))
+    for character in saga.get("characters") or []:
+        if character.get("portrait"):
+            found.append((PORTRAITS, str(character["portrait"])))
+    return list(dict.fromkeys(found))
+
+
+def _local_picture(folder: str, name: str) -> Path | None:
+    """One of this computer's pictures, by its folder and file name."""
+    root = storage.maps_dir() if folder == MAPS else storage.portraits_dir()
+    found = root / name
+    return found if found.is_file() else None
+
+
+def write_export(path: Path, data: dict[str, Any]) -> Path:
+    """Write an export to `path`: the JSON file alone, or, when its
+    records name pictures this computer has, a zip of it and them, named
+    with ZIP_SUFFIX in place of the JSON one. The file written."""
+    pictures = [
+        (folder, name, found)
+        for folder, name in pictures_named(data)
+        if (found := _local_picture(folder, name)) is not None
+    ]
+    text = json.dumps(data, indent=2)
+    if not pictures:
+        write_atomic(path, text)
+        return path
+    stem = path.name.removesuffix(SUFFIX).removesuffix(ZIP_SUFFIX)
+    stem = stem.removesuffix(".json").removesuffix(".zip")
+    zipped = path.with_name(stem + ZIP_SUFFIX)
+    zipped.parent.mkdir(parents=True, exist_ok=True)
+    partial = zipped.with_name(zipped.name + ".partial")
+    with zipfile.ZipFile(partial, "w", zipfile.ZIP_DEFLATED) as archive:
+        archive.writestr(stem + SUFFIX, text)
+        for folder, name, found in pictures:
+            # Pictures are already compressed: stored as they are.
+            archive.write(found, f"{folder}/{name}", zipfile.ZIP_STORED)
+    partial.replace(zipped)
+    return zipped
+
+
 def export_to(
     path: Path, saga: Saga, record: Record, *, with_members: bool = False
 ) -> Path:
-    """Write `record`'s export to `path` (its folder is made if needed)."""
-    data = export_data(saga, record, with_members=with_members)
-    write_atomic(path, json.dumps(data, indent=2))
-    return path
+    """Write `record`'s export to `path` (its folder is made if needed):
+    a zip with SUFFIX's name changed when it carries a portrait. The file
+    written."""
+    return write_export(path, export_data(saga, record, with_members=with_members))
 
 
 def saga_file_name(saga: Saga) -> str:
@@ -330,20 +389,35 @@ def export_saga_data(saga: Saga) -> dict[str, Any]:
 
 def export_saga_to(path: Path, saga: Saga) -> Path:
     """Write the whole saga's export to `path` (its folder is made if
-    needed)."""
-    write_atomic(path, json.dumps(export_saga_data(saga), indent=2))
-    return path
+    needed), with its maps and portraits as a zip when it has any. The
+    file written."""
+    return write_export(path, export_saga_data(saga))
 
 
 # ------------------------------------------------------------------ import
 
 
+def _text(path: Path) -> str:
+    """An export's JSON text: the file itself, or the one JSON file at the
+    top of its zip."""
+    if not zipfile.is_zipfile(path):
+        return path.read_text(encoding="utf-8")
+    with zipfile.ZipFile(path) as archive:
+        inside = [n for n in archive.namelist() if "/" not in n and n.endswith(".json")]
+        if len(inside) != 1:
+            raise ValueError("the zip should hold one export's JSON file")
+        return archive.read(inside[0]).decode("utf-8")
+
+
 def read(path: Path) -> dict[str, Any]:
-    """An export file's data. Raises ValueError for anything else."""
+    """An export file's data, from a JSON file or a zip holding one.
+    Raises ValueError for anything else."""
     try:
-        data = json.loads(path.read_text(encoding="utf-8"))
+        data = json.loads(_text(path))
     except json.JSONDecodeError as problem:
         raise ValueError(f"not a JSON file ({problem.msg})") from problem
+    except (zipfile.BadZipFile, UnicodeDecodeError) as problem:
+        raise ValueError(f"the zip can't be read ({problem})") from problem
     if not isinstance(data, dict) or data.get("format") not in FORMATS:
         raise ValueError(
             "not an Armarius export (export a covenant, laboratory or "
@@ -352,6 +426,33 @@ def read(path: Path) -> dict[str, Any]:
     if data.get("kind") not in KIND_LABELS or not isinstance(data.get("saga"), dict):
         raise ValueError("the export is incomplete")
     return data
+
+
+class Pictures:
+    """Where an export's pictures are read from, however it came: inside
+    its zip, or in the maps and portraits folders beside a JSON file (a
+    shipped pack's data/packs/maps/). The importer asks for a picture by
+    its folder and name and never minds which.
+
+    Pattern: Adapter, small: a zip and a folder answer the one question
+    alike, so the import plan and its migrations don't change."""
+
+    def __init__(self, path: Path) -> None:
+        self.path = path
+        self.zipped = path.is_file() and zipfile.is_zipfile(path)
+
+    def get(self, folder: str, name: str) -> bytes | None:
+        """The picture's bytes, or None when the export doesn't carry it."""
+        if not name or "/" in name or "\\" in name or name.startswith("."):
+            return None
+        if self.zipped:
+            with zipfile.ZipFile(self.path) as archive:
+                try:
+                    return archive.read(f"{folder}/{name}")
+                except KeyError:
+                    return None
+        beside = self.path.parent / folder / name
+        return beside.read_bytes() if beside.is_file() else None
 
 
 @dataclass
@@ -396,6 +497,10 @@ class ImportPlan:
     new_owners: list[tuple[Laboratory, str]] = field(default_factory=list)
     #: (existing magus, the imported laboratory's id) to assign.
     new_labs: list[tuple[Character, str]] = field(default_factory=list)
+    #: The saga's own maps a whole saga's import adds.
+    maps: list[AtlasMap] = field(default_factory=list)
+    #: Where the export's pictures are read from (None: it carries none).
+    pictures: Pictures | None = None
 
 
 class _Ids:
@@ -456,6 +561,8 @@ class _Import:
     codex_map: dict[str, str] = field(default_factory=dict)
     device_map: dict[str, str] = field(default_factory=dict)
     tribunal_map: dict[str, str] = field(default_factory=dict)
+    #: The Atlas's maps the import adds, by their id in the file.
+    map_map: dict[str, str] = field(default_factory=dict)
     familiar_map: dict[str, str] = field(default_factory=dict)
     #: The ids of the possessions of the covenants added.
     possessions: set[str] = field(default_factory=set)
@@ -719,9 +826,31 @@ def _plan_tribunals(job: _Import) -> None:
             proxies=proxies,
             diary=[replace(entry, changes=[]) for entry in tribunal.diary],
             meeting=None,
+            maps=_new_maps(job, tribunal.maps),
         )
         job.tribunal_map[tribunal.id] = added.id
         job.plan.tribunals.append(added)
+
+
+def _new_maps(job: _Import, found: list[AtlasMap]) -> list[AtlasMap]:
+    """The file's maps, each given an id free in the target."""
+    taken = _Ids(
+        [m.id for m, _t in atlas_maps(job.target)]
+        + [m.id for t in job.plan.tribunals for m in t.maps]
+        + [m.id for m in job.plan.maps]
+    )
+    added = []
+    for atlas_map in found:
+        new_id = taken.new(atlas_map.id, atlas_map.name)
+        job.map_map[atlas_map.id] = new_id
+        added.append(replace(atlas_map, id=new_id))
+    return added
+
+
+def _plan_maps(job: _Import) -> None:
+    """A whole saga's own maps (those of no Tribunal) come with it."""
+    if job.plan.kind == SAGA:
+        job.plan.maps += _new_maps(job, job.source.maps)
 
 
 def _relink_stops(job: _Import, covenant: Covenant) -> None:
@@ -1079,6 +1208,7 @@ def _plan_calendar(job: _Import) -> None:
 #: pairs with a magus planned before it, and a familiar follows its magus.
 _PLANNERS: dict[str, Callable[[_Import], None]] = {
     "tribunal": _plan_tribunals,
+    "maps": _plan_maps,
     COVENANT: _plan_covenants,
     CHARACTER: _plan_characters,
     LABORATORY: _plan_laboratories,
@@ -1096,12 +1226,14 @@ def plan_import(
     data: dict[str, Any],
     *,
     same_ids: dict[str, dict[str, str]] | None = None,
+    pictures: Pictures | None = None,
 ) -> ImportPlan:
     """Work out an import of `data` (from read()) into `target`, changing
     nothing yet: apply() does it. `same_ids` (kind -> the file's id -> an
     id) gives records in the file the id they are to have, whatever is
     free: updating a record from a file keeps the record's own id. A
-    pack's records are matched by name to the target's own."""
+    pack's records are matched by name to the target's own. `pictures`
+    is where the file's maps and portraits are read from."""
     # Runs the load-time migrations.
     source = Saga.from_dict(data["saga"], lab_feature_names=catalog.lab_feature_names())
     job = _Import(
@@ -1135,6 +1267,7 @@ def plan_import(
     }
     for planner in _PLANNERS.values():
         planner(job)
+    job.plan.pictures = pictures
     return job.plan
 
 
@@ -1183,6 +1316,34 @@ def preview(plan: ImportPlan) -> str:
     return "\n".join(lines)
 
 
+def _copy_pictures(target: Saga, plan: ImportPlan) -> None:
+    """Copy the pictures the file carries into this computer's folders: a
+    map's under its own name (named by its bytes, so one already there is
+    the same picture and is kept), a portrait under its character's new
+    name. A picture the file doesn't carry is left as it was named: it
+    shows if this computer has it, as on the computer it came from."""
+    pictures = plan.pictures
+    if pictures is None:
+        return
+    for atlas_map in [*(m for t in plan.tribunals for m in t.maps), *plan.maps]:
+        name = atlas_map.picture
+        if not name or (storage.maps_dir() / name).is_file():
+            continue
+        found = pictures.get(MAPS, name)
+        if found is not None:
+            storage.maps_dir().mkdir(parents=True, exist_ok=True)
+            (storage.maps_dir() / name).write_bytes(found)
+    for character in plan.characters:
+        found = pictures.get(PORTRAITS, character.portrait)
+        if found is None:
+            continue
+        suffix = Path(character.portrait).suffix
+        name = portraits.file_name(target, character, suffix)
+        storage.portraits_dir().mkdir(parents=True, exist_ok=True)
+        (storage.portraits_dir() / name).write_bytes(found)
+        character.portrait = name
+
+
 def apply(target: Saga, plan: ImportPlan) -> None:
     """Add everything in `plan` to `target` (the caller saves it)."""
     target.covenants += plan.covenants + plan.stub_covenants
@@ -1205,5 +1366,7 @@ def apply(target: Saga, plan: ImportPlan) -> None:
         lab.owner_id = owner_id
     for owner, lab_id in plan.new_labs:
         owner.assigned_lab_id = lab_id
+    target.maps += plan.maps
+    _copy_pictures(target, plan)
     places.sync(target)
     catalog.use_saga(target)

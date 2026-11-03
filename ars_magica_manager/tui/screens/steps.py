@@ -239,7 +239,7 @@ def run_steps(
                 run_steps(app, choose_file.apply(path), done, notify)
 
         app.push_screen(
-            CsvFilePickerScreen(step.title, step.start, suffix=step.suffix),
+            CsvFilePickerScreen(step.title, step.start, suffix=step.suffixes),
             handle_path,
         )
         return

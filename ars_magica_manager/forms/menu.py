@@ -1057,7 +1057,7 @@ def export_path(values: dict[str, Any]) -> Path:
     """The export form's file, with the export suffix if it has none."""
     name = (values.get("file") or "").strip().strip('"')
     path = Path(name).expanduser()
-    if name and not path.name.lower().endswith(".json"):
+    if name and not path.name.lower().endswith((".json", ".zip")):
         path = path.with_name(path.name + transfer.SUFFIX)
     return path
 
@@ -1086,7 +1086,7 @@ def export_record(saga: Saga, record: transfer.Record, folder: Path) -> Form:
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
         try:
-            transfer.export_to(
+            written = transfer.export_to(
                 path, saga, record, with_members=bool(values.get("with_members"))
             )
         except OSError as problem:
@@ -1094,7 +1094,7 @@ def export_record(saga: Saga, record: transfer.Record, folder: Path) -> Form:
                 f"Export {escape(record.name)}",
                 f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
             )
-        return notes(f"Exported {escape(record.name)} to {escape(str(path))}.")
+        return notes(f"Exported {escape(record.name)} to {escape(str(written))}.")
 
     return Form(
         f"Export {escape(record.name)}",
@@ -1727,13 +1727,13 @@ def export_saga(saga: Saga, folder: Path) -> Form:
     def apply(values: dict[str, Any]) -> Command | list[str]:
         path = export_path(values)
         try:
-            transfer.export_saga_to(path, saga)
+            written = transfer.export_saga_to(path, saga)
         except OSError as problem:
             return Refuse(
                 "Export Saga",
                 f"Couldn't write {escape(path.name)}: {escape(str(problem))}",
             )
-        return notes(f"Exported {escape(saga.name)} to {escape(str(path))}.")
+        return notes(f"Exported {escape(saga.name)} to {escape(str(written))}.")
 
     return Form(
         f"Export {escape(saga.name)}",

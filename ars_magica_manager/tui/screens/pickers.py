@@ -1312,7 +1312,9 @@ class _CsvDirectoryTree(DirectoryTree):
     """Folders and files of one kind only (.csv unless `suffix` says
     otherwise; hidden entries left out)."""
 
-    def __init__(self, path: Path, *, suffix: str = ".csv", id: str | None = None):
+    def __init__(
+        self, path: Path, *, suffix: tuple[str, ...] = (".csv",), id: str | None = None
+    ):
         super().__init__(path, id=id)
         self.suffix = suffix
 
@@ -1374,12 +1376,15 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
     }
     """
 
-    def __init__(self, title: str, start: Path, *, suffix: str = ".csv") -> None:
+    def __init__(
+        self, title: str, start: Path, *, suffix: str | tuple[str, ...] = ".csv"
+    ) -> None:
         super().__init__()
         self.title_text = title
         self.start = start
-        #: The kind of file to choose (".json" for an export).
-        self.suffix = suffix.lower()
+        #: The kinds of file to choose (".json" and ".zip" for an export).
+        found = (suffix,) if isinstance(suffix, str) else suffix
+        self.suffix = tuple(s.lower() for s in found)
 
     def compose(self) -> ComposeResult:
         with Vertical(id="picker-dialog", classes="dialog-box"):
@@ -1410,7 +1415,9 @@ class CsvFilePickerScreen(ModalDialog[Path | None]):
         elif path.is_file() and path.name.lower().endswith(self.suffix):
             self.dismiss(path)
         elif path.is_file():
-            error.update(f"{escape(path.name)} isn't a {self.suffix} file.")
+            error.update(
+                f"{escape(path.name)} isn't a {' or '.join(self.suffix)} file."
+            )
         else:
             error.update(f"No such file or folder: {escape(str(path))}")
 

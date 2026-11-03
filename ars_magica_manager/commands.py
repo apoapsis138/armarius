@@ -201,8 +201,8 @@ class ChooseFile:
     suffix: str
     start: Path
     apply: Callable[[Path], Any]
-    #: Other kinds of file it takes too (".jpg" beside ".png"); the
-    #: terminal, which has no use for pictures, offers only `suffix`.
+    #: Other kinds of file it takes too (".jpg" beside ".png", ".zip"
+    #: beside ".json" for an export that carries its pictures).
     more: tuple[str, ...] = ()
     save: bool = False
 
