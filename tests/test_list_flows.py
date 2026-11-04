@@ -270,6 +270,7 @@ _SHEET_VIEW_ATTR = {
     "conflicts": "_conflicts_view",
     "neighbour": "_neighbour_sheet_view",
     "tribunal": "_tribunal_sheet_view",
+    "seasons": "_seasons_view",
 }
 
 

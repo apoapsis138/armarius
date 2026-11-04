@@ -1727,6 +1727,17 @@ went unsecured, and an open Story Event for an experiment's story event
 (concerning the magus) or a Disaster's covenant story (concerning the
 covenant).
 
+A story's **chapters** are entries of their own, of the category
+Chapter: what the troupe did each time it took the story up.
+[Take Up the Tale](help:take-up-tale) on an open story writes one, and
+resolving a story asks for a last chapter, how it ended. A story's
+details list its chapters, oldest first; a story grown into a threat
+names the threat (its covenant's [Connections](help:section-connections)
+link to it) and goes on with the threat's chapters. A chapter's own
+details name its story, or the threat it took up. Deleting a story
+that has chapters asks whether to keep them in the Diary or delete them
+too; deleting a chapter leaves its story.
+
 A Story Event linked to a Hidden Resources Boon also has **Build Points
 unlocked**: the points of that Boon's 250 that the story opened up. They
 count once the event is Resolved, and the form refuses more than the Boon

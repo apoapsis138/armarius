@@ -32,6 +32,7 @@ from .. import (
     neighbours,
     open_stories,
     sieges,
+    story_chapters,
     troupe,
     world,
 )
@@ -446,6 +447,16 @@ def story_card(
         card.column.addWidget(
             text(entry.details.strip(), p["foreground"], serif(12.5), wrap=True)
         )
+    chapters = story_chapters.story_chapters(story.covenant, entry)
+    if chapters:
+        card.column.addWidget(
+            text(
+                "\n".join(f"{c.when}: {c.words}" for c in chapters),
+                p["label"],
+                serif(12, italic=True),
+                wrap=True,
+            )
+        )
     ops = open_stories.ops(
         saga, lambda covenant: diary_forms.covenant_diary_ops(saga, covenant)
     )
@@ -454,6 +465,16 @@ def story_card(
     if ops.edit is not None:
         edit = ops.edit
         line.addWidget(edit_button("Edit", p, lambda: run(edit(row))))
+    line.addWidget(
+        edit_button(
+            story_chapters.TAKE_UP,
+            p,
+            lambda: run(
+                story_chapters.take_up_story(saga, story.covenant, story.entry)
+            ),
+            "more",
+        )
+    )
     line.addWidget(
         edit_button(
             open_stories.GROW_TITLE,

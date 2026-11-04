@@ -12,11 +12,12 @@ into the diary list itself, whatever order a sheet shows them in.
 from __future__ import annotations
 
 from collections.abc import Callable, MutableSequence, Sequence
+from dataclasses import replace
 from typing import Any
 
-from .. import catalog, covenant_diary, open_stories
+from .. import catalog, covenant_diary, open_stories, story_chapters
 from ..arts import ARTS
-from ..commands import Form, SectionOps, delete
+from ..commands import Command, Form, SectionOps, Then, delete
 from ..form_spec import EMPHASIS_HINT, DialogField, attr, pairs
 from ..markup import escape
 from ..models import (
@@ -148,11 +149,14 @@ class _CovenantEntryForm:
             values["concerns"] = values.get("concerns") or (
                 self.existing.concerns if self.existing is not None else ""
             )
-            # The threat a story grew into is kept: the form doesn't edit it.
-            if self.existing is not None:
-                values["threat_id"] = self.existing.threat_id
         else:
             values.pop("concerns", None)
+        # What the form doesn't edit is kept: the threat a story grew into
+        # (or a chapter took up), a story's id and a chapter's story.
+        if self.existing is not None:
+            values["threat_id"] = self.existing.threat_id
+            values["id"] = self.existing.id
+            values["story_id"] = self.existing.story_id
         return CovenantDiaryEntry(**values)
 
 
@@ -351,13 +355,36 @@ def covenant_diary_ops(saga: Saga, covenant: Covenant) -> SectionOps:
 
     def form(existing: CovenantDiaryEntry | None, save: Callable[[Any], None]) -> Form:
         build = covenant_entry_from(covenant, existing)
+        was_open = existing is not None and story_chapters.is_open(existing)
+
+        def apply(values: dict[str, Any]) -> Then | None:
+            entry = build(values)
+            save(entry)
+            # Resolving a story asks how it ended: its last chapter.
+            if was_open and entry.status == story_chapters.RESOLVED:
+                return Then(story_chapters.ending_form(saga, covenant, entry))
+            return None
+
         return Form(
             entry_title(existing),
             lambda: covenant_entry_fields(
                 covenant, saga.current_year, existing, saga.current_season, saga
             ),
-            lambda values: save(build(values)),
+            apply,
             validate=covenant_entry_problem(covenant, existing),
         )
 
-    return diary_ops(covenant.diary, form)
+    ops = diary_ops(covenant.diary, form)
+    plain_remove = ops.remove
+    assert plain_remove is not None
+
+    def remove(index: int) -> Command:
+        # A story with chapters asks what becomes of them.
+        entry = covenant.diary[index]
+        if story_chapters.is_story(entry) and story_chapters.story_chapters(
+            covenant, entry
+        ):
+            return story_chapters.delete_story(covenant, entry)
+        return plain_remove(index)
+
+    return replace(ops, remove=remove)

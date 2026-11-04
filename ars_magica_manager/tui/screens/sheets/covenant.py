@@ -639,7 +639,7 @@ class CovenantSheetView(KindTabsView):
                 )
             yield self._panel(
                 "tab-cov-diary",
-                lambda: cov_diary.info_text(self.covenant, None),
+                lambda: cov_diary.info_text(self.covenant, None, self.saga),
                 id="cov-diary-info",
             )
 
@@ -1019,7 +1019,7 @@ class CovenantSheetView(KindTabsView):
         if list_id == "cov-diary-list":
             event.stop()
             self.query_one("#cov-diary-info", Static).update(
-                cov_diary.info_text(self.covenant, event.data_index)
+                cov_diary.info_text(self.covenant, event.data_index, self.saga)
             )
             return
         if list_id.startswith("eco-") and list_id.endswith("-list"):

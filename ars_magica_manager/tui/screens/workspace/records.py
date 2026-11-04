@@ -24,6 +24,7 @@ from .... import (
     places,
     ruins,
     storage,
+    story_chapters,
     threats,
     town_charter,
     town_court,
@@ -44,6 +45,7 @@ from ....forms import go_to as go_to_forms
 from ....forms import hunting as hunting_forms
 from ....forms import neighbour as neighbour_forms
 from ....forms import polemic as polemic_forms
+from ....forms import take_up as take_up_forms
 from ....forms import threshold as threshold_forms
 from ....forms import tribunal as tribunal_forms
 from ....forms import wizards_war
@@ -714,6 +716,31 @@ class RecordActions(WorkspaceBase):
             self.app,
             open_stories.grow_form(self.saga, row),
             lambda _end: self._commit(REGION_STORIES_SECTION, REGION_THREATS_SECTION),
+        )
+
+    def action_take_up_tale(self) -> None:
+        """More's Take Up the Tale on a threat under way: a chapter in its
+        Diary and the troupe's."""
+        record = self._record_to_delete()
+        if not threats.is_threat(record) or threats.is_dormant(record):
+            return
+        assert isinstance(record, Neighbour)
+        run_steps(
+            self.app,
+            story_chapters.take_up_threat(self.saga, record),
+            lambda end: self._commit_told(end, NEIGHBOUR_INFO_SECTION, DIARY_SECTION),
+        )
+
+    def action_take_up_story(self) -> None:
+        """More's Take Up the Tale on the chosen open story (a covenant's
+        Diary, the Region's Open Stories, Needs You)."""
+        section = self._active_section() or ""
+        view = self._current_sheet_view()
+        row = view.section_row(section) if view is not None else None
+        run_steps(
+            self.app,
+            take_up_forms.command(self.saga, section, row, self.selected_covenant),
+            lambda end: self._commit_told(end, section),
         )
 
     def action_delay_threat(self) -> None:

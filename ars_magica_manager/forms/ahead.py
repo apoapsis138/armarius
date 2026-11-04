@@ -7,12 +7,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from .. import ahead, world_turns
+from .. import ahead, attention, world_turns
 from ..commands import Command, Confirm, Form, Refuse, SectionOps
 from ..form_spec import DialogField, pairs
 from ..markup import escape
 from ..models import EVERY, ONCE, REPEATS, SEASONS, CalendarEntry, Covenant, Saga
-from ..sections import AHEAD_SECTION, SEASONS_INFO_SECTION, WORLD_TURNS_SECTION
+from ..sections import (
+    AHEAD_SECTION,
+    ATTENTION_SECTION,
+    SEASONS_INFO_SECTION,
+    WORLD_TURNS_SECTION,
+)
 
 _SPAN_CHOICES = [(ahead.span_label(years), str(years)) for years in ahead.SPANS]
 
@@ -183,10 +188,11 @@ def ahead_ops(saga: Saga, covenant: Covenant | None = None) -> SectionOps:
 
 
 def seasons_ops(saga: Saga) -> dict[str, SectionOps]:
-    """The Seasons sheet: its top panel's Edit and the Looking Ahead
-    list."""
+    """The Seasons sheet: its top panel's Edit, Needs You's Open and the
+    Looking Ahead list."""
     return {
         SEASONS_INFO_SECTION: SectionOps(edit=lambda _row: looking_form(saga)),
+        ATTENTION_SECTION: attention.ops(saga),
         AHEAD_SECTION: ahead_ops(saga),
         WORLD_TURNS_SECTION: world_turns.turn_ops(saga),
     }

@@ -511,10 +511,10 @@ The saga's record of past seasons: what everyone did each season and what it gav
 **You type:** nothing; the records are written by the app.
 
 <!-- tui -->
-**The app works out:** what is coming ([Looking Ahead](help:section-ahead)), then one row per season recorded, newest first ("Spring 1220 (3 people)"), and below the list the chosen season's record, grouped by covenant.
+**The app works out:** what is waiting on you ([Needs You](help:section-attention)) and what is coming ([Looking Ahead](help:section-ahead)), then one row per season recorded, newest first ("Spring 1220 (3 people)"), and below the list the chosen season's record, grouped by covenant.
 <!-- /tui -->
 <!-- gui -->
-**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), starts with what is coming ([Ahead](help:section-ahead)), then lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first. The page's title carries the present season's medallion, and each season's heading its own, in the saga's set of medallions.
+**The app works out:** the Seasons page, opened from the saga's Seasons chapter (The Seasons Played), starts with what is coming ([Ahead](help:section-ahead)) and what is waiting on you ([Needs You](help:section-attention)), then lists the seasons in its rail, newest first, and shows the chosen season's record, grouped by covenant, a row a person. Just after Advance Season, the season just played out is first. The page's title carries the present season's medallion, and each season's heading its own, in the saga's set of medallions.
 <!-- /gui -->
 Each person's line gives the activity, what it was on and its result. A plan that could not be carried out says why, and a magus or companion with nothing planned is shown as "nothing planned". Winter's lines also include aging rolls, grogs' yearly updates, business upkeep and vis harvests.
 
@@ -525,8 +525,8 @@ When season records are off, the page says so and no new seasons are added; each
 ## The Seasons panel
 <!-- help: section-seasons-info -->
 
-The date, how far Ahead looks, the next Tribunal's meeting and how many
-things come this season.
+The date, how far Ahead looks, the next Tribunal's meeting, how many
+things come this season, and how many are waiting on you (Needs you).
 
 **You type:** how far to look ahead (a number of years, or to the next
 Tribunal) and what to show, with
@@ -541,7 +541,39 @@ Both are kept with the saga; looking ahead starts at 2 years.
 ## Seasons tab
 <!-- help: tab-seasons -->
 
-What is coming, season by season, over the seasons already recorded.
+What is waiting on you and what is coming, season by season, over the
+seasons already recorded.
+
+## Needs You
+<!-- help: section-attention -->
+
+What in the saga is waiting on the storyguide, gathered from every part
+of it. Nothing here is kept as a list: each part of the saga is asked
+when the list is shown, so a row goes as soon as you deal with it.
+
+- **Revisit**: an open story whose Revisit year has come (marked).
+- **Open story**: every other open Story Event of the troupe's
+  covenants, oldest first (see [Open Stories](help:section-region-stories)).
+- **Describe**: a creation an experiment changed whose experimental
+  effects you haven't described yet: a side effect or a special result
+  with no words, or a modified effect that changes nothing the app works
+  out. A spell is opened through a magus who knows it (its Mastery form
+  holds its effects), an enchanted item's effect through its holder, a
+  bond power through its familiar.
+- **Overdue**: a dated stage of a threat still Pending after its season
+  has passed (marked): record what became of it on the threat's Stages,
+  or [Delay or Hasten](help:threat-delay) the threat.
+
+**You type:** nothing here. Choose a row to read what it needs and
+where;
+<!-- tui -->
+Edit (`e`) opens the record it is dealt with on.
+<!-- /tui -->
+<!-- gui -->
+**Open** goes to the record it is dealt with on.
+<!-- /gui -->
+
+**See also:** [How to clear what needs you](help:guide-needs-you)
 
 ## Looking Ahead
 <!-- help: section-ahead -->

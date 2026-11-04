@@ -150,8 +150,18 @@ def _spy_on_dialogs(app, spied: list) -> None:
     app.push_screen = record
 
 
+def _spy_on_opening(workspace, opened: list[str]) -> None:
+    """Record, instead of opening, each record a key would open (Needs
+    You's Edit): the workspace would leave the sheet being walked."""
+
+    def record(kind: str, record_id: str) -> None:
+        opened.append(f"{kind} {record_id}")
+
+    workspace.action_open_ref = record
+
+
 async def _record_keys(
-    pilot, app, workspace, notices: list[str], spied: list
+    pilot, app, workspace, notices: list[str], spied: list, opened: list[str]
 ) -> dict[str, str]:
     outcomes: dict[str, str] = {}
     for key, actions in KEYS.items():
@@ -160,6 +170,7 @@ async def _record_keys(
             continue
         notices.clear()
         spied.clear()
+        opened.clear()
         await pilot.press(key)
         await pilot.pause()
         # Done when something has happened, or when nothing is left to run:
@@ -170,6 +181,7 @@ async def _record_keys(
                 app.screen is not workspace
                 or notices
                 or spied
+                or opened
                 or not any(worker.is_running for worker in app.workers)
             ),
             timeout=1.0,
@@ -183,6 +195,8 @@ async def _record_keys(
             title = _title(screen)
             outcomes[key] = type(screen).__name__ + (f": {title}" if title else "")
             await _back_to_workspace(pilot, app, workspace)
+        elif opened:
+            outcomes[key] = f"opens: {opened[0]}"
         elif notices:
             outcomes[key] = f"notice: {notices[0]}"
         else:
@@ -212,6 +226,8 @@ async def _matrix_for(
 
         app.notify = record  # type: ignore[method-assign]
         _spy_on_dialogs(app, spied)
+        opened: list[str] = []
+        _spy_on_opening(workspace, opened)
 
         tree = workspace.query_one("#nav-tree", Tree)
 
@@ -234,7 +250,9 @@ async def _matrix_for(
         if attr is None:  # no sheet: the node itself decides the section
             record = {
                 "active": workspace._active_section(),
-                "keys": await _record_keys(pilot, app, workspace, notices, spied),
+                "keys": await _record_keys(
+                    pilot, app, workspace, notices, spied, opened
+                ),
             }
             return {"(node)": record}, ["(node)"]
 
@@ -257,7 +275,9 @@ async def _matrix_for(
             await _focus_target(pilot, app, view, target)
             result[_label(target)] = {
                 "active": workspace._active_section(),
-                "keys": await _record_keys(pilot, app, workspace, notices, spied),
+                "keys": await _record_keys(
+                    pilot, app, workspace, notices, spied, opened
+                ),
             }
         return result, labels
 

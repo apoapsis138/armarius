@@ -21,14 +21,13 @@ from __future__ import annotations
 from dataclasses import dataclass
 from typing import Any
 
-from . import diaries, neighbours, threats, world
+from . import diaries, neighbours, story_chapters, threats, world
 from .commands import Form, SectionOps, notes
 from .form_spec import DialogField
 from .grids import Grid
 from .markup import escape
 from .models import (
     SEASONS,
-    STORY_EVENT,
     STORY_EVENT_STATUSES,
     Character,
     Covenant,
@@ -60,8 +59,7 @@ class Story:
         return self.covenant.diary[self.index]
 
 
-def is_open(entry: CovenantDiaryEntry) -> bool:
-    return entry.category == STORY_EVENT and (entry.status or OPEN) == OPEN
+is_open = story_chapters.is_open
 
 
 def stories(saga: Saga) -> list[Story]:
@@ -193,6 +191,7 @@ def text(saga: Saga, row: int) -> str:
         lines.append(f"[$label]Revisit:[/] {entry.revisit_year}")
     if entry.details.strip():
         lines.append(escape(entry.details.strip()))
+    lines += story_chapters.story_thread(saga, story.covenant, entry)
     return "\n".join(lines)
 
 

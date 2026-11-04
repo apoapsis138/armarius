@@ -596,6 +596,18 @@ def add_hazards(chart: Extraordinary, hazards: Extraordinary) -> None:
     chart.effect_options += hazards.effect_options
 
 
+def needs_description(effect: ExperimentalEffect) -> bool:
+    """Whether the storyguide has still to say what `effect` is: it has no
+    words, and is a side effect, a special result's change, or a modified
+    effect that changes nothing the app works out (Range, Duration, Target
+    or potency)."""
+    if effect.description.strip():
+        return False
+    if effect.kind != "modified":
+        return True
+    return not (effect.range or effect.duration or effect.target or effect.potency)
+
+
 def describe(effect: ExperimentalEffect) -> str:
     """An experimental effect in a line (plain text): what the chart gave,
     what it is, what it changed, and a fatal flaw marked."""
@@ -604,7 +616,7 @@ def describe(effect: ExperimentalEffect) -> str:
         text += " (fatal flaw)"
     if effect.description.strip():
         text += f": {effect.description.strip()}"
-    elif effect.kind == "side":
+    elif needs_description(effect):
         text += " (not yet described)"
     changes = [
         f"{label} {value}"

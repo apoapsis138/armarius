@@ -428,6 +428,31 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Threat": ""},
         shown={"#region-threats-list": "The Salamander's Hunger"},
     ),
+    "take up story": Contract(
+        prefill={"Year": "1220", "Season": "Autumn", "What the troupe did": ""},
+        edits={"Season": "Winter", "What the troupe did": "We lured it out"},
+        saved=lambda s: (
+            s.covenants[0].diary[-1].category,
+            s.covenants[0].diary[-1].details,
+            s.covenants[0].diary[-1].story_id == s.covenants[0].diary[-2].id,
+        ),
+        expected=("Chapter", "We lured it out", True),
+        invalid={"What the troupe did": ""},
+        shown={"#region-stories-list": "A salamander in the lab"},
+    ),
+    "take up threat": Contract(
+        prefill={"Year": "1220", "Season": "Autumn", "What the troupe did": ""},
+        edits={"What the troupe did": "We rode out to the ford"},
+        saved=lambda s: s.neighbour("crown").details["diary"][-1],
+        expected={
+            "year": 1220,
+            "season": "Autumn",
+            "text": "We rode out to the ford",
+            "chapter": True,
+        },
+        invalid={"What the troupe did": ""},
+        shown={},
+    ),
     "delay threat": Contract(
         prefill={"Seasons later": "1", "Why": ""},
         edits={"Seasons later": "2", "Why": "The bridge was burned"},

@@ -47,7 +47,7 @@ from . import mystery_cults as cults_core
 from . import mystic_paths as mystic_forms
 from . import spells as spl
 from .forms import acclaim as acclaim_forms
-from .forms import careers, go_to
+from .forms import careers, go_to, take_up
 from .forms import certamen_duel as certamen_forms
 from .forms import charter as charter_forms
 from .forms import hubris as hubris_forms
@@ -397,6 +397,9 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("h", "delay_threat", "Delay or Hasten"),
     MenuItem("g", "grow_story", "Grow into a Threat"),
+    # A chapter of what the troupe did: on a threat, or a chosen open story.
+    MenuItem("t", "take_up_tale", "Take Up the Tale"),
+    MenuItem("t", "take_up_story", "Take Up the Tale"),
     MenuItem("g", "go_to", "Go To"),
     MenuItem("i", "impress_agent", "Impress"),
     MenuItem("x", "spend_agency_xp", "Spend Agency Experience"),
@@ -1470,6 +1473,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
     "delay_threat": _on_threat_under_way,
+    "take_up_tale": _on_threat_under_way,
     "go_to": _goes_to,
     # A scholar's ligature (Art & Academe).
     "make_ligature": _makes_ligature,
@@ -1908,6 +1912,13 @@ _SECTION_RULES: dict[str, Callable[[ActionFacts, str], bool]] = {
     "rally_group": _with_morale_rules("rally_group"),
     # An apothecary's searching and preserving, on This Season.
     "apothecary_store": _works_for_labor(apothecary.keeps_store),
+    # A chosen open story (or, on Needs You, a story or threat).
+    "take_up_story": lambda facts, section: (
+        section in take_up.LISTS
+        and take_up.offered(
+            facts.saga, section, facts.chosen_row(section), facts.selected_covenant
+        )
+    ),
     # The hunt and Area Lore on the road, beside Travel on Ahead.
     "hunt_on_journey": _plans_journey,
     "area_lore_on_journey": _plans_journey,

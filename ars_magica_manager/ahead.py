@@ -305,16 +305,10 @@ def _threats(saga: Saga, start: int, stop: int) -> list[Entry]:
         for stage in threats.stages(threat):
             if (stage.get("outcome") or threats.PENDING) != threats.PENDING:
                 continue
-            when = threats.stage_when(threat, stage)
+            when = threats.comes(threat, stage)
             if when is None:
                 continue
-            if threats.delay(threat):
-                year, index = divmod(when, len(SEASONS))
-                season = SEASONS[index]
-            else:
-                year = when // len(SEASONS)
-                season = stage.get("season") or SEASONS[-1]
-                when = season_order(season=season, year=year)
+            year, season = _from_order(when)
             if start <= when <= stop:
                 found.append(
                     Entry(

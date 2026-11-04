@@ -7,16 +7,18 @@ from __future__ import annotations
 from collections.abc import Sequence
 from dataclasses import dataclass
 
-from . import catalog
+from . import catalog, story_chapters
 from .arts import ART_ABBREVIATIONS
 from .markup import escape, markdown_text
 from .models import (
     BOON_HOOK_DETAIL,
+    CHAPTER,
     SEASONS,
     STORY_EVENT,
     STORY_EVENT_STATUSES,
     Covenant,
     CovenantDiaryEntry,
+    Saga,
 )
 
 #: Roughly how many stories overcome a Hook (Covenants, ch. 2).
@@ -275,8 +277,10 @@ def boon_hook_label(covenant: Covenant, boon_hook_id: str | None) -> str:
     return f"{catalog.describe_boon_hook(instance, by_id)} ({kind})"
 
 
-def info_text(covenant: Covenant, index: int | None) -> str:
-    """The details panel for a Diary entry."""
+def info_text(covenant: Covenant, index: int | None, saga: Saga | None = None) -> str:
+    """The details panel for a Diary entry; given the saga, a story names
+    the threat it grew into and shows its chapters, and a chapter names
+    the threat it took up."""
     if index is None:
         return "[dim]Select a Diary entry to see its details.[/]"
     entry = covenant.diary[index]
@@ -292,8 +296,15 @@ def info_text(covenant: Covenant, index: int | None) -> str:
         lines.append(f"[b]Vis:[/] {entry.vis_pawns:+d} pawns of {art}")
     if entry.loyalty is not None:
         lines.append(f"[b]Loyalty points:[/] {entry.loyalty:+d}")
+    if entry.category == CHAPTER:
+        lines += _chapter_of(covenant, entry, saga)
     if entry.category == STORY_EVENT:
         lines.append(f"[b]Status:[/] {entry.status or 'Open'}")
+        threat = story_chapters.grew_into(saga, entry) if saga is not None else None
+        if threat is not None:
+            lines.append(
+                f"[b]Grew into:[/] {escape(threat.name)} (the Region's Threats)"
+            )
         if entry.revisit_year is not None:
             lines.append(f"[b]Revisit:[/] {entry.revisit_year}")
         if linked := boon_hook_label(covenant, entry.boon_hook_id):
@@ -310,4 +321,23 @@ def info_text(covenant: Covenant, index: int | None) -> str:
                     note += "; these count once the event is Resolved"
                 lines.append(f"[dim]{pool.name}: {note}[/]")
     details = markdown_text(entry.details) if entry.details else "[dim](no details)[/]"
-    return "\n".join([*lines, "", details])
+    thread = (
+        story_chapters.story_thread(saga, covenant, entry)
+        if saga is not None and entry.category == STORY_EVENT
+        else []
+    )
+    return "\n".join([*lines, "", details, *([""] + thread if thread else [])])
+
+
+def _chapter_of(
+    covenant: Covenant, entry: CovenantDiaryEntry, saga: Saga | None
+) -> list[str]:
+    """What a chapter is a chapter of: its story, or the threat it took up."""
+    if entry.story_id:
+        story = next((e for e in covenant.diary if e.id == entry.story_id), None)
+        name = story.name if story is not None else "a story since deleted"
+        return [f"[b]Chapter of:[/] {escape(name or '(unnamed)')}"]
+    threat = saga.neighbour(entry.threat_id) if saga and entry.threat_id else None
+    if threat is not None:
+        return [f"[b]Chapter of:[/] {escape(threat.name)} (a threat)"]
+    return []

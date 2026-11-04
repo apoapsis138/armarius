@@ -26,6 +26,7 @@ from . import (
     references,
     sourcebooks,
     storage,
+    story_chapters,
     threats,
     tombs,
     town_charter,
@@ -174,9 +175,11 @@ for _kind in (
         "",
         threats.fields,
         threats.problem,
-        threats.facts,
+        lambda saga, threat: (
+            threats.facts(saga, threat) + story_chapters.threat_facts(saga, threat)
+        ),
         threats.TAB,
-        (place_events.THREAT_DIARY_TAB,),
+        (story_chapters.THREAT_DIARY_TAB,),
     ),
     NeighbourKind(
         sites.PLACE,

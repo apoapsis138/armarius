@@ -30,9 +30,10 @@ def table_section(
     empty: str = "None yet.",
     on_choose: Callable[[int], None] | None = None,
     more: Sequence[RowVerb] = (),
+    nouns: tuple[str, str, str] = ("Add", "Edit", "Delete"),
 ) -> QWidget:
-    """`table` under `title`, with the core's Add, Edit and Delete (and
-    `more`) acting on the row chosen."""
+    """`table` under `title`, with the core's Add, Edit and Delete (named
+    `nouns`, and `more`) acting on the row chosen."""
     chooser = Chooser()
 
     def choose(row: int) -> None:
@@ -46,7 +47,10 @@ def table_section(
         else text(empty, p["dim"], serif(12.5, italic=True))
     )
     return section(
-        title, p, body, buttons=verb_buttons(ops, chooser, run, p, more=more)
+        title,
+        p,
+        body,
+        buttons=verb_buttons(ops, chooser, run, p, nouns=nouns, more=more),
     )
 
 

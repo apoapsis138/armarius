@@ -39,7 +39,15 @@ from .commands import Confirm, Form, SectionOps, notes
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .markup import escape
-from .models import SEASONS, Neighbour, Saga, details_list, season_order
+from .models import (
+    CHAPTER,
+    SEASONS,
+    CovenantDiaryEntry,
+    Neighbour,
+    Saga,
+    details_list,
+    season_order,
+)
 from .neighbour_lists import KindList, KindTab, list_ops
 from .references import Fact
 from .sections import STAGES_SECTION
@@ -265,7 +273,9 @@ def tied(neighbour: Neighbour) -> bool:
 class Stage(TypedDict, total=False):
     """A stage of a threat's plan: its title, the clues it leaves, what
     happens if it is ignored, stopped or turned, how it came out, and
-    when it comes (a date, or the threat's position it is reached at)."""
+    when it comes (a date, or the threat's position it is reached at).
+    `chapter` is the form's word on what the troupe did, written as a
+    chapter and never kept on the stage."""
 
     title: Required[str]
     clues: str
@@ -276,6 +286,7 @@ class Stage(TypedDict, total=False):
     year: int | None
     season: str
     at: int | None
+    chapter: str
 
 
 def stages(neighbour: Neighbour) -> list[Stage]:
@@ -300,6 +311,17 @@ def stage_when(neighbour: Neighbour, stage: Stage) -> int | None:
     if when is None or (stage.get("outcome") or PENDING) != PENDING:
         return when
     return when + delay(neighbour)
+
+
+def comes(neighbour: Neighbour, stage: Stage) -> int | None:
+    """The season a dated stage comes, as a number that sorts by date:
+    stage_when, with a stage given only a year coming in its Winter
+    unless the delay has moved it."""
+    when = stage_when(neighbour, stage)
+    if when is None or delay(neighbour):
+        return when
+    season = stage.get("season") or SEASONS[-1]
+    return season_order(season=season, year=when // len(SEASONS))
 
 
 def _now(saga: Saga) -> int:
@@ -609,6 +631,14 @@ def stage_fields(
             hint="Pending comes on its date; the others say it came or was "
             "kept from coming.",
         ),
+        DialogField(
+            "chapter",
+            "What the troupe did",
+            "area",
+            "",
+            hint="Optional: written in its Diary and the troupe's as a chapter "
+            "of the tale.",
+        ),
     ]
     return found
 
@@ -626,6 +656,15 @@ def stage_ops(saga: Saga, neighbour: Neighbour) -> SectionOps:
 
     def after() -> None:
         for stage in stages(neighbour):
+            words = (stage.pop("chapter", "") or "").strip()
+            if words:
+                write_chapter(
+                    saga,
+                    neighbour,
+                    saga.current_year,
+                    saga.current_season,
+                    f"{stage['title']}: {words}",
+                )
             outcome = stage.get("outcome") or PENDING
             if outcome != PENDING and before.get(id(stage), PENDING) == PENDING:
                 record_outcome(saga, neighbour, stage)
@@ -660,6 +699,27 @@ def record_outcome(saga: Saga, neighbour: Neighbour, stage: Stage) -> str:
         neighbours=[neighbour],
     )
     return text
+
+
+def write_chapter(
+    saga: Saga, neighbour: Neighbour, year: int, season: str, words: str
+) -> None:
+    """A chapter of the threat's tale, what the troupe did: in its Diary,
+    marked a chapter, and each troupe covenant's as a Chapter naming it."""
+    details_list(neighbour, "diary").append(
+        {"year": year, "season": season, "text": words, "chapter": True}
+    )
+    for covenant in world.player_covenants(saga):
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                year,
+                season,
+                neighbour.name,
+                words,
+                category=CHAPTER,
+                threat_id=neighbour.id,
+            )
+        )
 
 
 TAB = KindTab(

@@ -21,7 +21,7 @@ from ars_magica_manager import seasons, storage
 from ars_magica_manager.gui import pictures
 from ars_magica_manager.gui.forms import ConfirmDialog
 from ars_magica_manager.gui.pages import SagaPage
-from ars_magica_manager.gui.seasons import AHEAD, RESULTS, SeasonsPage
+from ars_magica_manager.gui.seasons import AHEAD, NEEDS_YOU, RESULTS, SeasonsPage
 from ars_magica_manager.gui.window import MainWindow
 from ars_magica_manager.models import SeasonPlan, XpAllocation
 from ars_magica_manager.rules import activities as rules
@@ -66,7 +66,7 @@ def test_advancing_plays_the_season_and_shows_its_results(app):
     assert isinstance(page, SeasonsPage)
     assert window.crumb_names()[-1] == "Seasons"
     # The season just played out, not listed again under its own name.
-    assert page.chapters() == [RESULTS, AHEAD]
+    assert page.chapters() == [RESULTS, AHEAD, NEEDS_YOU]
     assert "Summer 1220" in window.advance.text()
 
 
@@ -115,4 +115,4 @@ def test_the_saga_page_opens_the_seasons_kept(app):
     page.seasons.clicked()
     page = window.page()
     assert isinstance(page, SeasonsPage)
-    assert page.chapters() == [AHEAD, "Spring 1220 (2 people)"]
+    assert page.chapters() == [AHEAD, NEEDS_YOU, "Spring 1220 (2 people)"]

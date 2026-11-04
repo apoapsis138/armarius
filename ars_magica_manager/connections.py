@@ -15,7 +15,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from . import neighbours, open_stories, places, references, world
+from . import neighbours, open_stories, places, references, story_chapters, world
 from .models import Character, Covenant, Creature, Familiar, Laboratory, Neighbour, Saga
 from .references import Fact, Ref
 from .rules import sites
@@ -150,6 +150,7 @@ QUERIES: tuple[Callable[[Saga, Any], list[Fact]], ...] = (
     rules_facts,
     linked_from,
     open_stories.facts,
+    story_chapters.facts,
 )
 
 

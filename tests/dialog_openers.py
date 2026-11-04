@@ -428,6 +428,37 @@ async def _grow_a_story(ws) -> None:
     ws.action_grow_story()
 
 
+async def _take_up_a_story(ws) -> None:
+    """Take Up the Tale on an open story, chosen (and focused) on the
+    Region's Open Stories."""
+    await _grow_a_story_chosen(ws)
+    ws.action_take_up_story()
+
+
+async def _grow_a_story_chosen(ws) -> None:
+    """The open story of _grow_a_story, chosen and focused on the Region's
+    Open Stories."""
+    covenant = ws.saga.covenants[0]
+    covenant.played = True
+    if not any(e.name == "A salamander in the lab" for e in covenant.diary):
+        covenant.diary.append(
+            CovenantDiaryEntry(
+                1220,
+                "Summer",
+                "A salamander in the lab",
+                category=STORY_EVENT,
+                status="Open",
+            )
+        )
+    view = ws._current_sheet_view()
+    view.refresh_all()
+    rows = view.query_one("#region-stories-list", scr.SelectableList)
+    await until(lambda: rows.row_count > 1)
+    rows.select_data_index(0)
+    rows.focus()
+    await until(lambda: ws._active_section() == "section-region-stories")
+
+
 def _with_crown_on_a_track(ws) -> None:
     """Add a trigger once the Hollow Crown moves along a track, which a
     trigger can move."""
@@ -1222,6 +1253,8 @@ OPENERS: dict[str, Opener] = {
     "tie trigger": Opener("place", _with_crown_on_a_track),
     "grow story": Opener("region", _grow_a_story),
     "delay threat": Opener("threat", lambda ws: ws.action_delay_threat()),
+    "take up story": Opener("region", _take_up_a_story),
+    "take up threat": Opener("threat", lambda ws: ws.action_take_up_tale()),
     "edit looking ahead": Opener(
         "seasons", lambda ws: ws._core_verb("section-seasons-info", "edit")
     ),

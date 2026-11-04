@@ -1390,6 +1390,32 @@ To undo it, Delay or Hasten again the other way, or Edit the threat.
 
 **See also:** [A threat](help:tab-nb-threat), [How to set up a threat's clock](help:guide-threat-clock)
 
+# Take Up the Tale
+<!-- help: take-up-tale -->
+
+The troupe picks a story up again: a chapter of what it did, met or
+avoided, dated by season, so the Diary keeps a record of each time.
+
+- **On an open story** (a covenant's Diary, the Region's
+  [Open Stories](help:section-region-stories), or
+  [Needs You](help:section-attention)): the chapter is an entry of its
+  own in the same covenant's Diary, of the category Chapter, naming its
+  story. A story grown into a threat is taken up on the threat instead.
+- **On a threat** (its page's More, or a threat's row on Needs You):
+  the chapter goes in the threat's [Diary](help:tab-nb-threat-diary)
+  and each troupe covenant's.
+- **How the Tale Ended**: marking an open story Resolved asks for its
+  last chapter, the same form; Cancel leaves it resolved with none.
+
+**You type:** the year and season (this one, unless you change it) and
+what the troupe did.
+
+**The app works out:** the chapter's Diary entry; the story's (or the
+threat's) details then list its chapters, oldest first, a grown story's
+going on into its threat's.
+
+**See also:** [How to follow a story from its start to a threat](help:guide-story-hook), [Diary tab](help:tab-cov-diary)
+
 # Grow into a Threat
 <!-- help: grow-story -->
 

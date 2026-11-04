@@ -495,11 +495,13 @@ def roll_table(
 
 
 class PlaceDiaryEntry(TypedDict, total=False):
-    """A line of a place's diary."""
+    """A line of a place's diary; on a threat's, `chapter` marks what the
+    troupe did when it took up the tale (story_chapters)."""
 
     year: int | None
     season: str
     text: str
+    chapter: bool
 
 
 def diary(place: Neighbour) -> list[PlaceDiaryEntry]:
@@ -521,7 +523,7 @@ def diary_rows(record: Neighbour, empty: str) -> Grid:
     rows = [
         [
             " ".join(str(p) for p in (e.get("season"), e.get("year")) if p),
-            e.get("text", ""),
+            ("Chapter: " if e.get("chapter") else "") + e.get("text", ""),
         ]
         for e in diary(record)
     ]
@@ -808,23 +810,4 @@ DIARY_TAB = KindTab(
     "Diary",
     "tab-nb-place-diary",
     (KindList(DIARY_SECTION, diary_title, diary_grid, diary_ops),),
-)
-
-#: A threat's Diary: what moved it, delayed it or came of its stages,
-#: kept as a place's is.
-THREAT_DIARY_TAB = KindTab(
-    "Diary",
-    "tab-nb-threat-diary",
-    (
-        KindList(
-            DIARY_SECTION,
-            diary_title,
-            lambda _saga, threat: diary_rows(
-                threat,
-                "Nothing written yet: what moves it, delays it or comes of its "
-                "stages is written here.",
-            ),
-            diary_ops,
-        ),
-    ),
 )

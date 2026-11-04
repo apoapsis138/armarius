@@ -1,20 +1,23 @@
-"""The desktop Seasons page: what is coming (Ahead), the saga's past
-seasons, as the terminal's Seasons node lists them, and the results of
-the season just advanced.
+"""The desktop Seasons page: what is coming (Ahead), what is waiting on
+the storyguide (Needs You), the saga's past seasons, as the terminal's
+Seasons node lists them, and the results of the season just advanced.
 
-It is a Codex: the rail starts with Ahead (gui/ahead.py), then lists the
-seasons, newest first (the season just played out first of all, even
-when the saga keeps no records); a season's chapter shows its record
-(seasons.record_table), grouped by covenant, a row a person.
+It is a Codex: the rail starts with Ahead (gui/ahead.py) and Needs You
+(attention.py), then lists the seasons, newest first (the season just
+played out first of all, even when the saga keeps no records); a
+season's chapter shows its record (seasons.record_table), grouped by
+covenant, a row a person.
 """
 
 from __future__ import annotations
 
 from PySide6.QtWidgets import QVBoxLayout, QWidget
 
-from .. import seasons, world_turns
+from .. import attention, seasons, story_chapters, world_turns
 from ..forms import advance as advance_forms
+from ..forms import take_up as take_up_forms
 from ..models import Saga, SeasonRecord
+from ..sections import ATTENTION_SECTION
 from .ahead import ahead_section, undertakings_section
 from .character_sheet import TextBlock
 from .editing import Run
@@ -29,6 +32,9 @@ RESULTS = "Just played"
 
 #: The chapter of what is coming.
 AHEAD = "Ahead"
+
+#: The chapter of what is waiting on the storyguide.
+NEEDS_YOU = "Needs You"
 
 
 class SeasonsPage(QWidget):
@@ -70,6 +76,7 @@ class SeasonsPage(QWidget):
             if records and records[0] is record:
                 records = records[1:]
         self.codex.add(AHEAD, "season", self._ahead())
+        self.codex.add(NEEDS_YOU, "season", self._needs_you())
         for record in records:
             self.codex.add(seasons.record_label(record), "season", self._record(record))
         if not records and played is None:
@@ -112,6 +119,43 @@ class SeasonsPage(QWidget):
                 empty="Nothing yet: each Winter, Advance Season asks what the "
                 "year brought.",
                 on_choose=show,
+            ),
+        )
+
+    def _needs_you(self) -> QWidget:
+        """What is waiting on the storyguide: a row each, Open going to
+        the record it is dealt with on."""
+        saga = self.saga
+        found = attention.items(saga)
+
+        def show(row: int) -> None:
+            self.codex.inspect(
+                found[row].title, found[row].need, attention.text(saga, row)
+            )
+
+        return scrolling_page(
+            self.p,
+            table_section(
+                attention.title(saga),
+                attention.grid(saga).table(),
+                attention.ops(saga),
+                self.p,
+                self.run,
+                empty=attention.grid(saga).empty,
+                on_choose=show,
+                nouns=("Add", attention.OPEN_TITLE, "Delete"),
+                more=[
+                    (
+                        story_chapters.TAKE_UP,
+                        "more",
+                        lambda row: take_up_forms.command(
+                            saga, ATTENTION_SECTION, row, None
+                        ),
+                        lambda row: take_up_forms.offered(
+                            saga, ATTENTION_SECTION, row, None
+                        ),
+                    )
+                ],
             ),
         )
 

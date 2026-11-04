@@ -123,6 +123,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.75.0 — 2026-11-04
+
+### Orbis
+
+- **Needs You** gathers what is waiting on the storyguide: open stories (those whose Revisit year has come first), experimental effects not yet described, and a threat's dated stages still Pending after their season. It is a section above Looking Ahead in the terminal, a chapter after Ahead on the desktop, and the Seasons panel counts it. Edit (on the desktop, Open) goes to the record where each is dealt with, and a row leaves the list as soon as it is.
+- **Take Up the Tale** writes a chapter of a story: the season, and what the troupe did, met or avoided, as an entry of its own in the covenant's Diary. It is offered on an open story in the Diary, on the Region's Open Stories and on Needs You. A story lists its chapters, oldest first, and resolving one asks for its last chapter, how it ended.
+- A threat takes up the tale too: its chapters go in its Diary and each troupe covenant's, and recording a stage's outcome can take one (What the troupe did). A story grown into a threat now names it (and the covenant's Connections link to it), and the threat shows the story it grew from with that story's chapters.
+- Deleting a story that has chapters asks whether to keep them in the Diary or delete them too.
+- A special result's change, or a modified effect that changes nothing the app works out, is now marked "not yet described" until its words are given, as a side effect was.
+
 ## 3.74.0 — 2026-11-03
 
 ### Mappa Mundi

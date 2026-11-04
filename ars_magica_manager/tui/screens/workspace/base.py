@@ -64,6 +64,7 @@ from ....actions import (
     MenuItem,
     NodeKind,
 )
+from ....commands import Go
 from ....forms import neighbour as neighbour_forms
 from ....forms import season as season_forms
 from ....markup import escape
@@ -304,6 +305,8 @@ _STORYGUIDE_ACTIONS = frozenset(
         "begin_story",
         "delay_threat",
         "grow_story",
+        "take_up_tale",
+        "take_up_story",
         "create_character",
         "create_laboratory",
         "create_familiar",
@@ -1956,13 +1959,17 @@ class WorkspaceBase(Screen[None]):
             if row is None:
                 return
             step = step_of(row)
-        run_steps(
-            self.app,
-            step,
-            lambda end: self._commit_told(
-                end, section, tree=section in self._TREE_SECTIONS
-            ),
-        )
+
+        def finished(end: object) -> None:
+            if isinstance(end, Go):
+                # Opening another record changes nothing, so nothing is saved.
+                self.call_later(
+                    self.run_action, f"open_ref({end.ref.kind!r}, {end.ref.id!r})"
+                )
+                return
+            self._commit_told(end, section, tree=section in self._TREE_SECTIONS)
+
+        run_steps(self.app, step, finished)
 
     def action_add(self) -> None:
         if (handler := self._section_op("add")) is not None:

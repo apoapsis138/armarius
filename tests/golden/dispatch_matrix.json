@@ -2760,7 +2760,7 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit The Hollow Crown",
         "d": "ConfirmScreen",
-        "m": "MenuScreen: Delay or Hasten, Go To",
+        "m": "MenuScreen: Delay or Hasten, Take Up the Tale, Go To",
         "slash": "(disabled)"
       }
     },
@@ -2965,6 +2965,16 @@
         "e": "FieldsDialog: Looking Ahead",
         "d": "(disabled)",
         "m": "(disabled)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attention": {
+      "active": "section-attention",
+      "keys": {
+        "a": "(disabled)",
+        "e": "opens: neighbours crown",
+        "d": "(disabled)",
+        "m": "FieldsDialog: Take Up the Tale: The Hollow Crown",
         "slash": "(disabled)"
       }
     },

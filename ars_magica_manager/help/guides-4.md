@@ -498,6 +498,10 @@ The app ships a content pack for each Tribunal sourcebook it covers, written in 
 
 More books follow in later versions.
 
+<!-- gui -->
+A pack can also bring its Tribunal's maps, with a pin for each of its covenants and places, to the saga's [Atlas](help:saga-atlas). Until a map's picture is drawn, it comes as a placeholder in the map's shape, its pins already on it. They are the pack's pins: move them, or take them off the map, and importing the pack again leaves them as you left them.
+<!-- /gui -->
+
 ### Starting a saga from a pack
 <!-- help: guide-book-packs-start -->
 
@@ -1169,15 +1173,56 @@ told, or grows into a threat.
 2. **Find them.** The Region's [Open Stories](help:section-region-stories)
    lists every open one of the troupe's covenants; a character's or
    laboratory's Connections lists its own.
-3. **Tell it.** When the troupe plays it out, Edit it and mark it
-   **Resolved**.
-4. **Or let it grow.** Left alone, it can become a threat of the Region:
+3. **Take it up.** Each time the troupe plays some of it, **Take Up the
+   Tale** writes a chapter: the season, and what was done, met or
+   avoided (see [Take Up the Tale](help:take-up-tale)). The story's
+   details list its chapters.
+4. **Tell it.** When the troupe plays it out, Edit it and mark it
+   **Resolved**: the app asks for its last chapter, how it ended.
+5. **Or let it grow.** Left alone, it can become a threat of the Region:
    **Grow into a Threat** makes one from its words, and marks the story
    Grown. Add the threat's stages, and give it a clock if a place's
    trigger should move it (see
-   [How to set up a threat's clock](help:guide-threat-clock)).
+   [How to set up a threat's clock](help:guide-threat-clock)). From then
+   on, take up the tale on the threat: its chapters go in its Diary, and
+   recording a stage's outcome can take one too (What the troupe did).
 
 **See also:** [Diary tab](help:tab-cov-diary), [Grow into a Threat](help:grow-story), [A threat](help:tab-nb-threat)
+
+# How to clear what needs you
+<!-- help: guide-needs-you -->
+
+The saga leaves things for the storyguide to settle: a story an
+experiment started, a side effect still to be named, a threat's stage
+whose season has passed. Needs You gathers them in one list.
+
+1. **Look.** On the Seasons page,
+<!-- tui -->
+   the Seasons panel's **Needs you** counts them, and
+   [Needs You](help:section-attention) lists them above Looking Ahead.
+<!-- /tui -->
+<!-- gui -->
+   the [Needs You](help:section-attention) chapter, after Ahead, lists
+   them.
+<!-- /gui -->
+   Choose a row to read what it needs and where.
+2. **Open it.**
+<!-- tui -->
+   Edit (`e`)
+<!-- /tui -->
+<!-- gui -->
+   **Open**
+<!-- /gui -->
+   goes to the record: the covenant for a story (its Diary), the magus
+   for a spell, the holder for an enchanted item, the familiar for a
+   bond power, the threat for a stage.
+3. **Deal with it.** Tell or grow the story, or change its Revisit year;
+   describe each experimental effect on its form; record what became of
+   the stage, or delay the threat.
+4. **It goes.** The row leaves the list as soon as nothing is left to
+   do: there is nothing to mark as read.
+
+**See also:** [Open Stories](help:section-region-stories), [How to follow a story from its start to a threat](help:guide-story-hook), [Delay or Hasten](help:threat-delay)
 
 # How to build a tomb
 <!-- help: guide-tomb -->

@@ -131,6 +131,7 @@ from .covenant import CENSURE_EXPELLED as CENSURE_EXPELLED
 from .covenant import CENSURE_LOWERED as CENSURE_LOWERED
 from .covenant import CENSURE_WITHHELD as CENSURE_WITHHELD
 from .covenant import CENSURES as CENSURES
+from .covenant import CHAPTER as CHAPTER
 from .covenant import CHARTER_SECTIONS as CHARTER_SECTIONS
 from .covenant import CLAUSE_AMENDED as CLAUSE_AMENDED
 from .covenant import CLAUSE_BROKEN as CLAUSE_BROKEN

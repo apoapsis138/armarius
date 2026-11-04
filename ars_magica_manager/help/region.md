@@ -128,7 +128,11 @@ concerns, the covenant whose Diary keeps it, and the season it arose.
 An experiment's story event, a Disaster's covenant story and Suggest a
 Story write one, and you add them by hand in a covenant's Diary (as a
 Story Event). Edit opens its Diary entry: mark it **Resolved** once it
-is told, and it leaves the list.
+is told, and it leaves the list (resolving asks for its last chapter).
+**Take Up the Tale** writes a chapter of what the troupe did; a story's
+chapters show under its words. The Seasons page's
+[Needs You](help:section-attention) lists them too, those whose Revisit
+year has come first.
 <!-- tui -->
 More (`m`) > **Grow into a Threat** makes the chosen story a threat of
 the Region (see [Grow into a Threat](help:grow-story)).
@@ -1172,6 +1176,13 @@ season asks whether the troupe **failed** it (the threat moves on) or
 **kept** it (it stays). See
 [How to set up a threat's clock](help:guide-threat-clock).
 
+**Take Up the Tale**, in the threat's More (on the desktop, its button),
+writes a chapter: what the troupe did, met or avoided, in the threat's
+[Diary](help:tab-nb-threat-diary) and each troupe covenant's. A threat
+grown from a story names it (**Grew from**, a link to the covenant whose
+Diary keeps it), and its Diary shows that story's chapters first. See
+[Take Up the Tale](help:take-up-tale).
+
 **Delay or Hasten**, in the threat's More, pushes it later or brings it
 sooner when something the troupe did changes it: a dated threat's stages
 still to come all move by the seasons you give (the dates typed stay as
@@ -1198,6 +1209,9 @@ reached; mark one **Happened** to say it came anyway, or **Stopped** or
 what the stage says follows (its If ignored, If stopped or If turned) in
 the threat's Diary and each troupe covenant's, so the troupe sees what
 comes of it. The stage reached is in bold. Add, edit or delete one.
+**What the troupe did**, on the stage's form, is optional: anything
+typed there is written as a chapter of the threat's tale (in its Diary
+and the troupe's covenants'), and not kept on the stage.
 <!-- gui -->
 Click a stage to read it in full in the Inspector: when it comes, what
 became of it, its clues, and what happens if it is ignored, stopped or
@@ -1209,9 +1223,11 @@ turned.
 
 What moved the threat, season by season: each answer to a trigger tied
 to it (failed or kept), each Delay or Hasten and its reason, and what
-came of a stage marked Happened, Stopped or Turned. It works as a
-place's [Diary](help:section-nb-place-diary): add, edit or delete an
-entry.
+came of a stage marked Happened, Stopped or Turned, and its chapters
+(marked "Chapter:"), what the troupe did when it took up the tale. A
+threat grown from a story shows that story and its chapters above the
+list. It works as a place's [Diary](help:section-nb-place-diary): add,
+edit or delete an entry.
 
 # A place
 <!-- help: tab-nb-place -->

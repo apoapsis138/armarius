@@ -31,10 +31,14 @@ COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
     "Favours",
     "Covenant Season",
     "Story Event",
+    "Chapter",
 )
 #: The category whose entries have a Status, a linked Boon/Hook and a
 #: Revisit year.
 STORY_EVENT = "Story Event"
+#: The category of a chapter: what the troupe did when it took up a
+#: story (its `story_id`) or a threat (its `threat_id`).
+CHAPTER = "Chapter"
 #: A Story Event's Status: still to be told, told, or grown into a
 #: threat of the Region (open_stories).
 STORY_EVENT_STATUSES: tuple[str, ...] = ("Open", "Resolved", "Grown into a threat")
@@ -56,7 +60,9 @@ class CovenantDiaryEntry:
     covenant's Boons/Hooks) and `revisit_year` are for Story Events, as
     are `concerns` (what the story is about: "" the covenant, "region",
     or "characters:<id>" / "laboratories:<id>") and `threat_id` (the
-    threat it grew into);
+    threat it grew into). `id` names a story once it has a chapter; a
+    Chapter's `story_id` is its story's id, or its `threat_id` the threat
+    it took up;
     `build_points` for a Story Event linked to a Hidden Resources Boon: the
     points of that Boon's pool it unlocked."""
 
@@ -75,6 +81,8 @@ class CovenantDiaryEntry:
     build_points: int | None = None
     concerns: str = ""
     threat_id: str | None = None
+    id: str = ""
+    story_id: str = ""
 
 
 class HistoryEra(TypedDict):

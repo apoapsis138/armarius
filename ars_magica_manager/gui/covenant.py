@@ -38,6 +38,7 @@ from .. import (
     manors,
     mobile_covenants,
     seasons,
+    story_chapters,
     town_charter,
     vis,
     world,
@@ -62,6 +63,7 @@ from ..forms import library as library_forms
 from ..forms import menu as menu_forms
 from ..forms import possession as possession_forms
 from ..forms import season as season_forms
+from ..forms import take_up as take_up_forms
 from ..forms import world as world_forms
 from ..models import (
     FULL,
@@ -77,6 +79,7 @@ from ..rules import covenfolk, library
 from ..sections import (
     COV_CHARTER_LORDS_SECTION,
     COV_CHARTER_TERMS_SECTION,
+    COV_DIARY_TAB,
     GUESTS_SECTION,
     WHEREABOUTS_SECTION,
 )
@@ -1394,7 +1397,7 @@ class CovenantPage(QWidget):
             if details:
                 card.column.addWidget(text(details, p["label"], wrap=True))
             card.clicked = lambda index=entry.index, name=entry.name: self.inspect(
-                name, "Diary", cov_diary.info_text(covenant, index)
+                name, "Diary", cov_diary.info_text(covenant, index, self.saga)
             )
             cards.append(card)
         _choose_cards_by(cards, [entry.index for entry in entries], chooser)
@@ -1404,7 +1407,24 @@ class CovenantPage(QWidget):
                 f"Diary ({len(cards)})",
                 p,
                 card_grid(cards, 2) if cards else _none("Nothing written yet.", p),
-                buttons=verb_buttons(ops, chooser, self.run, p),
+                buttons=verb_buttons(
+                    ops,
+                    chooser,
+                    self.run,
+                    p,
+                    more=[
+                        (
+                            story_chapters.TAKE_UP,
+                            "more",
+                            lambda row: take_up_forms.command(
+                                self.saga, COV_DIARY_TAB, row, covenant
+                            ),
+                            lambda row: take_up_forms.offered(
+                                self.saga, COV_DIARY_TAB, row, covenant
+                            ),
+                        )
+                    ],
+                ),
             ),
         )
 

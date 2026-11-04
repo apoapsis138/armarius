@@ -45,6 +45,7 @@ from .. import (
     selling,
     session_end,
     storage,
+    story_chapters,
     threats,
     tourney_season,
     traditions,
@@ -177,6 +178,9 @@ NOT_ON_PAGES = frozenset(
         "roll_table",
         # The desktop draws it as the Open Stories' own button.
         "grow_story",
+        # The desktop draws it as a button on the Diary, Open Stories and
+        # Needs You.
+        "take_up_story",
         # The desktop's Whereabouts draws it as its Add.
         "add_stop",
         "battle_event",
@@ -522,6 +526,8 @@ MANAGE: dict[str, str] = {
     "first due next season at the soonest.",
     "grow_story": "Make the chosen open story a threat of the Region, from "
     "its words; the story is marked Grown, naming the threat.",
+    "take_up_tale": "Write a chapter of the threat's tale: what the troupe "
+    "did, met or avoided, in its Diary and the troupe's covenants'.",
     "delay_threat": "Push the threat later or bring it sooner: its dated stages "
     "still to come move together, or it moves back or on along its track; "
     "the reason goes in its Diary.",
@@ -1854,6 +1860,13 @@ def _begin_command(page: Page) -> Command:
     return threats.begin_command(page.saga, record)
 
 
+def _take_up_command(page: Page) -> Command:
+    record = page.record_to_delete()
+    if not isinstance(record, Neighbour) or threats.is_dormant(record):
+        return Refuse(story_chapters.TAKE_UP, "Only a threat under way is taken up.")
+    return story_chapters.take_up_threat(page.saga, record)
+
+
 def _delay_command(page: Page) -> Command:
     record = page.record_to_delete()
     if not threats.is_threat(record) or threats.is_dormant(record):
@@ -1925,6 +1938,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "found_covenant": _found_command,
     "begin_story": _begin_command,
     "delay_threat": _delay_command,
+    "take_up_tale": _take_up_command,
     "edit_saga": lambda page: creation_forms.saga_details_form(page.saga),
     "create_covenant": lambda page: creation_forms.new_covenant_form(page.saga),
     "create_tribunal": lambda page: tribunal_forms.new_tribunal_form(page.saga),

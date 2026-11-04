@@ -149,6 +149,8 @@ REGION_UNIVERSITIES_SECTION = "section-region-universities"
 REGION_FACTIONS_SECTION = "section-region-factions"
 REGION_THREATS_SECTION = "section-region-threats"
 REGION_PLACES_SECTION = "section-region-places"
+#: A covenant's Diary, a flat tab whose list a / e / d act on.
+COV_DIARY_TAB = "tab-cov-diary"
 #: The troupe's covenants' open Story Events, together (open_stories).
 REGION_STORIES_SECTION = "section-region-stories"
 #: A neighbour's sheet's top panel.
@@ -232,6 +234,8 @@ CREATURE_VIS_SECTION = "section-cr-vis"
 #: The saga's Seasons sheet: its top panel, what is coming, and the
 #: seasons recorded; and a covenant's own Ahead, on its Seasons tab.
 SEASONS_INFO_SECTION = "section-seasons-info"
+#: What is waiting on the storyguide (attention.py), above what is coming.
+ATTENTION_SECTION = "section-attention"
 AHEAD_SECTION = "section-ahead"
 SEASONS_RECORDED_SECTION = "section-seasons-recorded"
 COV_AHEAD_SECTION = "section-cov-ahead"
@@ -406,6 +410,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     CREATURE_POWERS_SECTION: frozenset({"add", "edit", "remove"}),
     CREATURE_VIS_SECTION: frozenset({"add", "edit", "remove"}),
     SEASONS_INFO_SECTION: frozenset({"edit"}),
+    ATTENTION_SECTION: frozenset({"edit"}),
     AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
     COV_AHEAD_SECTION: frozenset({"add", "edit", "remove"}),
     WORLD_TURNS_SECTION: frozenset({"remove"}),
