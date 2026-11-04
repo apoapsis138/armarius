@@ -7,13 +7,13 @@ This guide takes you from the start screen to a saga you can play: a saga with i
 <!-- help: guide-getting-started-saga -->
 
 <!-- tui -->
-1. The app opens on its [title page](help:title-page). Choose **All Sagas** to go to the [saga picker](help:saga-picker), which lists the sagas saved on this computer ("No sagas yet" the first time).
-2. Press `n`. The Create a New Saga form asks for a Name and a Storyguide (both required), a Start Year and Start Season, and an optional one-line Description. Choose Create.
+1. The app opens on its [title page](help:title-page). Choose **New Saga**: the app goes to the [saga picker](help:saga-picker), which lists the sagas saved on this computer ("No sagas yet" the first time), and opens its New Saga form.
+2. (From the saga picker itself, press `n` for the same form.) The Create a New Saga form asks for a Name and a Storyguide (both required), a Start Year and Start Season, and an optional one-line Description. Choose Create.
 3. The new saga appears in the list. Highlight it with the arrow keys and press Enter to open it in the [workspace](help:workspace).
 <!-- /tui -->
 <!-- gui -->
-1. The app opens on its [title page](help:title-page). Choose **All Sagas** to go to the [Sagas page](help:saga-picker), which shows the sagas saved on this computer as cards ("No sagas yet" the first time).
-2. Click **New Saga** above the cards. The Create a New Saga form asks for a Name and a Storyguide (both required), a Start Year and Start Season, and an optional one-line Description. Choose Create.
+1. The app opens on its [title page](help:title-page). Choose **New Saga**: the app goes to the [Sagas page](help:saga-picker), which shows the sagas saved on this computer as cards ("No sagas yet" the first time), and opens its New Saga form.
+2. (From the Sagas page itself, click **New Saga** above the cards for the same form.) The Create a New Saga form asks for a Name and a Storyguide (both required), a Start Year and Start Season, and an optional one-line Description. Choose Create.
 3. The new saga opens at once, on [its page](help:saga). Next time, click its card on the Sagas page, or choose **Open Saga** on the title page to go back to the saga you had open last.
 <!-- /gui -->
 

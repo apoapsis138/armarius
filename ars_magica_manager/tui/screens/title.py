@@ -142,6 +142,8 @@ class TitleScreen(Screen[None]):
             return
         if key == tp.OPEN and self.page.saga_id is not None:
             picker.open_saga(self.page.saga_id)
+        elif key == tp.NEW:
+            picker.action_create_saga()
         elif key == tp.HELP:
             picker.action_help()
 

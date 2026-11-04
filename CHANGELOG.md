@@ -123,6 +123,13 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.76.0 — 2026-11-04
+
+### Illuminatio
+
+- The title page has a **New Saga** button, between All Sagas and Help: it goes to the sagas and opens the New Saga form at once, and the new saga opens when you save it. Cancel and you stay on the sagas. The terminal's title page offers it too.
+- The title page matches Sortilegus's: All Sagas now reads "Choose one to open" ("None saved yet" before the first).
+
 ## 3.75.0 — 2026-11-04
 
 ### Orbis

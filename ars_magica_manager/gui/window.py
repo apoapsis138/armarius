@@ -477,7 +477,8 @@ class MainWindow(QMainWindow):
 
     def leave_title(self, key: str) -> None:
         """Go on from the title page by the way chosen (title_page.OPEN,
-        SAGAS or HELP)."""
+        SAGAS, NEW or HELP). New Saga goes by the shelf, so cancelling its
+        form leaves the shelf on show."""
         title, self.title = self.title, None
         if title is None:
             return
@@ -490,7 +491,9 @@ class MainWindow(QMainWindow):
         self.saga_ids = storage.list_sagas()
         self.saga = None
         self.go([Place(SHELF)])
-        if key == title_page.HELP:
+        if key == title_page.NEW:
+            self.new_saga()
+        elif key == title_page.HELP:
             self.open_help()
 
     # The shelf of sagas

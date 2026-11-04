@@ -1,6 +1,6 @@
 """The title page the app opens on: its name and tagline, the version and
-the name of its major version, and the three ways on (the saga opened last, every
-saga, and Help). Both front-ends lay out the same TitlePage.
+the name of its major version, and the ways on (the saga opened last, every
+saga, a new saga, and Help). Both front-ends lay out the same TitlePage.
 
 The saga opened last is remembered in the settings, so Open Saga (and
 Enter) can go straight back to it.
@@ -19,7 +19,7 @@ TAGLINE = "A saga manager for Ars Magica"
 LAST_SAGA = "last_saga"
 
 #: The ways on, by key.
-OPEN, SAGAS, HELP = "open", "sagas", "help"
+OPEN, SAGAS, NEW, HELP = "open", "sagas", "new", "help"
 
 
 @dataclass(frozen=True)
@@ -94,8 +94,9 @@ def title_page(saga_ids: list[str] | None = None) -> TitlePage:
         TitleChoice(
             SAGAS,
             "All Sagas",
-            "Choose or begin another" if saga_ids else "Begin your first saga",
+            "Choose one to open" if saga_ids else "None saved yet",
         )
     )
+    choices.append(TitleChoice(NEW, "New Saga", "Begin a saga of your own"))
     choices.append(TitleChoice(HELP, "Help", "The guides and rules"))
     return TitlePage(NAME, TAGLINE, edition, tuple(choices), saga_id)

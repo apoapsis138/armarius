@@ -5,6 +5,7 @@ The page the app opens on: the illuminated A and the name Armarius, the tagline,
 
 - **Open Saga** opens the saga you had open last (or the only saga, if there is one). It isn't offered when there is no saga to open.
 - **All Sagas** goes to the [saga picker](help:saga-picker), to choose a saga, start a new one or delete one.
+- **New Saga** goes to the saga picker and opens its New Saga form at once; the new saga opens when you save it. Cancel the form and you stay on the picker.
 - **Help** opens Help.
 
 <!-- tui -->

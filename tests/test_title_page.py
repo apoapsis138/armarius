@@ -9,6 +9,7 @@ from ars_magica_manager import __version__, settings, storage
 from ars_magica_manager import title_page as tp
 from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens import WorkspaceScreen
+from ars_magica_manager.tui.screens.fields import FieldsDialog
 from ars_magica_manager.tui.screens.help import HelpScreen
 from ars_magica_manager.tui.screens.saga_picker import SagaPickerScreen
 from ars_magica_manager.tui.screens.title import TitleScreen, banner
@@ -79,8 +80,9 @@ def test_the_page_names_the_app_its_version_and_release():
 
 def test_with_no_sagas_it_offers_to_begin_one():
     page = tp.title_page([])
-    assert _keys(page) == [tp.SAGAS, tp.HELP]
-    assert page.choices[0].detail == "Begin your first saga"
+    assert _keys(page) == [tp.SAGAS, tp.NEW, tp.HELP]
+    assert page.choices[0].detail == "None saved yet"
+    assert page.choices[1].label == "New Saga"
     assert page.saga_id is None
 
 
@@ -93,7 +95,7 @@ def test_open_saga_opens_the_saga_opened_last():
     assert tp.title_page(ids).saga_id is None  # two sagas, none opened yet
     tp.remember_saga("second")
     page = tp.title_page(ids)
-    assert _keys(page) == [tp.OPEN, tp.SAGAS, tp.HELP]
+    assert _keys(page) == [tp.OPEN, tp.SAGAS, tp.NEW, tp.HELP]
     assert page.saga_id == "second"
     assert page.choices[0].detail == "The Second Saga"
 
@@ -153,6 +155,19 @@ async def test_the_title_pages_help_choice_opens_help_over_the_picker():
     app.show_title = True
     async with app.run_test(size=(120, 45)) as pilot:
         assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
-        await pilot.press("down", "enter")  # All Sagas, then Help
+        await pilot.press("down", "down", "enter")  # All Sagas, New Saga, Help
         assert await wait_until(pilot, lambda: isinstance(app.screen, HelpScreen))
         assert isinstance(app.screen_stack[-2], SagaPickerScreen)
+
+
+async def test_the_title_pages_new_saga_opens_the_new_saga_form_over_the_picker():
+    app = ArsMagicaManagerApp()
+    app.show_title = True
+    async with app.run_test(size=(120, 45)) as pilot:
+        assert await wait_until(pilot, lambda: isinstance(app.screen, TitleScreen))
+        await pilot.press("down", "enter")  # All Sagas, then New Saga
+        assert await wait_until(pilot, lambda: isinstance(app.screen, FieldsDialog))
+        assert "Create a New Saga" in "\n".join(screen_lines(app))
+        assert isinstance(app.screen_stack[-2], SagaPickerScreen)
+        await pilot.press("escape")
+        assert await wait_until(pilot, lambda: isinstance(app.screen, SagaPickerScreen))
