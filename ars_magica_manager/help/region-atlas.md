@@ -36,7 +36,7 @@ A map is a picture of a region: a PNG, WebP or JPEG you drew or exported, such a
 ### Pins
 <!-- help: atlas-pins; gui -->
 
-The pins belong to the saga. A Tribunal pack may bring a pin for each of its covenants and places; you add, move and take off pins of your own.
+The pins belong to the saga. A Tribunal pack may bring its maps with a pin for each of its covenants and places (see [How to start a saga from a sourcebook](help:guide-book-packs)); you add, move and take off pins of your own, and importing the pack again never moves them.
 
 - **Place on Map** lists the covenants, neighbours and creatures with no pin on the map yet. Choose one, then click where it is on the map (Esc stops).
 - **Drag** a record's own pin to move it. A record shown at another's pin can't be dragged: place it to give it a pin of its own.

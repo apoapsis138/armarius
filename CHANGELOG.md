@@ -123,6 +123,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.77.0 — 2026-11-05
+
+### Mappa Mundi
+
+- Content packs carry their Tribunals' maps and the pins of their records. Importing a pack adds its pins only where the saga has none of that record on that map, so importing it again never moves a pin you placed or brings back one you took off; a pack's map of a Tribunal the saga already has joins it, or is matched to its map of the same name.
+
+### Peregrinatio
+
+- The Tribunal packs can ship a map with a pin for each covenant and place, placed by clicking on the Atlas and written into the pack, on a placeholder until the map is drawn. No pack has one yet.
+
 ## 3.76.0 — 2026-11-04
 
 ### Illuminatio

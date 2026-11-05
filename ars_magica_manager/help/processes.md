@@ -1125,6 +1125,12 @@ those records skipped), what else is skipped (a calendar entry already in
 the calendar, or one for a covenant that isn't here), and the links kept
 and dropped. Importing the same pack twice adds nothing the second time.
 
+A pack carries its Tribunals' maps and the pins of the records it holds.
+Importing it adds them as the pack's: a pin goes in only where the saga
+has none of that record on that map, so a pin you moved stays where you
+put it and one you took off stays off. A map of a Tribunal the saga
+already has joins it, or is matched to its map of the same name.
+
 **Starting a saga from a pack:** the Create a New Saga form offers **Start
 from a pack**, listing the packs shipped with the app (one per Tribunal
 sourcebook; see [How to start a saga from a sourcebook](help:guide-book-packs))

@@ -24,11 +24,13 @@ from .. import catalog, sourcebooks, storage
 from .. import tombs as tomb_rules
 from ..arms import Arms
 from ..arts import ART_LOOKUP
+from ..atlas import Point, maps
 from ..models import (
     ONCE,
     REPEATS,
     Ability,
     ArtScore,
+    AtlasMap,
     BodyVis,
     Book,
     BoundBeing,
@@ -51,6 +53,7 @@ from ..models import (
     MasteryAbility,
     NamedDescription,
     Neighbour,
+    Pin,
     Possession,
     Ruling,
     Saga,
@@ -65,6 +68,7 @@ from ..models import (
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
 from ..places import RUINED
+from ..references import KINDS
 from ..rules import aging, mobile, warping
 from ..rules import creation_access as access
 from ..rules import egyptian_tombs as et
@@ -323,6 +327,46 @@ class Builder:
         )
         self.saga.tribunals.append(tribunal)
         return tribunal
+
+    # -- the Atlas --
+
+    def atlas_map(
+        self,
+        name: str,
+        *,
+        tribunal: Tribunal | None = None,
+        picture: str = "",
+        width: int = 3,
+        height: int = 2,
+        credit: str = "",
+        scale_bar: Sequence[float] = (),
+        scale_miles: float = 0.0,
+    ) -> AtlasMap:
+        """A map of `tribunal` (the saga's own, for a region with none):
+        `picture` a file in data/packs/maps/, or none for a placeholder in
+        the shape `width` by `height`."""
+        made = AtlasMap(
+            id=storage.generate_unique_id(name, [m.id for m, _t in maps(self.saga)]),
+            name=name,
+            picture=picture,
+            width=width,
+            height=height,
+            credit=credit,
+            scale_bar=list(scale_bar),
+            scale_miles=scale_miles,
+        )
+        (tribunal.maps if tribunal is not None else self.saga.maps).append(made)
+        return made
+
+    def pin(
+        self, atlas_map: AtlasMap, record: Covenant | Neighbour | Creature, at: Point
+    ) -> Pin:
+        """The pack's pin for `record` on `atlas_map`, `at` (x, y) as
+        fractions of the map's width and height."""
+        kind = KINDS[type(record)]
+        made = Pin(atlas_map.id, kind, record.id, at[0], at[1], from_pack=True)
+        self.saga.pins.append(made)
+        return made
 
     def gild(
         self,

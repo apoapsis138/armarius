@@ -62,13 +62,14 @@ PACKS: dict[str, BookPack] = {}
 
 
 def _finished(key: str, assemble: Callable[..., Builder]) -> Callable[..., Builder]:
-    """`assemble`, with the pack's waters, and what every pack keeps out of
-    its public text."""
+    """`assemble`, with the pack's waters, its maps and base pins
+    (pins.py), and what every pack keeps out of its public text."""
 
     @wraps(assemble)
     def finished(*args: Any) -> Builder:
         b = assemble(*args)
         waters.chart(key, b, *args)
+        pins.chart(key, b)
         builder.hide_holdings(b.saga)
         return b
 
@@ -154,6 +155,7 @@ from . import (  # noqa: F401
     normandy,
     novgorod,
     overlays,
+    pins,
     provence,
     rhine,
     stonehenge,

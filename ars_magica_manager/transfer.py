@@ -57,6 +57,7 @@ from .models import (
     Familiar,
     Laboratory,
     Neighbour,
+    Pin,
     Saga,
     Spell,
     Tribunal,
@@ -220,6 +221,13 @@ def bundle_data(
         for holder in [*characters, *familiars, *labs, *creatures]
         for vf in holder.virtues_flaws
     } | {bh.vf_id for c in covenants for bh in c.boons_hooks}
+    # The pins on the exported Tribunals' maps of the records exported.
+    map_ids = {m.id for t in tribunals for m in t.maps}
+    exported = (
+        {("covenants", c.id) for c in covenants}
+        | {("neighbours", n.id) for n in neighbours}
+        | {("creatures", c.id) for c in creatures}
+    )
     mini = Saga(
         id="export",
         name=saga.name,
@@ -242,6 +250,13 @@ def bundle_data(
             e for e in saga.custom_lab_virtues_flaws if e.id in held
         ],
         custom_boons_hooks=[e for e in saga.custom_boons_hooks if e.id in held],
+        pins=[
+            p
+            for p in saga.pins
+            if p.map_id in map_ids
+            and not p.hidden
+            and (p.kind, p.record_id) in exported
+        ],
         custom_abilities=[
             a
             for a in saga.custom_abilities
@@ -499,6 +514,12 @@ class ImportPlan:
     new_labs: list[tuple[Character, str]] = field(default_factory=list)
     #: The saga's own maps a whole saga's import adds.
     maps: list[AtlasMap] = field(default_factory=list)
+    #: Maps of a Tribunal the saga already has, which the file adds to it:
+    #: (the Tribunal's id, the map).
+    maps_for: list[tuple[str, AtlasMap]] = field(default_factory=list)
+    #: The pins the import adds; a pack's never move or double one the
+    #: saga has (Pin.from_pack).
+    pins: list[Pin] = field(default_factory=list)
     #: Where the export's pictures are read from (None: it carries none).
     pictures: Pictures | None = None
 
@@ -805,6 +826,7 @@ def _plan_tribunals(job: _Import) -> None:
         )
         if known is not None:
             job.tribunal_map[tribunal.id] = known.id
+            _match_maps(job, known, tribunal.maps)
             if known in job.target.tribunals:
                 line = f"Tribunal {known.name}"
                 if job.match:
@@ -845,6 +867,56 @@ def _new_maps(job: _Import, found: list[AtlasMap]) -> list[AtlasMap]:
         job.map_map[atlas_map.id] = new_id
         added.append(replace(atlas_map, id=new_id))
     return added
+
+
+def _match_maps(job: _Import, known: Tribunal, found: list[AtlasMap]) -> None:
+    """A Tribunal the saga already has: each of the file's maps of it is
+    the saga's own of that name, or one more the import adds to it."""
+    for atlas_map in found:
+        key = atlas_map.name.strip().casefold()
+        mine = next((m for m in known.maps if m.name.strip().casefold() == key), None)
+        if mine is not None:
+            job.map_map[atlas_map.id] = mine.id
+            continue
+        [added] = _new_maps(job, [atlas_map])
+        if known in job.plan.tribunals:
+            known.maps.append(added)
+        else:
+            job.plan.maps_for.append((known.id, added))
+
+
+#: A pin's kind (a Ref's) as the import's record kinds.
+_PIN_KINDS: dict[str, str] = {
+    "covenants": COVENANT,
+    "neighbours": NEIGHBOUR,
+    "creatures": CREATURE,
+    "laboratories": LABORATORY,
+}
+
+
+def _plan_pins(job: _Import) -> None:
+    """The file's pins, on the maps and records they became. A pack's pin
+    is added only where the saga has no pin of that record on that map
+    (one taken off it too), so importing a pack again never moves or
+    doubles a pin; it is marked as the pack's."""
+    placed = {(p.map_id, p.kind, p.record_id) for p in job.target.pins}
+    for pin in job.source.pins:
+        map_id = job.map_map.get(pin.map_id)
+        record_kind = _PIN_KINDS.get(pin.kind)
+        record_id = job.link(record_kind, pin.record_id) if record_kind else None
+        if map_id is None or record_id is None:
+            continue
+        if job.match and (map_id, pin.kind, record_id) in placed:
+            continue
+        placed.add((map_id, pin.kind, record_id))
+        job.plan.pins.append(
+            replace(
+                pin,
+                map_id=map_id,
+                record_id=record_id,
+                from_pack=pin.from_pack or job.match,
+            )
+        )
 
 
 def _plan_maps(job: _Import) -> None:
@@ -1218,6 +1290,7 @@ _PLANNERS: dict[str, Callable[[_Import], None]] = {
     NEIGHBOUR: _plan_neighbours,
     CREATURE: _plan_creatures,
     "calendar": _plan_calendar,
+    "pins": _plan_pins,
 }
 
 
@@ -1325,7 +1398,11 @@ def _copy_pictures(target: Saga, plan: ImportPlan) -> None:
     pictures = plan.pictures
     if pictures is None:
         return
-    for atlas_map in [*(m for t in plan.tribunals for m in t.maps), *plan.maps]:
+    for atlas_map in [
+        *(m for t in plan.tribunals for m in t.maps),
+        *plan.maps,
+        *(m for _t, m in plan.maps_for),
+    ]:
         name = atlas_map.picture
         if not name or (storage.maps_dir() / name).is_file():
             continue
@@ -1367,6 +1444,11 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     for owner, lab_id in plan.new_labs:
         owner.assigned_lab_id = lab_id
     target.maps += plan.maps
+    for tribunal_id, atlas_map in plan.maps_for:
+        found = target.tribunal(tribunal_id)
+        if found is not None:
+            found.maps.append(atlas_map)
+    target.pins += plan.pins
     _copy_pictures(target, plan)
     places.sync(target)
     catalog.use_saga(target)
