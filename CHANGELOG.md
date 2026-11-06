@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.78.1 — 2026-11-06
+
+### Florilegium
+
+- The Vast and Labyrinthine Boon no longer carries the Writ of Crenellation's text at the end of its description; Writ of Crenellation keeps its own entry (Covenants p. 15).
+
 ## 3.78.0 — 2026-11-06
 
 ### Orbis

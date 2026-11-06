@@ -391,6 +391,21 @@ def test_building_boons_add_to_the_buildings_expense():
     assert by_id["covbh_boon_minor_important_building"].repeatable
 
 
+def test_no_description_carries_another_entrys_text():
+    # A description that runs on into "Other Entry: ..." is two book entries
+    # transcribed as one (Covenants p. 15 prints Vast and Labyrinthine and
+    # Writ of Crenellation as separate Boons).
+    entries = list(catalog.load_covenant_boon_hook_catalog_by_id().values())
+    names = {e.name for e in entries}
+    merged = sorted(
+        f"{e.id} contains '{n}:'"
+        for e in entries
+        for n in names
+        if n != e.name and f"{n}:" in e.description
+    )
+    assert merged == []
+
+
 def test_unknown_modifier_is_rejected():
     with pytest.raises(ValueError, match="applies_to"):
         CovenantBoonHookDef.from_dict(
