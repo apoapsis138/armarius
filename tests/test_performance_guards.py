@@ -53,7 +53,9 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "university": 40,
     "faction": 40,
     "threat": 40,
-    "place": 42,  # the sample place is a tomb: its Tomb tab adds its (unbuilt) pane
+    # The sample place is a tomb: its Tomb tab adds its (unbuilt) pane; its
+    # Vis Sources section and list: 4.
+    "place": 46,
     "seasons": 40,
     "bestiary": 30,
     "creature": 50,

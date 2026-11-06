@@ -358,6 +358,10 @@ def sync(saga: Saga) -> None:
     ]:
         if record.place_id is not None and place(saga, record.place_id) is None:
             record.place_id, record.place_level = None, 0
+    for covenant in saga.covenants:
+        for source in covenant.possessions:
+            if source.place_id is not None and place(saga, source.place_id) is None:
+                source.place_id, source.place_level = None, 0
     _forget_gone(saga)
     for covenant in saga.covenants:
         stop = covenant_stop(saga, covenant)

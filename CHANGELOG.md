@@ -123,6 +123,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.81.0 — 2026-11-06
+
+### Orbis
+
+- A covenant's vis source can name the **Place** it is gathered at, or one of its regio levels; Location stays a free note. A source whose Location is exactly one Place's name is placed there when an older saga opens.
+- A place has a **Vis Sources** list: the sources covenants hold there, each with its covenant, and sources no covenant holds yet, added and edited on the place. Choosing a covenant in **Claimed by** gives one to it. A place's **Vis** says what its sources give a year by Art, and what the places inside it give, so a region shows all the vis in its lands.
+- A source gathered in an aura not of Magic shows its taint, such as "Faerie vis" (Definitive Edition p. 422).
+- The Region by place lists each vis source under its place.
+
 ## 3.80.1 — 2026-11-06
 
 ### Illuminatio

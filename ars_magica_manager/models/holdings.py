@@ -280,6 +280,10 @@ class Possession:
     #: it has dwindled since (seasons.dwindle); None until its first year end.
     dwindling_from: int | None = None
     dwindled_years: int = 0
+    #: vis_source: the Place it is gathered at, by id, and which of its
+    #: levels (0 the surface); `location` stays a free-text note.
+    place_id: str | None = None
+    place_level: int = 0
     #: ship: her figures (models.ships.Ship); None for every other kind.
     ship: Ship | None = None
 

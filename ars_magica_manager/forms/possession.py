@@ -11,9 +11,11 @@ Edit and Delete.
 from __future__ import annotations
 
 from collections.abc import Callable, Collection, Sequence
+from dataclasses import replace
 from typing import Any
 
 from .. import catalog, sourcebooks, vis
+from .. import places as places_core
 from .. import possessions as pos
 from ..arts import ARTS
 from ..commands import Confirm, Form, Refuse, SectionOps
@@ -610,10 +612,14 @@ def covenant_possession_form(
             place = places[0][1]  # whoever kept it has left the covenant
 
     def apply(values: dict[str, Any]) -> None:
+        if "where" in values:
+            values["place_id"], values["place_level"] = places_core.split(
+                values.pop("where")
+            )
         pos.save_entry(covenant, kind, entry, values)
 
     keep = entry.record.vis_kind if entry is not None and entry.record else ""
-    return possession_form(
+    form = possession_form(
         form_title(kind, entry),
         kind,
         entry,
@@ -623,6 +629,24 @@ def covenant_possession_form(
         vis_kind_options=vis_kinds.kind_options(saga, keep),
         books=sourcebooks.saga_books(saga),
     )
+    if kind != "vis_source":
+        return form
+    record = entry.record if entry is not None else None
+    base = form.fields
+
+    def fields() -> list[DialogField]:
+        """The source's own fields, then the Place it is gathered at."""
+        shown = base()
+        at = next((i for i, f in enumerate(shown) if f.key == "location"), len(shown))
+        where = places_core.where_field(
+            saga,
+            record,
+            hint="The Place (and level) it is gathered at: the place lists it, "
+            "and an aura not of Magic taints its vis. Location stays a note.",
+        )
+        return [*shown[:at], where, *shown[at:]]
+
+    return replace(form, fields=fields)
 
 
 def remove_possession(

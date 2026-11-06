@@ -1099,6 +1099,13 @@ An unsettled source shows as contested income does in the Treasury: a red
 **!**, its Pawns struck through beside a 0, and its Standing. **Settle**
 records the story that secures it for five years.
 <!-- /gui -->
+A source's **Place** is where it is gathered: a Place of the Region, or
+one of its regio levels. The place then lists it under
+[Vis Sources](help:section-nb-vis-sites), and if its aura is not Magic's
+the vis is tainted by that realm ("Faerie vis"; Definitive Edition
+p. 422). **Location** stays a free note. A source whose Location names
+exactly one Place in an older saga is placed there when it opens.
+
 How many pawns to give one is the troupe's choice: a low-yield source gives
 1, 2 or 4 a year in a low-, moderate- or high-vis saga, a moderate one 2,
 4 or 8, a high-yield one (about a magus's year of vis) 4, 8 or 16

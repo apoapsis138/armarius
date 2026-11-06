@@ -33,7 +33,7 @@ import re
 from dataclasses import dataclass
 from typing import Any, Required, TypedDict, cast
 
-from . import places, threats
+from . import places, threats, vis_sites
 from .commands import Command, Confirm, Refuse, SectionOps
 from .form_spec import DialogField, pairs
 from .grids import Grid
@@ -776,6 +776,7 @@ def place_facts(saga: Saga, place: Neighbour) -> list[Fact]:
     """The place's facts, its next trigger and how its aura changes."""
     found = places.facts(saga, place)
     found.insert(1, Fact("Next", next_text(saga, place)))
+    found.insert(2, Fact("Vis", vis_sites.vis_text(saga, place)))
     change = aura_change.summary(saga, place)
     if change:
         found.insert(2, Fact("Aura change", change))
@@ -800,7 +801,9 @@ def place_facts(saga: Saga, place: Neighbour) -> list[Fact]:
 
 
 TRIGGERS = KindList(TRIGGERS_SECTION, triggers_title, triggers_grid, trigger_ops)
-REGIO_TAB = KindTab("Regio", "tab-nb-place", (*places.LISTS, TRIGGERS))
+REGIO_TAB = KindTab(
+    "Regio", "tab-nb-place", (*places.LISTS, vis_sites.VIS_SITES, TRIGGERS)
+)
 TABLES_TAB = KindTab(
     "Roll Tables",
     "tab-nb-tables",

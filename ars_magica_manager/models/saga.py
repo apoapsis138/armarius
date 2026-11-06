@@ -71,6 +71,24 @@ class SagaSource:
         return cls(**known_fields(cls, data))
 
 
+def _vis_sources_at_places(
+    covenants: list[Covenant], neighbours: list[Neighbour]
+) -> None:
+    """Older saves named a vis source's place only in its Location text:
+    one whose Location is exactly one Place's name is gathered there."""
+    by_name: dict[str, list[str]] = {}
+    for found in neighbours:
+        if found.kind == "place":
+            by_name.setdefault(found.name.strip(), []).append(found.id)
+    for covenant in covenants:
+        for source in covenant.possessions:
+            if source.kind != "vis_source" or source.place_id is not None:
+                continue
+            named = by_name.get(source.location.strip(), [])
+            if len(named) == 1:
+                source.place_id = named[0]
+
+
 def _rosters_from_older_saves(neighbours: list[Neighbour]) -> None:
     """Older saves made a faction that belonged to another (a court's
     courtiers) answer to it: each becomes an entry of the other's roster
@@ -276,6 +294,7 @@ class Saga:
             for index, entry in enumerate(old):
                 d["battles"].append(battle_from_lord(neighbour.id, index, entry))
         _rosters_from_older_saves(d["neighbours"])
+        _vis_sources_at_places(d["covenants"], d["neighbours"])
         d["sieges"] = [Siege.from_dict(s) for s in d.get("sieges", [])]
         d["world_turns"] = [WorldTurn.from_dict(t) for t in d.get("world_turns", [])]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]

@@ -206,6 +206,8 @@ FACULTIES_SECTION = "section-nb-faculties"
 MASTERS_SECTION = "section-nb-masters"
 #: A faction's members (memberships.py).
 MEMBERS_SECTION = "section-nb-members"
+#: A place's vis sources (vis_sites.py).
+VIS_SITES_SECTION = "section-nb-vis-sites"
 #: A threat's stages.
 STAGES_SECTION = "section-nb-stages"
 #: A place's regio levels and effects.
@@ -395,6 +397,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
     MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
     MEMBERS_SECTION: frozenset({"add", "edit", "remove"}),
+    VIS_SITES_SECTION: frozenset({"add", "edit", "remove"}),
     STAGES_SECTION: frozenset({"add", "edit", "remove"}),
     LEVELS_SECTION: frozenset({"add", "edit", "remove"}),
     EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),

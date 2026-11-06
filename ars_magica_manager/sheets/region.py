@@ -17,6 +17,7 @@ from .. import (
     threats,
     tribunal_packages,
     tribunals,
+    vis_sites,
     world,
 )
 from ..grids import Grid
@@ -511,6 +512,29 @@ def _what(saga: Saga, record: Neighbour | Covenant | Creature) -> str:
     return f"{kind_text(record)}, {words}" if words else kind_text(record)
 
 
+def _vis_rows(saga: Saga, found: Neighbour, depth: int) -> list[PlaceRow]:
+    """The vis sources gathered at `found`: a held one opens its covenant."""
+    rows = [
+        PlaceRow(
+            depth,
+            source.name,
+            references.ref(covenant),
+            f"Vis source, {source.art} {source.pawns}, held by {covenant.name}",
+        )
+        for covenant, source in vis_sites.held_at(saga, found)
+    ]
+    rows += [
+        PlaceRow(
+            depth,
+            entry.get("name", ""),
+            references.ref(found),
+            f"Vis source, {entry.get('art', '')} {entry.get('pawns') or 0}, unclaimed",
+        )
+        for entry in vis_sites.unclaimed(found)
+    ]
+    return rows
+
+
 def by_place(saga: Saga) -> list[PlaceRow]:
     """The Region as the land: each place that sits inside no other, then
     what rests on it (its neighbours, covenants and creatures) and the
@@ -550,6 +574,7 @@ def by_place(saga: Saga) -> list[PlaceRow]:
         rows.append(
             PlaceRow(depth, found.name, references.ref(found), _what(saga, found))
         )
+        rows.extend(_vis_rows(saga, found, depth + 1))
         for record in resting.get(found.id, []):
             rows.append(
                 PlaceRow(

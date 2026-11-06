@@ -1626,6 +1626,27 @@ Each level may also have its aura's own kind (an alignment, tints, or
 Dominion or Empyreal), asked by the level's realm as the place's is.
 
 
+## Vis Sources
+<!-- help: section-nb-vis-sites -->
+
+The vis sources gathered at this place (Definitive Edition p. 422: a
+place where a certain number of pawns can be taken each year): each
+one's Art, pawns, season, who holds it, its level, and its taint when
+the aura there is not Magic's ("Faerie vis"; Divine vis risks the
+Church's anger, Infernal vis corrupts).
+
+- A source a covenant holds is listed from its covenant's
+  [Vis Sources](help:section-pos-vis_source), where it is edited: its
+  Place names this one.
+- A source no covenant holds yet (one waiting to be found) is added and
+  edited here. Choose a covenant in **Claimed by** and it becomes that
+  covenant's source, still gathered here.
+
+The place's **Vis** says what its sources give a year, by Art, and what
+the places inside it give, however deep, so a region shows the vis in
+all its lands. The Region [by place](help:tab-region-by-place) lists
+each source under its place.
+
 ## Effects
 <!-- help: section-nb-effects -->
 

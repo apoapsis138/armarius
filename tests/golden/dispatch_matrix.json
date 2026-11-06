@@ -2876,6 +2876,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-vis-sites": {
+      "active": "section-nb-vis-sites",
+      "keys": {
+        "a": "FieldsDialog: Add a Vis Source",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-nb-triggers": {
       "active": "section-nb-triggers",
       "keys": {

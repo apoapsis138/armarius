@@ -13,6 +13,7 @@
 
   Aura:       Magic 5
   Next:       Level 2 opens, Summer 1220
+  Vis:        —
   Threshold:  Level 1: 21 points to cross into the Faerie Realm
   Regio:      2 levels
   Can see:    Level 1: no one yet; Level 2: no one yet
@@ -30,15 +31,14 @@
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ Effects (2)
 
-        Effect      Amount       Where    Applies to      Note
+        Effect      Amount       Where    Applies to      Note                    ▇▇
       ○ Lab totals  +2 Herbam    Level 2  Labs here       a lab built in the regio
       ○ Warping     +1 a season  Level 2  Who lives here
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Triggers (2)                                                                ▄▄
+    ▼ Vis Sources (0)
 
-        Trigger         When                  Next         What happens
-      ○ Level 2 opens   Summer each year      Summer 1220  The terraces can be
+      No vis sources here: add one no covenant holds yet, or name this place on a
 
 
 ===== tab-nb-tomb

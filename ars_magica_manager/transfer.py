@@ -937,6 +937,10 @@ def _relink_stops(job: _Import, covenant: Covenant) -> None:
     covenant.stops = kept(covenant.stops)
     covenant.route = kept(covenant.route)
     for record in covenant.possessions:
+        if record.place_id is not None:
+            record.place_id = job.link(NEIGHBOUR, record.place_id)
+            if record.place_id is None:
+                record.place_level = 0
         if record.ship is not None:
             record.ship.stops = kept(record.ship.stops)
             record.ship.aboard = [
