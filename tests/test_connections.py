@@ -29,8 +29,10 @@ def _court() -> Saga:
     crown = saga.neighbour("crown")
     keep = saga.covenant("cov1")
     assert coven is not None and crown is not None and keep is not None
-    coven.links.append(Link("characters", "mag1", "its secret patron"))
-    coven.links.append(Link("covenants", "cov1"))
+    coven.details["roster"] = [
+        {"who": "characters:mag1", "role": "its secret patron"},
+        {"who": "covenants:cov1", "role": ""},
+    ]
     crown.ruler = "mag1"
     keep.place_id = "drachenfels"
     return saga

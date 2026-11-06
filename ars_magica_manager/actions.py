@@ -26,6 +26,7 @@ from . import (
     giving,
     guest_stays,
     hosting,
+    merges,
     mobile_covenants,
     places,
     seasons,
@@ -397,6 +398,7 @@ MORE_MENU: tuple[MenuItem, ...] = (
     MenuItem("b", "begin_story", "Begin This Story"),
     MenuItem("h", "delay_threat", "Delay or Hasten"),
     MenuItem("g", "grow_story", "Grow into a Threat"),
+    MenuItem("q", "merge_doubles", merges.TITLE),
     # A chapter of what the troupe did: on a threat, or a chosen open story.
     MenuItem("t", "take_up_tale", "Take Up the Tale"),
     MenuItem("t", "take_up_story", "Take Up the Tale"),
@@ -1038,6 +1040,16 @@ def _on_ruin(facts: ActionFacts) -> bool:
     return facts.on_record() and places.is_ruin(facts.record_to_delete())
 
 
+def _merges_doubles(facts: ActionFacts) -> bool:
+    """On the saga or the Region, while a faction shares its name with a
+    character or creature (merges.py)."""
+    return facts.selected_kind in (
+        NodeKind.SAGA,
+        NodeKind.REGION,
+        NodeKind.NEIGHBOUR_GROUP,
+    ) and bool(merges.doubles(facts.saga))
+
+
 def _on_dormant_threat(facts: ActionFacts) -> bool:
     return facts.on_record() and threats.is_dormant(facts.record_to_delete())
 
@@ -1472,6 +1484,7 @@ _RECORD_RULES: dict[str, Callable[[ActionFacts], bool]] = {
     "edit_arms": _bears_arms,
     "found_covenant": _on_ruin,
     "begin_story": _on_dormant_threat,
+    "merge_doubles": _merges_doubles,
     "delay_threat": _on_threat_under_way,
     "take_up_tale": _on_threat_under_way,
     "go_to": _goes_to,

@@ -5,6 +5,8 @@ neighbour's own facts and details."""
 
 from __future__ import annotations
 
+from dataclasses import dataclass
+
 from .. import (
     arms,
     connections,
@@ -19,8 +21,8 @@ from .. import (
 )
 from ..grids import Grid
 from ..markup import escape
-from ..models import Covenant, Neighbour, Saga, Tribunal
-from ..references import Fact
+from ..models import Covenant, Creature, Neighbour, Saga, Tribunal
+from ..references import Fact, Ref
 from ..rules import sites
 
 
@@ -240,6 +242,28 @@ def threats_grid(saga: Saga) -> Grid:
     )
 
 
+def customs_grid(saga: Saga) -> Grid:
+    """The customs and lore: where each belongs, and the first line of
+    what it means in play."""
+    rows = []
+    for found in neighbour_filter.shown(saga, "customs"):
+        rules = (found.details.get("rules") or "").strip()
+        rows.append(
+            [
+                found.name,
+                places.where_text(saga, found.place_id, found.place_level),
+                rules.splitlines()[0] if rules else "",
+            ]
+        )
+    return Grid(
+        ["Name", "Where", "Its rules"],
+        rows,
+        list(range(len(rows))),
+        _empty(saga, "None yet: add a custom, a law or a piece of lore here."),
+        caps=[30, 26, 0],
+    )
+
+
 def group_grid(saga: Saga, group_key: str) -> Grid:
     """The group's neighbours: kind, ruler, attitude toward the home
     covenant and detail."""
@@ -247,6 +271,8 @@ def group_grid(saga: Saga, group_key: str) -> Grid:
         return places_grid(saga)
     if group_key == "threats":
         return threats_grid(saga)
+    if group_key == "customs":
+        return customs_grid(saga)
     rows = []
     styles: dict[tuple[int, int], str] = {}
     members = neighbour_filter.shown(saga, group_key)
@@ -325,6 +351,12 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
             Fact("Kind", kind.name),
             Fact("Realm", neighbour.realm or "none"),
             inside_fact(saga, neighbour, "nowhere entered"),
+            *connections.lands_fact(saga, neighbour),
+            *(
+                []
+                if sites.is_place(neighbour)
+                else [ruler_fact(saga, neighbour, "Kept by", "(not named)")]
+            ),
             Fact("Book", kind.book or "core rules"),
             *connections.links_back(saga, neighbour),
         ]
@@ -337,6 +369,7 @@ def neighbour_facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
         Fact("Realm", neighbour.realm or "none"),
         Fact("Book", kind.book or "core rules"),
         *([Fact("Place", where, references.refs(place))] if where else []),
+        *connections.lands_fact(saga, neighbour),
         *below_fact(saga, neighbour),
         *connections.rules_facts(saga, neighbour),
         *connections.links_back(saga, neighbour),
@@ -401,6 +434,8 @@ def card_subtitle(neighbour: Neighbour) -> str:
     if sites.is_place(neighbour):
         what = "Ruined covenant" if places.is_ruin(neighbour) else "Place"
         return f"{what} · {places.aura_text(neighbour)}"
+    if "detail" in neighbours.kind_of(neighbour).hides:
+        return kind_text(neighbour)
     return f"{kind_text(neighbour)} · {neighbour.detail}"
 
 
@@ -445,3 +480,104 @@ def more_cards(group_key: str, held_back: int) -> tuple[str, str]:
     """The card that shows the rest of a group: its title and the line
     under it ("Show 90 more", "The rest of Lords and Towns")."""
     return f"Show {held_back} more", f"The rest of {neighbours.group(group_key).title}"
+
+
+# -- the Region by place --
+
+
+@dataclass(frozen=True)
+class PlaceRow:
+    """A line of the Region by place: how deep it sits, the record's name
+    and a Ref that opens it (None for a heading), and what it is."""
+
+    depth: int
+    name: str
+    ref: Ref | None
+    what: str
+
+
+def _what(saga: Saga, record: Neighbour | Covenant | Creature) -> str:
+    """What a record of the Region by place is: a place's aura, a
+    neighbour's kind and attitude, a covenant's mark, a creature's realm."""
+    if isinstance(record, Creature):
+        return f"Creature{f', {record.realm}' if record.realm else ''}"
+    if isinstance(record, Covenant):
+        words, _colour = _attitude_cell(saga, record)
+        what = "Troupe covenant" if record.played else "Covenant"
+        return f"{what}, {words}" if words else what
+    if sites.is_place(record):
+        return f"{card_subtitle(record)}"
+    words, _colour = _attitude_cell(saga, record)
+    return f"{kind_text(record)}, {words}" if words else kind_text(record)
+
+
+def by_place(saga: Saga) -> list[PlaceRow]:
+    """The Region as the land: each place that sits inside no other, then
+    what rests on it (its neighbours, covenants and creatures) and the
+    places inside it, each under the one it sits in; then what is placed
+    nowhere. Places in places is a Composite, walked once."""
+    every = sites.all_places(saga)
+    known = {p.id for p in every}
+    inside: dict[str | None, list[Neighbour]] = {}
+    for found in every:
+        parent = found.place_id if found.place_id in known else None
+        inside.setdefault(parent, []).append(found)
+    resting: dict[str, list[Neighbour | Covenant | Creature]] = {}
+    nowhere: list[Neighbour | Covenant | Creature] = []
+    for record in saga.neighbours:
+        if sites.is_place(record):
+            continue
+        if record.place_id in known:
+            resting.setdefault(record.place_id, []).append(record)
+        else:
+            nowhere.append(record)
+    for covenant in saga.covenants:
+        at = sites.covenant_place(saga, covenant)
+        if at is not None:
+            resting.setdefault(at[0].id, []).append(covenant)
+        elif not covenant.played:
+            nowhere.append(covenant)
+    for creature in saga.creatures:
+        if creature.place_id in known:
+            resting.setdefault(creature.place_id, []).append(creature)
+    rows: list[PlaceRow] = []
+    seen: set[str] = set()
+
+    def walk(found: Neighbour, depth: int) -> None:
+        if found.id in seen:
+            return
+        seen.add(found.id)
+        rows.append(
+            PlaceRow(depth, found.name, references.ref(found), _what(saga, found))
+        )
+        for record in resting.get(found.id, []):
+            rows.append(
+                PlaceRow(
+                    depth + 1, record.name, references.ref(record), _what(saga, record)
+                )
+            )
+        for child in inside.get(found.id, []):
+            walk(child, depth + 1)
+
+    for root in inside.get(None, []):
+        walk(root, 0)
+    if nowhere:
+        rows.append(PlaceRow(0, f"Placed nowhere ({len(nowhere)})", None, ""))
+        rows += [
+            PlaceRow(1, r.name, references.ref(r), _what(saga, r)) for r in nowhere
+        ]
+    return rows
+
+
+#: Each saga's way into the Region while the app runs: by kind (the
+#: lists) or by place.
+BY_KIND, BY_PLACE = "kind", "place"
+_VIEW: dict[str, str] = {}
+
+
+def view(saga: Saga) -> str:
+    return _VIEW.get(saga.id, BY_KIND)
+
+
+def choose_view(saga: Saga, chosen: str) -> None:
+    _VIEW[saga.id] = chosen

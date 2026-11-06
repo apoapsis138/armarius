@@ -302,6 +302,7 @@ class CreatureSheetView(SheetView):
                     self._description_text,
                     id="cr-description-content",
                 )
+            yield from self._relations(c, links=False)
             with SheetSection(
                 title=self._titled(
                     LINKS_SECTION,

@@ -84,6 +84,14 @@ DIALOG_CONTRACT_TESTS = (
 )
 
 AREA_TESTS: dict[str, tuple[str, ...]] = {
+    # A faction's members: its Members list, the sheets' Member of.
+    "ars_magica_manager/memberships.py": (
+        "test_dialog_contracts_tribunal.py",
+        "test_sheet_text.py",
+        "test_dispatch_matrix.py",
+    ),
+    # Merge Doubled Records: the Region's More and the desktop's button.
+    "ars_magica_manager/merges.py": ("test_gui_menus.py", "test_menu_items.py"),
     # A shield painted: the arms sections, the Hall's banners, a battle's
     # sides and the Atlas's lords.
     "ars_magica_manager/gui/shields.py": (

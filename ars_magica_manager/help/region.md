@@ -12,7 +12,9 @@ Each Tribunal is listed there, with the covenants the troupe doesn't
 play under the Tribunal they belong to (a covenant with no Tribunal sits
 directly under The Region), then a node for each group of neighbours
 with the neighbours in it. Selecting The Region, or a group, shows the
-Region sheet; selecting a neighbour shows its own sheet.
+Region sheet (its Neighbours tab of lists, and its
+[By Place](help:tab-region-by-place) tab); selecting a neighbour shows
+its own sheet.
 
 Press `n` (New) here, or on the saga, and choose **New Tribunal** or
 **New Neighbour**. A covenant joins a Tribunal through the Tribunal
@@ -27,7 +29,7 @@ attitude toward the troupe.
 On the saga's page, The Region chapter opens with the Tribunals as
 cards, each opening its own page, and a New card that adds one. Under
 them come the Region's facts, then each group's neighbours as cards,
-with their own New card. The covenants are in The Covenants, whether
+with their own New card, or the Region [by place](help:tab-region-by-place). The covenants are in The Covenants, whether
 the troupe plays them or not.
 
 A group with more than a dozen neighbours shows its first twelve and a
@@ -53,6 +55,43 @@ next meets.
 The leaf after it (❧) opens that threat's page.
 <!-- /gui -->
 
+## Merge Doubled Records
+<!-- help: merge-doubles -->
+
+Before a character or a creature could hold an attitude, someone the
+troupe dealt with (a faerie knight, a hedge witch) was often entered
+twice: as a faction, to carry the attitude, and as a character or
+Bestiary creature, for the stat block. **Merge Doubled Records** finds
+each faction whose name exactly one character or creature has, and
+makes the pair one record: the character's or creature's.
+
+The form lists each pair, ticked, with what merging brings. Untick any
+that are two records on purpose, then choose **Merge**. For each pair
+ticked:
+
+- Its attitudes, favours and links move to the character or creature
+  (an attitude toward a covenant the record already has one toward is
+  left as the record's).
+- Its summary, and its rules, wants, offers and diary, are added to the
+  character's summary or the creature's notes; its Secrets to theirs.
+- The factions it was a member of, and the neighbours it ruled, now name
+  the character or creature. A creature takes its place and its map
+  pins; a character's pins are left off (the Atlas shows him at his
+  covenant's).
+- The faction itself is deleted.
+
+Only factions are offered: a lord, a threat or a place named for its
+person (the Ash of Nortorf, the story and the spirit) keeps rules of its
+own and stays a record apart.
+<!-- tui -->
+It is in More (`m`) on the saga or The Region while there is a pair to
+merge.
+<!-- /tui -->
+<!-- gui -->
+It is a button beside the Neighbours heading of The Region while there
+is a pair to merge.
+<!-- /gui -->
+
 ## Neighbours tab
 <!-- help: tab-region-neighbours -->
 
@@ -65,18 +104,21 @@ or when the book one of its kinds needs is in play.
 A Tribunal book brings a great many neighbours, so the lists can be
 narrowed to one **region** (a place that sits inside no other, such as
 the Black Forest: everything inside it at any depth, and the region
-itself) and to one **kind** (lords, towns, places...). Each list's title
+itself), to one **kind** (lords, towns, places...) and, once a place
+names one, to one **Tribunal's lands** (whatever lies in them, member of
+that Tribunal or not; see [A place](help:tab-nb-place)). Each list's title
 then says how many it shows of how many. The filter stays while the
 app is open.
 
 <!-- tui -->
-The Region's facts say what the lists are narrowed to ("Showing"). Press `/` (Filter) on any of the lists and choose a region, a kind or
-both; blank both to show everything again.
+The Region's facts say what the lists are narrowed to ("Showing"). Press `/` (Filter) on any of the lists and choose a Tribunal's lands, a
+region, a kind, or any of them; blank them all to show everything again.
 <!-- /tui -->
 <!-- gui -->
-Choose them in the two quiet drop-downs at the right of the first list's
-heading ("Show: Every region, Every kind"); set both back to Every to
-show everything again.
+Choose them in the quiet drop-downs at the right of the first list's
+heading ("Show: Every Tribunal, Every region, Every kind"; the Tribunal
+one shows once a place names a Tribunal's lands); set them back to Every
+to show everything again.
 <!-- /gui -->
 
 ### Other Covenants
@@ -151,11 +193,71 @@ with it. Add, edit or delete one; see [A place](help:tab-nb-place).
 
 A place's form also has **Waters** (Open water, Anchorage or Port), which a ship's stops use (the book packs mark theirs, and a port town has a harbour Place beside it), and **Travels with**, for a place that moves with a covenant, as a ship does. See **How to keep a covenant on the move**.
 
+## By Place
+<!-- help: tab-region-by-place -->
+
+The Region as the land rather than as lists: each place that sits inside
+no other (the Black Forest, the Rhine Valley), then what rests on it (its
+lords, towns, churches, factions, threats, the covenants there now and
+the creatures found there) and the places inside it, each indented under
+the one it sits in, however deep. Each line says what the record is (a
+place's aura, a neighbour's kind and attitude). What is placed nowhere
+comes last. Click a name to open its record.
+
+<!-- tui -->
+It is the Region's **By Place** tab, beside Neighbours.
+<!-- /tui -->
+<!-- gui -->
+Choose **By place** in the chips under the Neighbours heading of The
+Region; **By kind** brings back the lists. The choice stays while the
+app is open.
+<!-- /gui -->
+
+The same records, in another order: nothing is moved, and a place's
+**Inside** (Edit) is what puts it under another.
+
+### The land
+<!-- help: section-region-by-place -->
+
+Each place, what rests on it and the places inside it, every name a link
+that opens its record (see [By Place](help:tab-region-by-place)).
+
+### Customs and Lore
+<!-- help: section-region-customs -->
+
+How the land lives, as a book's background describes it: its honour and
+kin, its tongues and manners, its law and its things, its trade and
+roads, a treaty or a legend. Each says where it belongs and the first
+line of the rules it brings (hof and ohof among the Icelanders, the
+Baqt between Egypt and Nubia). A custom holds no attitude toward the
+troupe. Add, edit or delete one; see [A custom](help:tab-nb-custom).
+
+# A custom
+<!-- help: tab-nb-custom -->
+
+A custom is the land's lore rather than a company: what the people of a
+place do and believe, how they trade, judge, speak and travel. New
+Custom and Edit record:
+
+- **Its rules**: what it means in play, with the book's page (a Virtue
+  it favours, a roll it changes, a law the troupe must keep).
+- **Wants** and **Offers**: what those who keep it ask of the troupe,
+  and what it gives them, when the book says.
+- **Ruler or leader**, shown as **Kept by**: a person who keeps or
+  presides over it (Viscountess Ermengarde over her Courts of Love).
+- **Place**: where it holds, so the Region [by place](help:tab-region-by-place)
+  lists it under that land.
+
+It has no attitude, detail or liege, as a place has none. Its Found Here
+tab shows the favours and links that name it.
+
+**See also:** [A neighbour](help:neighbour)
+
 # A neighbour
 <!-- help: neighbour -->
 
-A neighbour is a lord, a town, a church, a university, a faction or a
-threat of the saga's region. Only its name is needed; the rest can be
+A neighbour is a lord, a town, a church, a university, a faction, a
+threat, a place or a custom of the saga's region. Only its name is needed; the rest can be
 filled in later, or never.
 
 **New Neighbour** asks for its kind first, offering the kinds whose book
@@ -171,7 +273,8 @@ needs), then a plain form:
   decides, its members, rules, wants and offers (see
   [A faction](help:tab-nb-faction)); a threat's antagonist and how it
   moves (see [A threat](help:tab-nb-threat)); a place's aura, tethers
-  and gazetteer (see [A place](help:tab-nb-place)).
+  and gazetteer (see [A place](help:tab-nb-place)); a custom's rules
+  (see [A custom](help:tab-nb-custom)).
 - **Summary**: a paragraph on who they are and what they want.
 - **Detail**: a line, a sketch, or written in full.
 - **Ruler or leader**: chosen from the saga's characters, its other
@@ -213,7 +316,7 @@ Its attitude toward each player covenant, with the reasons it moved,
 the favours owed between it and the troupe, and its links to other
 records, as on a sketch covenant: see
 [Attitude](help:section-attitudes), [Favours](help:section-favours) and
-[Links](help:section-links). A place holds no attitude: its tab is
+[Links](help:section-links). A place or a custom holds no attitude: its tab is
 called Found Here and shows only its favours and links.
 
 ### Following a record's links
@@ -1116,24 +1219,45 @@ delete one.
 # A faction
 <!-- help: tab-nb-faction -->
 
-A faction (the core rules) is a hedge coven, a faerie court, a gild, a
-family or any other company with a will of its own. New Faction and
-Edit record what kind it is, how it decides (its leader, a council, or
+A faction (the core rules) is any company with a will of its own. Its
+**Faction** says which kind: a hedge coven (a magicians' tradition too),
+a faerie court, a gild, a family or dynasty, a Hermetic group (a
+lineage, societas, league, cabal or a House's faction), a people or
+tribe, spirits and beings (a host or race of them, not one: one being
+is a Bestiary creature), a faith or sect, a council or assembly, a
+military order, brigands and mercenaries, a religious community or an
+estate or rank; or Other. The books name no list of kinds: these sort
+what the Tribunal books describe. New Faction and Edit record what kind
+it is, how it decides (its leader, a council, or
 a vote of all), how many members it has, its rules, what it wants and
 what it offers; its Faction tab shows them. A hedge coven can also name
 the hedge tradition its members follow, from the traditions the app
 knows (see [A tradition's chapter](help:tradition-chapter)), so the troupe
-knows which record a member is played from. Members who are characters
-can be linked on its Standing tab, and the Faction tab counts them.
+knows which record a member is played from. Its named members are listed
+under [Members](help:section-nb-members), and the Faction tab counts them.
 
 Its leader is its **Ruler or leader**: a character, another neighbour or
 a creature from the Bestiary (see [Ruler or Leader](help:neighbour-ruler)).
-A member that is itself a neighbour (a courtier, a branch of the gild)
-names the faction in its own **Answers to**, and the faction's page
-lists it under **Answer to it**. A member linked from the faction lists
-it under **Member of** in their own
-[Connections](help:section-connections). See
+Its **Answers to** is its liege or master, not its membership. See
 [How to set up a faction's leader and members](help:guide-faction).
+
+### Members
+<!-- help: section-nb-members -->
+
+The faction's members, each a character, a covenant, a Bestiary
+creature or another neighbour (a courtier, a branch of the gild), with their **Role** in it
+("knight of the court", "elder"). Add one by choosing their record
+(filter the list by Kind, or type to search), edit their role, or take
+them off the roster; their own record stays. A record can belong to
+several factions: each one lists it, and the record's page shows every
+faction under **Member of** (a character's in its
+[Connections](help:section-connections)). A member whose record has since
+been deleted shows as no longer in the saga.
+
+Older saves made a faction that belonged to another (a court's
+courtiers) answer to it; it is moved to the other's roster when the saga
+is opened. A faction's links stay links, under **Linked from** on the
+record they point at: add a member here to say they belong to it.
 
 **See also:** [A neighbour](help:neighbour)
 
@@ -1245,6 +1369,13 @@ ruler, listed under Places in the Region. New Place and Edit record:
 - **Status** and **Known**: how far the troupe has got with it
   (rumoured, known, visited, claimed) and how widely it is known.
 - **Claimed by**: the covenant that claims it.
+- **Tribunal's lands** (once the saga has a Tribunal): the Tribunal whose
+  lands the place is. Set it on a region (the Black Forest) and
+  everything inside takes it, unless a place nearer in names another.
+  This is geography, not membership: a covenant's own **Tribunal** (Edit
+  Covenant) is the council it belongs to, so a covenant in the Rhine's
+  lands that is petitioning to join lies in the Rhine and is no member
+  yet; its Connections say both.
 - **Inside**: the place it is part of, so a regio can sit inside a
   forest inside a county. A place can't be put inside itself or inside
   a place within it.

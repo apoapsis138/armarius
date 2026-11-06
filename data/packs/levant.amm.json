@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.62.1",
+  "app_version": "3.77.0",
   "kind": "pack",
   "name": "Blood and Sand: the Levant Tribunal",
   "from_saga": "Blood and Sand: the Levant Tribunal",
@@ -33,6 +33,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -82,7 +83,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -102,19 +104,19 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy: its secret war",
-            "id": "59021900353b"
+            "id": "a7d43af77769"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "1225652f03b9"
+            "id": "d58c98c6f907"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Buys its supplies and sells its stone here",
-            "id": "ac0058db0d6e"
+            "id": "e7c7fddb0563"
           }
         ],
         "unnamed_magi": 1,
@@ -159,6 +161,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -208,7 +211,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -228,13 +232,13 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Ally",
-            "id": "b6e3f116f5d3"
+            "id": "86b869721291"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "Eleven miles to the south",
-            "id": "43642b3284ba"
+            "id": "75c9803d813d"
           }
         ],
         "unnamed_magi": 1,
@@ -279,6 +283,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -328,7 +333,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -348,19 +354,19 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy: the counter-Crusade's leader",
-            "id": "628e497ece58"
+            "id": "2fecb3dcce22"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Enemy: political attacks",
-            "id": "37cbb91ab746"
+            "id": "f951478dcd15"
           },
           {
             "kind": "places",
             "target_id": "acre",
             "note": "Ten miles to the south-west",
-            "id": "e453d05baf6f"
+            "id": "0df8e436abbe"
           }
         ],
         "unnamed_magi": 0,
@@ -405,6 +411,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -454,7 +461,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -474,37 +482,37 @@
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Contact",
-            "id": "176855136b9c"
+            "id": "8f4dbe5c063e"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Enemy",
-            "id": "e4b31844b7e3"
+            "id": "36044bcc9791"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Enemy",
-            "id": "a5c468d99cb8"
+            "id": "c1da13f51d4e"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Keeps the Treaty with his court",
-            "id": "99fb9f439fa3"
+            "id": "b00dd7635f0a"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "Keeps the Treaty with the Ayyubids",
-            "id": "206a27a457f3"
+            "id": "6476d6091f09"
           },
           {
             "kind": "places",
             "target_id": "the_order_of_suleiman",
             "note": "The Suhhar distrusts the Embassy",
-            "id": "ea66dd8a5b4a"
+            "id": "07b780f4974d"
           }
         ],
         "unnamed_magi": 0,
@@ -549,6 +557,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -598,7 +607,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -656,6 +666,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -705,7 +716,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -725,7 +737,7 @@
             "kind": "places",
             "target_id": "the_alans",
             "note": "Its neighbours",
-            "id": "15060e1a9b8a"
+            "id": "638dc7ef6b71"
           }
         ],
         "unnamed_magi": 0,
@@ -770,6 +782,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -819,7 +832,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -839,7 +853,7 @@
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Ally: backs its call for war",
-            "id": "350720c9de81"
+            "id": "cb58637b7434"
           }
         ],
         "unnamed_magi": 0,
@@ -892,6 +906,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -941,7 +956,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -961,13 +977,13 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "Enemy: she broke its monopoly",
-            "id": "ea163c04e1c5"
+            "id": "16896a1677fe"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Trade rival",
-            "id": "a90f18f403b1"
+            "id": "4800088dae01"
           }
         ],
         "unnamed_magi": 0,
@@ -1012,6 +1028,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -1061,7 +1078,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -1119,6 +1137,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -1168,7 +1187,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -1226,6 +1246,7 @@
         "place_level": 1,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -1275,7 +1296,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -1333,6 +1355,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_levant_tribunal",
         "liege_id": null,
         "oath": "",
@@ -1382,7 +1405,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -1402,7 +1426,7 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Friends in the garrison",
-            "id": "537ea7681f7f"
+            "id": "e5254e81dd40"
           }
         ],
         "unnamed_magi": 0,
@@ -1484,7 +1508,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "03910e0314c7"
+            "id": "ba2f57e2c99d"
           },
           {
             "title": "The slaying of a Crusader magus",
@@ -1516,7 +1540,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "4b9450ab5972"
+            "id": "c910d0c23925"
           }
         ],
         "rulings": [
@@ -1525,77 +1549,77 @@
             "year": 1193,
             "says": "Made between the Order in the Levant and the caliph's court, with Salah al-Din's mages and their Ayyubid heirs, and forced on the Levant's magi at the meeting of 1193 by quaesitores from Magvillus. No magus may take any part in Crusade or jihad, for either side; the Order's fighting with the Muslims' mages is over; and a magus found meddling in the wars is severely punished. Aurora of Jerbiton made it, treating with the caliph, Salah al-Din and their mages from 1183. The Order of Suleiman as a body never signed it.",
             "case_id": "",
-            "id": "6e862bfd1010"
+            "id": "ce068cb7fba1"
           },
           {
             "title": "The Treaty's term",
             "year": 1193,
             "says": "Muslim law lets a truce last ten years at most, so the Treaty lapses each decade unless the Tribunal renews it, and it is debated at every meeting. Each renewal is voted at the last meeting before the Treaty lapses; the present term runs to 1223, and its renewal is before the meeting of 1221.",
             "case_id": "",
-            "id": "16d12afc64a8"
+            "id": "59c8916aa55f"
           },
           {
             "title": "The Treaty renewed for 1203",
             "year": 1200,
             "says": "The meeting of 1200 renewed the Treaty for ten years from 1203.",
             "case_id": "",
-            "id": "2db767bbb249"
+            "id": "5401451a700a"
           },
           {
             "title": "The Treaty renewed for 1213",
             "year": 1207,
             "says": "The meeting of 1207 renewed the Treaty, by a narrow vote, for ten years from 1213.",
             "case_id": "",
-            "id": "8d6f4ac0ab0d"
+            "id": "157a45b46f6c"
           },
           {
             "title": "The chair",
             "year": null,
             "says": "The quaesitor who presides at a meeting of the Tribunal must be of House Guernicus; a quaesitor of any other House may not. Aurora of Jerbiton proposed the rule.",
             "case_id": "",
-            "id": "dc76e7a280e6"
+            "id": "ab5e0c88fa82"
           },
           {
             "title": "The Praeco",
             "year": 1207,
             "says": "Fade and Wraith of Urbs Rubra, the eldest magi, had not been seen for years and could not be reached, so the quaesitores ruled that Tau of Flambeau be held the eldest, and Praeco.",
             "case_id": "",
-            "id": "e2e30bf1c30c"
+            "id": "4669830720c2"
           },
           {
             "title": "The stone of Aedes Veritatis",
             "year": null,
             "says": "Some covenants asked whether Aedes Veritatis's sale of quarry stone to Damascus aided the war, since the stone might build walls. The quaesitores ruled the trade lawful: the stone is not magical, and was not made for war.",
             "case_id": "",
-            "id": "83a16c4e932b"
+            "id": "1f45bcbe6acf"
           },
           {
             "title": "Enchanted devices",
             "year": null,
             "says": "Selling enchanted devices to mundane lords is interference in mundane affairs, and forbidden.",
             "case_id": "",
-            "id": "8a60b738984b"
+            "id": "2c9e13d8c469"
           },
           {
             "title": "The border with Thebes",
             "year": null,
             "says": "After 1204 Theban magi followed the Byzantine refugees east and Thebes claimed more of Asia Minor for them; Aurora and other quaesitores of both Tribunals settled the quarrel short of war. The Empire of Nicaea belongs to the Theban Tribunal and the Empire of Trebizond to the Levant. Both sides have agreed to differ, and many are unhappy with it.",
             "case_id": "",
-            "id": "f6aff281d049"
+            "id": "1703fe836c57"
           },
           {
             "title": "The priests of the Pyramids",
             "year": 1178,
             "says": "Heliobus Magister of Bonisagus brought the twelve priests of Thoth and Anubis in their temple at Giza into House Ex Miscellanea, under the Code's protection, which ended the Hermetic raids on their temple.",
             "case_id": "",
-            "id": "17546345dcd5"
+            "id": "5b8dfe15f9df"
           },
           {
             "title": "Sahirs in the Order",
             "year": null,
             "says": "A sahir may join the Order as any hedge wizard does, through House Ex Miscellanea, swearing the Oath and taking the Parma Magica.",
             "case_id": "",
-            "id": "bf18008c38fa"
+            "id": "f307c2390e1d"
           }
         ],
         "treasury": [],
@@ -1607,7 +1631,7 @@
             "details": "The Order is founded in the west, far from the lands that will one day be the Levant Tribunal. At this time Baghdad, built five years before by the caliph al-Mansur, is the young capital of the 'Abbasids.",
             "changes": [],
             "margin": "",
-            "id": "5994bc5e1151"
+            "id": "ea52f133a0dc"
           },
           {
             "year": 802,
@@ -1616,7 +1640,7 @@
             "details": "Harun al-Rashid, caliph since 786, has been trading embassies with Charlemagne, a king with more friends in the Order than the quaesitores like to own. Through them the Order wins the caliph's leave for two covenants in his lands, and the first, Urbs Rubra, is raised among the rock-cut halls of Petra. Harun's reign is an age of wonders, when jinn and men in some places live side by side and trade with one another, and the caliph himself is said to take lessons in Hermetic magic.\n\nSecrets\nIf the storyguide wants it, the rumour is true: Harun learnt the Order's magic and passed it to mages of his court, and their pupils' pupils practise it still (see the Islamic Tradition's story seeds).",
             "changes": [],
             "margin": "",
-            "id": "9fdf4c0403dd"
+            "id": "ac66a900ff23"
           },
           {
             "year": 806,
@@ -1625,7 +1649,7 @@
             "details": "The second covenant by Harun's leave is made in caves high on two pale cliffs in the Alan country, north-east of the Black Sea. Its remoteness will keep it alive through every war to come.",
             "changes": [],
             "margin": "",
-            "id": "f2a11d827b6c"
+            "id": "74c2cab2a1fb"
           },
           {
             "year": 809,
@@ -1634,7 +1658,7 @@
             "details": "Harun's sons fall to civil war over his throne, the Muslim world turns its eyes inward and later breaks into rival states, and the two covenants lose their friends at court. For almost three centuries the East is a quiet corner of the Order.",
             "changes": [],
             "margin": "",
-            "id": "50bde96bb4b1"
+            "id": "21958be1bd0f"
           },
           {
             "year": 817,
@@ -1643,7 +1667,7 @@
             "details": "The hedge wizards' House is admitted, the road by which the Levant's priests of the Pyramids and its sahirs will one day come into the Order.",
             "changes": [],
             "margin": "",
-            "id": "df50eec0276c"
+            "id": "4b0e690622d1"
           },
           {
             "year": 832,
@@ -1652,7 +1676,7 @@
             "details": "The lands of Urbs Rubra and Urania are counted a Tribunal of the Order and named the Tribunal of the East, since the Order has reached no further in that direction. (Ch02 says only that this came soon after the covenants were founded; 832 is the timeline's year.)",
             "changes": [],
             "margin": "",
-            "id": "d649bce901bc"
+            "id": "fa68254d7a92"
           },
           {
             "year": 848,
@@ -1661,7 +1685,7 @@
             "details": "The timeline marks the Sundering of House Tremere in the west; the East, cut off since Harun's death, plays no part.",
             "changes": [],
             "margin": "",
-            "id": "45cfe7538b5e"
+            "id": "e519f9a90c34"
           },
           {
             "year": 961,
@@ -1670,7 +1694,7 @@
             "details": "The timeline records the execution of Tasgillia, an event of the Order in the west that the book does not tell.",
             "changes": [],
             "margin": "",
-            "id": "4b13e6030d02"
+            "id": "d0544ee355b2"
           },
           {
             "year": 969,
@@ -1679,7 +1703,7 @@
             "details": "The Isma'ili Fatimids, caliphs at Qayrawan since 909 on the strength of the mountain Berbers, send their general Jawhar to take Fustat and found Cairo beside it. Berber wizards march with them, working a magic no Muslim mage had met before, and the mages who stand against the invasion are wiped out. No magus of the Order ever meets them, and what their magic was is still unknown.",
             "changes": [],
             "margin": "",
-            "id": "3f9f15fec1d8"
+            "id": "1d04245446b7"
           },
           {
             "year": 1003,
@@ -1688,7 +1712,7 @@
             "details": "From 1003 to 1012 the Schism War tears the Order apart. The Tribunal of the East, still a forgotten backwater, has no recorded part in it.",
             "changes": [],
             "margin": "",
-            "id": "1cd8b0322051"
+            "id": "1feadf73f729"
           },
           {
             "year": 1073,
@@ -1697,7 +1721,7 @@
             "details": "Magi raise a covenant on a crag of the Taurus in Lesser Armenia, one of the few founded between the East's first Tribunal and its second, and it grows rich on trade with covenants of the Roman Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "fea0ee5f019c"
+            "id": "0eb036fc7b4a"
           },
           {
             "year": 1098,
@@ -1706,7 +1730,7 @@
             "details": "With the First Crusade trapped inside Antioch, a southern French servant, Peter Bartholomew, tells its leaders that Saint Andrew has shown him in visions where the Lance that pierced Christ lies buried. They dig beneath the cathedral of St Peter, find it, carry it out against the besiegers and break the siege. It is a crusade of portents: comets, saints' ghosts at the head of the armies, visions on every side.",
             "changes": [],
             "margin": "",
-            "id": "fb8686ef8a42"
+            "id": "80a5bd126563"
           },
           {
             "year": 1099,
@@ -1715,7 +1739,7 @@
             "details": "On 15 July the crusaders storm Jerusalem and slaughter its people, and Godfrey rules it as Defender of the Holy Sepulchre; a Fatimid army is beaten in August. The sorcerers of Jerusalem had cursed the siege engines and strengthened the walls, but the Muslims' mages are few, scattered and leaderless, and they cannot hold against the Hermetic magi who have come with the armies: Flambeau, Tremere and Tytalus above all, some for their faith, some for plunder, and some Flambeau to avenge a founder they believe Muslim wizards murdered. Arnulf, the new Latin patriarch, finds a relic of the True Cross buried at the Holy Sepulchre.\n\nSecrets\nEver since, the night of 15 July has been a night of the dead in Jerusalem: an Infernal aura of 5 replaces the Divine ones, and the dead of 1099 throng the streets until dawn.",
             "changes": [],
             "margin": "",
-            "id": "08f752ab0d8c"
+            "id": "947765999d44"
           },
           {
             "year": 1099,
@@ -1724,7 +1748,7 @@
             "details": "Just after the Crusade, Flambeau magi found a fortress hidden in the Sinai as a refuge for the Order and a school of war for their House's young.",
             "changes": [],
             "margin": "",
-            "id": "aef270f3ff1e"
+            "id": "de2c50c2715d"
           },
           {
             "year": 1101,
@@ -1733,7 +1757,7 @@
             "details": "The crusaders carry the Lance into battle until 1101, when it is lost in Asia Minor; what became of it no one knows. The same year Redcaps found Venti Rosa, a covenant that is a caravan, carrying the Order's messages from covenant to covenant across the East.",
             "changes": [],
             "margin": "",
-            "id": "857c423f7d65"
+            "id": "7308d247728c"
           },
           {
             "year": 1112,
@@ -1742,7 +1766,7 @@
             "details": "Maryam al-Dimashqiyya, a young Jerbiton maga of Damascus, raises a fortress on a mountain five miles east of the city for magi who have chosen to fight their Hermetic brothers on the Muslims' side. She names it the House of Truth; in Arabic, Bayt al-Haqq, it means too the house of what is right.",
             "changes": [],
             "margin": "",
-            "id": "1372fa395b5c"
+            "id": "dfaca3ea1087"
           },
           {
             "year": 1129,
@@ -1751,7 +1775,7 @@
             "details": "After the Crusade, Verditius magi come for the spoils, Criamon to sit with the East's mystics, Jerbiton for its wealth and learning, and the newcomers stake out covenants and lands over the old covenants' protests. The Grand Tribunal of 1129 recognises the refounded Tribunal and, as the Order now holds covenants across the eastern lands, names it the Levant Tribunal. Recognition brings no order. For decades magi meddle openly in the wars, clash again and again with the Muslims' mages, and fight one another in Wizard Wars over the land's riches; some, sickened by their sodales' cruelty, take the Muslims' side. Crusading magi excuse their breaches of the Code as the price of keeping the Order in the East, counter-crusaders theirs as shielding the Muslims, and the quaesitores, some of them as deep in it as anyone, cannot rule the Tribunal.",
             "changes": [],
             "margin": "",
-            "id": "0703fd5aa8cc"
+            "id": "243ef874c538"
           },
           {
             "year": 1144,
@@ -1760,7 +1784,7 @@
             "details": "On Christmas Eve Zangi, atabeg of Mosul, takes Edessa and ends the first of the Latin states, with Muslim magi at his side. As Zangi, Nur al-Din and Salah al-Din unite the Muslims, mages gather to their banners.",
             "changes": [],
             "margin": "",
-            "id": "380f3b5a3922"
+            "id": "d95629d4b3fd"
           },
           {
             "year": 1148,
@@ -1769,7 +1793,7 @@
             "details": "The Second Crusade, led by Louis VII and Conrad III, turns on Damascus, Jerusalem's ally, and fails. Some Latins of the Levant sold their comrades for a chest of gold, but the city's sorcerers had enchanted the coins, and when the traitors came to spend them they were brass.",
             "changes": [],
             "margin": "",
-            "id": "f6a91757e61a"
+            "id": "c5e060b3eb80"
           },
           {
             "year": 1148,
@@ -1778,7 +1802,7 @@
             "details": "Ruth of Bonisagus and Pariah of Criamon pitch a camp of tents by the Great Pyramid at Giza. (One of the book's two covenants at the pyramids; see the Pyramids (II), 1178.)",
             "changes": [],
             "margin": "",
-            "id": "e74b52256f13"
+            "id": "6a4dc3ec3ac1"
           },
           {
             "year": 1169,
@@ -1787,7 +1811,7 @@
             "details": "Aurora Borealis of Jerbiton arrives with Tau of Flambeau and founds Domus Pacis in a khan north of Jerusalem, where magi and the land's other wizards may meet and trade knowledge. In Egypt the Kurd Shirkuh becomes the Fatimid caliph's vizier and dies within the year, and his nephew Salah al-Din takes his place.",
             "changes": [],
             "margin": "",
-            "id": "4225e0d2fb11"
+            "id": "b3d54eda8e85"
           },
           {
             "year": 1174,
@@ -1796,7 +1820,7 @@
             "details": "Nur al-Din, the Muslims' champion in Syria since he took Damascus in 1154, dies, and Salah al-Din begins to bring the Muslim Levant under his own rule. Some say the prophet al-Khidr taught Nur al-Din words of power that won him whatever he asked and carried him great distances in an instant.\n\nSecrets\nKhidr may also have taught him long life and foresight: the storyguide may decide he feigned his death, foreseeing Salah al-Din's destiny, and still works unseen for Islam.",
             "changes": [],
             "margin": "",
-            "id": "fbecc0ec9282"
+            "id": "6160e15024d7"
           },
           {
             "year": 1177,
@@ -1805,7 +1829,7 @@
             "details": "One of the twelve priests of Thoth and Anubis, hidden in a regio among the pyramids and the Sphinx since ancient times, dies, and as always a Gifted stranger is drawn to take the empty place. This time it is Heliobus Magister, a respected Bonisagus researcher, who arrives as Hermetic magi begin raiding the temple for its magic.",
             "changes": [],
             "margin": "",
-            "id": "b1979acf6405"
+            "id": "6a4326fc126a"
           },
           {
             "year": 1178,
@@ -1814,7 +1838,7 @@
             "details": "Heliobus brings the priesthood into House Ex Miscellanea and under the Code's protection, and the raids stop. (The book's second covenant at the pyramids; it may stand instead of the first, or beside it.)",
             "changes": [],
             "margin": "",
-            "id": "62a33a628aa0"
+            "id": "acc91c1f0cd1"
           },
           {
             "year": 1183,
@@ -1823,7 +1847,7 @@
             "details": "Seeing the danger Salah al-Din's rise means for the Order, Aurora approaches him, the caliph and their mages, travels to Baghdad to sketch a treaty, and offers it to the quaesitores of Magvillus, who seize on the chance to bring the Tribunal to heel.",
             "changes": [],
             "margin": "",
-            "id": "b6303d499619"
+            "id": "c56b7a7df42d"
           },
           {
             "year": 1187,
@@ -1832,7 +1856,7 @@
             "details": "Salah al-Din destroys the Latin army at Hattin on 4 July and takes Jerusalem and most of the Latin states. Muslim mages working with him kill many Hermetic magi on the field and later lend magical artillery against the Latin castles, and by the year's end several of the great crusading covenants are gone. The survivors accuse the counter-crusaders of helping the Muslims, but nothing is ever proved. The relic of the True Cross is lost to Salah al-Din on the field.",
             "changes": [],
             "margin": "",
-            "id": "c9107f5502f4"
+            "id": "ac2743d3cb52"
           },
           {
             "year": 1187,
@@ -1841,7 +1865,7 @@
             "details": "Maryam al-Dimashqiyya and most of Aedes Veritatis's magi die at Hattin, though their side has won. Heloise of Criamon, the one left, defers to Maryam's wish, and her young filius Sharaf al-Din 'Umar takes the covenant; Heloise later goes, saying only that it was time, and is not seen again. At Petra the crusaders abandon their castle, leaving Urbs Rubra undisturbed.",
             "changes": [],
             "margin": "",
-            "id": "d62198cc0af1"
+            "id": "bee22de658e1"
           },
           {
             "year": 1188,
@@ -1850,7 +1874,7 @@
             "details": "Two young magi from France, the Flambeau Guillaume de Bourne and the Tytalus Rufus de Clary, plant a covenant on a hill north-east of Acre to keep the Order a lasting foothold on the coast. Amber of Tremere, rejecting her House's support for the Crusades, joins 'Umar at Aedes Veritatis. (By the book's ages Guillaume and Rufus were barely magi; the pack keeps the year.)",
             "changes": [],
             "margin": "",
-            "id": "ca2056138a87"
+            "id": "77ef24d87a5f"
           },
           {
             "year": 1192,
@@ -1859,7 +1883,7 @@
             "details": "After the Third Crusade retakes Acre and Richard I sells Cyprus to Guy of Lusignan, Richard and Salah al-Din agree on 2 September a three-year truce that leaves the coast to the Latins and Jerusalem to the Muslims. In Baghdad, Aurora's talks between the Order and the Muslims' rulers and mages draw to a close.",
             "changes": [],
             "margin": "",
-            "id": "58e2ad29bd02"
+            "id": "de8943165a43"
           },
           {
             "year": 1193,
@@ -1868,7 +1892,7 @@
             "details": "Salah al-Din dies at Damascus on 4 March, and his sons and brother divide his empire.",
             "changes": [],
             "margin": "",
-            "id": "fcb391c3ab99"
+            "id": "4c28b2fee961"
           },
           {
             "year": 1193,
@@ -1877,7 +1901,7 @@
             "details": "Quaesitores from Magvillus made the Tribunal accept the Treaty Aurora had negotiated, ending the Order's war with the Muslims' mages. Crusading magi could no longer excuse breaches of the Code as defence, nor counter-Crusaders as protecting the Muslims.",
             "changes": [],
             "margin": "",
-            "id": "b5281ecac0cc"
+            "id": "869f36ab0829"
           },
           {
             "year": 1193,
@@ -1886,7 +1910,7 @@
             "details": "With the Treaty accepted, Aurora is invited to become a quaesitor, and accepts. She moves to Baghdad to keep the Treaty and founds the Hermetic Embassy there, near the caliph's palace, paid for by Magvillus; soon afterwards she becomes an archmaga.",
             "changes": [],
             "margin": "",
-            "id": "6e5acd5b71c8"
+            "id": "81f676b8fee9"
           },
           {
             "year": 1195,
@@ -1895,7 +1919,7 @@
             "details": "The Order's most recent Grand Tribunal meets.",
             "changes": [],
             "margin": "",
-            "id": "f2659f32d959"
+            "id": "24361256ff43"
           },
           {
             "year": 1197,
@@ -1904,7 +1928,7 @@
             "details": "Esther of Verditius, an Englishwoman, comes to Domus Pacis and soon makes it a channel for trade between the Levant and the Roman Tribunal, breaking al-Arama's hold on the trade.",
             "changes": [],
             "margin": "",
-            "id": "33fc168cd2fb"
+            "id": "9078949cd20a"
           },
           {
             "year": 1200,
@@ -1913,7 +1937,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1203.",
             "changes": [],
             "margin": "",
-            "id": "12cc1bf4da9b"
+            "id": "c57dd38b3ed4"
           },
           {
             "year": 1203,
@@ -1922,7 +1946,7 @@
             "details": "The renewal voted in 1200 takes effect: the Treaty runs another ten years.",
             "changes": [],
             "margin": "",
-            "id": "44eb67ea67bb"
+            "id": "283c17b4bc60"
           },
           {
             "year": 1204,
@@ -1931,7 +1955,7 @@
             "details": "The Fourth Crusade takes Constantinople on 12 April and founds a Latin empire; few of its knights ever reach the Levant. Greek states rise at Nicaea and Trebizond, Theban magi follow the refugees east, and Thebes claims the border lands for them. War between the two Tribunals is averted by Aurora and quaesitores of both, who give Nicaea to Thebes and Trebizond to the Levant. (The book does not date the settlement.)",
             "changes": [],
             "margin": "",
-            "id": "cef82c9b4458"
+            "id": "9cf92c0f180f"
           },
           {
             "year": 1207,
@@ -1940,7 +1964,7 @@
             "details": "The meeting renewed the Treaty for ten years from 1213, barely. With Fade and Wraith out of reach, the quaesitores ruled Tau of Flambeau the eldest, and the Tribunal has met at Domus Pacis since.",
             "changes": [],
             "margin": "",
-            "id": "37d6a2762657"
+            "id": "1e17918a2cd2"
           },
           {
             "year": 1213,
@@ -1949,7 +1973,7 @@
             "details": "The renewal won, barely, in 1207 takes effect. At his induction into the Order, Arash, apprentice of Rachel of Criamon, refuses the Oath of Hermes after a crisis of the spirit and swears the Treaty of Barcelona instead. Magi threaten him, and House Criamon spirits him away to Baghdad.",
             "changes": [],
             "margin": "",
-            "id": "a89ee6145f8a"
+            "id": "66bc9f4b66ea"
           },
           {
             "year": 1214,
@@ -1958,7 +1982,7 @@
             "details": "The Treaty was not due until 1223, and is renewed only at the last meeting before it lapses, so this meeting had nothing to renew; the debate went on all the same.",
             "changes": [],
             "margin": "",
-            "id": "eea77723250d"
+            "id": "31500708bb1d"
           },
           {
             "year": 1215,
@@ -1967,7 +1991,7 @@
             "details": "Felix, born to covenfolk at Domus Pacis, whose Gift showed itself only at twenty-eight while he was a guard there, becomes a magus of Guernicus. His parens Raymond is killed soon after in a fight with a hedge wizard that lames Felix, who takes up Raymond's watch on House Criamon and the Kabbalists. (The book says five years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "5bcb93e23f37"
+            "id": "8abc5a934f9c"
           },
           {
             "year": 1218,
@@ -1976,7 +2000,7 @@
             "details": "The crusaders strike at Egypt, the heart of Muslim power, and besiege Damietta. Al-Kamil offers them every old Latin land west of the Jordan and a thirty-year truce if they will leave Egypt, and they refuse. The war strains the Treaty of Baghdad as nothing has since 1193.",
             "changes": [],
             "margin": "",
-            "id": "69ce62359c6c"
+            "id": "856abb6030b6"
           },
           {
             "year": 1219,
@@ -1985,13 +2009,14 @@
             "details": "Damietta falls to the Crusade. Two young magi, David of Tremere and Xydas of Bonisagus, found the True Cross in the city, with a few grogs and friends in the garrison, and call on the Order to join them. In Syria al-Mu'azzam pulls down Jerusalem's walls, so that the crusaders cannot hold the city if they take it.",
             "changes": [],
             "margin": "",
-            "id": "94cf1dc26753"
+            "id": "b0069ceeecb6"
           }
         ],
         "package_data": {},
         "meeting": null,
         "secrets": "The book's own guess at what follows 1220: the Treaty fails, perhaps once the True Cross is lost, and the Tribunal joins the war; or it holds until the Mongols come, and then the Mamluks drive the Order from the mainland by 1291, leaving only Cyprus.\n\nThe Praeco's office should strictly be Wraith's, of Urbs Rubra, the elder of the Tribunal's two eldest; the quaesitores ruled Tau the eldest in 1207 only because no one could reach her.",
-        "arguments": []
+        "arguments": [],
+        "maps": []
       }
     ],
     "neighbours": [
@@ -2007,7 +2032,7 @@
         "place_id": "baghdad",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "A council",
           "members": 5000,
           "rules": "Enchanted items go to sahirs alone; no extracted vis is traded to Hermetic magi; a sahir who can himself be summoned may not be a member.",
@@ -2022,13 +2047,13 @@
             "kind": "places",
             "target_id": "ashab_al_sakhr_the_followers_of_the_stone",
             "note": "One of the five families",
-            "id": "980b41809be9"
+            "id": "4b649ef57bbe"
           },
           {
             "kind": "places",
             "target_id": "ashab_al_nahr_the_followers_of_the_river",
             "note": "One of the five families",
-            "id": "52d10e930356"
+            "id": "d1523f1a6376"
           }
         ],
         "arms": {},
@@ -2098,7 +2123,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -2112,13 +2137,13 @@
             "kind": "places",
             "target_id": "jinnistan",
             "note": "Their homes",
-            "id": "a2c1df289567"
+            "id": "755c8a41260c"
           },
           {
             "kind": "places",
             "target_id": "the_mountains_of_qaf",
             "note": "Their homeland's wall",
-            "id": "097333717384"
+            "id": "e1abac0bd9db"
           }
         ],
         "arms": {},
@@ -2462,7 +2487,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "Its leader",
           "members": null,
           "rules": "The imam's word is absolute; taqiyya, hiding one's faith, is lawful in danger.",
@@ -2477,7 +2502,7 @@
             "kind": "places",
             "target_id": "lord_of_alamut",
             "note": "Their head",
-            "id": "2b538e141cd4"
+            "id": "b85776e3681f"
           }
         ],
         "arms": {},
@@ -2712,7 +2737,7 @@
             "kind": "creatures",
             "target_id": "abd_al_misbah_the_servant_of_the_lamp",
             "note": "the marid of the lamp, wherever the lamp has gone",
-            "id": "2433f53dea03"
+            "id": "be6932d7be97"
           }
         ],
         "arms": {},
@@ -2730,7 +2755,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2744,7 +2769,7 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Its leading member",
-            "id": "c4ef6910b2c0"
+            "id": "4215b4b20726"
           }
         ],
         "arms": {},
@@ -2943,7 +2968,7 @@
             "kind": "creatures",
             "target_id": "al_qatil_the_slayer",
             "note": "the ghul who sells his sword to any army",
-            "id": "b4191dc972cd"
+            "id": "cfc390ad8be4"
           }
         ],
         "arms": {},
@@ -3295,7 +3320,7 @@
             "kind": "creatures",
             "target_id": "amirat_al_jabal_lady_emir_of_the_mountain",
             "note": "the marida who watches over the mountains' jinn",
-            "id": "851511956856"
+            "id": "9d4cd7c0d504"
           }
         ],
         "arms": {},
@@ -3455,7 +3480,7 @@
             "kind": "creatures",
             "target_id": "naddaha",
             "note": "the spiked crone who lurks by wells",
-            "id": "0f6ec8a574e3"
+            "id": "45c271df4538"
           }
         ],
         "arms": {},
@@ -3604,7 +3629,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_acre",
             "note": "Its harbour",
-            "id": "92bad58a0ce4"
+            "id": "e1a246fa5b25"
           }
         ],
         "arms": {},
@@ -3633,7 +3658,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tripoli",
             "note": "Its harbour",
-            "id": "56ffdfa94d08"
+            "id": "12310b5d739f"
           }
         ],
         "arms": {},
@@ -3706,7 +3731,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_famagusta",
             "note": "Its harbour",
-            "id": "3f12e6535a45"
+            "id": "656ca62ff50a"
           }
         ],
         "arms": {},
@@ -3757,7 +3782,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_alexandria",
             "note": "Its harbour",
-            "id": "b8240cfdee73"
+            "id": "c9adc660b312"
           }
         ],
         "arms": {},
@@ -3786,7 +3811,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_damietta",
             "note": "Its harbour",
-            "id": "db39bd0dc248"
+            "id": "ddb568c5ef76"
           }
         ],
         "arms": {},
@@ -3905,37 +3930,37 @@
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Amber's familiar",
-            "id": "c01f2a8d4b84"
+            "id": "741ea8cd88c0"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "a ghost who answers Wardat's summons",
-            "id": "db1272826bde"
+            "id": "91b71f850834"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit who answers Wardat's summons",
-            "id": "87de4e3ca9b9"
+            "id": "c9d155aeedec"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon Wardat can summon but not command",
-            "id": "029cf78a83c3"
+            "id": "9442b1872927"
           },
           {
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to Wardat's service",
-            "id": "5065f5f8188c"
+            "id": "2cde6a0f1a42"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to Wardat's service",
-            "id": "d9acd90470f2"
+            "id": "5b295da1c9cf"
           }
         ],
         "arms": {},
@@ -4109,19 +4134,19 @@
             "kind": "places",
             "target_id": "acre",
             "note": "The kingdom's capital since 1187",
-            "id": "84c161a6591c"
+            "id": "39f49cdb2c5b"
           },
           {
             "kind": "places",
             "target_id": "the_papal_legate",
             "note": "Claims the Crusade's conquests for the Church",
-            "id": "e75f6e2acf33"
+            "id": "7cd9bbb4fa18"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "John of Brienne fights in it",
-            "id": "6baf1342f6cd"
+            "id": "b1a1f1ad1a4f"
           }
         ],
         "arms": {},
@@ -4151,13 +4176,13 @@
             "kind": "places",
             "target_id": "tripoli",
             "note": "His county's capital",
-            "id": "a7cb71c9cc1f"
+            "id": "d5ae26763329"
           },
           {
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "Held by the same man, Bohemond IV",
-            "id": "8a5824c419ed"
+            "id": "e93e8bbfa137"
           }
         ],
         "arms": {},
@@ -4187,13 +4212,13 @@
             "kind": "places",
             "target_id": "antioch",
             "note": "His capital, retaken in 1219",
-            "id": "e25589892b4a"
+            "id": "b27c42c0a588"
           },
           {
             "kind": "places",
             "target_id": "count_of_tripoli",
             "note": "Held by the same man, Bohemond IV",
-            "id": "e3387cab8e4b"
+            "id": "6cd42a16b37f"
           }
         ],
         "arms": {},
@@ -4223,13 +4248,13 @@
             "kind": "places",
             "target_id": "nicosia",
             "note": "His capital",
-            "id": "eb1ee60a6c06"
+            "id": "1856546082d5"
           },
           {
             "kind": "places",
             "target_id": "famagusta",
             "note": "His island's rising port",
-            "id": "9239b0fac244"
+            "id": "b67f5b77d5bf"
           }
         ],
         "arms": {},
@@ -4259,13 +4284,13 @@
             "kind": "places",
             "target_id": "prince_of_antioch",
             "note": "His uncle, who twice put him out of Antioch",
-            "id": "149b41d0c5b5"
+            "id": "14eb210812c2"
           },
           {
             "kind": "places",
             "target_id": "tarsus",
             "note": "His seat, where Constantine is favoured",
-            "id": "e97bd9073746"
+            "id": "ce48f3bdbace"
           }
         ],
         "arms": {},
@@ -4283,7 +4308,7 @@
         "place_id": "the_alan_lands",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -4297,7 +4322,7 @@
             "kind": "covenants",
             "target_id": "urania",
             "note": "Lies in their lands",
-            "id": "e0cf84eab07f"
+            "id": "f37e3405a49a"
           }
         ],
         "arms": {},
@@ -4327,25 +4352,25 @@
             "kind": "places",
             "target_id": "damascus",
             "note": "His capital",
-            "id": "bb1662f360e7"
+            "id": "bdf15349e283"
           },
           {
             "kind": "places",
             "target_id": "jerusalem",
             "note": "His; he razed it in 1219",
-            "id": "fe5a121dc6c7"
+            "id": "0c711abd3413"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "His brother and rival, head of the family",
-            "id": "ee549a3976ba"
+            "id": "a34de979f3dc"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Buys its quarry stone",
-            "id": "f30c7ba6211a"
+            "id": "bdbdddd42a9d"
           }
         ],
         "arms": {},
@@ -4387,7 +4412,7 @@
         "place_id": "masyaf",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "Its leader",
           "members": null,
           "rules": "The chief at Masyaf obeys the master at Alamut, and every rafiq obeys his chief.",
@@ -4402,13 +4427,13 @@
             "kind": "places",
             "target_id": "the_nizaris",
             "note": "The sect they belong to",
-            "id": "f3aa2adefeb8"
+            "id": "102bdac64f3e"
           },
           {
             "kind": "places",
             "target_id": "the_old_man_of_the_mountain",
             "note": "Their chief",
-            "id": "e64f617d3f37"
+            "id": "ce48d2f06ac6"
           }
         ],
         "arms": {},
@@ -4449,7 +4474,7 @@
         "place_id": "the_levant",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -4474,7 +4499,7 @@
         "place_id": "asia_minor",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -4499,7 +4524,7 @@
         "place_id": "acre",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4513,13 +4538,13 @@
             "kind": "places",
             "target_id": "chastel_p_lerin",
             "note": "Its castle",
-            "id": "a120cae40273"
+            "id": "c5a22b411272"
           },
           {
             "kind": "places",
             "target_id": "tortosa",
             "note": "Its castle",
-            "id": "f1fd89fb5f15"
+            "id": "e4a592be051e"
           }
         ],
         "arms": {},
@@ -4537,7 +4562,7 @@
         "place_id": "acre",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4551,13 +4576,13 @@
             "kind": "places",
             "target_id": "krak_des_chevaliers",
             "note": "Its castle",
-            "id": "4ba6f97cd010"
+            "id": "380912e1544f"
           },
           {
             "kind": "places",
             "target_id": "marqab",
             "note": "Its castle",
-            "id": "d4f19c8358d1"
+            "id": "6cba69f46e3a"
           }
         ],
         "arms": {},
@@ -4575,7 +4600,7 @@
         "place_id": "acre",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4589,7 +4614,7 @@
             "kind": "places",
             "target_id": "montfort",
             "note": "Its castle",
-            "id": "20f8a5c5085d"
+            "id": "e044c8816e68"
           }
         ],
         "arms": {},
@@ -4607,7 +4632,7 @@
         "place_id": "the_kingdom_of_jerusalem",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4632,7 +4657,7 @@
         "place_id": "the_kingdom_of_jerusalem",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4657,7 +4682,7 @@
         "place_id": "the_kingdom_of_jerusalem",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4682,7 +4707,7 @@
         "place_id": "the_kingdom_of_jerusalem",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4707,7 +4732,7 @@
         "place_id": "acre",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4732,7 +4757,7 @@
         "place_id": "acre",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Military order",
           "decides": "Its leader",
           "members": null,
           "rules": "",
@@ -4888,13 +4913,13 @@
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Leads it as the Pope's legate",
-            "id": "1a6c319e96e8"
+            "id": "db772fcdc2c7"
           },
           {
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "Quarrels with John of Brienne",
-            "id": "9fda69d1794b"
+            "id": "a61b0c006f88"
           }
         ],
         "arms": {},
@@ -4923,7 +4948,7 @@
             "kind": "places",
             "target_id": "king_of_jerusalem",
             "note": "The king chooses the patriarch",
-            "id": "3cd62f4a0141"
+            "id": "5c9f4452fa32"
           }
         ],
         "arms": {},
@@ -5205,7 +5230,7 @@
         "place_id": "the_levant",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5230,7 +5255,7 @@
         "place_id": "the_levant",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5256,7 +5281,7 @@
         "place_id": "the_mountains_of_lebanon",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "Their doctrine is kept secret from outsiders.",
@@ -5281,7 +5306,7 @@
         "place_id": "bilad_al_sham",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5306,7 +5331,7 @@
         "place_id": "the_levant",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5320,25 +5345,25 @@
             "kind": "places",
             "target_id": "the_syrian_nizaris",
             "note": "Another Shi'i branch",
-            "id": "81d854db17fe"
+            "id": "d8954a36db4a"
           },
           {
             "kind": "places",
             "target_id": "the_nusayris",
             "note": "Their splinter",
-            "id": "b90586fde836"
+            "id": "1fe1891c25ab"
           },
           {
             "kind": "places",
             "target_id": "the_druze",
             "note": "Another Shi'i branch",
-            "id": "6dee31f520f0"
+            "id": "47916dcafc50"
           },
           {
             "kind": "places",
             "target_id": "the_bedouin",
             "note": "Many are Twelvers",
-            "id": "26152343db0c"
+            "id": "edd43939375a"
           }
         ],
         "arms": {},
@@ -5399,91 +5424,91 @@
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Brings the renewal",
-            "id": "a2eb6b23b5d7"
+            "id": "0e3f6649e4e8"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Hosts the vote; for renewal",
-            "id": "098daeec5bed"
+            "id": "9964838a72e0"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "For renewal",
-            "id": "b29257885262"
+            "id": "ddc43187c4c9"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Leads the vote against",
-            "id": "1e7fae79044e"
+            "id": "9a641a4a6922"
           },
           {
             "kind": "covenants",
             "target_id": "para_belli",
             "note": "Against renewal",
-            "id": "af590b312880"
+            "id": "0d0f37e6261b"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "Against renewal",
-            "id": "552d741e70b0"
+            "id": "bf3ef859a83c"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "Twelve votes",
-            "id": "89dcb0dd67b8"
+            "id": "cad479728424"
           },
           {
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Its maker",
-            "id": "f0ee38f33c69"
+            "id": "0d463aa9f1e8"
           },
           {
             "kind": "characters",
             "target_id": "scipio",
             "note": "In the chair",
-            "id": "19578a420146"
+            "id": "f270073d3120"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "The Praeco, the host",
-            "id": "6929ff6d436a"
+            "id": "6bb4581344d1"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Speaks against",
-            "id": "c12365c1811c"
+            "id": "e55aae0520f1"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Holds twelve votes",
-            "id": "751a1eb51ef7"
+            "id": "9e90fbe274c0"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "The other party",
-            "id": "1e2817436f07"
+            "id": "e51c434771a4"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Strains the peace",
-            "id": "61a8da0a768c"
+            "id": "44acaad6b94b"
           },
           {
             "kind": "places",
             "target_id": "the_islamic_tradition",
             "note": "Suspected of meddling",
-            "id": "403025a230ba"
+            "id": "3bb2ee194f3e"
           }
         ],
         "arms": {},
@@ -5554,55 +5579,55 @@
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Wages it",
-            "id": "623179fb09b7"
+            "id": "7fac0932356b"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Its target",
-            "id": "5105432aded2"
+            "id": "96ca754e1fad"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Full of both sides' spies",
-            "id": "b990ce83cd75"
+            "id": "a7cf84ca96ad"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Troubled by both",
-            "id": "286d3589a288"
+            "id": "5810c9be6e0c"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Leads it",
-            "id": "2ff8ecdda91e"
+            "id": "0ab2bae1381b"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "Fights beside 'Umar",
-            "id": "507892d4b2fb"
+            "id": "33928a7e3b20"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "Fights too",
-            "id": "a40861b7d508"
+            "id": "82835729a6d6"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "Its target",
-            "id": "5728bfbb3073"
+            "id": "ca322a3e03f6"
           },
           {
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "Its target",
-            "id": "dc35b748cf10"
+            "id": "d24eb351ae19"
           }
         ],
         "arms": {},
@@ -5674,55 +5699,55 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "The servant",
-            "id": "50cb2ff1951b"
+            "id": "0bb670d2103b"
           },
           {
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "His friend, unknowing",
-            "id": "b22dc70a095b"
+            "id": "bf4152b23ebd"
           },
           {
             "kind": "characters",
             "target_id": "wardat_al_quds",
             "note": "His sodalis",
-            "id": "ebba15856728"
+            "id": "5a0bf51821a7"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "A quaesitor who may find out",
-            "id": "f4d3a56946ac"
+            "id": "e46b3af51bc8"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "His covenant",
-            "id": "65b3649ef685"
+            "id": "b7f332d82ff7"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "Wants him Renounced",
-            "id": "a374bf792fd7"
+            "id": "9516ae162e24"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_egypt",
             "note": "One of the sultans he serves",
-            "id": "27537ac9a195"
+            "id": "293bc321e92c"
           },
           {
             "kind": "places",
             "target_id": "ayyubid_sultan_of_damascus",
             "note": "His sultan at Damascus",
-            "id": "3704cc381759"
+            "id": "6960469ddf66"
           },
           {
             "kind": "places",
             "target_id": "damascus",
             "note": "Where he plays the emir",
-            "id": "e7b18a7c32b8"
+            "id": "12ce583d2a44"
           }
         ],
         "arms": {},
@@ -5784,37 +5809,37 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The trader",
-            "id": "09477b646550"
+            "id": "ec7f91ed91af"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Quaesitor under her roof",
-            "id": "8e4ce0cb2df9"
+            "id": "4753e4ee978a"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Her covenant's head",
-            "id": "dc526f480efd"
+            "id": "3e30aa689713"
           },
           {
             "kind": "characters",
             "target_id": "hildegard",
             "note": "Al-Arama's",
-            "id": "6c868277525b"
+            "id": "af3c95c04a40"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her covenant",
-            "id": "c393f669f67f"
+            "id": "dbda4925a1f6"
           },
           {
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Her rival in trade",
-            "id": "8045c946d36b"
+            "id": "8571be7e6b52"
           }
         ],
         "arms": {},
@@ -5876,19 +5901,19 @@
             "kind": "characters",
             "target_id": "rufus_de_clary",
             "note": "The blackmailer",
-            "id": "fecf31d7a709"
+            "id": "0c105c32f3c5"
           },
           {
             "kind": "characters",
             "target_id": "guillaume_de_bourne",
             "note": "His sodalis",
-            "id": "6c78468b8bd5"
+            "id": "c4b5d30f8a3d"
           },
           {
             "kind": "covenants",
             "target_id": "foothold",
             "note": "His covenant",
-            "id": "241ed68e6bfc"
+            "id": "dead27a3a698"
           }
         ],
         "arms": {},
@@ -5950,37 +5975,37 @@
             "kind": "characters",
             "target_id": "amber_the_golden",
             "note": "The rebel",
-            "id": "10586a02a4c7"
+            "id": "79064e9c5ffe"
           },
           {
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her friend",
-            "id": "6821a2ecc174"
+            "id": "c68d76be5c55"
           },
           {
             "kind": "characters",
             "target_id": "david",
             "note": "A Tremere of the Levant",
-            "id": "c81596fbefc4"
+            "id": "a9b218657c9c"
           },
           {
             "kind": "characters",
             "target_id": "xerxes",
             "note": "A Tremere of the Levant",
-            "id": "c7fcc4dc1ef9"
+            "id": "f2f4be35b20f"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "Her familiar",
-            "id": "6fced300b64a"
+            "id": "b7ecbc1813a8"
           },
           {
             "kind": "covenants",
             "target_id": "aedes_veritatis",
             "note": "Her covenant",
-            "id": "def55935a573"
+            "id": "68b85e3499c4"
           }
         ],
         "arms": {},
@@ -6042,31 +6067,31 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Failing",
-            "id": "95356a7f8868"
+            "id": "ac74c5b48f91"
           },
           {
             "kind": "characters",
             "target_id": "spiral",
             "note": "Her unfit heir",
-            "id": "b9a0e65b5a5b"
+            "id": "f4e071233922"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "Her covenant",
-            "id": "192c4f4d37fb"
+            "id": "6c56983526f9"
           },
           {
             "kind": "covenants",
             "target_id": "domus_pacis",
             "note": "Her first covenant",
-            "id": "f80738c28ec9"
+            "id": "59e6b65f12f1"
           },
           {
             "kind": "places",
             "target_id": "caliph_of_baghdad",
             "note": "Her counterpart",
-            "id": "9a9b4b5a084f"
+            "id": "aaa54c8427ab"
           }
         ],
         "arms": {},
@@ -6128,31 +6153,31 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "The eldest",
-            "id": "729661acaee9"
+            "id": "9795db8bcd11"
           },
           {
             "kind": "characters",
             "target_id": "wraith",
             "note": "Praeco by right",
-            "id": "d821a19e8018"
+            "id": "38ec7a45618b"
           },
           {
             "kind": "characters",
             "target_id": "tau",
             "note": "Praeco by ruling",
-            "id": "523cd1db5ecd"
+            "id": "cd9de877afb0"
           },
           {
             "kind": "covenants",
             "target_id": "urbs_rubra",
             "note": "Shut by its jinn",
-            "id": "ead9a47870aa"
+            "id": "abb58c4daf76"
           },
           {
             "kind": "places",
             "target_id": "petra",
             "note": "The Red City",
-            "id": "6a14122ca39d"
+            "id": "11aa48469a49"
           }
         ],
         "arms": {},
@@ -6214,19 +6239,19 @@
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "The kingmaker",
-            "id": "1ae92910ea6a"
+            "id": "29c7c34ee691"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "His twelve votes",
-            "id": "6fd3a9afea48"
+            "id": "f4096ce822ed"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The hidden temple",
-            "id": "82e37fdaac4e"
+            "id": "d496c446204e"
           }
         ],
         "arms": {},
@@ -6288,25 +6313,25 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Made the peace",
-            "id": "fca82dab350a"
+            "id": "4019faad621e"
           },
           {
             "kind": "places",
             "target_id": "asia_minor",
             "note": "The border",
-            "id": "61e5959bed10"
+            "id": "b7cd3ec7e74a"
           },
           {
             "kind": "places",
             "target_id": "emperor_of_trebizond",
             "note": "The Levant's side",
-            "id": "b0c37e5b9a9f"
+            "id": "486c813aa37c"
           },
           {
             "kind": "places",
             "target_id": "sultan_of_rum",
             "note": "Rules between",
-            "id": "5bea0b7fddee"
+            "id": "f683d9bdd50d"
           }
         ],
         "arms": {},
@@ -6358,25 +6383,25 @@
             "kind": "characters",
             "target_id": "arash",
             "note": "Outside the Order",
-            "id": "3cc5c0d3ad63"
+            "id": "a858c69b72ba"
           },
           {
             "kind": "characters",
             "target_id": "felix",
             "note": "Watches the Kabbalists",
-            "id": "3a93d34b9e5c"
+            "id": "dc1e58683d5f"
           },
           {
             "kind": "covenants",
             "target_id": "the_hermetic_embassy",
             "note": "His neighbour in Baghdad",
-            "id": "79c3c30a78a4"
+            "id": "6113e5e476d4"
           },
           {
             "kind": "places",
             "target_id": "baghdad",
             "note": "Where he hides",
-            "id": "6045ed04ee55"
+            "id": "229aa21f3219"
           }
         ],
         "arms": {},
@@ -6438,31 +6463,31 @@
             "kind": "characters",
             "target_id": "david",
             "note": "Sends the call",
-            "id": "44b8b0ae48bb"
+            "id": "86355b118d82"
           },
           {
             "kind": "characters",
             "target_id": "xydas",
             "note": "His sodalis",
-            "id": "615f437ac188"
+            "id": "12e904dbbf48"
           },
           {
             "kind": "covenants",
             "target_id": "the_true_cross",
             "note": "The covenant",
-            "id": "60ac597377d9"
+            "id": "a2247d2d8414"
           },
           {
             "kind": "places",
             "target_id": "the_fifth_crusade",
             "note": "Its fortunes",
-            "id": "ef17ffe671a2"
+            "id": "e383bfb9d13a"
           },
           {
             "kind": "places",
             "target_id": "damietta",
             "note": "Its city",
-            "id": "f380bf9c50c3"
+            "id": "e0d66b193874"
           }
         ],
         "arms": {},
@@ -6524,37 +6549,37 @@
             "kind": "characters",
             "target_id": "ruth",
             "note": "Would open them",
-            "id": "fa7ec167143c"
+            "id": "77ef4b90d23f"
           },
           {
             "kind": "characters",
             "target_id": "pariah",
             "note": "Would open them",
-            "id": "81c78c968029"
+            "id": "ea3aa283f7f3"
           },
           {
             "kind": "characters",
             "target_id": "heliobus_magister",
             "note": "Below, in the regio",
-            "id": "bff18c9c5098"
+            "id": "6b9e65189f44"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_i",
             "note": "The diggers",
-            "id": "ea5a2f736e42"
+            "id": "8d259881e46a"
           },
           {
             "kind": "covenants",
             "target_id": "the_pyramids_ii",
             "note": "The hidden temple",
-            "id": "8754744c3c9e"
+            "id": "d27816bf37e1"
           },
           {
             "kind": "places",
             "target_id": "giza",
             "note": "The pyramids",
-            "id": "ac30b2ad43c1"
+            "id": "7c7a3870259a"
           }
         ],
         "arms": {},
@@ -7292,6 +7317,8 @@
         "summary": "Scipio of Guernicus, filius Rognvald, the Tribunal's senior quaesitor and so the chair of its meetings, which gives him great power. He keeps no covenant and spends his time travelling the Tribunal. Ninety-six, he looks to be in his sixties: strongly built, with short grey hair and a beard, always in robes of grey. A master of Intellego, above all Intellego Mentem, he knows most of the common Intellego spells of the other Forms too.\n\nThe book leaves his character to the troupe, as three readings, none chosen here: a rigid Traditionalist who enforces the Code to the letter; a Transitionalist who lets reason come before law; or a corrupt judge in some covenant's pay.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8336,6 +8363,8 @@
         "summary": "Head of Aedes Veritatis, filius of its founder Maryam al-Dimashqiyya. Hattin was a Muslim victory, but it killed most of the covenant's magi; the one left, Heloise of Criamon, honoured Maryam's wish and let the young 'Umar take charge, and later went her own way, saying only that her time had come, and has not been seen since. Wild and hot-headed once, he has grown into a careful, wise leader, though the counter-Crusade still obsesses him and the old wildness breaks out now and then.\n\nTo look at he is nobody special, neither tall nor short, black-haired and fully bearded, until he speaks: then people listen. He wears black robes with a white sash and a white turban, and never goes without his staff, enchanted to carry him from place to place in an instant and to turn weapons aside. Like his mater he is an elementalist and a devout Sunni, and of the Islamic Tradition. His elements have made other Arts hard for him, Vim most of all: the second time he renewed his longevity potion he could make it strong enough only with rare ingredients, and hunting such things has become his own quest.\n\nStory seeds:\nA Shadow from the Past: Foothold, having learnt of the Crusader magus 'Umar killed with no one to witness the self-defence, perhaps from the dead man's ghost, asks the characters to help bring him to trial and have him Renounced: the letter of the law, or a plain political move?",
         "secrets": "'Umar is a servant of the Ayyubid sultans as well as a magus of the Order, and not even his sodales know it. If the Order learnt of it he would probably be Renounced; but he is powerful and would call on the Muslims' own mages for help, so a Renunciation might not end in his death.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9281,15 +9310,17 @@
             "kind": "characters",
             "target_id": "sharaf_al_din_umar",
             "note": "Her close friend",
-            "id": "8ca0dfc7b9cb"
+            "id": "19276f73fe2c"
           },
           {
             "kind": "creatures",
             "target_id": "luigi",
             "note": "her familiar, Luigi",
-            "id": "1e1ad7314e03"
+            "id": "ed4b2d56fa2c"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9619,7 +9650,10 @@
             "creature_id": "al_manqa_i_the_bog_dweller",
             "bonus": 0,
             "applies_to": "",
-            "notes": "One of her Familiarities (3) in the book."
+            "notes": "One of her Familiarities (3) in the book.",
+            "service": "",
+            "vis_yearly": 0,
+            "favour": ""
           },
           {
             "name": "Sharif",
@@ -9628,7 +9662,10 @@
             "creature_id": "sharif_the_noble",
             "bonus": 0,
             "applies_to": "",
-            "notes": "One of her Familiarities (3) in the book."
+            "notes": "One of her Familiarities (3) in the book.",
+            "service": "",
+            "vis_yearly": 0,
+            "favour": ""
           }
         ],
         "tradition_pools": {},
@@ -9833,33 +9870,35 @@
             "kind": "creatures",
             "target_id": "al_manqa_i_the_bog_dweller",
             "note": "a jinni bound to her service",
-            "id": "344b25ba4866"
+            "id": "05ac3f0d2960"
           },
           {
             "kind": "creatures",
             "target_id": "sharif_the_noble",
             "note": "a jinni bound to her service",
-            "id": "976df64f12f9"
+            "id": "24d1f6c256cb"
           },
           {
             "kind": "creatures",
             "target_id": "aziza",
             "note": "her grandmother's ghost, whom she summons",
-            "id": "0b2267e722c1"
+            "id": "519007e762ce"
           },
           {
             "kind": "creatures",
             "target_id": "hiss",
             "note": "an airy fire spirit she summons",
-            "id": "ec925df61829"
+            "id": "3aea1e83d534"
           },
           {
             "kind": "creatures",
             "target_id": "lucius",
             "note": "a demon she can summon but not command",
-            "id": "c1bb03cbde20"
+            "id": "f02db4a0981d"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10553,9 +10592,11 @@
             "kind": "characters",
             "target_id": "aurora_borealis",
             "note": "Came to the Levant with her",
-            "id": "3a9278345752"
+            "id": "5c4735c3ffa2"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11246,6 +11287,8 @@
         "summary": "Felix of Guernicus, filius Raymond, a quaesitor. He was born at Dar al-Salam to one of the covenfolk and was a guard in its turb when his Gift showed itself at 28; after the usual fifteen years of apprenticeship he passed his Gauntlet only five years ago. Soon after, his parens was killed fighting a hedge wizard, in a skirmish that crippled Felix's right leg for good. He took over Raymond's standing duty of watching the dealings between House Criamon and the Levant's Kabbalists, and does it faithfully, by ordinary means first, since he knows his magic is weak and best kept in support. He is on good terms with the Kabbalists and has quickly won a name for fairness in the Order.\n\nA plump, friendly-looking man a little under middle height, with an aquiline face and brown hair greying at the temples. His twisted leg keeps him from standing quite straight. He wears plain brown robes and walks with a staff; he can fight but seldom goes armed, as his leg makes it hard and battle no longer stirs him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12152,9 +12195,11 @@
             "kind": "covenants",
             "target_id": "al_arama",
             "note": "Enemies: she broke its monopoly",
-            "id": "4cec35bbfdc3"
+            "id": "e81b936f4f04"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12952,6 +12997,8 @@
         "summary": "Guillaume de Bourne of Flambeau, filius Ignatia, a Flambeau of the old pattern, Ignem his strength and as much a soldier as a magus, except that he is pious and truly believes in the Crusade, and that belief has become an obsession. The Holy Land should be won from the Muslims for the Church; that the Order would gain by it is, to him, beside the point. He knows he is a warrior with no head for politics, so he lets Rufus speak for the covenant and spends nearly as much time drilling with the grogs as studying.\n\nA big, thickset man with black hair, a thin moustache and a heavy accent; a burn scar on his right cheek is the mark of a fight with a powerful Muslim magus. He wears a plain tunic and trews, a gold cross on a chain and a longsword at his left hip, and fights in nothing heavier than a reinforced leather hauberk.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13706,6 +13753,8 @@
         "summary": "Rufus de Clary of Tytalus, filius Gilles de Clary, who speaks for Foothold at Tribunal. In debate he argues that the Crusade must go on for the Order's good, and that if the Order spreads into Muslim lands it can claim their magical riches; he means to have his share, and the end justifies the means.\n\nA handsome, slim man with a slight stoop, very fair hair and deep blue eyes, in robes of the same blue, with a silver pendant engraved with his House's sign. He is cunning and manipulative and will sacrifice others to his ends. He can work magic without words or gestures and read lips, and so has learnt many secrets; more than one magus dreads what would happen if he ever got proof of what he knows.\n\nStory seeds:\nSins of the Father: Rufus holds proof of a secret that could have a character's parens executed under the Code, and the parens asks for help: persuade him, steal the evidence, or something else?",
         "secrets": "Fear, not faith, drives him. His parents were diabolists who put him through horrors as a child until Gilles de Clary rescued him, and he still believes demons are after his soul; he hunts magical power to protect himself from them, and keeps the root of his zeal to himself.\n\nHe is gathering a hoard of other magi's secrets, and looking for the proof that would turn each one into a hold over its owner.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14371,6 +14420,8 @@
         "summary": "Archmaga and quaesitor, Aurora of Jerbiton, filia Marianne, the oldest quaesitor in the Tribunal and the architect of the Treaty of Baghdad. A daughter of Alpine nobility, she was struck by lightning at eight, which woke her Gift and showed her how she will end: in Final Twilight, from a second strike. Her mater loved the stars; Aurora cared for earthly things and for people, took early to Corpus and studied Mentem deeply, and after her Gauntlet stayed twenty years at her mater's covenant, a favourite of the grogs and covenfolk she helped with her magic.\n\nThen she came to the Levant, founded Domus Pacis in 1169, and, watching Salah al-Din unite the Muslims, saw the danger to the Order: from 1183 she treated in Baghdad with him, the caliph and their mages, and brought the quaesitores of Magvillus a way to end the fighting. When the Treaty was forced through in 1193 she was made a quaesitor, moved to Baghdad to keep the peace, founded the Embassy, and soon became an archmaga. It was she who proposed that only a Guernicus quaesitor may preside at the Tribunal, so that she would never be accused of bias in the chair.\n\nAt 102 she looks in her late sixties: slim, with long red hair streaked with grey, in bright, well-cut robes of many colours, still beautiful; many young magi have lost their hearts to her, and she has never let it go further. Age and creeping Twilight are telling on her: a hard Twilight lately damaged her Animal, she feels her hold on the world loosening, and she fears for the Levant if she goes soon, for Spiral could not carry on her diplomacy. She is looking for an answer.\n\nHer one apprentice, Macha, is now a maga in a covenant in Hibernia; she shares her mater's interests, leaning more to Mentem than Corpus.\n\nStory seeds:\nRescue Mission: if the Embassy is still in Baghdad when the Mongols take it in 1258, Aurora is taken by their shamans; Magvillus, afraid of what she might reveal, sends the characters to free her, or kill her if they cannot, and to answer for it afterwards.\nThe Archmage's Challenge: Aurora won her title by answering a riddle set by Emerich of Criamon, archmage of the Rhine; any magus may now challenge her for it, and what she sets is the storyguide's choice, a story or the saga's leitmotif.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15317,6 +15368,8 @@
         "summary": "Spiral of Criamon, filius Umberto, the Embassy's second magus. He wants the peace kept, but what he cares about most is unravelling the mysteries of Islamic magic. His view of the world, and of magic above all, is so much his own that the Muslim mages he meets can hardly follow him; Baghdad's Sufis think him a wise man and understand little of what he says. That is why he could not take over the Order's diplomacy if Aurora were lost, though his enthusiasm keeps him blind to it.\n\nAs a young magus he gave himself almost fanatically to Intellego and Vim, studying Corpus only enough to make a strong longevity potion and so win more years for them. He has mellowed since, seen that Mentem and Imaginem would help him understand Islamic magic, and is widening his studies.\n\nAn unsettling figure: tall and thin as a skeleton, all joints, his face covered in spiral tattoos and his long fair hair wild and unwashed, in plain robes torn and ragged from neglect.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16033,9 +16086,11 @@
             "kind": "characters",
             "target_id": "wraith",
             "note": "His wife",
-            "id": "0c1709831591"
+            "id": "d68f8948cee9"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16752,9 +16807,11 @@
             "kind": "characters",
             "target_id": "fade",
             "note": "Her husband",
-            "id": "ca6af35429b0"
+            "id": "0893b1052d8f"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17362,6 +17419,8 @@
         "summary": "Selene of Merinita, filia Myrtle, Urania's leader, who studies the Genjii and believes they and the jinn share an ancestor. Her pact with the Genjii bars her from searching out their secrets too closely.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17887,6 +17946,8 @@
         "summary": "Gagik of Criamon, filius Matthias, of Urania. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18368,6 +18429,8 @@
         "summary": "Xerxes of Tremere, filius Alix, of Urania. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18831,6 +18894,8 @@
         "summary": "Theodore Styppiotes of Jerbiton, filius Reynald, of Urania. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19405,9 +19470,11 @@
             "kind": "characters",
             "target_id": "leo",
             "note": "His firm friend",
-            "id": "839701ead352"
+            "id": "18b17c658df0"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19999,9 +20066,11 @@
             "kind": "characters",
             "target_id": "tiberius",
             "note": "His firm friend",
-            "id": "3ca7b38fdf8e"
+            "id": "a008773207fd"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20461,6 +20530,8 @@
         "summary": "Torchere of Flambeau, filius Flamberge, of Para Belli. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20909,6 +20980,8 @@
         "summary": "Hector of Flambeau, filius Ajax, of Para Belli. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -21350,6 +21423,8 @@
         "summary": "Aramis of Flambeau, filius Caius Magnus, of Para Belli. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -21971,6 +22046,8 @@
         "summary": "Hergar of Jerbiton, filius Alfred, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -22568,6 +22645,8 @@
         "summary": "Hildegard of Verditius, filia Mario de la Rosa, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of her.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -23125,6 +23204,8 @@
         "summary": "Ezra of Tytalus, filius Zachariah, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -23631,9 +23712,11 @@
             "kind": "characters",
             "target_id": "hergar",
             "note": "Her parens",
-            "id": "4d668da76548"
+            "id": "3b3760082cd6"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -24108,9 +24191,11 @@
             "kind": "characters",
             "target_id": "hildegard",
             "note": "His parens",
-            "id": "17c113fea569"
+            "id": "6c60186f5ba1"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -24390,6 +24475,8 @@
         "summary": "Thomasin of Mercere, filius Hengest, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -24667,6 +24754,8 @@
         "summary": "Ibrahim of Mercere, filius Mahmud, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -25150,9 +25239,11 @@
             "kind": "characters",
             "target_id": "sarah",
             "note": "His twin sister",
-            "id": "ff8a5fd38459"
+            "id": "ba30acf20144"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -25443,9 +25534,11 @@
             "kind": "characters",
             "target_id": "simon",
             "note": "Her twin brother",
-            "id": "3c29b2c7be61"
+            "id": "91b22dd05768"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -25716,6 +25809,8 @@
         "summary": "Khayzuran of Mercere, filia Nur al-Din 'Ali, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -26261,6 +26356,8 @@
         "summary": "Ruth of Bonisagus, filia Orestes, of the Pyramids (I), obsessed like Pariah with the pyramids' secrets, and with him master of the spirits of Giza.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -26816,6 +26913,8 @@
         "summary": "Pariah of Criamon, filius Celeriter, of the Pyramids (I), who with Ruth commands the spirits of Giza and is trying to read the hieroglyphs of the Great Pyramid's burial chamber.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27423,6 +27522,8 @@
         "summary": "Heliobus Magister of Bonisagus, filius Maximus Cosinus, a respected researcher drawn to the temple of Thoth and Anubis in 1177 to take a dead priest's place, who brought the priesthood into House Ex Miscellanea in 1178. He studies their ceremonies and seems to want nothing more; with the eleven priests he controls twelve votes at Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27611,6 +27712,8 @@
         "summary": "Sehotep ib Inepu, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27799,6 +27902,8 @@
         "summary": "Djehuti Hotep, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27987,6 +28092,8 @@
         "summary": "Djehuti Cheperuw, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28175,6 +28282,8 @@
         "summary": "Sat Djehuti, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28363,6 +28472,8 @@
         "summary": "Meret Djehuti, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28551,6 +28662,8 @@
         "summary": "Djehuti Aha, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28739,6 +28852,8 @@
         "summary": "Cheper Baw Inepu, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28927,6 +29042,8 @@
         "summary": "Nebet en Medw Necher, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29115,6 +29232,8 @@
         "summary": "Inet en Inepu, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29303,6 +29422,8 @@
         "summary": "Hekait Inepu, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29491,6 +29612,8 @@
         "summary": "Tepher Hem-necher Inepu, of the priesthood of Thoth and Anubis in the temple at Giza, admitted to House Ex Miscellanea in 1178. The book names the priests and says nothing of their magic, so they are given no stats.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29952,6 +30075,8 @@
         "summary": "David of Tremere, filius Virgil, a young magus and one of the two founders of the True Cross at Damietta.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30386,6 +30511,8 @@
         "summary": "Xydas of Bonisagus, filius Marcellus, a young magus and one of the two founders of the True Cross at Damietta.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30861,9 +30988,11 @@
             "kind": "places",
             "target_id": "baghdad",
             "note": "Lives among its Jews",
-            "id": "5169652e6393"
+            "id": "a7d6174befb9"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -32202,7 +32331,7 @@
             "attack": 8,
             "defense": 5,
             "damage": 19,
-            "id": "151de583850e"
+            "id": "3fb9cda3a04e"
           }
         ],
         "soak": 22,
@@ -32275,7 +32404,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "2c36960a93d0"
+            "id": "2161b283eaff"
           },
           {
             "name": "Dread of the Heights",
@@ -32289,7 +32418,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fills a crowd with terror, so that it flees or cowers; one person she may merely make wary. CrMe 30 (Base 5, +2 Voice, +1 Diameter, +2 Group), for the book's Fear 10. Fourth Edition: 6 points.",
-            "id": "a7542564e045"
+            "id": "6d1fcd5b6870"
           },
           {
             "name": "Shape of the Crag",
@@ -32303,7 +32432,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns her, or someone she touches, into any lifeless thing, from a pebble to a cliff, up to 14 steps of Size from the true one; she still sees and speaks in that shape, a victim does not. An unwilling victim resists on a Stamina stress roll of 9+. Others notice the disguise only if their Per + Awareness beats her Int + 14. MuCo(Te) 30, for the book's Shapechange to Object 14. Fourth Edition: 6 points.",
-            "id": "689ad4823e84"
+            "id": "e8f14c075ec3"
           },
           {
             "name": "Strength Beyond Nature",
@@ -32317,7 +32446,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 6 to Strength for one roll.",
-            "id": "588180737dc2"
+            "id": "d69cbc1d5dd6"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -32331,7 +32460,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls from her mountains up to 10 lesser jinn of Might up to 30 each and no more than 100 in all, who come within 10 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "d6a474f4c9e8"
+            "id": "9105804b48e7"
           },
           {
             "name": "The Jinni's Road",
@@ -32345,7 +32474,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 10 miles off, on Int + 10 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 12 people along. As the Leap of Homecoming, ReCo 35. Fourth Edition: 7 points.",
-            "id": "054807cc0bb3"
+            "id": "cd9ea17bd4f5"
           }
         ],
         "vis": [
@@ -32353,13 +32482,13 @@
             "pawns": 10,
             "art": "Terram",
             "where": "in her body",
-            "id": "1bfb461fa966"
+            "id": "3a68c13e459c"
           },
           {
             "pawns": 10,
             "art": "Ignem",
             "where": "in her body",
-            "id": "ddb730e4da3e"
+            "id": "b97470b8e80b"
           }
         ],
         "equipment": "",
@@ -32370,6 +32499,8 @@
         "place_id": "the_mountains_of_northern_syria",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -32474,7 +32605,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 10,
-            "id": "19660fb64221"
+            "id": "a9e6351fa35f"
           }
         ],
         "soak": 11,
@@ -32638,7 +32769,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Aquam effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "f61bd2056ede"
+            "id": "a88eba3bd491"
           },
           {
             "name": "Command of Auram",
@@ -32652,7 +32783,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Auram effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "ebf0c74aeba1"
+            "id": "200d73a14985"
           },
           {
             "name": "Command of Ignem",
@@ -32666,7 +32797,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Ignem effect up to level 50 (the book's rating of 10), at 1 Might point a magnitude. Creo Ignem effects reach a magnitude higher and Perdo Ignem ones a magnitude lower, as befits a creature of fire.",
-            "id": "def795c2ee0b"
+            "id": "427583f092b0"
           },
           {
             "name": "Command of Terram",
@@ -32680,7 +32811,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works any non-Ritual Terram effect up to level 60 (the book's rating of 12), at 1 Might point a magnitude. The book has jinn work these with the Islamic Ranges, Durations and Targets.",
-            "id": "141434c7f076"
+            "id": "a69410c05376"
           },
           {
             "name": "Unseen",
@@ -32694,7 +32825,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "No mortal sense can find him; he may show himself and vanish again at will while it lasts. Second Sight, angels and demons see through it, and magic can find him. As the Veil of Invisibility, PeIm 20, for the book's Invisibility 6. Fourth Edition: 4 points.",
-            "id": "01f26ffc9d98"
+            "id": "a8da65edd348"
           },
           {
             "name": "Strength Beyond Nature",
@@ -32708,7 +32839,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Strength for one roll. Once it was 8: his strength has drained with his Might.",
-            "id": "0c9e6e514c46"
+            "id": "9bfac84d392b"
           },
           {
             "name": "Call the Lesser Jinn",
@@ -32722,7 +32853,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Calls to his side up to 12 lesser jinn of Might up to 7 each and no more than 120 in all, who come within 8 minutes. They serve as well as they can but shun needless danger, and may turn on a master who mistreats them. The call is Momentary: they make their own way home.",
-            "id": "b32ebf74f1c6"
+            "id": "7e3d0be9e7a7"
           },
           {
             "name": "The Jinni's Road",
@@ -32736,7 +32867,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Is at once in any place it has been before. A place it has only heard described, or holds an Arcane Connection to, it reaches if no more than 12 miles off, on Int + 12 + a stress die against 15 (easier with a map or the Connection, harder with a vague account). It may take up to 3 people along. As the Leap of Homecoming, ReCo 35. Fourth Edition: 7 points.",
-            "id": "731b76b232f2"
+            "id": "4d1408094980"
           }
         ],
         "vis": [
@@ -32744,7 +32875,7 @@
             "pawns": 15,
             "art": "Ignem",
             "where": "in his body",
-            "id": "1e1ea0f89c15"
+            "id": "9030375f74d8"
           }
         ],
         "equipment": "",
@@ -32755,6 +32886,8 @@
         "place_id": "the_levant",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Someone who meets the conditions of his release can free him from the lamp, and only he knows what they are; the book leaves them to the storyguide, and says they are hard. Freed, he could be a lasting friend; refused, he makes his holders' lives a misery."
       },
       {
@@ -32867,7 +33000,7 @@
             "attack": 13,
             "defense": 12,
             "damage": 5,
-            "id": "cbf5a8111894"
+            "id": "2f965a9c3313"
           },
           {
             "name": "Long sword",
@@ -32875,7 +33008,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 11,
-            "id": "f2fc1bd79dee"
+            "id": "76e391001014"
           },
           {
             "name": "Long sword and round shield",
@@ -32883,7 +33016,7 @@
             "attack": 17,
             "defense": 15,
             "damage": 11,
-            "id": "5b1a2b025828"
+            "id": "3d313035f5f8"
           }
         ],
         "soak": 10,
@@ -32956,7 +33089,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Stirs anger in someone near him, adding 1 to rolls on a trait of anger; he may hold the power for several passions. The book's Psychomachia (Anger) 3.",
-            "id": "0212920a4eb8"
+            "id": "9a0de163bad9"
           },
           {
             "name": "Beast Shape",
@@ -32970,7 +33103,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of any living thing, a man among them, within 4 steps of his own Size, keeping his speech; to see through a human disguise others must beat his Int + 4 with Per + Awareness. MuCo(An) 20 (Base 10, +2 Sun), for the book's Shapechange to Animal 4; worked on another (Touch, +5 levels and 1 more Might) it allows a Stamina stress roll of 9+.",
-            "id": "02befdc6c94a"
+            "id": "166e6f8c5464"
           },
           {
             "name": "Ghul's Quickness",
@@ -32984,7 +33117,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Adds 2 to Dexterity or 1 to Quickness for one roll.",
-            "id": "020a16ab684d"
+            "id": "97f2110fb652"
           },
           {
             "name": "The Second Blow",
@@ -32998,7 +33131,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His own power, the ghul's legend made real: after he calls on it, the next blow that wounds him undoes, instead, the wounds of the last blow that struck him. It lasts for that one blow. The book allowed it twice a day; now each use costs its Might.",
-            "id": "108f95ce4db1"
+            "id": "c850643c55a3"
           }
         ],
         "vis": [
@@ -33006,19 +33139,19 @@
             "pawns": 3,
             "art": "Ignem",
             "where": "in his body",
-            "id": "46d9c519bed3"
+            "id": "789e5ad20dbc"
           },
           {
             "pawns": 2,
             "art": "Terram",
             "where": "in his sword",
-            "id": "c56c6abba532"
+            "id": "5430a2b62f6b"
           },
           {
             "pawns": 2,
             "art": "Herbam",
             "where": "in his shield",
-            "id": "19f95f51537a"
+            "id": "6251a3ad702b"
           }
         ],
         "equipment": "Long sword, round shield, partial chain mail.",
@@ -33029,6 +33162,8 @@
         "place_id": "bilad_al_sham",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "He can pass as an ordinary soldier among a covenant's grogs, where he sows quarrels until they are ripe for mutiny."
       },
       {
@@ -33086,7 +33221,7 @@
             "attack": 11,
             "defense": 11,
             "damage": 5,
-            "id": "db3e92064b06"
+            "id": "58030452b2b3"
           },
           {
             "name": "Grapple (the spiked embrace)",
@@ -33094,7 +33229,7 @@
             "attack": 11,
             "defense": 11,
             "damage": null,
-            "id": "99ce63931b7e"
+            "id": "65d25e05b199"
           }
         ],
         "soak": 8,
@@ -33146,7 +33281,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each time she asks something of her victim, he must make a Stamina roll of 12+ or do it unquestioning; a cynic may add to the roll and a kindly soul take away. She asks for a drink first, and then to be held. ReMe 30 at 2 Might points, as the book prices it.",
-            "id": "62f7348748aa"
+            "id": "aa1a54927aa9"
           }
         ],
         "vis": [
@@ -33154,7 +33289,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in her larynx",
-            "id": "0a702d9b0aca"
+            "id": "7943bddcad1d"
           }
         ],
         "equipment": "",
@@ -33165,6 +33300,8 @@
         "place_id": "upper_egypt",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "She throws what is left of her victims into the nearest river, so the bodies drift downstream from her well."
       },
       {
@@ -33267,7 +33404,7 @@
             "attack": 13,
             "defense": 17,
             "damage": -1,
-            "id": "64d7be21b421"
+            "id": "181cc54453d1"
           }
         ],
         "soak": 1,
@@ -33319,19 +33456,19 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in his left eye",
-            "id": "c593be67aee1"
+            "id": "194cab644942"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his right eye",
-            "id": "68cf734a9135"
+            "id": "3eb1d5ff16ac"
           },
           {
             "pawns": 1,
             "art": "Animal",
             "where": "in his brain",
-            "id": "03a6d9117cac"
+            "id": "fd58f925f684"
           }
         ],
         "equipment": "",
@@ -33342,6 +33479,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33413,6 +33552,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33484,6 +33625,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33555,6 +33698,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33626,6 +33771,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33697,6 +33844,8 @@
         "place_id": "the_mountain_of_aedes_veritatis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -33768,6 +33917,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       }
     ],
@@ -33807,7 +33958,9 @@
     "players": [],
     "app_version": "",
     "saved_by": "",
-    "marriages": []
+    "marriages": [],
+    "maps": [],
+    "pins": []
   },
   "key": "levant",
   "book": "B&S",
@@ -33976,6 +34129,8 @@
       "summary": "Scipio of Guernicus, filius Rognvald, the Tribunal's senior quaesitor and so the chair of its meetings, which gives him great power. He keeps no covenant and spends his time travelling the Tribunal. Ninety-six, he looks to be in his sixties: strongly built, with short grey hair and a beard, always in robes of grey. A master of Intellego, above all Intellego Mentem, he knows most of the common Intellego spells of the other Forms too.\n\nThe book leaves his character to the troupe, as three readings, none chosen here: a rigid Traditionalist who enforces the Code to the letter; a Transitionalist who lets reason come before law; or a corrupt judge in some covenant's pay.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34168,9 +34323,11 @@
           "kind": "places",
           "target_id": "baghdad",
           "note": "Lives among its Jews",
-          "id": "5169652e6393"
+          "id": "a7d6174befb9"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34363,9 +34520,11 @@
           "kind": "characters",
           "target_id": "aurora_borealis",
           "note": "Came to the Levant with her",
-          "id": "3a9278345752"
+          "id": "5c4735c3ffa2"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34554,6 +34713,8 @@
       "summary": "Archmaga and quaesitor, Aurora of Jerbiton, filia Marianne, the oldest quaesitor in the Tribunal and the architect of the Treaty of Baghdad. A daughter of Alpine nobility, she was struck by lightning at eight, which woke her Gift and showed her how she will end: in Final Twilight, from a second strike. Her mater loved the stars; Aurora cared for earthly things and for people, took early to Corpus and studied Mentem deeply, and after her Gauntlet stayed twenty years at her mater's covenant, a favourite of the grogs and covenfolk she helped with her magic.\n\nThen she came to the Levant, founded Domus Pacis in 1169, and, watching Salah al-Din unite the Muslims, saw the danger to the Order: from 1183 she treated in Baghdad with him, the caliph and their mages, and brought the quaesitores of Magvillus a way to end the fighting. When the Treaty was forced through in 1193 she was made a quaesitor, moved to Baghdad to keep the peace, founded the Embassy, and soon became an archmaga. It was she who proposed that only a Guernicus quaesitor may preside at the Tribunal, so that she would never be accused of bias in the chair.\n\nAt 102 she looks in her late sixties: slim, with long red hair streaked with grey, in bright, well-cut robes of many colours, still beautiful; many young magi have lost their hearts to her, and she has never let it go further. Age and creeping Twilight are telling on her: a hard Twilight lately damaged her Animal, she feels her hold on the world loosening, and she fears for the Levant if she goes soon, for Spiral could not carry on her diplomacy. She is looking for an answer.\n\nHer one apprentice, Macha, is now a maga in a covenant in Hibernia; she shares her mater's interests, leaning more to Mentem than Corpus.\n\nStory seeds:\nRescue Mission: if the Embassy is still in Baghdad when the Mongols take it in 1258, Aurora is taken by their shamans; Magvillus, afraid of what she might reveal, sends the characters to free her, or kill her if they cannot, and to answer for it afterwards.\nThe Archmage's Challenge: Aurora won her title by answering a riddle set by Emerich of Criamon, archmage of the Rhine; any magus may now challenge her for it, and what she sets is the storyguide's choice, a story or the saga's leitmotif.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34746,9 +34907,11 @@
           "kind": "characters",
           "target_id": "wraith",
           "note": "His wife",
-          "id": "0c1709831591"
+          "id": "d68f8948cee9"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34941,9 +35104,11 @@
           "kind": "characters",
           "target_id": "fade",
           "note": "Her husband",
-          "id": "ca6af35429b0"
+          "id": "0893b1052d8f"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35132,6 +35297,8 @@
       "summary": "Selene of Merinita, filia Myrtle, Urania's leader, who studies the Genjii and believes they and the jinn share an ancestor. Her pact with the Genjii bars her from searching out their secrets too closely.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35320,6 +35487,8 @@
       "summary": "Gagik of Criamon, filius Matthias, of Urania. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35508,6 +35677,8 @@
       "summary": "Xerxes of Tremere, filius Alix, of Urania. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35696,6 +35867,8 @@
       "summary": "Theodore Styppiotes of Jerbiton, filius Reynald, of Urania. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35888,9 +36061,11 @@
           "kind": "characters",
           "target_id": "leo",
           "note": "His firm friend",
-          "id": "839701ead352"
+          "id": "18b17c658df0"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36083,9 +36258,11 @@
           "kind": "characters",
           "target_id": "tiberius",
           "note": "His firm friend",
-          "id": "3ca7b38fdf8e"
+          "id": "a008773207fd"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36274,6 +36451,8 @@
       "summary": "Torchere of Flambeau, filius Flamberge, of Para Belli. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36462,6 +36641,8 @@
       "summary": "Hector of Flambeau, filius Ajax, of Para Belli. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36650,6 +36831,8 @@
       "summary": "Aramis of Flambeau, filius Caius Magnus, of Para Belli. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36838,6 +37021,8 @@
       "summary": "Hergar of Jerbiton, filius Alfred, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37026,6 +37211,8 @@
       "summary": "Hildegard of Verditius, filia Mario de la Rosa, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of her.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37214,6 +37401,8 @@
       "summary": "Ezra of Tytalus, filius Zachariah, of al-Arama, which hates Esther of Domus Pacis for breaking its hold on the Levant's trade. The book gives no more of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37406,9 +37595,11 @@
           "kind": "characters",
           "target_id": "hergar",
           "note": "Her parens",
-          "id": "4d668da76548"
+          "id": "3b3760082cd6"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37601,9 +37792,11 @@
           "kind": "characters",
           "target_id": "hildegard",
           "note": "His parens",
-          "id": "17c113fea569"
+          "id": "6c60186f5ba1"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37792,6 +37985,8 @@
       "summary": "Thomasin of Mercere, filius Hengest, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37980,6 +38175,8 @@
       "summary": "Ibrahim of Mercere, filius Mahmud, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38172,9 +38369,11 @@
           "kind": "characters",
           "target_id": "sarah",
           "note": "His twin sister",
-          "id": "ff8a5fd38459"
+          "id": "ba30acf20144"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38367,9 +38566,11 @@
           "kind": "characters",
           "target_id": "simon",
           "note": "Her twin brother",
-          "id": "3c29b2c7be61"
+          "id": "91b22dd05768"
         }
       ],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38558,6 +38759,8 @@
       "summary": "Khayzuran of Mercere, filia Nur al-Din 'Ali, of Venti Rosa. An un-Gifted Redcap, usually away with urgent messages.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38746,6 +38949,8 @@
       "summary": "Ruth of Bonisagus, filia Orestes, of the Pyramids (I), obsessed like Pariah with the pyramids' secrets, and with him master of the spirits of Giza.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38934,6 +39139,8 @@
       "summary": "Pariah of Criamon, filius Celeriter, of the Pyramids (I), who with Ruth commands the spirits of Giza and is trying to read the hieroglyphs of the Great Pyramid's burial chamber.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39122,6 +39329,8 @@
       "summary": "Heliobus Magister of Bonisagus, filius Maximus Cosinus, a respected researcher drawn to the temple of Thoth and Anubis in 1177 to take a dead priest's place, who brought the priesthood into House Ex Miscellanea in 1178. He studies their ceremonies and seems to want nothing more; with the eleven priests he controls twelve votes at Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39310,6 +39519,8 @@
       "summary": "David of Tremere, filius Virgil, a young magus and one of the two founders of the True Cross at Damietta.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39498,6 +39709,8 @@
       "summary": "Xydas of Bonisagus, filius Marcellus, a young magus and one of the two founders of the True Cross at Damietta.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],

@@ -361,9 +361,12 @@ class SheetView(Vertical):
         )
         return DetailsPanel(text(), id=id)
 
-    def _relations(self, record: Any, *, attitude: bool = True) -> ComposeResult:
+    def _relations(
+        self, record: Any, *, attitude: bool = True, links: bool = True
+    ) -> ComposeResult:
         """A world record's Attitude (toward each player covenant), Favours
-        and Links sections, edited through the core (world_forms)."""
+        and Links sections (Links left off when the sheet draws its own),
+        edited through the core (world_forms)."""
         saga = self.saga
         if attitude:
             with SheetSection(title="Attitude", id=ATTITUDE_SECTION):
@@ -388,6 +391,8 @@ class SheetView(Vertical):
                 ),
                 id="favours-list",
             )
+        if not links:
+            return
         with SheetSection(
             title=self._titled(
                 LINKS_SECTION,

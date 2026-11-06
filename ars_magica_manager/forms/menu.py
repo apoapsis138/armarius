@@ -36,6 +36,7 @@ from .. import (
     health,
     labor,
     melee_events,
+    merges,
     mobile_covenants,
     neighbours,
     packs,
@@ -524,6 +525,9 @@ MANAGE: dict[str, str] = {
     "does: it starts In Creation, sited here, and the ruin becomes its claim.",
     "begin_story": "Start this dormant story: its stages begin to come, the "
     "first due next season at the soonest.",
+    "merge_doubles": "Make one record of each faction that shares its name "
+    "with a character or creature: its attitudes, favours, links, words and "
+    "memberships move to the character or creature.",
     "grow_story": "Make the chosen open story a threat of the Region, from "
     "its words; the story is marked Grown, naming the threat.",
     "take_up_tale": "Write a chapter of the threat's tale: what the troupe "
@@ -580,6 +584,7 @@ PLACES: dict[str, tuple[tuple[NodeKind, str], ...]] = {
     "export_saga": ((NodeKind.SAGA, "Saga Management"),),
     "export_cult": ((NodeKind.SAGA, "Saga Management"),),
     "export_pack": ((NodeKind.SAGA, "Saga Management"),),
+    "merge_doubles": ((NodeKind.SAGA, "The Region"),),
     "host_saga": ((NodeKind.SAGA, "Saga Management"),),
     "stop_hosting": ((NodeKind.SAGA, "Saga Management"),),
     "set_date": ((NodeKind.SAGA, "Seasons"),),
@@ -1937,6 +1942,7 @@ _COMMANDS: dict[str, Callable[[Page], Command]] = {
     "edit_arms": _arms_command,
     "found_covenant": _found_command,
     "begin_story": _begin_command,
+    "merge_doubles": lambda page: merges.merge_form(page.saga),
     "delay_threat": _delay_command,
     "take_up_tale": _take_up_command,
     "edit_saga": lambda page: creation_forms.saga_details_form(page.saga),

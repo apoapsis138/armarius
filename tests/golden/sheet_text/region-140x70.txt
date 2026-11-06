@@ -8,7 +8,7 @@
       Customs:         Rhine: Gilds                      Threat due:      The Hollow Crown, Winter 1220
       Neighbours:      6, 1 warm, 1 wary
 
-   1 Neighbours
+   1 Neighbours  2 By Place
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -53,16 +53,84 @@
 
         Name               Inside             Aura     Regio     Status
       ○ The Siebengebirge                     Magic 2
-      ○ The Drachenfels    The Siebengebirge  Magic 5  2 levels  Visited
+      ○ The Drachenfels    The Siebengebirge  Magic 5  2 levels  Visited                              ▁▁
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
-    ▼ Open Stories (0)
+    ▼ Customs and Lore (1)
 
-      No open stories: an experiment's story event, a Disaster's covenant story or Suggest a Story
-      writes one in a covenant's Diary.                                                               ▇▇
+        Name                Where  Its rules
+      ○ The Weavers' Peace         A fight on a market day costs the town's favour.
 
   ▌
   ▌  Choose a neighbour to see how it stands.
   ▌
+
+
+===== tab-region-by-place
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Region
+
+      Player covenant: Keep                              Other covenants: 1
+      Tribunal:        Rhine                             Next Tribunal:   Summer 1228
+      Customs:         Rhine: Gilds                      Threat due:      The Hollow Crown, Winter 1220
+      Neighbours:      6, 1 warm, 1 wary
+
+   1 Neighbours  2 By Place
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ By Place
+
+      The Siebengebirge  Place · Magic 2
+        The Drachenfels  Place · Magic 5
+          Aeolus  Creature, Magic
+      Placed nowhere (8)
+        Gottfried of Arnsberg  Lord, ◉ −1 Wary
+        Archbishop of Cologne  Church, ◉ 0 Neutral
+        The Black Pool Coven  Faction, ◉ +2 Friendly
+        The Weavers' Peace  Custom
+        The Hollow Crown  Threat, ◉ 0 Neutral
+        The Studium of Cologne  University, ◉ 0 Neutral
+        Soest  Town, ◉ 0 Neutral
+        Fengheld  Covenant, ◉ −2 Unfriendly
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

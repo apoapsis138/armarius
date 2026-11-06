@@ -248,7 +248,7 @@ def _egypt(b: Builder, w: World) -> None:
     )
     b.faction(
         "The Mamluks",
-        faction="Other",
+        faction="Estate or rank",
         place=w["egypt"],
         summary=(
             "Slave soldiers. Copts may not carry arms, which the rulers "
@@ -262,7 +262,7 @@ def _egypt(b: Builder, w: World) -> None:
     )
     b.faction(
         "The Hirranian Sabeans",
-        faction="Other",
+        faction="Faith or sect",
         place=w["egypt"],
         summary=(
             "A people the sultan treats as People of the Book, perhaps through "
@@ -470,7 +470,7 @@ def _cairo_buildings(b: Builder, w: World) -> None:
     )
     b.faction(
         "The House",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         place=w["citadel"],
         rules=(
@@ -1621,9 +1621,8 @@ def _nubia(b: Builder, w: World) -> None:
 
 def _nubian_powers(b: Builder, w: World) -> None:
     nubia = w["nubia"]
-    b.faction(
+    b.custom(
         "The Baqt",
-        faction="Other",
         place=nubia,
         rules=(
             "No war between the parties; safe conduct for each other's "
@@ -1682,7 +1681,7 @@ def _nubian_powers(b: Builder, w: World) -> None:
     )
     b.faction(
         "The Kushite Gods",
-        faction="Other",
+        faction="Faith or sect",
         place=nubia,
         summary=paragraphs(
             "The old religion lingers in pockets, untolerated by the Church. "
@@ -1741,9 +1740,8 @@ def _nubian_powers(b: Builder, w: World) -> None:
             "book also spells them Banu al-Kanuz."
         ),
     )
-    w["slavers"] = b.faction(
+    w["slavers"] = b.custom(
         "The Nubian Slave Trade",
-        faction="Other",
         place=w["darb"],
         wants="Slaves and their cattle from the Slavelands.",
         summary=paragraphs(
@@ -2432,7 +2430,7 @@ def _darfur(b: Builder, w: World) -> None:
     )
     b.faction(
         "The Tajuwa",
-        faction="Other",
+        faction="People or tribe",
         place=w["darfur"],
         summary=(
             "The people of Darfur. They look like the slave races they "
@@ -2627,7 +2625,7 @@ def _alodian_kingdoms(b: Builder, w: World) -> None:
     )
     b.faction(
         "The Dihi",
-        faction="Other",
+        faction="People or tribe",
         place=atbai,
         summary=paragraphs(
             "Children of Blemmyae and humans in northern Atbai. They look like "

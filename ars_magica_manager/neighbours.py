@@ -1,6 +1,6 @@
 """The saga's neighbours: the lords, towns, churches, universities,
-factions and threats of the region, and its places, each a Neighbour
-record of one kind.
+factions and threats of the region, its places, and its customs and
+lore, each a Neighbour record of one kind.
 
 Pattern: Strategy, as a registry (KINDS), the way rules/activities.py
 registers the seasonal activities and tribunal_packages the Tribunals'
@@ -17,6 +17,7 @@ from typing import Any
 
 from . import (
     churches,
+    customs,
     factions,
     lords,
     manors,
@@ -43,6 +44,7 @@ from .references import Fact
 from .rules import sites
 from .sections import (
     REGION_CHURCH_SECTION,
+    REGION_CUSTOMS_SECTION,
     REGION_FACTIONS_SECTION,
     REGION_LORDS_SECTION,
     REGION_PLACES_SECTION,
@@ -68,6 +70,7 @@ GROUPS: tuple[Group, ...] = (
     Group("factions", "Factions", REGION_FACTIONS_SECTION),
     Group("threats", "Threats", REGION_THREATS_SECTION),
     Group("places", "Places", REGION_PLACES_SECTION),
+    Group("customs", "Customs and Lore", REGION_CUSTOMS_SECTION),
 )
 
 
@@ -199,6 +202,19 @@ for _kind in (
         attitude=False,
         hides=frozenset({"detail", "ruler", "answers_to"}),
     ),
+    NeighbourKind(
+        "custom",
+        "Custom",
+        "a land's way of life, its law or its lore",
+        "customs",
+        "",
+        customs.fields,
+        None,
+        customs.facts,
+        customs.TAB,
+        attitude=False,
+        hides=frozenset({"detail", "answers_to"}),
+    ),
 ):
     register(_kind)
 
@@ -251,6 +267,10 @@ def add(saga: Saga, kind: str, name: str) -> Neighbour:
         id=storage.generate_unique_id(name, [n.id for n in saga.neighbours]),
         name=name,
         kind=kind,
+        # A faction's members are kept on its roster from the start, so
+        # a faction answering to it later is its liege's, never taken for
+        # a member by the move of older saves (models.saga).
+        details={"roster": []} if kind == "faction" else {},
     )
     saga.neighbours.append(neighbour)
     return neighbour

@@ -55,8 +55,12 @@ from .markup import escape
 from .models import (
     REALMS,
     Character,
+    Covenant,
+    Creature,
+    Laboratory,
     Neighbour,
     Saga,
+    Tribunal,
 )
 from .neighbour_lists import KindList, list_ops
 from .references import Fact
@@ -153,6 +157,62 @@ def inside_of(saga: Saga, record: Neighbour) -> Iterator[Neighbour]:
         yield above
         seen.add(above.id)
         above = place(saga, above.place_id)
+
+
+#: The Tribunal whose lands a place is, kept in its details by id.
+LANDS = "tribunal"
+
+
+def lands_of(
+    saga: Saga, record: Neighbour | Covenant | Laboratory | Character | Creature
+) -> Tribunal | None:
+    """The Tribunal whose lands `record` lies in: the nearest place, from
+    the record (when it is a place) outward, that names one. This is
+    geography, not membership: a covenant's own Tribunal (tribunal_id)
+    is the council it belongs to, which a covenant petitioning to join,
+    or one that left, may not be. A character lies where his covenant
+    does; a covenant where it is now (a mobile one's stop in force); a
+    laboratory where it is placed, else where its covenant is."""
+    if isinstance(record, Character):
+        home = saga.covenant(record.covenant_id)
+        return lands_of(saga, home) if home is not None else None
+    start: Neighbour | None
+    if isinstance(record, Covenant):
+        at = covenant_place(saga, record)
+        start = at[0] if at is not None else None
+    elif isinstance(record, Neighbour) and record.kind == "place":
+        start = record
+    else:
+        start = place(saga, record.place_id)
+        if start is None and isinstance(record, Laboratory):
+            home = saga.covenant(record.covenant_id)
+            return lands_of(saga, home) if home is not None else None
+    if start is None:
+        return None
+    for found in (start, *inside_of(saga, start)):
+        tribunal = saga.tribunal(found.details.get(LANDS))
+        if tribunal is not None:
+            return tribunal
+    return None
+
+
+def lands_fields(saga: Saga, d: Mapping[str, Any]) -> list[DialogField]:
+    """Whose lands the place is, while the saga has a Tribunal."""
+    if not saga.tribunals:
+        return []
+    return [
+        DialogField(
+            LANDS,
+            "Tribunal's lands",
+            "select",
+            d.get(LANDS) or None,
+            options=[(escape(t.name), t.id) for t in saga.tribunals],
+            allow_blank=True,
+            placeholder="(as the place it is in)",
+            hint="Whose lands these are; what lies inside takes it. A "
+            "covenant's own Tribunal says which council it belongs to.",
+        )
+    ]
 
 
 def inside_text(saga: Saga, record: Neighbour) -> str:
@@ -666,6 +726,7 @@ def fields(saga: Saga, place: Neighbour | None) -> list[DialogField]:
         *world_fields(saga, d),
         *kind_fields(d),
         *travel_fields(saga, d),
+        *lands_fields(saga, d),
         DialogField(
             "tethers",
             "Tethers",

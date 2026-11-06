@@ -503,6 +503,7 @@ async def test_the_region_holds_each_tribunal_and_the_covenants_not_played():
             (NodeKind.NEIGHBOUR_GROUP, "factions"),
             (NodeKind.NEIGHBOUR_GROUP, "threats"),
             (NodeKind.NEIGHBOUR_GROUP, "places"),
+            (NodeKind.NEIGHBOUR_GROUP, "customs"),
         ]
         assert [n.data for n in region.children[0].children] == [
             (NodeKind.COVENANT, "cov_sketch")

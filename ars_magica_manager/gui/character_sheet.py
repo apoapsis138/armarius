@@ -62,6 +62,7 @@ from .. import (
     tradition_text,
     traditions,
     vis,
+    world,
 )
 from .. import books as bk
 from .. import enchanted_devices as ed
@@ -83,6 +84,7 @@ from ..forms import covers as cover_forms
 from ..forms import criamon as criamon_forms
 from ..forms import device as device_forms
 from ..forms import diary as diary_forms
+from ..forms import go_to as go_to_forms
 from ..forms import menu as menu_forms
 from ..forms import power as power_forms
 from ..forms import religion as religion_forms
@@ -93,6 +95,7 @@ from ..forms import trait as trait_forms
 from ..forms import virtue as virtue_forms
 from ..forms import vis as vis_forms
 from ..forms import whereabouts as whereabouts_forms
+from ..forms import world as world_forms
 from ..forms.secrets import NONE_YET, secrets_form
 from ..markup import escape
 from ..models import (
@@ -120,12 +123,14 @@ from ..sections import (
 from ..sheets import character as cs
 from ..sheets import familiar as fs
 from ..sheets import laboratory as labs_sheet
+from ..tables import Table
 from . import marks, motion, pictures
 from .bookmark import with_bookmark
 from .church import ledger as church_ledger
 from .editing import (
     Chooser,
     RowVerb,
+    Run,
     Section,
     choose_cards,
     choose_rows,
@@ -907,6 +912,8 @@ class CharacterSheet(QWidget):
                 self._placed("Reputations"),
             )
         )
+        if world.holds_standing(saga, c):
+            parts += relations(saga, c, p, self.run, links=False)
         parts += self._biography_sections(forms)
         parts += self._health_sections(forms)
         parts.append(self._constant_effects())
@@ -2243,3 +2250,98 @@ def _spell_model(rows: Sequence[cs.SpellRow], p: Palette) -> QStandardItemModel:
             ]
         )
     return model
+
+
+# -- the world pieces every record shares: a section of rows with the
+# core's Add, Edit and Delete, and a record's Attitude, Favours and Links --
+
+
+def table_section(
+    title: str,
+    table: Table,
+    ops: SectionOps,
+    p: Palette,
+    run: Run,
+    *,
+    empty: str = "None yet.",
+    on_choose: Callable[[int], None] | None = None,
+    more: Sequence[RowVerb] = (),
+    nouns: tuple[str, str, str] = ("Add", "Edit", "Delete"),
+) -> QWidget:
+    """`table` under `title`, with the core's Add, Edit and Delete (named
+    `nouns`, and `more`) acting on the row chosen."""
+    chooser = Chooser()
+
+    def choose(row: int) -> None:
+        chooser.choose(row)
+        if on_choose is not None:
+            on_choose(row)
+
+    body = (
+        table_view(table, p, choose)
+        if table.rows
+        else text(empty, p["dim"], serif(12.5, italic=True))
+    )
+    return section(
+        title,
+        p,
+        body,
+        buttons=verb_buttons(ops, chooser, run, p, nouns=nouns, more=more),
+    )
+
+
+def relations(
+    saga: Saga,
+    record: Any,
+    p: Palette,
+    run: Run,
+    *,
+    attitude: bool = True,
+    links: bool = True,
+) -> list[QWidget]:
+    """A world record's Attitude toward each player covenant, the favours
+    owed and its links (left off when the page draws its own)."""
+    ops = world_forms.record_ops(saga, record)
+    parts: list[QWidget] = []
+    if attitude:
+        parts.append(
+            table_section(
+                "Attitude",
+                world_forms.attitude_table(saga, record),
+                ops[world_forms.ATTITUDE_SECTION],
+                p,
+                run,
+                empty="There is no player covenant to have an attitude toward.",
+            )
+        )
+    parts.append(
+        table_section(
+            f"Favours ({len(record.favours)})",
+            world_forms.favour_table(record),
+            ops[world_forms.FAVOURS_SECTION],
+            p,
+            run,
+            empty="None owed.",
+        )
+    )
+    if not links:
+        return parts
+    parts += [
+        table_section(
+            f"Links ({len(record.links)})",
+            world_forms.link_table(saga, record),
+            ops[world_forms.LINKS_SECTION],
+            p,
+            run,
+            empty="No links.",
+            more=[
+                (
+                    "Open",
+                    "open",
+                    lambda row: go_to_forms.open_link(saga, record, row),
+                    lambda row: go_to_forms.opens(saga, record, row),
+                )
+            ],
+        ),
+    ]
+    return parts

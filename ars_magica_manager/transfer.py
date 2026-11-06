@@ -1228,8 +1228,39 @@ def _plan_neighbours(job: _Import) -> None:
             covenant = job.link(COVENANT, neighbour.details.pop(sites.TRAVELS_WITH))
             if covenant is not None:
                 neighbour.details[sites.TRAVELS_WITH] = covenant
+        _relink_roster(job, neighbour)
+        if neighbour.details.get(places.LANDS):
+            lands = job.tribunal_map.get(str(neighbour.details[places.LANDS]))
+            if lands:
+                neighbour.details[places.LANDS] = lands
+            else:
+                del neighbour.details[places.LANDS]
         _relink(job, neighbour)
         job.plan.neighbours.append(neighbour)
+
+
+#: A faction's member's kind (memberships.MEMBER_KINDS) as the import's.
+_MEMBER_KINDS = {
+    "characters": CHARACTER,
+    "covenants": COVENANT,
+    "creatures": CREATURE,
+    "neighbours": NEIGHBOUR,
+}
+
+
+def _relink_roster(job: _Import, neighbour: Neighbour) -> None:
+    """A faction's members through the maps; a member left out of the
+    import (and not already in the saga) is left off."""
+    roster = neighbour.details.get("roster")
+    if not isinstance(roster, list):
+        return
+    kept = []
+    for member in roster:
+        kind, _, old = str(member.get("who") or "").partition(":")
+        new = job.link(_MEMBER_KINDS[kind], old) if kind in _MEMBER_KINDS else None
+        if new is not None:
+            kept.append({**member, "who": f"{kind}:{new}"})
+    neighbour.details["roster"] = kept
 
 
 def _ruler(job: _Import, old: str) -> str:

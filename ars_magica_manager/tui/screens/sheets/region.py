@@ -24,6 +24,7 @@ from ....sections import (
     ATTITUDE_SECTION,
     FAVOURS_SECTION,
     NEIGHBOUR_INFO_SECTION,
+    REGION_BY_PLACE_SECTION,
     REGION_COVENANTS_SECTION,
     REGION_INFO_SECTION,
     REGION_STORIES_SECTION,
@@ -86,6 +87,30 @@ class RegionSheetView(SheetView):
             yield self._static(watched, lambda: self._facts(1), id="region-info-right")
         with TabbedContent(initial=self.INITIAL_TAB):
             yield self._tab("Neighbours", "tab-region-neighbours", self._neighbours_tab)
+            yield self._tab("By Place", "tab-region-by-place", self._by_place_tab)
+
+    def _by_place_tab(self) -> ComposeResult:
+        """The Region as the land: each place, what rests on it and the
+        places inside it, every name a link that opens its record."""
+        watched = (*_GROUP_SECTIONS, REGION_COVENANTS_SECTION)
+        with (
+            VerticalScroll(),
+            SheetSection(title="By Place", id=REGION_BY_PLACE_SECTION),
+        ):
+            yield self._static(watched, self._by_place_text, id="region-by-place")
+
+    def _by_place_text(self) -> str:
+        lines = []
+        for row in region_sheet.by_place(self.saga):
+            name = escape(row.name)
+            if row.ref is None:
+                lines.append(f"{'  ' * row.depth}[b]{name}[/]")
+                continue
+            link = (
+                f"[@click=screen.open_ref({row.ref.kind!r}, {row.ref.id!r})]{name}[/]"
+            )
+            lines.append(f"{'  ' * row.depth}{link}  [$label]{escape(row.what)}[/]")
+        return "\n".join(lines) or "[$label]No places yet: add one under Places.[/]"
 
     def _facts(self, column: int) -> str:
         return _facts_text(region_sheet.facts(self.saga), column)

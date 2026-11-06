@@ -330,7 +330,7 @@ def _bards(hibernia: Hibernia) -> None:
     w = hibernia.world
     w["bards"] = b.faction(
         "The Bards (filídh)",
-        faction="Other",
+        faction="Hedge coven",
         decides="Its leader",
         ruler="The ard-ollamh Érenn, the Chief Bard of Ireland (vacant since 1218)",
         rules=(
@@ -753,7 +753,7 @@ def _beasts(hibernia: Hibernia) -> None:
     b = hibernia.b
     hibernia.world["beasts_of_magic"] = b.faction(
         "The beasts of magic",
-        faction="Other",
+        faction="Spirits and beings",
         realm="Magic",
         decides="Its leader",
         ruler="The King of the Eagles",

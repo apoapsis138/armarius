@@ -1803,7 +1803,7 @@ def _creatures(b: Builder, monuments: Any, reeds: Any, giza: Any) -> None:
 def _copts(b: Builder) -> None:
     b.faction(
         "The Coptic Monks and Their Libraries",
-        faction="Other",
+        faction="Religious community",
         realm="Divine",
         summary=paragraphs(
             "Copts speak a descendant of the old Egyptian tongue, their priests a "
@@ -1843,7 +1843,7 @@ def _copts(b: Builder) -> None:
     )
     b.faction(
         "Coptic Alchemists",
-        faction="Other",
+        faction="Hedge coven",
         summary=paragraphs(
             "Whether the most studious monks or the sultan's personal alchemists "
             "are the world's best is disputed; each side names the other, citing "
@@ -1860,7 +1860,7 @@ def _copts(b: Builder) -> None:
     )
     b.faction(
         "The Sufis of the Enigma",
-        faction="Other",
+        faction="Faith or sect",
         realm="Divine",
         summary="A school of sufis in Egypt devoted to calligraphy and the "
         "beauty of the unread: they meditate on texts they cannot read, and "

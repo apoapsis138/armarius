@@ -1747,7 +1747,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         secrets="Waddenzee has found no evidence of an organised Order of Odin and "
         "keeps the myth alive anyway. The bulk of any such order may be "
         "Gymir's wizard pawns, or renegade Hermetic magi.",
-        faction="Other",
+        faction="Hedge coven",
         wants=(
             "Undecided: a rival Order's dominion over the North, or nothing more "
             "than a hedge wizard's living"
@@ -1761,7 +1761,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         rhine.b.saga.neighbours.remove(odin)
     else:
         world["order_of_odin"] = odin
-    world["gymir"] = b.faction(
+    world["gymir"] = b.custom(
         "Gymir",
         summary="A name from the North that the Order does not know in 1220.",
         secrets="A demon prince whose earthly fief is Scandinavia, at war with "
@@ -1772,12 +1772,11 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "archbishop of Cologne, it has murdered in 1225 if the book's future "
         "holds, meaning to turn the Vehm on Radegast's pagans in northern "
         "Germany.",
-        faction="Other",
         realm="Infernal",
         wants="(secret) the Church undone and the Holy Vehm turned on Radegast's followers",
         offers="(secret) storms, catastrophe and infernal power to its wizard pawns",
     )
-    world["radegast"] = b.faction(
+    world["radegast"] = b.custom(
         "Radegast",
         summary="A god of the Old Ways to the Slavs of the Baltic shore, as far as "
         "the Order knows.",
@@ -1789,7 +1788,6 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "Imanitos Mendax, willingly; Roznov, unwittingly; a cult among the "
         "townsfolk of Holstein and the Slavic princes of Mecklenburg; and an "
         "Ash Gild-led war on the Norse it is planning.",
-        faction="Other",
         realm="Infernal",
         place=places.get("east"),
         wants="(secret) Germans turned north against the Norse, the Hansa corrupted by greed",
@@ -1819,7 +1817,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
                 "whether they are the righteous gone wrong, Satan's dupes or "
                 "holy fools."
             ),
-            faction="Other",
+            faction="Military order",
             realm="Divine",
             place=places.get("east"),
             wants="The Baltic pagans converted or conquered",
@@ -1833,7 +1831,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             secrets="Gymir is infiltrating and corrupting it; its leader is murdered "
             "in 1225 if the book's future holds, and the demon means to turn "
             "it on Radegast's pagan followers in northern Germany.",
-            faction="Other",
+            faction="Council or assembly",
             realm="Divine",
             ruler="Engelbert I, Archbishop of Cologne",
             wants="Piety upheld",
@@ -1885,7 +1883,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "do not know that not all of them are magi of the Order. The agenda "
         "instilled in it is to take over the Elder Gild and with it "
         "Irencillia.",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         rules="Members meet masked as animals and keep one another's names secret",
         wants="Primal nature magic preserved; (secret) the Elder Gild and Irencillia in its hands",
@@ -1905,7 +1903,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         wants="Their old feud with Bjornaer settled on their own terms",
         offers="The shapeshifter's art, outside Hermetic tradition",
     )
-    world["rhine_league"] = b.faction(
+    world["rhine_league"] = b.custom(
         "The Rhine League",
         summary="No such league exists in 1220.",
         secrets="If history holds: as toll stations grow to a dozen by mid-century "
@@ -1918,7 +1916,6 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "unseating several barons, and disbands after three years with its "
         "aims met. A formidable foe for any covenant that acts as or allies "
         "with a robber-baron: vast resources, a large army and God on its side.",
-        faction="Other",
         place=gorge,
         wants="(secret) unjust tolls ended and the robber castles razed",
         offers="(secret) protection for merchants and lawful toll-takers",
@@ -1929,7 +1926,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "Island under Lord Robert Schönburg, taking river tolls that amount "
         "to piracy; Wolkan the branded thief is one of them.",
         secrets="Robert is a diabolist.",
-        faction="Other",
+        faction="Brigands and mercenaries",
         members=12,
         ruler="Lord Robert Schönburg",
         place=places["pfalz_island"],

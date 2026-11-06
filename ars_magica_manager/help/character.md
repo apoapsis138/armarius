@@ -268,7 +268,11 @@ All of it is typed in with the section's **Edit** button.
 Year Born is what the app works the character's Age out
 from.
 
-Below Personality Traits and Reputations come the character's
+Below Personality Traits and Reputations, a character who doesn't live
+at a covenant the troupe plays (a lord's steward, a hedge witch, a
+faerie knight) has an [Attitude](help:section-attitudes) toward each
+player covenant and the [Favours](help:section-favours) owed between
+them and the troupe, as a neighbour has. Then come the character's
 [Connections](help:section-connections): their covenant, the factions they are a member of, what they rule, and any
 other record that links to them.
 

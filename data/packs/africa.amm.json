@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.65.1",
+  "app_version": "3.77.0",
   "kind": "pack",
   "name": "Between Sand and Sea",
   "from_saga": "Between Sand and Sea",
@@ -24,56 +24,6 @@
     "covenants": [],
     "tribunals": [],
     "neighbours": [
-      {
-        "id": "the_great_hunger",
-        "name": "The Great Hunger",
-        "kind": "faction",
-        "summary": "The spirit at the centre of the Great Desert, whose strength even gods respect: the desert's heat and scouring wind given one will, which would leave the world dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "Magic",
-        "place_id": null,
-        "place_level": 0,
-        "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
-          "rules": "",
-          "wants": "",
-          "offers": ""
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": ""
-      },
-      {
-        "id": "the_hope",
-        "name": "The Hope",
-        "kind": "faction",
-        "summary": "The spirit of the Nile and the fertile black earth, called the Black, which holds back the Hunger. It favours people only by accident, being too vast to notice them. The lector priests who were magicians to the pharaohs served it, and so does Wesir, whom the Greeks called Osiris.",
-        "detail": "Sketch",
-        "ruler": "",
-        "answers_to": null,
-        "realm": "Magic",
-        "place_id": null,
-        "place_level": 0,
-        "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
-          "rules": "",
-          "wants": "",
-          "offers": ""
-        },
-        "attitudes": [],
-        "favours": [],
-        "links": [],
-        "arms": {},
-        "secrets": ""
-      },
       {
         "id": "the_pact_of_1225",
         "name": "The Pact of 1225",
@@ -373,7 +323,7 @@
             "kind": "places",
             "target_id": "the_banu_sulaym",
             "note": "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
-            "id": "7aa837cce5ec"
+            "id": "8ae937ce4b15"
           }
         ],
         "arms": {},
@@ -403,7 +353,7 @@
             "kind": "places",
             "target_id": "mythic_africa",
             "note": "Holds Cyrenaica and Tripolitania",
-            "id": "d0241ce10679"
+            "id": "c2bf7fb8f0af"
           }
         ],
         "arms": {},
@@ -444,7 +394,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -469,7 +419,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -494,7 +444,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -519,7 +469,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -544,7 +494,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -569,7 +519,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -594,7 +544,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -619,7 +569,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -644,7 +594,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Dynasty",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -669,7 +619,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "Each ward's tajmait, under its amin; confederations meet in need",
           "members": null,
           "rules": "Kharijism (p. 29): the earliest sect, who left Ali over arbitration, hold that major sin ends one's Islam, that any irreproachable believer may be caliph and any bad one deposed, that jihad is a sixth pillar, and that all believers are equal. It is extinct here but lives on in the gentler Ibadis, who reject violent rebellion: their Mashayekh elect and may remove an absolute Imam, and the 'Azzaba lead religious orders. Ibadism opposes Sufism but accepts the baraka of great leaders.",
@@ -718,7 +668,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -743,7 +693,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -768,7 +718,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -793,7 +743,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -818,7 +768,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -843,7 +793,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -868,7 +818,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Masmuda",
           "members": null,
           "rules": "",
@@ -893,7 +843,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Masmuda",
           "members": null,
           "rules": "",
@@ -918,7 +868,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Masmuda",
           "members": null,
           "rules": "",
@@ -943,7 +893,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Masmuda",
           "members": null,
           "rules": "",
@@ -968,7 +918,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -993,7 +943,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1018,7 +968,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1043,7 +993,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1068,7 +1018,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1093,7 +1043,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1118,7 +1068,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "Of the Sanhaja",
           "members": null,
           "rules": "",
@@ -1143,7 +1093,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1168,7 +1118,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1193,7 +1143,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1218,7 +1168,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "People",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "Reputations: a negative local Reputation is removed by building a rival one until it equals the first, then spending experience against the first (ArM5 p. 167). The Haj, as a series of scenes, erodes bad Reputations and gives Haji +1; shorter pilgrimages give less, which is what 'three pilgrimages equal one' means. For its religious side use The Church pp. 15-19. Shame removal is social, not supernatural.\n\nThe Gift breeds distrust, so magi easily gain shameful Reputations. Speaking of coming good fortune gives +3 to Hex rolls by those who envy the speaker. Fortune is no Virtue, and Hermetic magic cannot detect it; player characters who are wealthy, lucky or skilled have it. Maintaining the network is pushing up bond scores under the agency rules of Houses of Hermes: Societates pp. 140-144. A woman passing as a boy may take Dark Secret, or nothing if the troupe wants no stories from it.\n\nLocal saints may be of any Realm: a fortunate but unholy 'saint' is a Magic spirit of place or a faerie. Observing a sect's rites or the tomb's aura may show which, though Infernal murabits mask themselves. Murabitin rules are in ch. 4.\n\nMuslim names (p. 20) join an ism, nasab (ibn, bint; Berber ag), kunya (abu, umm), laqab and nisba: Saladin's breaks down there. Lists of isms, laqabs and nisbas are on pp. 20-21.",
@@ -1243,7 +1193,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "People",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "The Dhimmi Minor General Flaw reflects this; those not resident may use Outsider instead.",
@@ -1268,7 +1218,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "People",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "Rank: amajegh as Knight or Emir with a hunting and travel focus, bound by a code like Dutybound; amghar as Landed Noble or Muslim Muqta'; amenoukal as Great Noble (Lords of Men p. 31), the Kel Ahaggar's equal to a duke. Common noble traits: Fury, Obsession (appearance), Overconfident, Oversensitive, Piercing Gaze, Proud, Self-Confident, Social Handicap, Strong-Willed, Wrathful. Ineslemen is a Minor Social Status Virtue (p. 34) with free Noncombatant, and inenden have Outcast. Ineslemen lack Dream Interpretation and Create Vis, may take Purity, Adjuration or Wonders, and may hide other Realms behind false baraka.\n\nThe veil (p. 31) carries a hedge enchantment: ReAu 25, Duration Sun, 2 uses a day, against sandstorms, and once a day a Ward against Spirits of the Desert, Penetration 5 to 20 by rank. Wearers take Vow (constantly wear litham veil); hajis exchange it for Pious, and magicians who drop the veil for Judged Unfairly. It gives at least 2 Warping Points a year: from the eighth year Short Attention Span or Poor Concentration (Realms of Power: Magic p. 50), Warping 3 at forty and 5 at fifty, faster in strong auras. Warping 2 Short Attention Span or Poor Concentration; 3 Disfigured (deep indigo skin); 5 a Minor Supernatural Virtue (Desert Regio Network, Dowsing (water), Lesser Immunity: Thirst, Second Sight or Wilderness Sense); 6 Wanderlust; 7 Magical Air; 8 Blatant Magical Air. Most blame settut curses and buy stronger veils and amulets, which worsens it. Male asseher, imhergi, ineslemen and ineden avoid these effects but Warp faster.\n\nTuareg magic is mostly women's; settuten are rarer here than among other Berbers. See ch. 4.",
@@ -1293,7 +1243,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1318,7 +1268,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1343,7 +1293,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1368,7 +1318,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1393,7 +1343,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1418,7 +1368,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1443,7 +1393,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1468,7 +1418,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1493,7 +1443,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Tribe",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1518,7 +1468,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "People",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1543,7 +1493,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "False gods",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2537,7 +2487,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_anfa",
             "note": "Its harbour",
-            "id": "a764c04b4e6e"
+            "id": "73bd7b4e1073"
           }
         ],
         "arms": {},
@@ -2566,7 +2516,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_asfi",
             "note": "Its harbour",
-            "id": "0aafb384f39c"
+            "id": "419cd156d9f4"
           }
         ],
         "arms": {},
@@ -2764,7 +2714,7 @@
         "place_id": "pithecousa_the_island_of_monkeys",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2824,7 +2774,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tangier",
             "note": "Its harbour",
-            "id": "06bf18af769c"
+            "id": "f5bcf20df86e"
           }
         ],
         "arms": {},
@@ -3075,7 +3025,7 @@
         "place_id": "marrakesh",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Brigands and mercenaries",
           "decides": "",
           "members": null,
           "rules": "A character with a criminal background and Arabic 3 or more speaks the argot (p. 53). How close the family truly is varies by saga.",
@@ -3153,7 +3103,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tunis",
             "note": "Its harbour",
-            "id": "bcc6e8d62aa2"
+            "id": "ea4243c435d5"
           }
         ],
         "arms": {},
@@ -3182,7 +3132,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tripoli",
             "note": "Its harbour",
-            "id": "a1afe53c0e0e"
+            "id": "3d0926d6fc98"
           }
         ],
         "arms": {},
@@ -3211,7 +3161,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_mahdia",
             "note": "Its harbour",
-            "id": "6fc1c5a1efe4"
+            "id": "43b0c52b1544"
           }
         ],
         "arms": {},
@@ -3240,7 +3190,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sfax",
             "note": "Its harbour",
-            "id": "e83afbfb2d4e"
+            "id": "257aa9f7bad8"
           }
         ],
         "arms": {},
@@ -3269,7 +3219,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sharshal",
             "note": "Its harbour",
-            "id": "cc8e2783a470"
+            "id": "90afc48de295"
           }
         ],
         "arms": {},
@@ -3298,7 +3248,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_en_nassria",
             "note": "Its harbour",
-            "id": "420bcbe380d5"
+            "id": "208917714f99"
           }
         ],
         "arms": {},
@@ -4175,7 +4125,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sidi_rafaa",
             "note": "Its harbour",
-            "id": "d84b57f42c29"
+            "id": "6336a7a90734"
           }
         ],
         "arms": {},
@@ -5383,7 +5333,7 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5902,7 +5852,7 @@
         "place_id": "garama",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "Sorcerer-kings and an elite nobility",
           "members": null,
           "rules": "",
@@ -6069,7 +6019,7 @@
             "kind": "places",
             "target_id": "the_central_great_desert",
             "note": "Passes by the Central Great Desert",
-            "id": "c8d74940c4b4"
+            "id": "7700a31e748f"
           }
         ],
         "arms": {},
@@ -6628,7 +6578,7 @@
         "place_id": "the_redoubts_of_the_tuareg",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "True jinn, which Sihr affects (p. 126); Faerie by p. 123.",
@@ -7274,7 +7224,7 @@
       {
         "id": "the_desert_caravans",
         "name": "The Desert Caravans",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "The crossing goes by stages of about 7 leagues (21 miles) and takes two to three months one way, on the backs of camels and slaves. Gold, slaves and salt go north; slaves, glass and horses go south, among much else. Northbound too are ivory, gum arabic, ostrich feathers, kola nuts, ebony and cloth, cotton cloth, hides, goatskins and leatherwork. Southbound are dates, figs, sugar, cowries, copper, ironwork, paper, books, tools, weapons, cotton, silk, textiles, ceramics and armaments, serving as currency with the nomads. Salt and copper from the desert are bought along the way. Wheeled vehicles cannot cross, since no road stays clear of sand, so bulk trade is rare. Barbary steeds, bred for slavers rounding up people where horses are unknown, cost ten to thirty slaves each.\n\nThousands of slaves cross each year, half-starved and carrying the goods, many expected to die. Moorish pirates take pagans from Rus, Christians from the Mediterranean and England, and the least scrupulous Muslims from Iberia and the Levant. Those from the south reaching the Maghreb are mostly women, at 3 to 9 Mythic Pounds, though a ruler may buy men for war, as Marrakesh's founder bought 2,000. Islamic law frees a concubine who bears a Muslim's child, and soldiers die or win freedom, so demand and prices stay high.\n\nBerbers and Tuareg bring most of the caravans from the south, with hundreds of camels, into the markets in March and November; Muslim traders go the other way. The Genoese have traded along the coast since the mid-11th century, with enclaves at Safi, Sale, Tangier, Orano, Algiers, Bona, Tunis, Mahadia and Tripoli, chiefly for gold, timber, salt, cheese, wine, oil and grain, and take part in the slave trade too: many of their households keep two or three slaves. Many places forbid keeping Christian slaves, and an owner should free one who converts, which keeps demand from the north up.\n\nMerchants bound for one city gather at its departure city, buy rested camels and choose a guide, on whom everything depends. He sets a day in the cool months, October to March. The merchant stays home, sending a trusted slave or young relative. Up to two thousand camels move as one, a stage a day, by night and morning, by a winding route that ends each day at water, though camels need it only every ten days, for a well may be dry, poisoned, buried, beset by bandits or not where he remembers.\n\nA guide needs Area Lore to follow paths the sandstorms change, languages to deal with the tribes, Leadership to hold his men in trouble, the stars to steer by, and often dealings with creatures of the realms. He is paid in money or shares of cargo. Four days out a pair of runners goes ahead to warn the Sudanese, never one alone, for the demons of the desert play with single runners until they go mad or die of thirst; they earn pounds of gold for a few days' work. At a Maghrebi city everyone must buy, sell and change camels before the caravan leaves, and some cities see one a year or one in ten years, so the pressure is intense and crime by and against merchants pays.\n\nCamels come in two breeds: big, slow pack camels, by far the commoner, and swift saddle camels used as combat mounts, faster than oxen and carrying more than horses. Caravans make 15 to 25 miles a day. The wealthy and pilgrims ride in small canopies, often for two, shielded from sun and sand, with room to talk, play chess or eat.",
         "detail": "Sketch",
         "ruler": "",
@@ -7283,10 +7233,7 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "The caravan guide",
-          "members": null,
-          "rules": "",
+          "rules": "Decided by: The caravan guide.",
           "wants": "Goods carried across and profit shared out.",
           "offers": ""
         },
@@ -7346,7 +7293,7 @@
       {
         "id": "the_silent_traders",
         "name": "The Silent Traders",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Those who deal in gold guard its source. Northern caravan masters leave wares on an agreed stone and withdraw; the gold traders come out, leave what they think fair, signal and hide. The caravan takes the gold or signals it is too little, back and forth until one side leaves with gold or goods. Locals say two plants have roots of pure gold, a tale for the gullible.",
         "detail": "Sketch",
         "ruler": "",
@@ -7355,9 +7302,6 @@
         "place_id": "the_bilad_es_sudan",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "",
           "wants": "Their sources of gold kept secret.",
           "offers": ""
@@ -8378,7 +8322,7 @@
         "place_id": "kaf_ajnoun",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": 7,
           "rules": "",
@@ -8403,7 +8347,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "Berber magicians very often have the Cyclic Magic Virtue or Flaw, tied to the fitting body (p. 92). Sahirs: The Cradle and the Crescent ch. 3; elementalists: Hedge Magic Revised Edition ch. 2.",
@@ -8454,7 +8398,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "Sleeping in a dream house gives +3 to Dream Interpretation rolls on the dreams had there (p. 92; the Ability is in Realms of Power: The Divine p. 137 and pp. 128-130 here).",
@@ -8613,7 +8557,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Every Daughter has Skinchanger (dove) in a Major form, Feather Messenger (Minor), Wealthy and Close Family Ties (Minor), on p. 107: a prepared feather, or any picture of one, serves as the cloak, her clothes and gear become feathers, and in dove form she has a common dove's statistics with +3 Soak. Some are Well-Traveled, and some chroniclers give them Venus's Blessing. Their learning leads some to think them faeries who made up their own stories.",
@@ -8638,7 +8582,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "The Induction Virtue, pp. 107-108, with the box on Entrancement and Induction, p. 106.",
@@ -8663,7 +8607,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Maker of Water Vessels and Maker of Textured Vessels (p. 108). Each vessel costs a Long Term Fatigue level; one without the gifts, training and blood who tries it suffers Enfeebled for life. The senior potters are an oral tradition of Elementalists (Hedge Magic Revised Edition pp. 17-33).",
@@ -8688,7 +8632,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "The potteresses' two Virtues in leather; each Virtue covers clay or leather, not both (p. 109).",
@@ -8713,7 +8657,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Ripper, Fabric Ripper and Leather Ripper (pp. 109-110).",
@@ -8738,7 +8682,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "The Geomancy Ability and its Virtues (Geomancy, Lesser Geomancy, Skilled Geomancer, Astrological Geomancy), pp. 110-112; stylus bonuses p. 111. Astrological Geomancy is unknown in Africa and Mythic Europe.\n\nBooks, p. 111. Kitab al-Raml, thought a translation of Tumtum al-Hindi's book: summa, Level 4, Quality 10; poor Arabic copies and mistranslations Quality 5 to 8 are common, and occasional good Berber, Persian or Greek texts Quality 9. Experimentarius, a flawed Latin verse translation by Bernard Silvestris, in northern libraries since the 12th century: tractatus, Quality 8. A copy of its Arabic original: tractatus, Quality 9, from a Maghrebi bookseller or an Andalusian library.",
@@ -8789,7 +8733,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "The fully changed have Transformed by Magic and commonly Large or Giant Blood; built by Realms of Power: Magic ch. 4 (p. 116). Magic-kin suit grogs and companions, or an Ex Miscellanea magus, or a Mythic Companion as Spirit Votary of the Black.\n\nInherited Virtues: Dislocation, Geomancy, Greater Immunity (Deprivation), Lesser Geomancy, Lesser Immunity (Thirst), Personal Power: Aura of Rightful Authority, Desert Regio Network, Skinchanger (waral lizard), Ways of the Desert, Voice of the Desert. Required Flaw: Vow (always wear the litham). Inherited Flaws: Anchored to the Desert, Delusion (Tuareg superiority), Disfigured (blue dyed skin), Dutybound, Feral Scent, Obsessed (camels or racial purity), Overconfident, Oversensitive (appearance), Poor Concentration, Proud, Social Handicap (poor hygiene), Short Attention Span, Wanderlust, Weak Senses (Cold Sensitivity).",
@@ -8814,7 +8758,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Variants of the Drowned Men (Realms of Power: Magic pp. 96-97): Transformed Human and the Major Story Flaw Servant of the Desert (p. 115). They seem aligned to Aquam in a negative sense.",
@@ -8865,7 +8809,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Which jnun Sihr commands: rules.africa, pp. 123-125. All true jinn have the Free Virtue Jinn, nearly all Ways of the (Land) and Greater Malediction: Bound by Bargains, and Magic ones elemental powers. Multiple animal shapes, Shapeshifter sizes and hybrid shapes pp. 123-124; building them, The Cradle and the Crescent ch. 4.",
@@ -8890,7 +8834,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Lesser afarta are Infernal dragons (p. 125), not true jinn and unlike the eastern 'afrit despite the name: Sihr does not touch them, and sahirs cannot summon them. The greater vary in Realm, most being Magic variants of the Aerial Powers, and can lend subjects Recalcitrance (Realms of Power: The Infernal p. 42). The strongest are Magic Daimons, manifest as Aspects, not easily controlled by non-theurgical Hermetic magic. None is a true jinn.",
@@ -8939,7 +8883,7 @@
         "place_id": "the_seventh_depth",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Mermen and tritons are in Realms of Power: Faerie pp. 90-91. Not true jinn: Sihr does not touch them (p. 125), though they may share jinn's Traditional Wards, including the authority of Islam, and other magic can summon them.",
@@ -8964,7 +8908,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Mostly unGifted. Some leaders may have hedge magic, as Mythic Alchemists or Water Elementalists, seemingly of Faerie and not Magic (Hedge Magic Revised Edition; p. 124).",
@@ -8989,7 +8933,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Closest of the faeries to eastern jinn: vulnerable to the traditional wards and the sahirs' binding, built as Pious jinn (The Cradle and the Crescent ch. 4; p. 126).",
@@ -9005,7 +8949,7 @@
       {
         "id": "al_maghrebi",
         "name": "Al-Maghrebi",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "The evil Moroccan magician runs through the Thousand Nights and One Night like a dark thread, ruining trusting youths who become wise heroes by escaping him. These Faerie wizards mostly bear non-Arabic, usually Berber, names. In some western tellings a like figure of magian birth and Persian looks takes the villain's part: these seemingly Zoroastrian faeries are the al-Majusi.",
         "detail": "Sketch",
         "ruler": "",
@@ -9014,9 +8958,6 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "",
           "wants": "",
           "offers": ""
@@ -9063,7 +9004,7 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "For statistics, see the Faerie Bestiary of Realms of Power: Faerie ch. 4 and The Cradle and the Crescent ch. 4 (p. 126).",
@@ -9114,7 +9055,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "Zahids: Realms of Power: The Divine p. 116 (p. 131 here).\n\nThe Khirka of Abu Madyan (p. 129): a patched grey woollen cloak, handed from master to student, radiating calm. Faith Score 5, 5 Faith Points, Divine Might 50, with the Saint powers Celestial Immunity, Grant Serenity, Resist Temptation and The Incombustible Shroud (Realms of Power: The Divine p. 88).\n\nBooks, in Arabic (p. 129). Abu Madyan: Bidayat al Mouridin, Ouns al Wahid, Tahfat al Arib and his Diwan, each a Theology tractatus, Quality 9, in private libraries of the Maghreb and al-Andalus, sometimes the Levant. Ibn Masarrah: Kitab al-i'tibar, Kitab khawass al-huruf and Tawhid al-muqinin, each a Theology tractatus, Quality 10, there too, rarely the Levant; several works they cite are lost, so his system can hardly be rebuilt. Al-Ghazali: The Revival of Religious Sciences, summa, Theology: Islam, Level 5, Quality 8; Incoherence of the Philosophers, The Deliverer From Error and The Jerusalem Tract, Theology tractatus, Quality 8; in the Maghreb, al-Andalus and all the eastern Muslim world.",
@@ -9163,7 +9104,7 @@
         "place_id": "the_ruins_of_carthage",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "The Priesthood's ruins have no printed aura; Tunis is described with the coasts.\n\nSerpent amulets of shed snakeskin give long life: +3 to aging rolls and Tainted with Evil while worn (p. 134). Some pillars may carry True Names, and their remnants may give Seekers insight into lost magic (p. 132).\n\nBooks. Praeparatio Evangelica by Eusebius, in Latin (p. 132): summa, Area Lore: Ancient Carthage, Level 2, Quality 5, and Theology, Level 3, Quality 5, in private libraries in the Levant and Egypt and in Constantinople; it was meant to discredit paganism and became the last map to Punic magic. One copy is papyrus scrolls on iron rods capped with brass bull's heads, in a dark cedar box with brass fittings, in a fine narrow hand in a Roman dialect. Bibliotheca Historica Book III by Diodorus Siculus, in Latin (p. 130): summa, Area Lore: Ancient Carthage, Level 2, Quality 5, same libraries; it tells of the 300 children. De Superstitiones by Plutarch, in Latin (p. 130): tractatus, Area Lore: Ancient Carthage, Quality 5, in private libraries and Constantinople; on the flutes and drums that drowned the sacrifices' cries.",
@@ -9861,6 +9802,8 @@
         "summary": "The caliph's sahir vizier, on whose advice the friars were beheaded in the first weeks of 1220. Princess Sancha of Alenquer hints at a great reward for proof of his death.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10049,6 +9992,8 @@
         "summary": "A Portuguese princess who befriended St. Francis's friars on their way to Morocco and saw their deaths in a vision at prayer. She offers a reward for their remains.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10540,6 +10485,8 @@
         "summary": "A Targui amajegh, a noble of the Ahaggar who leads raiders on camels, known locally as merciless, with a veil worn so long that his skin has gone indigo.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10991,6 +10938,8 @@
         "summary": "A young Hassane of the Banu Khalida seeking fame as a warrior: nearly seven feet tall, ebony-skinned and shaven, his face painted with red ochre for battle, in a chain shirt under a black djebellah. He cannot leave a jar, door, shutter or chest open.",
         "secrets": "He preys on the ghosts of those he beats, Ablating experience, Confidence, Characteristics or healing from them, fifteen victories so far, gaining Warping and Infernal Reputation, and tainting his Abilities. The remnants hang at the edge of his sight, which is why he closes every place a spirit might hide. A demon is bound in his great sword.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11181,6 +11130,8 @@
         "summary": "A Sufi mystic of 67, beloved of Asfi's elders, with a ribat in the town and the beginnings of the Magiriyyun order. If history holds he has 14 years to live, teaching ascetics and writing the Bidayat al Mourid, on Tassawuf and on Sufi saints such as his teacher Abu Madyan.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11369,6 +11320,8 @@
         "summary": "A pious sorcerer who lives in Comino's caves and has a magic cloak that lets him fly, on which he sometimes goes to Malta for long stays.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11557,6 +11510,8 @@
         "summary": "Youngest daughter of the headman of the village by Cyrene, the only person who knows the nymph Kura still lives. She stumbled into the regio last spring and now visits often.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12049,6 +12004,8 @@
         "summary": "A Tuareg inenden saddle-maker who wanders the Ahaggar, his pariah birth barring him from the lasting protection of any drum group, though the nobles he serves prize his work. Mortally afraid of the desert spirits, he trades much of what he makes for charms against magic, most of which do nothing. He is worn in the face, in a tattered light veil and a dirty white robe, and hung all over with small metal amulets and glass.\n\nHis saddles are made for one rider and give +3 to riding or a Ride score of 8 on camels, or carry small Animal enchantments: they calm an animal, or let it go longer without water, or speed it across shifting sand.",
         "secrets": "Only two of his amulets do anything: a minor relic and an imerghi Vulnero Magicam charm.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12314,7 +12271,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "094740280b85"
+            "id": "8e2d59bd98b2"
           },
           {
             "name": "Evasion",
@@ -12322,7 +12279,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "d4694e333f93"
+            "id": "4f01660280a3"
           }
         ],
         "soak": 1,
@@ -12395,7 +12352,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a minor natural ability or mundane Quality of an animal he sees, such as a frog's swimming, a cat's night vision, horns, spines or a bear's pelt, but no major change like wings. One at a time; a second replaces the first. It lasts indefinitely, but he loses a Might point each sunrise and sunset while he keeps it, regained in three hours or less in a Magic aura. MuAn 25 (Base 4, +2 Sun, +1 Part, +1 Constant effect, +1 can change ability possessed); Personal Power (25 levels, -2 Might cost).",
-            "id": "659a98a3757c"
+            "id": "99e892658c66"
           },
           {
             "name": "Mimic the Man",
@@ -12409,7 +12366,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Copies any sound exactly, even human speech, without understanding it. MuIm 3 (Base 1, +1 Conc, +1 Complexity); Personal Power (3 levels, -1 Might cost, +1 Init).",
-            "id": "5335c7dab406"
+            "id": "8e8b16da0854"
           }
         ],
         "vis": [
@@ -12417,7 +12374,7 @@
             "pawns": 2,
             "art": "Muto",
             "where": "one pawn in each hand",
-            "id": "d7695e9265ad"
+            "id": "c916c7f8b553"
           }
         ],
         "equipment": "",
@@ -12428,6 +12385,8 @@
         "place_id": "pithecousa_the_island_of_monkeys",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -12861,7 +12820,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 12,
-            "id": "853a61c2d939"
+            "id": "77c2da02ce63"
           },
           {
             "name": "Bite",
@@ -12869,7 +12828,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 11,
-            "id": "5d2415779f9f"
+            "id": "4f5af8e95556"
           }
         ],
         "soak": 10,
@@ -13061,7 +13020,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "With a moment's concentration he learns the physical state of any Beast of Virtue whose token he holds. InAn 35 (Base 3, +4 Arc, +4 Boundary); Ritual Power x2. Might spent so is recovered only by resting in a Magic aura of 4 or higher.",
-            "id": "88792af06ce4"
+            "id": "9cbcd383eb1b"
           },
           {
             "name": "Routing Bellow",
@@ -13075,7 +13034,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that makes men and beasts who hear it flee in fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "648dd882102a"
+            "id": "6b8ff16f0faa"
           },
           {
             "name": "Circle of Beast Warding",
@@ -13089,7 +13048,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ring traced in the earth that no mundane beast of Size +4 or less may cross; he thinks it unsporting for hunting. ReAn 20 (Base 2, +1 Touch, +2 Ring, +3 Size); Lesser Power (20 levels, +5xp Penetration).",
-            "id": "84bf9dc0f88a"
+            "id": "410efb8ccdda"
           },
           {
             "name": "Cowing Snarl",
@@ -13103,7 +13062,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A man or beast of his size or less, caught by his gaze, kneels in fear. ReAn 25 (Base 4, +1 Eye, +1 Diam, +2 Size, +1 Mentem requisite); Lesser Power (25 levels), Improved Powers x3 (-5 Might cost, +10 Initiative).",
-            "id": "0a10b0bbef6c"
+            "id": "89990680b839"
           },
           {
             "name": "Trackless Step",
@@ -13117,7 +13076,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His sweeping tail erases his tracks as he walks. ReTe 10 (Base 4, +1 Touch, +1 Conc); Lesser Power (10 levels, +15xp Concentration).",
-            "id": "d0ca78ad3573"
+            "id": "f7a335a5177f"
           },
           {
             "name": "Hunter's Pounce",
@@ -13131,7 +13090,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaps up to 50 paces. ReAn 25 (Base 15, +2 Size); Personal Power (25 levels).",
-            "id": "de1c87b87d88"
+            "id": "0cea1e17366e"
           },
           {
             "name": "Sleep with Eyes Open",
@@ -13145,7 +13104,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He sleeps with open eyes and is hard to surprise. ReAn 20 (Base 4, +2 Sun, +2 Size); Personal Power (20 levels, -1 Might cost).",
-            "id": "84ffb313dc1e"
+            "id": "c241ccbc25cb"
           }
         ],
         "vis": [
@@ -13153,7 +13112,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in his mane",
-            "id": "383200d36f05"
+            "id": "f8893cddf36b"
           }
         ],
         "equipment": "",
@@ -13164,6 +13123,8 @@
         "place_id": "the_maghreb",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -13613,7 +13574,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 13,
-            "id": "eaece0dae82d"
+            "id": "2b30868e7625"
           },
           {
             "name": "Teeth",
@@ -13621,7 +13582,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "4fae5a899a0d"
+            "id": "e43f66b307ee"
           },
           {
             "name": "Grapple",
@@ -13629,7 +13590,7 @@
             "attack": 11,
             "defense": 9,
             "damage": null,
-            "id": "d7f4ca39a794"
+            "id": "cc999b33451a"
           }
         ],
         "soak": 13,
@@ -13765,7 +13726,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that freezes men and beasts who hear it, trembling with fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "d3e9cda90aaa"
+            "id": "d4240057de4d"
           },
           {
             "name": "Thunderous Swipe",
@@ -13779,7 +13740,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blow that throws anything up to his own size 5 paces; Dex against Ease Factor 12 to stay standing. Thrown straight up or into something hard, the target takes falling damage (+1 per 2 feet, +7 at most). It may join a claw attack. ReAn 25 (Base 10, +1 Touch, +1 Size, +1 Corpus requisite); Lesser Power (25 levels), Improved Powers (-5 Might cost).",
-            "id": "9f8312397f5c"
+            "id": "310c533cd6c2"
           }
         ],
         "vis": [
@@ -13787,7 +13748,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his claws",
-            "id": "db018fb8b4f6"
+            "id": "3f4908ee6cb3"
           }
         ],
         "equipment": "",
@@ -13798,6 +13759,8 @@
         "place_id": "the_atlas_mountains",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -14162,7 +14125,7 @@
             "attack": null,
             "defense": 1,
             "damage": null,
-            "id": "9edbf9523fef"
+            "id": "ffa3468b954d"
           },
           {
             "name": "Fist",
@@ -14170,7 +14133,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 16,
-            "id": "a675d34b3f9d"
+            "id": "a4a890fb5f14"
           },
           {
             "name": "Kick",
@@ -14178,7 +14141,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 13,
-            "id": "ea9acb017b91"
+            "id": "45df82199062"
           },
           {
             "name": "Cudgel",
@@ -14186,7 +14149,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 17,
-            "id": "8b776d291dcd"
+            "id": "5a3b25112a8a"
           },
           {
             "name": "Thrown Stone",
@@ -14194,7 +14157,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 15,
-            "id": "41267db51fe2"
+            "id": "60c73d037371"
           }
         ],
         "soak": 16,
@@ -14295,7 +14258,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He looks and sounds like a Size 0 man. MuIm 25 (Base 2, +4 size, +2 Sun, +1 Moving Image); Improved Powers: -3 Might cost.",
-            "id": "d6eb8315022b"
+            "id": "d29585b68775"
           },
           {
             "name": "Friend of the Desert",
@@ -14309,7 +14272,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He ignores heat and fire damage of +15 or less. ReIg (Base 4, +2 for +15 or less, +2 Sun, +1 size; the book gives no total); Improved Powers: -2 Might cost; Slow Power.",
-            "id": "5d290e0bb256"
+            "id": "f0973c1bd498"
           }
         ],
         "vis": [
@@ -14317,7 +14280,7 @@
             "pawns": 4,
             "art": "Ignem",
             "where": "in his heart",
-            "id": "60b6b1249eba"
+            "id": "3a03a90ce5c3"
           }
         ],
         "equipment": "Acacia wood cudgel, sack of salt, gold, trinkets",
@@ -14328,6 +14291,8 @@
         "place_id": "the_maghreb",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -14423,7 +14388,7 @@
             "attack": 7,
             "defense": 4,
             "damage": 5,
-            "id": "6a341c01d0a6"
+            "id": "7d3ae3f8be0a"
           },
           {
             "name": "Grapple",
@@ -14431,7 +14396,7 @@
             "attack": 3,
             "defense": 6,
             "damage": null,
-            "id": "5041eff45223"
+            "id": "e2a34bf3cb0b"
           }
         ],
         "soak": 11,
@@ -14473,6 +14438,8 @@
         "place_id": "garama",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -14706,7 +14673,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "8facee7dd300"
+            "id": "3949e0e550cb"
           },
           {
             "name": "Bite",
@@ -14714,7 +14681,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 8,
-            "id": "c1c02ebdb25c"
+            "id": "b557862d9809"
           }
         ],
         "soak": 3,
@@ -14822,7 +14789,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its gaze fills a victim with the wish to chase it until sunrise or sunset. ReMe 15 (Base 4, +1 Eye, +2 Sun): Lesser Power (15 levels, -2 Might cost).",
-            "id": "03ec3ce21d2d"
+            "id": "cba28858ec8d"
           },
           {
             "name": "Gone to Ground",
@@ -14836,7 +14803,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Teleports to a place within 500 paces to which it has an Arcane Connection. ReAn 20 (Base 20): Personal Power (20 levels, -1 Might cost). Not while observed.",
-            "id": "cd066e56a924"
+            "id": "871568153d60"
           },
           {
             "name": "Unsporting Stalker",
@@ -14850,7 +14817,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blends into the terrain, +3 to vision-based Stealth checks. MuIm 3 (Base 1, +1 Diam, +1 moving images): Personal Power (5 levels, -1 Might cost, +15xp Concentration). The book prints Duration Conc but prices +1 Diam.",
-            "id": "2327589dcc9b"
+            "id": "aadc407e20b9"
           }
         ],
         "vis": [
@@ -14858,7 +14825,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "626177130841"
+            "id": "38a21dac1f0d"
           }
         ],
         "equipment": "",
@@ -14869,6 +14836,8 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -15070,7 +15039,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 0,
-            "id": "b3d8f0218763"
+            "id": "f593c072a84b"
           },
           {
             "name": "Grapple",
@@ -15078,7 +15047,7 @@
             "attack": 9,
             "defense": 0,
             "damage": null,
-            "id": "53092c29d6c1"
+            "id": "7b9185c34e78"
           },
           {
             "name": "Sting",
@@ -15086,7 +15055,7 @@
             "attack": 9,
             "defense": 2,
             "damage": -3,
-            "id": "fcfb6fd2fd8a"
+            "id": "8132eae38dc1"
           }
         ],
         "soak": 4,
@@ -15201,7 +15170,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers an exceptionally debilitating poison (Stamina roll against Ease Factor 6, Incapacitating), wounded or not.",
-            "id": "690501ef31f5"
+            "id": "095f43eb4f4b"
           },
           {
             "name": "Drive Berserk",
@@ -15215,7 +15184,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch drives the target to attack everything nearby for a Diameter. CrMe 10 (Base 4, +1 Touch, +1 Diameter): Lesser Power (10 levels, -1 Might cost, 5xp Concentration, +5xp Penetration).",
-            "id": "2c1cbdb9eda3"
+            "id": "a2f2b8abc805"
           },
           {
             "name": "Lie in Wait",
@@ -15229,7 +15198,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sitting still, it looks like a plain rock or small dune. MuIm 10 (Base 5, +1 Conc): Personal Power (10 levels, -1 Might cost, +10xp Concentration).",
-            "id": "951a0c48ea8b"
+            "id": "d4b1c01f3b03"
           }
         ],
         "vis": [
@@ -15237,7 +15206,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its stinger",
-            "id": "f78ea65246f9"
+            "id": "c339815f60a8"
           }
         ],
         "equipment": "",
@@ -15248,6 +15217,8 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -15314,7 +15285,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "5dd3e175ce4c"
+            "id": "8579efb35131"
           }
         ],
         "soak": 7,
@@ -15359,7 +15330,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form in one round, most often a wave of grinding stones, and may discorporate almost at once. Its rocky body can hide trails and landmarks.",
-            "id": "128fdd55b1d5"
+            "id": "952cd52403bb"
           },
           {
             "name": "Elemental Control of Water",
@@ -15373,7 +15344,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: any Creo, Muto or Rego Aquam effect at 1 Might a magnitude, minor effects of level no higher than its Might. It taunts those dying of thirst.",
-            "id": "0c1dca7731d6"
+            "id": "126b957ebcaa"
           },
           {
             "name": "Envisioning",
@@ -15387,7 +15358,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Subtly alters dreams to make them more ominous and depressing.",
-            "id": "fc4bcde36225"
+            "id": "2a59da772107"
           },
           {
             "name": "Obsession",
@@ -15401,7 +15372,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and it spends Might, then at the next crisis of worthiness the storyguide rolls a simple die +3 and the player a simple die + a suitable Personality Trait - adjustments for harsh surroundings. If the demon's total is higher, the character gains Doubt +1; acting on it puts him in a state of sin, and the demon then coagulates and kills him.",
-            "id": "7cdb2380177c"
+            "id": "f7d4f1e69ad1"
           }
         ],
         "vis": [
@@ -15409,7 +15380,7 @@
             "pawns": 2,
             "art": "Perdo",
             "where": "tainted, in its body",
-            "id": "bca31f5606f1"
+            "id": "e57858d30df9"
           }
         ],
         "equipment": "",
@@ -15420,6 +15391,8 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -15596,7 +15569,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 2,
-            "id": "f828b7b1757d"
+            "id": "e019ebe5b14b"
           }
         ],
         "soak": -1,
@@ -15662,7 +15635,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 on all rolls to impress others. Base 3, +1 Touch, +2 Sun.",
-            "id": "e522ddd4eefe"
+            "id": "30390d14c1b1"
           },
           {
             "name": "Grant Major Flaw (Wildness)",
@@ -15676,7 +15649,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover grows helpless before all faeries, and suffers a different random Minor Personality Flaw each scene, stilled briefly by ecstatic experience such as dance, music or wandering dry riverbeds in hope of meeting faeries again.",
-            "id": "762096a923ee"
+            "id": "92c7c2054da0"
           },
           {
             "name": "Grant Minor Flaw (Impotence)",
@@ -15690,7 +15663,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover cannot have sex with others.",
-            "id": "ac945821a450"
+            "id": "1c68e05edbb4"
           },
           {
             "name": "Guide",
@@ -15704,7 +15677,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leads a character into danger like the Common Sense Virtue, but serving her ends. ReMe Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "4720a0d5d5a5"
+            "id": "c90711db4c2f"
           },
           {
             "name": "Hound",
@@ -15718,7 +15691,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her the direction and distance of her human quarry. InCo Base 3, +4 Arc, +1 Conc.",
-            "id": "e83eef0b7255"
+            "id": "fde2605954a9"
           },
           {
             "name": "Invisibility",
@@ -15732,7 +15705,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility (ArM5 p. 146). Base 4, +2 Sun, +1 moving image. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "2263a0618e6e"
+            "id": "f6a26d13b90d"
           },
           {
             "name": "Pine Away",
@@ -15746,7 +15719,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A major disease, Ease Factor 15, causing a Light Wound, treatable with Faerie Lore or Medicine; the victim loses the will and the vitality to live. Base 30 (5 + 25 virulence), +2 Voice.",
-            "id": "c4b683ee6945"
+            "id": "e6da711f807e"
           },
           {
             "name": "Silent Motion",
@@ -15760,7 +15733,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: she moves without a sound. Base 3, +2 Sun, +1 constant. The book prints '1 point, Init 0, Mentem' before '1 point, constant, Imaginem'.",
-            "id": "e7bd36d7b95d"
+            "id": "8193ce2587a8"
           },
           {
             "name": "Steal Judgment",
@@ -15774,7 +15747,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes almost any lie she tells; an Intelligence roll against Ease Factor 6 resists, easier for truly incredible lies. Base 4, +1 Eye, +2 Sun. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "9d180430f988"
+            "id": "fb09b93b9805"
           }
         ],
         "vis": [
@@ -15782,7 +15755,7 @@
             "pawns": 9,
             "art": "",
             "where": "bones of a goat",
-            "id": "c086a82584b4"
+            "id": "074750985dcf"
           }
         ],
         "equipment": "Any trappings of a woman of wealth and dubious virtue.",
@@ -15793,6 +15766,8 @@
         "place_id": "the_great_desert",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -16156,7 +16131,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "efeed6b3f2ae"
+            "id": "62a352027a6f"
           },
           {
             "name": "Falchion",
@@ -16164,7 +16139,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 5,
-            "id": "c671815cfe48"
+            "id": "efd017b8452c"
           },
           {
             "name": "Fist",
@@ -16172,7 +16147,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 2,
-            "id": "d0b08a227e02"
+            "id": "d3c4bd814907"
           }
         ],
         "soak": 2,
@@ -16378,7 +16353,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Constant effect. With a few moments' concentration he learns anything that happens within the bounds of the Great Desert.",
-            "id": "8851a56f76a0"
+            "id": "95264f5eef5c"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -16392,7 +16367,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Cr(Re)Co).",
-            "id": "d9405d58de81"
+            "id": "e0287ec29173"
           },
           {
             "name": "Eidolon",
@@ -16406,7 +16381,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory form material beings can see and hear. It moves and speaks as he directs and lasts until he has no use for it.",
-            "id": "4fd792a9463e"
+            "id": "af47daa1619a"
           },
           {
             "name": "Master of Sandstorms",
@@ -16420,7 +16395,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points, a point a magnitude: any non-ritual Creo, Muto or Rego Auram effect up to 7th magnitude, with Terram or Ignem prerequisites as he likes.",
-            "id": "5a3e3111b5e5"
+            "id": "8e1d8088de58"
           },
           {
             "name": "Master of Thirst",
@@ -16434,7 +16409,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Draws most of the water out of any object (PeAq(Co)).",
-            "id": "e9c5e5e2b26b"
+            "id": "eef60b2586ba"
           }
         ],
         "vis": [
@@ -16442,7 +16417,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "in the dust on his clothes or in his cyclone",
-            "id": "5d107d4d88d2"
+            "id": "ba1b97b0c557"
           }
         ],
         "equipment": "",
@@ -16453,6 +16428,8 @@
         "place_id": "kaf_ajnoun",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -16824,7 +16801,7 @@
             "attack": 0,
             "defense": -3,
             "damage": -2,
-            "id": "418fa5cca8a0"
+            "id": "38ede843dfe2"
           }
         ],
         "soak": 2,
@@ -16988,7 +16965,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Lesser Power, -5 Might cost).",
-            "id": "494c2d98afb4"
+            "id": "b6fbf6844fd8"
           },
           {
             "name": "Focus Power (Divination)",
@@ -17002,7 +16979,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Intellego Corpus, Imaginem or Vim effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "39c3269fa907"
+            "id": "75ab13492c04"
           },
           {
             "name": "Focus Power (Destruction)",
@@ -17016,7 +16993,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Perdo Animal, Corpus or Terram effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "cfc35015bb59"
+            "id": "1e9b778174f8"
           },
           {
             "name": "Invisibility",
@@ -17030,7 +17007,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She, or someone she touches, turns invisible at will, though Second Sight still sees her. The effect is PeIm 15; the book also says the Lesser Power's 25 levels.",
-            "id": "2b83315f6cd2"
+            "id": "6e3dec460872"
           },
           {
             "name": "Ritual Focus Power (Healing)",
@@ -17044,7 +17021,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Creo Corpus ritual effects up to 7th magnitude, paid for with any fitting vis she holds. Its Initiative is (2 x magnitude) - 3.",
-            "id": "1cbd451dad59"
+            "id": "77444ea5055d"
           }
         ],
         "vis": [
@@ -17052,7 +17029,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in her bracelets",
-            "id": "81097d96b478"
+            "id": "3d0f8c502839"
           }
         ],
         "equipment": "",
@@ -17063,6 +17040,8 @@
         "place_id": "the_tomb_of_tin_hinan",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17272,7 +17251,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "1dd5b4b9dc44"
+            "id": "f069528a5ba3"
           },
           {
             "name": "Fist",
@@ -17280,7 +17259,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 1,
-            "id": "9526d999455b"
+            "id": "3efd229b5781"
           },
           {
             "name": "Sling",
@@ -17288,7 +17267,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 5,
-            "id": "c68b66cc192c"
+            "id": "836dfd5441cc"
           }
         ],
         "soak": 2,
@@ -17368,7 +17347,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch, a tunnel a pace deep. Used over and over to build warrens, and to loosen stones for the great burial mounds (PeTe; 2 mastery points on Might cost, 1 on Initiative).",
-            "id": "f7ce16bcabb0"
+            "id": "2b83e5aaed43"
           }
         ],
         "vis": [
@@ -17376,7 +17355,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in its hands",
-            "id": "550b6a262323"
+            "id": "2113ac35a407"
           }
         ],
         "equipment": "Any small thing that caught its interest, a camel-hide loincloth, and a sling wound round the waist or worn as a sash with a stone ready.",
@@ -17387,6 +17366,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17458,6 +17439,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17529,6 +17512,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17600,6 +17585,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17671,6 +17658,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17742,6 +17731,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17813,6 +17804,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17884,6 +17877,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17955,6 +17950,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18026,6 +18023,8 @@
         "place_id": "the_amadagh",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18209,7 +18208,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 4,
-            "id": "9e04168c50d9"
+            "id": "6cb62f63aced"
           },
           {
             "name": "Great Sword",
@@ -18217,7 +18216,7 @@
             "attack": 21,
             "defense": 17,
             "damage": 13,
-            "id": "1d381701b557"
+            "id": "a9ee35544974"
           }
         ],
         "soak": 4,
@@ -18339,7 +18338,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once in a body, he shifts to any human form, even with animal parts such as curling ram's horns, and dissolves them at will. A natural change: Magic Resistance does not stop physical attacks.",
-            "id": "b8fe76747516"
+            "id": "a8983afdc590"
           },
           {
             "name": "Know the Places of Men",
@@ -18353,7 +18352,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Intellego Corpus or Imaginem effects up to 10th magnitude.",
-            "id": "f309ddafa15c"
+            "id": "a13c9966cbf4"
           },
           {
             "name": "Master of Flame",
@@ -18367,7 +18366,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Ignem effects up to 10th magnitude.",
-            "id": "83621b45cad8"
+            "id": "ada710b1c862"
           },
           {
             "name": "Summon the Herd of Destruction",
@@ -18381,7 +18380,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ritual power (ReMe 15, +4 Arc, +3 Moon, +2 Group): 10 ghostly war elephants who obey him, or one he names, for Moon Duration. They understand only Punic.",
-            "id": "10e49b903af6"
+            "id": "e7b7ce35619f"
           },
           {
             "name": "Coagulation",
@@ -18395,7 +18394,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form, which he may dissolve at will.",
-            "id": "1ee12a21c84f"
+            "id": "bd3cbdf85fa0"
           },
           {
             "name": "Envisioning",
@@ -18409,7 +18408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point to appear in a sleeper's dreams, 5 for a waking dream. So he often spoke to his worshippers.",
-            "id": "c5e64b7285e7"
+            "id": "d34b35d89eee"
           },
           {
             "name": "His Master's Voice",
@@ -18423,7 +18422,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: summons demons or corrupt beasts to him, 1 point for each point of their Infernal Might, so rarely used. He has no control over what comes.",
-            "id": "c398381227d5"
+            "id": "07c9f57a3de2"
           },
           {
             "name": "Obsession",
@@ -18437,7 +18436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points: imposes the Obsession Traits of Greed, Merciless Ambition and Pride (Realms of Power: The Infernal pp. 31-32).",
-            "id": "6b47397082e0"
+            "id": "e9d9a224bcd8"
           },
           {
             "name": "Possession",
@@ -18451,7 +18450,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: as Realms of Power: The Infernal. Might moved into a Possession Pool stays there until the possession ends. The more Might, the more he can do and the weaker the Penetration. Each portion is an independent copy of his mind using any Power its pool can pay for. He may give the host Magic Resistance equal to the Pool, or hide within and pass wards. Forcing the host, or using its powers, draws on the pool (1 point a magnitude or Ability point, or the Might the victim spent; a questionable act must beat the host's Trait on stress die + Might spent). The possession ends at pool 0. Vim spells drain the pool but must Penetrate his full Might.",
-            "id": "0181280fb4d2"
+            "id": "d217a25f7d01"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -18465,7 +18464,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: conceals the Infernal nature of a power or aura as Magical or Faerie, or as wholly mundane, even from Sense Holiness and Unholiness, for as long as what it masks. It costs the masked Power's cost, or its magnitude if it costs no Might.",
-            "id": "ace8f9e9b19d"
+            "id": "7cfd835ea4c4"
           },
           {
             "name": "Wealth of Nations",
@@ -18479,7 +18478,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Summons riches of intrinsic value up to 50 pounds of gold from somewhere else, a royal treasury or the purse of the man beside you, chosen to corrupt most.",
-            "id": "ca1f5ca5c058"
+            "id": "aeb1db222d7a"
           }
         ],
         "vis": [
@@ -18487,13 +18486,13 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in his curling horns",
-            "id": "b5f5810cb8d6"
+            "id": "ba065a56dfb8"
           },
           {
             "pawns": 20,
             "art": "Vim",
             "where": "vis infesta, carried on long stays abroad",
-            "id": "e22055938641"
+            "id": "9bc29bac719e"
           }
         ],
         "equipment": "",
@@ -18504,7 +18503,155 @@
         "place_id": "the_ruins_of_carthage",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "He is one demon of Hell who played every god of the Punics, and at last revealed himself to the Goetics as Baalzebub. The vast cache of vis infesta outside Tunis is his."
+      },
+      {
+        "id": "the_great_hunger",
+        "name": "The Great Hunger",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 0,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "faerie_role": "",
+        "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "warping_score": 0,
+        "virtues_flaws": [],
+        "personality_traits": [],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0,
+          "states": [],
+          "aid": 0,
+          "crisis": 0,
+          "bruises": {},
+          "diseases": [],
+          "conditions": []
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "",
+        "notes": "The spirit at the centre of the Great Desert, whose strength even gods respect: the desert's heat and scouring wind given one will, which would leave the world dust. The Romans called it the Fames Magna, the Berbers Lazz, the Arabs Al-Ju'; along the Nile it is the Red.\n\nHostile creatures, spirits, faeries and jinn serve it, and some people do too: the settuten trace their line to the Yemma-t n Dunnit, perhaps its foremost servant.",
+        "source": "Between Sand and Sea: Mythic Africa Between Sand and Sea pp. 7-8; Lands of the Nile p. 6",
+        "detail": "Full",
+        "place_id": null,
+        "place_level": 0,
+        "links": [],
+        "attitudes": [],
+        "favours": [],
+        "secrets": ""
+      },
+      {
+        "id": "the_hope",
+        "name": "The Hope",
+        "many": false,
+        "how_many": "",
+        "realm": "Magic",
+        "might": 0,
+        "might_form": "",
+        "might_pool": null,
+        "order": "",
+        "hierarchy": null,
+        "weakness": "",
+        "faerie_role": "",
+        "faerie_story": "",
+        "vampire_precautions": "",
+        "vampire_limitations": "",
+        "vampire_death": "",
+        "characteristics": {
+          "intelligence": 0,
+          "perception": 0,
+          "strength": 0,
+          "stamina": 0,
+          "presence": 0,
+          "communication": 0,
+          "dexterity": 0,
+          "quickness": 0
+        },
+        "cunning": false,
+        "size": 0,
+        "age": "",
+        "confidence_score": null,
+        "confidence_points": 0,
+        "season": "",
+        "warping_score": 0,
+        "virtues_flaws": [],
+        "personality_traits": [],
+        "reputations": [],
+        "attacks": [],
+        "soak": 0,
+        "wounds": {
+          "light": 0,
+          "medium": 0,
+          "heavy": 0,
+          "incapacitated": false,
+          "dead": false,
+          "soak": 0,
+          "states": [],
+          "aid": 0,
+          "crisis": 0,
+          "bruises": {},
+          "diseases": [],
+          "conditions": []
+        },
+        "fatigue_level": "fresh",
+        "fatigue_levels": "",
+        "tires": true,
+        "can_be_wounded": true,
+        "encumbrance": "",
+        "abilities": [],
+        "powers": [],
+        "vis": [],
+        "equipment": "",
+        "appearance": "",
+        "notes": "The spirit of the Nile and the fertile black earth, called the Black, which holds back the Hunger. It favours people only by accident, being too vast to notice them. The lector priests who were magicians to the pharaohs served it, and so does Wesir, whom the Greeks called Osiris.",
+        "source": "Between Sand and Sea: Mythic Africa Between Sand and Sea pp. 7-8; Lands of the Nile p. 6",
+        "detail": "Full",
+        "place_id": null,
+        "place_level": 0,
+        "links": [],
+        "attitudes": [],
+        "favours": [],
+        "secrets": ""
       },
       {
         "id": "the_jealous_wife",
@@ -18580,7 +18727,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 0,
-            "id": "c5bb769ad613"
+            "id": "1c6c1743377e"
           }
         ],
         "soak": 0,
@@ -18625,7 +18772,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 or more points, if it penetrates, the victim is possessed and under her direct control. Using the host's magic costs 1 Might per magnitude; a questionable act against the host's nature needs a stress die + Might spent over the host's Personality Trait roll (see Entrancement, ArM5 p. 65, for modifiers), and both costs apply together. Under her direct control the host has her Magic Resistance and is stopped by wards against her; acting freely, the host has neither. The costs follow Realms of Power: Magic, not Hermetic magic.",
-            "id": "2685a5a68f80"
+            "id": "217d6b2b0c37"
           }
         ],
         "vis": [
@@ -18633,7 +18780,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in the fingernails of the possession victim",
-            "id": "99d97e439f5b"
+            "id": "39efb9a76279"
           }
         ],
         "equipment": "Someone else's body and all her goods.",
@@ -18644,6 +18791,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18715,6 +18864,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18786,6 +18937,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18857,6 +19010,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18928,6 +19083,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18999,6 +19156,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -19070,6 +19229,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -19173,7 +19334,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 3. Any voice of man or creature, in any language it knows, in any shape (MuIm).",
-            "id": "72e618205e0b"
+            "id": "6942f14ee8e6"
           },
           {
             "name": "Trembling Fear of the Predator's Gaze",
@@ -19187,7 +19348,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. While it holds his eye the target cannot run or dodge, though he can use his hands or call out; he loses his Quickness from Defense and takes -3 (ReCo).",
-            "id": "36564b31ab6e"
+            "id": "e01b06d244c2"
           },
           {
             "name": "Rending Fangs",
@@ -19201,7 +19362,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 3. Its bite destroys leather, bone, wood, cloth, stone or metal it can get its teeth round. With an attack it takes a point of Protection off armour, or instead of one it breaks a weapon or shield if it beats Defense by 3 or more, doing no damage; not together with Ripping Jaws (PeTe(An, He)).",
-            "id": "70bf1637b127"
+            "id": "09971a6fbddd"
           },
           {
             "name": "Ripping Jaws",
@@ -19215,7 +19376,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 2. The victim takes -3 to all recovery rolls until fully healed, for any wound; Incapacitating Wounds leave scars that never fade (PeCo).",
-            "id": "2dcc7f36c7ca"
+            "id": "37d47695027a"
           },
           {
             "name": "The Beast Between",
@@ -19229,7 +19390,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. 3 points or Fatigue; Initiative Qik - 2. A hyena's head, claws, fur and tail on a man's upright frame, human mental Characteristics and a hyena's physical ones, usable hands, Protection +2. Bite of the hybrid form: Init 0, Attack +3, Defense +1, Damage +4. Ended early by changing shape (MuCo, free Animal requisite).",
-            "id": "1459b02d750a"
+            "id": "04a72ead9caf"
           }
         ],
         "vis": [],
@@ -19241,6 +19402,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -19491,7 +19654,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 9,
-            "id": "160cfa9db666"
+            "id": "33c115010977"
           },
           {
             "name": "Bite",
@@ -19499,7 +19662,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 8,
-            "id": "0aea27c82f95"
+            "id": "a4ba68418051"
           }
         ],
         "soak": 3,
@@ -19593,7 +19756,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Or Crafter's Healing, below. 1 point a magnitude, Initiative variable: any non-Ritual Creo, Muto, Rego or Perdo Terram spell, within its motif as a blacksmith.",
-            "id": "c9867d2cc639"
+            "id": "a52beb150c7e"
           },
           {
             "name": "Crafter's Healing",
@@ -19607,7 +19770,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In place of Blacksmithing, as the Major Supernatural Virtue (City & Guild p. 71).",
-            "id": "0402c321268b"
+            "id": "c823381655ae"
           },
           {
             "name": "Looked at Thrice",
@@ -19621,7 +19784,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Trembling Fear of the Predator's Gaze.",
-            "id": "feff47940892"
+            "id": "4d019dfec8d8"
           },
           {
             "name": "The Shadow Stays the Hound",
@@ -19635,7 +19798,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes a dog the werehyena's shadow falls on (Base 5, +2 Sight, +1 Conc).",
-            "id": "4a341fa4d0f4"
+            "id": "926bed86bee5"
           },
           {
             "name": "Transform into Human",
@@ -19649,7 +19812,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Human form for Duration: Sun, and only at sunrise (Personal, MuAn(Co)).",
-            "id": "bb5e2250df64"
+            "id": "9d20431e2194"
           }
         ],
         "vis": [
@@ -19657,7 +19820,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in its tools",
-            "id": "1e2cb32f67c3"
+            "id": "775f8b87c9dd"
           }
         ],
         "equipment": "Blacksmith tools, apron.",
@@ -19668,6 +19831,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -19788,6 +19953,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Their Greater Malediction: Magic auras do not keep off Acclimation. They must eat human flesh in a ceremony at least once a year, or lose a Magic Quality each year until they are ordinary, hideous mortals. One corpse feeds five. A family with no death to hand must make one, and those who tire of it and let themselves acclimate are usually eaten first; the last resort is the nearest human settlement.\n\nNot all are born to it. A human who shares the ceremony gains Transformed Human with the Greater Malediction. A village will sometimes spare a victim, share the secret, and send him home to get them the sacred meal each year. He gains Disfigured after five ceremonies, and after fifteen is too monstrous to stay among men."
       },
       {
@@ -19927,7 +20094,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Any sound, speech, song or music comes from the head, no louder than a human could make; only suppressing the power silences it (CrIm).",
-            "id": "024fb4874347"
+            "id": "6d40344030ed"
           }
         ],
         "vis": [],
@@ -19939,6 +20106,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20059,6 +20228,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20175,6 +20346,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20312,7 +20485,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. He makes out detail at any distance as if a foot away, and judges distance to an inch or so at several miles (InIm, Personal Power x2).",
-            "id": "de990830b591"
+            "id": "b89800dafeed"
           }
         ],
         "vis": [],
@@ -20324,6 +20497,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20459,7 +20634,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. A short-term Fatigue level for flight as fast as a running horse. Every minute a Stamina + Concentration roll against 6 or another Fatigue level; none when Dazed. Athletics steers (ReCo).",
-            "id": "236e6938f413"
+            "id": "4a01b6fae763"
           }
         ],
         "vis": [],
@@ -20471,6 +20646,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20628,7 +20805,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. The eyes shine like a lantern for five paces, without hurting sight; only closing them or a Confidence point shuts it off (CrIg; printed Greater Power, 10 levels, -2 cost).",
-            "id": "7def79865d5d"
+            "id": "9a4d3bb2b0e8"
           },
           {
             "name": "The Sun's Breath",
@@ -20642,7 +20819,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 1. Heats a thing no bigger than her head: metal glows red, water boils, the flammable ignites. It cools normally (CrIg).",
-            "id": "67a66dd3c53f"
+            "id": "e8b4aeaf0180"
           },
           {
             "name": "The Sun's Shout",
@@ -20656,7 +20833,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 1. Spits a dart of fire for +5 damage if it Penetrates (CrIg).",
-            "id": "57f75ee8d2f5"
+            "id": "1f87ed34a66b"
           }
         ],
         "vis": [],
@@ -20668,6 +20845,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20811,7 +20990,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Moves freely in complete darkness, as the Hermetic spell (ArM5 p. 127; InAu).",
-            "id": "53a4ea2a201d"
+            "id": "30408202a33f"
           }
         ],
         "vis": [],
@@ -20823,6 +21002,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20894,6 +21075,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20965,6 +21148,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21036,6 +21221,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21107,6 +21294,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21178,6 +21367,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21249,6 +21440,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21320,6 +21513,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21391,6 +21586,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21462,6 +21659,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21533,6 +21732,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21604,6 +21805,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21675,6 +21878,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21746,6 +21951,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21817,6 +22024,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon."
       },
       {
@@ -21888,6 +22097,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon."
       },
       {
@@ -21959,6 +22170,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon."
       },
       {
@@ -22030,6 +22243,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon."
       },
       {
@@ -22101,6 +22316,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon."
       },
       {
@@ -22183,7 +22400,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 2,
-            "id": "634909892523"
+            "id": "909cad6ccec6"
           }
         ],
         "soak": 3,
@@ -22246,6 +22463,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -22471,7 +22690,7 @@
             "attack": 8,
             "defense": 3,
             "damage": 5,
-            "id": "0f70ae045ba4"
+            "id": "57c556c66867"
           }
         ],
         "soak": 2,
@@ -22551,7 +22770,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns it into dromedary or Bactrian form and back, changing its Characteristics and non-magical Qualities to suit (MuAn; Base 5, +2 Sun).",
-            "id": "303495606b58"
+            "id": "972c54b640e6"
           },
           {
             "name": "Keep the Simoon at Bay",
@@ -22565,7 +22784,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shields the camel, its herd and any riders from the simoon, the scorching wind and sandstorm of the deep desert (ReAu).",
-            "id": "657d6fd8c5f0"
+            "id": "70b5502977b0"
           },
           {
             "name": "Scent the Distant Waters of the Oasis",
@@ -22579,7 +22798,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Finds any natural water on the path it is travelling, by simple Perception rolls against 6, once a day on long journeys; invoked again if the water is more than half a day off (InAq; Base 2, +2 Road, +2 Smell, +2 Sun).",
-            "id": "58057ca6ee21"
+            "id": "ba3dfc13938b"
           },
           {
             "name": "Subtle Taste of Poison and Purity",
@@ -22593,7 +22812,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ArM5 p. 122); poison does not harm it, a Magical Animal, so it tastes fouled water safely (InAq).",
-            "id": "6615287aa0fa"
+            "id": "3b4789e4b5bf"
           }
         ],
         "vis": [],
@@ -22605,6 +22824,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -22782,7 +23003,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "5d133fe241e2"
+            "id": "007231ebbb13"
           },
           {
             "name": "Bite",
@@ -22790,7 +23011,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 1,
-            "id": "80b0072af202"
+            "id": "190bb55ad167"
           }
         ],
         "soak": 2,
@@ -22860,6 +23081,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -22985,7 +23208,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "bee26f7f4f68"
+            "id": "f5e242e5a12b"
           },
           {
             "name": "Bite",
@@ -22993,7 +23216,7 @@
             "attack": 9,
             "defense": 10,
             "damage": -5,
-            "id": "2181f930068a"
+            "id": "85858addb997"
           }
         ],
         "soak": -1,
@@ -23070,6 +23293,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23211,7 +23436,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 2,
-            "id": "caffd6505666"
+            "id": "3c996e4868f2"
           },
           {
             "name": "Hooves",
@@ -23219,7 +23444,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 1,
-            "id": "5493ea18ad70"
+            "id": "74d8e6201993"
           }
         ],
         "soak": 1,
@@ -23282,6 +23507,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23459,7 +23686,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "b772364b28be"
+            "id": "fed72b5c7ca5"
           },
           {
             "name": "Dodge",
@@ -23467,7 +23694,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "8f34dd47d3d5"
+            "id": "a2e2d5244f20"
           }
         ],
         "soak": 3,
@@ -23544,6 +23771,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23615,6 +23844,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23748,7 +23979,7 @@
             "attack": null,
             "defense": 6,
             "damage": null,
-            "id": "06742de6f593"
+            "id": "6b4321c8f9d6"
           },
           {
             "name": "Bite",
@@ -23756,7 +23987,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -2,
-            "id": "d5c18574ba7b"
+            "id": "129deec9621b"
           }
         ],
         "soak": 2,
@@ -23826,6 +24057,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23897,6 +24130,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -24080,7 +24315,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 9,
-            "id": "903a330ccc5e"
+            "id": "64f85c13a9c5"
           },
           {
             "name": "Grapple",
@@ -24088,7 +24323,7 @@
             "attack": 7,
             "defense": 4,
             "damage": null,
-            "id": "250c56bd65d8"
+            "id": "f9ea7d2b939c"
           }
         ],
         "soak": 8,
@@ -24154,7 +24389,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 12 or Incapacitating, whether or not the bite wounds. Boots do not stop it, and it serves well on a victim held in its locking bite.",
-            "id": "a5503b7610b5"
+            "id": "0cf3bf8414eb"
           }
         ],
         "vis": [],
@@ -24166,6 +24401,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -24309,7 +24546,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "7abece794824"
+            "id": "b6e877f76f15"
           },
           {
             "name": "Kick (as hoof)",
@@ -24317,7 +24554,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "69f393da4831"
+            "id": "a1a2c560b829"
           }
         ],
         "soak": 3,
@@ -24380,6 +24617,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -24513,7 +24752,7 @@
             "attack": 10,
             "defense": 14,
             "damage": -6,
-            "id": "f64c4d292264"
+            "id": "a5d489da294f"
           },
           {
             "name": "Grapple",
@@ -24521,7 +24760,7 @@
             "attack": 7,
             "defense": 11,
             "damage": null,
-            "id": "5b14f593db29"
+            "id": "8c043618a6ef"
           },
           {
             "name": "Sting",
@@ -24529,7 +24768,7 @@
             "attack": 10,
             "defense": 6,
             "damage": -9,
-            "id": "4d2e53ad00d7"
+            "id": "8f122557dc25"
           }
         ],
         "soak": 4,
@@ -24609,7 +24848,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 6 or Incapacitating, whether or not the sting wounds. High leather boots and other simple measures hinder it.",
-            "id": "3fd6495ee4ee"
+            "id": "7d308228be3a"
           }
         ],
         "vis": [],
@@ -24621,6 +24860,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -24827,7 +25068,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 11,
-            "id": "86ea58168a0b"
+            "id": "37f31b00e744"
           },
           {
             "name": "Trample",
@@ -24835,7 +25076,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 9,
-            "id": "6682cb0eaf75"
+            "id": "0b9b7e5525c1"
           }
         ],
         "soak": 11,
@@ -24901,7 +25142,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A natural power. It spends a Fatigue level to charge over flat ground with its horn, adding its Combat Ability to its Attack roll; anything smaller it strikes is knocked prone (Lords of Men p. 123).",
-            "id": "db62e4c86788"
+            "id": "06cf7d01ef31"
           }
         ],
         "vis": [],
@@ -24913,6 +25154,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -25058,7 +25301,7 @@
             "attack": 6,
             "defense": 10,
             "damage": -4,
-            "id": "b6a6bb7ef4f6"
+            "id": "b6e2b78c2518"
           },
           {
             "name": "Beak",
@@ -25066,7 +25309,7 @@
             "attack": 6,
             "defense": 7,
             "damage": -3,
-            "id": "4f85d2684cc2"
+            "id": "a70ce76a76d2"
           },
           {
             "name": "Stone (dropped)",
@@ -25074,7 +25317,7 @@
             "attack": -1,
             "defense": 0,
             "damage": null,
-            "id": "0c7ca67a4c0b"
+            "id": "5e6990390fd2"
           },
           {
             "name": "Stone (bludgeon)",
@@ -25082,7 +25325,7 @@
             "attack": 0,
             "defense": 6,
             "damage": -2,
-            "id": "0d01c847ed7e"
+            "id": "f855c13bcfc2"
           }
         ],
         "soak": 3,
@@ -25152,6 +25395,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -25223,6 +25468,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       }
     ],
@@ -25262,7 +25509,9 @@
     "players": [],
     "app_version": "",
     "saved_by": "",
-    "marriages": []
+    "marriages": [],
+    "maps": [],
+    "pins": []
   },
   "key": "africa",
   "book": "BS&S",

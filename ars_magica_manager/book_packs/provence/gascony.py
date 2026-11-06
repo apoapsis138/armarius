@@ -1794,7 +1794,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["templars"] = b.faction(
         "The Knights Templar in Provence",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Peter de Montaigu",
         members=100,
@@ -1828,7 +1828,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["hospitallers"] = b.faction(
         "The Knights Hospitaller in Provence",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Guerrin de Montaigu",
         members=81,
@@ -1844,7 +1844,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["order_of_santiago"] = b.faction(
         "The Order of Santiago",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Martín Peláez Barragán, in Castile",
         place=region,

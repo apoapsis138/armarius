@@ -842,7 +842,7 @@ def _factions(hibernia: Hibernia) -> None:
     ireland = hibernia.places["ireland"]
     w["ordo_hiberniae"] = b.faction(
         "The Ordo Hiberniae",
-        faction="Other",
+        faction="Hermetic group",
         decides="A vote of all",
         place=ireland,
         wants="To keep the Code, the Treaty and the old ways, and Ireland's "
@@ -870,7 +870,7 @@ def _factions(hibernia: Hibernia) -> None:
     )
     w["english_council"] = b.faction(
         "The English Council",
-        faction="Other",
+        faction="Hermetic group",
         decides="A council",
         place=ireland,
         wants="A Code on the continental model: general law, vis harvested "

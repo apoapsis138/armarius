@@ -851,6 +851,7 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
 def _groups(b: Builder) -> None:
     b.faction(
         "The Praeses Septentrionalis",
+        faction="Hermetic group",
         summary="The Northern Guard, an old league of Hermetic covenants.",
         secrets=(
             "Vindolanda joined it to guard Scotland against Damhan-Allaidh's "
@@ -860,6 +861,7 @@ def _groups(b: Builder) -> None:
     )
     b.faction(
         "The Thothian Watchers",
+        faction="Spirits and beings",
         realm="Magic",
         summary="Spirits of old Egypt, about whom almost nothing is told.",
         secrets=(
@@ -873,6 +875,7 @@ def _groups(b: Builder) -> None:
     )
     b.faction(
         "The Odd-Karnor Clan",
+        faction="Family",
         summary="A Norwegian family, embroiled in a feud of its own.",
         secrets=(
             "Bjarke Odd-Karnor called in his distant kinsman Einar Gamlisson for "
@@ -882,7 +885,7 @@ def _groups(b: Builder) -> None:
             "family in Iceland (p. 103; see Leif Beogart)."
         ),
     )
-    b.faction(
+    b.custom(
         "The Ranks of Iceland",
         summary=(
             "Who stands where in Iceland: free men, householders, landowners, "

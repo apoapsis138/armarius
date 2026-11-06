@@ -348,7 +348,24 @@ def filter_form(saga: Saga) -> Form:
     wanted = neighbour_filter.current(saga)
 
     def fields() -> list[DialogField]:
+        lands = neighbour_filter.tribunals(saga)
         return [
+            *(
+                [
+                    DialogField(
+                        "tribunal",
+                        "Tribunal's lands",
+                        "select",
+                        wanted.tribunal or None,
+                        options=[(escape(t.name), t.id) for t in lands],
+                        allow_blank=True,
+                        placeholder="(any)",
+                        hint="What lies in its lands, whoever it belongs to.",
+                    )
+                ]
+                if lands
+                else []
+            ),
             DialogField(
                 "region",
                 "Region",
@@ -369,7 +386,7 @@ def filter_form(saga: Saga) -> Form:
                 options=[(k.name, k.key) for k in neighbour_filter.kinds(saga)],
                 allow_blank=True,
                 placeholder="(any)",
-                hint="Blank both to show every neighbour.",
+                hint="Blank them all to show every neighbour.",
             ),
         ]
 
@@ -377,7 +394,9 @@ def filter_form(saga: Saga) -> Form:
         neighbour_filter.choose(
             saga,
             neighbour_filter.Filter(
-                region=values.get("region") or "", kind=values.get("kind") or ""
+                region=values.get("region") or "",
+                kind=values.get("kind") or "",
+                tribunal=values.get("tribunal") or "",
             ),
         )
 

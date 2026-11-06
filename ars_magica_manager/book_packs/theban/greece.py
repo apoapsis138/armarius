@@ -2695,7 +2695,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     p = theban.places
     w["montferrat_party"] = b.faction(
         "The Montferrat Party",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         ruler="Count Oberto II of Biandrate",
         place=p["macedonia"],

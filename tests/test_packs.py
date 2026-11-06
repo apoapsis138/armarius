@@ -401,8 +401,11 @@ def test_the_nile_and_africa_packs_share_their_spirits_when_both_come_in():
         assert not data["saga"]["tribunals"] and not data["saga"]["covenants"]
         transfer.apply(saga, transfer.plan_import(saga, data))
     names = [n.name for n in saga.neighbours]
-    for shared in ("The Great Hunger", "The Hope", "The Pact of 1225"):
-        assert names.count(shared) == 1
+    assert names.count("The Pact of 1225") == 1
+    beings = [c.name for c in saga.creatures]
+    for shared in ("The Great Hunger", "The Hope"):
+        assert beings.count(shared) == 1
+        assert shared not in names
     assert "Er Rif" not in names and "The Rif" in names
 
 

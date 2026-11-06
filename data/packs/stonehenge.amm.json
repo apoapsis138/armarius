@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.62.1",
+  "app_version": "3.77.0",
   "kind": "pack",
   "name": "Heirs to Merlin: the Stonehenge Tribunal",
   "from_saga": "Heirs to Merlin: the Stonehenge Tribunal",
@@ -33,6 +33,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -82,7 +83,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -140,6 +142,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -189,7 +192,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -247,6 +251,7 @@
         "place_level": 3,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -296,7 +301,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -354,6 +360,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -403,7 +410,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -461,6 +469,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -510,7 +519,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -568,6 +578,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -617,7 +628,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -675,6 +687,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -724,7 +737,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -782,6 +796,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -831,7 +846,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -889,6 +905,7 @@
         "place_level": 0,
         "own_aura": null,
         "own_realm": "",
+        "aura_boons_apply": true,
         "tribunal_id": "the_stonehenge_tribunal",
         "liege_id": null,
         "oath": "",
@@ -938,7 +955,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -958,7 +976,7 @@
             "kind": "places",
             "target_id": "wilton",
             "note": "Its village",
-            "id": "88a37fdb6389"
+            "id": "34646fbda8d8"
           }
         ],
         "unnamed_magi": 0,
@@ -1016,21 +1034,21 @@
             "year": 1208,
             "says": "No covenant may put more than a reasonable amount of magically made silver into circulation in a year: two pounds for each resident, magus or mundane. Blackthorn, Burnham, Voluntas and others had made so much silver late last century that its value halved in twenty years; the Tribunal judged it interference with the mundanes. A move to punish those responsible failed easily. Gold, not used as coin in England, is not covered, but magi now know that making too much of a thing lowers its worth.",
             "case_id": "",
-            "id": "ed2e909ec05a"
+            "id": "f293cbe50e8d"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "Immanola, Prima of Ex Miscellanea and then the eldest magus, was barred from the office as likely to favour her own House, at Blackthorn's urging; Talion of Blackthorn has held it since, and the Tribunal meets at Blackthorn. The other covenants dislike it, but none has acted.",
             "case_id": "",
-            "id": "abceb960cd48"
+            "id": "744dd198013a"
           },
           {
             "title": "The meeting a year late",
             "year": 1201,
             "says": "The Tribunal meets a year after the rest of the Order, from the quorate meeting of 1201.",
             "case_id": "",
-            "id": "c6817a5625c8"
+            "id": "a4b9a03d4f3e"
           }
         ],
         "treasury": [],
@@ -1042,7 +1060,7 @@
             "details": "After the war on Damhan-Allaidh, Pralix founds the Ordo Miscellanea at Cad Gadu in North Wales.",
             "changes": [],
             "margin": "",
-            "id": "04c397e1ba38"
+            "id": "9e242c330dc3"
           },
           {
             "year": 817,
@@ -1051,7 +1069,7 @@
             "details": "The Ordo Miscellanea joins the Order as House Ex Miscellanea, and the Stonehenge Tribunal is born. The Nameless Covenant of House Diedne is founded on Anglesey.",
             "changes": [],
             "margin": "",
-            "id": "c01b183affbf"
+            "id": "53bc302bc663"
           },
           {
             "year": 818,
@@ -1060,7 +1078,7 @@
             "details": "Magi of House Tremere found Blackthorn in the Black Mountains of south Wales.",
             "changes": [],
             "margin": "",
-            "id": "5b364d2b30fd"
+            "id": "ef81d36c8a91"
           },
           {
             "year": 820,
@@ -1069,7 +1087,7 @@
             "details": "Flavia of Jerbiton founds Rosalba in the Yorkshire Dales.",
             "changes": [],
             "margin": "",
-            "id": "aff2a45ad3cf"
+            "id": "952faf42a2cf"
           },
           {
             "year": 821,
@@ -1078,7 +1096,7 @@
             "details": "Concordia, an attempt to weld the traditions of Ex Miscellanea together, is founded in the Lake District; it falls apart from its own tensions in 823.",
             "changes": [],
             "margin": "",
-            "id": "c64ba7b6c3ae"
+            "id": "d4a385919d8a"
           },
           {
             "year": 852,
@@ -1087,7 +1105,7 @@
             "details": "A covenant in a Roman fort on Hadrian's Wall, which lasts until 1030 or 1031 and then vanishes without trace.",
             "changes": [],
             "margin": "",
-            "id": "70f7b99ac23f"
+            "id": "c18cb917ae4c"
           },
           {
             "year": 863,
@@ -1096,7 +1114,7 @@
             "details": "Pralix disappears returning from a visit to her old domus magna (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "3f5038a485a8"
+            "id": "61e5fb6686a5"
           },
           {
             "year": 866,
@@ -1105,7 +1123,7 @@
             "details": "A covenant on the Isle of Man that lasts six months.",
             "changes": [],
             "margin": "",
-            "id": "55fc2e14e751"
+            "id": "d78b2b8a548e"
           },
           {
             "year": 873,
@@ -1114,7 +1132,7 @@
             "details": "Diana of Tremere of Blackthorn and William of Jerbiton of Rosalba fight a Wizard's War.",
             "changes": [],
             "margin": "",
-            "id": "c9c4b28606be"
+            "id": "dd3007d91d1c"
           },
           {
             "year": 875,
@@ -1123,7 +1141,7 @@
             "details": "A covenant in north Cornwall, which lasts until 931: Tytalus diabolism is found there, and King Athelstan destroys it.",
             "changes": [],
             "margin": "",
-            "id": "d6d9378a077f"
+            "id": "85a62a2580d6"
           },
           {
             "year": 893,
@@ -1132,7 +1150,7 @@
             "details": "Newly Gauntleted magi found Occulta in the East Anglian fens; it fails to find resources and collapses in 897, its magi joining other covenants.",
             "changes": [],
             "margin": "",
-            "id": "9083cdedae3d"
+            "id": "05c23066a29f"
           },
           {
             "year": 896,
@@ -1141,7 +1159,7 @@
             "details": "A covenant in London, which lasts until about 952.",
             "changes": [],
             "margin": "",
-            "id": "96757e57ea92"
+            "id": "3d6ec865327d"
           },
           {
             "year": 899,
@@ -1150,7 +1168,7 @@
             "details": "Blackthorn destroys Rosalba; its ruins are lost, and their defences are still active.",
             "changes": [],
             "margin": "",
-            "id": "01916b4f5ac1"
+            "id": "273a07d8eb74"
           },
           {
             "year": 915,
@@ -1159,7 +1177,7 @@
             "details": "An undistinguished covenant in the Pennines that never has much of a summer and dies in 1100, unable to recruit.",
             "changes": [],
             "margin": "",
-            "id": "bb4a8e2fe599"
+            "id": "ba3f8bc7b4eb"
           },
           {
             "year": 938,
@@ -1168,7 +1186,7 @@
             "details": "A second covenant on the Isle of Man, destroyed within a year.",
             "changes": [],
             "margin": "",
-            "id": "17c36db81fbf"
+            "id": "f57b321fbcce"
           },
           {
             "year": 946,
@@ -1177,7 +1195,7 @@
             "details": "A covenant in Kent, destroyed by House Diedne in 1008.",
             "changes": [],
             "margin": "",
-            "id": "4cbdc7793e73"
+            "id": "215356218400"
           },
           {
             "year": 984,
@@ -1186,7 +1204,7 @@
             "details": "Magi of House Flambeau found Ungulus, \"the Claw\", in the Lake District.",
             "changes": [],
             "margin": "",
-            "id": "61249e86d82d"
+            "id": "9db193921649"
           },
           {
             "year": 998,
@@ -1195,7 +1213,7 @@
             "details": "An early victim of the Schism War, too poor to repel a Diedne assault in 1003.",
             "changes": [],
             "margin": "",
-            "id": "5a419143ef34"
+            "id": "6e59cccc3162"
           },
           {
             "year": 1011,
@@ -1204,7 +1222,7 @@
             "details": "The Diedne covenant on Anglesey falls in the Schism War; its records are struck from the Code.",
             "changes": [],
             "margin": "",
-            "id": "89375b53a06c"
+            "id": "6092a9f86f6d"
           },
           {
             "year": 1014,
@@ -1213,7 +1231,7 @@
             "details": "A covenant in caves near Blackthorn, which lasts until 1062.",
             "changes": [],
             "margin": "",
-            "id": "2524b9f17afd"
+            "id": "f93c3eb788f4"
           },
           {
             "year": 1025,
@@ -1222,7 +1240,7 @@
             "details": "A Criamon covenant on the Isles of Scilly, destroyed in a storm in 1163.",
             "changes": [],
             "margin": "",
-            "id": "61ec5ddf7900"
+            "id": "2cfca8704f2f"
           },
           {
             "year": 1060,
@@ -1231,7 +1249,7 @@
             "details": "Gruffydd ap Llewelyn, who besieged Blackthorn from 1058 to 1062, sacks Cad Gadu; Diedne were suspected, though it is now thought coincidence. Cad Gadu is refounded in its regio's higher levels in 1065.",
             "changes": [],
             "margin": "",
-            "id": "5427e3c1f697"
+            "id": "3a504c6c7f57"
           },
           {
             "year": 1062,
@@ -1240,7 +1258,7 @@
             "details": "Blackthorn takes Tagelyn's caves and moves into them; Tagelyn's survivors flee to Hibernia and found Ashenrise.",
             "changes": [],
             "margin": "",
-            "id": "fa8b1d75f1f2"
+            "id": "48ac57119212"
           },
           {
             "year": 1066,
@@ -1249,7 +1267,7 @@
             "details": "Founded in the East Anglian fens to drive William the Conqueror from England; it breaks the Code so blatantly that it is Marched whole and destroyed in 1068.",
             "changes": [],
             "margin": "",
-            "id": "7efdd1cc8a9f"
+            "id": "760b3ed97bb4"
           },
           {
             "year": 1083,
@@ -1258,7 +1276,7 @@
             "details": "Norman magi found Voluntas in the north.",
             "changes": [],
             "margin": "",
-            "id": "317a2498a363"
+            "id": "8a03f49c60de"
           },
           {
             "year": 1100,
@@ -1267,7 +1285,7 @@
             "details": "Blackthorn claims Lux Draconis's property, the start of its enmity with Voluntas.",
             "changes": [],
             "margin": "",
-            "id": "4f52d278cc09"
+            "id": "bcd5a4d782b4"
           },
           {
             "year": 1104,
@@ -1276,7 +1294,7 @@
             "details": "A covenant on the North York Moors, which lasts until 1107.",
             "changes": [],
             "margin": "",
-            "id": "1d7a673eed98"
+            "id": "91a9654b92c8"
           },
           {
             "year": 1111,
@@ -1285,7 +1303,7 @@
             "details": "A covenant in a cave under Salisbury Plain, which disintegrates in 1187.",
             "changes": [],
             "margin": "",
-            "id": "185c65421b99"
+            "id": "6c6f155adbe9"
           },
           {
             "year": 1133,
@@ -1294,7 +1312,7 @@
             "details": "Nature magi found Natura Antiqua in the East Anglian fens; Geoffrey de Mandeville destroys it in the civil war, in 1143.",
             "changes": [],
             "margin": "",
-            "id": "f7442f3c81d6"
+            "id": "228fa802fca5"
           },
           {
             "year": 1141,
@@ -1303,7 +1321,7 @@
             "details": "Burnham is founded in the far north-east, with a grant of immunity from King Stephen.",
             "changes": [],
             "margin": "",
-            "id": "65fd57c2c54a"
+            "id": "cf3c2d1cc06b"
           },
           {
             "year": 1151,
@@ -1312,7 +1330,7 @@
             "details": "The wandering covenant Semitae first appears at a meeting, led by Gerfallon of Criamon.",
             "changes": [],
             "margin": "",
-            "id": "59acf9c5b430"
+            "id": "cbbc9b6547e5"
           },
           {
             "year": 1154,
@@ -1321,7 +1339,7 @@
             "details": "Flumen of Tremere of Blackthorn leads the Wild Hunt into iron-bound caves near Blackthorn and shuts it in.",
             "changes": [],
             "margin": "",
-            "id": "b7fd22cd1f2d"
+            "id": "81d5e8601e50"
           },
           {
             "year": 1160,
@@ -1330,7 +1348,7 @@
             "details": "A third try at a Manx covenant, destroyed by a dragon within six months; one magus is let go home with the message, \"Don't come back.\"",
             "changes": [],
             "margin": "",
-            "id": "4d253b348fc8"
+            "id": "1eb99f92c5e3"
           },
           {
             "year": 1182,
@@ -1339,7 +1357,7 @@
             "details": "Jerbiton magi found Schola Pythagoranis at Cambridge.",
             "changes": [],
             "margin": "",
-            "id": "195e3c127d97"
+            "id": "2e627c646990"
           },
           {
             "year": 1187,
@@ -1348,7 +1366,7 @@
             "details": "Flumen of Blackthorn passes into Final Twilight, and his filia Goliard takes his place; Magnantrum falls apart the same year.",
             "changes": [],
             "margin": "",
-            "id": "afd65ba5eaf0"
+            "id": "dc1fae8d164b"
           },
           {
             "year": 1194,
@@ -1357,7 +1375,7 @@
             "details": "Blackthorn hosts, Voluntas and Burnham stay away and Semitae cannot be found: the meeting is not quorate, and Stonehenge sends no one to the Grand Tribunal of 1195.",
             "changes": [],
             "margin": "",
-            "id": "c684536309ac"
+            "id": "493486c49d17"
           },
           {
             "year": 1195,
@@ -1366,7 +1384,7 @@
             "details": "Trutina the Quaesitor joins Burnham, and attends every meeting after.",
             "changes": [],
             "margin": "",
-            "id": "06e3863241f5"
+            "id": "62821fc685c2"
           },
           {
             "year": 1200,
@@ -1375,7 +1393,7 @@
             "details": "No one attends the meeting of 1200.",
             "changes": [],
             "margin": "",
-            "id": "cd890839d86b"
+            "id": "7484729ccb7c"
           },
           {
             "year": 1201,
@@ -1384,7 +1402,7 @@
             "details": "Maximianus of Bonisagus founds Nigrasaxa; with Voluntas, Schola Pythagoranis and Ungulus he calls a second meeting, quorate, at Blackthorn. The Tribunal meets a year late from now on, and the Redcaps' network is reorganised.",
             "changes": [],
             "margin": "",
-            "id": "7ecc5ec18bf6"
+            "id": "e02eaf9b45e4"
           },
           {
             "year": 1208,
@@ -1393,7 +1411,7 @@
             "details": "The meeting rules that no covenant may circulate more than two pounds of magical silver a resident a year.",
             "changes": [],
             "margin": "",
-            "id": "0174f7f4b8cb"
+            "id": "90ef6faf3732"
           },
           {
             "year": 1210,
@@ -1402,7 +1420,7 @@
             "details": "Stephen Eruditus of Jerbiton founds Libellus with six young magi.",
             "changes": [],
             "margin": "",
-            "id": "341d686f9a05"
+            "id": "3c7b91850e99"
           },
           {
             "year": 1216,
@@ -1411,7 +1429,7 @@
             "details": "Immanola, who has sat twelve years gazing into a pool at Cad Gadu, is declared to have entered Final Twilight; House Ex Miscellanea elects Ebroin Primus (Houses of Hermes: Societates).",
             "changes": [],
             "margin": "",
-            "id": "1c988a535ed0"
+            "id": "187aba59f37a"
           },
           {
             "year": 1220,
@@ -1420,13 +1438,14 @@
             "details": "William Fireheart of Flambeau, of Ungulus, loses a Wizard's War to a magus of Fudarus in the Normandy Tribunal, ending Ungulus's line of Flambeau magi.",
             "changes": [],
             "margin": "",
-            "id": "01baff123f95"
+            "id": "786eaddb96c7"
           }
         ],
         "package_data": {},
         "meeting": null,
         "secrets": "Blackthorn has faced charges of diabolism for generations; nothing has ever been proved, and the charge may be raised to distract from another, or may be true.\n\nBurnham's purpose is unknown to everyone outside it, and every covenant has its own theory.",
-        "arguments": []
+        "arguments": [],
+        "maps": []
       }
     ],
     "neighbours": [
@@ -3859,7 +3878,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_exeter",
             "note": "Its harbour",
-            "id": "2968bec8d3f1"
+            "id": "3d8386c1d14a"
           }
         ],
         "arms": {},
@@ -4005,7 +4024,7 @@
         "place_id": "england",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "A council",
           "members": 3,
           "rules": "",
@@ -4030,7 +4049,7 @@
         "place_id": "england",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -4044,7 +4063,7 @@
             "kind": "characters",
             "target_id": "berechiah_ben_natronai_hanakdan",
             "note": "A natural magician",
-            "id": "e3f6c89a5c9c"
+            "id": "92894e44fd2f"
           }
         ],
         "arms": {},
@@ -4085,25 +4104,25 @@
             "kind": "characters",
             "target_id": "gwrhyr",
             "note": "The island's owner",
-            "id": "a95e473de686"
+            "id": "870f0f294afb"
           },
           {
             "kind": "characters",
             "target_id": "culhwch",
             "note": "His adopted filius",
-            "id": "34c005905e97"
+            "id": "c95b272e8320"
           },
           {
             "kind": "characters",
             "target_id": "ebroin",
             "note": "Not yet told",
-            "id": "24c5a37b7222"
+            "id": "d3a7cdaa0e0c"
           },
           {
             "kind": "covenants",
             "target_id": "cad_gadu",
             "note": "The covenant at risk",
-            "id": "a66a4a9d2a47"
+            "id": "53f22bbc5844"
           }
         ],
         "arms": {},
@@ -4133,13 +4152,13 @@
             "kind": "covenants",
             "target_id": "voluntas",
             "note": "Encroaching",
-            "id": "1706daf9eb11"
+            "id": "e5f7d21697e7"
           },
           {
             "kind": "covenants",
             "target_id": "ungulus",
             "note": "The covenant at risk",
-            "id": "62143eaf2c12"
+            "id": "2a58c69d4f76"
           }
         ],
         "arms": {},
@@ -4169,19 +4188,19 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "One of the three",
-            "id": "996f77eb4766"
+            "id": "78f3eb93b442"
           },
           {
             "kind": "covenants",
             "target_id": "libellus",
             "note": "One of the three",
-            "id": "28c0047deed9"
+            "id": "fa9beb10fbcd"
           },
           {
             "kind": "covenants",
             "target_id": "nigrasaxa",
             "note": "One of the three",
-            "id": "bf3d51f7d419"
+            "id": "0cf88095f3bb"
           }
         ],
         "arms": {},
@@ -4211,7 +4230,7 @@
             "kind": "covenants",
             "target_id": "schola_pythagoranis",
             "note": "The covenant",
-            "id": "7fbc6a1f36be"
+            "id": "f7c22537537f"
           }
         ],
         "arms": {},
@@ -4241,19 +4260,19 @@
             "kind": "neighbours",
             "target_id": "nicola_de_hay",
             "note": "A party",
-            "id": "79836d644ea1"
+            "id": "b9bdeb1597d0"
           },
           {
             "kind": "neighbours",
             "target_id": "william_longespee_earl_of_salisbury",
             "note": "A party",
-            "id": "9d1365e4b142"
+            "id": "3bd7334fd1c5"
           },
           {
             "kind": "neighbours",
             "target_id": "falkes_de_br_aut",
             "note": "A party",
-            "id": "c6cb17f414fb"
+            "id": "22d5cd11db4c"
           }
         ],
         "arms": {},
@@ -4284,7 +4303,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "Its target",
-            "id": "9c27d4b305e8"
+            "id": "57b59234505f"
           }
         ],
         "arms": {},
@@ -4339,7 +4358,7 @@
             "kind": "covenants",
             "target_id": "blackthorn",
             "note": "The accused",
-            "id": "0c000fd75bff"
+            "id": "84e741cb6e45"
           }
         ],
         "arms": {},
@@ -4370,7 +4389,7 @@
             "kind": "covenants",
             "target_id": "burnham",
             "note": "The covenant",
-            "id": "c1e1c32aa064"
+            "id": "ebc3fc7637c7"
           }
         ],
         "arms": {},
@@ -4425,7 +4444,7 @@
             "kind": "characters",
             "target_id": "junius",
             "note": "The maker",
-            "id": "c11648911beb"
+            "id": "d519410e06be"
           }
         ],
         "arms": {},
@@ -5108,6 +5127,8 @@
         "summary": "Praeco of the Tribunal, its eldest magus now that Immanola is gone. An ancient magus who has weathered age and Twilight remarkably, still in full possession of his faculties and, as far as anyone knows, his magic, but very careful now about casting. Once renowned for his mastery of Perdo; he favours elaborate robes of deep green and blue. The book makes him of Flambeau at a Tremere covenant and says no more of it.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5728,6 +5749,8 @@
         "summary": "The senior quaesitor of the Tribunal, who presides at its meetings: with the Praeco, the hold that let Blackthorn keep its grip. A solid lawyer, competent wizard and capable politician, unremarkable in looks but for a writhing scarlet serpent tattooed on his left cheek by a long-ago Twilight; an ancient magus with his House's interest in Intellego and Mentem.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6291,6 +6314,8 @@
         "summary": "An old magus who keeps the illusion of one just out of apprenticeship, with unkempt brown hair and innocent blue eyes. No one is fooled, and everyone is kept off balance wondering why. Blackthorn's best political dealer, the more so as no one knows what he is about; his magical interests are unknown.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6850,6 +6875,8 @@
         "summary": "Filia Flumen, the most vigorous maga at Blackthorn and its leader in all but name, perhaps born there; she took her parens's place when he passed into Final Twilight in 1187. Nearly ninety, she looks in her early forties, black hair streaked grey and bloodshot brown eyes, plainly dressed in undyed white but for the jewelled purple and crimson robes she wears for the meeting's ceremonies. She restored an ancient binding on an elemental spirit that was taking revenge on humanity with rockslides, and controls it still; decades later she led an expedition into the Atlantic and was found four years on, battered and unconscious, on the sands at Chester. Anyone who deals with Blackthorn deals with her: an effective negotiator who keeps her word, keen for friends among the covenants, who are wary.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7349,6 +7376,8 @@
         "summary": "Goliard's filia, whose parens still holds her sigil: a mature maga who looks in her mid thirties, plain, with lank hair and a scarred face, and never known to be polite. She is said to work Rego and Mentem, to make people entertain her.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7798,6 +7827,8 @@
         "summary": "Goliard's filia, her sigil held by her parens, a maga less than ten years: good-looking, with long red hair and good teeth, always polite and usually pleasant, though she can insult within every rule of courtesy. She has a remarkable talent for Vim.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8295,6 +8326,8 @@
         "summary": "A mature magus who came to Burnham soon after his apprentice's Gauntlet and has left only once since, to present Caitlin at the meeting. He answers no letters and writes none; his magical interests are unknown.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8720,6 +8753,8 @@
         "summary": "Aindread's filia, a young maga who sometimes represents Burnham at the meeting: heavily freckled, with one blue eye and one brown, smartly but plainly dressed, polite to all, and unmoved by the most tempting offers. She has voted Sachiko's sigil since 1201.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9191,6 +9226,8 @@
         "summary": "Scintilla's filius; nothing else is generally known of him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9730,6 +9767,8 @@
         "summary": "Came to Burnham from eastern Europe at the end of the twelfth century, bringing Focus. She is said to be a powerful fire maga, but has done nothing of note in Stonehenge.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10214,6 +10253,8 @@
         "summary": "Probably female. The Tribunal first knew of her when Caitlin voted her sigil in 1201; it has appeared at every meeting since.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10721,6 +10762,8 @@
         "summary": "A quaesitor who joined Burnham in 1195 and has attended every meeting since, as custom demands. She says little, usually has her Redcap proxy vote with Iudicium, and pleads quaesitorial neutrality to avoid conversation. Very beautiful, long-haired and dark-robed, with a silver pendant of her House's badge; a mature maga of unknown interests.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11159,6 +11202,8 @@
         "summary": "Primus of House Ex Miscellanea since 1216, young and vibrant, elected when Immanola was declared in Final Twilight. He has restored the Council of Four, giving each member nominal charge of three Tribunals and keeping Stonehenge for himself, and called a census of the House. His Council is ill chosen, its members respecting neither one another nor him, and those who meet him often take him for a bumbling fool, wrongly (DE p. 22; Houses of Hermes: Societates pp. 102-103).",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11781,6 +11826,8 @@
         "summary": "The second eldest maga of Cad Gadu, worn harder by time than Immanola: nearly blind, and left by repeated Twilights seeing things that are not there; her delusions never harm her but can endanger others. She seldom leaves her sanctum.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12405,6 +12452,8 @@
         "summary": "A blustering incompetent of the Columbae, the Welsh ward-makers, extremely old though he looks about fifty, with pepper-and-salt hair and beard and robes embroidered with mystic symbols. Not bright nor powerful, he demands \"proper respect\" but knows his limits; his best magic is Rego. By his age and standing he sits on Ebroin's Council of Four. He owns Cad Gadu's island in Welsh law (Houses of Hermes: Societates p. 112).",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12897,6 +12946,8 @@
         "summary": "Gwrhyr's filius, not his blood, who suffered his master's insecurities and grew into a bully fond of taking it out on mundanes; more talented than his pater, he looks forward to surpassing him. Small and thin, simply dressed, smelling of burning, and skilled with Ignem.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13323,6 +13374,8 @@
         "summary": "A young maga, stunningly beautiful, long-haired and blue-eyed, who uses magic to eat and drink all she likes without losing her looks and dresses to seduce. She sees how fallen the covenant is and whines about it to anyone who will listen, too wrapped in her pleasures to act; the young men of the covenfolk hang about her.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13859,6 +13912,8 @@
         "summary": "Founder and leader of Libellus, about seventy though his longevity potion holds him at a look of thirty-five; trained in the Rhine Tribunal, a known taker of risks who has always come out ahead, and founding a covenant is the largest risk yet.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14268,6 +14323,8 @@
         "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14672,6 +14729,8 @@
         "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15119,6 +15178,8 @@
         "summary": "A young maga of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15535,6 +15596,8 @@
         "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15947,6 +16010,8 @@
         "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16356,6 +16421,8 @@
         "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17001,6 +17068,8 @@
         "summary": "Founder of Nigrasaxa, a widely respected master of Corpus whose many important texts are mostly in its library: a theoretical Bonisagus who these last twenty years has turned to the Order's politics. Julia of Voluntas asked him to help, and he came to Stonehenge and founded a covenant to break the cycle of invalid meetings, recruiting young magi to strengthen it. Ancient, and thought close to Final Twilight.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17410,6 +17479,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17845,6 +17916,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18261,6 +18334,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18673,6 +18748,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19089,6 +19166,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19498,6 +19577,8 @@
         "summary": "A young magus of Nigrasaxa.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20057,6 +20138,8 @@
         "summary": "The covenant's warden and its eldest magus, a great teacher who loves to lecture and dispute, weak for his age since he studies mundane learning too. He looks in his late fifties and is vigorous with an eager student. He has trained five apprentices, an unheard-of number. He dresses as a cleric and is in minor orders as an exorcist; his magic is chiefly Mentem, so he is very good at it.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20601,6 +20684,8 @@
         "summary": "Probably the most brilliant magus in the Tribunal, perhaps the Order, who would be an archmage if he gave himself to magic; his passion is natural philosophy, and he has begun applying it to magic theory, which he says rests on shoddy physics. Edward's first apprentice, now old, he looks in his late thirties and is usually unkempt, but dresses well for company. He works closely with Amabel the Learned.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -21046,6 +21131,8 @@
         "summary": "A young maga and obsessive bibliophile who keeps the library and wants every text she can get, classical authors and the Order's early magi above all, copying them herself or trading more useful books for them. She searches monasteries' libraries wearing a ring that makes her look a man, and carries it off well. Homely, short and gangly, practically dressed.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -21504,6 +21591,8 @@
         "summary": "A quaesitor and reforming idealist, a brilliant young student of civil, canon, common and Hermetic law, who devises new structures of Hermetic law and dreams of an age of justice for all magi. Smart, severe and attractive, she makes a good impression until her talk turns to her reforms.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -22118,6 +22207,8 @@
         "summary": "Leader of Semitae since its first record in 1151, unaged since, of no fixed age or sex: tattooed all over, the hair shaved for more room, under a deep hood and long sleeves; his appearance may change in mid-conversation, or hold for a whole meeting. He will not speak of his past or purpose, which, he says, no one can understand who has not glimpsed the Enigma. Some forty years ago magi of Cad Gadu found him etching designs into a Snowdonian mountainside by magic; months later they were finished, a map of no one knows what.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -22551,6 +22642,8 @@
         "summary": "A young maga with no tattoos on face or hands, dressed as a noblewoman in clothes embroidered with mystic symbols, good-looking and always friendly. She believes magic reflects the heart, so that malice brings vicious Twilights and good deeds good ones, and means to live magic, following Gerfallon about the country, until she understands the Enigma.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -23120,6 +23213,8 @@
         "summary": "An old magus at the height of his powers, dressed as a craftsman, clean-shaven, face and hands spotted with tiny burn scars; he looks puny, and his enchanted tools make his smithing surprising. He builds the covenant's wagons, but spends most of his time on a secret project he will not speak of. The Tribunal and his House are curious.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -23597,6 +23692,8 @@
         "summary": "A member of Semitae in name, gone to explore distant lands with his sigil, so the covenant has not his vote; no one expects to see him again. The Fourth Edition's The Mythic Seas tells more.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -24175,6 +24272,8 @@
         "summary": "Ungulus's leader, trained there in its glory, who remembers its Verditius magi. He knows it is falling apart and cannot abandon it nor save it, and means to hold on until the others die or pass into Twilight and then rebuild with magi who are not fresh from apprenticeship; he is already courting the Tribunal's younger magi. Long a frequent, frustrated attender of meetings, often the only one not of Blackthorn, a passable politician sidelined in the revival. He looks late middle-aged, stout, balding and brown-bearded, in magnificent robes with powerful devices, to remind people of what Ungulus owns.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -24812,6 +24911,8 @@
         "summary": "An ancient maga who spends most of her time as an eagle on the Lake District's thermals and seldom attends council; Flavius holds her sigil for good. She will likely pass into Final Twilight soon, staying in her heartbeast, and no one knows how the covenant would tell, or whether it already has.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -25440,6 +25541,8 @@
         "summary": "An ancient maga who loved Parsirus and burns to avenge him on the dragon: anyone who wants something of Ungulus, membership included, she asks to kill it. She has tried twice herself and barely lived; the second time she fell into Twilight, and now a magical force pushes her away from her enemy. She looks an old woman in rich, worn robes, her magic bent on fighting magical beasts.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -25993,6 +26096,8 @@
         "summary": "The only Gifted Redcap in the Tribunal, retired to Ungulus for the resources to make a way for covenants to talk by magic without weakening their defences against one another, and fiercely against new members until it is done. Weather-beaten and nearly bald, he dresses opulently to meet people, if not as richly as Ungulus could.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -26518,6 +26623,8 @@
         "summary": "Offended a faerie lord long ago, and has lived to survive him since: she never leaves the Aegis, presses for it to be strengthened, and will let no one join lest they be faeries seeking a place in its ritual. She wears enchanted iron against faeries and often changes her looks by Muto Corpus to confuse her enemy.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27062,6 +27169,8 @@
         "summary": "Voluntas's leader in all but name, who decides its dealings with the world. Tall, long black hair, pale skin and a fine low voice, in deep blue robes embroidered with silver; a mature maga of Corpus and Mentem. She came to Stonehenge in the civil war to study its shifting alliances, turned to the Order's politics as Henry II brought peace, and spent years persuading magi to stand against Blackthorn, staying away from meetings so that it could force nothing through; that led to the fiasco of 1194. She wrote to friends outside the Tribunal, Maximianus among them, and the quorate meeting of 1201 was her masterstroke. Her try to move the meeting from Blackthorn was out-manoeuvred, and she is still all but obsessed with weakening it.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27545,6 +27654,8 @@
         "summary": "A mature magus with a raven heartbeast and a gift for Intellego, who always seems to know things before he is told, so that he is suspected of scrying on the Order; nothing is proved, and he says it is often an act. Black-haired and dark-eyed, he stares, and rarely troubles to dress after changing back; when dressed, he wears black.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -27986,6 +28097,8 @@
         "summary": "A young Flambeau in red robes with a fiery temper and Ignem magic, but committed to the good of the whole Order and aware that burning people is not always it: he argues for conciliation when he thinks it right, unless someone angers him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -28555,6 +28668,8 @@
         "summary": "Disliked by most magi of the Tribunal: close to the faeries of winter and as cold to everyone, often away in the north, studying, she says, the fay of the frozen lands, with faerie items of the kind only given as gifts. She always wears white, her skin covered in a fine net of scars; an old maga thought skilled in Perdo.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29081,6 +29196,8 @@
         "summary": "A necromancer in plain brown robes trailing the smell of rotting flesh, who long cared nothing for the living but lately has come out of his shell and tries, without the skill, to be sociable; people are too frightened to be rude to him.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29269,6 +29386,8 @@
         "summary": "A natural magician among Schola Pythagoranis's scholars, nearly as brilliant as Astrolabe, with whom she works closely; perhaps as powerful as most of its magi, having studied her magic with greater focus. Magi who know her treat her as one of the Order, and many would be surprised to learn she has never joined.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29457,6 +29576,8 @@
         "summary": "A theologian among Schola Pythagoranis's scholars, friendly with the magi and sure of their good intentions, who writes tracts justifying magic used for virtuous ends; they bring him trouble with the Church, though he has not been charged with heresy, and some highly placed churchmen are said to find them convincing and to employ natural magicians.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29645,6 +29766,8 @@
         "summary": "An unGifted Redcap in his late twenties, brown-haired and green-eyed, fond of new covenants, often the only Redcap one sees for years; he rides his horses a little hard. He has a ring of magic resistance and an enchanted shield.\n\nLike each of the Tribunal's Redcaps, he has a device that brings him and his horse back to Mercer House from anywhere in the Tribunal, once a day.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -29833,6 +29956,8 @@
         "summary": "An unGifted Redcap in his late forties, thinking of retiring, tall, thin and balding, who never takes off his unenchanted red cap. His wife Lucy and their children live at Mercer House; Guy is ten, and Lucy thinks two-year-old Maud has the Gift. He helps any covenant in a crisis, but thinks people should manage daily life themselves. A brooch makes him and his horse invisible.\n\nLike each of the Tribunal's Redcaps, he has a device that brings him and his horse back to Mercer House from anywhere in the Tribunal, once a day.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30021,6 +30146,8 @@
         "summary": "An unGifted Redcap of giants' blood, just under eight feet, broad, with long blond hair and beard, in his mid thirties; quick-minded, widely read and keen on magic theory. He has boots that make him walk faster and a big axe enchanted for accuracy, as he is no great fighter.\n\nLike each of the Tribunal's Redcaps, he has a device that brings him and his horse back to Mercer House from anywhere in the Tribunal, once a day.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30209,6 +30336,8 @@
         "summary": "An unGifted Redcap, little only beside Great William: well over six feet and more solidly built, in his late thirties. He got a longevity potion from one of the Tribunal's magi and will not say whom or why. The only Redcap who wears armour as a habit, enchanted mail made lighter, and a skilled, proud fighter with sword and shield.\n\nLike each of the Tribunal's Redcaps, he has a device that brings him and his horse back to Mercer House from anywhere in the Tribunal, once a day.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30397,6 +30526,8 @@
         "summary": "The newest Redcap, in his early twenties, good-looking, light brown hair and grey eyes, with a way with women; he has no magical items yet.\n\nLike each of the Tribunal's Redcaps, he has a device that brings him and his horse back to Mercer House from anywhere in the Tribunal, once a day.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30589,9 +30720,11 @@
             "kind": "neighbours",
             "target_id": "the_bishop_of_hereford",
             "note": "The bishop he serves",
-            "id": "67b133688e85"
+            "id": "b118fb4e1a72"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30780,6 +30913,8 @@
         "summary": "A Jewish natural magician of Oxford, born 1162, who may approach the Order.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -30849,7 +30984,9 @@
     "players": [],
     "app_version": "",
     "saved_by": "",
-    "marriages": []
+    "marriages": [],
+    "maps": [],
+    "pins": []
   },
   "key": "stonehenge",
   "book": "HtM",
@@ -31018,6 +31155,8 @@
       "summary": "Praeco of the Tribunal, its eldest magus now that Immanola is gone. An ancient magus who has weathered age and Twilight remarkably, still in full possession of his faculties and, as far as anyone knows, his magic, but very careful now about casting. Once renowned for his mastery of Perdo; he favours elaborate robes of deep green and blue. The book makes him of Flambeau at a Tremere covenant and says no more of it.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -31206,6 +31345,8 @@
       "summary": "The senior quaesitor of the Tribunal, who presides at its meetings: with the Praeco, the hold that let Blackthorn keep its grip. A solid lawyer, competent wizard and capable politician, unremarkable in looks but for a writhing scarlet serpent tattooed on his left cheek by a long-ago Twilight; an ancient magus with his House's interest in Intellego and Mentem.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -31394,6 +31535,8 @@
       "summary": "An old magus who keeps the illusion of one just out of apprenticeship, with unkempt brown hair and innocent blue eyes. No one is fooled, and everyone is kept off balance wondering why. Blackthorn's best political dealer, the more so as no one knows what he is about; his magical interests are unknown.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -31582,6 +31725,8 @@
       "summary": "Filia Flumen, the most vigorous maga at Blackthorn and its leader in all but name, perhaps born there; she took her parens's place when he passed into Final Twilight in 1187. Nearly ninety, she looks in her early forties, black hair streaked grey and bloodshot brown eyes, plainly dressed in undyed white but for the jewelled purple and crimson robes she wears for the meeting's ceremonies. She restored an ancient binding on an elemental spirit that was taking revenge on humanity with rockslides, and controls it still; decades later she led an expedition into the Atlantic and was found four years on, battered and unconscious, on the sands at Chester. Anyone who deals with Blackthorn deals with her: an effective negotiator who keeps her word, keen for friends among the covenants, who are wary.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -31770,6 +31915,8 @@
       "summary": "Goliard's filia, whose parens still holds her sigil: a mature maga who looks in her mid thirties, plain, with lank hair and a scarred face, and never known to be polite. She is said to work Rego and Mentem, to make people entertain her.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -31958,6 +32105,8 @@
       "summary": "Goliard's filia, her sigil held by her parens, a maga less than ten years: good-looking, with long red hair and good teeth, always polite and usually pleasant, though she can insult within every rule of courtesy. She has a remarkable talent for Vim.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -32146,6 +32295,8 @@
       "summary": "A mature magus who came to Burnham soon after his apprentice's Gauntlet and has left only once since, to present Caitlin at the meeting. He answers no letters and writes none; his magical interests are unknown.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -32334,6 +32485,8 @@
       "summary": "Aindread's filia, a young maga who sometimes represents Burnham at the meeting: heavily freckled, with one blue eye and one brown, smartly but plainly dressed, polite to all, and unmoved by the most tempting offers. She has voted Sachiko's sigil since 1201.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -32522,6 +32675,8 @@
       "summary": "Scintilla's filius; nothing else is generally known of him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -32710,6 +32865,8 @@
       "summary": "Came to Burnham from eastern Europe at the end of the twelfth century, bringing Focus. She is said to be a powerful fire maga, but has done nothing of note in Stonehenge.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -32898,6 +33055,8 @@
       "summary": "Probably female. The Tribunal first knew of her when Caitlin voted her sigil in 1201; it has appeared at every meeting since.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -33086,6 +33245,8 @@
       "summary": "A quaesitor who joined Burnham in 1195 and has attended every meeting since, as custom demands. She says little, usually has her Redcap proxy vote with Iudicium, and pleads quaesitorial neutrality to avoid conversation. Very beautiful, long-haired and dark-robed, with a silver pendant of her House's badge; a mature maga of unknown interests.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -33274,6 +33435,8 @@
       "summary": "Primus of House Ex Miscellanea since 1216, young and vibrant, elected when Immanola was declared in Final Twilight. He has restored the Council of Four, giving each member nominal charge of three Tribunals and keeping Stonehenge for himself, and called a census of the House. His Council is ill chosen, its members respecting neither one another nor him, and those who meet him often take him for a bumbling fool, wrongly (DE p. 22; Houses of Hermes: Societates pp. 102-103).",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -33462,6 +33625,8 @@
       "summary": "The second eldest maga of Cad Gadu, worn harder by time than Immanola: nearly blind, and left by repeated Twilights seeing things that are not there; her delusions never harm her but can endanger others. She seldom leaves her sanctum.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -33652,6 +33817,8 @@
       "summary": "A blustering incompetent of the Columbae, the Welsh ward-makers, extremely old though he looks about fifty, with pepper-and-salt hair and beard and robes embroidered with mystic symbols. Not bright nor powerful, he demands \"proper respect\" but knows his limits; his best magic is Rego. By his age and standing he sits on Ebroin's Council of Four. He owns Cad Gadu's island in Welsh law (Houses of Hermes: Societates p. 112).",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -33840,6 +34007,8 @@
       "summary": "Gwrhyr's filius, not his blood, who suffered his master's insecurities and grew into a bully fond of taking it out on mundanes; more talented than his pater, he looks forward to surpassing him. Small and thin, simply dressed, smelling of burning, and skilled with Ignem.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34028,6 +34197,8 @@
       "summary": "A young maga, stunningly beautiful, long-haired and blue-eyed, who uses magic to eat and drink all she likes without losing her looks and dresses to seduce. She sees how fallen the covenant is and whines about it to anyone who will listen, too wrapped in her pleasures to act; the young men of the covenfolk hang about her.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34216,6 +34387,8 @@
       "summary": "Founder and leader of Libellus, about seventy though his longevity potion holds him at a look of thirty-five; trained in the Rhine Tribunal, a known taker of risks who has always come out ahead, and founding a covenant is the largest risk yet.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34404,6 +34577,8 @@
       "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34592,6 +34767,8 @@
       "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34780,6 +34957,8 @@
       "summary": "A young maga of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -34968,6 +35147,8 @@
       "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35156,6 +35337,8 @@
       "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35344,6 +35527,8 @@
       "summary": "A young magus of Libellus, newly arrived in the Tribunal.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35532,6 +35717,8 @@
       "summary": "Founder of Nigrasaxa, a widely respected master of Corpus whose many important texts are mostly in its library: a theoretical Bonisagus who these last twenty years has turned to the Order's politics. Julia of Voluntas asked him to help, and he came to Stonehenge and founded a covenant to break the cycle of invalid meetings, recruiting young magi to strengthen it. Ancient, and thought close to Final Twilight.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35720,6 +35907,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -35908,6 +36097,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36096,6 +36287,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36284,6 +36477,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36472,6 +36667,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36660,6 +36857,8 @@
       "summary": "A young magus of Nigrasaxa.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -36848,6 +37047,8 @@
       "summary": "The covenant's warden and its eldest magus, a great teacher who loves to lecture and dispute, weak for his age since he studies mundane learning too. He looks in his late fifties and is vigorous with an eager student. He has trained five apprentices, an unheard-of number. He dresses as a cleric and is in minor orders as an exorcist; his magic is chiefly Mentem, so he is very good at it.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37036,6 +37237,8 @@
       "summary": "Probably the most brilliant magus in the Tribunal, perhaps the Order, who would be an archmage if he gave himself to magic; his passion is natural philosophy, and he has begun applying it to magic theory, which he says rests on shoddy physics. Edward's first apprentice, now old, he looks in his late thirties and is usually unkempt, but dresses well for company. He works closely with Amabel the Learned.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37224,6 +37427,8 @@
       "summary": "A young maga and obsessive bibliophile who keeps the library and wants every text she can get, classical authors and the Order's early magi above all, copying them herself or trading more useful books for them. She searches monasteries' libraries wearing a ring that makes her look a man, and carries it off well. Homely, short and gangly, practically dressed.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37412,6 +37617,8 @@
       "summary": "A quaesitor and reforming idealist, a brilliant young student of civil, canon, common and Hermetic law, who devises new structures of Hermetic law and dreams of an age of justice for all magi. Smart, severe and attractive, she makes a good impression until her talk turns to her reforms.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37600,6 +37807,8 @@
       "summary": "Leader of Semitae since its first record in 1151, unaged since, of no fixed age or sex: tattooed all over, the hair shaved for more room, under a deep hood and long sleeves; his appearance may change in mid-conversation, or hold for a whole meeting. He will not speak of his past or purpose, which, he says, no one can understand who has not glimpsed the Enigma. Some forty years ago magi of Cad Gadu found him etching designs into a Snowdonian mountainside by magic; months later they were finished, a map of no one knows what.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37788,6 +37997,8 @@
       "summary": "A young maga with no tattoos on face or hands, dressed as a noblewoman in clothes embroidered with mystic symbols, good-looking and always friendly. She believes magic reflects the heart, so that malice brings vicious Twilights and good deeds good ones, and means to live magic, following Gerfallon about the country, until she understands the Enigma.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -37976,6 +38187,8 @@
       "summary": "An old magus at the height of his powers, dressed as a craftsman, clean-shaven, face and hands spotted with tiny burn scars; he looks puny, and his enchanted tools make his smithing surprising. He builds the covenant's wagons, but spends most of his time on a secret project he will not speak of. The Tribunal and his House are curious.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38164,6 +38377,8 @@
       "summary": "A member of Semitae in name, gone to explore distant lands with his sigil, so the covenant has not his vote; no one expects to see him again. The Fourth Edition's The Mythic Seas tells more.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38352,6 +38567,8 @@
       "summary": "Ungulus's leader, trained there in its glory, who remembers its Verditius magi. He knows it is falling apart and cannot abandon it nor save it, and means to hold on until the others die or pass into Twilight and then rebuild with magi who are not fresh from apprenticeship; he is already courting the Tribunal's younger magi. Long a frequent, frustrated attender of meetings, often the only one not of Blackthorn, a passable politician sidelined in the revival. He looks late middle-aged, stout, balding and brown-bearded, in magnificent robes with powerful devices, to remind people of what Ungulus owns.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38540,6 +38757,8 @@
       "summary": "An ancient maga who spends most of her time as an eagle on the Lake District's thermals and seldom attends council; Flavius holds her sigil for good. She will likely pass into Final Twilight soon, staying in her heartbeast, and no one knows how the covenant would tell, or whether it already has.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38728,6 +38947,8 @@
       "summary": "An ancient maga who loved Parsirus and burns to avenge him on the dragon: anyone who wants something of Ungulus, membership included, she asks to kill it. She has tried twice herself and barely lived; the second time she fell into Twilight, and now a magical force pushes her away from her enemy. She looks an old woman in rich, worn robes, her magic bent on fighting magical beasts.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -38916,6 +39137,8 @@
       "summary": "The only Gifted Redcap in the Tribunal, retired to Ungulus for the resources to make a way for covenants to talk by magic without weakening their defences against one another, and fiercely against new members until it is done. Weather-beaten and nearly bald, he dresses opulently to meet people, if not as richly as Ungulus could.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39104,6 +39327,8 @@
       "summary": "Offended a faerie lord long ago, and has lived to survive him since: she never leaves the Aegis, presses for it to be strengthened, and will let no one join lest they be faeries seeking a place in its ritual. She wears enchanted iron against faeries and often changes her looks by Muto Corpus to confuse her enemy.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39292,6 +39517,8 @@
       "summary": "Voluntas's leader in all but name, who decides its dealings with the world. Tall, long black hair, pale skin and a fine low voice, in deep blue robes embroidered with silver; a mature maga of Corpus and Mentem. She came to Stonehenge in the civil war to study its shifting alliances, turned to the Order's politics as Henry II brought peace, and spent years persuading magi to stand against Blackthorn, staying away from meetings so that it could force nothing through; that led to the fiasco of 1194. She wrote to friends outside the Tribunal, Maximianus among them, and the quorate meeting of 1201 was her masterstroke. Her try to move the meeting from Blackthorn was out-manoeuvred, and she is still all but obsessed with weakening it.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39480,6 +39707,8 @@
       "summary": "A mature magus with a raven heartbeast and a gift for Intellego, who always seems to know things before he is told, so that he is suspected of scrying on the Order; nothing is proved, and he says it is often an act. Black-haired and dark-eyed, he stares, and rarely troubles to dress after changing back; when dressed, he wears black.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39668,6 +39897,8 @@
       "summary": "A young Flambeau in red robes with a fiery temper and Ignem magic, but committed to the good of the whole Order and aware that burning people is not always it: he argues for conciliation when he thinks it right, unless someone angers him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -39856,6 +40087,8 @@
       "summary": "Disliked by most magi of the Tribunal: close to the faeries of winter and as cold to everyone, often away in the north, studying, she says, the fay of the frozen lands, with faerie items of the kind only given as gifts. She always wears white, her skin covered in a fine net of scars; an old maga thought skilled in Perdo.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],
@@ -40044,6 +40277,8 @@
       "summary": "A necromancer in plain brown robes trailing the smell of rotting flesh, who long cared nothing for the living but lately has come out of his shell and tries, without the skill, to be sociable; people are too frightened to be rude to him.",
       "secrets": "",
       "links": [],
+      "attitudes": [],
+      "favours": [],
       "agents": [],
       "agency_xp": 0,
       "discipline": [],

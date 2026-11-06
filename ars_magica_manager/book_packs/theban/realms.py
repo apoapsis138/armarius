@@ -364,7 +364,7 @@ def _leagues(theban: Theban) -> None:
     w = theban.world
     w["league_of_constantine"] = b.faction(
         "The League of Constantine",
-        faction="Other",
+        faction="Hermetic group",
         decides="A council",
         wants="A Greek emperor back on the throne of Constantinople and the Church freed of Rome; first, the lost battle standard, as a clue to the hagka",
         offers="Magi and their martial apprentices for the Nicene cause",
@@ -412,7 +412,7 @@ def _leagues(theban: Theban) -> None:
     )
     w["children_of_olympos"] = b.faction(
         "The Children of Olympos",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Lucian the Scholar of Aegaea",
         wants="The old Greek gods as the covenants' patrons, bound by lasting pacts",
@@ -465,7 +465,7 @@ def _leagues(theban: Theban) -> None:
     )
     w["league_of_the_vigilant"] = b.faction(
         "The League of the Vigilant",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Hydatius of Ingasia, its general",
         wants="To find any demon's servant hidden in the Order",
@@ -499,7 +499,7 @@ def _leagues(theban: Theban) -> None:
     )
     w["league_against_idolatry"] = b.faction(
         "The League Against Idolatry",
-        faction="Other",
+        faction="Hermetic group",
         decides="A council",
         wants="An end to the Ceremony of Propitiation and to the Tribunal's recognition of patrons",
         rules="Boycotts the Propitiation on Delos",
@@ -518,7 +518,7 @@ def _leagues(theban: Theban) -> None:
     )
     w["new_iconophiles"] = b.faction(
         "The New Iconophiles",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Valnastium",
         wants="The holy art scattered by the sack of 1204 found and saved",
@@ -546,7 +546,7 @@ def _titan_factions(theban: Theban) -> None:
     )
     w["seekers_of_the_fallen"] = b.faction(
         "The Seekers of the Fallen",
-        faction="Other",
+        faction="Hermetic group",
         decides="A vote of all",
         ruler="Evantia of Moero's Garden, most respected",
         wants="The titans restored, and with them a new age of magic",
@@ -564,7 +564,7 @@ def _titan_factions(theban: Theban) -> None:
     )
     w["legion_of_atlas"] = b.faction(
         "The Legion of Atlas",
-        faction="Other",
+        faction="Hermetic group",
         decides="A vote of all",
         ruler="Kristophoros of Bonisagus, its rallying point",
         wants="The faerie gods undermined and the Magic Realm built anew",
@@ -581,7 +581,7 @@ def _titan_factions(theban: Theban) -> None:
     )
     w["kampes_lovers"] = b.faction(
         "Kampe's Lovers",
-        faction="Other",
+        faction="Hermetic group",
         decides="A vote of all",
         ruler="Tisiphon of Hedyosmos, most prominent",
         wants="A closer bond with the imprisoned titans, and Hades' hold on their prison loosened",
@@ -813,7 +813,7 @@ def _traditions(theban: Theban) -> None:
     )
     w["cult_of_heroes"] = b.faction(
         "The Cult of Heroes",
-        faction="Other",
+        faction="Hermetic group",
         decides="A council",
         summary=paragraphs(
             "House Mercere's Mystery cult of the heroes, many of whose "
@@ -840,7 +840,7 @@ def _holy_and_heretic(theban: Theban) -> None:
     w = theban.world
     w["hesychasts"] = b.faction(
         "The Hesychasts",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         realm="Divine",
         rules="Only monks, perhaps some nuns; no Latins",
@@ -863,7 +863,7 @@ def _holy_and_heretic(theban: Theban) -> None:
     )
     w["society_of_cyprian_and_justina"] = b.faction(
         "The Society of Cyprian and Justina",
-        faction="Other",
+        faction="Religious community",
         decides="A council",
         realm="Divine",
         wants="The enemies of God fought with prayer and miracle",
@@ -886,7 +886,7 @@ def _holy_and_heretic(theban: Theban) -> None:
     )
     w["paulicians"] = b.faction(
         "The Paulicians",
-        faction="Other",
+        faction="Faith or sect",
         decides="A council",
         realm="Infernal",
         rules="Only the inner circle knows the creed is Infernal",
@@ -911,7 +911,7 @@ def _holy_and_heretic(theban: Theban) -> None:
     )
     w["eleusinian_cult"] = b.faction(
         "The Cult of Eleusis",
-        faction="Other",
+        faction="Faith or sect",
         decides="A council",
         realm="Faerie",
         rules="A sponsor; no barbarians, blood-guilty or harlots; secrecy on pain of death",
@@ -932,7 +932,7 @@ def _holy_and_heretic(theban: Theban) -> None:
     if _find(theban, "The Christians of Serapis", kinds=("faction",)) is None:
         w["christians_of_serapis"] = b.faction(
             "The Christians of Serapis",
-            faction="Other",
+            faction="Faith or sect",
             decides="A council",
             realm="Infernal",
             members=200,

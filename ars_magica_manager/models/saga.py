@@ -71,6 +71,23 @@ class SagaSource:
         return cls(**known_fields(cls, data))
 
 
+def _rosters_from_older_saves(neighbours: list[Neighbour]) -> None:
+    """Older saves made a faction that belonged to another (a court's
+    courtiers) answer to it: each becomes an entry of the other's roster
+    (memberships.py), and answers to no one. A faction that has a roster
+    already was moved before. Its links stay links: they name many ties
+    besides membership ("their dread ruler", "twice attacked its tower")."""
+    for faction in neighbours:
+        if faction.kind != "faction" or "roster" in faction.details:
+            continue
+        roster: list[dict[str, str]] = []
+        for other in neighbours:
+            if other.kind == "faction" and other.answers_to == faction.id:
+                roster.append({"who": f"neighbours:{other.id}", "role": ""})
+                other.answers_to = None
+        faction.details["roster"] = roster
+
+
 @dataclass
 class Saga:
     id: str
@@ -258,6 +275,7 @@ class Saga:
             old = neighbour.details.pop("battles", None) or []
             for index, entry in enumerate(old):
                 d["battles"].append(battle_from_lord(neighbour.id, index, entry))
+        _rosters_from_older_saves(d["neighbours"])
         d["sieges"] = [Siege.from_dict(s) for s in d.get("sieges", [])]
         d["world_turns"] = [WorldTurn.from_dict(t) for t in d.get("world_turns", [])]
         d["lab_projects"] = [LabProject.from_dict(p) for p in d.get("lab_projects", [])]

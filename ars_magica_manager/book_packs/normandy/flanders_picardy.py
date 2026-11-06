@@ -1371,9 +1371,8 @@ def _factions(normandy: Normandy, b: Builder) -> None:
             "barely paid workers nurses resentment."
         ),
     )
-    w["cloth_fairs"] = b.faction(
+    w["cloth_fairs"] = b.custom(
         "The Flemish cloth fairs",
-        faction="Other",
         place=flanders,
         rules="The counts guard the fairs and keep the roads and waterways safe",
         summary=(
@@ -1385,7 +1384,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["beguines"] = b.faction(
         "The Beguines",
-        faction="Other",
+        faction="Religious community",
         realm="Divine",
         place=flanders,
         rules=(
@@ -1417,7 +1416,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     if not any("Brabançon" in n.name for n in normandy.b.saga.neighbours):
         w["brabancons"] = b.faction(
             "The Brabançons",
-            faction="Other",
+            faction="Brigands and mercenaries",
             wants="Pay, and plunder when the pay runs out",
             offers="Hardened soldiers for hire",
             summary=paragraphs(
@@ -1480,7 +1479,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     w["donatores"] = b.faction(
         "The Donatores Requietis Aeternae",
         tradition="trad_donatores_requietis_aeternae",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         place=normandy.places["old_nesle"],
         wants="To give the restless dead their rest, and to banish those that will not go",

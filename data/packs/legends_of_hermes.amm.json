@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.62.1",
+  "app_version": "3.77.0",
   "kind": "pack",
   "name": "Legends of Hermes",
   "from_saga": "Legends of Hermes",
@@ -424,7 +424,7 @@
         "place_id": "qadis",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "By how well each recalls mortal life; lucid apparitions rule and use mindless specters as tools.",
           "members": null,
           "rules": "",
@@ -784,7 +784,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1117,7 +1117,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2092,7 +2092,7 @@
             "kind": "places",
             "target_id": "the_new_valley_of_santa_lucia",
             "note": "Where the village is moving",
-            "id": "0026254a10ac"
+            "id": "873d4ad04202"
           }
         ],
         "arms": {},
@@ -2603,6 +2603,8 @@
         "summary": "Born Dolorita, a wealthy merchant's daughter of Barcelona, about 885. Baltasar of Bonisagus took her to Leon and fostered her out as far as Al Andalus, Provence and Lombardy, and she left apprenticeship hungry to reach the unseen realms by Hermetic means alone. She worked as a laboratory assistant across Iberia and beyond. On her travels she met Currito of Jerbiton, and within a year they had raised a tower in a regio at Zaragoza and married.\n\nHer peers held that the realms would yield only to new Arts. She disagreed, and in 930 published The Application of Vim to the Supernatural Humors (tractatus on Magic Theory, quality 7), showing that auras fall into four categories matching the realms and that Vim can reach all four. Her name was made. Then Baltasar confessed to Infernal corruption and was marched; her rivals used it, her sex and her youth against her, and she was quietly shut out of Bonisagus society. She sent her last unfinished notes to Durenmar.\n\nFor forty years she studied strange places and published nothing, while Currito found her vis and books. In the end he left, and she stayed on alone in her tower while the world forgot her. The Order holds that she vanished into Twilight before the millennium. Her fame survives as a primer and, among Bonisagi, a warning.\n\nVim itself, as the Founders taught it, covered only active magic; the Forms did what Vim now does (p. 15). Much of the language magi use of auras is hers: diffuse and tethered; stable, waning and waxing; existential and moral; apparent and subsumed.",
         "secrets": "Her Gift grew blatant and magic began to leak from her unbidden, ruining her studies and drawing Twilight on. After five years alone, as the millennium turned, she went to a convent near Toledo she knew from her research, hoping the Dominion would quiet it. It did for a while. Warping took her into Final Twilight eleven years on, and her spirit broke into four aspects, one for each realm, which fled the convent. Each keeps something of her and guards a part of her unpublished breakthroughs (p. 14).\n\nWhat the Order Remembers (p. 14; rule pp. 10-11): Intelligence + Order of Hermes Lore simple roll; the character recalls everything up to the Ease Factor reached. Bonisagi add +3, for her rank of Cannophori (Houses of Hermes: True Lineages p. 21). Research in a fit library: Covenants p. 98.\nEase Factor 0, Known by All: she brought the four realms under the single Art of Vim; apprentices often study her The Application of Vim to the Supernatural Humors; she left Hermetic society in later life.\nEase Factor 6, Widely Known: she lived in Iberia, with ties to Christian and Muslim communities alike; her parens was marched for diabolic corruption; her husband, a Jerbiton artist, aided her work.\nEase Factor 12, Uncommon Knowledge: some hold she kept part of her research from the Order; she overcame the Dominion's effect on magic (false: a distortion grown from Currito's later writings); she vanished into Twilight before the turn of the millennium (what the Order at large believes, and false).\nEase Factor 18, Lost Secrets: the hubris of her research cost her control of her magic; she died in a convent near Toledo; shortly before her death four women came to her, and she gave each a magical treasure.\n\nList of Artifacts (p. 18), with integration or breakthrough points:\nConfluence of the Realms: Maintaining the Unstable Conjuration 6, The Fourfold Lens 11, Subsume the Apparent Dominion 10.\nInsight of the Realms: Clearing the Mind of the Caster 6, The Insightful Stylus 5, The Lodestone 7, The Sands of Time 4.\nTrue Understanding of the Realms: Ward Against Woodland Spirits 9.\nThe table calls the first Maintaining the Divine Conjuration; p. 30 prints it as Maintaining the Unstable Conjuration.\n\nHer new Virtues and Flaw, spells and guidelines (pp. 14-18) are in the catalogs: Confluence, Insight and True Understanding of the Realms; The Constant Expression, which magi Initiating her Virtues take through ordeal; To See What Binds this Magical Place; This Heart of Darkness; Dominance Over the Infernal. Her guidelines may be used by any maga who has studied one of her unpublished works. Integrating her discoveries: Ancient Magic p. 7; original research: Houses of Hermes: True Lineages p. 26; summary: Hedge Magic Revised Edition p. 14; the two add together (p. 18). The book gives her dates as c. 885 to 1007, yet has her at the convent eleven years from the new millennium (p. 14).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -2791,6 +2793,8 @@
         "summary": "An artist at heart and Conciatta's husband, impetuous and confident. He found the auras of Zaragoza and founded La Torre no Vista with her. His paintings were mostly religious, though for a time rich covenants prized his Hermetic triptychs, and frescoes of his can still be found across the Order.\n\nHe gave up his own studies and art to supply his wife, was mocked by his peers for it, and after she went a full year without seeing him he left Zaragoza, bitter, with some of her notes to sell. Reports put him in the Levant before 1000. By the Schism War his best days were long gone, and he ended as a wandering artist living on old fame and old friends' hospitality until his welcome wore out. In unguarded moments he spoke of a great prize: Hermetic magic fueled by the Dominion's own aura.",
         "secrets": "The Life of Currito (p. 22): his book, written in age, in a shaky hand between leather flaps; a five-day distraction to read. It tells that their hidden covenant was still plagued by birds from the mundane world; that Conciatta stayed in Zaragoza after La Torre no Vista dissolved; that she studied the Dominion at a convent in Toledo and ended her days there; that they survived an Infernal cave system at Narixa and left notes and a map in the library of the al Narixa mosque; and, with evident bitterness and no detail, that she bargained for knowledge with the king of a lost city outside Qadis, which began to turn her from him.\n\nA full-page illumination shows her under a wide arch, its pillars held up on one side by an angel on a demon, on the other by a dragon on a winged man with a lute. Hermetic text fills the wall behind her: the missing part of the cellar's casting tablet.\n\nBooks and devices he took may turn up in a covenant's library or stores, and casting tablets of his on auras too; his surviving frescoes can foreshadow the story by showing one subject as touched by the four realms (p. 19).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -3257,6 +3261,8 @@
         "summary": "A prosperous Zaragoza merchant whose home and warehouse look over the Ebro. He trades chiefly in wine from Logro\u00f1o, where he keeps another warehouse, but will buy and sell most things. He has three daughters, of 17, 16 and 14, and no sons, and wants husbands who will care for his business and his daughters, in that order.",
         "secrets": "His warehouse cellar bounds the old covenant's aura, which he knows nothing of. Characters wanting the cellar may appeal to his wish for sons-in-law (pp. 23-24).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -3687,6 +3693,8 @@
         "summary": "Abbess of the Convento de San Ildefonso, thought strict and aloof; the aloofness is mostly contempt for the men who come to her convent for their own secular gain. She knows little of magic and dislikes magi at her door.",
         "secrets": "She unknowingly wears a relic of San Ildefonso, a cord from his robe wound into a belt handed from abbess to abbess, with one Faith Point. She holds the vow, passed down the line of abbesses, to protect the spirit, and will not lightly break it (pp. 29-30).\n\nWinning her trust: a task she needs done, of no great danger, that lets the characters show virtue; a good name for kindness, charity or judgment around Toledo; or generosity to the convent. If she is persuaded the spirit harms the girl, she will not let the suffering go on, and lets the magi try to part them (p. 32).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -4064,6 +4072,8 @@
         "summary": "The novice of the Convento de San Ildefonso whose visions the wealthy pay to hear. The sisters care for her, for she cannot care for herself. She lives in a windowless room lit by candles, among bedding, slates and parchment, writing and speaking in tongues without warning.",
         "secrets": "She carries the Divine Conciatta, the latest of generations of possessed novices, and fares worst of them all. The convent has long taken this for God's miracle, and its magical origin is all but forgotten (p. 29).\n\nWhen visitors enter, sense surfaces in her babble (pp. 31-32): she once had many brothers and sisters and now only three, who hide, though she remembers where she went; Seiffeddin, an actor in Qadis, may know her and where she is; she would like to see her sisters.\n\nHer fear of being alone binds the spirit to her. If that is abated, the spirit can pass to another host; how is left to the troupe (p. 32).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -4443,6 +4453,8 @@
         "summary": "A scholar of Qadis, and cleric, astronomer, translator and teacher, who takes any work that keeps him in food and parchment, though not always in that order. He can be met at night searching the city with a strange instrument, and likes nothing better than to talk to the learned. His observatory is his room on the top floor of a tenement in a poor and noisy district.",
         "secrets": "He found the Fourfold Lens lately, took it for a device to study the heavens, and has seen auras and the ghostly citizens through it. He files what he sees under the four elements, tying them uncertainly to the four auras. He is slow to lend or sell it, but may part with it if his study of supernatural Qadis can be fed some other way (pp. 34-35).\n\nThe Fourfold Lens (p. 34): an adjustable iron stand with four hand-sized lenses on swinging arms, each enchanted for one realm and clear if its aura is absent. Conciatta made it for her custos and Currito to take on journeys, and it was lost on one. Each lens is Unveil the Subsumed (Realm), InVi 54, constant (R Personal, D Sun, T Vision, 2/day triggered at sunrise and sunset): it shows any aura present of its realm, subsumed or not, and the world as that aura would make it. It finds subsumed auras of any level but can only penetrate an apparent aura of level 3, and only the lowest level of each, so it does not show regiones. Re-creating it gives 11 points toward Confluence of the Realms.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -4846,6 +4858,8 @@
         "summary": "An imam of the Al Narixa Mosque all his adult life, kept mostly to its library. He suffers visions he takes for warnings from Allah, always of tunnels, caves, and hungry yellow eyes in the dark.",
         "secrets": "If the caves are spoken of with or near him in Arabic, he also sees a seductive queen clothed in smoke and fire (p. 40).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5034,6 +5048,8 @@
         "summary": "Lived 986 to about 1123. Daughter of a prince of Milan, she was taken as apprentice around 996 by Apollo of Jerbiton, who saw her Gentle Gift. Her childhood name is lost; she took the name Fortunata at her Gauntlet. She became a fine scholar and made her parens proud, but envied the potent specialised magic of others and came to want it more than the learning of her House.\n\nAs a young maga of the Rome Tribunal she travelled the old Roman and Greek ruins around the Mediterranean. She freed a spirit, Lucida, from a witch's binding in a cleft stone, and they became friends, travelling companions, and in time maga and familiar; some said lovers.\n\nShe pursued the rites of lost cults. Her sudden power led rivals to accuse her of dealing with demons and of spying through spirits. The charges dogged her, and her secrecy did not help, so in later years she quit her covenant for a hidden island, keeping a house in Venice for the Redcaps. Those who met her reported shimmering clouds of spirits around her.\n\nShe translated dead languages by having ancient ghosts read texts aloud while Mentem magic let her understand them, and many of her Latin versions spread through the Order, with notes in the margins that leave a reader wanting the rest. She was last met in 1123.",
         "secrets": "She dealt with no demons: she mastered Self-Initiation, turning quests into power with no cult to obey, and named the system Principles Lore (p. 47). She was careful of the Quaesitores and did not use her spirits to spy. She probably died or entered Final Twilight soon after 1123; the chapter's heading says Final Twilight, its text that her fate is not recorded. Her island and library wait to be opened.\n\nShe claimed to have found these rites in the ancients, yet many are Hermetic Virtues and there was no Hermetic magic before Bonisagus. She may have been deluded, may have lied, or may have had a knack for scripts that closely paralleled ancient Virtues (p. 47). The book leaves it open.\n\nShe never learned the ancient tongues, only called spirits until one could read the text (p. 68).\n\nWhat the Order Remembers (p. 48): a simple roll of Intelligence + Order of Hermes Lore recalls everything up to the Ease Factor it reaches (p. 10). Some of it is false, grown from envy and from the fable she has become. A library can be searched as well (Covenants p. 98).\nKnown by All (Ease Factor 0):\n- A spirit master and maga of House Jerbiton.\n- Active in the Rome Tribunal, she left it for a private retreat.\n- She beat many enemies outside the Order in southern Europe and North Africa.\n- Her power came from ancient lore, and she translated the ancients.\n- She robbed many Mysteries of their power.\n- Her books are said to tell how to win the same powers.\n- Hermetic enemies drove her into exile.\n- She vanished into Twilight about 1123.\nWidely Known (Ease Factor 6):\n- She kept no familiar, only a spirit who went with her.\n- A cloud of airy spirits surrounded her, quick to obey.\n- [Jerbiton magi only] A very gifted scholar who failed her House through envy of magical power.\n- She belonged to no known Mystery Cult, though she wrote of many.\n- [Redcaps only] Her house in Venice welcomed Redcaps richly.\nUncommon Knowledge (Ease Factor 12):\n- She answered charges of infernalism and magical spying and walked free, then retired anyway.\n- She owned and ran a house in Venice, for years a meeting place of Redcaps.\n- Her retreat lay among the many small islands of the Ionian Sea, or whichever part of the Mediterranean suits the saga.\n- Many admired her scholarship, but her parens was disappointed.\n- By magic she translated scrolls no one could read, going past the Hermetic limits on translation.\nLost Secrets (Ease Factor 18): the book lists none for her. It says a few details are known only to some Redcaps or Jerbiton magi, and gives no bonus to any House's roll.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5222,6 +5238,8 @@
         "summary": "Long dead. A witch banished from Algiers for her dark practices, who left carrying her beast-son Monocaudus and cursed the city with seven years of failed harvests. By black arts she bound the spirit Lucida and took an island in the Mediterranean, where she raised her son. She died of old age.",
         "secrets": "Her tradition resembles the Witches of Thessaly (Realms of Power: The Infernal p. 140) and still reveres her (p. 57). Monocaudus's tale that Fortunata slew her is false (p. 64). The father of her son was Omaion the Serpent.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5410,6 +5428,8 @@
         "summary": "A great magical snake some 30 feet long, with penetrating venom and leathery skin that turns any weapon, who can also walk as a beautiful, lithe and seductive man. He may wander far from his cave in that shape.",
         "secrets": "The father of Monocaudus, whom legend does not name (p. 58). He has hardly met a magus. The book gives him no stat block. See the story A Vengeful Father.\n\nLegends differ, and a saga may choose another version. Omaion the Infernal: a demon in the shape of a jet-skinned handsome man, in a fortified mansion in the old quarter of Algiers among beautiful servants and apparent wealth, Monocaudus's beast form then being Infernal and Magical blood mixed in flesh. Omaion the Sorcerer: one of the darker fae of Greece, brooding in dark forest glades, with a dragon's head and tail, a lion's chest, a man's arms and a goat's nether parts; to imply his origin is such a mixture of myths risks instant wrath.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5598,6 +5618,8 @@
         "summary": "The ghost of an elderly servant in an old Venetian house, who stayed faithful long after his mistress disappeared, until a gruesome plague killed him around 1130. He means no harm, and talks in an old Venetian dialect to anyone who can see him and does not run: of old Venice, of the maga who came to work on her books and letters, and of how he died.",
         "secrets": "He knows that Fortunata hid papers behind wall panels and under floorboards (p. 56). The book gives him no stat block.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5786,6 +5808,8 @@
         "summary": "A disreputable-looking monk, tall and forever tousled, who has wandered much of Europe, the southern Mediterranean coasts and England above all. A great storyteller, he has somehow survived many disasters and seen many wonders, and tells them for ale.",
         "secrets": "He knows much Church Lore, Dominion Lore, Magic Lore and Area Lore of England and the Mediterranean, which should serve the story and not be a guide to everything (p. 57). The book gives no scores.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -5974,6 +5998,8 @@
         "summary": "An elderly magus who has studied Fortunata's life and gathered a great deal about her. He is sure she was a witch of Thessaly, sodalis, rival and at last victor over Cupressa of Algiers, and he has plans for expeditions to Algiers, Thessaly and various Mediterranean islands.",
         "secrets": "Much of what he has is distorted, and the witches have fed him false information (p. 57).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6162,6 +6188,8 @@
         "summary": "A magus obsessed with Viea, Trianoma's sister, and with dragons. He believes Viea founded a lineage of her own on knowledge stolen from Bonisagus, and that the sisters dealt with dragons. His research into her ideas and magics keeps him at his laboratory, so he looks for others to go in his stead.",
         "secrets": "He takes Cupressa's son for a half-dragon, and Cupressa and Viea for one woman, which would make the island the home of a near-Founder (pp. 57-58). The book says nothing to support this. Viea's story is in Houses of Hermes: True Lineages p. 6.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6350,6 +6378,8 @@
         "summary": "c. 857-1002. A magus of Clan Arelie whose heartbeast was the urchin, or hedgehog, and whose sigil ran to spines and thorns; a copper urchin was his voting sigil. He left his apprenticeship in 881 in Normandy and was at first an unremarkable worker of Herbam and magical agriculture. His House feared that mankind was killing Magic as forests fell, and some talked of culling the people; he held that Magic was boundless and went off to a backwater of his Tribunal to prove it.\n\nAs the Order drifted toward the Schism he preached peace, offered his research to House Bonisagus and put his theories to convocations of House Diedne. Few believed he could grow vis. His House tired of him and distrusted his dealings; Gypaetus of Bjornaer accused him of betraying cult secrets and declared Wizard's War. Past a hundred years old and no fighter, he was dead within two days of the full moon. While the House sat out the Schism in its domus magna, the head of Clan Arelie studied his political writings, and by 1019 half the clans had declared for living alongside mankind: the Concordiarii, or Harmonists.\n\nWhat the Order Remembers (Intelligence + Order of Hermes Lore, simple roll; +1 for Bjornaer, +3 for Clan Arelie, the House's memory; a character recalls everything up to the Ease Factor reached, and some of it may be false; Introduction pp. 10-11).\n\nEase Factor 0, Known by All: a magus of the ninth and tenth centuries; he built a magical Garden overflowing with vis, never yet found.\n\nEase Factor 6, Widely Known: the Harmonists' founder, at least in name; a hedgehog heartbeast; he claimed he could grow all but limitless vis and was never taken seriously; he died in Wizard's War at the hands of his own House.\n\nEase Factor 12, Uncommon Knowledge: Gypaetus of Bjornaer slew him; he quarrelled with his House and Primus, and was accused of showing House secrets to House Diedne.",
         "secrets": "Ease Factor 18, Lost Secrets: he may descend from Myanar; some think his spirit lives on in his Garden; a copy of part of his research went to the Great Library at Durenmar.\n\nHe was a theorist of the first rank who completed a Major Breakthrough, Hermetic Viresculture, and a Minor one extending it to Lesser Enchantment Vis (pp. 72-76). He was working toward making Lesser Enchantment Vis, and on the vis in gems and metals, when he died. He never made the method general.\n\nA Descendant of Myanar? (pp. 71-72) Tales give him Nature Mysteries like House Merinita's, and the Garden's sentient plants look like the work of Awakening Nature (Houses of Hermes: Mystery Cults p. 104). He may come of a follower of Myanar who fled to House Bjornaer when Quendalon became Primus. Magi who know the Nature Mysteries may ask whether he took Guardian of Nature and became a genius loci, his death a staged way out of the Order. If so he may haunt the Garden as its spirit, and if he belonged to a hidden Bjornaer cult his heirs may keep it still. The book does not settle any of this.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6538,6 +6568,8 @@
         "summary": "Died 1035. A veteran hunter of Marched magi, who accused H\u00e9risson of betraying cult secrets to magi hostile to the Order, declared Wizard's War and killed him within two days of the full moon. He left a single filia, Vari\u00f1a, whose line ended with her.",
         "secrets": "H\u00e9risson's will left him the fruits of the research, by way of apology for the trouble of having to kill its discoverer. The copy buried in the field names him as heir; the notes themselves are not with it (p. 77).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6767,6 +6799,8 @@
         "summary": "Eldest of the Sept of H\u00e9risson and its Mystagogue, three generations from its founder, and a master of Terram. Black hair with a white stripe rising from each temple tells the badger he holds within. He goes in a peasant's smock, with a woven hat in the fields, and speaks like a peasant. Friendly and guileless, he is to be found working the land around his rural covenant, which stands apart from Order politics, and which he shares with one other of the sept. His aim is bigger harvests, so that fewer forests fall for fields.\n\nAge 64, apparent age 46. Gentle Gift; Study Bonus, which pays him for his labor with soil and crops (p. 78).",
         "secrets": "He holds a few of H\u00e9risson's laboratory texts, out of order and in cipher. He has never made sense of them, and lets the characters copy them if they will share what they learn of his ancestor, since such news is status in his House. Richard Strabo has made a friend of him with gifts of farming spells and enchantments, and passes for a friend still; word of anyone asking after H\u00e9risson soon reaches Strabo. The book prints no Characteristics or Arts for him.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -6955,6 +6989,8 @@
         "summary": "Tasso's filia, a mole in her heartbeast, and a prominent voice in Hermetic politics for living alongside mundanes and the Church. She dwells at a covenant near his. Asked about H\u00e9risson, she will likely send the enquirer to Tasso, the sept's leader and heir to its founder's texts (pp. 72, 78-79).",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7143,6 +7179,8 @@
         "summary": "Founder of the covenant that bears his name, a magus Ex Miscellanea of nearly 150 years with a passion for Herbam. He and his filii keep apart from the Order, content with its protection and with their right to be left alone.",
         "secrets": "He is close to Final Twilight and will not risk his strongest spells. He enchanted the gate that leads into the Garden's regio (p. 83). The book prints no block for him or his filii.\n\nA Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made of a Mandrake of Virtue from H\u00e9risson's Garden is the source of the wizard's magic, gained on one visit at the start of the career. The tradition gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin and hair. No wounds or Fatigue from want of food, drink or air, but Long Term Fatigue returns only with rest and sustenance; the body runs on the vegetative spirit woken by daylight. Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7331,6 +7369,8 @@
         "summary": "One of the four filii of Caerfloron, living in a hut against the walls of their walled garden, and like the others devoted to Herbam.",
         "secrets": "A Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made of a Mandrake of Virtue from H\u00e9risson's Garden is the source of the wizard's magic, gained on one visit at the start of the career. The tradition gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin and hair. No wounds or Fatigue from want of food, drink or air, but Long Term Fatigue returns only with rest and sustenance; the body runs on the vegetative spirit woken by daylight. Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7519,6 +7559,8 @@
         "summary": "One of the four filii of Caerfloron, living in a hut against the walls of their walled garden, and like the others devoted to Herbam.",
         "secrets": "A Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made of a Mandrake of Virtue from H\u00e9risson's Garden is the source of the wizard's magic, gained on one visit at the start of the career. The tradition gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin and hair. No wounds or Fatigue from want of food, drink or air, but Long Term Fatigue returns only with rest and sustenance; the body runs on the vegetative spirit woken by daylight. Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7707,6 +7749,8 @@
         "summary": "One of the four filii of Caerfloron, living in a hut against the walls of their walled garden, and like the others devoted to Herbam.",
         "secrets": "A Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made of a Mandrake of Virtue from H\u00e9risson's Garden is the source of the wizard's magic, gained on one visit at the start of the career. The tradition gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin and hair. No wounds or Fatigue from want of food, drink or air, but Long Term Fatigue returns only with rest and sustenance; the body runs on the vegetative spirit woken by daylight. Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -7895,6 +7939,8 @@
         "summary": "One of the four filii of Caerfloron, living in a hut against the walls of their walled garden, and like the others devoted to Herbam.",
         "secrets": "A Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made of a Mandrake of Virtue from H\u00e9risson's Garden is the source of the wizard's magic, gained on one visit at the start of the career. The tradition gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin and hair. No wounds or Fatigue from want of food, drink or air, but Long Term Fatigue returns only with rest and sustenance; the body runs on the vegetative spirit woken by daylight. Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8588,6 +8634,8 @@
         "summary": "A researcher of House Bonisagus who won Acclaim young, then soured under the weight of it. Nothing of his has satisfied the House in over twenty years, and he has grown bitter and solitary, dropping hints of a secret project that will change Hermetic magic.",
         "secrets": "Every line he tried came to nothing, until he found H\u00e9risson's notes in a forgotten archive of Durenmar's library. He means to find the rest and pass the whole off as his own, and has staked his name on it. Discovery would finish him in his House, and he is unhinged enough to break the Code to prevent it. He corresponds under several aliases with Herbam experts across Mythic Europe, mining them for ideas, and cultivates Tasso as his sentinel. He has not thought of the tomb of the slayer's filia. See The Search for H\u00e9risson's Garden.\n\nBy trying to have a magus killed he breaks the Oath and forfeits the Code's protection (p. 83).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8776,6 +8824,8 @@
         "summary": "c. 940 to 1098 (Final Twilight). The master strategist who gave more than eighty years to making Coeris, the domus magna of House Tremere, a safe storehouse for the House's treasure. Thirty-nine years past his apprenticeship when the Schism War began, he served as a master of auxiliaries, training and leading mundane soldiers. Twice he won by foreseeing the attack: his unit, warded beforehand, outlasted two Diedne magi and their beasts until help came, and he hunted down and slew Nuala of Diedne, fifteen years his elder. He had no Gentle Gift and little persuasion, yet his troops held; so the primus gave him the Adamant Rook Vexillation, a group of enchanters.\n\nThe House could not count on better magi than its foes, or on magics they did not know. Hermanus used what it did have, its cohesion, drawing in as much of its magi and resources as he could to build a network of devices through the covenant that found and held anyone acting against the Tremere. The more he built, the less he was content; his mind came to see only weakness. In 1070 the primus dissolved the vexillation, calling the work excessive, and others began to ask whether the vis had been well spent. For twenty-eight years more he kept at it alone, arguing, seeking the primacy, studying and enchanting.\n\nIn the autumn of 1098, three hours after a last quarrel with the primus, the top floor of his wing of Coeris vanished with him, most think in Final Twilight. The Abyssal Bearer Vexillation (Houses of Hermes: True Lineages p. 122) searched, and the Unbarred Gateway Vexillation searched until early 1104. His fame outside the House came later (see Velius of Tremere).\n\nWhat the Order Remembers (pp. 10-11, 96). Intelligence + Order of Hermes Lore simple roll; the character recalls everything up to the Ease Factor reached. Research in a library: Covenants p. 98.\n\nEase Factor 0, Known by All: His Final Twilight took away a whole part of Coeris. He was a Schism War veteran who oversaw defenses for the House's resources. He is famed for marshalling so much of the House to that end for decades. He found Diedne sympathizers in House Tremere, a cabal that destroyed him and made his laboratory vanish.\n\nEase Factor 6, Widely Known: At the end he enchanted his laboratory to move, so he could see the world from behind its wards, and left Coeris and the House for good. He went on strengthening Coeris for twenty-eight years after the vexillation ended, clashing ever more with the primus and senior magi, and sought the primacy to further it.\n\nEase Factor 12, Uncommon Knowledge: A vexillation hunted for him and the laboratory, and after four years found them beyond any Tremere method. He ended a great expert in Intellego, but was chosen for leadership; the greatest Adamant Rook works were made by magi in groups. Age made him ever more fearful, seeing attacks in everything, and he took to sending an enchanted human-sized doll out for vis in his stead. He died seeking vis from a Provencal town besieged by giant bats, and all record of the town save this has been destroyed by someone or something keeping it secret.\n\nEase Factor 18, Lost Secrets: Amarantha of Tremere went on searching after the vexillation reported and dissolved. She disappeared in 1110, without a trace.",
         "secrets": "False among the recollections (p. 96): the Diedne cabal; the laboratory enchanted to move; the Provencal town of giant bats. Much of his work may be known only inside House Tremere (p. 11).\n\nBy 1091 he saw the House would never give him the vis, and meant to find it himself; but his fears kept him in his laboratory, behind eight warded rings. So he enchanted one of the Coeris mannequins and sent it out under his control, through Opening the Intangible Tunnel, to look for vis. That autumn evening in 1098 it stood on the sea floor off the south coast of Crete, among the wrecks of Demetrios the Poliorketes' battle with Ptolemy, and he tried to bring the vis home with a Rego spell from a casting tablet. The casting failed terribly. He and his familiar were lost to Final Twilight; the laboratory and its structure went to the Terram province of the Twilight Void, tethered to the mannequin and the vis.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -8964,6 +9014,8 @@
         "summary": "Died late in 1110. A member of the Unbarred Gateway Vexillation who would not let the search end when it dissolved in 1104. She questioned those who had spoken with Hermanus or his familiar, read what he had read in his last years, and went through their letters. By 1110 she had a long list of places he might have sent his mannequin, and set off alone to visit them, telling no one: she feared looking a fool, and doubting the vexillation would have offended influential magi of the House.",
         "secrets": "Her end came far from help, somewhere the Abyssal Bearer Vexillation, charged with recovering the bodies of Tremere magi, never knew of. Her notes held some ideas for researching a spell to bring the laboratory back, but no firm plan. See The Remains of Amarantha.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9152,6 +9204,8 @@
         "summary": "Archmage from 1104; Final Twilight 1120. Come to Coeris from the Rhine Tribunal, he took on the danger of a vanished wing full of the covenant's own devices, shored up the defenses, then kept them working. In 1115 his former apprentice challenged him; he set her to fetch a token from a Coeris vault within the year, and she failed. Elonora of Tytalus then challenged him, sure he would not dare invite an outsider at the vaults; he put his marker there again, and she failed three times in the year. The primus was furious at his overconfidence, and a third use of the challenge was thought unlikely to go unpunished.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9340,6 +9394,8 @@
         "summary": "The maga who challenged the Archmage Velius after his filia failed, and made three failed attempts on the defenses of Coeris. She passed on what she remembered of them, and spread tales that Velius leaned on Hermanus' work rather than his own. From her stories magi tried to reckon the vis and seasons spent at Coeris, and the legend of its unbreachable defenses went through the Order, helped by the Tremere, who wished their sodales to think any raid futile.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9532,9 +9588,11 @@
             "kind": "places",
             "target_id": "the_wreck_of_thomae_s_castle",
             "note": "His castle, and his remains",
-            "id": "b5c7db46383d"
+            "id": "019a61209cdc"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9727,9 +9785,11 @@
             "kind": "characters",
             "target_id": "roberto",
             "note": "Took his medal",
-            "id": "87e41ee29e1f"
+            "id": "b01747cbbca4"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -9918,6 +9978,8 @@
         "summary": "A dead soldier of a mercenary company, who said he came from a tiny Alpine village called Santa Lucia and always kissed his medal before a fight.",
         "secrets": "Son of Rogerio, whose medallion he stole before going off to soldier. Shot down by arrows. He died in battle and was buried anyhow, so his ghost can be summoned (p. 129). Returning his remains to Rogerio will be taken very kindly (p. 131).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10110,15 +10172,17 @@
             "kind": "characters",
             "target_id": "roberto",
             "note": "His son",
-            "id": "cc02228ba5e2"
+            "id": "f24a53470dc0"
           },
           {
             "kind": "places",
             "target_id": "santa_lucia",
             "note": "One of its three councilors",
-            "id": "129df61e73f8"
+            "id": "17b9f37e7cae"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10311,9 +10375,11 @@
             "kind": "characters",
             "target_id": "thomae_of_tytalus",
             "note": "Made a medal for him; holds an Arcane Connection",
-            "id": "9e6ca83cf7b9"
+            "id": "50bf79b241aa"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10864,7 +10930,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Creo or Rego Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "64fbab5cd54c"
+            "id": "ade1c9c58a4e"
           },
           {
             "name": "Eidolon",
@@ -10878,7 +10944,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will, and she always keeps it. Realms of Power: Magic p. 102.",
-            "id": "8ca1621ea559"
+            "id": "23c8f503d39e"
           },
           {
             "name": "Ghost Touch",
@@ -10892,7 +10958,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: moves objects not held or fastened down, 5 pounds for 1 Might point, doubling with each further point. In constant use, mostly beyond her control, and often drains her Might. Init 0 minus the points spent. Realms of Power: Magic p. 102.",
-            "id": "8f2f992da25a"
+            "id": "6901c2752ea1"
           },
           {
             "name": "Master of Vim",
@@ -10906,7 +10972,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: changes or destroys weak sources of magic she can perceive, as any Muto or Perdo Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "104bab6c0f86"
+            "id": "874ce11d0a6a"
           }
         ],
         "vis": [],
@@ -10918,6 +10984,8 @@
         "place_id": "la_torre_no_vista",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "She knows she is dead and suspects a Final Twilight, prolonged and somehow made lasting, and that others like her may exist for the other realms. She knows she can learn nothing new of note, unless perhaps what follows if her Final Twilight is let finish (p. 25). Her books scrape over her own work again and again."
       },
       {
@@ -11056,7 +11124,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: by spending all her Might she inhabits a target, her Personality Traits overlaying and adding to the host's. Thus she has held novices through the years.",
-            "id": "cfd76f0898e6"
+            "id": "c4b237fa6842"
           },
           {
             "name": "Grant (Visions)",
@@ -11070,7 +11138,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual Power, used automatically on possession: gives the host the Visions Minor Story Flaw (ArM5 p. 60). Through it her memories of Hermetic work surface in the host.",
-            "id": "3a723833e026"
+            "id": "08282569fa3d"
           },
           {
             "name": "Grant (Enfeebled)",
@@ -11084,7 +11152,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual Power x2, used automatically on possession: gives the host the Enfeebled Major Flaw (ArM5 p. 53).",
-            "id": "6027fe31bc29"
+            "id": "43b55ad5bf74"
           }
         ],
         "vis": [],
@@ -11096,6 +11164,8 @@
         "place_id": "convento_de_san_ildefonso",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Visions in a new host may show her as a queen, wreathed in serpents, or in the heart of a great fire, or a shining city sinking under a mighty river (p. 32)."
       },
       {
@@ -11491,7 +11561,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual; no Hermetic equivalent. Blesses the target with the Insight of the Realms Virtue for as long as she chooses. She regains the Might only by withdrawing the gift, and until then she in effect does not exist, reaching the world only by that withdrawal.",
-            "id": "9dd6f34ad05c"
+            "id": "25d42a58e068"
           }
         ],
         "vis": [],
@@ -11503,6 +11573,8 @@
         "place_id": "tartessos",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "She is not truly Conciatta. The aspect the characters seek faded a century ago and became glamour, after pining for what she gave up and dying a second death; the true one had come back centuries ago to keep a bargain with the king. If reminded of her love for Currito she is released, and takes her role to be reunited with her sisters (pp. 38-39).\n\nOn leaving Tartessos her essence goes into the book Bruja gives: a quality 7 tractatus on Faerie Lore in somewhat archaic Hermetic Latin. The one given it gains one of her breakthroughs as a charm (Realms of Power: Faerie pp. 39, 104), usable while he carries the book and keeps it secret (p. 45)."
       },
       {
@@ -12006,7 +12078,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Creo or Rego Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "8d9728dd455b"
+            "id": "3345c434b901"
           },
           {
             "name": "Eidolon",
@@ -12020,7 +12092,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will, and she always keeps it. Realms of Power: Magic p. 102.",
-            "id": "47c92233a3c8"
+            "id": "6be7ce4bdf5a"
           },
           {
             "name": "Ghost Touch",
@@ -12034,7 +12106,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: moves objects not held or fastened down, 5 pounds for 1 Might point, doubling with each further point. In constant use, mostly beyond her control, and often drains her Might. Init 0 minus the points spent. Realms of Power: Magic p. 102.",
-            "id": "ed6e38892dde"
+            "id": "f6b869e72441"
           },
           {
             "name": "Master of Vim",
@@ -12048,7 +12120,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: changes or destroys weak sources of magic she can perceive, as any Muto or Perdo Vim effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "c641e09d764c"
+            "id": "183f75c3450e"
           },
           {
             "name": "Hell's Onslaught",
@@ -12062,7 +12134,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: as Pilum of Fire, +15 damage. Excess levels lower its cost, raise its initiative and master it, so she can loose two bolts together.",
-            "id": "6c844050cb12"
+            "id": "d37a905777f1"
           },
           {
             "name": "Master of Stone",
@@ -12076,7 +12148,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Muto or Perdo Terram effect of level 25 or less, at 1 Might point a magnitude. Init 0 minus the points spent.",
-            "id": "54fb21d8b8fe"
+            "id": "1711c928b376"
           }
         ],
         "vis": [],
@@ -12088,6 +12160,8 @@
         "place_id": "the_narixa_caves",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "She mocks the visitors and says the Order's rules no longer bind her. If the host of the Divine aspect is there, she offers to let the others go for one life; she will not keep her word. Soon bored, she sends in her army. She watches for hastily drawn circles and breaks them with Master of Stone, and does not trust her penetration against Parma Magica (p. 44).\n\nShe will fight to the death. Her Might makes wards a hard way to bind her, and the troupe should be creative: holy relics; Perdo Vim to lower her Might; intense cold may harm her and force her to submit (pp. 44-45)."
       },
       {
@@ -12271,7 +12345,7 @@
             "attack": null,
             "defense": 0,
             "damage": null,
-            "id": "2988a15e727a"
+            "id": "9be757858d3b"
           }
         ],
         "soak": 0,
@@ -12449,7 +12523,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: illusory props and sounds, as any Creo or Rego Imaginem effect of level 10 or less, at 1 Might point a magnitude. Never truly lifelike: they convey an idea or feeling. Init 0 minus the points spent.",
-            "id": "6deb6ea5d135"
+            "id": "b862579f1869"
           },
           {
             "name": "Eidolon",
@@ -12463,7 +12537,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: an illusory form both seen and heard, made and unmade at will. Realms of Power: Magic p. 102.",
-            "id": "93b7e343793f"
+            "id": "778d68d017a1"
           },
           {
             "name": "Master of Illusion",
@@ -12477,7 +12551,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: alters the look of what he touches, as any Muto or Perdo Imaginem effect of level 10 or less, at 1 Might point a magnitude, always like stage props, scenery or costume. Init 0 minus the points spent.",
-            "id": "b5a0680f9b99"
+            "id": "72b079ad4ffc"
           }
         ],
         "vis": [],
@@ -12489,6 +12563,8 @@
         "place_id": "the_roman_theater_of_qadis",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "He remembers Conciatta and her quest for Tartessos. He taught her and Currito, with other spirits of Qadis, over a year, and under him they made a set of stones that added power to their magic; he offers the magi the same teaching. He can say how to reach Tartessos: only on the anniversary of its loss, a night the storyguide sets, and they must find Bruja out on the marsh (pp. 34-35).\n\nThe stones are ceremonial casting props (Houses of Hermes: Societates p. 59). A season of Magic Lore under him is a source of insight for Insight of the Realms, +10 to the initial roll. The maga must then enchant Clearing the Mind of the Caster, PeIm (Vi) 30, Pen +0, 1/day (R Touch, D Ring, T Circle): fifteen slate tablets, laced with leather and each carved with a symbol, laid around the caster in three rounds. Sensations not of the Magic realm are dulled as they cross in, though she may still attend to them; +1 to Concentration for activities wholly within, +3 as props in ceremonial casting. Re-creating it gives 6 points toward Insight of the Realms (p. 33)."
       },
       {
@@ -12621,7 +12697,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 3,
-            "id": "d9c7cc8b6789"
+            "id": "25bc926188c5"
           }
         ],
         "soak": 2,
@@ -12715,7 +12791,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Greater Power: a brewed potion adds Threshold Points to a character's Threshold Total, 1 Might point each. The character must already have a Threshold Total, and she cannot supply all the points needed. Init is its magnitude divided by 2.",
-            "id": "729e167f4243"
+            "id": "97b7d38d055b"
           },
           {
             "name": "The Malicious Brew",
@@ -12729,7 +12805,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: brews any Perdo Corpus effect with an Individual target up to 9th magnitude into a poison, Might points equal to magnitude. It grows toward a set moment (sunset, full moon, cockcrow), giving time for a cure. Intelligence + Medicine simple roll against 9 tells how long the target has. She regains the Might when the effect ends.",
-            "id": "6aa590d725a4"
+            "id": "526a0fc0419c"
           },
           {
             "name": "The Merciful Brew",
@@ -12743,7 +12819,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lesser Power: a healing potion, as Purification of the Festering Wounds but with a Duration of Season, so it serves those recovering from heavy wounds. It instantly relieves a Malicious Brew. Might points equal to magnitude, regained when the effect ends.",
-            "id": "dc209a0a1a52"
+            "id": "ef9ba62c23aa"
           }
         ],
         "vis": [
@@ -12751,7 +12827,7 @@
             "pawns": 3,
             "art": "Aquam",
             "where": "in her legs",
-            "id": "5b83c71cca8c"
+            "id": "a082cf207bf1"
           }
         ],
         "equipment": "",
@@ -12762,6 +12838,8 @@
         "place_id": "the_guadalquivir_marshes",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "She will lead the characters to the gates if given a creature or herb not found in her marsh. She keeps no stock of potions, and brews each with spent Might; the Threshold draught is likely a live frog to be swallowed whole. Arganthonios can command her to give safe passage on a later visit (pp. 35-36, 39)."
       },
       {
@@ -12949,7 +13027,7 @@
             "attack": 6,
             "defense": 4,
             "damage": 4,
-            "id": "6960f74cde50"
+            "id": "c8f57c581494"
           },
           {
             "name": "Long spear",
@@ -12957,7 +13035,7 @@
             "attack": 9,
             "defense": 5,
             "damage": 11,
-            "id": "5636bfc8c05b"
+            "id": "02dd24e668df"
           }
         ],
         "soak": 5,
@@ -13079,7 +13157,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual; no Hermetic equivalent. Enforces an oath freely sworn between two or more parties, penetrating the Magic Resistance of all. If one acts against it the others know at once. A human oath-breaker sees Arganthonios in every reflective surface; one who ignores that is struck blind, as the Flaw. That ends through powers that destroy mystical effects, by fulfilling the oath, by a new oath with the wronged faerie, or by destroying all the oath's other parties. Faeries cannot break oaths, though some roles seek loopholes.",
-            "id": "96445eceb9f1"
+            "id": "5e9ae43ca8d5"
           }
         ],
         "vis": [
@@ -13087,7 +13165,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in the crown he wears",
-            "id": "68d8fece0aa6"
+            "id": "740e4bcc6e6c"
           }
         ],
         "equipment": "A silver crown of laurel leaves, too large for a mortal head. A great spear with a silver shaft, an ivory head and a binding hung with peacock feathers.",
@@ -13098,6 +13176,8 @@
         "place_id": "tartessos",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Alone but for his queen, it is his nature to endure loss, and he frees her freely (p. 38). He made a bargain with Conciatta: she would rule beside him for knowledge of Faerie places, at the cost of renouncing her love for Currito. He explains what became of her, and offers that if the characters reunite this remnant with that love, he will release her to the world of men. If they cannot meet it yet, he gives them leave to go and return, and commands Bruja to grant safe passage (pp. 38-39)."
       },
       {
@@ -13285,7 +13365,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 0,
-            "id": "0423ec35a4b3"
+            "id": "fca771ba58f4"
           }
         ],
         "soak": 4,
@@ -13372,7 +13452,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sees through the boundaries between regio levels. Improved Powers has brought its cost to 0 and raised its initiative.",
-            "id": "51d0e3d774ee"
+            "id": "63372a515792"
           }
         ],
         "vis": [],
@@ -13384,6 +13464,8 @@
         "place_id": "the_narixa_caves",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -13477,7 +13559,7 @@
             "attack": 9,
             "defense": 3,
             "damage": 3,
-            "id": "196bca43feb1"
+            "id": "c326936d8fbb"
           }
         ],
         "soak": 0,
@@ -13561,6 +13643,8 @@
         "place_id": "the_narixa_caves",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -13875,7 +13959,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: any non-Ritual weather effect up to level 25, at 1 Might per spell magnitude. A Slow Power, taking an extra round to prepare.",
-            "id": "1569e7ecd1a8"
+            "id": "8979dcdbdc81"
           },
           {
             "name": "Raise the Tempest",
@@ -13889,7 +13973,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrAu 50 (base 5, +3 Sight, +1 Concentration, +2 Group, +3 Size), Greater Power, -5 Might from Improved Powers. A hurricane ten miles across, like Wrath of Whirling Winds and Water, which builds over several minutes and dies soon after the power ends.",
-            "id": "ed5e8dbf9dc5"
+            "id": "3d46af3d0513"
           }
         ],
         "vis": [
@@ -13897,7 +13981,7 @@
             "pawns": 4,
             "art": "Auram",
             "where": "in storm spume",
-            "id": "0ad304e19286"
+            "id": "4313490c0bd9"
           }
         ],
         "equipment": "",
@@ -13908,6 +13992,8 @@
         "place_id": "fortunata_s_island",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Bound as guardian by Spell Binding in a carved agate head in the library (pp. 59-60). See the island's secrets for how the binding is built and broken."
       },
       {
@@ -14294,7 +14380,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 30 (base 5, +2 Voice, +3 Moon), Greater Power, -3 Might cost. If it penetrates, a disembodied spirit carries out her commands as best it can. It may try to break free when asked for anything complex, dangerous or against its nature: Intelligence + a fitting Personality Trait against Ease Factor 14 (9 + magnitude of her Might).",
-            "id": "0a601d9ef8f5"
+            "id": "9e3dbff5a352"
           },
           {
             "name": "Control Human",
@@ -14308,7 +14394,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 35 (base 20, +2 Voice, +1 Concentration), Greater Power, -3 Might cost. As Command Spirit, on a person, with the same chance to break free.",
-            "id": "a40cde4368e6"
+            "id": "7ab3951b04ea"
           },
           {
             "name": "Crafter of Illusion",
@@ -14322,7 +14408,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: any Creo or Rego Imaginem spell up to level 25, at 1 Might per magnitude.",
-            "id": "6b84b37df18d"
+            "id": "0b723635c3d6"
           },
           {
             "name": "Greater Eidolon",
@@ -14336,7 +14422,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(In)Im 30 (base 2, +3 Sight, +1 Concentration, +2 move at command, +1 intricacy, +1 Intellego requisite), Greater Power, -3 Might, +1 Init. An image she can see and hear through, anywhere she can see, moving and speaking as she directs even out of sight or after she Travels, until she has no more use for it: a youth in loose robes with short white hair and a high clear voice. In the villa it often appears inside a mirror.",
-            "id": "fd3125fb63a1"
+            "id": "768794150be1"
           },
           {
             "name": "Ghost Touch",
@@ -14350,7 +14436,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-5 points: moves objects not held or fastened down, up to 5 pounds for 1 Might and double for each further point, until released. She cannot use or throw them as weapons.",
-            "id": "3207ce5401e7"
+            "id": "685965e9f507"
           },
           {
             "name": "Travel",
@@ -14364,7 +14450,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe 35 (base 15, +4 Special, as Arcane), Personal Power x2, -3 Might. Brings her to any place she can see, knows well or has an Arcane Connection to, much like a maga's ReCo travel spells.",
-            "id": "f255572db76a"
+            "id": "22148717f6f7"
           }
         ],
         "vis": [
@@ -14372,7 +14458,7 @@
             "pawns": 5,
             "art": "Mentem",
             "where": "in reflections",
-            "id": "0da7fb284f58"
+            "id": "f9518e4bf25a"
           }
         ],
         "equipment": "",
@@ -14383,6 +14469,8 @@
         "place_id": "fortunata_s_villa",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Trapped by Cupressa and Monocaudus in the cleft of a huge boulder until Fortunata freed her and later came back to defeat and bind the beast. She may know what she really is and not be telling, or may truly have forgotten (p. 61). Only she knows the way into the laboratory (p. 62). She cannot force Monocaudus to obey; she can only repeat the old binding words and promise Fortunata's punishments, which feeds his hatred (p. 63)."
       },
       {
@@ -14737,7 +14825,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "e6b5ba63ca5a"
+            "id": "18f4a2be8c16"
           },
           {
             "name": "Fist (Man)",
@@ -14745,7 +14833,7 @@
             "attack": 14,
             "defense": 12,
             "damage": 8,
-            "id": "d9a3d7b9ec0a"
+            "id": "c8ecc5154289"
           },
           {
             "name": "Bite (Man)",
@@ -14753,7 +14841,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 2,
-            "id": "60b644307316"
+            "id": "51a8c9ebce21"
           },
           {
             "name": "Dodge (Serpent)",
@@ -14761,7 +14849,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "c3b8fd3c6e09"
+            "id": "f3d190191d55"
           },
           {
             "name": "Fist (Serpent)",
@@ -14769,7 +14857,7 @@
             "attack": 14,
             "defense": 10,
             "damage": 12,
-            "id": "189f968d408c"
+            "id": "dd2306793a4f"
           },
           {
             "name": "Bite (Serpent)",
@@ -14777,7 +14865,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 6,
-            "id": "3b25dd326ebc"
+            "id": "7d2af8a8a608"
           },
           {
             "name": "Constrict (Serpent)",
@@ -14785,7 +14873,7 @@
             "attack": 12,
             "defense": 7,
             "damage": null,
-            "id": "3a5f6ae56546"
+            "id": "4dd8167de82a"
           }
         ],
         "soak": 10,
@@ -14935,7 +15023,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He may, and is usually forced to, take human form for a Sun or until he ends it. It loses the serpent's Size +2, Str +4 and Qik -2, and has the Large Virtue, Size +1 with no change to his Characteristics. A Slow Power.",
-            "id": "79acf5f912cc"
+            "id": "3503d6e2d54a"
           }
         ],
         "vis": [
@@ -14943,7 +15031,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his tattoos",
-            "id": "17e75c25c1f6"
+            "id": "afee0dbf9eb0"
           }
         ],
         "equipment": "",
@@ -14954,6 +15042,8 @@
         "place_id": "fortunata_s_villa",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Son of Cupressa and Omaion, and with his mother Lucida's tormentor. Fortunata and Lucida hunted and bound him, a Quest of her Initiation of Spirit Familiar (pp. 52, 57). Her summa calls him now human, now serpent, and the reading of his name is uncertain.\n\nMonocaudus' Binding (p. 64): ReMe 55, Touch, Sun, Individual, Pen +32, constant (base 20, +1 Touch, +2 Sun, +4 levels constant, +16 levels Penetration). A tiny enchanted topaz embedded in his chest, which renews the effect if it is ever suppressed. He must obey Fortunata, her continuing commands, or any agent she deputised. Guileful, he is very hard to convince of any new command's authority, even Lucida's. He talks himself out of his duties, and she had to chastise him even in her day. It may be possible, with difficulty, to pose as Fortunata well enough to rule him.\n\nHe does not know what binds him and blames Lucida (p. 64). He has never entered the laboratory (p. 62)."
       },
       {
@@ -15150,7 +15240,7 @@
             "attack": null,
             "defense": 14,
             "damage": null,
-            "id": "9afd3826c713"
+            "id": "e53a55393899"
           },
           {
             "name": "Fist of Flame",
@@ -15158,7 +15248,7 @@
             "attack": 3,
             "defense": 8,
             "damage": 5,
-            "id": "9322dc35e525"
+            "id": "84bf901e667f"
           }
         ],
         "soak": 8,
@@ -15252,7 +15342,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 25 (base 5, +2 Voice, +2 Group), Greater Power, -2 Might cost. As the spell: +10 damage to all in a 60-degree arc as far as her voice carries.",
-            "id": "3a22c3f50257"
+            "id": "e8e4e59e87a6"
           },
           {
             "name": "Continual Flame",
@@ -15266,7 +15356,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 15 (base 3, +1 Touch, +3 Moon), Greater Power, -1 Might cost. Leaves a flame, candle- to torch-sized, on anything she touches, which burns a month with no fuel.",
-            "id": "f8ca798b332c"
+            "id": "2d8ba2efeec3"
           },
           {
             "name": "Crafter of Ignem",
@@ -15280,7 +15370,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power, 1-3 points (15 levels, +1 add 5 to maximum level, +1 Init): any non-Ritual Creo or Rego Ignem spell up to level 15, at 1 Might per magnitude.",
-            "id": "e9edeee971f4"
+            "id": "ff5a8e4badf2"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -15294,7 +15384,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(Re)Ig 25 (base 5, +1 Touch, +2 Sun, +1 requisite), Greater Power, -1 Might cost. Makes and animates a body of elemental fire until the duration ends or she dissolves it. Slain in it she is killed, leaving 2 small rubies holding vis; injured, she can dissolve it to escape death.",
-            "id": "74b4d1b6b3cd"
+            "id": "20c67dc8ff68"
           },
           {
             "name": "Flight of the Hummingbird",
@@ -15308,7 +15398,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReIg 10, Personal Power, -1 Might cost. She flies in any direction by concentrating, and if that lapses she stops but does not fall. The block's reckoning says base 4, +2 Sun, against a printed Duration of Concentration.",
-            "id": "5a4c4ce53848"
+            "id": "8493bb306a85"
           },
           {
             "name": "Hurl Flame",
@@ -15322,7 +15412,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg 10 (base 4, +2 Voice), Greater Power, -1 Might cost. A torch-sized flame from her tiny hands, +5 damage where it strikes.",
-            "id": "25ccf20f27cc"
+            "id": "a80a156593a4"
           }
         ],
         "vis": [
@@ -15330,7 +15420,7 @@
             "pawns": 2,
             "art": "Ignem",
             "where": "in her ruby eyes",
-            "id": "010b6004a97f"
+            "id": "871341584c57"
           }
         ],
         "equipment": "",
@@ -15341,6 +15431,8 @@
         "place_id": "fortunata_s_island",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Bound to protect the island by Spell Binding in a large ruby hidden in the library (p. 66)."
       },
       {
@@ -15481,7 +15573,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIm 25 (base 1, +2 Voice, +1 Concentration, +2 Group, +2 move at command, +1 intricacy), Greater Power, -3 Might, +2 Init. Music or simpler sounds, from one to ten voices. It favours bell chimes and plaintive melodies.",
-            "id": "9fcc28910377"
+            "id": "e62435034bcd"
           }
         ],
         "vis": [
@@ -15489,7 +15581,7 @@
             "pawns": 1,
             "art": "Imaginem",
             "where": "in a chime which falls to the ground",
-            "id": "358e6fb458b2"
+            "id": "506c4aa7615b"
           }
         ],
         "equipment": "",
@@ -15500,6 +15592,8 @@
         "place_id": "fortunata_s_island",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -15700,7 +15794,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Cr(In)Im(Me) 35 (base 2, +2 Voice, +1 Concentration, +2 Group, +2 move at command, +1 intricacy, +1 Intellego requisite; the Mentem requisite is free), Greater Power, -3 Might cost. Believable figures who deal with a victim and companions, guessing by magic what they should say: compare its Perception + Finesse with the victim's roll, usually Perception + Awareness, or another Ability fitting the figure. It must penetrate to take something familiar from a victim, and concentrates a round first, as a Slow Power.",
-            "id": "934188ec16dd"
+            "id": "5904ef3d956c"
           },
           {
             "name": "Warper of Imaginem",
@@ -15714,7 +15808,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Focus Power: any Muto or Rego Imaginem spell up to level 5, for 1 Might.",
-            "id": "f6e6415735d9"
+            "id": "fc2bbce267a4"
           }
         ],
         "vis": [
@@ -15722,7 +15816,7 @@
             "pawns": 1,
             "art": "Imaginem",
             "where": "in a shard of glass",
-            "id": "cdcaf8a29bd5"
+            "id": "3776b75d4f60"
           }
         ],
         "equipment": "",
@@ -15733,6 +15827,8 @@
         "place_id": "fortunata_s_island",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -15916,7 +16012,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Mu(Re)Te 10. Greater Power, -1 Might and +1 Init from Improved Powers.",
-            "id": "9bb11ffed142"
+            "id": "55a3e54e9e42"
           },
           {
             "name": "The Earth's Carbuncle",
@@ -15930,7 +16026,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Re(Mu)Te 15. Greater Power, -2 Might and +1 Init from Improved Powers.",
-            "id": "3e26e9b9e213"
+            "id": "1ee98a2cc05b"
           },
           {
             "name": "Hands of the Grasping Earth",
@@ -15944,7 +16040,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, Re(Mu)Te 15. Greater Power, -2 Might and +1 Init from Improved Powers.",
-            "id": "af6aad9bcebc"
+            "id": "4a84faf743c8"
           },
           {
             "name": "Pit of the Gaping Earth",
@@ -15958,7 +16054,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell, reduced to Range Touch, PeTe 10. Greater Power, -1 Might and +1 Init from Improved Powers.",
-            "id": "7ea962772c67"
+            "id": "6f46d4e0ad4b"
           },
           {
             "name": "Sense the Feet That Tread the Earth",
@@ -15972,7 +16068,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InTe 25 (base 4, +1 Touch, +1 Part, +3 Size), Greater Power, -3 Might, +2 Init. By thought alone he feels what moves on the ground within a mile, enough for the whole island: direction, distance, weight, number and manner of movement.",
-            "id": "6381f13c7e8c"
+            "id": "2b6daeed96df"
           }
         ],
         "vis": [
@@ -15980,7 +16076,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "in sharp flints",
-            "id": "7fe936368416"
+            "id": "4385c0c9041f"
           }
         ],
         "equipment": "",
@@ -15991,6 +16087,8 @@
         "place_id": "fortunata_s_island",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Bound by Spell Binding in a leaden plumb-weight hidden in the library (p. 69)."
       },
       {
@@ -16297,7 +16395,7 @@
             "attack": 21,
             "defense": 13,
             "damage": 9,
-            "id": "efdc8faf4087"
+            "id": "181e5f7ebd1a"
           }
         ],
         "soak": 12,
@@ -16377,7 +16475,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 6 points, Init is minus the Might cost, form variable. Duplicates any spell of snow, ice or cold of level 30 or less, at 1 Might per magnitude. A Focus Power: 5 mastery points raise the maximum level.",
-            "id": "4889b04435b1"
+            "id": "611f66a77b56"
           }
         ],
         "vis": [
@@ -16385,7 +16483,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "feathers",
-            "id": "804575f56fcd"
+            "id": "0ae0b32efafa"
           }
         ],
         "equipment": "",
@@ -16396,6 +16494,8 @@
         "place_id": "vari_a_s_tomb",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -16682,7 +16782,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "8194839953a1"
+            "id": "fc795cca1200"
           }
         ],
         "soak": -1,
@@ -16762,7 +16862,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Malus's power, but only for the Hortulus tribe.",
-            "id": "0ef0159dbb72"
+            "id": "e70c926b9da4"
           },
           {
             "name": "Healing",
@@ -16776,7 +16876,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target's worst wound improves by one level at once. The points come from Might Score, not the pool (Realms of Power: Magic p. 39). Ritual Power x2.",
-            "id": "12b06b63fe0a"
+            "id": "be016518173d"
           }
         ],
         "vis": [
@@ -16784,7 +16884,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "seeds",
-            "id": "15c493dc42a4"
+            "id": "d0d90c9fbce9"
           }
         ],
         "equipment": "",
@@ -16795,6 +16895,8 @@
         "place_id": "h_risson_s_garden",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17042,7 +17144,7 @@
             "attack": null,
             "defense": 10,
             "damage": null,
-            "id": "ce9bc95c0834"
+            "id": "4f1574d86e97"
           }
         ],
         "soak": 2,
@@ -17129,7 +17231,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Corpus or Animal. Deadly to all who hear it; deafness is a sound defense. Unlike a Mandrake of Virtue it can do this at any time. PeCo(An) 50 (Base 30, +3 Sound, +1 Animal requisite): Greater Power (50 levels), Improved Powers (5 mastery points, +3 Init, -2 Might cost).",
-            "id": "d0a662985d47"
+            "id": "a16e288a62ca"
           },
           {
             "name": "Rally the Wooden Troops",
@@ -17143,7 +17245,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Malus's power, but only for the Venenarium tribe.",
-            "id": "a6100dc6d2a6"
+            "id": "a2637e4fdd7b"
           },
           {
             "name": "Unwholesome Lust",
@@ -17157,7 +17259,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target burns with lust for someone the plant picks as it acts, and can do nothing but pursue them until it ends. CrMe 20 (Base 4, +2 Voice, +2 Sun): Greater Power (20 levels, -5 for Reduced Powers, -1 Might cost).",
-            "id": "67e76af51779"
+            "id": "14b5262928ad"
           }
         ],
         "vis": [
@@ -17165,7 +17267,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "root",
-            "id": "83fd6a0ca51a"
+            "id": "c6c209b955e8"
           }
         ],
         "equipment": "",
@@ -17176,6 +17278,8 @@
         "place_id": "h_risson_s_garden",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -17408,7 +17512,7 @@
             "attack": 9,
             "defense": 6,
             "damage": 12,
-            "id": "274eb7e94329"
+            "id": "cc8872372ce4"
           }
         ],
         "soak": 12,
@@ -17474,7 +17578,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sets nearby trees and plants walking; in this Garden they also gain Cunning 0. Up to 10 Groups of Herbam: 10,000 herbs (Size -6), 100 bushes (Size 0), 10 small trees (Size +3) or one 25-foot tree (Size +6). May fire as many times a round as the Mastery Ability, paying Might each time. Malus can move only Curtilagium plants. ReHe 35 (Base 5, +1 Touch, +2 Sun, +2 Group, +1 Size): Greater Power (35 levels, -2 Might cost, Multicast mastery power).",
-            "id": "ed62b0634f91"
+            "id": "7230a0637b06"
           },
           {
             "name": "Creeping Chasm",
@@ -17488,7 +17592,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Thrusts its roots deep and duplicates the spell of the same name. ReTe 35: Greater Power (35 levels, +3 Init).",
-            "id": "8940b8b9ffb9"
+            "id": "8a21b43fe8ad"
           }
         ],
         "vis": [
@@ -17496,7 +17600,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "apples",
-            "id": "fda7011fbd63"
+            "id": "e70197fdf59f"
           }
         ],
         "equipment": "",
@@ -17507,6 +17611,8 @@
         "place_id": "h_risson_s_garden",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Its powers fail it near fire, and it keeps well away from any flame."
       },
       {
@@ -17784,7 +17890,7 @@
             "attack": 13,
             "defense": 13,
             "damage": 7,
-            "id": "8e87872c8e14"
+            "id": "7b3618d836d2"
           }
         ],
         "soak": 13,
@@ -17850,7 +17956,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Weaves up to eight limbs from its tendrils, and may be treated as a trained group of four, adding +12 to Attack or Defense. Every two limbs strangling shrink the group by one. Cr(Re)He 10 (Base 1, +2 Sun, +2 Group, +1 requisite): Lesser Power (10 levels, -2 Might cost, +1 Init).",
-            "id": "7348c54012dc"
+            "id": "183e3b0e1aed"
           },
           {
             "name": "Strangle the Life",
@@ -17864,7 +17970,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Fingers of wire close on the throat and drain life. Each round the victim makes a Deprivation roll against an Ease Factor of Dodder's Strength roll. Up to eight at once, a limb each. To escape, beat its Grapple Attack with your own. PeCo 30 (Base 10, +1 Touch, +1 Conc, +2 Group): Greater Power (30 levels, -2 Might cost, +2 Init).",
-            "id": "509a47d7ae56"
+            "id": "5c2109ac4b78"
           },
           {
             "name": "Wear Corpse",
@@ -17878,7 +17984,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Worms into a human corpse of Size -1 to +1, moves it, and keeps it from decay. It can use its other powers inside, but cannot heal the corpse, or pass as human for long. Re(Cr)Co 35 (Base 10, +1 Touch, +2 Sun, +1 constant, +1 requisite): Greater Power (35 levels, -3 Might cost).",
-            "id": "3128652cf9d4"
+            "id": "4803afb04af4"
           }
         ],
         "vis": [
@@ -17886,7 +17992,7 @@
             "pawns": 5,
             "art": "Perdo",
             "where": "tendrils",
-            "id": "ce3c389ddb09"
+            "id": "19770a078769"
           }
         ],
         "equipment": "",
@@ -17897,6 +18003,8 @@
         "place_id": "h_risson_s_garden",
         "place_level": 1,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18071,7 +18179,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. Any non-ritual Creo or Rego Aquam spell of level 20 or less, one Might point per magnitude. Present throughout the valley, it can make most effects Personal or Touch.",
-            "id": "b1378eb62517"
+            "id": "e6039a015340"
           },
           {
             "name": "Emissary of Foam and Sand",
@@ -18085,7 +18193,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Aquam and Terram. Shapes within itself a human form of sand and water that speaks and handles things slowly and clumsily. Inanimate, it cannot be hurt as a creature can, but a strong current or a large object disperses it. It may leave the valley, though the spirit cannot perceive or control it more than a little way past its borders. (Base 5, +1 Conc, +1 Part, +1 Rego requisite, Terram requisite free; Lesser Power, 1 Mastery Point to lower Might; cost 20.)",
-            "id": "e30bf8349fa0"
+            "id": "8a82cda006ad"
           },
           {
             "name": "Master of Water",
@@ -18099,7 +18207,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points. Any non-ritual Muto or Perdo Aquam spell of level 20 or less, one Might point per magnitude. As Crafter of Water for Range.",
-            "id": "6361c8476169"
+            "id": "5911daebcd81"
           },
           {
             "name": "Presence",
@@ -18113,7 +18221,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Aware of all that passes in the valley, and present everywhere in it (Realms of Power: Magic pp. 103, 106).",
-            "id": "a4facad9308a"
+            "id": "b48ba308605c"
           }
         ],
         "vis": [
@@ -18121,7 +18229,7 @@
             "pawns": 2,
             "art": "Aquam",
             "where": "stones buried in the grotto, each year",
-            "id": "3d89071882c9"
+            "id": "756579ab6cac"
           }
         ],
         "equipment": "",
@@ -18132,6 +18240,8 @@
         "place_id": "the_aquatic_valley",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "It cares little for the mannequin. Disturbing the old ships or destroying the ghosts for good it takes as an attack on itself. If it hears of such plans it will try to bargain, without much hope, reading every offer and motive in the bleakest light."
       },
       {
@@ -18200,7 +18310,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 6,
-            "id": "d81094de1908"
+            "id": "371761308925"
           },
           {
             "name": "Javelin",
@@ -18208,7 +18318,7 @@
             "attack": 4,
             "defense": 5,
             "damage": 7,
-            "id": "e0f0d1286efe"
+            "id": "501fbd8ede8b"
           }
         ],
         "soak": 4,
@@ -18302,7 +18412,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory image of its former self, moving and speaking as it directs. It cannot help making one: remade each morning, lasting until a temporary end in battle or the next morning (Realms of Power: Magic p. 102).",
-            "id": "55e06f3ffe37"
+            "id": "adebbf6b5bed"
           },
           {
             "name": "Ghost Touch",
@@ -18316,7 +18426,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable points, Init -1 minus points spent. Moves objects not held or fastened: 1 point for five pounds, each further point doubling it. Hurled, Thrown Weapon and +5 damage a point. It can fight with an object on its usual totals, though it rarely does, keeping this for handling things (Realms of Power: Magic p. 102).",
-            "id": "126eb240edab"
+            "id": "38b3d504f5e0"
           },
           {
             "name": "Strike",
@@ -18330,7 +18440,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For one Diameter its sword strikes as a material object. The attack is magical and must penetrate Magic Resistance. Lesser Power with no direct Hermetic equivalent, treated as level 15; 2 Mastery Points reduce the cost.",
-            "id": "b490642367c7"
+            "id": "d7bf6d03b9d2"
           }
         ],
         "vis": [],
@@ -18342,6 +18452,8 @@
         "place_id": "the_aquatic_valley",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Vis: none in the spirit. When truly destroyed, not merely slain in the daily battle, 1 pawn of Mentem vis appears in the wreck of its ship, and the ship mends a little toward what it was before it sank."
       },
       {
@@ -18388,7 +18500,7 @@
             "attack": 6,
             "defense": 3,
             "damage": 11,
-            "id": "f47df33ad362"
+            "id": "65be6bc14e0a"
           },
           {
             "name": "Crossbow",
@@ -18396,7 +18508,7 @@
             "attack": 4,
             "defense": -1,
             "damage": 7,
-            "id": "6f2ef6e39654"
+            "id": "c164f2b439fe"
           }
         ],
         "soak": 0,
@@ -18430,6 +18542,8 @@
         "place_id": "the_sunken_laboratory_of_hermanus",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -18514,7 +18628,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 5,
-            "id": "5bcba6b929ed"
+            "id": "c0a10701a722"
           }
         ],
         "soak": 0,
@@ -18629,7 +18743,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves objects not held or fastened down; so they work the Staves of the Wooden Soldiers.",
-            "id": "31b1d0422f51"
+            "id": "bb5352a922ea"
           },
           {
             "name": "Ghostly Tongues",
@@ -18643,7 +18757,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes sound as if it had a body with a voice.",
-            "id": "d5d1d1e7c664"
+            "id": "72cb66997608"
           }
         ],
         "vis": [
@@ -18651,7 +18765,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "the statue in the sanctum",
-            "id": "c65785792894"
+            "id": "59efaf429684"
           }
         ],
         "equipment": "",
@@ -18662,6 +18776,8 @@
         "place_id": "laboratory_of_hermanus_sanctum",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Bound by old agreements with Hermanus to defend the complex, they know its defenses and devices well. Summoned by the Statue of Conjured Assistants, they go first to the receiving room for the Staves, then use the mannequins to carry justiciars and sentinels about against the intruders, keeping as far from magi as they can, perhaps slipping outside to act only through the dolls. If the mannequins of the spare laboratory are destroyed and they still hold the Staves, they will fetch Arcane Connections from the store room pair.\n\nIn the laboratory proper they find they can trigger the Butterfly's Gaze and the Tapestry of Confident Possession at will, and use them to fire any justiciar that helps. Once the ward against magical creatures is down they might, as a last resort, use the Helm of Unravelling, but are likelier to teach its use to any non-magus they think is under the Cross of the Preempted Conflict (errata p. 79).\n\nThey will not die for the laboratory. If destruction can be avoided only by flight or surrender they do that; if magi clearly mean to destroy them they leave and go overland to Coeris to warn the House. That takes a season, with finding it, drawing notice from outside its Aegis of the Hearth, and proving their good will. Entering the spare laboratory while the Hourglass or Prison stands there would trap them."
       },
       {
@@ -18746,7 +18862,7 @@
             "attack": 6,
             "defense": 6,
             "damage": 5,
-            "id": "3658fc3c10d2"
+            "id": "8a2a7e0b8013"
           }
         ],
         "soak": 0,
@@ -18861,7 +18977,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves objects not held or fastened down; so they work the Staves of the Wooden Soldiers.",
-            "id": "e66d02181727"
+            "id": "2e742eb7c711"
           },
           {
             "name": "Ghostly Tongues",
@@ -18875,7 +18991,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes sound as if it had a body with a voice.",
-            "id": "3f28a6686c1f"
+            "id": "194ee3fbf8b9"
           }
         ],
         "vis": [
@@ -18883,7 +18999,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "the statue in the sanctum",
-            "id": "b1846f81117a"
+            "id": "2b4d7a6d4a4e"
           }
         ],
         "equipment": "",
@@ -18894,6 +19010,8 @@
         "place_id": "laboratory_of_hermanus_sanctum",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Bound by old agreements with Hermanus to defend the complex, they know its defenses and devices well. Summoned by the Statue of Conjured Assistants, they go first to the receiving room for the Staves, then use the mannequins to carry justiciars and sentinels about against the intruders, keeping as far from magi as they can, perhaps slipping outside to act only through the dolls. If the mannequins of the spare laboratory are destroyed and they still hold the Staves, they will fetch Arcane Connections from the store room pair.\n\nIn the laboratory proper they find they can trigger the Butterfly's Gaze and the Tapestry of Confident Possession at will, and use them to fire any justiciar that helps. Once the ward against magical creatures is down they might, as a last resort, use the Helm of Unravelling, but are likelier to teach its use to any non-magus they think is under the Cross of the Preempted Conflict (errata p. 79).\n\nThey will not die for the laboratory. If destruction can be avoided only by flight or surrender they do that; if magi clearly mean to destroy them they leave and go overland to Coeris to warn the House. That takes a season, with finding it, drawing notice from outside its Aegis of the Hearth, and proving their good will. Entering the spare laboratory while the Hourglass or Prison stands there would trap them."
       },
       {
@@ -19038,7 +19156,7 @@
             "attack": 10,
             "defense": 9,
             "damage": 1,
-            "id": "5206ddbef50d"
+            "id": "a7f9bbb63c02"
           }
         ],
         "soak": 7,
@@ -19104,7 +19222,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes outright a human who meets its gaze. Base 5, +1 Eye, +1 Concentration.",
-            "id": "072df23c7cef"
+            "id": "256afc947082"
           },
           {
             "name": "Grasp Ghosts",
@@ -19118,7 +19236,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Seizes a ghost and drags it to the castle, where a ring of hounds keeps it from leaving. Base 5, +1 Touch, +2 Sun.",
-            "id": "4035f1ccce01"
+            "id": "1bbe2100513c"
           },
           {
             "name": "Hands of the Animal",
@@ -19132,7 +19250,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant. Carries and handles a thing as if with human hands of Strength +5. It must concentrate to do more than carry, to drop a thing, or to take up another. Base 3 (ReTe), +1 Touch, +2 Sun, +1 constant.",
-            "id": "1604c463224d"
+            "id": "dc87a3c3f87e"
           }
         ],
         "vis": [
@@ -19140,7 +19258,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in finial",
-            "id": "31a08f736b8a"
+            "id": "e9a83ac64dd9"
           }
         ],
         "equipment": "",
@@ -19151,6 +19269,8 @@
         "place_id": "the_wreck_of_thomae_s_castle",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "They guard the line between home and away from home, and the Santa Lucians, by moving, are crossing it. So they kill those hauling goods, and drag bodies and ghosts back to be 'at home' in the courtyard. See Flights of Fancy."
       },
       {
@@ -19303,7 +19423,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 3,
-            "id": "5e5c73406def"
+            "id": "7f091c35b71c"
           },
           {
             "name": "Grapple",
@@ -19311,7 +19431,7 @@
             "attack": 2,
             "defense": 7,
             "damage": null,
-            "id": "68cd2604fb75"
+            "id": "825bfcd101f0"
           },
           {
             "name": "Large Claws",
@@ -19319,7 +19439,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 6,
-            "id": "7597107d223f"
+            "id": "b763b186a892"
           }
         ],
         "soak": 1,
@@ -19399,7 +19519,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "heart",
-            "id": "bc29f91bd5f7"
+            "id": "c3d6d883c80c"
           }
         ],
         "equipment": "",
@@ -19410,6 +19530,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -19638,7 +19760,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 8,
-            "id": "61a9937e0851"
+            "id": "9db82a4805a9"
           },
           {
             "name": "Grapple",
@@ -19646,7 +19768,7 @@
             "attack": 7,
             "defense": 9,
             "damage": null,
-            "id": "18a35e6f7c50"
+            "id": "aee529f65324"
           },
           {
             "name": "Large Claws",
@@ -19654,7 +19776,7 @@
             "attack": 14,
             "defense": 12,
             "damage": 8,
-            "id": "11ecf98167cc"
+            "id": "8b1bb310298c"
           }
         ],
         "soak": 7,
@@ -19755,7 +19877,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "7c7e25ee2e4f"
+            "id": "31df952eab69"
           }
         ],
         "vis": [
@@ -19763,7 +19885,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "heart",
-            "id": "b5e05fc778e9"
+            "id": "6c3abd36c7a4"
           }
         ],
         "equipment": "",
@@ -19774,6 +19896,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20142,7 +20266,7 @@
             "attack": 15,
             "defense": 14,
             "damage": 11,
-            "id": "03e362875a6a"
+            "id": "681549b5f0a1"
           },
           {
             "name": "Grapple",
@@ -20150,7 +20274,7 @@
             "attack": 12,
             "defense": 11,
             "damage": null,
-            "id": "f6b9d86265b6"
+            "id": "8bb46dfb5fe8"
           },
           {
             "name": "Large Claws",
@@ -20158,7 +20282,7 @@
             "attack": 17,
             "defense": 16,
             "damage": 20,
-            "id": "b5ba4d10da35"
+            "id": "b323d521ca71"
           }
         ],
         "soak": 11,
@@ -20259,7 +20383,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "7c7e25ee2e4f"
+            "id": "31df952eab69"
           }
         ],
         "vis": [
@@ -20267,7 +20391,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "heart",
-            "id": "a12858ffcd54"
+            "id": "ea10b1364085"
           }
         ],
         "equipment": "",
@@ -20278,6 +20402,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20430,7 +20556,7 @@
             "attack": 5,
             "defense": 8,
             "damage": 3,
-            "id": "34be751ad267"
+            "id": "11946cf781b0"
           },
           {
             "name": "Grapple",
@@ -20438,7 +20564,7 @@
             "attack": 4,
             "defense": 9,
             "damage": null,
-            "id": "48a430df4008"
+            "id": "6d667eb81b1e"
           },
           {
             "name": "Large Claws",
@@ -20446,7 +20572,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 6,
-            "id": "ab04031b7895"
+            "id": "eb6811a0651c"
           }
         ],
         "soak": 3,
@@ -20526,7 +20652,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "heart",
-            "id": "f6f00395b200"
+            "id": "f493e1fd28f3"
           }
         ],
         "equipment": "",
@@ -20537,6 +20663,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -20765,7 +20893,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 8,
-            "id": "57f71ee89c35"
+            "id": "921db9b4adad"
           },
           {
             "name": "Grapple",
@@ -20773,7 +20901,7 @@
             "attack": 9,
             "defense": 11,
             "damage": null,
-            "id": "fb96cd2ee935"
+            "id": "dd7c68209426"
           },
           {
             "name": "Large Claws",
@@ -20781,7 +20909,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 8,
-            "id": "bc8806cdb4fc"
+            "id": "476e825189d8"
           }
         ],
         "soak": 9,
@@ -20882,7 +21010,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "7c7e25ee2e4f"
+            "id": "31df952eab69"
           }
         ],
         "vis": [
@@ -20890,7 +21018,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "heart",
-            "id": "21e0572ff4ab"
+            "id": "0068ff4a53fa"
           }
         ],
         "equipment": "",
@@ -20901,6 +21029,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21269,7 +21399,7 @@
             "attack": 14,
             "defense": 13,
             "damage": 8,
-            "id": "97136404217a"
+            "id": "105768059a61"
           },
           {
             "name": "Grapple",
@@ -21277,7 +21407,7 @@
             "attack": 15,
             "defense": 15,
             "damage": null,
-            "id": "74a166f506a0"
+            "id": "161759ac9e34"
           },
           {
             "name": "Large Claws",
@@ -21285,7 +21415,7 @@
             "attack": 16,
             "defense": 15,
             "damage": 11,
-            "id": "a7dc5508b379"
+            "id": "93f08048ada4"
           },
           {
             "name": "Large Horns",
@@ -21293,7 +21423,7 @@
             "attack": 17,
             "defense": 18,
             "damage": 16,
-            "id": "1ee8f0561542"
+            "id": "a0b5b186d977"
           }
         ],
         "soak": 15,
@@ -21394,7 +21524,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A catch-all: griffons find, dig out and work gold with it, and it is what let them hole the side of the tower.",
-            "id": "7c7e25ee2e4f"
+            "id": "31df952eab69"
           }
         ],
         "vis": [
@@ -21402,7 +21532,7 @@
             "pawns": 6,
             "art": "Animal",
             "where": "heart",
-            "id": "0aff2403eed0"
+            "id": "b4918fd71514"
           }
         ],
         "equipment": "",
@@ -21413,6 +21543,8 @@
         "place_id": "the_griffons_nest_of_gold",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21528,6 +21660,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "One of the ghosts in The Names of Ghosts, where she annotated him 'Sumerian?'. She would call him, have him read scrolls aloud, and follow by Thoughts Within Babble, transcribing, or studying from his voice as from the text. The book prints no haunt for him."
       },
       {
@@ -21626,7 +21760,7 @@
             "attack": 5,
             "defense": 1,
             "damage": 3,
-            "id": "80ebe77ea796"
+            "id": "aa3300801a3c"
           },
           {
             "name": "Dodge",
@@ -21634,7 +21768,7 @@
             "attack": null,
             "defense": 2,
             "damage": null,
-            "id": "094f02ea17c0"
+            "id": "78991c1b4350"
           }
         ],
         "soak": 5,
@@ -21697,6 +21831,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -21857,7 +21993,7 @@
             "attack": 11,
             "defense": 8,
             "damage": 7,
-            "id": "86e65fa47cb6"
+            "id": "952b6de4f622"
           },
           {
             "name": "Dodge",
@@ -21865,7 +22001,7 @@
             "attack": null,
             "defense": 2,
             "damage": null,
-            "id": "f7ef645c9e58"
+            "id": "73e6322d0f8b"
           }
         ],
         "soak": 6,
@@ -21935,6 +22071,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -22208,7 +22346,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its freezing touch does +10 damage, and metal armor gives no benefit against it.",
-            "id": "400ef45dac37"
+            "id": "9bce66a77de0"
           },
           {
             "name": "Charge of the Angry Winds",
@@ -22222,7 +22360,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell of that name, adding the elemental's Strength to every Ease Factor for acting within the wind.",
-            "id": "7537baf96197"
+            "id": "7a10f27acf39"
           },
           {
             "name": "Drown",
@@ -22236,7 +22374,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "It wraps a victim and fills her lungs with ice, forcing a Deprivation roll (ArM5 pp. 180-181). She may break free by the Grappling rules (ArM5 p. 174).",
-            "id": "193559153ba5"
+            "id": "e4e83bfccbe8"
           }
         ],
         "vis": [
@@ -22244,7 +22382,7 @@
             "pawns": 4,
             "art": "Auram",
             "where": "body",
-            "id": "2d7876d9b55a"
+            "id": "6ac61a4e089d"
           }
         ],
         "equipment": "",
@@ -22255,6 +22393,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -22321,7 +22461,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "3d450ef2844b"
+            "id": "6c24db970cbd"
           }
         ],
         "soak": 7,
@@ -22366,7 +22506,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives it a body, a spiked ball of icicles a yard wide. Forming takes a round; it can shed the body almost at once.",
-            "id": "7e62d9c6902a"
+            "id": "1b79fad3ebd4"
           },
           {
             "name": "Elemental Control of Air",
@@ -22380,7 +22520,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any Creo, Muto or Rego Auram effect at 1 Might a magnitude (variable cost), minor effects only, of level no more than its Might Score. It hides paths, wipes footprints, cuts visibility and smothers cries for help to part stragglers from a group.",
-            "id": "37c1c9ac5331"
+            "id": "93702d86f32d"
           },
           {
             "name": "Envisioning",
@@ -22394,7 +22534,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Small changes to a victim's dreams, making them darker and more ominous.",
-            "id": "629e22816ff7"
+            "id": "2dd5557d18dd"
           },
           {
             "name": "Obsession",
@@ -22408,7 +22548,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and the demon spends Might in reply, it may force spiritual doubt. At the next crisis of worthiness the storyguide rolls a simple die +3, the player a simple die + a suitable Personality Trait, with adjustments for a harsh environment. If the demon's total is higher the character gains Doubt +1. Acting on that score puts him in a state of sin, and the demon coagulates and kills him.",
-            "id": "e09653f39419"
+            "id": "d3aac841351e"
           }
         ],
         "vis": [
@@ -22416,7 +22556,7 @@
             "pawns": 2,
             "art": "",
             "where": "body",
-            "id": "a8d9cd455c6a"
+            "id": "69eff5f2f654"
           }
         ],
         "equipment": "",
@@ -22427,6 +22567,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       }
     ],
@@ -22466,7 +22608,9 @@
     "players": [],
     "app_version": "",
     "saved_by": "",
-    "marriages": []
+    "marriages": [],
+    "maps": [],
+    "pins": []
   },
   "key": "legends_of_hermes",
   "book": "LoH",

@@ -10,9 +10,12 @@ from .builder import Builder, dormant, paragraphs
 
 
 def build(b: Builder) -> None:
-    b.faction(
+    # Each is one vast spirit, so a Bestiary creature, not a faction; the
+    # books give it no statistics, so none are entered.
+    b.creature(
         "The Great Hunger",
-        summary=paragraphs(
+        page="Between Sand and Sea pp. 7-8; Lands of the Nile p. 6",
+        notes=paragraphs(
             "The spirit at the centre of the Great Desert, whose strength even "
             "gods respect: the desert's heat and scouring wind given one will, "
             "which would leave the world dust. The Romans called it the Fames "
@@ -24,9 +27,10 @@ def build(b: Builder) -> None:
         ),
         realm="Magic",
     )
-    b.faction(
+    b.creature(
         "The Hope",
-        summary=paragraphs(
+        page="Between Sand and Sea pp. 7-8; Lands of the Nile p. 6",
+        notes=paragraphs(
             "The spirit of the Nile and the fertile black earth, called the "
             "Black, which holds back the Hunger. It favours people only by "
             "accident, being too vast to notice them. The lector priests who "

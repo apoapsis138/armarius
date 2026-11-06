@@ -600,6 +600,7 @@ def _orris_secrets() -> str:
 def _factions(b: Builder, people: dict[str, Character]) -> None:
     chapter = b.faction(
         "The Cathedral Chapter of St. John",
+        faction="Religious community",
         members=9,
         ruler="Father Peter",
         tradition=CANTORES,
@@ -636,6 +637,7 @@ def _factions(b: Builder, people: dict[str, Character]) -> None:
     b.link(chapter, "characters", people["orris"], "The bishop they bless")
     friars = b.faction(
         "The Friars Preacher",
+        faction="Religious community",
         members=3,
         rules="They travel together and preach by turns, drink little, eat "
         "frugally, and stay only a few nights in each town or village.",
@@ -691,6 +693,7 @@ def _factions(b: Builder, people: dict[str, Character]) -> None:
     b.link(friars, "characters", people["orris"], "Asked for them")
     b.faction(
         "The Church Knights",
+        faction="Military order",
         wants="To fight pagans and infidels, as the pope charges them, and to aid "
         "a bishop who asks with the authority of his rank.",
         summary="Whichever military order keeps the nearest commandery: the Order "

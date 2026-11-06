@@ -42,7 +42,9 @@ SHEET_OPEN_WIDGET_BUDGET = {
     "hibernia_tribunal": 44,
     "alps_tribunal": 44,
     # The Open Stories section and its list: 2.
-    "region": 52,
+    # The By Place tab (its tab and pane), and Customs and Lore (its
+    # section and list): 4.
+    "region": 58,
     # A lord's Fief tab lists his sieges too; his Manors tab adds 2, and his
     # Marriages tab its (unbuilt) pane and its tab: 2.
     "neighbour": 46,

@@ -1014,6 +1014,39 @@ class Builder:
             },
         )
 
+    def custom(
+        self,
+        name: str,
+        *,
+        summary: str,
+        secrets: str = "",
+        rules: str = "",
+        decides: str = "",
+        wants: str = "",
+        offers: str = "",
+        ruler: str = "",
+        realm: str = "",
+        place: Neighbour | None = None,
+    ) -> Neighbour:
+        """A custom: a land's way of life, its law or its lore (customs.py).
+        How those who keep it decide, when the book says, goes with its
+        rules."""
+        decided = f"Decided by: {decides}." if decides else ""
+        return self.neighbour(
+            "custom",
+            name,
+            summary=summary,
+            secrets=secrets,
+            ruler=ruler,
+            realm=realm,
+            place=place,
+            details={
+                "rules": paragraphs(*(p for p in (rules, decided) if p)),
+                "wants": wants,
+                "offers": offers,
+            },
+        )
+
     def threat(
         self,
         name: str,

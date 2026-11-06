@@ -1830,6 +1830,7 @@ def _creatures(b: Builder, sites: dict[str, Neighbour]) -> None:
 def _ghosts(b: Builder, qadis: Neighbour) -> None:
     b.faction(
         "The Ghosts of Qadis",
+        faction="Spirits and beings",
         place=qadis,
         realm="Magic",
         summary="The dead of Qadis, perhaps a thousand or more, who have "

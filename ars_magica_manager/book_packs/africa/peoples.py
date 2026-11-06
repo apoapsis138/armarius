@@ -479,7 +479,7 @@ def _history(b: Builder) -> None:
             "dynasty ended.",
         ),
     ):
-        b.faction(name, summary=summary, faction="Dynasty")
+        b.faction(name, summary=summary, faction="Family")
 
 
 # -- Berbers and Arabs --
@@ -488,6 +488,7 @@ def _history(b: Builder) -> None:
 def _peoples(b: Builder, caliph: Neighbour) -> None:
     b.faction(
         "The Berbers (Imazighen)",
+        faction="People or tribe",
         place=None,
         summary=paragraphs(
             "The first people of Africa, who call themselves Imazighen (one "
@@ -659,7 +660,7 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
             "",
         ),
     ):
-        b.faction(name, summary=summary, ruler=ruler, faction="Tribe")
+        b.faction(name, summary=summary, ruler=ruler, faction="People or tribe")
     for name, parent, summary in (
         ("The Barghwata", "Masmuda", "A Masmuda subtribe."),
         ("The Ghomara", "Masmuda", "A Masmuda subtribe."),
@@ -686,10 +687,12 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
             "The southernmost Sanhaja, on the edge of the torrid zone.",
         ),
     ):
-        b.faction(name, summary=summary, faction="Tribe", decides=f"Of the {parent}")
+        b.faction(
+            name, summary=summary, faction="People or tribe", decides=f"Of the {parent}"
+        )
     b.faction(
         "The Banu Hilal",
-        faction="Tribe",
+        faction="People or tribe",
         summary=paragraphs(
             "Bedouin clans (Bani Hilal, 'children of the crescent moon'), grown "
             "in Egypt from other nomads and peasants fleeing debt into an "
@@ -705,7 +708,7 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
     )
     b.faction(
         "The Maqil",
-        faction="Tribe",
+        faction="People or tribe",
         summary="Yemeni allies of the Banu Hilal, whose chief subtribe, the "
         "Banu Hassan, names the Hassaniya Arabic. They settled in the far west "
         "beyond the High Atlas; some stayed in Ifriqiyeh with their sahirs, "
@@ -713,7 +716,7 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
     )
     b.faction(
         "The Banu Sulaym",
-        faction="Tribe",
+        faction="People or tribe",
         summary="Nomads from Nejd and Hejaz who followed the Banu Hilal west. "
         "The Banu Hebib settled in Cyrenaica; the 'Awf, Debbab and Zegb in "
         "Tripolitania and the Libyan Desert's fringes, where a century of "
@@ -733,7 +736,7 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
 def _customs(b: Builder) -> None:
     b.faction(
         "The Maghrebi Arabs",
-        faction="People",
+        faction="People or tribe",
         summary=paragraphs(
             "The most numerous people of the north. The first Arabs, Umayyads "
             "of the eighth century, built cities and made a town-dwelling upper "
@@ -820,7 +823,7 @@ def _customs(b: Builder) -> None:
     )
     b.faction(
         "The Dhimmis",
-        faction="People",
+        faction="Estate or rank",
         summary=paragraphs(
             "Christians and Jews, suffered if they do their duties and provoke "
             "nobody, and treated worse the further west one goes. They pay a "
@@ -852,7 +855,7 @@ def _customs(b: Builder) -> None:
 def _tuareg(b: Builder) -> Neighbour:
     tuareg = b.faction(
         "The Tuareg",
-        faction="People",
+        faction="People or tribe",
         summary=paragraphs(
             "Nomads who share the Berbers' origin and know the Great Desert "
             "better than anyone, centred on the Ahaggar and Air massifs (their "
@@ -954,7 +957,7 @@ def _tuareg(b: Builder) -> Neighbour:
         b.faction(
             name,
             summary=summary,
-            faction="Tribe",
+            faction="People or tribe",
             secrets="Whether the far southern tribes are humans, Magic-kin, "
             "Magic Humans or faeries playing raiders is uncertain."
             if name in ("Kel Ataram", "Kel Denneg", "Kel Geres")
@@ -969,7 +972,7 @@ def _tuareg(b: Builder) -> Neighbour:
 def _banu_khalida(b: Builder) -> Neighbour:
     b.faction(
         "The Banu Khalida",
-        faction="People",
+        faction="People or tribe",
         summary=paragraphs(
             "The people of the Twelve Cities, on twelve oases in the far south "
             "of Mauritania, deeper into the torrid zone than anyone, with "
@@ -1025,7 +1028,7 @@ def _banu_khalida(b: Builder) -> Neighbour:
     )
     b.faction(
         "The Unholy Trinity",
-        faction="False gods",
+        faction="Faith or sect",
         realm="Infernal",
         summary="The three gods Europeans think Muslims worship, Mahound, "
         "Termagant and Apollyon, a mistake born partly of early meetings with "

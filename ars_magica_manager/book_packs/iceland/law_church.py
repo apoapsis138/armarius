@@ -131,7 +131,7 @@ def _thingvoll(b: Builder) -> Neighbour:
 
 
 def _law(b: Builder) -> None:
-    b.faction(
+    b.custom(
         "The Law of Iceland",
         summary=paragraphs(
             "Iceland has no king; it has law. The first settlers, fleeing "
@@ -262,6 +262,7 @@ def _law(b: Builder) -> None:
 def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> None:
     spring = b.faction(
         "The Spring Things",
+        faction="Council or assembly",
         summary=paragraphs(
             "The local assembly (varthing) of each of Iceland's thirteen districts, "
             "held by the end of the fourth week of summer, mostly for cases "
@@ -291,6 +292,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
         b.link(spring, "places", site, "A spring assembly site")
     althing = b.faction(
         "The Althing",
+        faction="Council or assembly",
         summary=paragraphs(
             "The General Assembly, held at Thingvoll once ten weeks of "
             "summer have passed and lasting at least two weeks. It is the "
@@ -319,6 +321,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
     )
     b.faction(
         "The Quarter Courts",
+        faction="Council or assembly",
         summary="The judicial arm of the Althing: one court for each Quarter, "
         "hearing what the spring courts could not decide (LFI p. 36).",
         place=thingvoll,
@@ -330,6 +333,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
     )
     b.faction(
         "The Fifth Court",
+        faction="Council or assembly",
         summary="The highest court, hearing divided judgments from the "
         "Quarter Courts and abuses of procedure itself, such as perjury and "
         "bribery (LFI p. 36).",
@@ -345,6 +349,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
     )
     b.faction(
         "The Law Council (Logretta)",
+        faction="Council or assembly",
         summary="The legislative arm of the Althing. Here the chieftains "
         "review old laws and make new ones, approve out-of-court settlements, "
         "decide disagreements over the law and grant exemptions from it. Its "
@@ -362,6 +367,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
     )
     b.faction(
         "The Lawspeaker",
+        faction="Council or assembly",
         summary=paragraphs(
             "The only paid office in Iceland, held for three years by "
             "election of the law council. He chairs the council, recites "
@@ -384,6 +390,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
     )
     fall = b.faction(
         "The Fall Things",
+        faction="Council or assembly",
         summary="The least formal of the three great assemblies, held when "
         "eight weeks of summer remain and lasting no more than two days. It "
         "tells the people what happened at the Althing: the new laws, "
@@ -400,6 +407,7 @@ def _assemblies(b: Builder, sites: list[Neighbour], thingvoll: Neighbour) -> Non
 def _old_faith(b: Builder) -> None:
     b.faction(
         "The Aesir (The Old Religion)",
+        faction="Faith or sect",
         summary=paragraphs(
             "Until the end of the first millennium most Icelanders were "
             "pagans, honouring the Norse gods and goddesses together called "
@@ -417,6 +425,7 @@ def _old_faith(b: Builder) -> None:
 def _church(b: Builder) -> None:
     b.faction(
         "The Church in Iceland",
+        faction="Religious community",
         summary=paragraphs(
             "Iceland took the faith by a settlement at law. Pressure from "
             "the mainland began in 980 and came to a head under King Olaf "
@@ -544,6 +553,7 @@ def _sees(b: Builder) -> tuple[Neighbour, Neighbour]:
 def _wardens(b: Builder) -> None:
     b.faction(
         "The Lay Wardens",
+        faction="Religious community",
         summary=paragraphs(
             "Godar and well-off farmers who hold Church property. A family "
             "grants land in a saint's name and keeps control of it by "
@@ -570,6 +580,7 @@ def _gudmund(b: Builder, holar: Neighbour) -> None:
     )
     following = b.faction(
         "Bishop Gudmund's Following",
+        faction="Religious community",
         summary="Bishop Gudmund Arason lives in poverty among clergy, armed "
         "men, vagrants, beggars and thieves. He keeps 120 followers moving "
         "about Reykjadal, demanding hospitality from the local farmers "

@@ -1782,7 +1782,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     p = theban.places
     w["christians_of_serapis"] = b.faction(
         "The Christians of Serapis",
-        faction="Other",
+        faction="Faith or sect",
         decides="A council",
         members=200,
         realm="Infernal",
@@ -1802,7 +1802,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     )
     w["council_of_union"] = b.faction(
         "The Council of Union at Nicaea",
-        faction="Other",
+        faction="Council or assembly",
         decides="A council",
         ruler="Theodore I Laskaris, its convener",
         place=p["bithynia"],

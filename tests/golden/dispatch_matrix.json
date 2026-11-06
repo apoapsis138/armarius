@@ -2232,6 +2232,16 @@
         "slash": "FieldsDialog: Filter Neighbours"
       }
     },
+    "SheetSection#section-region-customs": {
+      "active": "section-region-customs",
+      "keys": {
+        "a": "FieldsDialog: New Custom",
+        "e": "FieldsDialog: Edit The Weavers' Peace",
+        "d": "ConfirmScreen",
+        "m": "(disabled)",
+        "slash": "FieldsDialog: Filter Neighbours"
+      }
+    },
     "SheetSection#section-region-stories": {
       "active": "section-region-stories",
       "keys": {
@@ -2239,6 +2249,16 @@
         "e": "(nothing)",
         "d": "(disabled)",
         "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-region-by-place": {
+      "active": "section-region-by-place",
+      "keys": {
+        "a": "(disabled)",
+        "e": "(disabled)",
+        "d": "(disabled)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     }
@@ -2692,13 +2712,13 @@
         "slash": "(disabled)"
       }
     },
-    "TabPane#tab-nb-faction": {
-      "active": "section-nb-info",
+    "SheetSection#section-nb-members": {
+      "active": "section-nb-members",
       "keys": {
-        "a": "(disabled)",
-        "e": "FieldsDialog: Edit The Black Pool Coven",
-        "d": "ConfirmScreen",
-        "m": "FieldsDialog: Arms of The Black Pool Coven",
+        "a": "FieldsDialog: Add a Member",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(disabled)",
         "slash": "(disabled)"
       }
     },
@@ -3138,6 +3158,26 @@
         "a": "(disabled)",
         "e": "FieldsDialog: Edit Description",
         "d": "(disabled)",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-attitudes": {
+      "active": "section-attitudes",
+      "keys": {
+        "a": "FieldsDialog: Add a Reason",
+        "e": "FieldsDialog: Attitude toward Keep",
+        "d": "notice: Where it started can't be deleted: edit it to change it.",
+        "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-favours": {
+      "active": "section-favours",
+      "keys": {
+        "a": "FieldsDialog: Add a Favour",
+        "e": "(nothing)",
+        "d": "(nothing)",
         "m": "ChooseScreen: Go To",
         "slash": "(disabled)"
       }

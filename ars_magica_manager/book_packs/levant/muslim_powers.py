@@ -162,7 +162,7 @@ def _nizaris(levant: Levant) -> None:
     )
     w["syrian_nizaris"] = syrian = b.faction(
         "The Syrian Nizaris",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         tradition="trad_nizari_mustajibs",
         place=masyaf,
@@ -242,7 +242,7 @@ def _nomads(levant: Levant) -> None:
     b, w = levant.b, levant.world
     w["bedouin"] = b.faction(
         "The Bedouin",
-        faction="Other",
+        faction="People or tribe",
         place=levant.places.get("levant"),
         wants="Their grazing, their wells and their freedom",
         offers="Guides across the desert, and riders in war",
@@ -259,7 +259,7 @@ def _nomads(levant: Levant) -> None:
     )
     w["turcomans"] = b.faction(
         "The Turcomans",
-        faction="Other",
+        faction="People or tribe",
         place=levant.places.get("asia_minor"),
         wants="Pasture, plunder and their own chiefs",
         offers="Horse archers for any prince who pays",

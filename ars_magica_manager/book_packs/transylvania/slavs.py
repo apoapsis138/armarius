@@ -1314,7 +1314,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     p = transylvania.places
     w["bosnian_church"] = b.faction(
         "The Bosnian Church (the Patarians)",
-        faction="Other",
+        faction="Faith or sect",
         decides="A council",
         ruler="The djed",
         place=p["bosnia"],

@@ -86,6 +86,7 @@ ICONS: dict[str, str] = {
     "export_saga": "export",
     "export_cult": "export",
     "export_pack": "export",
+    "merge_doubles": "region",
     "host_saga": "players",
     "stop_hosting": "players",
     "give_silver": "silver",

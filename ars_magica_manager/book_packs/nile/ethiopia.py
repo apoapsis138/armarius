@@ -1075,7 +1075,7 @@ def _people(b: Builder, p: Places, w: dict[str, Neighbour]) -> None:
 def _society(b: Builder, p: Places) -> None:
     b.faction(
         "The Ethiopian Church",
-        faction="Church",
+        faction="Religious community",
         ruler="Abuna Yeshaq",
         realm=DIVINE,
         place=p["ethiopia"],
@@ -1136,7 +1136,7 @@ def _society(b: Builder, p: Places) -> None:
     )
     b.faction(
         "The Debterah",
-        faction="Holy societas",
+        faction="Religious community",
         realm=DIVINE,
         place=p["ethiopia"],
         summary=paragraphs(
@@ -1169,6 +1169,7 @@ def _society(b: Builder, p: Places) -> None:
     )
     b.faction(
         "The Beta Israel",
+        faction="People or tribe",
         realm=DIVINE,
         place=p["bet_amhara"],
         summary=paragraphs(
@@ -1189,7 +1190,7 @@ def _society(b: Builder, p: Places) -> None:
     )
     b.faction(
         "The Mesafint",
-        faction="Nobility",
+        faction="Family",
         place=p["ethiopia"],
         summary=paragraphs(
             "The nobility of Ethiopia, in descending order: negus, a high king "
@@ -1562,6 +1563,7 @@ def _siwa(b: Builder, p: Places) -> None:
     )
     b.faction(
         "The Zenata of Siwa",
+        faction="People or tribe",
         members=55,
         place=siwa,
         summary=(

@@ -24,6 +24,7 @@ from .... import (
     seasons,
     tradition_text,
     traditions,
+    world,
 )
 from .... import enchanted_devices as ed
 from .... import lab_texts as lt
@@ -41,6 +42,7 @@ from ....forms import criamon as criamon_forms
 from ....forms import power as power_forms
 from ....forms import religion as religion_forms
 from ....forms import tradition as tradition_forms
+from ....forms import world as world_forms
 from ....forms.secrets import secrets_ops
 from ....markup import escape
 from ....models import (
@@ -651,6 +653,9 @@ class CharacterSheetView(SheetView):
                         self._reputation_rows,
                         id="character-reputations-list",
                     )
+            if world.holds_standing(self.saga, character):
+                self.core_ops.update(world_forms.standing_ops(self.saga, character))
+                yield from self._relations(character, links=False)
             yield from self._connections(character)
             if lineage.shown(self.saga, character):
                 with SheetSection(title="Lineage", id=lineage.SECTION):

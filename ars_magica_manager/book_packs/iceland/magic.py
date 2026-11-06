@@ -68,7 +68,7 @@ def _eldborg(b: Builder) -> Neighbour:
 def _hreppur(b: Builder, eldborg: Neighbour) -> Neighbour:
     return b.faction(
         "Galdramen Hreppur",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         place=eldborg,
         decides=(
@@ -161,7 +161,7 @@ def _hreppur(b: Builder, eldborg: Neighbour) -> Neighbour:
 def _icelandic_magicians(b: Builder) -> Neighbour:
     return b.faction(
         "Icelandic Magicians",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         summary=paragraphs(
             "The island has its own ways of magic, far from the roots of "
@@ -293,7 +293,7 @@ def _schooled_galdramen(b: Builder) -> Neighbour:
 def _trollsynir(b: Builder) -> Neighbour:
     return b.faction(
         "Trollsynir",
-        faction="Other",
+        faction="Hedge coven",
         tradition="trad_trollsynir",
         realm="Magic",
         decides="No one: they have no formal organisation (p. 54)",
@@ -347,7 +347,7 @@ def _vitkir(b: Builder) -> Neighbour:
 def _volur(b: Builder) -> Neighbour:
     return b.faction(
         "Volur",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         summary=paragraphs(
             "The name Icelanders often give a woman who practises magic "
@@ -364,7 +364,7 @@ def _volur(b: Builder) -> Neighbour:
 def _visindamen(b: Builder) -> Neighbour:
     return b.faction(
         "Visindamen",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         summary="The wise men among the Norse magicians who came with the "
         "settlers, often workers of seithr as the volur are. They stood outside "
@@ -393,7 +393,7 @@ def _seithkonur(b: Builder) -> Neighbour:
 def _order_of_odin(b: Builder) -> Neighbour:
     return b.faction(
         "The Order of Odin",
-        faction="Other",
+        faction="Hedge coven",
         summary=paragraphs(
             "The band of Norse wizards that senior magi of the Order of "
             "Hermes fear, on very little evidence, and fear the more for "

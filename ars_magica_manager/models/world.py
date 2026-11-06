@@ -67,6 +67,14 @@ class Favour:
     id: str = field(default_factory=new_instance_id, compare=False)
 
 
+def read_standing(d: dict[str, Any]) -> None:
+    """Turn a loaded record's attitudes and favours into their classes,
+    in place: the standing a neighbour, a covenant, a character or a
+    creature holds toward the troupe."""
+    d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes") or []]
+    d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours") or []]
+
+
 #: The kinds of record a Link can point at, as the saga lists them.
 LINK_KINDS: tuple[str, ...] = (
     "characters",
@@ -89,6 +97,19 @@ class Link:
     target_id: str
     note: str = ""
     id: str = field(default_factory=new_instance_id, compare=False)
+
+
+#: Labels older packs gave a faction's kind outside factions.FACTION_KINDS,
+#: as the list has them; moved when a saga is loaded.
+OLD_FACTION_KINDS: dict[str, str] = {
+    "Tribe": "People or tribe",
+    "People": "People or tribe",
+    "Dynasty": "Family",
+    "Nobility": "Family",
+    "Church": "Religious community",
+    "Holy societas": "Religious community",
+    "False gods": "Faith or sect",
+}
 
 
 @dataclass
@@ -129,10 +150,12 @@ class Neighbour:
     def from_dict(cls, data: dict[str, Any]) -> Neighbour:
         # Older saves kept secrets under a heading in the summary.
         d = move_secrets(known_fields(cls, data), "summary")
-        d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
-        d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
+        read_standing(d)
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         d["details"] = dict(d.get("details") or {})
+        label = d["details"].get("faction")
+        if d.get("kind") == "faction" and label in OLD_FACTION_KINDS:
+            d["details"]["faction"] = OLD_FACTION_KINDS[label]
         return cls(**d)
 
 

@@ -133,6 +133,7 @@ def _winds(b: Builder) -> None:
     )
     b.faction(
         "The Council of Winds",
+        faction="Spirits and beings",
         realm="Magic",
         place=kaf_ajnoun,
         members=7,
@@ -353,6 +354,7 @@ def _winds(b: Builder) -> None:
 def _sun_and_moon(b: Builder) -> None:
     b.faction(
         "The Cult of the Sun and Moon",
+        faction="Faith or sect",
         realm="Magic",
         summary=paragraphs(
             "In antiquity the Sun and Moon were worshipped with fanatical "
@@ -418,6 +420,7 @@ def _sun_and_moon(b: Builder) -> None:
 def _dead(b: Builder) -> None:
     b.faction(
         "The Cult of the Dead",
+        faction="Faith or sect",
         realm="Magic",
         summary=paragraphs(
             "Among the Berbers the dead stay part of the living people. "
@@ -758,6 +761,7 @@ def _settuten(b: Builder) -> None:
 def _minor_traditions(b: Builder) -> None:
     b.faction(
         "The Daughters of Four Fathers",
+        faction="Hedge coven",
         summary=paragraphs(
             "A small, close family of shapeshifting women who say they all "
             "descend from one mother. Four friends on a long journey, the "
@@ -789,6 +793,7 @@ def _minor_traditions(b: Builder) -> None:
     )
     b.faction(
         "The Inducers",
+        faction="Hedge coven",
         summary=paragraphs(
             "The scholars of the Maghreb count three kinds of magician, and "
             "these are the least: they cannot change the world, only make a "
@@ -804,6 +809,7 @@ def _minor_traditions(b: Builder) -> None:
     )
     b.faction(
         "The Potteresses",
+        faction="Hedge coven",
         summary=paragraphs(
             "Several lineages of magical potteresses work in Africa; these are "
             "the weaker ones. Many keep customs over the clay: some sacrifice "
@@ -831,6 +837,7 @@ def _minor_traditions(b: Builder) -> None:
     )
     b.faction(
         "The Leather-Workers",
+        faction="Hedge coven",
         summary=paragraphs(
             "Leather is the male twin of the female art of pottery in Desert "
             "Africa: the same tradition in another stuff. The worker's highest "
@@ -848,6 +855,7 @@ def _minor_traditions(b: Builder) -> None:
     )
     b.faction(
         "The Rippers",
+        faction="Hedge coven",
         summary=paragraphs(
             "Minor magicians, thickest round Tunis but reported as far as the "
             "Muslim settlements of Iberia and Sicily. A ripper can tear things "
@@ -864,6 +872,7 @@ def _minor_traditions(b: Builder) -> None:
     )
     b.faction(
         "The Geomancers",
+        faction="Hedge coven",
         summary=paragraphs(
             "Geomancy, ilm al-raml, the science of the sand, reads rows of "
             "seemingly random marks scratched in earth. One Muslim legend has "
@@ -1048,6 +1057,7 @@ def _inenden(b: Builder) -> None:
 def _blue_men(b: Builder) -> None:
     b.faction(
         "The Blue Men of the Desert",
+        faction="People or tribe",
         realm="Magic",
         summary=paragraphs(
             "Some Tuareg of the deep desert are changed over time by its "
@@ -1080,6 +1090,7 @@ def _blue_men(b: Builder) -> None:
     )
     b.faction(
         "The Desiccated Men",
+        faction="Spirits and beings",
         realm="Magic",
         summary=paragraphs(
             "Far into the Tanezrouft, the Land of Thirst, wander the darker "
@@ -1741,7 +1752,13 @@ def _kel_asouf(b: Builder) -> None:
     rules = "True jinn, which Sihr affects (p. 126); Faerie by p. 123."
     found = next((n for n in b.saga.neighbours if n.name == "The Kel Asouf"), None)
     if found is None:
-        b.faction("The Kel Asouf", realm="Faerie", summary=words, rules=rules)
+        b.faction(
+            "The Kel Asouf",
+            faction="Spirits and beings",
+            realm="Faerie",
+            summary=words,
+            rules=rules,
+        )
     else:
         found.summary = paragraphs(found.summary, words)
         found.details["rules"] = rules
@@ -1750,6 +1767,7 @@ def _kel_asouf(b: Builder) -> None:
 def _jnun(b: Builder) -> None:
     b.faction(
         "The Jnun of Africa",
+        faction="Spirits and beings",
         summary=paragraphs(
             "Few supernatural beings matter more here. People think in terms "
             "of jnun, not of realms, which confuses any magus trying to learn "
@@ -1819,6 +1837,7 @@ def _jnun(b: Builder) -> None:
     )
     b.faction(
         "The Afarta",
+        faction="Spirits and beings",
         summary=paragraphs(
             "The winged messengers and nobles of the jnun (singular afrit), "
             "spirits of the air kin to the leriah but outranking other jnoun, "
@@ -1853,6 +1872,7 @@ def _jnun(b: Builder) -> None:
     )
     b.faction(
         "The Baharia",
+        faction="Spirits and beings",
         realm="Faerie",
         place=seventh,
         ruler="Sidi Moussa",
@@ -1890,6 +1910,7 @@ def _jnun(b: Builder) -> None:
     )
     b.faction(
         "The Awlad al-Hut",
+        faction="Hedge coven",
         realm="Faerie",
         summary=paragraphs(
             "A secret brotherhood of Tunisian fishermen, drawn from those "
@@ -1905,6 +1926,7 @@ def _jnun(b: Builder) -> None:
     )
     b.faction(
         "The Siadna",
+        faction="Hedge coven",
         realm="Faerie",
         summary=paragraphs(
             "The Masters Underground: the Walad al-Ahmar, sons of the Red, "
@@ -1921,7 +1943,7 @@ def _jnun(b: Builder) -> None:
         ),
     )
     _kel_asouf(b)
-    b.faction(
+    b.custom(
         "Al-Maghrebi",
         realm="Faerie",
         summary=paragraphs(
@@ -1953,6 +1975,7 @@ def _lowhush(b: Builder) -> None:
     )
     b.faction(
         "The Lowhush",
+        faction="Spirits and beings",
         place=amadagh,
         summary=paragraphs(
             "Lowhush (singular lwash) is the Berber word for monsters: it "
@@ -2163,6 +2186,7 @@ def _divine(b: Builder) -> None:
     )
     b.faction(
         "The Sufis of the Maghreb",
+        faction="Faith or sect",
         realm="Divine",
         summary=paragraphs(
             "Sufis take the Qur'an as speaking straight to the heart, and know "
@@ -2274,6 +2298,7 @@ def _carthage(b: Builder) -> None:
     )
     b.faction(
         "The Priesthood of Carthage",
+        faction="Faith or sect",
         place=ruins,
         summary=paragraphs(
             "Long dead. The priests of Carthage drew their tradition from the "

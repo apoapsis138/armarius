@@ -1967,7 +1967,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     p = provence.places
     w["white_brotherhood"] = b.faction(
         "The White Brotherhood",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         place=p["toulouse_city"],
         ruler="Founded by Bishop Foulques",
@@ -1988,7 +1988,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["black_brotherhood"] = b.faction(
         "The Black Brotherhood",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         place=p["toulouse_city"],
         wants="The Cathars and Jews of Toulouse protected from the Whites",
@@ -2003,7 +2003,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["tolosa_whites"] = b.faction(
         "The Whites of Tolosa Paratge",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Carolus St. Tropez",
         place=p["toulouse_city"],
@@ -2021,7 +2021,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["tolosa_blacks"] = b.faction(
         "The Blacks of Tolosa Paratge",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Cyprian of Flambeau",
         place=p["tolosa_lake"],
@@ -2037,7 +2037,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["faidits_of_toulouse"] = b.faction(
         "The Faidits",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="A council",
         place=p["toulousain"],
         wants="Their lands back, by papal favour or by the sword",

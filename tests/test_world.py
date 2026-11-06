@@ -19,9 +19,11 @@ from ars_magica_manager.models import (
     Attitude,
     Character,
     Covenant,
+    Creature,
     Favour,
     Link,
     Reason,
+    Saga,
     ScoredTrait,
 )
 from ars_magica_manager.rules import creation as creation_rules
@@ -190,3 +192,40 @@ def test_a_reputations_row_shows_its_kind_and_reach():
     assert st.trait_rows(
         [ScoredTrait("Brave", 2), ScoredTrait("Fair dealing", 1, type="Local")]
     ) == [(0, "Brave: +2"), (1, "Fair dealing: +1 [$label](Local)[/]")]
+
+
+def test_characters_and_creatures_keep_their_standing():
+    standing = {
+        "attitudes": [
+            {
+                "covenant_id": "home",
+                "start": 1,
+                "reasons": [{"what": "Aid", "change": 1}],
+            }
+        ],
+        "favours": [{"what": "A safe road", "owed_by": "Hush", "owed_to": "Home"}],
+    }
+    character = Character.from_dict(
+        {"id": "j", "name": "Jorg", "type": "companion"} | standing
+    )
+    creature = Creature.from_dict({"id": "h", "name": "Hush"} | standing)
+    for record in (character, creature):
+        assert world.attitude_score(world.attitude_toward(record, "home")) == 2
+        assert record.favours[0].what == "A safe road"
+    assert (
+        Character.from_dict({"id": "o", "name": "Old", "type": "grog"}).attitudes == []
+    )
+
+
+def test_only_the_troupes_own_people_hold_no_standing():
+    saga = Saga(id="s", name="S")
+    home = Covenant(id="home", saga_id="s", name="Home")
+    other = Covenant(id="far", saga_id="s", name="Far", played=False)
+    saga.covenants += [home, other]
+    ours = Character(id="a", name="Ours", type="grog", covenant_id="home")
+    theirs = Character(id="b", name="Theirs", type="grog", covenant_id="far")
+    nobody = Character(id="c", name="Nobody's", type="companion")
+    assert not world.holds_standing(saga, ours)
+    assert world.holds_standing(saga, theirs)
+    assert world.holds_standing(saga, nobody)
+    assert world.holds_standing(saga, Creature(id="h", name="Hush"))

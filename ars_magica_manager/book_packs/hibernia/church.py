@@ -306,7 +306,7 @@ def _celi_de(hibernia: Hibernia) -> None:
     hibernia.world["celi_de"] = b.faction(
         "The Céli Dé",
         tradition="trad_celi_de",
-        faction="Other",
+        faction="Religious community",
         realm="Divine",
         rules=(
             "Not an order but a way of life under the Rule of Saint "

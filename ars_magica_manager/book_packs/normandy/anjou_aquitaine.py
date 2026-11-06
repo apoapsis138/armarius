@@ -1124,7 +1124,7 @@ def _aquitaine_world(normandy: Normandy) -> None:
     )
     w["marsh_abbeys"] = b.faction(
         "The Five Abbeys of the Marsh",
-        faction="Other",
+        faction="Religious community",
         decides="A council",
         members=5,
         place=normandy.places["sevre_marsh"],
@@ -1340,7 +1340,7 @@ def _aquitaine_world(normandy: Normandy) -> None:
     )
     w["brabancons"] = b.faction(
         "The Brabançons",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         place=aquitaine,
         wants="Pay, or plunder where there is none",
@@ -1361,7 +1361,7 @@ def _aquitaine_world(normandy: Normandy) -> None:
     )
     w["capuchonnes"] = b.faction(
         "The Capuchonnes",
-        faction="Other",
+        faction="Faith or sect",
         place=aquitaine,
         summary=(
             "A movement begun in the 1180s by Durand, a freeman of Le Puy, "

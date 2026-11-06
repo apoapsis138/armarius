@@ -301,7 +301,7 @@ def _lesser_armenia(levant: Levant) -> None:
 def _alans(levant: Levant) -> None:
     levant.world["alans"] = levant.b.faction(
         "The Alans",
-        faction="Other",
+        faction="People or tribe",
         place=_region(levant, "alans"),
         summary=paragraphs(
             "A people of many tribes in the Caucasus mountains and the "

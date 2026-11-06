@@ -318,7 +318,7 @@ def _mazdeans(cradle: Cradle) -> None:
     b = cradle.b
     mazdeans = cradle.world["mazdeans"] = b.faction(
         "The Mazdeans",
-        faction="Other",
+        faction="Faith or sect",
         decides="A council",
         realm=DIVINE,
         tradition=MOBEDS,

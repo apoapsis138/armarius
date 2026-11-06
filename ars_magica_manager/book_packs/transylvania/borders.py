@@ -1074,7 +1074,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     p = transylvania.places
     w["teutonic_knights"] = b.faction(
         "The Teutonic Knights",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Brother Theoderich",
         realm="Divine",
@@ -1160,7 +1160,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["saxons"] = b.faction(
         "The Transylvanian Saxons",
-        faction="Other",
+        faction="People or tribe",
         place=p["transylvania"],
         wants="Land, markets and their own law",
         offers="Grain, wool, meat, metal and miners; help building castles",
@@ -1182,7 +1182,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["szeklers"] = b.faction(
         "The Szeklers",
-        faction="Other",
+        faction="People or tribe",
         decides="Its leader",
         ruler="The count of the Szeklers",
         place=p["szeklerland"],
@@ -1217,7 +1217,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["pechenegs"] = b.faction(
         "The Pechenegs",
-        faction="Other",
+        faction="People or tribe",
         place=p["carpathians"],
         offers="Warriors for the king and for the oppida",
         summary=(
@@ -1234,7 +1234,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["cumans"] = b.faction(
         "The Cumans",
-        faction="Other",
+        faction="People or tribe",
         place=p["cumania"],
         wants="Grazing, plunder and pay",
         offers="Mercenary horsemen",
@@ -1268,7 +1268,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["vlachs"] = b.faction(
         "The Vlachs",
-        faction="Other",
+        faction="People or tribe",
         place=p["transylvania"],
         wants="Their land and their ways, under whatever ruler",
         offers="Shepherds, farmers, local knowledge and boyar war bands",
@@ -1295,7 +1295,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["brodnici"] = b.faction(
         "The Brodnici",
-        faction="Other",
+        faction="People or tribe",
         place=p["cumania"],
         summary=(
             "A people of mixed Vlach and Slav stock, the main group in "
@@ -1308,7 +1308,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["zalmoxis_cult"] = b.faction(
         "The Cult of Zalmoxis",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         realm="Magic",
         place=p["maramures"],

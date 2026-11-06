@@ -82,13 +82,24 @@ def demoted(detail: str) -> str | None:
     return DETAIL_LEVELS[index - 1] if index else None
 
 
+def holds_standing(saga: Saga, record: Character | Creature) -> bool:
+    """Whether a character's or creature's page shows its attitude toward
+    the troupe and the favours owed: a creature's always, a character's
+    unless he lives at a covenant the troupe plays (his own covenant is
+    no neighbour to him)."""
+    if isinstance(record, Creature):
+        return True
+    home = saga.covenant(record.covenant_id)
+    return home is None or not home.played
+
+
 def player_covenants(saga: Saga) -> list[Covenant]:
     """The covenants the troupe plays, which attitudes point at."""
     return [c for c in saga.covenants if c.played]
 
 
 def attitude_toward(
-    record: Character | Covenant | Neighbour | MysteryCult, covenant_id: str
+    record: Character | Covenant | Creature | Neighbour | MysteryCult, covenant_id: str
 ) -> Attitude | None:
     """`record`'s attitude toward the player covenant `covenant_id`, or None
     when none is set."""

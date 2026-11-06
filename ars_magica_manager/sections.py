@@ -147,8 +147,12 @@ REGION_LORDS_SECTION = "section-region-lords"
 REGION_CHURCH_SECTION = "section-region-church"
 REGION_UNIVERSITIES_SECTION = "section-region-universities"
 REGION_FACTIONS_SECTION = "section-region-factions"
+#: The Region by place: the land, and what rests on each place.
+REGION_BY_PLACE_SECTION = "section-region-by-place"
 REGION_THREATS_SECTION = "section-region-threats"
 REGION_PLACES_SECTION = "section-region-places"
+#: The Region's customs and lore (customs.py).
+REGION_CUSTOMS_SECTION = "section-region-customs"
 #: A covenant's Diary, a flat tab whose list a / e / d act on.
 COV_DIARY_TAB = "tab-cov-diary"
 #: The troupe's covenants' open Story Events, together (open_stories).
@@ -200,6 +204,8 @@ MANOR_CHECK_SECTION = "section-manor-check"
 RELICS_SECTION = "section-nb-relics"
 FACULTIES_SECTION = "section-nb-faculties"
 MASTERS_SECTION = "section-nb-masters"
+#: A faction's members (memberships.py).
+MEMBERS_SECTION = "section-nb-members"
 #: A threat's stages.
 STAGES_SECTION = "section-nb-stages"
 #: A place's regio levels and effects.
@@ -360,6 +366,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     REGION_FACTIONS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_THREATS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_PLACES_SECTION: frozenset({"add", "edit", "remove"}),
+    REGION_CUSTOMS_SECTION: frozenset({"add", "edit", "remove"}),
     REGION_STORIES_SECTION: frozenset({"edit"}),
     NEIGHBOUR_INFO_SECTION: frozenset({"edit"}),
     CASTLES_SECTION: frozenset({"add", "edit", "remove"}),
@@ -387,6 +394,7 @@ CORE_SECTIONS: dict[str, frozenset[str]] = {
     RELICS_SECTION: frozenset({"add", "edit", "remove"}),
     FACULTIES_SECTION: frozenset({"add", "edit", "remove"}),
     MASTERS_SECTION: frozenset({"add", "edit", "remove"}),
+    MEMBERS_SECTION: frozenset({"add", "edit", "remove"}),
     STAGES_SECTION: frozenset({"add", "edit", "remove"}),
     LEVELS_SECTION: frozenset({"add", "edit", "remove"}),
     EFFECTS_SECTION: frozenset({"add", "edit", "remove"}),

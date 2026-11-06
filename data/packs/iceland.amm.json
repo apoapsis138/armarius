@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.65.1",
+  "app_version": "3.77.0",
   "kind": "pack",
   "name": "Land of Fire and Ice",
   "from_saga": "Land of Fire and Ice",
@@ -83,7 +83,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -191,7 +192,8 @@
           "ritual_magnitudes": 0,
           "magic_grain": 0,
           "grain_care": "Covered only",
-          "bread_share": "Half"
+          "bread_share": "Half",
+          "purchases": []
         },
         "diary": [],
         "power_level": "",
@@ -1670,7 +1672,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -1686,7 +1688,7 @@
       {
         "id": "the_icelandic_freestate",
         "name": "The Icelandic Freestate",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Irish priests came in coracles about 790 and for eighty years spent their summers here in prayer. When the Norse arrived, they had seen enough of Vikings at home and sailed away.\n\nWord of the island spread after Naddoddur found it in 850, just as Harald Fairhair was making himself overlord of Norway, and many had reason to leave. Within sixty years the farmland was taken, by ten to twenty thousand people from Norway and the Norse colonies of Ireland, Scotland and the Hebrides. Gaelic wives, followers and slaves came with them, but left only a few place-names and their blood.\n\nRicher settlers raised temples and gave oxen and horses for sacrifice, and so became godar (singular godi), godly ones. A godi's power rested on how many householders, baendur (singular bondi), would freely ally with him as thingmen.\n\nSlaves cost more to feed than they earned, and spare land had to be defended, so owners freed them as labourers and tenants. Freedmen often came to own land, and their children were born free. Most slaves were free by the tenth century, and household slaves were very rare by the mid twelfth.\n\nDisputes first went to district spring assemblies, the varthing, each run by three local godar. With settlers from everywhere and no shared law, and no wish to ask Norway's king, the chieftains sent Ulfjot of Lon to study the Gulathing Law. With his uncle Thorleif the Wise he adapted it, and in 930 the Althing met.\n\nMagicians came with the settlers, drawn by the island's strong spirits and plentiful magical resources, and they were busy, for with the priests gone violent spirits, trolls and beasts fell on the farms, and wards were much sought after.\n\nMagicians were respected in pagan days, but magic in matters of honour was hated, and they kept out of feuds. A godi who practised invited talk of dishonour, so most godar chose politics, though they might seek magical help in secret. To keep the godar from leaning on them, the leading magicians formed a hreppur, which set wards against trolls on the trails, fixed the cost of their services, refused the blacklisted, backed members under pressure, treated with giants and dragons, and ruled the gathering of Ond, which is vis, from magical sites.\n\nAfter the conversion of 1000 the fear of hell became real to the magicians, and from 1020 private pagan worship was banned. Within a generation vitkir went from honoured priests to likely outlaws. Other magicians worked on in the open until, in 1031, a curse helped to kill the heroic outlaw Grettir. The outrage brought a ban on all magic, with lesser outlawry for spells and full outlawry for sorcery that sickened or killed.\n\nAfter a run of convictions the leading magicians met, admitted volur and visindamen to the hreppur for the first time, and gave the Christian party what it asked for. For ten years no magic was worked. Famine came, cattle sickened, fish failed, storms came unwarned, the trail wards failed and trolls took travellers and herds. In the end great baendur and godar quietly promised that cases over harmless magic would be crushed and charges of black sorcery fairly heard. The magicians came back, known to all and spoken of by none.\n\nIn the twelfth century the most successful godar began to act as aristocrats, and saw what several chieftaincies (godord) could do for a man. Around 1200 the sons of Sturla began gathering them in the Western Quarter, and the race for mastery of Iceland began. By 1220 nearly all of it lies in eight unstable domains, riki, ruled by close relatives from five families: the storgodar, big chieftains.\n\nMost baendur have lost their free choice of godi, and storgodar take little interest in local quarrels, so rich storbaendur, big householders, have become local advocates. Their loyalty still decides contests between storgodar, and their stout refusal of every tax keeps any one man from winning outright.\n\nEven inside the riki the storgodar rarely own every chieftaincy. Lesser chieftains lend their godord or follow a greater man and keep control under his protection, for failing to protect one's thingmen is a great shame, and few can stand alone. Yet no godi gives up his title unless honour leaves no other way.\n\nKing Hakon of Norway now reaches for the Norse lands of the North Atlantic. His father-in-law Earl Skuli threatened Snorri Sturluson at court with a fleet. Snorri talked him out of it by offering to go home and win the chieftains over to the Crown, a cause he does not mean to champion.\n\nTimeline:\nc. 4000 BC: The civilization of the Old Ones is destroyed.\nc. 2000 BC: The Egyptian cult of Thoth is at its height.\nc. 500 BC: The Greek cult of Hermes is at its height.\n412: The cult of Mercury is officially disbanded.\n767: The Order of Hermes is founded at Durenmar.\n790: Irish priests, whom the Norse will call papar, reach Iceland and make it their summer retreat.\n800-1100: The Viking period.\n825: The Irish monk Dicuil mentions Thule in his book on the measure of the world.\n850: Naddoddur the Swede, blown off his course to the Faeroes, comes on the island and calls it Snaeland, snowland.\n855: Gardar Svavarsson sails round the island and winters at Husavik on the north coast.\n860: Floki Vilgerdarson brings his family to Snaeland, soon tires of it and renames it Island, ice land.\n870-930: The landnam, the land-taking: 10-20 thousand Norsemen claim the farmland, and the Irish priests choose not to come back.\n874: Ingolfur Arnarson makes his home at a place he names Reykjavik, smoky bay.\n890-930: Harald Fairhair reigns in Norway.\n910-990: The life of Egil Skallagrimson: warrior, poet, magician.\n925: Pan Caudarax orders the landvaettir to clear the island of people, and volcanoes stir all over it. Trollsynir, galdramen and vitkir attack him and in the end win a truce.\n930: The Althing, the general assembly, is set up with the first constitution, opening what will be called the Freestate.\n930: The island is declared albyggt, fully inhabited: 40-50 thousand people, 400 named settlers with their kin, women and slaves.\n950: The magicians form a hreppur to guard their interests, and meet in the Eldborg caldera, which the dragon's wrath made 25 years before, in memory of their first alliance.\n965: The constitution is refined: four quarters (fjordungar), each with a court at the Althing.\n970: An outlaw who kills three other outlaws earns a free pardon.\n979: Harald Bluetooth Gormsson of Denmark sends a trollson to look at Iceland. The Guardians meet him, and Harald gives up his plan of invasion.\n982: Outlawed from Iceland, Eirik the Red sails west and comes on Greenland.\n984: The native Thorvald and the German bishop Fridrekr build the first church in Iceland. Their mission does well, but the Althing they attend mocks them.\n986: Greenland is colonized.\n987: Bjarni Herjolfsson catches sight of Vinland.\n997: A law rules that conversion may in some cases count as a defilement of the family.\n1000: The Althing makes Iceland Christian, thanks chiefly to three zealous Christian godar. They argue that two faiths under one law would split the land into two states, and pressure over trade from Denmark and Norway helps. Exposing newborns, eating horseflesh and private sacrifice to the old gods stay lawful.\n1001: Leif Eiriksson goes west in search of Vinland.\n1002-20: Vinland's colonies are tried, and given up by 1020 at the latest under native attacks. Gathering furs and timber there may go on into the mid fourteenth century.\n1005: A fifth court is set up.\n1007: Holmganga, single combat, ends as a legal way of deciding a case. The last duel recorded on the islet in the Oxara was fought by the warrior-poet Gunnlaugur Serpent-Tongue against the husband of the woman he loved.\n1014-1030: Olaf Haraldson, St Olaf, reigns in Norway. A treaty of 1020 with Iceland settles the rights of each country's people in the other, and with it the last pagan practices become illegal.\n1030-1118: The Fridharold, the age of peace.\n1031-1041: Magic helps to kill Grettir the Strong, and laws against all magic follow. For ten years the magicians give no help at all, until the godar agree to protect in secret those accused of harmless magic.\n1056: The first bishopric is founded at Skalholt in the Southern Quarter, and its bishop gains a seat in the logretta.\n1056-80: Isleif Gizursson is Iceland's first native bishop.\n1056-1133: The life of Saemundur Sigfusson the Wise, godi of Oddi, galdraman and bishop, whose sister Halla was a seithkona.\n1096: The law of tithes comes in.\n1106: A second bishopric is founded at Holar in the Northern Quarter, its bishop too sitting in the logretta. Its first, Jon the Saint Ogmundarson (1106-1121), a mighty foe of heathen ways, is later made a saint. Bergthor Hrafnsson, Haflidi Masson and others write down the laws, a work that comes to be called Gragas, Grey Goose.\n1122-1133: Ari the Learned writes the Islendingabok, a history from the founding to the death of Bishop Gizur in 1118.\n1123: Iceland's Christian law is set down as a code.\n1218-1220: Earl Skuli, for King Hakon of Norway, makes an expedition to Iceland to secure trade. Snorri Sturluson heads off violence by agreeing to help bring Iceland under Norway.",
         "detail": "Sketch",
         "ruler": "",
@@ -1695,10 +1697,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "No king: the godar and the Althing, under the law.",
-          "members": null,
-          "rules": "One law for the whole island, from 930. Magic of any sort is outlawed, though harmless magic goes unpunished by quiet agreement. Slavery stays lawful, but by 1220 debt slaves are the only ones often seen.",
+          "rules": "One law for the whole island, from 930. Magic of any sort is outlawed, though harmless magic goes unpunished by quiet agreement. Slavery stays lawful, but by 1220 debt slaves are the only ones often seen.\n\nDecided by: No king: the godar and the Althing, under the law..",
           "wants": "",
           "offers": ""
         },
@@ -2052,7 +2051,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "Their rise and their limits are told on pp. 15-16.",
@@ -2077,7 +2076,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "Pp. 15, 38.",
@@ -2102,7 +2101,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 9.",
@@ -2127,7 +2126,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Religious community",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2152,7 +2151,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -2489,7 +2488,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "Farmsteads in 1220, as printed: Eastern Quarter 1260, Southern 1750, Western 1580, Northern 2140. The book totals these as 4560, though they add to 6730. Population between 60 and 70 thousand, which at ten to a farm (p. 20) fits the 6730. Pp. 20-21, 24.",
@@ -2514,7 +2513,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "Their chieftaincies, the godord, each a legal entity within one of the thirteen districts.",
           "members": null,
           "rules": "A woman may inherit a godord but not run it: she names a man to act for her, and can do well through him. Pp. 21, 23.",
@@ -2539,7 +2538,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "Owning land or milk animals makes a man a bondi; the bar is low, and a moderately prosperous tenant or hut man can form a household. A landowner must declare himself in thing even with no milk animals; a man with neither land nor milk animals belongs to the thing of the householder who takes him in (from Gragas).\n\nRicher baendur pay thing tax. Of those who pay it, a godi may require one in nine to go with him to the Althing; the rest pay for that retinue. Paying thing tax also gives full rights to sit on legal panels (p. 34) and full membership of the local hreppur. P. 21.",
@@ -2564,7 +2563,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "Moving days fall six weeks after the start of summer. Rent is at most a tenth of the land's value. The tenant must keep the land's value up, above all its full yield of hay. A landowner must keep a tenant who cannot feed his family until the next moving days. Pp. 21-22.",
@@ -2589,7 +2588,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "A landowner needs his local hreppur's leave for each hut man, so that he makes no more than he can support; without it both he and the hut man risk lesser outlawry. P. 22.",
@@ -2614,7 +2613,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "P. 22.",
@@ -2639,7 +2638,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Estate or rank",
           "decides": "",
           "members": null,
           "rules": "The former owner must support a freedman who cannot support himself, inherits from one who dies with no heirs, and takes the blood money if one is killed. P. 22.",
@@ -2655,7 +2654,7 @@
       {
         "id": "honour_among_the_icelanders",
         "name": "Honour among the Icelanders",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Honour stands at the centre of Icelandic life, and the coming of Christianity has not moved it: godar, priests, rich and poor all weigh a person by it first, and piety comes a distant second. Meekly offering the other cheek is a foreign idea to most.\n\nA man's honour rests on his stock, his land and his lawsuits as much as on his weapons. A well-run farm, good marriages for his kin and skill at law all earn it. This is no knight's code: it allows for stratagem and a measure of deceit, and creeping up by night to burn a family in its house does not stain it, so long as the deed is owned.\n\nRank makes honour delicate. A plain farmer knows where he stands beside a chieftain, and each knows how to treat the other; where dominance or equality is open to question, offence is hard to avoid.\n\nIcelanders prize moderation, hof: the just and temperate man tends to prosper in the sagas. Its opposite, ohof, is excess and unfair dealing that frightens enemies, allies and the man's own kin alike, and those who practise it rarely last before other leaders band against them.",
         "detail": "Sketch",
         "ruler": "",
@@ -2664,9 +2663,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "Whoever gives, in gifts or in injury, is paid back in kind. Hiding what you have done is contemptible.\n\nHof and ohof: the magi of a Toframanna Saga gain greatly by showing hof and shunning ohof. Pp. 22-23.",
           "wants": "",
           "offers": ""
@@ -2680,7 +2676,7 @@
       {
         "id": "kin_fostering_and_vinfengi",
         "name": "Kin, Fostering and Vinfengi",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Kin come first in any need. But the island is small and its great folk much intermarried, so a man often finds close relations on the other side of a quarrel. Help usually comes from the side of the family, from brothers and cousins, and less from uncles and nephews.\n\nSo Icelanders make kin of the spirit as well. Children are fostered in another household by agreement between the fathers. Men blend their blood in a rite to become foster-brothers, sworn brothers or oath brothers, and when vengeance is due such kin are often more to be relied on than those of blood. Vinfengi is a formal friendship that promises political and legal support, now or later.",
         "detail": "Sketch",
         "ruler": "",
@@ -2689,9 +2685,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "P. 23.",
           "wants": "",
           "offers": ""
@@ -2705,7 +2698,7 @@
       {
         "id": "the_women_of_iceland",
         "name": "The Women of Iceland",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Icelandic women have a real say in their own lives: they may own property and lead households, and answer to outlawry for injury and killing. Much of their power is worked behind the scenes, in feuds they help end or help keep alight, shaming men into action with unpaid debts or cooling hotheads before a squabble turns to blood.\n\nMarriage offers pass between fathers or guardians, but the woman is normally asked, and a widow may refuse. The groom pays a bride price and her family gives a dowry, both hers, and in a divorce she takes both with any increase. Some women choose instead to be a frilla, the concubine of a man of rank, as a folk saying recommends over a bad marriage; many such matches exist because kinship forbids marriage. Both divorce and the frilla survive in 1220 against Christian teaching.",
         "detail": "Sketch",
         "ruler": "",
@@ -2714,9 +2707,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "Women cannot act as advocates or sit on legal panels; a woman with a godord uses a male representative at the things. A betrothed couple must by law own at least 120 law ounces between them, perhaps twenty years' saving for a landless worker; the law means to keep children from being born destitute and is hard to enforce. P. 23.",
           "wants": "",
           "offers": ""
@@ -2730,7 +2720,7 @@
       {
         "id": "poets_and_saga_tellers",
         "name": "Poets and Saga-Tellers",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Weather and the long winter nights keep people indoors, and they fill the time with an occasional board game, stories and verse. Reciting sagas is a respected skill, and a traveller with many of them, well told, is welcome anywhere.\n\nA good poet adds to his name. His verses lean on Norse myth and show his learning as well as his craft, and the great saga heroes were warrior poets, ready at any moment with something witty, flattering, insulting or obscure. A poem can win a place as a king's retainer, save a neck or start a feud. A proper Icelander facing death should find a verse or several, and a man speared through the heart may still spend his last breath on a jest.",
         "detail": "Sketch",
         "ruler": "",
@@ -2739,9 +2729,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "P. 24.",
           "wants": "",
           "offers": ""
@@ -2755,7 +2742,7 @@
       {
         "id": "letters_and_learning",
         "name": "Letters and Learning",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Literacy came with Christianity. The new faith needed more teachers than it had, so many godar and baendur took orders and learned Latin and letters, or sent sons abroad who came home with Scripture, and these godi-priests founded schools that still stand in 1220. The most famous are at the homes of the Haukdaelir at Haukadalur and the Oddaverjar at Oddi.\n\nGood Latin and letters are now common among wealthy men's sons, and authors such as Snorri Sturluson have lately begun writing verse and prose on Norse and Icelandic tradition.",
         "detail": "Sketch",
         "ruler": "",
@@ -2764,9 +2751,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "P. 24.",
           "wants": "",
           "offers": ""
@@ -2800,7 +2784,7 @@
       {
         "id": "homespun_and_the_three_ounces",
         "name": "Homespun and the Three Ounces",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Silver is scarce, so Icelanders trade in standard lengths of homespun, the woollen cloth they wear and sail under at home and abroad. Its quality and width are fixed: a bolt is two ells wide, and twelve ells of homespun means a sheet two ells across and twelve long.\n\nWool in bulk, homespun, skins and dairy goods buy the imports. White falcons, bears, sulphur and walrus ivory go abroad as well, in small amounts. Rents and debts are mostly settled with the wool and dairy work of the household.",
         "detail": "Sketch",
         "ruler": "",
@@ -2809,9 +2793,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "An ell is about 49 cm. The law ounce, the national rate for fines, is 6 ells. The standard ounce, the district rate for trade, rent and tithes, is 4 ells. The silver ounce, the international rate, is the true weight of silver. Eight ounces of any kind make one mark of that kind.\n\nThe law council sets the law ounce's silver value each year; in 1220 it is one-sixth of a silver ounce. So a silver ounce is worth 6 law ounces, 9 standard ounces or 36 ells, and a standard ounce is worth two-thirds of a law ounce. Prices are set in standard ounces at the spring things, district by district. Pp. 24-25.",
           "wants": "",
           "offers": ""
@@ -2825,7 +2806,7 @@
       {
         "id": "farm_shore_and_larder",
         "name": "Farm, Shore and Larder",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "In summer the farmers of a region share common land and highland pasture. Lambs and gelded rams go up to the highest grazing, while ewes and cows stay on the lower land by the dairies. Ewes left unmilked grow more and better wool, the cash crop, so the dairies run mostly on cow's milk, making butter, cheese and above all skyr, a thick curd that keeps through winter in great wooden vats half sunk in the ground. Grazing is largely held in common; what separates one farm from another is how much hay it makes and how well its farmer judges the stock it can carry.\n\nThe commons give landless men a chance to rise. Seals are widely hunted, and a stranded whale, with its mountain of meat and blubber, can start a bitter dispute. Whale keeps fermenting in purpose-built pits. Blubber serves for frying where butter is short, for proofing leather and, from seals, for caulking boats; seal and shark oil burn in the lamps.\n\nTrout and char run all year and salmon in season, and may be smoked. Cod dries on open racks in the arctic wind, cheap work for one fisherman, and dried and smoked fish sell in quantity at home, above all in the fasts. Most meat is boiled and steeped in vats of sour whey; this surr can be eaten from the barrel. There are sausages of meat, suet, liver and blood. Salt is short, so butter is left to ferment sour and keeps a long time. Edible lichen stands in for meal, birds and their eggs are taken, and dried dung is the ordinary fuel.",
         "detail": "Sketch",
         "ruler": "",
@@ -2834,9 +2815,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "Pp. 25-26.",
           "wants": "",
           "offers": ""
@@ -2850,7 +2828,7 @@
       {
         "id": "roads_and_travellers",
         "name": "Roads and Travellers",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "The descendants of famous seamen now have few ships, for want of wood. Horse paths reach almost every part of the land, and goods go by the tough native packhorses over steep and stony ways.\n\nTravellers usually sleep and eat at farms along the road. Hospitality marks an honourable man, and little is asked of a guest beyond good manners, a small gift, and his tales and gossip.",
         "detail": "Sketch",
         "ruler": "",
@@ -2859,9 +2837,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "A householder is bound by law to shelter only those on religious or legal errands, such as taking a child to baptism or going to thing for a case. Pointless wandering is illegal: an able-bodied man who does it is a tramp, and the penalty is lesser outlawry. The physically or mentally disabled are exempt, and a district usually shares their care by special arrangement. P. 26.",
           "wants": "",
           "offers": ""
@@ -2875,7 +2850,7 @@
       {
         "id": "trade_gifts_and_raids",
         "name": "Trade, Gifts and Raids",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Iceland has no standing marketplace. Markets gather when there is cause: the things are yearly meetings where shoemakers, swordsmiths and the like ply their crafts, each bishop's see holds a fair on certain feast days, and locals flock to a trading ship to buy its goods and deal with each other. A fishing station comes nearest to a lasting market, but sells only fish.\n\nPrices differ from district to district, so a peddler can live by carrying goods between them and now and then saves enough for a farm of his own, but petty trading is despised and his low standing follows him. Long-distance trade is another matter: a man may buy much from a ship and sell it on at a profit with no shame, given capital and connections.\n\nBetween near equals, exchange is one more move in the game of honour. The gift is its finest form, since it leaves the receiver to choose what comes back and when. Refusing a gift, or returning one at once, may show distrust or hostility; waiting too long may show resentment; and never answering may mean utter contempt or an admission of lasting superiority, as the case may be.\n\nA failed bargain may turn into a raid, the open taking of goods. Theft, the secret taking, is deeply dishonourable, and a serious lawsuit follows if it comes to light. A wasted journey is a bitter humiliation, and such an insult rarely goes unanswered, though most deals proposed between men of rank are well received and a trip to arrange a marriage is seldom thought hostile.",
         "detail": "Sketch",
         "ruler": "",
@@ -2884,9 +2859,6 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "Raiders are under forfeit immunity (p. 38): the defender may kill or hurt them without legal consequence, or may honourably stand aside and sue, so that the raider pays in the end at a price third parties set. Land, marriage and dowry deals are formalised by a witnessed handshake, the handsal. Pp. 26-27.",
           "wants": "",
           "offers": ""
@@ -2909,7 +2881,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "A committee of five.",
           "members": null,
           "rules": "A member who loses over a quarter of his herds to disease may recover half the loss, and half the value of fire damage to his home, at most three times in a lifetime. The other members fund it, each up to 1/120 of his total wealth; if that falls short, claims shrink in proportion. Full membership goes with paying thing tax (p. 21), and the hreppur licenses hut men (p. 22). The magicians keep a hreppur of their own on this model, the Galdramen Hreppur. P. 27.",
@@ -2934,7 +2906,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "No more than four hundred giants in Iceland in 1220. Pp. 29-31.",
@@ -2959,7 +2931,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Typical personality traits: Wise, Vengeful, Hateful. Pp. 30-31.",
@@ -2984,7 +2956,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Typical personality traits: Violent, Gullible, Greedy. P. 31.",
@@ -3009,7 +2981,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Typical personality traits: Sly, Quick-Tempered, Meticulous. P. 31.",
@@ -3034,7 +3006,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Typical personality traits: Fickle, Hospitable, Cowardly. P. 31.",
@@ -3059,7 +3031,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Typical personality traits: Proud, Slow Witted, Boastful. Pp. 31-32.",
@@ -3084,7 +3056,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 32.",
@@ -3109,7 +3081,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Likely the mothers or grandmothers of any player character trollsynir. P. 32.",
@@ -3134,7 +3106,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Landvaettir partake of both Magic and Faerie: those closest to mankind are nearest the fay, and those who kept apart as pure spirits of nature nearest the Magic Realm. For realm interaction treat them all as using Faerie power, except in magical auras, where they count as magical creatures; both sorts are therefore met in the magical auras that dot the land.\n\nThe few faerie auras are mostly heathen temple sites the Dominion has not taken, which also draw landvaettir, chiefly those who served there. All Icelandic spirits are by nature invisible and insubstantial; some can become visible, or material, not always both at once. Pp. 32-33.",
@@ -3159,7 +3131,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "They are the chief source of galdramen's magic (ch. 6). Their Might counts as ten points higher against a faerie-affecting spell. P. 33.",
@@ -3184,7 +3156,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Usually Magic Might about 10, with few powers and little reach into the physical world. Icelanders with the Premonitions Talent, as all galdramen have, get their premonitions from it. Premonitions is common among Icelanders, and fylgjur take special offence at malign magic on their wards or families, so such magic hardly ever passes unnoticed and unrecognised.\n\nThey count among the true landvaettir, so their Might is ten points higher against a faerie-affecting spell. Pp. 32-33.",
@@ -3209,7 +3181,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Best represented by the Guardian Angel or Ghostly Warder Virtue. P. 32.",
@@ -3234,7 +3206,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3259,7 +3231,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3284,7 +3256,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3309,7 +3281,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3334,7 +3306,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3359,7 +3331,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3384,7 +3356,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "Summoned when galdramen sing curse-songs and disease-songs. Their Might counts as ten points higher against a faerie-affecting spell. P. 33.",
@@ -3409,7 +3381,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -3434,7 +3406,7 @@
         "place_id": "iceland",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "P. 33.",
@@ -4003,7 +3975,7 @@
       {
         "id": "the_law_of_iceland",
         "name": "The Law of Iceland",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Iceland has no king; it has law. The first settlers, fleeing the feudal order growing on the mainland, framed it around the rights of free men, and the land itself kept any lord from holding wide territories, so wealth lay remarkably evenly. Slaves were freed and freedmen came to own land. That levelling is slowly and painfully coming undone in this century: the law was never able to restrain the storgodar, or later the bishops.\n\nEveryone belongs to the law through a thing attachment. A householder chooses a godi to be in thing with at the spring assembly, and those attached to the household follow that choice, so every person stands with one godi, in one district, in one Quarter (LFI p. 34).\n\nOn paper the land looks punished at every turn: eating meat on a Friday can earn lesser outlawry, and tripping a man full outlawry. In truth most offences never reach a court. The one wronged lets the matter go or settles at once, because a suit is costly, slow, technical and often dangerous (LFI pp. 37-38).\n\nThe laws are written now, in many books that may differ on the very detail a case turns on, for the law still bears the marks of its oral beginnings. The name Gragas (Grey Goose) belongs to two later manuscripts, and Icelanders of 1220 do not use it (LFI p. 36).\n\nLaw reaches everyone. Even magi who shun their neighbours have companions and grogs to feed, and will buy from the farms nearby (LFI p. 39).",
         "detail": "Sketch",
         "ruler": "",
@@ -4012,9 +3984,6 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "Penalties (LFI p. 37): only three exist, each fixed for its crime, and the court cannot vary them. No office enforces them: an unpaid fine needs a new case for non-payment (penalty: lesser outlawry), and after an outlawry the family must post a bounty or hunt the man themselves.\n\nThree-mark fine (24 law ounces): for petty offences such as unintended damage by cattle, small legal errors and minor religious breaches. Half goes to the prosecutor, half to the lawspeaker if present.\n\nLesser outlawry: three years' banishment, usually for negligent damage above five law ounces and many religious matters, such as a priest forgetting the holy water for a baptism. The outlaw has three summers to find passage; the three years run from then, and he may return with full rights. A court of confiscation divides his property; if it strays from the law the case can be quashed and those responsible face lesser outlawry themselves.\n\nFull outlawry: for any assault that landed a blow, hurt or not, and for breaking judgment in a lesser outlawry case. The outlaw loses all property and all legal, family and Church rights, and the Church always excommunicates him. No one may lawfully help or even advise him, and anyone may kill him. Only surviving twenty years or killing three other outlaws wins a reprieve without the prosecutor's consent.\n\nCourt of confiscation: two weeks after the thing that pronounces outlawry, at the convicted man's home, with twelve judges named by a local godi.\n\nWergild (LFI p. 37): free man 120 law ounces, freedman 60, slave 12; a fraction for harm short of death, not only bodily. It is owed whether or not a suit is brought, unless the victim fell having forfeited immunity. If it goes unpaid, the victim's kin may forbid the attacker's kin from coming near them, who must then humbly keep out of their way.\n\nPrincipals and vengeance (LFI p. 38): every prosecution and defence needs a principal, who may hand the case to another at any point. A defence principal charged with violence is barred from things and must do so. Assault, injury, raids on property, insult by word or gesture and sexual offences against kinswomen give a right of vengeance: the aggressor loses immunity and may be killed or hurt without penalty, until the next Althing. Forfeit immunity is a common defence.\n\nAdvocates (LFI p. 38): any slip, or possible slip, in a major case can spawn a new case. Handing a case to a godi is often very dear, but against a godi the only other course is to drop it. Skill at law can offset uneven support.\n\nBefore court (LFI p. 38): the prosecutor publishes the charge before a panel of neighbours, then before them summons the defence principal and tells his witnesses to attend. A killer must publish the deed as his own within a set time and distance, though not before a panel; failing that it is murder, a shameful thing, and full outlawry. Where witnesses are lacking, or intent or state of mind is in question, a panel decides: a panel of neighbours (five or nine freemen, usually those living closest), or a panel of twelve (the local godi and eleven freemen of his assembly third), used for matters of great public interest such as sorcery, theft, murder and perjury.\n\nIn court (LFI pp. 38-39): a principal brings at most ten men, and spectators stay beyond the boundary lines. Each litigant draws one lot for the order of cases, however many he has. The prosecutor names his witnesses, swears it is his case, recites his summons and presents his proof. Facts stated within a case may not conflict, and only a perjury judgment of the Fifth Court can amend them, for which the trial may be halted. Witnesses give one testimony, the majority prevailing, and dissenters are immune from perjury. The defence may challenge panel members (someone closer not called, kinship with the prosecutor, means, health), the prosecutor replacing them with the best qualified present; a wrong type of panel, or a witness on the same point, vetoes its verdict, for testimony outranks a panel. The defence then puts its case and the prosecutor may challenge likewise. One judge sums up each side.\n\nSettlement (LFI pp. 39-40): self-judgment, where the victim sets the terms, is the most honourable course, and abusing it costs reputation. Formal duels were outlawed in the eleventh century, though single combat quietly goes on. The summons is the first chance to settle, and refusing a generous offer weakens the prosecutor. Men of rank may call in an arbitrator, or a respected one may step in unasked; only overwhelming support then keeps a case alive. Arbitrators count the dead on each side, offset by rank and other injuries, and make up the difference with compensation on top of wergild. One who cannot pay suffers a banishment whose terms are entirely at the arbitrator's discretion.",
           "wants": "",
           "offers": ""
@@ -4037,7 +4006,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": null,
           "rules": "Only godar of full and ancient chieftaincies preside in the eastern, southern and western Quarters (LFI p. 34).\n\nCourt of prosecution (LFI pp. 35-36): opens the assembly. 36 judges, twelve named by each godi from his thingmen. A verdict needs 31 to agree; failing that, the case goes to the matching Quarter Court. Godar cannot sit as judges and are free to fight cases and broker settlements.\n\nCourt of payments (LFI p. 35): opens four days later. Debts are settled and goods valued, and it sets local measures such as the silver value of the standard ounce and the prices of cloth, fish and livestock.",
@@ -4051,79 +4020,79 @@
             "kind": "places",
             "target_id": "thverar",
             "note": "A spring assembly site",
-            "id": "58a1c1a73239"
+            "id": "a6c1987a3597"
           },
           {
             "kind": "places",
             "target_id": "thorsnes",
             "note": "A spring assembly site",
-            "id": "681837e2c75e"
+            "id": "e986c6a5178f"
           },
           {
             "kind": "places",
             "target_id": "thorskafjardar",
             "note": "A spring assembly site",
-            "id": "5c4e718f210c"
+            "id": "16629803cffd"
           },
           {
             "kind": "places",
             "target_id": "rangar",
             "note": "A spring assembly site",
-            "id": "19eafd20d894"
+            "id": "30be55063f4e"
           },
           {
             "kind": "places",
             "target_id": "arnes",
             "note": "A spring assembly site",
-            "id": "6a25c2f91935"
+            "id": "b12ffddf1355"
           },
           {
             "kind": "places",
             "target_id": "kjarlarnes",
             "note": "A spring assembly site",
-            "id": "f2c49df42397"
+            "id": "701e813cf1ea"
           },
           {
             "kind": "places",
             "target_id": "sunnudals",
             "note": "A spring assembly site",
-            "id": "df6b833cbafb"
+            "id": "e3256a7ddce7"
           },
           {
             "kind": "places",
             "target_id": "mula",
             "note": "A spring assembly site",
-            "id": "d2956892b3f2"
+            "id": "2ee1ecff4a47"
           },
           {
             "kind": "places",
             "target_id": "skaftafells",
             "note": "A spring assembly site",
-            "id": "599e4bbf4b8a"
+            "id": "835c544aa881"
           },
           {
             "kind": "places",
             "target_id": "hunavatns",
             "note": "A spring assembly site",
-            "id": "1085d4b966df"
+            "id": "6419b4c1654f"
           },
           {
             "kind": "places",
             "target_id": "hegranes",
             "note": "A spring assembly site",
-            "id": "c02430a0b209"
+            "id": "d64a3cb5460d"
           },
           {
             "kind": "places",
             "target_id": "vadla",
             "note": "A spring assembly site",
-            "id": "93c15468cc59"
+            "id": "ec56c450958c"
           },
           {
             "kind": "places",
             "target_id": "thingeyjar",
             "note": "A spring assembly site",
-            "id": "c85ba2624ebc"
+            "id": "703b8534f127"
           }
         ],
         "arms": {},
@@ -4141,7 +4110,7 @@
         "place_id": "thingvoll",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": null,
           "rules": "All godar and the lawspeaker must be present on the opening day. Each godi should bring at least one in nine of his thingmen, or be fined (LFI p. 35).\n\nThe calendar (LFI pp. 35-36): Thursday evening, the allsherjargodi hallows the site and sets the boundaries of the assembly's sections. Friday, judges are appointed. Saturday, either side in a case may challenge or dismiss nominees. Sunday, the bishops lead masses. Monday, the courts convene for nine days, ending on a Wednesday. Last comes the session of the law council, then the weapon-taking.\n\nWeapons may not be carried once the Althing is convened: they stay at the booth or campsite until the weapon-taking, when people pack for home (LFI p. 36).",
@@ -4155,7 +4124,7 @@
             "kind": "places",
             "target_id": "the_fall_things",
             "note": "Reports the Althing to the districts",
-            "id": "f19f69d0675f"
+            "id": "c3aee77ea42d"
           }
         ],
         "arms": {},
@@ -4173,7 +4142,7 @@
         "place_id": "thingvoll",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": 36,
           "rules": "Each holder of a full and ancient godord names one thingman to each court, so each has 36 judges. As in the varthing, a verdict must be all but unanimous: 31 of 36 (LFI pp. 36, 39). A divided judgment goes to the next court up, usually the Fifth Court.",
@@ -4198,7 +4167,7 @@
         "place_id": "thingvoll",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": 48,
           "rules": "All the godar name one judge each, making 48; the accused and the plaintiff each dismiss six for every dispute, leaving 36. A simple majority decides. A tie goes to the prosecution, except in a case sent up from a divided Quarter Court, when lots are drawn. Procedure otherwise follows the lower courts (LFI pp. 36, 39). The book dates its founding to 1004 here and to 1005 in its timeline (LFI p. 17).",
@@ -4223,7 +4192,7 @@
         "place_id": "thingvoll",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "The 48 godar and two bishops, with the lawspeaker in the chair and holding the casting vote.",
           "members": 50,
           "rules": "Every free man may attend, but only godar and bishops may speak; all 48 godar and both bishops must attend. Each godi has two advisers. They sit on three concentric rings of benches, the godar in the middle, the advisers on the inner and outer. The council elects the lawspeaker, and may ask him to recite any part of the law it needs (LFI p. 36).",
@@ -4248,7 +4217,7 @@
         "place_id": "thingvoll",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": null,
           "rules": "Stipend of 40 law ounces a year, plus half the fines levied at the Althing and at his own spring assembly. He holds the council's casting vote. Each godi, or two of his advisers, must attend the recital. At a lapse of memory or a hard point he consults at least five legal experts (LFI p. 36).",
@@ -4273,7 +4242,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Council or assembly",
           "decides": "",
           "members": null,
           "rules": "No court is appointed.",
@@ -4298,7 +4267,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faith or sect",
           "decides": "",
           "members": null,
           "rules": "",
@@ -4323,7 +4292,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Religious community",
           "decides": "",
           "members": null,
           "rules": "Knowing the Pater noster and Credo by heart is required of anyone able to learn them; wilful failure is lesser outlawry, and the bishop decides who prosecutes (LFI p. 42).\n\nThe tithe, from 1096, is a 1% property tax split into four: bishop, parish church, priest and paupers (LFI pp. 42-43).\n\nBoth bishops sit in the law council (LFI p. 36).",
@@ -4436,7 +4405,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Religious community",
           "decides": "",
           "members": null,
           "rules": "A warden receives two of the tithe's four parts, the church's and the priest's, keeps any profit, and is personally exempt from the tithe (LFI p. 43).",
@@ -4485,7 +4454,7 @@
         "place_id": "reykjadal",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Religious community",
           "decides": "",
           "members": 120,
           "rules": "",
@@ -4499,7 +4468,7 @@
             "kind": "places",
             "target_id": "holar",
             "note": "The bishop's see",
-            "id": "69adda4aeb2d"
+            "id": "89eb89cc8256"
           }
         ],
         "arms": {},
@@ -4842,7 +4811,7 @@
             "kind": "places",
             "target_id": "skalholt",
             "note": "Under its control",
-            "id": "605ee9bbd072"
+            "id": "8fea6d941fbd"
           }
         ],
         "arms": {},
@@ -4977,7 +4946,7 @@
         "place_id": "eldborg",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "A council, sitting yearly at Eldborg; it also judges disputes between members (p. 28)",
           "members": null,
           "rules": "Fees (1220): a trollson, galdraman or vitkir charges one standard ounce a day or part of a day, to two standard marks (16 ounces) a season. Seithkona and witches charge half an ounce a day, to one mark (8 ounces) a season. Ond is charged at one standard mark a pawn.\nDiscretion: magic is to be discreet, with as few witnesses as may be. A householder hiring a magician first assures him none of the household will take offence; if that fails, the magician is not answerable. Supernatural affairs are not discussed with non-members unless it cannot be helped, and the council alone decides what men of rank must be told. A member charged with witchcraft through unjustified, indiscreet magic pays the godi or storbaendur who defends him six law marks; if it was beyond his control the defence is free.\nOnd: a member may claim any source on his own land; on common land the first to harvest it claims it. A poacher returns the ond and pays a mark a pawn. The claims of a member dying without an heir lie open to the first harvester; abandoned sites may be claimed, and the hreppur judges any dispute.\nDuties: the cost and work of the path wards is split as evenly as the members allow. One who cannot contribute gives at least three pawns a year; one too poor for that pays nothing, but may not judge or sit on the council. Serving anyone on the blacklist, reviewed yearly, costs a fine of three law marks and the fee taken.\nBlack magic: malign magic on a human forfeits the hreppur's protection; magical attacks are allowed only against outlawed magicians. A magician in a mundane conflict uses mundane means or loses that protection. Attacked at home or on an innocent journey, not on a raid, he may use magic to drive off attackers or get away, but only with his life at risk, and never to injure on purpose.",
@@ -5002,7 +4971,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "The rules are on the sheet of anyone who belongs to the tradition; Help has How to play a galdraman.\nLimits (p. 45): those peculiar to Norse magic are for Norse characters, at the storyguide's careful choice. Hermetic Virtues are open to the Gifted (Hedge Magic RE p. 12); trollsynir have no other shapeshifting power and nothing of a realm at odds with theirs.\nVirtues: Mighty Fylgja and Large Fylgja, Hamfarir, Potency, Curse, Jotunn Affinity with Earth, Galdor Conjuring, Galdor Enchantment. The book's other Talents are the gruagach Arts, or Rival Magic's Winter's Breath, Storm's Eye, Wildfire and Sjonhverfing. The book's Gift has no Ability: keep its score in notes (pp. 57-58).\nNidstong (pp. 57-59): a tall rune-cut pole topped with a horse's skull, set overlooking the victims' land; it can strike groups. A casting roll daily against each target until it succeeds, with no backlash or botch while it stands; the last rolls count when it falls.\nLifting a Curse (p. 59): the maker beats the first roll; or the condition is met. A Curse holder beating the total, or an Intellego Vim of the 7th magnitude, learns the condition. Intellego Vim of 20+ shows the Ease Factor, and a Perdo Vim ritual above the casting total dispels it, at the risk of catching it on a botch.\nSun Duration (p. 51): in Iceland D: Sun lasts to the next sunrise or sunset, from about 23 hours at midsummer to 1, and further north longer. Optionally a full turn of the sky breaks it, at just under 24 hours.",
@@ -5042,19 +5011,19 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "8094ed022734"
+            "id": "6a0bffdf8361"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "aea50c8a3ee1"
+            "id": "614f2505de6e"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Its women are galdrakona",
-            "id": "06418404aebb"
+            "id": "a2db3cd72501"
           }
         ],
         "arms": {},
@@ -5087,31 +5056,31 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "7c480c875bfe"
+            "id": "66ca1f872599"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "846ce24b5929"
+            "id": "8708aaf1fd07"
           },
           {
             "kind": "places",
             "target_id": "traditional_galdramen",
             "note": "Their model and their rivals",
-            "id": "3fa7cf32ab31"
+            "id": "69d1b2e0763e"
           },
           {
             "kind": "places",
             "target_id": "holar_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "8c61c73df277"
+            "id": "436683bf58d1"
           },
           {
             "kind": "places",
             "target_id": "skalholt_cathedral_school",
             "note": "Trains schooled galdramen",
-            "id": "5d8b5b398fd8"
+            "id": "69d937b89f68"
           }
         ],
         "arms": {},
@@ -5129,7 +5098,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "No one: they have no formal organisation (p. 54)",
           "members": null,
           "rules": "The rules are on the sheet of anyone who belongs to the tradition; Help has How to play a galdraman.\nThe Fifth Edition trollsynir of Hedge Magic RE p. 76: the gruagach Arts through the Jotnar tongue, with a Trollskap chapter. No Magic Resistance (Hedge Magic RE p. 9) and no Potency, so totals fall from the book's; Afflictions are Transformation's bad results. A printed figure stays in a record's notes.",
@@ -5144,13 +5113,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "17c1c0a4ccb9"
+            "id": "ad8774156930"
           },
           {
             "kind": "places",
             "target_id": "icelandic_magicians",
             "note": "The Virtues and limits they share",
-            "id": "adff0129cfce"
+            "id": "14d0b10138da"
           }
         ],
         "arms": {},
@@ -5183,7 +5152,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "5c699b1edd72"
+            "id": "3fcae73d55d6"
           }
         ],
         "arms": {},
@@ -5201,7 +5170,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "Pp. 9, 45.",
@@ -5215,7 +5184,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "dde668967fd2"
+            "id": "5bef9a3ea1a7"
           }
         ],
         "arms": {},
@@ -5233,7 +5202,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "The book gives them no rules of their own. Pp. 9, 14.",
@@ -5247,7 +5216,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Admitted in the Interdiction",
-            "id": "d102256a9c56"
+            "id": "dcc764e37999"
           }
         ],
         "arms": {},
@@ -5280,13 +5249,13 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "Sits in the hreppur at Eldborg",
-            "id": "6958ee297256"
+            "id": "c1b1410fa019"
           },
           {
             "kind": "places",
             "target_id": "volur",
             "note": "Among the women called volur",
-            "id": "0938294a286e"
+            "id": "c11375a9cc88"
           }
         ],
         "arms": {},
@@ -5304,7 +5273,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hedge coven",
           "decides": "",
           "members": null,
           "rules": "P. 29.",
@@ -5318,7 +5287,7 @@
             "kind": "places",
             "target_id": "galdramen_hreppur",
             "note": "What the Order would mistake for it",
-            "id": "0ea60deb10a7"
+            "id": "a263cbcc9f50"
           }
         ],
         "arms": {},
@@ -5530,7 +5499,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_de_panne",
             "note": "Its harbour",
-            "id": "1e2c23edbf05"
+            "id": "dbd2c90d0b94"
           }
         ],
         "arms": {},
@@ -5607,7 +5576,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_exeter",
             "note": "Its harbour",
-            "id": "cce29f5d75ef"
+            "id": "ace6959f6092"
           }
         ],
         "arms": {},
@@ -5720,7 +5689,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5745,7 +5714,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5770,7 +5739,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -5786,7 +5755,7 @@
       {
         "id": "the_ranks_of_iceland",
         "name": "The Ranks of Iceland",
-        "kind": "faction",
+        "kind": "custom",
         "summary": "Who stands where in Iceland: free men, householders, landowners, great farmers and chieftains, and those with no standing.",
         "detail": "Sketch",
         "ruler": "",
@@ -5795,9 +5764,6 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
-          "decides": "",
-          "members": null,
           "rules": "",
           "wants": "",
           "offers": ""
@@ -5874,19 +5840,19 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "f14c3cacce7d"
+            "id": "146f8118d2a6"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "7ac7e4f4a8c5"
+            "id": "5715749ebe9f"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "3bc8a2a88a2d"
+            "id": "cdd5fd9c9478"
           }
         ],
         "arms": {},
@@ -5958,61 +5924,61 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "2637b8a5dd72"
+            "id": "d17c56171f06"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "5437582fa634"
+            "id": "733a7fc142fa"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "ad321fddc8c2"
+            "id": "8b3038509710"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "c6ff33192563"
+            "id": "f7f69443794b"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "e8753d8cebd8"
+            "id": "f56d9cfbce7d"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "f4453e17f748"
+            "id": "7c729004c005"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "8ed27a66cb9b"
+            "id": "3ccb7e87a57b"
           },
           {
             "kind": "characters",
             "target_id": "pralix",
             "note": "",
-            "id": "24b76db6952e"
+            "id": "db7fa5794cd3"
           },
           {
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "",
-            "id": "aad8f473cd85"
+            "id": "b97fd45837ed"
           },
           {
             "kind": "characters",
             "target_id": "macomb",
             "note": "",
-            "id": "8a1fa432e003"
+            "id": "5023e609f305"
           }
         ],
         "arms": {},
@@ -6144,91 +6110,91 @@
             "kind": "characters",
             "target_id": "lord_peter",
             "note": "",
-            "id": "3fbd77df0911"
+            "id": "866bf1a43548"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "ac9791c2f5a1"
+            "id": "6aea300d0e60"
           },
           {
             "kind": "creatures",
             "target_id": "lord_peter_s_men",
             "note": "",
-            "id": "0f79add1b93b"
+            "id": "f89830be7471"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "70abe365f308"
+            "id": "2ebac38c80d5"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "cf77e51f41f5"
+            "id": "2fe0d1af731d"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "",
-            "id": "a2e7b30d82ec"
+            "id": "02abe88eca39"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "",
-            "id": "9d91bb85da97"
+            "id": "c757b4276dfb"
           },
           {
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "",
-            "id": "fed31f589cf9"
+            "id": "4473f800f156"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "709e218f55df"
+            "id": "3ed81152cb64"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "5b357cbd5967"
+            "id": "c798708c9625"
           },
           {
             "kind": "characters",
             "target_id": "markus_of_verditius",
             "note": "",
-            "id": "7b465b338403"
+            "id": "7edb63b9f6ad"
           },
           {
             "kind": "characters",
             "target_id": "cornelius_of_verditius",
             "note": "",
-            "id": "82a4b47d1146"
+            "id": "da07ec949294"
           },
           {
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "5be5b4daddd4"
+            "id": "307ae9567321"
           },
           {
             "kind": "creatures",
             "target_id": "thingmen",
             "note": "",
-            "id": "84b8dcf34266"
+            "id": "0841aff81b9d"
           },
           {
             "kind": "creatures",
             "target_id": "walking_corpses",
             "note": "",
-            "id": "6ad8f58fec4b"
+            "id": "be3f188999af"
           }
         ],
         "arms": {},
@@ -6259,7 +6225,7 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "66be8a3854dd"
+            "id": "e2453829ca00"
           }
         ],
         "arms": {},
@@ -7330,7 +7296,7 @@
         "place_id": "glyder_fawr_sanctum",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -7444,7 +7410,7 @@
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "c5d695d565af"
+            "id": "fe6f55a1c670"
           }
         ],
         "arms": {},
@@ -7646,55 +7612,55 @@
             "kind": "characters",
             "target_id": "thord_sturluson",
             "note": "",
-            "id": "413a3771905b"
+            "id": "d585cd32ac1a"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "9fce832acc38"
+            "id": "921e0e333d52"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "bb0f369505c6"
+            "id": "cfee981829d0"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "f7f054e4ff1e"
+            "id": "f8e3ec074737"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "037111c01751"
+            "id": "c6c8d8b09980"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "2b26deedbbe2"
+            "id": "405c8d23b585"
           },
           {
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "",
-            "id": "869baffff107"
+            "id": "5b5b84432566"
           },
           {
             "kind": "creatures",
             "target_id": "disease_spirits",
             "note": "",
-            "id": "57de8023d9c2"
+            "id": "d706ee06371c"
           },
           {
             "kind": "creatures",
             "target_id": "unhatched_dragon_of_pan_caudarax",
             "note": "",
-            "id": "0ba05b4b2fa9"
+            "id": "00f9087dccc9"
           }
         ],
         "arms": {},
@@ -7838,73 +7804,73 @@
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "",
-            "id": "cbf2f8aa7c1b"
+            "id": "7e6c9a281336"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "3f2af4d63f76"
+            "id": "f5346c8fe889"
           },
           {
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "",
-            "id": "f3cef3a5c999"
+            "id": "c03d9855b67b"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "",
-            "id": "425551c2fb17"
+            "id": "19a2a8c65461"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "c4f542f2ba09"
+            "id": "94992071c8ed"
           },
           {
             "kind": "characters",
             "target_id": "signy_grettisdottir",
             "note": "",
-            "id": "05ddb606b155"
+            "id": "9e07d566c883"
           },
           {
             "kind": "characters",
             "target_id": "arnor_arngeirsson",
             "note": "",
-            "id": "e11f9509c707"
+            "id": "005feeac004a"
           },
           {
             "kind": "characters",
             "target_id": "leif_beogart",
             "note": "",
-            "id": "0ce7cfc60bf3"
+            "id": "892586f02b4f"
           },
           {
             "kind": "characters",
             "target_id": "father_halldor_ormsson",
             "note": "",
-            "id": "a2e3b14b3a41"
+            "id": "f1a7ef8a70d9"
           },
           {
             "kind": "characters",
             "target_id": "father_vebrand_thoroddson",
             "note": "",
-            "id": "ce55b74a2ec5"
+            "id": "98ba31f3ad1f"
           },
           {
             "kind": "characters",
             "target_id": "aldis_kolbeinsdottir",
             "note": "",
-            "id": "53c26d5b076e"
+            "id": "8fc609bb316d"
           },
           {
             "kind": "characters",
             "target_id": "helga_grimsdottir",
             "note": "",
-            "id": "0dc6f562b967"
+            "id": "33255d6ff3b9"
           }
         ],
         "arms": {},
@@ -8018,7 +7984,7 @@
         "place_id": "the_troll_caves_of_snaefell",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8043,7 +8009,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8068,7 +8034,7 @@
         "place_id": "the_singing_cave",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Family",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8093,7 +8059,7 @@
         "place_id": "the_singing_cave",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8222,43 +8188,43 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "fc40515fa975"
+            "id": "4317b9ea4cf5"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "a2c6bf94c494"
+            "id": "96fdfd354629"
           },
           {
             "kind": "characters",
             "target_id": "thordis",
             "note": "",
-            "id": "d0df1a6b548c"
+            "id": "9b702abdfd55"
           },
           {
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "26d4257eaa27"
+            "id": "9ed96de50a9d"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "3a25cdc04554"
+            "id": "5117fedecfe8"
           },
           {
             "kind": "creatures",
             "target_id": "thorkel_red_cloak_s_son",
             "note": "",
-            "id": "403a85cd62f7"
+            "id": "2192952e26e0"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "",
-            "id": "15ce5bb2bc0c"
+            "id": "c30c494786f4"
           }
         ],
         "arms": {},
@@ -8289,25 +8255,25 @@
             "kind": "creatures",
             "target_id": "kollbjorn",
             "note": "",
-            "id": "9e1b4cf25be3"
+            "id": "830150d3e54c"
           },
           {
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "",
-            "id": "b240b1f0a154"
+            "id": "ef7816b4b4da"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "",
-            "id": "e39912b04fdd"
+            "id": "9eae1cae1e5f"
           },
           {
             "kind": "characters",
             "target_id": "solrun",
             "note": "",
-            "id": "35fd8dddd4a9"
+            "id": "787a3c9fc078"
           }
         ],
         "arms": {},
@@ -8362,13 +8328,13 @@
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "",
-            "id": "28d492e6e746"
+            "id": "403097099494"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "",
-            "id": "95895671c7b3"
+            "id": "ff424c6ccdd0"
           }
         ],
         "arms": {},
@@ -8419,7 +8385,7 @@
         "place_id": "glasvellir",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "People or tribe",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8444,7 +8410,7 @@
         "place_id": "glasvellir",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Faerie court",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8493,7 +8459,7 @@
         "place_id": "geirrodargard",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8518,7 +8484,7 @@
         "place_id": "glasvellir",
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Spirits and beings",
           "decides": "",
           "members": null,
           "rules": "",
@@ -8637,49 +8603,49 @@
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "39bc1f0241bb"
+            "id": "35197e06befd"
           },
           {
             "kind": "characters",
             "target_id": "blund_thorgilsson",
             "note": "",
-            "id": "44b76ce9002e"
+            "id": "479d02754bfc"
           },
           {
             "kind": "characters",
             "target_id": "una",
             "note": "",
-            "id": "20d1b4abbd0e"
+            "id": "69662dab0399"
           },
           {
             "kind": "characters",
             "target_id": "kar_liefsson",
             "note": "",
-            "id": "743f12164a01"
+            "id": "5afefadf7955"
           },
           {
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "",
-            "id": "593e4abbf4e5"
+            "id": "49ab94223db4"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "971c3ac32a95"
+            "id": "b0b1029407e5"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "427b436efb7b"
+            "id": "aef7d0a43743"
           },
           {
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "",
-            "id": "71c4fe789ee0"
+            "id": "f8c062fe6c9b"
           }
         ],
         "arms": {},
@@ -8761,43 +8727,43 @@
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "",
-            "id": "5bd1cd1abdd7"
+            "id": "8ba33fc9b70f"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "f5a770e56919"
+            "id": "5716b01d6957"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "daec780cf88c"
+            "id": "695f6391efa2"
           },
           {
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "7110be90094b"
+            "id": "28700975b44c"
           },
           {
             "kind": "creatures",
             "target_id": "whisper",
             "note": "",
-            "id": "47f06f7b4f91"
+            "id": "704062f62be3"
           },
           {
             "kind": "creatures",
             "target_id": "ammon_master_of_the_hidden_revels",
             "note": "",
-            "id": "9e23307b617e"
+            "id": "e4b80ec2acdb"
           },
           {
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "",
-            "id": "6e455cc63871"
+            "id": "02d4c44871e8"
           }
         ],
         "arms": {},
@@ -8869,25 +8835,25 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "b00f67cd271c"
+            "id": "ef0f461ac1ab"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "5660f9e8b13b"
+            "id": "d43a33caf920"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "13e8f7d96fb4"
+            "id": "16df5ce1e5a4"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "a1c2f18a7154"
+            "id": "a710fb261de9"
           }
         ],
         "arms": {},
@@ -9051,61 +9017,61 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "",
-            "id": "7a30af19cc93"
+            "id": "7087cadd0fec"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "",
-            "id": "65c10d1a62a4"
+            "id": "5dad9d819c9e"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_s_undead_form",
             "note": "",
-            "id": "bd75a96478ac"
+            "id": "166b1dcf190d"
           },
           {
             "kind": "creatures",
             "target_id": "setna",
             "note": "",
-            "id": "bcc49259b1ba"
+            "id": "e38f55ab1856"
           },
           {
             "kind": "creatures",
             "target_id": "the_golden_sphinxes",
             "note": "",
-            "id": "08e2cc8e5cd9"
+            "id": "e37b40891d89"
           },
           {
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "",
-            "id": "179a0d407cf6"
+            "id": "fdaabb494f7d"
           },
           {
             "kind": "creatures",
             "target_id": "gudmund_of_glasvellir",
             "note": "",
-            "id": "72d9dfed455e"
+            "id": "6a91e6eb08ea"
           },
           {
             "kind": "characters",
             "target_id": "einar_gamlisson",
             "note": "",
-            "id": "2b2e34706311"
+            "id": "773a5216fead"
           },
           {
             "kind": "characters",
             "target_id": "iain_the_scot",
             "note": "",
-            "id": "3720bcbea6c5"
+            "id": "dac1778ca9e6"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "",
-            "id": "880cd14c4c0b"
+            "id": "39d05a043192"
           }
         ],
         "arms": {},
@@ -9134,7 +9100,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_bergen",
             "note": "Its harbour",
-            "id": "931918db4b73"
+            "id": "18cab425735c"
           }
         ],
         "arms": {},
@@ -9249,7 +9215,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -9263,19 +9229,19 @@
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads it",
-            "id": "40a3d1295445"
+            "id": "f0f1e157c183"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads it",
-            "id": "3af3afeb4ef8"
+            "id": "244697490544"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "Their pretext",
-            "id": "bc458040dc86"
+            "id": "64eaf4aa0f90"
           }
         ],
         "arms": {},
@@ -9293,7 +9259,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -9318,7 +9284,7 @@
         "place_id": null,
         "place_level": 0,
         "details": {
-          "faction": "Other",
+          "faction": "Hermetic group",
           "decides": "",
           "members": null,
           "rules": "",
@@ -9478,145 +9444,145 @@
             "kind": "characters",
             "target_id": "hadrianus_of_flambeau",
             "note": "His death begins it",
-            "id": "c27011e77504"
+            "id": "5e71c4bae81f"
           },
           {
             "kind": "characters",
             "target_id": "julius_of_flambeau",
             "note": "Leads the crusade",
-            "id": "58f8e6d09d0f"
+            "id": "4eff3d03b066"
           },
           {
             "kind": "characters",
             "target_id": "lavinia_of_guernicus",
             "note": "Leads the crusade",
-            "id": "4850dde0467f"
+            "id": "d85f93ca706a"
           },
           {
             "kind": "characters",
             "target_id": "albinus_of_ex_miscellanea",
             "note": "The crusade's spirit master, or its enemy",
-            "id": "1147c15a6278"
+            "id": "48c43a737019"
           },
           {
             "kind": "characters",
             "target_id": "vigdis",
             "note": "Warns of the attack on Scartaris",
-            "id": "9ac710158dea"
+            "id": "832cc42a93cc"
           },
           {
             "kind": "creatures",
             "target_id": "vindsvall",
             "note": "The second guardian",
-            "id": "959f148ac972"
+            "id": "35975698fc30"
           },
           {
             "kind": "creatures",
             "target_id": "the_gray_bull",
             "note": "The third guardian",
-            "id": "5a54f58c9dd5"
+            "id": "d7164e35810e"
           },
           {
             "kind": "creatures",
             "target_id": "the_guardian_host",
             "note": "Fights for each guardian",
-            "id": "b00de3584f87"
+            "id": "ea9cb1038c6f"
           },
           {
             "kind": "creatures",
             "target_id": "gull_hellirsson",
             "note": "Breaks the crusaders' Aegis",
-            "id": "ecd10967e03a"
+            "id": "43bb6c8dbe3a"
           },
           {
             "kind": "places",
             "target_id": "bergen",
             "note": "Hadrianus sailed from here",
-            "id": "16f2ad58458e"
+            "id": "a576bd4fcc40"
           },
           {
             "kind": "places",
             "target_id": "the_haunted_scottish_island",
             "note": "Where his ghost walks",
-            "id": "a29592d25ec0"
+            "id": "d8a29e0bef91"
           },
           {
             "kind": "places",
             "target_id": "the_southeastern_harbor",
             "note": "Where the armada anchors",
-            "id": "08f3771a4ba8"
+            "id": "292b156c7a31"
           },
           {
             "kind": "places",
             "target_id": "the_crusaders_mystic_tower",
             "note": "The crusaders' base",
-            "id": "ee3d947b94af"
+            "id": "ac6fb0776074"
           },
           {
             "kind": "neighbours",
             "target_id": "the_hermetic_crusaders",
             "note": "The invaders",
-            "id": "db282df4ac3d"
+            "id": "05e3b3ee801b"
           },
           {
             "kind": "neighbours",
             "target_id": "the_magi_against_the_crusade",
             "note": "Argue against it",
-            "id": "719f723b8a34"
+            "id": "d0adaded960d"
           },
           {
             "kind": "neighbours",
             "target_id": "the_order_of_odin",
             "note": "The pretext",
-            "id": "33212d3f5b4a"
+            "id": "6f377ba4f121"
           },
           {
             "kind": "neighbours",
             "target_id": "the_loch_leglean_tribunal",
             "note": "Finds the ghost",
-            "id": "5c68bf0be080"
+            "id": "f8e38b728d2f"
           },
           {
             "kind": "creatures",
             "target_id": "pan_caudarax_dragon_of_hekla",
             "note": "The first guardian",
-            "id": "5c5bd372b4e0"
+            "id": "2d7a6616267a"
           },
           {
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "The fourth guardian",
-            "id": "a8aa19bd890c"
+            "id": "e8f5de8c9dc3"
           },
           {
             "kind": "characters",
             "target_id": "biorn_egilsson",
             "note": "Leader of the hreppur, slain",
-            "id": "7b99a4882625"
+            "id": "d83efb172b1f"
           },
           {
             "kind": "neighbours",
             "target_id": "skalholt",
             "note": "Bishop Magnus's seat; the Gray Bull's pasture",
-            "id": "6425a8458d38"
+            "id": "07a3b6e615e5"
           },
           {
             "kind": "places",
             "target_id": "scartaris",
             "note": "Julius's target, and a trap",
-            "id": "d0d15af22045"
+            "id": "811a99424d69"
           },
           {
             "kind": "neighbours",
             "target_id": "the_norn_landvaettir",
             "note": "Coordinate the Icelandic assault",
-            "id": "8d812631315f"
+            "id": "62f458aef4c2"
           },
           {
             "kind": "neighbours",
             "target_id": "galdramen_hreppur",
             "note": "The war's target",
-            "id": "056a3b40494e"
+            "id": "e4802718d1fd"
           }
         ],
         "arms": {},
@@ -10747,6 +10713,8 @@
         "summary": "The leader of Wormhout: a thickset man of average height, dark brown hair and green eyes, an expert in sacred architecture.",
         "secrets": "Looks 35. Size 0, Confidence 3, Twilight Points 9. Reputations: Contemptibly Cautious 3 with Flambeau and Tytalus magi; Promising Theoretician 2 with Verditius and Bonisagus magi (p. 78).\n\nA Vim specialist who has so far escaped temporary Twilight by caution and luck, though the last brush nearly took him. He knows few spells and invests a device with any effect he wants. He commissioned his longevity potion from the Order's foremost Verditius alchemist. He dreads casting the Aegis, which his enduring magic lets last up to ten years, and is researching a way to master rituals and cast them safely.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -10966,6 +10934,8 @@
         "summary": "A thin, tiny woman with greying blond hair and blue eyes, and an important powerbroker in the Normandy Tribunal.",
         "secrets": "Looks 50. Size -1, Confidence 3, Twilight Points 15. Reputation: Formidable 3 with the Normandy Tribunal (p. 78).\n\nHer high ideals have made her enemies, even among quaesitores. Her law, certamen and, rarely for a Bonisagus, Wizard's War impress even Flambeau and Tytalus. She specialises in deception and illusion, which her master taught as the proof that truth is hard won, and uses them to expose lies. She often goes with Iphimedeia on investigations.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11185,6 +11155,8 @@
         "summary": "A quaesitor: a tall, strongly built woman with light brown hair and brown eyes, often called on to look into Hermetic crimes.",
         "secrets": "Looks 40. Size 0, Confidence 3, Twilight Points 17. Reputations: Impartial 3 with the Normandy Tribunal; Dangerous 3 with guilty magi (p. 78). The book calls her a quaesitor on p. 75.\n\nRespected, with powerful enemies made by her impartial justice. An Intellego specialist, sharpened by her rivalry with Vera. Few in Normandy doubt she can find a sigil on illegal magic however old, and several Marched magi have found illusion and masking useless before her (pp. 78-79).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11404,6 +11376,8 @@
         "summary": "The youngest magus of Wormhout: a lean, shortish man with black hair and green eyes, a maker of automata.",
         "secrets": "Looks 32. Size 0, Confidence 3, Twilight Points 10. Reputations: Apolitical 2 and Maker of Automata 3, both with the Normandy Tribunal (p. 79).\n\nHe wants an automaton that truly learns, which no Hermetic maga has made; his best play chess and work puzzles. They watch the covenant's vis sources, with magic from Vera and Iphimedeia that stays hidden and pierces concealment, on covenant land only and against concealments only. Some call that scrying; Iphimedeia would argue that entering under concealment is itself magical spying. No test case has been brought.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -11840,27 +11814,29 @@
             "kind": "creatures",
             "target_id": "liam_the_shapeless",
             "note": "His father and parens",
-            "id": "c69bfe7fde16"
+            "id": "9f0f40d9a2d1"
           },
           {
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Serves him",
-            "id": "97d3743f0310"
+            "id": "96fcf0932372"
           },
           {
             "kind": "characters",
             "target_id": "eleanor_iain_s_wife",
             "note": "His wife",
-            "id": "96eeeed3543e"
+            "id": "5e82bc1ffcec"
           },
           {
             "kind": "characters",
             "target_id": "donncadh_scot",
             "note": "His son",
-            "id": "75e2c6a010a8"
+            "id": "58c823d78499"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12122,15 +12098,17 @@
             "kind": "characters",
             "target_id": "pralix",
             "note": "His parens",
-            "id": "e1151c7899c7"
+            "id": "fa51db619a3b"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His prisoner",
-            "id": "a844e90331eb"
+            "id": "b6038ec40835"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12567,9 +12545,11 @@
             "kind": "creatures",
             "target_id": "whisper",
             "note": "His familiar",
-            "id": "6ee88e8a679e"
+            "id": "5134aa67a7ac"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -12879,15 +12859,17 @@
             "kind": "characters",
             "target_id": "victor_filius_pralix",
             "note": "Her master, who possesses her",
-            "id": "dc8a19bb1283"
+            "id": "3d82a11a3007"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The demon held in her",
-            "id": "f5d7b22243ca"
+            "id": "925afce274f6"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13076,6 +13058,8 @@
         "summary": "The Tytalus maga who first beat Damhan-Allaidh and founded House Ex Miscellanea.",
         "secrets": "Victor's parens. Landed in Northumbria in May 814, beat Damhan-Allaidh in 816, and raised the Ordo Miscellanea from the witches, druids, beast mages and spirit masters of her army, becoming prima when it joined the Order (p. 71). Heirs to Merlin p. 13 has the Ordo founded in 815 and accepted in 817, a year inside this book's campaign of 814 to 816; this pack follows 815.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13264,6 +13248,8 @@
         "summary": "A theurgist of the old covenant of Vindolanda, long dead.",
         "secrets": "Her line came down from the Romano-Celtic priests of Sulis Minerva at Bath. She worked out the Carnac gate and rebuilt the gatestones as Hermetic thaumaturgy. Filia of Morwena and parens of Macomb. She fled Wales from threats by Diedne magi, reclaimed her lands with a first sanctum under Glyder Fawr, left it to Macomb, and moved to the Sea Temple beneath the sea off Devon. Damhan-Allaidh killed her there in 889, and her ghost brought the dome down on him and Liam (pp. 71-73, 88, 94, 123).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13456,9 +13442,11 @@
             "kind": "characters",
             "target_id": "ealasaid_lady_of_the_waters",
             "note": "His parens",
-            "id": "cd5965b2a2cb"
+            "id": "334e8b3077b9"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13703,9 +13691,11 @@
             "kind": "characters",
             "target_id": "una",
             "note": "His wife",
-            "id": "4fe7f46217d2"
+            "id": "afed0ac71dd9"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -13940,9 +13930,11 @@
             "kind": "creatures",
             "target_id": "hlokk",
             "note": "Her cat",
-            "id": "1d9089882f2f"
+            "id": "683d2ed68588"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14174,6 +14166,8 @@
         "summary": "A member of the galdramen hreppur's council.",
         "secrets": "A trollsdottir of the council: printed Magic Resistance 63, dropped as no hedge wizard has one (Hedge Magic RE p. 9), Size +2, looks 37, printed Confidence 3. Her giant mother raised her and she never met her outlawed father. She picked fights until age taught her some caution, and trollsynir magic has left her looking more troll than human. She has come to back her descendant Arnor Arngeirsson in his dispute, and the attack on the eggs worries her (p. 103).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14403,6 +14397,8 @@
         "summary": "A member of the galdramen hreppur's council.",
         "secrets": "Leader of the few vitkir left: Size +1, looks 67, printed Confidence 4. His temple lies in a regio near his farm, and such regiones are rare and precious to vitkir, who must keep their rites wholly secret. Wanting back those that have left vitkir hands, for vitkir lately fled from Norway, he blights fields and cattle to force sales and hides it from his victims' fylgjur. A galdraman has reported him. He will answer that the victims never suspected and that he paid fair prices (p. 103).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14622,6 +14618,8 @@
         "summary": "Attends the hreppur at Eldborg.",
         "secrets": "A vitki of the powerful Beogart family, in a feud of centuries with the Odd-Karnors. Size +0, printed Confidence 4. He has come only to make plain that he had no part in the attack on the eggs (p. 103).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -14843,6 +14841,8 @@
         "summary": "Leader of the galdramen hreppur.",
         "secrets": "Iceland's oldest galdraman, a deft politician: Size +1, looks 85, printed Confidence 3, Twilight Points 19, which are Warping 6 now (DE p. 538). Most galdramen have made the long hamfaring (Final Twilight) by his age, and he knows his fylgja's call cannot be refused for ever. He wants peace for those to come, and finds the quarrel between the two Christian schools the hardest to settle (p. 104). He sees no reason the magi should not belong, and offers vis rights if they appease the dragon (p. 105).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15072,6 +15072,8 @@
         "summary": "Represents the Holar school on the hreppur's council.",
         "secrets": "Size +0, printed Confidence 3. He seems to want the balance kept, but his first aim is his school's right to harvest magical sites. Bishop Gudmund's troubles leave Holar to itself. When some Skalholt vis sites went unharvested, Holar claimed abandonment and took them. Some at Holar deny the hreppur's authority; Halldor thinks the moment is wrong, not the idea. The school seeks a breakthrough to the strength of the trollsynir and traditional galdramen, and with it would press for independence (p. 104).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15301,6 +15303,8 @@
         "summary": "Represents the Skalholt school on the hreppur's council.",
         "secrets": "Size +0, printed Confidence 2. Local priests gather the school's vis, and several have died of late, so sites stood idle until new priests came. Holar calls them abandoned. Vebrand hopes the hreppur rules against Holar, and it probably will, since abandonment normally means many years of disuse (p. 104).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15520,6 +15524,8 @@
         "summary": "Nominal leader of the Seithkona.",
         "secrets": "Size -1, looks 75, printed Confidence 3. Her gloomy prophecies come true often enough that people listen, and some claim to have escaped disaster by solving her riddles, but she argues practical matters badly (p. 104).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15739,6 +15745,8 @@
         "summary": "Speaks for the Seithkona at the hreppur.",
         "secrets": "Size +0, looks 51, printed Confidence 4. Being women, most Seithkona cannot attend, so they are always outvoted. For years she has proposed that the absent may hand their votes to those who go, which the powers at the hreppur will never pass, unless she brings every Seithkona in Iceland to one meeting (pp. 104-105).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -15931,9 +15939,11 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "97d56d25f964"
+            "id": "3f91b0845ec8"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16126,9 +16136,11 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "a5d11ba26b58"
+            "id": "87d52764603d"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16321,9 +16333,11 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "Her father",
-            "id": "832e3ae8c7e6"
+            "id": "6b35bc5a379d"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16512,6 +16526,8 @@
         "summary": "Geirrod's lieutenant, a troll.",
         "secrets": "He rules Geirrod's people with an iron fist (p. 118).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16700,6 +16716,8 @@
         "summary": "A peddler of household goods who carries the Snaefellsnes gossip from farm to farm.",
         "secrets": "He brings word of the dragon rumour and of Blund's tall machine, and nearly took a beating for asking about it (p. 114).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -16888,6 +16906,8 @@
         "summary": "A farmer on the north side of Snaefell who keeps his own counsel.",
         "secrets": "Einar's brother. He says nothing of Einar until threatened, by force or magic. Then he says Einar has gone back to the Glittering Plains, beyond reach, and under more pressure that the way in lies in Snaefell's central crater. He knows nothing but the reasons for the vendetta (p. 115).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17132,6 +17152,8 @@
         "summary": "Wife of the merchant Iain Scot of De Panne: still a striking beauty close on fifty, dressed in the newest fashion. A foundling left at St Michael's church and fostered by a carpenter through Father Galcher, she sold the toys she made at market for high prices until Iain, the town's best match, married her. Some women of the town still look down on her for her birth.",
         "secrets": "",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17590,15 +17612,17 @@
             "kind": "characters",
             "target_id": "mari_donncadh_s_wife",
             "note": "His wife",
-            "id": "690ad2814285"
+            "id": "01460658b9fb"
           },
           {
             "kind": "characters",
             "target_id": "brighde_scot",
             "note": "His daughter",
-            "id": "d34f1a1c689c"
+            "id": "724ae4dd7563"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -17870,6 +17894,8 @@
         "summary": "Wife of Donncadh Scot and mother of Brighde, a fairly tall woman with the blond hair and blue eyes of her Scandinavian forebears, daughter of Baldwin, who co-owns De Panne's only mill. She is delighted with her marriage, expecting a second child, a proud mother and known among the merchants' wives for her close interest in everyone's affairs, though not in the family trade.",
         "secrets": "She knows nothing of Iain's true past or her husband's magic; recent events, and arriving at a Hermetic covenant, have shaken her badly. Her fylgja (p. 32) is a hawk. She has never linked her little accidents to coming danger, so it spent the past week trying and failing to warn her (pp. 134-135).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18452,9 +18478,11 @@
             "kind": "characters",
             "target_id": "thorodd_gamlisson",
             "note": "His brother",
-            "id": "9e7b6e8bdd7b"
+            "id": "ce773d4c5de0"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -18851,9 +18879,11 @@
             "kind": "characters",
             "target_id": "vifil_halldorson",
             "note": "His guide for the magi",
-            "id": "59f6ba706bc2"
+            "id": "744b27712dac"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19380,6 +19410,8 @@
         "summary": "A tall, thin, affable farmer and smith of Snaefellsnes with light brown hair, brown eyes and a clubfoot that keeps him from much farm work. His smithy makes tools and now and then weapons, and earns him well. His son runs the farm and its three laborers, and he is known for his generosity to neighbors in hard times.",
         "secrets": "A moderately powerful traditional galdraman who quietly sells his services around the region. With the farm in his son's hands he means to work on his magic (p. 142). Thord asks him to guide the foreign magi, and to watch and report on them, which he admits only if asked; he has no Gentle Gift, so they may guess (p. 99). He can tell them about Pan Caudarax (p. 101), brings them to the hreppur, and shares the vis if he found the nidstong himself (pp. 102, 106).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19568,6 +19600,8 @@
         "summary": "An archmagus of House Flambeau, teacher of two filii.",
         "secrets": "In 1214 he heard of magicians working from Iceland and sailed from Bergen with his two filii. Their hostility roused the landvaettir watchers, and Pan Caudarax burned the ship. The filii died at once. Hadrianus lived through the flame and killed a band of landvaettir, then botched a spell and fell into brief Twilight, and was thrown in the sea and drowned (Icelandic Wars pp. 1-2).\n\nHis ghost haunts a Scottish island until 1224, when it tells a magus of Loch Leglean, incoherently, that forces of the Order of Odin killed him, and rests. A summoning to learn more sends him into Final Twilight (p. 2). He spoke of a dragon and other beasts, not of spirits, as the landvaettir took solid form to reach him past his Parma (p. 6).\n\nLand of Fire & Ice p. 70 tells of a separate voyage, with no names: in 1218 other powerful Flambeau magi on a ship from Bergen drew the dragon's fire, and Einar Gamlisson's wife and sons died with them.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19756,6 +19790,8 @@
         "summary": "An archmagus of House Flambeau, an Ignem specialist, whose strongest spells are made for hunting renounced magi.",
         "secrets": "After 1224 he rises to prominence and, with Lavinia, prepares the invasion of Iceland (Icelandic Wars p. 2). He is only average in Vim, and his Perdo Vim spells are against demons, not magical spirits (p. 6).\n\nHe beats the senior opponent of the crusade in certamen at the War Tribunal (p. 4), burns Biorn Egilsson as he asks to talk (p. 9), and leads the hoplites against Vindolanda (p. 12). If Bard wins and Julius lives, he is taken at sunset and given to the Yfel lords (p. 13).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -19944,6 +19980,8 @@
         "summary": "An archmaga and Quaesitor of House Guernicus, an Intellego specialist skilled in wards and necromancy.",
         "secrets": "With Julius she prepares the invasion. In 1230 she calls the War Tribunal at Durenmar, the domus magna of House Bonisagus in the Rhine Tribunal, open to all with an interest, to debate and organise a crusade against Iceland, and declares it legal and binding (Icelandic Wars pp. 2, 4). She has no offensive spells against magical spirits (p. 6).\n\nIf the hreppur swears the Oath she answers that joining a House needs its primus's consent, demands that the Primus of Ex Miscellanea approve each candidate, an approval that cannot be had, and declares the membership invalid (p. 4). She has witches' hearts brought to her to question their ghosts (p. 10). Her own divinations slowly show that Iceland's magicians knew nothing of any Order of Odin (p. 12).\n\nThe book prints that Primus as an unnamed, reclusive prima who refuses all contact as she readies for the doom she has foretold for decades, which is what makes the demand impossible (p. 4). In the Stonehenge Tribunal's Order, which this pack follows, Immanola entered Final Twilight in 1216 and Ebroin has held the office since, so a troupe must settle why his approval cannot be had.",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20132,6 +20170,8 @@
         "summary": "An archmagus of House Ex Miscellanea, a Theban spirit master.",
         "secrets": "His spells can beat the guardians. If support for the crusade holds he sails with it, drives off the Host and can bottle Vindsvall; he has an even chance of stopping the Gray Bull (Icelandic Wars pp. 7-8).\n\nIf support is undermined he withdraws. If Lavinia rebuffs the hreppur he goes to Iceland, affirms its membership to the guardians and Biorn Egilsson, and with a laboratory from Vindolanda can make them magics against the crusade (p. 7). If the hreppur joins the Order he works to bring galdor into Hermetic Theory (p. 15).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20320,6 +20360,8 @@
         "summary": "A bondi of Snaefellsnes, warden of the local church, married to the galdrakona Asta.",
         "secrets": "A neighbour of Dagverdara. His young daughter falls gravely ill during the war, and he rides to the magi for ond (Icelandic Wars p. 10).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20508,6 +20550,8 @@
         "summary": "A young galdrakona, wife of Gunnar Loftursson, with a fylgja.",
         "secrets": "Crusaders mark her for death. Warned by her fylgja, she keeps singing the spell that holds a Biarg spirit at her daughter's side from inside the church (Icelandic Wars p. 10).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -20696,6 +20740,8 @@
         "summary": "A Norn lady, a landvaettir lady of the Orlog spirits.",
         "secrets": "With Bard and Gull she warns Vindolanda that Julius has found Scartaris and will strike in three days, and she can give each magus a landvaettir attendant of Might 50 (Icelandic Wars pp. 11-12).",
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "agents": [],
         "agency_xp": 0,
         "discipline": [],
@@ -22532,7 +22578,7 @@
             "attack": 10,
             "defense": 15,
             "damage": -2,
-            "id": "1e0a161fd735"
+            "id": "4d3ef6b88f49"
           }
         ],
         "soak": 1,
@@ -22591,7 +22637,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReAu 20. Flies ten times as fast as a normal bird and never tires.",
-            "id": "d7668fe9a3cd"
+            "id": "53c14b5afa5d"
           },
           {
             "name": "Mythic Perception",
@@ -22605,7 +22651,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 40. Sees through any disguise or illusion, and hears talk perfectly up to a mile away.",
-            "id": "19a32873caf3"
+            "id": "2051c82547ff"
           },
           {
             "name": "Eye Peck",
@@ -22619,7 +22665,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 30. A hit scratches an eye, the Might being spent after the attack lands. An infection sets in next day and lasts seven days, blinding that eye; a Medicine or Herbalism roll of 15+ saves it, or Restoration of the Defiled Body stops the infection and restores sight.",
-            "id": "f43e54dc4434"
+            "id": "377fea710eb6"
           }
         ],
         "vis": [
@@ -22627,7 +22673,7 @@
             "pawns": 4,
             "art": "Intellego",
             "where": "in its eyes",
-            "id": "2ba90b36f27a"
+            "id": "18d921b73dd2"
           }
         ],
         "equipment": "",
@@ -22638,6 +22684,8 @@
         "place_id": "lord_peter_s_manor",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Lord Peter's familiar, once Damhan-Allaidh's messenger. Misheard messages have undone several masters. A coward, it goes back to spirit form as soon as anyone attacks it."
       },
       {
@@ -22695,7 +22743,7 @@
             "attack": 9,
             "defense": 9,
             "damage": 2,
-            "id": "ecd98054101d"
+            "id": "6c1c942c9c72"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22703,7 +22751,7 @@
             "attack": 13,
             "defense": 12,
             "damage": 8,
-            "id": "c8276eff9228"
+            "id": "769d63a326a5"
           }
         ],
         "soak": 3,
@@ -22766,6 +22814,8 @@
         "place_id": "lord_peter_s_manor",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Two dozen die in Scartaris and six stay behind at the manor (p. 82)."
       },
       {
@@ -22812,7 +22862,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 0,
-            "id": "c1f86ec39be9"
+            "id": "fc69a07bf8c1"
           },
           {
             "name": "Club",
@@ -22820,7 +22870,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 3,
-            "id": "110a5a72d824"
+            "id": "6bfe27ef770e"
           }
         ],
         "soak": 7,
@@ -22865,7 +22915,7 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in the body; infernally tainted",
-            "id": "e59db3d6d290"
+            "id": "4635cc536a52"
           }
         ],
         "equipment": "",
@@ -22876,6 +22926,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "The slain of Snaefellsnes, raised by Hetep (pp. 86, 137)."
       },
       {
@@ -22943,7 +22995,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 1,
-            "id": "e1ae0a84e817"
+            "id": "aa3981a51adf"
           },
           {
             "name": "Longsword and Round Shield",
@@ -22951,7 +23003,7 @@
             "attack": 12,
             "defense": 11,
             "damage": 7,
-            "id": "174a4f1f8a6c"
+            "id": "46d97511199a"
           },
           {
             "name": "Long Spear",
@@ -22959,7 +23011,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 8,
-            "id": "5e94908adf49"
+            "id": "928cd06a8d42"
           },
           {
             "name": "Dagger",
@@ -22967,7 +23019,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "bb80e017bfce"
+            "id": "d680cff0c8ef"
           }
         ],
         "soak": 3,
@@ -23044,6 +23096,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Thirty ride with Thord Sturluson on Snaefellsnes (p. 86)."
       },
       {
@@ -23121,7 +23175,7 @@
             "attack": 16,
             "defense": 11,
             "damage": 12,
-            "id": "2c0aa52c6ed6"
+            "id": "4be44edb7422"
           }
         ],
         "soak": 10,
@@ -23166,7 +23220,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe 25, as the Hermetic spell (ArM4 p. 145).",
-            "id": "32de8882a13c"
+            "id": "95a275d8b2b3"
           },
           {
             "name": "Control Regio",
@@ -23180,7 +23234,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 40. Decides who enters or leaves his regio; spells to travel between its levels must defeat his Infernal Might of 40.",
-            "id": "b58b648e3eab"
+            "id": "50621154425f"
           },
           {
             "name": "The Unblinking Eye",
@@ -23194,7 +23248,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InIm 30. Moves his sight to any point within the regio; neither Parma nor any Hermetic effect detects it.",
-            "id": "55cf19d1306c"
+            "id": "0e8d8d8c3135"
           },
           {
             "name": "Sow Discord",
@@ -23208,7 +23262,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrMe, MuMe 10. Quietly makes or changes the emotions of people in his regio, to steer his visitors. An Int roll of 9+, modified by relevant Personality Traits, recognizes the urge as unnatural.",
-            "id": "ef5d5fbe4933"
+            "id": "d0594897540d"
           },
           {
             "name": "Ill Fortune",
@@ -23222,7 +23276,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi 30. The victim botches automatically on any stress roll of 0.",
-            "id": "4b1f10d18124"
+            "id": "30a2877e273d"
           }
         ],
         "vis": [
@@ -23230,19 +23284,19 @@
             "pawns": 8,
             "art": "Corpus",
             "where": "body",
-            "id": "96f3bde9c5d5"
+            "id": "68e83d1cf804"
           },
           {
             "pawns": 4,
             "art": "Perdo",
             "where": "heart",
-            "id": "2aa849cea71d"
+            "id": "ca5d07068ff8"
           },
           {
             "pawns": 4,
             "art": "Mentem",
             "where": "brain",
-            "id": "12b6578c424a"
+            "id": "303284775b52"
           }
         ],
         "equipment": "",
@@ -23253,6 +23307,8 @@
         "place_id": "old_vindolanda",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Making the regio tied Ammon to a physical form inside it: he can be hurt by physical attack and cannot withdraw. If it is assaulted he defends it until banished. He has gained no new souls in a hundred years and hopes to be beaten, so he lets attackers retreat, with mocking insults to bring them back (p. 94)."
       },
       {
@@ -23358,7 +23414,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bites all exposed flesh. The storyguide rules on protection; armor does not add to Soak. Damage roll each round: loose clothes 9 + stress die; sturdy clothing 6; winter garb or hauberk 3; half armor 0; full armor -3; full armor with helm and gauntlets -6.",
-            "id": "44949a503ff3"
+            "id": "2a2adf3f3528"
           }
         ],
         "vis": [],
@@ -23370,6 +23426,8 @@
         "place_id": "old_vindolanda",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -23464,7 +23522,7 @@
             "attack": 13,
             "defense": 15,
             "damage": -2,
-            "id": "26b2c5812fab"
+            "id": "61dacdca0b28"
           },
           {
             "name": "Spiritual Form",
@@ -23472,7 +23530,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "73267c04f449"
+            "id": "9306de16e21c"
           }
         ],
         "soak": 1,
@@ -23552,7 +23610,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sees in near-darkness.",
-            "id": "2baea03dd614"
+            "id": "89340f691d19"
           },
           {
             "name": "Grant Fertility",
@@ -23566,7 +23624,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrCo 30. A woman of childbearing age who lets her sleep in her lap for over a quarter of an hour conceives, provided the conception would not be immaculate. Fourth Edition: 1 points.",
-            "id": "f71fe6cf9ec3"
+            "id": "51e10a52993a"
           },
           {
             "name": "Hamfaring",
@@ -23580,7 +23638,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReVi 30, 1 point an hour. While she seems asleep, her spirit form hunts whatever spirits threaten her mistress. Fourth Edition: 1 points.",
-            "id": "90ece0047ab1"
+            "id": "094e16c148cd"
           }
         ],
         "vis": [
@@ -23588,7 +23646,7 @@
             "pawns": 4,
             "art": "Creo",
             "where": "in her body",
-            "id": "5c986c6877ce"
+            "id": "870a36d3dcbf"
           }
         ],
         "equipment": "",
@@ -23599,6 +23657,8 @@
         "place_id": "blund_s_farmstead",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "A beast of virtue, worn out by defending Una from the disease spirits. If she sees that the magi mean to help she tries to lead them to the mud pits (p. 100).\n\nConverted: her Spiritual Form has Str +3, Sta +1, Size -1 and Soak +5. Ferocity 3 is the Virtue, for protecting her mistress. Body levels OK, -3, Incapacitated. Might Form Animal is this pack's reading. Powers with no Ability now, as printed: Hamfarir 5."
       },
       {
@@ -23673,7 +23733,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeCo 10, costing 10 permanent Might. The victim makes a Sta stress roll of 6+ or miscarries. Against the dragon eggs success takes extraordinary luck, but given time one spirit gets through. Fourth Edition: 10 points.",
-            "id": "b13401a94d42"
+            "id": "6c5e9be1aed5"
           }
         ],
         "vis": [],
@@ -23685,6 +23745,8 @@
         "place_id": "blund_s_mud_pits",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "A manifestation of Einar's curse, which disappear if it is broken (p. 100). Body levels OK, Banished. The book prints no Characteristics; Might Form Corpus is this pack's reading."
       },
       {
@@ -23756,6 +23818,8 @@
         "place_id": "blund_s_mud_pits",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Each living egg has Magic Resistance +40, Soak +40 and 10 Body levels; the infant inside has Magic Might 20 and Soak +10, and if the shell breaks it defends itself or tries to flee (p. 100).\n\nDestroying one is a very bad idea, as Vifil will say, dropping his cover to do it (p. 101). They hatch twenty years after the settlement with Pan Caudarax (p. 105). Might Form Ignem is this pack's reading, from the dead infant's vis."
       },
       {
@@ -23844,7 +23908,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 8,
-            "id": "c0b6c63f4769"
+            "id": "f74a259d2539"
           },
           {
             "name": "Club",
@@ -23852,7 +23916,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 11,
-            "id": "6d983b587114"
+            "id": "99e9198aed54"
           },
           {
             "name": "Rock",
@@ -23860,7 +23924,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 10,
-            "id": "0520156e0e9e"
+            "id": "c2a2ecf8cc31"
           }
         ],
         "soak": 12,
@@ -23912,7 +23976,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "1413216cc59d"
+            "id": "0e2dbe7f7343"
           }
         ],
         "equipment": "A staff of rusted iron.",
@@ -23927,15 +23991,17 @@
             "kind": "creatures",
             "target_id": "skrukka",
             "note": "His mother",
-            "id": "4bf20d8b335f"
+            "id": "c194008ac56a"
           },
           {
             "kind": "creatures",
             "target_id": "drit",
             "note": "His daughter",
-            "id": "aa3fc7924727"
+            "id": "0099c5919a3d"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "The meanest of a mean lot, secure in his lordship with his mother Skrukka and his henchmen Gapi and Gljufra-Geir behind him (p. 113). He entraps a lone man before the truce begins, claims his life is forfeit, and offers a deal that Skrukka seals with a Curse.\n\nConverted: the book gives no combat table, only the standard troll's raised by 5 to Init, Atk and Dfn and by 3 to Damage; those totals are here, and his fatigue levels are the standard troll's. A Rock has no Defense (n/a), shown as 0. No more magic than the average troll.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24052,7 +24118,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Approximates any Hermetic spell at 1 Might per 5 spell levels, to level 25 alone; trolls in a group share the cost of higher spells, at about a minute per 5 levels (p. 30). Fourth Edition: 1 points.",
-            "id": "6f58990f5e6d"
+            "id": "eb3db21bc4af"
           }
         ],
         "vis": [
@@ -24060,7 +24126,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "at least; more in a powerful troll (p. 30)",
-            "id": "c0bf02b82f67"
+            "id": "a6b9b6f5845c"
           }
         ],
         "equipment": "A short walking stick, the thighbone of a human priest.",
@@ -24071,6 +24137,8 @@
         "place_id": "the_troll_caves_of_snaefell",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Most trolls who know of her are afraid of her. Many say she is the true chief, never in Kollbjorn's hearing. She is about as evil as trolls get. Her illusions split parties in the caves and show Solrun walking into them (p. 108).\n\nPrinted abilities, described and not built: Curse 12, External Soul, Potency 9, Shapeshift 12, Speak Jotunn 9, Svonhverfing 18 (pp. 57-59 for those talents).\n\nThe book's Curse example (p. 59) has a troll-sorceress Skrukka curse a man, Jorik, to marry her granddaughter, with Curse 8, Speak Jotunn 7 and Potency 6 against the 12, 9 and 9 of her block here.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24138,7 +24206,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "6b3344c3373d"
+            "id": "5cce5cd7ca51"
           },
           {
             "name": "Club",
@@ -24146,7 +24214,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "2ee53b5802d4"
+            "id": "f09237a4266a"
           },
           {
             "name": "Rock",
@@ -24154,7 +24222,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "4a5c15d55aa3"
+            "id": "dbfc5485e37f"
           }
         ],
         "soak": 11,
@@ -24206,7 +24274,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in her body (p. 30)",
-            "id": "07bb5dcd25e7"
+            "id": "6ebcf205a106"
           }
         ],
         "equipment": "",
@@ -24217,6 +24285,8 @@
         "place_id": "the_troll_caves_of_snaefell",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Kollbjorn's daughter, for whom no troll husband can be found. She has a normal troll's statistics (p. 30) with Presence -1, and may become a player character if the storyguide agrees (p. 108). A Rock has no Defense (n/a), shown as 0.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24316,7 +24386,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "a giant's (p. 31)",
-            "id": "faa7c9507aa9"
+            "id": "72ccca14a6f5"
           }
         ],
         "equipment": "",
@@ -24331,9 +24401,11 @@
             "kind": "creatures",
             "target_id": "bard_snaefellsass_dumbson",
             "note": "His half-brother",
-            "id": "30d630a981e7"
+            "id": "8f4022ca3da9"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Their mother Mjoll married the giant Red-Cloak after the giant-king Hardverk killed her first husband. Bard broke Thorkel's leg in a duel. Violent, unprincipled and cunning, he has a bad name as a troublemaker; humans annoy him, no more (p. 113).\n\nPrinted abilities, described and not built: External Soul, Jotunn Affinity with Frost (blizzards) 20, Curse (bad luck) 10, Transform (into rocks) 15, Speak Jotunn (Clan of Hrym) 8, Potency 8. The book gives him no combat table.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24409,9 +24481,11 @@
             "kind": "creatures",
             "target_id": "geirrod",
             "note": "His brother",
-            "id": "e432b0e5ed86"
+            "id": "9c21ed948e83"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "An extremely ancient giant who calls himself the son of Mimir, which would make him cousin to Odin (Mimir's sister Bestla being Odin's mother). The claim cannot be tested. He has a wide range of powers, but does not own the regio or control its bounds. The book says no other characteristics should be needed (p. 118).\n\nHe may be magical or faerie: lineage and manners suggest fay, yet like landvaettir he is at home in a magic realm. The book leaves it deliberately open; Magic here is the printed realm of the regio, not a ruling.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24487,9 +24561,11 @@
             "kind": "characters",
             "target_id": "jarl_agdi",
             "note": "His lieutenant",
-            "id": "0ddee8a74a9a"
+            "id": "3282b3804d87"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Not as strong as his brother, but formidable. He has a special power over fire: he handles molten metal bare-handed and flings it in combat. He has an External Soul, so unless the magi have made a Setna's Blade for him he survives a battle (pp. 118, 127-128). He knows where Damhan-Allaidh's soulstone is. No other statistics are printed.\n\nMight Form Corpus is this pack's reading, from the body vis of trolls and giants (pp. 30-31)."
       },
       {
@@ -24536,7 +24612,7 @@
             "attack": 28,
             "defense": 21,
             "damage": 19,
-            "id": "cf1deda85f01"
+            "id": "6f38486fc9d7"
           }
         ],
         "soak": 26,
@@ -24581,7 +24657,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrTe 30. Heals up to three wound levels a round at a Might point each, needing no action. Fourth Edition: 1 points.",
-            "id": "af70af1ff232"
+            "id": "fb8a1aae4fe7"
           },
           {
             "name": "Sense Intents",
@@ -24595,7 +24671,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InVi 100. Senses the presence of benign or malevolent forces.",
-            "id": "5c199ac6f5c6"
+            "id": "22dd40fe7970"
           },
           {
             "name": "Binding Word",
@@ -24609,7 +24685,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 30. Holds any person or group to its word by controlling their bodies. Fourth Edition: 5 points.",
-            "id": "f1540e21a65c"
+            "id": "d0298264f377"
           },
           {
             "name": "Thoughts Within the Babble",
@@ -24623,7 +24699,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InMe 20. Speaks and understands any language.",
-            "id": "de15ac3bc1ad"
+            "id": "27e74015b2d2"
           }
         ],
         "vis": [
@@ -24631,7 +24707,7 @@
             "pawns": 50,
             "art": "Vim",
             "where": "in each, if destroyed",
-            "id": "959c3fb6c9d4"
+            "id": "5f1a510179ce"
           }
         ],
         "equipment": "",
@@ -24642,6 +24718,8 @@
         "place_id": "the_obsidian_temple",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "The automata know of Setna's fate and of the corruption. Magi who think to explain themselves are let by, and defended on their way through the doors. Instead of harvesting vis they can be studied for liquid fire and true intelligence in automata (The Mysteries)."
       },
       {
@@ -24747,7 +24825,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Any spell effect the storyguide likes, up to half his current Might. Effects that would need vis cost 1 Might per magnitude; others cost nothing.",
-            "id": "c507e3442dc3"
+            "id": "f0fa195043dd"
           }
         ],
         "vis": [],
@@ -24759,6 +24837,8 @@
         "place_id": "the_obsidian_temple",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Might 120, reduced to 30 by long battle with Hetep's corruption.\n\nSon of Rameses II, the most learned man in Egypt and perhaps its greatest magician, schooled in secret texts beyond the priests of Amen-Ra. Proud, he took the book of Thoth from Nefrekeptah's tomb despite warnings; a terrible vision from Thoth made him return it and do penance. He rose in Thoth's favour and was given the stelae's guardianship, which his spirit has held for nearly two and a half millennia.\n\nHe has always seen Hetep's shadow in the magicians who tried to bring the poison in, until Damhan-Allaidh. For four centuries he has fought it, and he can no longer bar Damhan-Allaidh or stand against him. As the first to try to codify magical thought, he has become the embodiment of man's understanding of magic.\n\nSetna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: Ind. He supplies a papyrus scroll. It can only be invested in a weapon, never made a spell, and each weapon is for one named victim. Driven through the heart, whatever Magic Resistance stands against it, it destroys the soulstone and kills. In the end he can restore any magus Hetep's Sunder the Magician's Spirit has maimed, Iain included (p. 129)."
       },
       {
@@ -24836,7 +24916,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "f93aaaabc4b7"
+            "id": "782c501d276e"
           },
           {
             "name": "Claw",
@@ -24844,7 +24924,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "48299c7d2d99"
+            "id": "aa51265a0d3d"
           }
         ],
         "soak": 18,
@@ -24889,7 +24969,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi 50. As Hetep's own power of that name: a landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma.",
-            "id": "8d4e96f1193d"
+            "id": "c922a2e472ec"
           },
           {
             "name": "Shapechange",
@@ -24903,7 +24983,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An) 40. Gives a host he possesses his own beast shape.",
-            "id": "b47752d43d9b"
+            "id": "a08766403eb4"
           },
           {
             "name": "Raise Corpse",
@@ -24917,7 +24997,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo 25. Raises anyone he slays as walking dead.",
-            "id": "27fd9eda3f4c"
+            "id": "52af258e3ea3"
           },
           {
             "name": "Infernal Spell",
@@ -24931,7 +25011,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The equivalent of spontaneous spells to level 30, at 1 Might per magnitude.",
-            "id": "c41da843df5f"
+            "id": "8f6482e76622"
           }
         ],
         "vis": [],
@@ -24947,15 +25027,17 @@
             "kind": "creatures",
             "target_id": "damhan_allaidh_the_spider",
             "note": "His body",
-            "id": "0847722c6152"
+            "id": "3694af98489e"
           },
           {
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "The same demon",
-            "id": "511cb99f9730"
+            "id": "7031f73163b2"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Hetep is bound into his former servant's shell. Destroying it lets the Thothian watchers capture him at once (p. 128). Body levels OK, 0, 0, -1, -3, -5, Incapacitated. Presence is printed N/A, shown as 0. Might Form Corpus is this pack's reading."
       },
       {
@@ -25101,7 +25183,7 @@
             "attack": 3,
             "defense": 3,
             "damage": 7,
-            "id": "522909fd192f"
+            "id": "defbb931b6c7"
           },
           {
             "name": "Grapple",
@@ -25109,7 +25191,7 @@
             "attack": 3,
             "defense": 3,
             "damage": null,
-            "id": "116846c8bd5b"
+            "id": "3f5bfa14eef5"
           },
           {
             "name": "Smother",
@@ -25117,7 +25199,7 @@
             "attack": null,
             "defense": 0,
             "damage": 10,
-            "id": "29d33f03fff5"
+            "id": "ddb9b6762647"
           }
         ],
         "soak": 21,
@@ -25271,6 +25353,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "A gruagach born in 749, father of Iain, reckoned dead by the magi after three centuries buried. Once recovered he is barely human, fighting for each breath in constant pain, and moves only by shapeshifting, into the one form he can hold for long. Endurance of the Berserkers, or any Corpus or Mentem effect that quells pain, gives him respite, and with it he can help the magi hunt Damhan-Allaidh; without it he can only beg to die. Even so he will ask Iain to destroy his soulstone once the Spider is gone (p. 136).\n\nA fleshy thing with no shape, bones or organs, able to squeeze into small places, forever putting out and drawing in tentacles of flesh.\n\nMagic Resistance 51 printed, and no Might. Presence n/a in the block, 0 here. Student of Brude +1 is left out: the catalog's Student of a realm is not a teacher. Soak +41 includes the +40 of his invulnerability.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, a wholly monstrous look, no bones (hence the Characteristics, wrecked by three centuries buried), constant pain.\n\nShapeless Form, which he takes at will: Int +3, Per +1, Str +5, Sta +5, Dex -4, Qik -3, Size +5, Soak +50, tireless; Body levels OK, 0, 0, 0, -1, -1, -3, -3, -5, -5, Incapacitated. The Combat lines are this form's; the book gives Grapple no Defense or Damage and Smother only Damage. Each turn he may put out up to five pseudopods at one foe. If two or more strike in a round he may grapple and draw the victim in, and on success smothering starts next round, to Fatigue and then Body levels, armor no help.\nAbilities: Herbalism 5 to Profession: Herbalist.\n\nAbilities renamed: Enchanting Music 4 to Enchanting: Music; Fantastic Beast Lore 4 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Shapeshift 16 to Shapeshifter.\n\nAbilities with no counterpart: Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 30 xp spent on Organization Lore: Gruagachan.\n\nPowers with no Ability now, as printed: Geasa 3 (physical); Gruagach Wisdom 15 (new Talents); Potency 6 (shapeshift); Gift 8 (physical); Transform 7 (birds)."
       },
       {
@@ -25348,7 +25432,7 @@
             "attack": 15,
             "defense": 18,
             "damage": 10,
-            "id": "48ba6c9ac467"
+            "id": "c7b4c3806d98"
           }
         ],
         "soak": 13,
@@ -25393,7 +25477,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi. A landed blow wounds the victim's Gift, against Magic Resistance with Vim added to Parma. Hermetic magic has no cure while he remains in the mortal realm, and elsewhere he alone can give one, as a rule for a cardinal pact.",
-            "id": "caadcc77eb8c"
+            "id": "8953cd024f50"
           },
           {
             "name": "Shapechange",
@@ -25407,7 +25491,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "MuCo(An). Turns one he possesses into his natural body.",
-            "id": "459592ebcbf0"
+            "id": "d3408ea992ac"
           },
           {
             "name": "Raise Corpse",
@@ -25421,7 +25505,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReCo. Raises anyone he kills as one of the walking dead.",
-            "id": "0aa23fe2e505"
+            "id": "a87f588132de"
           },
           {
             "name": "Infernal Spell",
@@ -25435,7 +25519,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works the like of spontaneous spells to level 30, at 1 Might a magnitude.",
-            "id": "6a1520fcbef9"
+            "id": "a9c1a9e0b083"
           },
           {
             "name": "Possession",
@@ -25449,7 +25533,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "ReMe. Any human in line of sight. Entry costs Might equal to the victim's Confidence + Stamina (+3 if Strong-Willed) + twice any True Faith. Parma resists, using the highest of Corpus, Mentem or Vim, against his penetration of 65 + stress die; a Natural Resistance roll (Stamina + stress die) of 60 also stops it. He can stay indefinitely. Hermetic magic cannot detect him; detection and exorcism are resisted by twice his current Might.",
-            "id": "f93dcddfeb98"
+            "id": "4cdbeb13201d"
           },
           {
             "name": "Corrupt Knowledge",
@@ -25463,7 +25547,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "PeVi, 1 point a day. Slowly corrupts a written work on magic he touches: a summa takes days equal to the experience it holds (55 for a level 10 summa), a libri quaestionum or tractatus days equal to its quality, an Authority a year and a day. A reader then gains an Occult Lore experience point a season, taken out of the study total, and a Personality Trait for the dark arts at the score those points give. Only Sense Holiness and Unholiness or a like divine gift shows the change.",
-            "id": "af2d4f872782"
+            "id": "69b069ea7c2a"
           }
         ],
         "vis": [
@@ -25471,7 +25555,7 @@
             "pawns": 18,
             "art": "Vim",
             "where": "in his heart, Infernally tainted",
-            "id": "8fbed23cf63e"
+            "id": "64cf726703ed"
           }
         ],
         "equipment": "",
@@ -25482,6 +25566,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Once a servant of Thoth, he betrayed his master for Hell and means to turn all magic to its service, working chiefly on magicians. His former kin kept watch: Setna caught him time and again hiding in those who came to Thoth's stelae, until Damhan-Allaidh brought him into the sanctum. There he set to corrupting Thoth's own words, hoping to lay the magic realm at Hell's feet. Setna noticed before it was done and drove Damhan-Allaidh out, but the corruption went on sapping Setna, and Hetep needed only time, until Pralix broke in on the Spider's preparations and in the end beat him. Victor of Vindolanda captured Hetep in 875. The two have been locked in a battle of wills ever since, beyond mortal understanding; for a century Victor has withstood all the demon can conjure. Hetep is no great thinker, and Victor has tricked him into letting slip that he was close to finishing some plot against the Order (pp. 137-138)."
       },
       {
@@ -25675,7 +25761,7 @@
             "attack": 17,
             "defense": 17,
             "damage": 16,
-            "id": "64ff6cd25490"
+            "id": "38436f0b475a"
           },
           {
             "name": "Claw",
@@ -25683,7 +25769,7 @@
             "attack": 18,
             "defense": 19,
             "damage": 14,
-            "id": "fababae488f4"
+            "id": "758ea40674d1"
           }
         ],
         "soak": 11,
@@ -25925,9 +26011,11 @@
             "kind": "creatures",
             "target_id": "hetep_the_corrupter",
             "note": "His demon",
-            "id": "ae57d1bb8486"
+            "id": "89c8268aa15e"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "The ancient gruagach, born in 570, whom the Order thinks dead. His name, said davan-alli, is Gaelic for the spider, and he is also called Dav'nalleous (pp. 70-71). His mind is close to ruin, and the scrap of humanity left in it longs to be free of him. Beast instinct usually rules and he obeys Hetep at a word. Brought to reflect on his state, by The Gift of Reason or fine roleplaying, he may turn on Hetep and seek God's grace. Only true remorse, unlikely as it is, would move God to undo the soul he hid away and let him rest (p. 139).\n\nNo longer human at all: hairless, crusted with pus and open sores, with a beast's head of huge jaw and fangs, a back too twisted to walk upright, and long iron-hard claws for hands and feet.\n\nMagic Resistance 77 printed, and no Might. Presence n/a in the block, 0 here; Intelligence and Perception are worn down by three centuries buried. Need Not Sleep +5 has no catalog entry and is kept here. Vulnerability (obsidian) and Vulnerable (Celtic holy relics) are Vulnerable to a substance.\n\nEffects of his Gruagach powers: Magical Aura, Blatant Gift, Offensive to Animals; a wholly monstrous look; clothes rot on his skin; fangs (+8 damage in Bite); a hunchback; iron-hard claws (+5 damage in Brawl); no body hair; skin crusted with old pus; swollen abdomen; open sores; constant pain. Body levels as printed: OK, 0, 0, -1, -3, -5, Incapacitated.\n\nHis Special Gruagach Abilities act like Hermetic Form and Technique pairs, each a separate skill casting spontaneous Hermetic-style spells. Result level = Ability + Characteristic + stress die if he spends a point of that Characteristic, or half that if not. A botch after spending loses the point for good; otherwise it comes back as Fatigue does. Parma or wards resist; Penetration equals the result after any halving. Incinerate: as Creo and Rego Ignem, true fire only, Presence (now only at half). Decay: as Perdo Animal and Corpus, Stamina. Enthrall: as Rego and Perdo Mentem, Intelligence. Sacrifice: as Creo Vim; each Body level drained gives a pawn of vis per 10 levels of result, only at Imbolc, Beltane, Lughnasa and Samhain. Shatter: as Perdo Herbam and Terram, Strength.\nVirtues and Flaws: Hatred (Major): the Order of Hermes; Fury as Wrathful (Major): when thwarted; Weakness (Minor): strong drink.\nAbilities: Herbalism 6 to Profession: Herbalist; Occult Lore 5 to Infernal Lore; Visions 3 to Premonitions.\n\nAbilities renamed: Enchanting Music 6 to Enchanting: Music; Fantastic Beast Lore 8 to Magic Lore; Hermes History 3 to Organization Lore: Order of Hermes; Sense Holiness & Unholiness 7 to Sense Holiness and Unholiness; Shapeshift 20 to Shapeshifter.\n\nAbilities with no counterpart: Contortions' 140 xp spent on Athletics; Direction Sense's 50 xp spent on Area Lore: Scottish Highlands; Empathy's 15 xp spent on Folk Ken; Gruagach Lore's 15 xp spent on Organization Lore: Gruagachan; Mimicry's 75 xp spent on Guile; Weather Sense's 50 xp spent on Wilderness Sense.\n\nPowers with no Ability now, as printed: Geasa 7 (physical); Gift 6 (characteristics); Gruagach Wisdom 30 (new Talents); Potency 6 (curse); Transform 20 (fish); Decay 15 (bone-breaking); Enthrall 10 (for sacrifice); Incinerate 13 (projection); Sacrifice 8 (human); Shatter 9 (explosion)."
       },
       {
@@ -26026,7 +26114,7 @@
             "attack": 8,
             "defense": 0,
             "damage": 40,
-            "id": "83d6b1a767b7"
+            "id": "81df8e268758"
           },
           {
             "name": "Bite",
@@ -26034,7 +26122,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 29,
-            "id": "706788b98da2"
+            "id": "16eae077eb37"
           },
           {
             "name": "1st Claw",
@@ -26042,7 +26130,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "0e611a8959c6"
+            "id": "2c82bc71170b"
           },
           {
             "name": "2nd Claw",
@@ -26050,7 +26138,7 @@
             "attack": 13,
             "defense": 11,
             "damage": 24,
-            "id": "b117451a4d36"
+            "id": "3b4a01acd99f"
           }
         ],
         "soak": 18,
@@ -26102,7 +26190,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrIg. A gout of fire over an area 10 paces wide and 30 long: intensely hot but with little force, so any cover blocks it.",
-            "id": "9d586269a82d"
+            "id": "cc0f47e91887"
           },
           {
             "name": "Spellcasting",
@@ -26116,7 +26204,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts a range of spells as if he had the Arts Creo 20, Rego 10, Animal 20 and Imaginem 10.",
-            "id": "91da57b87736"
+            "id": "10ac43afb7bd"
           }
         ],
         "vis": [],
@@ -26128,6 +26216,8 @@
         "place_id": "hekla",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "He has a weak spot beneath his left ear, where the scales never quite grew. Anyone who knows may aim for it at -3 to Attack, and there his Soak is only +5.\n\nFirst Guardian of Iceland, he came back to Hekla in 108 after nearly a thousand years in Flanders, where he took priests of Mercury and Apollo to teach him their magic and built up a hoard. He has lairs across the world.\n\nThe prophecy of De Panne: leaving Flanders as too crowded, he declared that he went by choice, not wishing to live among men or to wipe them out, that he remembered the treasure he left there, and that anyone who robbed it would bring him back in a vengeance feared for centuries. He has not yet had to keep the oath (p. 140), and will raze the town only if the hoard is robbed (p. 63)."
       },
       {
@@ -26324,7 +26414,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Jotunn Affinity with Frost 17, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
-            "id": "62b7ac748002"
+            "id": "4ec3e092acd4"
           },
           {
             "name": "Transform",
@@ -26338,7 +26428,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Transform 16, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
-            "id": "cd2c161647b5"
+            "id": "0327c6ba56b4"
           },
           {
             "name": "Gift",
@@ -26352,7 +26442,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gift 5, as the book prints the Talent: at its cost in Might as the storyguide sets it.",
-            "id": "5d46b4cab66b"
+            "id": "94725cdfe9f3"
           }
         ],
         "vis": [],
@@ -26364,6 +26454,8 @@
         "place_id": "the_singing_cave",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Born in 960 in Helluland, the giants' realm beyond Greenland, son of King Dumb, half giant and half troll, and of Mjoll, daughter of the frost giant Snaer the Old; fostered by giants in Iceland, he settled in Norway. A trollson in Ars Magica's terms, more human than giant after so long among men. He left Norway with so many others when Harald Finehair took the crown, came to Iceland with his nine daughters, named Snaefellsnes and made his home at Songhellir, the Singing Cave. His brother Thorkel settled with him; their families feuded and made peace. Having guarded the people there against the trolls that swarm in those parts, he is held their guardian spirit. He leads all Iceland's giants and is one of the land's Guardians (p. 141). He wants peace between the dragon and Einar, and counts himself guardian of the land where the characters' covenant stands (p. 70). The book's dates disagree: born in 960, he leaves Norway at the accession of a Harald who reigns 890-930 (pp. 17, 141)."
       },
       {
@@ -26452,7 +26544,7 @@
             "attack": 27,
             "defense": 24,
             "damage": 22,
-            "id": "3078568cda05"
+            "id": "e3864b2bb421"
           },
           {
             "name": "First Claw",
@@ -26460,7 +26552,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "c5d8de1c9270"
+            "id": "b961c3b7db48"
           },
           {
             "name": "Second Claw",
@@ -26468,7 +26560,7 @@
             "attack": 28,
             "defense": 26,
             "damage": 14,
-            "id": "d991e535b40e"
+            "id": "9721fda67435"
           }
         ],
         "soak": 23,
@@ -26513,7 +26605,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Makes any weather up to 12th magnitude. CrAu, ReAu.",
-            "id": "0be4370bb371"
+            "id": "f057756174e8"
           },
           {
             "name": "Spiritual Form",
@@ -26527,7 +26619,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "ab02e2ece24c"
+            "id": "1b5bacb266e1"
           }
         ],
         "vis": [],
@@ -26539,6 +26631,8 @@
         "place_id": "iceland",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -26627,7 +26721,7 @@
             "attack": 16,
             "defense": 15,
             "damage": 45,
-            "id": "b224f1375b69"
+            "id": "807d1580987e"
           },
           {
             "name": "First Kick",
@@ -26635,7 +26729,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "37291439a7e3"
+            "id": "6b167cd404e1"
           },
           {
             "name": "Second Kick",
@@ -26643,7 +26737,7 @@
             "attack": 15,
             "defense": 15,
             "damage": 40,
-            "id": "ee64748e425f"
+            "id": "b7c61ee1d80f"
           }
         ],
         "soak": 36,
@@ -26688,7 +26782,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Changes its size at will from +2 to +8; away from its duty it roams the highlands at +2.",
-            "id": "68660ac54cb1"
+            "id": "3bd0a795381c"
           },
           {
             "name": "Spiritual Form",
@@ -26702,7 +26796,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "806065c0c82c"
+            "id": "1945419fb436"
           }
         ],
         "vis": [],
@@ -26714,6 +26808,8 @@
         "place_id": "skalholt",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -26799,7 +26895,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Each spirit can make a spell effect of a level equal to its permanent Might. Art and cost vary.",
-            "id": "25ed271d1947"
+            "id": "25bede98ac81"
           },
           {
             "name": "Grant Might",
@@ -26813,7 +26909,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Gives the guardian temporary Might points. CrVi.",
-            "id": "3fd49425528a"
+            "id": "133aaaf7dee8"
           },
           {
             "name": "Heal Guardian",
@@ -26827,7 +26923,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Heals the guardian one Health level for every 10 Might spent, by touch. CrAn or CrCo.",
-            "id": "3bf0a4a5f0f8"
+            "id": "c95a4dce722b"
           },
           {
             "name": "Spiritual Form",
@@ -26841,7 +26937,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes solid form or none at will, and travels at a hundred times its speed while immaterial.",
-            "id": "0f2600276b37"
+            "id": "fe48299103b2"
           },
           {
             "name": "Shapeshift",
@@ -26855,7 +26951,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes any form it likes, fighting while solid as a Beast of Virtue of that kind; a landvaettir of Might 40 or more can become a fantastic beast of like Might.",
-            "id": "2f3b87b842a5"
+            "id": "a2b3ed7f33ec"
           }
         ],
         "vis": [],
@@ -26867,6 +26963,8 @@
         "place_id": "iceland",
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -26965,7 +27063,7 @@
             "attack": 22,
             "defense": 19,
             "damage": 35,
-            "id": "5e13870d520e"
+            "id": "2a67e10aba89"
           },
           {
             "name": "Thrown Molten Gold",
@@ -26973,7 +27071,7 @@
             "attack": 13,
             "defense": 0,
             "damage": 50,
-            "id": "e261388ebc9c"
+            "id": "84c43294ecff"
           }
         ],
         "soak": 20,
@@ -27046,7 +27144,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Works some fire effects directly, without calling on Jotunn spirits, with Stamina in place of Communication in his Jotunn Affinity casting total. CrIg, Te varies. His favourite conjures molten gold that he handles unharmed and throws.",
-            "id": "9af22c730a70"
+            "id": "d70156c3a654"
           },
           {
             "name": "Immunity to Fire",
@@ -27060,7 +27158,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His Jotunn Affinity has made him proof against all heat and flame.",
-            "id": "389bec04acb3"
+            "id": "27dc8917b67a"
           },
           {
             "name": "Break Wards",
@@ -27074,7 +27172,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A power of the hammer, which must strike the target. The first blow dispels wards of 8th magnitude or less and breaks any barrier they guard; each later blow reaches a magnitude higher, to 20th. PeVi, Te.",
-            "id": "42c2be656d70"
+            "id": "78daaefd5a31"
           }
         ],
         "vis": [],
@@ -27090,9 +27188,11 @@
             "kind": "neighbours",
             "target_id": "the_clan_of_geirrod",
             "note": "Speaks its Jotunn; leads the fire giants",
-            "id": "cc91dd4ab0cd"
+            "id": "b19d36855843"
           }
         ],
+        "attitudes": [],
+        "favours": [],
         "secrets": "A Hermetic scouting party attacked his son's regio home, killed his two granddaughters and took his son's beaten body to their tower. The son lives through his External Soul, and the magi cut him for vis; Gull takes it for a depraved game and wants Julius's forces dead (Icelandic Wars p. 11)."
       },
       {
@@ -27177,7 +27277,7 @@
             "attack": 7,
             "defense": 6,
             "damage": 6,
-            "id": "c9639da55a9b"
+            "id": "37fe7ca89abd"
           },
           {
             "name": "Club",
@@ -27185,7 +27285,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 9,
-            "id": "bf5643f1deee"
+            "id": "b2bce22b890d"
           },
           {
             "name": "Rock",
@@ -27193,7 +27293,7 @@
             "attack": 8,
             "defense": 6,
             "damage": 8,
-            "id": "d14e60897c0c"
+            "id": "2b9baa7b7cec"
           }
         ],
         "soak": 11,
@@ -27273,7 +27373,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "CrVi. Anyone fighting a troll has exceedingly bad luck: a stress die botches on a 0 or a 2, twice the chance, and always with two extra botch dice.",
-            "id": "a542cc079fc7"
+            "id": "65b6c9a5e9cc"
           },
           {
             "name": "Gift of the Magic Arts",
@@ -27287,7 +27387,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "About one troll in 100, usually female and with Intelligence +1. Though they do not study the Hermetic Arts, they can approximate any Hermetic spell for 1 Might per 5 levels (the cost shown), up to level 25. Groups can share the Might of a higher spell, taking about a minute per 5 levels to cast it.",
-            "id": "4b552d9071c9"
+            "id": "2aad82c3aabd"
           }
         ],
         "vis": [
@@ -27295,7 +27395,7 @@
             "pawns": 5,
             "art": "Corpus",
             "where": "in the body; more if particularly powerful",
-            "id": "53bec3995395"
+            "id": "498c5038178d"
           }
         ],
         "equipment": "",
@@ -27306,6 +27406,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -27352,7 +27454,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 15,
-            "id": "8c8359cb8701"
+            "id": "b4d1db732a05"
           },
           {
             "name": "Club",
@@ -27360,7 +27462,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 18,
-            "id": "e65d2c451e43"
+            "id": "40ae867db911"
           },
           {
             "name": "Boulder",
@@ -27368,7 +27470,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 17,
-            "id": "c3798877dc90"
+            "id": "cbb214c767a6"
           }
         ],
         "soak": 9,
@@ -27427,7 +27529,7 @@
             "pawns": 12,
             "art": "Corpus",
             "where": "in the body",
-            "id": "85ef2f4e04d3"
+            "id": "d62cb5fd06ba"
           }
         ],
         "equipment": "",
@@ -27438,6 +27540,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": ""
       },
       {
@@ -27543,7 +27647,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries itself to any point in the Mundane, Magic or Faerie Realms.",
-            "id": "aee45f63a048"
+            "id": "6cdc0fe4f7d3"
           },
           {
             "name": "Gateway",
@@ -27557,7 +27661,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Bridges the mundane and magical realms, swallowing or bringing up people and things while it stays incorporeal. With a magical archway, trilithon or the like this costs nothing; without one, 5 Might.",
-            "id": "33498b5e48ae"
+            "id": "72721a8b7009"
           },
           {
             "name": "Knowledge of the Subterranean",
@@ -27571,7 +27675,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "InTe 40. Sees or hears whatever happens under the earth, or knows where anything buried lies. Fourth Edition: 3 points.",
-            "id": "e3a5be63b078"
+            "id": "c8ff85071919"
           },
           {
             "name": "Strong Willed",
@@ -27585,7 +27689,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "No magic can compel it to act against its will.",
-            "id": "a40b3c72d300"
+            "id": "d3f6466886c7"
           }
         ],
         "vis": [],
@@ -27597,6 +27701,8 @@
         "place_id": null,
         "place_level": 0,
         "links": [],
+        "attitudes": [],
+        "favours": [],
         "secrets": "Earth daemons of Thoth, each with its own name, akin to the Amphisbaena of Hedge Magic p. 76 but far greater. They dug secret tunnels and hid things in remote caves for him, and helped his priests build temples in far places; they know every place in the Magic, Faerie and Mundane Realms (pp. 73-74).\n\nThe Gateways (p. 73). A true gateway is two cross-lintels cut in ritual from one stone and enchanted as bridges to the spirit realm. A serpent, bought with gifts of vis, joins them: called from before a lintel, it stretches a mouth over each gate, and travellers pass quickly through it. It can bar any gate by person or oath-sworn group, but cannot perceive motive, so coercion and magical compulsion deceive it. The lore passed from Thoth's priests through the Cult of Mercury to the Order as the Hermes Portal ritual, in a weaker form.\n\nEalasaid rebuilt it as Hermetic thaumaturgy, in notes the magi may recover. Cut unquarried stone free in ritual, carry it to a laboratory unseen and untouched by the ritually unclean, split it, open each half as an invested device and invest a level 40 Rego Vim effect that calls the serpent and opens the bridge. Then summon a serpent. She learned 16 of the sixty names and wrote spells for three, at level 55, in her and Macomb's grimoire.\n\nDaemonic Adjuration of [Name], Serpent of Thoth (ReVi Gen, Special, Special, Individual, Ritual). The Fourth Edition printing: stress die + Com + spell level + Penetration + Aura against stress die + 40; each point of margin counts toward the serpent's appearing, which it does when the points pass its Might. Repeat casts add up, but are lost at the next sunrise or sunset. It then bargains: 20 pawns, and 20 more for each gateway pair it already serves, reduced by half a roll of Com + Bargain + Theurgy + stress die. Under The Mysteries, casting from text needs Hermetic Theurgy equal to the spell's magnitude; otherwise a magus learns it and must master it first. A serpent serves any number of gates, one at a time. The joined gatestones stop being Arcane Connections to each other."
       }
     ],
@@ -27636,7 +27742,9 @@
     "players": [],
     "app_version": "",
     "saved_by": "",
-    "marriages": []
+    "marriages": [],
+    "maps": [],
+    "pins": []
   },
   "key": "iceland",
   "book": "LFI",

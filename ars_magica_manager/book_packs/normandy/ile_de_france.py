@@ -910,7 +910,7 @@ def _factions(normandy: Normandy) -> None:
     )
     w["beggars"] = b.faction(
         "The Court of the King of the Beggars",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         ruler="Anacrôn, the Grand Coësre",
         place=p["ile_de_la_cite"],
@@ -957,7 +957,7 @@ def _factions(normandy: Normandy) -> None:
     )
     w["free_spirit"] = b.faction(
         "The Brethren of the Free Spirit (Paris)",
-        faction="Other",
+        faction="Faith or sect",
         decides="A vote of all",
         place=p["paris_islets"],
         wants="The new age of the Holy Spirit, and freedom from sin and its rules.",
@@ -972,7 +972,7 @@ def _factions(normandy: Normandy) -> None:
     )
     w["itinerarium"] = b.faction(
         "The Itinerarium",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         decides="Its leader",
         place=p["eboris_site"],

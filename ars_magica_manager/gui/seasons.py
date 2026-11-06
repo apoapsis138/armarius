@@ -19,13 +19,12 @@ from ..forms import take_up as take_up_forms
 from ..models import Saga, SeasonRecord
 from ..sections import ATTENTION_SECTION
 from .ahead import ahead_section, undertakings_section
-from .character_sheet import TextBlock
+from .character_sheet import TextBlock, table_section
 from .editing import Run
 from .medallions import Medallion, beside
 from .pages import page_header
 from .themes import Palette
 from .widgets import Codex, scrolling_page, serif, table_view, text
-from .world import table_section
 
 #: The chapter of the season just played out.
 RESULTS = "Just played"

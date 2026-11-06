@@ -1787,7 +1787,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     p = provence.places
     w["andorrans"] = b.faction(
         "The Parishes of Andorra",
-        faction="Other",
+        faction="Council or assembly",
         decides="A council",
         members=3000,
         place=p["andorra"],
@@ -1804,7 +1804,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     Builder.link(w["andorrans"], "covenants", provence.covenants["bellaquin"])
     w["andorra_company"] = b.faction(
         "The Andorra Company",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         members=18,
         ruler="Captain Michael, son of Robert Vasquez",
@@ -1856,7 +1856,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     w["hermetic_sorginak"] = b.faction(
         "The Hermetic Sorginak",
         tradition="trad_hermetic_sorginak",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         members=3,
         place=p["basque_country"],

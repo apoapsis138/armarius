@@ -123,6 +123,22 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.78.0 — 2026-11-06
+
+### Orbis
+
+- Characters and creatures hold an **attitude** toward each troupe covenant and the **favours** owed, as neighbours do, so a person or being is one record with its stat block and its stance. A character shows them unless he lives at a covenant the troupe plays.
+- A faction has a **Members** list: characters, covenants, creatures or other neighbours, each with a role in it. A record can belong to several factions, and its page lists each one under **Member of**. Answers to is now only a liege, bishop or master; in older saves a faction that answered to another faction moves onto its roster. A faction's links stay links, shown under Linked from.
+- **Merge Doubled Records** finds each faction that shares its name with exactly one character or creature (someone entered twice, once to carry an attitude and once for the stat block) and, for each pair ticked, moves its attitudes, favours, links, words and memberships onto the character or creature and removes the faction.
+- A place can say whose **Tribunal's lands** it is, and everything inside it takes that unless a place nearer in names another. This is where a record lies, kept apart from which Tribunal a covenant belongs to: a covenant in the Rhine's lands that hasn't joined shows "Rhine (not a member)". The Region's filter can narrow its lists to one Tribunal's lands.
+- The Region can be read **By Place**: each place, what rests on it (its neighbours, covenants and creatures) and the places inside it, every name a link. It is a tab in the terminal and a By kind / By place choice on the desktop.
+- **Customs and Lore**: a new kind of neighbour for how a land lives (its honour and kin, its tongues and manners, its law, trade and roads, a treaty or a legend), with the rules it brings and the place it belongs to, and no attitude. The Region lists them in a section of their own.
+- A faction's kind can now be a Hermetic group, a people or tribe, spirits and beings, a faith or sect, a council or assembly, a military order, brigands and mercenaries, a religious community or an estate or rank, beside the hedge coven, faerie court, gild and family. Older labels (Tribe, People, Dynasty, Nobility, Church, Holy societas, False gods) are moved to the list when a saga opens.
+
+### Peregrinatio
+
+- Every faction in the Tribunal and book packs now has its kind, where 304 of 477 were Other; magicians' traditions are hedge covens, and the background chapters filed as factions (Iceland's customs, the Nile's tongues and manners, the Baqt, the Flemish cloth fairs and more) are customs. The Great Hunger and the Hope are Bestiary creatures, each one vast spirit. Importing a pack again doesn't change the factions a saga already has.
+
 ## 3.77.0 — 2026-11-05
 
 ### Mappa Mundi

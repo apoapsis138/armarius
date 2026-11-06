@@ -1512,7 +1512,7 @@ def _factions(hibernia: Hibernia, b: Builder) -> None:
     )
     w["galloglaigh"] = b.faction(
         "The Gallóglaigh of Donegal",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         members=2000,
         ruler="the Mac Suibhne",

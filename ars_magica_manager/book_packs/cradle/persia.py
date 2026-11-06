@@ -1632,7 +1632,7 @@ def _factions(cradle: Cradle) -> None:
     )
     w["ghuzz"] = b.faction(
         "The Ghuzz",
-        faction="Other",
+        faction="People or tribe",
         decides="Nobody",
         place=persia,
         summary=paragraphs(
@@ -1689,7 +1689,7 @@ def _factions(cradle: Cradle) -> None:
     )
     w["zutt"] = b.faction(
         "The Zutt",
-        faction="Other",
+        faction="People or tribe",
         place=places["khuzistan"],
         summary=paragraphs(
             "A half-nomad tribe from south-east of Ramhurmuz near the "
@@ -1706,7 +1706,7 @@ def _factions(cradle: Cradle) -> None:
     )
     w["balu"] = b.faction(
         "The Balu",
-        faction="Other",
+        faction="People or tribe",
         place=places["kirman"],
         summary=paragraphs(
             "The tribesmen of the Jabal Kufs, much feared by Persians: "

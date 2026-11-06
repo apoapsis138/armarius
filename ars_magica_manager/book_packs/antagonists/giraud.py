@@ -374,6 +374,7 @@ def _retainers(
     b.link(household, "characters", people["artur"], "His brother")
     retainers = b.faction(
         "The Baron's Retainers",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         ruler=BARON,
         summary=paragraphs(
@@ -406,6 +407,7 @@ def _retainers(
 def _agents(b: Builder) -> None:
     b.faction(
         "Folk Who Deal With the Covenant",
+        faction="Estate or rank",
         decides="Its leader",
         summary=(
             "Farmers, artisans and others who deal with the covenant, with "

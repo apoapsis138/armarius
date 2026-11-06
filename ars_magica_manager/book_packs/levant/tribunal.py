@@ -356,7 +356,7 @@ MEMBERS: tuple[tuple[str, str], ...] = (("umar", "Its leading member"),)
 def _islamic_tradition(levant: Levant) -> None:
     levant.world["islamic_tradition"] = levant.b.faction(
         "The Islamic Tradition",
-        faction="Other",
+        faction="Hermetic group",
         summary=paragraphs(
             "Not a society but a strand running through the Order since "
             "its first settlers reached the Levant: magi of any House or "

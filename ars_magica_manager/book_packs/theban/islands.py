@@ -2349,7 +2349,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     p = theban.places
     w["aegean_pirates"] = b.faction(
         "The Pirates of the Aegean",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         place=p["islands"],
         wants="Booty and ransoms",
@@ -2369,7 +2369,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     )
     w["monocheiros"] = b.faction(
         "Peter Monocheiros's crew",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         members=8,
         ruler="Peter Monocheiros",

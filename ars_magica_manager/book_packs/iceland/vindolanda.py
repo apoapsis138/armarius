@@ -987,6 +987,7 @@ def _bestiary(b: Builder, old: Neighbour) -> None:
 def _stories(b: Builder, scartaris: Neighbour, old: Neighbour) -> None:
     b.faction(
         "Cadell and Enan",
+        faction="Spirits and beings",
         summary="Two earth spirits at Glyder Fawr.",
         realm="Magic",
         place=next(n for n in b.saga.neighbours if n.name == "Glyder Fawr Sanctum"),

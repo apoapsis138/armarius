@@ -8,6 +8,7 @@ choosing a card calls back to the window, which opens the next page.
 
 from __future__ import annotations
 
+import html
 from collections.abc import Callable, Sequence
 from pathlib import Path
 from typing import Any, TypedDict, Unpack
@@ -41,7 +42,7 @@ from ..commands import Command
 from ..forms import diary as diary_forms
 from ..forms import menu as menu_forms
 from ..models import Character, Creature, Neighbour, Saga, Tribunal
-from ..references import Fact
+from ..references import Fact, Ref
 from ..sections import CONFLICT_BATTLES_SECTION, FIGHTS_SECTION, SIEGES_SECTION
 from ..sheets import character as cs
 from ..sheets import creature as crs
@@ -63,6 +64,7 @@ from .widgets import (
     Codex,
     card_grid,
     chapter_title,
+    chip_row,
     display_name,
     edit_button,
     filter_choice,
@@ -379,8 +381,9 @@ def group_cards(
 
 
 class NeighbourFilterBar(QWidget):
-    """What the Region's neighbours are narrowed to, as two quiet
-    drop-downs on one line (neighbour_filter.Filter)."""
+    """What the Region's neighbours are narrowed to, as quiet drop-downs
+    on one line (neighbour_filter.Filter): a Tribunal's lands (while a
+    place names one), a region and a kind."""
 
     def __init__(self, saga: Saga, p: Palette) -> None:
         super().__init__()
@@ -392,25 +395,41 @@ class NeighbourFilterBar(QWidget):
         self.kind = filter_choice(
             "Every kind", [(k.name, k.key) for k in neighbour_filter.kinds(saga)]
         )
+        lands = neighbour_filter.tribunals(saga)
+        #: Whose lands, only while some place names a Tribunal.
+        self.tribunal = (
+            filter_choice("Every Tribunal", [(t.name, t.id) for t in lands])
+            if lands
+            else None
+        )
         row = QHBoxLayout(self)
         # Level with the heading's words beside it.
         row.setContentsMargins(0, 8, 0, 0)
         row.setSpacing(10)
         row.addStretch(1)
         row.addWidget(text("Show", p["dim"], serif(12, italic=True)))
-        for combo, value in ((self.region, wanted.region), (self.kind, wanted.kind)):
+        shown = [(self.region, wanted.region), (self.kind, wanted.kind)]
+        if self.tribunal is not None:
+            shown.insert(0, (self.tribunal, wanted.tribunal))
+        for combo, value in shown:
             combo.setObjectName("quiet")
             combo.setCurrentIndex(max(combo.findData(value or None), 0))
             row.addWidget(combo)
 
     def wanted(self) -> neighbour_filter.Filter:
         return neighbour_filter.Filter(
-            region=self.region.currentData() or "", kind=self.kind.currentData() or ""
+            region=self.region.currentData() or "",
+            kind=self.kind.currentData() or "",
+            tribunal=(
+                self.tribunal.currentData() or "" if self.tribunal is not None else ""
+            ),
         )
 
     def changed(self, then: Callable[[], None]) -> None:
-        """Call `then` whenever either drop-down changes."""
-        for combo in (self.region, self.kind):
+        """Call `then` whenever a drop-down changes."""
+        for combo in (self.region, self.kind, self.tribunal):
+            if combo is None:
+                continue
             combo.currentIndexChanged.connect(lambda _index: then())
 
 
@@ -521,6 +540,87 @@ def _tribunals_parts(
     ]
 
 
+def _heading_with(
+    title: QWidget, buttons: Sequence[QWidget], spacing: int = 6
+) -> QWidget:
+    """`title`, with `buttons` at its right when there are any."""
+    if not buttons:
+        return title
+    row = QWidget()
+    line = QHBoxLayout(row)
+    line.setContentsMargins(0, 0, 0, 0)
+    line.setSpacing(spacing)
+    line.addWidget(title, 1)
+    for button in buttons:
+        line.addWidget(button, 0, Qt.AlignmentFlag.AlignTop)
+    return row
+
+
+def _clear(holder: QVBoxLayout) -> None:
+    """Take every widget out of `holder`, to be drawn again."""
+    while holder.count():
+        item = holder.takeAt(0)
+        old = item.widget() if item is not None else None
+        if old is not None:
+            old.setParent(None)
+            old.deleteLater()
+
+
+def _view_chips(saga: Saga, p: Palette, then: Callable[[], None]) -> QWidget:
+    """By kind or by place: the two ways into the Region."""
+
+    def show(chosen: str) -> Callable[[], None]:
+        def flip() -> None:
+            region_sheet.choose_view(saga, chosen)
+            then()
+
+        return flip
+
+    shown = region_sheet.view(saga)
+    return chip_row(
+        "Show",
+        [
+            ("By kind", shown == region_sheet.BY_KIND, show(region_sheet.BY_KIND)),
+            ("By place", shown == region_sheet.BY_PLACE, show(region_sheet.BY_PLACE)),
+        ],
+        p,
+    )
+
+
+def _by_place(saga: Saga, p: Palette, follow: Callable[[Ref], None]) -> QWidget:
+    """The Region by place as one block of lines, indented by depth, each
+    name a link (one label, so hundreds of records draw at once)."""
+    rows = region_sheet.by_place(saga)
+    if not rows:
+        return text(
+            "No places yet: add one under Places.", p["dim"], serif(12.5, italic=True)
+        )
+    by_href: dict[str, Ref] = {}
+    lines = []
+    for row in rows:
+        indent = "&nbsp;" * (4 * row.depth)
+        name = html.escape(row.name)
+        if row.ref is None:
+            lines.append(f"{indent}<b>{name}</b>")
+            continue
+        href = str(len(by_href))
+        by_href[href] = row.ref
+        lines.append(
+            f'{indent}<a href="{href}" style="color:{p["primary"]}; '
+            f'text-decoration:none">{name}</a>'
+            f'&nbsp;&nbsp;<span style="color:{p["label"]}">{html.escape(row.what)}</span>'
+        )
+    label = text("<br>".join(lines), p["foreground"], serif(13), wrap=True)
+    label.setTextFormat(Qt.TextFormat.RichText)
+    # A wrapped label asks for the width of its longest line; let it take
+    # the column's width instead, wrapping the rest.
+    label.setMinimumWidth(240)
+    label.linkActivated.connect(
+        lambda href: follow(by_href[href]) if href in by_href else None
+    )
+    return label
+
+
 def region_chapter(
     saga: Saga,
     p: Palette,
@@ -529,16 +629,26 @@ def region_chapter(
     open_tribunal: Open,
     new_tribunal: QWidget | None,
     run: Callable[[Command], None] = lambda _command: None,
+    buttons: Sequence[QWidget] = (),
+    follow: Callable[[Ref], None] | None = None,
 ) -> QWidget:
     """The Region: its Tribunals as cards, ending in the New card that
     adds one; its facts (Threat due with a leaf that opens the threat),
+    under the Neighbours heading with `buttons` (More's actions on the
+    Region) at its right,
     then each group's neighbours the filter lets through as cards, the
     filter's quiet drop-downs at the right of the first group's heading,
-    and the New card that adds one; then the troupe's open stories."""
+    and the New card that adds one; then the troupe's open stories. A
+    line of chips under the heading turns the groups into the Region by
+    place, each name a link `follow` opens."""
     facts = _region_facts(saga, p, open_neighbour)
+    opened = follow or (
+        lambda found: open_neighbour(found.id) if found.kind == "neighbours" else None
+    )
+
     parts: list[QWidget] = [
         *_tribunals_parts(saga, p, open_tribunal, new_tribunal),
-        chapter_title(region_sheet.neighbours_title(saga), p),
+        _heading_with(chapter_title(region_sheet.neighbours_title(saga), p), buttons),
     ]
     groups = QWidget()
     holder = QVBoxLayout(groups)
@@ -549,36 +659,27 @@ def region_chapter(
     def heading(words: str, first: bool) -> QWidget:
         """A group's heading; the first shown carries the filter."""
         title = chapter_title(words, p)
-        if bar is None or not first:
-            return title
-        row = QWidget()
-        line = QHBoxLayout(row)
-        line.setContentsMargins(0, 0, 0, 0)
-        line.setSpacing(16)
-        line.addWidget(title, 1)
-        line.addWidget(bar, 0, Qt.AlignmentFlag.AlignTop)
-        return row
+        return title if bar is None or not first else _heading_with(title, [bar], 16)
 
     def fill() -> None:
         if bar is not None:
             bar.setParent(None)
-        while holder.count():
-            item = holder.takeAt(0)
-            old = item.widget() if item is not None else None
-            if old is not None:
-                old.setParent(None)
-                old.deleteLater()
+        _clear(holder)
+        holder.addWidget(_view_chips(saga, p, fill))
+        if region_sheet.view(saga) == region_sheet.BY_PLACE:
+            holder.addWidget(_by_place(saga, p, opened))
+            return
+        first = True
         for group in neighbours.groups_shown(saga):
             members = neighbour_filter.shown(saga, group.key)
             if not members:
                 continue
-            holder.addWidget(
-                heading(region_sheet.group_title(saga, group.key), holder.count() == 0)
-            )
+            holder.addWidget(heading(region_sheet.group_title(saga, group.key), first))
+            first = False
             holder.addWidget(
                 group_cards(saga, group.key, members, every, p, open_neighbour, fill)
             )
-        if saga.neighbours and holder.count() == 0:
+        if saga.neighbours and first:
             if bar is not None:
                 holder.addWidget(bar)
             holder.addWidget(
@@ -964,6 +1065,8 @@ class SagaPage(QWidget):
                 self.open_tribunal,
                 self._new("Tribunals"),
                 run,
+                self._buttons("The Region"),
+                lambda found: self._follow(opens, found),
             ),
         )
         # The Atlas is built when first opened: its maps are large pictures.
@@ -996,6 +1099,13 @@ class SagaPage(QWidget):
 
     def chapters(self) -> list[str]:
         return self.codex.chapters()
+
+    @staticmethod
+    def _follow(opens: dict[str, Callable[[Any], None]], found: Ref) -> None:
+        """Open the record a link of the Region by place names."""
+        kind = found.kind.removesuffix("s")
+        if kind in opens:
+            opens[kind](found.id)
 
     def _new(self, spot: str, hint: str = "") -> QWidget | None:
         return self.placer.new_card(spot, hint=hint) if self.placer else None

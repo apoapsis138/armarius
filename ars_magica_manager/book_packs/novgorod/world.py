@@ -429,7 +429,7 @@ def _peoples(records: Records) -> None:
     b, p, w = records.b, records.places, records.world
     w["teutonic_knights"] = b.faction(
         "The Teutonic Knights",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Hermann von Salza",
         realm="Divine",
@@ -441,7 +441,7 @@ def _peoples(records: Records) -> None:
     )
     w["knights_of_the_sword"] = b.faction(
         "The Knights of the Sword",
-        faction="Other",
+        faction="Military order",
         realm="Divine",
         place=p["baltic"],
         summary="The Brotherhood of the Sword, founded by Bishop Albert of "
@@ -451,7 +451,7 @@ def _peoples(records: Records) -> None:
     )
     w["baltic_pagans"] = b.faction(
         "The Baltic Pagans",
-        faction="Other",
+        faction="People or tribe",
         place=p["baltic"],
         summary="The Prussians, Lithuanians, Samogithians, Curs, Selonians, "
         "Semgallians, Livonians, Letts and Estonians, who keep the old "
@@ -462,7 +462,7 @@ def _peoples(records: Records) -> None:
     )
     w["cumans"] = b.faction(
         "The Cumans",
-        faction="Other",
+        faction="People or tribe",
         place=p["steppe"],
         ruler="Khan Kotian",
         summary="The nomads of the southern steppe, a branch of the "
@@ -500,7 +500,7 @@ def _peoples(records: Records) -> None:
     )
     w["vedun"] = b.faction(
         "The Vedun",
-        faction="Other",
+        faction="Hedge coven",
         realm="Faerie",
         place=p["russia"],
         summary="The Slavs' cunning folk, and every pagan household: in a "
@@ -519,7 +519,7 @@ def _peoples(records: Records) -> None:
     )
     w["cult_of_hermes"] = b.faction(
         "The Cult of Hermes",
-        faction="Other",
+        faction="Faith or sect",
         place=p["urals"],
         summary="The faith Thousand Caves has preached to its tribes for "
         "thirty years, with new festivals, rites and idols of Hermes in "

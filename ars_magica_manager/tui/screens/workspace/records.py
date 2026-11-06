@@ -19,6 +19,7 @@ from .... import (
     lords,
     manors,
     marriages,
+    merges,
     open_stories,
     place_events,
     places,
@@ -704,6 +705,14 @@ class RecordActions(WorkspaceBase):
             self.app,
             threats.begin_command(self.saga, record),
             lambda _end: self._commit(NEIGHBOUR_INFO_SECTION, STAGES_SECTION),
+        )
+
+    def action_merge_doubles(self) -> None:
+        """More's Merge Doubled Records on the saga or the Region."""
+        run_steps(
+            self.app,
+            merges.merge_form(self.saga),
+            lambda end: self._commit_told(end, tree=True),
         )
 
     def action_grow_story(self) -> None:

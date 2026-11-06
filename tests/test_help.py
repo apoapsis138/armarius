@@ -113,7 +113,11 @@ DIALOG_PAGES = {
 }
 
 #: The sample saga's nodes, and the Grand Tribunal the help test adds.
-HELP_NODES = {**NODES, "grand_tribunal": ("tribunal", "grand")}
+HELP_NODES = {
+    **NODES,
+    "grand_tribunal": ("tribunal", "grand"),
+    "custom": ("neighbour", "weavers_peace"),
+}
 
 #: The sheets whose tabs and sections need help, by tree node.
 SHEETS = {
@@ -137,6 +141,7 @@ SHEETS = {
     "faction": "_neighbour_sheet_view",
     "threat": "_neighbour_sheet_view",
     "place": "_neighbour_sheet_view",
+    "custom": "_neighbour_sheet_view",
     "seasons": "_seasons_view",
     "bestiary": "_bestiary_view",
     "creature": "_creature_sheet_view",

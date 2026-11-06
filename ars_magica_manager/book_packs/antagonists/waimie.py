@@ -933,7 +933,7 @@ def _cult(b: Builder, waimie: Creature) -> None:
         "The Cult of the Serpent",
         summary="A band of folk who speak of a Scaly Queen and go about gathering "
         "news.",
-        faction="Other",
+        faction="Faith or sect",
         decides="A charismatic leader",
         secrets="An option for a stronger Waimie, not part of the story as "
         "printed. They gather information and vis for her. Her human servants are perhaps held by a power like the "

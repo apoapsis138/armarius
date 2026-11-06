@@ -1875,7 +1875,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     p = transylvania.places
     w["bogomils"] = b.faction(
         "The Bogomils",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         ruler="The Protos",
         realm="Divine",
@@ -1920,7 +1920,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     )
     w["sinklit"] = b.faction(
         "The Sinklit",
-        faction="Other",
+        faction="Council or assembly",
         decides="A council",
         ruler="Tsar Ivan Asen II",
         place=p["bulgaria"],

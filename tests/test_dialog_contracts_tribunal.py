@@ -296,6 +296,14 @@ CONTRACTS: dict[str, Contract] = {
         invalid={"Name": ""},
         shown={"#nb-masters-list": "Magister in Artibus"},
     ),
+    "add member": Contract(
+        prefill={"Member": None, "Role": ""},
+        edits={"Member": "characters:mag1", "Role": "its secret patron"},
+        saved=lambda s: s.neighbour("coven").details["roster"][-1],
+        expected={"who": "characters:mag1", "role": "its secret patron"},
+        invalid={"Member": None},
+        shown={"#nb-members-list": "its secret patron"},
+    ),
     "edit faction": Contract(
         prefill={"Faction": "Hedge coven", "Members": "7"},
         edits={

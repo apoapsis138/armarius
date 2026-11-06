@@ -333,6 +333,7 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
     if odin is None:
         odin = b.faction(
             "The Order of Odin",
+            faction="Hedge coven",
             summary="The rival order of Norse wizards that rumour has "
             "whispered of in the Order of Hermes for over a century. Magi "
             "credit it with destroying spring covenants in Scandinavia, and "
@@ -356,7 +357,7 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
             "They carry spells for killing huge beasts and vis to pierce any "
             "resistance, but know nothing of spirits unless told (pp. 6, 8).",
         ),
-        faction="Other",
+        faction="Hermetic group",
         ruler="Julius of Flambeau and Lavinia of Guernicus",
         wants="Revenge for Hadrianus, and the end of the Order of Odin",
     )
@@ -368,14 +369,14 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
         "time for childish adventures. If the player characters argue well "
         "many powerful magi withdraw, and after the War Tribunal some pledge "
         "to take the matter to the Grand Tribunal (Icelandic Wars pp. 3-4).",
-        faction="Other",
+        faction="Hermetic group",
     )
     leglean = b.faction(
         "The Loch Leglean Tribunal",
         summary="The Order's Tribunal in Scotland.",
         secrets="One of its magi looks into the haunting of Hadrianus in 1224 "
         "(Icelandic Wars p. 2).",
-        faction="Other",
+        faction="Hermetic group",
     )
     Builder.link(crusaders, "characters", people["julius"], "Leads it")
     Builder.link(crusaders, "characters", people["lavinia"], "Leads it")

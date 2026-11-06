@@ -1029,7 +1029,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["holy_vehm"] = b.faction(
         "The Holy Vehm",
-        faction="Other",
+        faction="Council or assembly",
         place=lowlands,
         ruler="The archbishop of Cologne, as Oberststuhlherr",
         rules=(
@@ -1102,7 +1102,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["cult_of_radegast"] = b.faction(
         "Cult of Radegast",
-        faction="Other",
+        faction="Faith or sect",
         place=east,
         ruler="Igor Rastvan of Roznov, high priest",
         wants="A kingdom of the Slavs united under Radegast",
@@ -1124,7 +1124,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["frisian_pirates"] = b.faction(
         "Pirates of Frisia",
-        faction="Other",
+        faction="Brigands and mercenaries",
         place=lowlands,
         summary=(
             "The pirates of the Frisian coast, Waddenzee's among them, who bury their "
@@ -1136,7 +1136,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["rhine_tremere"] = b.faction(
         "House Tremere in the Rhine",
-        faction="Other",
+        faction="Hermetic group",
         ruler="Stentorius of Fengheld, exarch",
         rules="Only Stentorius and Severicus hold their own sigils; the exarch holds about three-fifths of the rest, Severicus the remainder",
         wants="Order, hierarchy and a strong hand on the Tribunal's eastern frontier",
@@ -1173,7 +1173,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["harmonists"] = b.faction(
         "Harmonists of House Bjornaer",
-        faction="Other",
+        faction="Hermetic group",
         place=east,
         ruler="Falke, Prima of Bjornaer, sympathises",
         wants="Mundanes persuaded to live respectfully alongside the wild",
@@ -1193,7 +1193,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["wilderists"] = b.faction(
         "Wilderists of House Bjornaer",
-        faction="Other",
+        faction="Hermetic group",
         place=east,
         ruler="Urgen, Senior Elder of Bjornaer",
         wants="Humans confined to walled cities; forests, marshes and moors left to beasts and feared",
@@ -1278,7 +1278,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["order_of_odin"] = b.faction(
         "The Order of Odin",
-        faction="Other",
+        faction="Hedge coven",
         summary=(
             "The Norse wizards beyond the northern border, as the Order imagines "
             "them. The fear of them has stopped any Hermetic covenant lasting long "
@@ -1292,7 +1292,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["knights_of_the_sword"] = b.faction(
         "The Knights of the Sword",
-        faction="Other",
+        faction="Military order",
         realm="Divine",
         place=east,
         ruler="Albert von Buxhövden, bishop of Riga, founder",
@@ -1343,7 +1343,7 @@ def _factions(rhine: Rhine) -> None:
     )
     w["god_of_truth"] = b.faction(
         "The God of Truth",
-        faction="Other",
+        faction="Faith or sect",
         realm="Faerie",
         place=bohemia,
         rules="No catechism beyond reverence for the wild and leaving the churches",

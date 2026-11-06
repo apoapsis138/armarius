@@ -1428,6 +1428,7 @@ def _spirits(b: Builder, island: Neighbour, villa: Neighbour) -> None:
 def _witches(b: Builder) -> Neighbour:
     return b.faction(
         "The Heirs of Cupressa",
+        faction="Hedge coven",
         summary=(
             "Witches of Algiers and the lands around, who revere the great "
             "Cupressa and have slowly spread into southern Europe, gathering "

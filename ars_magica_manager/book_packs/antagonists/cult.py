@@ -561,6 +561,7 @@ def _possessed(b: Builder):
 def _cult(b: Builder):
     cult = b.faction(
         "The Flagellants",
+        faction="Faith or sect",
         summary=paragraphs(
             "A penitential movement spreading from town to town, led by "
             "eloquent lay preachers. Its people pray, fast and call the "
@@ -613,6 +614,7 @@ def _cult(b: Builder):
     )
     b.faction(
         "The False Saints",
+        faction="Faith or sect",
         summary=(
             "Flagellant leaders hailed as men returned from the dead, who "
             "ordain their own priests outside the Church. Some shelter with "
@@ -637,6 +639,7 @@ def _cult(b: Builder):
     )
     b.faction(
         "The Loyal Flagellants",
+        faction="Faith or sect",
         summary=(
             "Flagellant groups that denounce the false saints and keep the "
             "support of part of the Church. Some nobles follow them and make "

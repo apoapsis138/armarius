@@ -518,7 +518,7 @@ FACTIONS: tuple[tuple[str, str, dict[str, Any]], ...] = (
         "rowan_sisterhood",
         "The Rowan Sisterhood",
         {
-            "faction": "Other",
+            "faction": "Hermetic group",
             "summary": "An informal society founded in the purge of the Shadow "
             "Flambeau and led by Archmaga Jacinta, all but inactive now, whose "
             "members still watch for diabolic or vampiric corruption and keep "
@@ -531,7 +531,7 @@ FACTIONS: tuple[tuple[str, str, dict[str, Any]], ...] = (
         "craft_school",
         "The Craft School",
         {
-            "faction": "Other",
+            "faction": "Hermetic group",
             "summary": "A Hermetic movement that prizes beautiful and useful "
             "objects; most Crafters are mage-smiths. Constance of Valnastium "
             "leads it, and Angela belongs. Crafters buy odd things at the Fair "
@@ -543,7 +543,7 @@ FACTIONS: tuple[tuple[str, str, dict[str, Any]], ...] = (
         "jovians",
         "The Jovians",
         {
-            "faction": "Other",
+            "faction": "Hermetic group",
             "summary": "Archmage Pietro's lineage within House Flambeau, "
             "Auram magi who must learn the Incantation of Lightning and a "
             "longer Wings of the Soaring Wind, and master the first; some "
@@ -555,7 +555,7 @@ FACTIONS: tuple[tuple[str, str, dict[str, Any]], ...] = (
         "black_mark",
         "The Black Mark",
         {
-            "faction": "Other",
+            "faction": "Hermetic group",
             "summary": "A splinter of House Criamon which believes the "
             "Dominion will destroy all magic on Earth unless stopped, and "
             "denies that it comes from an almighty God.",
@@ -565,7 +565,7 @@ FACTIONS: tuple[tuple[str, str, dict[str, Any]], ...] = (
         "dyssynergy",
         "The Cult of Dyssynergy",
         {
-            "faction": "Other",
+            "faction": "Hermetic group",
             "summary": "House Criamon's bugbear, which may not exist: its "
             "members are said to oppose humanity's rush into Twilight, for "
             "reasons that change with the teller, and are feared as "

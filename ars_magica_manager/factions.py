@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from . import place_events, traditions
+from . import memberships, place_events, traditions
 from .form_spec import DialogField, pairs
 from .grids import Grid
 from .models import Neighbour, Saga
@@ -22,11 +22,22 @@ from .neighbour_lists import KindList, KindTab
 from .references import Fact
 from .sections import DIARY_SECTION
 
+#: What a faction is. The books name no list of kinds; these sort what
+#: the Tribunal books describe as companies of their own, Other last.
 FACTION_KINDS: tuple[str, ...] = (
     "Hedge coven",
     "Faerie court",
     "Gild",
     "Family",
+    "Hermetic group",
+    "People or tribe",
+    "Spirits and beings",
+    "Faith or sect",
+    "Council or assembly",
+    "Military order",
+    "Brigands and mercenaries",
+    "Religious community",
+    "Estate or rank",
     "Other",
 )
 
@@ -36,10 +47,10 @@ DECIDES: tuple[str, ...] = ("Its leader", "A council", "A vote of all")
 def facts(saga: Saga, neighbour: Neighbour) -> list[Fact]:
     d = neighbour.details
     members = d.get("members")
-    linked = len(neighbour.links)
+    named = len(memberships.roster(neighbour))
     count = "" if members is None else str(members)
-    if linked:
-        count = f"{count}, {linked} linked" if count else f"{linked} linked"
+    if named:
+        count = f"{count}, {named} named" if count else f"{named} named"
     return [
         Fact("Faction", d.get("faction") or ""),
         Fact("Decides by", d.get("decides") or ""),
@@ -110,7 +121,7 @@ def problem(values: dict[str, Any]) -> str | None:
     return None
 
 
-TAB = KindTab("Faction", "tab-nb-faction", ())
+TAB = KindTab("Faction", "tab-nb-faction", (memberships.MEMBERS,))
 
 
 def diary_grid(_saga: Saga, faction: Neighbour) -> Grid:

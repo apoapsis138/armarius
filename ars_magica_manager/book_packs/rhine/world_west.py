@@ -217,7 +217,7 @@ def _crown_and_princes(
     )
     w["free_imperial_cities"] = b.faction(
         "The Free Imperial Cities",
-        faction="Other",
+        faction="Council or assembly",
         members=14,
         rules=(
             "Each city answers to the emperor alone and not to any local lord; "
@@ -852,7 +852,7 @@ def _factions(
 ) -> None:
     w["forest_guides"] = b.faction(
         "Bjornaer and Merinita, guides of the forest paths",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         offers="A guide to the paths of power through the forest, for those who can follow.",
         summary=(
@@ -866,7 +866,7 @@ def _factions(
     )
     w["hercynius_lineage"] = b.faction(
         "The Hercynius lineage of House Bonisagus",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         wants="To channel the forests' primal magic and complete the great work Bonisagus began.",
         summary="A rumour from Causabon's journal: that a remaining few who follow "
@@ -891,7 +891,7 @@ def _factions(
     )
     w["forest_guardians"] = b.faction(
         "Forest Guardians",
-        faction="Other",
+        faction="Hermetic group",
         realm="Magic",
         rules=(
             "A Guardian publicly declares a wilderness his Hermetic territory and "
@@ -909,7 +909,7 @@ def _factions(
     )
     w["brethren_of_the_free_spirit"] = b.faction(
         "The Brethren of the Free Spirit",
-        faction="Other",
+        faction="Faith or sect",
         place=valley,
         rules="If all is God, nothing is sin.",
         wants=(
@@ -937,7 +937,7 @@ def _factions(
     )
     w["chasidim"] = b.faction(
         "The Chasidim",
-        faction="Other",
+        faction="Faith or sect",
         realm="Divine",
         place=valley,
         rules="Asceticism, readiness for martyrdom and lifelong penitence.",
@@ -962,7 +962,7 @@ def _factions(
     )
     w["zuider_sea_pirates"] = b.faction(
         "Zuider Sea pirates",
-        faction="Other",
+        faction="Brigands and mercenaries",
         place=valley,
         offers="Sailors of doubtful character for hire in Deventer.",
         summary=(
@@ -973,7 +973,7 @@ def _factions(
     )
     w["cult_of_mercury"] = b.faction(
         "The Cult of Mercury",
-        faction="Other",
+        faction="Faith or sect",
         realm="Magic",
         summary=(
             "The Roman magician-priests of the Rhine frontier towns, long gone. "

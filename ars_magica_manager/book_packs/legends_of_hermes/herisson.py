@@ -305,6 +305,7 @@ def _people(b: Builder) -> None:
     )
     b.faction(
         "The Sept of Hérisson",
+        faction="Hermetic group",
         summary="The descendants of Hérisson within Clan Arelie of House "
         "Bjornaer, who keep his name though their common ancestor is more "
         "recent. All hold to the Harmonist cause.",

@@ -109,7 +109,7 @@ def order_of_suleiman(b: Builder) -> dict[str, Neighbour]:
     "order", "stone", "river"."""
     order = b.faction(
         "The Order of Suleiman",
-        faction="Other",
+        faction="Hedge coven",
         decides="A council",
         members=5000,
         ruler="Kha'trazh, grand vizier",
@@ -223,7 +223,7 @@ def jinn(b: Builder, *, inside: Neighbour | None = None) -> dict[str, Neighbour]
     Keys "jinn", "jinnistan", "qaf"."""
     faction = b.faction(
         "The jinn",
-        faction="Other",
+        faction="Spirits and beings",
         decides="Its leader",
         summary=paragraphs(
             "In Islamic teaching God made three thinking peoples: angels "
@@ -362,7 +362,7 @@ def nizaris(b: Builder, *, place: Neighbour | None = None) -> dict[str, Neighbou
     )
     sect = b.faction(
         "The Nizaris",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         ruler="Jalal al-Din Hasan",
         tradition=MUSTAJIBS,

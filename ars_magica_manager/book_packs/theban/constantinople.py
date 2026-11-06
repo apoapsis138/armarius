@@ -1122,7 +1122,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     )
     w["gangs"] = b.faction(
         "The Gangs of Constantinople",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         place=region,
         wants="Safety for their own people, and loot",
@@ -1139,7 +1139,7 @@ def _factions(theban: Theban, b: Builder) -> None:
     )
     w["venetian_council"] = b.faction(
         "The Venetian Council of Constantinople",
-        faction="Other",
+        faction="Council or assembly",
         decides="A council",
         ruler="The podestà",
         place=p["venetian_quarter"],

@@ -247,6 +247,8 @@ ICON_NAMES: dict[str, str] = {
     "church": "church",
     "university": "book-open",
     "faction": "users-three",
+    # A custom: the land's lore, a scroll of it.
+    "custom": "scroll",
     "threat": "skull",
     "place": "sparkle",
     "enchanted_item": "magic-wand",

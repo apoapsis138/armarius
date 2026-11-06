@@ -15,7 +15,14 @@ from __future__ import annotations
 from collections.abc import Callable
 from typing import Any
 
-from . import neighbours, open_stories, places, references, story_chapters, world
+from . import (
+    memberships,
+    open_stories,
+    places,
+    references,
+    story_chapters,
+    world,
+)
 from .models import Character, Covenant, Creature, Familiar, Laboratory, Neighbour, Saga
 from .references import Fact, Ref
 from .rules import sites
@@ -59,29 +66,20 @@ def _linking(saga: Saga, record: Any) -> list[tuple[Any, str]]:
     ]
 
 
-def _is_faction(record: Any) -> bool:
-    return isinstance(record, Neighbour) and neighbours.kind_of(record).key == "faction"
-
-
 def member_of(saga: Saga, record: Any) -> list[Fact]:
-    """The factions whose Links include `record`."""
-    return _named(
-        "Member of", [(r, note) for r, note in _linking(saga, record) if _is_faction(r)]
-    )
+    """The factions whose members include `record`, each with its role."""
+    return _named("Member of", list(memberships.factions_of(saga, record)))
 
 
 def linked_from(saga: Saga, record: Any) -> list[Fact]:
     """Every other record whose Links include `record`."""
-    return _named(
-        "Linked from",
-        [(r, note) for r, note in _linking(saga, record) if not _is_faction(r)],
-    )
+    return _named("Linked from", _linking(saga, record))
 
 
 def links_back(saga: Saga, record: Any) -> list[Fact]:
-    """Every other record whose Links include `record`, factions too: a
-    place's or creature's page, which has no Member of."""
-    return _named("Linked from", _linking(saga, record))
+    """The factions `record` is a member of, then every other record
+    whose Links include it: a neighbour's or creature's page."""
+    return member_of(saga, record) + linked_from(saga, record)
 
 
 def _covenant(saga: Saga, record: Any) -> list[Fact]:
@@ -112,6 +110,20 @@ def _located_in(saga: Saga, record: Any) -> list[Fact]:
     if isinstance(record, Laboratory):
         return where_fact("Located in", saga, sites.lab_place(saga, record))
     return []
+
+
+def lands_fact(saga: Saga, record: Any) -> list[Fact]:
+    """The Tribunal whose lands `record` lies in (places.lands_of), linked;
+    for a covenant, whether it is a member of that Tribunal too."""
+    if not isinstance(record, (Covenant, Character, Laboratory, Neighbour, Creature)):
+        return []
+    lands = places.lands_of(saga, record)
+    if lands is None:
+        return []
+    value = lands.name
+    if isinstance(record, Covenant) and record.tribunal_id != lands.id:
+        value += " (not a member)"
+    return [Fact("Tribunal's lands", value, references.refs(lands))]
 
 
 def _gilds(saga: Saga, record: Any) -> list[Fact]:
@@ -145,6 +157,7 @@ def rules_facts(saga: Saga, record: Any) -> list[Fact]:
 QUERIES: tuple[Callable[[Saga, Any], list[Fact]], ...] = (
     _covenant,
     _located_in,
+    lands_fact,
     _gilds,
     member_of,
     rules_facts,

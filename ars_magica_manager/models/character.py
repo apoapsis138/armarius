@@ -34,7 +34,7 @@ from .traits import (
     new_instance_id,
     reputation_from_dict,
 )
-from .world import FULL, Link
+from .world import FULL, Attitude, Favour, Link, read_standing
 
 
 @dataclass
@@ -1121,6 +1121,10 @@ class Character:
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
     links: list[Link] = field(default_factory=list)
+    #: His attitude toward each player covenant and the favours owed
+    #: between him and the troupe, as a neighbour's are (models.world).
+    attitudes: list[Attitude] = field(default_factory=list)
+    favours: list[Favour] = field(default_factory=list)
     #: The people he controls through personal bonds, and the Agency
     #: experience not yet spent on them (Lords of Men pp. 22-25).
     agents: list[Agent] = field(default_factory=list)
@@ -1218,12 +1222,15 @@ class Character:
             d["animal"] = AnimalForm.from_dict(d["animal"])
         d["progress"] = [Progress.from_dict(p) for p in d.get("progress", [])]
         d["investments"] = [Investment.from_dict(i) for i in d.get("investments", [])]
+        read_standing(d)
         d.update(
             links=[Link(**known_fields(Link, x)) for x in d.get("links", [])],
             interests_off=_interests_off(d),
         )
-        d["agents"] = [Agent.from_dict(a) for a in d.get("agents", [])]
-        d["discipline"] = [Discipline.from_dict(x) for x in d.get("discipline", [])]
+        d.update(
+            agents=[Agent.from_dict(a) for a in d.get("agents", [])],
+            discipline=[Discipline.from_dict(x) for x in d.get("discipline", [])],
+        )
         if d.get("alchemy") is not None:
             d["alchemy"] = Alchemy.from_dict(d["alchemy"])
         d["stay"] = GuestStay.from_dict(d["stay"]) if d.get("stay") else None

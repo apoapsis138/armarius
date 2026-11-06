@@ -1226,6 +1226,9 @@ OPENERS: dict[str, Opener] = {
             lambda ws: ws._core_verb("section-nb-masters", "edit"), "nb-masters-list"
         ),
     ),
+    "add member": Opener(
+        "faction", lambda ws: ws._core_verb("section-nb-members", "add")
+    ),
     "edit faction": Opener(
         "faction", lambda ws: ws._core_verb("section-nb-info", "edit")
     ),

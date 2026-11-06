@@ -426,6 +426,7 @@ def _pithecousa(b: Builder) -> Neighbour:
     )
     b.faction(
         "The Court of the King of Monkeys",
+        faction="Spirits and beings",
         place=island,
         realm="Magic",
         ruler="The King of Monkeys",
@@ -778,6 +779,7 @@ def _tell(
     )
     b.faction(
         "The Sons of Sasan",
+        faction="Brigands and mercenaries",
         place=marrakesh,
         summary=paragraphs(
             "The Banu Sasan of Arabic folklore: a hidden tribe of bandits, "

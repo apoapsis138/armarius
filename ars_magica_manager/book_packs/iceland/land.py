@@ -723,6 +723,7 @@ def _west_over_sea(b: Builder) -> None:
 def _guardians(b: Builder) -> None:
     b.faction(
         "The Guardians of Iceland",
+        faction="Spirits and beings",
         realm="Magic",
         summary=paragraphs(
             "Four great powers who answer the landvaettir, the spirits of the "
@@ -770,9 +771,8 @@ def _guardians(b: Builder) -> None:
 
 
 def _freestate(b: Builder) -> None:
-    b.faction(
+    b.custom(
         "The Icelandic Freestate",
-        faction="Other",
         decides="No king: the godar and the Althing, under the law.",
         rules="One law for the whole island, from 930. Magic of any sort is "
         "outlawed, though harmless magic goes unpunished by quiet agreement. "
@@ -1003,6 +1003,7 @@ def _norway(b: Builder) -> None:
 def _peoples(b: Builder) -> None:
     b.faction(
         "The Storgodar",
+        faction="Estate or rank",
         summary="The big chieftains, closely related men of the five great "
         "families who rule the eight riki. Local quarrels bore them, and the "
         "householders' refusal of every tax keeps each from final mastery.",
@@ -1010,6 +1011,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Storbaendur",
+        faction="Estate or rank",
         summary="The big householders, rich men who stepped in as local "
         "advocates when the storgodar lost interest in small disputes. Their "
         "loyalty still decides contests between storgodar, and fighting other "
@@ -1018,6 +1020,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Draug",
+        faction="Spirits and beings",
         realm="Magic",
         summary="The restless dead of the early settlement. With no Christian "
         "burial to lay them, the magic in the air sometimes raised a corpse, "
@@ -1027,7 +1030,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Papar",
-        faction="Other",
+        faction="Religious community",
         realm="Divine",
         summary="The Irish priests who summered in Iceland from about 790, and "
         "whose prayers drove back the magical beasts. They fled the Norse and "
@@ -1035,7 +1038,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Skraelingar",
-        faction="Other",
+        faction="People or tribe",
         summary="The people of Vinland, named screechers or uglies by the Norse. "
         "They traded gladly at first, keen on metal, which Karlsefni would not "
         "sell as weapons, and on red cloth. When the cloth ran out the raids "

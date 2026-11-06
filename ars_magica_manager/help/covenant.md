@@ -206,16 +206,22 @@ theirs, so nothing is entered here:
 - **Covenant**: a character's or laboratory's covenant.
 - **Located in**: a covenant's or laboratory's place (a laboratory with
   none of its own is where its covenant is), then each place around it.
+- **Tribunal's lands**: the Tribunal whose lands it lies in, from the
+  nearest place around it that names one (a character's is his
+  covenant's). This is where it is, not which council it belongs to: a
+  covenant in a Tribunal's lands that isn't its member (one petitioning
+  to join) shows "(not a member)".
 - **Gilds**: the Rhine gilds a covenant belongs to, and the Tribunal they
   are in.
-- **Member of**: each faction whose Links include this record, with the
-  note on its link.
+- **Member of**: each faction whose [Members](help:section-nb-members)
+  include this record, with its role.
 - **Rules**: each neighbour whose Ruler or leader this is.
 - **Linked from**: any other record whose Links include this one.
 - **Open stories**: a character's or laboratory's open Story Events,
   and the covenant whose Diary keeps them.
 
-A connection is changed where it is made: on the faction's Links, the
+A connection is changed where it is made: on the faction's Members, a
+place's Tribunal's lands, the
 neighbour's Ruler or leader, the covenant's or laboratory's place, the
 Tribunal's gilds, or the Story Event's Concerns in the covenant's
 Diary.

@@ -516,9 +516,8 @@ def _narbonne(provence: Provence, b: Builder) -> None:
             "region, but the crusade has cost it dearly."
         ),
     )
-    w["courts_of_love"] = b.faction(
+    w["courts_of_love"] = b.custom(
         "Ermengarde's Courts of Love",
-        faction="Other",
         decides="Its leader",
         ruler="Once Viscountess Ermengarde of Narbonne",
         place=duchy_land,
@@ -618,7 +617,7 @@ def _nimes(provence: Provence, b: Builder) -> None:
     )
     w["knights_of_the_arena"] = b.faction(
         "The Knights of the Arena",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="The viscount of Nîmes",
         place=arena,
@@ -805,9 +804,8 @@ def _rodez_millau(provence: Provence, b: Builder) -> None:
             "swallow it but have so far failed."
         ),
     )
-    w["troubadours_of_rodez"] = b.faction(
+    w["troubadours_of_rodez"] = b.custom(
         "The Troubadours of Rodez",
-        faction="Other",
         decides="A vote of all",
         place=rodez_land,
         wants="Patrons, audiences and peace to sing in",
@@ -1011,7 +1009,7 @@ def _gevaudan_montpellier(provence: Provence, b: Builder) -> None:
     )
     w["jewish_scholars"] = b.faction(
         "The Wise of Provence",
-        faction="Other",
+        faction="Religious community",
         decides="A council",
         place=montpellier_land,
         summary=paragraphs(
@@ -1247,7 +1245,7 @@ def _flavour(provence: Provence, b: Builder) -> None:
     )
     w["moorish_raiders"] = b.faction(
         "The Moorish Raiders",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         place=coast,
         wants="Plunder, captives to ransom or sell",

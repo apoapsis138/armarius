@@ -1492,7 +1492,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["fair_mercer_houses"] = b.faction(
         "The Temporary Mercer Houses of the Fairs",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Hervé filius Évrard",
         wants="Profit, news and the Redcaps' standing at the fairs.",
@@ -1530,7 +1530,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     w["priory_of_st_nerius"] = b.faction(
         "The Priory of St. Nerius",
         tradition="trad_priory_of_saint_nerius",
-        faction="Other",
+        faction="Religious community",
         realm="Divine",
         wants="St. Nerius recognised as a saint by the Latin Church.",
         offers="A bridge between the Magic and the Divine.",

@@ -305,6 +305,7 @@ _STORYGUIDE_ACTIONS = frozenset(
         "begin_story",
         "delay_threat",
         "grow_story",
+        "merge_doubles",
         "take_up_tale",
         "take_up_story",
         "create_character",

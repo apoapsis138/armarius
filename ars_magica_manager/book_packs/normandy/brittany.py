@@ -2436,7 +2436,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["laden_cart"] = b.faction(
         "The Cabal of the Laden Cart",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         place=p["brittany"],
         ruler="Kybella of Tytalus (secretly)",
@@ -2457,7 +2457,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["fudarus_spies"] = b.faction(
         "The Web of Fudarus",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Prima Buliste",
         place=p["brittany"],
@@ -2476,7 +2476,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["decimi"] = b.faction(
         "The Decimi",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Primus Harpax",
         place=p["ushant"],
@@ -2492,7 +2492,7 @@ def _factions(normandy: Normandy, b: Builder) -> None:
     )
     w["fideli"] = b.faction(
         "The Fideli",
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Prima Buliste",
         place=p["ushant"],

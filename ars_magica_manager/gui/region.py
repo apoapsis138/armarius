@@ -58,6 +58,7 @@ from .character_sheet import (
     TextBlock,
     is_aligned,
     label_values,
+    relations,
     secrets_chapter,
     section,
     side_by_side,
@@ -80,7 +81,6 @@ from .widgets import (
     table_view,
     text,
 )
-from .world import relations
 
 
 def _column(words: str, p: Palette) -> QWidget:

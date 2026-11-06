@@ -71,7 +71,7 @@ holds the rest.
 <!-- help: creature -->
 
 A creature's sheet: its facts at the top, then its Traits, its Combat,
-its Powers & Vis, and its Description and Links. Everything a book's
+its Powers & Vis, and its Description with its attitude, favours and links. Everything a book's
 stat block gives has a place here, and what follows from it (its
 Penetration, its Wound Penalties by Size) is worked out for you.
 
@@ -359,7 +359,10 @@ which Art, and where in its body (its horn, its heart, its blood).
 ## Description tab
 <!-- help: tab-cr-description -->
 
-What it looks like, what it carries and any notes, then its links.
+What it looks like, what it carries and any notes; then its
+[Attitude](help:section-attitudes) toward each player covenant and the
+[Favours](help:section-favours) owed between it and the troupe, as a
+neighbour has; then its links.
 
 ### Description
 <!-- help: section-cr-description -->

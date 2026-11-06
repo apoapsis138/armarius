@@ -12,7 +12,7 @@ from .holdings import Arrival, Economics, Inhabitant, Loyalty, Population, Posse
 from .land_shaping import LandProject
 from .stops import CovenantStop, RouteStop, route_from, stops_from
 from .traits import ScoredTrait, VirtueFlawInstance
-from .world import FULL, Attitude, Favour, Link
+from .world import FULL, Attitude, Favour, Link, read_standing
 
 #: A Covenant Diary entry's categories, in the spec's order.
 COVENANT_DIARY_CATEGORIES: tuple[str, ...] = (
@@ -561,8 +561,7 @@ class Covenant:
             ScoredTrait(**known_fields(ScoredTrait, r))
             for r in d.get("reputations", [])
         ]
-        d["attitudes"] = [Attitude.from_dict(a) for a in d.get("attitudes", [])]
-        d["favours"] = [Favour(**known_fields(Favour, f)) for f in d.get("favours", [])]
+        read_standing(d)
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
         charter = d.get("charter") or {}
         if not isinstance(charter, dict):

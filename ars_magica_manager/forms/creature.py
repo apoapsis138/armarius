@@ -746,6 +746,7 @@ def creature_ops(saga: Saga, creature: Creature) -> dict[str, SectionOps]:
             lambda v: creatures.vis_text(v),
             validate=_vis_problem,
         ),
+        **world_forms.standing_ops(saga, creature),
         LINKS_SECTION: world_forms.link_ops(saga, creature),
         **secrets_ops(creature),
     }

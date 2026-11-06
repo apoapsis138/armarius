@@ -284,6 +284,7 @@ def _lands(b: Builder) -> tuple[Neighbour, Neighbour]:
 def _peoples(b: Builder) -> None:
     b.faction(
         "The Copts",
+        faction="People or tribe",
         summary=paragraphs(
             "The first people of Egypt, descended from the pyramid builders: "
             "dark of hair and eye, olive of skin, like Jews and Syrians, "
@@ -323,6 +324,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Muslims of Egypt",
+        faction="Faith or sect",
         summary=paragraphs(
             "Egypt fell to the Umayyad Caliphate in 639, and its people turned "
             "to Islam slowly over the centuries. They are now a blend of "
@@ -354,6 +356,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Dhimmis",
+        faction="Estate or rank",
         summary=paragraphs(
             "Egypt surrendered to the Muslims rather than falling by force, "
             "and to a pious Muslim that bargain binds before God, so those "
@@ -409,6 +412,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Nubians",
+        faction="People or tribe",
         summary=(
             "A black-skinned Christian people, descended from the Nobatae, a "
             "tribe who came into the Nile Valley about the fall of Kush, and "
@@ -419,6 +423,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Ethiopians",
+        faction="People or tribe",
         summary=(
             "Kin to the Nubians in looks, quite different in culture, and in "
             "their land since the dawn of time: the forebears of the Empire "
@@ -428,6 +433,7 @@ def _peoples(b: Builder) -> None:
     )
     b.faction(
         "The Churches of the Nile",
+        faction="Religious community",
         summary=paragraphs(
             "The Coptic Orthodox Church of Alexandria was founded by Saint "
             "Mark. It gave Christendom monasticism, and from its catechetical "
@@ -449,7 +455,7 @@ def _peoples(b: Builder) -> None:
         ),
         realm="Divine",
     )
-    b.faction(
+    b.custom(
         "The Tongues of the Nile",
         summary=paragraphs(
             "Egypt speaks Arabic in its Masri dialect; travellers from North "
@@ -509,7 +515,7 @@ def _peoples(b: Builder) -> None:
 
 
 def _customs(b: Builder) -> None:
-    b.faction(
+    b.custom(
         "Egyptian Manners",
         summary=paragraphs(
             "Egyptians speak more formally than Europeans, even among friends "
@@ -567,7 +573,7 @@ def _customs(b: Builder) -> None:
             "Knows People (p. 13) is in the catalog.",
         ),
     )
-    b.faction(
+    b.custom(
         "Words of the Nile",
         summary=joined_lines(
             "Akh: a new soul made when ba, ka and khu fuse; the akhu are "
@@ -602,6 +608,7 @@ def _customs(b: Builder) -> None:
 def _tribes(b: Builder, slavelands: Neighbour) -> None:
     b.faction(
         "The Mythic Aithiopes",
+        faction="People or tribe",
         summary=paragraphs(
             "The Aithiopes, 'burnt faces', are not the Ethiopians, though kin "
             "to them and to the Nubians, whose black skin and hair they share. "
@@ -797,7 +804,13 @@ def _tribes(b: Builder, slavelands: Neighbour) -> None:
         ),
     )
     for name, summary, rules in tribes:
-        b.faction(name, summary=summary, rules=rules, place=slavelands)
+        b.faction(
+            name,
+            faction="People or tribe",
+            summary=summary,
+            rules=rules,
+            place=slavelands,
+        )
 
 
 # -- the Bestiary --

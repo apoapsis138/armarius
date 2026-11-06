@@ -418,6 +418,7 @@ def _books(b: Builder, joseph: Character) -> list[Book]:
 def _societas(b: Builder, joseph: Character) -> Neighbour:
     societas = b.faction(
         "The Societas of the Mystical Christ",
+        faction="Hermetic group",
         wants="A religious Order of Hermes under a Grand Master and the pope.",
         offers=paragraphs(
             "Standing among those high in the Church who know of it: a member "

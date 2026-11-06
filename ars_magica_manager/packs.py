@@ -166,13 +166,19 @@ def creatures_round(
     saga: Saga, covenants: list[Covenant], neighbours: list[Neighbour]
 ) -> list[Creature]:
     """The creatures a pack takes: those found at its places, those that
-    link to its covenants, places or neighbours, and those they link to."""
+    link to its covenants, places or neighbours, those they link to, and
+    the members of its factions."""
     ids = {c.id for c in covenants} | {n.id for n in neighbours}
     linked = {
         link.target_id
         for record in neighbours
         for link in record.links
         if link.kind == "creatures"
+    } | {
+        str(member.get("who"))[len("creatures:") :]
+        for record in neighbours
+        for member in record.details.get("roster") or []
+        if str(member.get("who")).startswith("creatures:")
     }
     return [
         c

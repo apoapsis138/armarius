@@ -1040,7 +1040,7 @@ def _factions(cradle: Cradle) -> None:
     )
     w["daughters_cult"] = b.faction(
         "The Cult of the Daughters of Allah",
-        faction="Other",
+        faction="Faith or sect",
         decides="Its leader",
         members=3,
         ruler="'Abd al-Qadir",
@@ -1098,7 +1098,7 @@ def _factions(cradle: Cradle) -> None:
     )
     w["jurhumites"] = b.faction(
         "The Jurhumites",
-        faction="Other",
+        faction="People or tribe",
         realm="Faerie",
         place=p["hijaz"],
         wants="Mecca back, and their old feud with its rulers.",

@@ -686,7 +686,7 @@ def _factions(records: Records) -> None:
     b, w, p = records.b, records.world, records.places
     w["triumvirate"] = b.faction(
         "The Triumvirate",
-        faction="Other",
+        faction="Council or assembly",
         decides="A council",
         members=3,
         place=p["england"],
@@ -698,7 +698,7 @@ def _factions(records: Records) -> None:
     )
     w["jews"] = b.faction(
         "The Jews of England",
-        faction="Other",
+        faction="People or tribe",
         place=p["england"],
         summary="The king's Jews, under the archpresbyter Josce fil' Isaac of "
         "London: among them Rabbi Menahem of London, Rabbi Yom-Tob of Oxford "

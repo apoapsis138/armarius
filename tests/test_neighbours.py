@@ -25,7 +25,7 @@ from ars_magica_manager import (
 from ars_magica_manager.actions import NodeKind
 from ars_magica_manager.commands import Choose, Confirm, Form, Refuse
 from ars_magica_manager.forms import neighbour as neighbour_forms
-from ars_magica_manager.models import Attitude, Link, Neighbour, Reason, Saga
+from ars_magica_manager.models import Attitude, Neighbour, Reason, Saga
 from ars_magica_manager.rules import dice
 from ars_magica_manager.sections import NEIGHBOUR_INFO_SECTION
 from ars_magica_manager.sheets import region as region_sheet
@@ -43,6 +43,7 @@ def test_new_neighbour_offers_the_kinds_whose_book_is_in_play():
         "faction",
         "threat",
         "place",
+        "custom",
     ]
     assert command.others is not None
     shown = [c.value for c in command.others()]
@@ -68,6 +69,7 @@ def test_a_group_with_one_kind_in_play_opens_its_form_at_once():
         "factions",
         "threats",
         "places",
+        "customs",
     ]
 
 
@@ -474,13 +476,13 @@ def test_a_university_grants_its_faculties_degrees():
     assert universities._master_problem({"name": " ", "who": None}) is not None
 
 
-def test_a_faction_counts_its_linked_members():
+def test_a_faction_counts_its_named_members():
     saga = everything_saga()
     coven = saga.neighbour("coven")
     assert coven is not None
-    coven.links.append(Link("character", "mag1", "member"))
+    coven.details["roster"] = [{"who": "characters:mag1", "role": "member"}]
     facts = {f.label: f.value for f in factions.facts(saga, coven)}
-    assert facts["Members"] == "7, 1 linked"
+    assert facts["Members"] == "7, 1 named"
     coven.details["faction"] = None  # left blank
     assert {f.label: f.value for f in factions.facts(saga, coven)}["Faction"] == ""
 

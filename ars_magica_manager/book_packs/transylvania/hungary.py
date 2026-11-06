@@ -722,7 +722,7 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
     region = transylvania.places["hungary"]
     w["hungarian_barons"] = b.faction(
         "The Barons of Hungary",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         members=20,
         ruler="King Andrew II",

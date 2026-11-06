@@ -698,12 +698,19 @@ def covenant_ops(saga: Saga, covenant: Covenant) -> dict[str, SectionOps]:
     }
 
 
+def standing_ops(saga: Saga, record: Any) -> dict[str, SectionOps]:
+    """Attitude and favours: a record's standing with the troupe."""
+    return {
+        ATTITUDE_SECTION: attitude_ops(saga, record),
+        FAVOURS_SECTION: favour_ops(saga, record),
+    }
+
+
 def record_ops(saga: Saga, record: Any) -> dict[str, SectionOps]:
     """Attitude, favours, links and secrets: the sections any world
     record has."""
     return {
-        ATTITUDE_SECTION: attitude_ops(saga, record),
-        FAVOURS_SECTION: favour_ops(saga, record),
+        **standing_ops(saga, record),
         LINKS_SECTION: link_ops(saga, record),
         **secrets_ops(record),
     }

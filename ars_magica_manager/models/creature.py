@@ -15,7 +15,7 @@ from .traits import (
     VirtueFlawInstance,
     new_instance_id,
 )
-from .world import SKETCH, Link
+from .world import SKETCH, Attitude, Favour, Link, read_standing
 
 
 @dataclass
@@ -154,6 +154,10 @@ class Creature:
     place_id: str | None = None
     place_level: int = 0
     links: list[Link] = field(default_factory=list)
+    #: Its attitude toward each player covenant and the favours owed
+    #: between it and the troupe, as a neighbour's are (models.world).
+    attitudes: list[Attitude] = field(default_factory=list)
+    favours: list[Favour] = field(default_factory=list)
     #: What only the storyguide should read: the record's Secrets
     #: chapter, hidden from players signed in to a hosted copy.
     secrets: str = ""
@@ -182,4 +186,5 @@ class Creature:
         ]
         d["vis"] = [BodyVis(**known_fields(BodyVis, v)) for v in d.get("vis", [])]
         d["links"] = [Link(**known_fields(Link, x)) for x in d.get("links", [])]
+        read_standing(d)
         return cls(**d)

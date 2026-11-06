@@ -1903,7 +1903,7 @@ def _factions(provence: Provence, b: Builder) -> None:
     )
     w["corsairs"] = b.faction(
         "The Corsairs of the Hyères",
-        faction="Other",
+        faction="Brigands and mercenaries",
         decides="Its leader",
         ruler="Ahmad ibn Nasr (secretly)",
         place=p["hyeres"],

@@ -193,7 +193,7 @@ def _great_desert(b: Builder) -> Neighbour:
     b.faction(
         "The Ibadi of the Desert",
         place=desert,
-        faction="Other",
+        faction="Faith or sect",
         summary=paragraphs(
             "An unusual Muslim sect, for whom leadership is open to any of the "
             "faithful and a bad or heretical leader may rightly be overthrown. "
@@ -449,7 +449,7 @@ def _garamantians(b: Builder, fezzan: Neighbour) -> Neighbour:
     b.faction(
         "The Garamantians",
         place=garama,
-        faction="Other",
+        faction="People or tribe",
         decides="Sorcerer-kings and an elite nobility",
         wants="Nothing now: they are gone, though their dead may still work.",
         summary=paragraphs(
@@ -893,6 +893,7 @@ def _redoubts(b: Builder, desert: Neighbour) -> Neighbour:
     )
     b.faction(
         "The Kel Asouf",
+        faction="Spirits and beings",
         place=redoubts,
         realm="Faerie",
         summary=paragraphs(
@@ -1192,7 +1193,7 @@ def _roads(b: Builder, desert: Neighbour) -> None:
         ("Zaouila", "A stop on the Garamantian Road past the Libyan Sand Sea."),
     ):
         _place(b, name, inside=desert, summary=summary)
-    b.faction(
+    b.custom(
         "The Desert Caravans",
         place=desert,
         decides="The caravan guide",
@@ -1313,7 +1314,7 @@ def _sudan(b: Builder) -> None:
             "say who buys them.",
         ),
     )
-    b.faction(
+    b.custom(
         "The Silent Traders",
         place=sudan,
         wants="Their sources of gold kept secret.",

@@ -94,9 +94,11 @@ from .character_sheet import (
     columns_text,
     connections_section,
     device_section,
+    relations,
     secrets_chapter,
     section,
     side_by_side,
+    table_section,
     trait_section,
 )
 from .charter import charter_section, clauses_section
@@ -151,7 +153,6 @@ from .widgets import (
     text,
     tier_badge,
 )
-from .world import relations, table_section
 
 #: The Treasury section's id, its help topic.
 PURCHASES_SECTION = "section-eco-purchases"

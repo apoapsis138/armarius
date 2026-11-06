@@ -36,8 +36,10 @@ from .character_sheet import (
     ability_mark,
     ability_view,
     characteristic_cards,
+    relations,
     secrets_chapter,
     section,
+    table_section,
     trait_section,
 )
 from .editing import Chooser, Run, follower, verb_buttons
@@ -53,7 +55,6 @@ from .widgets import (
     table_view,
     text,
 )
-from .world import table_section
 
 CHAPTERS = (
     ("Traits", "character"),
@@ -312,6 +313,7 @@ class CreaturePage(QWidget):
                 *(parts or [_none("Nothing written yet.", p)]),
                 edits={"Edit": self._edit(CREATURE_DESCRIPTION_SECTION)},
             ),
+            *relations(self.saga, c, p, self.run, links=False),
             table_section(
                 f"Links ({len(c.links)})",
                 world_forms.link_table(self.saga, c),

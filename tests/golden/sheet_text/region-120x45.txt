@@ -8,7 +8,7 @@
       Customs:         Rhine: Gilds            Threat due:      The Hollow Crown,
       Neighbours:      6, 1 warm, 1 wary       Winter 1220
 
-   1 Neighbours
+   1 Neighbours  2 By Place
   ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
@@ -22,7 +22,7 @@
 
         Name                   Kind  Ruler or leader  Attitude     Detail
       ○ Gottfried of Arnsberg  Lord  Count Gottfried  ◉ −1 Wary    Sketch
-      ○ Soest                  Town                   ◉ 0 Neutral  Sketch         ▅▅
+      ○ Soest                  Town                   ◉ 0 Neutral  Sketch
 
   ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
     ▼ The Church (1)
@@ -39,5 +39,48 @@
   ▌
   ▌  Choose a neighbour to see how it stands.
   ▌
+
+
+===== tab-region-by-place
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+     The Region
+
+      Player covenant: Keep                    Other covenants: 1
+      Tribunal:        Rhine                   Next Tribunal:   Summer 1228
+      Customs:         Rhine: Gilds            Threat due:      The Hollow Crown,
+      Neighbours:      6, 1 warm, 1 wary       Winter 1220
+
+   1 Neighbours  2 By Place
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+  ▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔▔
+    ▼ By Place
+
+      The Siebengebirge  Place · Magic 2
+        The Drachenfels  Place · Magic 5
+          Aeolus  Creature, Magic
+      Placed nowhere (8)
+        Gottfried of Arnsberg  Lord, ◉ −1 Wary
+        Archbishop of Cologne  Church, ◉ 0 Neutral
+        The Black Pool Coven  Faction, ◉ +2 Friendly
+        The Weavers' Peace  Custom
+        The Hollow Crown  Threat, ◉ 0 Neutral
+        The Studium of Cologne  University, ◉ 0 Neutral
+        Soest  Town, ◉ 0 Neutral
+        Fengheld  Covenant, ◉ −2 Unfriendly
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 

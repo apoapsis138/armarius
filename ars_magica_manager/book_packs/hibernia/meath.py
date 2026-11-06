@@ -609,7 +609,7 @@ def _lordship(hibernia: Hibernia, b: Builder) -> None:
     )
     justices = b.faction(
         "The Itinerant Justices",
-        faction="Other",
+        faction="Council or assembly",
         decides="Its leader",
         ruler="Archbishop Henry de Londres",
         place=ireland,
@@ -836,7 +836,7 @@ def _towns(hibernia: Hibernia, b: Builder) -> None:
 def _ostmen(hibernia: Hibernia, b: Builder) -> None:
     hibernia.world["ostmen"] = b.faction(
         "The Ostmen",
-        faction="Other",
+        faction="People or tribe",
         decides="Councils of the leading families in each city",
         place=hibernia.places.get("ireland"),
         wants="Their trade, their quarters in the ports and their standing apart",

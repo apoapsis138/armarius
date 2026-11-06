@@ -328,7 +328,7 @@ def _factions(normandy: Normandy) -> None:
             "bring the runes into Hermetic theory; if it does not, Skuld may "
             "be lying to her followers.",
         ),
-        faction="Other",
+        faction="Hermetic group",
         decides="Its leader",
         ruler="Queen Skuld",
         rules=(
@@ -360,7 +360,7 @@ def _factions(normandy: Normandy) -> None:
         "a challenge in its heartland. Prima Buliste joins only to keep her "
         "brother Harpax busy. At least one member is a saboteur, quietly "
         "souring relations between the movement's covenants.",
-        faction="Other",
+        faction="Hermetic group",
         rules="Membership anonymous; meetings in disguise or by letter and spell",
         wants="A Lotharingian Tribunal founded, each member for their own reasons",
         offers="Tytalan wit, gold and connections in two or more Tribunals",
@@ -378,7 +378,7 @@ def _factions(normandy: Normandy) -> None:
         "of a different covenant and House, has come fourteenth at the last "
         "three Tourneys. Late in a Tourney a member may quietly offer a "
         "covenant a fixed contest for a little vis.",
-        faction="Other",
+        faction="Hermetic group",
         rules="Members anonymous to outsiders; agreements made in secret and kept",
         wants="The Tourney's prizes, the tropaeum leases above all",
         offers="A contest fixed for a modest bribe of vis",
@@ -412,7 +412,7 @@ def _factions(normandy: Normandy) -> None:
         "dissolve its oath to Florum and would not mind. Montverte and "
         "Waddenzee plan for Waddenzee to join and then defect as Montverte's "
         "vassal, crippling the new Tribunal.",
-        faction="Other",
+        faction="Hermetic group",
         decides="A council",
         members=7,
         rules="Each covenant pledges support in whole or in part",

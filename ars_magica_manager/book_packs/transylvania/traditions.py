@@ -257,7 +257,7 @@ def _hunters(transylvania: Transylvania) -> None:
     w["sabotnici"] = b.faction(
         "The Sabotnici",
         tradition="trad_hunters",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         rules="None: a sabotnik is made by the day of his birth, not by any school",
         offers="Finding vampires, and safety from their direct powers",
@@ -289,7 +289,7 @@ def _hunters(transylvania: Transylvania) -> None:
     w["glogove"] = b.faction(
         "The Glogove",
         tradition="trad_hunters",
-        faction="Other",
+        faction="Hedge coven",
         realm="Magic",
         rules="None: a glog is marked at birth (feet first, with teeth, or red-haired)",
         offers="Protection from vampires, and their destruction",
@@ -371,7 +371,7 @@ def _hunters(transylvania: Transylvania) -> None:
     w["dhampiri"] = b.faction(
         "The Dhampiri and Vampirdzhia",
         tradition="trad_hunters",
-        faction="Other",
+        faction="Hedge coven",
         realm="Faerie",
         rules=(
             "A dhampir's fee is fixed by custom and never haggled down; "

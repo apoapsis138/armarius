@@ -882,6 +882,7 @@ def _feast_of_thanks(b: Builder) -> None:
     )
     b.faction(
         "Trolls of the Western Quarter",
+        faction="Spirits and beings",
         summary="Trolls of Snaefellsnes, the thickest concentration in Iceland "
         "(p. 125), who steal much-needed livestock (p. 107).",
         ruler="Kollbjorn",
@@ -1103,6 +1104,7 @@ def _feast_of_thanks(b: Builder) -> None:
 def _scottish_giants(b: Builder) -> None:
     b.faction(
         "The Scottish Giants",
+        faction="Spirits and beings",
         summary="A dozen or so brutish giants from Scotland, stranded in Iceland "
         "and barely tolerated by its giants, who think them barbarians.",
         ruler="Geamhradh Grian",
@@ -1131,6 +1133,7 @@ def _scottish_giants(b: Builder) -> None:
 def _bards_kin(b: Builder, cave: Neighbour) -> None:
     b.faction(
         "Bard's Daughters",
+        faction="Family",
         summary="The nine golden-haired daughters of Bard Snaefellsass, all healers.",
         place=cave,
         secrets="Giantesses. By his first wife: Helga, Thordis and Solrun. By "
@@ -1206,6 +1209,7 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
     )
     b.faction(
         "Thorkel's Sons",
+        faction="Spirits and beings",
         summary="Six giants of the clan of Hrym, sons of Thorkel and much like "
         "him: Red-Cloak, Solvi, Svadi, Ox-Thorir, Asvald and Skeggi.",
         place=cave,
@@ -1281,6 +1285,7 @@ def _glittering_plains(b: Builder) -> None:
     )
     b.faction(
         "The Humans of Glasvellir",
+        faction="People or tribe",
         summary="A village descended from people who strayed into Glasvellir "
         "centuries ago.",
         place=plains,
@@ -1292,6 +1297,7 @@ def _glittering_plains(b: Builder) -> None:
     )
     b.faction(
         "Gudmund's People",
+        faction="Faerie court",
         summary="The fair folk of Glasvellir, more courtiers than warriors.",
         ruler="Gudmund",
         place=plains,
@@ -1384,6 +1390,7 @@ def _glittering_plains(b: Builder) -> None:
     )
     b.faction(
         "Geirrod's People",
+        faction="Spirits and beings",
         summary="The trolls of Geirrodargard, shorter than Gudmund's folk, "
         "twisted and ugly, as mean and petty as any troll.",
         ruler="Geirrod",
@@ -1395,6 +1402,7 @@ def _glittering_plains(b: Builder) -> None:
     )
     b.faction(
         "The Norn Landvaettir",
+        faction="Spirits and beings",
         summary="Spirits of fate called up by orlog-galdor, seen as countless "
         "shadowy shapes about a lady.",
         place=plains,

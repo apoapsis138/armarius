@@ -663,7 +663,15 @@ def everything_saga() -> Saga:
                     "decides": "Its leader",
                     "members": 7,
                     "wants": "The Black Pool kept secret",
+                    "roster": [],
                 },
+            ),
+            Neighbour(
+                id="weavers_peace",
+                name="The Weavers' Peace",
+                kind="custom",
+                summary="No blade is drawn in Soest on a market day.",
+                details={"rules": "A fight on a market day costs the town's favour."},
             ),
             Neighbour(
                 id="crown",

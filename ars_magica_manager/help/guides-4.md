@@ -641,8 +641,13 @@ A faction's page can name its leader and list its members, each a link to its re
 ### The members
 <!-- help: guide-faction-members -->
 
-- **A member who is a neighbour** (a courtier, a branch of the gild): edit that neighbour and set its **Answers to** to the faction. The faction's page lists it under **Answer to it**.
-- **A member who is a character or a creature**: add a link to them in the faction's [Links](help:section-links), on its Standing tab, with a note on their place in it. The Faction tab counts the characters linked. A character's sheet then lists the faction under **Member of** in their [Connections](help:section-connections), with your note; a creature's page lists it under **Linked from**.
+<!-- tui -->
+- **A member with a record** (a character, a covenant, a Bestiary creature, or a neighbour such as a courtier or a branch of the gild): on the faction's Faction tab, go to **Members** and press `a`. Choose their record (filter by Kind, or type to search) and type their **Role** in it.
+<!-- /tui -->
+<!-- gui -->
+- **A member with a record** (a character, a covenant, a Bestiary creature, or a neighbour such as a courtier or a branch of the gild): on the faction's Faction chapter, click **Add** on **Members**. Choose their record (filter by Kind, or type to search) and type their **Role** in it.
+<!-- /gui -->
+- Their page then lists the faction under **Member of**, with the role (a character's in its [Connections](help:section-connections)). One record can be a member of several factions.
 - **Members with no record**: type how many there are in the faction's **Members**.
 
 ### Following them

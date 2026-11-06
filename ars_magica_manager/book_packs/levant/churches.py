@@ -194,7 +194,7 @@ def _military_orders(levant: Levant) -> None:
     b, w = levant.b, levant.world
     w["templars"] = b.faction(
         "The Knights Templar",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Peter de Montaigu",
         place=_where(levant, "templars"),
@@ -233,7 +233,7 @@ def _military_orders(levant: Levant) -> None:
     )
     w["hospitallers"] = b.faction(
         "The Knights Hospitaller",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Guerin de Montaigu",
         place=_where(levant, "hospitallers"),
@@ -253,7 +253,7 @@ def _military_orders(levant: Levant) -> None:
     )
     w["teutonic_knights"] = b.faction(
         "The Teutonic Knights",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         ruler="Grand Master Hermann von Salza",
         place=_where(levant, "teutonic_knights"),
@@ -288,7 +288,7 @@ def _military_orders(levant: Levant) -> None:
     for key, name, more in lesser:
         w[key] = b.faction(
             name,
-            faction="Other",
+            faction="Military order",
             decides="Its leader",
             place=_where(levant, key),
             summary=f"{more}One of the lesser military orders of the Latin "
@@ -297,7 +297,7 @@ def _military_orders(levant: Levant) -> None:
         )
     w["order_st_lazarus"] = b.faction(
         "The Order of St Lazarus",
-        faction="Other",
+        faction="Military order",
         decides="Its leader",
         place=_where(levant, "order_st_lazarus"),
         summary="The Order of Leper Knights: monks who kept a leper hospital "
@@ -557,7 +557,7 @@ def _faiths(levant: Levant) -> None:
     b, w = levant.b, levant.world
     w["rabbinites"] = b.faction(
         "The Rabbinites",
-        faction="Other",
+        faction="Faith or sect",
         place=_where(levant, "rabbinites"),
         summary="The Jews who follow the rabbis and the Talmud, the "
         "larger of the Levant's two Jewish communities, found in every "
@@ -567,7 +567,7 @@ def _faiths(levant: Levant) -> None:
     )
     w["karaites"] = b.faction(
         "The Karaites",
-        faction="Other",
+        faction="Faith or sect",
         tradition="trad_karaites",
         place=_where(levant, "karaites"),
         summary="The Jews who hold to Scripture alone and reject the "
@@ -577,7 +577,7 @@ def _faiths(levant: Levant) -> None:
     )
     w["druze"] = b.faction(
         "The Druze",
-        faction="Other",
+        faction="Faith or sect",
         place=_where(levant, "druze"),
         rules="Their doctrine is kept secret from outsiders.",
         summary=paragraphs(
@@ -604,7 +604,7 @@ def _faiths(levant: Levant) -> None:
     )
     w["nusayris"] = b.faction(
         "The Nusayris",
-        faction="Other",
+        faction="Faith or sect",
         place=_where(levant, "nusayris"),
         summary="A splinter of the Twelvers, also called 'Alawis for "
         "their devotion to 'Ali, whose teaching the rest of the Twelvers "
@@ -618,7 +618,7 @@ def _faiths(levant: Levant) -> None:
     )
     w["twelvers"] = b.faction(
         "The Twelvers",
-        faction="Other",
+        faction="Faith or sect",
         place=_where(levant, "twelvers"),
         summary=paragraphs(
             "The Ithna'ashari or Imami Shi'a, the largest Shi'i branch, "

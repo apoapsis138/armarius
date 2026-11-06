@@ -535,6 +535,7 @@ def _family(
     )
     coven = b.faction(
         "The Local Witch Coven",
+        faction="Hedge coven",
         realm="Infernal",
         place=spring,
         summary="A coven of witches said to meet about the baron's estate.",
@@ -613,6 +614,7 @@ def _nunnery(b: Builder, fulke: Character) -> Neighbour:
     b.link(fulke, "places", nunnery, "Priest to the nuns")
     b.faction(
         "The Younger Nuns",
+        faction="Religious community",
         place=nunnery,
         summary="A group of the younger nuns, lately rebellious and licentious.",
         secrets=(

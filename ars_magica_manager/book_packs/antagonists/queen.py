@@ -108,7 +108,7 @@ def _kingdom(b: Builder) -> Neighbour:
 def _court(b: Builder, kingdom: Neighbour) -> Neighbour:
     return b.faction(
         "The Court of Gold and Glass",
-        faction="Other",
+        faction="Spirits and beings",
         realm="Faerie",
         ruler=QUEEN,
         place=kingdom,

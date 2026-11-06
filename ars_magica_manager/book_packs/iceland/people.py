@@ -51,6 +51,7 @@ def _place(b: Builder, name: str) -> Neighbour | None:
 def _society(b: Builder) -> None:
     b.faction(
         "The Icelanders",
+        faction="People or tribe",
         place=_place(b, "Iceland"),
         summary=paragraphs(
             "Iceland has no towns and no villages: nearly everyone lives on "
@@ -93,6 +94,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "The Godar",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         decides="Their chieftaincies, the godord, each a legal entity within one "
         "of the thirteen districts.",
@@ -113,6 +115,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "The Baendur",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         summary=paragraphs(
             "The householders; one is a bondi. The household is the root of "
@@ -143,6 +146,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "Tenants",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         summary="Men who rent their land for a year at a time, taking it up or "
         "giving it up at the moving days. They count as baendur but may fall "
@@ -155,6 +159,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "Hut Men",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         summary="Renters who do not farm: fishermen as a rule, or men of some "
         "other trade. Their living fails in famine even when they usually "
@@ -166,6 +171,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "Slaves",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         summary="Once common, captives of Irish, Scottish or Saxon stock and "
         "their children. By 1220 a slave is a rare sight, most likely brought "
@@ -175,6 +181,7 @@ def _society(b: Builder) -> None:
     )
     b.faction(
         "Freedmen",
+        faction="Estate or rank",
         place=_place(b, "Iceland"),
         summary="Freed slaves, who stand as dependents of their former owners "
         "under a new contract. The children of freedmen are freeborn and owe "
@@ -189,7 +196,7 @@ def _society(b: Builder) -> None:
 
 
 def _customs(b: Builder) -> None:
-    b.faction(
+    b.custom(
         "Honour among the Icelanders",
         place=_place(b, "Iceland"),
         rules=paragraphs(
@@ -220,7 +227,7 @@ def _customs(b: Builder) -> None:
             "leaders band against them.",
         ),
     )
-    b.faction(
+    b.custom(
         "Kin, Fostering and Vinfengi",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -239,7 +246,7 @@ def _customs(b: Builder) -> None:
         ),
         rules="P. 23.",
     )
-    b.faction(
+    b.custom(
         "The Women of Iceland",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -264,7 +271,7 @@ def _customs(b: Builder) -> None:
         "twenty years' saving for a landless worker; the law means to keep "
         "children from being born destitute and is hard to enforce. P. 23.",
     )
-    b.faction(
+    b.custom(
         "Poets and Saga-Tellers",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -283,7 +290,7 @@ def _customs(b: Builder) -> None:
         ),
         rules="P. 24.",
     )
-    b.faction(
+    b.custom(
         "Letters and Learning",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -312,7 +319,7 @@ def _customs(b: Builder) -> None:
 
 
 def _economy(b: Builder) -> None:
-    b.faction(
+    b.custom(
         "Homespun and the Three Ounces",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -340,7 +347,7 @@ def _economy(b: Builder) -> None:
             "24-25.",
         ),
     )
-    b.faction(
+    b.custom(
         "Farm, Shore and Larder",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -371,7 +378,7 @@ def _economy(b: Builder) -> None:
         ),
         rules="Pp. 25-26.",
     )
-    b.faction(
+    b.custom(
         "Roads and Travellers",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -389,7 +396,7 @@ def _economy(b: Builder) -> None:
         "or mentally disabled are exempt, and a district usually shares their "
         "care by special arrangement. P. 26.",
     )
-    b.faction(
+    b.custom(
         "Trade, Gifts and Raids",
         place=_place(b, "Iceland"),
         summary=paragraphs(
@@ -432,6 +439,7 @@ def _economy(b: Builder) -> None:
 def _hreppar(b: Builder) -> None:
     b.faction(
         "The Hreppar",
+        faction="Council or assembly",
         place=_place(b, "Iceland"),
         decides="A committee of five.",
         summary=paragraphs(
@@ -461,6 +469,7 @@ def _giants(b: Builder) -> None:
     home = _place(b, "Iceland")
     b.faction(
         "The Children of Ymir",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary=paragraphs(
@@ -541,6 +550,7 @@ def _giants(b: Builder) -> None:
     for name, words, traits, pages in clans:
         b.faction(
             name,
+            faction="Spirits and beings",
             realm="Magic",
             place=home,
             summary=words,
@@ -548,6 +558,7 @@ def _giants(b: Builder) -> None:
         )
     b.faction(
         "The Children of Surt",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         ruler="Surt",
@@ -559,6 +570,7 @@ def _giants(b: Builder) -> None:
     )
     b.faction(
         "The Etin Brides",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Giantesses on friendly terms with gods and men, from any of the "
@@ -577,6 +589,7 @@ def _landvaettir(b: Builder) -> None:
     home = _place(b, "Iceland")
     b.faction(
         "The Landvaettir",
+        faction="Spirits and beings",
         realm="Faerie",
         place=home,
         summary=paragraphs(
@@ -607,6 +620,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The True Landvaettir",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Creatures of pure magic in Iceland's wildest places, the most "
@@ -620,6 +634,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The Fylgjur",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary=paragraphs(
@@ -649,6 +664,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "Hamingja",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Fylgjur so devoted that they take human form, often giants or "
@@ -657,6 +673,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The Alfar",
+        faction="Spirits and beings",
         realm="Faerie",
         place=home,
         summary="Alfar (one is an alf) are the spirits who have had most to do "
@@ -690,9 +707,17 @@ def _landvaettir(b: Builder) -> None:
             "benevolent, and hard for many people to deal with.",
         ),
     ):
-        b.faction(name, realm="Faerie", place=home, summary=words, rules="P. 33.")
+        b.faction(
+            name,
+            faction="Spirits and beings",
+            realm="Faerie",
+            place=home,
+            summary=words,
+            rules="P. 33.",
+        )
     b.faction(
         "The Husvaettir",
+        faction="Spirits and beings",
         realm="Faerie",
         place=home,
         summary="House-spirits, close allies of the alfar and much like the "
@@ -704,6 +729,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The Yarthkin",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Spirits of any of the other kinds whose growing dislike of "
@@ -715,6 +741,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The Tramar",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Yarthkin who are spirits of evil magic.",
@@ -722,6 +749,7 @@ def _landvaettir(b: Builder) -> None:
     )
     b.faction(
         "The Kveldrida",
+        faction="Spirits and beings",
         realm="Magic",
         place=home,
         summary="Yarthkin who are spirits of sickness, often seen as old women "
