@@ -11,13 +11,20 @@ from ars_magica_manager.tui.app import ArsMagicaManagerApp
 from ars_magica_manager.tui.screens.workspace.base import WorkspaceBase
 
 #: Textual's names for the table's keys.
-_TEXTUAL = {"?": "question_mark", "F1": "f1", "Esc": "escape", "q": "q"}
+_TEXTUAL = {
+    "?": "question_mark",
+    "F1": "f1",
+    "Esc": "escape",
+    "q": "q",
+    "Ctrl+F": "ctrl+f",
+}
 
 #: The terminal's actions for each of the table's.
 _ACTIONS = {
     hotkeys.HELP: {"help"},
     hotkeys.BACK: {"step_out"},
     hotkeys.QUIT: {"quit"},
+    hotkeys.FIND: {"find"},
 }
 
 

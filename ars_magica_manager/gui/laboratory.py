@@ -26,7 +26,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import artwork, deeds, giving, lab_planning, research_text, seasons, vis
+from .. import (
+    artwork,
+    deeds,
+    giving,
+    lab_planning,
+    research_text,
+    saga_index,
+    seasons,
+    vis,
+)
 from .. import books as bk
 from .. import lab_texts as lt
 from .. import laboratories as labs
@@ -84,6 +93,7 @@ from .widgets import (
     edit_button,
     filter_choice,
     level_box,
+    offer_rows,
     scrolling_page,
     serif,
     table_view,
@@ -672,6 +682,14 @@ class LaboratoryPage(QWidget):
             book_cards.append(card)
         chosen_book = Chooser()
         choose_cards(book_cards, chosen_book)
+
+        def choose_book(book_id: str) -> QWidget | None:
+            index = next((n for n, b in enumerate(books) if b.id == book_id), None)
+            if index is None:
+                return None
+            book_cards[index].clicked()
+            return book_cards[index]
+
         none = "None recorded."
         chooser = Chooser()
         choose_cards(phials, chooser)
@@ -703,7 +721,7 @@ class LaboratoryPage(QWidget):
             section(
                 f"Books ({len(books)})",
                 p,
-                card_grid(book_cards, 3)
+                offer_rows(card_grid(book_cards, 3), saga_index.BOOKS, choose_book)
                 if book_cards
                 else text(none, p["dim"], serif(12.5, italic=True)),
                 buttons=verb_buttons(

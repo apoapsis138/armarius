@@ -373,6 +373,47 @@ class SelectableList(OptionList):
         if self.highlighted is None:
             self._choose_near(0)
 
+    def on_resize(self) -> None:
+        # A list that grows or shrinks (a details panel taking rows from
+        # it) keeps its chosen row in sight while it has focus.
+        if self.has_focus:
+            self.scroll_to_highlight()
+
+    def bring_chosen_into_view(self) -> bool:
+        """Scroll the chosen row into sight: within the list when the list
+        scrolls, and in the tab that scrolls around it (a section low on a
+        long tab, or a tab with little room left).
+        True once the row is in sight (or nothing scrolls around it)."""
+        self.scroll_to_highlight()
+        position = self.highlighted
+        if position is None:
+            return True
+        self._update_lines()
+        line = self._index_to_line.get(position)
+        if line is None:
+            return True
+        tab = next(
+            (
+                w
+                for w in self.ancestors
+                if isinstance(w, ScrollableContainer) and w.max_scroll_y
+            ),
+            None,
+        )
+        # The chosen row's screen row, then the least scroll that shows it.
+        row = self.region.y + line - round(self.scroll_y)
+        if tab is not None and not tab.region.y <= row < tab.region.bottom:
+            by = (
+                row - tab.region.y
+                if row < tab.region.y
+                else row - tab.region.bottom + 1
+            )
+            tab.scroll_to(y=tab.scroll_y + by, animate=False, immediate=True)
+            row = self.region.y + line - round(self.scroll_y)
+        # In sight: inside the list's own window, and the tab's.
+        in_tab = tab is None or tab.region.y <= row < tab.region.bottom
+        return in_tab and self.region.y <= row < self.region.bottom
+
     def relabel(self, labels: list[str]) -> None:
         """New labels for the same rows, in order (e.g. re-laid-out columns);
         the chosen row and any checks stay as they are."""

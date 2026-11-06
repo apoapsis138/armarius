@@ -57,6 +57,7 @@ from .. import (
     giving,
     marriages,
     portraits,
+    saga_index,
     seasons,
     sourcebooks,
     tradition_text,
@@ -169,8 +170,10 @@ from .widgets import (
     arts_heat_grid,
     chapter_title,
     chip,
+    choose_key,
     display_name,
     edit_button,
+    offer_rows,
     scrolling_page,
     serif,
     table_view,
@@ -521,14 +524,46 @@ def device_section(
             give_verb(saga, giving.DEVICE, holder, lambda: [t[0] for t in targets])
         )
     devices = len(enchantment.held_by(saga, kind, holder_id))
+    table = ed.device_table(saga, kind, holder_id)
+    view = table_view(table, p, show)
+    offer_rows(
+        view,
+        saga_index.DEVICES,
+        lambda device_id: choose_key(
+            view, table, saga_index.device_row(saga, kind, holder_id, device_id)
+        ),
+    )
     return section(
         f"Enchanted Devices ({devices})",
         p,
-        table_view(ed.device_table(saga, kind, holder_id), p, show)
-        if targets
-        else TextBlock("[dim]None recorded.[/]", p),
+        view if targets else TextBlock("[dim]None recorded.[/]", p),
         buttons=verb_buttons(ops, chooser, run, p, more=more),
     )
+
+
+def _offer_spell_rows(
+    view: QTableView, proxy: QSortFilterProxyModel, character: Character
+) -> None:
+    """Let Find choose a Known Spell's row (offer_rows), through the
+    sorted view to the spell's place in spells_known."""
+
+    def choose(spell_id: str) -> QWidget | None:
+        index = saga_index.spell_row(character, spell_id)
+        row = next(
+            (
+                r
+                for r in range(proxy.rowCount())
+                if index is not None
+                and proxy.index(r, 0).data(Qt.ItemDataRole.UserRole) == index
+            ),
+            None,
+        )
+        if row is None:
+            return None
+        view.selectRow(row)
+        return view
+
+    offer_rows(view, saga_index.SPELLS, choose)
 
 
 def _fit_height(view: QAbstractItemView, rows: int, row: int = ROW) -> None:
@@ -1532,6 +1567,8 @@ class CharacterSheet(QWidget):
         if chooser is not None:
             choose_rows(view, chooser, lambda row: rows[row].index)
 
+        _offer_spell_rows(view, proxy, c)
+
         search = QLineEdit()
         search.setPlaceholderText("Filter spells…")
         search.addAction(
@@ -1591,13 +1628,21 @@ class CharacterSheet(QWidget):
             chosen_book.choose(index)
             self.inspect(books[index].name, "", bk.detail_text(saga, books[index]))
 
+        book_table = bk.book_table(saga, books)
+        book_view = offer_rows(
+            table_view(book_table, p, show_book),
+            saga_index.BOOKS,
+            lambda book_id: choose_key(
+                book_view,
+                book_table,
+                next((n for n, b in enumerate(books) if b.id == book_id), None),
+            ),
+        )
         parts.append(
             section(
                 f"Books ({len(books)})",
                 p,
-                table_view(bk.book_table(saga, books), p, show_book)
-                if books
-                else TextBlock("[dim]None recorded.[/]", p),
+                book_view if books else TextBlock("[dim]None recorded.[/]", p),
                 buttons=verb_buttons(
                     SectionOps(rows=lambda: [b.name for b in books]),
                     chosen_book,

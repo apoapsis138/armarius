@@ -37,6 +37,7 @@ from .. import (
     hermetic_projects,
     manors,
     mobile_covenants,
+    saga_index,
     seasons,
     story_chapters,
     town_charter,
@@ -111,6 +112,7 @@ from .editing import (
     verb_buttons,
 )
 from .figures import (
+    Bookcase,
     SeasonSeal,
     attitude_seal,
     aura_seal,
@@ -147,6 +149,7 @@ from .widgets import (
     chapter_title,
     display_name,
     edit_button,
+    offer_rows,
     scrolling_page,
     serif,
     table_view,
@@ -1283,9 +1286,19 @@ class CovenantPage(QWidget):
             )
         ]
         for title, spines in cvs.shelves(saga, covenant):
+            case = shelf(spines, p, show)
+
+            def choose_book(book_id: str, case: Bookcase = case) -> QWidget | None:
+                figure = next(
+                    (f for f in case.books if f.spine.book.id == book_id), None
+                )
+                if figure is not None:
+                    show(figure.spine)
+                return figure
+
             parts += [
                 chapter_title(f"{title} ({len(spines)})", p),
-                shelf(spines, p, show),
+                offer_rows(case, saga_index.BOOKS, choose_book),
             ]
         return scrolling_page(p, *parts)
 

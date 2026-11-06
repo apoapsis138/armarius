@@ -63,6 +63,9 @@ class NavigationActions(WorkspaceBase):
             for rows in self._detail_pane().query(SelectableList):
                 rows.focus()
                 break
+        spot, self._spot_after_open = self._spot_after_open, None
+        if spot is not None:
+            self.open_spot(*spot)
         self.refresh_bindings()
 
     # What selecting each kind of tree node does: set the selection and

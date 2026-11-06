@@ -123,6 +123,20 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.79.0 — 2026-11-06
+
+### Illuminatio
+
+- **Find** searches the whole saga: press Ctrl+F, or click the Find button (a magnifier) to the right of Help, and a panel drops under it with a field and the matches. Type part of a name and pick a match with the arrows and Enter, or a click, to open it; Esc or a click outside closes it.
+- Find looks through characters, covenants, laboratories, familiars, Tribunals, places, factions, customs and lore, creatures, books, spells and enchanted devices. Each match shows its name, kind and place. Names that are exactly what you typed come first, then names that start with it or have it as a word, then records found through it: a faction's members, the place a record is in or who holds it, and the Tribunal whose lands it lies in. A leading The, A or An and accents don't get in the way.
+- A book or device opens its holder's page at the chapter that lists it, with its row chosen, and a spell opens its magus's Known Spells. Books nobody owns, devices nobody holds and spells nobody knows aren't found yet.
+- The title bar now starts with Advance Season, set apart from the rest by a thin upright rule, then Help, Find and the other buttons, so reaching for Find no longer lands on Advance Season.
+- The finder's matches are spaced so each row reads clearly.
+
+### Scriptorum
+
+- **Find** in the terminal: Ctrl+F (shown as ^f Find in the footer, beside Help, Back and Quit) opens a finder like the pickers, a field over the matches, searching and ranking as the desktop does. A book, device or spell opens at its row on its holder's page. Players on a hosted copy may use it too, as it only reads.
+
 ## 3.78.1 — 2026-11-06
 
 ### Florilegium

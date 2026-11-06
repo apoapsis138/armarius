@@ -134,6 +134,11 @@ class BookListView(Vertical):
         #: Width of the Subject column, fitted to the list (see on_resize).
         self._subject_cols = bk.SUBJECT_MIN_WIDTH
 
+    def index_of(self, book_id: str) -> int | None:
+        """The data index of the book `book_id`'s row, None when it isn't
+        listed."""
+        return next((n for n, b in enumerate(self._books) if b.id == book_id), None)
+
     def _summary(self) -> tuple[str, str]:
         research = self._research() if self._research else ""
         return bk.summary_texts(self._books, self.saga, research=research)

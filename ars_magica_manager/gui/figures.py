@@ -1002,7 +1002,7 @@ def shelf(
     spines: Sequence[cs_cov.Spine],
     p: Palette,
     on_choose: Callable[[cs_cov.Spine], None],
-) -> QWidget:
+) -> Bookcase:
     """A bookcase of `spines`; clicking a book calls `on_choose` with it."""
     case = Bookcase(spines, p)
     for figure in case.books:

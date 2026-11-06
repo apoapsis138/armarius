@@ -43,7 +43,16 @@ from PySide6.QtWidgets import (
     QWidget,
 )
 
-from .. import catalog, help_text, hotkeys, paths, references, storage, title_page
+from .. import (
+    catalog,
+    help_text,
+    hotkeys,
+    paths,
+    references,
+    saga_index,
+    storage,
+    title_page,
+)
 from .. import familiars as fam
 from .. import print_layout as pl
 from ..actions import NodeKind
@@ -83,6 +92,7 @@ from .character_sheet import CharacterSheet
 from .conflicts import FightPage, SiegePage
 from .covenant import CovenantPage
 from .familiar import FamiliarPage
+from .finder import FinderPanel, magnifier_icon
 from .forms import NoticeDialog, answer, run_steps, step_dialog
 from .help import HelpPage
 from .icon import app_icon
@@ -98,6 +108,7 @@ from .seasons import SeasonsPage
 from .style import gilding, snapping
 from .style.frame import (
     MAXIMISE,
+    BarRule,
     DragStrip,
     Grips,
     TopStrip,
@@ -115,6 +126,7 @@ from .themes import (
 )
 from .title import TitleScreen
 from .tribunal import TribunalPage
+from .widgets import Codex
 from .worksheet import WorksheetPage
 
 (
@@ -251,6 +263,18 @@ _REF_PLACES: dict[str, str] = {
     "creatures": CREATURE,
 }
 
+#: The chapter each page lists a Find Spot's records in, by the page's
+#: Ref kind and the Spot's list.
+SPOT_CHAPTERS: dict[tuple[str, str], str] = {
+    ("covenants", saga_index.BOOKS): "Library",
+    ("covenants", saga_index.DEVICES): "Inventory",
+    ("laboratories", saga_index.BOOKS): "Stores",
+    ("laboratories", saga_index.DEVICES): "Stores",
+    ("characters", saga_index.BOOKS): "Inventory",
+    ("characters", saga_index.DEVICES): "Inventory",
+    ("characters", saga_index.SPELLS): "Hermetic Magic",
+}
+
 
 class MainWindow(QMainWindow):
     def __init__(self, saga_ids: list[str] | None = None) -> None:
@@ -270,6 +294,9 @@ class MainWindow(QMainWindow):
         #: The chapter each page was last left on, to open it there again
         #: (for this sitting only).
         self._chapters: dict[Place, str] = {}
+        #: The row Find asked for on the page opening next: its chapter
+        #: and where in it.
+        self._spot: tuple[str, saga_index.Spot] | None = None
         #: Shows a step as a window and waits for it (a test answers it).
         self.ask: Callable[[QDialog], int] = self._present
         #: The step open now.
@@ -307,7 +334,8 @@ class MainWindow(QMainWindow):
     def _top_bar(self) -> QHBoxLayout:
         """The window's title bar: the trail on the left, the app's name
         in the middle (drag it to move the window), and Advance Season,
-        Help, the theme and the window's own buttons on the right."""
+        set apart by a rule, then Help, Find, the theme, sounds, motion
+        and the window's own buttons on the right."""
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
         self.theme = QPushButton()
@@ -325,11 +353,23 @@ class MainWindow(QMainWindow):
         self.advance.setFlat(True)
         self.advance.clicked.connect(self.advance_season)
         bar.addWidget(self.advance)
+        #: Sets Advance Season apart from the buttons beside it, so a
+        #: click meant for them doesn't land on it.
+        self.advance_rule = BarRule(self.palette_)
+        bar.addWidget(self.advance_rule)
         self.help = QPushButton("  Help")
         self.help.setFlat(True)
         self.help.setToolTip("Help on this page (? or F1)")
         self.help.clicked.connect(self.open_help)
         bar.addWidget(self.help)
+        #: Find, while a saga is open: drops the finder (finder.py).
+        self.find_button = QPushButton("  Find")
+        self.find_button.setFlat(True)
+        self.find_button.setToolTip("Find a record in the saga by name (Ctrl+F)")
+        self.find_button.clicked.connect(self.open_finder)
+        bar.addWidget(self.find_button)
+        #: The finder dropped, while it is open.
+        self.finder: FinderPanel | None = None
         self._bind_hotkeys()
         bar.addWidget(self.theme)
         #: The sounds on or off (gui/sounds.py); its icon says which.
@@ -348,12 +388,13 @@ class MainWindow(QMainWindow):
         return bar
 
     def _bind_hotkeys(self) -> None:
-        """The keys that work on every page (hotkeys.py): Help, Back and
-        Quit, each a shortcut on the whole window."""
+        """The keys that work on every page (hotkeys.py): Help, Back, Quit
+        and Find, each a shortcut on the whole window."""
         handlers: dict[str, Callable[[], object]] = {
             hotkeys.HELP: self._help_key,
             hotkeys.BACK: self.back,
             hotkeys.QUIT: self.close,
+            hotkeys.FIND: self.open_finder,
         }
         for hotkey in hotkeys.HOTKEYS:
             act = handlers[hotkey.action]
@@ -665,6 +706,26 @@ class MainWindow(QMainWindow):
             return
         self._visit(Place(kind, found.id))
 
+    def open_entry(self, entry: saga_index.Entry) -> None:
+        """Open what Find chose: a book, device or spell on its holder's
+        page, at its chapter with its row chosen."""
+        spot = entry.spot
+        chapter = SPOT_CHAPTERS.get((entry.ref.kind, spot.list)) if spot else None
+        self._spot = (chapter, spot) if chapter is not None and spot else None
+        self.open_ref(entry.ref)
+        self._spot = None
+
+    def open_finder(self) -> None:
+        """Find (Ctrl+F, or the top bar's Find): drop the finder under the
+        Find button, to open a record of the saga by name."""
+        if self.saga is None or not self.find_button.isVisible() or self._step_open():
+            return
+        if self.finder is not None and shiboken6.isValid(self.finder):
+            self.finder.close()
+        self.finder = FinderPanel(self.saga, self.palette_, self.open_entry, self)
+        self.finder.setAttribute(Qt.WidgetAttribute.WA_DeleteOnClose)
+        self.finder.drop_under(self.find_button)
+
     def _visit(self, place: Place) -> None:
         """Go to `place` below the page on show, or back to it if the
         trail already passes through it (from a sanctum to its magus and
@@ -971,6 +1032,7 @@ class MainWindow(QMainWindow):
             self._apply_theme()
         page = self._build(trail[-1])
         self._reopen_chapter(trail[-1], page)
+        self._open_spot(page)
         self._show(page)
         self._draw_trail()
         self._draw_advance()
@@ -1324,6 +1386,8 @@ class MainWindow(QMainWindow):
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
         self.advance.setVisible(shown)
+        self.advance_rule.setVisible(shown)
+        self.find_button.setVisible(shown)
         # The headpiece carries the present season while a saga's page is on show.
         self.headpiece.saga = saga if shown else None
         self.headpiece.update()
@@ -1339,6 +1403,17 @@ class MainWindow(QMainWindow):
         item = codex.rail.currentItem() if codex is not None else None
         if self.trail and item is not None:
             self._chapters[self.trail[-1]] = item.text()
+
+    def _open_spot(self, page: QWidget) -> None:
+        """Turn `page` to the chapter of the row Find asked for, and
+        choose the row (Codex.choose_row)."""
+        codex = getattr(page, "codex", None)
+        if self._spot is None or not isinstance(codex, Codex):
+            return
+        chapter, spot = self._spot
+        if chapter in codex.chapters():
+            codex.open_chapter(chapter)
+            codex.choose_row(spot.list, spot.record_id)
 
     def _reopen_chapter(self, place: Place, page: QWidget) -> None:
         """Turn `page`, before it is shown, to the chapter it was left at."""
@@ -1427,6 +1502,7 @@ class MainWindow(QMainWindow):
         self.headpiece.p = p
         self.headpiece.update()
         self.drag.set_palette(p)
+        self.advance_rule.set_palette(p)
         self.controls.set_palette(p)
         app = QApplication.instance()
         if isinstance(app, QApplication):
@@ -1438,5 +1514,6 @@ class MainWindow(QMainWindow):
         self.theme.setText(f"  {other.name}")
         self.theme.setIcon(pictures.icon("theme", p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
+        self.find_button.setIcon(magnifier_icon(p["label"]))
         self._draw_sound()
         self._draw_motion()

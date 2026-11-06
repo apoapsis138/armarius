@@ -119,6 +119,7 @@ A character's node shows its type, for example "Leandro (magus)". A covenant, la
 - **n** (New) makes a covenant, character, laboratory or familiar bond, offering only what belongs at the selected tree node. A new character or laboratory starts in the covenant on show.
 - **/** filters a list that can be filtered: on the Saga Content Spells tab it moves to the search box, and on a laboratory's Lab Texts it opens the filter.
 - **t** advances the saga by one season. See [Advance Season](help:advance-season).
+- **Ctrl+F** opens Find, to open any record by its name. See [Find](help:find).
 - **q** quits, and **Ctrl+P** opens Textual's command palette.
 - **?** opens Help on the part of the screen that has focus (F1 does the same while you are typing in a dialog).
 
@@ -172,8 +173,9 @@ A covenant, laboratory or character still being made is In Creation: its page is
 - Buttons in a page's header or chapter heading, such as **Edit Covenant**, act on the record itself.
 - What the terminal keeps in its New and More menus is on the page itself: a New card at the end of the cards it adds to (**New Covenant**, **New Character**, **New Laboratory**), or a button in the chapter or section it acts on, such as **Give** beside a list's Add, Edit and Delete, **Set Up Research Library** on a covenant's Library or **Set Date** in the saga's Seasons chapter.
 - A record's **Manage** chapter holds what acts on the record as a whole: Export, Update from a File, Print to PDF, Show on Map (on the desktop, for a covenant, laboratory, neighbour or creature on one of the saga's maps: see [The Atlas](help:saga-atlas)) and Delete.
-- **Advance Season**, in the top bar, shows the saga's date and advances it by one season. See [Advance Season](help:advance-season).
+- **Advance Season**, in the top bar, shows the saga's date and advances it by one season, after asking first. A thin rule sets it apart from Help and the buttons after it, so a click meant for them doesn't land on it. See [Advance Season](help:advance-season).
 - The **bookmark**, a ribbon at the right of the header of a character, covenant, laboratory, familiar, Tribunal, neighbour or creature, keeps that page on the saga's [The Troupe](help:saga-troupe) chapter; it fills in when the page is bookmarked, and a second click takes the bookmark out.
+- **Find**, just right of Help, or `Ctrl+F`, drops a box to type a name in and open that record, wherever it is in the saga. See [Find](help:find).
 - **Help**, or `?` or `F1`, opens Help on the page and chapter on show. `Esc` goes back a page (or cancels a form that is open), and `q` quits. See [Keys](help:keys).
 
 ### The Inspector and the theme
@@ -181,7 +183,7 @@ A covenant, laboratory or character still being made is In Creation: its page is
 
 The Inspector, on the right of a record's page, shows whatever you last clicked on the page in full: a row, a card, a book, a spell.
 
-The button beside Help switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop remembers your choice on this computer and opens in it next time.
+The button right of Find switches between the two themes, Scriptorum (aged parchment and iron gall ink) and Scriptorum Dark (vellum by candlelight); it names the one it switches to. The desktop remembers your choice on this computer and opens in it next time.
 
 While a saga is open, the headpiece band under the top bar carries the present season's medallion at its centre, drawn in the set the saga chooses (the saga's settings, Medallion style). The same medallions mark the seasons elsewhere: the Seasons page's title and each past season's heading, each season's column in Ahead (on the Seasons page and a covenant's Seasons chapter), a covenant's header (its own Covenant Season, beside its Magic Aura and Loyalty, with no words), the title of a covenant's Seasons chapter, a character's This Season, the column heads of a character's and a laboratory's calendar, and a siege's track. The present season's medallion glows. A figure drawn as a medallion, such as an aura or a Loyalty, takes the same set in its own colour. They change with the season when it is advanced, and with the set when the saga's settings change it.
 
@@ -190,6 +192,58 @@ The speaker beside the theme turns the sounds on or off, and the app remembers w
 The pages move a little, never in your way: the Inspector's new item inks in on its gilt leaf as a sheen of light crosses it, a chosen row's gold wash spreads from the left with its leaf after it, a chapter fades in with a small slide, and an experience line that has moved since you last saw it (after Advance Season, or an edit) grows to its new length. A wax seal is pressed on the page for a moment when the season advances (the new season's seal) and when a record is moved to In Play (its initial). The sparkle beside the speaker is **Reduce motion**: click it and the pages change at once, with no seal; it shows dimmed while it is on, and the app remembers your choice. Until you choose, it follows Windows' own Animation effects setting.
 
 **See also:** [The saga](help:saga), [Saga Content](help:saga-content), [Seasons](help:seasons), [Getting started](help:guide-getting-started)
+
+# Find
+<!-- help: find -->
+
+Find opens any record in the saga by its name, without going through the
+pages above it.
+
+<!-- tui -->
+**Ctrl+F** (`^f Find` in the footer), anywhere in the workspace, opens
+Find: a box to type in over
+the list of matches. Each letter typed narrows the list. **Down** moves
+into the list and **Enter** opens the match chosen (Enter in the box opens
+the first); the tree moves to the record and its sheet shows. **Esc**
+closes Find and leaves you where you were.
+<!-- /tui -->
+<!-- gui -->
+**Find**, in the top bar just right of Help, or **Ctrl+F** on any page of a saga,
+drops a box under the button with the matches below it. Each letter typed
+narrows the list. **Up** and **Down** choose a match and **Enter** opens
+it, or click one; it opens below the page on show, so the trail leads
+back. **Esc**, or a click anywhere else, closes Find. It lists sixty
+matches at most, and says how many more there are.
+<!-- /gui -->
+
+Each match shows its name, what it is and where it is: "Gottfried of
+Arnsberg · Lord · The Drachenfels".
+
+- **What it finds:** characters, covenants, laboratories, familiars,
+  Tribunals, neighbours of every kind (lords, towns, the Church,
+  universities, factions, threats, places, customs and lore), creatures,
+  books, spells and enchanted devices.
+- **By name first,** in any case and with or without accents
+  ("dammerstein" finds Dammërstein): names that start with what you
+  typed (a leading "The" or "A" passed over), then names with a word
+  that does, then names that hold it anywhere. Within each, a name
+  that is exactly what you typed comes first, the kind it ends with
+  aside: "rhine" lists The Rhine Tribunal before The Rhine Gorge.
+- **Then by what it is tied to,** with the reason shown beside the
+  match: a faction by its members ("member Gottfried of Arnsberg"), a
+  record by the place it is at, and by the Tribunal whose lands it lies
+  in ("in the lands of Rhine", set on a place: see
+  [The Place tab](help:tab-nb-place)).
+- **Books, spells and enchanted devices** have no page of their own: a
+  book or device opens the page of whoever holds it, and a spell the
+  page of the magus who knows it, at the tab or chapter that lists it
+  with its row chosen (a covenant's book in its Library, a device among
+  its holder's Enchanted Devices, a spell in Known Spells). A book nobody
+  owns is not listed, nor a spell nobody knows.
+- **Not searched:** Secrets, notes and descriptions, the seasons played
+  and the calendar.
+
+**See also:** [How to find a record](help:guide-find-record)
 
 # The saga
 <!-- help: saga -->

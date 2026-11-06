@@ -24,6 +24,7 @@ from .... import (
     place_events,
     places,
     ruins,
+    saga_index,
     storage,
     story_chapters,
     threats,
@@ -89,6 +90,7 @@ from ....sections import (
 from ..fields import (
     FieldsDialog,
 )
+from ..finder import FinderScreen
 from ..forms import (
     _character_create_dialog,
     _covenant_create_fields,
@@ -674,10 +676,24 @@ class RecordActions(WorkspaceBase):
 
         run_steps(self.app, go_to_forms.go_to(self.saga, record), follow)
 
-    def action_open_ref(self, kind: str, record_id: str) -> None:
+    def action_find(self) -> None:
+        """Ctrl+F: Find a record by name, and open it: a book, device or
+        spell on its holder's sheet, at its row."""
+
+        def follow(found: saga_index.Entry | None) -> None:
+            if found is None:
+                return
+            if found.spot is not None:
+                self._spot_after_open = (found.ref, found.spot)
+            if not self.action_open_ref(found.ref.kind, found.ref.id):
+                self._spot_after_open = None
+
+        self.app.push_screen(FinderScreen(self.saga), follow)
+
+    def action_open_ref(self, kind: str, record_id: str) -> bool:
         """Open the record a name on the page links to (a click on it, or
         Go To): its node chosen in the tree, the branches above it
-        opened."""
+        opened; False when the tree hasn't it."""
         node_kind = _REF_NODES.get(kind)
         tree = self._nav_tree()
         node = (
@@ -687,13 +703,14 @@ class RecordActions(WorkspaceBase):
         )
         if node is None:
             self.notify("That record isn't in the saga's tree.", severity="warning")
-            return
+            return False
         above = node.parent
         while above is not None:
             above.expand()
             above = above.parent
         tree.move_cursor(node)
         tree.select_node(node)
+        return True
 
     def action_begin_story(self) -> None:
         """More's Begin This Story on a dormant threat."""

@@ -192,6 +192,29 @@ class DragStrip(QWidget):
         event.accept()
 
 
+class BarRule(QWidget):
+    """A thin upright rule in the palette's rule colour with a clear gap
+    either side, to set a title bar's buttons apart into groups."""
+
+    #: The gap on each side of the rule, in pixels.
+    GAP = 10
+
+    def __init__(self, p: Palette) -> None:
+        super().__init__()
+        self.p = p
+        self.setFixedWidth(2 * self.GAP + 1)
+
+    def set_palette(self, p: Palette) -> None:
+        self.p = p
+        self.update()
+
+    def paintEvent(self, event: QPaintEvent) -> None:
+        painter = QPainter(self)
+        painter.setPen(QPen(QColor(self.p["rule"]), 1))
+        inset = self.height() // 4
+        painter.drawLine(self.GAP, inset, self.GAP, self.height() - inset)
+
+
 class TopStrip(QWidget):
     """A DragStrip and the WindowButtons laid over the top of `host` (a
     page with no bar of its own, as the title page), kept across its

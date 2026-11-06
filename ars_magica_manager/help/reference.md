@@ -32,6 +32,8 @@ the keys that always work.
 <!-- help: keys-always -->
 
 - `t` Advance Season (see [Advancing a season](help:advance-season)).
+- `Ctrl+F` Find: type a name and open that record, wherever it is in the
+  saga (see [Find](help:find)).
 - `?` Help, here. In a dialog where you're typing, `F1` opens it instead.
 - `q` Quit, and `Ctrl+P` the command palette (themes and more).
 
@@ -50,6 +52,7 @@ The desktop version is used with the mouse: every action is a button on the page
 - `?` or `F1` opens Help on the page on show, as the top bar's **Help** does.
 - `Esc` cancels the form or question that is open, as its Cancel does; with none open, it goes back a page, to the one above in the trail (from Help, to the page you opened it on).
 - `q` quits Armarius. Everything is already saved.
+- `Ctrl+F` drops **Find** from the top bar, to open any record by its name (see [Find](help:find)).
 - `?` and `q` are typed as letters while you are typing in a box, and do nothing while a form or question is open, so they never act by accident. `Esc` and `F1` always work.
 - **Advance Season**, in the top bar, advances the saga by one season (see [Advancing a season](help:advance-season)).
 - The trail at the top left goes back to any page above this one.

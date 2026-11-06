@@ -1382,3 +1382,34 @@ Flaviae; years later one of them breaks it.
 
 **See also:** [The charter](help:section-cov-charter), [Clauses](help:section-cov-clauses)
 
+# How to find a record
+<!-- help: guide-find-record -->
+
+The troupe meets Gottfried of Arnsberg again, and you need his page now.
+
+<!-- tui -->
+1. **Open Find.** Press **Ctrl+F** wherever you are in the workspace.
+2. **Type part of the name.** "gott" is enough: the list narrows with
+   each letter, names that start with it first.
+3. **Open it.** Press **Enter** for the first match, or **Down** to
+   choose another and then Enter. The tree moves to him and his sheet
+   shows. **Esc** closes Find without moving.
+<!-- /tui -->
+<!-- gui -->
+1. **Open Find.** Click **Find** in the top bar, or press **Ctrl+F**, on
+   any page of the saga.
+2. **Type part of the name.** "gott" is enough: the list narrows with
+   each letter, names that start with it first.
+3. **Open it.** Press **Enter** for the first match, choose another with
+   **Up** and **Down**, or click one. His page opens below the one you
+   were on, so the trail leads back. **Esc** closes Find.
+<!-- /gui -->
+4. **Find by where, or who.** Type a place ("Drachenfels") to list
+   everything there, a Tribunal ("Rhine") for what lies in its lands, or
+   a member's name for the factions they belong to. The reason shows
+   beside each such match.
+5. **Find a book, spell or device.** Type its name: it opens the page of
+   whoever holds it (the magus who knows a spell), at its row, ready
+   for Edit or More.
+
+**See also:** [Find](help:find)

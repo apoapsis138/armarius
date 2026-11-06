@@ -46,6 +46,7 @@ from .... import (
     hosting,
     neighbours,
     presence,
+    saga_index,
     seasons,
     sourcebooks,
     storage,
@@ -83,6 +84,7 @@ from ....models import (
     ScoredTrait,
     Tribunal,
 )
+from ....references import Ref
 from ....rules import activities as season_rules
 from ....rules import creation as creation_rules
 from ....rules import creation_covenant as cov_creation
@@ -123,6 +125,7 @@ from ..sheets import (
     SPELL_SECTION,
     TAB_SECTIONS,
     BestiarySheetView,
+    BookListView,
     CharacterSheetView,
     ConflictsSheetView,
     CovenantSheetView,
@@ -334,6 +337,18 @@ _STORYGUIDE_ACTIONS = frozenset(
     }
 )
 
+#: The section each page lists a Find Spot's records in, by the page's
+#: Ref kind and the Spot's list.
+SPOT_SECTIONS: dict[tuple[str, str], str] = {
+    ("covenants", saga_index.BOOKS): "section-lib-books",
+    ("covenants", saga_index.DEVICES): "section-cov-devices",
+    ("laboratories", saga_index.BOOKS): "section-lab-books",
+    ("laboratories", saga_index.DEVICES): "section-lab-devices",
+    ("characters", saga_index.BOOKS): "section-books",
+    ("characters", saga_index.DEVICES): "section-char-devices",
+    ("characters", saga_index.SPELLS): "section-known-spells",
+}
+
 #: What anyone signed in may do anywhere: move around, read, and export
 #: (which only reads the saga).
 _LOOKING_ACTIONS = frozenset(
@@ -347,6 +362,7 @@ _LOOKING_ACTIONS = frozenset(
         "more",
         "export_record",
         "go_to",
+        "find",
         # A calculator: it records nothing.
         "plan_journey",
         "craft_by_magic",
@@ -562,6 +578,8 @@ class WorkspaceBase(Screen[None]):
         ("m", "more", "More"),
         ("n", "new", "New"),
         ("t", "advance_season", "Advance Season"),
+        # Find: a record by name, from anywhere (hotkeys.FIND).
+        Binding("ctrl+f", "find", "Find", key_display="^f"),
         ("question_mark", "help", "Help"),
         ("escape", "step_out", "Back"),
         ("q", "quit", "Quit"),
@@ -580,6 +598,7 @@ class WorkspaceBase(Screen[None]):
     GLOBAL_ACTIONS: ClassVar[tuple[str, ...]] = (
         "new",
         "advance_season",
+        "find",
         "help",
         "step_out",
         "quit",
@@ -673,6 +692,13 @@ class WorkspaceBase(Screen[None]):
         #: The section Help's Go there asked for, focused once its tab is
         #: shown (instead of the tab's first section).
         self._go_section: str | None = None
+        #: The row Find asked for in that section: the page it opens and
+        #: where on it (saga_index.Spot).
+        self._go_row: tuple[Ref, saga_index.Spot] | None = None
+        #: The row Find asked for, until the tree node it opens is shown.
+        self._spot_after_open: tuple[Ref, saga_index.Spot] | None = None
+        #: ... and then until its sheet has announced its first tab.
+        self._spot_after_tab: tuple[Ref, saga_index.Spot] | None = None
 
     def compose(self) -> ComposeResult:
         yield Header()
@@ -1340,6 +1366,10 @@ class WorkspaceBase(Screen[None]):
         # on_descendant_focus); refreshing here as well would rebuild the
         # Footer twice when the PC is busy -- once for the old focus on the
         # new tab, then again once focus arrives.
+        spot, self._spot_after_tab = self._spot_after_tab, None
+        if initial and spot is not None:
+            # Find's row: asked for before the sheet announced its tab.
+            self.open_spot(*spot)
         moved = self._focus_go_section() or self._focus_first_section(initial=initial)
         if not moved:
             self.refresh_bindings()
@@ -1383,21 +1413,67 @@ class WorkspaceBase(Screen[None]):
 
     def _focus_go_section(self) -> bool:
         """Focus the section Go there asked for, if there is one and the
-        sheet has it; True when that moves focus."""
+        sheet has it, and choose the row Find asked for in it; True when
+        that moves focus."""
         section_id, self._go_section = self._go_section, None
+        if section_id is None:
+            return False
+        row, self._go_row = self._go_row, None
         view = self._current_sheet_view()
-        if section_id is None or view is None:
+        if view is None:
             return False
         found = _section_named(view, section_id)
         if found is None:
             return False
-        return self._focus_stop(section_stop(found))
+        # Find's row scrolls itself into view: the focus's own scroll, which
+        # glides, would carry on past it.
+        moved = self._focus_stop(section_stop(found), scroll=row is None)
+        if row is not None:
+            self._choose_spot(found, *row)
+        return moved
 
-    def _focus_stop(self, widget: Widget) -> bool:
-        """Focus `widget`; True when that moves focus (it wasn't focused
-        already), so a DescendantFocus will follow."""
+    def open_spot(self, opens: Ref, spot: saga_index.Spot) -> None:
+        """Find's book, device or spell: once `opens`'s sheet shows, open
+        the tab with `spot`'s list on it and choose its row."""
+        view = self._current_sheet_view()
+        if view is not None and not view.initial_tab_seen:
+            # Its first tab's TabActivated would focus that tab's first
+            # section after this; go on from there.
+            self._spot_after_tab = (opens, spot)
+            return
+        section = SPOT_SECTIONS.get((opens.kind, spot.list))
+        if section is not None and self.go_to(section):
+            self._go_row = (opens, spot)
+
+    def _choose_spot(self, section: Widget, opens: Ref, spot: saga_index.Spot) -> None:
+        lists = section.query(SelectableList)
+        if not lists:
+            return
+        index = saga_index.spot_row(self.saga, opens, spot)
+        if index is None and spot.list == saga_index.BOOKS:
+            # A book list sets its own order (a codex's books together).
+            books = next(
+                (w for w in section.ancestors if isinstance(w, BookListView)), None
+            )
+            index = books.index_of(spot.record_id) if books is not None else None
+        rows = lists.first()
+        if index is not None and rows.select_data_index(index):
+
+            def into_view(tries: int) -> None:
+                # A tab just built is still being laid out, and a details
+                # panel filling below the list moves it: try again until the
+                # row shows (a busy PC lays out late), for two seconds at most.
+                if not rows.bring_chosen_into_view() and tries > 1:
+                    self.set_timer(0.05, partial(into_view, tries - 1))
+
+            self.call_after_refresh(into_view, 40)
+
+    def _focus_stop(self, widget: Widget, *, scroll: bool = True) -> bool:
+        """Focus `widget`, scrolling it into view unless not to `scroll`;
+        True when that moves focus (it wasn't focused already), so a
+        DescendantFocus will follow."""
         moved = widget is not self.app.focused
-        widget.focus()
+        widget.focus(scroll_visible=scroll)
         return moved
 
     def _focus_first_section(self, *, initial: bool = False) -> bool:

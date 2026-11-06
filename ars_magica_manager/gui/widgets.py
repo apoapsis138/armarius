@@ -8,6 +8,7 @@ restyled) when the theme changes.
 
 from __future__ import annotations
 
+import weakref
 from collections.abc import Callable, Sequence
 from pathlib import Path
 
@@ -727,6 +728,37 @@ class RailRows(QStyledItemDelegate):
         super().paint(painter, option, index)
 
 
+#: A widget that shows a list a Find Spot names, and how to choose a
+#: record's row in it (offer_rows).
+_ROW_CHOOSERS: weakref.WeakKeyDictionary[
+    QWidget, tuple[str, Callable[[str], QWidget | None]]
+] = weakref.WeakKeyDictionary()
+
+
+def offer_rows[W: QWidget](
+    widget: W, listed: str, choose: Callable[[str], QWidget | None]
+) -> W:
+    """Let Codex.choose_row choose a row of `widget`, which shows the
+    `listed` list (saga_index.BOOKS, DEVICES, SPELLS): `choose` takes a
+    record's id, chooses its row as a click would, and returns what to
+    bring into view, or None when the record isn't there."""
+    _ROW_CHOOSERS[widget] = (listed, choose)
+    return widget
+
+
+def choose_key(view: QTableView, table: Table, key: int | None) -> QWidget | None:
+    """Choose the row of a table_view whose key is `key`; the view, or
+    None when no row has it."""
+    row = next(
+        (r for r in range(len(table.rows)) if key is not None and table.key(r) == key),
+        None,
+    )
+    if row is None:
+        return None
+    view.selectRow(row)
+    return view
+
+
 class Codex(QSplitter):
     """The Codex body every record's page shares: a rail of chapters on
     the left, the chosen chapter in the middle and the inspector, which
@@ -809,6 +841,29 @@ class Codex(QSplitter):
 
     def chapters(self) -> list[str]:
         return [self.rail.item(i).text() for i in range(self.rail.count())]
+
+    def choose_row(self, listed: str, record_id: str) -> bool:
+        """Choose `record_id`'s row of the `listed` list on the chapter on
+        show (offer_rows), and scroll it into view; False when the
+        chapter hasn't it."""
+        row = self.rail.currentRow()
+        if row < 0:
+            return False
+        chapter = self.chapter(row)
+        for widget in (chapter, *chapter.findChildren(QWidget)):
+            offered = _ROW_CHOOSERS.get(widget)
+            if offered is None or offered[0] != listed:
+                continue
+            shown = offered[1](record_id)
+            if shown is None:
+                continue
+            scroll = shown.parentWidget()
+            while scroll is not None and not isinstance(scroll, QScrollArea):
+                scroll = None if scroll is chapter else scroll.parentWidget()
+            if scroll is not None:
+                scroll.ensureWidgetVisible(shown)
+            return True
+        return False
 
     def open_chapter(self, name: str) -> None:
         self.rail.setCurrentRow(self.chapters().index(name))

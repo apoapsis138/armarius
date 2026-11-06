@@ -559,6 +559,8 @@ async def test_the_footer_keeps_focused_actions_left_and_global_ones_right():
             "t",
             "Advance",
             "Season",
+            "^f",
+            "Find",
             "?",
             "Help",
             "esc",

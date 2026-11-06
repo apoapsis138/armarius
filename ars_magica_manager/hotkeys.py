@@ -1,5 +1,5 @@
-"""The keys that work on every page, in both front-ends: Help, Back and
-Quit.
+"""The keys that work on every page, in both front-ends: Help, Back,
+Quit and Find.
 
 Each is a command (its action) with the keys that give it, written as
 they are printed on the keyboard. A front-end binds each key to its own
@@ -17,7 +17,7 @@ from __future__ import annotations
 
 from typing import NamedTuple
 
-HELP, BACK, QUIT = "help", "back", "quit"
+HELP, BACK, QUIT, FIND = "help", "back", "quit", "find"
 
 
 class Hotkey(NamedTuple):
@@ -37,6 +37,7 @@ HOTKEYS: tuple[Hotkey, ...] = (
         "Cancel the form or question that is open, else go back a page",
     ),
     Hotkey(QUIT, ("q",), "Quit Armarius"),
+    Hotkey(FIND, ("Ctrl+F",), "Find a record in the saga by name"),
 )
 
 
