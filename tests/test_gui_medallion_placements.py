@@ -202,7 +202,7 @@ def test_the_headpiece_carries_the_present_season(app):
     assert window.headpiece.height() == SeasonHeadpiece.HEIGHT == 46
     assert window.headpiece.saga is saga
     answering(window, True)
-    window.advance.click()
+    window.season_panel.click()
     QApplication.processEvents()
     advanced = window.saga
     assert advanced is not None and advanced.current_season == SEASONS[1]

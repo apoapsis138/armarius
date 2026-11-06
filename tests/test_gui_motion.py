@@ -7,7 +7,7 @@ import pytest
 
 pytest.importorskip("PySide6")
 
-from PySide6.QtCore import QObject
+from PySide6.QtCore import QObject, Qt
 from PySide6.QtGui import QStandardItem, QStandardItemModel
 from PySide6.QtTest import QTest
 from PySide6.QtWidgets import QApplication, QTableView, QWidget
@@ -16,9 +16,10 @@ from screen_helpers import _sample_saga_with_covenant
 from ars_magica_manager import creation, settings, storage
 from ars_magica_manager.gui import motion, pictures
 from ars_magica_manager.gui.character_sheet import CharacterSheet, XpTable
+from ars_magica_manager.gui.season_panel import SeasonDial, wheel_place
 from ars_magica_manager.gui.themes import SCRIPTORUM
 from ars_magica_manager.gui.widgets import XP_FROM, Spread
-from ars_magica_manager.gui.window import MainWindow
+from ars_magica_manager.gui.window import MOTION, MainWindow
 from ars_magica_manager.gui.worksheet import WorksheetPage
 from ars_magica_manager.models import Character
 
@@ -185,11 +186,49 @@ def test_a_table_with_no_memory_never_grows(app):
     assert not _xp_table("", 8).grows
 
 
-def test_advance_season_presses_the_seasons_seal(app, moves):
+def test_advance_season_turns_the_seasons_dial(app, moves):
     window = _window(_sample_saga_with_covenant())
-    window._press_season_seal()
-    assert moves.names[-2:] == ["press", "lift"]
+    ended: list[str] = []
+    window._turn_the_dial(lambda: ended.append("then"))
+    # The quarter turn, the new season shown large, then the fade; and
+    # only once it has gone does the window go on.
+    assert moves.names[-3:] == ["turn", "reveal", "fade"]
+    assert ended == ["then"]
+    assert not any(d.isVisible() for d in window.stack.findChildren(SeasonDial))
     window.close()
+
+
+def test_without_motion_no_dial_turns(app):
+    window = _window(_sample_saga_with_covenant())
+    ended: list[str] = []
+    window._turn_the_dial(lambda: ended.append("then"))
+    assert ended == ["then"]
+    assert window.stack.findChildren(SeasonDial) == []
+    window.close()
+
+
+def test_the_dial_brings_the_new_season_to_the_top(app):
+    saga = _sample_saga_with_covenant()
+    saga.current_season, saga.current_year = "Spring", 1221
+    host = QWidget()
+    dial = SeasonDial(host, saga, SCRIPTORUM, lambda: None)
+    # The wheel starts at the season just ended (Winter of the year
+    # before), and a quarter turn brings the present one to the top.
+    assert dial.wheel[:2] == [("Winter", 1220), ("Spring", 1221)]
+    assert wheel_place(0, 0.0) == (0.0, 1.0)
+    angle, near = wheel_place(1, 1.0)
+    assert (angle, near) == (0.0, 1.0)
+    assert wheel_place(2, 1.0)[1] < 1e-9
+
+
+def test_a_click_ends_the_dial_at_once(app):
+    saga = _sample_saga_with_covenant()
+    ended: list[str] = []
+    host = QWidget()
+    dial = SeasonDial(host, saga, SCRIPTORUM, lambda: ended.append("done"))
+    QTest.mouseClick(dial, Qt.MouseButton.LeftButton)
+    QTest.mouseClick(dial, Qt.MouseButton.LeftButton)
+    assert ended == ["done"]
 
 
 def test_no_seal_is_pressed_without_motion(app):
@@ -209,13 +248,13 @@ def test_a_finished_character_is_sealed(app, moves):
     window.close()
 
 
-def test_the_title_bar_turns_reduce_motion_on_and_off(app, monkeypatch):
+def test_the_settings_gear_turns_reduce_motion_on_and_off(app, monkeypatch):
     monkeypatch.setattr(motion, "windows_animates", lambda: True)
     window = MainWindow(saga_ids=[])
-    assert "click to reduce motion" in window.motion.toolTip()
-    window.motion.click()
-    assert motion.reduced()
-    assert "Reduce motion is on" in window.motion.toolTip()
-    window.motion.click()
-    assert not motion.reduced()
+    entry = window.settings_entries[MOTION]
+    assert entry.text() == "Reduce motion" and not entry.isChecked()
+    entry.trigger()
+    assert motion.reduced() and entry.isChecked()
+    entry.trigger()
+    assert not motion.reduced() and not entry.isChecked()
     window.close()

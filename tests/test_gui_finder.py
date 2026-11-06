@@ -103,15 +103,14 @@ def test_a_click_on_find_and_on_a_match_opens_it_and_esc_closes(app):
 def test_find_is_shown_only_while_a_saga_is_open(app):
     window = _window(app)
     assert window.find_button.isVisible()
-    # Advance Season, a rule, then Help and Find: Find isn't beside the
-    # season's button, where a slip would advance the saga.
-    order = [window.advance, window.advance_rule, window.help, window.find_button]
+    # Find, Help, a rule, then the settings gear: Advance Season is under
+    # the chapters, away from them all.
+    order = [window.find_button, window.help, window.bar_rule, window.settings]
     lefts = [w.mapTo(window, w.rect().topLeft()).x() for w in order]
     assert lefts == sorted(lefts)
-    assert window.advance_rule.width() >= 16
+    assert window.bar_rule.width() >= 16
     window.go(window.trail[:1])  # back to the Sagas
     assert not window.find_button.isVisible()
-    assert not window.advance_rule.isVisible()
     window.open_finder()
     assert window.finder is None
     window.close()

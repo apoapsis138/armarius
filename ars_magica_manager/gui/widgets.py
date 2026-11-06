@@ -776,6 +776,10 @@ class Codex(QSplitter):
         self.rail.setIconSize(QSize(20, 20))
         self.rail.setFixedWidth(180)
         self.rail.setFont(serif(13))
+        # A long chapter name beside the rail's scroll bar (when the season's
+        # panel leaves it too short for every chapter) is cut short, never
+        # scrolled sideways.
+        self.rail.setHorizontalScrollBarPolicy(Qt.ScrollBarPolicy.ScrollBarAlwaysOff)
         self.rail.setStyleSheet(
             "QListWidget#rail { background:transparent; border:none; }"
             f" QListWidget#rail::item {{ padding:8px 6px; color:{p['label']};"
@@ -790,7 +794,16 @@ class Codex(QSplitter):
         self.rail.currentRowChanged.connect(self._turn_to)
         self.rail.currentRowChanged.connect(self._turned)
         self.setHandleWidth(1)
-        self.addWidget(self.rail)
+        #: The rail, with room at its foot for what the window puts there
+        #: (the season's panel: set_foot).
+        self.side = QWidget()
+        self.side.setFixedWidth(180)
+        column = self._side = QVBoxLayout(self.side)
+        column.setContentsMargins(0, 0, 0, 12)
+        column.setSpacing(8)
+        column.addWidget(self.rail, 1)
+        self.foot: QWidget | None = None
+        self.addWidget(self.side)
         self.addWidget(self.pages)
         self.addWidget(self.inspector)
         self.setStretchFactor(1, 1)
@@ -810,6 +823,15 @@ class Codex(QSplitter):
         QListWidgetItem(pictures.icon(concept, self.p["label"], 20), name, self.rail)
         if self.rail.count() == 1:
             self.rail.setCurrentRow(0)
+
+    def set_foot(self, widget: QWidget) -> None:
+        """Put `widget` at the foot of the rail, in place of any there."""
+        column = self._side
+        if self.foot is not None:
+            column.removeWidget(self.foot)
+            self.foot.deleteLater()
+        self.foot = widget
+        column.addWidget(widget, 0, Qt.AlignmentFlag.AlignHCenter)
 
     def chapter(self, row: int) -> QWidget:
         """The chapter at `row`, built if it was not yet."""

@@ -23,7 +23,7 @@ from pathlib import Path
 
 import shiboken6
 from PySide6.QtCore import QByteArray, QEvent, Qt, QTimer
-from PySide6.QtGui import QFont, QKeySequence, QShortcut, QShowEvent
+from PySide6.QtGui import QAction, QFont, QKeySequence, QShortcut, QShowEvent
 from PySide6.QtWidgets import (
     QAbstractSpinBox,
     QApplication,
@@ -34,6 +34,7 @@ from PySide6.QtWidgets import (
     QLabel,
     QLineEdit,
     QMainWindow,
+    QMenu,
     QPlainTextEdit,
     QPushButton,
     QScrollArea,
@@ -85,6 +86,7 @@ from . import (
     pictures,
     print_sheet,
     printing,
+    season_panel,
     sounds,
 )
 from .bestiary import CreaturePage
@@ -104,6 +106,7 @@ from .menus import Placer
 from .pages import SagaPage, SagaShelf
 from .region import NeighbourPage
 from .saga_content import SagaContentPage
+from .season_panel import SeasonPanel
 from .seasons import SeasonsPage
 from .style import gilding, snapping
 from .style.frame import (
@@ -162,6 +165,9 @@ from .worksheet import WorksheetPage
     "fight",
     "siege",
 )
+
+#: The settings gear's entries.
+THEME, SOUNDS, MOTION = "theme", "sounds", "motion"
 
 #: Each page's help topic (help_text: a page's id), most specific first.
 _HELP_IDS = {
@@ -333,55 +339,56 @@ class MainWindow(QMainWindow):
 
     def _top_bar(self) -> QHBoxLayout:
         """The window's title bar: the trail on the left, the app's name
-        in the middle (drag it to move the window), and Advance Season,
-        set apart by a rule, then Help, Find, the theme, sounds, motion
-        and the window's own buttons on the right."""
+        in the middle (drag it to move the window), and Find, Help, a rule,
+        the settings gear and the window's own buttons on the right.
+        Advance Season is at the foot of each page's chapters
+        (season_panel.py)."""
         self.crumbs = QHBoxLayout()
         self.crumbs.setSpacing(2)
-        self.theme = QPushButton()
-        self.theme.setFlat(True)
-        self.theme.clicked.connect(self.toggle_theme)
         bar = QHBoxLayout()
         bar.setContentsMargins(12, 4, 8, 0)
         bar.addLayout(self.crumbs)
         self.drag = DragStrip(self, self.palette_, APP_NAME)
         bar.addWidget(self.drag, 1)
-        #: Advance Season, while a saga is open: its date, and a click
-        #: plays the season out (advance_forms).
-        self.advance = QPushButton()
-        self.advance.setObjectName("edit")
-        self.advance.setFlat(True)
-        self.advance.clicked.connect(self.advance_season)
-        bar.addWidget(self.advance)
-        #: Sets Advance Season apart from the buttons beside it, so a
-        #: click meant for them doesn't land on it.
-        self.advance_rule = BarRule(self.palette_)
-        bar.addWidget(self.advance_rule)
-        self.help = QPushButton("  Help")
-        self.help.setFlat(True)
-        self.help.setToolTip("Help on this page (? or F1)")
-        self.help.clicked.connect(self.open_help)
-        bar.addWidget(self.help)
         #: Find, while a saga is open: drops the finder (finder.py).
         self.find_button = QPushButton("  Find")
         self.find_button.setFlat(True)
         self.find_button.setToolTip("Find a record in the saga by name (Ctrl+F)")
         self.find_button.clicked.connect(self.open_finder)
         bar.addWidget(self.find_button)
+        self.help = QPushButton("  Help")
+        self.help.setFlat(True)
+        self.help.setToolTip("Help on this page (? or F1)")
+        self.help.clicked.connect(self.open_help)
+        bar.addWidget(self.help)
         #: The finder dropped, while it is open.
         self.finder: FinderPanel | None = None
+        #: Advance Season at the foot of the page's chapters, while shown.
+        self.season_panel: SeasonPanel | None = None
         self._bind_hotkeys()
-        bar.addWidget(self.theme)
-        #: The sounds on or off (gui/sounds.py); its icon says which.
-        self.sound = QPushButton()
-        self.sound.setFlat(True)
-        self.sound.clicked.connect(self.toggle_sounds)
-        bar.addWidget(self.sound)
-        #: Reduce motion on or off (gui/motion.py); dimmed while it is on.
-        self.motion = QPushButton()
-        self.motion.setFlat(True)
-        self.motion.clicked.connect(self.toggle_motion)
-        bar.addWidget(self.motion)
+        #: Sets the settings gear apart from Help and Find.
+        self.bar_rule = BarRule(self.palette_)
+        bar.addWidget(self.bar_rule)
+        #: The settings gear: its menu holds the theme, the sounds and
+        #: reduce motion, one entry each (SETTINGS).
+        self.settings = QPushButton()
+        self.settings.setFlat(True)
+        self.settings.setToolTip("Theme, sounds and motion")
+        self.settings.setAccessibleName("Settings")
+        self.settings_menu = QMenu(self.settings)
+        self.settings_entries: dict[str, QAction] = {}
+        for key, act in (
+            (THEME, self.toggle_theme),
+            (SOUNDS, self.toggle_sounds),
+            (MOTION, self.toggle_motion),
+        ):
+            entry = self.settings_menu.addAction("")
+            entry.setCheckable(key != THEME)
+            entry.triggered.connect(lambda _checked=False, act=act: act())
+            self.settings_entries[key] = entry
+        self.settings.setMenu(self.settings_menu)
+        self.settings.setStyleSheet("QPushButton::menu-indicator { width:0px; }")
+        bar.addWidget(self.settings)
         bar.addSpacing(10)
         self.controls = WindowButtons(self, self.palette_)
         bar.addWidget(self.controls, 0, Qt.AlignmentFlag.AlignTop)
@@ -820,25 +827,24 @@ class MainWindow(QMainWindow):
         if end.results:
             self._played = end
             self.open_seasons()
-            # The seal after the page's own turn, which it cuts short.
-            sounds.play("seal")
-            self._press_season_seal()
+            self._turn_the_dial(lambda: None)
             return
         self.redraw()
-        sounds.play("seal")
-        self._press_season_seal()
-        self.tell("Advance Season", end.message)
+        self._turn_the_dial(lambda: self.tell("Advance Season", end.message))
 
-    def _press_season_seal(self) -> None:
-        """The new season's wax seal, pressed on the page a moment."""
+    def _turn_the_dial(self, then: Callable[[], None]) -> None:
+        """The season's dial in the middle of the window, turning to the
+        new season (season_panel.py), then `then`; with no motion, only
+        the seal's sound, then `then`."""
         saga = self.saga
         if saga is None:
+            then()
             return
-        season, year, p = saga.current_season, saga.current_year, self.palette_
-        motion.press_seal(
-            self.stack,
-            lambda g, c, r: medallions.wax_seal(g, c, r, season, year, p),
-        )
+        if not motion.moving():
+            sounds.play("seal")
+            then()
+            return
+        season_panel.turn_the_dial(self.stack, saga, self.palette_, then)
 
     def _finished(self, record_id: str) -> None:
         """A record moved to In Play: leave its worksheet, and press a seal
@@ -1383,19 +1389,26 @@ class MainWindow(QMainWindow):
         return menu_forms.page_for(saga, NodeKind.FAMILIAR, familiar_id=place.id)
 
     def _draw_advance(self) -> None:
+        """Find while a saga is open, and Advance Season at the foot of
+        the chapters of the page on show, but not a Creation Worksheet's:
+        a record is finished or left before the season ends."""
         saga = self.saga
         shown = saga is not None and bool(self.trail) and self.trail[-1].kind != SHELF
-        self.advance.setVisible(shown)
-        self.advance_rule.setVisible(shown)
         self.find_button.setVisible(shown)
         # The headpiece carries the present season while a saga's page is on show.
         self.headpiece.saga = saga if shown else None
         self.headpiece.update()
-        if saga is not None:
-            self.advance.setText(
-                f"  {saga.current_season} {saga.current_year} · Advance Season"
-            )
-            self.advance.setIcon(pictures.icon("season", self.palette_["label"]))
+        codex = getattr(self.page(), "codex", None)
+        if (
+            saga is not None
+            and shown
+            and isinstance(codex, Codex)
+            and self.trail[-1].kind != WORKSHEET
+        ):
+            self.season_panel = SeasonPanel(saga, self.palette_, self.advance_season)
+            codex.set_foot(self.season_panel)
+        else:
+            self.season_panel = None
 
     def _leave_chapter(self) -> None:
         """Note the chapter the page on show is at, to open it there again."""
@@ -1468,15 +1481,12 @@ class MainWindow(QMainWindow):
 
     def _draw_sound(self) -> None:
         on = sounds.enabled()
-        self.sound.setIcon(
+        entry = self.settings_entries[SOUNDS]
+        entry.setIcon(
             pictures.icon("sounds_on" if on else "sounds_off", self._applied["label"])
         )
-        self.sound.setToolTip(
-            "Sounds are on: click to turn them off"
-            if on
-            else "Sounds are off: click to turn them on"
-        )
-        self.sound.setAccessibleName("Sounds")
+        entry.setText("Sounds")
+        entry.setChecked(on)
 
     def toggle_motion(self) -> None:
         motion.set_reduced(not motion.reduced())
@@ -1485,13 +1495,10 @@ class MainWindow(QMainWindow):
     def _draw_motion(self) -> None:
         still = motion.reduced()
         p = self._applied
-        self.motion.setIcon(pictures.icon("motion", p["dim"] if still else p["label"]))
-        self.motion.setToolTip(
-            "Reduce motion is on: click to let the pages move again"
-            if still
-            else "Pages move a little: click to reduce motion"
-        )
-        self.motion.setAccessibleName("Reduce motion")
+        entry = self.settings_entries[MOTION]
+        entry.setIcon(pictures.icon("motion", p["dim"] if still else p["label"]))
+        entry.setText("Reduce motion")
+        entry.setChecked(still)
 
     def _apply_theme(self) -> None:
         p = self._applied = self.palette_
@@ -1502,7 +1509,7 @@ class MainWindow(QMainWindow):
         self.headpiece.p = p
         self.headpiece.update()
         self.drag.set_palette(p)
-        self.advance_rule.set_palette(p)
+        self.bar_rule.set_palette(p)
         self.controls.set_palette(p)
         app = QApplication.instance()
         if isinstance(app, QApplication):
@@ -1511,8 +1518,10 @@ class MainWindow(QMainWindow):
             gilding.gild_application(app, p)
             choices.ink_choices(app, p)
         other = PALETTES[(self.palette_index + 1) % len(PALETTES)]
-        self.theme.setText(f"  {other.name}")
-        self.theme.setIcon(pictures.icon("theme", p["label"]))
+        theme = self.settings_entries[THEME]
+        theme.setText(f"Switch to {other.name}")
+        theme.setIcon(pictures.icon("theme", p["label"]))
+        self.settings.setIcon(pictures.gear_icon(p["label"]))
         self.help.setIcon(pictures.icon("help", p["label"]))
         self.find_button.setIcon(magnifier_icon(p["label"]))
         self._draw_sound()

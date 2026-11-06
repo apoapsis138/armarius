@@ -82,7 +82,7 @@ class SeasonsPage(QWidget):
             outer.addWidget(
                 text(
                     "No seasons recorded yet: they're kept as seasons are "
-                    "advanced (Advance in the top bar)."
+                    "advanced (Advance Season, under the chapters)."
                     if saga.keep_season_records
                     else "Season records are off (the saga's settings): new seasons "
                     "aren't kept here.",

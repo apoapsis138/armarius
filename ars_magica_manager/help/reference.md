@@ -54,7 +54,7 @@ The desktop version is used with the mouse: every action is a button on the page
 - `q` quits Armarius. Everything is already saved.
 - `Ctrl+F` drops **Find** from the top bar, to open any record by its name (see [Find](help:find)).
 - `?` and `q` are typed as letters while you are typing in a box, and do nothing while a form or question is open, so they never act by accident. `Esc` and `F1` always work.
-- **Advance Season**, in the top bar, advances the saga by one season (see [Advancing a season](help:advance-season)).
+- **Advance Season**, under the chapters on the left, advances the saga by one season (see [Advancing a season](help:advance-season)).
 - The trail at the top left goes back to any page above this one.
 
 ### In a form

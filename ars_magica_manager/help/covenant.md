@@ -917,7 +917,7 @@ grog's yearly update.
 press `t` to advance the season,
 <!-- /tui -->
 <!-- gui -->
-advance the season with **Advance Season** in the top bar,
+advance the season with **Advance Season**, under the chapters on the left,
 <!-- /gui -->
 every plan is worked out and applied, and someone with
 nothing planned gains nothing that season. At the end of Winter the year

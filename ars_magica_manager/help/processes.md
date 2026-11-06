@@ -6,7 +6,7 @@ Plans what a magus, companion or Mythic Companion does with a season: the curren
 with `t`.
 <!-- /tui -->
 <!-- gui -->
-with **Advance Season** in the top bar.
+with **Advance Season**, under the chapters on the left.
 <!-- /gui -->
 Grogs aren't planned season by season; they have a [yearly update](help:grog-year) instead.
 
@@ -298,7 +298,7 @@ The season is played when it is advanced, as anyone's is, and the grog's This Se
 `t` moves the saga on by one season and applies every plan made for the season that is ending. It works from anywhere in the workspace.
 <!-- /tui -->
 <!-- gui -->
-**Advance Season**, in the top bar beside the date, moves the saga on by one season and applies every plan made for the season that is ending. It is there on every page while a saga is open.
+**Advance Season**, the card with the present season's medallion at the foot of the chapters on the left, moves the saga on by one season and applies every plan made for the season that is ending: click anywhere on the card. It is there on every page of a saga that has chapters, so the last thing you do in a season can be the last thing before it ends; a Creation Worksheet, a Fight and a Siege have none, as a record is finished or left first. Once you say Advance, a dial of the four seasons turns in the middle of the window to bring the new season to the top, then shows its medallion with its name and year, and fades; click or press a key to skip it. With **Reduce motion** on, the new season simply follows.
 <!-- /gui -->
 
 **You type:** only your answers to the questions it asks.

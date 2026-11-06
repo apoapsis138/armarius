@@ -123,6 +123,16 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.80.0 — 2026-11-06
+
+### Illuminatio
+
+- **Advance Season** has moved from the title bar to a card at the foot of the chapters on every page of a saga, with the present season's medallion, its name and year. Click anywhere on the card (or press Space or Enter on it) to end the season; it still asks first. Creation Worksheets, Fights and Sieges have none: finish or leave them first.
+- Once you say Advance, a dial of the four seasons turns in the middle of the window to bring the new season to the top, then shows its medallion large with its name and year, and fades. A click or a key skips it, and Reduce motion leaves it out. It takes the place of the wax seal pressed after Advance Season.
+- The title bar is now Find, Help, a thin rule and a **gear**, whose menu holds the theme, the sounds and Reduce motion, each ticked while it is on.
+- Tooltips are drawn on the page's own parchment, in the serif with a thin gilt edge, in both themes; in the dark theme they no longer show as a grey box.
+- A chapter list too long for its page scrolls up and down only; a long chapter name is cut short beside its scroll bar instead of the list scrolling sideways.
+
 ## 3.79.0 — 2026-11-06
 
 ### Illuminatio

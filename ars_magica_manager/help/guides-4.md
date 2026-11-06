@@ -77,7 +77,7 @@ The binding needs a Lab Total of at least 25 + Might + 5 x Size, and the Lab Tot
 8. Press `t` to [advance the season](help:advance-season) when the troupe is ready.
 <!-- /tui -->
 <!-- gui -->
-8. Click **Advance Season** in the top bar to [advance the season](help:advance-season) when the troupe is ready.
+8. Click **Advance Season**, under the chapters on the left, to [advance the season](help:advance-season) when the troupe is ready.
 <!-- /gui -->
 
 When the season is applied, the app fills in the [Binding & Cords](help:section-fam-binding) section: the Arts used, the Lab Total, the binding level, the vis spent and the three cords. It also sets the season and year bound if they were blank.
@@ -218,7 +218,7 @@ The House's Hubris is now kept on the sheet: the first Inner Mystery makes the H
 Press `t` to [advance the season](help:advance-season).
 <!-- /tui -->
 <!-- gui -->
-Click **Advance Season** in the top bar to [advance the season](help:advance-season).
+Click **Advance Season**, under the chapters on the left, to [advance the season](help:advance-season).
 <!-- /gui -->
 For a successful Initiation, the app adds the Virtue (with what it names) to the Initiate's [Virtues & Flaws](help:tab-vf) and applies the Ordeal: it adds the Flaw gained, takes away the Virtue lost, or replaces the Minor Flaw raised with its Major Flaw. A Great Characteristic Virtue gained raises the score, and one lost lowers it again. A failed Initiation changes nothing, and its Ordeal is not suffered: the Mystagogue sees that a Script will fail before any sacrifice is made. Two failures still cost the Ordeal: one that distractions made fail (The Mysteries Revised Edition p. 12), and an experimental Script whose rite fails, since its Ordeals are suffered before the rite is checked (p. 18). Either way, the Diary records the Initiation Total against the Target.
 

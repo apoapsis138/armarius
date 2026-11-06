@@ -15,8 +15,17 @@ def style_sheet(p: Palette, serif: str) -> str:
         background: transparent;
         color: {p["foreground"]};
     }}
-    QMenu, QToolTip, QDialog {{
+    QMenu, QDialog {{
         background: {p["background"]};
+    }}
+    QToolTip {{
+        background: {p["surface"]};
+        color: {p["foreground"]};
+        border: 1px solid {p["accent"]};
+        border-radius: 0px;
+        padding: 3px 7px;
+        font-family: "{serif}";
+        font-size: 11pt;
     }}
     QComboBox QAbstractItemView {{
         background: {p["surface"]};
