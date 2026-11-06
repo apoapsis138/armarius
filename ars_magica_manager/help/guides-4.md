@@ -405,7 +405,10 @@ chapter (**Edit Secrets** there),
 <!-- /gui -->
 not in its summary or notes. A player who signs in never sees that tab,
 and a record they export leaves its secrets out; everything else on the
-sheet they can read.
+sheet they can read. The [Roll Tables](help:tab-nb-tables) of places,
+threats, factions and lords are yours alone too: a player doesn't see
+that tab and can't roll, and a row's "(SG: ...)" note shows on your roll
+but never in the Diary line it writes.
 
 ### Starting and stopping
 <!-- help: guide-hosting-start -->

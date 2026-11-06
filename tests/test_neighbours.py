@@ -185,6 +185,7 @@ def test_the_desktop_lists_neighbours_and_opens_one():
         "Manors",
         "Marriages",
         "Standing",
+        "Roll Tables",
         "Diary",
         "Secrets",
     ]

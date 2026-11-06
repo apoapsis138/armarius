@@ -275,8 +275,13 @@ class NeighbourSheetView(KindTabsView):
         )
 
     def _more_tabs(self) -> list[KindTab]:
-        """The kind's further tabs this neighbour shows."""
-        return [m for m in self.kind.more if m.shows(self.neighbour)]
+        """The kind's further tabs this neighbour shows: a storyguide-only
+        one (Roll Tables) only to the storyguide, as Secrets."""
+        return [
+            m
+            for m in self.kind.more
+            if m.shows(self.neighbour) and (self.show_secrets or not m.storyguide_only)
+        ]
 
     def kind_holder(self) -> Neighbour:
         return self.neighbour

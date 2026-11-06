@@ -453,7 +453,8 @@ class RecordActions(WorkspaceBase):
         self._conflict_command("next_siege_event")
 
     def action_roll_table(self) -> None:
-        """More's Roll on a place's chosen roll table."""
+        """More's Roll on the chosen roll table of a place, threat,
+        faction or lord."""
         view = self._neighbour_sheet_view
         row = view.section_row(TABLES_SECTION) if view is not None else None
         if view is None or row is None:

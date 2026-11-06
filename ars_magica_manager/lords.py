@@ -17,6 +17,7 @@ unset, worked out from his title) and "affinity_divided"."""
 
 from __future__ import annotations
 
+from dataclasses import replace
 from typing import Any, Required, TypedDict, cast
 
 from . import battles, place_events, references, sieges
@@ -691,6 +692,10 @@ def diary_grid(_saga: Saga, lord: Neighbour) -> Grid:
         "Nothing written yet: each Battle Event, and each fight or siege he is "
         "linked to, is written here.",
     )
+
+
+#: His Roll Tables, a place's, shown beside his Diary after Standing.
+TABLES_TAB = replace(place_events.TABLES_TAB, after_standing=True)
 
 
 #: His Diary: what befell him and his lands, kept as a place's is.

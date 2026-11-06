@@ -121,8 +121,9 @@ for _kind in (
         lords.problem,
         lords.facts,
         lords.TAB,
-        # A lord's Marriages tab comes after his Manors.
-        (manors.LORD_TAB, marriages.TAB, lords.DIARY_TAB),
+        # A lord's Marriages tab comes after his Manors; his Roll Tables
+        # sit beside his Diary, after Standing.
+        (manors.LORD_TAB, marriages.TAB, lords.TABLES_TAB, lords.DIARY_TAB),
     ),
     NeighbourKind(
         "town",
@@ -168,7 +169,7 @@ for _kind in (
         factions.problem,
         factions.facts,
         factions.TAB,
-        (factions.DIARY_TAB,),
+        (place_events.TABLES_TAB, factions.DIARY_TAB),
     ),
     NeighbourKind(
         "threat",
@@ -182,7 +183,7 @@ for _kind in (
             threats.facts(saga, threat) + story_chapters.threat_facts(saga, threat)
         ),
         threats.TAB,
-        (story_chapters.THREAT_DIARY_TAB,),
+        (place_events.TABLES_TAB, story_chapters.THREAT_DIARY_TAB),
     ),
     NeighbourKind(
         sites.PLACE,

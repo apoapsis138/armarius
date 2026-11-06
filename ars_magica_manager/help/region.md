@@ -1266,16 +1266,19 @@ record they point at: add a member here to say they belong to it.
 
 What the faction has done, season by season: its schemes, its quarrels,
 who joined or left. A place's Diary works the same way (see
-[Diary](help:section-nb-place-diary)); a faction's is written only by
-hand. Add, edit or delete an entry.
+[Diary](help:section-nb-place-diary)); a faction's is written by hand,
+or by a roll on its [Roll Tables](help:tab-nb-tables) (what its agents
+are up to this season). Add, edit or delete an entry.
 
 # A lord's Diary
 <!-- help: tab-nb-lord-diary -->
 
 What befell the lord and his lands, season by season: each Battle Event
 his army fights, a siege he is linked to as the castle or the besieger
-when it ends, and anything the storyguide writes. It works as a place's
-[Diary](help:section-nb-place-diary): add, edit or delete an entry.
+when it ends, a roll on his [Roll Tables](help:tab-nb-tables) (which
+sit beside his Diary, after Standing), and anything the storyguide
+writes. It works as a place's [Diary](help:section-nb-place-diary): add,
+edit or delete an entry.
 
 # A threat
 <!-- help: tab-nb-threat -->
@@ -1320,6 +1323,11 @@ nothing of it comes due, and the Tribunal sheet counts it under
 dated stages move later together so the first still to come is due next
 season at the soonest; a track or omen count starts where it stands.
 
+Its [Roll Tables](help:tab-nb-tables) say how the stage it has reached
+shows itself this season: rolled, the row is written in its Diary with
+the stage it colours. A roll never moves the threat: its clock moves
+only by date, by a tied trigger, by Delay or Hasten, or by Edit.
+
 **See also:** [A neighbour](help:neighbour)
 
 ## Stages
@@ -1348,7 +1356,8 @@ turned.
 What moved the threat, season by season: each answer to a trigger tied
 to it (failed or kept), each Delay or Hasten and its reason, and what
 came of a stage marked Happened, Stopped or Turned, and its chapters
-(marked "Chapter:"), what the troupe did when it took up the tale. A
+(marked "Chapter:"), what the troupe did when it took up the tale, and
+each roll on its Roll Tables with the stage it coloured. A
 threat grown from a story shows that story and its chapters above the
 list. It works as a place's [Diary](help:section-nb-place-diary): add,
 edit or delete an entry.
@@ -1682,8 +1691,19 @@ comes, the season it comes in asks how it went (see
 ## Roll Tables tab
 <!-- help: tab-nb-tables -->
 
-The place's roll tables: what the troupe might meet there, or what a
-night in the regio brings.
+The roll tables of a place, a threat, a faction or a lord: what the
+troupe might meet at a place, or what a night in the regio brings; how
+a threat's stage shows itself; what a faction or a lord is up to this
+season. A lord's tab comes after Standing, beside his Diary. No book
+prints a rule for these tables: they are the storyguide's own.
+
+Only the storyguide sees the tab and rolls: a player signed in to a
+hosted copy doesn't see it, as with Secrets (see
+[Keeping secrets from players](help:guide-hosting-secrets)). Played
+solo, the one player is the storyguide and sees everything.
+
+A roll on a threat's table colours the stage it has reached and never
+moves its clock.
 
 ## Roll Tables
 <!-- help: section-nb-tables -->
@@ -1692,13 +1712,21 @@ Each table names its die (a simple die, a stress die, a d6 or a d10)
 and its rows, one a line: "1-3: Nothing stirs", "4: A hare", "9+: The
 Hall opens", and for a stress die "botch: The mist closes".
 
+A row may end with a note for the storyguide, written "(SG: ...)":
+"3: The letters on the walls curse whoever reads them. (SG: False: they
+honour Abnoba.)". The roll shows the note; the line written in the
+Diary leaves it out, so players reading the Diary see only what
+happened. Any row can take one, a botch row too; a row without one
+works as before, and "(SG:" anywhere but the row's end is part of its
+text.
+
 <!-- tui -->
 More (`m`) > **Roll** rolls the chosen table and shows the row it lands
-on; **Write** puts it in the place's diary.
+on; **Write** puts it in the record's Diary.
 <!-- /tui -->
 <!-- gui -->
 **Roll** rolls the chosen table and shows the row it lands on; **Write**
-puts it in the place's diary.
+puts it in the record's Diary.
 <!-- /gui -->
 
 Add, edit or delete one.

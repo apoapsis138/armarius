@@ -128,6 +128,9 @@ class KindTab:
     #: Whether the tab shows for this neighbour (a place's Tomb, only on
     #: a tomb); None: always.
     shown: Callable[[Neighbour], bool] | None = None
+    #: Shown only to the storyguide, as Secrets are (Roll Tables): a
+    #: player signed in to a hosted copy doesn't see it.
+    storyguide_only: bool = False
 
     def shows(self, neighbour: Neighbour) -> bool:
         """Whether the tab is on `neighbour`'s sheet."""

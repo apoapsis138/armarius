@@ -2394,6 +2394,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-tables": {
+      "active": "section-nb-tables",
+      "keys": {
+        "a": "FieldsDialog: Add a Roll Table",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Roll, Go To",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-nb-place-diary": {
       "active": "section-nb-place-diary",
       "keys": {
@@ -2722,6 +2732,16 @@
         "slash": "(disabled)"
       }
     },
+    "SheetSection#section-nb-tables": {
+      "active": "section-nb-tables",
+      "keys": {
+        "a": "FieldsDialog: Add a Roll Table",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "(nothing)",
+        "slash": "(disabled)"
+      }
+    },
     "SheetSection#section-nb-place-diary": {
       "active": "section-nb-place-diary",
       "keys": {
@@ -2791,6 +2811,16 @@
         "e": "FieldsDialog: Edit a Stage",
         "d": "ConfirmScreen",
         "m": "ChooseScreen: Go To",
+        "slash": "(disabled)"
+      }
+    },
+    "SheetSection#section-nb-tables": {
+      "active": "section-nb-tables",
+      "keys": {
+        "a": "FieldsDialog: Add a Roll Table",
+        "e": "(nothing)",
+        "d": "(nothing)",
+        "m": "MenuScreen: Roll, Go To",
         "slash": "(disabled)"
       }
     },

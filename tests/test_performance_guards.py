@@ -46,8 +46,9 @@ SHEET_OPEN_WIDGET_BUDGET = {
     # section and list): 4.
     "region": 58,
     # A lord's Fief tab lists his sieges too; his Manors tab adds 2, and his
-    # Marriages tab its (unbuilt) pane and its tab: 2.
-    "neighbour": 46,
+    # Marriages tab its (unbuilt) pane and its tab: 2, and his Roll Tables
+    # tab the same: 2.
+    "neighbour": 48,
     "town": 40,
     "church": 40,
     "university": 40,

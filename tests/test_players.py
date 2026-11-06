@@ -343,3 +343,38 @@ async def test_only_the_storyguide_sees_a_records_secrets(in_a_browser):
         app.player = hedda
         await _show(pilot, ws, ("neighbour", "gottfried"))
         assert ws._current_sheet_view().query("#tab-secrets")
+
+
+_WITH_TABLES = ("drachenfels", "crown", "coven", "gottfried")
+
+
+async def test_only_the_storyguide_sees_and_rolls_roll_tables(in_a_browser):
+    saga, ana, hedda = _troupe()
+    app = ArsMagicaManagerApp()
+    async with app.run_test(size=(140, 60)) as pilot:
+        ws = await _workspace_as(app, pilot, saga, ana)
+        assert not ws._player_may("roll_table")
+        for key in _WITH_TABLES:
+            view = await _sheet_of(pilot, ws, key)
+            assert not view.query("#tab-nb-tables"), key
+            assert not ws._available("roll_table"), key
+
+        app.player = hedda
+        assert ws._player_may("roll_table")
+        for key in _WITH_TABLES:
+            view = await _sheet_of(pilot, ws, key)
+            assert view.query("#tab-nb-tables"), key
+
+
+async def _sheet_of(pilot, workspace, key: str):
+    """The neighbour `key`'s sheet, once it is mounted."""
+    await _show(pilot, workspace, ("neighbour", key))
+
+    def mounted():
+        view = workspace._current_sheet_view()
+        neighbour = getattr(view, "neighbour", None)
+        return view if neighbour is not None and neighbour.id == key else None
+
+    view = await wait_until(pilot, mounted)
+    assert view is not None, key
+    return view

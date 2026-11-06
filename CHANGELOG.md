@@ -123,6 +123,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.82.0 — 2026-11-06
+
+### Orbis
+
+- Threats, factions and lords have **Roll Tables**, as places do: what a faction or a lord is up to this season, how a threat's stage shows itself, rumours by who's telling. A record can hold several tables; **Roll** rolls the chosen one and writes the result in the record's Diary. A lord's tables sit after Standing, beside his Diary.
+- A roll on a threat's table names the stage it colours, in the roll and in the Diary; it never moves the threat's clock.
+- Roll Tables are the storyguide's alone: a player signed in to a hosted copy doesn't see the tab, on a place or anywhere else, and can't roll. Played solo, you see everything as before.
+- A table's row may end with a note for the storyguide, written "(SG: ...)". The roll shows it; the line written in the Diary leaves it out, so players reading the Diary see only what happened. Botch rows can take notes too.
+
 ## 3.81.0 — 2026-11-06
 
 ### Orbis

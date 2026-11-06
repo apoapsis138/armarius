@@ -156,8 +156,8 @@ def test_a_faction_keeps_a_diary_as_a_place_does():
     coven = saga.neighbour("coven")
     assert coven is not None
     kind = neighbours.kind_of(coven)
-    assert [t.tab_id for t in kind.more] == ["tab-nb-faction-diary"]
-    (diary,) = kind.more[0].lists
+    assert [t.tab_id for t in kind.more] == ["tab-nb-tables", "tab-nb-faction-diary"]
+    (diary,) = kind.more[1].lists
     assert diary.title(saga, coven) == "Diary (0)"
     assert diary.grid(saga, coven).rows == []
     coven.details["diary"] = [

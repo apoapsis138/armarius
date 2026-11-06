@@ -277,7 +277,12 @@ def test_a_lord_himself_may_marry_and_is_named_for_his_ruler():
 
 def test_a_lord_has_a_marriages_tab_after_his_manors():
     tab_ids = [t.tab_id for t in neighbours.KINDS["lord"].more]
-    assert tab_ids == ["tab-nb-manors", "tab-nb-marriages", "tab-nb-lord-diary"]
+    assert tab_ids == [
+        "tab-nb-manors",
+        "tab-nb-marriages",
+        "tab-nb-tables",
+        "tab-nb-lord-diary",
+    ]
     assert CORE_SECTIONS[MARRIAGES_SECTION] == {"add", "edit", "remove"}
     assert CORE_SECTIONS[MARRIAGE_TERMS_SECTION] == {"edit"}
     saga = _saga()

@@ -79,7 +79,12 @@ def _form(command: object) -> Form:
 
 def test_a_lord_has_a_manors_tab_after_his_fief_and_a_covenant_has_one_too():
     kind = neighbours.KINDS["lord"]
-    assert [t.title for t in kind.more] == ["Manors", "Marriages", "Diary"]
+    assert [t.title for t in kind.more] == [
+        "Manors",
+        "Marriages",
+        "Roll Tables",
+        "Diary",
+    ]
     assert not kind.more[0].after_standing
     tab = manors.LORD_TAB
     assert [p.section_id for p in tab.parts()] == [

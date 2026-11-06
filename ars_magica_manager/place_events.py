@@ -1,7 +1,11 @@
 """What happens at a place over time: its triggers (a regio opening each
 Midsummer, a white stag every seven years), its roll tables (rolled with
 More's Roll and written to its diary), its diary, and how its aura
-changes with the Realms of Power: Magic option.
+changes with the Realms of Power: Magic option. Threats, factions and
+lords take the same Roll Tables tab, kept the same way; no book prints
+a rule for such tables, and a threat's roll only colours the stage it
+has reached: its stages move by date or by the storyguide (Dies Irae
+pp. 46-47), never by the dice.
 
 A trigger comes once (a season and year), each year (a season), every N
 years (a season, from a year), or whenever something happens (a
@@ -317,6 +321,9 @@ class TableRow:
     high: int | None
     result: str
     botch: bool = False
+    #: The storyguide's note on the row, from a closing "(SG: ...)":
+    #: shown on the roll, never written in the Diary.
+    note: str = ""
 
     def covers(self, value: int, botched: bool) -> bool:
         if self.botch or botched:
@@ -328,10 +335,28 @@ _ROW = re.compile(
     r"^\s*(?:(botch)|(\d+)\s*(?:([-–])\s*(\d+)|(\+))?)\s*[:.]\s*(.+)$", re.IGNORECASE
 )
 
+#: A storyguide's note closing a row: "... (SG: False: they honour Abnoba.)".
+_NOTE = re.compile(r"\s*\(SG:\s*([^()]*?)\s*\)\s*$")
+
+
+def split_note(text: str) -> tuple[str, str]:
+    """A row's text and the storyguide's note closing it, "" for none.
+    Only a closing "(SG: ...)" is a note: one mid-row is the row's text."""
+    match = _NOTE.search(text)
+    if match is None:
+        return text.strip(), ""
+    return text[: match.start()].strip(), match.group(1)
+
+
+def player_text(text: str) -> str:
+    """A row's text without the storyguide's note: what the Diary keeps."""
+    return split_note(text)[0]
+
 
 def parse_rows(text: str) -> list[TableRow] | None:
     """The rows written one a line ("1-3: Nothing", "9+: The Hall
-    opens", "botch: The mist closes"); None if a line isn't one."""
+    opens", "botch: The mist closes"), each with any storyguide's note
+    kept apart; None if a line isn't one."""
     found = []
     for line in (text or "").splitlines():
         if not line.strip():
@@ -340,12 +365,13 @@ def parse_rows(text: str) -> list[TableRow] | None:
         if match is None:
             return None
         botch, low, _dash, high, plus, result = match.groups()
+        shown, note = split_note(result)
         if botch:
-            found.append(TableRow(0, 0, result.strip(), botch=True))
+            found.append(TableRow(0, 0, shown, botch=True, note=note))
             continue
         start = int(low)
         end = None if plus else int(high) if high else start
-        found.append(TableRow(start, end, result.strip()))
+        found.append(TableRow(start, end, shown, note=note))
     return found
 
 
@@ -415,7 +441,8 @@ def table_fields(
             e.get("rows", ""),
             required=True,
             hint='One a line: "1-3: Nothing stirs", "9+: The Hall opens", '
-            '"botch: The mist closes".',
+            '"botch: The mist closes". End a row with "(SG: ...)" for a note '
+            "shown on the roll but kept out of the Diary.",
         ),
     ]
 
@@ -454,11 +481,22 @@ def _roll(die: str, rng: random.Random, saga: Saga) -> tuple[int, bool, str]:
     return value, False, str(value)
 
 
+def _threat_stage(saga: Saga, record: Neighbour) -> str | None:
+    """The title of the stage a threat has reached, which a roll on its
+    table colours; None for another kind, or a threat at no stage yet."""
+    if not threats.is_threat(record):
+        return None
+    stage = threats.reached(saga, record).current
+    return stage["title"] if stage is not None else None
+
+
 def roll_table(
     saga: Saga, place: Neighbour, index: int, rng: random.Random | None = None
 ) -> Command:
-    """More's Roll on the chosen table: roll its die, read its row, and
-    write the result to the place's diary if kept."""
+    """More's Roll on the chosen table of a place, threat, faction or
+    lord: roll its die, read its row, and write the result to its diary
+    if kept. A threat's roll names the stage it colours and never moves
+    the threat."""
     listed = tables(place)
     if index >= len(listed):
         return Refuse("Roll", "Choose a roll table first.")
@@ -469,21 +507,29 @@ def roll_table(
     )
     row = next((r for r in rows if r.covers(value, botched)), None)
     result = row.result if row is not None else "no row covers it"
+    sg_note = row.note if row is not None else ""
     when = f"{saga.current_season} {saga.current_year}"
+    stage = _threat_stage(saga, place)
+    at = f" (at {stage})" if stage else ""
+    # The Diary keeps what happened; the storyguide's note stays on the roll.
+    rolled = f"{shown}, {result}" if result else shown
+    note = f"\n\n[i](SG: {escape(sg_note)})[/]" if sg_note else ""
+    if stage:
+        note += f"\n\nIt colours {escape(stage)}; the threat's clock doesn't move."
 
     def apply() -> None:
-        table["last"] = f"{when}: {shown}, {result}"
+        table["last"] = f"{when}: {rolled}"
         diary(place).append(
             {
                 "year": saga.current_year,
                 "season": saga.current_season,
-                "text": f"{table['name']}: rolled {shown}, {result}",
+                "text": f"{table['name']}: rolled {rolled}{at}",
             }
         )
 
     return Confirm(
         f"{escape(table['name'])}: the {escape((table.get('die') or DICE[0]).lower())} "
-        f"shows {shown}.\n\n[b]{escape(result)}[/]\n\nWrite it in "
+        f"shows {shown}.\n\n[b]{escape(result)}[/]{note}\n\nWrite it in "
         f"{escape(place.name)}'s diary?",
         apply,
         yes_label="Write",
@@ -808,6 +854,7 @@ TABLES_TAB = KindTab(
     "Roll Tables",
     "tab-nb-tables",
     (KindList(TABLES_SECTION, tables_title, tables_grid, table_ops),),
+    storyguide_only=True,
 )
 DIARY_TAB = KindTab(
     "Diary",

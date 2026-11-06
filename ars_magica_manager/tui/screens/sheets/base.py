@@ -145,8 +145,9 @@ class SheetView(Vertical):
         #: The core's Add, Edit and Delete (commands.SectionOps) for each
         #: section in sections.CORE_SECTIONS this sheet shows.
         self.core_ops: dict[str, SectionOps] = {}
-        #: Whether the record's Secrets tab is shown: the workspace turns it
-        #: off for a player signed in to a hosted copy.
+        #: Whether the record's Secrets tab, and any other tab for the
+        #: storyguide alone (a neighbour's Roll Tables), is shown: the
+        #: workspace turns it off for a player signed in to a hosted copy.
         self.show_secrets = True
 
     def section_row(self, section_id: str) -> int | None:
