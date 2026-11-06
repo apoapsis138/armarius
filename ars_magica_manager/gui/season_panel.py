@@ -42,9 +42,6 @@ from .style.paper import lift, shade
 from .style.pieces import serif, text
 from .themes import Palette
 
-#: The panel's width: the chapter rail's.
-WIDTH = 180
-
 
 class SeasonPanel(QAbstractButton):
     """The present season at the foot of the chapter rail, drawn as the
@@ -60,7 +57,6 @@ class SeasonPanel(QAbstractButton):
     def __init__(self, saga: Saga, p: Palette, advance: Callable[[], None]) -> None:
         super().__init__()
         self.p = p
-        self.setFixedWidth(WIDTH)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
         self.setFocusPolicy(Qt.FocusPolicy.StrongFocus)
         self.setAttribute(Qt.WidgetAttribute.WA_Hover)

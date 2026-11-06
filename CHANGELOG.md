@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.80.1 — 2026-11-06
+
+### Illuminatio
+
+- The Advance Season card stands clear of the rule beside the chapters, on every page, instead of running up against it.
+
 ## 3.80.0 — 2026-11-06
 
 ### Illuminatio

@@ -759,6 +759,11 @@ def choose_key(view: QTableView, table: Table, key: int | None) -> QWidget | Non
     return view
 
 
+#: The room between the rail's foot (the season's panel) and the rule
+#: beside the rail.
+FOOT_GAP = 14
+
+
 class Codex(QSplitter):
     """The Codex body every record's page shares: a rail of chapters on
     the left, the chosen chapter in the middle and the inspector, which
@@ -828,10 +833,14 @@ class Codex(QSplitter):
         """Put `widget` at the foot of the rail, in place of any there."""
         column = self._side
         if self.foot is not None:
-            column.removeWidget(self.foot)
+            # Deleting it takes it out of its row.
             self.foot.deleteLater()
         self.foot = widget
-        column.addWidget(widget, 0, Qt.AlignmentFlag.AlignHCenter)
+        # Clear of the rule beside the rail, as the chapters' text is.
+        row = QHBoxLayout()
+        row.setContentsMargins(0, 0, FOOT_GAP, 0)
+        row.addWidget(widget)
+        column.addLayout(row)
 
     def chapter(self, row: int) -> QWidget:
         """The chapter at `row`, built if it was not yet."""
