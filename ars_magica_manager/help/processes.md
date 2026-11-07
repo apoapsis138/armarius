@@ -1103,7 +1103,9 @@ can use it; in a browser copy the file downloads instead.
 one.
 <!-- /gui -->
 
-**You choose:** the pack's name and file, and a tick for each Tribunal,
+**You choose:** the pack's name and file, an optional **Introduction**
+(a few paragraphs on what the pack sets up, a blank line between
+paragraphs, shown under the pack in Start from a pack), and a tick for each Tribunal,
 covenant, place and neighbour it holds. A Tribunal takes everything in
 it: its covenants, the places they sit in (and the places round and
 inside those), whoever is in those places, and the neighbours that hold
@@ -1112,7 +1114,17 @@ Tribunal is not asked about. **With their characters** adds the
 covenants' characters and laboratories and each Tribunal's Praeco and
 Presiding Quaesitor; **With the calendar** the covenants' calendar
 entries and the saga's own. The line above Export says what the pack
-holds. A pack whose Tribunals have maps with pictures is written as a
+holds. In **Start from a pack** a pack is listed by its Tribunal
+("Rhine Tribunal: 10 covenants, …"), or, when its name doesn't name
+the Tribunal, by its name first ("Dammërstein (Rhine Tribunal): 1
+covenant, …"), so give a pack a name of its own. The book packs come
+first, then the saga starters: ready-made covenants and sagas shipped
+with the app, such as Dammërstein. A starter is a pack exported like
+any other and put in the app's `data/saga_starters` folder; every pack
+there is listed. A starter may name the shipped book pack it is
+built on (its `base`, such as `rhine`): Start from a pack brings that in
+first, and a starter whose book pack the app doesn't have isn't offered.
+A pack whose Tribunals have maps with pictures is written as a
 zip, `.amm.zip`, with the maps in it (see Exporting, above).
 
 A Tribunal's meeting under way stays behind, and its Diary comes without
@@ -1264,6 +1276,23 @@ Tribunal's Praeco) or the link is dropped, and the preview lists which;
 a covenant whose place is left out sits nowhere until you place it.
 Starting a saga from a pack brings everything, and asks which of its
 stories to begin in the same way.
+
+A place, threat, faction or lord this saga already has is kept as it
+is, with one exception: the pack's roll tables on it that the saga's
+has none of the same name of (in any case) are added to it, and the
+preview says so ("1 roll table to The valley of Durenmar"). So a saga
+starter can bring "Rumours about Dammërstein" to a Rhine Tribunal place.
+A table the saga has is never overwritten, and importing the pack again
+adds nothing.
+
+A saga starter built on a book pack, imported into a saga without that
+book's Tribunal (Dammërstein into a Transylvanian saga), first asks
+**First bring in the Rhine Tribunal**, ticked, with the book pack's own
+choices under it, so it can come in lightly. The preview shows the book
+pack's import, then the starter's over it. Untick it and the starter
+comes in alone, and the preview says that its tables for the Tribunal's
+records come in on records of their own. A saga that has the Tribunal
+is not asked.
 
 Importing a pack again, or a newer copy of it, leaves every record the
 saga already has as it is and adds the rest: see [Adding a book to a saga

@@ -78,10 +78,19 @@ MAPS, PORTRAITS = "maps", "portraits"
 CHARACTER, LABORATORY, COVENANT = "character", "laboratory", "covenant"
 #: The kind of a whole saga's export, and of a content pack's.
 SAGA, PACK = "saga", "pack"
+#: A pack's key for its introduction: a few paragraphs, separated by
+#: blank lines, that Start from a pack shows under the pack chosen.
+INTRODUCTION = "introduction"
+#: A pack's key naming the shipped book pack it is built on (a saga
+#: starter's Tribunal pack, "rhine"), brought in before it.
+BASE = "base"
 #: The kind of record a place or neighbour is, among the links.
 NEIGHBOUR = "neighbour"
 #: The kind of record a creature of the Bestiary is.
 CREATURE = "creature"
+#: The key in a neighbour's details holding its roll tables
+#: (place_events.RollTable).
+TABLES = "tables"
 KIND_LABELS: dict[str, str] = {
     CHARACTER: "Character",
     LABORATORY: "Laboratory",
@@ -440,6 +449,16 @@ def read(path: Path) -> dict[str, Any]:
         )
     if data.get("kind") not in KIND_LABELS or not isinstance(data.get("saga"), dict):
         raise ValueError("the export is incomplete")
+    introduction = data.get(INTRODUCTION)
+    if introduction is not None and not isinstance(introduction, str):
+        raise ValueError(
+            f"the introduction of {data.get('name') or 'the pack'} isn't text"
+        )
+    base = data.get(BASE)
+    if base is not None and (not isinstance(base, str) or not base.strip()):
+        raise ValueError(
+            f"the base pack of {data.get('name') or 'the pack'} isn't named"
+        )
     return data
 
 
@@ -508,6 +527,12 @@ class ImportPlan:
     dropped: list[str] = field(default_factory=list)
     #: Anything else worth saying before importing.
     notes: list[str] = field(default_factory=list)
+    #: Roll tables a pack adds to a place, threat, faction or lord the
+    #: saga already has: (that record, the tables it hasn't one of the
+    #: same name of). Nothing else on the record changes.
+    new_tables: list[tuple[Neighbour, list[dict[str, Any]]]] = field(
+        default_factory=list
+    )
     #: Existing records given an imported partner: (laboratory, owner id).
     new_owners: list[tuple[Laboratory, str]] = field(default_factory=list)
     #: (existing magus, the imported laboratory's id) to assign.
@@ -1224,6 +1249,7 @@ def _held_line(what: str, name: str) -> str:
 def _plan_neighbours(job: _Import) -> None:
     for neighbour in job.source.neighbours:
         if neighbour.id in job.kept[NEIGHBOUR]:
+            _plan_new_tables(job, neighbour)
             continue
         neighbour.id = job.record_map[NEIGHBOUR][neighbour.id]
         neighbour.answers_to = job.link(NEIGHBOUR, neighbour.answers_to)
@@ -1241,6 +1267,30 @@ def _plan_neighbours(job: _Import) -> None:
                 del neighbour.details[places.LANDS]
         _relink(job, neighbour)
         job.plan.neighbours.append(neighbour)
+
+
+def _plan_new_tables(job: _Import, neighbour: Neighbour) -> None:
+    """The pack's roll tables on a record the saga already has, that the
+    saga's copy has none of the same name of (ignoring case): added to
+    it, so a pack can bring tables to a Tribunal's places. Importing
+    again adds nothing, and a table the saga has is never overwritten."""
+    incoming = neighbour.details.get(TABLES)
+    own = job.target.neighbour(job.record_map[NEIGHBOUR][neighbour.id])
+    if not isinstance(incoming, list) or own is None:
+        return
+    had = {
+        str(t.get("name") or "").strip().casefold()
+        for t in own.details.get(TABLES) or []
+        if isinstance(t, dict)
+    }
+    added = []
+    for table in incoming:
+        name = str(table.get("name") or "").strip() if isinstance(table, dict) else ""
+        if name and name.casefold() not in had:
+            had.add(name.casefold())
+            added.append({**table, "last": ""})
+    if added:
+        job.plan.new_tables.append((own, added))
 
 
 #: A faction's member's kind (memberships.MEMBER_KINDS) as the import's.
@@ -1410,6 +1460,10 @@ def preview(plan: ImportPlan) -> str:
     ):
         if number:
             lines.append(f"  {_count(number, noun)}")
+    lines += [
+        f"  {_count(len(tables), 'roll table')} to {own.name}"
+        for own, tables in plan.new_tables
+    ]
     if plan.already:
         lines += ["", "Already here, kept as they are:"]
         lines += [f"  {text}" for text in plan.already]
@@ -1458,6 +1512,16 @@ def _copy_pictures(target: Saga, plan: ImportPlan) -> None:
 
 def apply(target: Saga, plan: ImportPlan) -> None:
     """Add everything in `plan` to `target` (the caller saves it)."""
+    add_records(target, plan)
+    _copy_pictures(target, plan)
+    catalog.use_saga(target)
+
+
+def add_records(target: Saga, plan: ImportPlan) -> None:
+    """Add `plan`'s records to `target` and nothing more: no pictures
+    copied, no catalog switched. apply() does the whole import; this
+    alone lets a preview plan a second import over a copy of the saga
+    with the first one's records in it."""
     target.covenants += plan.covenants + plan.stub_covenants
     target.tribunals += plan.tribunals
     target.characters += plan.characters
@@ -1474,6 +1538,8 @@ def apply(target: Saga, plan: ImportPlan) -> None:
     target.neighbours += plan.neighbours
     target.creatures += plan.creatures
     target.calendar += plan.calendar
+    for own, tables in plan.new_tables:
+        own.details[TABLES] = [*(own.details.get(TABLES) or []), *tables]
     for lab, owner_id in plan.new_owners:
         lab.owner_id = owner_id
     for owner, lab_id in plan.new_labs:
@@ -1484,6 +1550,4 @@ def apply(target: Saga, plan: ImportPlan) -> None:
         if found is not None:
             found.maps.append(atlas_map)
     target.pins += plan.pins
-    _copy_pictures(target, plan)
     places.sync(target)
-    catalog.use_saga(target)

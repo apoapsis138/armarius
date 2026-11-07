@@ -6,6 +6,7 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from support import everything_saga, menu
 
 from ars_magica_manager import (
@@ -161,7 +162,9 @@ def test_a_new_saga_starts_from_a_pack(tmp_path):
     # Other exports in the folder are not packs.
     transfer.export_saga_to(storage.exports_dir() / "all.amm.json", saga)
     found = packs.available(storage.exports_dir())
-    assert [label.split(":")[0] for label, _path, _data in found] == ["Rhine Tribunal"]
+    assert [label.split(":")[0] for label, _path, _data in found] == [
+        "The Rhine (Rhine Tribunal)"
+    ]
     assert "Tribunal," not in found[0][0]
     fields = {f.key: f for f in creation_forms.saga_fields(None)}
     assert fields["pack"].value == ""
@@ -301,6 +304,7 @@ def test_the_new_saga_form_reads_each_pack_once(monkeypatch):
 
     monkeypatch.setattr(transfer, "read", counted)
     monkeypatch.setattr(packs, "SHIPPED_DIR", storage.exports_dir() / "none")
+    monkeypatch.setattr(packs, "STARTERS_DIR", storage.exports_dir() / "none")
     creation_forms.saga_fields(None)
     assert sorted(p.name for p in reads) == ["other.amm.json", "rhine.amm.json"]
 
@@ -322,6 +326,299 @@ def test_an_overlay_adds_to_its_tribunal_and_remembers_the_rest():
 def test_an_overlay_is_not_offered_as_a_pack_to_start_from():
     found = packs.available(packs.SHIPPED_DIR)
     assert not any(packs.is_overlay(data) for _label, _path, data in found)
+
+
+def test_every_saga_starter_is_a_pack_that_imports_clean_over_its_tribunal():
+    """Each saga starter is a plain pack, and comes into a saga started
+    from the shipped Rhine pack with nothing skipped, stubbed or dropped."""
+    starters = sorted(packs.STARTERS_DIR.glob(f"*{transfer.SUFFIX}"))
+    assert starters
+    offenders = []
+    for path in starters:
+        data = transfer.read(path)
+        if (
+            data.get("kind") != packs.PACK
+            or packs.is_overlay(data)
+            or packs.is_book_of_magi(data)
+        ):
+            offenders.append(f"{path.name}: not a plain pack")
+            continue
+        saga = Saga(id="s", name="S")
+        packs.start_from(saga, packs.SHIPPED_DIR / "rhine.amm.json")
+        plan = transfer.plan_import(saga, data, pictures=transfer.Pictures(path))
+        problems = [
+            *plan.skipped,
+            *plan.dropped,
+            *plan.notes,
+            *(f"stub covenant {c.name}" for c in plan.stub_covenants),
+        ]
+        offenders += [f"{path.name}: {problem}" for problem in problems]
+        transfer.apply(saga, plan)
+    assert not offenders, "Saga starters that don't import clean:\n" + "\n".join(
+        offenders
+    )
+
+
+def test_a_pack_s_introduction_shows_under_it_only_while_it_is_chosen(monkeypatch):
+    monkeypatch.setattr(packs, "SHIPPED_DIR", storage.exports_dir() / "none")
+    monkeypatch.setattr(packs, "STARTERS_DIR", storage.exports_dir() / "none")
+    saga = everything_saga()
+    with_one = {**_rhine_pack(saga), transfer.INTRODUCTION: "The Keep.\n\nIts story."}
+    packs.write(storage.exports_dir() / "intro.amm.json", with_one)
+    packs.write(storage.exports_dir() / "plain.amm.json", _rhine_pack(saga))
+    found = packs.available(storage.exports_dir())
+    (intro,) = packs.start_intro_fields(found)
+    assert intro.kind == "info" and not intro.label
+    assert intro.value == "The Keep.\n\nIts story."
+    paths = {Path(path).name: path for _label, path, _data in found}
+    assert intro.show_if is not None
+    assert intro.show_if({"pack": paths["intro.amm.json"]})
+    assert not intro.show_if({"pack": paths["plain.amm.json"]})
+    assert not intro.show_if({"pack": ""})
+    # It sits right under the choice of pack.
+    keys = [f.key for f in creation_forms.saga_fields(None)]
+    assert keys[keys.index("pack") + 1] == intro.key
+
+
+def test_export_pack_writes_its_introduction_and_leaves_a_blank_one_out(tmp_path):
+    saga = everything_saga()
+    form = packs.export_pack(saga, tmp_path)
+    fields = {f.key: f for f in form.fields()}
+    assert fields["introduction"].kind == "area"
+    values = {k: f.value for k, f in fields.items() if f.kind != "info"}
+    values[packs.tick("tribunal", [t.id for t in saga.tribunals].index("rhine"))] = True
+    values["introduction"] = "  The Keep.\n\nIts story.\n "
+    form.apply(values)
+    assert transfer.read(packs._path(values))[transfer.INTRODUCTION] == (
+        "The Keep.\n\nIts story."
+    )
+    values["introduction"] = "   "
+    form.apply(values)
+    assert transfer.INTRODUCTION not in transfer.read(packs._path(values))
+
+
+def test_a_pack_whose_introduction_is_not_text_is_refused(tmp_path):
+    saga = everything_saga()
+    path = tmp_path / "bad.amm.json"
+    packs.write(path, {**_rhine_pack(saga), transfer.INTRODUCTION: ["not", "text"]})
+    with pytest.raises(ValueError, match="introduction of The Rhine isn't text"):
+        transfer.read(path)
+    assert packs.available(tmp_path) == []
+
+
+def test_the_dammerstein_starter_has_its_introduction():
+    data = transfer.read(packs.STARTERS_DIR / "dammerstein.amm.json")
+    assert data[transfer.INTRODUCTION].startswith("Dammërstein, the Stone House\n\n")
+
+
+def _with_tables(data: dict, name: str, *tables: str) -> dict:
+    """`data` with roll tables of these names on its neighbour `name`."""
+    for neighbour in data["saga"]["neighbours"]:
+        if neighbour["name"] == name:
+            neighbour["details"]["tables"] = [
+                {"name": t, "die": "d6", "rows": f"1-6: {t}.", "last": "rolled"}
+                for t in tables
+            ]
+    return data
+
+
+def _tables(saga: Saga, name: str) -> list[dict]:
+    (found,) = [n for n in saga.neighbours if n.name == name]
+    return found.details.get("tables") or []
+
+
+def test_a_pack_adds_its_roll_tables_to_a_record_the_saga_already_has():
+    lord = "Gottfried of Arnsberg"
+    target = everything_saga()
+    (own,) = [n for n in target.neighbours if n.name == lord]
+    own.details["tables"] = [
+        {"name": "Rumours at court", "die": "d6", "rows": "1-6: Ours.", "last": ""}
+    ]
+    before = {k: v for k, v in own.details.items() if k != "tables"}
+    summary = own.summary
+    data = _with_tables(
+        _rhine_pack(everything_saga()), lord, "rumours at court", "What he wants"
+    )
+    plan = transfer.plan_import(target, data)
+    assert f"Lord {lord}" in plan.already
+    assert "  1 roll table to Gottfried of Arnsberg" in transfer.preview(plan)
+    transfer.apply(target, plan)
+    tables = _tables(target, lord)
+    # The saga's own table, whatever the case of its name, is left as it was.
+    assert [(t["name"], t["rows"]) for t in tables] == [
+        ("Rumours at court", "1-6: Ours."),
+        ("What he wants", "1-6: What he wants."),
+    ]
+    assert tables[1]["last"] == ""
+    # Nothing else on the record changed, and a second import adds nothing.
+    assert {k: v for k, v in own.details.items() if k != "tables"} == before
+    assert own.summary == summary
+    again = transfer.plan_import(target, data)
+    assert again.new_tables == []
+    assert "roll table" not in transfer.preview(again)
+
+
+def test_a_pack_s_record_the_saga_lacks_comes_with_its_tables():
+    data = _with_tables(_rhine_pack(everything_saga()), "The Black Pool Coven", "Omens")
+    target = Saga(id="dst", name="Target")
+    plan = transfer.plan_import(target, data)
+    assert plan.new_tables == []
+    transfer.apply(target, plan)
+    assert [t["name"] for t in _tables(target, "The Black Pool Coven")] == ["Omens"]
+
+
+def _starter_on_a_base(tmp_path: Path, monkeypatch, base: str = "base") -> Path:
+    """A shipped book pack ("base", the sample Rhine) and a starter built
+    on it, which has a table for the base's lord: the starter's path."""
+    shipped = tmp_path / "shipped"
+    monkeypatch.setattr(packs, "SHIPPED_DIR", shipped)
+    packs.write(shipped / "base.amm.json", _rhine_pack(everything_saga()))
+    starter = _with_tables(
+        _rhine_pack(everything_saga()), "Gottfried of Arnsberg", "His moods"
+    )
+    starter.update(name="Little Keep", base=base)
+    return packs.write(tmp_path / "starters" / "little.amm.json", starter)
+
+
+def test_a_starter_starts_from_its_base_pack_then_comes_in_over_it(
+    tmp_path, monkeypatch
+):
+    path = _starter_on_a_base(tmp_path, monkeypatch)
+    found = packs.available(packs.SHIPPED_DIR, path.parent)
+    assert [Path(p).name for _label, p, _data in found] == [
+        "base.amm.json",
+        "little.amm.json",
+    ]
+    (line,) = packs.start_base_fields(found)
+    assert line.kind == "info" and line.value == (
+        "Starts from The Rhine first, then brings Little Keep in over it."
+    )
+    assert line.show_if is not None and line.show_if({"pack": str(path)})
+    assert not line.show_if({"pack": found[0][1]})
+    saga = Saga(id="s", name="S")
+    said = packs.start_from(saga, path, {})
+    assert said[0].startswith("Started from The Rhine")
+    assert [t.name for t in saga.tribunals] == ["Rhine"]
+    assert [t["name"] for t in _tables(saga, "Gottfried of Arnsberg")] == ["His moods"]
+    assert sum(1 for n in saga.neighbours if n.name == "Gottfried of Arnsberg") == 1
+
+
+def test_the_new_saga_form_reads_a_starter_and_its_base_once(tmp_path, monkeypatch):
+    path = _starter_on_a_base(tmp_path, monkeypatch)
+    monkeypatch.setattr(packs, "STARTERS_DIR", path.parent)
+    monkeypatch.setattr(storage, "exports_dir", lambda: tmp_path / "none")
+    reads: list[Path] = []
+    real_read = transfer.read
+
+    def counted(at: Path) -> dict:
+        reads.append(Path(at))
+        return real_read(at)
+
+    monkeypatch.setattr(transfer, "read", counted)
+    creation_forms.saga_fields(None)
+    assert sorted(p.name for p in reads) == ["base.amm.json", "little.amm.json"]
+
+
+def test_a_starter_whose_base_pack_is_missing_is_not_offered(tmp_path, monkeypatch):
+    from ars_magica_manager.forms import importing as import_forms
+
+    path = _starter_on_a_base(tmp_path, monkeypatch, base="nowhere")
+    assert [p for _l, p, _d in packs.available(packs.SHIPPED_DIR, path.parent)] == [
+        str(packs.SHIPPED_DIR / "base.amm.json")
+    ]
+    with pytest.raises(
+        ValueError, match="Little Keep is built on the book pack 'nowhere'"
+    ):
+        packs.base_path(transfer.read(path))
+    step = import_forms.import_file(Saga(id="t", name="T"), "pack", path)
+    assert isinstance(step, Refuse) and "'nowhere'" in step.why
+
+
+def test_importing_a_starter_brings_its_base_in_first(tmp_path, monkeypatch):
+    from ars_magica_manager.commands import Confirm, Form
+    from ars_magica_manager.forms import importing as import_forms
+
+    path = _starter_on_a_base(tmp_path, monkeypatch)
+    target = Saga(id="t", name="Elsewhere")
+    step = import_forms.import_file(target, "pack", path)
+    assert isinstance(step, Form)
+    fields = step.fields()
+    assert fields[0].key == "base" and fields[0].value is True
+    assert fields[0].label == "First bring in the Rhine Tribunal"
+    values = {f.key: f.value for f in fields if f.kind != "info"}
+    base_people = next(f for f in fields if f.key == "base_people")
+    assert base_people.show_if is not None and base_people.show_if(values)
+    assert not base_people.show_if({**values, "base": False})
+    confirm = step.apply(values)
+    assert isinstance(confirm, Confirm)
+    first, then = confirm.question.split("Then:")
+    assert "Tribunal: Rhine" in first
+    assert "1 roll table to Gottfried of Arnsberg" in then
+    assert target.tribunals == []  # nothing is added before Import
+    confirm.apply()
+    assert [t.name for t in target.tribunals] == ["Rhine"]
+    assert [t["name"] for t in _tables(target, "Gottfried of Arnsberg")] == [
+        "His moods"
+    ]
+
+
+def test_a_starter_imported_without_its_base_warns_and_comes_in_alone(
+    tmp_path, monkeypatch
+):
+    from ars_magica_manager.commands import Confirm, Form
+    from ars_magica_manager.forms import importing as import_forms
+
+    path = _starter_on_a_base(tmp_path, monkeypatch)
+    target = Saga(id="t", name="Elsewhere")
+    step = import_forms.import_file(target, "pack", path)
+    assert isinstance(step, Form)
+    values = {f.key: f.value for f in step.fields() if f.kind != "info"}
+    values["base"] = False
+    confirm = step.apply(values)
+    assert isinstance(confirm, Confirm) and "Then:" not in confirm.question
+    assert "Built on The Rhine, which this saga hasn't" in confirm.question
+    confirm.apply()
+    assert [t["name"] for t in _tables(target, "Gottfried of Arnsberg")] == [
+        "His moods"
+    ]
+
+
+def test_a_saga_that_has_the_base_tribunal_is_not_asked(tmp_path, monkeypatch):
+    from ars_magica_manager.forms import importing as import_forms
+
+    path = _starter_on_a_base(tmp_path, monkeypatch)
+    target = Saga(id="t", name="Rhine saga")
+    packs.start_from(target, packs.SHIPPED_DIR / "base.amm.json")
+    step = import_forms.import_file(target, "pack", path)
+    keys = {f.key for f in step.fields()} if hasattr(step, "fields") else set()
+    assert not any(k == "base" or k.startswith("base_") for k in keys)
+
+
+def test_the_dammerstein_starter_starts_from_the_rhine_pack():
+    found = packs.available(packs.SHIPPED_DIR, packs.STARTERS_DIR)
+    index = [Path(p).name for _l, p, _d in found].index("dammerstein.amm.json")
+    # The Rhine pack's stories are asked about under the starter too.
+    keys = [f.key for f in packs.start_story_fields(found)]
+    assert any(k.startswith(f"pack{index}_base_story_") for k in keys)
+    saga = Saga(id="s", name="S")
+    packs.start_from(saga, packs.STARTERS_DIR / "dammerstein.amm.json")
+    assert [t.name for t in saga.tribunals] == ["The Rhine Tribunal"]
+    assert "Dammërstein" in {c.name for c in saga.covenants}
+    assert len(saga.covenants) > 1
+    assert sum(1 for n in saga.neighbours if n.name == "The Black Forest") == 1
+    assert saga.books_in_play is None or "GotF" in saga.books_in_play
+
+
+def test_saga_starters_are_listed_after_the_book_packs():
+    found = packs.available(packs.SHIPPED_DIR, packs.STARTERS_DIR)
+    folders = [Path(path).parent for _label, path, _data in found]
+    first = folders.index(packs.STARTERS_DIR)
+    assert set(folders[:first]) == {packs.SHIPPED_DIR}
+    assert set(folders[first:]) == {packs.STARTERS_DIR}
+    labels = [
+        label for label, path, _data in found if Path(path).parent == packs.STARTERS_DIR
+    ]
+    assert any(label.startswith("Dammërstein (Rhine Tribunal):") for label in labels)
 
 
 def _magi_of_hermes() -> dict:

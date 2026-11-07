@@ -17,7 +17,7 @@ import json
 import re
 from collections.abc import Callable
 from copy import deepcopy
-from dataclasses import asdict, dataclass
+from dataclasses import asdict, dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -257,6 +257,14 @@ def pack_fields(saga: Saga, folder: Path) -> list[DialogField]:
     fields = [
         DialogField("name", "Pack name", "text", f"{saga.name} pack", required=True),
         DialogField(
+            "introduction",
+            "Introduction",
+            "area",
+            "",
+            hint="Optional: a few paragraphs on what the pack sets up, shown "
+            "under it in Start from a pack. A blank line starts a paragraph.",
+        ),
+        DialogField(
             "file",
             "File",
             "text",
@@ -355,7 +363,7 @@ def live(saga: Saga, values: dict[str, Any]) -> str:
 
 def _data(saga: Saga, values: dict[str, Any]) -> dict[str, Any]:
     tribunals, covenants, neighbours = chosen(saga, values)
-    return pack_data(
+    data = pack_data(
         saga,
         (values.get("name") or "").strip() or f"{saga.name} pack",
         tribunals,
@@ -364,6 +372,8 @@ def _data(saga: Saga, values: dict[str, Any]) -> dict[str, Any]:
         with_characters=bool(values.get("characters")),
         with_calendar=bool(values.get("calendar")),
     )
+    introduction = (values.get("introduction") or "").strip()
+    return {**data, transfer.INTRODUCTION: introduction} if introduction else data
 
 
 def export_pack(
@@ -884,6 +894,10 @@ def narrow(data: dict[str, Any], values: dict[str, Any]) -> dict[str, Any]:
 #: The packs shipped with the app, built from the Tribunal books
 #: (book_packs).
 SHIPPED_DIR = DATA_DIR / "packs"
+#: Saga starters shipped with the app: ready-made covenants and sagas,
+#: each a pack exported from a saga. Start from a pack lists them after
+#: the book packs.
+STARTERS_DIR = DATA_DIR / "saga_starters"
 
 
 # -- overlays: a supplement on top of the Tribunal packs --
@@ -1082,9 +1096,10 @@ def start_overlay_fields(
 PackChoice = tuple[str, str, dict[str, Any]]
 
 
-def available(*folders: Path) -> list[PackChoice]:
-    """The packs in `folders`, as (label, path, data) choices: the shipped
-    packs first when SHIPPED_DIR is given first."""
+def read_packs(*folders: Path) -> list[tuple[Path, dict[str, Any]]]:
+    """Every pack file in `folders`, read once, folder by folder in the
+    order given: books of magi and overlays too (choices() leaves them
+    out of Start from a pack; overlays() finds the shipped supplements)."""
     found = []
     for folder in folders:
         if not folder.is_dir():
@@ -1094,29 +1109,149 @@ def available(*folders: Path) -> list[PackChoice]:
                 data = transfer.read(path)
             except OSError, ValueError:
                 continue
-            if (
-                data.get("kind") == PACK
-                and not is_overlay(data)
-                and not is_book_of_magi(data)
-            ):
-                found.append((choice_label(data, path.stem), str(path), data))
+            if data.get("kind") == PACK:
+                found.append((path, data))
     return found
+
+
+def overlays(read: list[tuple[Path, dict[str, Any]]]) -> list[dict[str, Any]]:
+    """The shipped supplements among packs already read."""
+    return [
+        data for path, data in read if path.parent == SHIPPED_DIR and is_overlay(data)
+    ]
+
+
+def available(*folders: Path) -> list[PackChoice]:
+    """The packs in `folders`, as (label, path, data) choices, folder by
+    folder in the order given (Start from a pack gives SHIPPED_DIR, then
+    STARTERS_DIR, then the exports folder)."""
+    return choices(read_packs(*folders))
+
+
+def choices(read: list[tuple[Path, dict[str, Any]]]) -> list[PackChoice]:
+    """Start from a pack's choices among packs already read."""
+    found = [
+        (choice_label(data, path.stem), str(path), data)
+        for path, data in read
+        if not is_overlay(data) and not is_book_of_magi(data)
+    ]
+    listed = {path for _label, path, _data in found}
+    # A pack built on a book pack is offered only beside that pack, which
+    # is listed first; it is read here once, not again.
+    return [
+        choice
+        for choice in found
+        if _base_name(choice[2]) is None or _base_file(choice[2]) in listed
+    ]
+
+
+def _base_name(data: dict[str, Any]) -> str | None:
+    base = data.get(transfer.BASE)
+    return base.strip() if isinstance(base, str) and base.strip() else None
+
+
+def _base_file(data: dict[str, Any]) -> str:
+    return str(SHIPPED_DIR / f"{_base_name(data)}{transfer.SUFFIX}")
+
+
+def base_path(data: dict[str, Any]) -> Path | None:
+    """The shipped book pack `data` is built on, or None for a pack built
+    on none. Raises ValueError, naming the pack, when it names a pack the
+    app doesn't ship."""
+    name = _base_name(data)
+    if name is None:
+        return None
+    path = Path(_base_file(data))
+    if not path.is_file():
+        raise ValueError(
+            f"{data.get('name') or 'the pack'} is built on the book pack "
+            f"{name!r}, which this copy of the app doesn't have"
+        )
+    return path
+
+
+def base_tribunals(base: dict[str, Any]) -> list[str]:
+    """The Tribunals a base pack brings, as the app titles them."""
+    return [tribunals.title_text(str(t.get("name"))) for t in _held(base, "tribunals")]
+
+
+def lacks_base(saga: Saga, base: dict[str, Any]) -> bool:
+    """Whether `saga` lacks any of the base pack's Tribunals, by name."""
+    held = {t.name.strip().casefold() for t in saga.tribunals}
+    return any(
+        str(t.get("name") or "").strip().casefold() not in held
+        for t in _held(base, "tribunals")
+    )
+
+
+#: The key prefix of the base pack's choices in a form that imports a
+#: pack built on it.
+BASE_PREFIX = "base_"
+#: Import Data's key for bringing in the base pack first.
+BASE_KEY = "base"
+
+
+def base_values(values: dict[str, Any]) -> dict[str, Any]:
+    """The base pack's choices in `values`, keyed as its own form keys
+    them."""
+    return {
+        key.removeprefix(BASE_PREFIX): value
+        for key, value in values.items()
+        if key.startswith(BASE_PREFIX)
+    }
+
+
+def base_import_fields(base: dict[str, Any], saga: Saga) -> list[DialogField]:
+    """Import Data's tick for bringing in the base pack first, ticked,
+    with the base's own choices under it while it is ticked."""
+    names = " and ".join(base_tribunals(base)) or str(base.get("name"))
+
+    def ticked(values: dict[str, Any]) -> bool:
+        return bool(values.get(BASE_KEY, True))
+
+    def under(field: DialogField) -> DialogField:
+        inner = field.show_if
+
+        def show(values: dict[str, Any]) -> bool:
+            return ticked(values) and (inner is None or inner(base_values(values)))
+
+        return replace(field, key=BASE_PREFIX + field.key, show_if=show)
+
+    return [
+        DialogField(
+            BASE_KEY,
+            f"First bring in the {escape(names)}",
+            "check",
+            True,
+            hint=f"{escape(str(base.get('name')))}: {escape(summary(base))}. "
+            "This pack is built on it; without it, its tables for the "
+            "Tribunal's records come in on records of their own.",
+        ),
+        *(under(f) for f in import_fields(base, saga)),
+    ]
 
 
 def choice_label(data: dict[str, Any], fallback: str) -> str:
     """How Start from a pack lists a pack: its Tribunals and what else it
     holds ("Rhine Tribunal: 10 covenants, 74 characters"), or, holding
-    no Tribunal, its name (else `fallback`) and what it holds. Kept short
-    so the choice fits the form."""
+    no Tribunal, its name (else `fallback`) and what it holds. A pack whose
+    name doesn't name its Tribunals, such as one covenant exported from a
+    saga, leads with its name ("Dammerstein (Rhine Tribunal): 1 covenant"),
+    so it isn't mistaken for the Tribunal's book. Kept short so the choice
+    fits the form."""
     names = [
         tribunals.title_text(t["name"])
         for t in (data.get("saga") or {}).get("tribunals") or []
         if isinstance(t, dict) and t.get("name")
     ]
-    if names:
-        rest = summary(data, tribunals=False)
-        return f"{', '.join(names)}: {rest}" if rest else ", ".join(names)
-    return f"{data.get('name') or fallback}: {summary(data)}"
+    if not names:
+        return f"{data.get('name') or fallback}: {summary(data)}"
+    head = ", ".join(names)
+    name = str(data.get("name") or "").strip()
+    if name and not any(n.casefold() in name.casefold() for n in names):
+        head = f"{name} ({head})"
+    rest = summary(data, tribunals=False)
+    return f"{head}: {rest}" if rest else head
 
 
 #: The pack key naming the help topic that lists what a book pack
@@ -1162,16 +1297,61 @@ def start_prefix(index: int) -> str:
     return f"pack{index}_"
 
 
+def start_intro_fields(found: list[PackChoice]) -> list[DialogField]:
+    """Start from a pack's introduction of each pack that has one, shown
+    while it is the one chosen. The form scrolls, so it is shown whole."""
+    return [
+        DialogField(
+            f"{start_prefix(index)}introduction",
+            "",
+            "info",
+            introduction.strip(),
+            show_if=lambda values, path=path: values.get("pack") == path,
+        )
+        for index, (_label, path, data) in enumerate(found)
+        if (introduction := data.get(transfer.INTRODUCTION))
+    ]
+
+
+def start_base_fields(found: list[PackChoice]) -> list[DialogField]:
+    """Start from a pack's line naming the book pack a pack is built on,
+    shown while it is the one chosen."""
+    by_path = {path: data for _label, path, data in found}
+    fields = []
+    for index, (_label, path, data) in enumerate(found):
+        base = by_path.get(_base_file(data)) if _base_name(data) else None
+        if base is None:
+            continue
+        fields.append(
+            DialogField(
+                f"{start_prefix(index)}base",
+                "",
+                "info",
+                f"Starts from {escape(str(base.get('name')))} first, then "
+                f"brings {escape(str(data.get('name')))} in over it.",
+                show_if=lambda values, path=path: values.get("pack") == path,
+            )
+        )
+    return fields
+
+
 def start_story_fields(found: list[PackChoice]) -> list[DialogField]:
     """Start from a pack's ticks for the stories to begin, each pack's
     shown while it is the one chosen."""
     fields = []
+    by_path = {path: data for _label, path, data in found}
     for index, (_label, path, data) in enumerate(found):
-        fields += story_fields(
-            data,
-            prefix=start_prefix(index),
-            show_if=lambda values, path=path: values.get("pack") == path,
-        )
+
+        def chosen(values: dict[str, Any], path: str = path) -> bool:
+            return values.get("pack") == path
+
+        if _base_name(data) is not None and _base_file(data) in by_path:
+            fields += story_fields(
+                by_path[_base_file(data)],
+                prefix=start_prefix(index) + BASE_PREFIX,
+                show_if=chosen,
+            )
+        fields += story_fields(data, prefix=start_prefix(index), show_if=chosen)
     return fields
 
 
@@ -1184,7 +1364,11 @@ def start_choices(values: dict[str, Any]) -> dict[str, Any]:
         if key.startswith("overlay_"):
             found[key] = value
         head, _, rest = key.partition("_")
-        if head.startswith("pack") and head[4:].isdigit() and rest.startswith("story_"):
+        if (
+            head.startswith("pack")
+            and head[4:].isdigit()
+            and (rest.startswith(("story_", BASE_PREFIX + "story_")))
+        ):
             found[rest] = value
     return found
 
@@ -1194,15 +1378,27 @@ def start_from(
 ) -> list[str]:
     """Add the pack at `path` to `saga` (a new one): what it added, as
     notes. `values` holds the stories to begin (start_choices); the
-    rest come in dormant. The caller saves the saga."""
+    rest come in dormant. A pack built on a book pack starts from that
+    pack, then comes in over it. The caller saves the saga."""
     data = transfer.read(path)
     if data["kind"] != PACK:
         raise ValueError("it is not a content pack")
-    data = _dormant(data, values or {})
+    values = values or {}
+    found: list[str] = []
+    base = base_path(data)
+    if base is not None:
+        overlays = {k: v for k, v in values.items() if k.startswith("overlay_")}
+        found += start_from(saga, base, {**base_values(values), **overlays})
+        values = {
+            k: v
+            for k, v in values.items()
+            if not k.startswith((BASE_PREFIX, "overlay_"))
+        }
+    data = _dormant(data, values)
     plan = transfer.plan_import(saga, data, pictures=transfer.Pictures(path))
     transfer.apply(saga, plan)
-    found = notes(escape(f"Started from {plan.name}: {summary(data)}."))
+    found += notes(escape(f"Started from {plan.name}: {summary(data)}."))
     for overlay in shipped_overlays():
-        if (values or {}).get(overlay_key(overlay)):
+        if values.get(overlay_key(overlay)):
             found += apply_overlay(saga, overlay)
     return found + after_import(saga, data)

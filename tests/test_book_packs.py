@@ -497,6 +497,25 @@ def test_a_region_pack_imports_clean_and_is_listed_by_name():
     assert bare["saga"]["calendar"] == []
 
 
+def test_a_pack_of_part_of_a_tribunal_is_listed_by_its_own_name():
+    def pack(name: str) -> dict[str, Any]:
+        return {
+            "kind": packs.PACK,
+            "name": name,
+            "saga": {
+                "tribunals": [{"name": "The Rhine Tribunal"}],
+                "covenants": [{"name": "Dammerstein"}],
+            },
+        }
+
+    assert packs.choice_label(pack("Dammerstein"), "fallback") == (
+        "Dammerstein (Rhine Tribunal): 1 covenant"
+    )
+    # A Tribunal's book names its Tribunal, so it is listed by that alone.
+    book = pack("Guardians of the Forests: the Rhine Tribunal")
+    assert packs.choice_label(book, "fallback") == "Rhine Tribunal: 1 covenant"
+
+
 # -- The Lion and the Lily --
 
 

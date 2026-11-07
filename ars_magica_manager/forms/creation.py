@@ -86,11 +86,13 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
             placeholder="A one-line premise for the saga",
         )
     )
-    found = (
-        packs.available(packs.SHIPPED_DIR, storage.exports_dir())
+    # Each pack file is read once, for both the list and its supplements.
+    read = (
+        packs.read_packs(packs.SHIPPED_DIR, packs.STARTERS_DIR, storage.exports_dir())
         if saga is None
         else []
     )
+    found = packs.choices(read)
     if found:
         fields.append(
             DialogField(
@@ -103,8 +105,10 @@ def saga_fields(saga: Saga | None) -> list[DialogField]:
                 "and calendar are added to the new saga.",
             )
         )
+        fields += packs.start_base_fields(found)
+        fields += packs.start_intro_fields(found)
         fields += packs.start_story_fields(found)
-        fields += packs.start_overlay_fields(found, packs.shipped_overlays())
+        fields += packs.start_overlay_fields(found, packs.overlays(read))
     if saga is not None:
         fields.append(
             DialogField(

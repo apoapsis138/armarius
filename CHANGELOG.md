@@ -123,6 +123,17 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.83.0 — 2026-11-07
+
+### Peregrinatio
+
+- **Saga starters**: ready-made covenants and sagas now ship with the app, and **Start from a pack** lists them after the Tribunal books and before your own exports. The first is **Dammërstein**, the Stone House in the Rhine's Black Forest, made neutral so any troupe can start there.
+- A pack whose name doesn't name its Tribunal is listed by its own name first, "Dammërstein (Rhine Tribunal): 1 covenant, ...", so it isn't mistaken for the Tribunal's book.
+- A pack can carry an **introduction**: choose it in Start from a pack and a few paragraphs on what it sets up and where the saga begins appear under the choice. **Export Pack** has an Introduction box for it.
+- A saga starter can be **built on a Tribunal pack**: choosing Dammërstein starts the saga from the Rhine Tribunal pack first, its stories and supplements asked about too, then brings Dammërstein in over it. Importing Dammërstein into a saga without the Rhine (a Transylvanian saga growing west) offers to bring the Rhine in first, with its own choices so it can come in lightly; untick it and Dammërstein comes in alone.
+- Importing a pack over a saga that already has one of its places, threats, factions or lords now adds the pack's **roll tables** to the saga's copy, those it hasn't one of the same name of; nothing else on the record changes, and the preview lists them ("1 roll table to The valley of Durenmar").
+- Dammërstein comes with **53 roll tables**: what the valley, the shepherds, the carters and the Tribunal say; nights on the ridge and in the Echoing Halls; the harvests at the Well, the firs, the tarn and the tower; the baron's moods and his men at the gate; the Spinner's Court at night; and rumours of the Stone House at Durenmar and on the Black Forest Road, which land on the Rhine Tribunal's own places.
+
 ## 3.82.0 — 2026-11-06
 
 ### Orbis

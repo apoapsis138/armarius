@@ -16,6 +16,7 @@ Update from a File reads an export too, over the record it was made from
 from __future__ import annotations
 
 from collections.abc import Callable
+from copy import deepcopy
 from pathlib import Path
 from typing import Any
 
@@ -252,21 +253,54 @@ def _import_record(saga: Saga, kind: str, path: Path) -> Command:
 
 
 def _confirm_import(
-    saga: Saga, plan: transfer.ImportPlan, data: dict[str, Any] | None = None
+    saga: Saga,
+    plan: transfer.ImportPlan,
+    data: dict[str, Any] | None = None,
+    warning: str = "",
 ) -> Confirm:
     """`data`, a pack's, for what importing it does besides its records
-    (packs.after_import)."""
+    (packs.after_import); `warning` is said under the preview."""
 
     def apply() -> list[str]:
-        transfer.apply(saga, plan)
-        found = notes(
-            escape(f"Imported {plan.name} ({transfer.KIND_LABELS[plan.kind].lower()}).")
-        )
-        return found + (packs.after_import(saga, data) if data is not None else [])
+        return _imported(saga, plan, data)
 
-    return Confirm(
-        escape(transfer.preview(plan)), apply, yes_label="Import", title=TITLE
+    text = transfer.preview(plan) + (f"\n\n{warning}" if warning else "")
+    return Confirm(escape(text), apply, yes_label="Import", title=TITLE)
+
+
+def _imported(
+    saga: Saga, plan: transfer.ImportPlan, data: dict[str, Any] | None
+) -> list[str]:
+    transfer.apply(saga, plan)
+    found = notes(
+        escape(f"Imported {plan.name} ({transfer.KIND_LABELS[plan.kind].lower()}).")
     )
+    return found + (packs.after_import(saga, data) if data is not None else [])
+
+
+def _confirm_with_base(
+    saga: Saga,
+    base: tuple[dict[str, Any], transfer.Pictures],
+    pack: tuple[dict[str, Any], transfer.Pictures | None],
+) -> Confirm:
+    """Import a pack's base book pack, then the pack over it. The preview
+    plans the pack over a copy of the saga holding the base's records, so
+    it shows what will match; Import plans both again on the saga
+    itself, in order."""
+    trial = deepcopy(saga)
+    first = transfer.plan_import(trial, base[0], pictures=base[1])
+    transfer.add_records(trial, first)
+    then = transfer.plan_import(trial, pack[0], pictures=pack[1])
+    text = f"{transfer.preview(first)}\n\nThen:\n\n{transfer.preview(then)}"
+
+    def apply() -> list[str]:
+        found: list[str] = []
+        for data, pictures in (base, pack):
+            plan = transfer.plan_import(saga, data, pictures=pictures)
+            found += _imported(saga, plan, data)
+        return found
+
+    return Confirm(escape(text), apply, yes_label="Import", title=TITLE)
 
 
 def _import_pack(
@@ -277,7 +311,13 @@ def _import_pack(
     A pack with nothing to leave out goes straight to the preview."""
     if packs.is_overlay(data):
         return _import_overlay(saga, data)
+    base_file = packs.base_path(data)
+    base = transfer.read(base_file) if base_file is not None else None
+    if base is not None and not packs.lacks_base(saga, base):
+        base = None
     fields = packs.import_fields(data, saga)
+    if base is not None:
+        fields = packs.base_import_fields(base, saga) + fields
     if not fields:
         return _confirm_import(
             saga, transfer.plan_import(saga, data, pictures=pictures), data
@@ -286,10 +326,27 @@ def _import_pack(
     def apply(values: dict[str, Any]) -> Command:
         try:
             chosen = packs.narrow(data, values)
+            if (
+                base is not None
+                and base_file is not None
+                and values.get(packs.BASE_KEY)
+            ):
+                first = packs.narrow(base, packs.base_values(values))
+                return _confirm_with_base(
+                    saga,
+                    (first, transfer.Pictures(base_file)),
+                    (chosen, pictures),
+                )
             plan = transfer.plan_import(saga, chosen, pictures=pictures)
         except (ValueError, KeyError, TypeError) as problem:
             return Refuse(TITLE, f"Couldn't import the pack: {escape(str(problem))}")
-        return _confirm_import(saga, plan, chosen)
+        warning = (
+            f"Built on {base.get('name')}, which this saga hasn't: its roll "
+            "tables for that Tribunal's records come in on records of their own."
+            if base is not None
+            else ""
+        )
+        return _confirm_import(saga, plan, chosen, warning)
 
     def live(values: dict[str, Any]) -> str:
         return f"Brings {escape(packs.summary(packs.narrow(data, values)))}."
