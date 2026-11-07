@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.2 — 2026-11-07
+
+### Fundamenta
+
+- **A season's side effects are applied one kind at a time**: what a planned season does besides experience (Faith Points, an insight, Warping, the Opening of a hedge tradition, a found apprentice, the Arts opened, a book read or glossed, vis spent, book work, a supplement's work, and the laboratory set up by a new one) is now worked out as a list of small effects and applied by one function each, in a fixed order. Seasons advance exactly as before; the first part of a larger cleanup, with lab work still to move.
+
 ## 3.85.1 — 2026-11-07
 
 ### Fundamenta

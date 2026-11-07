@@ -124,9 +124,11 @@ def test_the_season_search_adds_a_ranked_bonisagus_acclaim():
         for note in outcome.notes
     )
     # Taken by right: another magus's apprentice, not a new child (DE p. 270).
-    assert not outcome.found_child
+    assert not outcome.effect_of(activities.FoundChild)
     plan.die = 6
-    assert activities.outcome(character, plan, saga, random.Random(0)).found_child
+    assert activities.outcome(character, plan, saga, random.Random(0)).effect_of(
+        activities.FoundChild
+    )
 
 
 def test_no_acclaim_keeps_the_core_search():

@@ -1487,16 +1487,18 @@ def set_up_new_lab(saga: Saga, magus: Character, outcome: rules.Outcome) -> Labo
         )
     )
     saga.laboratories.append(lab)
-    outcome.new_lab_id = lab.id
     return lab
 
 
-def plan_lab_finish(saga: Saga, outcome: rules.Outcome) -> SeasonPlan | None:
-    """After a new laboratory's first season: its second, planned as lab
+def plan_lab_finish(
+    saga: Saga, outcome: rules.Outcome, new_lab_id: str
+) -> SeasonPlan | None:
+    """After a new laboratory's first season (`new_lab_id`, the one set up for
+    the magus): its second, planned as lab
     work in it for the magus's next season (the saga's season once the
     date has moved on), unless they already have a plan for it."""
     magus = saga.character(outcome.character_id)
-    lab = saga.laboratory(outcome.new_lab_id) if outcome.new_lab_id else None
+    lab = saga.laboratory(new_lab_id)
     if magus is None or lab is None:
         return None
     season, year = next_season(outcome.plan.season, outcome.plan.year)

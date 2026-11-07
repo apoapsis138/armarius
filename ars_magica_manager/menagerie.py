@@ -1300,7 +1300,8 @@ def _planned_points(
             f"{plan.book_level} = {work.points_gained}",
             [],
         )
-    supplement = worked.supplement
+    effect = worked.effect_of(activities.SupplementEffect)
+    supplement = effect.work if effect is not None else None
     if supplement is not None and supplement.progress:
         _kind, _name, _target, points = supplement.progress[0]
         return points, escape(supplement.notes[-1] if supplement.notes else ""), []

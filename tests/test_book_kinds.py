@@ -103,7 +103,7 @@ def test_a_commentary_notes_an_unread_summa_until_it_is_read():
     # A season on the summa is recorded when it is applied.
     summa_plan = SeasonPlan("ana", 1220, "Spring", activities.READ, book_id="physics")
     outcome = activities.outcome(ana, summa_plan, saga)
-    assert outcome.summa == "physics"
+    assert outcome.effect_of(activities.ReadBook).summa == "physics"
     advance.apply(saga, [outcome])
     assert ana.summae_read == ["physics"]
     notes = activities.outcome(ana, plan, saga).notes

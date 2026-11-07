@@ -639,7 +639,8 @@ def _finish(
     for line in done.forecast:
         message += f" {line}"
     for outcome in finish:
-        planned = seasons.plan_lab_finish(saga, outcome)
+        new_lab = done.new_labs.get(outcome.character_id)
+        planned = seasons.plan_lab_finish(saga, outcome, new_lab) if new_lab else None
         magus = saga.character(outcome.character_id)
         lab = saga.laboratory(planned.lab_id) if planned else None
         if magus is not None and lab is not None:

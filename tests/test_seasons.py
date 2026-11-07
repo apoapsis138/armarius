@@ -256,7 +256,7 @@ def test_apply_adds_xp_writes_the_diary_and_drops_the_plan():
         saga, _plan(magus, rules.PRACTICE, "ability:Latin", details="Aloud")
     )
     applied = seasons.apply(saga, seasons.resolve(saga))
-    assert applied == [magus]
+    assert applied.characters == [magus]
     assert magus.abilities[0].xp == ability_xp(4) + 4
     entry = magus.diary[-1]
     assert (entry.year, entry.season, entry.activity) == (1220, "Spring", "Practice")
@@ -317,7 +317,7 @@ def test_a_plan_that_cant_be_carried_out_is_skipped_and_dropped():
     seasons.set_plan(saga, _plan(magus, rules.PRACTICE, "art:Creo"))
     summary = strip_markup(seasons.advance_summary(saga))
     assert "Tiberius's plan can't be carried out: Arts can't be practised" in summary
-    assert seasons.apply(saga, seasons.resolve(saga)) == []
+    assert seasons.apply(saga, seasons.resolve(saga)).characters == []
     assert magus.diary == [] and saga.season_plans == []
 
 

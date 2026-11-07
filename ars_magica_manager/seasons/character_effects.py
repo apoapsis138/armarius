@@ -77,8 +77,9 @@ def diary_entry(saga: Saga, character: Character, worked: rules.Outcome) -> Diar
     lines += worked.notes
     if worked.lab_work is not None:
         lines.append(work_text(worked.lab_work, plan) + ".")
-    if worked.book_work is not None:
-        lines.append(book_text(worked.book_work, plan) + ".")
+    book = worked.effect_of(rules.BookEffect)
+    if book is not None:
+        lines.append(book_text(book.work, plan) + ".")
     if plan.days_away:
         lines.append(f"{plan.days_away} days away from the laboratory.")
     if plan.months_lost and activity and activity.distractable:

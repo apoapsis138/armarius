@@ -166,7 +166,8 @@ def drop_later(saga: Saga, plan: SeasonPlan) -> None:
 
 
 def _finished(outcome: rules.Outcome) -> bool:
-    work = outcome.lab_work or outcome.book_work
+    book = outcome.effect_of(rules.BookEffect)
+    work = outcome.lab_work or (book.work if book is not None else None)
     return outcome.ok and work is not None and work.finished
 
 

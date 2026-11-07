@@ -236,7 +236,7 @@ def test_vis_study_with_a_typed_die():
     worked = _outcome(saga, plan)
     # Creo 4: 1 pawn; no covenant aura: Source Quality = 7.
     assert _xp(worked) == [("art:Creo", 7)]
-    assert worked.vis_spent == ("character", "Creo", 1)
+    assert worked.effect_of(rules.SpendVis) == rules.SpendVis("character", "Creo", 1)
     seasons.set_plan(saga, plan)
     seasons.apply(saga, seasons.resolve(saga))
     assert saga.characters[0].raw_vis == {"creo": 2}
@@ -309,7 +309,7 @@ def test_a_vis_study_botch_warps_and_a_double_one_brings_twilight():
     student.arts["creo"] = ArtScore(xp=art_xp(10))  # 2 pawns: 2 botch dice
     plan = _plan("tib", rules.VIS_STUDY, "art:Creo", die=0, vis_from="character")
     worked = _outcome(saga, plan, _Zeros())
-    assert worked.warping == 2
+    assert worked.effect_of(rules.Warp).points == 2
     seasons.set_plan(saga, plan)
     seasons.apply(saga, seasons.resolve(saga, _Zeros()))
     assert warping.total_points(student) >= 2

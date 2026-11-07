@@ -180,7 +180,7 @@ def test_a_realia_is_studied_as_often_as_its_quality_and_shared():
     plan = SeasonPlan("ana", 1220, "Spring", activities.READ, book_id="bones")
     saga.season_plans.append(plan)
     first = activities.outcome(ana, plan, saga)
-    assert not first.problems and first.realia
+    assert not first.problems and first.effect_of(activities.ReadBook).realia
     advance.apply(saga, [first])
     assert ana.tractatus_read == ["bones"]
     again = SeasonPlan("ana", 1220, "Summer", activities.READ, book_id="bones")

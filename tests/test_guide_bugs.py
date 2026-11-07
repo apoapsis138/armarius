@@ -458,8 +458,10 @@ def test_a_found_child_is_added_and_opening_the_arts_makes_the_apprentice():
     magus.hermetic.house = "house_bonisagus"
     saga = Saga(id="s", name="S", characters=[magus])
     plan = SeasonPlan("m", 1220, "Summer", aps.SEARCH)
-    found = activities.Outcome("m", plan, None, found_child=True)
-    advance._found_child(saga, magus, found)
+    found = activities.Outcome("m", plan, None, effects=[activities.FoundChild()])
+    advance.EFFECT_APPLIERS[activities.FoundChild](
+        saga, magus, found, activities.FoundChild()
+    )
     child = saga.characters[-1]
     assert child.background.year_born == 1213 and child.in_creation
     assert any(vf.vf_id == "vf_the_gift" for vf in child.virtues_flaws)

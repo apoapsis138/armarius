@@ -84,14 +84,16 @@ def resolve(saga: Saga, rng: random.Random | None = None) -> list[rules.Outcome]
     return rules.outcomes(saga, due_plans(saga), rng)
 
 
-def _apply_insight(character: Character, outcome: rules.Outcome) -> None:
+def _seek_insight(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.SeekInsight
+) -> None:
     """A season seeking an insight: an insight gained on the goal, and the
     season in its Research log either way."""
     plan = outcome.plan
     if plan.activity != ex.INTEGRATE or not plan.research.strip():
         return
     goal = ex.goal(character, plan.research, plan.research_kind)
-    if outcome.insight:
+    if effect.gained:
         goal.insights += 1
     research.record(
         goal,
@@ -101,7 +103,7 @@ def _apply_insight(character: Character, outcome: rules.Outcome) -> None:
             kind="insight",
             work=plan.title.strip(),
             result=" ".join(outcome.notes),
-            insight=bool(outcome.insight),
+            insight=effect.gained,
         ),
     )
 
@@ -122,11 +124,11 @@ def _record_raised(character: Character, outcome: rules.Outcome) -> None:
 FOUND_CHILD_AGE = 7
 
 
-def _found_child(saga: Saga, character: Character, outcome: rules.Outcome) -> None:
+def _found_child(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.FoundChild
+) -> None:
     """A search for an apprentice that found a Gifted child: the child,
     added as a character at the magus's covenant, in creation (DE p. 269)."""
-    if not outcome.found_child:
-        return
     child = Character(
         id=new_instance_id(),
         name=f"A Gifted child found by {character.name}",
@@ -144,14 +146,16 @@ def _found_child(saga: Saga, character: Character, outcome: rules.Outcome) -> No
     saga.characters.append(child)
 
 
-def _apply_apprentice(saga: Saga, outcome: rules.Outcome) -> None:
-    """An apprentice found, his Arts opened, or a Hermetic Virtue taught."""
-    searcher = saga.character(outcome.character_id)
-    if searcher is not None:
-        _found_child(saga, searcher, outcome)
-    work = outcome.apprentice_work
+def _apply_apprentice(
+    saga: Saga,
+    character: Character,
+    outcome: rules.Outcome,
+    effect: rules.ApprenticeEffect,
+) -> None:
+    """His Arts opened, or a Hermetic Virtue taught."""
+    work = effect.work
     student = saga.character(outcome.plan.subject_id)
-    if work is None or student is None:
+    if student is None:
         return
     if outcome.plan.activity == aps.OPEN_ARTS:
         magus = saga.character(outcome.plan.character_id)
@@ -162,12 +166,11 @@ def _apply_apprentice(saga: Saga, outcome: rules.Outcome) -> None:
             student.virtues_flaws.append(VirtueFlawInstance(work.flaw_id))
 
 
-def _apply_warping(saga: Saga, character: Character, outcome: rules.Outcome) -> None:
+def _apply_warping(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.Warp
+) -> None:
     """A botch's Warping Points, with the Twilight check at two or more."""
-    if outcome.warping:
-        gain_warping(
-            saga, character, outcome.warping, random.Random(), aura=outcome.warping_aura
-        )
+    gain_warping(saga, character, effect.points, random.Random(), aura=effect.aura)
 
 
 def _apply_agency(character: Character, outcome: rules.Outcome) -> None:
@@ -188,12 +191,11 @@ def _apply_agency(character: Character, outcome: rules.Outcome) -> None:
         )
 
 
-def _apply_warping_and_agency(
+def _apply_season_wide(
     saga: Saga, character: Character, outcome: rules.Outcome
 ) -> None:
-    """A botch's Warping, an Adventure's Agency experience, and a season's
-    Reputation for each deep cover kept up (HoH:S p. 88)."""
-    _apply_warping(saga, character, outcome)
+    """An Adventure's Agency experience, and a season's Reputation for each
+    deep cover kept up (HoH:S p. 88)."""
     _apply_agency(character, outcome)
     outcome.notes += house_magic.keep_covers(character)
     plan = outcome.plan
@@ -201,12 +203,117 @@ def _apply_warping_and_agency(
         character.campaign_seasons.append(f"{plan.year} {plan.season}")
 
 
-def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
+def _apply_book(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.BookEffect
+) -> None:
+    apply_book_work(saga, character, outcome.plan, effect.work)
+
+
+def _apply_supplement(
+    saga: Saga,
+    character: Character,
+    outcome: rules.Outcome,
+    effect: rules.SupplementEffect,
+) -> None:
+    apply_supplement(saga, character, outcome.plan, effect.work)
+
+
+def _gain_faith(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.GainFaith
+) -> None:
+    character.background.faith_points += effect.points
+
+
+def _open_tradition(
+    saga: Saga,
+    character: Character,
+    outcome: rules.Outcome,
+    effect: rules.TraditionEffect,
+) -> None:
+    """Only an Opening is applied here; a tradition's own work is carried."""
+    if outcome.plan.activity != rules.OPEN_TRADITION:
+        return
+    opened = saga.character(outcome.plan.subject_id)
+    if opened is not None:
+        tradition_seasons.apply_opening(opened, effect.work)
+
+
+def _read_book(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.ReadBook
+) -> None:
+    """The tractatus or summa read is recorded (a realia as often as it is
+    read), and a book glossed while reading is marked."""
+    if effect.tractatus and (
+        effect.realia or effect.tractatus not in character.tractatus_read
+    ):
+        character.tractatus_read.append(effect.tractatus)
+    if effect.summa and effect.summa not in character.summae_read:
+        character.summae_read.append(effect.summa)
+    if effect.glossed:
+        glossed = next((b for b in saga.books if b.id == effect.glossed), None)
+        if glossed is not None:
+            glossed.glossed = True
+
+
+def _spend_vis(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.SpendVis
+) -> None:
+    pool = rules.vis_pool(saga, character, outcome.plan)
+    key = effect.art.lower()
+    pool[key] = max(0, pool.get(key, 0) - effect.pawns)
+    if not pool[key]:
+        del pool[key]
+
+
+#: How each kind of effect changes the saga (the kinds are rules.EFFECT_ORDER).
+EFFECT_APPLIERS: dict[type, Callable[..., None]] = {
+    rules.BookEffect: _apply_book,
+    rules.SupplementEffect: _apply_supplement,
+    rules.GainFaith: _gain_faith,
+    rules.SeekInsight: _seek_insight,
+    rules.Warp: _apply_warping,
+    rules.TraditionEffect: _open_tradition,
+    rules.FoundChild: _found_child,
+    rules.ApprenticeEffect: _apply_apprentice,
+    rules.ReadBook: _read_book,
+    rules.SpendVis: _spend_vis,
+}
+
+
+def _apply_effects(
+    saga: Saga, character: Character, outcome: rules.Outcome, kinds: Sequence[type]
+) -> None:
+    """Apply the season's effects of these `kinds`, in EFFECT_ORDER."""
+    for kind in kinds:
+        for effect in outcome.effects:
+            if isinstance(effect, kind):
+                EFFECT_APPLIERS[kind](saga, character, outcome, effect)
+
+
+#: Effects applied before the season-wide ones (Agency, covers, campaigns),
+#: and those after.
+_FIRST_EFFECTS = rules.EFFECT_ORDER[:2]
+_EARLY_EFFECTS = rules.EFFECT_ORDER[2:5]
+_LATE_EFFECTS = rules.EFFECT_ORDER[5:]
+
+
+@dataclass
+class Applied:
+    """What applying a season's outcomes did."""
+
+    #: The characters whose season was applied.
+    characters: list[Character]
+    #: The laboratory set up for each magus whose season set one up (by the
+    #: magus's id).
+    new_labs: dict[str, str] = field(default_factory=dict)
+
+
+def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> Applied:
     """Apply outcomes worked out by resolve(): add each one's experience and
     write its Diary entry. Outcomes that can't be carried out are skipped.
     Then the current season's plans (and any older ones left over) are
-    removed. Returns the characters whose season was applied."""
-    applied: list[Character] = []
+    removed. Returns whose season was applied and the laboratories set up."""
+    applied = Applied([])
     for outcome in worked:
         character = saga.character(outcome.character_id)
         if character is None or not outcome.ok:
@@ -218,42 +325,15 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> list[Character]:
         if outcome.lab_work is not None:
             apply_lab_work(saga, character, outcome)
         if outcome.plan.activity == ls.NEW:
-            set_up_new_lab(saga, character, outcome)
-        if outcome.book_work is not None:
-            apply_book_work(saga, character, outcome.plan, outcome.book_work)
-        if outcome.faith:
-            character.background.faith_points += outcome.faith
-        if outcome.supplement is not None:
-            apply_supplement(saga, character, outcome.plan, outcome.supplement)
-        _apply_insight(character, outcome)
-        _apply_warping_and_agency(saga, character, outcome)
-        hedge = outcome.tradition_work
-        if hedge is not None and outcome.plan.activity == rules.OPEN_TRADITION:
-            opened = saga.character(outcome.plan.subject_id)
-            if opened is not None:
-                tradition_seasons.apply_opening(opened, hedge)
-        _apply_apprentice(saga, outcome)
-        if outcome.tractatus and (
-            outcome.realia or outcome.tractatus not in character.tractatus_read
-        ):
-            character.tractatus_read.append(outcome.tractatus)
-        if outcome.summa and outcome.summa not in character.summae_read:
-            character.summae_read.append(outcome.summa)
-        if outcome.glossed:
-            glossed = next((b for b in saga.books if b.id == outcome.glossed), None)
-            if glossed is not None:
-                glossed.glossed = True
-        if outcome.vis_spent is not None:
-            pool = rules.vis_pool(saga, character, outcome.plan)
-            _, art, pawns = outcome.vis_spent
-            key = art.lower()
-            pool[key] = max(0, pool.get(key, 0) - pawns)
-            if not pool[key]:
-                del pool[key]
+            applied.new_labs[character.id] = set_up_new_lab(saga, character, outcome).id
+        _apply_effects(saga, character, outcome, _FIRST_EFFECTS)
+        _apply_effects(saga, character, outcome, _EARLY_EFFECTS)
+        _apply_season_wide(saga, character, outcome)
+        _apply_effects(saga, character, outcome, _LATE_EFFECTS)
         _lose_eucrasia(character, outcome)
         character.diary.append(diary_entry(saga, character, outcome))
         _count_grog_season(character)
-        applied.append(character)
+        applied.characters.append(character)
     house_virtue.count_seasons(saga, [o.plan for o in worked if o.ok])
     now = (saga.current_year, SEASONS.index(saga.current_season))
     saga.season_plans = [
@@ -482,6 +562,8 @@ class Advanced:
     #: Work that runs until done whose seasons were worked out again: a
     #: line for each change (repeat.reforecast).
     forecast: list[str] = field(default_factory=list)
+    #: The laboratory set up for each magus (by id) whose season set one up.
+    new_labs: dict[str, str] = field(default_factory=dict)
 
 
 def finish_season(
@@ -538,7 +620,9 @@ def finish_season(
     )
     # A new season brings new days: every device's uses come back.
     new_day(saga)
-    return Advanced(record, applied, year_end, added, forecast)
+    return Advanced(
+        record, applied.characters, year_end, added, forecast, applied.new_labs
+    )
 
 
 def neglected_upkeep(saga: Saga) -> list[SeasonRecordLine]:

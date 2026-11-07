@@ -668,8 +668,9 @@ def live_text(saga: Saga, character: Character, plan: SeasonPlan) -> str:
     lines += [escape(n) for n in worked.notes]
     if worked.lab_work is not None:
         lines.insert(0, escape(work_text(worked.lab_work, plan)))
-    if worked.book_work is not None:
-        lines.insert(0, escape(book_text(worked.book_work, plan)))
+    book = worked.effect_of(rules.BookEffect)
+    if book is not None:
+        lines.insert(0, escape(book_text(book.work, plan)))
     if worked.pending_roll:
         lines.append("[dim]The die is rolled when the season is applied.[/]")
     note = working_seasons_note(character, plan)

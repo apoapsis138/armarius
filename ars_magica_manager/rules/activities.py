@@ -1397,6 +1397,112 @@ class XpGain:
         return self.before + self.result.xp
 
 
+@dataclass(frozen=True)
+class BookEffect:
+    """Book work: what the season does to books."""
+
+    work: book_seasons.BookWork
+
+
+@dataclass(frozen=True)
+class SupplementEffect:
+    """What a supplement season does besides experience (decision 38)."""
+
+    work: supplement_work.SupplementWork
+
+
+@dataclass(frozen=True)
+class FoundChild:
+    """A search for an apprentice found a Gifted child (DE p. 269)."""
+
+
+@dataclass(frozen=True)
+class SpendVis:
+    """Vis study: the pawns of `art` to spend from `pool` ("character",
+    "laboratory" or "covenant")."""
+
+    pool: str
+    art: str
+    pawns: int
+
+
+@dataclass(frozen=True)
+class ReadBook:
+    """Reading a book: the tractatus (and whether it is a realia, which may
+    be studied as many times as its Quality) or the summa read, to record
+    it, and the book glossed while reading."""
+
+    tractatus: str | None = None
+    realia: bool = False
+    summa: str | None = None
+    glossed: str | None = None
+
+
+@dataclass(frozen=True)
+class ApprenticeEffect:
+    """Apprentice work: the Arts opened, or a Hermetic Virtue taught."""
+
+    work: apprentice_seasons.ApprenticeWork
+
+
+@dataclass(frozen=True)
+class TraditionEffect:
+    """An Opening to a hedge tradition, or a tradition's own work."""
+
+    work: tradition_seasons.TraditionWork
+
+
+@dataclass(frozen=True)
+class SeekInsight:
+    """Seeking an insight on a research goal: whether one was gained."""
+
+    gained: bool
+
+
+@dataclass(frozen=True)
+class GainFaith:
+    """Faith Points gained (Good Works)."""
+
+    points: int
+
+
+@dataclass(frozen=True)
+class Warp:
+    """A botch's Warping Points (one per zero) and the aura it happened in,
+    given when the season is applied (and Twilight checked at 2+)."""
+
+    points: int
+    aura: int
+
+
+#: What a season does to the saga besides experience, as data: seasons/advance
+#: applies each kind (one function per kind), in this order.
+SeasonEffect = (
+    BookEffect
+    | SupplementEffect
+    | GainFaith
+    | SeekInsight
+    | Warp
+    | TraditionEffect
+    | FoundChild
+    | ApprenticeEffect
+    | ReadBook
+    | SpendVis
+)
+EFFECT_ORDER: tuple[type, ...] = (
+    BookEffect,
+    SupplementEffect,
+    GainFaith,
+    SeekInsight,
+    Warp,
+    TraditionEffect,
+    FoundChild,
+    ApprenticeEffect,
+    ReadBook,
+    SpendVis,
+)
+
+
 @dataclass
 class Outcome:
     """What a planned season gives, worked out from the saga before the
@@ -1409,46 +1515,22 @@ class Outcome:
     problems: list[str] = field(default_factory=list)
     #: How the Source Quality is (or was) worked out, rolls, botches.
     notes: list[str] = field(default_factory=list)
-    #: A search for an apprentice found a Gifted child (DE p. 269).
-    found_child: bool = False
-    #: Vis study: (pool "character"/"laboratory", art, pawns) to spend.
-    vis_spent: tuple[str, str, int] | None = None
-    #: Reading a tractatus: its id, to mark it read.
-    tractatus: str | None = None
-    #: That tractatus is a realia: each season studying it is recorded
-    #: (it may be studied as many times as its Quality).
-    realia: bool = False
-    #: Reading a summa: its id, to record it was studied (a commentary on
-    #: it can then be read).
-    summa: str | None = None
-    #: Glossing while reading: the book glossed.
-    glossed: str | None = None
+    #: What the season does to the saga besides experience, in the order
+    #: the handler worked it out (seasons/advance applies them in
+    #: EFFECT_ORDER).
+    effects: list[SeasonEffect] = field(default_factory=list)
     #: Vis study still to roll (a preview made without a die).
     pending_roll: bool = False
     #: Lab work: what the season in the laboratory does.
     lab_work: lab_seasons.LabWork | None = None
-    #: Book work: what the season does to books.
-    book_work: book_seasons.BookWork | None = None
-    #: Apprentice work.
-    apprentice_work: apprentice_seasons.ApprenticeWork | None = None
-    #: An Opening to a hedge tradition, or a tradition's own work.
-    tradition_work: tradition_seasons.TraditionWork | None = None
-    #: Seeking an insight: whether one was gained.
-    insight: bool = False
-    #: Faith Points gained (Good Works).
-    faith: int = 0
-    #: What a supplement season does besides experience (decision 38).
-    supplement: supplement_work.SupplementWork | None = None
-    #: Setting up a new laboratory: its id, once the season is applied.
-    new_lab_id: str | None = None
-    #: A botch's Warping Points (one per zero) and the aura it happened in,
-    #: given when the season is applied (and Twilight checked at 2+).
-    warping: int = 0
-    warping_aura: int = 0
 
     @property
     def ok(self) -> bool:
         return not self.problems
+
+    def effect_of[E](self, kind: type[E]) -> E | None:
+        """The season's effect of `kind`, if it has one."""
+        return next((e for e in self.effects if isinstance(e, kind)), None)
 
 
 def _gain(
@@ -1668,8 +1750,9 @@ def outcome(
         and saga is not None
         and plan.activity in supplement_seasons.BY_KEY
     ):
-        result.supplement = supplement_work.work(saga, character, plan, rng)
-        result.notes += result.supplement.notes
+        supplement = supplement_work.work(saga, character, plan, rng)
+        result.effects.append(SupplementEffect(supplement))
+        result.notes += supplement.notes
     if found or activity is None or not activity.gives_xp:
         return result
     result = _outcome(character, plan, saga, rng, result, activity)
@@ -2022,7 +2105,9 @@ def _book_outcome(
     rng: random.Random | None,
     result: Outcome,
 ) -> None:
-    _, result.book_work = book_seasons.work(saga, character, plan)
+    _, work = book_seasons.work(saga, character, plan)
+    if work is not None:
+        result.effects.append(BookEffect(work))
     result.gains.append(
         _exposure(
             character, book_seasons.exposure_ability(character, plan), year=plan.year
@@ -2074,8 +2159,8 @@ def _tradition_outcome(
                 year=plan.year,
             )
         )
-    result.tradition_work = work
     if work is not None:
+        result.effects.append(TraditionEffect(work))
         result.notes += work.notes
 
 
@@ -2098,8 +2183,8 @@ def _apprentice_outcome(
     result: Outcome,
 ) -> None:
     _, work = apprentice_seasons.work(saga, character, plan)
-    result.apprentice_work = work
     if work is not None:
+        result.effects.append(ApprenticeEffect(work))
         result.notes += work.notes
         if plan.activity == apprentice_seasons.TEACH_VIRTUE:
             result.notes.append(
@@ -2132,7 +2217,8 @@ def _apprentice_outcome(
         # Only a child found is a new character: one taken by right is
         # another magus's apprentice already (DE p. 270), whom the
         # storyguide names.
-        result.found_child = not botched and total >= acclaim.APPRENTICE_EASE
+        if not botched and total >= acclaim.APPRENTICE_EASE:
+            result.effects.append(FoundChild())
         return
     if botched:
         # A botch dupes the searcher (DE p. 269).
@@ -2151,7 +2237,8 @@ def _apprentice_outcome(
             else "no apprentice found this season."
         )
     )
-    result.found_child = total >= apprentice_seasons.SEARCH_EASE
+    if total >= apprentice_seasons.SEARCH_EASE:
+        result.effects.append(FoundChild())
 
 
 # Integrating an insight into Arcane Discovery: a roll.
@@ -2174,9 +2261,10 @@ def _integrate_outcome(
         result.pending_roll = True
         return
     theory = laboratory_seasons.magic_theory(character)
-    result.insight, note = experiment.insight_roll(
+    gained, note = experiment.insight_roll(
         character, plan, rng or random.Random(), theory, saga
     )
+    result.effects.append(SeekInsight(bool(gained)))
     result.notes.append(note)
 
 
@@ -2215,9 +2303,11 @@ def _supplement_outcome(
         result.gains.append(
             _gain(character, subject, quality or 0, kind, 0, year=plan.year)
         )
-    result.faith = simple.faith
-    result.supplement = supplement_work.work(saga, character, plan, rng)
-    result.notes += result.supplement.notes
+    if simple.faith:
+        result.effects.append(GainFaith(simple.faith))
+    supplement = supplement_work.work(saga, character, plan, rng)
+    result.effects.append(SupplementEffect(supplement))
+    result.notes += supplement.notes
 
 
 # Assisting in another's laboratory: Exposure in Magic Theory.
@@ -2427,7 +2517,7 @@ def _reading_outcome(
     assert subject is not None and quality is not None
     limit = book.level if book.type != "Tractatus" else None
     bonuses = _reading_lines(saga, character, plan, book, quality)
-    result.realia = book.opus == book_kinds.REALIA
+    realia = book.opus == book_kinds.REALIA
     result.gains.append(
         _gain(
             character,
@@ -2443,13 +2533,16 @@ def _reading_outcome(
             ),
         )
     )
-    if book.type == "Tractatus":
-        result.tractatus = book.id
-    else:
-        result.summa = book.id
+    result.effects.append(
+        ReadBook(
+            tractatus=book.id if book.type == "Tractatus" else None,
+            realia=realia,
+            summa=None if book.type == "Tractatus" else book.id,
+            glossed=book.id if plan.gloss else None,
+        )
+    )
     result.notes += _book_kind_notes(saga, character, book)
     if plan.gloss:
-        result.glossed = book.id
         if book.glossed:
             result.notes.append(
                 f"{book.name} is already glossed: another gloss adds no Quality."
@@ -2601,7 +2694,7 @@ def _vis_study_outcome(
     botch_dice = pawns + hybrid.foreign_botch_dice(
         character, realm, aura, in_regio=in_regio
     )
-    result.vis_spent = (plan.vis_from or "character", art, pawns)
+    result.effects.append(SpendVis(plan.vis_from or "character", art, pawns))
     result.notes.append(
         f"Source Quality: stress die + aura {aura_mod:+d} ({aura} {realm}); "
         f"{pawns} pawn(s) of {art} vis; {botch_dice} botch dice."
@@ -2624,7 +2717,7 @@ def _vis_study_outcome(
     if botches:
         # A Warping Point for each zero, as for any supernatural botch (DE
         # p. 390); two or more bring the Twilight check (DE pp. 228, 378).
-        result.warping, result.warping_aura = botches, aura
+        result.effects.append(Warp(botches, aura))
         result.notes.append(
             f"Botch: {botches} zero(s) on the botch dice: {botches} Warping "
             "Point(s)"
