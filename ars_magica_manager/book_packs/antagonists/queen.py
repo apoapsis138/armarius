@@ -29,11 +29,20 @@ from __future__ import annotations
 from typing import Any
 
 from ...models import BodyVis, Creature, Neighbour
-from ..builder import Builder, characteristics, dormant, paragraphs, vf_ward
+from ..builder import (
+    Builder,
+    Secrets,
+    characteristics,
+    dormant,
+    paragraphs,
+    titled,
+    vf_ward,
+)
 
 S = Builder.stage
 P = Builder.power
 QUEEN = "The Queen of Gold and Glass"
+STORYGUIDE = "Storyguide Notes"
 TIRELESS = "Tireless"
 PRETENSES = "Its Abilities are the book's Pretenses."
 NO_FIGURES = (
@@ -92,16 +101,29 @@ def _kingdom(b: Builder) -> Neighbour:
             "every familiar thing of the mortal world has its counterpart in "
             "warped glass.",
         ),
-        secrets=paragraphs(
-            "The completed Frame of Gold, set between two mirrors, is a "
-            "corridor here (Ant p. 124). Raiders meet the Undistinguished "
-            "Warriors, and at the last the Distinguished Knight (pp. 130-131). "
-            "The book prints no aura for the kingdom itself; where the Queen "
-            "extends it by Extend Glamour, the area has a Faerie aura of 6 "
-            "(p. 122).",
-            "Faerie Lore of 21+ tells of this kingdom and of its entry by "
-            "mirrors (p. 129).",
-        ),
+        secrets=[
+            titled(
+                "The way in",
+                "The completed Frame of Gold, set between two mirrors, is a "
+                "corridor to the Land of Gold and Glass (Ant p. 124).",
+            ),
+            titled(
+                "Who meets raiders",
+                "Raiders of the Land of Gold and Glass meet the "
+                "Undistinguished Warriors, and at the last the Distinguished "
+                "Knight (pp. 130-131).",
+            ),
+            titled(
+                STORYGUIDE,
+                paragraphs(
+                    "The book prints no aura for the kingdom itself; where the "
+                    "Queen extends it by Extend Glamour, the area has a Faerie "
+                    "aura of 6 (p. 122).",
+                    "Faerie Lore of 21+ tells of this kingdom and of its entry "
+                    "by mirrors (p. 129).",
+                ),
+            ),
+        ],
     )
 
 
@@ -131,22 +153,47 @@ def _court(b: Builder, kingdom: Neighbour) -> Neighbour:
             "The Hazy Servants have no fixed role and the Shadowy Minions are "
             "hardly there at all (pp. 130-131).",
         ),
-        secrets=paragraphs(
-            "The Queen wants a court magician: faeries who cast as real magi "
-            "cast, wear what they wear and sound as they sound (Ant p. 120).",
-            "The Queen will ransom a Distinguished Servant as a mortal monarch "
-            "would, and is loath to lose one, but spends it if that draws out "
-            "interesting spells. Many have External Vis, so a defeat in battle "
-            "seldom ends them. Given a ready replacement, she does not care "
-            "(Ant p. 130).",
-            "Highly cognizant faeries such as the Queen can redesign their "
-            "lesser faeries; the book gives this no Virtue, but this story "
-            "rests on it (p. 121). She uses human hirelings, dupes and "
-            "captured monsters as well, because her faeries' powers are alike "
-            "and would draw out too few kinds of spell (p. 124).",
-            "Smoothfaces and knockers are no part of the court, but both "
-            "scorn mirrors (pp. 127, 129).",
-        ),
+        secrets=[
+            titled(
+                "What the Queen wants",
+                "The Queen wants a court magician: faeries who cast as real "
+                "magi cast, wear what they wear and sound as they sound "
+                "(Ant p. 120).",
+            ),
+            titled(
+                "What a Distinguished Servant is worth",
+                "The Queen will ransom a Distinguished Servant as a mortal "
+                "monarch would, and is loath to lose one, but spends it if that "
+                "draws out interesting spells. A defeat in battle seldom ends "
+                "one. Given a ready replacement, she does not care "
+                "(Ant p. 130).",
+            ),
+            titled(
+                "The Queen reshapes her servants",
+                "The Queen can redesign her lesser faeries (p. 121).",
+            ),
+            titled(
+                "Hirelings and dupes",
+                "The Queen uses human hirelings, dupes and captured monsters "
+                "as well, because her faeries' powers are alike and would draw "
+                "out too few kinds of spell (p. 124).",
+            ),
+            titled(
+                "Faeries who scorn mirrors",
+                "Smoothfaces and knockers are no part of the Court of Gold and "
+                "Glass, but both scorn mirrors (pp. 127, 129).",
+            ),
+            titled(
+                STORYGUIDE,
+                paragraphs(
+                    "Many Distinguished Servants have External Vis, which is "
+                    "why a defeat in battle seldom ends them (Ant p. 130).",
+                    "Highly cognizant faeries such as the Queen can redesign "
+                    "their lesser faeries; the book gives this no Virtue, but "
+                    "this story rests on it (p. 121).",
+                ),
+            ),
+        ],
     )
 
 
@@ -326,39 +373,87 @@ def _queen(b: Builder, kingdom: Neighbour) -> Creature:
             "and cannot sidestep the story, for instance by paying for what "
             "she wants, since she feeds on what they feel along the way.",
         ),
-        secrets=paragraphs(
-            "Long ago, as Rome pushed out over the tribes, a mortal master "
-            "made a flawless mirror for the woman he loved. She betrayed him, "
-            "and he cursed it and buried it. A faerie found it and gave it to "
-            "a princess; when she looked in, the Queen reached through from "
-            "Faerie and took her shape, her life and her place. Since then the "
-            "Queen has toyed with mortals and made faerie copies of her foes "
-            "(Ant p. 120).",
-            "She is a dispenser of labours, a faerie fed by the quests she "
-            "sets. Now she wants one or more of her servants shaped into a "
-            "court magician, true in every small detail. So she chooses young "
-            "magi and goads them: every new spell her servants see or suffer "
-            "is one her wizards can then imitate, and she counts a challenge "
-            "won if she sees one (p. 120). She does not want the magi dead, "
-            "and may aid them against third parties. She is immortal and "
-            "patient; they will know better spells when they are older.",
-            "She is highly cognizant, and knows her own role and how far she "
-            "can exploit it (p. 121). She keeps out of combat for fear of her "
-            "fragility, and sets minions to fight for her. She tailors those "
-            "minions to the magi's strength and scatters tokens that lead to "
-            "her, like a game's final foe; the book means the troupe to enjoy "
-            "this, and to be rewarded for adding touches that suit it, such "
-            "as a faerie key that opens any lock, or enemies dying in a "
-            "shower of coins (p. 121). She has no originality: fill her "
-            "stories with motifs from the magi's own lives, gathered by her "
-            "Shadowy Minions (p. 124).",
-            "Her weaknesses: faeries who cannot bear mirrors (the smoothfaces, "
-            "and the knockers, who know much about her); darkness; her glass body. If she is killed, her body breaks into "
-            "gold-backed glass; the 8 pawns of Imaginem in the largest piece "
-            "are a decoy. Her true anchor is the bead the princess wears, "
-            "holding 8 pawns (no Art printed). Unless that vis is taken, she "
-            "may in time rebuild her body or move to another object (p. 123).",
-        ),
+        secrets=[
+            titled(
+                "The cursed mirror",
+                "Long ago, as Rome pushed out over the tribes, a mortal master "
+                "made a flawless mirror for the woman he loved. She betrayed "
+                "him, and he cursed it and buried it (Ant p. 120).",
+            ),
+            titled(
+                "How she took the princess",
+                "A faerie found the cursed mirror and gave it to a princess; "
+                "when she looked in, the Queen reached through from Faerie and "
+                "took her shape, her life and her place. Since then the Queen "
+                "has toyed with mortals and made faerie copies of her foes "
+                "(Ant p. 120).",
+            ),
+            titled(
+                "What feeds her",
+                "She is a dispenser of labours, a faerie fed by the quests she "
+                "sets (p. 120).",
+            ),
+            titled(
+                "Her court magician",
+                "Now she wants one or more of her servants shaped into a court "
+                "magician, true in every small detail. So she chooses young "
+                "magi and goads them: every new spell her servants see or "
+                "suffer is one her wizards can then imitate, and she counts a "
+                "challenge won if she sees one (p. 120).",
+            ),
+            titled(
+                "Why she spares the magi",
+                "She does not want the magi dead, and may aid them against "
+                "third parties. She is immortal and patient; they will know "
+                "better spells when they are older.",
+            ),
+            titled(
+                "She knows her role",
+                "She knows her own role and how far she can exploit it (p. 121).",
+            ),
+            titled(
+                "Why she keeps out of combat",
+                "She keeps out of combat for fear of her fragility, and sets "
+                "minions to fight for her. She tailors those minions to the "
+                "magi's strength and scatters tokens that lead to her, like a "
+                "game's final foe (p. 121).",
+            ),
+            titled(
+                "Where her stories come from",
+                "She has no originality: her stories take motifs from the "
+                "magi's own lives, gathered by her Shadowy Minions (p. 124).",
+            ),
+            titled(
+                "Her weaknesses",
+                "Her weaknesses: faeries who cannot bear mirrors (the "
+                "smoothfaces, and the knockers, who know much about her); "
+                "darkness; her glass body (p. 123).",
+            ),
+            titled(
+                "What her body breaks into",
+                "If she is killed, her body breaks into gold-backed glass; the "
+                "8 pawns of Imaginem in the largest piece are a decoy "
+                "(p. 123).",
+            ),
+            titled(
+                "Her true anchor",
+                "Her true anchor is the bead the princess wears, holding 8 "
+                "pawns. Unless that vis is taken, she may in time rebuild her "
+                "body or move to another object (p. 123).",
+            ),
+            titled(
+                STORYGUIDE,
+                paragraphs(
+                    "She is highly cognizant (p. 121).",
+                    "The book means the troupe to enjoy her game-like tokens, "
+                    "and to be rewarded for adding touches that suit it, such "
+                    "as a faerie key that opens any lock, or enemies dying in "
+                    "a shower of coins (p. 121). Fill her stories with motifs "
+                    "from the magi's own lives (p. 124).",
+                    "No Art is printed for the bead's 8 pawns (p. 123).",
+                ),
+            ),
+        ],
     )
 
 
@@ -396,17 +491,29 @@ def _frame(b: Builder, kingdom: Neighbour) -> Creature:
             "serve as Arcane Connections to each other (see Breaking the "
             "Story).",
         ),
-        secrets=paragraphs(
-            "This is no object but a Threshold Guardian, a faerie that longs "
-            "to be whole. Its pieces lead their owners into each other's "
-            "reach. A piece lost or destroyed does not matter: the Queen "
-            "supplies another if she wants the magi to come (Ant pp. 124-125).",
-        ),
+        secrets=[
+            titled(
+                "What the frame is",
+                "The Frame of Gold is no object but a faerie that longs to be "
+                "whole. Its pieces lead their owners into each other's reach "
+                "(Ant pp. 124-125).",
+            ),
+            titled(
+                "A lost piece",
+                "A piece of the Frame of Gold lost or destroyed does not "
+                "matter: the Queen supplies another if she wants the magi to "
+                "come (Ant pp. 124-125).",
+            ),
+            titled(
+                STORYGUIDE,
+                "The frame is a Threshold Guardian (Ant pp. 124-125).",
+            ),
+        ],
     )
 
 
 def _distinguished(
-    b: Builder, kingdom: Neighbour, name: str, page: str, notes: str, secrets: str
+    b: Builder, kingdom: Neighbour, name: str, page: str, notes: str, secrets: Secrets
 ) -> Creature:
     """A Distinguished Servant the book names, with no block printed."""
     return b.creature(
@@ -434,8 +541,14 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
             "The Distinguished Herald",
             "p. 127",
             "One of the Distinguished Servants (p. 127).",
-            "In the Herbam challenge it steals a Gifted child, gives it to "
-            "smoothfaces, then spreads the tale among mortals (p. 127).",
+            [
+                titled(
+                    "The Herald's errand",
+                    "In the Herbam challenge it steals a Gifted child, gives "
+                    "it to smoothfaces, then spreads the tale among mortals "
+                    "(p. 127).",
+                )
+            ],
         ),
         _distinguished(
             b,
@@ -443,9 +556,14 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
             "The Distinguished Huntsman",
             "p. 125",
             "One of the Distinguished Servants (p. 125).",
-            "In the Animal challenge he goes after the giant beasts to mark "
-            "the Queen's hand, and looks like a rival for vis until the magi "
-            "learn they hold none (p. 125).",
+            [
+                titled(
+                    "The Huntsman's quarry",
+                    "In the Animal challenge he goes after the giant beasts to "
+                    "mark the Queen's hand, and looks like a rival for vis "
+                    "until the magi learn they hold none (p. 125).",
+                )
+            ],
         ),
         _distinguished(
             b,
@@ -453,8 +571,13 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
             "The Distinguished Spy",
             "p. 128",
             "One of the Distinguished Servants (p. 128).",
-            "Still being perfected: the actor of the Mentem challenge is "
-            "taken off to help (p. 128).",
+            [
+                titled(
+                    "The Spy's training",
+                    "The Distinguished Spy is still being perfected: the actor "
+                    "of the Mentem challenge is taken off to help (p. 128).",
+                )
+            ],
         ),
         _distinguished(
             b,
@@ -462,7 +585,13 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
             "The Distinguished Ambassador",
             "p. 131",
             "One of the Distinguished Servants (p. 131).",
-            "Arranges the final meeting with magi too dangerous to provoke (p. 131).",
+            [
+                titled(
+                    "The Ambassador's errand",
+                    "The Distinguished Ambassador arranges the final meeting "
+                    "with magi too dangerous to provoke (p. 131).",
+                )
+            ],
         ),
         b.creature(
             "The Queen's Steward",
@@ -474,10 +603,13 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
                 "(p. 128). The book does not say that it is one of the "
                 "Distinguished. " + NO_FIGURES
             ),
-            secrets=(
-                "In the seed Firebrand Tytalus, the Queen is designing a new "
-                "steward (p. 132)."
-            ),
+            secrets=[
+                titled(
+                    "A new steward",
+                    "The Queen is designing a new steward (p. 132).",
+                ),
+                titled(STORYGUIDE, "See the seed Firebrand Tytalus (p. 132)."),
+            ],
         ),
         warriors,
         b.creature(
@@ -497,10 +629,18 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
                 "Distinguished Knight's (p. 130). A symbolic object holding vis is wedged in its head; the pawns are not printed.",
                 "None can break a mirror or attack someone who carries one.",
             ),
-            secrets=(
-                "They too are being shaped to human roles, and the Queen "
-                "spends them far more readily than the Distinguished (p. 130)."
-            ),
+            secrets=[
+                titled(
+                    "What they are shaped for",
+                    "The Undistinguished Servants too are being shaped to "
+                    "human roles (p. 130).",
+                ),
+                titled(
+                    "How readily the Queen spends them",
+                    "The Queen spends the Undistinguished Servants far more "
+                    "readily than the Distinguished (p. 130).",
+                ),
+            ],
         ),
         b.creature(
             "Undistinguished Magi",
@@ -527,10 +667,17 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
                 "magus breaks the Code, and these copies offer no cause "
                 "(p. 132).",
             ),
-            secrets=(
-                "They are the point of the whole scheme. See A Faerie Magus? "
-                "in the last stage of A Run of Odd Troubles."
-            ),
+            secrets=[
+                titled(
+                    "The point of the scheme",
+                    "The Undistinguished Magi are the point of the Queen's "
+                    "whole scheme.",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "See A Faerie Magus? in the last stage of A Run of Odd Troubles.",
+                ),
+            ],
         ),
         b.creature(
             "Hazy Servants",
@@ -572,11 +719,14 @@ def _servants(b: Builder, kingdom: Neighbour) -> list[Creature]:
                 "nor attack anyone. They can still spy, and the sight of one "
                 "can scare people, set dogs barking or bolt horses (p. 131)."
             ),
-            secrets=(
-                "They bring the Queen the details of the magi's lives that "
-                "she recycles in her stories (p. 124). Faerie Lore of 18+ "
-                "knows of them (p. 129)."
-            ),
+            secrets=[
+                titled(
+                    "What they bring the Queen",
+                    "The Shadowy Minions bring the Queen the details of the "
+                    "magi's lives that she recycles in her stories (p. 124).",
+                ),
+                titled(STORYGUIDE, "Faerie Lore of 18+ knows of them (p. 129)."),
+            ],
         ),
     ]
 
@@ -689,10 +839,13 @@ def _knight(b: Builder, kingdom: Neighbour) -> Creature:
             "than his Virtues permit, which only a player faerie must balance; "
             "he is not designed as one (Ant p. 130). " + PRETENSES,
         ),
-        secrets=(
-            "The Queen's champion, and her last guard if her realm is raided "
-            "(Ant p. 130)."
-        ),
+        secrets=[
+            titled(
+                "His place at court",
+                "The Queen's champion, and her last guard if her realm is "
+                "raided (Ant p. 130).",
+            )
+        ],
     )
 
 
@@ -916,15 +1069,29 @@ def _ice_wyrm(b: Builder) -> Creature:
             "listed; the challenge says seven miles freeze, the power says "
             "one mile.",
         ),
-        secrets=paragraphs(
-            "Ice wyrms stand for the edge between arable land and the snowy "
-            "north, or peak and pasture, or the draining of life by winter. "
-            "This one is a mastery faerie: it must fall to humans in an epic "
-            "fight that passes into local legend, and until then it hunts "
-            "warm life to drain (Ant p. 127).",
-            "The Queen's servants catch it and move it by mirror. A piece of "
-            "the frame lies in its treasure.",
-        ),
+        secrets=[
+            titled(
+                "What ice wyrms stand for",
+                "Ice wyrms stand for the edge between arable land and the "
+                "snowy north, or peak and pasture, or the draining of life by "
+                "winter (Ant p. 127).",
+            ),
+            titled(
+                "How the wyrm must fall",
+                "This ice wyrm must fall to humans in an epic fight that "
+                "passes into local legend, and until then it hunts warm life "
+                "to drain (Ant p. 127).",
+            ),
+            titled(
+                "How the wyrm came here",
+                "The Queen's servants catch the ice wyrm and move it by mirror.",
+            ),
+            titled(
+                "A piece of the frame",
+                "A piece of the Frame of Gold lies in the ice wyrm's treasure.",
+            ),
+            titled(STORYGUIDE, "The ice wyrm is a mastery faerie (Ant p. 127)."),
+        ],
     )
 
 
@@ -1037,16 +1204,35 @@ def _smoothfaces(b: Builder) -> Creature:
             "higher Characteristics and six Minor Flaws, and may want the "
             "Damaging Effect power (p. 126).",
         ),
-        secrets=paragraphs(
-            "They haunt travellers and those who fear strangers, for sport "
-            "and vitality. One who frightens a victim to death may wear that "
-            "face. They fight only to defend themselves (Ant p. 126).",
-            "In the Herbam challenge they mean to keep the Gifted child, "
-            "hoping it will draw faces for them. They hate mirrors and the "
-            "Queen hates them; they know nothing of her, but may be persuaded "
-            "that she has put them in peril with her gift, and side with the "
-            "magi at the end (pp. 126-127).",
-        ),
+        secrets=[
+            titled(
+                "Whom smoothfaces haunt",
+                "Smoothfaces haunt travellers and those who fear strangers, "
+                "for sport and vitality (Ant p. 126).",
+            ),
+            titled(
+                "A stolen face",
+                "A smoothface who frightens a victim to death may wear that "
+                "face (Ant p. 126).",
+            ),
+            titled(
+                "When smoothfaces fight",
+                "Smoothfaces fight only to defend themselves (Ant p. 126).",
+            ),
+            titled(
+                "The Gifted child",
+                "In the Herbam challenge the smoothfaces mean to keep the "
+                "Gifted child, hoping it will draw faces for them "
+                "(pp. 126-127).",
+            ),
+            titled(
+                "Smoothfaces and the Queen",
+                "Smoothfaces hate mirrors and the Queen hates them; they know "
+                "nothing of her, but may be persuaded that she has put them in "
+                "peril with her gift, and side with the magi at the end "
+                "(pp. 126-127).",
+            ),
+        ],
     )
 
 
@@ -1131,18 +1317,32 @@ def _knockers(b: Builder) -> Creature:
             "religious, and cannot hold on to the riddle of why death made "
             "them dwarfs for more than a moment.",
         ),
-        secrets=paragraphs(
-            "They bargain gladly if approached in peace, above all with miners "
-            "and Jews. They give up the child for binding oaths that it be "
-            "properly raised; break those, and they may undermine the "
-            "covenant, shift its underground waters or find other revenges "
-            "(Ant p. 129).",
-            "Having no reflection, they have no use for mirrors, and they "
-            "know much about the Queen. Even attacked, they can give away her "
-            "weakness: they fight a few rounds with tools and mirrors, cry "
-            "out that the mirrors have failed them, and flee through tunnels "
-            "or rock.",
-        ),
+        secrets=[
+            titled(
+                "Bargaining with knockers",
+                "Knockers bargain gladly if approached in peace, above all "
+                "with miners and Jews (Ant p. 129).",
+            ),
+            titled(
+                "Oaths for the child",
+                "The knockers give up the child for binding oaths that it be "
+                "properly raised; break those, and they may undermine the "
+                "covenant, shift its underground waters or find other revenges "
+                "(Ant p. 129).",
+            ),
+            titled(
+                "What knockers know",
+                "Having no reflection, knockers have no use for mirrors, and "
+                "they know much about the Queen.",
+            ),
+            titled(
+                "How knockers give the Queen away",
+                "Even attacked, knockers can give away the Queen's weakness: "
+                "they fight a few rounds with tools and mirrors, cry out that "
+                "the mirrors have failed them, and flee through tunnels or "
+                "rock.",
+            ),
+        ],
     )
 
 
@@ -1157,11 +1357,19 @@ def _treasures(b: Builder, kingdom: Neighbour) -> dict[str, Neighbour]:
                 "A flawless mirror made for a faithless lover in the days of "
                 "Rome's first advance, then cursed and put in the ground."
             ),
-            secrets=(
-                "A faerie dug it up and gave it to the princess, and through "
-                "it the Queen took her (Ant p. 120). The book does not say "
-                "where it is now, or whether it is the mirror of the heart."
-            ),
+            secrets=[
+                titled(
+                    "Who dug up the mirror",
+                    "A faerie dug up the Cursed Mirror of the Artisan and gave "
+                    "it to the princess, and through it the Queen took her "
+                    "(Ant p. 120).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "The book does not say where it is now, or whether it is "
+                    "the mirror of the heart.",
+                ),
+            ],
         ),
         "What she breaks into": b.place(
             "The Heart-Shaped Mirror",
@@ -1173,12 +1381,24 @@ def _treasures(b: Builder, kingdom: Neighbour) -> dict[str, Neighbour]:
                 "Gold-backed glass in the shape of a heart, in whose depths a "
                 "woman can be seen."
             ),
-            secrets=(
-                "The largest piece of the Queen's body when she dies. "
-                "Characters can reach in and draw out the princess, which "
-                "shatters it; the shards hold 8 pawns of Imaginem in all. This "
-                "is a decoy, not her anchor (Ant p. 123)."
-            ),
+            secrets=[
+                titled(
+                    "What the mirror is",
+                    "The Heart-Shaped Mirror is the largest piece of the "
+                    "Queen's body when she dies (Ant p. 123).",
+                ),
+                titled(
+                    "The woman in its depths",
+                    "Characters can reach into the Heart-Shaped Mirror and "
+                    "draw out the princess, which shatters it (Ant p. 123).",
+                ),
+                titled(
+                    "The vis in its shards",
+                    "The shards of the Heart-Shaped Mirror hold 8 pawns of "
+                    "Imaginem in all. This is a decoy, not the Queen's anchor "
+                    "(Ant p. 123).",
+                ),
+            ],
         ),
         "Her true anchor": b.place(
             "The Gold and Glass Bead",
@@ -1190,12 +1410,25 @@ def _treasures(b: Builder, kingdom: Neighbour) -> dict[str, Neighbour]:
                 "A bead of gold and glass, the dearest possession of the woman "
                 "who wears it."
             ),
-            secrets=(
-                "The Queen's spirit is anchored here, with 8 pawns of vis (no "
-                "Art printed). Wearing it works as Aura of Rightful Authority. "
-                "Unless this vis is harvested, she may in time move to another "
-                "object or rebuild her body (Ant p. 123)."
-            ),
+            secrets=[
+                titled(
+                    "Whose spirit it holds",
+                    "The Queen's spirit is anchored in the Gold and Glass "
+                    "Bead, with 8 pawns of vis (Ant p. 123).",
+                ),
+                titled(
+                    "What the bead does for its wearer",
+                    "Wearing the Gold and Glass Bead works as Aura of Rightful "
+                    "Authority (Ant p. 123).",
+                ),
+                titled(
+                    "If the vis is left",
+                    "Unless the Gold and Glass Bead's vis is harvested, the "
+                    "Queen may in time move to another object or rebuild her "
+                    "body (Ant p. 123).",
+                ),
+                titled(STORYGUIDE, "No Art is printed for the bead's vis."),
+            ],
         ),
         "Her badge": b.place(
             "Gold-Backed Mirrors",
@@ -1209,23 +1442,43 @@ def _treasures(b: Builder, kingdom: Neighbour) -> dict[str, Neighbour]:
                 "So a mirror of any sort is scarce and costly, and one backed "
                 "in gold stands out.",
             ),
-            secrets=(
-                "The Queen's name comes from them (Ant p. 123). "
-                "Awareness rolls about these mirrors are +3 easier (Ant "
-                "p. 129). A minion who takes a symbolic object for her must in time be shown as hers, by the mirror (p. 122)."
-            ),
+            secrets=[
+                titled(
+                    "The Queen's name",
+                    "The Queen of Gold and Glass takes her name from "
+                    "gold-backed mirrors (Ant p. 123).",
+                ),
+                titled(
+                    "The mark of her minions",
+                    "A minion who takes a symbolic object for the Queen must "
+                    "in time be shown as hers, by the mirror (p. 122).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "Awareness rolls about these mirrors are +3 easier (Ant p. 129).",
+                ),
+            ],
         ),
         "An old account of her": b.place(
             "A Bonisagus Account",
             realm="",
             known="Locally",
             summary="A centuries-old record by a long-dead magus of House Bonisagus.",
-            secrets=(
-                "It tells of the Queen's earlier attempt to make a faerie skilled "
-                "in the Arts for her courtier. Intelligence + Order of Hermes Lore against an Ease Factor of "
-                "15 recalls or finds it. If the storyguide wishes, the roll "
-                "also points to The Rare Book (Ant p. 129)."
-            ),
+            secrets=[
+                titled(
+                    "What the account tells",
+                    "The Bonisagus account tells of the Queen's earlier "
+                    "attempt to make a faerie skilled in the Arts for her "
+                    "courtier (Ant p. 129).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "Intelligence + Order of Hermes Lore against an Ease "
+                    "Factor of 15 recalls or finds it. If the storyguide "
+                    "wishes, the roll also points to The Rare Book "
+                    "(Ant p. 129).",
+                ),
+            ],
         ),
         "A book on her": b.place(
             "The Rare Book",
@@ -1233,11 +1486,24 @@ def _treasures(b: Builder, kingdom: Neighbour) -> dict[str, Neighbour]:
             known="Hidden",
             status="Hidden",
             summary="A rare book.",
-            secrets=(
-                "It describes the Queen's powers and weaknesses. Held, by bad luck, at a reclusive covenant far away. Getting "
-                "to it makes a separate story, connected but with a different "
-                "theme (Ant p. 129). Neither covenant nor book is named."
-            ),
+            secrets=[
+                titled(
+                    "What the book describes",
+                    "The Rare Book describes the Queen's powers and "
+                    "weaknesses (Ant p. 129).",
+                ),
+                titled(
+                    "Where the book is",
+                    "The Rare Book is held, by bad luck, at a reclusive "
+                    "covenant far away (Ant p. 129).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "Getting to it makes a separate story, connected but with "
+                    "a different theme (Ant p. 129). Neither covenant nor "
+                    "book is named.",
+                ),
+            ],
         ),
     }
 
@@ -1254,14 +1520,29 @@ def _people(b: Builder) -> tuple[Any, Any]:
             "red-haired with piercing blue eyes, and fond above all of a "
             "single gold and glass bead."
         ),
-        secrets=paragraphs(
-            "The book prints no stats and no name. She is held by the Queen's "
-            "Spirit Away, in a mirror, in the Queen's realm, and the Queen "
-            "wears her form. If the Queen is killed she can be pulled from "
-            "the heart-shaped mirror. She wears the bead that is the Queen's "
-            "real anchor, which gives her the effect of Aura of Rightful "
-            "Authority (Ant pp. 122-123).",
-        ),
+        secrets=[
+            titled(
+                "Where she is held",
+                "She is held in a mirror, in the Queen's realm, and the Queen "
+                "wears her form (Ant pp. 122-123).",
+            ),
+            titled(
+                "How she can be freed",
+                "If the Queen is killed she can be pulled from the "
+                "heart-shaped mirror (Ant pp. 122-123).",
+            ),
+            titled(
+                "Her bead",
+                "She wears the bead that is the Queen's real anchor, which "
+                "gives her the effect of Aura of Rightful Authority "
+                "(Ant pp. 122-123).",
+            ),
+            titled(
+                STORYGUIDE,
+                "The book prints no stats and no name. She is held by the "
+                "Queen's Spirit Away (Ant pp. 122-123).",
+            ),
+        ],
     )
     actor = b.magus(
         "The Actor",
@@ -1273,18 +1554,31 @@ def _people(b: Builder) -> tuple[Any, Any]:
             "A player of some talent, who has been called away to a new part "
             "by the same patron every few years since his youth."
         ),
-        secrets=paragraphs(
-            "Mortal pawns have no printed stats (Ant p. 124). When he was "
-            "very young, in his first big role, a patron paid his way, then "
-            "had him pose as a grieving husband to get a locket of hair from "
-            "a corpse. Every four years since, the patron has returned with "
-            "a harder imposture. The one time he refused, not even his friends "
-            "knew him until the job was done (p. 128).",
-            "Taken in a nearby town, he confesses all and says he had no "
-            "choice. Left too long, he is taken to another kingdom and set "
-            "new tasks by the Queen's Steward, to help perfect her "
-            "Distinguished Spy.",
-        ),
+        secrets=[
+            titled(
+                "His first imposture",
+                "When he was very young, in his first big role, a patron paid "
+                "his way, then had him pose as a grieving husband to get a "
+                "locket of hair from a corpse (p. 128).",
+            ),
+            titled(
+                "His patron's returns",
+                "Every four years since his first imposture, his patron has "
+                "returned with a harder one. The one time he refused, not even "
+                "his friends knew him until the job was done (p. 128).",
+            ),
+            titled(
+                "If he is caught",
+                "Taken in a nearby town, he confesses all and says he had no choice.",
+            ),
+            titled(
+                "If he is left too long",
+                "Left too long, he is taken to another kingdom and set new "
+                "tasks by the Queen's Steward, to help perfect her "
+                "Distinguished Spy.",
+            ),
+            titled(STORYGUIDE, "Mortal pawns have no printed stats (Ant p. 124)."),
+        ],
     )
     return princess, actor
 
@@ -1299,46 +1593,88 @@ def _threat(b: Builder) -> Neighbour:
                 "Odd troubles come to the covenant, years apart, with no enemy "
                 "to show for them."
             ),
-            secrets=paragraphs(
-                "The Queen's two goals: to run the magi through her stories, "
-                "and to see Hermetic spells of every Form, so that her court "
-                "wizards can imitate them (Ant p. 120). Roughly one story "
-                "every four years. She is immortal; she knows mortals grow, "
-                "so there is no sense in pressing them young; and any faster "
-                "might sidetrack them, for she values spells against faeries "
-                "less and does not want them over-specialized. Alter the "
-                "frequency or count to suit the saga (p. 121).",
-                "Each story is tied to one Form, and tempts spells of it but "
-                "forces none. She misreads Hermetic magic, so players who "
-                "see the pattern can subvert it, which obliges her to step in "
-                "herself. They are printed by Art and may come in any order, "
-                "harder as the magi age. She sets no Vim story, being already "
-                "a mistress of Vim and unwilling to give her minions weapons "
-                "against spirits, and no Imaginem story, thinking it kin to "
-                "glamour and missing its subtler uses. All are suggestions "
-                "(p. 124).",
-                "If the magi do not play along (p. 125): burn the animals "
-                "with fire and she simply adds another Animal story and "
-                "wonders whether she still needs the Ignem one. She rarely "
-                "knows when they have reached their limits. If the players "
-                "tire of this, she either leaves them alone until they have "
-                "other interests to exploit, or moves to the confrontation.",
-                "How the pattern shows (pp. 128-129): the frame pieces mark "
-                "the link from the second piece on; she wants her hand known "
-                "once she has her symbolic objects. Other victims, whom her "
-                "servants introduce during The Obvious Liar, tell of repeated "
-                "challenges that test growing skills. Questioning one "
-                "(Communication + a fitting Ability, Ease Factor 15) brings "
-                "back the event in which his symbolic object was taken, and "
-                "the magi may then roll to recall theirs.",
-                "Intelligence + Faerie Lore on faeries and mirrors (p. 129): "
-                "12+ her title, and that her servants travel by mirror; 15+ "
-                "they are reflections of real people, epitomes of human "
-                "roles; 18+ some are shadows and reflections who spy; 21+ she "
-                "has a kingdom in the faerie lands entered by mirrors. "
-                "Intelligence + Order of Hermes Lore (Ease Factor 15) finds "
-                "the Bonisagus account.",
-            ),
+            secrets=[
+                titled(
+                    "Who is behind the troubles",
+                    "The Queen of Gold and Glass has two goals: to run the "
+                    "magi through her stories, and to see Hermetic spells of "
+                    "every Form, so that her court wizards can imitate them "
+                    "(Ant p. 120).",
+                ),
+                titled(
+                    "Why the troubles come years apart",
+                    "The Queen sets roughly one story every four years. She "
+                    "is immortal; she knows mortals grow, so there is no sense "
+                    "in pressing them young; and any faster might sidetrack "
+                    "them, for she values spells against faeries less and "
+                    "does not want them over-specialized (p. 121).",
+                ),
+                titled(
+                    "One Form to each trouble",
+                    "Each of the Queen's stories is tied to one Form, and "
+                    "tempts spells of it but forces none (p. 124).",
+                ),
+                titled(
+                    "Subverting the pattern",
+                    "The Queen misreads Hermetic magic, so those who see the "
+                    "pattern of her stories can subvert it, which obliges her "
+                    "to step in herself (p. 124).",
+                ),
+                titled(
+                    "No Vim or Imaginem trouble",
+                    "The Queen sets no Vim story, being already a mistress of "
+                    "Vim and unwilling to give her minions weapons against "
+                    "spirits, and no Imaginem story, thinking it kin to "
+                    "glamour and missing its subtler uses (p. 124).",
+                ),
+                titled(
+                    "When the magi do not play along",
+                    "If the magi burn the animals with fire, the Queen simply adds "
+                    "another Animal story and wonders whether she still needs "
+                    "the Ignem one. She rarely knows when the magi have "
+                    "reached their limits (p. 125).",
+                ),
+                titled(
+                    "The frame pieces show her hand",
+                    "The pieces of the Frame of Gold mark the link between "
+                    "the troubles from the second piece on; the Queen wants "
+                    "her hand known once she has her symbolic objects "
+                    "(pp. 128-129).",
+                ),
+                titled(
+                    "Other victims",
+                    "Other victims, whom the Queen's servants introduce during "
+                    "The Obvious Liar, tell of repeated challenges that test "
+                    "growing skills. Questioning one brings back the event in "
+                    "which his symbolic object was taken, and the magi may "
+                    "then recall theirs (pp. 128-129).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    paragraphs(
+                        "Alter the frequency or count of the stories to suit "
+                        "the saga (p. 121).",
+                        "The stories are printed by Art and may come in any "
+                        "order, harder as the magi age. All are suggestions "
+                        "(p. 124).",
+                        "If the players tire of this, she either leaves them "
+                        "alone until they have other interests to exploit, or "
+                        "moves to the confrontation (p. 125).",
+                        "Questioning another victim is Communication + a "
+                        "fitting Ability, Ease Factor 15, and the magi then "
+                        "roll to recall their own symbolic objects "
+                        "(pp. 128-129).",
+                        "Intelligence + Faerie Lore on faeries and mirrors "
+                        "(p. 129): 12+ her title, and that her servants travel "
+                        "by mirror; 15+ they are reflections of real people, "
+                        "epitomes of human roles; 18+ some are shadows and "
+                        "reflections who spy; 21+ she has a kingdom in the "
+                        "faerie lands entered by mirrors. Intelligence + Order "
+                        "of Hermes Lore (Ease Factor 15) finds the Bonisagus "
+                        "account.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Marked as her protagonists",
@@ -1609,14 +1945,22 @@ def _seeds(b: Builder) -> None:
                 "people say the same few lines over and over, walk fixed "
                 "paths, and do not see that bits of the scenery are missing."
             ),
-            secrets=(
-                "Used as Arcane Connections to each other, the frame pieces "
-                "can bring the magi to one of her stories before it is ready, "
-                "to wreck it and enjoy a bizarre half-built setting. Played "
-                "straighter, the setting is normal and the people unsure why "
-                "they are there. To rule this out, keep the unfound pieces in "
-                "Faerie, each let out only as its story begins (Ant p. 124)."
-            ),
+            secrets=[
+                titled(
+                    "Where the frame pieces lead",
+                    "Used as Arcane Connections to each other, the pieces of "
+                    "the Frame of Gold can bring the magi to one of the "
+                    "Queen's stories before it is ready, to wreck it and enjoy "
+                    "a bizarre half-built setting (Ant p. 124).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "Played straighter, the setting is normal and the people "
+                    "unsure why they are there. To rule this out, keep the "
+                    "unfound pieces in Faerie, each let out only as its story "
+                    "begins (Ant p. 124).",
+                ),
+            ],
         )
     )
     dormant(
@@ -1629,11 +1973,18 @@ def _seeds(b: Builder) -> None:
                 "breaks the Code, and the Guernicus sent to look into it has "
                 "been ambushed and shamed."
             ),
-            secrets=(
-                "The Tytalus is a duplicate. The Queen is designing a new "
-                "steward, and uses this pawn to stretch the mortal who "
-                "governs the kingdom (Ant p. 132)."
-            ),
+            secrets=[
+                titled(
+                    "Who the Tytalus is",
+                    "The young Tytalus magus is a duplicate (Ant p. 132).",
+                ),
+                titled(
+                    "What the Queen wants of the king",
+                    "The Queen of Gold and Glass is designing a new steward, "
+                    "and uses the duplicate Tytalus to stretch the mortal who "
+                    "governs the kingdom (Ant p. 132).",
+                ),
+            ],
         )
     )
     dormant(
@@ -1645,12 +1996,23 @@ def _seeds(b: Builder) -> None:
                 "equivalent, for a child she says one of the magi fathered. "
                 "None of them knows anything about it."
             ),
-            secrets=(
-                "The child has very strong Faerie Blood of a new kind, and can "
-                "make many kinds of imperishable Arcane Connection, as the "
-                "Queen can. He is a source of guaranteed Insight for Original "
-                "Research, and useful in Wizard's Marches. Do the magi let "
-                "this be known? (Ant p. 132)."
-            ),
+            secrets=[
+                titled(
+                    "The child's blood",
+                    "The child has very strong faerie blood of a new kind, and "
+                    "can make many kinds of imperishable Arcane Connection, as "
+                    "the Queen of Gold and Glass can (Ant p. 132).",
+                ),
+                titled(
+                    "What the child is worth",
+                    "The child is a source of guaranteed Insight for Original "
+                    "Research, and useful in Wizard's Marches (Ant p. 132).",
+                ),
+                titled(
+                    STORYGUIDE,
+                    "The child has Faerie Blood of a new kind. Do the magi let "
+                    "this be known? (Ant p. 132).",
+                ),
+            ],
         )
     )

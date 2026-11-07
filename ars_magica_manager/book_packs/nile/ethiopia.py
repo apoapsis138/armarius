@@ -14,12 +14,15 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import BodyVis, Character, Neighbour, as_secrets, secret_words
+from ...models import BodyVis, Character, Neighbour
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
+    more_secrets,
     paragraphs,
+    titled,
     vf_puissant,
     vf_ward,
 )
@@ -61,7 +64,7 @@ def _seed(
     place: Neighbour,
     summary: str,
     *,
-    secrets: str = "",
+    secrets: Secrets = "",
     antagonist: str = "",
     realm: str = "",
     moves: str = "A track",
@@ -90,7 +93,7 @@ def _existing(b: Builder, name: str) -> Neighbour | None:
 
 
 def _site(
-    b: Builder, name: str, *, summary: str, secrets: str, aura: int, within: str
+    b: Builder, name: str, *, summary: str, secrets: Secrets, aura: int, within: str
 ) -> Neighbour:
     """A covenant site: the place an earlier part made, its text added, or a
     new place inside the region it lies in, when that exists."""
@@ -104,7 +107,7 @@ def _site(
             inside=_existing(b, within),
         )
     found.summary = paragraphs(found.summary, summary)
-    found.secrets = as_secrets(paragraphs(secret_words(found.secrets), secrets))
+    found.secrets = more_secrets(found.secrets, secrets)
     return found
 
 
@@ -205,18 +208,28 @@ def _region(b: Builder, p: Places) -> None:
             "chromatinos, spikenard and bdellium. Copies are rare, mostly in "
             "private hands at Alexandria, Constantinople and Jerusalem.",
         ),
-        secrets=paragraphs(
-            "The Periplus is a tractatus in Latin or Classical Greek on each of "
-            "Area Lore: Ethiopia, Area Lore: Erythean Sea Coast, Area Lore: Red "
-            "Sea Coast and Magic Lore, Quality 5 (p. 107).",
-            "A Jew or Falasha is unusual but not an Outsider unless also a "
-            "blacksmith (p. 110). A large polygamous family might take Close "
-            "Family Ties (p. 109). Infantry bear sword, shield and an 8-foot "
-            "spear, thrown about twenty-five paces; cavalry wear heavy mail, "
-            "most others the equal of quilted armor; the Amharic word for "
-            "'spear' and 'war' is the same. Militias have a shield and a dagger "
-            "or spear (p. 110).",
-        ),
+        secrets=[
+            titled(
+                "The Periplus",
+                "The Periplus is a tractatus in Latin or Classical Greek on each "
+                "of Area Lore: Ethiopia, Area Lore: Erythean Sea Coast, Area "
+                "Lore: Red Sea Coast and Magic Lore, Quality 5 (p. 107).",
+            ),
+            titled(
+                "Ethiopian arms",
+                "Infantry bear sword, shield and an 8-foot spear, thrown about "
+                "twenty-five paces; cavalry wear heavy mail, most others the "
+                "equal of quilted armor; the Amharic word for 'spear' and 'war' "
+                "is the same. Militias have a shield and a dagger or spear (p. "
+                "110).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A Jew or Falasha is unusual but not an Outsider unless also a "
+                "blacksmith (p. 110). A large polygamous family might take Close "
+                "Family Ties (p. 109).",
+            ),
+        ],
     )
     p["red_sea_stands"] = b.place(
         "The Bleeding Trees of the Red Sea Coast",
@@ -230,8 +243,13 @@ def _region(b: Builder, p: Places) -> None:
             "from Yemen or Soqotra, no one tends them now. Yemeni merchants may "
             "be spoiling them to protect their own trade."
         ),
-        secrets="The jaculi are in The Cradle and the Crescent pp. 116-118, "
-        "Soqotra in Rival Magic p. 110 (p. 113).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The jaculi are in The Cradle and the Crescent pp. 116-118, "
+                "Soqotra in Rival Magic p. 110 (p. 113).",
+            ),
+        ],
     )
     p["mountains_of_the_moon"] = b.place(
         "The Mountains of the Moon",
@@ -274,8 +292,13 @@ def _medri_bahri(b: Builder, p: Places) -> None:
             "The strait between Ethiopia and Yemen, held by Yemen's Muslim "
             "navies, friends of the sultan of Adal."
         ),
-        secrets="Passing it requires a story, as with the straits of Gibraltar "
-        "(p. 114).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Passing the Bab-al-Mandab requires a story, as with the straits "
+                "of Gibraltar (p. 114).",
+            ),
+        ],
     )
     p["danakil"] = b.place(
         "The Danakil Desert",
@@ -296,7 +319,13 @@ def _medri_bahri(b: Builder, p: Places) -> None:
             "burning debris or spills over the rim. Its low bare slopes grow "
             "almost nothing. A fiery, capricious ifrit jinni lives here."
         ),
-        secrets="An ideal site for the volcano magic of Hermetic Projects (p. 115).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Erta Ale is an ideal site for the volcano magic of Hermetic "
+                "Projects (p. 115).",
+            ),
+        ],
     )
     p["adulis_town"] = b.town(
         "Adulis",
@@ -326,7 +355,12 @@ def _medri_bahri(b: Builder, p: Places) -> None:
             "are hated here. He pays a bounty on live hyenas, hoping to catch "
             "the faeries."
         ),
-        secrets="The bounty is unlikely to work (p. 115).",
+        secrets=[
+            titled(
+                "The hyena bounty",
+                "The negus's bounty on live hyenas is unlikely to work (p. 115).",
+            ),
+        ],
     )
     p["massawa"] = b.town(
         "Massawa",
@@ -425,10 +459,19 @@ def _axum(b: Builder, p: Places) -> None:
             "Abba Liqanos's monastery, a pagan temple nearly 750 years ago, is "
             "still at work.",
         ),
-        secrets="Knowing one of its languages, a reader may study Ezana's Stone "
-        "for a season as a Quality 5 tractatus on one of the other two, or on "
-        "Area Lore: Ethiopia. Ancient Sabaean is also found at Petra, at Yeha "
-        "and in Yemen and 'Asir (p. 116).",
+        secrets=[
+            titled(
+                "Studying Ezana's Stone",
+                "Knowing one of its languages, a reader may study Ezana's Stone "
+                "for a season as a Quality 5 tractatus on one of the other two, "
+                "or on Area Lore: Ethiopia (p. 116).",
+            ),
+            titled(
+                "Ancient Sabaean elsewhere",
+                "Ancient Sabaean is also found at Petra, at Yeha and in Yemen and "
+                "'Asir (p. 116).",
+            ),
+        ],
     )
     p["maryam_tsion"] = b.church(
         "Church of Maryam Tsion",
@@ -440,16 +483,22 @@ def _axum(b: Builder, p: Places) -> None:
             "brought here from Tana Qirqos. Pilgrims come on Axum Tsion, Hadar "
             "20 or November 18, and many go on to Roha."
         ),
-        secrets=paragraphs(
-            "The Divine aura here depends on whether Axum truly holds the Ark "
-            "(p. 116).",
-            "The Ark has Faith Score 10, 10 Faith Points and Divine Might 100 "
-            "for any Ethiopian, Falasha or Christian; for other Christians and "
-            "all Muslims its Faith Score is 7 (RoP:D p. 44; p. 112).",
-            "Prester John does not rule Ethiopia, but anyone leaving this "
-            "church at sunrise on Easter morning may enter a Faerie regio much "
-            "like his lost kingdom (p. 120).",
-        ),
+        secrets=[
+            titled(
+                "The way to Prester John's kingdom",
+                "Prester John does not rule Ethiopia, but anyone leaving the "
+                "Church of Maryam Tsion at sunrise on Easter morning may enter a "
+                "Faerie regio much like his lost kingdom (p. 120).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Divine aura here depends on whether Axum truly holds the Ark "
+                "(p. 116). The Ark has Faith Score 10, 10 Faith Points and Divine "
+                "Might 100 for any Ethiopian, Falasha or Christian; for other "
+                "Christians and all Muslims its Faith Score is 7 (RoP:D p. 44; p. "
+                "112).",
+            ),
+        ],
     )
     b.place(
         "The Kingdom Beyond Maryam Tsion",
@@ -462,9 +511,19 @@ def _axum(b: Builder, p: Places) -> None:
             "it. They say a wise Christian king rules them, and that the law "
             "forbids them to name him."
         ),
-        secrets="A Faerie regio entered on leaving the church at sunrise on "
-        "Easter morning. Whoever sleeps here wakes in the church of his "
-        "baptism or in Maryam Tsion, which makes exploring it hard (p. 120).",
+        secrets=[
+            titled(
+                "The way into the kingdom",
+                "The Kingdom Beyond Maryam Tsion is a Faerie regio entered on "
+                "leaving the church at sunrise on Easter morning (p. 120).",
+            ),
+            titled(
+                "Sleeping in the kingdom",
+                "Whoever sleeps in the Kingdom Beyond Maryam Tsion wakes in the "
+                "church of his baptism or in Maryam Tsion, which makes exploring "
+                "it hard (p. 120).",
+            ),
+        ],
     )
     b.place(
         "The Hidden Palace of the Great Stelae",
@@ -478,16 +537,28 @@ def _axum(b: Builder, p: Places) -> None:
             "where the living honoured them. Ezana raised the last just before "
             "his conversion and never entered it."
         ),
-        secrets=(
-            "Nobles and priests who knew the way once passed the false doors "
-            "into an afterlife regio. It was submerged under the Divine aura, "
-            "not destroyed, and its secret died with the priesthood. On the "
-            "night of the winter solstice the Divine sinks enough for Faerie to "
-            "show and entry is easier. Inside is a vast palace of gold and "
-            "ivory scented with myrrh, where ghosts of the old kings lounge, "
-            "speaking Ge'ez and fluent Latin. They might describe the Roman "
-            "trade, teach Ge'ez or reveal lost pagan and magical sites (p. 107)."
-        ),
+        secrets=[
+            titled(
+                "The afterlife regio",
+                "Nobles and priests who knew the way once passed the false doors "
+                "of the great stelae into an afterlife regio. It was submerged "
+                "under the Divine aura, not destroyed, and its secret died with "
+                "the priesthood.",
+            ),
+            titled(
+                "The winter solstice",
+                "On the night of the winter solstice the Divine sinks enough for "
+                "Faerie to show and entry to the hidden palace is easier.",
+            ),
+            titled(
+                "The ghosts of the old kings",
+                "Inside the hidden palace is a vast palace of gold and ivory "
+                "scented with myrrh, where ghosts of the old kings lounge, "
+                "speaking Ge'ez and fluent Latin. They might describe the Roman "
+                "trade, teach Ge'ez or reveal lost pagan and magical sites (p. "
+                "107).",
+            ),
+        ],
     )
     b.place(
         "The Stone Lion and the Quarry",
@@ -501,13 +572,19 @@ def _axum(b: Builder, p: Places) -> None:
             "and three half-worked stelae lie half in the ground. Locals guard "
             "both and answer defacement with force."
         ),
-        secrets=(
-            "An animal corpse laid at the lioness's feet on the night before "
-            "the first day of spring, and kept from scavengers until dawn, "
-            "yields 5 pawns of Animal vis in some part of it. Chips from the "
-            "partial stelae gathered at noon on Timket hold 5 pawns of Rego and "
-            "5 of Vim (p. 117)."
-        ),
+        secrets=[
+            titled(
+                "Vis of the stone lioness",
+                "An animal corpse laid at the lioness's feet on the night before "
+                "the first day of spring, and kept from scavengers until dawn, "
+                "yields 5 pawns of Animal vis in some part of it (p. 117).",
+            ),
+            titled(
+                "Vis of the partial stelae",
+                "Chips from the partial stelae gathered at noon on Timket hold 5 "
+                "pawns of Rego and 5 of Vim (p. 117).",
+            ),
+        ],
     )
 
 
@@ -547,7 +624,12 @@ def _bet_amhara(b: Builder, p: Places) -> None:
             "cattle and rabbits and six stone cisterns. Kedus Harbe retired "
             "here, and heirs were once held here."
         ),
-        secrets="The whole community has a Dominion aura of 3 (p. 117).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The whole community of Debre Damo has a Dominion aura of 3 (p. 117).",
+            ),
+        ],
     )
     hayq = p["hayq"] = b.place(
         "Lake Hayq",
@@ -624,7 +706,11 @@ def _bet_amhara(b: Builder, p: Places) -> None:
             "Islam. Its mosque was built by the Prophet's companions, exiles "
             "of 613."
         ),
-        secrets="The mosque has a Divine aura of 5 (p. 117).",
+        secrets=[
+            titled(
+                "Storyguide Notes", "Zeila's mosque has a Divine aura of 5 (p. 117)."
+            ),
+        ],
     )
 
 
@@ -650,13 +736,16 @@ def _roha(b: Builder, p: Places) -> None:
             "trenches. Bet Golgotha holds copies of Christ's tomb, Adam's tomb "
             "and the crib of the nativity.",
         ),
-        secrets=paragraphs(
-            "The whole complex has a Dominion aura of 7 (p. 117).",
-            "A framework for pilgrimage (p. 118): a season walking the tunnels, "
-            "praying at each church, fasting and defeating the trials of "
-            "demons in possessed locals or of bouda faeries calling temptation "
-            "from the rims completes a pilgrimage story (The Church pp. 16-19).",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The whole complex has a Dominion aura of 7 (p. 117). A framework "
+                "for pilgrimage (p. 118): a season walking the tunnels, praying "
+                "at each church, fasting and defeating the trials of demons in "
+                "possessed locals or of bouda faeries calling temptation from the "
+                "rims completes a pilgrimage story (The Church pp. 16-19).",
+            ),
+        ],
     )
     p["roha_town"] = b.town(
         "The Village of Roha",
@@ -698,12 +787,21 @@ def _agaw(b: Builder, p: Places) -> None:
             "the monks bar women and livestock. Solomon's ring, Menelik's, is "
             "said to be hidden on one of these isles, the place long lost."
         ),
-        secrets="The ring is a relic of Faith Score 7 for Jews, Falasha and "
-        "Ethiopian Christians, 5 for other Christians. It adds its Faith Score "
-        "to a Solomonic practitioner's casting total (Cradle & Crescent pp. "
-        "33-37) or an Ars Notoria recitation (RoP:D p. 98), and a Gifted student "
-        "may study it as a Quality 5 tractatus on Ars Notoria. Where it lies is "
-        "unknown (p. 112).",
+        secrets=[
+            titled(
+                "Solomon's ring",
+                "Solomon's ring is a relic. Where it lies is unknown (p. 112).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The ring is a relic of Faith Score 7 for Jews, Falasha and "
+                "Ethiopian Christians, 5 for other Christians. It adds its Faith "
+                "Score to a Solomonic practitioner's casting total (Cradle & "
+                "Crescent pp. 33-37) or an Ars Notoria recitation (RoP:D p. 98), "
+                "and a Gifted student may study it as a Quality 5 tractatus on "
+                "Ars Notoria.",
+            ),
+        ],
     )
     b.place(
         "Tana Qirqos",
@@ -715,8 +813,14 @@ def _agaw(b: Builder, p: Places) -> None:
             "rested before going to Axum. The ruins of a large temple stand on "
             "it."
         ),
-        secrets="Anyone with Judaic Lore who studies the ruins for a season "
-        "finds they follow the proportions of Solomon's temple (p. 119).",
+        secrets=[
+            titled(
+                "The temple's proportions",
+                "Anyone with Judaic Lore who studies the ruins on Tana Qirqos for "
+                "a season finds they follow the proportions of Solomon's temple "
+                "(p. 119).",
+            ),
+        ],
     )
     p["blue_nile"] = b.place(
         "The Blue Nile",
@@ -735,9 +839,18 @@ def _agaw(b: Builder, p: Places) -> None:
             "The 'Smoking Waters', the fall where the Blue Nile begins. Rich "
             "plants grow in its mist."
         ),
-        secrets="As the flood first starts, mist caught here at sunrise yields 3 "
-        "pawns each of Aquam, Creo, Imaginem and Perdo. Unharvested, it feeds "
-        "the flora; Plants and Beasts of Virtue are common (p. 117).",
+        secrets=[
+            titled(
+                "Vis in the mist",
+                "As the flood first starts, mist caught at Tis Abbay at sunrise "
+                "yields 3 pawns each of Aquam, Creo, Imaginem and Perdo (p. 117).",
+            ),
+            titled(
+                "The flora of Tis Abbay",
+                "Unharvested, the mist of Tis Abbay feeds the flora; Plants and "
+                "Beasts of Virtue are common (p. 117).",
+            ),
+        ],
     )
 
 
@@ -773,7 +886,12 @@ def _shewa(b: Builder, p: Places) -> None:
         inside=kingdom,
         summary="Three terraces deep along the road to Asbari's gate, growing "
         "many sorts of plant.",
-        secrets="They grow various Plants of Virtue (p. 120).",
+        secrets=[
+            titled(
+                "The terraces' plants",
+                "The Terraces of Asbari grow various Plants of Virtue (p. 120).",
+            ),
+        ],
     )
     masal = p["masal"] = b.town(
         "Masal",
@@ -796,13 +914,24 @@ def _shewa(b: Builder, p: Places) -> None:
             "The obelisk marks a way into caverns deep in the earth, some with "
             "signs of old habitation."
         ),
-        secrets=(
-            "It marks the tomb of an Axumite Falasha wizard who helped found "
-            "these towns. Frost on its shaded side on the first day of Passover "
-            "holds 4 pawns of Rego. In old sampling pits of an abandoned, "
-            "brittle obsidian seam, chips gathered once a year yield 3 pawns of "
-            "Terram and 3 of Ignem (p. 121)."
-        ),
+        secrets=[
+            titled(
+                "The wizard's tomb",
+                "The Masal Obelisk marks the tomb of an Axumite Falasha wizard "
+                "who helped found these towns (p. 121).",
+            ),
+            titled(
+                "Vis in the frost",
+                "Frost on the Masal Obelisk's shaded side on the first day of "
+                "Passover holds 4 pawns of Rego (p. 121).",
+            ),
+            titled(
+                "Vis in the obsidian seam",
+                "In old sampling pits of an abandoned, brittle obsidian seam "
+                "under the Masal Obelisk, chips gathered once a year yield 3 "
+                "pawns of Terram and 3 of Ignem (p. 121).",
+            ),
+        ],
     )
     b.town(
         "Nora",
@@ -819,7 +948,11 @@ def _shewa(b: Builder, p: Places) -> None:
             "15-foot walls, has a lush forest only 10 feet deep and 20 tall. "
             "Outside, a mound of raw stone holds hundreds of carved tombs."
         ),
-        secrets="The church has a Dominion aura of 3 (p. 120).",
+        secrets=[
+            titled(
+                "Storyguide Notes", "Nora's church has a Dominion aura of 3 (p. 120)."
+            ),
+        ],
     )
 
 
@@ -843,8 +976,16 @@ def _southern_sultanates(b: Builder, p: Places) -> None:
             "pays Ethiopia tribute, is independent in name, and loves the "
             "elephants of the nearby coast. He wants a herd of his own."
         ),
-        secrets="The main mosque is a converted Axumite church; the Divine aura "
-        "of 3 covers the whole of the islands (p. 121).",
+        secrets=[
+            titled(
+                "Dahlak's main mosque",
+                "The main mosque of Dahlak is a converted Axumite church (p. 121).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Divine aura of 3 covers the whole of the islands (p. 121).",
+            ),
+        ],
     )
     for key, name, text in (
         (
@@ -997,7 +1138,7 @@ def _rulers(b: Builder, p: Places) -> dict[str, Neighbour]:
 
 
 def _sketch(
-    b: Builder, name: str, summary: str, age: int | None = None, secrets: str = ""
+    b: Builder, name: str, summary: str, age: int | None = None, secrets: Secrets = ""
 ) -> Character:
     return b.magus(
         name,
@@ -1058,9 +1199,18 @@ def _people(b: Builder, p: Places, w: dict[str, Neighbour]) -> None:
         "A boy of Shewa, son of the priest Sagaz Ab and Egzi'e Haraya, promised "
         "to God before his birth and learning scripture from his father.",
         5,
-        "If history holds he will be one of Ethiopia's great saints, renewing "
-        "the faith in the north, and abuna at 69 in 1284. Archangel Michael "
-        "watches him (RoP:D p. 30; p. 121).",
+        [
+            titled(
+                "The archangel's watch",
+                "Archangel Michael watches him (RoP:D p. 30; p. 121).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "If history holds he will be one of Ethiopia's great saints, "
+                "renewing the faith in the north, and abuna at 69 in 1284 (p. "
+                "121).",
+            ),
+        ],
     )
     _sketch(
         b,
@@ -1068,7 +1218,12 @@ def _people(b: Builder, p: Places, w: dict[str, Neighbour]) -> None:
         "The man in Egypt certain he will be next patriarch of Alexandria. "
         "Deadlock keeps the seat vacant, and he still sends letters south twice "
         "a year to keep watch on Axum.",
-        secrets="If history holds he wins in 1235 as Cyril III (p. 111).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "If history holds he wins in 1235 as Cyril III (p. 111).",
+            ),
+        ],
     )
 
 
@@ -1442,42 +1597,68 @@ def _creatures(b: Builder, p: Places) -> None:
 
 # -- the three covenant sites --
 
-SIWA_SECRETS = paragraphs(
-    "Boons: Difficult Access (Minor Site); Edifices (Minor Fortification); "
-    "Important Building x3, the Aghurmi temple fort and the lesser temples at "
-    "Abu Sharef and Bilad al-Rum (Minor Fortification); Peasants (Free "
-    "Residents); Strong Community (Minor Residents); Ungoverned (Minor External "
-    "Relations). Hooks: Poverty, Multiple Sites (Minor Resources; pp. 128, "
-    "131); Road (Minor Site); Tribunal Border (Major External Relations); "
-    "Unsafe (Minor External Relations). The book counts seven of each, and "
-    "would give Castle and Ringworks only if the Bedouin matter to the saga. "
-    "It suggests Castle, minor Natural Disaster (locusts on the dates), or a "
-    "minor Regio holding a version of the temples (pp. 128-130).",
-    "Multiple Sites (Major/Minor Resources Hook, p. 131): facilities at several "
-    "sites must go without the Aegis, share tokens or take several rituals in "
-    "a day, at the cost of vis, of unguarded sanctums or of more tokens to "
-    "steal. Major with five or more sites.",
-    "Resources (pp. 131-133): up to four lab sites, a working covenant needing "
-    "at least two: Siwa Village and any of Aghurmi, Abu Sharef or Bilad "
-    "al-Rum. Income: 20 Mythic Pounds a year from dates, and 20 from caravan "
-    "barter and rest fees. Think of it as between Manor and Farm and Grand "
-    "Castle (Covenants pp. 45-46). Few craftsmen; true specialists must be "
-    "brought in. Scores in Tamazight count one less unless Siwan is the "
-    "specialty.",
-    "Vis (pp. 133-134): Alexander's Camp, 4 Herbam a year, 20 points: cut the "
-    "first fronds to sway on the Ides of February, Magic aura 2. Alexander's "
-    "Stele, 6 Vim, 30 points: a prism, gem or glass set atop it to catch the "
-    "sunrise on the Ides of February, Magic aura 3. Crypts of Jabal al-Mawta, "
-    "5 Corpus, 25 points: a lone skull in the tomb with two cobra-headed "
-    "pillars, on the winter solstice, ending if the tombs are emptied, Magic "
-    "aura 2. Spring of the Sun, 6 Aquam or 6 Ignem, 30 points: fill an amphora "
-    "on the full moon between late October and early November, at noon for "
-    "Aquam or midnight for Ignem, Magic aura 2.",
-    "Story themes (pp. 134-135): exploring deserts, native traditions and lost "
-    "ruins from a safe distance; scarcity and survival when isolation turns "
-    "dangerous. The caravans bring the slave and salt trade and the Great "
-    "Desert's adventures to the door (BS&S).",
-)
+SIWA_SECRETS = [
+    titled(
+        "Siwa's resources",
+        "Siwa's resources (pp. 131-133): up to four lab sites, a working "
+        "covenant needing at least two: Siwa Village and any of Aghurmi, "
+        "Abu Sharef or Bilad al-Rum. Income: 20 Mythic Pounds a year from "
+        "dates, and 20 from caravan barter and rest fees. Few craftsmen; "
+        "true specialists must be brought in.",
+    ),
+    titled(
+        "Alexander's Camp",
+        "Alexander's Camp gives 4 Herbam vis a year: cut the first fronds "
+        "to sway on the Ides of February (pp. 133-134).",
+    ),
+    titled(
+        "Alexander's Stele",
+        "Alexander's Stele gives 6 Vim vis: a prism, gem or glass set "
+        "atop it to catch the sunrise on the Ides of February (pp. "
+        "133-134).",
+    ),
+    titled(
+        "The Crypts of Jabal al-Mawta",
+        "The Crypts of Jabal al-Mawta give 5 Corpus vis: a lone skull in "
+        "the tomb with two cobra-headed pillars, on the winter solstice, "
+        "ending if the tombs are emptied (pp. 133-134).",
+    ),
+    titled(
+        "The Spring of the Sun",
+        "The Spring of the Sun gives 6 Aquam or 6 Ignem vis: fill an "
+        "amphora on the full moon between late October and early "
+        "November, at noon for Aquam or midnight for Ignem (pp. 133-134).",
+    ),
+    titled(
+        "Storyguide Notes",
+        "Boons: Difficult Access (Minor Site); Edifices (Minor "
+        "Fortification); Important Building x3, the Aghurmi temple fort "
+        "and the lesser temples at Abu Sharef and Bilad al-Rum (Minor "
+        "Fortification); Peasants (Free Residents); Strong Community "
+        "(Minor Residents); Ungoverned (Minor External Relations). Hooks: "
+        "Poverty, Multiple Sites (Minor Resources; pp. 128, 131); Road "
+        "(Minor Site); Tribunal Border (Major External Relations); Unsafe "
+        "(Minor External Relations). The book counts seven of each, and "
+        "would give Castle and Ringworks only if the Bedouin matter to "
+        "the saga. It suggests Castle, minor Natural Disaster (locusts on "
+        "the dates), or a minor Regio holding a version of the temples "
+        "(pp. 128-130).\n\nMultiple Sites (Major/Minor Resources Hook, p. "
+        "131): facilities at several sites must go without the Aegis, "
+        "share tokens or take several rituals in a day, at the cost of "
+        "vis, of unguarded sanctums or of more tokens to steal. Major "
+        "with five or more sites.\n\nResources: think of it as between "
+        "Manor and Farm and Grand Castle (Covenants pp. 45-46). Scores in "
+        "Tamazight count one less unless Siwan is the specialty.\n\nVis "
+        "(pp. 133-134): Alexander's Camp, 20 points, Magic aura 2. "
+        "Alexander's Stele, 30 points, Magic aura 3. Crypts of Jabal "
+        "al-Mawta, 25 points, Magic aura 2. Spring of the Sun, 30 points, "
+        "Magic aura 2.\n\nStory themes (pp. 134-135): exploring deserts, "
+        "native traditions and lost ruins from a safe distance; scarcity "
+        "and survival when isolation turns dangerous. The caravans bring "
+        "the slave and salt trade and the Great Desert's adventures to "
+        "the door (BS&S).",
+    ),
+]
 
 
 def _siwa(b: Builder, p: Places) -> None:
@@ -1707,45 +1888,67 @@ def _siwa(b: Builder, p: Places) -> None:
         b.link(character, "places", siwa, "Lives by the oasis")
 
 
-IKHMINDI_SECRETS = paragraphs(
-    "Hooks: Castle (Major Fortification); Fragile Vis Sources (Major Resources; "
-    "two sites, the mine unrepairable); Poverty (Minor Resources); Ringworks "
-    "(Free Fortification Choice); Road (Minor Site); Unsafe (Minor External "
-    "Relations). Boons: Edifices (Minor Fortification); Difficult Access (Minor "
-    "Site); Healthy Feature (Minor Site; the well, +1 to Aging Rolls for those "
-    "who drink from it most of the year); Missile Weapons (Minor Residents); "
-    "Important Building x2, the two churches (Minor Fortifications); Peasants "
-    "(Free Residents). The book counts six Boons and eight Hooks (pp. 136-137).",
-    "Suggested: minor Contested Resources; minor Hermit, a Sufi or Gnostic "
-    "mystic opposed to the use of the churches; major Beholden to regional "
-    "inspectors; minor Rival, a Bedouin tribe. Boons: minor Hidden Resources, "
-    "from a lost Nubian tomb or the ruins of walled Sabagura 5 leagues north; "
-    "major Autocephelous, which spares the inspectors but may mean worse "
-    "raiders (p. 137).",
-    "Fragile Vis Sources (Major/Minor Resources Hook, p. 134): a source of four "
-    "or more pawns stops if a feature of the site is damaged, resuming if "
-    "repaired. Major for three or more fragile sites; one that cannot be "
-    "repaired counts as two. It may be unknown to the covenant.",
-    "Resources (pp. 137-139): up to three labs with living space in the two "
-    "churches and the catacombs, or six without. Income only from fees and "
-    "barter with spring and late autumn caravans, or Tapara's ventures. Few "
-    "specialists and no teachers; a hermit might teach, and training can be "
-    "had at Faras or Qasr Ibrim. A basketweaver, fishermen, herdsmen, potters "
-    "and a smith would serve.",
-    "Vis (pp. 139-140): Abandoned Copper Mine, 4 Rego and 3 Terram a year, 35 "
-    "points in all, Magic aura 3: gathers in copper nuggets or tools left "
-    "against the seam, 25 leagues east on the Wadi Allaqi route, and stops for "
-    "good if Hathor's statue at the door is taken. Black Sandbar of the Nile, 4 "
-    "Creo twice a year, 40 points, no aura: rich black silt filling two "
-    "amphorae as the flood rises in June and falls in October, two leagues "
-    "north of the fishing camp. Temple Kiosk of Qertassi, 7 Imaginem a year, "
-    "35 points, Magic aura 3: haboobs leave it in the sand at the Hathor "
-    "columns, 25 leagues northeast; it stops if the capitals are harmed and "
-    "returns when they are mended.",
-    "Story themes (p. 140): survival in a harsh land, exploration for "
-    "treasure-filled tombs, lost magics, Bedouin adversity, and a great "
-    "legacy.",
-)
+IKHMINDI_SECRETS = [
+    titled(
+        "Ikhmindi's resources",
+        "Ikhmindi's resources (pp. 137-139): up to three labs with living "
+        "space in the two churches and the catacombs, or six without. "
+        "Income only from fees and barter with spring and late autumn "
+        "caravans, or Tapara's ventures. Few specialists and no teachers; "
+        "a hermit might teach, and training can be had at Faras or Qasr "
+        "Ibrim. A basketweaver, fishermen, herdsmen, potters and a smith "
+        "would serve.",
+    ),
+    titled(
+        "The Abandoned Copper Mine",
+        "The Abandoned Copper Mine gives 4 Rego and 3 Terram vis a year: "
+        "it gathers in copper nuggets or tools left against the seam, 25 "
+        "leagues east on the Wadi Allaqi route, and stops for good if "
+        "Hathor's statue at the door is taken (pp. 139-140).",
+    ),
+    titled(
+        "The Black Sandbar of the Nile",
+        "The Black Sandbar of the Nile gives 4 Creo vis twice a year: "
+        "rich black silt filling two amphorae as the flood rises in June "
+        "and falls in October, two leagues north of the fishing camp (pp. "
+        "139-140).",
+    ),
+    titled(
+        "The Temple Kiosk of Qertassi",
+        "The Temple Kiosk of Qertassi gives 7 Imaginem vis a year: "
+        "haboobs leave it in the sand at the Hathor columns, 25 leagues "
+        "northeast; it stops if the capitals are harmed and returns when "
+        "they are mended (pp. 139-140).",
+    ),
+    titled(
+        "Storyguide Notes",
+        "Hooks: Castle (Major Fortification); Fragile Vis Sources (Major "
+        "Resources; two sites, the mine unrepairable); Poverty (Minor "
+        "Resources); Ringworks (Free Fortification Choice); Road (Minor "
+        "Site); Unsafe (Minor External Relations). Boons: Edifices (Minor "
+        "Fortification); Difficult Access (Minor Site); Healthy Feature "
+        "(Minor Site; the well, +1 to Aging Rolls for those who drink "
+        "from it most of the year); Missile Weapons (Minor Residents); "
+        "Important Building x2, the two churches (Minor Fortifications); "
+        "Peasants (Free Residents). The book counts six Boons and eight "
+        "Hooks (pp. 136-137).\n\nSuggested: minor Contested Resources; "
+        "minor Hermit, a Sufi or Gnostic mystic opposed to the use of the "
+        "churches; major Beholden to regional inspectors; minor Rival, a "
+        "Bedouin tribe. Boons: minor Hidden Resources, from a lost Nubian "
+        "tomb or the ruins of walled Sabagura 5 leagues north; major "
+        "Autocephelous, which spares the inspectors but may mean worse "
+        "raiders (p. 137).\n\nFragile Vis Sources (Major/Minor Resources "
+        "Hook, p. 134): a source of four or more pawns stops if a feature "
+        "of the site is damaged, resuming if repaired. Major for three or "
+        "more fragile sites; one that cannot be repaired counts as two. "
+        "It may be unknown to the covenant.\n\nVis (pp. 139-140): Abandoned "
+        "Copper Mine, 35 points in all, Magic aura 3. Black Sandbar of "
+        "the Nile, 40 points, no aura. Temple Kiosk of Qertassi, 35 "
+        "points, Magic aura 3.\n\nStory themes (p. 140): survival in a "
+        "harsh land, exploration for treasure-filled tombs, lost magics, "
+        "Bedouin adversity, and a great legacy.",
+    ),
+]
 
 
 def _ikhmindi(b: Builder, p: Places) -> None:
@@ -1914,53 +2117,79 @@ def _ikhmindi(b: Builder, p: Places) -> None:
         b.link(character, "places", ikhmindi, "Lives here")
 
 
-ADULIS_SECRETS = paragraphs(
-    "Hooks: Dwindling Resources (Minor Resources; pearl beds poached by "
-    "fishermen of Adulis or Dahlek, or a jinn who finds them delicious); Linked "
-    "Vis Sources (Minor Resources); Poorly Defensible (Minor Site); Regio "
-    "(Minor Site); Road (Minor Site); Tribunal Border (Major External "
-    "Relations); Urban (Minor Site). Boons: Healthy Feature (Minor Site; harbor "
-    "breezes, +1 to Aging Rolls for residents most of the year); Important "
-    "Building (Minor Fortification; the lighthouse); Secondary Income (Minor "
-    "Resources; myrrh); Unwitting Defenders (Minor External Relations); Sailors "
-    "(Free Resident). The book counts four Boons and nine Hooks (pp. 141-142). "
-    "It suggests minor Uncontrolled Portal, or major Monster, Ceto bursting up "
-    "through the docks in storms (p. 142).",
-    "Linked Vis Site (Major/Minor Resources Hook, pp. 142-143): two or more "
-    "sources of four pawns or more depend on one condition. If it fails their "
-    "rates halve in the first year, quarter in the second and then stop; a "
-    "story restarts them, over three years. The book's example is bees of 6 "
-    "Animal and wildflowers of 4 Herbam in Iberia. Major links four sites; "
-    "permanent damage counts as two.",
-    "Unwitting Defenders (Major/Minor Resources Boon, p. 143; listed as External "
-    "Relations on p. 142): a force unaware of the covenant keeps bandits and "
-    "pirates off. Revealing the covenant turns it into Local or Powerful Ally, "
-    "or Rival or Unsafe. Major means a force that can stand a siege, paid for "
-    "in taxes.",
-    "Resources (pp. 143-144): the lighthouse can hold four labs and sanctums, "
-    "but then cannot serve as a lighthouse; magical light costs -5 to lab "
-    "work unless the magus is Blind, until a story or project cures it. Two "
-    "Typical Quality sources give 100 Mythic Pounds each: myrrh grove and "
-    "pearl fishery, on unclaimed islands. Any force over twenty grogs draws "
-    "notice. An ex-ship captain might be autocrat; potters make hard white "
-    "brick with crushed coral.",
-    "Vis (p. 144): Fire Coral Beds, 6 Vim a year, 30 points; Magical School of "
-    "Fish, 6 Animal a year, 30 points; both yield 1 pawn every two months or 6 "
-    "each year, and a second early harvest in a year cuts both to 3 until "
-    "left alone for a year. Storm Flotsam, 3 Perdo twice a year with the "
-    "first spring and first autumn storm, 30 points, in the wreckage under "
-    "the docks.",
-    "Relations (p. 144): the sultan of Dahlek would blackmail the magi into "
-    "helping seize Adulis, but might sell safe passage of the Bab-el-Mandeb "
-    "for an elephant and regular fodder. The bishop may urge the governor to "
-    "attack; with the bishop discredited or replaced, the governor may accept "
-    "them for aid in need and regular gifts, which other magi might frown on.",
-    "Story themes (p. 144): discovery and exploration from a base open to "
-    "Egypt, Ethiopia, the Levant Tribunal and Arabia, and more distantly the "
-    "Great Desert, Nubia and Soqotra, by way of Yemeni merchants. Christian "
-    "magi may struggle to get books; Muslim magi are nearer the Levant and "
-    "Arabia.",
-)
+ADULIS_SECRETS = [
+    titled(
+        "The village's resources",
+        "The village's resources (pp. 143-144): the lighthouse can hold "
+        "four labs and sanctums, but then cannot serve as a lighthouse. "
+        "Two Typical Quality sources give 100 Mythic Pounds each: myrrh "
+        "grove and pearl fishery, on unclaimed islands. Any force over "
+        "twenty grogs draws notice. An ex-ship captain might be autocrat; "
+        "potters make hard white brick with crushed coral.",
+    ),
+    titled(
+        "The fire coral and the fish",
+        "The Fire Coral Beds give 6 Vim a year and the Magical School of "
+        "Fish 6 Animal a year; both yield 1 pawn every two months or 6 "
+        "each year, and a second early harvest in a year cuts both to 3 "
+        "until left alone for a year (p. 144).",
+    ),
+    titled(
+        "The storm flotsam",
+        "Storm Flotsam gives 3 Perdo vis twice a year with the first "
+        "spring and first autumn storm, in the wreckage under the docks "
+        "(p. 144).",
+    ),
+    titled(
+        "The sultan of Dahlek",
+        "The sultan of Dahlek would blackmail the magi into helping seize "
+        "Adulis, but might sell safe passage of the Bab-el-Mandeb for an "
+        "elephant and regular fodder (p. 144).",
+    ),
+    titled(
+        "The bishop and the governor",
+        "The bishop may urge the governor to attack; with the bishop "
+        "discredited or replaced, the governor may accept them for aid in "
+        "need and regular gifts, which other magi might frown on (p. "
+        "144).",
+    ),
+    titled(
+        "Storyguide Notes",
+        "Hooks: Dwindling Resources (Minor Resources; pearl beds poached "
+        "by fishermen of Adulis or Dahlek, or a jinn who finds them "
+        "delicious); Linked Vis Sources (Minor Resources); Poorly "
+        "Defensible (Minor Site); Regio (Minor Site); Road (Minor Site); "
+        "Tribunal Border (Major External Relations); Urban (Minor Site). "
+        "Boons: Healthy Feature (Minor Site; harbor breezes, +1 to Aging "
+        "Rolls for residents most of the year); Important Building (Minor "
+        "Fortification; the lighthouse); Secondary Income (Minor "
+        "Resources; myrrh); Unwitting Defenders (Minor External "
+        "Relations); Sailors (Free Resident). The book counts four Boons "
+        "and nine Hooks (pp. 141-142). It suggests minor Uncontrolled "
+        "Portal, or major Monster, Ceto bursting up through the docks in "
+        "storms (p. 142).\n\nLinked Vis Site (Major/Minor Resources Hook, "
+        "pp. 142-143): two or more sources of four pawns or more depend "
+        "on one condition. If it fails their rates halve in the first "
+        "year, quarter in the second and then stop; a story restarts "
+        "them, over three years. The book's example is bees of 6 Animal "
+        "and wildflowers of 4 Herbam in Iberia. Major links four sites; "
+        "permanent damage counts as two.\n\nUnwitting Defenders "
+        "(Major/Minor Resources Boon, p. 143; listed as External "
+        "Relations on p. 142): a force unaware of the covenant keeps "
+        "bandits and pirates off. Revealing the covenant turns it into "
+        "Local or Powerful Ally, or Rival or Unsafe. Major means a force "
+        "that can stand a siege, paid for in taxes.\n\nResources: magical "
+        "light in the lighthouse costs -5 to lab work unless the magus is "
+        "Blind, until a story or project cures it.\n\nVis (p. 144): Fire "
+        "Coral Beds, 30 points; Magical School of Fish, 30 points; Storm "
+        "Flotsam, 30 points.\n\nStory themes (p. 144): discovery and "
+        "exploration from a base open to Egypt, Ethiopia, the Levant "
+        "Tribunal and Arabia, and more distantly the Great Desert, Nubia "
+        "and Soqotra, by way of Yemeni merchants. Christian magi may "
+        "struggle to get books; Muslim magi are nearer the Levant and "
+        "Arabia.",
+    ),
+]
 
 
 def _adulis(b: Builder, p: Places) -> None:
@@ -2006,11 +2235,14 @@ def _adulis(b: Builder, p: Places) -> None:
             "northeast rim, among fish twice the common size, and fishermen "
             "of Adulis eye both in hard times."
         ),
-        secrets=(
-            "A three-level regio opening to the Magic Realm, likely tied to "
-            "the myth of Perseus and Andromeda, and outside a likely Aegis (pp. "
-            "141-142)."
-        ),
+        secrets=[
+            titled(
+                "What lies in Ceto's Well",
+                "Ceto's Well is a three-level regio opening to the Magic Realm, "
+                "likely tied to the myth of Perseus and Andromeda, and outside a "
+                "likely Aegis (pp. 141-142).",
+            ),
+        ],
     )
     b.link(p["ethiopia"], "places", p["cetos_well"], "Ceto's old hunting ground")
     captain = b.magus(
@@ -2199,9 +2431,14 @@ def _ethiopian_stories(b: Builder, p: Places) -> None:
         "firstborn, and they kept his ring, one of Solomon's, with a seal. Its "
         "hiding place was lost among Tana's islands and monasteries. Finding it "
         "could fill the years of any magus curious about Theurgy or Ars Notoria.",
-        secrets="If it lies with an unburied Kahen, the ghost could speak of the "
-        "Ark's powers against unbelievers and of old sites in Ethiopia, to one "
-        "who has Ge'ez or Hebrew at 4 (p. 112).",
+        secrets=[
+            titled(
+                "The Kahen's ghost",
+                "If Solomon's ring lies with an unburied Kahen, the ghost could "
+                "speak of the Ark's powers against unbelievers and of old sites "
+                "in Ethiopia, to one who has Ge'ez or Hebrew at 4 (p. 112).",
+            ),
+        ],
     )
     _seed(
         b,
@@ -2252,12 +2489,25 @@ def _ethiopian_stories(b: Builder, p: Places) -> None:
         "The Lost Temple",
         p["tana"],
         "The ruin on Tana Qirqos can show where the Holy of Holies lay at Jerusalem.",
-        secrets="That may lead to a Divine regio made by Solomon and peopled by "
-        "nephilim, or this temple may be another door to it, joining Ethiopia "
-        "and the Levant. The nephilim knew the Ark, may have studied Ars Notoria "
-        "or Kabbalah with Solomon, and might help recover the Ark or fight "
-        "demons. Students of Hermetic Architecture may want the ruins too (p. "
-        "119).",
+        secrets=[
+            titled(
+                "The nephilim's regio",
+                "Where the Holy of Holies lay may lead to a Divine regio made by "
+                "Solomon and peopled by nephilim, or the temple on Tana Qirqos "
+                "may be another door to it, joining Ethiopia and the Levant (p. "
+                "119).",
+            ),
+            titled(
+                "The nephilim",
+                "The nephilim knew the Ark, may have studied Ars Notoria or "
+                "Kabbalah with Solomon, and might help recover the Ark or fight "
+                "demons (p. 119).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Students of Hermetic Architecture may want the ruins too (p. 119).",
+            ),
+        ],
     )
     _seed(
         b,
@@ -2275,10 +2525,19 @@ def _ethiopian_stories(b: Builder, p: Places) -> None:
         "Pagan raiders from beyond the Jamma carry off the mother of young "
         "Takle Haymanot to wed one of their lords. Her return will prove the "
         "archangel's care.",
-        secrets="A young man attends the sleeping boy, calls magi by their birth "
-        "names, ignores the Aegis and vanishes: Michael. A devout magus, or one "
-        "with a Divine Ghostly Warder or Guardian Angel, may act as his "
-        "instrument (p. 121).",
+        secrets=[
+            titled(
+                "The young man",
+                "A young man attends the sleeping Takle Haymanot, calls magi by "
+                "their birth names, ignores the Aegis and vanishes: Michael (p. "
+                "121).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A devout magus, or one with a Divine Ghostly Warder or Guardian "
+                "Angel, may act as his instrument (p. 121).",
+            ),
+        ],
     )
 
 
@@ -2291,9 +2550,18 @@ def _roha_stories(b: Builder, p: Places) -> None:
         "for a second base against the Levant. They fought for him against "
         "Kedus Harbe, and are now his secret allies, gathering knights in his "
         "cavalry and influence at his court.",
-        secrets="Finding a covenant, they may seek alliance, destroy it, or "
-        "steer it. The storyguide sets whether the Order is Divine, Infernal or "
-        "mundane (p. 118).",
+        secrets=[
+            titled(
+                "What the Templars may do",
+                "Finding a covenant, the Templars may seek alliance, destroy it, "
+                "or steer it (p. 118).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The storyguide sets whether the Order is Divine, Infernal or "
+                "mundane (p. 118).",
+            ),
+        ],
         antagonist="The Templars of Ethiopia",
     )
     _seed(
@@ -2337,9 +2605,14 @@ def _roha_stories(b: Builder, p: Places) -> None:
         "prayer or walk in human form, asking favours of the faithful, from "
         "feeding a senile anchorite to recovering captives from pagans. They do "
         "not always know the greater purpose.",
-        secrets="If the Templars go for the Ark, the angels may guide the magi "
-        "to help or stop them: God let it leave Jerusalem once, and may want it "
-        "moved, or kept (p. 118).",
+        secrets=[
+            titled(
+                "The angels and the Ark",
+                "If the Templars go for the Ark, the angels may guide the magi to "
+                "help or stop them: God let it leave Jerusalem once, and may want "
+                "it moved, or kept (p. 118).",
+            ),
+        ],
         realm=DIVINE,
     )
     _seed(
@@ -2350,8 +2623,15 @@ def _roha_stories(b: Builder, p: Places) -> None:
         "Fearing the sin of the nephilim, the others will not act themselves, "
         "but press the characters to take the mortal far away, even on a "
         "dangerous mission to Egypt or across the Great Desert.",
-        secrets="Desperate, an angel may urge a grog to kill the mortal. It may "
-        "all be a test of the characters (p. 118).",
+        secrets=[
+            titled(
+                "The angel's desperation",
+                "Desperate, the angel may urge a grog to kill the mortal (p. 118).",
+            ),
+            titled(
+                "Storyguide Notes", "It may all be a test of the characters (p. 118)."
+            ),
+        ],
         realm=DIVINE,
     )
 
@@ -2483,9 +2763,14 @@ def _site_stories(b: Builder, p: Places) -> None:
             "his tax collectors, the magi might take on the town's debt and "
             "deliver it, and be made its governors in return for gold or "
             "slaves. A visiting Quaesitor may be less forgiving.",
-            "The eparch ranks as a metropolitan and likely has strong Magic "
-            "Resistance from Commanding Presence (RoP:D p. 42) or a relic, and "
-            "Divine agents (p. 134).",
+            [
+                titled(
+                    "The eparch's protection",
+                    "The eparch ranks as a metropolitan and likely has strong Magic "
+                    "Resistance from Commanding Presence (RoP:D p. 42) or a relic, "
+                    "and Divine agents (p. 134).",
+                ),
+            ],
         ),
         (
             "The Past of a Slave",
@@ -2558,10 +2843,19 @@ def _adulis_stories(b: Builder, p: Places) -> None:
             "A local Christian woman died saving the village from Ceto. Her "
             "bones lie unspoiled in the fire coral, venerated but unrecognized by "
             "the Church.",
-            "They hold a Faith point, and no vis can be gathered while they lie "
-            "there. Whoever moves them has dreams, and her spirit promises the "
-            "vis sites' secrets once they reach the bishop in Adulis, if the "
-            "magi can manage that unnoticed (p. 139).",
+            [
+                titled(
+                    "The bones and the vis",
+                    "The woman's bones hold a Faith point, and no vis can be gathered "
+                    "while they lie there (p. 139).",
+                ),
+                titled(
+                    "Moving the bones",
+                    "Whoever moves the woman's bones has dreams, and her spirit "
+                    "promises the vis sites' secrets once they reach the bishop in "
+                    "Adulis, if the magi can manage that unnoticed (p. 139).",
+                ),
+            ],
         ),
     ):
         _seed(b, name, place, text, secrets=hidden)

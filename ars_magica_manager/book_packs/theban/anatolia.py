@@ -24,7 +24,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
 from .. import east
-from ..builder import Builder, joined_lines, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -177,9 +177,19 @@ def _bithynia(theban: Theban) -> None:
             "flee a stronger band. A Redcap riding solo is just the "
             "prey they like.",
         ),
-        secrets="No magus has yet connected the roadside killings with the "
-        "demons; a Redcap of Alexandria or Moero's Garden's covenfolk "
-        "on an errand are the likeliest next victims.",
+        secrets=[
+            titled(
+                "Who the killers are",
+                "No magus has yet connected the roadside killings about "
+                "Nicaea with the demons.",
+            ),
+            titled(
+                "The likeliest next victims",
+                "A Redcap of Alexandria or Moero's Garden's covenfolk on an "
+                "errand are the likeliest next victims of the roadside "
+                "killings about Nicaea.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -271,12 +281,24 @@ def _troad(theban: Theban) -> None:
             "shores as if with Keen Vision. The hill has an Infernal "
             "aura of 3.",
         ),
-        secrets="Artabanos made a druj build the hill in a single day, then "
-        "bound her under it and fed her power into the king's view; "
-        "her malice seeped through and filled Xerxes with doubt and "
-        "gloom. She is bound there still (Infernal Might 30, an "
-        "Obsession of Doubt; see the Bestiary), and anyone using the "
-        "view is open to her Obsession.",
+        secrets=[
+            titled(
+                "How the hill was made",
+                "Artabanos made a druj build the Vantage Point of Xerxes in "
+                "a single day, then bound her under it and fed her power "
+                "into the king's view; her malice seeped through and filled "
+                "Xerxes with doubt and gloom.",
+            ),
+            titled(
+                "The druj under the hill",
+                "The druj is bound under the Vantage Point of Xerxes still, "
+                "and anyone using the view is open to her doubt.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The druj: Infernal Might 30, an Obsession of Doubt; see the Bestiary.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -335,25 +357,46 @@ def _troad(theban: Theban) -> None:
             "vanished and no search found a trace. The Tribunal now "
             "turns down any new proposal with ease.",
         ),
-        secrets=paragraphs(
-            "Wilusa was built swiftly by magic in a Faerie regio of "
-            "aura 4, but not the one where the Scamander's spirit "
-            "dwells: a faerie calling himself Odysseus fooled "
-            "Droserius, then sealed the regio. He has glamoured the "
-            "covenant to look like Troy and throws the war's last "
-            "assault at it again and again, the magi defending it by "
-            "reflex; by bending time, the faeries have kept it up for "
-            "more than a century, while the magi think only months "
-            "have passed. Odysseus is fully cognizant and hopes to "
-            "gather enough vitality to change his own story.",
-            "Finding that regio is hard: other faeries lure searchers "
-            "into their own tales, it takes good Faerie Lore and "
-            "patient exploring, and more than one regio stages the "
-            "sack, so beating the 'Greeks' may only show the searchers "
-            "they are in the wrong Troy. Even rescued, Droserius and "
-            "his sodales will be loath to leave until shown that a "
-            "hundred years have gone by.",
-        ),
+        secrets=[
+            titled(
+                "Where Wilusa went",
+                "Wilusa was built swiftly by magic in a Faerie regio at "
+                "Ilion, but not the one where the Scamander's spirit "
+                "dwells: a faerie calling himself Odysseus fooled "
+                "Droserius, then sealed the regio.",
+            ),
+            titled(
+                "The endless siege",
+                "The faerie Odysseus has glamoured Wilusa to look like Troy "
+                "and throws the war's last assault at it again and again, "
+                "the magi defending it by reflex; by bending time, the "
+                "faeries have kept it up for more than a century, while the "
+                "magi think only months have passed.",
+            ),
+            titled(
+                "What Odysseus wants",
+                "The faerie Odysseus who holds Wilusa is fully cognizant and "
+                "hopes to gather enough vitality to change his own story.",
+            ),
+            titled(
+                "Finding the regio",
+                "Finding Wilusa's regio is hard: other faeries lure "
+                "searchers into their own tales, and more than one regio "
+                "stages the sack, so beating the 'Greeks' may only show the "
+                "searchers they are in the wrong Troy.",
+            ),
+            titled(
+                "Bringing the magi home",
+                "Even rescued, Droserius and his sodales will be loath to "
+                "leave Wilusa until shown that a hundred years have gone "
+                "by.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Wilusa's regio has a Faerie aura of 4. Finding it takes "
+                "good Faerie Lore and patient exploring.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
 
@@ -443,23 +486,42 @@ def _pergamos(theban: Theban) -> None:
             "Lucian and his Children of Olympos think it central to "
             "their plan to make pacts with the Greek gods.",
         ),
-        secrets=paragraphs(
-            "The altar is the lock on the prison of Klymene, Titaness "
-            "of fame (Magic Might 50, see the Bestiary), one of the "
-            "titanesses who stayed neutral in the Titanomachy and were "
-            "bound away from Tartaros. A quirk of her binding lets "
-            "magi draw on her power for their rituals. The bonds have "
-            "a strength of 50, restored at each new year, and each "
-            "ritual cast here wears them down by the pawns it would "
-            "normally cost; if they fall to nothing within one year, "
-            "the altar splits in two and she goes free.",
-            "She thought her prison a kindness, gentler than Tartaros "
-            "and shared with her sisters, and freed she has nowhere "
-            "to go: she might go back to the Magic Realm, settle on a "
-            "mountain of the Tribunal and upset all around her, or "
-            "range the land freeing other titanesses to bring back "
-            "their old revels.",
-        ),
+        secrets=[
+            titled(
+                "What the altar locks",
+                "The Great Altar of Pergamos is the lock on the prison of "
+                "Klymene, Titaness of fame, one of the titanesses who "
+                "stayed neutral in the Titanomachy and were bound away "
+                "from Tartaros.",
+            ),
+            titled(
+                "Why rituals work here",
+                "A quirk of Klymene's binding lets magi draw on her power "
+                "for their rituals at the Great Altar of Pergamos.",
+            ),
+            titled(
+                "The bonds wear thin",
+                "Each ritual cast at the Great Altar of Pergamos wears down "
+                "Klymene's bonds; if they fall to nothing within one year, "
+                "the altar splits in two and she goes free.",
+            ),
+            titled(
+                "Klymene freed",
+                "Klymene thought her prison a kindness, gentler than "
+                "Tartaros and shared with her sisters, and freed she has "
+                "nowhere to go: she might go back to the Magic Realm, "
+                "settle on a mountain of the Tribunal and upset all around "
+                "her, or range the land freeing other titanesses to bring "
+                "back their old revels.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Klymene: Magic Might 50, see the Bestiary. The bonds have a "
+                "strength of 50, restored at each new year, and each ritual "
+                "cast here wears them down by the pawns it would normally "
+                "cost.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -554,9 +616,17 @@ def _lydia(theban: Theban) -> None:
             "inside the walls, which makes coming and going hard for "
             "the Redcaps.",
         ),
-        secrets="The glass submarine kept by Alexandria (an iron anima, see "
-        "the Bestiary) is chained to one of its ships in Smyrna "
-        "harbour, not here.",
+        secrets=[
+            titled(
+                "Where the glass submarine is",
+                "The glass submarine kept by Alexandria is chained to one "
+                "of its ships in Smyrna harbour, not at Mount Pagus.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The glass submarine is an iron anima, see the Bestiary.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -744,9 +814,14 @@ def _thrakesion(theban: Theban) -> None:
             "senior magus may ask player magi to find out before the "
             "Tribunal of 1221.",
         ),
-        secrets="The magus who sets them on may suspect someone and want "
-        "proof, or may be the knight himself, testing how easily the "
-        "truth can be found.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The magus who sets them on may suspect someone and want "
+                "proof, or may be the knight himself, testing how easily "
+                "the truth can be found.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -829,21 +904,30 @@ def _black_sea(theban: Theban) -> None:
             "Their warnings are uncannily true: everyone who has seen "
             "the jackal and heard it wail has soon lost someone dear.",
         ),
-        secrets="Fishermen of the docks have lately seen a huge, savage shark "
-        "off the shore that has killed several men who tried to kill "
-        "it, and they are sure it hunts the Pearl of Peroz, which must "
-        "be somewhere in the city. That pearl, the greatest ever seen, "
-        "hung from the ear of King Peroz of Persia, who marched into "
-        "eastern Anatolia against the Ephthalite Huns in the fifth "
-        "century. A fisherman found it by watching a monstrous shark "
-        "follow an oyster that showed it its pearl; he threw the "
-        "oyster ashore and was eaten, and the shark haunted the king "
-        "whenever he went near the sea. Peroz, falling into a trench "
-        "his enemies had dug, tore the pearl from his ear and threw "
-        "it away rather than be buried with it; it has turned up now "
-        "and then since, and whoever bears it near water soon meets "
-        "the shark. The fishermen think the shark magical and the "
-        "pearl mighty.",
+        secrets=[
+            titled(
+                "The shark off Trebizond",
+                "Fishermen of Trebizond's docks have lately seen a huge, "
+                "savage shark off the shore that has killed several men who "
+                "tried to kill it, and they are sure it hunts the Pearl of "
+                "Peroz, which must be somewhere in the city. The fishermen "
+                "think the shark magical and the pearl mighty.",
+            ),
+            titled(
+                "The Pearl of Peroz",
+                "The Pearl of Peroz, the greatest ever seen, "
+                "hung from the ear of King Peroz of Persia, who marched into "
+                "eastern Anatolia against the Ephthalite Huns in the fifth "
+                "century. A fisherman found it by watching a monstrous shark "
+                "follow an oyster that showed it its pearl; he threw the "
+                "oyster ashore and was eaten, and the shark haunted the king "
+                "whenever he went near the sea. Peroz, falling into a trench "
+                "his enemies had dug, tore the pearl from his ear and threw "
+                "it away rather than be buried with it; it has turned up now "
+                "and then since, and whoever bears it near water soon meets "
+                "the shark.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -856,17 +940,25 @@ def _black_sea(theban: Theban) -> None:
         known="Locally",
         summary="Somewhere deep under Sinope, a heretical Christian sect meets "
         "in secret. The book gives no aura.",
-        secrets=paragraphs(
-            "The sect has put Serapis in God's place. Alexander brought "
-            "the god into Anatolia from Babylon; after his death Ptolemy "
-            "took the cult statue to Egyptian Alexandria and blended "
-            "Serapis with Egypt's gods to make one deity, and under "
-            "Hadrian Egyptian Christians began worshipping him. The "
-            "sect was thought stamped out in the fourth century, but "
-            "the statue survived and its last followers smuggled it to "
-            "Sinope, where it has stayed.",
-            "Serapis is a False God (see the Christians of Serapis).",
-        ),
+        secrets=[
+            titled(
+                "Who the shrine worships",
+                "The sect of the Hidden Shrine at Sinope has put Serapis in "
+                "God's place.",
+            ),
+            titled(
+                "How Serapis came to Sinope",
+                "Alexander brought Serapis into Anatolia from Babylon; "
+                "after his death Ptolemy took the cult statue to Egyptian "
+                "Alexandria and blended Serapis with Egypt's gods to make "
+                "one deity, and under Hadrian Egyptian Christians began "
+                "worshipping him. The sect was thought stamped out in the "
+                "fourth century, but the statue survived and its last "
+                "followers smuggled it to Sinope, where it has stayed.",
+            ),
+            titled("What Serapis is", "Serapis is a False God."),
+            titled("Storyguide Notes", "See the Christians of Serapis."),
+        ],
     )
 
 
@@ -988,10 +1080,22 @@ def _alexandria(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Niko, the Redcaps of chapter three, have no covenant in the "
         "book and may be among them.",
     )
-    hidden = joined_lines(
-        "Proximios, the likely next logothete and co-founder of the League of the Vigilant, is secretly an infernalist bent on the Order's downfall; his place at Alexandria lets him read the missives and private letters that pass through it (see his entry and An Enemy Within).",
-        "The garrison does not know of the regio; if it finds it, the covenant's secrecy and the Tribunal's records are at risk.",
-    )
+    hidden = [
+        titled(
+            "Proximios of Alexandria",
+            "Proximios, the likely next logothete and co-founder of the "
+            "League of the Vigilant, is secretly an infernalist bent on the "
+            "Order's downfall; his place at Alexandria lets him read the "
+            "missives and private letters that pass through it.",
+        ),
+        titled(
+            "What the garrison does not know",
+            "The garrison does not know of Alexandria's regio; if it finds "
+            "it, the covenant's secrecy and the Tribunal's records are at "
+            "risk.",
+        ),
+        titled("Storyguide Notes", "See Proximios's entry and An Enemy Within."),
+    ]
     alexandria = b.covenant(
         "Alexandria",
         tribunal=tribunal,
@@ -1084,39 +1188,63 @@ def _alexandria_magi(theban: Theban, b: Builder, home: Covenant) -> None:
             "pointing to how well his own House of unGifted folk "
             "serves the Order.",
         ),
-        secrets=paragraphs(
-            "Proximios is an infernalist, unknown to anyone: a master "
-            "of the Unholy Method of Incantation and the Unholy Power "
-            "of Diablerie, with a long list of demons' True Names. He "
-            "uses summoned demons as spies and lures, and sets "
-            "Tempters and Evil Spirits to drive his fellows to sin. He "
-            "means to bring down the Order, starting in Thebes, and "
-            "works slowly and covertly among magi who would spot "
-            "anything blatant, seeking a weak link in every covenant; "
-            "his post at Alexandria shows him the letters and missives "
-            "passing through. Neither Method nor Power is on his "
-            "generated sheet: the storyguide adds them.",
-            "He set up the League of the Vigilant to aim it, in time, "
-            "at innocent magi who look like diabolists (Caterina da "
-            "Vigonovo, young magi of Erebos, nosy Delfini of Aegaea), "
-            "sending league members to look into them, never going "
-            "himself, and then having a demon dressed as Hydatius "
-            "order an attack. He would turn Aiakia, or more easily "
-            "the hotter Tisiphon, against Gigas by blaming its Tremere "
-            "for Constantinople's fall, and set Celaenea, who adores "
-            "Hermes, against Lucian's Children of Olympos; other "
-            "infernalists have told him an infernalist planted in that league "
-            "could make it raise a False God in place of a faerie.",
-            "In 1220 these plans are only forming. He will take the "
-            "logothete's post, seeming reluctant so the blame falls "
-            "elsewhere when things unravel, and use the register of "
-            "tokens and shards to reward those who cooperate. He has "
-            "not yet recruited magi, but has his eye on a few who "
-            "might be tempted. His plots always look like someone "
-            "else's work; the book suggests him as a saga's chief "
-            "enemy, his threat growing slowly over the years (see An "
-            "Enemy Within).",
-        ),
+        secrets=[
+            titled(
+                "An infernalist",
+                "Proximios is an infernalist, unknown to anyone, with a "
+                "long list of demons' True Names. He uses summoned demons "
+                "as spies and lures, and sets Tempters and Evil Spirits to "
+                "drive his fellows to sin.",
+            ),
+            titled(
+                "What Proximios means to do",
+                "Proximios means to bring down the Order, starting in "
+                "Thebes, and works slowly and covertly among magi who would "
+                "spot anything blatant, seeking a weak link in every "
+                "covenant; his post at Alexandria shows him the letters and "
+                "missives passing through.",
+            ),
+            titled(
+                "Why he founded the Vigilant",
+                "Proximios set up the League of the Vigilant to aim it, in "
+                "time, at innocent magi who look like diabolists (Caterina "
+                "da Vigonovo, young magi of Erebos, nosy Delfini of "
+                "Aegaea), sending league members to look into them, never "
+                "going himself, and then having a demon dressed as Hydatius "
+                "order an attack.",
+            ),
+            titled(
+                "Gigas and the Tremere",
+                "Proximios would turn Aiakia, or more easily the hotter "
+                "Tisiphon, against Gigas by blaming its Tremere for "
+                "Constantinople's fall.",
+            ),
+            titled(
+                "Celaenea and the Children of Olympos",
+                "Proximios would set Celaenea, who adores Hermes, against "
+                "Lucian's Children of Olympos; other infernalists have told "
+                "him an infernalist planted in that league could make it "
+                "raise a False God in place of a faerie.",
+            ),
+            titled(
+                "Proximios as logothete",
+                "In 1220 Proximios's plans are only forming. He will take "
+                "the logothete's post, seeming reluctant so the blame falls "
+                "elsewhere when things unravel, and use the register of "
+                "tokens and shards to reward those who cooperate. He has "
+                "not yet recruited magi, but has his eye on a few who might "
+                "be tempted. His plots always look like someone else's "
+                "work.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Proximios is a master of the Unholy Method of Incantation "
+                "and the Unholy Power of Diablerie. Neither Method nor Power "
+                "is on his generated sheet: the storyguide adds them. The "
+                "book suggests him as a saga's chief enemy, his threat "
+                "growing slowly over the years (see An Enemy Within).",
+            ),
+        ],
         traits={"Intense": 3, "Eloquent": 2, "Humble": 2},
     )
     m["catella"] = b.magus(
@@ -1514,8 +1642,14 @@ def _lords(theban: Theban, b: Builder) -> None:
         "Muslim himself, who governs Sinope and pays tribute to Rum. "
         "He is on good terms with Alexios of Trebizond. He has lately "
         "taken a new confessor.",
-        secrets="The confessor is a priest of the Christians of Serapis, to the "
-        "demon's delight; nothing good can come of it.",
+        secrets=[
+            titled(
+                "The governor's confessor",
+                "The confessor of Sinope's governor is a priest of the "
+                "Christians of Serapis, to the demon's delight; nothing good "
+                "can come of it.",
+            ),
+        ],
     )
     w["emperor_of_trebizond"] = east.emperor_of_trebizond(b, place=p["pontus"])
     w["amastris_border"] = b.lord(
@@ -1794,11 +1928,26 @@ def _factions(theban: Theban, b: Builder) -> None:
         "cult statue smuggled out of Egypt. Its priests dress and act "
         "like Orthodox clergy, never quarrelling with the Church's own "
         "priests, the better to win converts quietly.",
-        secrets="Serapis is a False God, a demon. Few followers know what they "
-        "worship, and he masks the Infernal nature of the Supernatural "
-        "Abilities he grants them with his power to shroud the stench "
-        "of the Pit. Etoumes, Sinope's Greek governor, has lately made "
-        "one of its priests his confessor, to the demon's joy.",
+        secrets=[
+            titled(
+                "What Serapis is",
+                "Serapis is a False God, a demon. Few of the Christians of "
+                "Serapis know what they worship, and he masks the Infernal "
+                "nature of the powers he grants them.",
+            ),
+            titled(
+                "The governor's confessor",
+                "Etoumes, Sinope's Greek governor, has lately made one of "
+                "the priests of the Christians of Serapis his confessor, to "
+                "the demon's joy.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Serapis grants his followers Supernatural Abilities and "
+                "masks their Infernal nature with his power to shroud the "
+                "stench of the Pit.",
+            ),
+        ],
     )
     w["council_of_union"] = b.faction(
         "The Council of Union at Nicaea",

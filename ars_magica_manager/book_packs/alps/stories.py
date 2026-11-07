@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import Builder, dormant, paragraphs
+from ..builder import Builder, dormant, paragraphs, titled
 
 if TYPE_CHECKING:
     from .state import Alps
@@ -43,9 +43,14 @@ def build(alps: Alps) -> None:
             "blatant favouritism. At the meeting of 1214 she had to send away "
             "a Tremere hoplite. The sherds at the next meeting may name her.",
         ),
-        secrets="Cato was sent to the Alps partly so that, if she goes, the "
-        "chief Quaesitor's place passes to him and not to Adrasteia of "
-        "Tytalus.",
+        secrets=[
+            titled(
+                "Why Cato came to the Alps",
+                "Cato was sent to the Alps partly so that, if Athena Alpina "
+                "goes, the chief Quaesitor's place passes to him and not to "
+                "Adrasteia of Tytalus.",
+            )
+        ],
         antagonist="The Tribunal's old grudge against House Tremere",
         moves=DATED,
         stages=[

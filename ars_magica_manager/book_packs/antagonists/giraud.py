@@ -21,6 +21,7 @@ from ..builder import (
     dormant,
     paragraphs,
     secrets,
+    titled,
 )
 
 BARON = "Baron Giraud Le Cornu"
@@ -131,25 +132,42 @@ def _baron(b: Builder) -> Character:
             "then delivered him up. Some call that a ruthless grab for favor, "
             "others a knight's duty to his liege over his kin.",
         ),
-        secrets=paragraphs(
-            "He does not want the covenant's land or wealth, nor even its "
-            "allegiance to himself. He wants the magi to be law-abiding as he "
-            "understands it, which means sworn to some mundane lord, and so "
-            "in breach of the Code of Hermes. In his view anyone who owes "
-            "fealty to no one is a king, the Pope or a rebel (Ant pp. 26-27).",
-            "The more he learns of magic, the more he fears it: magi could "
-            "seize his liege's mind or appear at his bedside with a knife. "
-            "Unless they are bound into the web of allegiance that holds "
-            "nobles in check, they threaten him, his family and his lord "
-            "(Ant p. 27; Lords of Men pp. 42-43 says why the feudal order "
-            "survives them).",
-            "He expects to be bewitched or killed, so his wife, his confessor "
-            "and his brother know all his plans and any of them could take "
-            "up the campaign. His sons join that circle when they reach 21 "
-            "(Ant p. 29).",
-            "He would balk at a pact with demons, but only if he knew them "
-            "for what they were (Ant p. 30).",
-        ),
+        secrets=[
+            titled(
+                "What the baron wants of the magi",
+                "He does not want the covenant's land or wealth, nor even its "
+                "allegiance to himself. He wants the magi to be law-abiding as "
+                "he understands it, which means sworn to some mundane lord, and "
+                "so in breach of the Code of Hermes. In his view anyone who owes "
+                "fealty to no one is a king, the Pope or a rebel (Ant pp. "
+                "26-27).",
+            ),
+            titled(
+                "Why the baron fears magic",
+                "The more he learns of magic, the more he fears it: magi could "
+                "seize his liege's mind or appear at his bedside with a knife. "
+                "Unless they are bound into the web of allegiance that holds "
+                "nobles in check, they threaten him, his family and his lord "
+                "(Ant p. 27).",
+            ),
+            titled(
+                "Who knows the baron's plans",
+                "He expects to be bewitched or killed, so his wife, his "
+                "confessor and his brother know all his plans and any of them "
+                "could take up the campaign. His sons join that circle when "
+                "they reach 21 (Ant p. 29).",
+            ),
+            titled(
+                "The baron and demons",
+                "He would balk at a pact with demons, but only if he knew them "
+                "for what they were (Ant p. 30).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Lords of Men pp. 42-43 says why the feudal order survives the "
+                "magi (Ant p. 27).",
+            ),
+        ],
     )
     b.stats(baron, _BLOCK, source="Ant")
     for ability in baron.abilities:
@@ -170,20 +188,31 @@ def _lands(b: Builder, baron: Character) -> tuple[Neighbour, Neighbour, Neighbou
             "so on. He can raise an army of thousands if he must, and the "
             "baron and his family can shelter at his court.",
         ),
-        secrets=paragraphs(
-            "He expects the baron to handle his own troubles, since the baron "
-            "holds his place by being useful. He cares far less about the "
-            "magi: the Order has never overthrown a count, and one covenant's "
-            "land and soldiers would mean little to him. He has more to gain "
-            "from their friendship than to lose by leaving them be, as the "
-            "baron knows, and that restrains the baron (Ant p. 26).",
-            "He can defuse a quarrel, sending emissaries to broker a truce if "
-            "raids break out, or to tell over-aggressive magi to stand down "
-            "or meet his army. He values the baron and his knights above "
-            "anything the covenant has, and will order an end to a futile war "
-            "(Ant pp. 26, 34). Keep him from being drawn in too far: he is "
-            "too strong for most covenants to resist (Ant p. 26).",
-        ),
+        secrets=[
+            titled(
+                "What the count thinks of the magi",
+                "The count expects the baron to handle his own troubles, since "
+                "the baron holds his place by being useful. He cares far less "
+                "about the magi: the Order has never overthrown a count, and one "
+                "covenant's land and soldiers would mean little to him. He has "
+                "more to gain from their friendship than to lose by leaving them "
+                "be, as the baron knows, and that restrains the baron (Ant p. "
+                "26).",
+            ),
+            titled(
+                "The count as peacemaker",
+                "The count can defuse a quarrel, sending emissaries to broker a "
+                "truce if raids break out, or to tell over-aggressive magi to "
+                "stand down or meet his army. He values the baron and his "
+                "knights above anything the covenant has, and will order an end "
+                "to a futile war (Ant pp. 26, 34).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Keep the count from being drawn in too far: he is too strong "
+                "for most covenants to resist (Ant p. 26).",
+            ),
+        ],
     )
     keep = b.place(
         "Le Cornu's Keep",
@@ -194,20 +223,30 @@ def _lands(b: Builder, baron: Character) -> tuple[Neighbour, Neighbour, Neighbou
             "beside it, and a permanent guard of dismounted men-at-arms "
             "holds it.",
         ),
-        secrets=paragraphs(
-            "Once he knows wizards can fly or turn into birds, the baron "
-            "keeps his chamber shuttered tight, hangs bells on the doors of "
-            "sensitive rooms, and orders patrols at random hours of the "
-            "night. His people demand a password before any unusual order, "
-            "and watch for anyone acting out of place, since magic can change "
-            "a face. They avoid the eyes of magi, on account of Entrancement "
-            "(ArM5 p. 65), and take suspected wizards blindfolded and gagged "
-            "to the dungeon (Ant p. 30).",
-            "These measures are guesswork with gaps. He knows little of "
-            "Arcane Connections and takes no care over a shed hair or a "
-            "favorite cloak (Ant p. 30). All this makes it somewhat hard to "
-            "slip a magical spy inside (Ant p. 31).",
-        ),
+        secrets=[
+            titled(
+                "The keep's guard against magic",
+                "Once he knows wizards can fly or turn into birds, the baron "
+                "keeps his chamber shuttered tight, hangs bells on the doors of "
+                "sensitive rooms, and orders patrols at random hours of the "
+                "night. His people demand a password before any unusual order, "
+                "and watch for anyone acting out of place, since magic can "
+                "change a face. They avoid the eyes of magi, on account of "
+                "Entrancement, and take suspected wizards blindfolded and gagged "
+                "to the dungeon (Ant p. 30).",
+            ),
+            titled(
+                "Gaps in the keep's guard",
+                "The baron's measures against magic are guesswork with gaps. He "
+                "knows little of Arcane Connections and takes no care over a "
+                "shed hair or a favorite cloak (Ant p. 30).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Entrancement: ArM5 p. 65. All the baron's measures make it "
+                "somewhat hard to slip a magical spy inside (Ant p. 31).",
+            ),
+        ],
     )
     barony = b.lord(
         "The Barony of Le Cornu",
@@ -230,13 +269,19 @@ def _lands(b: Builder, baron: Character) -> tuple[Neighbour, Neighbour, Neighbou
             "died before his eldest son came of age, his brother Sir Artur "
             "would rule as steward.",
         ),
-        secrets=paragraphs(
-            "The father was dispossessed or killed, as suits the saga. The "
-            "manors by the covenant came with the barony, or later as a "
-            "spur to continued loyalty (Ant p. 24).",
-            "The baron may own the main road to the covenant, and the land "
-            "under some of its vis sources (Ant p. 27).",
-        ),
+        secrets=[
+            titled(
+                "The barony's road and vis",
+                "The baron may own the main road to the covenant, and the land "
+                "under some of its vis sources (Ant p. 27).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The baron's father was dispossessed or killed, as suits the "
+                "saga. The manors by the covenant came with the barony, or later "
+                "as a spur to continued loyalty (Ant p. 24).",
+            ),
+        ],
     )
     b.link(barony, "characters", baron, "Its lord")
     b.link(keep, "characters", baron, "His seat")
@@ -257,17 +302,30 @@ def _household(b: Builder, baron: Character) -> dict[str, Character]:
             "councils and negotiations. She decides quickly, seldom thinks "
             "again, and does not take advice.",
         ),
-        secrets=paragraphs(
-            "She is unsure of herself in her duties and hides it behind a "
-            "show of authority. Facing the magi while he is away, she starts "
-            "out harder and less patient than he is (Ant pp. 25-26).",
-            "She knows all his plans, and is his likeliest choice to run his "
-            "network of agents (Ant p. 29). With her or his confessor he "
-            "arranges secret meetings with the covenant's malcontents (Ant "
-            "p. 29).",
-            "If the saga runs for several years she grows used to authority: "
-            "she loses Headstrong and gains Innovative +1 (Ant p. 26).",
-        ),
+        secrets=[
+            titled(
+                "Éloise's uncertainty",
+                "She is unsure of herself in her duties and hides it behind a "
+                "show of authority. Facing the magi while the baron is away, she "
+                "starts out harder and less patient than he is (Ant pp. 25-26).",
+            ),
+            titled(
+                "Éloise and the spies",
+                "She knows all the baron's plans, and is his likeliest choice to "
+                "run his network of agents (Ant p. 29).",
+            ),
+            titled(
+                "Secret meetings with malcontents",
+                "With her or his confessor the baron arranges secret meetings "
+                "with the covenant's malcontents (Ant p. 29).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "If the saga runs for several years she grows used to "
+                "authority: she loses Headstrong and gains Innovative +1 (Ant p. "
+                "26).",
+            ),
+        ],
     )
     henri = b.magus(
         HENRI,
@@ -283,14 +341,21 @@ def _household(b: Builder, baron: Character) -> dict[str, Character]:
             "lord, and he may come to the covenant under a white flag to "
             "ease a quarrel.",
         ),
-        secrets=paragraphs(
-            "He willingly helps with the baron's intrigues, and knows all "
-            "his plans. He wants to learn all he can of the magi: first that "
-            "they are neither diabolists nor heretics, then that they do not "
-            "ill-use Christians. His hand shows in any terms the baron "
-            "offers, and he judges whether the magi have satisfied the "
-            "baron that their powers are not Infernal (Ant pp. 26, 29, 35).",
-        ),
+        secrets=[
+            titled(
+                "Henri and the baron's intrigues",
+                "He willingly helps with the baron's intrigues, and knows all "
+                "his plans (Ant pp. 26, 29).",
+            ),
+            titled(
+                "What Henri wants to learn",
+                "He wants to learn all he can of the magi: first that they are "
+                "neither diabolists nor heretics, then that they do not ill-use "
+                "Christians. His hand shows in any terms the baron offers, and "
+                "he judges whether the magi have satisfied the baron that their "
+                "powers are not Infernal (Ant pp. 26, 35).",
+            ),
+        ],
     )
     artur = b.magus(
         "Sir Artur Le Cornu",
@@ -306,15 +371,25 @@ def _household(b: Builder, baron: Character) -> dict[str, Character]:
             "yet he is less ruled by his passions. He would rule as steward "
             "if the baron died before his heir came of age.",
         ),
-        secrets=paragraphs(
-            "He has come to accept the betrayal of their father as right for "
-            "the realm, but doubts he could have done it himself. He knows "
-            "all his brother's plans (Ant pp. 26, 29).",
-            "If he takes over the barony he soon learns intrigue and becomes "
-            "nearly as dangerous. He is readier than his brother to hire "
-            "hedge wizards against the magi and less willing to heed Brother "
-            "Raoullin (Ant p. 26).",
-        ),
+        secrets=[
+            titled(
+                "Artur and their father",
+                "He has come to accept the betrayal of their father as right for "
+                "the realm, but doubts he could have done it himself (Ant p. "
+                "26).",
+            ),
+            titled(
+                "Artur knows the plans",
+                "He knows all his brother's plans (Ant p. 29).",
+            ),
+            titled(
+                "Artur as baron",
+                "If he takes over the barony he soon learns intrigue and becomes "
+                "nearly as dangerous. He is readier than his brother to hire "
+                "hedge wizards against the magi and less willing to heed Brother "
+                "Raoullin (Ant p. 26).",
+            ),
+        ],
     )
     bertrand = b.magus(
         "Bertrand Gallain",
@@ -330,13 +405,19 @@ def _household(b: Builder, baron: Character) -> dict[str, Character]:
             "finely and judges everyone at first sight, as he expects to be "
             "judged.",
         ),
-        secrets=paragraphs(
-            "He puts on airs to hide his humble start. He is loyal at bottom, "
-            "but his taste for luxury and rank leaves him open to bribes and "
-            "flattery (Ant p. 26).",
-            "A magus without the Gentle Gift who meets him is reported to the "
-            "baron as a wicked, untrustworthy sort (Ant p. 27).",
-        ),
+        secrets=[
+            titled(
+                "Bertrand's weakness",
+                "He puts on airs to hide his humble start. He is loyal at "
+                "bottom, but his taste for luxury and rank leaves him open to "
+                "bribes and flattery (Ant p. 26).",
+            ),
+            titled(
+                "What Bertrand tells the baron of magi",
+                "A magus without the Gentle Gift who meets Bertrand is reported "
+                "to the baron as a wicked, untrustworthy sort (Ant p. 27).",
+            ),
+        ],
     )
     for person, note in (
         (eloise, "His wife"),
@@ -364,10 +445,14 @@ def _retainers(
             "two daughters, all under ten, with the baron's brother Sir "
             "Artur. They can take refuge at the count's court.",
         ),
-        secrets=(
-            "The sons are 9 and 6 when the conflict starts, and enter the "
-            "circle of trust at 21 (Ant p. 29). The children are not named."
-        ),
+        secrets=[
+            titled(
+                "The baron's sons",
+                "The baron's sons are 9 and 6 when the conflict starts, and "
+                "enter the circle of trust at 21 (Ant p. 29).",
+            ),
+            titled("Storyguide Notes", "The children are not named."),
+        ],
     )
     b.link(household, "characters", baron, "Its head")
     b.link(household, "characters", people["eloise"], "His wife")
@@ -392,12 +477,19 @@ def _retainers(
             "castle guard use the Standard Soldier grog template (ArM5 p. 22) "
             "(Ant p. 24).",
         ),
-        secrets=(
-            "In open war he holds at least half his knights at home and "
-            "raids with a dozen riders: himself, three knights and eight "
-            "men-at-arms (Ant p. 31). His men soon weary of guard duty, so a "
-            "guard is only ever a short-term measure (Ant p. 27)."
-        ),
+        secrets=[
+            titled(
+                "How the baron raids",
+                "In open war the baron holds at least half his knights at home "
+                "and raids with a dozen riders: himself, three knights and eight "
+                "men-at-arms (Ant p. 31).",
+            ),
+            titled(
+                "The retainers tire of guard duty",
+                "The baron's men soon weary of guard duty, so a guard is only "
+                "ever a short-term measure (Ant p. 27).",
+            ),
+        ],
     )
     b.link(retainers, "characters", people["artur"], "A vassal knight")
     b.link(retainers, "characters", people["bertrand"], "A household squire")
@@ -413,30 +505,49 @@ def _agents(b: Builder) -> None:
             "Farmers, artisans and others who deal with the covenant, with "
             "nothing to show that anything ties them together."
         ),
-        secrets=paragraphs(
-            "A network of spies and informers gathered as relations sour, "
-            "run for the baron by one of his inner circle, probably his "
-            "wife. It starts with people loosely tied to the covenant, such "
-            "as farmers and artisans who deliver there, and with anyone who "
-            "bears it a grudge: thwarted apprentices, evicted tenants, rival "
-            "magi, cheated merchants. Later it seeks covenfolk or grogs open "
-            "to bribery or extortion, such as those with poor relatives or a "
-            "weakness for drink or dice (Ant pp. 28-29).",
-            "Each agent reports small things, and over time the baron "
-            "assembles a surprisingly full account of the covenant: its "
-            "defenses, members, quarrels, income and spending (Ant p. 29). "
-            "The storyguide need only keep a list of how many there are and "
-            "roughly where (Ant p. 29).",
-            "Those inside the covenant are the easiest to expose, with "
-            "Intellego Mentem spells, and the hardest to replace, but random "
-            "checks hurt morale and may drive the unhappy to him; under the "
-            "loyalty rules of Covenants, a magical questioning is probably a "
-            "minor humiliation. Those outside are hard to trace. An exposed "
-            "agent can be turned, fed false news, bribed, frightened or "
-            "avoided, and a thorough covenant can destroy the network, over "
-            "many stories (Ant pp. 31-32). The baron may also try to recruit "
-            "a player's own grog or companion (Ant p. 32).",
-        ),
+        secrets=[
+            titled(
+                "The baron's spies",
+                "These folk are a network of spies and informers gathered as "
+                "relations sour, run for the baron by one of his inner circle, "
+                "probably his wife. It starts with people loosely tied to the "
+                "covenant, such as farmers and artisans who deliver there, and "
+                "with anyone who bears it a grudge: thwarted apprentices, "
+                "evicted tenants, rival magi, cheated merchants (Ant pp. "
+                "28-29).",
+            ),
+            titled(
+                "Spies inside the covenant",
+                "Later the baron's network of spies seeks covenfolk or grogs "
+                "open to bribery or extortion, such as those with poor "
+                "relatives or a weakness for drink or dice (Ant pp. 28-29).",
+            ),
+            titled(
+                "What the spies report",
+                "Each of the baron's agents reports small things, and over time "
+                "the baron assembles a surprisingly full account of the "
+                "covenant: its defenses, members, quarrels, income and spending "
+                "(Ant p. 29).",
+            ),
+            titled(
+                "Rooting out the spies",
+                "The baron's agents inside the covenant are the easiest to "
+                "expose, with Intellego Mentem spells, and the hardest to "
+                "replace, but random checks hurt morale and may drive the "
+                "unhappy to him. Those outside are hard to trace. An exposed "
+                "agent can be turned, fed false news, bribed, frightened or "
+                "avoided, and a thorough covenant can destroy the network, over "
+                "many stories (Ant pp. 31-32).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The storyguide need only keep a list of how many agents there "
+                "are and roughly where (Ant p. 29). Under the loyalty rules of "
+                "Covenants, a magical questioning is probably a minor "
+                "humiliation (Ant pp. 31-32). The baron may also try to recruit "
+                "a player's own grog or companion (Ant p. 32).",
+            ),
+        ],
         rules=paragraphs(
             "One season for the first three agents, all outside the covenant. "
             "After that, one season for each outsider, two or more for a "
@@ -458,10 +569,13 @@ def _items(b: Builder, baron: Character, keep: Neighbour) -> None:
             "The castle chapel beside the baron's keep, served by Brother "
             "Henri Raoullin."
         ),
-        secrets=(
-            "The baron's diary lies hidden under the altar, where he wrongly "
-            "believes no magic can find it (Ant p. 29)."
-        ),
+        secrets=[
+            titled(
+                "Under the altar",
+                "The baron's diary lies hidden under the chapel's altar, where "
+                "he wrongly believes no magic can find it (Ant p. 29).",
+            ),
+        ],
     )
     diary = Book(
         id=storage.generate_unique_id(
@@ -495,13 +609,24 @@ def _items(b: Builder, baron: Character, keep: Neighbour) -> None:
             "baron's person. Every stranger at his court must touch or kiss "
             "one before he will see them."
         ),
-        secrets=(
-            "All of them are fakes. He has come to believe the touch of a "
-            "relic dispels any magic, and spends much time and money on them. "
-            "This and his other odd habits give him a local Reputation as "
-            "Eccentric within a few years (Ant p. 30). His Church Lore "
-            "specialty is relics, for all the good it does him (Ant p. 25)."
-        ),
+        secrets=[
+            titled(
+                "Whether the relics are true",
+                "All the baron's relics are fakes (Ant p. 30).",
+            ),
+            titled(
+                "Why the baron collects relics",
+                "The baron has come to believe the touch of a relic dispels any "
+                "magic, and spends much time and money on them (Ant p. 30).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The relics and the baron's other odd habits give him a local "
+                "Reputation as Eccentric within a few years (Ant p. 30). His "
+                "Church Lore specialty is relics, for all the good it does him "
+                "(Ant p. 25).",
+            ),
+        ],
     )
     b.link(relics, "characters", baron, "His collection")
 
@@ -519,81 +644,123 @@ def _story(
                 "asking who the covenant's liege is and by what right it "
                 "keeps armed men."
             ),
-            secrets=paragraphs(
-                "By fair means or foul, the baron means to end the magi's "
-                "independence and bring them to swear fealty, which the Code "
-                "forbids. He knows he cannot beat a typical covenant by "
-                "force, and the Code lets magi defend themselves against "
-                "mundanes (HoH:TL p. 51), so he uses carrot and stick. Lean "
-                "too far toward him and the magi risk a charge of meddling "
-                "with mundanes; rebuff him too often and he turns to "
-                "harassment. Either way there are stories (Ant p. 27). The "
-                "stages are the book's plots in its order; pick those that "
-                "fit, as his next step depends on what the magi do.",
-                "A vis source on his land counts as the Contested Resources "
-                "Hook: reveal a Hidden Hook as this, or add a new one with a "
-                "new Boon to balance it, or give the covenant a new resource "
-                "worth the same build points (Ant p. 28).",
-                "Jurisdiction (Ant pp. 32-33). The baron's own court hears "
-                "small cases such as trespass, so he both sues and judges. "
-                "He takes that seriously, and strong evidence can win there "
-                "as anywhere. If the players find that unfair, say such cases "
-                "go to his overlord's court here. Land, economic privileges "
-                "and capital crimes go to royal court, and stealing "
-                "livestock or poaching big game can mean death. A Church "
-                "court hears clergy, and most inheritance and contract "
-                "cases. Secular courts are described in Lords of Men pp. "
-                "80-82, Church courts in The Church pp. 35-36.",
-                "Arguing a case (Ant pp. 32-34). The Gift sets any secular "
-                "court against magi, who may earn a bad local Reputation by "
-                "appearing, Gentle Gift aside. No one is presumed innocent or "
-                "protected against incriminating himself; testimony counts "
-                "more than things. Character witnesses matter, and in a "
-                "canon court enough clergy clear the accused outright "
-                "(compurgation). Eyewitnesses weigh heavily, but alternative "
-                "explanations can answer them. Land cases turn on long "
-                "possession, and parish records are the best proof. Benefit "
-                "of clergy is open: rule that magi do not count unless "
-                "ordained, or leave it unsettled and make a story of it.",
-                "Stolen vis (Ant p. 34). If the vis is in something of value, "
-                "a jewel or a large beast, the court tries an ordinary theft. "
-                "If it is in something cheap, the baron cannot show its worth "
-                "without a magus to testify, so the verdict is trespass; but "
-                "he persuades the court that taking the same thing again "
-                "proves its value, and any repeat is serious burglary.",
-                "Land verdicts (Ant p. 34). A covenant with the Autocephalous "
-                "Boon (Covenants p. 20) wins outright. Otherwise it must "
-                "settle by owning the count as lord and taking a charter, or "
-                "argue in royal court, where a win gives it that Boon. If it "
-                "loses, the land reverts to the count, and after a week the "
-                "baron comes with armed men to clear the squatters.",
-                "Ending the fighting (Ant p. 34). A couple of raids beaten "
-                "off, a manor sacked, or two or three knights killed or badly "
-                "hurt make him ask for a truce; a captured knight or adviser "
-                "brings a truce and a ransom. Too great a show of force "
-                "drives him to a last decisive battle.",
-                "His demands, most important first (Ant p. 35): no attacks on "
-                "the count or his vassals and no spells on them unasked, "
-                "self-defense excepted; proof the magi's powers are not "
-                "Infernal, such as taking confession and communion; magical "
-                "service to his liege, which breaks the Code and which he "
-                "can be argued out of; respect for his bounds, with nothing "
-                "taken unpaid, vis included, and he prefers payment in "
-                "enchantments or spells; obedience to mundane law, handing "
-                "over the accused and answering lawsuits, the court being "
-                "negotiable; a share of income from anything they cannot "
-                "prove is theirs; the count's leave to keep men-at-arms, or "
-                "disarm; and scutage, which he will waive to gain a higher "
-                "demand. If they agree to all, he has no more quarrel.",
-                "What the count grants in return, most valuable first (Ant p. "
-                "35): recognition that the covenant owns its land and "
-                "resources, its serfs included; a charter making it an "
-                "independent legal body; leave for an armed garrison; "
-                "exemption from military service and scutage; exclusive "
-                "rights to vis on the baron's lands; leave to clear "
-                "wasteland; leave to hunt magical beasts; and exemption from "
-                "some taxes and fines. A settlement with the count is final.",
-            ),
+            secrets=[
+                titled(
+                    "What the baron means to do",
+                    "By fair means or foul, the baron means to end the magi's "
+                    "independence and bring them to swear fealty, which the "
+                    "Code forbids. He knows he cannot beat a typical covenant "
+                    "by force, and the Code lets magi defend themselves against "
+                    "mundanes (HoH:TL p. 51), so he uses carrot and stick.",
+                ),
+                titled(
+                    "The magi's dilemma",
+                    "Lean too far toward the baron and the magi risk a charge "
+                    "of meddling with mundanes; rebuff him too often and he "
+                    "turns to harassment (Ant p. 27).",
+                ),
+                titled(
+                    "Which court hears what",
+                    "The baron's own court hears small cases such as trespass, "
+                    "so he both sues and judges. He takes that seriously, and "
+                    "strong evidence can win there as anywhere. Land, economic "
+                    "privileges and capital crimes go to royal court, and "
+                    "stealing livestock or poaching big game can mean death. A "
+                    "Church court hears clergy, and most inheritance and "
+                    "contract cases (Ant pp. 32-33).",
+                ),
+                titled(
+                    "Arguing a case",
+                    "The Gift sets any secular court against magi, who may earn "
+                    "a bad local Reputation by appearing, Gentle Gift aside. No "
+                    "one is presumed innocent or protected against "
+                    "incriminating himself; testimony counts more than things. "
+                    "Character witnesses matter, and in a canon court enough "
+                    "clergy clear the accused outright (compurgation). "
+                    "Eyewitnesses weigh heavily, but alternative explanations "
+                    "can answer them. Land cases turn on long possession, and "
+                    "parish records are the best proof (Ant pp. 32-34).",
+                ),
+                titled(
+                    "Stolen vis in court",
+                    "If the vis is in something of value, a jewel or a large "
+                    "beast, the court tries an ordinary theft. If it is in "
+                    "something cheap, the baron cannot show its worth without a "
+                    "magus to testify, so the verdict is trespass; but he "
+                    "persuades the court that taking the same thing again "
+                    "proves its value, and any repeat is serious burglary (Ant "
+                    "p. 34).",
+                ),
+                titled(
+                    "Land verdicts",
+                    "A covenant that cannot win a land case outright must "
+                    "settle by owning the count as lord and taking a charter, "
+                    "or argue in royal court. If it loses, the land "
+                    "reverts to the count, and after a week the baron comes "
+                    "with armed men to clear the squatters (Ant p. 34).",
+                ),
+                titled(
+                    "Ending the fighting",
+                    "A couple of raids beaten off, a manor sacked, or two or "
+                    "three knights killed or badly hurt make the baron ask for "
+                    "a truce; a captured knight or adviser brings a truce and a "
+                    "ransom. Too great a show of force drives him to a last "
+                    "decisive battle (Ant p. 34).",
+                ),
+                titled(
+                    "The baron's demands",
+                    "The baron's demands, most important first (Ant p. 35): no "
+                    "attacks on the count or his vassals and no spells on them "
+                    "unasked, self-defense excepted; proof the magi's powers "
+                    "are not Infernal, such as taking confession and communion; "
+                    "magical service to his liege, which breaks the Code and "
+                    "which he can be argued out of; respect for his bounds, "
+                    "with nothing taken unpaid, vis included, and he prefers "
+                    "payment in enchantments or spells; obedience to mundane "
+                    "law, handing over the accused and answering lawsuits, the "
+                    "court being negotiable; a share of income from anything "
+                    "they cannot prove is theirs; the count's leave to keep "
+                    "men-at-arms, or disarm; and scutage, which he will waive "
+                    "to gain a higher demand. If they agree to all, he has no "
+                    "more quarrel.",
+                ),
+                titled(
+                    "What the count grants in return",
+                    "What the count grants in return, most valuable first (Ant "
+                    "p. 35): recognition that the covenant owns its land and "
+                    "resources, its serfs included; a charter making it an "
+                    "independent legal body; leave for an armed garrison; "
+                    "exemption from military service and scutage; exclusive "
+                    "rights to vis on the baron's lands; leave to clear "
+                    "wasteland; leave to hunt magical beasts; and exemption "
+                    "from some taxes and fines. A settlement with the count is "
+                    "final.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Either way there are stories (Ant p. 27). The stages "
+                        "are the book's plots in its order; pick those that "
+                        "fit, as his next step depends on what the magi do.",
+                        "A vis source on his land counts as the Contested "
+                        "Resources Hook: reveal a Hidden Hook as this, or add a "
+                        "new one with a new Boon to balance it, or give the "
+                        "covenant a new resource worth the same build points "
+                        "(Ant p. 28).",
+                        "Courts (Ant pp. 32-33): if the players find the "
+                        "baron's own court unfair, say such cases go to his "
+                        "overlord's court here. Secular courts are described in "
+                        "Lords of Men pp. 80-82, Church courts in The Church "
+                        "pp. 35-36.",
+                        "Benefit of clergy is open: rule that magi do not count "
+                        "unless ordained, or leave it unsettled and make a "
+                        "story of it (Ant pp. 32-34).",
+                        "Land verdicts (Ant p. 34): a covenant with the "
+                        "Autocephalous Boon (Covenants p. 20) wins outright, "
+                        "and a win in royal court gives it that Boon.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "A Squire Comes Calling",

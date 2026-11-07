@@ -41,7 +41,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import joined_lines, paragraphs
+from ..builder import joined_lines, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -218,13 +218,19 @@ def _urbs_rubra(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "Guardians: the jinn of the entrance gorge, who let no one in",
             "Library and vis: the book gives none",
         ),
-        secrets=paragraphs(
-            "Most magi believe Fade and Wraith are dead, killed by their "
-            "own servants, who keep up the appearance that they live for "
-            "reasons of their own; nobody knows. If they live, both are "
-            "nearly senile and close to Final Twilight, and pay the "
-            "Tribunal no mind.",
-        ),
+        secrets=[
+            titled(
+                "Whether Fade and Wraith live",
+                "Most magi believe Fade and Wraith are dead, killed by their "
+                "own servants, who keep up the appearance that they live for "
+                "reasons of their own; nobody knows.",
+            ),
+            titled(
+                "Fade and Wraith in their age",
+                "If Fade and Wraith live, both are nearly senile and close to "
+                "Final Twilight, and pay the Tribunal no mind.",
+            ),
+        ],
     )
     levant.covenants["urbs_rubra"] = covenant
     m = levant.magi
@@ -239,10 +245,16 @@ def _urbs_rubra(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "been seen for years; the jinn who serve the covenant turn "
             "all visitors away."
         ),
-        secrets=(
-            "He may be dead, killed by the jinn who now pretend he lives; "
-            "if he lives, he is mostly senile and near Final Twilight."
-        ),
+        secrets=[
+            titled(
+                "Whether Fade lives",
+                "He may be dead, killed by the jinn who now pretend he lives.",
+            ),
+            titled(
+                "Fade in his age",
+                "If Fade lives, he is mostly senile and near Final Twilight.",
+            ),
+        ],
     )
     m["wraith"] = b.magus(
         "Wraith",
@@ -256,11 +268,16 @@ def _urbs_rubra(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "it is she and not her husband. She has not been seen for "
             "years."
         ),
-        secrets=(
-            "She may be dead, killed by the jinn who now pretend she "
-            "lives; if she lives, she is mostly senile and near Final "
-            "Twilight."
-        ),
+        secrets=[
+            titled(
+                "Whether Wraith lives",
+                "She may be dead, killed by the jinn who now pretend she lives.",
+            ),
+            titled(
+                "Wraith in her age",
+                "If Wraith lives, she is mostly senile and near Final Twilight.",
+            ),
+        ],
     )
 
 
@@ -297,11 +314,17 @@ def _urania(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "Pact: with the Genjii, limiting what Selene may learn of them",
             "Library and vis: the book gives none",
         ),
-        secrets=(
-            "The book's guess at its end: when the Mongols overrun the "
-            "Alan lands in 1238, their shamans destroy Urania, leaving no "
-            "survivors or witnesses and hiding their work from scrying."
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "When the Mongols overrun the Alan lands in 1238, their "
+                    "shamans destroy Urania, leaving no survivors or witnesses "
+                    "and hiding their work from scrying.",
+                    "Urania's end is the book's guess.",
+                ),
+            ),
+        ],
     )
     levant.covenants["urania"] = covenant
     m = levant.magi

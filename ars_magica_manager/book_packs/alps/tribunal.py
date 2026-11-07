@@ -16,7 +16,7 @@ from typing import TYPE_CHECKING
 
 from ...models.seasons import YEARLY
 from ...tribunal_packages import alps as package
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from .state import Alps
@@ -79,15 +79,25 @@ SUMMARY = paragraphs(
     "March and carries the judges' symbols at the meeting.",
 )
 
-SECRETS = paragraphs(
-    "Athena Alpina's even-handedness toward House Tremere, which her "
-    "neighbours call blatant favouritism, may see her ostracised at the "
-    "next meeting. Cato was sent to the Alps partly to make sure that, "
-    "if she goes, Adrasteia of Tytalus does not become chief Quaesitor.",
-    "A myth runs through the Alps that the mountains lie across the spine "
-    "of a dragon so large it eats other dragons, and that widespread "
-    "disorder would wake it. Few magi believe it wholeheartedly.",
-)
+SECRETS = [
+    titled(
+        "Athena Alpina's ostracism",
+        "Athena Alpina's even-handedness toward House Tremere, which her "
+        "neighbours call blatant favouritism, may see her ostracised at the "
+        "next meeting.",
+    ),
+    titled(
+        "Why Cato came to the Alps",
+        "Cato was sent to the Alps partly to make sure that, if Athena "
+        "Alpina goes, Adrasteia of Tytalus does not become chief Quaesitor.",
+    ),
+    titled(
+        "The dragon under the Alps",
+        "A myth runs through the Alps that the mountains lie across the spine "
+        "of a dragon so large it eats other dragons, and that widespread "
+        "disorder would wake it. Few magi believe it wholeheartedly.",
+    ),
+]
 
 #: The Peripheral Code: (year or None, title, what it says).
 RULINGS: tuple[tuple[int | None, str, str], ...] = (

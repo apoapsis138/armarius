@@ -22,6 +22,7 @@ from ..builder import (
     characteristics,
     joined_lines,
     paragraphs,
+    titled,
     vf_art,
     vf_puissant,
 )
@@ -2457,17 +2458,30 @@ PERSEPHONE = Magus(
         "(Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks "
         "the sisters need protection (Pity +2).",
     ),
-    secrets=(
-        "Kore hates the pater more fiercely than Persephone does: Persephone's "
-        "resentment is considered, Kore's visceral. Thinking her sister "
-        "distracted by being a maga, she has taken up the vendetta herself. "
-        "Without Persephone's knowledge, mundane agents, sometimes with "
-        "stolen magical devices, watch him always; she has struck at him in "
-        "secret with Hex, and holds one of his lesser enchantments, knowing "
-        "it to be an Arcane Connection. She covers her tracks with great "
-        "care, knowing the danger to her sister, who can truthfully tell "
-        "Quaesitores she knows nothing."
-    ),
+    secrets=[
+        titled(
+            "Kore's vendetta",
+            "Kore hates the pater more fiercely than Persephone does: "
+            "Persephone's resentment is considered, Kore's visceral. Thinking "
+            "her sister distracted by being a maga, Kore has taken up the "
+            "vendetta herself.",
+        ),
+        titled(
+            "Kore's watchers",
+            "Without Persephone's knowledge, Kore's mundane agents, sometimes "
+            "with stolen magical devices, watch the pater always.",
+        ),
+        titled(
+            "Kore's strikes at the pater",
+            "Kore has struck at the pater in secret with Hex, and holds one of "
+            "his lesser enchantments, knowing it to be an Arcane Connection.",
+        ),
+        titled(
+            "Kore's tracks",
+            "Kore covers her tracks with great care, knowing the danger to her "
+            "sister, who can truthfully tell Quaesitores she knows nothing.",
+        ),
+    ],
     printings=(
         _persephone(
             0,

@@ -46,7 +46,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...rules.sites import PLACE
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -221,15 +221,22 @@ def _military_orders(levant: Levant) -> None:
             "Hospitallers, and in March 1314 Grand Master Jacques de "
             "Molay and Geoffroi de Charney are burnt.",
         ),
-        secrets=paragraphs(
-            "Whether the Templars were guilty is not known, and the book "
-            "offers a troupe the darker reading: Templars who really are "
-            "diabolists or sorcerers with real power. With their houses "
-            "and wealth across Europe and the Levant they would be a "
-            "rival to the Order itself, and if their power is Infernal, "
-            "Hermetic magic cannot see through the deceptions that hide "
-            "it, so only mundane digging will find them out.",
-        ),
+        secrets=[
+            titled(
+                "Templars with real power",
+                "The Templars may really be diabolists or sorcerers with real "
+                "power. With their houses and wealth across Europe and the "
+                "Levant they would be a rival to the Order itself, and if "
+                "their power is Infernal, Hermetic magic cannot see through "
+                "the deceptions that hide it, so only mundane digging will "
+                "find them out.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Whether the Templars were guilty is not known, and the book "
+                "offers a troupe the darker reading.",
+            ),
+        ],
     )
     w["hospitallers"] = b.faction(
         "The Knights Hospitaller",

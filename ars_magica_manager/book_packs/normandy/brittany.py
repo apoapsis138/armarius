@@ -21,7 +21,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs, vf_ability, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_ability, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -217,9 +217,18 @@ def _rennes(normandy: Normandy) -> None:
             "left a footprint on the summit.",
             "South of the town of Dol stands the menhir of Champ-Dolent.",
         ),
-        secrets="The legend of St Michael is a garbled memory of the Order's "
-        "assault on Branugurix. The regio's entrances were closed in the "
-        "last battle of the Schism War.",
+        secrets=[
+            titled(
+                "The legend of St Michael",
+                "The legend of St Michael is a garbled memory of the Order's assault "
+                "on Branugurix.",
+            ),
+            titled(
+                "The closed entrances",
+                "The entrances of Branugurix's regio were closed in the last battle "
+                "of the Schism War.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -322,8 +331,14 @@ def _rennes(normandy: Normandy) -> None:
         "built into the walls of a Romano-Gallic temple of Venus. "
         "Locals say the stones are girls who danced on the moor instead "
         "of going to vespers and were turned to stone by God.",
-        secrets="The stones are far older than the tale and belong with the "
-        "temple: they record the fate of the women who served it.",
+        secrets=[
+            titled(
+                "What the stones record",
+                "The stones of the Young Ladies of Langon are far older than the tale "
+                "and belong with the temple: they record the fate of the women who "
+                "served it.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -407,8 +422,13 @@ def _broceliande(normandy: Normandy) -> None:
             "shadows and thunder.",
             "A magus following the Path of Aging may drink here for the second quest.",
         ),
-        secrets="The drop on the stone is probably the first step of the rite "
-        "that opens the Faerie regio where Merlin may lie sleeping.",
+        secrets=[
+            titled(
+                "The drop on the stone",
+                "The drop on the Stone of Merlin is probably the first step of the "
+                "rite that opens the Faerie regio where Merlin may lie sleeping.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "Merlin's sleeping place",
@@ -502,7 +522,13 @@ def _broceliande(normandy: Normandy) -> None:
         "Fay, Arthur's half-sister, imprisoned her faithless lover "
         "Guyomart at False Lover's Rock. Legend says no wrongdoer can "
         "leave it.",
-        secrets="Only those unfaithful in love are actually held.",
+        secrets=[
+            titled(
+                "Who the valley holds",
+                "Only those unfaithful in love are actually held by the Valley of No "
+                "Return.",
+            ),
+        ],
         **KNOWN_REGION,
     )
 
@@ -708,7 +734,12 @@ def _leon(normandy: Normandy) -> None:
         "attacked it; the village church stands on a pagan cairn. The "
         "Quaesitores investigate anyone known to be looking for a way "
         "in.",
-        secrets="Druids almost certainly hid the town in a regio by magic.",
+        secrets=[
+            titled(
+                "How Tolente vanished",
+                "Druids almost certainly hid Tolente in a regio by magic.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The hidden town",
@@ -749,7 +780,13 @@ def _leon(normandy: Normandy) -> None:
             "Circlet of the Primus, through an old pact that made them "
             "the island's genii loci.",
         ),
-        secrets="Only the people of Fudarus know what form the spirits' vis takes.",
+        secrets=[
+            titled(
+                "The spirits' vis",
+                "Only the people of Fudarus know what form the Ushant spirits' vis "
+                "takes.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -1101,11 +1138,18 @@ def _broerec(normandy: Normandy) -> None:
             "dark schist: a betrothed couple turned to stone for not "
             "waiting for their wedding.",
         ),
-        secrets="A suitable Hermetic ritual could restore Jean and Jeanne, who "
-        "would be glad to join a covenant since their world is long "
-        "gone. Jeanne is pregnant and gives birth three months after "
-        "the spell ends, to a Gifted child with a close affinity for "
-        "Terram.",
+        secrets=[
+            titled(
+                "Restoring Jean and Jeanne",
+                "A suitable Hermetic ritual could restore Jean and Jeanne, who would "
+                "be glad to join a covenant since their world is long gone.",
+            ),
+            titled(
+                "Jeanne's child",
+                "Jeanne is pregnant and gives birth three months after the spell "
+                "ends, to a Gifted child with a close affinity for Terram.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -1161,10 +1205,14 @@ def _broerec(normandy: Normandy) -> None:
             "the stones one moonless night, hunting the legendary, "
             "unnamed treasure of Carnac.",
         ),
-        secrets="Rumours say Diedne fled into the regiones, or that the stones "
-        "hold portals, like Mercere Portals, to other far-off stone "
-        "rows, through which the surviving Diedne may one day return "
-        "for revenge.",
+        secrets=[
+            titled(
+                "The Diedne and the stones",
+                "Rumours say Diedne fled into Carnac's regiones, or that the stones "
+                "hold portals, like Mercere Portals, to other far-off stone rows, "
+                "through which the surviving Diedne may one day return for revenge.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The avenues",
@@ -1402,14 +1450,47 @@ def _fudarus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "servant spirits, and affects any whose Might is below its "
         "Penetration.",
     )
-    hidden = joined_lines(
-        "Lord Heusaff is Harpax in disguise: he stole the identity from Buliste's sanctum along with the Rod when she seemed dead.",
-        "The Three Great Spirits obey the Circlet's wearer through the old pact, not because the Circlet compels them; their vis's form is known only inside Fudarus.",
-        "Harpax is offering generous terms to new vassals for pawns in his feud, and wants the pieces of a pre-Hermetic item; it is a Diedne relic, Buliste has steered him to it, and she means to frame him once he has it.",
-        "Harpax has a merchant of Fudarus's spy network jailed on false charges; Buliste sends a spirit to help whoever frees him.",
-        "Porphyrion of Tytalus, an archmage who came from the Rome Tribunal three years ago, may mean to take the House for himself; a third contender is the one thing that would make the Primi work together.",
-        "The Primi will not stoop to a High Crime or Wizard's War against each other, though either may put the other in mortal danger.",
-    )
+    hidden = [
+        titled(
+            "Who Lord Heusaff is",
+            "Lord Heusaff is Harpax in disguise: he stole the identity from Buliste's "
+            "sanctum along with the Rod when she seemed dead.",
+        ),
+        titled(
+            "Why the Great Spirits obey",
+            "The Three Great Spirits obey the Circlet's wearer through the old pact, "
+            "not because the Circlet compels them.",
+        ),
+        titled(
+            "The spirits' vis",
+            "The form of the Three Great Spirits' vis is known only inside Fudarus.",
+        ),
+        titled(
+            "Harpax's new vassals",
+            "Harpax is offering generous terms to new vassals for pawns in his feud.",
+        ),
+        titled(
+            "The pre-Hermetic item",
+            "Harpax wants the pieces of a pre-Hermetic item; it is a Diedne relic, "
+            "Buliste has steered him to it, and she means to frame him once he has it.",
+        ),
+        titled(
+            "The jailed merchant",
+            "Harpax has a merchant of Fudarus's spy network jailed on false charges; "
+            "Buliste sends a spirit to help whoever frees him.",
+        ),
+        titled(
+            "Porphyrion's ambition",
+            "Porphyrion of Tytalus, an archmage who came from the Rome Tribunal three "
+            "years ago, may mean to take the House for himself; a third contender is "
+            "the one thing that would make the Primi work together.",
+        ),
+        titled(
+            "How far the Primi will go",
+            "The Primi will not stoop to a High Crime or Wizard's War against each "
+            "other, though either may put the other in mortal danger.",
+        ),
+    ]
     fudarus = b.covenant(
         "Fudarus",
         tribunal=tribunal,
@@ -1469,8 +1550,13 @@ def _fudarus_magi(normandy: Normandy, b: Builder, fudarus: Covenant) -> None:
             "the other painfully. Older than Harpax, she has the more "
             "raw power, but several Twilights have hemmed in her magic.",
         ),
-        secrets="She is steering Harpax toward a Diedne relic so she can frame "
-        "him with it.",
+        secrets=[
+            titled(
+                "Buliste's trap for Harpax",
+                "She is steering Harpax toward a Diedne relic so she can frame him "
+                "with it.",
+            ),
+        ],
         traits={"Petty": 3, "Generous": 2, "Caring": -1},
     )
     m["harpax"] = b.magus(
@@ -1503,9 +1589,14 @@ def _fudarus_magi(normandy: Normandy, b: Builder, fudarus: Covenant) -> None:
             "Twilight scar makes the cut of his clothes drift through "
             "the day, always in his forest green.",
         ),
-        secrets="As Lord Heusaff he takes the shape of a dashing young nobleman, "
-        "and has played the part so well that he has had to cultivate "
-        "unpleasant habits to keep off marriageable women.",
+        secrets=[
+            titled(
+                "Harpax as Lord Heusaff",
+                "As Lord Heusaff he takes the shape of a dashing young nobleman, and "
+                "has played the part so well that he has had to cultivate unpleasant "
+                "habits to keep off marriageable women.",
+            ),
+        ],
         traits={"Mercurial": 3, "Impulsive": 1, "Sincere": 1},
     )
 
@@ -1546,11 +1637,28 @@ def _exspectatio(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: Cynics say the founders of Atramentum were duped into preparing the site for them",
         "Hook: Iasper's family, the Foutins, and his taste for turmoil",
     )
-    hidden = joined_lines(
-        "Iasper, looking for a way into the Cabal of the Laden Cart, draws a crossroads faerie of the passage between life and death, which blurs the border: corpses walk, the living fall into a death-like pallor, and Iasper must be freed from his own death-state to break the spell.",
-        "When one of Iasper's Foutin cousins gets into trouble (perhaps a grog of the player covenant), Iasper smooths things over with the authorities by framing the player magi in a grand plot to destabilise the region, then comes to them contrite to help untangle the mess without admitting his part.",
-        "Kybella founded the Cabal of the Laden Cart and hunts the Ankeu to imprison Death itself.",
-    )
+    hidden = [
+        titled(
+            "Kybella's hunt",
+            "Kybella founded the Cabal of the Laden Cart and hunts the Ankeu to "
+            "imprison Death itself.",
+        ),
+        titled(
+            "Storyguide Notes",
+            paragraphs(
+                "Iasper and the crossroads faerie: Iasper, looking for a way into "
+                "the Cabal of the Laden Cart, draws a crossroads faerie of the "
+                "passage between life and death, which blurs the border: corpses "
+                "walk, the living fall into a death-like pallor, and Iasper must be "
+                "freed from his own death-state to break the spell.",
+                "Iasper's cousins: when one of Iasper's Foutin cousins gets into "
+                "trouble (perhaps a grog of the player covenant), Iasper smooths "
+                "things over with the authorities by framing the player magi in a "
+                "grand plot to destabilise the region, then comes to them contrite "
+                "to help untangle the mess without admitting his part.",
+            ),
+        ),
+    ]
     exspectatio = b.covenant(
         "Exspectatio",
         tribunal=tribunal,
@@ -1593,8 +1701,13 @@ def _exspectatio_magi(normandy: Normandy, b: Builder, home: Covenant) -> None:
         "against his unbreakable defences and then strikes one crushing "
         "blow. He is Iasper's master, and wrote The Mole's Work, Terram "
         "Lab Texts now held for the Tribunal. Looks about forty.",
-        secrets="Like Valerian of Confluensis, he is reputed to belong to the "
-        "Guernicus Terrae cult.",
+        secrets=[
+            titled(
+                "Adanos and the Terrae cult",
+                "Like Valerian of Confluensis, he is reputed to belong to the "
+                "Guernicus Terrae cult.",
+            ),
+        ],
         traits={"Humorless": 2, "Unswerving": 3, "Loyal to Harpax": 3},
     )
     m["kybella"] = b.magus(
@@ -1609,13 +1722,24 @@ def _exspectatio_magi(normandy: Normandy, b: Builder, home: Covenant) -> None:
         "She specialises in genii loci and searches every place she "
         "stays for signs of one. Her filius Helios, of Atramentum "
         "Renatus, is a theurgist too. Looks about fifty.",
-        secrets="Twelve years ago a Twilight showed her Death reaping Europe, "
-        "kings, bishops, commoners and magi alike, and she founded the "
-        "Cabal of the Laden Cart to trap Death and hold it to ransom. "
-        "The other members assume she is one of them but never know "
-        "which disguise is hers. With another theurgist of her line she "
-        "is obsessed with the Ankeu, and her agents listen across "
-        "Brittany for anyone who hears its cart.",
+        secrets=[
+            titled(
+                "Kybella's vision",
+                "Twelve years ago a Twilight showed her Death reaping Europe, kings, "
+                "bishops, commoners and magi alike, and she founded the Cabal of the "
+                "Laden Cart to trap Death and hold it to ransom.",
+            ),
+            titled(
+                "Kybella's disguise",
+                "The cabal's other members assume she is one of them but never know "
+                "which disguise is hers.",
+            ),
+            titled(
+                "Kybella and the Ankeu",
+                "With another theurgist of her line she is obsessed with the Ankeu, "
+                "and her agents listen across Brittany for anyone who hears its cart.",
+            ),
+        ],
         traits={"Loyal to Buliste": 3, "Suspicious": 1},
     )
     m["iasper"] = b.magus(
@@ -1818,9 +1942,18 @@ def _lords(normandy: Normandy, b: Builder) -> None:
         "keeps the family. The lord is a dashing young nobleman with "
         "some off-putting habits; the fishermen have little to do with "
         "the family and do not know its 'castle' is a magical place.",
-        secrets="Lord Heusaff is Harpax, Primus of House Tytalus, in a deep "
-        "cover disguise taken from Buliste. Through the role he governs "
-        "Fudarus's vis and coin.",
+        secrets=[
+            titled(
+                "Who Lord Heusaff is",
+                "Lord Heusaff is Harpax, Primus of House Tytalus, in a deep cover "
+                "disguise taken from Buliste.",
+            ),
+            titled(
+                "What Lord Heusaff governs",
+                "Through the role of Lord Heusaff, Harpax governs Fudarus's vis and "
+                "coin.",
+            ),
+        ],
     )
 
 
@@ -2025,7 +2158,12 @@ def _abbeys(normandy: Normandy, b: Builder) -> None:
         "eleventh century and the church of Brélévenez at Lannion in "
         "the twelfth, raised to cleanse the coast of the Diedne's "
         "diabolic taint.",
-        secrets="Rumour says a Quaesitor suggested the building to the Templars.",
+        secrets=[
+            titled(
+                "Who suggested the chapels",
+                "Rumour says a Quaesitor suggested the building to the Templars.",
+            ),
+        ],
     )
     w["our_lady_of_haut"] = b.church(
         "Chapel of Our Lady of Haut",
@@ -2447,13 +2585,32 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         "as a fight against disease and the ravages of time. Its agents "
         "listen across Brittany for anyone who hears the creak of the "
         "Ankeu's cart, and a member soon calls on whoever does.",
-        secrets="Kybella founded it twelve years ago after a Twilight vision of "
-        "Death reaping all Europe; the others assume she is a member but "
-        "never know which disguise is hers. She and another theurgist "
-        "of her line mean to imprison the Ankeu. If they succeed, Death "
-        "will not take kindly to being tamed; the cabal may already have "
-        "caught a night spirit that is not Death, which must be freed "
-        "far from Brittany. Iasper is seeking to join.",
+        secrets=[
+            titled(
+                "Why Kybella founded the cabal",
+                "Kybella founded the Cabal of the Laden Cart twelve years ago after a "
+                "Twilight vision of Death reaping all Europe.",
+            ),
+            titled(
+                "Kybella's disguise",
+                "The cabal's other members assume Kybella is a member but never know "
+                "which disguise is hers.",
+            ),
+            titled(
+                "The plan to imprison the Ankeu",
+                "Kybella and another theurgist of her line mean to imprison the "
+                "Ankeu. If they succeed, Death will not take kindly to being tamed.",
+            ),
+            titled(
+                "The night spirit",
+                "The Cabal of the Laden Cart may already have caught a night spirit "
+                "that is not Death, which must be freed far from Brittany.",
+            ),
+            titled(
+                "Iasper's bid to join",
+                "Iasper is seeking to join the Cabal of the Laden Cart.",
+            ),
+        ],
     )
     w["fudarus_spies"] = b.faction(
         "The Web of Fudarus",
@@ -2469,10 +2626,18 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         "know one another: in Paris two merchant partners scheme against "
         "each other for patrons who are secretly the same magus, and the "
         "Dyers' Guild, won from Florum's agents, is Fudarus's.",
-        secrets="Buliste controls the network and speaks mind to mind with "
-        "several key agents; Harpax, without it, cannot steer much of "
-        "the House's business and has jailed at least one agent on false "
-        "charges.",
+        secrets=[
+            titled(
+                "Who controls the Web",
+                "Buliste controls the Web of Fudarus and speaks mind to mind with "
+                "several key agents.",
+            ),
+            titled(
+                "Harpax and the Web",
+                "Harpax, without the Web of Fudarus, cannot steer much of the House's "
+                "business and has jailed at least one agent on false charges.",
+            ),
+        ],
     )
     w["decimi"] = b.faction(
         "The Decimi",

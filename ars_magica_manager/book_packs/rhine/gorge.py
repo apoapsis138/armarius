@@ -15,8 +15,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arms import Arms
-from ...models import as_secrets, secret_words
-from ..builder import Builder, paragraphs
+from ..builder import Builder, Secrets, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -42,11 +41,11 @@ TOLLS = (
 )
 
 
-def _add_to(record: Neighbour, more: str, hidden: str = "") -> None:
+def _add_to(record: Neighbour, more: str, hidden: Secrets = "") -> None:
     """Add the Gorge's paragraph to a record another part made, and
     `hidden` to its secrets."""
     record.summary = paragraphs(record.summary, more)
-    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
+    record.secrets = more_secrets(record.secrets, hidden)
 
 
 def build(rhine: Rhine) -> None:
@@ -102,9 +101,18 @@ def _archbishops(
             "just tolls at Schloss Fürstenberg, Burg Drachenfels and Burg "
             "Rheineck, and his great castle stands directly over the "
             "Drachenfels cave. A pious man, he leads the Holy Vehm.",
-            secrets="Gymir, the demon prince of the North, is working its way into "
-            "the Holy Vehm; if the book's future holds, the archbishop is "
-            "murdered in 1225 at the demon's contriving.",
+            secrets=[
+                titled(
+                    "Gymir and the Holy Vehm",
+                    "Gymir, the demon prince of the North, is working its way into "
+                    "the Holy Vehm.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "If the book's future holds, the archbishop is murdered in 1225 "
+                    "at the demon's contriving.",
+                ),
+            ],
             church="Archbishop's cathedral",
             order="secular clergy",
             ruler="Engelbert I",
@@ -164,12 +172,21 @@ def _gorge(rhine: Rhine, valley: Neighbour | None) -> Neighbour:
             "so badly that the Tribunal of 1200 banned magic in the Gorge for "
             "twenty years. That ban has now run out.",
         ),
-        secrets="Students of the Tribunal's records notice that each lost covenant "
-        "fell within exactly eleven Tribunals, seventy-seven years, of its "
-        "founding: the root of the tale that the Gorge is cursed, officially "
-        "idle speculation. By the middle of the century a dozen toll "
-        "stations stand between Mainz and Cologne, and in the Interregnum of "
-        "the 1250s they double in four years.",
+        secrets=[
+            titled(
+                "The seventy-seven years",
+                "Students of the Tribunal's records notice that each lost covenant "
+                "fell within exactly eleven Tribunals, seventy-seven years, of its "
+                "founding: the root of the tale that the Gorge is cursed, officially "
+                "idle speculation.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "By the middle of the century a dozen toll stations stand between "
+                "Mainz and Cologne, and in the Interregnum of the 1250s they double "
+                "in four years.",
+            ),
+        ],
         inside=valley,
         known="In the Order",
     )
@@ -212,14 +229,26 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "still troubles the family, and Thibaud the Fat, the present "
             "baron, quietly asks learned strangers for help.",
         ),
-        secrets="Mechthild's ghost has no realm or Might given. The old dungeons of "
-        "Rudiaria beneath the castle were merely bricked up and forgotten, "
-        "and may hold Hermetic treasures and traces of its black past; were "
-        "the baron to open them he might loose a captive demon on the "
-        "district. In the Infernal reading of the curse Rudiaria sold its "
-        "souls for seventy years of power, held Hatto II in thrall, tried to "
-        "cheat and burned, and the famine and Hatto's madness both trace "
-        "back to it.",
+        secrets=[
+            titled(
+                "Rudiaria's old dungeons",
+                "The old dungeons of Rudiaria beneath the castle were merely bricked "
+                "up and forgotten, and may hold Hermetic treasures and traces of its "
+                "black past.",
+            ),
+            titled(
+                "A captive demon",
+                "Were the baron to open Rudiaria's old dungeons he might loose a "
+                "captive demon on the district.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Mechthild's ghost has no realm or Might given. In the Infernal "
+                "reading of the curse Rudiaria sold its souls for seventy years of "
+                "power, held Hatto II in thrall, tried to cheat and burned, and the "
+                "famine and Hatto's madness both trace back to it.",
+            ),
+        ],
         inside=gorge,
     )
 
@@ -269,9 +298,18 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "more magnitude clears the island for a while. Hatto's crosier "
             "holds 6 pawns of Perdo vis, found only once he is destroyed.",
         ),
-        secrets="Hatto's corruption and the famine may both be linked to Rudiaria's "
-        "misdeeds: in the Infernal reading of the curse the covenant held him "
-        "in its sway.",
+        secrets=[
+            titled(
+                "Hatto and Rudiaria",
+                "Hatto's corruption and the famine may both be linked to Rudiaria's "
+                "misdeeds.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "In the Infernal reading of the curse the covenant held him in its "
+                "sway.",
+            ),
+        ],
         inside=gorge,
         realm="Infernal",
         aura=3,
@@ -349,14 +387,30 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "A young vine in the copse yields a little Intellego vis from its "
             "sap with great care.",
         ),
-        secrets="The vine was cut in secret from Durenmar's famous vine; Durenmar "
-        "does not know and may be displeased. The old magi sold dripstone "
-        "charms against the Loreley to ship captains. Two ancient burial "
-        "mounds hide among the upstream island's trees; Robert robbed them "
-        "(paltry treasure, perhaps vis) and woke their guardians, two "
-        "powerful undead corpses of unstated realm and Might with powers of "
-        "stealth and destruction, who wait for a midsummer night when the "
-        "river is low enough to cross the spine and fall on the castle.",
+        secrets=[
+            titled(
+                "Where the vine came from",
+                "The vine on Pfalz Island was cut in secret from Durenmar's famous "
+                "vine; Durenmar does not know and may be displeased.",
+            ),
+            titled(
+                "The dripstone charms",
+                "The old magi of Pfalz Island sold dripstone charms against the "
+                "Loreley to ship captains.",
+            ),
+            titled(
+                "The burial mounds",
+                "Two ancient burial mounds hide among the upstream island's trees; "
+                "Robert Schönburg robbed them (paltry treasure, perhaps vis) and woke "
+                "their guardians, two powerful undead corpses with powers of stealth "
+                "and destruction, who wait for a midsummer night when the river is "
+                "low enough to cross the spine and fall on the castle.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The mounds' guardians are of unstated realm and Might.",
+            ),
+        ],
         inside=gorge,
         aura=2,
     )
@@ -541,10 +595,19 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "Prince of Spring in the Odenwald, King Oak of Summer in the "
             "Palatinate Forest and the Willow Maiden of Autumn in the Hunsrück.",
         ),
-        secrets="In the Faerie reading of the curse the two courts play a game of "
-        "seventy-seven years with the Gorge's nobles as pawns and clear the "
-        "board at the end of every round. The fae of Dark Summer know a cure "
-        "for Karlotte Schönburg and will sell it.",
+        secrets=[
+            titled(
+                "A cure for Karlotte",
+                "The fae of Dark Summer know a cure for Karlotte Schönburg and will "
+                "sell it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "In the Faerie reading of the curse the two courts play a game of "
+                "seventy-seven years with the Gorge's nobles as pawns and clear the "
+                "board at the end of every round.",
+            ),
+        ],
         inside=gorge,
         realm="Faerie",
     )
@@ -637,9 +700,14 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "on the upper level and Magic 2 on the lower, as are many of "
             "Trier's other Roman cellars Magic 1.",
         ),
-        secrets="The ghosts of the covenant's magi rest in the burial alcoves by the "
-        "underground stream; disturbing one may bring pestering, or lost "
-        "secrets at a price.",
+        secrets=[
+            titled(
+                "The ghosts of Treverorum",
+                "The ghosts of Treverorum's magi rest in the burial alcoves by the "
+                "underground stream; disturbing one may bring pestering, or lost "
+                "secrets at a price.",
+            ),
+        ],
         inside=valley,
         realm="Divine",
         levels=[
@@ -718,10 +786,15 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
             "loses fades leaving his trinket, worth 2 pawns of Mentem vis. "
             "Each fights once a year.",
         ),
-        secrets="The record of 1248 AA, Valdus of Tytalus fined a pawn for twice "
-        "harvesting vis from Treverorum's site outside the walls, is the clue "
-        "that leads to a vis source near Trier, and so to the amphitheatre, "
-        "its ghosts and the trumpet.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The record of 1248 AA, Valdus of Tytalus fined a pawn for twice "
+                "harvesting vis from Treverorum's site outside the walls, is the clue "
+                "that leads to a vis source near Trier, and so to the amphitheatre, "
+                "its ghosts and the trumpet.",
+            ),
+        ],
         inside=valley,
         aura=1,
         levels=[
@@ -737,18 +810,37 @@ def _gorge_places(rhine: Rhine, gorge: Neighbour, valley: Neighbour | None) -> N
         "Fenistal",
         summary="A regio deep in the southern Bohemian Forest, dangerously close to "
         "Irencillia, of which the Order knows nothing.",
-        secrets="The original temple of Diana, where Merinita served as the "
-        "goddess's last disciple in Germania, long thought destroyed but "
-        "held ever since by the surviving renegades of early House Merinita, "
-        "the exsules, as their 'covenant'. The regio has a single level, the "
-        "top, at Magic 8, with no intermediate levels, so that entering it "
-        "is very hard; the strongest magic of its masters goes to keeping it "
-        "hidden. Fewer than a dozen exsules live there with the barest staff "
-        "of servants, all once animals given human form, and two of them "
-        "always stand guard. From here come raids on weak covenants, the "
-        "recruiting of failed apprentices, fae set against the Order, the "
-        "Huntress in the Wood as an unwitting arm, and a long-planned revenge "
-        "on the Tribunal.",
+        secrets=[
+            titled(
+                "What Fenistal is",
+                "Fenistal is the original temple of Diana, where Merinita served as "
+                "the goddess's last disciple in Germania, long thought destroyed but "
+                "held ever since by the surviving renegades of early House Merinita, "
+                "the exsules, as their 'covenant'.",
+            ),
+            titled(
+                "Fenistal's regio",
+                "Fenistal's regio has a single level, the top, with no intermediate "
+                "levels, so that entering it is very hard; the strongest magic of its "
+                "masters goes to keeping it hidden.",
+            ),
+            titled(
+                "Who lives at Fenistal",
+                "Fewer than a dozen exsules live at Fenistal with the barest staff of "
+                "servants, all once animals given human form, and two of them always "
+                "stand guard.",
+            ),
+            titled(
+                "What comes from Fenistal",
+                "From Fenistal come raids on weak covenants, the recruiting of failed "
+                "apprentices, fae set against the Order, the Huntress in the Wood as "
+                "an unwitting arm, and a long-planned revenge on the Tribunal.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The regio's single level is at Magic 8.",
+            ),
+        ],
         inside=rhine.places.get("bohemia") or valley,
         status="Rumoured",
         known="Locally",
@@ -1202,44 +1294,63 @@ def _threat(rhine: Rhine, gorge: Neighbour) -> None:
             "recruits or sponsors' gifts, and a shield grog is played by "
             "someone other than its magus's player.",
         ),
-        secrets=paragraphs(
-            "Each lost covenant fell within exactly seventy-seven years of "
-            "its founding, and the saga can climax about seven decades in, "
-            "when the curse's forces gather and the covenant meets its "
-            "predecessors' fate unless it breaks the curse and founds a "
-            "lasting Hermetic power. The storyguide chooses one cause, or "
-            "none but self-inflicted misfortune:",
-            "Magic, the revenge of the Nibelungs: Siegfried cheated the "
-            "dwarves and giants who first tamed the Rhine, dooming his line "
-            "and every kingdom or wise man who follows him to fall within "
-            "seven decades, as the Burgundians fell to Attila, the "
-            "Merovingians, and Charlemagne's empire to the Norse. Breaking it "
-            "may uncover the lost Rhinegold and may require the untaming of "
-            "the river's elemental spirit; it ties to Schwall of Bjornaer's "
-            "schemes and the Path of the Heartbeast.",
-            "Faerie, the rivalry of the Courts: Dark Summer and Bright Winter "
-            "play a game more than a thousand years old with the Gorge's "
-            "nobles as pawns, and its rules clear the board every seventy-"
-            "seven years, sweeping away nobles, covenants and kingdoms alike; "
-            "the Romans were Dark Summer's pieces and the barbarians Bright "
-            "Winter's, then Burgundians against Huns as the Nibelungenlied "
-            "records.",
-            "Infernal, the pact of Rudiaria: the first covenant sold its souls "
-            "to a powerful devil for gifts falling due after seventy years, "
-            "grew mighty, held Archbishop Hatto II in thrall, and when payment "
-            "came tried to cheat and was destroyed battling Hell in a great "
-            "fire; the devil has since lured each later covenant to the same "
-            "fall on the same schedule. This ties to the Gymir and Radegast "
-            "arc.",
-            "Divine, the corruption of the Merovingians: the Christian "
-            "wizard-kings, Merovech descended from David and keeper of the "
-            "Grail, rose by God's plan and fell within seven decades to "
-            "corruption and infighting; God blessed the Carolingians and "
-            "cursed every wizard's work in the region to fail in the same "
-            "span, the Order's included, and only humble pious wizards "
-            "prosper. The counsel of Albertus Magnus may show the path. If history holds, the Rhine League of "
-            "the 1250s is a further threat to any covenant taking tolls.",
-        ),
+        secrets=[
+            titled(
+                "The seventy-seven years",
+                "Each lost covenant of the Gorge fell within exactly seventy-seven "
+                "years of its founding.",
+            ),
+            titled(
+                "The Magic reading",
+                "The curse's Magic cause, the revenge of the Nibelungs: Siegfried "
+                "cheated the dwarves and giants who first tamed the Rhine, dooming "
+                "his line and every kingdom or wise man who follows him to fall "
+                "within seven decades, as the Burgundians fell to Attila, the "
+                "Merovingians, and Charlemagne's empire to the Norse. Breaking it may "
+                "uncover the lost Rhinegold and may require the untaming of the "
+                "river's elemental spirit.",
+            ),
+            titled(
+                "The Faerie reading",
+                "The curse's Faerie cause, the rivalry of the Courts: Dark Summer and "
+                "Bright Winter play a game more than a thousand years old with the "
+                "Gorge's nobles as pawns, and its rules clear the board every "
+                "seventy-seven years, sweeping away nobles, covenants and kingdoms "
+                "alike; the Romans were Dark Summer's pieces and the barbarians "
+                "Bright Winter's, then Burgundians against Huns as the Nibelungenlied "
+                "records.",
+            ),
+            titled(
+                "The Infernal reading",
+                "The curse's Infernal cause, the pact of Rudiaria: the first covenant "
+                "sold its souls to a powerful devil for gifts falling due after "
+                "seventy years, grew mighty, held Archbishop Hatto II in thrall, and "
+                "when payment came tried to cheat and was destroyed battling Hell in "
+                "a great fire; the devil has since lured each later covenant to the "
+                "same fall on the same schedule.",
+            ),
+            titled(
+                "The Divine reading",
+                "The curse's Divine cause, the corruption of the Merovingians: the "
+                "Christian wizard-kings, Merovech descended from David and keeper of "
+                "the Grail, rose by God's plan and fell within seven decades to "
+                "corruption and infighting; God blessed the Carolingians and cursed "
+                "every wizard's work in the region to fail in the same span, the "
+                "Order's included, and only humble pious wizards prosper. The counsel "
+                "of Albertus Magnus may show the path.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The saga can climax about seven decades in, when the curse's forces "
+                "gather and the covenant meets its predecessors' fate unless it "
+                "breaks the curse and founds a lasting Hermetic power. The storyguide "
+                "chooses one cause, or none but self-inflicted misfortune. The Magic "
+                "cause ties to Schwall of Bjornaer's schemes and the Path of the "
+                "Heartbeast; the Infernal cause ties to the Gymir and Radegast arc. "
+                "If history holds, the Rhine League of the 1250s is a further threat "
+                "to any covenant taking tolls.",
+            ),
+        ],
         antagonist="The curse of the Gorge, whichever realm the storyguide gives it",
         moves="A track",
         position=0,
@@ -1560,16 +1671,41 @@ def _people(rhine: Rhine) -> None:
             "gang of ruffians there in what is really piracy, gate-crashing "
             "noble gatherings to behave disgracefully.",
         ),
-        secrets="A committed servant of the Devil for the gains rather than from "
-        "fervour; his greed grew with his initiation, and people shun him, "
-        "which he does not mind since his bewitchment compels obedience, used "
-        "frivolously. Premonitions warn him when exposure nears. He works "
-        "minor natural magics as rituals needing time and vis, with "
-        "Intelligence, Infernal Lore, the aura and a stress die and Shape and "
-        "Material bonuses from gemstones, and might grow to rival a magus by "
-        "dealing with a demon directly. He robbed the burial mounds on the "
-        "upstream island and woke their guardians, and he is behind the attack "
-        "on his half-sister Karlotte.",
+        secrets=[
+            titled(
+                "Robert's master",
+                "A committed servant of the Devil for the gains rather than from "
+                "fervour; his greed grew with his initiation.",
+            ),
+            titled(
+                "Robert's bewitchment",
+                "People shun him, which he does not mind since his bewitchment "
+                "compels obedience, used frivolously.",
+            ),
+            titled(
+                "Robert's warnings",
+                "Premonitions warn him when exposure nears.",
+            ),
+            titled(
+                "Robert's magic",
+                "He works minor natural magics as rituals needing time and vis, and "
+                "might grow to rival a magus by dealing with a demon directly.",
+            ),
+            titled(
+                "The burial mounds",
+                "He robbed the burial mounds on the upstream island and woke their "
+                "guardians.",
+            ),
+            titled(
+                "The attack on Karlotte",
+                "He is behind the attack on his half-sister Karlotte.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "His rituals use Intelligence, Infernal Lore, the aura and a stress "
+                "die and Shape and Material bonuses from gemstones.",
+            ),
+        ],
         traits={"Arrogant": 3, "Greedy": 3, "Scheming": 2},
     )
     magi["wolkan"] = b.magus(
@@ -1590,8 +1726,13 @@ def _people(rhine: Rhine) -> None:
         "tolls are unjust or that Robert is more than he seems. He knows "
         "the toll system, the dripstone trade against the Loreley, and the "
         "petty criminals and mercenaries of the towns up and down the Rhine.",
-        secrets="His own aim is to lead his criminal contacts and get rich, perhaps "
-        "with the covenant's resources.",
+        secrets=[
+            titled(
+                "Wolkan's own aim",
+                "His own aim is to lead his criminal contacts and get rich, perhaps "
+                "with the covenant's resources.",
+            ),
+        ],
         traits={"Self-interest": 3, "Loyal": 0, "Brave": -1},
     )
     magi["karlotte_schonburg"] = b.magus(
@@ -1607,8 +1748,17 @@ def _people(rhine: Rhine) -> None:
         "woods west of the castle, and her seemingly slight wounds have "
         "left her in a coma from which nothing wakes her. The fae of Dark "
         "Summer will reveal a cure for a price.",
-        secrets="Robert is behind the attack; proving it and curing her wins the "
-        "baron's gratitude and with it Pfalz Island.",
+        secrets=[
+            titled(
+                "Who is behind the attack",
+                "Robert Schönburg is behind the attack on Karlotte.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Proving it and curing her wins the baron's gratitude and with it "
+                "Pfalz Island.",
+            ),
+        ],
     )
     magi["ludold"] = b.magus(
         "Ludold",
@@ -1717,7 +1867,12 @@ def _people(rhine: Rhine) -> None:
         "divination of dreams and arguing all of them compatible with "
         "Christianity. He might meet the magi, or be recruited into the "
         "Order.",
-        secrets="In the Divine reading of the curse his counsel is a path to grace.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "In the Divine reading of the curse his counsel is a path to grace.",
+            ),
+        ],
     )
 
 
@@ -1745,9 +1900,18 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             "killed a handful; Heorot studies them; Oculus Septentrionalis "
             "wants the Baltic trade.",
         ),
-        secrets="Waddenzee has found no evidence of an organised Order of Odin and "
-        "keeps the myth alive anyway. The bulk of any such order may be "
-        "Gymir's wizard pawns, or renegade Hermetic magi.",
+        secrets=[
+            titled(
+                "Waddenzee and the myth",
+                "Waddenzee has found no evidence of an organised Order of Odin and "
+                "keeps the myth alive anyway.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The bulk of any such order may be Gymir's wizard pawns, or renegade "
+                "Hermetic magi.",
+            ),
+        ],
         faction="Hedge coven",
         wants=(
             "Undecided: a rival Order's dominion over the North, or nothing more "
@@ -1756,7 +1920,7 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         offers="Norse magics of shape-changing, prophecy, far-seeing and the runes",
     )
     if "order_of_odin" in world:
-        _add_to(world["order_of_odin"], odin.summary, secret_words(odin.secrets))
+        _add_to(world["order_of_odin"], odin.summary, odin.secrets)
         world["order_of_odin"].details["wants"] = odin.details["wants"]
         world["order_of_odin"].details["offers"] = odin.details["offers"]
         rhine.b.saga.neighbours.remove(odin)
@@ -1765,14 +1929,29 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
     world["gymir"] = b.custom(
         "Gymir",
         summary="A name from the North that the Order does not know in 1220.",
-        secrets="A demon prince whose earthly fief is Scandinavia, at war with "
-        "Radegast and with the Dominion; Might not given. It strikes at the "
-        "Church, works through catastrophe and weather and through the Norse, "
-        "commands an aggressive faction of wizards, profits from Waddenzee's "
-        "piracy, and is worming into the Holy Vehm, whose leader, the "
-        "archbishop of Cologne, it has murdered in 1225 if the book's future "
-        "holds, meaning to turn the Vehm on Radegast's pagans in northern "
-        "Germany.",
+        secrets=[
+            titled(
+                "Gymir's fief",
+                "A demon prince whose earthly fief is Scandinavia, at war with "
+                "Radegast and with the Dominion.",
+            ),
+            titled(
+                "Gymir's ways",
+                "Gymir strikes at the Church, works through catastrophe and weather "
+                "and through the Norse, commands an aggressive faction of wizards, "
+                "and profits from Waddenzee's piracy.",
+            ),
+            titled(
+                "Gymir and the Holy Vehm",
+                "Gymir is worming into the Holy Vehm, meaning to turn the Vehm on "
+                "Radegast's pagans in northern Germany.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Might not given. Gymir has murdered the Vehm's leader, the "
+                "archbishop of Cologne, in 1225 if the book's future holds.",
+            ),
+        ],
         realm="Infernal",
         wants="(secret) the Church undone and the Holy Vehm turned on Radegast's followers",
         offers="(secret) storms, catastrophe and infernal power to its wizard pawns",
@@ -1781,14 +1960,35 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "Radegast",
         summary="A god of the Old Ways to the Slavs of the Baltic shore, as far as "
         "the Order knows.",
-        secrets="A demon prince whose fief is the Slavic lands, its heartland the "
-        "eastern Baltic shore; Might not given. It wants the Germans "
-        "deflected north and the Hanseatic towns rotted by greed, poses as "
-        "the pagan gods, and can dress Infernal power as Magic or Faerie: the "
-        "auras of Rethra and Mount Radhost are really Infernal. Its pawns are "
-        "Imanitos Mendax, willingly; Roznov, unwittingly; a cult among the "
-        "townsfolk of Holstein and the Slavic princes of Mecklenburg; and an "
-        "Ash Gild-led war on the Norse it is planning.",
+        secrets=[
+            titled(
+                "Radegast's fief",
+                "A demon prince whose fief is the Slavic lands, its heartland the "
+                "eastern Baltic shore.",
+            ),
+            titled(
+                "What Radegast wants",
+                "Radegast wants the Germans deflected north and the Hanseatic towns "
+                "rotted by greed.",
+            ),
+            titled(
+                "Radegast's disguises",
+                "Radegast poses as the pagan gods, and can dress Infernal power as "
+                "Magic or Faerie: the auras of Rethra and Mount Radhost are really "
+                "Infernal.",
+            ),
+            titled(
+                "Radegast's pawns",
+                "Radegast's pawns are Imanitos Mendax, willingly; Roznov, "
+                "unwittingly; a cult among the townsfolk of Holstein and the Slavic "
+                "princes of Mecklenburg; and an Ash Gild-led war on the Norse it is "
+                "planning.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Might not given.",
+            ),
+        ],
         realm="Infernal",
         place=places.get("east"),
         wants="(secret) Germans turned north against the Norse, the Hansa corrupted by greed",
@@ -1798,10 +1998,19 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "The cult of Radegast",
         summary="Worshippers of the Old Ways among the townsfolk of Holstein and the "
         "Slavic princes of Mecklenburg.",
-        secrets="Nobles and priests of the Holstein cities and the Mecklenburg "
-        "princes who worship the demon Radegast believing it a god and "
-        "receive diabolic powers; Imanitos Mendax poses as their high priest "
-        "and gathers power among them.",
+        secrets=[
+            titled(
+                "What the cult worships",
+                "Nobles and priests of the Holstein cities and the Mecklenburg "
+                "princes who worship the demon Radegast believing it a god and "
+                "receive diabolic powers.",
+            ),
+            titled(
+                "The cult's high priest",
+                "Imanitos Mendax poses as the high priest of the cult of Radegast and "
+                "gathers power among its members.",
+            ),
+        ],
         faction="Hedge coven",
         realm="Infernal",
         place=places.get("lowlands"),
@@ -1829,9 +2038,18 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
             "The Holy Vehm",
             summary="A pious society led by the archbishop of Cologne; the book says "
             "no more of it.",
-            secrets="Gymir is infiltrating and corrupting it; its leader is murdered "
-            "in 1225 if the book's future holds, and the demon means to turn "
-            "it on Radegast's pagan followers in northern Germany.",
+            secrets=[
+                titled(
+                    "Gymir and the Holy Vehm",
+                    "Gymir is infiltrating and corrupting the Holy Vehm, and the "
+                    "demon means to turn it on Radegast's pagan followers in northern "
+                    "Germany.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Its leader is murdered in 1225 if the book's future holds.",
+                ),
+            ],
             faction="Council or assembly",
             realm="Divine",
             ruler="Engelbert I, Archbishop of Cologne",
@@ -1840,33 +2058,59 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
     world["exsules"] = b.faction(
         "The exsules of Fenistal",
         summary="Nothing of them is known to the Order in 1220.",
-        secrets=paragraphs(
-            "Fewer than a dozen self-styled exiles (exsules; one exsul) "
-            "living at Fenistal in the Bohemian Forest: descendants of the "
-            "losing faction of early House Merinita who rejected the Order "
-            "after Myanar's death and keep a Hermetic-like tradition cut off "
-            "from modern Magic Theory. All have Weird Magic; all know Parma "
-            "Magica but imperfectly (Flawed Parma Magica); most have studied "
-            "from vis all their lives, so Poor Student is common; the line "
-            "bears Supernatural Nuisance (Faeries) from Quendalon's curse; many have Mythic "
-            "Blood from Merinita or from powerful magical spirits, and Ways "
-            "of the Forest, Free Study and Study Bonus are common. Heirs of "
-            "Merinita's nature magic, many have walked the Paths through the "
-            "Forest and may have overcome one or more Lesser Limits, and "
-            "they may have taken in Diedne fleeing the Schism War, in which "
-            "case they excel at spontaneous magic. With little access to "
-            "Hermetic grimoires their spells rouse nature's fury rather than "
-            "strike directly, and should feel alien and frightening to a "
-            "Hermetic magus.",
-            "They mean to survive hidden, keep up with Hermetic advances by "
-            "theft and spying, shelter failed apprentices, set the fae against "
-            "the Order, and in the end take revenge on the Tribunal; they "
-            "count Irencillia their greatest enemy, though Irencillia knows "
-            "nothing of them. They keep no warriors and the barest servants, "
-            "all former animals given human shape, which makes infiltration "
-            "all but impossible; two members are always on guard. The "
-            "Huntress in the Wood is their unwitting instrument.",
-        ),
+        secrets=[
+            titled(
+                "Who the exsules are",
+                "Fewer than a dozen self-styled exiles (exsules; one exsul) living at "
+                "Fenistal in the Bohemian Forest: descendants of the losing faction "
+                "of early House Merinita who rejected the Order after Myanar's death "
+                "and keep a Hermetic-like tradition cut off from modern Magic Theory.",
+            ),
+            titled(
+                "The exsules' learning",
+                "All the exsules know Parma Magica but imperfectly; most have studied "
+                "from vis all their lives; the line bears Quendalon's curse; many "
+                "have the blood of Merinita or of powerful magical spirits.",
+            ),
+            titled(
+                "The exsules' nature magic",
+                "Heirs of Merinita's nature magic, many exsules have walked the Paths "
+                "through the Forest. With little access to Hermetic grimoires their "
+                "spells rouse nature's fury rather than strike directly.",
+            ),
+            titled(
+                "What the exsules mean to do",
+                "The exsules mean to survive hidden, keep up with Hermetic advances "
+                "by theft and spying, shelter failed apprentices, set the fae against "
+                "the Order, and in the end take revenge on the Tribunal.",
+            ),
+            titled(
+                "The exsules and Irencillia",
+                "The exsules count Irencillia their greatest enemy, though Irencillia "
+                "knows nothing of them.",
+            ),
+            titled(
+                "The exsules' household",
+                "The exsules keep no warriors and the barest servants, all former "
+                "animals given human shape, which makes infiltration all but "
+                "impossible; two members are always on guard.",
+            ),
+            titled(
+                "The Huntress in the Wood",
+                "The Huntress in the Wood is the exsules' unwitting instrument.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "All have Weird Magic and Flawed Parma Magica; Poor Student is "
+                "common; the line bears Supernatural Nuisance (Faeries) from "
+                "Quendalon's curse; many have Mythic Blood from Merinita or from "
+                "powerful magical spirits, and Ways of the Forest, Free Study and "
+                "Study Bonus are common. Many may have overcome one or more Lesser "
+                "Limits, and they may have taken in Diedne fleeing the Schism War, in "
+                "which case they excel at spontaneous magic. Their spells should feel "
+                "alien and frightening to a Hermetic magus.",
+            ),
+        ],
         faction="Hedge coven",
         realm="Magic",
         place=places["fenistal"],
@@ -1879,11 +2123,23 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         summary="A secret society within the Order, mostly of House Bjornaer's "
         "followers, devoted to preserving primal, nature-bound magic. Its "
         "members meet in secret wearing animal masks.",
-        secrets="It is unknowingly a pawn of the exsules of Fenistal, who have "
-        "steered it since its founding; with every face hidden, its members "
-        "do not know that not all of them are magi of the Order. The agenda "
-        "instilled in it is to take over the Elder Gild and with it "
-        "Irencillia.",
+        secrets=[
+            titled(
+                "Who steers the Huntress",
+                "The Huntress in the Wood is unknowingly a pawn of the exsules of "
+                "Fenistal, who have steered it since its founding.",
+            ),
+            titled(
+                "Under the masks",
+                "With every face hidden, the Huntress's members do not know that not "
+                "all of them are magi of the Order.",
+            ),
+            titled(
+                "The Huntress's agenda",
+                "The agenda instilled in the Huntress in the Wood is to take over the "
+                "Elder Gild and with it Irencillia.",
+            ),
+        ],
         faction="Hermetic group",
         realm="Magic",
         rules="Members meet masked as animals and keep one another's names secret",
@@ -1896,8 +2152,14 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         "shapeshifters in Pomerania, long at feud with House Bjornaer, which "
         "no longer remembers why. They have factions and feuds of their own, "
         "and the most peaceable among them may treat with Prima Falke.",
-        secrets="In the Crintera Schism arc they are admitted to House Bjornaer in "
-        "1227 and 1228 and mostly lean Wilderist, tipping the House's balance.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "In the Crintera Schism arc they are admitted to House Bjornaer in "
+                "1227 and 1228 and mostly lean Wilderist, tipping the House's "
+                "balance.",
+            ),
+        ],
         faction="Hedge coven",
         realm="Magic",
         place=places.get("east"),
@@ -1907,16 +2169,22 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
     world["rhine_league"] = b.custom(
         "The Rhine League",
         summary="No such league exists in 1220.",
-        secrets="If history holds: as toll stations grow to a dozen by mid-century "
-        "and double in four years in the Interregnum of the 1250s, merchants "
-        "and lawful toll-takers suffer, and Mainz and Worms found the Rhine "
-        "League to protect their merchants; many cities, the princely nobles "
-        "(the three archbishops and the Count Palatine) and lesser nobles "
-        "join. It puts down unjust tolls by trade sanctions and by destroying "
-        "robber-barons' castles, besieging or razing nearly a dozen and "
-        "unseating several barons, and disbands after three years with its "
-        "aims met. A formidable foe for any covenant that acts as or allies "
-        "with a robber-baron: vast resources, a large army and God on its side.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "If history holds: as toll stations grow to a dozen by mid-century "
+                "and double in four years in the Interregnum of the 1250s, merchants "
+                "and lawful toll-takers suffer, and Mainz and Worms found the Rhine "
+                "League to protect their merchants; many cities, the princely nobles "
+                "(the three archbishops and the Count Palatine) and lesser nobles "
+                "join. It puts down unjust tolls by trade sanctions and by destroying "
+                "robber-barons' castles, besieging or razing nearly a dozen and "
+                "unseating several barons, and disbands after three years with its "
+                "aims met. A formidable foe for any covenant that acts as or allies "
+                "with a robber-baron: vast resources, a large army and God on its "
+                "side.",
+            ),
+        ],
         place=gorge,
         wants="(secret) unjust tolls ended and the robber castles razed",
         offers="(secret) protection for merchants and lawful toll-takers",
@@ -1926,7 +2194,12 @@ def _factions(rhine: Rhine, gorge: Neighbour, cologne: Neighbour) -> None:
         summary="About a dozen malcontents and ruffians living in the ruins on Pfalz "
         "Island under Lord Robert Schönburg, taking river tolls that amount "
         "to piracy; Wolkan the branded thief is one of them.",
-        secrets="Robert is a diabolist.",
+        secrets=[
+            titled(
+                "Robert's secret",
+                "Robert Schönburg is a diabolist.",
+            ),
+        ],
         faction="Brigands and mercenaries",
         members=12,
         ruler="Lord Robert Schönburg",

@@ -61,7 +61,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, paragraphs
+from ..builder import Builder, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -611,11 +611,14 @@ def _fars(cradle: Cradle) -> None:
             "the heavens double his Artes Liberales for astrology and "
             "his Solomonic Astrology for magic.",
         ),
-        secrets=paragraphs(
-            "The sahir who found the cup uses it to pry on neighbours "
-            "and rivals (the troupe perhaps among them); the book does "
-            "not name him.",
-        ),
+        secrets=[
+            titled(
+                "Who has the cup",
+                "The sahir who found the cup at Istakhr uses it to pry on "
+                "neighbours and rivals (the troupe perhaps among them).",
+            ),
+            titled("Storyguide Notes", "The book does not name the sahir."),
+        ],
     )
     _place(
         cradle,
@@ -711,15 +714,23 @@ def _fars(cradle: Cradle) -> None:
             "turned to stone. The old kings anointed it with oil; nobody "
             "has honoured it for centuries.",
         ),
-        secrets=paragraphs(
-            "The statue is a great div, one of the forty-five named "
-            "demons (which one is unknown), bound in it long ago by a "
-            "mobed. Knowing his binding would not last forever, he made "
-            "the leaves green, to fade as it wore off; each anointing "
-            "came with a mobed's blessing that renewed it. Under Muslim "
-            "rule the rite was banned as idolatry, and only a tenth of "
-            "one leaf is still green: the demon is nearly free.",
-        ),
+        secrets=[
+            titled(
+                "What the Black Man is",
+                "The statue of the Black Man is a great div, one of the "
+                "forty-five named demons (which one is unknown), bound in it "
+                "long ago by a mobed.",
+            ),
+            titled(
+                "The green leaves",
+                "Knowing his binding of the div in the Black Man would not "
+                "last forever, the mobed made the leaves green, to fade as it "
+                "wore off; each anointing came with a mobed's blessing that "
+                "renewed it. Under Muslim rule the rite was banned as "
+                "idolatry, and only a tenth of one leaf is still green: the "
+                "demon is nearly free.",
+            ),
+        ],
     )
     _town(
         cradle,
@@ -1053,14 +1064,17 @@ def _mazandaran(cradle: Cradle) -> None:
             "Major Focus against the enemies of Persia; the rite works "
             "only within the Wall of Gurgan's aligned aura.",
         ),
-        secrets=paragraphs(
-            "The first Zahhak was not killed by Feridun: with an angel's "
-            "help he was chained and buried under the mountain. The "
-            "demon has long since left him, but he lives on there, kept "
-            "from death by the holy bonds, an ancient survivor of the "
-            "heroic age who might teach something to those facing a new "
-            "Zahhak.",
-        ),
+        secrets=[
+            titled(
+                "The first Zahhak",
+                "The first Zahhak was not killed by Feridun: with an angel's "
+                "help he was chained and buried under Mount Damavand. The "
+                "demon has long since left him, but he lives on there, kept "
+                "from death by the holy bonds, an ancient survivor of the "
+                "heroic age who might teach something to those facing a new "
+                "Zahhak.",
+            ),
+        ],
     )
     _place(
         cradle,
@@ -1328,11 +1342,14 @@ def _khurasan(cradle: Cradle) -> None:
             "rooz, the wind of 120 days, blows from north to south, "
             "wrapping the land in dust; some think jinn live in it.",
         ),
-        secrets=paragraphs(
-            "The 120-day wind is a host of air elementals (Realms of "
-            "Power: Magic) on their yearly migration, playing as they "
-            "pass.",
-        ),
+        secrets=[
+            titled(
+                "The 120-day wind",
+                "Zaranj's 120-day wind is a host of air elementals on their "
+                "yearly migration, playing as they pass.",
+            ),
+            titled("Storyguide Notes", "Air elementals: Realms of Power: Magic."),
+        ],
     )
     _place(
         cradle,
@@ -1406,15 +1423,22 @@ def _khurasan(cradle: Cradle) -> None:
             "Merv's collections, and the town's house of wisdom keeps its books "
             "of magic.",
         ),
-        secrets=paragraphs(
-            "Faeries keep stalls in the market beside the townsfolk and "
-            "help earn Merv its name. They draw their life from trading "
-            "with mortals but supply nothing themselves: each deal they "
-            "make is with another mortal who has the thing, so getting "
-            "anything rare means a chain of favours, each faerie asking "
-            "for something else, from a pebble with a white spot to the "
-            "Sasanid king's crown. The trick is to know when to stop.",
-        ),
+        secrets=[
+            titled(
+                "Faeries in Merv's market",
+                "Faeries keep stalls in Merv's market beside the townsfolk "
+                "and help earn Merv its name.",
+            ),
+            titled(
+                "Trading with Merv's faeries",
+                "The faeries of Merv's market draw their life from trading "
+                "with mortals but supply nothing themselves: each deal they "
+                "make is with another mortal who has the thing, so getting "
+                "anything rare means a chain of favours, each faerie asking "
+                "for something else, from a pebble with a white spot to the "
+                "Sasanid king's crown. The trick is to know when to stop.",
+            ),
+        ],
     )
     _town(
         cradle,
@@ -1566,11 +1590,17 @@ def _ghur(cradle: Cradle) -> None:
             "wears a gold necklace or bracelet, and the great drip with "
             "jewels.",
         ),
-        secrets=paragraphs(
-            "Its wealth is a False God's gift, through that demon's "
-            "Wealth of Nations power (Realms of Power: The Infernal) that the "
-            "Ghaznians worship in secret.",
-        ),
+        secrets=[
+            titled(
+                "Ghazni's wealth",
+                "Ghazni's wealth is the gift of a False God, a demon that "
+                "the Ghaznians worship in secret.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The demon's Wealth of Nations power (Realms of Power: The Infernal).",
+            ),
+        ],
     )
     _town(
         cradle,
@@ -1682,10 +1712,13 @@ def _factions(cradle: Cradle) -> None:
             "they have all disappeared: gone to Mythic Hind, some say, "
             "or into hiding. Their demons stayed behind.",
         ),
-        secrets=paragraphs(
-            "One rumour that will not die puts the Shansabani heir at "
-            "Genghis Khan's court.",
-        ),
+        secrets=[
+            titled(
+                "The Shansabani heir",
+                "One rumour that will not die puts the Shansabani heir at "
+                "Genghis Khan's court.",
+            ),
+        ],
     )
     w["zutt"] = b.faction(
         "The Zutt",
@@ -1765,11 +1798,14 @@ def _factions(cradle: Cradle) -> None:
             "saying you own one defeats its purpose, nobody talks of "
             "them.",
         ),
-        secrets=paragraphs(
-            "Yarankush is a Nizari, and weaves into each carpet's design "
-            "a hidden sign that tells the sect's killers not to step on "
-            "it.",
-        ),
+        secrets=[
+            titled(
+                "Yarankush's carpets",
+                "Yarankush is a Nizari, and weaves into each carpet's design "
+                "a hidden sign that tells the sect's killers not to step on "
+                "it.",
+            ),
+        ],
     )
     b.link(w["yatus"], "places", places["damavand"], "Their seven closed houses")
     b.link(w["shansabani"], "places", w["firuzkuh"], "Their hidden retreat")

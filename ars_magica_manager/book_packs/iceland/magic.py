@@ -15,7 +15,7 @@ on a sheet: the hreppur's laws, nidstong and the lifting of Curses."""
 from __future__ import annotations
 
 from ...models import Neighbour
-from ..builder import Builder, dormant, joined_lines, paragraphs
+from ..builder import Builder, dormant, joined_lines, paragraphs, titled
 
 #: Where a record's magic is now.
 RULES_ARE_THE_CATALOGS = (
@@ -139,22 +139,31 @@ def _hreppur(b: Builder, eldborg: Neighbour) -> Neighbour:
             "or get away, but only with his life at risk, and never to "
             "injure on purpose.",
         ),
-        secrets=paragraphs(
-            "Its authority is loose: no oath, no ceremony of joining, and "
-            "attending Eldborg or paying the path tax is voluntary, but only "
-            "those who keep its laws share the protection of its deal with "
-            "the godar. Magi may be admitted on the same terms. Witchcraft "
-            "cases embarrass it badly, and it works to end them fast "
-            "(pp. 102, 105).",
-            "The meeting in the book's saga draws 11 trollsynir, 6 vitkir, "
-            "62 galdramen (11 of them schooled) and 8 seithkonur, with a "
-            "council of five (p. 102).",
-            "With the Guardians at its side it could stand even against "
-            "Hermetic magi. Kill a prominent galdraman and many landvaettir "
-            "lords are incensed; kill a trollson and his giant kin are "
-            "enraged; a war could turn all of supernatural Iceland on the "
-            "Order (p. 29).",
-        ),
+        secrets=[
+            titled(
+                "The hreppur's loose authority",
+                "The hreppur's authority is loose: no oath, no ceremony of "
+                "joining, and attending Eldborg or paying the path tax is "
+                "voluntary, but only those who keep its laws share the "
+                "protection of its deal with the godar. Magi may be admitted on "
+                "the same terms. Witchcraft cases embarrass it badly, and it "
+                "works to end them fast (pp. 102, 105).",
+            ),
+            titled(
+                "The hreppur at war",
+                "With the Guardians at its side the hreppur could stand even "
+                "against Hermetic magi. Kill a prominent galdraman and many "
+                "landvaettir lords are incensed; kill a trollson and his giant "
+                "kin are enraged; a war could turn all of supernatural Iceland on "
+                "the Order (p. 29).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The meeting in the book's saga draws 11 trollsynir, 6 vitkir, "
+                "62 galdramen (11 of them schooled) and 8 seithkonur, with a "
+                "council of five (p. 102).",
+            ),
+        ],
     )
 
 
@@ -282,11 +291,14 @@ def _schooled_galdramen(b: Builder) -> Neighbour:
             "differences: they use the normal magical interaction table, "
             "and they have the Gift.",
         ),
-        secrets=(
-            "Being Gifted, they could learn Hermetic magic; they only lack "
-            "the means. Books of Hermetic theory in either school could "
-            "change that, to the horror of the Order (p. 51)."
-        ),
+        secrets=[
+            titled(
+                "What the schooled galdramen lack",
+                "Being Gifted, the schooled galdramen could learn Hermetic magic; "
+                "they only lack the means. Books of Hermetic theory in either "
+                "school could change that, to the horror of the Order (p. 51).",
+            ),
+        ],
     )
 
 
@@ -400,14 +412,24 @@ def _order_of_odin(b: Builder) -> Neighbour:
             "having so little.",
         ),
         rules="P. 29.",
-        secrets=(
-            "Whether it exists is for each storyguide to decide. On the "
-            "surface the Galdramen Hreppur looks like this Order, but it "
-            "grew up here, shaped by local custom and local wants, and owes "
-            "nothing to anyone abroad. Icelanders mentioned the name will only be "
-            "confused (pp. 29, 105). That hedge wizards can resist Hermetics "
-            "at all would still confirm the Order's fears."
-        ),
+        secrets=[
+            titled(
+                "The hreppur is not the Order of Odin",
+                "On the surface the Galdramen Hreppur looks like the Order of "
+                "Odin, but it grew up here, shaped by local custom and local "
+                "wants, and owes nothing to anyone abroad. Icelanders mentioned "
+                "the name will only be confused (pp. 29, 105).",
+            ),
+            titled(
+                "What would confirm the Order's fears",
+                "That hedge wizards can resist Hermetics at all would still "
+                "confirm the Order's fears of an Order of Odin.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Whether the Order of Odin exists is for each storyguide to decide.",
+            ),
+        ],
     )
 
 

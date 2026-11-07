@@ -7,7 +7,9 @@ is an ordinary export and the sheets show it like anything the user
 typed.
 
 A record's secrets go in its own `secrets` (each method's `secrets=`),
-the Secrets chapter a player never sees. The few texts that are part of
+the Secrets chapter a player never sees: a list of `titled(...)`
+secrets, each one thing the storyguide may reveal on its own, or plain
+words for one untitled secret. The few texts that are part of
 another record (a regio level's notes, a case's charge, a Tribunal's
 diary entry, a book's description) keep theirs at their end under a
 "Secrets" heading (`secrets()` writes it)."""
@@ -58,6 +60,7 @@ from ..models import (
     Ruling,
     Saga,
     ScoredTrait,
+    Secret,
     Spell,
     TraditionEffect,
     Tribunal,
@@ -65,7 +68,6 @@ from ..models import (
     VirtueFlawInstance,
     as_character_type,
     as_secrets,
-    secret_words,
 )
 from ..models.common import SEASONS, SECRETS_HEADING
 from ..models.world import FULL, SKETCH
@@ -89,6 +91,41 @@ def secrets(text: str, hidden: str) -> str:
     if not hidden.strip():
         return text
     return f"{text.rstrip()}\n\n{SECRETS}\n{hidden.strip()}"
+
+
+#: A record's secrets as a book's module writes them: titled secrets
+#: (`titled`), or plain words for one untitled secret.
+type Secrets = str | Sequence[Secret]
+
+
+def titled(title: str, text: str) -> Secret:
+    """One secret: its title and words, not yet revealed."""
+    return Secret(title=title, text=text.strip())
+
+
+def secret_list(secrets: Secrets) -> list[Secret]:
+    """`secrets` as a record holds them: copies of the titled secrets (so
+    revealing one record's never reveals another's), or plain words as
+    one untitled secret (none when blank)."""
+    if isinstance(secrets, str):
+        return as_secrets(secrets)
+    return [replace(s) for s in secrets]
+
+
+#: The title of the one secret a record keeps for table notes, never
+#: revealed; it stays last.
+STORYGUIDE_NOTES = "Storyguide Notes"
+
+
+def more_secrets(have: Sequence[Secret], *more: Secrets) -> list[Secret]:
+    """A record's secrets with `more` after them, its Storyguide Notes
+    (all of them joined into one) kept last."""
+    every = [*have, *(s for part in more for s in secret_list(part))]
+    notes = [s.text for s in every if s.title == STORYGUIDE_NOTES]
+    kept = [s for s in every if s.title != STORYGUIDE_NOTES]
+    if notes:
+        kept.append(titled(STORYGUIDE_NOTES, paragraphs(*notes)))
+    return kept
 
 
 def paragraphs(*parts: str) -> str:
@@ -321,7 +358,7 @@ class Builder:
         meeting_place: str,
         covenants_total: int | None = None,
         magi_total: int | None = None,
-        secrets: str = "",
+        secrets: Secrets = "",
     ) -> Tribunal:
         tribunal = Tribunal(
             id=storage.generate_unique_id(name, [t.id for t in self.saga.tribunals]),
@@ -334,7 +371,7 @@ class Builder:
             meeting_place=meeting_place,
             covenants_total=covenants_total,
             magi_total=magi_total,
-            secrets=as_secrets(secrets),
+            secrets=secret_list(secrets),
         )
         self.saga.tribunals.append(tribunal)
         return tribunal
@@ -526,7 +563,7 @@ class Builder:
         liege: Covenant | None = None,
         oath: str = "",
         aegis: int = 0,
-        secrets: str = "",
+        secrets: Secrets = "",
     ) -> Covenant:
         """A covenant of the book's Tribunal, not played, or with no
         `tribunal` one outside every Tribunal, on no Tribunal's roster: its
@@ -552,7 +589,7 @@ class Builder:
             liege_id=liege.id if liege is not None else None,
             oath=oath,
             aegis_of_the_hearth=aegis,
-            secrets=as_secrets(secrets),
+            secrets=secret_list(secrets),
         )
         if place is not None:
             covenant.place_id, covenant.place_level = place.id, level
@@ -571,7 +608,7 @@ class Builder:
         detail: str = SKETCH,
         type: str = "magus",
         traditions: list[str] | None = None,
-        secrets: str = "",
+        secrets: Secrets = "",
     ) -> Character:
         """A magus the book names, as a sketch: House, age as of the
         pack's year, a paragraph, and personality traits where given. Any
@@ -585,7 +622,7 @@ class Builder:
             covenant_id=covenant.id if covenant else None,
             detail=detail,
             summary=summary,
-            secrets=as_secrets(secrets),
+            secrets=secret_list(secrets),
             traditions=list(traditions or []),
         )
         character.hermetic.house = house
@@ -728,7 +765,7 @@ class Builder:
         level: int = 0,
         detail: str = SKETCH,
         arms: Arms | None = None,
-        secrets: str = "",
+        secrets: Secrets = "",
     ) -> Neighbour:
         neighbour = Neighbour(
             id=self._neighbour_id(name),
@@ -741,7 +778,7 @@ class Builder:
             realm=realm,
             details=dict(details or {}),
             arms=arms.to_dict() if arms else {},
-            secrets=as_secrets(secrets),
+            secrets=secret_list(secrets),
         )
         if place is not None:
             neighbour.place_id, neighbour.place_level = place.id, level
@@ -753,7 +790,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         inside: Neighbour | None = None,
         level: int = 0,
         realm: str = "Magic",
@@ -858,7 +895,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         charter: str = "",
         population: int | None = None,
         council: int | None = None,
@@ -915,7 +952,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         title: str = "landed",
         wealth: str = "Average",
         manors: int = 1,
@@ -942,7 +979,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         church: str = "Parish church",
         order: str = "",
         ruler: str = "",
@@ -969,7 +1006,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         school: str = "Cathedral school",
         ruler: str = "",
         answers_to: Neighbour | None = None,
@@ -991,7 +1028,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         faction: str = "Other",
         decides: str = "",
         members: int | None = None,
@@ -1030,7 +1067,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         rules: str = "",
         decides: str = "",
         wants: str = "",
@@ -1063,7 +1100,7 @@ class Builder:
         name: str,
         *,
         summary: str,
-        secrets: str = "",
+        secrets: Secrets = "",
         antagonist: str = "",
         moves: str = "A track",
         position: int = 0,
@@ -1121,9 +1158,7 @@ class Builder:
         kept = next(n for n in records if n.name == keep)
         gone = next(n for n in reversed(records) if n.name == drop and n is not kept)
         kept.summary = paragraphs(kept.summary, gone.summary)
-        kept.secrets = as_secrets(
-            paragraphs(secret_words(kept.secrets), secret_words(gone.secrets)).strip()
-        )
+        kept.secrets = more_secrets(kept.secrets, gone.secrets)
         for record in self.saga.neighbours:
             if record.answers_to == gone.id:
                 record.answers_to = kept.id
@@ -1169,7 +1204,7 @@ class Builder:
         order: str = "",
         hierarchy: int | None = None,
         weakness: str = "",
-        secrets: str = "",
+        secrets: Secrets = "",
         source: str = "",
     ) -> Creature:
         """A creature's stat block as the book prints it: its realm, Might
@@ -1213,7 +1248,7 @@ class Builder:
             order=order,
             hierarchy=hierarchy,
             weakness=weakness,
-            secrets=as_secrets(secrets),
+            secrets=secret_list(secrets),
         )
         creature.characteristics = replace(
             creature.characteristics, **block.get("characteristics", {})
@@ -1479,9 +1514,23 @@ def _split_holdings(text: str) -> tuple[str, list[str]]:
     return re.sub(r"\n{3,}", "\n\n", kept).strip(), held
 
 
+def _holdings(lines: Sequence[str], owner: str) -> list[Secret]:
+    """A record's vis and books lines as secrets, one for each kind,
+    titled with what it is and whose: "Vis at Durenmar"."""
+    kinds: dict[str, list[str]] = {}
+    for line in lines:
+        found = HOLDINGS.match(line)
+        label = found.group(1) if found else "Vis"
+        label = "Books" if label.startswith("Book") else label
+        kinds.setdefault(label, []).append(line.strip())
+    return [
+        titled(f"{label} at {owner}", "\n".join(held)) for label, held in kinds.items()
+    ]
+
+
 def hide_holdings(saga: Saga) -> None:
     """Move each record's vis and books out of its public text into its
-    secrets."""
+    secrets, a secret for each kind (vis, books, library)."""
     public = (
         (saga.neighbours, "summary"),
         (saga.covenants, "what_matters"),
@@ -1492,8 +1541,8 @@ def hide_holdings(saga: Saga) -> None:
             kept, held = _split_holdings(getattr(record, name))
             if held:
                 setattr(record, name, kept)
-                record.secrets = as_secrets(
-                    paragraphs(secret_words(record.secrets), *held).strip()
+                record.secrets = more_secrets(
+                    record.secrets, _holdings(held, record.name)
                 )
 
 

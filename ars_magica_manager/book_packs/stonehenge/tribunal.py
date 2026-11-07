@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages import stonehenge as package
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ..records import Records
@@ -82,13 +82,19 @@ SUMMARY = paragraphs(
     "vis, as the plough takes the land and the Tribunal grows.",
 )
 
-SECRETS = paragraphs(
-    "Blackthorn has faced charges of diabolism for generations; nothing has "
-    "ever been proved, and the charge may be raised to distract from another, "
-    "or may be true.",
-    "Burnham's purpose is unknown to everyone outside it, and every covenant "
-    "has its own theory.",
-)
+SECRETS = [
+    titled(
+        "Blackthorn and diabolism",
+        "Blackthorn has faced charges of diabolism for generations; nothing "
+        "has ever been proved, and the charge may be raised to distract from "
+        "another, or may be true.",
+    ),
+    titled(
+        "Burnham's purpose",
+        "Burnham's purpose is unknown to everyone outside it, and every "
+        "covenant has its own theory.",
+    ),
+]
 
 #: The Peripheral Code: (year, title, what it says).
 RULINGS: tuple[tuple[int | None, str, str], ...] = (

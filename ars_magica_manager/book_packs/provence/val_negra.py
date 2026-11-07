@@ -23,7 +23,7 @@ from typing import TYPE_CHECKING
 
 from ... import storage
 from ...models import Book
-from ..builder import paragraphs
+from ..builder import Secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Provence
@@ -305,53 +305,121 @@ def _summary() -> str:
     )
 
 
-def _hidden() -> str:
-    return paragraphs(
-        "The Iron Door holds the Adulteration of Flambeau: the magical "
-        "residue of the Founder's Twilights, built from his mistakes, base "
-        "desires and failings (an Adulteration as Houses of Hermes: Mystery "
-        "Cults describes them; House Criamon knows of such things). It is "
-        "not Flambeau, who is long dead or gone into Final Twilight, but it "
-        "believes it is, and does not understand why it cannot leave. Loose, "
-        "it would lay the country waste in mad rage. It is a Malignancy of "
-        "Magic Might 65 (Ignem), Wrathful +5, Proud +3, Hard-Hearted +2, "
-        "with the Founder's fire spells as powers (Pilum of Fire, Ball of "
-        "Abysmal Flame, Arc of Fiery Ribbons, a burning aura, any non-ritual "
-        "Ignem effect up to level 50), flight, a body until sunrise or "
-        "sunset as a bald, sun-darkened man of nearly sixty in a coarse "
-        "brown robe, rituals that curse a victim with Deficient Form "
-        "(Ignem) or Incompatible Arts, and awareness of everything in the "
-        "fortress's level. It cannot act beyond the door while the ward "
-        "holds. It hates Moors and sahirs and attacks them on sight. Its "
-        "full stat block is the book's.",
-        "The Diedne archmagi of 1012 broke the door's ancient seal, made by "
-        "a lost Rite of Fenicil that kept it forever, and released the "
-        "Adulteration, which destroyed them. The two surviving defenders, "
-        "both archmagi, overpowered it and closed the door again, but the "
-        "seal was gone; the round Hermetic ward they cast in its place holds "
-        "it in, yet breaks if anyone simply opens the door, which is "
-        "physically easy. This is why the Quaesitors hid the truth and "
-        "barred the covenant's return. The door probably dates from after "
-        "Delendos built the Black Tower, by him or another magus; the "
-        "legend that it is as old as the Aerie, and holds demons, is wrong.",
-        "Abaddon was one of the two who resealed the door. He gave up his "
-        "life to guard it and the covenant forever, watches the ward, and "
-        "stands ready to recast it. He keeps the Aegis up through the "
-        "Mystery of Hermetic Empowerment, often by binding the ghosts of "
-        "former members, who volunteer; hidden laboratories in the "
-        "Catacombs let him make each Aegis item from lab texts in a season, "
-        "and his spirits power it two or three times before release. "
-        "Val-Negra's old wealth, and supplies from the Haruspex, keep him in "
-        "vis for centuries. His talisman stores many useful spells, and he "
-        "may know unique Mysteries of spirit magic.",
-        "The 'watchers' of Perdut are Aerie who still walk unseen among the "
-        "villagers now and then. Romulus and Remus are renewed when twins "
-        "are born: old and young pairs hold a secret rite at the Shrine, and "
-        "the young emerge with the elders' minds and memories while the "
-        "elders vanish; Remus holds secret knowledge. Priamitus may have "
-        "hidden the original scroll of a lost Mercurian ritual somewhere in "
-        "the covenant.",
-    )
+def _hidden() -> Secrets:
+    return [
+        titled(
+            "What the Iron Door holds",
+            "The Iron Door holds the Adulteration of Flambeau: the magical "
+            "residue of the Founder's Twilights, built from his mistakes, base "
+            "desires and failings; House Criamon knows of such things.",
+        ),
+        titled(
+            "Not Flambeau",
+            "The Adulteration is not Flambeau, who is long dead or gone into "
+            "Final Twilight, but it believes it is, and does not understand "
+            "why it cannot leave.",
+        ),
+        titled(
+            "If the Adulteration got loose",
+            "Loose, the Adulteration would lay the country waste in mad rage.",
+        ),
+        titled(
+            "The Adulteration's powers",
+            "The Adulteration is wrathful, proud and hard-hearted, with the "
+            "Founder's fire spells as powers, flight, a body until sunrise or "
+            "sunset as a bald, sun-darkened man of nearly sixty in a coarse "
+            "brown robe, rituals that curse a victim, and awareness of "
+            "everything in the fortress's level.",
+        ),
+        titled(
+            "What holds the Adulteration",
+            "The Adulteration cannot act beyond the Iron Door while the ward holds.",
+        ),
+        titled(
+            "Moors and sahirs",
+            "The Adulteration hates Moors and sahirs and attacks them on sight.",
+        ),
+        titled(
+            "The breach of 1012",
+            "The Diedne archmagi of 1012 broke the Iron Door's ancient seal, "
+            "made by a lost Rite of Fenicil that kept it forever, and released "
+            "the Adulteration, which destroyed them.",
+        ),
+        titled(
+            "The new ward",
+            "The two surviving defenders of Val-Negra, both archmagi, "
+            "overpowered the Adulteration and closed the Iron Door again, but "
+            "the seal was gone; the round Hermetic ward they cast in its place "
+            "holds it in, yet breaks if anyone simply opens the door, which is "
+            "physically easy.",
+        ),
+        titled(
+            "Why the Quaesitors hid the truth",
+            "The broken seal on the Iron Door is why the Quaesitors hid the "
+            "truth and barred Val-Negra's return.",
+        ),
+        titled(
+            "The door's age",
+            "The Iron Door probably dates from after Delendos built the Black "
+            "Tower, by him or another magus; the legend that it is as old as "
+            "the Aerie, and holds demons, is wrong.",
+        ),
+        titled(
+            "Abaddon's watch",
+            "Abaddon was one of the two who resealed the Iron Door. He gave up "
+            "his life to guard it and the covenant forever, watches the ward, "
+            "and stands ready to recast it.",
+        ),
+        titled(
+            "Abaddon's Aegis",
+            "Abaddon keeps Val-Negra's Aegis up through a Mystery, often by "
+            "binding the ghosts of former members, who volunteer; hidden "
+            "laboratories in the Catacombs let him make each Aegis item from "
+            "lab texts in a season, and his spirits power it two or three "
+            "times before release.",
+        ),
+        titled(
+            "Abaddon's vis",
+            "Val-Negra's old wealth, and supplies from the Haruspex, keep "
+            "Abaddon in vis for centuries.",
+        ),
+        titled(
+            "Abaddon's talisman",
+            "Abaddon's talisman stores many useful spells, and he may know "
+            "unique Mysteries of spirit magic.",
+        ),
+        titled(
+            "The watchers of Perdut",
+            "The 'watchers' of Perdut are Aerie who still walk unseen among "
+            "the villagers now and then.",
+        ),
+        titled(
+            "Romulus and Remus",
+            "Romulus and Remus are renewed when twins are born: old and young "
+            "pairs hold a secret rite at the Shrine, and the young emerge with "
+            "the elders' minds and memories while the elders vanish.",
+        ),
+        titled("Remus's knowledge", "Remus holds secret knowledge."),
+        titled(
+            "Priamitus's scroll",
+            "Priamitus may have hidden the original scroll of a lost Mercurian "
+            "ritual somewhere in Val-Negra.",
+        ),
+        titled(
+            "Storyguide Notes",
+            paragraphs(
+                "The Adulteration is an Adulteration as Houses of Hermes: "
+                "Mystery Cults describes them. It is a Malignancy of Magic "
+                "Might 65 (Ignem), Wrathful +5, Proud +3, Hard-Hearted +2. Its "
+                "fire powers: Pilum of Fire, Ball of Abysmal Flame, Arc of "
+                "Fiery Ribbons, a burning aura, any non-ritual Ignem effect up "
+                "to level 50. Its rituals curse a victim with Deficient Form "
+                "(Ignem) or Incompatible Arts. Its full stat block is the "
+                "book's.",
+                "Abaddon's Mystery is Hermetic Empowerment.",
+            ),
+        ),
+    ]
 
 
 def _library(provence: Provence) -> list[Book]:

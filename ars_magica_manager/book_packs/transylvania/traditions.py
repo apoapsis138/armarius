@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import StatBlock, paragraphs
+from ..builder import StatBlock, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Character
@@ -149,10 +149,15 @@ def _storm_wizards(transylvania: Transylvania) -> None:
             "and Storm Fighting and the Social Status Storm Wizard are "
             "in the catalog.",
         ),
-        secrets="The Tremere may be burying what they know of the storm "
-        "wizards on purpose: their powers baffled the Diedne in the "
-        "Schism War, and the House may want that surprise kept for "
-        "the next war.",
+        secrets=[
+            titled(
+                "What the Tremere bury",
+                "The Tremere may be burying what they know of the storm "
+                "wizards on purpose: their powers baffled the Diedne in the "
+                "Schism War, and the House may want that surprise kept for "
+                "the next war.",
+            ),
+        ],
     )
     transylvania.places["ice_cave"] = b.place(
         "A storm wizards' ice cave",
@@ -248,11 +253,25 @@ def _hunters(transylvania: Transylvania) -> None:
             "Weak Spontaneous Magic. The Virtues Fector, Scry Art, "
             "Ban Art, Slay Art and the Foe Art are in the catalog.",
         ),
-        secrets="Murat of Terezin was a dhampir and rose as a vampire when "
-        "he died: he is now a kukudhi living far from Laniena with "
-        "his fourth mortal wife and has fathered over twenty dhampir "
-        "children. Only Murat the Younger knows, and lets him be for "
-        "the hunters his children make.",
+        secrets=[
+            titled(
+                "What Murat of Terezin was",
+                "Murat of Terezin was a dhampir and rose as a vampire when "
+                "he died: he is now a kukudhi.",
+            ),
+            titled(
+                "Murat of Terezin's family",
+                "Murat of Terezin, now a kukudhi, lives far from Laniena "
+                "with his fourth mortal wife and has fathered over twenty "
+                "dhampir children.",
+            ),
+            titled(
+                "Murat the Younger's silence",
+                "Only Murat the Younger knows that Murat of Terezin lives on "
+                "as a vampire, and lets him be for the hunters his children "
+                "make.",
+            ),
+        ],
     )
     w["sabotnici"] = b.faction(
         "The Sabotnici",
@@ -598,8 +617,13 @@ def _companions(transylvania: Transylvania) -> None:
             "is dead and another that he hunts vampires, and he must "
             "live with both.",
         ),
-        secrets="The thing that came back was not Tibor: his father's "
-        "vampire took his shape, and it still follows him.",
+        secrets=[
+            titled(
+                "What came back",
+                "The thing that came back was not Tibor: his father's "
+                "vampire took his shape, and it still follows him.",
+            ),
+        ],
         traits={"Brave": 3, "Implacable": 3, "Uncompromising": 2},
     )
 

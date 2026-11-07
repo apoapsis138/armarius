@@ -30,6 +30,7 @@ from ..builder import (
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_focus,
@@ -284,42 +285,82 @@ def _galerius(b: Builder) -> Character:
             "fear him; he has no known friends but Ingrid of Tremere, and "
             "perhaps his own covenant.",
         ),
-        secrets=paragraphs(
-            "He believes reckless conduct will bring the Order down, imagines "
-            "how any small incident could become a disaster, and assumes magi "
-            "are always scheming round the Code. He cares for the harm a deed "
-            "might do, not the harm it did, and thinks it better to risk "
-            "punishing the innocent than to let the guilty go (pp. 67-69).",
-            "Under it lies guilt. He worships Paulinus's memory so highly he "
-            "can never match it, and he has moved the blame for the death "
-            "onto the Tribunal and his fellow Quaesitors, whose laxity he "
-            "condemns. His motives are sincere: brought to see that his zeal "
-            "has made a travesty of justice, he is crushed and tries to make "
-            "amends (p. 69).",
-            "He is seldom seen in his true shape. He favours Disguise of the "
-            "Transformed Image: a beggar, a leper, a pilgrim, a street "
-            "urchin, a tradesman's boy on an errand, a peddler, a labourer, "
-            "any villager he has seen going the other way; a woman if he must. "
-            "He may change several times a day. His sigil is the colour grey, "
-            "so every guise has some grey hair or clothing, which can give him "
-            "away (pp. 68, 71).",
-            "His talisman's Invisibility he saves for getting out of trouble, "
-            "though a major suspect may tempt him. With mundanes he confirms "
-            "a witness with Posing the Silent Question, casts Trust Me to talk "
-            "past his Gift, bribes if that fails, and prefers to watch faces "
-            "as they answer. He lies freely about who he is, and only admits "
-            "to being a magus hunting 'outlaw wizards' to someone who has "
-            "already seen magic. The mundanes' distrust of magi seeps into "
-            "him, and he comes away thinking his suspects rogues (pp. 72-73).",
-            "Nightwing keeps watch on crime scenes and scouts for him. Using "
-            "the raven so, using a disguise to learn about a magus, and "
-            "walking behind one invisible all count as scrying. His "
-            "investigation immunity covers only a reasonable suspicion, and "
-            "he stretches it to gather background on suspects, which the "
-            "player magi can charge him with if they prove it. He stops short "
-            "of hard rules: he never turns Intellego Mentem on a magus or a "
-            "magus's servant without leave (pp. 71-73).",
-        ),
+        secrets=[
+            titled(
+                "What Galerius fears",
+                "He believes reckless conduct will bring the Order down, "
+                "imagines how any small incident could become a disaster, and "
+                "assumes magi are always scheming round the Code. He cares "
+                "for the harm a deed might do, not the harm it did, and "
+                "thinks it better to risk punishing the innocent than to let "
+                "the guilty go (pp. 67-69).",
+            ),
+            titled(
+                "Galerius's guilt",
+                "Under his zeal lies guilt. He worships Paulinus's memory so "
+                "highly he can never match it, and he has moved the blame for "
+                "the death onto the Tribunal and his fellow Quaesitors, whose "
+                "laxity he condemns (p. 69).",
+            ),
+            titled(
+                "If Galerius sees his error",
+                "His motives are sincere: brought to see that his zeal has "
+                "made a travesty of justice, he is crushed and tries to make "
+                "amends (p. 69).",
+            ),
+            titled(
+                "Galerius's disguises",
+                "He is seldom seen in his true shape. He favours Disguise of "
+                "the Transformed Image: a beggar, a leper, a pilgrim, a street urchin, a "
+                "tradesman's boy on an errand, a peddler, a labourer, any "
+                "villager he has seen going the other way; a woman if he "
+                "must. He may change several times a day (pp. 68, 71).",
+            ),
+            titled(
+                "The grey that gives Galerius away",
+                "His sigil is the colour grey, so every guise has some grey "
+                "hair or clothing, which can give him away (pp. 68, 71).",
+            ),
+            titled(
+                "Galerius's invisibility",
+                "His talisman's Invisibility he saves for getting out of "
+                "trouble, though a major suspect may tempt him (pp. 72-73).",
+            ),
+            titled(
+                "How Galerius questions mundanes",
+                "With mundanes he confirms a witness with Posing the Silent "
+                "Question, casts Trust Me to talk past his Gift, bribes if "
+                "that fails, and prefers to "
+                "watch faces as they answer. He lies freely about who he is, "
+                "and only admits to being a magus hunting 'outlaw wizards' to "
+                "someone who has already seen magic (pp. 72-73).",
+            ),
+            titled(
+                "The mundanes' distrust",
+                "The mundanes' distrust of magi seeps into Galerius, and he "
+                "comes away thinking his suspects rogues (pp. 72-73).",
+            ),
+            titled(
+                "Nightwing",
+                "Galerius's raven Nightwing keeps watch on crime scenes and "
+                "scouts for him (pp. 71-73).",
+            ),
+            titled(
+                "Galerius's scrying",
+                "Using the raven Nightwing so, using a disguise to learn about a "
+                "magus, and walking behind one invisible all count as "
+                "scrying. His investigation immunity covers only a reasonable "
+                "suspicion, and he stretches it to gather background on "
+                "suspects, which the player magi can charge him with if they "
+                "prove it (pp. 71-73).",
+            ),
+            titled(
+                "Where Galerius stops",
+                "He stops short of hard rules: he never turns Intellego "
+                "Mentem on a magus or a magus's servant without leave "
+                "(pp. 71-73).",
+            ),
+        ],
     )
     b.stats(galerius, _GALERIUS, source="Ant")
     magic_theory = next(a for a in galerius.abilities if a.name == "Magic Theory")
@@ -389,22 +430,36 @@ def _ingrid(b: Builder) -> Character:
             "She goes by her Christian name, which cannot serve as a "
             "sympathetic connection to her.",
         ),
-        secrets=paragraphs(
-            "Rather like a very junior Hoplite, a word she would not use. She "
-            "is weak at investigation and adds little to the case itself. She "
-            "deters attacks on Galerius, but if the players do fight, she is "
-            "less deadly than a true Hoplite (p. 74).",
-            "In a fight she opens with The Crystal Dart; if Magic Resistance "
-            "stops that she turns to indirect spells such as Invisible Sling "
-            "of Vilano and Pit of the Gaping Earth. Wizard's Leap, mastered, "
-            "takes her out of danger at fast-cast speed. With both an Arcane "
-            "and a sympathetic connection to a foe she can penetrate with her "
-            "favourites, Invocation of Weariness and Grip of the Choking "
-            "Hand: not lethal, so unlikely to bring a charge of a high crime "
-            "even without enough cause (p. 74).",
-            "If Galerius falls into disgrace, House Tremere presses her to "
-            "drop him, whatever she thinks herself (p. 79).",
-        ),
+        secrets=[
+            titled(
+                "What Ingrid is",
+                "Rather like a very junior Hoplite, a word she would not use. "
+                "She is weak at investigation and adds little to the case "
+                "itself. She deters attacks on Galerius, but if the players "
+                "do fight, she is less deadly than a true Hoplite (p. 74).",
+            ),
+            titled(
+                "How Ingrid fights",
+                "In a fight she opens with The Crystal Dart; if Magic "
+                "Resistance stops that she turns to indirect spells such as "
+                "Invisible Sling of Vilano and Pit of the Gaping Earth. "
+                "Wizard's Leap, mastered, takes her out of danger at "
+                "fast-cast speed (p. 74).",
+            ),
+            titled(
+                "Ingrid's favourite spells",
+                "With both an Arcane and a sympathetic connection to a foe "
+                "she can penetrate with her favourites, Invocation of "
+                "Weariness and Grip of the Choking Hand: not lethal, so "
+                "unlikely to bring a charge of a high crime even without "
+                "enough cause (p. 74).",
+            ),
+            titled(
+                "Ingrid if Galerius falls",
+                "If Galerius falls into disgrace, House Tremere presses her "
+                "to drop him, whatever she thinks herself (p. 79).",
+            ),
+        ],
     )
     b.stats(ingrid, _INGRID, source="Ant")
     _talisman(
@@ -516,13 +571,20 @@ def _nightwing(b: Builder, galerius: Character) -> None:
             "ArM5 p. 105, letting Galerius use Nightwing's senses but not the "
             "reverse.",
         ),
-        secrets=(
-            "Galerius sees and hears through the raven to watch places and "
-            "scout, and if he learns he is being followed it serves as his "
-            "lookout. The raven is also a clue to his approach: seen once, it "
-            "is watched for, and ordinary ravens can keep the magi on edge "
-            "(pp. 72, 75, 77)."
-        ),
+        secrets=[
+            titled(
+                "Galerius's eyes",
+                "Galerius sees and hears through the raven Nightwing to watch "
+                "places and scout, and if he learns he is being followed it "
+                "serves as his lookout (pp. 72, 75, 77).",
+            ),
+            titled(
+                "The raven as a clue",
+                "Nightwing is also a clue to Galerius's approach: seen once, "
+                "it is watched for, and ordinary ravens can keep the magi on "
+                "edge (pp. 72, 75, 77).",
+            ),
+        ],
     )
     b.saga.familiars.append(
         Familiar(
@@ -649,16 +711,27 @@ def _past(b: Builder, galerius: Character) -> None:
             "and the lab text of the spell she had used was seized and "
             "destroyed."
         ),
-        secrets=(
-            "With no outside witnesses, she and Claudius each swore under "
-            "Frosty Breath of the Spoken Lie to having won. Galerius found she "
-            "had a spell of Momentary duration made to beat truth detection, "
-            "much like Clear Breath of the Consummate Liar (Guardians of the "
-            "Forests p. 73), castable without voice or gesture and so brief "
-            "that it did not show when she was checked for active magic before "
-            "her testimony. Since then he has insisted on checks before and "
-            "after any questioning (pp. 75-77)."
-        ),
+        secrets=[
+            titled(
+                "How Iana lied",
+                "With no outside witnesses, she and Claudius each swore under "
+                "Frosty Breath of the Spoken Lie to having won. Galerius found "
+                "she had a spell of Momentary duration made to beat truth "
+                "detection, castable without voice or gesture and so brief "
+                "that it did not show when she was checked for active magic "
+                "before her testimony (pp. 75-77).",
+            ),
+            titled(
+                "What Galerius learned from Iana",
+                "Since Iana's case Galerius has insisted on checks for active "
+                "magic before and after any questioning (pp. 75-77).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Iana's spell is much like Clear Breath of the Consummate Liar "
+                "(Guardians of the Forests p. 73).",
+            ),
+        ],
     )
     claudius = b.magus(
         "Claudius of House Verditius",
@@ -680,12 +753,19 @@ def _past(b: Builder, galerius: Character) -> None:
             "Repeatedly accused of stealing vis. Another Quaesitor looked into "
             "him without bringing charges; Galerius convicted him."
         ),
-        secrets=(
-            "Galerius waited invisible at a vis source Tranio had been "
-            "robbing and caught him at it. The Tribunal's records say he had "
-            "mundanes watching to tell him when to set the trap; they are not "
-            "named and never testified (p. 76)."
-        ),
+        secrets=[
+            titled(
+                "How Tranio was caught",
+                "Galerius waited invisible at a vis source Tranio had been "
+                "robbing and caught him at it (p. 76).",
+            ),
+            titled(
+                "Galerius's watchers in Tranio's case",
+                "The Tribunal's records say Galerius had mundanes watching to "
+                "tell him when to set the trap for Tranio; they are not named "
+                "and never testified (p. 76).",
+            ),
+        ],
     )
     for convict, note in (
         (kraxia, "Convicted of interfering with mundanes"),
@@ -706,88 +786,174 @@ def _story(b: Builder, galerius: Character, ingrid: Character) -> None:
                 "covenant's neighbourhood, and to be investigated by him is "
                 "known to mean real trouble.",
             ),
-            secrets=paragraphs(
-                "Use him when the magi have done something questionable or "
-                "have something to hide, or when they are falsely accused by "
-                "mistake or by design. If there is no reason to suspect them "
-                "he is no real threat, and can be a short-term ally: do they "
-                "notice how far he oversteps, and dare they say so? He needs "
-                "some evidence, however thin, and comes either on a neighbour's "
-                "complaint or on his own initiative (pp. 67, 69).",
-                "What might draw him (pp. 69-70): scrying, which Tribunals "
-                "punish strictly and which he alone may half excuse; dealing "
-                "with demons, even unknowingly through tainted vis, for which "
-                "the penalty is always a March, so give the players clues and "
-                "a fair chance; deprivation of magical power, over disputed "
-                "vis, a slain beast near another covenant, or a contested "
-                "familiar or apprentice, and more than one or two such quarrels "
-                "brand them habitual troublemakers; mundane interference, "
-                "which each Tribunal reads differently (Normandy demands proof "
-                "of ruin to a magus, The Lion and the Lily p. 25, though serving "
-                "a mundane as a court wizard is always serious); and reckless "
-                "behaviour, no crime at all, though he thinks it should be. A "
-                "case with no real merit makes him a paper tiger, a good choice "
-                "for a troupe new to legal stories, but a conviction can still "
-                "cost Reputation.",
-                "False accusations (p. 70): a disliked wandering magus or "
-                "redcap vanishes near the covenant, by outlaws, a river or "
-                "faeries; a neighbour's sanctum is burgled of an invested "
-                "device or fine book, with the owner's Arcane Connections ended "
-                "by Perdo Vim, the thief being one of the victim's own "
-                "covenant; a hedge wizard turned diabolist attacks enemies he "
-                "shares with the covenant; a magus of another Tribunal secretly "
-                "sells enchanted items past the usual limits, and the great of "
-                "the region compete for them. Solving the real crime is the "
-                "way out. Other sourcebooks' story seeds with accused magi "
-                "serve too.",
-                "The Reputation: a stress roll of his Reputation against Ease "
-                "Factor 6 (ArM5 p. 19) tells a character he prosecutes what "
-                "others overlook and seeks the harshest penalty (p. 70). "
-                "Tribunal records are open on a season's notice; Int + Code of "
-                "Hermes, stress, Ease Factor 12, shows he wins by blackening "
-                "the defendant's character with anecdotes barely tied to the "
-                "case (p. 75). He investigated and prosecuted all his cases "
-                "himself, which is unusual; most were settled at private "
-                "hearing, so the full Tribunal never saw his methods; one or "
-                "two challenges to his charging beyond the first complaint "
-                "failed (pp. 75-76).",
-                "The powers of a Quaesitor (p. 72; Houses of Hermes: True "
-                "Lineages pp. 61-66): he carries a letter of authority from "
-                "the Primus and can lose it, and his House, for abuse; he must "
-                "investigate serious complaints and may begin on his own; he "
-                "may ask reasonable cooperation, which never includes "
-                "submitting to magical interrogation; he may use magic in an "
-                "investigation, but learning a magus's innocent affairs that "
-                "way is a crime, softened by investigation immunity, under "
-                "which he answers only for actual harm (True Lineages p. 62); "
-                "he may call a March in an extreme case, for the Tribunal to "
-                "ratify; he may not arrest or detain, nor order anyone to "
-                "submit to mind-reading. Failure to cooperate is a low crime "
-                "(p. 75).",
-                "Making him harder (p. 73): he is written with one fatal flaw, "
-                "using spells on mundanes, to give the players a counter-claim. "
-                "Let a grog do the legwork instead and the scrying charge goes "
-                "away. Mundanes may testify in person or, more often, in "
-                "writing, with magic used to see they speak freely; often "
-                "Quaesitors use them only to find physical evidence (True "
-                "Lineages p. 58).",
-                "Allies (p. 78): if the players start to feel the law is rigged, "
-                "let a sympathetic magus he once savaged offer advice at a "
-                "recess, such as the right to challenge evidence and demand "
-                "its source. Well-wishers may turn up after the Tribunal "
-                "whatever the verdict. Have a second player, with no magus on "
-                "trial, play the presiding Quaesitor, coached on how seriously "
-                "scrying is taken (p. 79).",
-                "Preparing the defense (p. 76): what a Quaesitor may do is "
-                "mostly unwritten House tradition, and serving Quaesitors will "
-                "not discuss a colleague's misconduct, so the answers may lie "
-                "with experts outside the Tribunal or in distant libraries. "
-                "The accused may call character witnesses, the best answer to "
-                "his attacks on character. Make them easy to get: anyone the "
-                "covenant has helped or lived at peace with should speak, and "
-                "mundanes may too, with less weight. Reaching them opens side "
-                "stories. Trial procedure is in True Lineages pp. 56-59 (p. 78).",
-            ),
+            secrets=[
+                titled(
+                    "What brings Galerius",
+                    "Galerius needs some evidence, however thin, and comes "
+                    "either on a neighbour's complaint or on his own "
+                    "initiative (pp. 67, 69).",
+                ),
+                titled(
+                    "Galerius and scrying",
+                    "Scrying draws Galerius: Tribunals punish it strictly, "
+                    "and he alone may half excuse it (pp. 69-70).",
+                ),
+                titled(
+                    "Galerius and demons",
+                    "Dealing with demons, even unknowingly through tainted "
+                    "vis, draws Galerius, and the penalty is always a March "
+                    "(pp. 69-70).",
+                ),
+                titled(
+                    "Galerius and deprivation of magical power",
+                    "Deprivation of magical power draws Galerius, over "
+                    "disputed vis, a slain beast near another covenant, or a "
+                    "contested familiar or apprentice, and more than one or "
+                    "two such quarrels brand magi habitual troublemakers "
+                    "(pp. 69-70).",
+                ),
+                titled(
+                    "Galerius and mundane interference",
+                    "Mundane interference draws Galerius, and each Tribunal "
+                    "reads it differently: Normandy demands proof of ruin to "
+                    "a magus (The Lion and the Lily p. 25), though serving a "
+                    "mundane as a court wizard is always serious "
+                    "(pp. 69-70).",
+                ),
+                titled(
+                    "Galerius and reckless behaviour",
+                    "Reckless behaviour draws Galerius, though it is no crime "
+                    "at all; he thinks it should be (pp. 69-70).",
+                ),
+                titled(
+                    "A conviction's cost",
+                    "Even a case against the magi with no real merit can "
+                    "still cost Reputation if Galerius wins a conviction "
+                    "(pp. 69-70).",
+                ),
+                titled(
+                    "Galerius's reputation",
+                    "Galerius is known to prosecute what others overlook and "
+                    "to seek the harshest penalty (p. 70).",
+                ),
+                titled(
+                    "What the Tribunal records show",
+                    "Tribunal records are open on a season's notice, and show "
+                    "Galerius wins by blackening the defendant's character "
+                    "with anecdotes barely tied to the case (p. 75).",
+                ),
+                titled(
+                    "Galerius's past cases",
+                    "Galerius investigated and prosecuted all his cases "
+                    "himself, which is unusual; most were settled at private "
+                    "hearing, so the full Tribunal never saw his methods; one "
+                    "or two challenges to his charging beyond the first "
+                    "complaint failed (pp. 75-76).",
+                ),
+                titled(
+                    "Galerius's letter of authority",
+                    "As a Quaesitor Galerius carries a letter of authority "
+                    "from the Primus and can lose it, and his House, for "
+                    "abuse (p. 72; Houses of Hermes: True Lineages pp. "
+                    "61-66).",
+                ),
+                titled(
+                    "A Quaesitor's duties",
+                    "A Quaesitor must investigate serious complaints and may "
+                    "begin on his own; he may ask reasonable cooperation, "
+                    "which never includes submitting to magical "
+                    "interrogation. Failure to cooperate is a low crime "
+                    "(pp. 72, 75; Houses of Hermes: True Lineages pp. "
+                    "61-66).",
+                ),
+                titled(
+                    "Investigation immunity",
+                    "A Quaesitor may use magic in an investigation, but "
+                    "learning a magus's innocent affairs that way is a "
+                    "crime, softened by investigation immunity, under which "
+                    "he answers only for actual harm (p. 72; True Lineages "
+                    "p. 62).",
+                ),
+                titled(
+                    "What a Quaesitor may not do",
+                    "A Quaesitor may call a March in an extreme case, for the "
+                    "Tribunal to ratify; he may not arrest or detain, nor "
+                    "order anyone to submit to mind-reading (p. 72; Houses "
+                    "of Hermes: True Lineages pp. 61-66).",
+                ),
+                titled(
+                    "Mundane witnesses",
+                    "Mundanes may testify before a Tribunal in person or, "
+                    "more often, in writing, with magic used to see they "
+                    "speak freely; often Quaesitors use them only to find "
+                    "physical evidence (p. 73; True Lineages p. 58).",
+                ),
+                titled(
+                    "Where a Quaesitor's limits are written",
+                    "What a Quaesitor may do is mostly unwritten House "
+                    "tradition, and serving Quaesitors will not discuss a "
+                    "colleague's misconduct, so the answers may lie with "
+                    "experts outside the Tribunal or in distant libraries "
+                    "(p. 76).",
+                ),
+                titled(
+                    "Character witnesses",
+                    "Accused magi may call character witnesses, the best "
+                    "answer to Galerius's attacks on character: anyone the "
+                    "covenant has helped or lived at peace with should "
+                    "speak, and mundanes may too, with less weight (p. 76).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Use him when the magi have done something "
+                        "questionable or have something to hide, or when "
+                        "they are falsely accused by mistake or by design. If "
+                        "there is no reason to suspect them he is no real "
+                        "threat, and can be a short-term ally: do they notice "
+                        "how far he oversteps, and dare they say so? "
+                        "(pp. 67, 69).",
+                        "Demons (pp. 69-70): give the players clues and a "
+                        "fair chance. A case with no real merit makes him a "
+                        "paper tiger, a good choice for a troupe new to legal "
+                        "stories.",
+                        "False accusations (p. 70): a disliked wandering "
+                        "magus or redcap vanishes near the covenant, by "
+                        "outlaws, a river or faeries; a neighbour's sanctum "
+                        "is burgled of an invested device or fine book, with "
+                        "the owner's Arcane Connections ended by Perdo Vim, "
+                        "the thief being one of the victim's own covenant; a "
+                        "hedge wizard turned diabolist attacks enemies he "
+                        "shares with the covenant; a magus of another "
+                        "Tribunal secretly sells enchanted items past the "
+                        "usual limits, and the great of the region compete "
+                        "for them. Solving the real crime is the way out. "
+                        "Other sourcebooks' story seeds with accused magi "
+                        "serve too.",
+                        "The Reputation: a stress roll of his Reputation "
+                        "against Ease Factor 6 (ArM5 p. 19) tells a character "
+                        "what he is known for (p. 70). Reading the Tribunal "
+                        "records takes Int + Code of Hermes, stress, Ease "
+                        "Factor 12 (p. 75).",
+                        "Making him harder (p. 73): he is written with one "
+                        "fatal flaw, using spells on mundanes, to give the "
+                        "players a counter-claim. Let a grog do the legwork "
+                        "instead and the scrying charge goes away.",
+                        "Allies (p. 78): if the players start to feel the law "
+                        "is rigged, let a sympathetic magus he once savaged "
+                        "offer advice at a recess, such as the right to "
+                        "challenge evidence and demand its source. "
+                        "Well-wishers may turn up after the Tribunal whatever "
+                        "the verdict. Have a second player, with no magus on "
+                        "trial, play the presiding Quaesitor, coached on how "
+                        "seriously scrying is taken (p. 79).",
+                        "Preparing the defense (p. 76): make character "
+                        "witnesses easy to get. Reaching them opens side "
+                        "stories. Trial procedure is in True Lineages pp. "
+                        "56-59 (p. 78).",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "A hint of wrongdoing",

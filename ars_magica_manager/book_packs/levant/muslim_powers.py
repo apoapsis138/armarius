@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...rules.sites import PLACE
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -202,17 +202,28 @@ def _nizaris(levant: Levant) -> None:
             "strongholds in 1256, and Baybars takes the last Syrian ones "
             "in 1273.",
         ),
-        secrets=paragraphs(
-            "In this saga the chief of the Syrian Nizaris is always a "
-            "magician. Blood and Sand makes him usually a raqi and "
-            "sometimes a sahir or another tradition's man; The Cradle "
-            "and the Crescent's Nizari mustajibs, renegade sahirs, are "
-            "the faction's tradition here. He breeds his followers' "
-            "fanatical loyalty with tricks and spells together.",
-            "A shipment of daggers bound for Alamut is a prize many "
-            "would want, the Order among them, and the sect will hunt "
-            "down whoever holds one.",
-        ),
+        secrets=[
+            titled(
+                "The chief's magic",
+                "The chief of the Syrian Nizaris is always a magician. He "
+                "breeds his followers' fanatical loyalty with tricks and "
+                "spells together.",
+            ),
+            titled(
+                "The daggers for Alamut",
+                "A shipment of daggers bound for Alamut is a prize many "
+                "would want, the Order among them, and the Nizari sect will "
+                "hunt down whoever holds one.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "In this saga the chief is always a magician. Blood and Sand "
+                "makes him usually a raqi and sometimes a sahir or another "
+                "tradition's man; The Cradle and the Crescent's Nizari "
+                "mustajibs, renegade sahirs, are the faction's tradition "
+                "here.",
+            ),
+        ],
     )
     w["masyaf_chief"] = b.lord(
         "The Old Man of the Mountain",

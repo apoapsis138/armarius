@@ -22,7 +22,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -162,10 +162,18 @@ def _danube(transylvania: Transylvania) -> None:
             "have hunted it ever since, and the townsfolk fear its "
             "traps and its curse.",
         ),
-        secrets="A Tarnovo man who has found a tunnel beneath his house looks "
-        "for foreign adventurers to explore it, since no local will "
-        "go down; he means to cheat them of whatever gold they bring "
-        "out.",
+        secrets=[
+            titled(
+                "The tunnel under a Tarnovo house",
+                "A Tarnovo man has found a tunnel beneath his house, and means "
+                "to cheat whoever explores it of whatever gold they bring out.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Tarnovo man looks for foreign adventurers to explore his "
+                "tunnel, since no local will go down.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -188,8 +196,13 @@ def _danube(transylvania: Transylvania) -> None:
             "of foreigners has tried to break in to free him, and "
             "failed: the tower cannot be forced.",
         ),
-        secrets="Others insist Baldwin still lives, a prisoner the present "
-        "tsar keeps for some purpose of his own.",
+        secrets=[
+            titled(
+                "Whether Baldwin lives",
+                "Others insist Baldwin still lives, a prisoner the present "
+                "tsar keeps in the tower for some purpose of his own.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
 
@@ -383,9 +396,15 @@ def _plains(transylvania: Transylvania) -> None:
             "must defeat or lastingly appease her; vis gatherers may "
             "strike a bargain to guard the temple for her in return.",
         ),
-        secrets="The genius may or may not be the goddess once worshipped "
-        "here; its Magic nature suggests not, and if so, something "
-        "befell Bendis that settlers would be wise to learn first.",
+        secrets=[
+            titled(
+                "The genius and Bendis",
+                "Starosel's genius may or may not be the goddess once "
+                "worshipped here; its Magic nature suggests not, and if so, "
+                "something befell Bendis that settlers would be wise to "
+                "learn first.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     madara = _add(
@@ -429,14 +448,19 @@ def _plains(transylvania: Transylvania) -> None:
             "other faeries of the region take up their glamour and they "
             "can be called again.",
         ),
-        secrets="Story seed: a bolyar the magi know begs them to shelter him "
-        "from the Horseman, loosed on him, he says, by a faerie "
-        "wizard. In truth he paid the wizard to raise the Horseman "
-        "against his enemies, but the Horseman had heard his people's "
-        "prayers and judged the bolyar's pride and ambition the "
-        "region's worst threat. The wizard only failed to warn him. "
-        "If the magi let things run their course, the Lion may "
-        "interfere.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Story seed: a bolyar the magi know begs them to shelter him "
+                "from the Horseman, loosed on him, he says, by a faerie "
+                "wizard. In truth he paid the wizard to raise the Horseman "
+                "against his enemies, but the Horseman had heard his people's "
+                "prayers and judged the bolyar's pride and ambition the "
+                "region's worst threat. The wizard only failed to warn him. "
+                "If the magi let things run their course, the Lion may "
+                "interfere.",
+            ),
+        ],
         **KNOWN_REGION,
     )
 
@@ -619,25 +643,36 @@ def _thrace(transylvania: Transylvania) -> None:
             "perhaps by journeys into the Magic or Faerie realms or by "
             "seeking Initiation into their Mysteries.",
         ),
-        secrets=joined_lines(
-            "The false Kabeiros (see the Bestiary), a strong local "
-            "faerie, is reviving the Cabeiri cult here: a tall brass "
-            "man with a great crab claw for a left hand, which serves "
-            "him as smith's tongs and to punish the unjust. He courts "
-            "the servants of Quaesitors, posing as the guide of kings "
-            "and giver of justice. His cult has four degrees "
-            "(Interrogator, Invader, Observer, Liberator), all "
-            "initiated in the valley on a holy day under a Vow to give "
-            "fair and swift justice; they confer Piercing Gaze, "
-            "Invasive Eyes, Bright Eyes and Eyes of Theseus, and he can "
-            "take back Eyes of Theseus from the disloyal. He wants to "
-            "teach Second Sight but has not yet stolen it from anyone.",
-            "He took the idea from a cult of servants at a Quaesitorial "
-            "covenant who long ago worshipped Asmodeus as patron of "
-            "prying; an Infernal scholar of the Black Library might "
-            "trace it, and Asmodeus may punish the cult if he learns "
-            "his idea was reused.",
-        ),
+        secrets=[
+            titled(
+                "The false Kabeiros",
+                "A strong local faerie, the false Kabeiros, is reviving the "
+                "Cabeiri cult in the Valley of the Thracian Kings: a tall "
+                "brass man with a great crab claw for a left hand, which "
+                "serves him as smith's tongs and to punish the unjust. He "
+                "courts the servants of Quaesitors, posing as the guide of "
+                "kings and giver of justice.",
+            ),
+            titled(
+                "The Kabeiros cult's degrees",
+                "The false Kabeiros's cult has four degrees (Interrogator, "
+                "Invader, Observer, Liberator), all initiated in the valley "
+                "on a holy day under a Vow to give fair and swift justice; "
+                "they confer Piercing Gaze, Invasive Eyes, Bright Eyes and "
+                "Eyes of Theseus, and he can take back Eyes of Theseus from "
+                "the disloyal. He wants to teach Second Sight but has not "
+                "yet stolen it from anyone.",
+            ),
+            titled(
+                "Where the cult's idea came from",
+                "The false Kabeiros took the idea for his cult from a cult "
+                "of servants at a Quaesitorial covenant who long ago "
+                "worshipped Asmodeus as patron of prying; an Infernal "
+                "scholar of the Black Library might trace it, and Asmodeus "
+                "may punish the cult if he learns his idea was reused.",
+            ),
+            titled("Storyguide Notes", "The false Kabeiros: see the Bestiary."),
+        ],
         **KNOWN_TRIBUNAL,
     )
 
@@ -691,10 +726,13 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "obvious thief. If its protests are honest, who is framing Gigas, "
         "and why?",
     )
-    hidden = (
-        "Oeagrus keeps the mummified arm of Orpheus and means to remake "
-        "the god by grafting his scattered limbs onto his own body."
-    )
+    hidden = [
+        titled(
+            "Oeagrus's treasure",
+            "Oeagrus keeps the mummified arm of Orpheus and means to remake "
+            "the god by grafting his scattered limbs onto his own body.",
+        ),
+    ]
     evredika = b.covenant(
         "Evredika",
         tribunal=tribunal,
@@ -740,9 +778,14 @@ def _evredika(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
             "careless of his looks, his hair wild and twigs caught in "
             "his tangled beard.",
         ),
-        secrets="His treasure is the mummified arm of Orpheus, whom the "
-        "Maenads tore apart; he seeks a way to rebuild the god by "
-        "grafting the dismembered body onto himself.",
+        secrets=[
+            titled(
+                "Oeagrus's treasure",
+                "His treasure is the mummified arm of Orpheus, whom the "
+                "Maenads tore apart; he seeks a way to rebuild the god by "
+                "grafting the dismembered body onto himself.",
+            ),
+        ],
         traits={"Devout": 3, "Misogynist": 3, "Domineering": 2},
     )
     m["bozhidar"] = b.magus(
@@ -872,16 +915,25 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "staffed by people who fled the world for a different life, and "
         "the Quaesitors find their skills, some a little shady, useful.",
     )
-    hidden = joined_lines(
-        "The town's charter from Diocletian is a clever forgery.",
-        "Rumour, perhaps true, says the Red Library also holds "
-        "magic items, seized in investigations and never destroyed, "
-        "that cast some of the Red Spells; the House might argue "
-        "they are lawful to own, and lawful to use on hedge "
-        "wizards, the Orders of Odin and Solomon, and Renounced "
-        "magi, whom the Code does not protect.",
-        "Saturnino thinks gathering the Red and Black Libraries was a grave mistake.",
-    )
+    hidden = [
+        titled(
+            "Seuthopolis's charter",
+            "The town of Seuthopolis's charter from Diocletian is a clever forgery.",
+        ),
+        titled(
+            "Red Spells in the Red Library",
+            "Rumour, perhaps true, says the Red Library also holds "
+            "magic items, seized in investigations and never destroyed, "
+            "that cast some of the Red Spells; the House might argue "
+            "they are lawful to own, and lawful to use on hedge "
+            "wizards, the Orders of Odin and Solomon, and Renounced "
+            "magi, whom the Code does not protect.",
+        ),
+        titled(
+            "Saturnino's doubts",
+            "Saturnino thinks gathering the Red and Black Libraries was a grave mistake.",
+        ),
+    ]
     seuthopolis = b.covenant(
         "Seuthopolis",
         tribunal=tribunal,
@@ -1014,10 +1066,15 @@ def _seuthopolis(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
             "magical places, only more often bloody to the elbows. He "
             "excels at surprising foes and at mystical swordplay.",
         ),
-        secrets="He serves here because he thinks gathering the Red and Black "
-        "Libraries was a deep error, and because he wonders whether "
-        "the Tribunal's strange faeries come of the Criamon having "
-        "stolen the World Tree.",
+        secrets=[
+            titled(
+                "Why Saturnino serves",
+                "He serves here because he thinks gathering the Red and Black "
+                "Libraries was a deep error, and because he wonders whether "
+                "the Tribunal's strange faeries come of the Criamon having "
+                "stolen the World Tree.",
+            ),
+        ],
         traits={
             "Determined to do evil by doing what others call good": 5,
             "Spooky and enigmatic": 3,
@@ -1157,36 +1214,59 @@ def _tablinum_site(transylvania: Transylvania) -> Neighbour:
             "light as from candles, with no flame to set the exhibits "
             "alight.",
         ),
-        secrets=joined_lines(
-            "Six hidden exhibits are rumoured, which most of the "
-            "Tribunal only guesses at; some magi claim to have been "
-            "there, and may be liars or mad. Even the Curator may not "
-            "hold their Arcane Connections, which a cabal or Mystery "
-            "Cult may keep, or which may be lost:",
-            "The Founder's Exhibit: realia of the Founders' lives, "
-            "first traditions and deaths, some say with several "
-            "Founders' bodies on show.",
-            "The Lower Dungeon: a web of wards binding hundreds of "
-            "demons; its keepers would risk a charge of infernalism.",
-            "The Refuge: not an exhibit but stocked laboratories and "
-            "lodgings in hidden regiones, readied for House Tremere to "
-            "flee to should catastrophe strike the House, the Tribunal "
-            "or the world, and outlast it. Hidden laboratories do "
-            "exist (Nestor uses one); if disaster such as the Mongols "
-            "comes, desperate magi will come here.",
-            "The Schism Exhibit: a full record of the Schism War, "
-            "including Expurgatio, said to catalogue all the evidence "
-            "House Tremere gathered against the Diedne in the decades "
-            "before the war, with the artifacts and Lab Texts it "
-            "names; called 'the truth', against a public record many "
-            "think Tremere propaganda.",
-            "The Seeker's Forum: realia of extinct (and not so "
-            "extinct) magical traditions the Tremere have recovered "
-            "across Mythic Europe, a rich source of Insight.",
-            "The Warehouse of Ares: a great store of magic weapons, "
-            "many made by both sides around the Schism War, kept "
-            "against the day the Order splits in war again.",
-        ),
+        secrets=[
+            titled(
+                "Six hidden exhibits",
+                "Six hidden exhibits of Tablinum are rumoured, which most of "
+                "the Tribunal only guesses at; some magi claim to have been "
+                "there, and may be liars or mad. Even the Curator may not "
+                "hold their Arcane Connections, which a cabal or Mystery "
+                "Cult may keep, or which may be lost.",
+            ),
+            titled(
+                "The Founder's Exhibit",
+                "The Founder's Exhibit, one of Tablinum's rumoured hidden exhibits: realia of the "
+                "Founders' lives, first traditions and deaths, some say with "
+                "several Founders' bodies on show.",
+            ),
+            titled(
+                "The Lower Dungeon",
+                "The Lower Dungeon, one of Tablinum's rumoured hidden exhibits: a web of wards "
+                "binding hundreds of demons; its keepers would risk a charge "
+                "of infernalism.",
+            ),
+            titled(
+                "The Refuge",
+                "The Refuge, one of Tablinum's rumoured hidden exhibits: not an exhibit but "
+                "stocked laboratories and lodgings in hidden regiones, "
+                "readied for House Tremere to flee to should catastrophe "
+                "strike the House, the Tribunal or the world, and outlast "
+                "it. Hidden laboratories do exist (Nestor uses one); if "
+                "disaster such as the Mongols comes, desperate magi will "
+                "come here.",
+            ),
+            titled(
+                "The Schism Exhibit",
+                "The Schism Exhibit, one of Tablinum's rumoured hidden exhibits: a full record of "
+                "the Schism War, including Expurgatio, said to catalogue all "
+                "the evidence House Tremere gathered against the Diedne in "
+                "the decades before the war, with the artifacts and Lab "
+                "Texts it names; called 'the truth', against a public record "
+                "many think Tremere propaganda.",
+            ),
+            titled(
+                "The Seeker's Forum",
+                "The Seeker's Forum, one of Tablinum's rumoured hidden exhibits: realia of extinct "
+                "(and not so extinct) magical traditions the Tremere have "
+                "recovered across Mythic Europe, a rich source of Insight.",
+            ),
+            titled(
+                "The Warehouse of Ares",
+                "The Warehouse of Ares, one of Tablinum's rumoured hidden exhibits: a great store "
+                "of magic weapons, many made by both sides around the Schism "
+                "War, kept against the day the Order splits in war again.",
+            ),
+        ],
         levels=[
             level(
                 "The Art Exhibits",
@@ -1475,23 +1555,37 @@ def _tablinum(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "and, if so, to take the relics to Rome. Nestor asks the visiting "
         "magi to help him deal with it.",
     )
-    hidden = joined_lines(
-        "The Empty Laboratory's void window is a vis source the "
-        "residents do not know of: now and then frost forms on its "
-        "sill that can be gathered as Mentem vis before it melts, "
-        "2 pawns a season. The ghost knows.",
-        "Nestor keeps most of the Curators' necklaces hidden and "
-        "carries only the one for the most visited levels; his "
-        "real laboratory is in a level of its own.",
-        "The Dungeon's excess: either infernalists with their own "
-        "Arcane Connections use it to hide their cult's "
-        "paraphernalia, coming and going by Leap of Homecoming, or "
-        "Hell has got in, and possessed exhibits are summoning "
-        "more demons into the hall.",
-        "Theodore once told Nestor many exhibits should be "
-        "destroyed, and lately told Demetrius the Order has "
-        "outlived its purpose.",
-    )
+    hidden = [
+        titled(
+            "The Empty Laboratory's window",
+            "The Empty Laboratory's void window is a vis source the "
+            "residents do not know of: now and then frost forms on its "
+            "sill that can be gathered as Mentem vis before it melts, "
+            "2 pawns a season. The ghost knows.",
+        ),
+        titled(
+            "The Curators' necklaces",
+            "Nestor keeps most of the Curators' necklaces hidden and "
+            "carries only the one for the most visited levels.",
+        ),
+        titled(
+            "Nestor's real laboratory",
+            "Nestor's real laboratory is in a level of its own.",
+        ),
+        titled(
+            "The Dungeon's excess",
+            "Either infernalists with their own Arcane Connections use "
+            "the Dungeon to hide their cult's paraphernalia, coming and "
+            "going by Leap of Homecoming, or Hell has got in, and "
+            "possessed exhibits are summoning more demons into the hall.",
+        ),
+        titled(
+            "What Theodore said",
+            "Theodore once told Nestor many exhibits should be "
+            "destroyed, and lately told Demetrius the Order has "
+            "outlived its purpose.",
+        ),
+    ]
     tablinum = b.covenant(
         "Tablinum",
         tribunal=tribunal,
@@ -1799,12 +1893,20 @@ def _churches(transylvania: Transylvania, b: Builder) -> None:
             "tears; he is a Maestro, and like most of them notices "
             "little but his art.",
         ),
-        secrets="An angel has taken Vasiliy under its wing, while a demon has "
-        "fixed on the parish priest through his pride in the work, and "
-        "the congregation are caught between them. Vasiliy may sense "
-        "the struggle and ask for help, or the angel may ask the "
-        "characters, or the demon trick them, to finish off the "
-        "other.",
+        secrets=[
+            titled(
+                "Angel and demon at Boyana",
+                "An angel has taken Vasiliy under its wing, while a demon has "
+                "fixed on the parish priest through his pride in the work, and "
+                "the congregation are caught between them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Vasiliy may sense the struggle and ask for help, or the "
+                "angel may ask the characters, or the demon trick them, to "
+                "finish off the other.",
+            ),
+        ],
     )
 
 
@@ -1866,7 +1968,16 @@ def _towns(transylvania: Transylvania, b: Builder) -> None:
             "the four, whose guild at once names another in his "
             "place. Its people are Greeks, Bulgars and mountain Slavs.",
         ),
-        secrets="The charter is a skilful forgery; the oppidum of Seuthopolis rules here.",
+        secrets=[
+            titled(
+                "The town's charter",
+                "The town of Seuthopolis's charter is a skilful forgery.",
+            ),
+            titled(
+                "Who rules Seuthopolis",
+                "The oppidum of Seuthopolis rules the town.",
+            ),
+        ],
     )
 
 

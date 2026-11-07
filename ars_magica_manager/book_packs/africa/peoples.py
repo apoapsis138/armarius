@@ -15,7 +15,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
-from ..builder import Builder, characteristics, dormant, paragraphs, wound_ranges
+from ..builder import (
+    Builder,
+    characteristics,
+    dormant,
+    paragraphs,
+    titled,
+    wound_ranges,
+)
 from ..east import al_kamil
 
 if TYPE_CHECKING:
@@ -127,63 +134,32 @@ def _land(b: Builder) -> Neighbour:
             "by a Muslim warlord in 1220, and if history holds Frederick II "
             "begins his campaigns against him in 1221.",
         ),
-        secrets=paragraphs(
-            "Why no covenants (pp. 8-11). Any of these may be true in a saga: "
-            "the pact of 925, which questionable covenants may have broken; "
-            "the early Order's heart being the Black Forest and not Rome, so "
-            "young magi found sites nearer home; Muslim Sicily and Castille "
-            "having once stood between the core Tribunals and the Maghreb; "
-            "the desert uprisings of uncompromising nomad Muslims, unbribable "
-            "and seemingly Divinely protected, who wreck irrigation and ruin "
-            "agrarian lands. The book details no failed covenants, but a "
-            "troupe may add them.",
-            "What Africa offers magi: rival-free vis and resources, troubled "
-            "only by Moorish or Berber settlements and local sorcerers; no "
-            "vote, no Tribunal approval, no Peripheral Code on vis sites, and "
-            "little fear of a charge of mundane interference, though acts that "
-            "spill over the Mediterranean can still bring charges in Europe. "
-            "Against that: isolation from news and help, native distrust of "
-            "foreigners, and no safe assumption that magic is superior, since "
-            "a campaign of conquest may unite sahirs, murabitin, the Tuareg "
-            "and the Wind Spirits. Weak Divine reach and thin population make "
-            "Magic sites easy to find, and nothing stops magi evicting a "
-            "weaker sorcerer, genius loci or faerie. Muslim magi avoid the "
-            "strife of the Iberian or Levant Tribunals. Exiles from the Order "
-            "may hide here, near enough to keep ties that may also betray them.",
-            "Logistics (pp. 11-12): a magus must belong to one Tribunal, and "
-            "one may refuse an African covenant, or several may fight to claim "
-            "it; Houses Mercere and Guernicus may object to the journeys, and "
-            "a covenant may need an enchantment for redcaps or even a Mercere "
-            "Portal. Hermetic settlement is left undefined, and later books "
-            "assume none. Options for any city: a Mercere trading house with "
-            "wharf and warehouse, keeping magic quiet; Jerbiton scholars at the "
-            "madrasas, a loose network anxious about coming civil war; "
-            "Criamon's small Sufi membership, welcoming to those learning "
-            "Enigmatic Wisdom; or Tremere spies, African-looking magi raised "
-            "from Gifted children Mercere gathered at the Primus's request a "
-            "few decades ago.",
-            "Languages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; "
-            "Derija is the common speech, Classical the tongue of scholarship "
-            "and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and "
-            "Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); "
-            "Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in "
-            "the central highlands, Zenaga in south-west Mauritania, Tamahak "
-            "among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir "
-            "(Western, Eastern), the commonest tongue of visiting Europeans; "
-            "Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek "
-            "(Classical), Latin (Classical), Libyan, Punic (Carthaginian, "
-            "Phoenician). Scholars and travellers often lose their dialect for "
-            "a standard specialty. Northern Arabic and Tamazight use Arabic "
-            "script, the Tuareg and southern Berbers Tifinagh, Khalidan a "
-            "Phoenician variant, the Germans Gothic. Penalties to both speakers: "
-            "dialects of one language -1; northern Tamazight with Tamahak -2; "
-            "any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. "
-            "Others are mutually unintelligible. Almoravid and Almohad warriors "
-            "and clerics often have only Arabic (Classical) 3.",
-            "Pronunciation and Tamazight plurals are on p. 19; Arabic "
-            "pronunciation is in Realms of Power: The Divine p. 107. Art & "
-            "Academe p. 28 discusses the shape of the world.",
-        ),
+        secrets=[
+            titled(
+                "What Africa offers magi",
+                "What Africa offers magi: rival-free vis and resources, troubled only by Moorish or Berber settlements and local sorcerers; no vote, no Tribunal approval, no Peripheral Code on vis sites, and little fear of a charge of mundane interference, though acts that spill over the Mediterranean can still bring charges in Europe.",
+            ),
+            titled(
+                "What Africa costs magi",
+                "Against what Africa offers magi: isolation from news and help, native distrust of foreigners, and no safe assumption that magic is superior, since a campaign of conquest may unite sahirs, murabitin, the Tuareg and the Wind Spirits.",
+            ),
+            titled(
+                "Magic sites in Africa",
+                "Weak Divine reach and thin population make Magic sites in Africa easy to find, and nothing stops magi evicting a weaker sorcerer, genius loci or faerie.",
+            ),
+            titled(
+                "Muslim magi in Africa",
+                "Muslim magi in Africa avoid the strife of the Iberian or Levant Tribunals.",
+            ),
+            titled(
+                "Exiles in Africa",
+                "Exiles from the Order may hide in Africa, near enough to keep ties that may also betray them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Why no covenants (pp. 8-11). Any of these may be true in a saga: the pact of 925, which questionable covenants may have broken; the early Order's heart being the Black Forest and not Rome, so young magi found sites nearer home; Muslim Sicily and Castille having once stood between the core Tribunals and the Maghreb; the desert uprisings of uncompromising nomad Muslims, unbribable and seemingly Divinely protected, who wreck irrigation and ruin agrarian lands. The book details no failed covenants, but a troupe may add them.\n\nLogistics (pp. 11-12): a magus must belong to one Tribunal, and one may refuse an African covenant, or several may fight to claim it; Houses Mercere and Guernicus may object to the journeys, and a covenant may need an enchantment for redcaps or even a Mercere Portal. Hermetic settlement is left undefined, and later books assume none. Options for any city: a Mercere trading house with wharf and warehouse, keeping magic quiet; Jerbiton scholars at the madrasas, a loose network anxious about coming civil war; Criamon's small Sufi membership, welcoming to those learning Enigmatic Wisdom; or Tremere spies, African-looking magi raised from Gifted children Mercere gathered at the Primus's request a few decades ago.\n\nLanguages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; Derija is the common speech, Classical the tongue of scholarship and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in the central highlands, Zenaga in south-west Mauritania, Tamahak among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir (Western, Eastern), the commonest tongue of visiting Europeans; Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek (Classical), Latin (Classical), Libyan, Punic (Carthaginian, Phoenician). Scholars and travellers often lose their dialect for a standard specialty. Northern Arabic and Tamazight use Arabic script, the Tuareg and southern Berbers Tifinagh, Khalidan a Phoenician variant, the Germans Gothic. Penalties to both speakers: dialects of one language -1; northern Tamazight with Tamahak -2; any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. Others are mutually unintelligible. Almoravid and Almohad warriors and clerics often have only Arabic (Classical) 3.\n\nPronunciation and Tamazight plurals are on p. 19; Arabic pronunciation is in Realms of Power: The Divine p. 107. Art & Academe p. 28 discusses the shape of the world.",
+            ),
+        ],
     )
     regions = (
         (
@@ -309,25 +285,16 @@ def _land(b: Builder) -> Neighbour:
             "south of Mauritania. Most of the black-skinned people known to "
             "the north are Ethiopians of the zone's fringes.",
         ),
-        secrets=paragraphs(
-            "Deprivation rolls for thirst come every two hours (see Hazards of "
-            "the Great Desert), and sun on bare skin does +5 non-combat damage "
-            "as often. Patches that give life may lie in Magic or Faerie auras "
-            "or regiones joined to the desert's regio network; desert dwellers "
-            "are likely to know them. A storyguide may keep the south beyond "
-            "the desert habitable, or in regiones.",
-            "If the troupe wants it impassable, it can be a Divine edict: the "
-            "heat, coming from the superlunar sun, lies past Hermetic magic, "
-            "grows until it beats any defence, foils magic spectacularly and "
-            "may be patrolled by angels. Research on the Limit of the Lunar "
-            "Sphere may profit here. Ideas for what lies within: a city of "
-            "refugees from Carthage under a college of priestesses; Prester "
-            "John's peaceful empire; grasslands and jungles whose nomads herd "
-            "for sphinxes; a river of gems and vis through black ravines that "
-            "trap the ghosts of those who die there; the true home of the "
-            "Sudanese in Aethiopia Occidentalis. Whether Aethiopia is the torrid "
-            "zone is for the saga.",
-        ),
+        secrets=[
+            titled(
+                "Life in the Torrid Zone",
+                "Patches of the Torrid Zone that give life may lie in Magic or Faerie auras or regiones joined to the desert's regio network; desert dwellers are likely to know them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Deprivation rolls for thirst come every two hours (see Hazards of the Great Desert), and sun on bare skin does +5 non-combat damage as often. A storyguide may keep the south beyond the desert habitable, or in regiones.\n\nIf the troupe wants it impassable, it can be a Divine edict: the heat, coming from the superlunar sun, lies past Hermetic magic, grows until it beats any defence, foils magic spectacularly and may be patrolled by angels. Research on the Limit of the Lunar Sphere may profit here. Ideas for what lies within: a city of refugees from Carthage under a college of priestesses; Prester John's peaceful empire; grasslands and jungles whose nomads herd for sphinxes; a river of gems and vis through black ravines that trap the ghosts of those who die there; the true home of the Sudanese in Aethiopia Occidentalis. Whether Aethiopia is the torrid zone is for the saga.",
+            ),
+        ],
     )
     return africa
 
@@ -575,16 +542,17 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
             "army into Iberia. An idol of Gurzil from Jugurtha's day went into "
             "every battle with her, and some think her a settut.",
         ),
-        secrets=paragraphs(
-            "Most Berber gods belong to the Faerie Realm. Whether the Dii Mauri "
-            "still hear, or lie smothered by the Divine, is left open. The "
-            "settuten, dedicated to the god of sacrifices, are the nearest "
-            "thing to a priesthood (ch. 4). Traditional ahadjam forms are in "
-            "the Tattoo Magicians section, pp. 93-95.",
-            "Names (p. 21): most Berbers follow the Muslim pattern with Berber "
-            "isms; traditional men are 'name ag name', women go by one name or "
-            "a Tamazight laqab. Lists of men's and women's isms are on p. 21.",
-        ),
+        secrets=[
+            titled("The Berber gods", "Most Berber gods belong to the Faerie Realm."),
+            titled(
+                "The settuten",
+                "The settuten, dedicated to the god of sacrifices, are the nearest thing to a Berber priesthood (ch. 4).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Whether the Dii Mauri still hear, or lie smothered by the Divine, is left open. Traditional ahadjam forms are in the Tattoo Magicians section, pp. 93-95.\n\nNames (p. 21): most Berbers follow the Muslim pattern with Berber isms; traditional men are 'name ag name', women go by one name or a Tamazight laqab. Lists of men's and women's isms are on p. 21.",
+            ),
+        ],
         decides="Each ward's tajmait, under its amin; confederations meet in need",
         rules="Kharijism (p. 29): the earliest sect, who left Ali over "
         "arbitration, hold that major sin ends one's Islam, that any "
@@ -612,8 +580,12 @@ def _peoples(b: Builder, caliph: Neighbour) -> None:
             "messages, so one treats them with respect lest they speak ill of "
             "one to one's ancestors.",
         ),
-        secrets="It is part of the Faerie Realm, and parts of it lie in Faerie "
-        "regiones, which are easier to visit.",
+        secrets=[
+            titled(
+                "The Netherworld's realm",
+                "The Netherworld is part of the Faerie Realm, and parts of it lie in Faerie regiones, which are easier to visit.",
+            )
+        ],
     )
     for name, summary, ruler in (
         (
@@ -933,10 +905,16 @@ def _tuareg(b: Builder) -> Neighbour:
             "Tuareg magic is mostly women's; settuten are rarer here than among "
             "other Berbers. See ch. 4.",
         ),
-        secrets="Elder men, driven apart by Warping, wander into the deep "
-        "desert, where some bargain with the Hunger for release and become "
-        "Spirit Votaries with Servant of the Desert, or Dessicated Men, undead "
-        "Magic Humans with Might.",
+        secrets=[
+            titled(
+                "The elders in the deep desert",
+                "Elder Tuareg men, driven apart by Warping, wander into the deep desert, where some bargain with the Hunger for release and become its servants, or Dessicated Men, undead.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Those who bargain become Spirit Votaries with Servant of the Desert, or Dessicated Men, undead Magic Humans with Might.",
+            ),
+        ],
     )
     for name, summary in (
         ("Kel Ajjer", "Near the oasis of Ghat and the Tassili n Ajjer plateau."),
@@ -958,10 +936,14 @@ def _tuareg(b: Builder) -> Neighbour:
             name,
             summary=summary,
             faction="People or tribe",
-            secrets="Whether the far southern tribes are humans, Magic-kin, "
-            "Magic Humans or faeries playing raiders is uncertain."
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "Whether the far southern tribes are humans, Magic-kin, Magic Humans or faeries playing raiders is uncertain.",
+                )
+            ]
             if name in ("Kel Ataram", "Kel Denneg", "Kel Geres")
-            else "",
+            else [],
         )
     return tuareg
 
@@ -1003,28 +985,28 @@ def _banu_khalida(b: Builder) -> Neighbour:
             "not for land or wealth but to spend their champions abroad on "
             "trade roads and nomads.",
         ),
-        secrets=paragraphs(
-            "They worship the Unholy Trinity. The Zawiya and most Hassane know "
-            "these are demons and believe, after five centuries, that they hold "
-            "the upper hand; the Znaga and slaves mostly do not know. The upper "
-            "ranks are goetic sorcerers, usually by pact, as the Gift is no "
-            "commoner than in Europe. Hassane Summon and Ablate for life, "
-            "healing and strength, so a duel goes to the greater demon. Zawiya "
-            "Command demons to build roads and houses, and Bind Aerial Powers "
-            "into stone pylons that cool the cities and bring rain. Almost "
-            "yearly a demon breaks loose. Hell lets them be: with no Divine "
-            "faith to reach, every one of them can fall, and the emirs play the "
-            "Three against each other.",
-            "Characters: Hassane, Knight or Emir, or Landed Noble or Muqta', "
-            "the great ones Diabolist Mythic Companions; Zawiya, Priest or "
-            "'Alim with Commanding and Binding; Znaga, any Free status; "
-            "Haratan, the Freed Slave Flaw (p. 37) with Warrior or Educated; "
-            "'Abid, the 'Abid Flaw. See Realms of Power: The Infernal ch. 11 "
-            "and Realms of Power: The Divine pp. 114-115. Names: Abisme, "
-            "Alphaien, Burdel, Canabeus, Chernubles, Corsablix, Esperveres, "
-            "Eudropin, Faldrun, Gemalfin, Guarlan, Jouna, Malduit, Marcule, "
-            "Priamon, Timozel.",
-        ),
+        secrets=[
+            titled(
+                "What the Banu Khalida worship",
+                "The Banu Khalida worship the Unholy Trinity. The Zawiya and most Hassane know these are demons and believe, after five centuries, that they hold the upper hand; the Znaga and slaves mostly do not know.",
+            ),
+            titled(
+                "The Banu Khalida's sorcerers",
+                "The upper ranks of the Banu Khalida are goetic sorcerers, usually by pact, as the Gift is no commoner than in Europe. Hassane Summon and Ablate for life, healing and strength, so a duel goes to the greater demon. Zawiya Command demons to build roads and houses, and Bind Aerial Powers into stone pylons that cool the cities and bring rain.",
+            ),
+            titled(
+                "Demons breaking loose",
+                "Almost yearly a demon breaks loose among the Banu Khalida.",
+            ),
+            titled(
+                "Why Hell lets them be",
+                "Hell lets the Banu Khalida be: with no Divine faith to reach, every one of them can fall, and the emirs play the Three against each other.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Characters: Hassane, Knight or Emir, or Landed Noble or Muqta', the great ones Diabolist Mythic Companions; Zawiya, Priest or 'Alim with Commanding and Binding; Znaga, any Free status; Haratan, the Freed Slave Flaw (p. 37) with Warrior or Educated; 'Abid, the 'Abid Flaw. See Realms of Power: The Infernal ch. 11 and Realms of Power: The Divine pp. 114-115. Names: Abisme, Alphaien, Burdel, Canabeus, Chernubles, Corsablix, Esperveres, Eudropin, Faldrun, Gemalfin, Guarlan, Jouna, Malduit, Marcule, Priamon, Timozel.",
+            ),
+        ],
     )
     b.faction(
         "The Unholy Trinity",
@@ -1033,23 +1015,24 @@ def _banu_khalida(b: Builder) -> Neighbour:
         summary="The three gods Europeans think Muslims worship, Mahound, "
         "Termagant and Apollyon, a mistake born partly of early meetings with "
         "the Banu Khalida.",
-        secrets=paragraphs(
-            "Demons of the Order of False Gods (Realms of Power: The Infernal "
-            "p. 37) who sow hate between Christian and Muslim anywhere from "
-            "Africa to the Middle East, in whatever form suits the listener, "
-            "high in Hell and able to feign patience.",
-            "Mahound: a parody of a prophet in green silk and gold, leering, "
-            "with immense ears. It seeks apostasy, sends missionaries north "
-            "and watches visitors to the Cities.",
-            "Termagant: a wrinkled hag with bulging eyes, spitting venom and "
-            "clawing at eyes with jagged nails. It wants blood, drives the "
-            "Hassane to pointless violence, teaches contempt for slaves and "
-            "seeks more of them.",
-            "Apollyon: a hunchbacked, ugly blond parody of Apollo in a "
-            "dripping, acid, oversized gold cloak, whose lyre jangles the "
-            "senses to stillness. It is greed: it brings gold, always stolen "
-            "from elsewhere, to lure merchants and sends them home corrupted.",
-        ),
+        secrets=[
+            titled(
+                "What the Trinity are",
+                "The Unholy Trinity are demons of the Order of False Gods (Realms of Power: The Infernal p. 37) who sow hate between Christian and Muslim anywhere from Africa to the Middle East, in whatever form suits the listener, high in Hell and able to feign patience.",
+            ),
+            titled(
+                "Mahound",
+                "Mahound is a parody of a prophet in green silk and gold, leering, with immense ears. It seeks apostasy, sends missionaries north and watches visitors to the Cities.",
+            ),
+            titled(
+                "Termagant",
+                "Termagant is a wrinkled hag with bulging eyes, spitting venom and clawing at eyes with jagged nails. It wants blood, drives the Hassane to pointless violence, teaches contempt for slaves and seeks more of them.",
+            ),
+            titled(
+                "Apollyon",
+                "Apollyon is a hunchbacked, ugly blond parody of Apollo in a dripping, acid, oversized gold cloak, whose lyre jangles the senses to stillness. It is greed: it brings gold, always stolen from elsewhere, to lure merchants and sends them home corrupted.",
+            ),
+        ],
     )
     twelve = b.place(
         "The Twelve Cities",
@@ -1063,8 +1046,16 @@ def _banu_khalida(b: Builder) -> Neighbour:
             "the city's absolute emir.",
             "The cities are named for the twelve peers of King Marsile.",
         ),
-        secrets="A council of twelve emirs and the senior Zawiyas balance the "
-        "Three. The demon-bound pylons keep the climate.",
+        secrets=[
+            titled(
+                "Who rules the Cities",
+                "A council of twelve emirs and the senior Zawiyas balance the Three in the Twelve Cities.",
+            ),
+            titled(
+                "The pylons",
+                "The demon-bound pylons keep the climate of the Twelve Cities.",
+            ),
+        ],
     )
     for name in (
         "Aelroth",
@@ -1084,9 +1075,14 @@ def _banu_khalida(b: Builder) -> Neighbour:
             name,
             place=twelve,
             summary="One of the Twelve Cities of the Banu Khalida, under its emir.",
-            secrets="Its emir has been corrupted by Baal-Peor."
+            secrets=[
+                titled(
+                    "Malprimis's emir",
+                    "The emir of Malprimis has been corrupted by Baal-Peor.",
+                )
+            ]
             if name == "Malprimis"
-            else "",
+            else [],
         )
     return twelve
 
@@ -1190,12 +1186,19 @@ def _people_with_stats(b: Builder) -> None:
         "nearly seven feet tall, ebony-skinned and shaven, his face painted "
         "with red ochre for battle, in a chain shirt under a black djebellah. "
         "He cannot leave a jar, door, shutter or chest open.",
-        secrets="He preys on the ghosts of those he beats, Ablating experience, "
-        "Confidence, Characteristics or healing from them, fifteen victories "
-        "so far, gaining Warping and Infernal Reputation, and tainting his "
-        "Abilities. The remnants hang at the edge of his sight, which is why "
-        "he closes every place a spirit might hide. A demon is bound in his "
-        "great sword.",
+        secrets=[
+            titled(
+                "The ghosts he beats",
+                "He preys on the ghosts of those he beats, fifteen victories so far. The remnants hang at the edge of his sight, which is why he closes every place a spirit might hide.",
+            ),
+            titled(
+                "The demon in the sword", "A demon is bound in Jurfaret's great sword."
+            ),
+            titled(
+                "Storyguide Notes",
+                "He Ablates experience, Confidence, Characteristics or healing from the ghosts, gaining Warping and Infernal Reputation, and tainting his Abilities.",
+            ),
+        ],
     )
     b.stats(
         jurfaret,

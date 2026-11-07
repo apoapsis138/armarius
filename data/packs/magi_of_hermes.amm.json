@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.83.0",
+  "app_version": "3.84.0",
   "kind": "pack",
   "name": "Magi of Hermes",
   "from_saga": "Magi of Hermes",
@@ -1389,7 +1389,7 @@
         "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
         "secrets": [
           {
-            "title": "",
+            "title": "Whether the prophecy is real",
             "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
             "revealed_year": null,
             "revealed_season": ""
@@ -2121,7 +2121,7 @@
         "summary": "A village girl from near Carcassonne, a prodigy of theory whose simplest spells fizzled. Her Tytalus master raged at her until a Bonisagus saw what she was and took her to Durenmar. She assisted in high experiments, the last of which wrecked the lab and sent her parens into Twilight. Since her Gauntlet she has stayed in that lab, awaiting his return, and later takes a librarian's post in the Great Library.\n\nShe makes Lab Texts, casting tablets and items to order, bartering for equipment and supplies. She pads her estimates so she can finish early and seem a miracle worker, or spends the spare time on the spell her parens was developing, whose nature the storyguide decides. Story seeds: the unfinished spell; a patron's item with a side effect.",
         "secrets": [
           {
-            "title": "",
+            "title": "Cultellus",
             "text": "Cultellus, the Parma-dispelling knife she says she never finished, is listed among her works; its patron never came back for it.",
             "revealed_year": null,
             "revealed_season": ""
@@ -3541,8 +3541,14 @@
         "summary": "Hugh Hostis was found at fourteen working as a street gang's heavy, frightening people with his Gift, and trained in the School of Ramius, which pairs mundane attacks with magical defense. An excellent soldier, half-deaf from blows to the head, he believes his mother's tale of valkyrie blood and their armor. Always in the front line, he casts defenses on his fellows; grogs respect his skill and fear his temper. His favorite trick is to wound a supernatural foe, then use the blood on his blade as an Arcane Connection.\n\nAfter nearly fifty years he is a prominent member of his Tribunal, hunting Marched magi with loyal grogs. Story seeds: a Wizard's March that needs a hoplite; his bargain with an einheri; the supposed Order of Odin.",
         "secrets": [
           {
-            "title": "",
-            "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride. Its errands take him beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
+            "title": "Hugh in the Legion of Mithras",
+            "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Legion's errands",
+            "text": "The Legion of Mithras's errands take Hugh beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7542,8 +7548,26 @@
         "summary": "Marie-Helene and her elder sister Marie-Philipe came from a village near a covenant. A Tytalus magus took the younger as apprentice and refused the other, who had only a latent knack and no Gift. Soon a terrible fire struck the family home and scarred Marie-Philipe; Marie-Helene, sure her master set it to rid her of a distraction, hid her sister, slipping out by night with food and lessons, though the elder could work no spell. At her Gauntlet she took the name Persephone of Tytalus, and her sister Kore. They swore a fiery end for him: plain revenge, nothing to do with the House's beloved rivals. Kore keeps to the shadows nearby, hiding her face.\n\nPersephone runs a network of agents who mostly do not know whom they serve, reached through go-betweens or in disguise. They are chiefly spies, whose reports Kore sifts. Her spells and enchantments serve the network, and her plans have drifted from revenge to general meddling in her Tribunal's politics. Her covenant goes on impersonating the dead Lord Richard of Hallam with her ring, which it uses only to protect its interests; she is less careful when she wears the disguise. His widow Joanna knows and is glad, preferring it to the dull second husband her family would find her.\n\nShe rarely keeps an agent long for fear of double agents (Houses of Hermes: Societates pages 140-144). Typical ones, each with the Trait that binds them: Macco, a novice scribe at a rival covenant (Fear of Discovery +1); Sir Stephene, a wealthy knight and secret lycanthrope promised a cure (Hopeful of a Cure +3); Pierre, a journeyman with a guildmaster as mentor in a distant shoemakers' guild (Ambitious +1); Jack, a well-travelled peddler of penny cures full of local gossip (Avaricious +1); Claude, the sisters' cousin, a nobleman's trusted man-at-arms who can lend his men (Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks the sisters need protection (Pity +2).",
         "secrets": [
           {
-            "title": "",
-            "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, she has taken up the vendetta herself. Without Persephone's knowledge, mundane agents, sometimes with stolen magical devices, watch him always; she has struck at him in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection. She covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
+            "title": "Kore's vendetta",
+            "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, Kore has taken up the vendetta herself.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Kore's watchers",
+            "text": "Without Persephone's knowledge, Kore's mundane agents, sometimes with stolen magical devices, watch the pater always.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Kore's strikes at the pater",
+            "text": "Kore has struck at the pater in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Kore's tracks",
+            "text": "Kore covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8334,8 +8358,20 @@
         "summary": "Petalichus the Weaver, last of Arachne's Children, a dwindling cult of Verditius weavers who put magic into humble cloth while others forged swords and rings. His learning in philosophy and the artes liberales drew the Cononites, a secret Hermetic cult guarding the esoteric works of Conon of Samos, Euclid, Apollonius and Archimedes; they taught him their magic and he made their tools. Modest in his crafts and lofty in his aims, he is secretive, manipulative and vindictive, working from hiding through agents and proxies, and a long feud with Solar Magnus of Tytalus runs through his life.",
         "secrets": [
           {
-            "title": "",
-            "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury. He destroyed Solar Magnus there with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest. He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in that feud.",
+            "title": "The death of Thomas Roxbury",
+            "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The end of Solar Magnus",
+            "text": "He destroyed Solar Magnus at Canterbury with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "A spell from Yestin",
+            "text": "He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in his feud with Solar Magnus.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -10765,8 +10801,20 @@
         "summary": "Born a Silesian bond-slave, he served an Infernalist master in terrorising eastern Europe until he was as evil as his victims thought him; when the master was Marched he helped the Quaesitores. That left him a sinister husk of a young magus, unable to live with freedom, fit in anywhere, or bear the sun, on the edge of society with his studies, hoping for oblivion. Flambeau in name, he holds to no politics, and his House is not keen to claim him. He has the mind of a cornered beast, a predator wanting peace through his art and no more power than survival needs, and he seems bound for a March as his master was.",
         "secrets": [
           {
-            "title": "",
-            "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him. His imp familiar is unlikely to have come by chance. Around +30 his dealings are found out and he is Marched, and survives.",
+            "title": "Tolides the diabolist",
+            "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Tolides's imp",
+            "text": "His imp familiar is unlikely to have come by chance.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Tolides Marched",
+            "text": "Around +30 his dealings are found out and he is Marched, and survives.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -16110,7 +16158,7 @@
           "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
           "secrets": [
             {
-              "title": "",
+              "title": "Whether the prophecy is real",
               "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
               "revealed_year": null,
               "revealed_season": ""
@@ -16813,7 +16861,7 @@
           "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
           "secrets": [
             {
-              "title": "",
+              "title": "Whether the prophecy is real",
               "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
               "revealed_year": null,
               "revealed_season": ""
@@ -17583,7 +17631,7 @@
           "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
           "secrets": [
             {
-              "title": "",
+              "title": "Whether the prophecy is real",
               "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
               "revealed_year": null,
               "revealed_season": ""
@@ -18455,7 +18503,7 @@
           "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
           "secrets": [
             {
-              "title": "",
+              "title": "Whether the prophecy is real",
               "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
               "revealed_year": null,
               "revealed_season": ""
@@ -19387,7 +19435,7 @@
           "summary": "A magus from a family of mages: the fifth straight generation of seventh sons, under a prophecy that the seventh son of the seventh generation will reshape magic. The line began when Askanius loved a nymph of Artemis in Greece, and each father has sired seven sons his own way: charm (Alexander, Antipater), passive Corpus magic (Alboin), love magic (Altus). Aurulentus means to father all seven on one woman, his true love Semira, so he devotes his career to health, fertility and children, and makes a Longevity Ritual that leaves its users fertile.\n\nHis own seventh son, Arbus Tutus, has two daughters and shows little wish for more, or for women, so the grandson the prophecy needs is in doubt. His spells and devices for mothers and children fill his covenant. Story seeds: magi who want the fertile Longevity Ritual; the covenant's unusual birth rate.",
           "secrets": [
             {
-              "title": "",
+              "title": "Whether the prophecy is real",
               "text": "The prophecy may be nothing: the priest and the nymph could have been faeries wagering they could fool seven generations of magi.",
               "revealed_year": null,
               "revealed_season": ""
@@ -20024,7 +20072,7 @@
           "summary": "A village girl from near Carcassonne, a prodigy of theory whose simplest spells fizzled. Her Tytalus master raged at her until a Bonisagus saw what she was and took her to Durenmar. She assisted in high experiments, the last of which wrecked the lab and sent her parens into Twilight. Since her Gauntlet she has stayed in that lab, awaiting his return, and later takes a librarian's post in the Great Library.\n\nShe makes Lab Texts, casting tablets and items to order, bartering for equipment and supplies. She pads her estimates so she can finish early and seem a miracle worker, or spends the spare time on the spell her parens was developing, whose nature the storyguide decides. Story seeds: the unfinished spell; a patron's item with a side effect.",
           "secrets": [
             {
-              "title": "",
+              "title": "Cultellus",
               "text": "Cultellus, the Parma-dispelling knife she says she never finished, is listed among her works; its patron never came back for it.",
               "revealed_year": null,
               "revealed_season": ""
@@ -20713,7 +20761,7 @@
           "summary": "A village girl from near Carcassonne, a prodigy of theory whose simplest spells fizzled. Her Tytalus master raged at her until a Bonisagus saw what she was and took her to Durenmar. She assisted in high experiments, the last of which wrecked the lab and sent her parens into Twilight. Since her Gauntlet she has stayed in that lab, awaiting his return, and later takes a librarian's post in the Great Library.\n\nShe makes Lab Texts, casting tablets and items to order, bartering for equipment and supplies. She pads her estimates so she can finish early and seem a miracle worker, or spends the spare time on the spell her parens was developing, whose nature the storyguide decides. Story seeds: the unfinished spell; a patron's item with a side effect.",
           "secrets": [
             {
-              "title": "",
+              "title": "Cultellus",
               "text": "Cultellus, the Parma-dispelling knife she says she never finished, is listed among her works; its patron never came back for it.",
               "revealed_year": null,
               "revealed_season": ""
@@ -21449,7 +21497,7 @@
           "summary": "A village girl from near Carcassonne, a prodigy of theory whose simplest spells fizzled. Her Tytalus master raged at her until a Bonisagus saw what she was and took her to Durenmar. She assisted in high experiments, the last of which wrecked the lab and sent her parens into Twilight. Since her Gauntlet she has stayed in that lab, awaiting his return, and later takes a librarian's post in the Great Library.\n\nShe makes Lab Texts, casting tablets and items to order, bartering for equipment and supplies. She pads her estimates so she can finish early and seem a miracle worker, or spends the spare time on the spell her parens was developing, whose nature the storyguide decides. Story seeds: the unfinished spell; a patron's item with a side effect.",
           "secrets": [
             {
-              "title": "",
+              "title": "Cultellus",
               "text": "Cultellus, the Parma-dispelling knife she says she never finished, is listed among her works; its patron never came back for it.",
               "revealed_year": null,
               "revealed_season": ""
@@ -22203,7 +22251,7 @@
           "summary": "A village girl from near Carcassonne, a prodigy of theory whose simplest spells fizzled. Her Tytalus master raged at her until a Bonisagus saw what she was and took her to Durenmar. She assisted in high experiments, the last of which wrecked the lab and sent her parens into Twilight. Since her Gauntlet she has stayed in that lab, awaiting his return, and later takes a librarian's post in the Great Library.\n\nShe makes Lab Texts, casting tablets and items to order, bartering for equipment and supplies. She pads her estimates so she can finish early and seem a miracle worker, or spends the spare time on the spell her parens was developing, whose nature the storyguide decides. Story seeds: the unfinished spell; a patron's item with a side effect.",
           "secrets": [
             {
-              "title": "",
+              "title": "Cultellus",
               "text": "Cultellus, the Parma-dispelling knife she says she never finished, is listed among her works; its patron never came back for it.",
               "revealed_year": null,
               "revealed_season": ""
@@ -27999,8 +28047,14 @@
           "summary": "Hugh Hostis was found at fourteen working as a street gang's heavy, frightening people with his Gift, and trained in the School of Ramius, which pairs mundane attacks with magical defense. An excellent soldier, half-deaf from blows to the head, he believes his mother's tale of valkyrie blood and their armor. Always in the front line, he casts defenses on his fellows; grogs respect his skill and fear his temper. His favorite trick is to wound a supernatural foe, then use the blood on his blade as an Arcane Connection.\n\nAfter nearly fifty years he is a prominent member of his Tribunal, hunting Marched magi with loyal grogs. Story seeds: a Wizard's March that needs a hoplite; his bargain with an einheri; the supposed Order of Odin.",
           "secrets": [
             {
-              "title": "",
-              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride. Its errands take him beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
+              "title": "Hugh in the Legion of Mithras",
+              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The Legion's errands",
+              "text": "The Legion of Mithras's errands take Hugh beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -28710,8 +28764,14 @@
           "summary": "Hugh Hostis was found at fourteen working as a street gang's heavy, frightening people with his Gift, and trained in the School of Ramius, which pairs mundane attacks with magical defense. An excellent soldier, half-deaf from blows to the head, he believes his mother's tale of valkyrie blood and their armor. Always in the front line, he casts defenses on his fellows; grogs respect his skill and fear his temper. His favorite trick is to wound a supernatural foe, then use the blood on his blade as an Arcane Connection.\n\nAfter nearly fifty years he is a prominent member of his Tribunal, hunting Marched magi with loyal grogs. Story seeds: a Wizard's March that needs a hoplite; his bargain with an einheri; the supposed Order of Odin.",
           "secrets": [
             {
-              "title": "",
-              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride. Its errands take him beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
+              "title": "Hugh in the Legion of Mithras",
+              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The Legion's errands",
+              "text": "The Legion of Mithras's errands take Hugh beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -29506,8 +29566,14 @@
           "summary": "Hugh Hostis was found at fourteen working as a street gang's heavy, frightening people with his Gift, and trained in the School of Ramius, which pairs mundane attacks with magical defense. An excellent soldier, half-deaf from blows to the head, he believes his mother's tale of valkyrie blood and their armor. Always in the front line, he casts defenses on his fellows; grogs respect his skill and fear his temper. His favorite trick is to wound a supernatural foe, then use the blood on his blade as an Arcane Connection.\n\nAfter nearly fifty years he is a prominent member of his Tribunal, hunting Marched magi with loyal grogs. Story seeds: a Wizard's March that needs a hoplite; his bargain with an einheri; the supposed Order of Odin.",
           "secrets": [
             {
-              "title": "",
-              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride. Its errands take him beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
+              "title": "Hugh in the Legion of Mithras",
+              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The Legion's errands",
+              "text": "The Legion of Mithras's errands take Hugh beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -30312,8 +30378,14 @@
           "summary": "Hugh Hostis was found at fourteen working as a street gang's heavy, frightening people with his Gift, and trained in the School of Ramius, which pairs mundane attacks with magical defense. An excellent soldier, half-deaf from blows to the head, he believes his mother's tale of valkyrie blood and their armor. Always in the front line, he casts defenses on his fellows; grogs respect his skill and fear his temper. His favorite trick is to wound a supernatural foe, then use the blood on his blade as an Arcane Connection.\n\nAfter nearly fifty years he is a prominent member of his Tribunal, hunting Marched magi with loyal grogs. Story seeds: a Wizard's March that needs a hoplite; his bargain with an einheri; the supposed Order of Odin.",
           "secrets": [
             {
-              "title": "",
-              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride. Its errands take him beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
+              "title": "Hugh in the Legion of Mithras",
+              "text": "Two decades out of apprenticeship he was initiated into the Legion of Mithras (The Mysteries Revised pp. 118-122), and holds its second rank, the Bride.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The Legion's errands",
+              "text": "The Legion of Mithras's errands take Hugh beyond the Order's lands after rumored hostile magicians; he has slain several hedge wizards and thinks none was a real threat, but obeys.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -44611,8 +44683,26 @@
           "summary": "Marie-Helene and her elder sister Marie-Philipe came from a village near a covenant. A Tytalus magus took the younger as apprentice and refused the other, who had only a latent knack and no Gift. Soon a terrible fire struck the family home and scarred Marie-Philipe; Marie-Helene, sure her master set it to rid her of a distraction, hid her sister, slipping out by night with food and lessons, though the elder could work no spell. At her Gauntlet she took the name Persephone of Tytalus, and her sister Kore. They swore a fiery end for him: plain revenge, nothing to do with the House's beloved rivals. Kore keeps to the shadows nearby, hiding her face.\n\nPersephone runs a network of agents who mostly do not know whom they serve, reached through go-betweens or in disguise. They are chiefly spies, whose reports Kore sifts. Her spells and enchantments serve the network, and her plans have drifted from revenge to general meddling in her Tribunal's politics. Her covenant goes on impersonating the dead Lord Richard of Hallam with her ring, which it uses only to protect its interests; she is less careful when she wears the disguise. His widow Joanna knows and is glad, preferring it to the dull second husband her family would find her.\n\nShe rarely keeps an agent long for fear of double agents (Houses of Hermes: Societates pages 140-144). Typical ones, each with the Trait that binds them: Macco, a novice scribe at a rival covenant (Fear of Discovery +1); Sir Stephene, a wealthy knight and secret lycanthrope promised a cure (Hopeful of a Cure +3); Pierre, a journeyman with a guildmaster as mentor in a distant shoemakers' guild (Ambitious +1); Jack, a well-travelled peddler of penny cures full of local gossip (Avaricious +1); Claude, the sisters' cousin, a nobleman's trusted man-at-arms who can lend his men (Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks the sisters need protection (Pity +2).",
           "secrets": [
             {
-              "title": "",
-              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, she has taken up the vendetta herself. Without Persephone's knowledge, mundane agents, sometimes with stolen magical devices, watch him always; she has struck at him in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection. She covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
+              "title": "Kore's vendetta",
+              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, Kore has taken up the vendetta herself.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's watchers",
+              "text": "Without Persephone's knowledge, Kore's mundane agents, sometimes with stolen magical devices, watch the pater always.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's strikes at the pater",
+              "text": "Kore has struck at the pater in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's tracks",
+              "text": "Kore covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -45290,8 +45380,26 @@
           "summary": "Marie-Helene and her elder sister Marie-Philipe came from a village near a covenant. A Tytalus magus took the younger as apprentice and refused the other, who had only a latent knack and no Gift. Soon a terrible fire struck the family home and scarred Marie-Philipe; Marie-Helene, sure her master set it to rid her of a distraction, hid her sister, slipping out by night with food and lessons, though the elder could work no spell. At her Gauntlet she took the name Persephone of Tytalus, and her sister Kore. They swore a fiery end for him: plain revenge, nothing to do with the House's beloved rivals. Kore keeps to the shadows nearby, hiding her face.\n\nPersephone runs a network of agents who mostly do not know whom they serve, reached through go-betweens or in disguise. They are chiefly spies, whose reports Kore sifts. Her spells and enchantments serve the network, and her plans have drifted from revenge to general meddling in her Tribunal's politics. Her covenant goes on impersonating the dead Lord Richard of Hallam with her ring, which it uses only to protect its interests; she is less careful when she wears the disguise. His widow Joanna knows and is glad, preferring it to the dull second husband her family would find her.\n\nShe rarely keeps an agent long for fear of double agents (Houses of Hermes: Societates pages 140-144). Typical ones, each with the Trait that binds them: Macco, a novice scribe at a rival covenant (Fear of Discovery +1); Sir Stephene, a wealthy knight and secret lycanthrope promised a cure (Hopeful of a Cure +3); Pierre, a journeyman with a guildmaster as mentor in a distant shoemakers' guild (Ambitious +1); Jack, a well-travelled peddler of penny cures full of local gossip (Avaricious +1); Claude, the sisters' cousin, a nobleman's trusted man-at-arms who can lend his men (Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks the sisters need protection (Pity +2).",
           "secrets": [
             {
-              "title": "",
-              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, she has taken up the vendetta herself. Without Persephone's knowledge, mundane agents, sometimes with stolen magical devices, watch him always; she has struck at him in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection. She covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
+              "title": "Kore's vendetta",
+              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, Kore has taken up the vendetta herself.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's watchers",
+              "text": "Without Persephone's knowledge, Kore's mundane agents, sometimes with stolen magical devices, watch the pater always.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's strikes at the pater",
+              "text": "Kore has struck at the pater in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's tracks",
+              "text": "Kore covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -46003,8 +46111,26 @@
           "summary": "Marie-Helene and her elder sister Marie-Philipe came from a village near a covenant. A Tytalus magus took the younger as apprentice and refused the other, who had only a latent knack and no Gift. Soon a terrible fire struck the family home and scarred Marie-Philipe; Marie-Helene, sure her master set it to rid her of a distraction, hid her sister, slipping out by night with food and lessons, though the elder could work no spell. At her Gauntlet she took the name Persephone of Tytalus, and her sister Kore. They swore a fiery end for him: plain revenge, nothing to do with the House's beloved rivals. Kore keeps to the shadows nearby, hiding her face.\n\nPersephone runs a network of agents who mostly do not know whom they serve, reached through go-betweens or in disguise. They are chiefly spies, whose reports Kore sifts. Her spells and enchantments serve the network, and her plans have drifted from revenge to general meddling in her Tribunal's politics. Her covenant goes on impersonating the dead Lord Richard of Hallam with her ring, which it uses only to protect its interests; she is less careful when she wears the disguise. His widow Joanna knows and is glad, preferring it to the dull second husband her family would find her.\n\nShe rarely keeps an agent long for fear of double agents (Houses of Hermes: Societates pages 140-144). Typical ones, each with the Trait that binds them: Macco, a novice scribe at a rival covenant (Fear of Discovery +1); Sir Stephene, a wealthy knight and secret lycanthrope promised a cure (Hopeful of a Cure +3); Pierre, a journeyman with a guildmaster as mentor in a distant shoemakers' guild (Ambitious +1); Jack, a well-travelled peddler of penny cures full of local gossip (Avaricious +1); Claude, the sisters' cousin, a nobleman's trusted man-at-arms who can lend his men (Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks the sisters need protection (Pity +2).",
           "secrets": [
             {
-              "title": "",
-              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, she has taken up the vendetta herself. Without Persephone's knowledge, mundane agents, sometimes with stolen magical devices, watch him always; she has struck at him in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection. She covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
+              "title": "Kore's vendetta",
+              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, Kore has taken up the vendetta herself.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's watchers",
+              "text": "Without Persephone's knowledge, Kore's mundane agents, sometimes with stolen magical devices, watch the pater always.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's strikes at the pater",
+              "text": "Kore has struck at the pater in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's tracks",
+              "text": "Kore covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -46741,8 +46867,26 @@
           "summary": "Marie-Helene and her elder sister Marie-Philipe came from a village near a covenant. A Tytalus magus took the younger as apprentice and refused the other, who had only a latent knack and no Gift. Soon a terrible fire struck the family home and scarred Marie-Philipe; Marie-Helene, sure her master set it to rid her of a distraction, hid her sister, slipping out by night with food and lessons, though the elder could work no spell. At her Gauntlet she took the name Persephone of Tytalus, and her sister Kore. They swore a fiery end for him: plain revenge, nothing to do with the House's beloved rivals. Kore keeps to the shadows nearby, hiding her face.\n\nPersephone runs a network of agents who mostly do not know whom they serve, reached through go-betweens or in disguise. They are chiefly spies, whose reports Kore sifts. Her spells and enchantments serve the network, and her plans have drifted from revenge to general meddling in her Tribunal's politics. Her covenant goes on impersonating the dead Lord Richard of Hallam with her ring, which it uses only to protect its interests; she is less careful when she wears the disguise. His widow Joanna knows and is glad, preferring it to the dull second husband her family would find her.\n\nShe rarely keeps an agent long for fear of double agents (Houses of Hermes: Societates pages 140-144). Typical ones, each with the Trait that binds them: Macco, a novice scribe at a rival covenant (Fear of Discovery +1); Sir Stephene, a wealthy knight and secret lycanthrope promised a cure (Hopeful of a Cure +3); Pierre, a journeyman with a guildmaster as mentor in a distant shoemakers' guild (Ambitious +1); Jack, a well-travelled peddler of penny cures full of local gossip (Avaricious +1); Claude, the sisters' cousin, a nobleman's trusted man-at-arms who can lend his men (Loyal to Sisters +3); Sister Maurisse, a mendicant nun who thinks the sisters need protection (Pity +2).",
           "secrets": [
             {
-              "title": "",
-              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, she has taken up the vendetta herself. Without Persephone's knowledge, mundane agents, sometimes with stolen magical devices, watch him always; she has struck at him in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection. She covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
+              "title": "Kore's vendetta",
+              "text": "Kore hates the pater more fiercely than Persephone does: Persephone's resentment is considered, Kore's visceral. Thinking her sister distracted by being a maga, Kore has taken up the vendetta herself.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's watchers",
+              "text": "Without Persephone's knowledge, Kore's mundane agents, sometimes with stolen magical devices, watch the pater always.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's strikes at the pater",
+              "text": "Kore has struck at the pater in secret with Hex, and holds one of his lesser enchantments, knowing it to be an Arcane Connection.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Kore's tracks",
+              "text": "Kore covers her tracks with great care, knowing the danger to her sister, who can truthfully tell Quaesitores she knows nothing.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -47386,8 +47530,20 @@
           "summary": "Petalichus the Weaver, last of Arachne's Children, a dwindling cult of Verditius weavers who put magic into humble cloth while others forged swords and rings. His learning in philosophy and the artes liberales drew the Cononites, a secret Hermetic cult guarding the esoteric works of Conon of Samos, Euclid, Apollonius and Archimedes; they taught him their magic and he made their tools. Modest in his crafts and lofty in his aims, he is secretive, manipulative and vindictive, working from hiding through agents and proxies, and a long feud with Solar Magnus of Tytalus runs through his life.",
           "secrets": [
             {
-              "title": "",
-              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury. He destroyed Solar Magnus there with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest. He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in that feud.",
+              "title": "The death of Thomas Roxbury",
+              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The end of Solar Magnus",
+              "text": "He destroyed Solar Magnus at Canterbury with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "A spell from Yestin",
+              "text": "He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in his feud with Solar Magnus.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -48067,8 +48223,20 @@
           "summary": "Petalichus the Weaver, last of Arachne's Children, a dwindling cult of Verditius weavers who put magic into humble cloth while others forged swords and rings. His learning in philosophy and the artes liberales drew the Cononites, a secret Hermetic cult guarding the esoteric works of Conon of Samos, Euclid, Apollonius and Archimedes; they taught him their magic and he made their tools. Modest in his crafts and lofty in his aims, he is secretive, manipulative and vindictive, working from hiding through agents and proxies, and a long feud with Solar Magnus of Tytalus runs through his life.",
           "secrets": [
             {
-              "title": "",
-              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury. He destroyed Solar Magnus there with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest. He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in that feud.",
+              "title": "The death of Thomas Roxbury",
+              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The end of Solar Magnus",
+              "text": "He destroyed Solar Magnus at Canterbury with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "A spell from Yestin",
+              "text": "He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in his feud with Solar Magnus.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -48863,8 +49031,20 @@
           "summary": "Petalichus the Weaver, last of Arachne's Children, a dwindling cult of Verditius weavers who put magic into humble cloth while others forged swords and rings. His learning in philosophy and the artes liberales drew the Cononites, a secret Hermetic cult guarding the esoteric works of Conon of Samos, Euclid, Apollonius and Archimedes; they taught him their magic and he made their tools. Modest in his crafts and lofty in his aims, he is secretive, manipulative and vindictive, working from hiding through agents and proxies, and a long feud with Solar Magnus of Tytalus runs through his life.",
           "secrets": [
             {
-              "title": "",
-              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury. He destroyed Solar Magnus there with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest. He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in that feud.",
+              "title": "The death of Thomas Roxbury",
+              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The end of Solar Magnus",
+              "text": "He destroyed Solar Magnus at Canterbury with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "A spell from Yestin",
+              "text": "He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in his feud with Solar Magnus.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -49724,8 +49904,20 @@
           "summary": "Petalichus the Weaver, last of Arachne's Children, a dwindling cult of Verditius weavers who put magic into humble cloth while others forged swords and rings. His learning in philosophy and the artes liberales drew the Cononites, a secret Hermetic cult guarding the esoteric works of Conon of Samos, Euclid, Apollonius and Archimedes; they taught him their magic and he made their tools. Modest in his crafts and lofty in his aims, he is secretive, manipulative and vindictive, working from hiding through agents and proxies, and a long feud with Solar Magnus of Tytalus runs through his life.",
           "secrets": [
             {
-              "title": "",
-              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury. He destroyed Solar Magnus there with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest. He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in that feud.",
+              "title": "The death of Thomas Roxbury",
+              "text": "Quaesitor Valeria of Donum Chanuti found evidence that he killed Thomas Roxbury, a notary of House Guernicus, with a Light of Fell Disease candle while hunting Solar Magnus at Canterbury.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "The end of Solar Magnus",
+              "text": "He destroyed Solar Magnus at Canterbury with a Dreams You Shall Not Wake From sheet, having learned when the Tytalus's cyclic magic left his resistance weakest.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "A spell from Yestin",
+              "text": "He bought Let the Sun Not Bother Me This Day from Yestin of Jerbiton for use in his feud with Solar Magnus.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -60225,8 +60417,20 @@
           "summary": "Born a Silesian bond-slave, he served an Infernalist master in terrorising eastern Europe until he was as evil as his victims thought him; when the master was Marched he helped the Quaesitores. That left him a sinister husk of a young magus, unable to live with freedom, fit in anywhere, or bear the sun, on the edge of society with his studies, hoping for oblivion. Flambeau in name, he holds to no politics, and his House is not keen to claim him. He has the mind of a cornered beast, a predator wanting peace through his art and no more power than survival needs, and he seems bound for a March as his master was.",
           "secrets": [
             {
-              "title": "",
-              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him. His imp familiar is unlikely to have come by chance. Around +30 his dealings are found out and he is Marched, and survives.",
+              "title": "Tolides the diabolist",
+              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides's imp",
+              "text": "His imp familiar is unlikely to have come by chance.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides Marched",
+              "text": "Around +30 his dealings are found out and he is Marched, and survives.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -61011,8 +61215,20 @@
           "summary": "Born a Silesian bond-slave, he served an Infernalist master in terrorising eastern Europe until he was as evil as his victims thought him; when the master was Marched he helped the Quaesitores. That left him a sinister husk of a young magus, unable to live with freedom, fit in anywhere, or bear the sun, on the edge of society with his studies, hoping for oblivion. Flambeau in name, he holds to no politics, and his House is not keen to claim him. He has the mind of a cornered beast, a predator wanting peace through his art and no more power than survival needs, and he seems bound for a March as his master was.",
           "secrets": [
             {
-              "title": "",
-              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him. His imp familiar is unlikely to have come by chance. Around +30 his dealings are found out and he is Marched, and survives.",
+              "title": "Tolides the diabolist",
+              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides's imp",
+              "text": "His imp familiar is unlikely to have come by chance.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides Marched",
+              "text": "Around +30 his dealings are found out and he is Marched, and survives.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -61883,8 +62099,20 @@
           "summary": "Born a Silesian bond-slave, he served an Infernalist master in terrorising eastern Europe until he was as evil as his victims thought him; when the master was Marched he helped the Quaesitores. That left him a sinister husk of a young magus, unable to live with freedom, fit in anywhere, or bear the sun, on the edge of society with his studies, hoping for oblivion. Flambeau in name, he holds to no politics, and his House is not keen to claim him. He has the mind of a cornered beast, a predator wanting peace through his art and no more power than survival needs, and he seems bound for a March as his master was.",
           "secrets": [
             {
-              "title": "",
-              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him. His imp familiar is unlikely to have come by chance. Around +30 his dealings are found out and he is Marched, and survives.",
+              "title": "Tolides the diabolist",
+              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides's imp",
+              "text": "His imp familiar is unlikely to have come by chance.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides Marched",
+              "text": "Around +30 his dealings are found out and he is Marched, and survives.",
               "revealed_year": null,
               "revealed_season": ""
             }
@@ -62785,8 +63013,20 @@
           "summary": "Born a Silesian bond-slave, he served an Infernalist master in terrorising eastern Europe until he was as evil as his victims thought him; when the master was Marched he helped the Quaesitores. That left him a sinister husk of a young magus, unable to live with freedom, fit in anywhere, or bear the sun, on the edge of society with his studies, hoping for oblivion. Flambeau in name, he holds to no politics, and his House is not keen to claim him. He has the mind of a cornered beast, a predator wanting peace through his art and no more power than survival needs, and he seems bound for a March as his master was.",
           "secrets": [
             {
-              "title": "",
-              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him. His imp familiar is unlikely to have come by chance. Around +30 his dealings are found out and he is Marched, and survives.",
+              "title": "Tolides the diabolist",
+              "text": "He is a practising diabolist, raised to see the Church as his enemy, with demons about him waiting for his fall; salvation does not occur to him.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides's imp",
+              "text": "His imp familiar is unlikely to have come by chance.",
+              "revealed_year": null,
+              "revealed_season": ""
+            },
+            {
+              "title": "Tolides Marched",
+              "text": "Around +30 his dealings are found out and he is Marched, and survives.",
               "revealed_year": null,
               "revealed_season": ""
             }

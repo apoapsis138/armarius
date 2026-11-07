@@ -14,7 +14,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -347,12 +347,24 @@ def _rhine_valley(rhine: Rhine) -> None:
             "downstream later, each worth a pawn of Aquam vis; it is never "
             "found by accident.",
         ),
-        secrets="Schwall's final Quest is to free the Rhine elemental and merge his "
-        "mind with it, a kind of immortality before Final Twilight takes him; "
-        "the floods that would wreck shipping, towns and cities along the whole "
-        "river are to him a welcome bonus. The early signs are disturbances on "
-        "the river. The Tribunal would March anyone involved, but he expects "
-        "to be beyond its reach.",
+        secrets=[
+            titled(
+                "Schwall's final Quest",
+                "Schwall's final Quest is to free the Rhine elemental and merge his "
+                "mind with it, a kind of immortality before Final Twilight takes him; "
+                "the floods that would wreck shipping, towns and cities along the "
+                "whole river are to him a welcome bonus.",
+            ),
+            titled(
+                "Signs on the river",
+                "The early signs of Schwall's plan are disturbances on the river.",
+            ),
+            titled(
+                "Schwall and the Tribunal",
+                "The Tribunal would March anyone involved, but Schwall expects to be "
+                "beyond its reach.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -390,11 +402,20 @@ def _rhine_valley(rhine: Rhine) -> None:
         "be moved. The lord of the nearby Engelburg raised the chapel, a village "
         "grew about it, and the Engelburg peasants ceremonially burn three fir "
         "trees before it each summer. Its Divine aura is 3 and it draws pilgrims.",
-        secrets="The Vosges once had a secretive fir spirit like the Black Forest's. "
-        "Villages, monasteries and felling wore it down, and the planting of "
-        "the holy staff extinguished it, which is why no continuous Vosges "
-        "forest remains. If the staff were removed it might be the one artefact "
-        "able to counter the spirit of the Black Forest.",
+        secrets=[
+            titled(
+                "The fir spirit of the Vosges",
+                "The Vosges once had a secretive fir spirit like the Black Forest's. "
+                "Villages, monasteries and felling wore it down, and the planting of "
+                "the holy staff extinguished it, which is why no continuous Vosges "
+                "forest remains.",
+            ),
+            titled(
+                "What the holy staff might do",
+                "If the holy staff of Thann were removed it might be the one artefact "
+                "able to counter the spirit of the Black Forest.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -442,8 +463,13 @@ def _rhine_valley(rhine: Rhine) -> None:
         "the tributaries of the Mosel, and the storks that arrive each spring "
         "are thought lucky. The mountains have no general aura; Mount Saint "
         "Odile, Thann Chapel and the Sanctuary of Hercules are its sites.",
-        secrets="The fir spirit of the Vosges is extinct, put out by the holy staff at "
-        "Thann.",
+        secrets=[
+            titled(
+                "The fir spirit of the Vosges",
+                "The fir spirit of the Vosges is extinct, put out by the holy staff "
+                "at Thann.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -543,13 +569,21 @@ def _black_forest(rhine: Rhine) -> None:
             "tolerated for the Perdo vis of its cones; the great vine on the "
             "Tower of Bonisagus yields Intellego vis in its sap.",
         ),
-        secrets="The Black Fir was planted over a century ago by the King of the Black "
-        "Mountain at the edge of the Aegis after his direct attacks failed; when "
-        "the magi found it gave vis they moved the Aegis boundary to take it in, "
-        "breaching their own defence. It creeps about six inches a year toward "
-        "the Tower of Bonisagus, and nobody alive remembers it being young. What "
-        "happens when it reaches the tower or the vine is unknown but likely "
-        "severe.",
+        secrets=[
+            titled(
+                "How the Black Fir came",
+                "The Black Fir was planted over a century ago by the King of the "
+                "Black Mountain at the edge of the Aegis after his direct attacks "
+                "failed; when the magi found it gave vis they moved the Aegis "
+                "boundary to take it in, breaching their own defence.",
+            ),
+            titled(
+                "The Black Fir creeps",
+                "The Black Fir creeps about six inches a year toward the Tower of "
+                "Bonisagus, and nobody alive remembers it being young. What happens "
+                "when it reaches the tower or the vine is unknown but likely severe.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -637,14 +671,31 @@ def _black_forest(rhine: Rhine) -> None:
         "and undisputed ruler of every dark faerie court in the forest, and his "
         "influence covers all of it. Monasteries inside the forest suffer his "
         "attacks: vanishing monks, blight, landslides and earthquakes.",
-        secrets="His dominion cannot reach the Glade of the Seven Waterfalls or the Fane "
-        "of the Founders; lacking the original spirit's nature, they are "
-        "unknowable to him. He craves revenge on those who bound the old spirit "
-        "and wants to be whole again, so he seeks Durenmar's destruction: were "
-        "it to fall, the rite of the Fane would lapse and the bound spirit would "
-        "be his to dominate and absorb. The raid of 1085 was his, and its "
-        "captives never returned; the Black Fir at Durenmar is his centuries-long "
-        "plan.",
+        secrets=[
+            titled(
+                "Beyond the King's dominion",
+                "The King of the Black Mountain's dominion cannot reach the Glade of "
+                "the Seven Waterfalls or the Fane of the Founders; lacking the "
+                "original spirit's nature, they are unknowable to him.",
+            ),
+            titled(
+                "What the King wants",
+                "The King of the Black Mountain craves revenge on those who bound the "
+                "old spirit and wants to be whole again, so he seeks Durenmar's "
+                "destruction: were it to fall, the rite of the Fane would lapse and "
+                "the bound spirit would be his to dominate and absorb.",
+            ),
+            titled(
+                "The raid of 1085",
+                "The raid of 1085 was the King of the Black Mountain's, and its "
+                "captives never returned.",
+            ),
+            titled(
+                "The King's long plan",
+                "The Black Fir at Durenmar is the King of the Black Mountain's "
+                "centuries-long plan.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -720,12 +771,25 @@ def _black_forest(rhine: Rhine) -> None:
         "Diedne's place. Rumour says the attendees met Hermes himself, or a "
         "powerful faerie posing as him who extracted a terrible service from the "
         "Founders.",
-        secrets="The Fane is an artefact into which the Cult of Mercury bound much of the "
-        "Black Forest's original magical essence by a great ritual. It behaves as "
-        "a spirit of Magic Might 40 with limited forest powers: it produces vis, "
-        "shrouds, swears oaths and grants clear thought for a time. The rite "
-        "must be renewed regularly or the spirit escapes the stone, which the "
-        "King of the Black Mountain hopes for so that he may seize it.",
+        secrets=[
+            titled(
+                "What the Fane is",
+                "The Fane is an artefact into which the Cult of Mercury bound much of "
+                "the Black Forest's original magical essence by a great ritual. It "
+                "behaves as a spirit with limited forest powers: it produces vis, "
+                "shrouds, swears oaths and grants clear thought for a time.",
+            ),
+            titled(
+                "The Fane's rite",
+                "The rite of the Fane must be renewed regularly or the spirit escapes "
+                "the stone, which the King of the Black Mountain hopes for so that he "
+                "may seize it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Fane behaves as a spirit of Magic Might 40.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -882,8 +946,13 @@ def _lowlands(rhine: Rhine) -> None:
         "dead here, and the place is haunted. Lucas von Beck of Waddenzee takes "
         "vis and corpses from it for his necromancy. The aura is not given and "
         "its realm is uncertain.",
-        secrets="The power here may be Infernal rather than Magic; Lucas has barely "
-        "considered it.",
+        secrets=[
+            titled(
+                "The power in the graveyards",
+                "The power in the Pirates' Graveyards may be Infernal rather than "
+                "Magic; Lucas has barely considered it.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -1261,11 +1330,16 @@ def _central(rhine: Rhine) -> None:
         "aura of 3, its floor strewn with the arranged bones, teeth and scraps of "
         "hide of bears far larger and fiercer than any known today, which can be "
         "harvested for Animal vis (amount not given).",
-        secrets="The cave is the secret retreat and private vis source of an ancient "
-        "line of bear-heartbeast Bjornaer descending from the Founder herself, "
-        "whose two living members are Archmage Urgen of Crintera and his filia "
-        "Odorpes of Fengheld's Lusatia chapter. Each visits now and then and "
-        "would be furious to find anyone else harvesting their vis.",
+        secrets=[
+            titled(
+                "Whose cave it is",
+                "The Bears' Cave is the secret retreat and private vis source of an "
+                "ancient line of bear-heartbeast Bjornaer descending from the Founder "
+                "herself, whose two living members are Archmage Urgen of Crintera and "
+                "his filia Odorpes of Fengheld's Lusatia chapter. Each visits now and "
+                "then and would be furious to find anyone else harvesting their vis.",
+            ),
+        ],
         **RUMOURED,
     )
     kyffhauser = _add(
@@ -1523,8 +1597,17 @@ def _central(rhine: Rhine) -> None:
         "Neustadt has resisted growth and stays a quiet backwater. A magpie has "
         "nested in the Linden and is slowly killing it, and every attempt to "
         "drive it off has failed. The aura is not given.",
-        secrets="The magpie is a Bjornaer magus in heartbeast form. What has he foreseen "
-        "that makes him destroy the tree?",
+        secrets=[
+            titled(
+                "The magpie",
+                "The magpie at the Linden of Neustadt is a Bjornaer magus in "
+                "heartbeast form.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "What has the magpie foreseen that makes him destroy the tree?",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -1543,11 +1626,21 @@ def _central(rhine: Rhine) -> None:
         "Vim vis (amounts not given). The spirit (Magic, Might 30; Mysterious +3) "
         "grants magic sensitivity and second sight and possesses. Magi, hedge "
         "wizards and stranger beasts all hunt the tree. The aura is not given.",
-        secrets="The dragon and the treasure are myth; the rest is true. The Drudenbaum "
-        "is no real species: when the spirit possesses any tree of its domain, "
-        "that tree takes on the Drudenbaum's look and vis for a time, and the "
-        "black bird settling in its topmost branches marks the possession, so the "
-        "tree keeps moving about the Harberg Forest.",
+        secrets=[
+            titled(
+                "The Harberg legend",
+                "The dragon and the treasure of the Harberg are myth; the rest is "
+                "true.",
+            ),
+            titled(
+                "What the Drudenbaum is",
+                "The Drudenbaum is no real species: when the spirit possesses any "
+                "tree of its domain, that tree takes on the Drudenbaum's look and vis "
+                "for a time, and the black bird settling in its topmost branches "
+                "marks the possession, so the tree keeps moving about the Harberg "
+                "Forest.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -1684,8 +1777,13 @@ def _east(rhine: Rhine) -> None:
         "mundane, should be given a heartbeast that fits his character before he "
         "crosses the boundaries. Locals shun the forest with tales of animal "
         "attacks, shadow-monsters and witches, which the covenant encourages.",
-        secrets="The pristine look of Stubnitz is a deception; the forest is full of "
-        "hidden covenfolk settlements.",
+        secrets=[
+            titled(
+                "The look of Stubnitz",
+                "The pristine look of Stubnitz is a deception; the forest is full of "
+                "hidden covenfolk settlements.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -1713,10 +1811,16 @@ def _east(rhine: Rhine) -> None:
         "the Great Ritual to the god; whoever brought one might rekindle the old "
         "priest's link to Svantovit and make a zealous pagan messiah of the "
         "grandson.",
-        secrets="The two priests have laboriously moved the surviving upper half of "
-        "Svantovit's statue from Arkona into a well-hidden shrine: four faces "
-        "looking four ways, a bull's horn in its right hand and the god's huge "
-        "sword laid before it; looters took the jewelled saddle and bridle.",
+        secrets=[
+            titled(
+                "Svantovit's statue",
+                "The two priests have laboriously moved the surviving upper half of "
+                "Svantovit's statue from Arkona into a well-hidden shrine: four faces "
+                "looking four ways, a bull's horn in its right hand and the god's "
+                "huge sword laid before it; looters took the jewelled saddle and "
+                "bridle.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -1778,11 +1882,16 @@ def _east(rhine: Rhine) -> None:
         "Only a volkhv can open the gate it holds, and they often let Bjornaer "
         "magi use it because of Crintera's friendship, which makes it useful for "
         "contact between the Rhine and Novgorod Tribunals. The aura is not given.",
-        secrets="The barrow is a pre-Hermetic supernatural gateway, one end of a faerie "
-        "trod through a particularly dark and frightening region of Arcadia whose "
-        "far end comes out near the covenant of Pripet Major in the Novgorod "
-        "Tribunal. Nobody at the Russian end can open it, so it works one way "
-        "only.",
+        secrets=[
+            titled(
+                "The barrow's gateway",
+                "The barrow on the Ziegensteine is a pre-Hermetic supernatural "
+                "gateway, one end of a faerie trod through a particularly dark and "
+                "frightening region of Arcadia whose far end comes out near the "
+                "covenant of Pripet Major in the Novgorod Tribunal. Nobody at the "
+                "Russian end can open it, so it works one way only.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -2088,9 +2197,14 @@ def _bohemia(rhine: Rhine) -> None:
         "before she vanished in 785. Pieces taken out of the aura turn to dust, "
         "dry leaves and twigs at sunrise or sunset, and no usable map can be "
         "made. The surrounding land is kept wild by the covenant's meddling.",
-        secrets="Irencillia was never Merinita's home. Her true first domus magna, the "
-        "temple of Diana of which she was the last Roman priestess, is lost and "
-        "its name forgotten.",
+        secrets=[
+            titled(
+                "Merinita's true home",
+                "Irencillia was never Merinita's home. Her true first domus magna, "
+                "the temple of Diana of which she was the last Roman priestess, is "
+                "lost and its name forgotten.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -2157,7 +2271,12 @@ def _bohemia(rhine: Rhine) -> None:
         "at the foot of the mountain control the single pass and trail up, and "
         "two-thirds of the way up a small twin-towered castle inside a curtain "
         "wall can be seen only from its own valley.",
-        secrets="Castle and fort are linked by tunnels through the mountain.",
+        secrets=[
+            titled(
+                "Castle and fort",
+                "Roznov's castle and fort are linked by tunnels through the mountain.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -2173,11 +2292,21 @@ def _bohemia(rhine: Rhine) -> None:
         "the whole covenant of Roznov and its village climb to celebrate him here "
         "with orgiastic drinking and debauchery, from which dozens of pawns of "
         "vis are harvested.",
-        secrets="A few celebrants are quietly seized each year and sacrificed inside the "
-        "temple, seen only by the high priest Igor Rastvan's most loyal servants; "
-        "the victims usually come from the covenant's slaves, their blood yields "
-        "Corpus vis and fuels the harvest. It is never discussed, though most "
-        "covenfolk guess why people vanish each summer, and some supernatural "
-        "agency seems to keep it secret from the Tremere of the fort.",
+        secrets=[
+            titled(
+                "The summer sacrifices",
+                "A few celebrants are quietly seized each year and sacrificed inside "
+                "the temple on Mount Radhost, seen only by the high priest Igor "
+                "Rastvan's most loyal servants; the victims usually come from the "
+                "covenant's slaves, their blood yields Corpus vis and fuels the "
+                "harvest.",
+            ),
+            titled(
+                "What the covenfolk guess",
+                "The sacrifices are never discussed, though most covenfolk guess why "
+                "people vanish each summer, and some supernatural agency seems to "
+                "keep them secret from the Tremere of the fort.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )

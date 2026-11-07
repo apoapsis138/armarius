@@ -35,6 +35,7 @@ from ..builder import (
     dormant,
     paragraphs,
     secrets,
+    titled,
 )
 from ..fourth import Fourth, convert
 
@@ -96,13 +97,23 @@ def _wormhout(b: Builder) -> Any:
             "A stretch of forest a mile outside the town of Wormhout, reached "
             "by a clear path that passes between two worn stone pillars."
         ),
-        secrets=paragraphs(
-            "A two-tier magical regio, with the mundane level guarded by a "
-            "powerful Mentem spell (pp. 77, 79). Markus's parens designed its "
-            "gates and seals, the covenant's main defence (p. 78).",
-            "The town lies about 42 miles east of Calais and 16 miles southwest "
-            "of De Panne (p. 77).",
-        ),
+        secrets=[
+            titled(
+                "The Wormhout regio",
+                "A two-tier magical regio, with the mundane level guarded by a "
+                "powerful Mentem spell (pp. 77, 79).",
+            ),
+            titled(
+                "Wormhout's gates and seals",
+                "Markus's parens designed the regio's gates and seals, the "
+                "covenant's main defence (p. 78).",
+            ),
+            titled(
+                "Where Wormhout lies",
+                "The town lies about 42 miles east of Calais and 16 miles "
+                "southwest of De Panne (p. 77).",
+            ),
+        ],
         levels=[
             b.level(
                 "The Manor Level",
@@ -135,7 +146,12 @@ def _wormhout(b: Builder) -> Any:
             "A town beside a forest, which has grown greatly in trade "
             "and people over the last three centuries."
         ),
-        secrets="The covenant of Wormhout lies in the forest just outside (p. 77).",
+        secrets=[
+            titled(
+                "The covenant in the forest",
+                "The covenant of Wormhout lies in the forest just outside (p. 77).",
+            ),
+        ],
     )
     covenant = b.covenant(
         "Wormhout",
@@ -146,31 +162,49 @@ def _wormhout(b: Builder) -> Any:
             "A covenant of the Normandy Tribunal, in a forest outside the town "
             "of the same name."
         ),
-        secrets=paragraphs(
-            "The book sets it in the Normandy Tribunal (p. 77). This pack holds "
-            "no Tribunal, so it stands on no roster here. Its magi, each "
-            "gauntleted some 60 to 70 years ago, are given only brief statistics; "
-            "the book suggests about 1200 xp in Arts and 120 in Abilities for a "
-            "storyguide who fleshes them out (p. 78).",
-            "Four members, most in middle age, none near final Twilight. It "
-            "was built on its founders' cooperation, and its vis sources and "
-            "its mundane and magical security are excellent (p. 79).",
-            "Founded in 886 with Vindolanda's sponsorship, and bound to it by a "
-            "treaty with no time limit, invoked by agreed tokens (pp. 77, 80). "
-            "Vindolanda was reported destroyed 331 years before the saga opens.",
-            "The book's saga opens here: the new magi are lodged and fed and "
-            "given some study time in exchange for scribing, and are waiting "
-            "for an invitation from any covenant at all (p. 77). Vera and "
-            "Iphimedeia are away on an investigation when Donncadh arrives "
-            "(p. 80). Magi who refuse the mission are told to leave. Markus "
-            "and Cornelius offer two seasons of study rights for it and may "
-            "be pressed to four.",
-            "After the first adventure Iphimedeia investigates Vindolanda's "
-            "survival, is reassured, and agrees to register it in the Normandy "
-            "Tribunal; Wormhout honours its debt and stays an ally. Its library "
-            "is open to the magi at its standard fee of 2 pawns of vis a season "
-            "(p. 75). The book leaves the library's contents to the storyguide.",
-        ),
+        secrets=[
+            titled(
+                "Wormhout's members",
+                "Four members, most in middle age, none near final Twilight. It "
+                "was built on its founders' cooperation, and its vis sources and "
+                "its mundane and magical security are excellent (p. 79).",
+            ),
+            titled(
+                "Wormhout and Vindolanda",
+                "Founded in 886 with Vindolanda's sponsorship, and bound to it by "
+                "a treaty with no time limit, invoked by agreed tokens (pp. 77, "
+                "80). Vindolanda was reported destroyed 331 years before the "
+                "saga opens.",
+            ),
+            titled(
+                "Wormhout's library",
+                "Its library is open to the magi at its standard fee of 2 pawns "
+                "of vis a season (p. 75).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book sets it in the Normandy Tribunal (p. 77). This "
+                    "pack holds no Tribunal, so it stands on no roster here. Its "
+                    "magi, each gauntleted some 60 to 70 years ago, are given "
+                    "only brief statistics; the book suggests about 1200 xp in "
+                    "Arts and 120 in Abilities for a storyguide who fleshes them "
+                    "out (p. 78).",
+                    "The book's saga opens here: the new magi are lodged and fed "
+                    "and given some study time in exchange for scribing, and are "
+                    "waiting for an invitation from any covenant at all (p. 77). "
+                    "Vera and Iphimedeia are away on an investigation when "
+                    "Donncadh arrives (p. 80). Magi who refuse the mission are "
+                    "told to leave. Markus and Cornelius offer two seasons of "
+                    "study rights for it and may be pressed to four.",
+                    "After the first adventure Iphimedeia investigates "
+                    "Vindolanda's survival, is reassured, and agrees to register "
+                    "it in the Normandy Tribunal; Wormhout honours its debt and "
+                    "stays an ally.",
+                    "The book leaves the library's contents to the storyguide.",
+                ),
+            ),
+        ],
     )
     _wormhout_magi(b, covenant)
     return covenant
@@ -187,18 +221,32 @@ def _wormhout_magi(b: Builder, covenant: Any) -> None:
             "The leader of Wormhout: a thickset man of average height, dark "
             "brown hair and green eyes, an expert in sacred architecture."
         ),
-        secrets=paragraphs(
-            "Looks 35. Size 0, Confidence 3, Twilight Points 9. Reputations: "
-            "Contemptibly Cautious 3 with Flambeau and Tytalus magi; Promising "
-            "Theoretician 2 with Verditius and Bonisagus magi (p. 78).",
-            "A Vim specialist who has so far escaped temporary Twilight by "
-            "caution and luck, though the last brush nearly took him. He knows "
-            "few spells and invests a device with any effect he wants. He "
-            "commissioned his longevity potion from the Order's foremost "
-            "Verditius alchemist. He dreads casting the Aegis, which his "
-            "enduring magic lets last up to ten years, and is researching a way "
-            "to master rituals and cast them safely.",
-        ),
+        secrets=[
+            titled(
+                "Markus's caution",
+                "A Vim specialist who has so far escaped temporary Twilight by "
+                "caution and luck, though the last brush nearly took him.",
+            ),
+            titled(
+                "Markus's devices",
+                "He knows few spells and invests a device with any effect he "
+                "wants. He commissioned his longevity potion from the Order's "
+                "foremost Verditius alchemist.",
+            ),
+            titled(
+                "Markus and the Aegis",
+                "He dreads casting the Aegis, which his enduring magic lets last "
+                "up to ten years, and is researching a way to master rituals and "
+                "cast them safely.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Looks 35. Size 0, Confidence 3, Twilight Points 9. Reputations: "
+                "Contemptibly Cautious 3 with Flambeau and Tytalus magi; "
+                "Promising Theoretician 2 with Verditius and Bonisagus magi (p. "
+                "78).",
+            ),
+        ],
     )
     markus.aging.apparent_age = 35
     vera = b.magus(
@@ -211,16 +259,25 @@ def _wormhout_magi(b: Builder, covenant: Any) -> None:
             "A thin, tiny woman with greying blond hair and blue eyes, and an "
             "important powerbroker in the Normandy Tribunal."
         ),
-        secrets=paragraphs(
-            "Looks 50. Size -1, Confidence 3, Twilight Points 15. Reputation: "
-            "Formidable 3 with the Normandy Tribunal (p. 78).",
-            "Her high ideals have made her enemies, even among quaesitores. Her "
-            "law, certamen and, rarely for a Bonisagus, Wizard's War impress "
-            "even Flambeau and Tytalus. She specialises in deception and "
-            "illusion, which her master taught as the proof that truth is hard "
-            "won, and uses them to expose lies. She often goes with Iphimedeia "
-            "on investigations.",
-        ),
+        secrets=[
+            titled(
+                "Vera's enemies",
+                "Her high ideals have made her enemies, even among quaesitores. "
+                "Her law, certamen and, rarely for a Bonisagus, Wizard's War "
+                "impress even Flambeau and Tytalus.",
+            ),
+            titled(
+                "Vera's illusions",
+                "She specialises in deception and illusion, which her master "
+                "taught as the proof that truth is hard won, and uses them to "
+                "expose lies. She often goes with Iphimedeia on investigations.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Looks 50. Size -1, Confidence 3, Twilight Points 15. "
+                "Reputation: Formidable 3 with the Normandy Tribunal (p. 78).",
+            ),
+        ],
     )
     vera.aging.apparent_age = 50
     iphimedeia = b.magus(
@@ -233,16 +290,23 @@ def _wormhout_magi(b: Builder, covenant: Any) -> None:
             "A quaesitor: a tall, strongly built woman with light brown hair "
             "and brown eyes, often called on to look into Hermetic crimes."
         ),
-        secrets=paragraphs(
-            "Looks 40. Size 0, Confidence 3, Twilight Points 17. Reputations: "
-            "Impartial 3 with the Normandy Tribunal; Dangerous 3 with guilty "
-            "magi (p. 78). The book calls her a quaesitor on p. 75.",
-            "Respected, with powerful enemies made by her impartial justice. An "
-            "Intellego specialist, sharpened by her rivalry with Vera. Few in "
-            "Normandy doubt she can find a sigil on illegal magic however old, "
-            "and several Marched magi have found illusion and masking useless "
-            "before her (pp. 78-79).",
-        ),
+        secrets=[
+            titled(
+                "Iphimedeia's justice",
+                "Respected, with powerful enemies made by her impartial justice. "
+                "An Intellego specialist, sharpened by her rivalry with Vera. Few "
+                "in Normandy doubt she can find a sigil on illegal magic however "
+                "old, and several Marched magi have found illusion and masking "
+                "useless before her (pp. 78-79).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Looks 40. Size 0, Confidence 3, Twilight Points 17. "
+                "Reputations: Impartial 3 with the Normandy Tribunal; Dangerous "
+                "3 with guilty magi (p. 78). The book calls her a quaesitor on "
+                "p. 75.",
+            ),
+        ],
     )
     iphimedeia.aging.apparent_age = 40
     cornelius = b.magus(
@@ -255,18 +319,28 @@ def _wormhout_magi(b: Builder, covenant: Any) -> None:
             "The youngest magus of Wormhout: a lean, shortish man with black "
             "hair and green eyes, a maker of automata."
         ),
-        secrets=paragraphs(
-            "Looks 32. Size 0, Confidence 3, Twilight Points 10. Reputations: "
-            "Apolitical 2 and Maker of Automata 3, both with the Normandy "
-            "Tribunal (p. 79).",
-            "He wants an automaton that truly learns, which no Hermetic maga "
-            "has made; his best play chess and work puzzles. They watch the "
-            "covenant's vis sources, with magic from Vera and Iphimedeia that "
-            "stays hidden and pierces concealment, on covenant land only and "
-            "against concealments only. Some call that scrying; Iphimedeia "
-            "would argue that entering under concealment is itself magical "
-            "spying. No test case has been brought.",
-        ),
+        secrets=[
+            titled(
+                "Cornelius's automata",
+                "He wants an automaton that truly learns, which no Hermetic maga "
+                "has made; his best play chess and work puzzles.",
+            ),
+            titled(
+                "The watching automata",
+                "Cornelius's automata watch the covenant's vis sources, with "
+                "magic from Vera and Iphimedeia that stays hidden and pierces "
+                "concealment, on covenant land only and against concealments "
+                "only. Some call that scrying; Iphimedeia would argue that "
+                "entering under concealment is itself magical spying. No test "
+                "case has been brought.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Looks 32. Size 0, Confidence 3, Twilight Points 10. "
+                "Reputations: Apolitical 2 and Maker of Automata 3, both with "
+                "the Normandy Tribunal (p. 79).",
+            ),
+        ],
     )
     cornelius.aging.apparent_age = 32
 
@@ -283,18 +357,35 @@ def _low_countries(b: Builder) -> Neighbour:
             "mile from its beach and docks, smelling of soot and fish. Fishing "
             "huts line the shore and old docks run far out over the shallows."
         ),
-        secrets=paragraphs(
-            "The book's suggested mainland base for Spider in the Ice; it may "
-            "be moved anywhere in Mythic Europe, and a second storyguide could "
-            "run stories here (p. 70). Earthen banks replace the land near the "
-            "waterfront (p. 80).",
-            "Pan Caudarax keeps a hoard here, and has promised to raze the town "
-            "only if that hoard is robbed (p. 63). Once the saga is under way "
-            "Redcaps deliver and collect at Iain's house and may not tell other "
-            "magi where it is (p. 75). The local Redcap trades vis on the magi's "
-            "behalf: a year for each exchange, at most 9 pawns at a time, and a "
-            "pawn charged for every three.",
-        ),
+        secrets=[
+            titled(
+                "De Panne's waterfront",
+                "Earthen banks replace the land near the waterfront (p. 80).",
+            ),
+            titled(
+                "The dragon's hoard at De Panne",
+                "Pan Caudarax keeps a hoard at De Panne, and has promised to raze "
+                "the town only if that hoard is robbed (p. 63).",
+            ),
+            titled(
+                "Redcaps at Iain's house",
+                "Once the saga is under way Redcaps deliver and collect at "
+                "Iain's house in De Panne and may not tell other magi where it "
+                "is (p. 75).",
+            ),
+            titled(
+                "Trading vis at De Panne",
+                "The local Redcap trades vis on the magi's behalf: a year for "
+                "each exchange, at most 9 pawns at a time, and a pawn charged "
+                "for every three.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book's suggested mainland base for Spider in the Ice; it "
+                "may be moved anywhere in Mythic Europe, and a second storyguide "
+                "could run stories here (p. 70).",
+            ),
+        ],
     )
     b.place(
         "The Red Lion",
@@ -305,11 +396,18 @@ def _low_countries(b: Builder) -> Neighbour:
             "grey-bearded man named Pol and his wife Richilda. Rooms are "
             "affordable."
         ),
-        secrets=(
-            "Redcaps often stay here and the keeper is especially friendly with "
-            "the Order. Asked politely, Pol and Richilda say they heard the "
-            "Englishmen talk of going back to Exeter (pp. 80-81)."
-        ),
+        secrets=[
+            titled(
+                "The Red Lion's guests",
+                "Redcaps often stay at the Red Lion and the keeper is especially "
+                "friendly with the Order.",
+            ),
+            titled(
+                "What Pol and Richilda heard",
+                "Asked politely, Pol and Richilda say they heard the Englishmen "
+                "talk of going back to Exeter (pp. 80-81).",
+            ),
+        ],
     )
     b.place(
         "Iain Scot's House",
@@ -319,12 +417,19 @@ def _low_countries(b: Builder) -> Neighbour:
             "A merchant's townhouse facing the square of De Panne, its back to "
             "the docks."
         ),
-        secrets=(
-            "Headquarters of Iain's large trading company, whose ship waits in "
-            "port. Burned in Lord Peter's raid; as the magi arrive the smoke is "
-            "still rising, and Donncadh blames threats from overseas debtors "
-            "(p. 80)."
-        ),
+        secrets=[
+            titled(
+                "Iain's trading company",
+                "Headquarters of Iain's large trading company, whose ship waits "
+                "in port.",
+            ),
+            titled(
+                "The burning of Iain's house",
+                "Burned in Lord Peter's raid; as the magi arrive the smoke is "
+                "still rising, and Donncadh blames threats from overseas debtors "
+                "(p. 80).",
+            ),
+        ],
     )
     return de_panne
 
@@ -339,22 +444,35 @@ def _england(b: Builder) -> Neighbour:
             "A busy trading port on the river Exe, two days' sail from De Panne, "
             "with a quay for seagoing ships."
         ),
-        secrets=(
-            "The ship that fled De Panne lies here, and its captain fears Lord "
-            "Peter. Quiet approaches and money get answers; public quarrels get "
-            "only angry words. The crew were hired for a raid, and were shocked "
-            "at its being in the middle of the town, and at the fire. Commoners "
-            "and merchants here think little of Lord Peter (p. 81)."
-        ),
+        secrets=[
+            titled(
+                "The ship at Exeter",
+                "The ship that fled De Panne lies at Exeter, and its captain "
+                "fears Lord Peter. Quiet approaches and money get answers; "
+                "public quarrels get only angry words.",
+            ),
+            titled(
+                "The crew's story",
+                "The crew were hired for a raid, and were shocked at its being "
+                "in the middle of the town, and at the fire.",
+            ),
+            titled(
+                "Lord Peter's name in Exeter",
+                "Commoners and merchants in Exeter think little of Lord Peter (p. 81).",
+            ),
+        ],
     )
     coombe = b.place(
         "Coombe",
         realm="",
         summary="A village at the edge of Dartmoor, in hilly country.",
-        secrets=(
-            "Its people avoid the manor nearby, and the servants' families have "
-            "heard nothing of them for months (p. 81)."
-        ),
+        secrets=[
+            titled(
+                "Coombe and the manor",
+                "Coombe's people avoid the manor nearby, and the servants' "
+                "families have heard nothing of them for months (p. 81).",
+            ),
+        ],
     )
     return b.place(
         "Lord Peter's Manor",
@@ -363,17 +481,27 @@ def _england(b: Builder) -> Neighbour:
         summary=(
             "A manor house on the edge of Dartmoor near Coombe, cut off by the hills."
         ),
-        secrets=paragraphs(
-            "Lightly guarded: six men remain when the magi come, in and around "
-            "the house, and the servants are locked in their sleeping chambers. "
-            "Set free they are grateful, and wish only to run home to their "
-            "villages (pp. 81-82).",
-            "Lord Peter's private chambers hold what serves a diabolist as a "
-            "laboratory. In the middle is a stone archway capped with the "
-            "stolen gatestone, which opens to Scartaris when the keystone is "
-            "touched and a phrase spoken, and stays open under concentration. "
-            "Ugly rumours tie him to disappearances among moorland farmers.",
-        ),
+        secrets=[
+            titled(
+                "The manor's guards",
+                "Lightly guarded: six men remain when the magi come, in and "
+                "around the house, and the servants are locked in their sleeping "
+                "chambers. Set free they are grateful, and wish only to run home "
+                "to their villages (pp. 81-82).",
+            ),
+            titled(
+                "Lord Peter's laboratory",
+                "Lord Peter's private chambers hold what serves a diabolist as a "
+                "laboratory. In the middle is a stone archway capped with the "
+                "stolen gatestone, which opens to Scartaris when the keystone is "
+                "touched and a phrase spoken, and stays open under "
+                "concentration.",
+            ),
+            titled(
+                "Disappearances on the moor",
+                "Ugly rumours tie Lord Peter to disappearances among moorland farmers.",
+            ),
+        ],
     )
 
 
@@ -381,13 +509,21 @@ def _carnac(b: Builder) -> None:
     b.place(
         "Carnac",
         summary="The great megaliths of Carnac, in France.",
-        secrets=(
-            "One of the lost gateways of the Cult of Thoth stands here, leading "
-            "to the Kerlingarfjoll valley. Hetep led Damhan-Allaidh through it, "
-            "he used it again to escape to Scotland after 808, and Victor found "
-            "it in 845 and took its gatestone to Vindolanda (pp. 71-72). One of "
-            "Lord Peter's ancestors served Damhan-Allaidh here (p. 83)."
-        ),
+        secrets=[
+            titled(
+                "The gateway at Carnac",
+                "One of the lost gateways of the Cult of Thoth stands at Carnac, "
+                "leading to the Kerlingarfjoll valley. Hetep led Damhan-Allaidh "
+                "through it, he used it again to escape to Scotland after 808, "
+                "and Victor found it in 845 and took its gatestone to Vindolanda "
+                "(pp. 71-72).",
+            ),
+            titled(
+                "Lord Peter's ancestor",
+                "One of Lord Peter's ancestors served Damhan-Allaidh at Carnac "
+                "(p. 83).",
+            ),
+        ],
     )
 
 
@@ -406,13 +542,26 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
             "a short black beard, who usually wears a long red cloak. His "
             "family came to England with the Conqueror."
         ),
-        secrets=paragraphs(
-            "An English diabolist, promised more magical power for freeing "
-            "Hetep. Found his grandfather's occult books on his death; Hell has "
-            "watched his family since an ancestor served Damhan-Allaidh near "
-            "Carnac. He blackmails Falkes de Bréauté, acting Earl of Devonshire "
-            "(p. 83). The characters kill him in the opening adventure (p. 76).",
-        ),
+        secrets=[
+            titled(
+                "Lord Peter's bargain",
+                "An English diabolist, promised more magical power for freeing Hetep.",
+            ),
+            titled(
+                "Lord Peter's inheritance",
+                "Found his grandfather's occult books on his death; Hell has "
+                "watched his family since an ancestor served Damhan-Allaidh near "
+                "Carnac.",
+            ),
+            titled(
+                "Lord Peter's blackmail",
+                "He blackmails Falkes de Bréauté, acting Earl of Devonshire (p. 83).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The characters kill him in the opening adventure (p. 76).",
+            ),
+        ],
     )
     stat, _ = convert(
         "lord_peter",
@@ -482,16 +631,27 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
             "granddaughter of the merchant Iain, who already has some Latin "
             "and is learning her letters."
         ),
-        secrets=paragraphs(
-            "Her magical potential is plain to any magus in five minutes. Her "
-            "grandfather has shown her the Scartaris sanctum, and she dreams of "
-            "being a wizard like him (p. 84). She has the Gift (p. 87).",
-            "Kidnapped by Lord Peter and forced to open the gate; possessed by "
-            "Hetep; then host to Victor, who imprisons the demon in her and "
-            "takes her as his apprentice. He hates controlling her and does so "
-            "only at need. Her gauntlet is the story of 1240. A player may run "
-            "her, but she does not adventure before that gauntlet (p. 87).",
-        ),
+        secrets=[
+            titled(
+                "Brighde's Gift",
+                "Her magical potential is plain to any magus in five minutes. "
+                "Her grandfather has shown her the Scartaris sanctum, and she "
+                "dreams of being a wizard like him (p. 84). She has the Gift (p. "
+                "87).",
+            ),
+            titled(
+                "Brighde's ordeal",
+                "Kidnapped by Lord Peter and forced to open the gate; possessed "
+                "by Hetep; then host to Victor, who imprisons the demon in her "
+                "and takes her as his apprentice. He hates controlling her and "
+                "does so only at need.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Her gauntlet is the story of 1240. A player may run her, but she "
+                "does not adventure before that gauntlet (p. 87).",
+            ),
+        ],
     )
     stat, _ = convert(
         "brighde",
@@ -540,7 +700,11 @@ def _characters(b: Builder, de_panne: Neighbour) -> None:
             "A landed knight in Flanders, loyal to the French Crown, who carries "
             "a holy sword."
         ),
-        secrets="The hero of the seed The Dragon's Bane (p. 63).",
+        secrets=[
+            titled(
+                "Storyguide Notes", "The hero of the seed The Dragon's Bane (p. 63)."
+            ),
+        ],
     )
 
 
@@ -555,14 +719,21 @@ def _founders(b: Builder) -> None:
             "The Tytalus maga who first beat Damhan-Allaidh and founded House "
             "Ex Miscellanea."
         ),
-        secrets=(
-            "Victor's parens. Landed in Northumbria in May 814, beat "
-            "Damhan-Allaidh in 816, and raised the Ordo Miscellanea from the "
-            "witches, druids, beast mages and spirit masters of her army, "
-            "becoming prima when it joined the Order (p. 71). Heirs to Merlin "
-            "p. 13 has the Ordo founded in 815 and accepted in 817, a year "
-            "inside this book's campaign of 814 to 816; this pack follows 815."
-        ),
+        secrets=[
+            titled(
+                "Pralix's war",
+                "Victor's parens. Landed in Northumbria in May 814, beat "
+                "Damhan-Allaidh in 816, and raised the Ordo Miscellanea from the "
+                "witches, druids, beast mages and spirit masters of her army, "
+                "becoming prima when it joined the Order (p. 71).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Heirs to Merlin p. 13 has the Ordo founded in 815 and accepted "
+                "in 817, a year inside this book's campaign of 814 to 816; this "
+                "pack follows 815.",
+            ),
+        ],
     )
     b.magus(
         "Ealasaid, Lady of the Waters",
@@ -570,16 +741,30 @@ def _founders(b: Builder) -> None:
         house=EX_MISCELLANEA,
         age=None,
         summary="A theurgist of the old covenant of Vindolanda, long dead.",
-        secrets=(
-            "Her line came down from the Romano-Celtic priests of Sulis Minerva "
-            "at Bath. She worked out the Carnac gate and rebuilt the gatestones "
-            "as Hermetic thaumaturgy. Filia of Morwena and parens of Macomb. "
-            "She fled Wales from threats by Diedne magi, reclaimed her lands "
-            "with a first sanctum under Glyder Fawr, left it to Macomb, and "
-            "moved to the Sea Temple beneath the sea off Devon. Damhan-Allaidh "
-            "killed her there in 889, and her ghost brought the dome down on him "
-            "and Liam (pp. 71-73, 88, 94, 123)."
-        ),
+        secrets=[
+            titled(
+                "Ealasaid's line",
+                "Her line came down from the Romano-Celtic priests of Sulis "
+                "Minerva at Bath.",
+            ),
+            titled(
+                "Ealasaid's gatestones",
+                "She worked out the Carnac gate and rebuilt the gatestones as "
+                "Hermetic thaumaturgy. Filia of Morwena and parens of Macomb.",
+            ),
+            titled(
+                "Ealasaid's sancta",
+                "She fled Wales from threats by Diedne magi, reclaimed her lands "
+                "with a first sanctum under Glyder Fawr, left it to Macomb, and "
+                "moved to the Sea Temple beneath the sea off Devon.",
+            ),
+            titled(
+                "Ealasaid's death",
+                "Damhan-Allaidh killed her at the Sea Temple in 889, and her "
+                "ghost brought the dome down on him and Liam (pp. 71-73, 88, 94, "
+                "123).",
+            ),
+        ],
     )
     b.magus(
         "Macomb",
@@ -587,11 +772,14 @@ def _founders(b: Builder) -> None:
         house=EX_MISCELLANEA,
         age=None,
         summary="A theurgist of the old covenant of Vindolanda, long dead.",
-        secrets=(
-            "Ealasaid's filius and an original member, whose sanctum was Glyder "
-            "Fawr in Snowdonia. Damhan-Allaidh killed him there in 889 (pp. "
-            "71-72, 94-95)."
-        ),
+        secrets=[
+            titled(
+                "Macomb's death",
+                "Ealasaid's filius and an original member, whose sanctum was "
+                "Glyder Fawr in Snowdonia. Damhan-Allaidh killed him there in 889 "
+                "(pp. 71-72, 94-95).",
+            ),
+        ],
     )
 
 
@@ -654,41 +842,54 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "-3, -3, -5, -5, Banished, and no Soak. The block prints Per twice; "
             "the 0 is read as Pre."
         ),
-        secrets=paragraphs(
-            "Earth daemons of Thoth, each with its own name, akin to the "
-            "Amphisbaena of Hedge Magic p. 76 but far greater. They dug secret "
-            "tunnels and hid things in remote caves for him, and helped his "
-            "priests build temples in far places; they know every place in the "
-            "Magic, Faerie and Mundane Realms (pp. 73-74).",
-            "The Gateways (p. 73). A true gateway is two cross-lintels cut in "
-            "ritual from one stone and enchanted as bridges to the spirit realm. "
-            "A serpent, bought with gifts of vis, joins them: called from before "
-            "a lintel, it stretches a mouth over each gate, and travellers pass "
-            "quickly through it. It can bar any gate by person or oath-sworn "
-            "group, but cannot perceive motive, so coercion and magical "
-            "compulsion deceive it. The lore passed from Thoth's priests through "
-            "the Cult of Mercury to the Order as the Hermes Portal ritual, in a "
-            "weaker form.",
-            "Ealasaid rebuilt it as Hermetic thaumaturgy, in notes the magi may "
-            "recover. Cut unquarried stone free in ritual, carry it to a "
-            "laboratory unseen and untouched by the ritually unclean, split it, "
-            "open each half as an invested device and invest a level 40 Rego Vim "
-            "effect that calls the serpent and opens the bridge. Then summon a "
-            "serpent. She learned 16 of the sixty names and wrote spells for "
-            "three, at level 55, in her and Macomb's grimoire.",
-            "Daemonic Adjuration of [Name], Serpent of Thoth (ReVi Gen, Special, "
-            "Special, Individual, Ritual). The Fourth Edition printing: stress "
-            "die + Com + spell level + Penetration + Aura against stress die + "
-            "40; each point of margin counts toward the serpent's appearing, "
-            "which it does when the points pass its Might. Repeat casts add up, "
-            "but are lost at the next sunrise or sunset. It then bargains: 20 "
-            "pawns, and 20 more for each gateway pair it already serves, reduced "
-            "by half a roll of Com + Bargain + Theurgy + stress die. Under The "
-            "Mysteries, casting from text needs Hermetic Theurgy equal to the "
-            "spell's magnitude; otherwise a magus learns it and must master it "
-            "first. A serpent serves any number of gates, one at a time. The "
-            "joined gatestones stop being Arcane Connections to each other.",
-        ),
+        secrets=[
+            titled(
+                "The earth daemons of Thoth",
+                "Earth daemons of Thoth, each with its own name, akin to the "
+                "Amphisbaena of Hedge Magic p. 76 but far greater. They dug "
+                "secret tunnels and hid things in remote caves for him, and "
+                "helped his priests build temples in far places; they know every "
+                "place in the Magic, Faerie and Mundane Realms (pp. 73-74).",
+            ),
+            titled(
+                "The gateways of Thoth",
+                "A true gateway is two cross-lintels cut in "
+                "ritual from one stone and enchanted as bridges to the spirit realm "
+                "(p. 73). "
+                "A serpent, bought with gifts of vis, joins them: called from before "
+                "a lintel, it stretches a mouth over each gate, and travellers pass "
+                "quickly through it. It can bar any gate by person or oath-sworn "
+                "group, but cannot perceive motive, so coercion and magical "
+                "compulsion deceive it. The lore passed from Thoth's priests through "
+                "the Cult of Mercury to the Order as the Hermes Portal ritual, in a "
+                "weaker form.",
+            ),
+            titled(
+                "Ealasaid's gateway lore",
+                "Ealasaid rebuilt it as Hermetic thaumaturgy, in notes the magi may "
+                "recover. Cut unquarried stone free in ritual, carry it to a "
+                "laboratory unseen and untouched by the ritually unclean, split it, "
+                "open each half as an invested device and invest a level 40 Rego Vim "
+                "effect that calls the serpent and opens the bridge. Then summon a "
+                "serpent. She learned 16 of the sixty names and wrote spells for "
+                "three, at level 55, in her and Macomb's grimoire.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Daemonic Adjuration of [Name], Serpent of Thoth (ReVi Gen, Special, "
+                "Special, Individual, Ritual). The Fourth Edition printing: stress "
+                "die + Com + spell level + Penetration + Aura against stress die + "
+                "40; each point of margin counts toward the serpent's appearing, "
+                "which it does when the points pass its Might. Repeat casts add up, "
+                "but are lost at the next sunrise or sunset. It then bargains: 20 "
+                "pawns, and 20 more for each gateway pair it already serves, reduced "
+                "by half a roll of Com + Bargain + Theurgy + stress die. Under The "
+                "Mysteries, casting from text needs Hermetic Theurgy equal to the "
+                "spell's magnitude; otherwise a magus learns it and must master it "
+                "first. A serpent serves any number of gates, one at a time. The "
+                "joined gatestones stop being Arcane Connections to each other.",
+            ),
+        ],
     )
     b.creature(
         "Whisper",
@@ -749,11 +950,17 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "he follows only with a Perception roll of +6. It never repeats "
             "itself."
         ),
-        secrets=(
-            "Lord Peter's familiar, once Damhan-Allaidh's messenger. Misheard "
-            "messages have undone several masters. A coward, it goes back to "
-            "spirit form as soon as anyone attacks it."
-        ),
+        secrets=[
+            titled(
+                "Whisper's masters",
+                "Lord Peter's familiar, once Damhan-Allaidh's messenger. "
+                "Misheard messages have undone several masters.",
+            ),
+            titled(
+                "Whisper's cowardice",
+                "A coward, it goes back to spirit form as soon as anyone attacks it.",
+            ),
+        ],
     )
     b.creature(
         "Lord Peter's Men",
@@ -781,9 +988,12 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "Printed Body levels OK, 0, -1, -3, -5, Incapacitated. Weapon and "
             "Shield 4 is Single Weapon."
         ),
-        secrets=(
-            "Two dozen die in Scartaris and six stay behind at the manor (p. 82)."
-        ),
+        secrets=[
+            titled(
+                "The fate of Lord Peter's men",
+                "Two dozen die in Scartaris and six stay behind at the manor (p. 82).",
+            ),
+        ],
     )
     b.creature(
         "Walking Corpses",
@@ -807,7 +1017,12 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "laying the head at the feet, or a particular Perdo Vim spell stops "
             "them moving.",
         ),
-        secrets="The slain of Snaefellsnes, raised by Hetep (pp. 86, 137).",
+        secrets=[
+            titled(
+                "Who the walking corpses are",
+                "The slain of Snaefellsnes, raised by Hetep (pp. 86, 137).",
+            ),
+        ],
     )
     b.creature(
         "Thingmen",
@@ -841,7 +1056,12 @@ def _creatures(b: Builder, manor: Neighbour) -> None:
             "a Profession, Icelandic Law Common Law, and Weapon and Shield Single "
             "Weapon. Printed Confidence 3 is left out."
         ),
-        secrets="Thirty ride with Thord Sturluson on Snaefellsnes (p. 86).",
+        secrets=[
+            titled(
+                "Thord's riders",
+                "Thirty ride with Thord Sturluson on Snaefellsnes (p. 86).",
+            ),
+        ],
     )
 
 
@@ -853,37 +1073,67 @@ def _groups(b: Builder) -> None:
         "The Praeses Septentrionalis",
         faction="Hermetic group",
         summary="The Northern Guard, an old league of Hermetic covenants.",
-        secrets=(
-            "Vindolanda joined it to guard Scotland against Damhan-Allaidh's "
-            "return (p. 72). His forces attacked its covenants in 889 and "
-            "destroyed them all (pp. 72, 77)."
-        ),
+        secrets=[
+            titled(
+                "Vindolanda and the Northern Guard",
+                "Vindolanda joined the Praeses Septentrionalis to guard Scotland "
+                "against Damhan-Allaidh's return (p. 72).",
+            ),
+            titled(
+                "The fall of the Northern Guard",
+                "Damhan-Allaidh's forces attacked the Northern Guard's covenants "
+                "in 889 and destroyed them all (pp. 72, 77).",
+            ),
+        ],
     )
     b.faction(
         "The Thothian Watchers",
         faction="Spirits and beings",
         realm="Magic",
         summary="Spirits of old Egypt, about whom almost nothing is told.",
-        secrets=(
-            "Thoth set them to capture and imprison Hetep, but they cannot take "
-            "him while he possesses someone. He used to lose them by going back "
-            "to Hell, which he now cannot do without undoing his partial "
-            "corruption of the stelae. They speak to no one and wait for his "
-            "mistake. The book prints no stats. Ealasaid's grimoire holds a "
-            "spell to contact them, now of little use (p. 84)."
-        ),
+        secrets=[
+            titled(
+                "The Watchers' task",
+                "Thoth set them to capture and imprison Hetep, but they cannot "
+                "take him while he possesses someone.",
+            ),
+            titled(
+                "Why Hetep cannot flee to Hell",
+                "Hetep used to lose the Thothian Watchers by going back to Hell, "
+                "which he now cannot do without undoing his partial corruption "
+                "of the stelae.",
+            ),
+            titled(
+                "The Watchers wait",
+                "They speak to no one and wait for Hetep's mistake.",
+            ),
+            titled(
+                "Ealasaid's spell for the Watchers",
+                "Ealasaid's grimoire holds a spell to contact the Thothian "
+                "Watchers, now of little use (p. 84).",
+            ),
+            titled("Storyguide Notes", "The book prints no stats."),
+        ],
     )
     b.faction(
         "The Odd-Karnor Clan",
         faction="Family",
         summary="A Norwegian family, embroiled in a feud of its own.",
-        secrets=(
-            "Bjarke Odd-Karnor called in his distant kinsman Einar Gamlisson for "
-            "magical help in 1210. Einar stayed seven years and married Yrsa, a "
-            "young girl of the clan (p. 69). She and her two sons died in 1218. "
-            "The feud is a centuries-old one with the Beogarts, a powerful "
-            "family in Iceland (p. 103; see Leif Beogart)."
-        ),
+        secrets=[
+            titled(
+                "Einar and the Odd-Karnors",
+                "Bjarke Odd-Karnor called in his distant kinsman Einar Gamlisson "
+                "for magical help in 1210. Einar stayed seven years and married "
+                "Yrsa, a young girl of the clan (p. 69). She and her two sons "
+                "died in 1218.",
+            ),
+            titled(
+                "The Odd-Karnor feud",
+                "The Odd-Karnors' feud is a centuries-old one with the Beogarts, "
+                "a powerful family in Iceland (p. 103).",
+            ),
+            titled("Storyguide Notes", "See Leif Beogart."),
+        ],
     )
     b.custom(
         "The Ranks of Iceland",
@@ -891,40 +1141,45 @@ def _groups(b: Builder) -> None:
             "Who stands where in Iceland: free men, householders, landowners, "
             "great farmers and chieftains, and those with no standing."
         ),
-        secrets=paragraphs(
-            "The ranks are Social Status Virtues and Flaws now: Bondi, Landowner, "
-            "Storbondi, Godi and Storgodi; a freeman is a Laborer, a freedman a "
-            "Freed Slave, and Slave and Outlaw are as they are elsewhere (pp. "
-            "65-66). A godi has no serfs or men-at-arms, so he is no Landed Noble.",
-            "Every Icelander starts with Icelandic Law 2 and Legend Lore 2. The "
-            "wealthy, from landowner up, are usually Educated, which they pay "
-            "for (p. 66).",
-            "Iceland-born characters (pp. 64-65). Magus-equivalents: Trollson, "
-            "traditional galdraman. Mythic companions: seithkona (a Hedge Magic "
-            "cunning-woman with a fylgja and Hamfarir instead of Visions, and "
-            "Second Sight and Legend Lore instead of the faerie versions), "
-            "schooled galdraman (Natural Magician), spirit master. Companions: "
-            "witch, seeress or wiseman, viking (anachronistic by 1220), skald, "
-            "shapeshifter, bondi, godi. Grogs: berserker (almost unknown by now), "
-            "laborer, tenant farmer, thrall.",
-            "The book's Fourth Edition Virtue lists (p. 65). Witch (heid), often "
-            "with a Jotunn Affinity, some with Scribe Runes, Shapeshift or "
-            "Transform: Bane Maker +2, Magical Animal Companion +2, Herbalism "
-            "+1, Bad Reputation (pagan) -1, Tainted with Evil -2. Seeress "
-            "(volva) or wiseman (visindaman): Divination +4, Visions +2, Second "
-            "Sight +1, Premonitions +1. Viking: Mercenary Leader +3 or Wealthy "
-            "Merchant +3, Ways of the Sea +4, Well Traveled +1, Social Contacts "
-            "+1, Berserk +1, Fury -3, Judged Unfairly -1. Skald: Audio Eidetic "
-            "Memory +3, Free Expression +1, Inspirational +1. Shapeshifter: "
-            "Shapeshifter +5, Skinchanger +2 or Lycanthrope -3, Outcast -1. "
-            "Bondi: Bondi +1, Landowner +2, Storbondi +3, Social Contacts +1, "
-            "Obligations -1. Godi: Godi +4, Prestigious Family +1, Feud -1 to "
-            "-4. Berserker: Berserk +1, Fury -3, Outcast -1. Laborer: Freeman "
-            "or Freedman. Tenant farmer: Bondi. Thrall: Slave.",
-            "Magi should come from the Order's heartlands, at first; at most one "
-            "player should fill the magus slot with a native magician. One "
-            "character needs Premonitions for Spider in the Ice.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The ranks are Social Status Virtues and Flaws now: Bondi, Landowner, "
+                    "Storbondi, Godi and Storgodi; a freeman is a Laborer, a freedman a "
+                    "Freed Slave, and Slave and Outlaw are as they are elsewhere (pp. "
+                    "65-66). A godi has no serfs or men-at-arms, so he is no Landed Noble.",
+                    "Every Icelander starts with Icelandic Law 2 and Legend Lore 2. The "
+                    "wealthy, from landowner up, are usually Educated, which they pay "
+                    "for (p. 66).",
+                    "Iceland-born characters (pp. 64-65). Magus-equivalents: Trollson, "
+                    "traditional galdraman. Mythic companions: seithkona (a Hedge Magic "
+                    "cunning-woman with a fylgja and Hamfarir instead of Visions, and "
+                    "Second Sight and Legend Lore instead of the faerie versions), "
+                    "schooled galdraman (Natural Magician), spirit master. Companions: "
+                    "witch, seeress or wiseman, viking (anachronistic by 1220), skald, "
+                    "shapeshifter, bondi, godi. Grogs: berserker (almost unknown by now), "
+                    "laborer, tenant farmer, thrall.",
+                    "The book's Fourth Edition Virtue lists (p. 65). Witch (heid), often "
+                    "with a Jotunn Affinity, some with Scribe Runes, Shapeshift or "
+                    "Transform: Bane Maker +2, Magical Animal Companion +2, Herbalism "
+                    "+1, Bad Reputation (pagan) -1, Tainted with Evil -2. Seeress "
+                    "(volva) or wiseman (visindaman): Divination +4, Visions +2, Second "
+                    "Sight +1, Premonitions +1. Viking: Mercenary Leader +3 or Wealthy "
+                    "Merchant +3, Ways of the Sea +4, Well Traveled +1, Social Contacts "
+                    "+1, Berserk +1, Fury -3, Judged Unfairly -1. Skald: Audio Eidetic "
+                    "Memory +3, Free Expression +1, Inspirational +1. Shapeshifter: "
+                    "Shapeshifter +5, Skinchanger +2 or Lycanthrope -3, Outcast -1. "
+                    "Bondi: Bondi +1, Landowner +2, Storbondi +3, Social Contacts +1, "
+                    "Obligations -1. Godi: Godi +4, Prestigious Family +1, Feud -1 to "
+                    "-4. Berserker: Berserk +1, Fury -3, Outcast -1. Laborer: Freeman "
+                    "or Freedman. Tenant farmer: Bondi. Thrall: Slave.",
+                    "Magi should come from the Order's heartlands, at first; at most one "
+                    "player should fill the magus slot with a native magician. One "
+                    "character needs Premonitions for Spider in the Ice.",
+                ),
+            ),
+        ],
     )
 
 
@@ -945,38 +1200,61 @@ def _arcs(b: Builder) -> None:
                 "characters are caught between them.",
                 NOT_HISTORY,
             ),
-            secrets=paragraphs(
-                "The first arc, before the climax with Damhan-Allaidh; its "
-                "purpose is to draw the characters into Iceland's daily life, "
-                "where magicians live beside farmers and godar, a small picture "
-                "of what the Order might achieve in Europe (pp. 67-68). Chapters "
-                "11 to 14. Each story follows on the next by the years shown, "
-                "but the dates are suggestions, not to be enforced, and other "
-                "stories fill the time between (p. 75).",
-                "In 1210 Einar went to Norway to help Bjarke Odd-Karnor, and "
-                "stayed seven years; he married Yrsa and had two sons. He sailed "
-                "home a year ahead of them to repair his farmstead and renew his "
-                "ties with the spirits. In 1218 Yrsa and the boys took ship at "
-                "Bergen. Powerful Flambeau magi were aboard, going to destroy "
-                "the Order of Odin. Their presence roused the landvaettir and "
-                "the First Guardian, Pan Caudarax, who burned the ship and went "
-                "home to Hekla. Einar does not see that the dragon was defending "
-                "Iceland (pp. 69-70).",
-                "Einar is cunning and ruthless, and the characters may pity him. "
-                "Pan Caudarax is a huge dragon of the Hekla crater, not native "
-                "to the north, in Iceland over a thousand years. Bard "
-                "Snaefellsass, a powerful trollson, wants the two reconciled and "
-                "holds himself guardian of the land the covenant stands on, so "
-                "he may become a strong ally (p. 70).",
-                "Vis: Vindolanda soon has Rego and Vim sources; beyond that only "
-                "stories (the Odadahraun among them) and aura extraction bring "
-                "it. The annual Galdramen Hreppur meeting will haggle for vis, "
-                "in rough terms such as fire, illusion, warding, weather (p. 75).",
-                "The book's dates disagree. The eggs hatch about twenty years "
-                "after the settlement of 1222 (pp. 105-106), yet are two years "
-                "from hatching in 1230 (pp. 76, 114). Page 106 puts the burned "
-                "ship five years back, about 1217, where p. 70 says 1218.",
-            ),
+            secrets=[
+                titled(
+                    "Einar's lost family",
+                    "In 1210 Einar went to Norway to help Bjarke Odd-Karnor, and "
+                    "stayed seven years; he married Yrsa and had two sons. He sailed "
+                    "home a year ahead of them to repair his farmstead and renew his "
+                    "ties with the spirits. In 1218 Yrsa and the boys took ship at "
+                    "Bergen. Powerful Flambeau magi were aboard, going to destroy "
+                    "the Order of Odin. Their presence roused the landvaettir and "
+                    "the First Guardian, Pan Caudarax, who burned the ship and went "
+                    "home to Hekla. Einar does not see that the dragon was defending "
+                    "Iceland (pp. 69-70).",
+                ),
+                titled(
+                    "Einar's nature",
+                    "Einar is cunning and ruthless, and the characters may pity him.",
+                ),
+                titled(
+                    "Pan Caudarax in Iceland",
+                    "Pan Caudarax is a huge dragon of the Hekla crater, not "
+                    "native to the north, in Iceland over a thousand years.",
+                ),
+                titled(
+                    "Bard's wish for peace",
+                    "Bard Snaefellsass, a powerful trollson, wants Einar and the "
+                    "dragon reconciled and holds himself guardian of the land the "
+                    "covenant stands on, so he may become a strong ally (p. 70).",
+                ),
+                titled(
+                    "Vis for Vindolanda",
+                    "Vindolanda soon has Rego and Vim sources; beyond that only "
+                    "stories (the Odadahraun among them) and aura extraction "
+                    "bring vis. The annual Galdramen Hreppur meeting will haggle "
+                    "for vis, in rough terms such as fire, illusion, warding, "
+                    "weather (p. 75).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The first arc, before the climax with Damhan-Allaidh; "
+                        "its purpose is to draw the characters into Iceland's "
+                        "daily life, where magicians live beside farmers and "
+                        "godar, a small picture of what the Order might achieve "
+                        "in Europe (pp. 67-68). Chapters 11 to 14. Each story "
+                        "follows on the next by the years shown, but the dates "
+                        "are suggestions, not to be enforced, and other stories "
+                        "fill the time between (p. 75).",
+                        "The book's dates disagree. The eggs hatch about twenty "
+                        "years after the settlement of 1222 (pp. 105-106), yet "
+                        "are two years from hatching in 1230 (pp. 76, 114). Page "
+                        "106 puts the burned ship five years back, about 1217, "
+                        "where p. 70 says 1218.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Thord's Feast",
@@ -1032,61 +1310,96 @@ def _arcs(b: Builder) -> None:
                 "and a hidden valley temple of Thoth is the prize.",
                 NOT_HISTORY,
             ),
-            secrets=paragraphs(
-                "The second arc: Chapter 9 brings the characters to Iceland and "
-                "Chapters 15 to 17 end it, about forty years on (pp. 67-68). The "
-                "fate of Damhan-Allaidh, the valley temple and Vindolanda are at "
-                "the storyguide's discretion. Its two seats are Iceland and De "
-                "Panne, which suits a second storyguide (p. 70). Dates are "
-                "suggestions (p. 75).",
-                "The valley. About 2000 BC priests of Thoth under the legendary "
-                "Setna followed spirits to a mist-shrouded valley at Iceland's "
-                "heart, and after years broke the mist with a spell. An obsidian "
-                "block carved into an arch stood there. They built a temple round "
-                "it and opened a gateway; few who entered came back, but those "
-                "who did had multiplied power. They made lesser gateways, and "
-                "when Egypt fell the priests were scattered and the ways lost "
-                "(pp. 70-71).",
-                "The Spider. A Pictish magician drawn to goetia, he got a reed "
-                "scroll naming Hetep in 680 and made a cardinal pact: ancient "
-                "knowledge and the safest hiding place for his soul. Hetep took "
-                "him by Carnac to the valley and hid inside him. Setna's spirit, "
-                "for once deceived, let him study the seven stelae for four "
-                "seasons while Hetep corrupted them; then Setna saw it, fought "
-                "him, and he fled through the seven doors into the Glasvellir "
-                "regio. He came out of the Snaefell crater in 730. The gate no "
-                "longer answers him; Hetep says to wait for Setna to weaken "
-                "(p. 71).",
-                "The wars. He refused the Order's offer, and his blood sacrifice "
-                "and demon cults brought Flambeau and Tremere against him. He "
-                "beat them in 808, then left by Carnac for Scotland. Pralix of "
-                "Tytalus landed in Northumbria in May 814 and in two years beat "
-                "him with local wizards; he escaped. She raised the Ordo "
-                "Miscellanea from her army, and Trianoma brought it in as House "
-                "Ex Miscellanea (p. 71). The years are Heirs to Merlin's: "
-                "founded 815, accepted 817 (p. 13).",
-                "Vindolanda. Victor, Pralix's apprentice, whose gauntlet was "
-                "surviving the war, founded it on a supply fort of Hadrian's "
-                "Wall with theurgists Ealasaid and Macomb and gruagachan Iain "
-                "and Liam. In 845 he found the Carnac gate and brought its stone "
-                "home; seven years on it was deciphered and the valley found. "
-                "Ealasaid made Hermetic gatestones in three more years, and each "
-                "magus built a linked sanctum: Victor's in the Scartaris peak of "
-                "Snaefell, the others beneath the sea off Devon and in Snowdonia "
-                "(p. 72).",
-                "The battle of wills. They captured Hetep in 875 and found him a "
-                "fallen spirit of Thoth. Victor designed a spell of wills to "
-                "turn him, which ends only with one's defeat, and the theurgists "
-                "warded him in with him. It began in 888, and Iain's party left "
-                "with the Scartaris gatestone. In 889 the Spider destroyed the "
-                "Northern Guard and led the attack on Vindolanda; Ealasaid and "
-                "Macomb died. Liam escaped. In 890 Tremere and Flambeau routed "
-                "the Spider's forces, and he and Liam were buried in Ealasaid's "
-                "collapsing sanctum under 50 meters of sea, their external souls "
-                "keeping them alive. His last followers fled to Shetland and "
-                "some to Iceland, and Hetep's minions still hunt the sanctum "
-                "(pp. 71-73).",
-            ),
+            secrets=[
+                titled(
+                    "The valley of Thoth",
+                    "About 2000 BC priests of Thoth under the legendary "
+                    "Setna followed spirits to a mist-shrouded valley at Iceland's "
+                    "heart, and after years broke the mist with a spell. An obsidian "
+                    "block carved into an arch stood there. They built a temple round "
+                    "it and opened a gateway; few who entered came back, but those "
+                    "who did had multiplied power. They made lesser gateways, and "
+                    "when Egypt fell the priests were scattered and the ways lost "
+                    "(pp. 70-71).",
+                ),
+                titled(
+                    "The Spider's pact",
+                    "Damhan-Allaidh, a Pictish magician drawn to goetia, got a "
+                    "reed scroll naming Hetep in 680 and made a cardinal pact: "
+                    "ancient knowledge and the safest hiding place for his soul. "
+                    "Hetep took him by Carnac to the valley and hid inside him.",
+                ),
+                titled(
+                    "The Spider in the temple",
+                    "Setna's spirit, for once deceived, let Damhan-Allaidh study the "
+                    "seven stelae for four "
+                    "seasons while Hetep corrupted them; then Setna saw it, fought "
+                    "him, and he fled through the seven doors into the Glasvellir "
+                    "regio. He came out of the Snaefell crater in 730. The gate no "
+                    "longer answers him; Hetep says to wait for Setna to weaken "
+                    "(p. 71).",
+                ),
+                titled(
+                    "The wars against the Spider",
+                    "Damhan-Allaidh refused the Order's offer, and his blood "
+                    "sacrifice and demon cults brought Flambeau and Tremere against "
+                    "him. He "
+                    "beat them in 808, then left by Carnac for Scotland. Pralix of "
+                    "Tytalus landed in Northumbria in May 814 and in two years beat "
+                    "him with local wizards; he escaped. She raised the Ordo "
+                    "Miscellanea from her army, and Trianoma brought it in as House "
+                    "Ex Miscellanea (p. 71).",
+                ),
+                titled(
+                    "Vindolanda's founding",
+                    "Victor, Pralix's apprentice, whose gauntlet was "
+                    "surviving the war, founded it on a supply fort of Hadrian's "
+                    "Wall with theurgists Ealasaid and Macomb and gruagachan Iain "
+                    "and Liam. In 845 he found the Carnac gate and brought its stone "
+                    "home; seven years on it was deciphered and the valley found. "
+                    "Ealasaid made Hermetic gatestones in three more years, and each "
+                    "magus built a linked sanctum: Victor's in the Scartaris peak of "
+                    "Snaefell, the others beneath the sea off Devon and in Snowdonia "
+                    "(p. 72).",
+                ),
+                titled(
+                    "The battle of wills",
+                    "Vindolanda's magi captured Hetep in 875 and found him a "
+                    "fallen spirit of Thoth. Victor designed a spell of wills to "
+                    "turn him, which ends only with one's defeat, and the "
+                    "theurgists warded him in with him. It began in 888, and "
+                    "Iain's party left with the Scartaris gatestone.",
+                ),
+                titled(
+                    "The fall of Vindolanda",
+                    "In 889 the Spider destroyed the Northern Guard and led the "
+                    "attack on Vindolanda; Ealasaid and Macomb died. Liam "
+                    "escaped.",
+                ),
+                titled(
+                    "The Spider buried",
+                    "In 890 Tremere and Flambeau routed the Spider's forces, and "
+                    "he and Liam were buried in Ealasaid's collapsing sanctum "
+                    "under 50 meters of sea, their external souls keeping them "
+                    "alive. His last followers fled to Shetland and some to "
+                    "Iceland, and Hetep's minions still hunt the sanctum (pp. "
+                    "71-73).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The second arc: Chapter 9 brings the characters to "
+                        "Iceland and Chapters 15 to 17 end it, about forty years "
+                        "on (pp. 67-68). The fate of Damhan-Allaidh, the valley "
+                        "temple and Vindolanda are at the storyguide's "
+                        "discretion. Its two seats are Iceland and De Panne, "
+                        "which suits a second storyguide (p. 70). Dates are "
+                        "suggestions (p. 75).",
+                        "The years of the Ordo Miscellanea are Heirs to Merlin's: "
+                        "founded 815, accepted 817 (p. 13).",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Blood of Innocence",
@@ -1149,20 +1462,37 @@ def _blood_of_innocence(b: Builder, wormhout: Any) -> None:
                 "after her.",
                 NOT_HISTORY,
             ),
-            secrets=paragraphs(
-                "The saga's opening adventure, of 1220 (ch. 9). During Pralix's "
-                "war Hetep maimed Iain's Gift. He kept his External Soul, joined "
-                "Vindolanda as a full magus, and hid with the Scartaris gatestone "
-                "in 888. He searched the world for centuries, learned Natural "
-                "Magic, grew rich as a merchant, and settled in De Panne in 1182, "
-                "where he married. In 1219 he gave up on Victor and went to ask "
-                "Cad Gadu for aid, was turned away for lack of an invitation, and "
-                "a diabolist followed him home (p. 77).",
-                "The oath the magi swear and the charter are on the covenant of "
-                "Vindolanda's record (p. 85). Donncadh and Brighde are both "
-                "Gifted and may become player characters; Donncadh could stay a "
-                "Mythic Companion (p. 87).",
-            ),
+            secrets=[
+                titled(
+                    "Iain's maimed Gift",
+                    "During Pralix's war Hetep maimed Iain's Gift. He kept his "
+                    "External Soul, joined Vindolanda as a full magus, and hid "
+                    "with the Scartaris gatestone in 888.",
+                ),
+                titled(
+                    "Iain's long search",
+                    "Iain searched the world for centuries, learned Natural "
+                    "Magic, grew rich as a merchant, and settled in De Panne in "
+                    "1182, where he married.",
+                ),
+                titled(
+                    "How the diabolist found Iain",
+                    "In 1219 Iain gave up on Victor and went to ask Cad Gadu for "
+                    "aid, was turned away for lack of an invitation, and a "
+                    "diabolist followed him home (p. 77).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The saga's opening adventure, of 1220 (ch. 9).",
+                        "The oath the magi swear and the charter are on the "
+                        "covenant of Vindolanda's record (p. 85). Donncadh and "
+                        "Brighde are both Gifted and may become player "
+                        "characters; Donncadh could stay a Mythic Companion (p. "
+                        "87).",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Fate Lends a Hand",
@@ -1295,18 +1625,35 @@ def _seeds(b: Builder, de_panne: Neighbour) -> None:
                 "town will burn, and is taking ship for Iceland with his holy "
                 "sword to kill the dragon first. The magi are welcome aboard."
             ),
-            secrets=paragraphs(
-                "A way to bring characters to Iceland without Spider in the Ice "
-                "(p. 63). Pan Caudarax promised to raze the town for a past "
-                "slight; the prophecy is on p. 140. Magi may want the vis of the "
-                "corpse, or to guard Ivain.",
-                "Their presence on the ship may be enough to rouse the Guardians "
-                "(p. 7). Local magicians can tell them of the dragon's weak spot "
-                "if they enlist them. Faced, Pan Caudarax asks why the knight "
-                "defends thieves. He will destroy De Panne only when his hoard "
-                "there is robbed; once Ivain understands, he withdraws his "
-                "challenge and goes home.",
-            ),
+            secrets=[
+                titled(
+                    "Why the dragon threatens De Panne",
+                    "Pan Caudarax promised to raze the town for a past slight.",
+                ),
+                titled(
+                    "Rousing the Guardians",
+                    "The magi's presence on Ivain's ship may be enough to rouse "
+                    "the Guardians (p. 7).",
+                ),
+                titled(
+                    "The dragon's weak spot",
+                    "Local magicians can tell the magi of the dragon's weak spot "
+                    "if they enlist them.",
+                ),
+                titled(
+                    "Facing the dragon",
+                    "Faced, Pan Caudarax asks why the knight defends thieves. He "
+                    "will destroy De Panne only when his hoard there is robbed; "
+                    "once Ivain understands, he withdraws his challenge and goes "
+                    "home.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "A way to bring characters to Iceland without Spider in the "
+                    "Ice (p. 63). The prophecy is on p. 140. Magi may want the "
+                    "vis of the corpse, or to guard Ivain.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1318,13 +1665,20 @@ def _seeds(b: Builder, de_panne: Neighbour) -> None:
                 "intrigued, alarmed or both, and young magi are chosen to go and "
                 "see."
             ),
-            secrets=(
-                "Heorot on Zealand (see Ultima Thule) was founded partly to watch "
-                "the Order of Odin, and the Hreppar may be the nearest thing to "
-                "it outside tales. The trip may be a spying mission with the "
-                "quaesitores' approval, or a diplomatic one, as the characters' "
-                "skills suit (pp. 63-64)."
-            ),
+            secrets=[
+                titled(
+                    "Heorot's watch",
+                    "Heorot on Zealand (see Ultima Thule) was founded partly to "
+                    "watch the Order of Odin, and the Hreppar may be the nearest "
+                    "thing to it outside tales.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The trip may be a spying mission with the quaesitores' "
+                    "approval, or a diplomatic one, as the characters' skills "
+                    "suit (pp. 63-64).",
+                ),
+            ],
         )
     )
 
@@ -1338,44 +1692,58 @@ def _advice(b: Builder) -> None:
                 "A saga of foreign magicians, whom Icelanders call toframenn, "
                 "learning to live in a land of neighbours."
             ),
-            secrets=paragraphs(
-                "Toframan, feminine tofrakona, is the Icelandic magicians' word "
-                "for foreign magicians, whose power rests on no song, giant "
-                "blood, runes or herbs, so the saga is the saga of the magi (p. "
-                "62).",
-                "Land and weather (p. 62). Volcanic ground everywhere; rugged "
-                "lowlands, and an interior of trolls, giants and violent spirits "
-                "that bleakly offsets the summer meadows. Stick to the paths and "
-                "the ponies. A day seldom passes without rain, sleet, hail or "
-                "snow, above all in the west, and sun often follows.",
-                "Society (pp. 62-63). Everyone of rank knows everyone, and "
-                "writes; even labourers follow the intrigues. Foreign magicians "
-                "are endlessly discussed, and a magical attempt at privacy makes "
-                "it worse. Secret crimes come out, for Icelanders despise those "
-                "who disown their acts. Bread and ale are luxuries and a storgodi "
-                "is a simple farmer, yet the freemen are proud: tenant farmers "
-                "expect to be heard, abuse brings vengeance or a lawsuit, and "
-                "reputations are national. If Mythic Iceland follows history the "
-                "storgodi's feudal schemes fail and the Norwegian king must "
-                "treat with the farmers themselves.",
-                "Premises of the saga (pp. 68-69). High fantasy, with the "
-                "characters as heroes. A mature Order: expansion is over, and "
-                "Join or Die on the borders is a sport. The Oath is applied "
-                "pragmatically, and quaesitores act when the Order is endangered. "
-                "Commoners do not know of the Order; Jerbiton envoys keep the "
-                "peace with Church and courts. Open magic breaks no Code but "
-                "angers churchmen. Magi swear no feudal oath and strike deals "
-                "with lords, but being in thing with a godi carries no feudal "
-                "duty, as the characters may have to argue at Tribunal. Young "
-                "magi expect hard terms from a covenant, and take them.",
-                "Virtues and Flaws to refuse (p. 74): Quaesitor, Hedge Wizard, "
-                "Infamous Master, Tormenting Master, Discredited Lineage, since "
-                "the covenant is isolated; Secret Vis Source and Vis Obligation, "
-                "since vis is scarce and shared.",
-                "The feud is the theme: Order against Damhan-Allaidh, Einar "
-                "against the dragon, and behind them the storgodi's mundane feud "
-                "(pp. 18-19, 67). The arcs are linear in places, and meant to be "
-                "left to the storyguide's nudging or dropped (p. 68).",
-            ),
+            secrets=[
+                titled(
+                    "What toframan means",
+                    "Toframan, feminine tofrakona, is the Icelandic magicians' "
+                    "word for foreign magicians, whose power rests on no song, "
+                    "giant blood, runes or herbs, so the saga is the saga of the "
+                    "magi (p. 62).",
+                ),
+                titled(
+                    "Iceland's land and weather",
+                    "Volcanic ground everywhere (p. 62); rugged "
+                    "lowlands, and an interior of trolls, giants and violent spirits "
+                    "that bleakly offsets the summer meadows. Stick to the paths and "
+                    "the ponies. A day seldom passes without rain, sleet, hail or "
+                    "snow, above all in the west, and sun often follows.",
+                ),
+                titled(
+                    "Icelandic society",
+                    "Everyone of rank knows everyone (pp. 62-63), and "
+                    "writes; even labourers follow the intrigues. Foreign magicians "
+                    "are endlessly discussed, and a magical attempt at privacy makes "
+                    "it worse. Secret crimes come out, for Icelanders despise those "
+                    "who disown their acts. Bread and ale are luxuries and a storgodi "
+                    "is a simple farmer, yet the freemen are proud: tenant farmers "
+                    "expect to be heard, abuse brings vengeance or a lawsuit, and "
+                    "reputations are national. If Mythic Iceland follows history the "
+                    "storgodi's feudal schemes fail and the Norwegian king must "
+                    "treat with the farmers themselves.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Premises of the saga (pp. 68-69). High fantasy, with the "
+                        "characters as heroes. A mature Order: expansion is over, and "
+                        "Join or Die on the borders is a sport. The Oath is applied "
+                        "pragmatically, and quaesitores act when the Order is endangered. "
+                        "Commoners do not know of the Order; Jerbiton envoys keep the "
+                        "peace with Church and courts. Open magic breaks no Code but "
+                        "angers churchmen. Magi swear no feudal oath and strike deals "
+                        "with lords, but being in thing with a godi carries no feudal "
+                        "duty, as the characters may have to argue at Tribunal. Young "
+                        "magi expect hard terms from a covenant, and take them.",
+                        "Virtues and Flaws to refuse (p. 74): Quaesitor, Hedge Wizard, "
+                        "Infamous Master, Tormenting Master, Discredited Lineage, since "
+                        "the covenant is isolated; Secret Vis Source and Vis Obligation, "
+                        "since vis is scarce and shared.",
+                        "The feud is the theme: Order against Damhan-Allaidh, Einar "
+                        "against the dragon, and behind them the storgodi's mundane feud "
+                        "(pp. 18-19, 67). The arcs are linear in places, and meant to be "
+                        "left to the storyguide's nudging or dropped (p. 68).",
+                    ),
+                ),
+            ],
         )
     )

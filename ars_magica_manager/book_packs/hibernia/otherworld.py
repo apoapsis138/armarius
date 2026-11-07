@@ -32,7 +32,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -413,9 +413,12 @@ def _bards(hibernia: Hibernia) -> None:
             "title, are their rivals (see that faction).",
             SKETCHED,
         ),
-        secrets="Some senior bards still hold their druid forebears' magic, "
-        "though not every bard of high grade can, and no bard will "
-        "own that such magic exists.",
+        secrets=[
+            titled(
+                "The bards' old magic",
+                "Some senior bards still hold their druid forebears' magic, though not every bard of high grade can, and no bard will own that such magic exists.",
+            )
+        ],
     )
     w["ollamhain"] = b.faction(
         "The Ollamhain",
@@ -447,8 +450,12 @@ def _bards(hibernia: Hibernia) -> None:
             "Roscommon (see Connacht).",
             SKETCHED,
         ),
-        secrets="A 'bard' who takes the part of the covenant's rival or enemy "
-        "is in truth one of the Ollamhain.",
+        secrets=[
+            titled(
+                "The rival's bard",
+                "A 'bard' who takes the part of the covenant's rival or enemy is in truth one of the Ollamhain.",
+            )
+        ],
     )
 
 
@@ -601,9 +608,13 @@ def _races(hibernia: Hibernia) -> None:
             "(poets say Strongbow saw her washing severed heads "
             "before his last battle).",
         ),
-        secrets="Why the Tuatha Dé sided with House Diedne in the Schism War "
-        "is still unknown, after two centuries of Cliffheart's "
-        "questions (see Munster).",
+        secrets=[
+            titled(
+                "The Tuatha Dé and House Diedne",
+                "Why the Tuatha Dé sided with House Diedne in the Schism War is still unknown, after two centuries of Cliffheart's questions.",
+            ),
+            titled("Storyguide Notes", "See Munster."),
+        ],
     )
     w["fir_bolg"] = b.faction(
         "The Fir Bolg",
@@ -666,10 +677,16 @@ def _races(hibernia: Hibernia) -> None:
             "the first high-king of Mythic Ireland.",
             SKETCHED,
         ),
-        secrets="A secret circle of Gaileoin infernalists rules the tribe's "
-        "king; the other tribes do not know. The meddling has left "
-        "the Gaileoin royal line feeble-minded, puppets in all but "
-        "name, though the tribe as a whole has been slow to fall.",
+        secrets=[
+            titled(
+                "Who rules the Gaileoin king",
+                "A secret circle of Gaileoin infernalists rules the tribe's king; the other tribes of the Fir Bolg do not know.",
+            ),
+            titled(
+                "The feeble royal line",
+                "The infernalists' meddling has left the Gaileoin royal line feeble-minded, puppets in all but name, though the tribe as a whole has been slow to fall.",
+            ),
+        ],
     )
     w["fomorach"] = b.faction(
         "The Fomórach",
@@ -790,8 +807,12 @@ def _beasts(hibernia: Hibernia) -> None:
             "boat from drowning, a house from fire or a man from "
             "accident. Both are in the Bestiary.",
         ),
-        secrets="Whether the Eagle King's claim to rule all Ireland's birds "
-        "is true is unknown.",
+        secrets=[
+            titled(
+                "The Eagle King's claim",
+                "Whether the Eagle King's claim to rule all Ireland's birds is true is unknown.",
+            )
+        ],
     )
 
 
@@ -1096,10 +1117,16 @@ def _otherworld_places(hibernia: Hibernia) -> None:
             "experiments. No one knows why he builds an army either, "
             "beyond that kings do.",
         ),
-        secrets="His great regio may hide a whole army, and magi wonder if "
-        "he means to invade again. Munster's endless wars may set "
-        "him off, and anyone starting a war with the Order would "
-        "find him a ready ally.",
+        secrets=[
+            titled(
+                "Donn's hidden army",
+                "Donn's great regio may hide a whole army, and magi wonder if he means to invade again.",
+            ),
+            titled(
+                "What could set Donn off",
+                "Munster's endless wars may set Donn off, and anyone starting a war with the Order would find him a ready ally.",
+            ),
+        ],
         **TRIBUNAL_WIDE,
     )
     p["slievanamon"] = b.place(

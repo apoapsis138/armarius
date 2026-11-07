@@ -29,7 +29,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -615,13 +615,25 @@ def _niaux(provence: Provence) -> None:
             "gallery 5. Miniata Sophia lives here; the Redcaps record its "
             "site as the village of Niaux.",
         ),
-        secrets="A regio lies in the cave, easily entered by magic at the new "
-        "moon, the equinoxes and the solstices: an ancient magical form of "
-        "the cave where shamans from before the Flood dance, drum and "
-        "paint new pictures on the walls. The only way to stumble in is to "
-        "drum or paint on the walls by firelight at a solstice. The "
-        "Criamon go there for the last initiation of the Avenue of "
-        "Adulation.",
+        secrets=[
+            titled(
+                "The regio in the cave",
+                "A regio lies in the Cave of Niaux, easily entered by magic at "
+                "the new moon, the equinoxes and the solstices: an ancient "
+                "magical form of the cave where shamans from before the Flood "
+                "dance, drum and paint new pictures on the walls.",
+            ),
+            titled(
+                "Stumbling in",
+                "The only way to stumble into the regio of the Cave of Niaux is "
+                "to drum or paint on the walls by firelight at a solstice.",
+            ),
+            titled(
+                "The Criamon's last initiation",
+                "The Criamon go to the regio of the Cave of Niaux for the last "
+                "initiation of the Avenue of Adulation.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The cave of the first painters",
@@ -771,11 +783,26 @@ def _aedes_mercurii(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "Guernicus, tried to join the Way of St James to the Via Domitia by "
         "a Mercurian ritual into one great road network, and failed.",
     )
-    hidden = joined_lines(
-        "Protendus works as an unofficial, tacitly approved Quaesitor, against Tytalan influence from the north; he keeps it quiet by oaths enforced with certamen.",
-        "Ruberus is secretly a friend of Garus, Primus of Flambeau, and secretly loves Dama, the Praeco.",
-        "Flammarcus may stop at nothing to become Primus when Garus dies.",
-    )
+    hidden = [
+        titled(
+            "Protendus's office",
+            "Protendus works as an unofficial, tacitly approved Quaesitor, "
+            "against Tytalan influence from the north; he keeps it quiet by "
+            "oaths enforced with certamen.",
+        ),
+        titled(
+            "Ruberus and Garus",
+            "Ruberus is secretly a friend of Garus, Primus of Flambeau.",
+        ),
+        titled(
+            "Ruberus and Dama",
+            "Ruberus secretly loves Dama, the Praeco.",
+        ),
+        titled(
+            "Flammarcus's ambition",
+            "Flammarcus may stop at nothing to become Primus when Garus dies.",
+        ),
+    ]
     aedes = b.covenant(
         "Aedes Mercurii",
         tribunal=tribunal,
@@ -858,7 +885,12 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
             "cannot see why it matters so to him. He burns to become "
             "Primus of Flambeau as soon as Garus dies.",
         ),
-        secrets="He may be willing to do anything at all to get there.",
+        secrets=[
+            titled(
+                "How far Flammarcus would go",
+                "He may be willing to do anything at all to become Primus of Flambeau.",
+            ),
+        ],
         traits={"Passionate": 2, "Ruthless": 2},
     )
     m["protendus"] = b.magus(
@@ -882,12 +914,21 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
             "or a Tremere warns him. He is the likeliest magus to look "
             "into the deaths of Senex and Tibaut.",
         ),
-        secrets="He acts as an unofficial Quaesitor, tacitly allowed, whose rank "
-        "and secrecy let him investigate discreetly and by methods "
-        "Quaesitors would not use; he guards the secret with oaths backed "
-        "by certamen. He has kept the northern Tytali from gaining a "
-        "foothold so far, but suspects they now work through the "
-        "Mithraian Flambeau of Castra Solis.",
+        secrets=[
+            titled(
+                "Protendus's office",
+                "He acts as an unofficial Quaesitor, tacitly allowed, whose "
+                "rank and secrecy let him investigate discreetly and by methods "
+                "Quaesitors would not use; he guards the secret with oaths "
+                "backed by certamen.",
+            ),
+            titled(
+                "Protendus and the Tytali",
+                "He has kept the northern Tytali from gaining a foothold so "
+                "far, but suspects they now work through the Mithraian Flambeau "
+                "of Castra Solis.",
+            ),
+        ],
         traits={"Reclusive": 2, "Secretive": 2},
     )
     m["ophilio"] = b.magus(
@@ -1001,9 +1042,17 @@ def _aedes_magi(provence: Provence, b: Builder, aedes: Covenant) -> None:
             "Garus, the Flambeau Primus, but the forge obliges him to stay "
             "on good terms with his covenant-mates.",
         ),
-        secrets="He hides his friendship with Garus, and he admires and secretly "
-        "loves Dama, the Praeco, and would do nearly anything to protect "
-        "her.",
+        secrets=[
+            titled(
+                "Ruberus and Garus",
+                "He hides his friendship with Garus.",
+            ),
+            titled(
+                "Ruberus and Dama",
+                "He admires and secretly loves Dama, the Praeco, and would do "
+                "nearly anything to protect her.",
+            ),
+        ],
         traits={"Conciliatory": 2, "Relaxed": 2},
     )
     m["oxioun"] = b.magus(
@@ -1116,11 +1165,24 @@ def _bellaquin(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "Jerbiton cast him out in 1216, and he was Marched and slain early in "
         "1218 (chapter three also calls the Coenobium his former covenant).",
     )
-    hidden = joined_lines(
-        "Rumour says the Danior are homunculi, less open to Mentem magic, easily mended, and with a bloody habit of twisting Artemis's orders.",
-        "Antoinette fears Michael will learn of her affair with Carolus of the Rhine Tribunal during a Jerbiton fosterage at Oculus Septentrionalis.",
-        "Other magi may have engineered the fall of the first Bellaquin.",
-    )
+    hidden = [
+        titled(
+            "What the Danior are",
+            "Rumour says the Danior are homunculi, less open to Mentem magic, "
+            "easily mended, and with a bloody habit of twisting Artemis's "
+            "orders.",
+        ),
+        titled(
+            "Antoinette's affair",
+            "Antoinette fears Michael will learn of her affair with Carolus of "
+            "the Rhine Tribunal during a Jerbiton fosterage at Oculus "
+            "Septentrionalis.",
+        ),
+        titled(
+            "The fall of the first Bellaquin",
+            "Other magi may have engineered the fall of the first Bellaquin.",
+        ),
+    ]
     bellaquin = b.covenant(
         "Bellaquin",
         tribunal=tribunal,
@@ -1242,7 +1304,9 @@ def _bellaquin_magi(provence: Provence, b: Builder, home: Covenant) -> None:
             "the Danior, never leave her side. Her sigil is a dull ache in "
             "the teeth of those she targets or stands near as she casts.",
         ),
-        secrets="The Danior may be homunculi of her making.",
+        secrets=[
+            titled("What the Danior are", "The Danior may be homunculi of her making."),
+        ],
         traits={"Disciplined": 3, "Loyal to Order of Hermes": 3},
     )
     m["antoinette"] = b.magus(
@@ -1263,9 +1327,14 @@ def _bellaquin_magi(provence: Provence, b: Builder, home: Covenant) -> None:
             "a certamen master to teach her to beat Artemis or find the "
             "Tremere's weak Arts.",
         ),
-        secrets="She also fears Michael will learn of her fling with Carolus of "
-        "the Rhine Tribunal during a Jerbiton fosterage at Oculus "
-        "Septentrionalis.",
+        secrets=[
+            titled(
+                "Antoinette's fling",
+                "She also fears Michael will learn of her fling with Carolus of "
+                "the Rhine Tribunal during a Jerbiton fosterage at Oculus "
+                "Septentrionalis.",
+            ),
+        ],
         traits={"Creative": 2, "Expressive": 2},
     )
 
@@ -1884,8 +1953,14 @@ def _factions(provence: Provence, b: Builder) -> None:
         "Christian, with more pagans and old superstitions than other "
         "Basques. At akelarre they are revered rather than scorned, and "
         "said to be stronger in dark magic.",
-        secrets="Basque slang calls them not of the people, which may mean the "
-        "leftovers of some invader, or that they are not wholly human.",
+        secrets=[
+            titled(
+                "Not of the people",
+                "Basque slang calls the Crestias not of the people, which may "
+                "mean the leftovers of some invader, or that they are not "
+                "wholly human.",
+            ),
+        ],
     )
 
 

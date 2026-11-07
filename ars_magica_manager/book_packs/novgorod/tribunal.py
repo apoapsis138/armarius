@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages import novgorod as package
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ..records import Records
@@ -61,15 +61,21 @@ SUMMARY = paragraphs(
     "palace.",
 )
 
-SECRETS = paragraphs(
-    "Malincka Capcek hid her real purpose when she asked for Thousand "
-    "Caves' charter in 1185: not a wilderness covenant but a way to blend "
-    "Volkhv ritual with Hermetic magic, temper an aura with mundane "
-    "worship and a faerie god, and make Hermes that god.",
-    "Zashya Miyovna of Three Lakes, daughter of the Praeco, bore a child "
-    "to a prince of the House of Rurik before the Royal Embargo; her "
-    "granddaughter is Nastassia Baramov of Thousand Caves.",
-)
+SECRETS = [
+    titled(
+        "Thousand Caves' real purpose",
+        "Malincka Capcek hid her real purpose when she asked for Thousand "
+        "Caves' charter in 1185: not a wilderness covenant but a way to "
+        "blend Volkhv ritual with Hermetic magic, temper an aura with "
+        "mundane worship and a faerie god, and make Hermes that god.",
+    ),
+    titled(
+        "Zashya Miyovna's child",
+        "Zashya Miyovna of Three Lakes, daughter of the Praeco, bore a child "
+        "to a prince of the House of Rurik before the Royal Embargo; her "
+        "granddaughter is Nastassia Baramov of Thousand Caves.",
+    ),
+]
 
 #: The Peripheral Code: (year or None, title, what it says).
 RULINGS: tuple[tuple[int | None, str, str], ...] = (

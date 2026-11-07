@@ -18,7 +18,7 @@ from __future__ import annotations
 from typing import Any
 
 from ...models import BodyVis, Neighbour
-from ..builder import Builder, characteristics, dormant, paragraphs
+from ..builder import Builder, Secrets, characteristics, dormant, paragraphs, titled
 
 RUMOURED: dict[str, Any] = {"status": "Rumoured", "known": "In the region"}
 LOCAL: dict[str, Any] = {"status": "Known", "known": "Locally"}
@@ -39,7 +39,7 @@ def _story(
     *,
     place: Neighbour | None = None,
     realm: str = "",
-    secrets: str = "",
+    secrets: Secrets = "",
     stages: list[dict[str, Any]] | None = None,
 ) -> Neighbour:
     """A story seed, waiting for the storyguide to begin it."""
@@ -118,40 +118,40 @@ def _great_desert(b: Builder) -> Neighbour:
             "Quality 8, and al-Zuhri's Kitab al-Jaghrafiyya, Book of "
             "Geography, another, Quality 10.",
         ),
-        secrets=paragraphs(
-            "Sun (BS&S p. 66): the Deprivation check for lack of water comes "
-            "every 4 hours in the deserts, and exposed skin takes +1 "
-            "non-combat damage (ArM5 pp. 180-181).",
-            "Dry quicksand in the ergs pulls a man under in two rounds, and "
-            "he then suffocates. In the first round he may make a Strength "
-            "or Quickness stress roll against Ease Factor 9 to get free; a "
-            "botch traps his arms next round. After that it is up to his "
-            "companions, though with free arms he may help in the second "
-            "round, lowering their further Ease Factors by 3.",
-            "Brigands prey on caravans not clearly well guarded, as far as "
-            "their need drives them. Sandstorms and dust-storms can smother "
-            "or flay: natural, the work of sorcerers, elemental jinn, or "
-            "witches in disguise. Jinn and demons send false oases; the "
-            "victim learns of it when her first long drink turns out to be "
-            "sand.",
-            "Myrtle of Virtue (p. 72): berries fermented in a silver urn "
-            "underground for a season give a draught of +3 to all recovery "
-            "rolls for a season. A flowering sprig gives its bearer Clear "
-            "Thinker if the intended user sleeps with it under the pillow "
-            "for a season, or by some Jewish traditions if it dries in the "
-            "Holy of Holies, touched by each day's rising sun for a season. "
-            "Soaked in seawater for a season in a place sacred to Aphrodite "
-            "it stays supple and fresh and gives Venus' Blessing.",
-            "Why slaves rarely flee (p. 84): all three faiths hold that a "
-            "runaway is a thief bound for Hell, tempted by evil spirits, "
-            "though each forbids enslaving its own. Many are freed anyway: a "
-            "mother of her master's child, warriors after a campaign, "
-            "domestics by will or charity. A runaway in the Maghreb has "
-            "nowhere to go where slaves do not already do the work, and some "
-            "would rather be a trusted ghilman than free and poor. Maghrebi "
-            "Muslims also take suffering as God's will, which flight cannot "
-            "change.",
-        ),
+        secrets=[
+            titled(
+                "Dry quicksand",
+                "Dry quicksand in the Great Desert's ergs pulls a man under in two rounds, and he then suffocates.",
+            ),
+            titled(
+                "Brigands",
+                "Brigands prey on caravans in the Great Desert not clearly well guarded, as far as their need drives them.",
+            ),
+            titled(
+                "Sandstorms",
+                "Sandstorms and dust-storms in the Great Desert can smother or flay: natural, the work of sorcerers, elemental jinn, or witches in disguise.",
+            ),
+            titled(
+                "False oases",
+                "Jinn and demons send false oases in the Great Desert; the victim learns of it when her first long drink turns out to be sand.",
+            ),
+            titled(
+                "Myrtle berries",
+                "Myrtle of Virtue (p. 72): berries fermented in a silver urn underground for a season give a draught of +3 to all recovery rolls for a season.",
+            ),
+            titled(
+                "Myrtle sprigs",
+                "A flowering sprig of Myrtle of Virtue gives its bearer Clear Thinker if the intended user sleeps with it under the pillow for a season, or by some Jewish traditions if it dries in the Holy of Holies, touched by each day's rising sun for a season. Soaked in seawater for a season in a place sacred to Aphrodite it stays supple and fresh and gives Venus' Blessing.",
+            ),
+            titled(
+                "Why slaves rarely flee",
+                "Why slaves rarely flee (p. 84): all three faiths hold that a runaway is a thief bound for Hell, tempted by evil spirits, though each forbids enslaving its own. Many are freed anyway: a mother of her master's child, warriors after a campaign, domestics by will or charity. A runaway in the Maghreb has nowhere to go where slaves do not already do the work, and some would rather be a trusted ghilman than free and poor. Maghrebi Muslims also take suffering as God's will, which flight cannot change.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Sun (BS&S p. 66): the Deprivation check for lack of water comes every 4 hours in the deserts, and exposed skin takes +1 non-combat damage (ArM5 pp. 180-181). Quicksand: in the first round he may make a Strength or Quickness stress roll against Ease Factor 9 to get free; a botch traps his arms next round. After that it is up to his companions, though with free arms he may help in the second round, lowering their further Ease Factors by 3.",
+            ),
+        ],
     )
     _place(
         b,
@@ -180,15 +180,16 @@ def _great_desert(b: Builder) -> Neighbour:
             "Tuareg and the mysterious Blue Men can find their way, which is "
             "how nomads strike suddenly and melt into the sands.",
         ),
-        secrets=paragraphs(
-            "A character with the (Desert) Regio Network Minor Virtue "
-            "(Realms of Power: Magic p. 45; the catalog's entry is "
-            "{land} Regio Network) can enter and leave at different "
-            "mundane places. Some may reach other deserts this way: the "
-            "Sahara, the Empty Quarter, the Nefud, the Kyzylkum and Karakum, "
-            "the Taklimakan, and perhaps unknown deserts beyond Mythic "
-            "Europe.",
-        ),
+        secrets=[
+            titled(
+                "Paths to other deserts",
+                "Some may reach other deserts by the Great Desert Regio Network: the Sahara, the Empty Quarter, the Nefud, the Kyzylkum and Karakum, the Taklimakan, and perhaps unknown deserts beyond Mythic Europe.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A character with the (Desert) Regio Network Minor Virtue (Realms of Power: Magic p. 45; the catalog's entry is {land} Regio Network) can enter and leave at different mundane places.",
+            ),
+        ],
     )
     b.faction(
         "The Ibadi of the Desert",
@@ -421,8 +422,12 @@ def _fezzan(b: Builder, desert: Neighbour) -> Neighbour:
             "Vis: split trees give fragments rich in Terram vis; one pawn in "
             "five is Herbam or Auram instead, but only in vis found in spring.",
         ),
-        secrets="The book does not say where it lies (p. 68). It prints the "
-        "second Form as Aurum, read here as Auram.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book does not say where it lies (p. 68). It prints the second Form as Aurum, read here as Auram.",
+            )
+        ],
     )
     return fezzan
 
@@ -484,25 +489,20 @@ def _garamantians(b: Builder, fezzan: Neighbour) -> Neighbour:
             "temple and oracle stood at Siwah, now little but ruins and a "
             "small village.",
         ),
-        secrets=paragraphs(
-            "Their magic (pp. 70-71) was non-Hermetic, limited, and erratic "
-            "near the Divine: preserving, animating, sensing through and "
-            "commanding corpses, with a small side in sensing water. No text "
-            "of its secrets left the kingdom, but some may lie in a hidden "
-            "stronghold.",
-            "Their ritual for binding a horde of corpses without an Arcane "
-            "Connection to each counts in Hermetic research as a Minor "
-            "Magical Breakthrough. It yields a simple supernatural ritual "
-            "adding a corpse to a horde bound to an object, often a crown or "
-            "feathered headdress. Its wearer may use Voice and Group levels "
-            "of effect for spells on or through the horde, at Arcane "
-            "Connection distance and past a usual Group's numbers. The ritual "
-            "has no Penetration, works only on mundane corpses and cannot "
-            "last in a Divine aura. Recovered bound objects can be researched "
-            "as a source of Garamantian Lore or Insight (Ancient Magic p. 8).",
-            "Hermetic Intellego far outdoes their water-sensing, but relics "
-            "of it help to understand their methods or to translate Tifinagh.",
-        ),
+        secrets=[
+            titled(
+                "Garamantian magic",
+                "Garamantian magic (pp. 70-71) was non-Hermetic, limited, and erratic near the Divine: preserving, animating, sensing through and commanding corpses, with a small side in sensing water. No text of its secrets left the kingdom, but some may lie in a hidden stronghold.",
+            ),
+            titled(
+                "The corpse-binding ritual",
+                "The Garamantian ritual for binding a horde of corpses without an Arcane Connection to each counts in Hermetic research as a Minor Magical Breakthrough. It yields a simple supernatural ritual adding a corpse to a horde bound to an object, often a crown or feathered headdress. Its wearer may use Voice and Group levels of effect for spells on or through the horde, at Arcane Connection distance and past a usual Group's numbers. The ritual has no Penetration, works only on mundane corpses and cannot last in a Divine aura. Recovered bound objects can be researched as a source of Garamantian Lore or Insight (Ancient Magic p. 8).",
+            ),
+            titled(
+                "Garamantian water-sensing",
+                "Hermetic Intellego far outdoes the Garamantians' water-sensing, but relics of it help to understand their methods or to translate Tifinagh.",
+            ),
+        ],
     )
     _place(
         b,
@@ -513,18 +513,20 @@ def _garamantians(b: Builder, fezzan: Neighbour) -> Neighbour:
             "anything remains, and the lake is salt flats now, but the spring "
             "still keeps a cut-stone fountain partly full all year.",
         ),
-        secrets=paragraphs(
-            "Buried in an urn in a small cave nearby is the last initiation "
-            "script for Dowsing (ArM5 p. 64), in Tifinagh Punic. To "
-            "self-initiate (Target Level 18; The Mysteries: Revised Edition "
-            "p. 13) one must properly mummify and entomb 10 people in "
-            "Garamantian tombs (+3), go to the cut-stone pool at the autumn "
-            "equinox (+3), and bathe there by moonlight while ritually "
-            "scarred, the equal of the Blatant Gift (+9). If Garamantian Lore "
-            "+ Presence + Initiation Script bonus exceeds 18, one gains "
-            "Dowsing for drinking water. Finding and reading the script may "
-            "be a whole story arc.",
-        ),
+        secrets=[
+            titled(
+                "The Dowsing script",
+                "Buried in an urn in a small cave near Zinchecra is the last initiation script for Dowsing (ArM5 p. 64), in Tifinagh Punic.",
+            ),
+            titled(
+                "The Dowsing initiation",
+                "To self-initiate with the Dowsing script one must properly mummify and entomb 10 people in Garamantian tombs, go to the cut-stone pool at the autumn equinox, and bathe there by moonlight while ritually scarred.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Self-initiation: Target Level 18 (The Mysteries: Revised Edition p. 13); the tombs +3, the pool +3, the scarring the equal of the Blatant Gift (+9). If Garamantian Lore + Presence + Initiation Script bonus exceeds 18, one gains Dowsing for drinking water. Finding and reading the script may be a whole story arc.",
+            ),
+        ],
     )
     _place(
         b,
@@ -780,12 +782,16 @@ def _redoubts(b: Builder, desert: Neighbour) -> Neighbour:
             "Amjer struck his brother's shoulder; its water is a liquid form "
             "of Terram vis.",
         ),
-        secrets=paragraphs(
-            "The remotest heights are pocked with Magic auras. In the sharpest "
-            "clefts at their feet lie small Infernal auras, home to demons "
-            "and Infernal jnun of the Aerial Powers and Furies, who send flash "
-            "floods down the gueltas.",
-        ),
+        secrets=[
+            titled(
+                "Demons of the clefts",
+                "In the sharpest clefts at the feet of the Ahaggar's remotest heights dwell demons and Infernal jnun of the Aerial Powers and Furies, who send flash floods down the gueltas.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The remotest heights are pocked with Magic auras. The sharpest clefts at their feet hold small Infernal auras.",
+            ),
+        ],
     )
     b.town(
         "Tamanghest",
@@ -889,7 +895,11 @@ def _redoubts(b: Builder, desert: Neighbour) -> Neighbour:
             "other three its auras are mostly Faerie. Its rock art shows nomad "
             "life, and shifts from one visit to the next.",
         ),
-        secrets="The book prints no strength for its auras (p. 74).",
+        secrets=[
+            titled(
+                "Storyguide Notes", "The book prints no strength for its auras (p. 74)."
+            )
+        ],
     )
     b.faction(
         "The Kel Asouf",
@@ -948,9 +958,12 @@ def _tanezrouft(b: Builder, desert: Neighbour) -> Neighbour:
             "leagues east-south-east, and the salt mines of Taghaza 165 leagues "
             "north-north-east.",
         ),
-        secrets="The book disagrees on the road to Taghaza: 165 leagues "
-        "north-north-east from here (p. 74), 125 leagues south-south-east from "
-        "there (p. 75).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book disagrees on the road to Taghaza: 165 leagues north-north-east from here (p. 74), 125 leagues south-south-east from there (p. 75).",
+            )
+        ],
     )
     _place(
         b,
@@ -995,9 +1008,12 @@ def _tanezrouft(b: Builder, desert: Neighbour) -> Neighbour:
             "Iwalatan is 125 leagues south-south-east and Sijilmasa some 20 "
             "days north.",
         ),
-        secrets="The book disagrees on the road to Iwalatan: 125 leagues "
-        "south-south-east from here (p. 75), 165 leagues north-north-east from "
-        "there (p. 74).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book disagrees on the road to Iwalatan: 125 leagues south-south-east from here (p. 75), 165 leagues north-north-east from there (p. 74).",
+            )
+        ],
     )
     tuwat = _place(
         b,
@@ -1257,11 +1273,12 @@ def _roads(b: Builder, desert: Neighbour) -> None:
             "often for two, shielded from sun and sand, with room to talk, "
             "play chess or eat.",
         ),
-        secrets=paragraphs(
-            "The Ride Ability covers camels. Many warriors ride a camel to "
-            "battle and change to a horse to fight. Camel statistics are in "
-            "the book's Bestiary Appendix (p. 136).",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The Ride Ability covers camels. Many warriors ride a camel to battle and change to a horse to fight. Camel statistics are in the book's Bestiary Appendix (p. 136).",
+            )
+        ],
     )
 
 
@@ -1284,20 +1301,16 @@ def _sudan(b: Builder) -> None:
             "them of any invasion like the one that came once from the Tell.",
             "Kombuh Saleh lies here.",
         ),
-        secrets=paragraphs(
-            "Theories traded at dinner parties in the Tell (pp. 81-82): that "
-            "the Sudanese are faeries; that their way of life would disgust "
-            "the Arabs; that they are the servant caste of a people who shun "
-            "Allah's servants, such as evil jinn; that the gold comes "
-            "corruptly, perhaps as monsters' excrement; that the desert truly "
-            "is the world's edge and the Sudan is in Faerie; that gold is as "
-            "cheap as sand to them; or that their faerie rulers want the "
-            "journey, not the gold, and every trade good ever brought sits "
-            "in a pile outside Kombuh Saleh.",
-            "If history holds, the kingdoms here are small and war-tossed, "
-            "between the fall of the Empire of Ghana in 1204 and the founding "
-            "of the Empire of Mali about 1240.",
-        ),
+        secrets=[
+            titled(
+                "What the Tell says of the Sudan",
+                "Theories traded at dinner parties in the Tell (pp. 81-82): that the Sudanese are faeries; that their way of life would disgust the Arabs; that they are the servant caste of a people who shun Allah's servants, such as evil jinn; that the gold comes corruptly, perhaps as monsters' excrement; that the desert truly is the world's edge and the Sudan is in Faerie; that gold is as cheap as sand to them; or that their faerie rulers want the journey, not the gold, and every trade good ever brought sits in a pile outside Kombuh Saleh.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "If history holds, the kingdoms here are small and war-tossed, between the fall of the Empire of Ghana in 1204 and the founding of the Empire of Mali about 1240.",
+            ),
+        ],
     )
     b.lord(
         "The Sorcerer-King of Sosso",
@@ -1326,12 +1339,12 @@ def _sudan(b: Builder) -> None:
             "forth until one side leaves with gold or goods. Locals say two "
             "plants have roots of pure gold, a tale for the gullible.",
         ),
-        secrets=paragraphs(
-            "Who they are the book leaves open: faeries feeding on the "
-            "exchange, demons breeding greed, tribesmen without speech, or "
-            "emissaries of a lost kingdom such as Atlantis, Prester John or "
-            "the Sorcerer-King of Sosso.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Who they are the book leaves open: faeries feeding on the exchange, demons breeding greed, tribesmen without speech, or emissaries of a lost kingdom such as Atlantis, Prester John or the Sorcerer-King of Sosso.",
+            )
+        ],
     )
 
 
@@ -1855,9 +1868,16 @@ def _realm_readings(b: Builder, desert: Neighbour) -> None:
         ),
         place=desert,
         realm="Magic",
-        secrets="Lieutenants of either side may initiate seekers into "
-        "Mysteries that turn their side's power on the other; Red Initiations "
-        "such as desiccation are in the book's next chapter.",
+        secrets=[
+            titled(
+                "Mysteries of the Red and the Black",
+                "Lieutenants of either the Red or the Black may initiate seekers into Mysteries that turn their side's power on the other.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Red Initiations such as desiccation are in the book's next chapter.",
+            ),
+        ],
         stages=[
             S(
                 "The Red grows",
@@ -1898,19 +1918,16 @@ def _realm_readings(b: Builder, desert: Neighbour) -> None:
             "fill the pit with firewood and roast it. Ghouls kill each other "
             "the same way, and it works on lions too.",
         ),
-        secrets=paragraphs(
-            "A choice for the troupe (the Faerie reading, p. 86). Use the "
-            "cannibal spirit of Realms of Power: Faerie or The Cradle and the "
-            "Crescent's tribe, or rework faeries into ghoulish knights, giants "
-            "and beasts.",
-            "The ruler may be an ancient ghoul, an angel, a demon, a mortal "
-            "tale-teller, the ghost of a Criamon Primus, nobody, or whatever "
-            "spirit is nearest in the story.",
-            "The treasury is a cave that opens when asked in the name of a "
-            "mysterious person. The stealthy, minding the ghouls' keen noses, "
-            "may overhear the name from guards; it may be an Arcane Connection "
-            "to the Ghoul King or the vault's maker.",
-        ),
+        secrets=[
+            titled(
+                "The ghouls' treasury",
+                "The treasury of the Kingdom of the Ghouls is a cave that opens when asked in the name of a mysterious person. The stealthy, minding the ghouls' keen noses, may overhear the name from guards; it may be an Arcane Connection to the Ghoul King or the vault's maker.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A choice for the troupe (the Faerie reading, p. 86). Use the cannibal spirit of Realms of Power: Faerie or The Cradle and the Crescent's tribe, or rework faeries into ghoulish knights, giants and beasts. The ruler may be an ancient ghoul, an angel, a demon, a mortal tale-teller, the ghost of a Criamon Primus, nobody, or whatever spirit is nearest in the story.",
+            ),
+        ],
     )
     _story(
         b,
@@ -1922,13 +1939,16 @@ def _realm_readings(b: Builder, desert: Neighbour) -> None:
         ),
         place=desert,
         realm="Infernal",
-        secrets=paragraphs(
-            "In this version the Great Desert has an Infernal aura of 2, "
-            "higher where people hid in it to do crimes. Demons dance on its "
-            "sands, parts are almost the Fiery Pit, Hell has gates in the "
-            "mountains, and Infernal smiths forge weapons for the last war in "
-            "the Hoggar.",
-        ),
+        secrets=[
+            titled(
+                "Hell in the desert",
+                "In this version demons dance on the Great Desert's sands, parts are almost the Fiery Pit, Hell has gates in the mountains, and Infernal smiths forge weapons for the last war in the Hoggar.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "In this version the Great Desert has an Infernal aura of 2, higher where people hid in it to do crimes.",
+            ),
+        ],
     )
     _story(
         b,
@@ -1938,20 +1958,20 @@ def _realm_readings(b: Builder, desert: Neighbour) -> None:
             "south but from other worlds, by portals deep in the desert.",
         ),
         place=desert,
-        secrets=paragraphs(
-            "Faerie markets: each caravan is a troupe of faeries bearing "
-            "real, exhausted goods, trading for vital things or a part in "
-            "mortal stories.",
-            "Wounded worlds: the Hope and the Hunger fight in other worlds "
-            "too. Slavers from a Hunger-ruled world trade gold they cannot "
-            "eat and captives they will not feed; or traders from a world "
-            "drowned in fecundity, the Black's kind face a mask, come for "
-            "life-giving salt with the gold that breeds under their earth.",
-            "Unknowable places: the caravans come from deep in the Magic "
-            "Realm, as spirits or the Realm's way of clearing travellers' "
-            "leavings. Magi who follow pass into the Twilight Void and never "
-            "come back to tell.",
-        ),
+        secrets=[
+            titled(
+                "Faerie markets",
+                "Each caravan through the Crack Between the Worlds is a troupe of faeries bearing real, exhausted goods, trading for vital things or a part in mortal stories.",
+            ),
+            titled(
+                "Wounded worlds",
+                "The Hope and the Hunger fight in other worlds too. Slavers from a Hunger-ruled world trade gold they cannot eat and captives they will not feed; or traders from a world drowned in fecundity, the Black's kind face a mask, come for life-giving salt with the gold that breeds under their earth.",
+            ),
+            titled(
+                "Unknowable places",
+                "The caravans come from deep in the Magic Realm, as spirits or the Realm's way of clearing travellers' leavings. Magi who follow pass into the Twilight Void and never come back to tell.",
+            ),
+        ],
     )
 
 
@@ -1984,18 +2004,16 @@ def _sources_of_the_nile(b: Builder, desert: Neighbour) -> None:
             "from the Mountains of the Moon past the unlivable Equator, and "
             "flows on through Nubia and Egypt.",
         ),
-        secrets=paragraphs(
-            "The standard setting of this book: the Western Nile exists but "
-            "has faded into a regio as the Red defeats the Black. Victories "
-            "for the Hope draw it closer. A shattering injury to the Hunger, "
-            "on the scale of the European Forest's splitting (Guardians of "
-            "the Forest), might bring it back to the world.",
-            "A troupe may instead use real geography, where the Nile rises in "
-            "central Africa and the Sahel lies beyond the desert. That suits "
-            "characters built around crossing the desert, and gives it a more "
-            "realistic tone; the Western Nile suits high fantasy and a "
-            "permeable desert.",
-        ),
+        secrets=[
+            titled(
+                "The fading Nile",
+                "The Western Nile exists but has faded into a regio as the Red defeats the Black. Victories for the Hope draw it closer. A shattering injury to the Hunger, on the scale of the European Forest's splitting (Guardians of the Forest), might bring it back to the world.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The fading Nile is the standard setting of this book. A troupe may instead use real geography, where the Nile rises in central Africa and the Sahel lies beyond the desert. That suits characters built around crossing the desert, and gives it a more realistic tone; the Western Nile suits high fantasy and a permeable desert.",
+            ),
+        ],
     )
     black_city = _place(
         b,
@@ -2050,10 +2068,16 @@ def _sources_of_the_nile(b: Builder, desert: Neighbour) -> None:
             "more than 100 in all, so she may never marry.",
         ),
         place=silent,
-        secrets="She speaks if shocked into botching a Personality Trait "
-        "roll, most easily by storytelling. Her servants know this has been "
-        "tried and love stories fail; tales of outrage and vice rewarded may "
-        "anger her into shouting.",
+        secrets=[
+            titled(
+                "What makes the princess speak",
+                "The Silent Princess speaks if shocked, most easily by storytelling. Her servants know this has been tried and love stories fail; tales of outrage and vice rewarded may anger her into shouting.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "She speaks if shocked into botching a Personality Trait roll.",
+            ),
+        ],
     )
     _place(
         b,
@@ -2070,10 +2094,16 @@ def _sources_of_the_nile(b: Builder, desert: Neighbour) -> None:
             "gate with the key in its beak. No Hermetic magus has heard the "
             "story yet, but Seekers will want it when they do.",
         ),
-        secrets="All its people sleep unaging under a king and queen; a "
-        "thief may carry off what he can if he dodges the guards and does not "
-        "stray near the couple, lest they wake. Why they sleep and what will "
-        "wake them is unrecorded.",
+        secrets=[
+            titled(
+                "The sleepers of Zerzura",
+                "All Zerzura's people sleep unaging under a king and queen; a thief may carry off what he can if he dodges the guards and does not stray near the couple, lest they wake.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Why they sleep and what will wake them is unrecorded.",
+            ),
+        ],
     )
     _story(
         b,
@@ -2130,8 +2160,12 @@ def _sources_of_the_nile(b: Builder, desert: Neighbour) -> None:
             "return the Pasha's greatest treasure, the little tin lamp.",
         ),
         place=atlas_city,
-        secrets="The tale is told all over the Near East, so they may be "
-        "faeries playing at wealth and poverty, or the valley may be real.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The tale is told all over the Near East, so they may be faeries playing at wealth and poverty, or the valley may be real.",
+            )
+        ],
     )
     _story(
         b,
@@ -2192,8 +2226,15 @@ def _sources_of_the_nile(b: Builder, desert: Neighbour) -> None:
         "shave it bare. Do the locals accept this king? Can the dragon "
         "answer?",
         place=dragon,
-        secrets="The prophecy works as the Death Prophecy Virtue, though a "
-        "few kings do not actually die when their reign ends.",
+        secrets=[
+            titled(
+                "Kings who live on",
+                "Despite the prophecy, a few kings do not actually die when their reign ends.",
+            ),
+            titled(
+                "Storyguide Notes", "The prophecy works as the Death Prophecy Virtue."
+            ),
+        ],
     )
 
 
@@ -2260,9 +2301,12 @@ def _desert_stories(
         "would hurt Hell's plans.",
         place=tanezrouft,
         realm="Infernal",
-        secrets="The flies are a horde of False God demons. Where death and "
-        "murder are common they feed on the sin, and whisk away gold from "
-        "hovels and caravans whenever a weak fool needs tempting.",
+        secrets=[
+            titled(
+                "What the flies are",
+                "The flies are a horde of False God demons. Where death and murder are common they feed on the sin, and whisk away gold from hovels and caravans whenever a weak fool needs tempting.",
+            )
+        ],
     )
     _story(
         b,
@@ -2277,8 +2321,12 @@ def _desert_stories(
             "the region's power brokers.",
         ),
         place=tanezrouft,
-        secrets="Anyone living at Taghaza or Taodeni takes -3 on Aging rolls "
-        "for the conditions (ArM5 p. 170), plus any Warping from the aura.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Anyone living at Taghaza or Taodeni takes -3 on Aging rolls for the conditions (ArM5 p. 170), plus any Warping from the aura.",
+            )
+        ],
     )
     _story(
         b,
@@ -2291,15 +2339,20 @@ def _desert_stories(
         "look-alike kin with similar names. Some exotic goods are touched by "
         "Faerie or carry tainted vis.",
         place=tanezrouft,
-        secrets=paragraphs(
-            "The Azalai may end in Arcadia, where salt becomes goods and "
-            "captives are changed and sent north as black slaves with altered "
-            "memories. At least one merchant is a disguised faerie with Spirit "
-            "Away (Realms of Power: Faerie pp. 23-24); guides are men Warped "
-            "away or minor faeries.",
-            "Or demons run it to punish sinners, whose fragments of memory "
-            "make Taghaza a mundane purgatory.",
-        ),
+        secrets=[
+            titled(
+                "The road to Arcadia",
+                "The Azalai may end in Arcadia, where salt becomes goods and captives are changed and sent north as black slaves with altered memories. At least one merchant is a disguised faerie; guides are men Warped away or minor faeries.",
+            ),
+            titled(
+                "A mundane purgatory",
+                "Or demons run the Azalai to punish sinners, whose fragments of memory make Taghaza a mundane purgatory.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The disguised faerie merchant has Spirit Away (Realms of Power: Faerie pp. 23-24).",
+            ),
+        ],
     )
     _story(
         b,
@@ -2308,12 +2361,20 @@ def _desert_stories(
         "only the memory of being brought to the pits and of missing their "
         "families.",
         place=tanezrouft,
-        secrets="Exposure to the site's Infernal occupants gives nearly all "
-        "mundane miners Weak Willed through Warping, and most hold the "
-        "equivalent of the Delusion Flaw: the memories are false, and neither "
-        "mundane nor magical means show it. Some miners and overseers are "
-        "incognizant dark faeries or demons who feed on the suffering and warp "
-        "the memories of the miners and female slaves.",
+        secrets=[
+            titled(
+                "The miners' memories",
+                "Exposure to the Infernal occupants of the Mines of Despair warps nearly all mundane miners: the memories are false, and neither mundane nor magical means show it.",
+            ),
+            titled(
+                "Who feeds on the miners",
+                "Some miners and overseers at the Mines of Despair are incognizant dark faeries or demons who feed on the suffering and warp the memories of the miners and female slaves.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Exposure to the site's Infernal occupants gives nearly all mundane miners Weak Willed through Warping, and most hold the equivalent of the Delusion Flaw.",
+            ),
+        ],
     )
     _story(
         b,
@@ -2332,9 +2393,12 @@ def _desert_stories(
         "The rumoured Sorcerer-King of Sosso has an endless hunger for slaves "
         "for his wars against rivals and the deep desert's jinn.",
         place=tenere,
-        secrets="Some claim he can use traded salt and gold as Arcane "
-        "Connections, and see and hear through the slaves he sends into "
-        "Mythic Europe.",
+        secrets=[
+            titled(
+                "The Sorcerer-King's eyes",
+                "Some claim the Sorcerer-King of Sosso can use traded salt and gold as Arcane Connections, and see and hear through the slaves he sends into Mythic Europe.",
+            )
+        ],
     )
     _story(
         b,
@@ -2365,9 +2429,16 @@ def _desert_stories(
         "their service, and Frosty Breath of the Spoken Lie finds them honest. "
         "They need no church or mosque, but in civilization they hide or "
         "slip away at bad moments.",
-        secrets="They are a slave-soldier cadre who killed guards in their "
-        "escape. Their owner comes to reclaim his property before a local "
-        "magistrate.",
+        secrets=[
+            titled(
+                "Who the grogs are",
+                "The southern grogs are a slave-soldier cadre who killed guards in their escape.",
+            ),
+            titled(
+                "Their owner",
+                "The grogs' owner comes to reclaim his property before a local magistrate.",
+            ),
+        ],
         stages=[
             S("Strange absences", at=1),
             S(

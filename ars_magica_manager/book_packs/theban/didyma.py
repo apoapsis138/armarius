@@ -36,6 +36,7 @@ from ..builder import (
     characteristics,
     joined_lines,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_focus,
@@ -1103,11 +1104,24 @@ MAGI = (
         "its head since Jason was given up for lost in 1132. His schemes "
         "have made the covenant secure with its neighbours. He rarely leaves "
         "the temples, and his laboratory stands within Apollo's.",
-        "His Death Prophecy: to be slain by his apprentice. He has two left "
-        "living, Nikola and Aoede. Though the title was barely his, he kept "
-        "the older Tessa and Damen from Didyma, by the wards cast with Lana. "
-        "He magically fixed Niketas's election in 1172 and made him a "
-        "Longevity Ritual.",
+        [
+            titled(
+                "Alexander's prophecy",
+                "Alexander is prophesied to be slain by his apprentice. He has "
+                "two left living, Nikola and Aoede.",
+            ),
+            titled(
+                "How Alexander kept the title",
+                "Though the title was barely his, Alexander kept the older "
+                "Tessa and Damen from Didyma, by the wards cast with Lana.",
+            ),
+            titled(
+                "Alexander and Niketas",
+                "Alexander magically fixed Niketas's election in 1172 and made "
+                "him a Longevity Ritual.",
+            ),
+            titled("Storyguide Notes", "Alexander has a Death Prophecy."),
+        ],
     ),
     (
         "nikola",
@@ -1120,11 +1134,24 @@ MAGI = (
         "Redcaps without end and loves to talk Tribunal business. Her "
         "daughters Lydia and Cora drowned in 1205, and she blames Herakles; "
         "she married Alexios soon after.",
-        "Her Death Prophecy: to die on a full moon. Alexios has come to "
-        "think she married him only to escape her grief, though he denies "
-        "with a brittle smile that it is anything but a love match. She has "
-        "waited all her life for Alexander to die and knows nothing of the "
-        "wards unless he tells her.",
+        [
+            titled(
+                "Nikola's prophecy",
+                "Nikola is prophesied to die on a full moon.",
+            ),
+            titled(
+                "Nikola's marriage",
+                "Alexios has come to think Nikola married him only to escape "
+                "her grief, though he denies with a brittle smile that it is "
+                "anything but a love match.",
+            ),
+            titled(
+                "Waiting for Alexander",
+                "Nikola has waited all her life for Alexander to die and knows "
+                "nothing of the wards unless he tells her.",
+            ),
+            titled("Storyguide Notes", "Nikola has a Death Prophecy."),
+        ],
     ),
     (
         "herakles",
@@ -1150,8 +1177,17 @@ MAGI = (
         "draped temple with her blind maidens, watches the covenant's "
         "interests through Intangible Tunnels and her cat, and is kind to "
         "those who trouble to know her, but fearful of Latin magi.",
-        "She suspects William took part in the sack of Constantinople, and "
-        "fears him for it. She leans towards the Children of Olympos.",
+        [
+            titled(
+                "Ariane and William",
+                "Ariane suspects William took part in the sack of "
+                "Constantinople, and fears him for it.",
+            ),
+            titled(
+                "Ariane's leaning",
+                "Ariane leans towards the Children of Olympos.",
+            ),
+        ],
     ),
     (
         "william",
@@ -1162,7 +1198,12 @@ MAGI = (
         "A Norman knight-magus of the Gentle Gift, liked by mundanes in "
         "spite of his strange looks, who means to be the greatest slayer of "
         "monsters there has been. He hunts with Herakles.",
-        "He claims he took no direct part in the siege of Constantinople.",
+        [
+            titled(
+                "William at Constantinople",
+                "William claims he took no direct part in the siege of Constantinople.",
+            ),
+        ],
     ),
 )
 
@@ -1203,9 +1244,18 @@ PEOPLE = (
         NIKETAS,
         "Metropolitan of Miletos and the covenant's ally, a tie few know "
         "of, even at the covenant.",
-        "He owes Alexander his election and his long life, and in return "
-        "discourages hard questions about the paganism at Didyma. He "
-        "convalesced a season in the baths after an illness in 1194.",
+        [
+            titled(
+                "What Niketas owes Alexander",
+                "Niketas owes Alexander his election and his long life, and in "
+                "return discourages hard questions about the paganism at "
+                "Didyma.",
+            ),
+            titled(
+                "Niketas's illness",
+                "Niketas convalesced a season in the baths after an illness in 1194.",
+            ),
+        ],
     ),
     (
         "magarethe",
@@ -1933,15 +1983,19 @@ def _places(theban: Theban) -> dict[str, Neighbour]:
             "they have fallen and risen many times. The covenfolk, most of "
             "them of the Branchidae family, make up a sizeable village here.",
         ),
-        secrets=(
-            "The cult is not as old as it claims. It has been remade after "
-            "each conquest and persecution, last after the Christians left "
-            "in the eighth century, so its rites are a second-hand memory "
-            "of ancient stories shaped by the faerie Apollo Didyma, himself "
-            "a mirror of human tales; its priestly dress is closer to Rome "
-            "than to old Greece. Only one who knows faeries and stories "
-            "deeply, or the far past by supernatural means, could see it."
-        ),
+        secrets=[
+            titled(
+                "How old the cult is",
+                "Didyma's cult is not as old as it claims. It has been remade "
+                "after each conquest and persecution, last after the "
+                "Christians left in the eighth century, so its rites are a "
+                "second-hand memory of ancient stories shaped by the faerie "
+                "Apollo Didyma, himself a mirror of human tales; its priestly "
+                "dress is closer to Rome than to old Greece. Only one who "
+                "knows faeries and stories deeply, or the far past by "
+                "supernatural means, could see it.",
+            ),
+        ],
     )
     places = {"didyma": site, "thrakesion": thrakesion}
     for key, name, words in (
@@ -2053,11 +2107,15 @@ def _places(theban: Theban) -> dict[str, Neighbour]:
             "prophecy gives no point, and the Branchidae rarely lie about "
             "them, faithful transmission being their religion.",
         ),
-        secrets=(
-            "The Branchidae put the +6 down to Apollo Didyma being a great "
-            "faerie. The truth is that prophecies are stories, and faeries "
-            "work to fulfil them."
-        ),
+        secrets=[
+            titled(
+                "Why prophecies of faeries are stronger",
+                "The Branchidae put the +6 of a prophecy that concerns "
+                "faeries down to Apollo Didyma being a great faerie. The "
+                "truth is that prophecies are stories, and faeries work to "
+                "fulfil them.",
+            ),
+        ],
     )
     plain = b.place(
         "The Didyma Plain",
@@ -2325,42 +2383,68 @@ def _covenant(theban: Theban, site: Neighbour) -> Covenant:
             "travellers to take ship for North Africa; Quaesitors for "
             "interference; officials to see Nikola.",
         ),
-        secrets=paragraphs(
-            "Hook: Monster (Major, unknown to all). Agamenoth, a demon prince, "
-            "sleeps under the plain; his stirring caused the earthquakes.",
-            "Storyline, The Sleeping Beast. Woken by the fall of Constantinople, "
-            "Agamenoth means only destruction. Earthquakes wreck Miletos season "
-            "after season, leaving a stench of sulphur that may pass for a "
-            "sigil. His powers should not pierce the Aegis; if it fails, "
-            "laboratories lose the season, and suffer -3 until a season's "
-            "tidying. Infernal Lore against 12 knows his Reputation. Mileta "
-            "smells him but fears questions, and may suggest asking Apollo; he "
-            "would use her past against her. Old church records in Miletos "
-            "mention him.",
-            "Storyline, The Branchidae. Alexander dies. Lana, with Alexander, "
-            "cast two wards after Jason's loss that barred the lines of "
-            "Tessa and Damen (The Tessa and Damen Wards, ReCo(In) 60, Touch, "
-            "Fire, Boundary, ritual, Base 15; a bloodline primogenitor's "
-            "Arcane Connection is needed). Their braziers went out by "
-            "accident in the 1190s and Alexander could not recast them, "
-            "though Lab Texts may lie in Lana's effects with Herakles. "
-            "Nestor of Polyaigos, of Damen's line and older than Nikola, "
-            "comes secretly to Miletos, hires agents to put out flames that "
-            "are already dead, and claims the title at the solstice, with Io "
-            "and Kaia waiting in Panormos. Age and descent can be shown by "
-            "Intellego Corpus. Years later Aristocles the Wanderer comes with "
-            "three Tremere, Anica, Octavian and Petre, gracious about the "
-            "title, with a secret purpose: to slay Apollo Didyma, behind a "
-            "declared Wizard War. Apollo sends the trireme Diakopho, with 200 "
-            "faerie ghosts of dead Branchidae and a squadron of talkative "
-            "dolphins, to fetch Erginos the Argonaut, son of a Branchidae "
-            "woman and Poseidon, from the faerie seas in the Apeiro. If the "
-            "characters side with Aristocles, Apollo recruits at Panormos.",
-            "Niketas's two predecessors of 1170, hostile to pagans, both died "
-            "suddenly after election, and Michael (metropolitan to 1170) was a "
-            "Branchidae under a Longevity Ritual: the covenant has long "
-            "meddled with its bishops.",
-        ),
+        secrets=[
+            titled(
+                "What sleeps under the plain",
+                "Agamenoth, a demon prince, sleeps under the Didyma plain; his "
+                "stirring caused the earthquakes.",
+            ),
+            titled(
+                "What Agamenoth wants",
+                "Woken by the fall of Constantinople, Agamenoth means only "
+                "destruction. Earthquakes wreck Miletos season after season, "
+                "leaving a stench of sulphur.",
+            ),
+            titled(
+                "Mileta and Agamenoth",
+                "Mileta smells Agamenoth but fears questions, and may suggest "
+                "asking Apollo; he would use her past against her.",
+            ),
+            titled(
+                "Agamenoth in the church records",
+                "Old church records in Miletos mention Agamenoth.",
+            ),
+            titled(
+                "The Tessa and Damen Wards",
+                "Lana, with Alexander, cast two wards after Jason's loss that "
+                "barred the lines of Tessa and Damen from Didyma. Their "
+                "braziers went out by accident in the 1190s and Alexander "
+                "could not recast them, though Lab Texts may lie in Lana's "
+                "effects with Herakles.",
+            ),
+            titled(
+                "Didyma and its bishops",
+                "Niketas's two predecessors of 1170, hostile to pagans, both "
+                "died suddenly after election, and Michael (metropolitan to "
+                "1170) was a Branchidae under a Longevity Ritual: the "
+                "covenant has long meddled with its bishops.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Hook: Monster (Major, unknown to all): Agamenoth.\n\n"
+                "Storyline, The Sleeping Beast. The stench of sulphur may pass "
+                "for a sigil. Agamenoth's powers should not pierce the Aegis; "
+                "if it fails, laboratories lose the season, and suffer -3 "
+                "until a season's tidying. Infernal Lore against 12 knows his "
+                "Reputation.\n\n"
+                "Storyline, The Branchidae. Alexander dies. The Tessa and "
+                "Damen Wards: ReCo(In) 60, Touch, Fire, Boundary, ritual, "
+                "Base 15; a bloodline primogenitor's Arcane Connection is "
+                "needed. "
+                "Nestor of Polyaigos, of Damen's line and older than Nikola, "
+                "comes secretly to Miletos, hires agents to put out flames that "
+                "are already dead, and claims the title at the solstice, with Io "
+                "and Kaia waiting in Panormos. Age and descent can be shown by "
+                "Intellego Corpus. Years later Aristocles the Wanderer comes with "
+                "three Tremere, Anica, Octavian and Petre, gracious about the "
+                "title, with a secret purpose: to slay Apollo Didyma, behind a "
+                "declared Wizard War. Apollo sends the trireme Diakopho, with 200 "
+                "faerie ghosts of dead Branchidae and a squadron of talkative "
+                "dolphins, to fetch Erginos the Argonaut, son of a Branchidae "
+                "woman and Poseidon, from the faerie seas in the Apeiro. If the "
+                "characters side with Aristocles, Apollo recruits at Panormos.",
+            ),
+        ],
     )
     covenant.charter_of_covenant.name = "The Charter of the Council of the Magi"
     return covenant
@@ -2400,7 +2484,10 @@ def _people(theban: Theban, covenant: Covenant) -> dict[str, Character]:
             "the darling of the Branchidae, though the unGifted resent "
             "that a little. She should take her Gauntlet at Didyma in 1231."
         ),
-        secrets="Her Death Prophecy: to die in the dark.",
+        secrets=[
+            titled("Aoede's prophecy", "Aoede is prophesied to die in the dark."),
+            titled("Storyguide Notes", "Aoede has a Death Prophecy."),
+        ],
         traditions=[BRANCHIDAE],
     )
     for key, name, words in (
@@ -2463,11 +2550,15 @@ def _people(theban: Theban, covenant: Covenant) -> dict[str, Character]:
             "he wandered far and now lives at the oppidum of Tablinum in "
             "the Transylvanian Tribunal."
         ),
-        secrets=(
-            "He has renounced the Branchidae cult and means to end Apollo "
-            "Didyma's worship by slaying him, with House Tremere's research "
-            "behind him, whether or not it means the deed to be done."
-        ),
+        secrets=[
+            titled(
+                "What Aristocles means to do",
+                "Aristocles has renounced the Branchidae cult and means to end "
+                "Apollo Didyma's worship by slaying him, with House Tremere's "
+                "research behind him, whether or not it means the deed to be "
+                "done.",
+            ),
+        ],
         traditions=[BRANCHIDAE],
     )
     return found
@@ -2499,7 +2590,13 @@ def _world(
                 "Ariane in Constantinople, and knows the magi for members of a "
                 "league of half-pagan sorcerers.",
             ),
-            secrets="He has had a fearsome prophecy of a Muslim invasion.",
+            secrets=[
+                titled(
+                    "Anakletos's prophecy",
+                    "Anakletos, Strategos of Miletos, has had a fearsome "
+                    "prophecy of a Muslim invasion.",
+                ),
+            ],
         ),
         "metropolis": b.church(
             "The Metropolis of Miletos",
@@ -2533,7 +2630,13 @@ def _world(
                 "corrupt, and many merchants pay him, though nothing is "
                 "proven at Nicaea. Cleon has the covenant and its warehouses."
             ),
-            secrets="Torvus is blackmailing Leander with stolen papers.",
+            secrets=[
+                titled(
+                    "Leander's blackmailer",
+                    "Torvus, William's falcon familiar, is blackmailing "
+                    "Leander with stolen papers.",
+                ),
+            ],
         ),
     }
     return world
@@ -3654,13 +3757,21 @@ def _familiars(b: Builder, people: dict[str, Character]) -> None:
             "Incapacitating Wound (ArM5 p. 180). Printed Infernal Lore 4+2.",
             "Bond: Golden +1, Silver +2, Bronze +2, by InMe Lab Total 35.",
         ),
-        secrets=(
-            "Her Dark Secret: she was a demon, long before she met Alexander, "
-            "changed into a creature of Magic she knows not how, perhaps by "
-            "miracle or lost magic; she feels no loyalty to Hell, and she may "
-            "only be deluded. No Hermetic magic can prove she is no demon, "
-            "only that a Demon's Eternal Oblivion did not affect her."
-        ),
+        secrets=[
+            titled(
+                "What Mileta was",
+                "Mileta was a demon, long before she met Alexander, changed "
+                "into a creature of Magic she knows not how, perhaps by "
+                "miracle or lost magic; she feels no loyalty to Hell, and she "
+                "may only be deluded.",
+            ),
+            titled(
+                "Proving Mileta",
+                "No Hermetic magic can prove Mileta is no demon, only that a "
+                "Demon's Eternal Oblivion did not affect her.",
+            ),
+            titled("Storyguide Notes", "Mileta's past is her Dark Secret."),
+        ],
     )
     _bind(
         b,
@@ -3949,11 +4060,14 @@ def _familiars(b: Builder, people: dict[str, Character]) -> None:
             "flyer, +3 on rolls of speed.",
             "Bond: Golden +1, Silver 0, Bronze +2, by InAu Lab Total 20.",
         ),
-        secrets=(
-            "Papers in his hoard show the corruption of Miletos's tax "
-            "officials, and without William's knowledge he is blackmailing "
-            "their head, Leander."
-        ),
+        secrets=[
+            titled(
+                "Torvus's hoard",
+                "Papers in Torvus's hoard show the corruption of Miletos's tax "
+                "officials, and without William's knowledge he is "
+                "blackmailing their head, Leander.",
+            ),
+        ],
     )
     _bind(
         b,
@@ -4201,11 +4315,17 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
             "black seam of coal several hundred paces wide and long."
         ),
         notes="Prince of the Moving Earth.",
-        secrets=(
-            "He brought down the church and monastery at Didyma, and has "
-            "since slept as coal under the plain, but the fall of "
-            "Constantinople woke him, and when he is fully roused his "
-            "earthquakes will strike Didyma and Miletos."
-        ),
+        secrets=[
+            titled(
+                "The fall of Didyma's church",
+                "Agamenoth brought down the church and monastery at Didyma, "
+                "and has since slept as coal under the plain.",
+            ),
+            titled(
+                "Agamenoth wakes",
+                "The fall of Constantinople woke Agamenoth, and when he is "
+                "fully roused his earthquakes will strike Didyma and Miletos.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", agamenoth, "sleeps unknown beneath it")

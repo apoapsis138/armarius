@@ -17,9 +17,11 @@ from typing import Any
 from ...models import BodyVis, Neighbour
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_minor,
     vf_puissant,
 )
@@ -43,7 +45,7 @@ def _seed(
     summary: str,
     place: Neighbour,
     *,
-    secrets: str = "",
+    secrets: Secrets = "",
     antagonist: str = "",
     stages: list[dict[str, Any]] | None = None,
 ) -> Neighbour:
@@ -121,10 +123,12 @@ def _maghreb(b: Builder) -> Neighbour:
             "tombs in the hills south of Tahert, though its interpreter's "
             "reading of their inscriptions is wrong (p. 42).",
         ),
-        secrets=(
-            "A large pack of bouda has come up from the south to strip the "
-            "ruins (p. 42)."
-        ),
+        secrets=[
+            titled(
+                "Bouda in the ruins",
+                "A large pack of bouda has come up from the south to strip the Maghreb's ruins (p. 42).",
+            )
+        ],
     )
 
 
@@ -266,10 +270,12 @@ def _atlantic(b: Builder, maghreb: Neighbour) -> dict[str, Neighbour]:
             "senators' togas. Harvesters cross from Essaouira, and guard the "
             "foul-smelling secret of the dye.",
         ),
-        secrets=(
-            "A ruined cellar door in an overgrown Roman villa is the way into "
-            "the regio."
-        ),
+        secrets=[
+            titled(
+                "The way into the regio",
+                "A ruined cellar door in an overgrown Roman villa on Mogador is the way into the regio.",
+            )
+        ],
         levels=[
             b.level(
                 "The Villa of the Dye",
@@ -334,12 +340,20 @@ def _atlantic(b: Builder, maghreb: Neighbour) -> dict[str, Neighbour]:
             "Few people live near, and its walls keep out the sound of prayer. "
             "Rome sent its searchers for the Hesperides out from here."
         ),
-        secrets=(
-            "Little Divine aura troubles the place. Those who speak Aramaic may "
-            "talk to Punic ghosts as if they had Dead Language: Punic at their "
-            "score less 3 (below zero, not at all). Defixiones may lie in the "
-            "abandoned Roman quarter."
-        ),
+        secrets=[
+            titled(
+                "Punic ghosts",
+                "At Chellah, those who speak Aramaic may talk to Punic ghosts.",
+            ),
+            titled(
+                "Curse tablets",
+                "Defixiones may lie in Chellah's abandoned Roman quarter.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Little Divine aura troubles the place. Those who speak Aramaic talk to Punic ghosts as if they had Dead Language: Punic at their score less 3 (below zero, not at all).",
+            ),
+        ],
     )
     sale = b.town(
         "Sale",
@@ -376,32 +390,28 @@ def _pithecousa(b: Builder) -> Neighbour:
             "Atlantic, some in the Nile Delta. All of them may be right. The "
             "way is through unexpected patches of fog at sea.",
         ),
-        secrets=paragraphs(
-            "It lies in a regio with several entrances, all at sea in fog. "
-            "Seeing through the boundary takes Ease Factor 15 (ArM5 p. 189); at "
-            "certain times of year particular headings lead straight through "
-            "without any special ability.",
-            "The first enchantment, Penetration 0, turns every human and any "
-            "other creature affected by Corpus who does not resist into a "
-            "mundane monkey suited to its nature: warriors hamadryades, the "
-            "clever callithrices, the agile cercopitheci. Intelligence, Virtues, "
-            "Flaws and Abilities remain; clothes and gear do not change. A "
-            "monkey character can talk with monkeys, and understand but not "
-            "speak human tongues, so a magus casts only with quiet words (ArM5 "
-            "p. 83). It lasts while on the island and causes Warping as a "
-            "powerful mystical effect, and Flaws so gained are simian. Dispelling "
-            "it is as a level 55 enchantment (about MuCo base 10, +1 Touch, +4 "
-            "Until, +4 Boundary); a Bjornaer's Heartbeast Ability also ends it.",
-            "The second, Penetration 50, keeps out anything in human shape: one "
-            "it overcomes cannot leave the beach landward or affect anything "
-            "beyond it, and is driven to the nearest beach if it takes human "
-            "shape inland, even partly once the shape is recognisable. It is as "
-            "a level 85 enchantment (about ReCo base 15, +1 Touch, +4 Until, +4 "
-            "Boundary, +25 for Penetration). Magi who want to explore must "
-            "probably suppress their Magic Resistance and accept the change. "
-            "Both effects come from the island, by no known magic; the "
-            "guidelines are only for investigating and dispelling them.",
-        ),
+        secrets=[
+            titled(
+                "Finding Pithecousa",
+                "Pithecousa lies in a regio with several entrances, all at sea in fog. At certain times of year particular headings lead straight through without any special ability.",
+            ),
+            titled(
+                "The monkey enchantment",
+                "The first enchantment of Pithecousa turns every human and any other creature affected by Corpus who does not resist into a mundane monkey suited to its nature: warriors hamadryades, the clever callithrices, the agile cercopitheci. Intelligence, Virtues, Flaws and Abilities remain; clothes and gear do not change. A monkey character can talk with monkeys, and understand but not speak human tongues, so a magus casts only with quiet words (ArM5 p. 83). It lasts while on the island; a Bjornaer's Heartbeast Ability also ends it.",
+            ),
+            titled(
+                "The ward against human shape",
+                "The second enchantment of Pithecousa keeps out anything in human shape: one it overcomes cannot leave the beach landward or affect anything beyond it, and is driven to the nearest beach if it takes human shape inland, even partly once the shape is recognisable. Magi who want to explore must probably suppress their Magic Resistance and accept the change.",
+            ),
+            titled(
+                "Whence the enchantments come",
+                "Both of Pithecousa's enchantments come from the island, by no known magic.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Seeing through the regio boundary takes Ease Factor 15 (ArM5 p. 189). The first enchantment has Penetration 0 and causes Warping as a powerful mystical effect, and Flaws so gained are simian. Dispelling it is as a level 55 enchantment (about MuCo base 10, +1 Touch, +4 Until, +4 Boundary). The second has Penetration 50 and is as a level 85 enchantment (about ReCo base 15, +1 Touch, +4 Until, +4 Boundary, +25 for Penetration). The guidelines are only for investigating and dispelling them.",
+            ),
+        ],
         levels=[
             b.level(
                 "The Island",
@@ -448,12 +458,16 @@ def _pithecousa(b: Builder) -> Neighbour:
             "Urination: before the full court he passes water seven times, and "
             "all watch closely. It may be a kind of divination.",
         ),
-        secrets=(
-            "The King and his counsellors, drawn from all five kinds and more "
-            "exotic ones, are Magic Animals. He and many of them have true "
-            "Intelligence. He may have higher Might and further powers, as his "
-            "storyguide chooses; the book prints no block for him."
-        ),
+        secrets=[
+            titled(
+                "The King and his counsellors",
+                "The King of Monkeys and his counsellors, drawn from all five kinds and more exotic ones, are Magic Animals. He and many of them have true Intelligence.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The King may have higher Might and further powers, as his storyguide chooses; the book prints no block for him.",
+            ),
+        ],
     )
     b.creature(
         "Satyrus, an Ape",
@@ -590,16 +604,16 @@ def _rif(b: Builder, maghreb: Neighbour) -> dict[str, Neighbour]:
             "with Spain and rule of it harder.",
             "Almohad loyalists paint the Marinids as barbarians, which may be unfair.",
         ),
-        secrets=paragraphs(
-            "The troupe chooses what the Marinids are: a rampaging horde like "
-            "the Mongols, or, as in history, future conquerors of the western "
-            "Maghreb who spare Fez and bring a new age of art and learning.",
-            "Their weakness: the dynasty holds together only while it raids and "
-            "grows. When plunder or conquest stops, each warlord looks to "
-            "swallow his cousins and their followers. Stalling their advance "
-            "forces a civil war that leaves them united but far smaller (p. "
-            "49).",
-        ),
+        secrets=[
+            titled(
+                "The Marinids' weakness",
+                "The Marinid dynasty holds together only while it raids and grows. When plunder or conquest stops, each warlord looks to swallow his cousins and their followers. Stalling their advance forces a civil war that leaves them united but far smaller (p. 49).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The troupe chooses what the Marinids are: a rampaging horde like the Mongols, or, as in history, future conquerors of the western Maghreb who spare Fez and bring a new age of art and learning.",
+            ),
+        ],
     )
     tangier = b.town(
         "Tangier",
@@ -762,20 +776,12 @@ def _tell(
             "designs on the title of Caliph, and might carry power across the "
             "Strait.",
         ),
-        secrets=(
-            "Thieves of Marrakesh take Virtues that suit them only if they use "
-            "those Abilities often (pp. 52-53): Affinity, Cautious with or "
-            "Puissant in Athletics, Awareness, Legerdemain or Stealth, Intuition, "
-            "Keen Vision, Light Touch, Perfect Balance, Premonitions, Ways of "
-            "the Town, and the catalog's All According to Plan, Falls Like a "
-            "Cat, Indescribable Face, Just an Instant, Finding Hidden Loot, Rat "
-            "Up a Drainpipe, Schooled in Crime, See in Darkness (the book's "
-            "Sees in the Dark) and Skilled Smuggler. Childhoods raised by "
-            "thieves (p. 53, each with Native Language 5): burglar, Awareness, "
-            "Bargain, Stealth 2; grifter, Charm, Guile, Legerdemain 2; lookout, "
-            "Awareness, Legerdemain, Stealth 2; runner, Area Lore, Athletics, "
-            "Legerdemain 2."
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Thieves of Marrakesh take Virtues that suit them only if they use those Abilities often (pp. 52-53): Affinity, Cautious with or Puissant in Athletics, Awareness, Legerdemain or Stealth, Intuition, Keen Vision, Light Touch, Perfect Balance, Premonitions, Ways of the Town, and the catalog's All According to Plan, Falls Like a Cat, Indescribable Face, Just an Instant, Finding Hidden Loot, Rat Up a Drainpipe, Schooled in Crime, See in Darkness (the book's Sees in the Dark) and Skilled Smuggler. Childhoods raised by thieves (p. 53, each with Native Language 5): burglar, Awareness, Bargain, Stealth 2; grifter, Charm, Guile, Legerdemain 2; lookout, Awareness, Legerdemain, Stealth 2; runner, Area Lore, Athletics, Legerdemain 2.",
+            )
+        ],
     )
     b.faction(
         "The Sons of Sasan",
@@ -983,7 +989,12 @@ def _tell_towns(
             "scholars to Tunis, and rebuilding is unfinished. Libraries lost in "
             "the flight may lie in the ruins.",
         ),
-        secrets="The book gives no figure for its Divine aura (p. 56).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book gives no figure for its Divine aura (p. 56).",
+            )
+        ],
     )
     for name, kw in (
         (
@@ -1069,10 +1080,12 @@ def _tell_towns(
             "Some reaches of the Roman and Christian catacombs under Soussa "
             "strangely keep a Magic aura of 4."
         ),
-        secrets=(
-            "A Virgilian cabal left texts and works here when the Arabs came, "
-            "and never returned."
-        ),
+        secrets=[
+            titled(
+                "The Virgilian cabal",
+                "A Virgilian cabal left texts and works in the Catacombs of Soussa when the Arabs came, and never returned.",
+            )
+        ],
     )
     _place(
         b,
@@ -1085,11 +1098,12 @@ def _tell_towns(
             "with all his men and engines. Its skin, sent to Rome, measured 120 "
             "feet."
         ),
-        secrets=(
-            "Magical creatures rest in auras larger than themselves, so a site "
-            "of aura 3 or more, big enough for laboratories, must lie here "
-            "(p. 55)."
-        ),
+        secrets=[
+            titled(
+                "A site for laboratories",
+                "Magical creatures rest in auras larger than themselves, so a site of aura 3 or more, big enough for laboratories, must lie at the mouth of the Bagradas (p. 55).",
+            )
+        ],
     )
     _place(
         b,
@@ -1101,12 +1115,16 @@ def _tell_towns(
             "husks dye the brightest Tuareg veils, and the nomads who gather "
             "them prize them."
         ),
-        secrets=(
-            "Gathered in late summer after the sirocco, the husks give four "
-            "pawns of Muto and Imaginem vis (p. 54). Taking the vis ruins them "
-            "for dye, so a magus must come to terms with the tribe, which guides "
-            "southbound caravans and keeps grudges for generations."
-        ),
+        secrets=[
+            titled(
+                "Vis in the husks",
+                "Gathered in late summer after the sirocco, the husks of the Wadi of the Molting Beetles give four pawns of Muto and Imaginem vis (p. 54).",
+            ),
+            titled(
+                "The dyers' grudge",
+                "Taking the vis ruins the beetle husks for dye, so a magus must come to terms with the tribe, which guides southbound caravans and keeps grudges for generations.",
+            ),
+        ],
     )
 
 
@@ -1131,17 +1149,20 @@ def _islands(b: Builder) -> dict[str, Neighbour]:
             "for fear of the capricious jinn who come at evening with their "
             "lovely wives.",
         ),
-        secrets=paragraphs(
-            "The Lotophagi withdrew long ago into isolated regiones marked by "
-            "clusters of lotus shrubs, avoid the islanders, and come out rarely "
-            "to gather Lotus Fruit of Virtue on the Summer Solstice.",
-            "In a secluded gully on a nearly inaccessible shore grows an "
-            "untended copse of Lotus of Virtue, the narcotic fruit that held "
-            "Odysseus's crew. Berries picked on the morning of the summer "
-            "solstice give three pawns of Herbam and three of Mentem vis. Three "
-            "seeds exposed only to full moonlight for a year and then sealed in "
-            "an amulet give the wearer Clear Thinker (p. 57).",
-        ),
+        secrets=[
+            titled(
+                "Where the Lotophagi went",
+                "The Lotophagi of Djerba withdrew long ago into isolated regiones marked by clusters of lotus shrubs, avoid the islanders, and come out rarely to gather Lotus Fruit of Virtue on the Summer Solstice.",
+            ),
+            titled(
+                "The lotus copse",
+                "In a secluded gully on a nearly inaccessible shore of Djerba grows an untended copse of Lotus of Virtue, the narcotic fruit that held Odysseus's crew. Berries picked on the morning of the summer solstice give three pawns of Herbam and three of Mentem vis.",
+            ),
+            titled(
+                "The lotus seed amulet",
+                "Three seeds of Djerba's Lotus of Virtue exposed only to full moonlight for a year and then sealed in an amulet give the wearer Clear Thinker (p. 57).",
+            ),
+        ],
     )
     for name, text in (
         (
@@ -1208,10 +1229,12 @@ def _islands(b: Builder) -> dict[str, Neighbour]:
         "Ghar Dalam",
         inside=malta,
         summary="A cave of Malta running deep into the rock.",
-        secrets=(
-            "The cyclopskin retreated to regiones here, and may be at war "
-            "beneath the island."
-        ),
+        secrets=[
+            titled(
+                "The cyclopskin",
+                "The cyclopskin retreated to regiones at Ghar Dalam, and may be at war beneath the island.",
+            )
+        ],
         levels=[
             b.level(
                 "Subterranean Vaults of the Cyclopskin",
@@ -1307,20 +1330,28 @@ def _cyrenaica(b: Builder) -> dict[str, Neighbour]:
             "replace myrrh, with Shape and Material bonus: protect against evil "
             "spirits +3 (p. 62).",
         ),
-        secrets=(
-            "Silphium of Virtue survives only in a few lost Magic regiones in "
-            "the coastal mountains. Enriched by cutting the stem and sealing "
-            "the faintly scented resin in a jar of pine nuts for a season, then "
-            "eating one nut a day, it wards against poison as Greater Immunity "
-            "for a year, with infertility as Lesser Malediction for as long. "
-            "Unenriched, its heart-shaped seeds hold 2 pawns of extraordinary "
-            "Corpus vis, or serve as a finite-use Lesser Enchantment, Silphium "
-            "Seeds of Corpus Vis (PeCo 15; R: Touch, D: Mom, T: Unborn Child; "
-            "Base 5, +1 Touch, +1 Part), which ends a pregnancy, with a Stamina "
-            "stress roll against 6 after the first month or a Medium Wound. It "
-            "derives from Black Anne's Kiss (Ancient Magic pp. 54-56), and "
-            "study may give Insight into that magic (pp. 62-63)."
-        ),
+        secrets=[
+            titled(
+                "Where silphium survives",
+                "Silphium of Virtue survives only in a few lost Magic regiones in Cyrenaica's coastal mountains.",
+            ),
+            titled(
+                "Enriched silphium",
+                "Enriched by cutting the stem and sealing the faintly scented resin in a jar of pine nuts for a season, then eating one nut a day, silphium wards against poison for a year, with infertility for as long.",
+            ),
+            titled(
+                "Silphium seeds",
+                "Unenriched, silphium's heart-shaped seeds hold 2 pawns of extraordinary Corpus vis, or serve as a finite-use Lesser Enchantment, Silphium Seeds of Corpus Vis, which ends a pregnancy, with a Stamina stress roll against 6 after the first month or a Medium Wound.",
+            ),
+            titled(
+                "Silphium and Black Anne's Kiss",
+                "The silphium seed enchantment derives from Black Anne's Kiss (Ancient Magic pp. 54-56), and study may give Insight into that magic (pp. 62-63).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Enriched silphium wards against poison as Greater Immunity, with infertility as Lesser Malediction. Silphium Seeds of Corpus Vis: PeCo 15; R: Touch, D: Mom, T: Unborn Child; Base 5, +1 Touch, +1 Part.",
+            ),
+        ],
     )
     b.town(
         "Barce",
@@ -1365,11 +1396,12 @@ def _cyrenaica(b: Builder) -> dict[str, Neighbour]:
             "The ruin of an ancient lighthouse on the third islet just outside "
             "the harbour."
         ),
-        secrets=(
-            "Inside are a makeshift Hermetic laboratory, a shattered oversized "
-            "glass lens, a freshly slain man and signs of a fight with a great "
-            "sea creature."
-        ),
+        secrets=[
+            titled(
+                "Inside the Pharos",
+                "Inside the Pharos of Apollonia are a makeshift Hermetic laboratory, a shattered oversized glass lens, a freshly slain man and signs of a fight with a great sea creature.",
+            )
+        ],
     )
     cyrene = _place(
         b,
@@ -1398,18 +1430,24 @@ def _cyrenaica(b: Builder) -> dict[str, Neighbour]:
             "Kura, once worshipped by Cyrene's citizens. Its rivulet joins the "
             "river that runs through the necropolis to the sea."
         ),
-        secrets=(
-            "Kura is an unfettered Magic spirit, a nereid and genius loci who "
-            "remembers true silphium and the groves above the city. She cannot "
-            "leave her precinct. Sacrifice or a restored shrine will win her "
-            "help, and she may use Zeynab as intermediary through a Spiritual "
-            "Pact, taking her as Spirit Votary (Realms of Power: Magic pp. "
-            "88-89). She might be patron of a Theban-style covenant (The "
-            "Sundered Eagle pp. 30-31) but mistrusts Hermetics after hostile "
-            "Berber and Arab wizards; her price includes veneration, perhaps a "
-            "magus's Spiritual Pact and a promise to restore her public worship, "
-            "which risks the Code."
-        ),
+        secrets=[
+            titled(
+                "Who Kura is",
+                "Kura is an unfettered Magic spirit, a nereid and genius loci who remembers true silphium and the groves above the city. She cannot leave her precinct.",
+            ),
+            titled(
+                "Winning Kura's help",
+                "Sacrifice or a restored shrine will win Kura's help, and she may use Zeynab as intermediary.",
+            ),
+            titled(
+                "Kura as patron",
+                "Kura might be patron of a Theban-style covenant (The Sundered Eagle pp. 30-31) but mistrusts Hermetics after hostile Berber and Arab wizards; her price includes veneration, perhaps a magus's Spiritual Pact and a promise to restore her public worship, which risks the Code.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Kura uses Zeynab through a Spiritual Pact, taking her as Spirit Votary (Realms of Power: Magic pp. 88-89).",
+            ),
+        ],
         levels=[
             b.level(
                 "Kura's Regio",
@@ -1493,15 +1531,24 @@ def _cyrenaica(b: Builder) -> dict[str, Neighbour]:
             "race that was to fix the border, are said to have offered to be "
             "buried alive."
         ),
-        secrets=(
-            "The Philaeni are inseparable daimonic Heroes with pooled Magic "
-            "Might 35, summoned only by a joint theurgic rite of two wizards "
-            "using Wizard's Communion. Once they gave swiftness to legions on "
-            "their stretch of road; they can also grant duplication of a "
-            "recently cast spell, enforce truth, and curse oathbreakers. The "
-            "contemporary Cult of Mercury (The Mysteries: Revised Edition pp. "
-            "114-117) sometimes holds initiations here."
-        ),
+        secrets=[
+            titled(
+                "The Philaeni",
+                "The Philaeni are inseparable daimonic Heroes, summoned only by a joint theurgic rite of two wizards.",
+            ),
+            titled(
+                "The Philaeni's gifts",
+                "Once the Philaeni gave swiftness to legions on their stretch of road; they can also grant duplication of a recently cast spell, enforce truth, and curse oathbreakers.",
+            ),
+            titled(
+                "The Cult of Mercury here",
+                "The contemporary Cult of Mercury (The Mysteries: Revised Edition pp. 114-117) sometimes holds initiations at the Altars of the Philaeni.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Philaeni have pooled Magic Might 35; the rite uses Wizard's Communion.",
+            ),
+        ],
         levels=[
             b.level(
                 "The Twin Pillars",
@@ -2095,8 +2142,12 @@ def _maghreb_stories(
         "disturbed the Great Hunger; priests' scrolls and fragments of the road "
         "magic may lie in hidden refuges (p. 42).",
         maghreb,
-        secrets="A large pack of bouda is moving in from the south to pick the "
-        "region clean.",
+        secrets=[
+            titled(
+                "Bouda from the south",
+                "A large pack of bouda is moving in from the south to pick the region clean.",
+            )
+        ],
     )
     _seed(
         b,
@@ -2165,19 +2216,20 @@ def _maghreb_stories(
             "pipe, all magical (p. 52).",
         ),
         cities["marrakesh"],
-        secrets=paragraphs(
-            "The sheepskin carries whoever sits on it, and itself, in a blink to "
-            "any place asked, even unseen or conditional ('wherever the man who "
-            "stole my trousers has gone').",
-            "The cap makes the wearer and what he wears or holds invisible, but "
-            "not mounts or objects like statues; he can still be heard, or "
-            "smelled by dogs.",
-            "The pipe turns exhaled smoke to small gold ingots, without limit "
-            "while there is hashish, but the smoker is out of his mind and "
-            "under the storyguide's control, usually to his humiliation, and "
-            "often with the other two items. That is why the merchant forbade "
-            "the pavilion.",
-        ),
+        secrets=[
+            titled(
+                "The sheepskin",
+                "The pavilion's sheepskin carries whoever sits on it, and itself, in a blink to any place asked, even unseen or conditional ('wherever the man who stole my trousers has gone').",
+            ),
+            titled(
+                "The cap",
+                "The pavilion's cap makes the wearer and what he wears or holds invisible, but not mounts or objects like statues; he can still be heard, or smelled by dogs.",
+            ),
+            titled(
+                "The pipe",
+                "The pavilion's pipe turns exhaled smoke to small gold ingots, without limit while there is hashish, but the smoker is out of his mind and under the storyguide's control, usually to his humiliation, and often with the other two items. That is why the merchant forbade the pavilion.",
+            ),
+        ],
     )
 
 
@@ -2191,10 +2243,16 @@ def _monkey_stories(b: Builder, pithecousa: Neighbour) -> None:
         "Verditius of Favonius (The Sundered Eagle p. 83), expert in knots, whose "
         "familiar is a monkey (p. 47).",
         pithecousa,
-        secrets="Verecunda made it for the King of Monkeys in payment for her "
-        "familiar. A treacherous servant stole it years ago and has become "
-        "formidable. He needs it to return and challenge the King, and will "
-        "pose as a helper to get it.",
+        secrets=[
+            titled(
+                "Who made the Fist",
+                "Verecunda made the Monkey's Fist for the King of Monkeys in payment for her familiar.",
+            ),
+            titled(
+                "The thief",
+                "A treacherous servant stole the Monkey's Fist from the King of Monkeys years ago and has become formidable. He needs it to return and challenge the King, and will pose as a helper to get it.",
+            ),
+        ],
         antagonist="The King's treacherous servant",
     )
     _seed(
@@ -2216,9 +2274,15 @@ def _monkey_stories(b: Builder, pithecousa: Neighbour) -> None:
         "with gifts, and meet the Embassy from Furthest Hind, exotic monkeys "
         "eager for their friendship (p. 47).",
         pithecousa,
-        secrets="They are shapechanged serpents sent by the King of Punt, the "
-        "Egyptian name for Soqotra (Rival Magic ch. 5), to kill the King of "
-        "Monkeys. Punt's mighty serpent king has further plans.",
+        secrets=[
+            titled(
+                "Who the envoys are",
+                "The Embassy from Furthest Hind are shapechanged serpents sent by the King of Punt, the Egyptian name for Soqotra (Rival Magic ch. 5), to kill the King of Monkeys.",
+            ),
+            titled(
+                "Punt's further plans", "Punt's mighty serpent king has further plans."
+            ),
+        ],
         antagonist="The King of Punt",
     )
     _seed(
@@ -2362,16 +2426,16 @@ def _cyrenaica_stories(
         "The pharos of Apollonia holds a wrecked laboratory and a fresh corpse "
         "(p. 59).",
         cyrenaica["pharos"],
-        secrets=paragraphs(
-            "The dead man is Diurnum Lumen of Flambeau, left behind from a "
-            "Jerbiton-led Theban settlement abandoned under ten years ago. He "
-            "was rebuilding the pharos to recover the Lineage of Abydaros, a lost "
-            "African mystery cult of Apollo with powers from sunlight.",
-            "His killer may be Glaucus, a murderous Makhai (the Theban Muspelli "
-            "of Rival Magic), who serves the sea Titan Okeanos and his monsters "
-            "and has moved on. Magi who settle here may rebuild the experiments "
-            "and invite his return.",
-        ),
+        secrets=[
+            titled(
+                "The dead man",
+                "The dead man in the pharos is Diurnum Lumen of Flambeau, left behind from a Jerbiton-led Theban settlement abandoned under ten years ago. He was rebuilding the pharos to recover the Lineage of Abydaros, a lost African mystery cult of Apollo with powers from sunlight.",
+            ),
+            titled(
+                "The killer",
+                "Diurnum Lumen's killer may be Glaucus, a murderous Makhai (the Theban Muspelli of Rival Magic), who serves the sea Titan Okeanos and his monsters and has moved on. Magi who settle at the pharos may rebuild the experiments and invite his return.",
+            ),
+        ],
         antagonist="Glaucus",
     )
     _seed(
@@ -2390,8 +2454,12 @@ def _cyrenaica_stories(
         "the Great Desert. Will the magi ask Muqadam to give him up, or find a "
         "way to take Syyd's arcane connection from him (p. 61)?",
         maghreb,
-        secrets="A demon has preyed on Syyd's solitude and led him step by step "
-        "to feel justified in killing.",
+        secrets=[
+            titled(
+                "What drives Syyd",
+                "A demon has preyed on Syyd's solitude and led him step by step to feel justified in killing.",
+            )
+        ],
         antagonist="Syyd",
     )
     _seed(

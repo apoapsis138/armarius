@@ -1143,10 +1143,17 @@ the record's **Known** section instead; with none revealed the tab isn't
 there for them. A record a player exports carries only its revealed
 secrets. Your Find searches every secret, theirs none.
 
+The content packs that come with the app, and the Dammërstein saga
+starter, give each secret a title, each one thing the players could
+learn on its own. A record's table notes (auras, rolls, where a stat
+block is, the rules' names for a trait) are its last secret,
+**Storyguide Notes**, which is for you and not meant to be revealed.
+
 Older sagas and content packs kept a record's secrets as one piece of
 writing (some at the end of a summary or notes under a **Secrets**
 heading). Opening the saga makes that one untitled secret; **Split by
-Paragraph** breaks it up. Packs bring theirs the same way.
+Paragraph** breaks it up. A pack exported from such a saga brings its
+secrets the same way.
 
 **See also:** [How to reveal a record to the players](help:guide-reveal), [What a signed-in player can do](help:players-access), [How to host a saga](help:guide-hosting)
 

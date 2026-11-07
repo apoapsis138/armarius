@@ -34,7 +34,7 @@ from typing import TYPE_CHECKING, Any
 from ... import storage
 from ...arms import Arms
 from ...models import Book
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -303,9 +303,12 @@ def _boyne(hibernia: Hibernia) -> None:
             "cauldron out of one of its mounds, then held a barrow "
             "here for a year against the high-king's men.",
         ),
-        secrets="The monks working among the barrows may have stumbled on "
-        "some old magical secret, which could lie behind the "
-        "Conspiracy of Mellifont.",
+        secrets=[
+            titled(
+                "The monks among the barrows",
+                "The monks working among the barrows of the Brú na Bóinne may have stumbled on some old magical secret, which could lie behind the Conspiracy of Mellifont.",
+            )
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -485,8 +488,16 @@ def _clonmacnoise(hibernia: Hibernia) -> None:
         "laboratory, but by morning it was gone, and back in "
         "Clonmacnoise she found it where she had first seen it; she "
         "sensibly did not try again.",
-        secrets="Whatever makes the stone return, it is bound to this spot; "
-        "the faerie fort behind it may still be inhabited.",
+        secrets=[
+            titled(
+                "What binds the stone",
+                "Whatever makes the Faerie Stone of Clonmacnoise return, it is bound to this spot.",
+            ),
+            titled(
+                "The faerie fort",
+                "The faerie fort behind the Faerie Stone of Clonmacnoise may still be inhabited.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
 
@@ -578,8 +589,12 @@ def _lordship(hibernia: Hibernia, b: Builder) -> None:
             "clergy. Itinerant justices hold his assizes in the "
             "Liberties.",
         ),
-        secrets="The Pope's ruling against his English-only bishops has not "
-        "yet reached Dublin; he does not know he has lost.",
+        secrets=[
+            titled(
+                "The Pope's ruling",
+                "The Pope's ruling against his English-only bishops has not yet reached Dublin; he does not know he has lost.",
+            )
+        ],
     )
     w["walter_de_lacy"] = b.lord(
         "Walter de Lacy, Lord of Meath",
@@ -812,8 +827,12 @@ def _towns(hibernia: Hibernia, b: Builder) -> None:
         "Saint Lommán and Saint Malachy's Augustinian abbey of Saint "
         "Mary stand in the town. The castle was lately the scene of a "
         "strange affair, the tale of the Three Sisters of Trim.",
-        secrets="The book names the Three Sisters of Trim but tells nothing "
-        "more of them: the storyguide decides what happened.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book names the Three Sisters of Trim but tells nothing more of them: the storyguide decides what happened.",
+            )
+        ],
     )
     w["kells_town"] = b.town(
         "Kells",

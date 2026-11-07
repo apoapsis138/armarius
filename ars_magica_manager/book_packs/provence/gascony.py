@@ -36,6 +36,7 @@ from ..builder import (
     StatBlock,
     joined_lines,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_focus,
@@ -192,18 +193,35 @@ def _bordeaux_and_medoc(provence: Provence) -> None:
         "The True Mithraeum of Bordeaux",
         inside=region,
         summary="A natural cavern under the southern quarter of Bordeaux.",
-        secrets=paragraphs(
-            "Roman soldiers of the garrison made it a temple of Mithras, "
-            "and it has lain buried and forgotten for centuries. Only "
-            "Kaeso of Flambeau knew where it was: fearing the barbarians "
-            "then holding Bordeaux would find it, he told no one in the "
-            "Order and built a second temple upriver, where Castra Solis "
-            "now stands, so that the true one kept its power undimmed. "
-            "Most Flambeau believe the temple under Castra Solis is "
-            "Kaeso's own. The book gives no aura for the true one.",
-            "Many high initiates of the Legion of Mithras believe their "
-            "rumoured Great Temple lies somewhere in France.",
-        ),
+        secrets=[
+            titled(
+                "The Roman temple",
+                "Roman soldiers of the garrison made the cavern under Bordeaux "
+                "a temple of Mithras, and it has lain buried and forgotten for "
+                "centuries.",
+            ),
+            titled(
+                "Kaeso's secret",
+                "Only Kaeso of Flambeau knew where the true mithraeum was: "
+                "fearing the barbarians then holding Bordeaux would find it, he "
+                "told no one in the Order and built a second temple upriver, "
+                "where Castra Solis now stands, so that the true one kept its "
+                "power undimmed.",
+            ),
+            titled(
+                "What the Flambeau believe",
+                "Most Flambeau believe the temple under Castra Solis is Kaeso's own.",
+            ),
+            titled(
+                "The Great Temple",
+                "Many high initiates of the Legion of Mithras believe their "
+                "rumoured Great Temple lies somewhere in France.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book gives no aura for the true mithraeum.",
+            ),
+        ],
         **SECRET,
     )
     _add(
@@ -371,9 +389,14 @@ def _bazas_and_garonne(provence: Provence) -> None:
         "faerie masons. Each new lord de La Motte enlarges the castle "
         "with their help, which is how the square four-towered keep has "
         "grown so grand.",
-        secrets="The masons are bound by a pact to finish one building work for "
-        "each new lord of the family. Its terms are secret, told only by "
-        "a dying lord to his son.",
+        secrets=[
+            titled(
+                "The masons' pact",
+                "The masons are bound by a pact to finish one building work for "
+                "each new lord of the family. Its terms are secret, told only by "
+                "a dying lord to his son.",
+            ),
+        ],
         realm="Faerie",
         **RUMOURED,
     )
@@ -570,9 +593,14 @@ def _castra_solis_sites(provence: Provence) -> None:
             "hold fallen milites in holy ground; the former Primus "
             "Entisimon lies here, but Kaeso does not.",
         ),
-        secrets="It is a copy, built when Bordeaux fell to the raiders; the true "
-        "temple lies under Bordeaux and was kept secret so that its power "
-        "would endure.",
+        secrets=[
+            titled(
+                "Which temple is the true one",
+                "The Mithraeum of Castra Solis is a copy, built when Bordeaux "
+                "fell to the raiders; the true temple lies under Bordeaux and "
+                "was kept secret so that its power would endure.",
+            ),
+        ],
         realm="Divine",
         aura=4,
         **KNOWN_TRIBUNAL,
@@ -609,15 +637,25 @@ def _castra_solis_sites(provence: Provence) -> None:
             "Dama and Rebecca are its only magi, with Rebecca's "
             "apprentice Alexa and their servants.",
         ),
-        secrets=paragraphs(
-            "The black rock is where the Gauls drowned captives for "
-            "Maju, then worshipped as Teutates; an inscription lies under "
-            "the mud, and votive silver rings lie in the lake. The site "
-            "is Infernal now, but Maju keeps the aura cloaked so it seems "
-            "Faerie, at a constant cost to its Might.",
-            "Dama made the place frightening on Maju's advice, saying the "
-            "Veil protects it from crusaders.",
-        ),
+        secrets=[
+            titled(
+                "The black rock",
+                "The black rock at Mimizan is where the Gauls drowned captives "
+                "for Maju, then worshipped as Teutates; an inscription lies "
+                "under the mud, and votive silver rings lie in the lake.",
+            ),
+            titled(
+                "The cloaked aura",
+                "Dama's Tower at Mimizan is Infernal now, but Maju keeps the "
+                "aura cloaked so it seems Faerie, at a constant cost to its "
+                "Might.",
+            ),
+            titled(
+                "Why the place is frightening",
+                "Dama made Mimizan frightening on Maju's advice, saying the "
+                "Veil protects it from crusaders.",
+            ),
+        ],
         realm="Faerie",
         aura=4,
         **KNOWN_TRIBUNAL,
@@ -769,12 +807,37 @@ def _castra_solis(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "pretensions; the pious here think the Mercurian flamen at "
         "Tribunal blasphemous.",
     )
-    hidden = joined_lines(
-        "The mithraeum under the covenant is Kaeso's copy; the true temple lies secret under Bordeaux.",
-        "Dama, the Praeco, killed the Presiding Quaesitors Senex (1210) and Tibaut (1219); her familiar Maju is becoming a demon (see her sheet and the Serpent's Venom).",
-        "Tibaut's lab notes on Senex's last inquiry are in his sanctum here; Senex told no one where he went.",
-        "Dama won the Chief Redcap Alazais's tacit support by secretly making a Longevity Ritual for her mundane companion, and counts on the covenant's weight to bury any motion against her.",
-    )
+    hidden = [
+        titled(
+            "The true mithraeum",
+            "The mithraeum under Castra Solis is Kaeso's copy; the true temple "
+            "lies secret under Bordeaux.",
+        ),
+        titled(
+            "Who killed the Presiding Quaesitors",
+            "Dama, the Praeco, killed the Presiding Quaesitors Senex (1210) and "
+            "Tibaut (1219).",
+        ),
+        titled(
+            "Dama's familiar",
+            "Dama's familiar Maju is becoming a demon.",
+        ),
+        titled(
+            "Tibaut's lab notes",
+            "Tibaut's lab notes on Senex's last inquiry are in his sanctum at "
+            "Castra Solis; Senex told no one where he went.",
+        ),
+        titled(
+            "The Praeco's bargain",
+            "Dama won the Chief Redcap Alazais's tacit support by secretly "
+            "making a Longevity Ritual for her mundane companion, and counts on "
+            "Castra Solis's weight to bury any motion against her.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "For Dama and Maju see her sheet and the Serpent's Venom.",
+        ),
+    ]
     castra = b.covenant(
         "Castra Solis",
         tribunal=tribunal,
@@ -894,10 +957,19 @@ def _castra_solis_magi(provence: Provence, b: Builder, castra: Covenant) -> None
             "thinks of her as a harsh taskmistress; they are cold to each "
             "other, and Marie honours Eleanor far more.",
         ),
-        secrets="Perhaps none of it happened: Marie may instead have trailed after "
-        "an Arcadian faerie queen who looks like Eleanor and feeds on the stories "
-        "told of her. Dama drove her away by putting the cult first and "
-        "refusing the rites Marie said Eleanor taught her.",
+        secrets=[
+            titled(
+                "Eleanor's faerie double",
+                "Perhaps none of it happened: Marie may instead have trailed "
+                "after an Arcadian faerie queen who looks like Eleanor and feeds "
+                "on the stories told of her.",
+            ),
+            titled(
+                "Why Dama drove Marie away",
+                "Dama drove her away by putting the cult first and refusing the "
+                "rites Marie said Eleanor taught her.",
+            ),
+        ],
         traits={"Unaging": 3, "Political": 3, "Artistic": 2},
     )
     m["beatrice"] = b.magus(
@@ -922,16 +994,26 @@ def _castra_solis_magi(provence: Provence, b: Builder, castra: Covenant) -> None
             "Arelat. She is thought to sympathise with the Matres and "
             "Matrones.",
         ),
-        secrets=paragraphs(
-            "Tibaut told her he believed Senex dead, and sent her sealed "
-            "letters by an Iberian Redcap who was ambushed by crusader "
-            "camp followers and died in the wilds by the Via Domitia; "
-            "the letter is still in his satchel. When Tibaut missed their "
-            "meeting she took her fears to Dama, who calmly suggested she "
-            "hold the office until the Tribunal; honoured, she agreed. "
-            "Dama believes she will not pursue her pater's inquiry and "
-            "has all but drawn her into the cult.",
-        ),
+        secrets=[
+            titled(
+                "Tibaut's letters",
+                "Tibaut told her he believed Senex dead, and sent her sealed "
+                "letters by an Iberian Redcap who was ambushed by crusader "
+                "camp followers and died in the wilds by the Via Domitia; "
+                "the letter is still in his satchel.",
+            ),
+            titled(
+                "How Beatrice came to the office",
+                "When Tibaut missed their meeting she took her fears to Dama, "
+                "who calmly suggested she hold the office until the Tribunal; "
+                "honoured, she agreed.",
+            ),
+            titled(
+                "Dama's hopes for Beatrice",
+                "Dama believes Beatrice will not pursue her pater's inquiry and "
+                "has all but drawn her into the cult.",
+            ),
+        ],
     )
     _mimizan_magi(provence, b, castra)
 
@@ -991,71 +1073,151 @@ def _mimizan_magi(provence: Provence, b: Builder, castra: Covenant) -> None:
             "gold, her father's gift and the only thing she has from "
             "before her apprenticeship.",
         ),
-        secrets=paragraphs(
-            "Maju is not what it seems. Worshipped by the Gauls as "
-            "Teutates, who drowned captives for it at the lake's black "
-            "rock, it later wore the mask of Sugaar among the Basques, "
-            "then returned to play in Oriande's court, where Dama first "
-            "saw it. It has bound her spirit as she bound it, and its "
-            "counsel led her into sin and blasphemy and to the edge of "
-            "infernalism: it had her build the chthonic sorginak into "
-            "her cult under the guise of the Black Madonna, so that at "
-            "its upper levels the Matres and Matrones are a coven of "
-            "tainted witches close to demonic corruption. Through them "
-            "it sets women against men and against Christ, and the sins "
-            "it spreads will soon make it a demon outright (Infernal "
-            "Might 45, a Duke of False Gods); it already hides the "
-            "Infernal aura at Mimizan. It appears as a winged sprite, a "
-            "hare, a dove or, in private, a snake that coils round her "
-            "throat. See the Serpent's Venom.",
-            "In 1210 Senex, Presiding Quaesitor, came to suspect her "
-            "cult. While she was away at an akelarre he slipped into "
-            "Mimizan; she came back early and found him in her sanctum. "
-            "The Aegis, Revoke the Protection of Bonisagus and Maju's "
-            "viper venom killed him; she stripped his goods and Maju, as "
-            "a drake, ate the body. Having entered her sanctum uninvited "
-            "he had forfeited his immunity, so the killing was lawful, "
-            "but she told no one to keep the cult unseen. His successor "
-            "Tibaut found the thread in Senex's notes, began probing the "
-            "Tribunal's cults in 1217, and pressed Luc of Ara Maxima Nova "
-            "about clergy and pilgrims on the Via Domitia; Luc lost a "
-            "Certamen to him and told Dama which Arts to avoid. In 1219 "
-            "she lured Tibaut into an abandoned house near the road to "
-            "Foix, broke his Parma, and set Maju on him; he staggered "
-            "into the road and collapsed, and crusader knights, Divinely "
-            "blessed and proof against her magic, carried him to the "
-            "Abbey of Saint Hilaire, where he died of the poison. They "
-            "later took him for a Cathar and raided the abbey. He lies "
-            "in its cemetery; his belongings sit locked in a chest in "
-            "the abbot's office. Dama does not know whether he told the "
-            "knights or the monks anything.",
-            "She has never killed a woman. She worries a little that "
-            "Beatrice is a woman, but thinks she will not follow her "
-            "pater's trail and has nearly won her for the cult. She "
-            "bought the tacit support of Alazais and the Coenobium by "
-            "secretly making a Longevity Ritual for Alazais's mundane "
-            "companion. Her own ritual is failing: she must renew it "
-            "before 1232, may sacrifice Maju for its vis, and feels her "
-            "legacy slipping away. Maju urges her to draw more sorginak "
-            "in and bend their faith in Mari and Sugaar, and needles her "
-            "about Marie and about Mimizan's smallness beside Rosefleur. "
-            "She has taken no more apprentices, as Maju thinks it too "
-            "risky. If she is shown what her familiar truly is, she may "
-            "yet be saved; if she falls, Maju means to carry her soul to "
-            "Hell.",
-            "The baetylus holds a shard of the beginning of Creation, "
-            "perhaps of Sol Invictus or of Cronus. Touching it she adds "
-            "5 to her aging rolls and suffers no aging crises; it purifies "
-            "her and all she touches or eats as the Greater Purifying "
-            "Touch, so poison cannot harm her; and it gives her visions "
-            "of danger to herself or the stone, which feed her paranoia. "
-            "The tale she believes says it fell into the lake of "
-            "Toulouse and was raised by pagan wizards who later became "
-            "Diedne, and that Maugris kept it, long-lived by its power, "
-            "hid with it at Oriande's court in the Schism War, and gave "
-            "it to her so that he could at last die and so that Oriande, "
-            "whom he foresaw it would corrupt, would never have it.",
-        ),
+        secrets=[
+            titled(
+                "What Maju is",
+                "Maju is not what it seems. Worshipped by the Gauls as "
+                "Teutates, who drowned captives for it at the lake's black "
+                "rock, it later wore the mask of Sugaar among the Basques, "
+                "then returned to play in Oriande's court, where Dama first "
+                "saw it.",
+            ),
+            titled(
+                "Maju's hold on Dama",
+                "Maju has bound her spirit as she bound it, and its counsel "
+                "led her into sin and blasphemy and to the edge of "
+                "infernalism.",
+            ),
+            titled(
+                "The cult's upper levels",
+                "Maju had her build the chthonic sorginak into her cult under "
+                "the guise of the Black Madonna, so that at its upper levels "
+                "the Matres and Matrones are a coven of tainted witches close "
+                "to demonic corruption.",
+            ),
+            titled(
+                "Maju becoming a demon",
+                "Through the Matres and Matrones Maju sets women against men "
+                "and against Christ, and the sins it spreads will soon make it "
+                "a demon outright; it already hides the Infernal aura at "
+                "Mimizan.",
+            ),
+            titled(
+                "Maju's shapes",
+                "Maju appears as a winged sprite, a hare, a dove or, in "
+                "private, a snake that coils round her throat.",
+            ),
+            titled(
+                "The death of Senex",
+                "In 1210 Senex, Presiding Quaesitor, came to suspect her "
+                "cult. While she was away at an akelarre he slipped into "
+                "Mimizan; she came back early and found him in her sanctum. "
+                "The Aegis, Revoke the Protection of Bonisagus and Maju's "
+                "viper venom killed him; she stripped his goods and Maju, as "
+                "a drake, ate the body.",
+            ),
+            titled(
+                "Whether Senex's killing was lawful",
+                "Having entered her sanctum uninvited Senex had forfeited his "
+                "immunity, so the killing was lawful, but she told no one to "
+                "keep the cult unseen.",
+            ),
+            titled(
+                "Tibaut's inquiry",
+                "Senex's successor Tibaut found the thread in Senex's notes, "
+                "began probing the Tribunal's cults in 1217, and pressed Luc "
+                "of Ara Maxima Nova about clergy and pilgrims on the Via "
+                "Domitia.",
+            ),
+            titled(
+                "Luc's warning",
+                "Luc of Ara Maxima Nova lost a Certamen to Tibaut and told "
+                "Dama which Arts to avoid.",
+            ),
+            titled(
+                "The death of Tibaut",
+                "In 1219 she lured Tibaut into an abandoned house near the road "
+                "to Foix, broke his Parma, and set Maju on him; he staggered "
+                "into the road and collapsed, and crusader knights, Divinely "
+                "blessed and proof against her magic, carried him to the "
+                "Abbey of Saint Hilaire, where he died of the poison. They "
+                "later took him for a Cathar and raided the abbey.",
+            ),
+            titled(
+                "Tibaut's grave",
+                "Tibaut lies in the cemetery of the Abbey of Saint Hilaire; his "
+                "belongings sit locked in a chest in the abbot's office.",
+            ),
+            titled(
+                "What Tibaut may have told",
+                "Dama does not know whether Tibaut told the knights or the "
+                "monks anything.",
+            ),
+            titled(
+                "Dama and Beatrice",
+                "She has never killed a woman. She worries a little that "
+                "Beatrice is a woman, but thinks Beatrice will not follow her "
+                "pater's trail and has nearly won her for the cult.",
+            ),
+            titled(
+                "The Coenobium's support",
+                "She bought the tacit support of Alazais and the Coenobium by "
+                "secretly making a Longevity Ritual for Alazais's mundane "
+                "companion.",
+            ),
+            titled(
+                "Dama's failing ritual",
+                "Her own Longevity Ritual is failing: she must renew it before "
+                "1232, may sacrifice Maju for its vis, and feels her legacy "
+                "slipping away.",
+            ),
+            titled(
+                "Maju's urging",
+                "Maju urges her to draw more sorginak in and bend their faith "
+                "in Mari and Sugaar, and needles her about Marie and about "
+                "Mimizan's smallness beside Rosefleur.",
+            ),
+            titled(
+                "No more apprentices",
+                "She has taken no more apprentices, as Maju thinks it too risky.",
+            ),
+            titled(
+                "Dama's soul",
+                "If she is shown what her familiar truly is, she may yet be "
+                "saved; if she falls, Maju means to carry her soul to Hell.",
+            ),
+            titled(
+                "The baetylus",
+                "The baetylus holds a shard of the beginning of Creation, "
+                "perhaps of Sol Invictus or of Cronus.",
+            ),
+            titled(
+                "The baetylus's gifts",
+                "Touching the baetylus guards her against aging; it purifies "
+                "her and all she touches or eats, so poison cannot harm her; "
+                "and it gives her visions of danger to herself or the stone, "
+                "which feed her paranoia.",
+            ),
+            titled(
+                "The tale of the baetylus",
+                "The tale she believes says the baetylus fell into the lake of "
+                "Toulouse and was raised by pagan wizards who later became "
+                "Diedne, and that Maugris kept it, long-lived by its power, "
+                "hid with it at Oriande's court in the Schism War, and gave "
+                "it to her so that he could at last die and so that Oriande, "
+                "whom he foresaw it would corrupt, would never have it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Maju as a demon: Infernal Might 45, a Duke of False Gods. "
+                    "See the Serpent's Venom.",
+                    "Touching the baetylus she adds 5 to her aging rolls and "
+                    "suffers no aging crises; it purifies as the Greater "
+                    "Purifying Touch.",
+                ),
+            ),
+        ],
         traits={"Driven": 4, "Proud": 3, "Optimistic": 2},
     )
     m["rebecca"] = b.magus(
@@ -1091,8 +1253,13 @@ def _mimizan_magi(provence: Provence, b: Builder, castra: Covenant) -> None:
             "when she joins the cult. Rebecca's voting sigil is a wolf "
             "fetish she took in a fight from a rival sorgina.",
         ),
-        secrets="She is one of the sorginak Maju is working to corrupt through "
-        "Dama's cult.",
+        secrets=[
+            titled(
+                "Rebecca and the cult",
+                "She is one of the sorginak Maju is working to corrupt through "
+                "Dama's cult.",
+            ),
+        ],
         traits={"Optimistic": 2},
     )
 
@@ -1263,8 +1430,13 @@ def _lords(provence: Provence, b: Builder) -> None:
         summary="Lord of Roquetaillade near Langon, said to be the first castle "
         "Charlemagne built, a square stronghold with four towers that "
         "each lord of the line has made grander.",
-        secrets="The faerie masons of the nearby caves build for each new lord "
-        "under a family pact passed from father to son on the deathbed.",
+        secrets=[
+            titled(
+                "The masons' pact",
+                "The faerie masons of the nearby caves build for each new lord "
+                "under a family pact passed from father to son on the deathbed.",
+            ),
+        ],
     )
     w["count_armagnac"] = b.lord(
         "Pierre-Gerald, Count of Armagnac",
@@ -1519,14 +1691,31 @@ def _churches(provence: Provence, b: Builder) -> None:
             "bishop keeps in his office unused, and a plain gold ring set "
             "with amber in a soapstone box.",
         ),
-        secrets="Whoever is given the ring and told to think of a subject slowly "
-        "forgets it: an Intelligence roll each full moon against 7, plus "
-        "1 for each failure, and after five failures it is gone. The "
-        "effect is not Hermetic (a season and an InMe Lab Total of 30 to "
-        "work out). The ring holds 4 pawns of Mentem vis and is an Arcane "
-        "Connection to the spirit of Tharbis. Its power was forgotten "
-        "when a dying bishop gave it to his successor and told him never "
-        "to forget it.",
+        secrets=[
+            titled(
+                "The bishop's ring",
+                "Whoever is given the bishops' gold ring and told to think of a "
+                "subject slowly forgets it.",
+            ),
+            titled(
+                "What the ring holds",
+                "The bishops' gold ring holds 4 pawns of Mentem vis and is an "
+                "Arcane Connection to the spirit of Tharbis.",
+            ),
+            titled(
+                "How the ring's power was forgotten",
+                "The power of the bishops' gold ring was forgotten when a dying "
+                "bishop gave it to his successor and told him never to forget "
+                "it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The ring's forgetting: an Intelligence roll each full moon "
+                "against 7, plus 1 for each failure, and after five failures "
+                "the subject is gone. The effect is not Hermetic (a season and "
+                "an InMe Lab Total of 30 to work out).",
+            ),
+        ],
     )
     w["saint_savin"] = b.church(
         "The Abbey of Saint-Savin",
@@ -1536,10 +1725,15 @@ def _churches(provence: Provence, b: Builder) -> None:
         "Charlemagne besieged Lourdes and repaid the monks by killing the "
         "giants Passamont and Alabaster, who lived near their priory and "
         "ate their flocks.",
-        secrets="The giants were faeries and did not die: their essence passed "
-        "into the skull fetishes Roland left behind, and they now dwell "
-        "deeper in the Pyrenees, behind tales of savage brutes haunting "
-        "the high pastures and passes.",
+        secrets=[
+            titled(
+                "What became of the giants",
+                "The giants were faeries and did not die: their essence passed "
+                "into the skull fetishes Roland left behind, and they now dwell "
+                "deeper in the Pyrenees, behind tales of savage brutes haunting "
+                "the high pastures and passes.",
+            ),
+        ],
     )
     w["bessaut"] = b.church(
         "The Bessaut Commandery",
@@ -1580,7 +1774,13 @@ def _towns(provence: Provence, b: Builder) -> None:
             "and is a major stop on the Way of St James. Cenodoxus "
             "Superbia and Julian the Tempter hunt its crowds.",
         ),
-        secrets="Kaeso's true mithraeum lies in a cavern under its southern quarter.",
+        secrets=[
+            titled(
+                "Kaeso's true mithraeum",
+                "Kaeso's true mithraeum lies in a cavern under Bordeaux's "
+                "southern quarter.",
+            ),
+        ],
     )
     w["blaye"] = b.town(
         "Blaye",

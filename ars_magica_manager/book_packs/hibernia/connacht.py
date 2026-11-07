@@ -28,7 +28,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs, vf_art
+from ..builder import joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -1593,13 +1593,44 @@ def _oireadh(hibernia: Hibernia, b: Builder) -> None:
             "and the Ordo Hiberniae both know the Pact as a fellowship "
             "of druids; its research is kept from both.",
         ),
-        secrets=joined_lines(
-            "The Pact's true aim is a Parma Magica of its own; the Order knows nothing of it.",
-            "Ádhamh's vision is a theory of magic that takes in every Irish tradition and gives every practitioner each tradition's defences: a breakthrough of at least 120 points (the Original Research rules of Houses of Hermes: True Lineages). He has 15. So far he has made amulets, after the Folk Witch tradition, that give their wearer Second Sight, Dowsing or Cursing at a score of 4 for a season; they have shown him how his own magic differs from the witches', and by learning those Abilities he hopes to gain their small magical defences. His notes are hidden for those who come after him.",
-            "The Gifted child the Coill Trí took from Ádhamh is now an apprentice in a Hermetic covenant, and he may yet ask her to report on summoners she meets.",
-            "Tuathal's goetic arts are Infernal at root, though he does not hide them and Ádhamh has not yet seen it. His Goetic master has just died in Dublin, leaving him a book of Infernal Lore on particular demons.",
-            "Umor's three cousins have sworn to kill him for leaving Árainn Meáin.",
-        ),
+        secrets=[
+            titled(
+                "The Pact's true aim",
+                "The Pact's true aim is a Parma Magica of its own; the Order knows nothing of it.",
+            ),
+            titled(
+                "Ádhamh's vision",
+                "Ádhamh's vision is a theory of magic that takes in every Irish tradition and gives every practitioner each tradition's defences.",
+            ),
+            titled(
+                "Ádhamh's amulets",
+                "So far Ádhamh has made amulets, after the Folk Witch tradition, that give their wearer Second Sight, Dowsing or Cursing for a season; they have shown him how his own magic differs from the witches', and by learning those Abilities he hopes to gain their small magical defences.",
+            ),
+            titled(
+                "Ádhamh's notes",
+                "Ádhamh's notes are hidden for those who come after him.",
+            ),
+            titled(
+                "The Gifted child",
+                "The Gifted child the Coill Trí took from Ádhamh is now an apprentice in a Hermetic covenant, and he may yet ask her to report on summoners she meets.",
+            ),
+            titled(
+                "Tuathal's goetic arts",
+                "Tuathal's goetic arts are Infernal at root, though he does not hide them and Ádhamh has not yet seen it.",
+            ),
+            titled(
+                "Tuathal's inheritance",
+                "Tuathal's Goetic master has just died in Dublin, leaving him a book of Infernal Lore on particular demons.",
+            ),
+            titled(
+                "Umor's cousins",
+                "Umor's three cousins have sworn to kill him for leaving Árainn Meáin.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Ádhamh's theory is a breakthrough of at least 120 points (the Original Research rules of Houses of Hermes: True Lineages). He has 15. His amulets give their Ability at a score of 4.",
+            ),
+        ],
     )
 
 
@@ -1707,11 +1738,20 @@ def _praesis(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "independent magus. The book gives no founding year: 855 is "
         "assumed, soon after the Treaty was signed in 851.",
     )
-    hidden = joined_lines(
-        "The tower and the spear stand in a regio, out of mortal sight, warded and guarded by magic: the platform the world sees is not where the spear truly is.",
-        "Oscar has seen his own death through the Gáe Bulg. No one knows what he saw; since taking the spear he has been studying the legends of the Fir Bolg.",
-        "Ballack's distant benefactors are a powerful cult or society he does not belong to but took help from; they may soon send someone to remind him of what he owes.",
-    )
+    hidden = [
+        titled(
+            "Where the spear truly is",
+            "The tower and the spear stand in a regio, out of mortal sight, warded and guarded by magic: the platform the world sees is not where the spear truly is.",
+        ),
+        titled(
+            "Oscar's vision",
+            "Oscar has seen his own death through the Gáe Bulg. No one knows what he saw; since taking the spear he has been studying the legends of the Fir Bolg.",
+        ),
+        titled(
+            "Ballack's benefactors",
+            "Ballack's distant benefactors are a powerful cult or society he does not belong to but took help from; they may soon send someone to remind him of what he owes.",
+        ),
+    ]
     praesis = b.covenant(
         "Praesis",
         tribunal=tribunal,
@@ -1883,9 +1923,13 @@ def _meadhbh_and_faolan(hibernia: Hibernia, b: Builder) -> None:
             "friends among the Coill Trí. He belongs to no covenant, "
             "a vagrant at law.",
         ),
-        secrets="He is turning his back on the Order. The Tribunal has not "
-        "yet worked out where he is; when it does, it will want him "
-        "brought back, with or without the Coill Trí's help.",
+        secrets=[
+            titled("Turning from the Order", "He is turning his back on the Order."),
+            titled(
+                "The Tribunal's search",
+                "The Tribunal has not yet worked out where Faolán is; when it does, it will want him brought back, with or without the Coill Trí's help.",
+            ),
+        ],
     )
 
 

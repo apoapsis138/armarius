@@ -22,10 +22,9 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...models import new_instance_id
-from ...models.common import split_secrets
+from ...models import Secret, new_instance_id
 from ...tribunal_packages import hibernia as package
-from ..builder import paragraphs, secrets
+from ..builder import paragraphs, secrets, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -521,17 +520,12 @@ RUINS: tuple[tuple[str, str, str, tuple[str, ...], str, int, str, str, str], ...
         2,
         "Known",
         "In the Tribunal",
-        secrets(
-            "A Diedne covenant of Munster that took Donn, the death god of "
-            "the Tuatha Dé, as its ally in the Schism War. With Donn's host "
-            "it destroyed Warbler's Way; then the Hibernian magi united, "
-            "beat the Munster Diedne, razed Salmon's Eye and drove Donn back "
-            "to his island, Teach Duínn. The book does not say where it "
-            "stood; the aura is assumed.",
-            "Cliffheart has spent two centuries asking why the Munster "
-            "Tuatha Dé sided with the Diedne and still does not know; "
-            "whatever bound Donn to this place may be found in its ruins.",
-        ),
+        "A Diedne covenant of Munster that took Donn, the death god of "
+        "the Tuatha Dé, as its ally in the Schism War. With Donn's host "
+        "it destroyed Warbler's Way; then the Hibernian magi united, "
+        "beat the Munster Diedne, razed Salmon's Eye and drove Donn back "
+        "to his island, Teach Duínn. The book does not say where it "
+        "stood; the aura is assumed.",
     ),
     (
         "ruin_widows_throat",
@@ -611,31 +605,47 @@ RUINS: tuple[tuple[str, str, str, tuple[str, ...], str, int, str, str, str], ...
         5,
         "Known",
         "In the Tribunal",
-        secrets(
-            "A covenant founded on the Hill of Uisneach early in the Order's "
-            "time in Ireland, for its strong aura and the Stone of Division, "
-            "where oaths and treaties binding the whole Tribunal are sworn. "
-            "One summer evening it vanished and left no trace; only scraps of "
-            "record remain and even its name is forgotten. It seems likely "
-            "another covenant will one day rise here.",
+        "A covenant founded on the Hill of Uisneach early in the Order's "
+        "time in Ireland, for its strong aura and the Stone of Division, "
+        "where oaths and treaties binding the whole Tribunal are sworn. "
+        "One summer evening it vanished and left no trace; only scraps of "
+        "record remain and even its name is forgotten. It seems likely "
+        "another covenant will one day rise here.",
+    ),
+)
+
+#: The secrets of the ruins that have them, by the ruin's key.
+RUIN_SECRETS: dict[str, list[Secret]] = {
+    "ruin_salmons_eye": [
+        titled(
+            "Cliffheart's question",
+            "Cliffheart has spent two centuries asking why the Munster "
+            "Tuatha Dé sided with the Diedne and still does not know.",
+        ),
+        titled(
+            "What bound Donn",
+            "Whatever bound Donn to Salmon's Eye may be found in its ruins.",
+        ),
+    ],
+    "ruin_uisneach": [
+        titled(
+            "The proud magician",
             "Folk tales tell of a mighty magician who wanted to rule all the "
             "others in Ireland, broke a geas, and was carried off by the Good "
             "Folk for his pride. The truth is not known.",
         ),
-    ),
-)
+    ],
+}
 
 
 def _ruins(hibernia: Hibernia) -> None:
     b = hibernia.b
-    for key, name, _province, _near, realm, aura, status, known, text in RUINS:
-        # A ruin's text is written with its secrets under their heading.
-        summary, hidden = split_secrets(text)
+    for key, name, _province, _near, realm, aura, status, known, summary in RUINS:
         hibernia.places[key] = b.place(
             name,
             ruined=True,
             summary=summary,
-            secrets=hidden,
+            secrets=RUIN_SECRETS.get(key, []),
             realm=realm,
             aura=aura,
             status=status,
@@ -914,9 +924,14 @@ def _cu_chonnacht(hibernia: Hibernia) -> None:
         "which has never ended though the two have met face to face "
         "many times, the Tribunal's best example of a War that runs on "
         "until someone dies, yields or makes a treaty.",
-        secrets="The book says nothing more of him. His heartbeast is assumed "
-        "to be a wolf, from his name (mac tíre is Irish for a wolf, and "
-        "cluasach means big-eared).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book says nothing more of him. His heartbeast is assumed "
+                "to be a wolf, from his name (mac tíre is Irish for a wolf, and "
+                "cluasach means big-eared).",
+            )
+        ],
     )
 
 

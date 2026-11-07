@@ -21,9 +21,11 @@ from ...rules import egyptian_tombs as et
 from ...tombs import TombCurse, TombTrap, TombWard
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_great,
     vf_minor,
     vf_puissant,
@@ -111,18 +113,24 @@ def _guild(b: Builder) -> None:
             "Locals call hieroglyphs by many names: the Pen of Copts, of the "
             "Temples, of Talismans, of South Arabia, of Priests and of Hermes.",
         ),
-        secrets=paragraphs(
-            "Rules: the guild's knowledge is the Ability Profession: Seeker; its "
-            "site lists are Area Lore (LotN p. 24). A government clerk must be "
-            "present at any digging for treasure (p. 25).",
-            "In a high-fantasy saga, members may hire magic items recovered from "
-            "tombs, and the guild has supernatural allies or even mystical "
-            "members (p. 24).",
-            "The book compares the guild to the adventurers' guilds of other "
-            "fantasy games: a familiar way in for new players (p. 24). The Seeker "
-            "manuals describe more, and less, dangerous versions of every trap "
-            "listed under the Traps of the Tombs (p. 43).",
-        ),
+        secrets=[
+            titled(
+                "The government clerk",
+                "A government clerk must be present at any digging for treasure "
+                "(p. 25).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Rules: the guild's knowledge is the Ability Profession: Seeker; "
+                "its site lists are Area Lore (LotN p. 24).\n\nIn a high-fantasy "
+                "saga, members may hire magic items recovered from tombs, and the "
+                "guild has supernatural allies or even mystical members (p. "
+                "24).\n\nThe book compares the guild to the adventurers' guilds of "
+                "other fantasy games: a familiar way in for new players (p. 24). "
+                "The Seeker manuals describe more, and less, dangerous versions "
+                "of every trap listed under the Traps of the Tombs (p. 43).",
+            ),
+        ],
     )
     b.town(
         "Gourneh",
@@ -216,62 +224,87 @@ def _monuments(b: Builder) -> Any:
             "graveyards, and these have a Divine aura. Ancient temples may keep a "
             "weak Faerie aura from their pagan worship, if any remains.",
         ),
-        secrets=paragraphs(
-            "Auras (LotN pp. 31, 40): ancient tombs often have Magic auras, from "
-            "their preternatural tether and fine sites. Each century a grave site "
-            "was in use gives a tether of 1, to a maximum of 5; the aura equals "
-            "the tether, may be raised by impressive natural features, and is "
-            "often lower where the monuments have decayed. The stele is a vestige "
-            "of the Magic Realm, usually aligned to Mentem, of a level equal to "
-            "the tomb's aura. An intact mummy is an Arcane Connection for its ka, "
-            "giving a Familiarity Bonus of 15 to the Vestige Travel Total; mortals "
-            "using the vestige gain nothing. See Realms of Power: Magic pp. 8-10, "
-            "20-24.",
-            "Ka-work (pp. 27, 30): a ghost can manifest as part of its form "
-            "anything in its grave goods or painted on its walls, if not stolen "
-            "or defaced, and these things can affect mortals at its choice. "
-            "Hermetic magic cannot sense the ba, perhaps because of the Limit of "
-            "the Soul, or use the spells written to protect it. Hermetic magi may "
-            "use the serdab tunnel with shapeshifting or Intellego; treasure "
-            "guides leave it out, as it is no use to thieves.",
-            "Carving equipment (p. 31): in a very few tombs the best grave goods "
-            "are carving tools, with which a ghost makes likenesses that become "
-            "real for it, including food, so it escapes the fate of the unfed. A "
-            "rough carving of archers calls up faerie reinforcements. In later "
-            "tombs a new object takes one round; in earlier ones, five minutes, "
-            "as the carving must closely match known forms; in the earliest, a "
-            "miniature statue, up to half an hour. Many tomb owners have a small "
-            "servitor statue use the tools for them.",
-            "Unfed spirits (p. 31) travel the roads scrounging what humans have "
-            "thrown away, which spiritually gives it to the next finder. They hate "
-            "this, and may plague people with ill luck until offered libations.",
-            "Designing a tomb (pp. 40-44): a place marked as a tomb has a Tomb "
-            "tab with the book's kinds, Build Points and costs; statistics are "
-            "needed only for a tomb that will last in the saga. A library is "
-            "usually wall inscriptions in Ancient "
-            "Egyptian or Demotic, in hieroglyphs or hieratic: a history of the "
-            "dead as Area Lore or Organization Lore, or spells as Magic Lore or "
-            "Supernatural Abilities; a few hold scrolls in sealed jars. Specialists "
-            "cost BP as usual; a tomb guardian costs its highest Martial Ability "
-            "or Brawl; ghosts may be specialists or teachers.",
-            "Vis and Boons (p. 44): vis left as grave goods is paid for as a vis "
-            "stock if the tomb becomes a character's home, and helps an akh offset "
-            "the penalty of high Might on Study Totals for Transformation. Tombs "
-            "may also be vis sources, Corpus most often. The Boons and Hooks of "
-            "ArM5 pp. 72-74 and Covenants pp. 6-27 mostly suit; Wealth means the "
-            "grave goods are intact, perhaps Unknown to the tomb's residents. In "
-            "Nubia every tomb should buy Seclusion, for fear of the dead.",
-            "Dedun (p. 39): Temple Priests and Undying Ones of the Cult of Dedun "
-            "use tombs as homes and temples, the font of power gained at Initiation "
-            "as temple priest and the home of their ghoulish court; adherents "
-            "gather there once a month. Detail the tomb's resources when a player "
-            "character seeks that Initiation, or for an Undying One as villain or "
-            "ally. Such a resident may hold altar priests and adherents as "
-            "specialists (p. 42).",
-            "The book offers both simple tombs and labyrinthine necropolises; "
-            "treat simple ones as early, poor, or built after a long drought "
-            "(p. 27).",
-        ),
+        secrets=[
+            titled(
+                "Ka-work",
+                "A ghost can manifest as part of its form anything in its grave "
+                "goods or painted on its walls, if not stolen or defaced, and "
+                "these things can affect mortals at its choice (pp. 27, 30).",
+            ),
+            titled(
+                "The ba and Hermetic magic",
+                "Hermetic magic cannot sense the ba, perhaps because of the Limit "
+                "of the Soul, or use the spells written to protect it (pp. 27, "
+                "30).",
+            ),
+            titled(
+                "The serdab tunnel",
+                "Hermetic magi may use the serdab tunnel with shapeshifting or "
+                "Intellego; treasure guides leave it out, as it is no use to "
+                "thieves (pp. 27, 30).",
+            ),
+            titled(
+                "Carving equipment",
+                "In a very few tombs the best grave goods are carving tools, with "
+                "which a ghost makes likenesses that become real for it, "
+                "including food, so it escapes the fate of the unfed. A rough "
+                "carving of archers calls up faerie reinforcements. In later "
+                "tombs a new object takes one round; in earlier ones, five "
+                "minutes, as the carving must closely match known forms; in the "
+                "earliest, a miniature statue, up to half an hour. Many tomb "
+                "owners have a small servitor statue use the tools for them (p. "
+                "31).",
+            ),
+            titled(
+                "Unfed spirits",
+                "Unfed spirits travel the roads scrounging what humans have "
+                "thrown away, which spiritually gives it to the next finder. They "
+                "hate this, and may plague people with ill luck until offered "
+                "libations (p. 31).",
+            ),
+            titled(
+                "The Cult of Dedun's tombs",
+                "Temple Priests and Undying Ones of the Cult of Dedun use tombs "
+                "as homes and temples, the font of power gained at Initiation as "
+                "temple priest and the home of their ghoulish court; adherents "
+                "gather there once a month (p. 39).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Auras (LotN pp. 31, 40): ancient tombs often have Magic auras, "
+                "from their preternatural tether and fine sites. Each century a "
+                "grave site was in use gives a tether of 1, to a maximum of 5; "
+                "the aura equals the tether, may be raised by impressive natural "
+                "features, and is often lower where the monuments have decayed. "
+                "The stele is a vestige of the Magic Realm, usually aligned to "
+                "Mentem, of a level equal to the tomb's aura. An intact mummy is "
+                "an Arcane Connection for its ka, giving a Familiarity Bonus of "
+                "15 to the Vestige Travel Total; mortals using the vestige gain "
+                "nothing. See Realms of Power: Magic pp. 8-10, 20-24.\n\nDesigning "
+                "a tomb (pp. 40-44): a place marked as a tomb has a Tomb tab with "
+                "the book's kinds, Build Points and costs; statistics are needed "
+                "only for a tomb that will last in the saga. A library is usually "
+                "wall inscriptions in Ancient Egyptian or Demotic, in hieroglyphs "
+                "or hieratic: a history of the dead as Area Lore or Organization "
+                "Lore, or spells as Magic Lore or Supernatural Abilities; a few "
+                "hold scrolls in sealed jars. Specialists cost BP as usual; a "
+                "tomb guardian costs its highest Martial Ability or Brawl; ghosts "
+                "may be specialists or teachers.\n\nVis and Boons (p. 44): vis left "
+                "as grave goods is paid for as a vis stock if the tomb becomes a "
+                "character's home, and helps an akh offset the penalty of high "
+                "Might on Study Totals for Transformation. Tombs may also be vis "
+                "sources, Corpus most often. The Boons and Hooks of ArM5 pp. "
+                "72-74 and Covenants pp. 6-27 mostly suit; Wealth means the grave "
+                "goods are intact, perhaps Unknown to the tomb's residents. In "
+                "Nubia every tomb should buy Seclusion, for fear of the "
+                "dead.\n\nDedun: detail the tomb's resources when a player "
+                "character seeks that Initiation, or for an Undying One as "
+                "villain or ally. Such a resident may hold altar priests and "
+                "adherents as specialists (p. 42).\n\nThe book offers both simple "
+                "tombs and labyrinthine necropolises; treat simple ones as early, "
+                "poor, or built after a long drought (p. 27).",
+            ),
+        ],
     )
 
 
@@ -295,23 +328,44 @@ def _field_of_reeds(b: Builder, monuments: Any) -> Any:
             "The common dead expected no more than to farm here for ever; to be "
             "anything else took burial rites only great wealth could buy.",
         ),
-        secrets=paragraphs(
-            "It lies in the Magic Realm, and most tombs' Magic auras ease the "
-            "passage (LotN pp. 26, 32).",
-            "Wesir (Osiris) rules it: a powerful Daimon and ally of the Black, "
-            "whose ordeals set the pattern for other ka, and perhaps the first "
-            "human to reach apotheosis as a Daimon. He opened the path hoping to "
-            "recruit friends for the Black. Those who become akhu may join, but "
-            "none are forced to fight the Red (pp. 32, 37). Whether stories of "
-            "Wesir inspired the faerie god Osiris, or the reverse, nobody knows; "
-            "a faerie copy of the Field of Reeds, in the Faerie Realm, is ruled "
-            "by that god and peopled by faerie ka (p. 32).",
-            "The ba is said to leave the boat of the sun god to visit its body "
-            "(p. 30). Thoth judges those who would become akhu, and hearts heavy "
-            "with evil feed the Devourer of Souls (p. 37). When the ba needs "
-            "protection against the Great Serpents of the Hours it must have the "
-            "true words (p. 32).",
-        ),
+        secrets=[
+            titled(
+                "The way to the Field of Reeds",
+                "The Field of Reeds lies in the Magic Realm, and most tombs' "
+                "Magic auras ease the passage (LotN pp. 26, 32).",
+            ),
+            titled(
+                "Wesir",
+                "Wesir (Osiris) rules the Field of Reeds: a powerful Daimon and "
+                "ally of the Black, whose ordeals set the pattern for other ka, "
+                "and perhaps the first human to reach apotheosis as a Daimon. He "
+                "opened the path hoping to recruit friends for the Black. Those "
+                "who become akhu may join, but none are forced to fight the Red "
+                "(pp. 32, 37).",
+            ),
+            titled(
+                "The faerie Field of Reeds",
+                "Whether stories of Wesir inspired the faerie god Osiris, or the "
+                "reverse, nobody knows; a faerie copy of the Field of Reeds, in "
+                "the Faerie Realm, is ruled by that god and peopled by faerie ka "
+                "(p. 32).",
+            ),
+            titled(
+                "The ba's journey",
+                "The ba is said to leave the boat of the sun god to visit its "
+                "body (p. 30).",
+            ),
+            titled(
+                "The judgement of Thoth",
+                "Thoth judges those who would become akhu, and hearts heavy with "
+                "evil feed the Devourer of Souls (p. 37).",
+            ),
+            titled(
+                "The true words",
+                "When the ba needs protection against the Great Serpents of the "
+                "Hours it must have the true words (p. 32).",
+            ),
+        ],
         inside=monuments,
     )
 
@@ -330,11 +384,16 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
             "Between its forepaws lies a small Divine aura, from when Mary laid "
             "the infant Christ in the shade there while they rested (p. 28).",
         ),
-        secrets="The Divine aura between its forepaws may be what has locked the "
-        "Father of Dread in "
-        "place: it no longer gives predictions or warns of grave worldly events, "
-        "but it protects the tombs in a subtler way, drawing trespassers into "
-        "Faerie (LotN p. 28). The aura's strength is not printed.",
+        secrets=[
+            titled(
+                "What holds the Father of Dread",
+                "The Divine aura between the Father of Dread's forepaws may be "
+                "what has locked it in place: it no longer gives predictions or "
+                "warns of grave worldly events, but it protects the tombs in a "
+                "subtler way, drawing trespassers into Faerie (LotN p. 28).",
+            ),
+            titled("Storyguide Notes", "The aura's strength is not printed."),
+        ],
     )
     b.place(
         "The Ramaseum",
@@ -342,11 +401,20 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         inside=monuments,
         summary="The tomb of Rameses II, the pharaoh of the Bible, adorned with "
         "colossal images of himself.",
-        secrets="Most ghosts cannot possess statues far larger than they were in "
-        "life, as these do not feel like true likenesses. Rameses, the very type of "
-        "Pride, thought himself a giant bestriding the world, so might animate the "
-        "vast images here. Other pharaohs who share his Personality Flaw might "
-        "likewise manifest through huge statues (LotN p. 31).",
+        secrets=[
+            titled(
+                "Ghosts and great statues",
+                "Most ghosts cannot possess statues far larger than they were in "
+                "life, as these do not feel like true likenesses (LotN p. 31).",
+            ),
+            titled(
+                "Rameses's statues",
+                "Rameses, the very type of Pride, thought himself a giant "
+                "bestriding the world, so might animate the vast images at the "
+                "Ramaseum. Other pharaohs who share his Personality Flaw might "
+                "likewise manifest through huge statues (LotN p. 31).",
+            ),
+        ],
     )
     b.place(
         "The Secret Valley near Alexandria",
@@ -356,11 +424,20 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         summary="A hidden valley of rock-cut tombs close to Alexandria. Each "
         "tomb's mortuary chapel stands apart on the banks of the Nile, to keep "
         "the valley's place secret.",
-        secrets="The ghosts ride regularly to their chapels for offerings, or "
-        "scrounge street rubbish if a chapel is destroyed or untended. Characters "
-        "with Second Sight may follow them home; if spotted they are attacked, "
-        "and on the Paths of the Dead the spectral weapons are entirely solid "
-        "(LotN p. 31).",
+        secrets=[
+            titled(
+                "The ghosts' rides",
+                "The ghosts of the Secret Valley ride regularly to their chapels "
+                "for offerings, or scrounge street rubbish if a chapel is "
+                "destroyed or untended (LotN p. 31).",
+            ),
+            titled(
+                "Following the ghosts",
+                "Characters with Second Sight may follow the ghosts home; if "
+                "spotted they are attacked, and on the Paths of the Dead the "
+                "spectral weapons are entirely solid (LotN p. 31).",
+            ),
+        ],
     )
     b.place(
         "The House of Life",
@@ -370,8 +447,13 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         summary="The temple of Thoth where Imhotep's healers trained, the first "
         "known library of magical books and the first hospital. Others like it "
         "followed, but no House of Life has ever been uncovered.",
-        secrets="Its library, never found, is the greatest cache of alchemical "
-        "texts (LotN pp. 39, 49).",
+        secrets=[
+            titled(
+                "The House of Life's library",
+                "The House of Life's library, never found, is the greatest cache "
+                "of alchemical texts (LotN pp. 39, 49).",
+            ),
+        ],
     )
     b.place(
         "The Treasure House of Qarun",
@@ -384,9 +466,19 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         "has found it since. The seekers love the tale: it was buried, but not by "
         "its owner's order, so its defences should be weak beside those of dead "
         "kings.",
-        secrets="Where the keys lie is recorded somewhere in the guild's library. "
-        "Characters with a clue find many eager young seekers, and many cynical "
-        "old ones who chased it in their youth (LotN p. 25).",
+        secrets=[
+            titled(
+                "Where the keys lie",
+                "Where the keys of Qarun's treasure house lie is recorded "
+                "somewhere in the guild's library (LotN p. 25).",
+            ),
+            titled(
+                "The seekers of Qarun's treasure",
+                "Characters with a clue find many eager young seekers, and many "
+                "cynical old ones who chased Qarun's treasure in their youth "
+                "(LotN p. 25).",
+            ),
+        ],
     )
     b.place(
         "The Treasure House of Moses's Pharaoh",
@@ -396,7 +488,13 @@ def _necropolises(b: Builder, monuments: Any) -> Any:
         summary="God played the same trick with the treasure house of the "
         "pharaoh of Moses. It too has never been found, though its exact place is "
         "known.",
-        secrets="This may mean a Divine regio lies there (LotN p. 25).",
+        secrets=[
+            titled(
+                "A Divine regio",
+                "That the treasure house is never found, though its exact place "
+                "is known, may mean a Divine regio lies there (LotN p. 25).",
+            ),
+        ],
     )
     return giza
 
@@ -416,10 +514,16 @@ def _defenses(b: Builder, monuments: Any) -> None:
             "names a condition, such as defacing the inscription, breaking the "
             "seal, entering impure or disturbing the king, then one or more "
             "punishments.",
-            secrets="How literally a condition is taken is left to the storyguide; "
-            "it need not be one a Hermetic device could detect (LotN pp. 34, 40). "
-            "All are 1/day, Pen 0, R: Touch, T: Room unless noted, and their levels "
-            "serve for breaking them as well as for Build Points (p. 41).",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "How literally a condition is taken is left to the storyguide; it "
+                    "need not be one a Hermetic device could detect (LotN pp. 34, "
+                    "40). All are 1/day, Pen 0, R: Touch, T: Room unless noted, and "
+                    "their levels serve for breaking them as well as for Build Points "
+                    "(p. 41).",
+                ),
+            ],
         ),
         kind=et.EXAMPLES.key,
         curses=[
@@ -523,15 +627,27 @@ def _defenses(b: Builder, monuments: Any) -> None:
             "people gently away. The books of treasure hunters are full of ways "
             "round them: stand on a certain rock at dawn, say, wearing a headdress "
             "of red feathers. Against the strongest such tricks fail.",
-            secrets="Wards (LotN pp. 35, 40). Most have a way to deactivate them "
-            "for a while, and they are likelier than other talismans to have "
-            "Penetration, since they are aimed at spirits. Books on bypassing the "
-            "strongest are Initiation Scripts for Mystery Virtues, which may open "
-            "a single site or, unknown to the reader, many: some grant Second "
-            "Sight and teach regio crossing, others give resistance to talismans "
-            "of one substance or school. A ward repels rather than harms, as when "
-            "sand is about to turn to glass and seal the tomb, or an illusion has "
-            "a flaw.",
+            secrets=[
+                titled(
+                    "Bypassing the wards",
+                    "Most tomb wards have a way to deactivate them for a while (LotN "
+                    "pp. 35, 40). Books on bypassing the strongest are Initiation "
+                    "Scripts for Mystery Virtues, which may open a single site or, "
+                    "unknown to the reader, many: some grant Second Sight and teach "
+                    "regio crossing, others give resistance to talismans of one "
+                    "substance or school.",
+                ),
+                titled(
+                    "How a ward works",
+                    "A ward repels rather than harms, as when sand is about to turn "
+                    "to glass and seal the tomb, or an illusion has a flaw.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Wards (LotN pp. 35, 40) are likelier than other talismans to "
+                    "have Penetration, since they are aimed at spirits.",
+                ),
+            ],
         ),
         kind=et.EXAMPLES.key,
         wards=[
@@ -583,16 +699,29 @@ def _defenses(b: Builder, monuments: Any) -> None:
             "the pharaoh's magicians was a sort of primitive certamen, but their "
             "lasting curses, talismans and wards were sometimes exceptional, and "
             "always made of opulent materials.",
-            secrets="Talismans (LotN pp. 33-35, 41-42). Ancient Egyptians had no "
-            "general Magic Resistance, so talismans aimed at people mostly have no "
-            "Penetration: even young magi ignore them, but grogs and equipment do "
-            "not. A particular spell effect usually renders one inert until "
-            "sunset; in a laboratory a magus finds which, by trial or as with a "
-            "magic item's triggers (ArM5 p. 100). Design them by the Hermetic item "
-            "rules, or Learned Magic with the provisos of Chapter 5; few relied on "
-            "one-use seals or temporary amulets. Though costed as Hermetic "
-            "effects, they need not obey Hermetic limits. Left in a strong aura, "
-            "enchantments take Warping.",
+            secrets=[
+                titled(
+                    "Talismans and magi",
+                    "Ancient Egyptians had no general Magic Resistance, so talismans "
+                    "aimed at people mostly have no Penetration: even young magi "
+                    "ignore them, but grogs and equipment do not (LotN pp. 33-35, "
+                    "41-42).",
+                ),
+                titled(
+                    "Rendering a talisman inert",
+                    "A particular spell effect usually renders a tomb talisman inert "
+                    "until sunset; in a laboratory a magus finds which, by trial or "
+                    "as with a magic item's triggers (ArM5 p. 100).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Talismans (LotN pp. 33-35, 41-42). Design them by the Hermetic "
+                    "item rules, or Learned Magic with the provisos of Chapter 5; few "
+                    "relied on one-use seals or temporary amulets. Though costed as "
+                    "Hermetic effects, they need not obey Hermetic limits. Left in a "
+                    "strong aura, enchantments take Warping.",
+                ),
+            ],
         ),
         kind=et.EXAMPLES.key,
         wards=[
@@ -662,24 +791,32 @@ def _defenses(b: Builder, monuments: Any) -> None:
                 "backgammon, though those who know its history doubt it, and some "
                 "suspect faeries.",
             ),
-            secrets=paragraphs(
-                "Spells that detect metal find mechanisms, and destroying one can "
-                "seize the trap (LotN p. 32).",
-                "Puzzles: Hermetic magi can subvert them, say with Rego from "
-                "outside the door. A dedicated magus might collect accounts to "
-                "deduce senet's rules, or some ghosts know the game. As a minigame, "
-                "play a real historical game; with combat-minded troupes put the "
-                "characters on the board to fight the pieces; let magic cheat "
-                "(p. 33).",
-                "Projectiles, cost varies: if not escaped that round, stress die + "
-                "weapon Damage (ArM5 p. 177), soaked. Several projectiles are "
-                "rolled and added; machines add +1 to +5 by human Strength "
-                "equivalent. Many are poisoned (p. 180).",
-                "Pits, cost varies: falling damage (ArM5 p. 181), plus the nearest "
-                "weapon's Damage for a dangerous floor: a 20-foot pit of sharp "
-                "stakes is stress die + 20 + 5, against stress die + Soak. An "
-                "architect's aim may add more.",
-            ),
+            secrets=[
+                titled(
+                    "Finding the mechanisms",
+                    "Spells that detect metal find the mechanisms of tomb traps, and "
+                    "destroying one can seize the trap (LotN p. 32).",
+                ),
+                titled(
+                    "Tomb puzzles",
+                    "Hermetic magi can subvert tomb puzzles, say with Rego from "
+                    "outside the door. A dedicated magus might collect accounts to "
+                    "deduce senet's rules, or some ghosts know the game (p. 33).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Puzzles: as a minigame, play a real historical game; with "
+                    "combat-minded troupes put the characters on the board to fight "
+                    "the pieces; let magic cheat (p. 33).\n\nProjectiles, cost varies: "
+                    "if not escaped that round, stress die + weapon Damage (ArM5 p. "
+                    "177), soaked. Several projectiles are rolled and added; machines "
+                    "add +1 to +5 by human Strength equivalent. Many are poisoned (p. "
+                    "180).\n\nPits, cost varies: falling damage (ArM5 p. 181), plus the "
+                    "nearest weapon's Damage for a dangerous floor: a 20-foot pit of "
+                    "sharp stakes is stress die + 20 + 5, against stress die + Soak. "
+                    "An architect's aim may add more.",
+                ),
+            ],
         ),
         kind=et.EXAMPLES.key,
         traps=[
@@ -777,54 +914,74 @@ def _ghost_kits(b: Builder, monuments: Any) -> None:
             "one, it seems, could slow time around him, so that his companions "
             "aged less and spells took longer to run out.",
         ),
-        secrets=paragraphs(
-            "Quick ghost (LotN pp. 35-36). Take a mortal; Magic Might 5 to 25; "
-            "Characteristics as in life, and it cannot fail Fatigue rolls. Remove "
-            "Virtues and Flaws of social role or body, which need not balance. "
-            "Most take Magical Monster, some Magical Friend; add Magic Spirit. "
-            "Abilities stay, many useless. Intangible and unharmed by weapons or "
-            "fire; Protection and Soak work against magic; vulnerable to Mentem. "
-            "Add a +3 trait tied to mortal business. Few have Donning the "
-            "Corporeal Veil (5 points, material until released, gear too). A new "
-            "power is based on a Hermetic spell, at 1 Might per 5 levels, or per "
-            "10 for one that affects only itself, Init Qik - magnitude/2. Vis, "
-            "usually Mentem, equals Might/5.",
-            "Possess Statue (Minor Power): 3 points, Init Qik -3, Terram or "
-            "Herbam. Steps into and animates a statue at Range Personal, one at a "
-            "time. Improved Powers often cuts the cost to 0. The statue's physical "
-            "attacks must Penetrate. Wooden: ReHe 25 (Base 10, +2 Sun, +1 "
-            "constant). Stone: ReTe 25 (Base 3, +2 Sun, +1 stone, +1 constant, "
-            "+2 intricacy). Metal: ReTe 30 (Base 3, +2 Sun, +2 metal, +1 "
-            "constant, +2 intricacy).",
-            "Quick animated statue (p. 36). As above with Might 5 to 25 (a "
-            "possessing ghost's own Might). Rarely not life-size: -2 Str and +1 "
-            "Qik per Size lost, the reverse per Size gained. Remove social "
-            "Virtues; add Magical Monster and Magic Thing. Soak: wood +9; ceramic, "
-            "soft stone or soft metal +15; hard stone +18; hard metal +21. Armour "
-            "adds nothing unless harder than the statue. To destroy the face, "
-            "announce it and inflict a Medium Wound; that drives the ghost out. "
-            "Weapons of stone or bronze -1 damage; gilded wood in place of metal "
-            "-2; alchemically hardened bronze as steel. Fists and kicks +1 for "
-            "wood or stone, +2 for metal; brawling weapons unadjusted. Boost "
-            "combat with Qualities as the story needs. Vis, usually the "
-            "material's Form, is Might/5. Al-jazari, the automatons, use these "
-            "rules on any reworked monster, and have no Might.",
-            "Royal ghosts (pp. 36-37): most dynasties claimed a faerie god "
-            "invested the pharaoh when he begot his heir, giving the Major Blood "
-            "of the Old Gods; other descendants have the Minor (Virtue, p. 36; "
-            "Sympathy Trait usually Royalty, or a god's purview). The Ptolemies "
-            "built their own god, Serapis, an ally but no ancestor. Longer rites "
-            "and coffin texts allow Transformation after death (Realms of Power: "
-            "Magic p. 52), and tombs were sometimes stocked with vis for it.",
-            "Akhu (p. 37; The Mysteries: Revised Edition pp. 82-86): a Daimon, an "
-            "indestructible being acting through a self-sustaining Aspect. Build "
-            "as Magic Spirits: Might 20 for a noble with the simplest coffin "
-            "texts, up to 60 for the greatest pharaohs, the longer to finish the "
-            "greater the Might. They have virtuous traits. All have long since "
-            "gained all they can from readers of their names, so are Winter "
-            "creatures, and may be summoned by name or relics. Offspring may have "
-            "Mythic or Magical Blood.",
-        ),
+        secrets=[
+            titled(
+                "The pharaohs' divine fathers",
+                "Most dynasties claimed a faerie god invested the pharaoh when he "
+                "begot his heir (pp. 36-37).",
+            ),
+            titled(
+                "Serapis",
+                "The Ptolemies built their own god, Serapis, an ally but no "
+                "ancestor (pp. 36-37).",
+            ),
+            titled(
+                "Transformation after death",
+                "Longer rites and coffin texts allow Transformation after death "
+                "(Realms of Power: Magic p. 52), and tombs were sometimes stocked "
+                "with vis for it.",
+            ),
+            titled(
+                "What an akh is",
+                "An akh is a Daimon, an indestructible being acting through a "
+                "self-sustaining Aspect (p. 37; The Mysteries: Revised Edition "
+                "pp. 82-86). Akhu have virtuous traits, and may be summoned by "
+                "name or relics.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Quick ghost (LotN pp. 35-36). Take a mortal; Magic Might 5 to "
+                "25; Characteristics as in life, and it cannot fail Fatigue "
+                "rolls. Remove Virtues and Flaws of social role or body, which "
+                "need not balance. Most take Magical Monster, some Magical "
+                "Friend; add Magic Spirit. Abilities stay, many useless. "
+                "Intangible and unharmed by weapons or fire; Protection and Soak "
+                "work against magic; vulnerable to Mentem. Add a +3 trait tied to "
+                "mortal business. Few have Donning the Corporeal Veil (5 points, "
+                "material until released, gear too). A new power is based on a "
+                "Hermetic spell, at 1 Might per 5 levels, or per 10 for one that "
+                "affects only itself, Init Qik - magnitude/2. Vis, usually "
+                "Mentem, equals Might/5.\n\nPossess Statue (Minor Power): 3 points, "
+                "Init Qik -3, Terram or Herbam. Steps into and animates a statue "
+                "at Range Personal, one at a time. Improved Powers often cuts the "
+                "cost to 0. The statue's physical attacks must Penetrate. Wooden: "
+                "ReHe 25 (Base 10, +2 Sun, +1 constant). Stone: ReTe 25 (Base 3, "
+                "+2 Sun, +1 stone, +1 constant, +2 intricacy). Metal: ReTe 30 "
+                "(Base 3, +2 Sun, +2 metal, +1 constant, +2 intricacy).\n\nQuick "
+                "animated statue (p. 36). As above with Might 5 to 25 (a "
+                "possessing ghost's own Might). Rarely not life-size: -2 Str and "
+                "+1 Qik per Size lost, the reverse per Size gained. Remove social "
+                "Virtues; add Magical Monster and Magic Thing. Soak: wood +9; "
+                "ceramic, soft stone or soft metal +15; hard stone +18; hard "
+                "metal +21. Armour adds nothing unless harder than the statue. To "
+                "destroy the face, announce it and inflict a Medium Wound; that "
+                "drives the ghost out. Weapons of stone or bronze -1 damage; "
+                "gilded wood in place of metal -2; alchemically hardened bronze "
+                "as steel. Fists and kicks +1 for wood or stone, +2 for metal; "
+                "brawling weapons unadjusted. Boost combat with Qualities as the "
+                "story needs. Vis, usually the material's Form, is Might/5. "
+                "Al-jazari, the automatons, use these rules on any reworked "
+                "monster, and have no Might.\n\nRoyal ghosts (pp. 36-37): the "
+                "faerie god's investiture gives the Major Blood of the Old Gods; "
+                "other descendants have the Minor (Virtue, p. 36; Sympathy Trait "
+                "usually Royalty, or a god's purview).\n\nAkhu (p. 37): build as "
+                "Magic Spirits: Might 20 for a noble with the simplest coffin "
+                "texts, up to 60 for the greatest pharaohs, the longer to finish "
+                "the greater the Might. All have long since gained all they can "
+                "from readers of their names, so are Winter creatures. Offspring "
+                "may have Mythic or Magical Blood.",
+            ),
+        ],
     )
 
 
@@ -839,17 +996,27 @@ def _lost_tombs(b: Builder, monuments: Any) -> None:
         "medicine; the column and lintel come from his designs. Classical sources "
         "mention his tomb, but it has never been traced. He took every scroll he "
         "owned to the grave.",
-        secrets=paragraphs(
-            "Its defences and writings would settle the Order's old dispute "
-            "whether modern magic outstrips the ancient. Some magi hold that "
-            "Bonisagus built on earlier traditions and that Original Research has "
-            "gone further; others that the world declines from golden ages, and "
-            "that research mostly fits old wisdom into Hermetic Theory (LotN p. "
-            "39).",
-            "Coptic magicians think Imhotep took great pains to leave no trace. "
-            "Some magi think he was also Asclepius and Hermes Trismegistus, and "
-            "hope those names lead to it; others dispute this.",
-        ),
+        secrets=[
+            titled(
+                "Why magi want the tomb",
+                "The Tomb of Imhotep's defences and writings would settle the "
+                "Order's old dispute whether modern magic outstrips the ancient. "
+                "Some magi hold that Bonisagus built on earlier traditions and "
+                "that Original Research has gone further; others that the world "
+                "declines from golden ages, and that research mostly fits old "
+                "wisdom into Hermetic Theory (LotN p. 39).",
+            ),
+            titled(
+                "Imhotep's care",
+                "Coptic magicians think Imhotep took great pains to leave no trace.",
+            ),
+            titled(
+                "Imhotep's other names",
+                "Some magi think Imhotep was also Asclepius and Hermes "
+                "Trismegistus, and hope those names lead to his tomb; others "
+                "dispute this.",
+            ),
+        ],
     )
     imhotep = b.magus(
         "Imhotep",
@@ -870,14 +1037,21 @@ def _lost_tombs(b: Builder, monuments: Any) -> None:
         summary="Probably near Alexandria. The Romans never found it, for all "
         "their searching and the thousands who saw the funeral or helped to "
         "build it. Cleopatra meant to lie here beside him.",
-        secrets=paragraphs(
-            "Cleopatra had at least two tombs made; this was the intended one, "
-            "far closer to Alexandria than her final rest (LotN p. 39).",
-            "Hermetic magi want her resting places for Cleopatra's Book, and "
-            "because some say the fire at the Great Library covered the hiding "
-            "of its books from Rome, with the 200,000 books of Pergamon that "
-            "Antonius took by force as a wedding gift for her.",
-        ),
+        secrets=[
+            titled(
+                "The intended tomb",
+                "Cleopatra had at least two tombs made; the Tomb of Marcus "
+                "Antonius was the intended one, far closer to Alexandria than her "
+                "final rest (LotN p. 39).",
+            ),
+            titled(
+                "Why magi want her tombs",
+                "Hermetic magi want Cleopatra's resting places for Cleopatra's "
+                "Book, and because some say the fire at the Great Library covered "
+                "the hiding of its books from Rome, with the 200,000 books of "
+                "Pergamon that Antonius took by force as a wedding gift for her.",
+            ),
+        ],
     )
     antonius = b.magus(
         "Marcus Antonius",
@@ -927,56 +1101,107 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
                 "to the storyguide.",
             )
         ],
-        secrets=paragraphs(
-            "It is no pyramid but a walled compound at Taposiris Magna, a lonely "
-            "bay west of Alexandria, far from any trade route. A handful know the "
-            "place, among them the jinniyya Nahrou, whose Might shielded her from "
-            "the concealing enchantment (LotN p. 44).",
-            "The Garden: fifteen-foot walls with one great pylon gate, carved "
-            "with Isis and with cows, cats, lionesses, vultures and hippopotamuses "
-            "for the goddesses. Inside is a temple of Isis and a rich garden of "
-            "food and medicinal herbs, dates, bananas and other fruit, feeding "
-            "families of mongooses. Warping has made some of these Magic Animals, "
-            "who rule the rival clans like royalty. The pool at the centre is the "
-            "regio's entrance. The asps' bodies are vis, usually eaten quickly by "
-            "the magical mongooses for Transformation.",
-            "The Temple: its roof rests on columns carved as four handmaidens, "
-            "each face many times repeated. Walls hold spells of midwifery and "
-            "healing in Koine Greek and Ancient Egyptian, some studied as texts on "
-            "the Arts of Learned Magicians, though not quite the same Arts; "
-            "Quality is what a 13th-century magician can draw from them. Two "
-            "statues of Sekhmet, bows drawn, each loose a fiery arrow a round at "
-            "anyone in the temple unless Cleopatra's name is intoned. Four "
-            "priestess handmaidens died to guard her, and their ghosts haunt the "
-            "place, sorceresses in healing, in destruction, in transformation and "
-            "in control and enchantment.",
-            "The Tomb: an inclined passage from the temple levels off, with the "
-            "soporific trap, then turns at the pit. The burial chamber, directly "
-            "under the temple's statue of Isis, has a cursed door. The body lies "
-            "under a net of pure gold, in a painted wooden coffin shaped like the "
-            "queen, in a gold sarcophagus, in a stone sepulcher, ringed by four "
-            "goddess statues with heads of vulture, lioness, crocodile and asp. A "
-            "hidden way in the rear wall leads by a short corridor to a second, "
-            "cursed door and the treasury of Ptolemaic Egypt: over ten thousand "
-            "Mythic Pounds of gold, gems and ivory, a legendary source of income.",
-            "Library: later history of Roman Egypt, summa on Area Lore: Egypt, "
-            "Koine Greek, Level 5, Quality 9. Medicinal herbs, tractatus on "
-            "Medicine, Demotic, Quality 10. Healing spells, tractatus on the "
-            "Learned Magician Form Salutem, Demotic, Quality 11. Magical wards, "
-            "summa on the Learned Magician Technique Tueor, Demotic, Level 10, "
-            "Quality 7. Eight formulae for pharmaceutical theriacs, Demotic, 5 BP "
-            "each (Art & Academe p. 77). Creation myth, tractatus on Faerie Lore, "
-            "Demotic, Quality 7. Handmaidens' diaries on crumbling papyrus: three "
-            "tractatus on Charm, Etiquette and Intrigue, Koine Greek, Quality 5.",
-            "Specialists: four ghostly priestesses, each with the equivalent of "
-            "one Hermetic Technique at 20; five mongoose monarchs, Leadership 5.",
-            "Vis sources, a year: 5 Animal (slain asps), 2 Aquam (the pool), 3 "
-            "Herbam (exotic fruit), 1 Ignem (a potsherd exposed to a Destroying "
-            "Uraeus), 3 Terram (an item worth at least 10 Mythic Pounds left a "
-            "year in the treasure chamber). Vis stocks: 10 Creo (unguents, pastes, "
-            "medicines), 5 Imaginem (cosmetics, perfumes), 30 Terram (gold objects "
-            "in the treasure room).",
-        ),
+        secrets=[
+            titled(
+                "Where the tomb lies",
+                "Cleopatra's tomb is no pyramid but a walled compound at "
+                "Taposiris Magna, a lonely bay west of Alexandria, far from any "
+                "trade route (LotN p. 44).",
+            ),
+            titled(
+                "Who knows the place",
+                "A handful know the place of Cleopatra's tomb, among them the "
+                "jinniyya Nahrou, whose Might shielded her from the concealing "
+                "enchantment (LotN p. 44).",
+            ),
+            titled(
+                "The garden",
+                "Cleopatra's tomb has fifteen-foot walls with one great pylon "
+                "gate, carved with Isis and with cows, cats, lionesses, vultures "
+                "and hippopotamuses for the goddesses. Inside is a temple of Isis "
+                "and a rich garden of food and medicinal herbs, dates, bananas "
+                "and other fruit, feeding families of mongooses. Warping has made "
+                "some of these Magic Animals, who rule the rival clans like "
+                "royalty.",
+            ),
+            titled(
+                "The pool",
+                "The pool at the centre of the garden of Cleopatra's tomb is the "
+                "regio's entrance.",
+            ),
+            titled(
+                "The asps' bodies",
+                "The asps' bodies in the garden of Cleopatra's tomb are vis, "
+                "usually eaten quickly by the magical mongooses for "
+                "Transformation.",
+            ),
+            titled(
+                "The temple",
+                "The temple of Cleopatra's tomb: its roof rests on columns carved "
+                "as four handmaidens, each face many times repeated. Walls hold "
+                "spells of midwifery and healing in Koine Greek and Ancient "
+                "Egyptian, some studied as texts on the Arts of Learned "
+                "Magicians, though not quite the same Arts; Quality is what a "
+                "13th-century magician can draw from them.",
+            ),
+            titled(
+                "The statues of Sekhmet",
+                "Two statues of Sekhmet in the temple of Cleopatra's tomb, bows "
+                "drawn, each loose a fiery arrow a round at anyone in the temple "
+                "unless Cleopatra's name is intoned.",
+            ),
+            titled(
+                "The four handmaidens",
+                "Four priestess handmaidens died to guard Cleopatra, and their "
+                "ghosts haunt the place, sorceresses in healing, in destruction, "
+                "in transformation and in control and enchantment.",
+            ),
+            titled(
+                "The burial chamber",
+                "In Cleopatra's tomb an inclined passage from the temple levels "
+                "off, with the soporific trap, then turns at the pit. The burial "
+                "chamber, directly under the temple's statue of Isis, has a "
+                "cursed door. The body lies under a net of pure gold, in a "
+                "painted wooden coffin shaped like the queen, in a gold "
+                "sarcophagus, in a stone sepulcher, ringed by four goddess "
+                "statues with heads of vulture, lioness, crocodile and asp.",
+            ),
+            titled(
+                "The treasury of Ptolemaic Egypt",
+                "A hidden way in the rear wall of Cleopatra's burial chamber "
+                "leads by a short corridor to a second, cursed door and the "
+                "treasury of Ptolemaic Egypt: over ten thousand Mythic Pounds of "
+                "gold, gems and ivory, a legendary source of income.",
+            ),
+            titled(
+                "The tomb's library",
+                "Library: later history of Roman Egypt, summa on Area Lore: "
+                "Egypt, Koine Greek, Level 5, Quality 9. Medicinal herbs, "
+                "tractatus on Medicine, Demotic, Quality 10. Healing spells, "
+                "tractatus on the Learned Magician Form Salutem, Demotic, Quality "
+                "11. Magical wards, summa on the Learned Magician Technique "
+                "Tueor, Demotic, Level 10, Quality 7. Eight formulae for "
+                "pharmaceutical theriacs, Demotic, 5 BP each (Art & Academe p. "
+                "77). Creation myth, tractatus on Faerie Lore, Demotic, Quality "
+                "7. Handmaidens' diaries on crumbling papyrus: three tractatus on "
+                "Charm, Etiquette and Intrigue, Koine Greek, Quality 5.",
+            ),
+            titled(
+                "The tomb's vis",
+                "Vis sources, a year: 5 Animal (slain asps), 2 Aquam (the pool), "
+                "3 Herbam (exotic fruit), 1 Ignem (a potsherd exposed to a "
+                "Destroying Uraeus), 3 Terram (an item worth at least 10 Mythic "
+                "Pounds left a year in the treasure chamber). Vis stocks: 10 Creo "
+                "(unguents, pastes, medicines), 5 Imaginem (cosmetics, perfumes), "
+                "30 Terram (gold objects in the treasure room).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Specialists: four ghostly priestesses, each with the equivalent "
+                "of one Hermetic Technique at 20; five mongoose monarchs, "
+                "Leadership 5.",
+            ),
+        ],
     )
     _cleopatra_tomb(b, tomb)
     queen = b.magus(
@@ -993,11 +1218,24 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
         "Marcus Antonius against Octavian. She died by a sacred asp, some say a "
         "suicide in captivity, and her body was stolen for burial (LotN pp. 39, "
         "44).",
-        secrets="The youngest possible akh, she may not have finished the change. "
-        "Her ka may seek Hermetic aid to clear her ba's path, which disposes her "
-        "well to magi; if so she is a remarkable communicator, and could be a "
-        "peerless teacher of Egyptian mysteries. Cleopatra's Book is said to be "
-        "the height of alchemy, and no Egyptian library admits to a copy.",
+        secrets=[
+            titled(
+                "Her unfinished change",
+                "The youngest possible akh, she may not have finished the change.",
+            ),
+            titled(
+                "What her ka seeks",
+                "Her ka may seek Hermetic aid to clear her ba's path, which "
+                "disposes her well to magi; if so she is a remarkable "
+                "communicator, and could be a peerless teacher of Egyptian "
+                "mysteries.",
+            ),
+            titled(
+                "Cleopatra's Book",
+                "Cleopatra's Book is said to be the height of alchemy, and no "
+                "Egyptian library admits to a copy.",
+            ),
+        ],
     )
     b.link(queen, "buried at", tomb)
     nahrou = b.magus(
@@ -1007,8 +1245,14 @@ def _cleopatra(b: Builder, monuments: Any) -> None:
         age=None,
         type="mythic companion",
         summary="A jinniyya.",
-        secrets="One of the few who know where Cleopatra's tomb lies; her Magic "
-        "Might protected her from its concealing enchantment (LotN p. 44).",
+        secrets=[
+            titled(
+                "Cleopatra's tomb",
+                "One of the few who know where Cleopatra's tomb lies; her Magic "
+                "Might protected her from its concealing enchantment (LotN p. "
+                "44).",
+            ),
+        ],
     )
     b.link(nahrou, "knows of", tomb)
 
@@ -1826,13 +2070,19 @@ def _copts(b: Builder) -> None:
         "it, in Mediterranean ports and on pilgrimage in the Holy Land, and some "
         "monks have written grammars for Arabic speakers. To read hieroglyphs one "
         "must find a skilled, probably ancient monk and persuade him to teach.",
-        secrets=paragraphs(
-            "A few Copts practise Egyptian magic with saints or the Holy Family in "
-            "the gods' places; these are Holy Magicians (Realms of Power: The "
-            "Divine) (LotN p. 47).",
-            "They want to keep the writings of those who commanded spirits from "
-            "undeserving hands (p. 56).",
-        ),
+        secrets=[
+            titled(
+                "Holy Magicians among the Copts",
+                "A few Copts practise Egyptian magic with saints or the Holy "
+                "Family in the gods' places; these are Holy Magicians (Realms of "
+                "Power: The Divine) (LotN p. 47).",
+            ),
+            titled(
+                "What the monks guard",
+                "The Coptic monks want to keep the writings of those who "
+                "commanded spirits from undeserving hands (p. 56).",
+            ),
+        ],
     )
     b.church(
         "Al-Quisir",
@@ -1853,10 +2103,23 @@ def _copts(b: Builder) -> None:
             "sense to these men: the faithful live for ever anyway, in greater "
             "bliss, so the Great Elixir is all but worthless to the devout.",
         ),
-        secrets="Hermetic magi may compare them to the Learned Magicians of "
-        "Europe, who have one excellent book of Egyptian formulae. Medicines found "
-        "in tombs can be designed as single-use Hermetic items (LotN pp. 47, 49). "
-        "The Black calls on Coptic alchemists in its war with the Red (p. 57).",
+        secrets=[
+            titled(
+                "Like the Learned Magicians",
+                "Hermetic magi may compare the Coptic alchemists to the Learned "
+                "Magicians of Europe, who have one excellent book of Egyptian "
+                "formulae (LotN pp. 47, 49).",
+            ),
+            titled(
+                "The Black's alchemists",
+                "The Black calls on Coptic alchemists in its war with the Red (p. 57).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Medicines found in tombs can be designed as single-use Hermetic "
+                "items (LotN pp. 47, 49).",
+            ),
+        ],
     )
     b.faction(
         "The Sufis of the Enigma",
@@ -1867,8 +2130,14 @@ def _copts(b: Builder) -> None:
         "find enlightenment in the attempt. They also study alchemy, only for "
         "substances that alter mood and body and so ease meditation and the "
         "channelling of the Divine.",
-        secrets="They hold the Wisdom from Ignorance Virtue (LotN p. 49; DE p. 116). "
-        "The book gives this school no name; the record's name is descriptive.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "They hold the Wisdom from Ignorance Virtue (LotN p. 49; DE p. "
+                "116). The book gives this school no name; the record's name is "
+                "descriptive.",
+            ),
+        ],
     )
 
 
@@ -1898,23 +2167,38 @@ def _treasures(b: Builder, monuments: Any) -> None:
             "Gifted, and of little power. Theirs is the only ancient Egyptian "
             "magic alive in 1220, renamed and aligned with Islam.",
         ),
-        secrets=paragraphs(
-            "Heka is what Hermetic magi call vis (LotN p. 50). The tomb chapter "
-            "assumes Magic-aligned practitioners; this one has Faerie-aligned "
-            "priests served by Magic-aligned artisans. Use either as suits the "
-            "story (p. 48). Troupes may let tombs give Guaranteed Insight into "
-            "almost anything, or hold that Mercurian magic took in the Egyptian "
-            "so fully that little new remains (p. 49). A parallel to nearly every "
-            "magical tradition can be found in the ruins, even to troll-blooded "
-            "magi, among the servants of old desert spirits (p. 47).",
-            "Local priests (p. 54): faerie-aided Murabits (see the Murabitin) may "
-            "claim to venerate saints' bones but serve faeries of strong local "
-            "stories. Design remnants with Virtues like Faerie Friend, as Faerie "
-            "Doctors (Realms of Power: Faerie p. 118), Faerie Wizards in Weal "
-            "(p. 129) or Faerie Bargainers in Bonding (p. 132). Their grave goods "
-            "suit Mystery Quests; their ghosts may act as mystagogues, fading "
-            "once they have saved their priesthood from extinction.",
-        ),
+        secrets=[
+            titled("Heka", "Heka is what Hermetic magi call vis (LotN p. 50)."),
+            titled(
+                "Parallels in the ruins",
+                "A parallel to nearly every magical tradition can be found in the "
+                "ruins, even to troll-blooded magi, among the servants of old "
+                "desert spirits (p. 47).",
+            ),
+            titled(
+                "The Murabits",
+                "Faerie-aided Murabits (see the Murabitin) may claim to venerate "
+                "saints' bones but serve faeries of strong local stories (p. 54).",
+            ),
+            titled(
+                "The local priests' ghosts",
+                "The ghosts of the faerie-aided local priests may act as "
+                "mystagogues, fading once they have saved their priesthood from "
+                "extinction (p. 54).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The tomb chapter assumes Magic-aligned practitioners; this one "
+                "has Faerie-aligned priests served by Magic-aligned artisans. Use "
+                "either as suits the story (p. 48). Troupes may let tombs give "
+                "Guaranteed Insight into almost anything, or hold that Mercurian "
+                "magic took in the Egyptian so fully that little new remains (p. "
+                "49).\n\nLocal priests (p. 54): design remnants with Virtues like "
+                "Faerie Friend, as Faerie Doctors (Realms of Power: Faerie p. "
+                "118), Faerie Wizards in Weal (p. 129) or Faerie Bargainers in "
+                "Bonding (p. 132). Their grave goods suit Mystery Quests.",
+            ),
+        ],
     )
     b.place(
         "Books of the Lector Priests",
@@ -1937,45 +2221,63 @@ def _treasures(b: Builder, monuments: Any) -> None:
             "baboon is oil of lilies, Ethiopian soil is crocodile dung, the semen "
             "of Amun a kind of houseleek.",
         ),
-        secrets=paragraphs(
-            "See the Lector Priests tradition. Usually Faerie Rite Wizards "
-            "(Realms of Power: Faerie ch. 6), with Evocation p. 122, Grant p. 127, "
-            "Weal p. 128, Ware p. 128 and Woe p. 130 popular, and always "
-            "Ceremony (p. 115) (LotN p. 48).",
-            "Reading them (pp. 49-51). A magus usually cannot perform one; a "
-            "character with the Faerie Method can make a Hermetic equivalent "
-            "(Realms of Power: Faerie p. 121), so Merinita are sought. Ceremony "
-            "must be followed exactly, perhaps Com + Leadership against 3 + 1 per "
-            "follower. Then Com + Coptic against 3 + 1 per 5 levels, higher for "
-            "symbolic language. A botch may misfire or bring a faerie's "
-            "persecution.",
-            "Why rites fail: most need a powerful Faerie aura, as the god's "
-            "presence was assumed; the Silencing of the Oracles voided foretelling; "
-            "gods grow old and die; the rubric was left out as known to all; or "
-            "no faerie nearby wants the role or notices.",
-            "Without Realms of Power: Faerie (p. 51): Range, Target and Duration "
-            "are fixed. After preparation and the Com + Coptic roll, Casting total "
-            "is Sta + closest Form + closest Technique + Aura + stress die, less "
-            "spell level: 0 or more, cast, -1 Fatigue; -1 to -10, cast, -2; -11 to "
-            "-20, cast, -3; -21 to -30, cast, -4 and a Warping point; -31 or "
-            "less, not cast, -5, Warping equal to magnitude, and Twilight check "
-            "if over 2. A book is a set of scrolls, one effect each, treated as "
-            "casting tablets (Covenants).",
-            "Apparently unGifted: Egyptian accounts show no social effect of the "
-            "Gift in lectors (p. 50); see the story of that name.",
-            "Those who threatened the gods (pp. 53-55): lectors, toward gods they "
-            "did not serve, and rogues used a harsher Enchantment Rite, threatening "
-            "to destroy the faerie and the world, usually with a faerie ally and a "
-            "gate to Arcadia for escape. One such threat promises to turn the world "
-            "over and drag up the afterlife: really a bargain offered to a second "
-            "god, whose presence with the first weakens the world, touches Duat "
-            "and allows Spiriting Away; Hermetic magi think the magician's unspoken "
-            "wishes settle it. The Sun is said to have stood still for three days, "
-            "beyond any but the Divine, so faeries faked or planted the memory. "
-            "Their writings are scripts that Enchant; threat scripts that add a "
-            "bonus to one Rite's casting total; and Initiation texts for Special "
-            "Circumstances, Puissant Enchantment or Magical Focus.",
-        ),
+        secrets=[
+            titled(
+                "Why the rites fail",
+                "Most lector rites need a powerful Faerie aura, as the god's "
+                "presence was assumed; the Silencing of the Oracles voided "
+                "foretelling; gods grow old and die; the rubric was left out as "
+                "known to all; or no faerie nearby wants the role or notices.",
+            ),
+            titled(
+                "Those who threatened the gods",
+                "Lectors, toward gods they did not serve, and rogues used a "
+                "harsher Enchantment Rite, threatening to destroy the faerie and "
+                "the world, usually with a faerie ally and a gate to Arcadia for "
+                "escape (pp. 53-55).",
+            ),
+            titled(
+                "Turning the world over",
+                "One threat of the lectors promises to turn the world over and "
+                "drag up the afterlife: really a bargain offered to a second god, "
+                "whose presence with the first weakens the world, touches Duat "
+                "and allows Spiriting Away; Hermetic magi think the magician's "
+                "unspoken wishes settle it (pp. 53-55).",
+            ),
+            titled(
+                "The Sun stood still",
+                "The Sun is said to have stood still for three days, beyond any "
+                "but the Divine, so faeries faked or planted the memory (pp. "
+                "53-55).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "See the Lector Priests tradition. Usually Faerie Rite Wizards "
+                "(Realms of Power: Faerie ch. 6), with Evocation p. 122, Grant p. "
+                "127, Weal p. 128, Ware p. 128 and Woe p. 130 popular, and always "
+                "Ceremony (p. 115) (LotN p. 48).\n\nReading them (pp. 49-51). A "
+                "magus usually cannot perform one; a character with the Faerie "
+                "Method can make a Hermetic equivalent (Realms of Power: Faerie "
+                "p. 121), so Merinita are sought. Ceremony must be followed "
+                "exactly, perhaps Com + Leadership against 3 + 1 per follower. "
+                "Then Com + Coptic against 3 + 1 per 5 levels, higher for "
+                "symbolic language. A botch may misfire or bring a faerie's "
+                "persecution.\n\nWithout Realms of Power: Faerie (p. 51): Range, "
+                "Target and Duration are fixed. After preparation and the Com + "
+                "Coptic roll, Casting total is Sta + closest Form + closest "
+                "Technique + Aura + stress die, less spell level: 0 or more, "
+                "cast, -1 Fatigue; -1 to -10, cast, -2; -11 to -20, cast, -3; -21 "
+                "to -30, cast, -4 and a Warping point; -31 or less, not cast, -5, "
+                "Warping equal to magnitude, and Twilight check if over 2. A book "
+                "is a set of scrolls, one effect each, treated as casting tablets "
+                "(Covenants).\n\nApparently unGifted: Egyptian accounts show no "
+                "social effect of the Gift in lectors (p. 50); see the story of "
+                "that name.\n\nThe threatening lectors' writings are scripts that "
+                "Enchant; threat scripts that add a bonus to one Rite's casting "
+                "total; and Initiation texts for Special Circumstances, Puissant "
+                "Enchantment or Magical Focus.",
+            ),
+        ],
     )
     b.place(
         "Transitory Magic Items",
@@ -2009,38 +2311,69 @@ def _treasures(b: Builder, monuments: Any) -> None:
             "him back from the afterlife for the pharaoh's questions, and away "
             "again.",
         ),
-        secrets=paragraphs(
-            "Temporary amulets (LotN p. 51) are objects under a spell of the Until "
-            "Duration, available only to Faerie Magicians, lasting until worn and "
-            "discarded. Unlike modern ones they outlive their maker, perhaps being "
-            "made by faeries, or mocked up just before their finders come.",
-            "Seals (p. 52) work much like Watching Wards. The ivory hands were "
-            "talismans in some cults, a way to extend Touch in others, and in "
-            "others a symbolic hand for the god.",
-            "Statues and potions (pp. 51-52): Merinita argue the statue is not "
-            "magic. Water on a cippus is an open offer: a faerie that makes it "
-            "medicine feeds on the family's fear and worship. If none takes it the "
-            "sufferer gets water, and his death is blamed on hidden sin. Dying "
-            "stories may be rekindled by dreams or a talking statue. Some bowls "
-            "still work if faeries know the deal; others are only ceremonial "
-            "casting at Touch and need a Gifted user.",
-            "Models (p. 54): grave goods still work when found: a faerie enters "
-            "the model and aids the user, gaining vitality. With Realms of Power: "
-            "Faerie, a faerie of the large form with a shapeshifting power; with "
-            "core rules, an item with a shapeshifting effect.",
-            "Faeries in boxes (p. 55): they are no longer inside. Characters who "
-            "know the old tales may tempt a faerie back into the role of Apep's "
-            "servant. Use the animal-headed demons, or any dragon's statistics.",
-            "Unusual amulets (p. 54). Ib Scarab: made to let the dead lie to the "
-            "gods at judgement, it replaces the heart, so works at Personal Range; "
-            "lost, it is an Arcane Connection to its owner. Seals with royal names: "
-            "a dead pharaoh's name has a little Magic Resistance, perhaps 5, so "
-            "wearers hope curses that catch it are deflected. It protects only "
-            "itself, so a curse that would drown a man through his boat's "
-            "capsizing fails, while a scorpion's sting does not. Folk magicians "
-            "know this. The royal ring is a shen, a rope laid in a protective "
-            "circle; cartouche is a later word and unknown in Mythic Africa.",
-        ),
+        secrets=[
+            titled(
+                "Temporary amulets",
+                "Temporary amulets are objects under a spell of the Until "
+                "Duration, available only to Faerie Magicians, lasting until worn "
+                "and discarded. Unlike modern ones they outlive their maker, "
+                "perhaps being made by faeries, or mocked up just before their "
+                "finders come (LotN p. 51).",
+            ),
+            titled(
+                "Seals and ivory hands",
+                "Tomb seals work much like Watching Wards (p. 52). The ivory "
+                "hands were talismans in some cults, a way to extend Touch in "
+                "others, and in others a symbolic hand for the god.",
+            ),
+            titled(
+                "Statues and potions",
+                "Merinita argue the statue is not magic (pp. 51-52). Water on a "
+                "cippus is an open offer: a faerie that makes it medicine feeds "
+                "on the family's fear and worship. If none takes it the sufferer "
+                "gets water, and his death is blamed on hidden sin. Dying stories "
+                "may be rekindled by dreams or a talking statue. Some bowls still "
+                "work if faeries know the deal; others are only ceremonial "
+                "casting at Touch and need a Gifted user.",
+            ),
+            titled(
+                "Models",
+                "Grave goods still work when found: a faerie enters the model and "
+                "aids the user, gaining vitality (p. 54).",
+            ),
+            titled(
+                "Faeries in boxes",
+                "The faeries of the boxes are no longer inside (p. 55). "
+                "Characters who know the old tales may tempt a faerie back into "
+                "the role of Apep's servant.",
+            ),
+            titled(
+                "Ib scarabs",
+                "Ib Scarab: made to let the dead lie to the gods at judgement, it "
+                "replaces the heart, so works at Personal Range; lost, it is an "
+                "Arcane Connection to its owner (p. 54).",
+            ),
+            titled(
+                "Seals with royal names",
+                "A dead pharaoh's name has a little Magic Resistance, perhaps 5, "
+                "so wearers of seals with royal names hope curses that catch it "
+                "are deflected. It protects only itself, so a curse that would "
+                "drown a man through his boat's capsizing fails, while a "
+                "scorpion's sting does not. Folk magicians know this (p. 54).",
+            ),
+            titled(
+                "The royal ring",
+                "The royal ring is a shen, a rope laid in a protective circle; "
+                "cartouche is a later word and unknown in Mythic Africa (p. 54).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Models: with Realms of Power: Faerie, a faerie of the large form "
+                "with a shapeshifting power; with core rules, an item with a "
+                "shapeshifting effect. Faeries in boxes: use the animal-headed "
+                "demons, or any dragon's statistics.",
+            ),
+        ],
     )
     b.place(
         "Animated Statues",
@@ -2061,32 +2394,49 @@ def _treasures(b: Builder, monuments: Any) -> None:
             "prayers to the gods in return for offerings. Guards and spies might "
             "be given statues likewise.",
         ),
-        secrets=paragraphs(
-            "To secular magi, it means persuading a faerie to enter a statue and "
-            "stay, feeding on those it touches and their worship; the statue is "
-            "only matter it wears (LotN p. 52). Player characters can banish a "
-            "faerie god by defacing its image. Ruined statues that held faeries "
-            "often contain vis (p. 54).",
-            "Statue Consecration Mystery (pp. 52-53): lost to humans, but findable "
-            "in an intact temple library, or from faeries. Great temples followed "
-            "written steps; small sects were guided by a faerie. Such statues may "
-            "attract demons seeking to replace the faerie, or Divine wrath. A few "
-            "chief lectors made new rituals: a convincing narrative on which a "
-            "faerie may feed, by Com + Folk Ken against 18. The texts are "
-            "choreographies that aid the roll, as does a Faerie aura or rites by "
-            "other priests.",
-            "Tongue magic (p. 52), in rare texts: The Drawing of Maat: a skilled "
-            "portrait of the Goddess of Truth on the tongue stops the character "
-            "lying or saying false words, and any weaker god must forgive "
-            "mispronunciation. Whoever discovers it can make a tiny possessing "
-            "faerie that corrects a magus's words, reducing botches, which may "
-            "alter his personality.",
-            "Saliva and breath: spells work more easily on those spat or breathed "
-            "on. Treat as Personal range but without circumventing Magic "
-            "Resistance. People shielded themselves accordingly, and some faeries "
-            "still use shared fluid or breath as Arcane Connections. It would ease "
-            "some Spontaneous spells. Nobody bottled them to delay a spell.",
-        ),
+        secrets=[
+            titled(
+                "Faeries in statues",
+                "To secular magi, animating a statue means persuading a faerie to "
+                "enter a statue and stay, feeding on those it touches and their "
+                "worship; the statue is only matter it wears (LotN p. 52). Player "
+                "characters can banish a faerie god by defacing its image. Ruined "
+                "statues that held faeries often contain vis (p. 54).",
+            ),
+            titled(
+                "The Statue Consecration Mystery",
+                "The Statue Consecration Mystery is lost to humans, but findable "
+                "in an intact temple library, or from faeries (pp. 52-53). Great "
+                "temples followed written steps; small sects were guided by a "
+                "faerie. Such statues may attract demons seeking to replace the "
+                "faerie, or Divine wrath. A few chief lectors made new rituals: a "
+                "convincing narrative on which a faerie may feed.",
+            ),
+            titled(
+                "The Drawing of Maat",
+                "The Drawing of Maat, in rare texts of tongue magic: a skilled "
+                "portrait of the Goddess of Truth on the tongue stops the "
+                "character lying or saying false words, and any weaker god must "
+                "forgive mispronunciation. Whoever discovers it can make a tiny "
+                "possessing faerie that corrects a magus's words, reducing "
+                "botches, which may alter his personality (p. 52).",
+            ),
+            titled(
+                "Saliva and breath",
+                "Spells work more easily on those spat or breathed on. People "
+                "shielded themselves accordingly, and some faeries still use "
+                "shared fluid or breath as Arcane Connections. Nobody bottled "
+                "them to delay a spell.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A new consecration ritual is made by Com + Folk Ken against 18. "
+                "The texts are choreographies that aid the roll, as does a Faerie "
+                "aura or rites by other priests. Saliva and breath: treat as "
+                "Personal range but without circumventing Magic Resistance. It "
+                "would ease some Spontaneous spells.",
+            ),
+        ],
     )
     b.place(
         "Magical Craftwork",
@@ -2112,19 +2462,29 @@ def _treasures(b: Builder, monuments: Any) -> None:
             "their graves with bird-snaring weapons against demons on the road: "
             "most often a throwing stick, and sometimes nets.",
         ),
-        secrets=paragraphs(
-            "One Egyptian craft book, circulated in Europe, created the Learned "
-            "Magician tradition (Hedge Magic: Revised Edition). Its protection, "
-            "assistance and harm Techniques and Luck, Magic and Health Forms "
-            "simulate much Egyptian work, but priesthoods had other Arts. Egyptian "
-            "magic had no fixed Ranges, Targets and Durations and no Difficult "
-            "Arts, relics of that single book. Spirit aid from the four realms "
-            "came more easily. Assume very high casting and laboratory totals. "
-            "Without that book, design amulets as Hermetic items (LotN p. 55).",
-            "Grave weapons: the throwing stick has an effect like Faerie's Eternal "
-            "Oblivion; nets have ReVi effects that hold demons, so victims may "
-            "flee or stab them.",
-        ),
+        secrets=[
+            titled(
+                "The Egyptian craft book",
+                "One Egyptian craft book, circulated in Europe, created the "
+                "Learned Magician tradition (Hedge Magic: Revised Edition). Its "
+                "protection, assistance and harm Techniques and Luck, Magic and "
+                "Health Forms simulate much Egyptian work, but priesthoods had "
+                "other Arts. Egyptian magic had no fixed Ranges, Targets and "
+                "Durations and no Difficult Arts, relics of that single book. "
+                "Spirit aid from the four realms came more easily (LotN p. 55).",
+            ),
+            titled(
+                "Grave weapons",
+                "The throwing stick of the graves has an effect like Faerie's "
+                "Eternal Oblivion; nets have ReVi effects that hold demons, so "
+                "victims may flee or stab them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Assume very high casting and laboratory totals. Without that "
+                "book, design amulets as Hermetic items (LotN p. 55).",
+            ),
+        ],
     )
     b.place(
         "Contained Spirits",
@@ -2137,24 +2497,34 @@ def _treasures(b: Builder, monuments: Any) -> None:
         "them. A bargain with one binds, but only as to the words. Most are found "
         "in tombs, though in old times most were buried in sacred precincts, for "
         "the gods to watch.",
-        secrets=paragraphs(
-            "Their magic resembles spirit masters', and they are an ancestral "
-            "tradition of the sihr (The Cradle and the Crescent; a Hermetic "
-            "variant in Houses of Hermes: Societates). Their writings, using the "
-            "Magic Realm, suit Hermetic adaptation best: Insight and Mystery "
-            "Initiations, prized by sahirs too (LotN p. 56).",
-            "A grateful spirit may forgo harm, and can be made a permanent ally by "
-            "favours like Ordeals (The Mysteries), without Occult Lore. Most "
-            "resent it. For a faerie, some magi advise instant, unconditional "
-            "freedom: a gift many must repay with one worth as much, though the "
-            "gift may cause trouble. A magical creature need give nothing, and "
-            "may attack.",
-            "True names: Egyptians were casual with them. Tombs list the ka names "
-            "of owner and servants, so that a dead man need not call his "
-            "table-steward like a lost dog; a true name is also called a ka name "
-            "or ren. Shabtis answered the owner's name for him, avoiding labour "
-            "and turning aside curses laid through it.",
-        ),
+        secrets=[
+            titled(
+                "The spirit masters' writings",
+                "The magic of those who contained spirits resembles spirit "
+                "masters', and they are an ancestral tradition of the sihr (The "
+                "Cradle and the Crescent; a Hermetic variant in Houses of Hermes: "
+                "Societates). Their writings, using the Magic Realm, suit "
+                "Hermetic adaptation best: Insight and Mystery Initiations, "
+                "prized by sahirs too (LotN p. 56).",
+            ),
+            titled(
+                "Freeing a contained spirit",
+                "A grateful spirit may forgo harm, and can be made a permanent "
+                "ally by favours like Ordeals (The Mysteries), without Occult "
+                "Lore. Most resent it. For a faerie, some magi advise instant, "
+                "unconditional freedom: a gift many must repay with one worth as "
+                "much, though the gift may cause trouble. A magical creature need "
+                "give nothing, and may attack.",
+            ),
+            titled(
+                "True names",
+                "Egyptians were casual with true names. Tombs list the ka names "
+                "of owner and servants, so that a dead man need not call his "
+                "table-steward like a lost dog; a true name is also called a ka "
+                "name or ren. Shabtis answered the owner's name for him, avoiding "
+                "labour and turning aside curses laid through it.",
+            ),
+        ],
     )
     b.place(
         "The Book of Thoth",
@@ -2164,10 +2534,20 @@ def _treasures(b: Builder, monuments: Any) -> None:
         summary="All authorities agree the mightiest magicians of Egyptian "
         "folklore are the few who read the Book of Thoth, which holds every "
         "spell of the first great magician.",
-        secrets="Any character who finds it may read it, and can then cast almost "
-        "any Hermetic spell's equivalent without effort. Within one day he dies "
-        "or fades into Twilight; he cannot stay. The Book is then hidden again by "
-        "forces reaching from deep in the Magic Realm (LotN p. 56).",
+        secrets=[
+            titled(
+                "Reading the Book of Thoth",
+                "Any character who finds the Book of Thoth may read it, and can "
+                "then cast almost any Hermetic spell's equivalent without effort. "
+                "Within one day he dies or fades into Twilight; he cannot stay "
+                "(LotN p. 56).",
+            ),
+            titled(
+                "The Book hidden again",
+                "The Book of Thoth is then hidden again by forces reaching from "
+                "deep in the Magic Realm (LotN p. 56).",
+            ),
+        ],
     )
 
 
@@ -2180,34 +2560,56 @@ def _seeds(b: Builder) -> None:
         "The Treasure of Qarun",
         "Young seekers chase Qarun's lost treasure house, and the keys' place is "
         "written somewhere in the guild's library.",
-        "See the place for what is printed (LotN p. 25).",
+        [
+            titled(
+                "Storyguide Notes", "See the place for what is printed (LotN p. 25)."
+            ),
+        ],
         at="The Treasure House of Qarun",
     )
     seed(
         "The Ramaseum",
         "Colossal images of Rameses II may be statues that his ghost, for all "
         "their size, can animate.",
-        "See the place; other proud pharaohs may do likewise (LotN p. 31).",
+        [
+            titled(
+                "Other proud pharaohs",
+                "Other proud pharaohs may do likewise (LotN p. 31).",
+            ),
+            titled("Storyguide Notes", "See the place."),
+        ],
         at="The Ramaseum",
     )
     seed(
         "Following the Dead",
         "Ghosts ride between the Nile bank and a hidden valley near Alexandria.",
-        "Second Sight may let characters follow them home; see the place (LotN p. 31).",
+        [
+            titled(
+                "Following the ghosts home",
+                "Second Sight may let characters follow the ghosts home (LotN p. 31).",
+            ),
+            titled("Storyguide Notes", "See the place."),
+        ],
         at="The Secret Valley near Alexandria",
     )
     seed(
         "The Search for Imhotep's Tomb",
         "Hermetic wizards want this tomb, arguably the first of the Egyptian "
         "kind, to end the dispute over ancient and modern magic.",
-        "See the place (LotN pp. 37-39).",
+        [
+            titled("Storyguide Notes", "See the place (LotN pp. 37-39)."),
+        ],
         at="The Tomb of Imhotep",
     )
     seed(
         "The Search for Antonius's Tomb",
         "Hermetic wizards want this tomb, arguably the last of the Egyptian "
         "kind, for Cleopatra's Book and the lost libraries.",
-        "See the place, and Cleopatra (LotN pp. 37-40).",
+        [
+            titled(
+                "Storyguide Notes", "See the place, and Cleopatra (LotN pp. 37-40)."
+            ),
+        ],
         at="The Tomb of Marcus Antonius",
     )
     seed(
@@ -2215,33 +2617,59 @@ def _seeds(b: Builder) -> None:
         "A rich man begs the covenant's help. A poor acquaintance showed him gold "
         "amulets from a find, took much money for supplies and labourers against "
         "half the treasure, and vanished.",
-        "He is too embarrassed to go to the authorities. Having social standing, "
-        "he might become an ally, pawn or front man (LotN p. 25).",
+        [
+            titled(
+                "The rich man's shame",
+                "The rich man is too embarrassed to go to the authorities (LotN "
+                "p. 25).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Having social standing, he might become an ally, pawn or front "
+                "man (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "The Destructive Jest",
         "A forged old document says a treasure lies under the covenant. Gangs "
         "creep in to dig the cellars, neighbours tunnel, mobs storm the gates, and "
         "passers-by strike the walls with picks, hoping for a hollow.",
-        "An enemy forged it. The trick is old and famous among the ruling class, "
-        "so its author is hard to trace; the characters may hunt the forger "
-        "(LotN p. 25).",
+        [
+            titled(
+                "Who forged the document",
+                "An enemy forged the document. The trick is old and famous among "
+                "the ruling class, so its author is hard to trace; the characters "
+                "may hunt the forger (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "Government Agent",
         "A government clerk must attend any digging for treasure. One who has "
         "angered a nobleman is sent with the characters to a tomb known to be "
         "deadly.",
-        "He is terrified and unskilled; they must keep him alive (LotN p. 25).",
+        [
+            titled(
+                "The clerk",
+                "The government clerk is terrified and unskilled; the characters "
+                "must keep him alive (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "Monastery or Mosque",
         "An old scroll gives the place of a temple listed nowhere else, and so "
         "likely undisturbed; but a monastery or mosque has been built over it.",
-        "Either its keepers welcome the characters, wanting the temple's "
-        "troublesome beings destroyed; or they ban them, and the characters must "
-        "sneak in, tunnel from nearby, or discredit the keeper for a more "
-        "pliable one (LotN p. 25).",
+        [
+            titled(
+                "Storyguide Notes",
+                "Either its keepers welcome the characters, wanting the temple's "
+                "troublesome beings destroyed; or they ban them, and the "
+                "characters must sneak in, tunnel from nearby, or discredit the "
+                "keeper for a more pliable one (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "Naqeeb Al-Matalibeen",
@@ -2249,9 +2677,18 @@ def _seeds(b: Builder) -> None:
         "Seekers' Guild. Elections are usually civil, but sometimes rivals thin "
         "the field by assassination, with strange poisons, old magic items and "
         "death-traps.",
-        "A player character who wins commands all the guild's resources, if he "
-        "can keep the emir ignorant. A covenant secretly ruling the guild is a "
-        "saga seed (LotN p. 25).",
+        [
+            titled(
+                "Winning the guild",
+                "A player character who wins the guild's chair commands all the "
+                "guild's resources, if he can keep the emir ignorant (LotN p. "
+                "25).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A covenant secretly ruling the guild is a saga seed (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "Roman Notes",
@@ -2259,66 +2696,133 @@ def _seeds(b: Builder) -> None:
         "the caches, and took Coptic, Greek and Chaldean treasure books to the "
         "cathedral of Constantinople. Crusaders sacked it in 1204, and most Arabs "
         "who know this think the Franks now hold the notes.",
-        "Common folk might aid the new owners for a share; officials want to "
-        "steal the books for the realm and for the thief's own safety. Characters "
-        "who make gold by magic may be taken for the keepers, winning peasants and "
-        "merchants but offending nobles (LotN p. 25).",
+        [
+            titled(
+                "Who wants the books",
+                "Common folk might aid the new owners of the treasure books for a "
+                "share; officials want to steal the books for the realm and for "
+                "the thief's own safety (LotN p. 25).",
+            ),
+            titled(
+                "Gold made by magic",
+                "Characters who make gold by magic may be taken for the keepers "
+                "of the treasure books, winning peasants and merchants but "
+                "offending nobles (LotN p. 25).",
+            ),
+        ],
     )
     seed(
         "Medallion Removal",
         "Many graveyard statues wear medallions showing a decapitator among "
         "bound, beheaded victims, and the same design seals tomb doors.",
-        "Without these seals the decapitators hardly attack; near them, night is "
-        "far deadlier. A robber may come by day, when they are less active, to "
-        "remove or deface them unseen by the human watchers (LotN p. 28).",
+        [
+            titled(
+                "The seals and the decapitators",
+                "Without the medallion seals the decapitators hardly attack; near "
+                "them, night is far deadlier (LotN p. 28).",
+            ),
+            titled(
+                "Removing the seals",
+                "A robber may come by day, when the decapitators are less active, "
+                "to remove or deface the seals unseen by the human watchers (LotN "
+                "p. 28).",
+            ),
+        ],
     )
     seed(
         "The Mut for the Archmage",
         "An archmage who will not leave his concerns in Italy offers to pay anyone "
         "who can capture a mut.",
-        "He may lend a mirror that captures ghosts to those who cannot make such "
-        "a spell or item. He thinks the Faerie and Magic realms had not yet "
-        "parted when the mut were made. How will they know a mut from a recent "
-        "ghost or faerie impostor? (LotN p. 29.)",
+        [
+            titled(
+                "The archmage's mirror",
+                "The archmage may lend a mirror that captures ghosts to those who "
+                "cannot make such a spell or item (LotN p. 29).",
+            ),
+            titled(
+                "The archmage's theory",
+                "The archmage thinks the Faerie and Magic realms had not yet "
+                "parted when the mut were made (LotN p. 29).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "How will they know a mut from a recent ghost or faerie impostor? "
+                "(LotN p. 29.)",
+            ),
+        ],
     )
     seed(
         "The Colour of Ghosts",
         "Necromancers may notice the mut are never black like the ghosts of "
         "Greek and Roman sources, nor white like those of Mythic Europe.",
-        "House Criamon says the shift came when the Axis Magica moved to the Cave "
-        "of Twisting Shadows, and notes the ghosts older than Criamon there are "
-        "all black. If so, what cataclysm drained the colour from the Classical "
-        "world's ghosts? An ancient sorcerer's mut may know (LotN p. 29).",
+        [
+            titled(
+                "House Criamon's account",
+                "House Criamon says the shift in the colour of ghosts came when "
+                "the Axis Magica moved to the Cave of Twisting Shadows, and notes "
+                "the ghosts older than Criamon there are all black (LotN p. 29).",
+            ),
+            titled(
+                "What drained the colour",
+                "If so, what cataclysm drained the colour from the Classical "
+                "world's ghosts? An ancient sorcerer's mut may know (LotN p. 29).",
+            ),
+        ],
     )
     seed(
         "Apparently UnGifted Magicians",
         "The mightiest Faerie Wizards are always Gifted, yet Egyptian accounts "
         "show no social effect of the Gift among lectors, only among followers "
         "of dark gods.",
-        paragraphs(
-            "Possible reasons (LotN p. 50). Faeries Stripped of Volition: the "
-            "Egyptians may have made their gods machines, so a priest was anyone "
-            "in the right robe; some may still be stuck in statues. Engineered "
-            "Emotions: the right attention in a heightened state might win a "
-            "mystical effect; such ecstatic cults were known, and forbidden "
-            "darker rites called up things beyond Duat, dark faeries or demons, "
-            "for anyone who repeats them.",
-            "A Source for the Gentle Gift: a Mystery Initiation may have given it "
-            "to pharaonic priests; the ghosts of priests or the site could allow "
-            "self-Initiation, and Jerbiton and Mercere might back it. If it "
-            "spreads, offer a new Virtue to those who already took it. A Caste of "
-            "Servants: true wizards may have cast through mortal proxies, whose "
-            "symbols of office allow casting at a distance. Mystery Initiations: "
-            "priests may have earned powers by Ordeals, known to faeries, the "
-            "dead or old inscriptions.",
-        ),
+        [
+            titled(
+                "Faeries stripped of volition",
+                "The Egyptians may have made their gods machines, so a priest was "
+                "anyone in the right robe; some may still be stuck in statues "
+                "(LotN p. 50).",
+            ),
+            titled(
+                "Engineered emotions",
+                "The right attention in a heightened state might win a mystical "
+                "effect; such ecstatic cults were known, and forbidden darker "
+                "rites called up things beyond Duat, dark faeries or demons, for "
+                "anyone who repeats them (LotN p. 50).",
+            ),
+            titled(
+                "A source for the Gentle Gift",
+                "A Mystery Initiation may have given the Gentle Gift to pharaonic "
+                "priests; the ghosts of priests or the site could allow "
+                "self-Initiation, and Jerbiton and Mercere might back it (LotN p. "
+                "50).",
+            ),
+            titled(
+                "A caste of servants",
+                "True wizards may have cast through mortal proxies, whose symbols "
+                "of office allow casting at a distance (LotN p. 50).",
+            ),
+            titled(
+                "Mystery Initiations",
+                "Priests may have earned powers by Ordeals, known to faeries, the "
+                "dead or old inscriptions (LotN p. 50).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Possible reasons (LotN p. 50). If the Gentle Gift spreads, offer "
+                "a new Virtue to those who already took it.",
+            ),
+        ],
     )
     arc = b.threat(
         "The Coptic Saga Arc",
         summary="The monks gather magic texts and terrible weapons and keep "
         "Nilometers, and nobody knows why.",
-        secrets="In this arc the Copts are allies of the Black, using their powers "
-        "and items against servants of the Red (LotN p. 49).",
+        secrets=[
+            titled(
+                "The Copts and the Black",
+                "The Copts are allies of the Black, using their powers and items "
+                "against servants of the Red (LotN p. 49).",
+            ),
+        ],
         antagonist="Servants of the Red",
         stages=[
             b.stage(
@@ -2344,7 +2848,7 @@ def _seeds(b: Builder) -> None:
 def _seed_maker(b: Builder) -> Any:
     """A maker of one-line story seeds: dormant threats with no stages."""
 
-    def seed(name: str, summary: str, secrets: str, at: str = "") -> None:
+    def seed(name: str, summary: str, secrets: Secrets, at: str = "") -> None:
         place = next((n for n in b.saga.neighbours if n.name == at), None)
         dormant(b.threat(name, summary=summary, secrets=secrets, place=place))
 

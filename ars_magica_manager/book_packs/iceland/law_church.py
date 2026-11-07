@@ -20,7 +20,7 @@ from __future__ import annotations
 from typing import Any
 
 from ...models import Neighbour
-from ..builder import Builder, dormant, paragraphs
+from ..builder import Builder, dormant, paragraphs, titled
 
 S = Builder.stage
 MONASTERY = "Monastery or nunnery"
@@ -160,16 +160,22 @@ def _law(b: Builder) -> None:
             "companions and grogs to feed, and will buy from the farms "
             "nearby (LFI p. 39).",
         ),
-        secrets=paragraphs(
-            "Once the characters are known to exist, even with their "
-            "covenant unfound, powerful bondi and godi may court them as "
-            "allies, and others who feel threatened may plot against them. "
-            "Either way, with Icelandic politics as turbulent as they are, "
-            "the law will soon be involved (LFI p. 39).",
-            "A godi can in practice dictate a panel of twelve, at some cost "
-            "in respect, and so can shield a magician from an unjust "
-            "prosecution for sorcery (LFI p. 38).",
-        ),
+        secrets=[
+            titled(
+                "A godi's panel of twelve",
+                "A godi can in practice dictate a panel of twelve, at some cost "
+                "in respect, and so can shield a magician from an unjust "
+                "prosecution for sorcery (LFI p. 38).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Once the characters are known to exist, even with their "
+                "covenant unfound, powerful bondi and godi may court them as "
+                "allies, and others who feel threatened may plot against them. "
+                "Either way, with Icelandic politics as turbulent as they are, "
+                "the law will soon be involved (LFI p. 39).",
+            ),
+        ],
         rules=paragraphs(
             "Penalties (LFI p. 37): only three exist, each fixed for its "
             "crime, and the court cannot vary them. No office enforces them: "
@@ -620,8 +626,13 @@ def _schools(b: Builder, skalholt: Neighbour, holar: Neighbour) -> None:
         "galdramen exist at any one time, between the schools. Skalholt's "
         "name is unstained: its members use their art only for the good of "
         "their flock (LFI p. 42).",
-        secrets="It seeks a breakthrough to match the feats of Iceland's "
-        "pagan magicians, as Holar does (LFI p. 42).",
+        secrets=[
+            titled(
+                "Skalholt's search",
+                "Skalholt Cathedral School seeks a breakthrough to match the "
+                "feats of Iceland's pagan magicians, as Holar does (LFI p. 42).",
+            ),
+        ],
     )
     b.university(
         "Holar Cathedral School",
@@ -630,10 +641,18 @@ def _schools(b: Builder, skalholt: Neighbour, holar: Neighbour) -> None:
         "centre for the study of magic. Its magicians are priests, often "
         "indiscreet, whose office puts them beyond reproach; they are "
         "credited with prophecy through astronomy (LFI p. 42).",
-        secrets="The two schools have drifted apart, and Holar has grown "
-        "darker: it is whispered that it uses magic to enslave true demons. "
-        "It too seeks a breakthrough to match the feats of Iceland's pagan "
-        "magicians (LFI p. 42).",
+        secrets=[
+            titled(
+                "Holar's darker art",
+                "The two schools have drifted apart, and Holar has grown darker: "
+                "it is whispered that it uses magic to enslave true demons.",
+            ),
+            titled(
+                "Holar's search",
+                "Holar Cathedral School too seeks a breakthrough to match the "
+                "feats of Iceland's pagan magicians (LFI p. 42).",
+            ),
+        ],
     )
 
 
@@ -667,7 +686,11 @@ def _monasteries(b: Builder, skalholt: Neighbour) -> Neighbour:
         b,
         "Videy",
         "The site of a planned Augustinian monastery, not yet built (LFI p. 44).",
-        secrets="The map (p. 10) marks it as a monastery already.",
+        secrets=[
+            titled(
+                "Storyguide Notes", "The map (p. 10) marks it as a monastery already."
+            ),
+        ],
     )
     helgafell = _place(
         b,
@@ -680,8 +703,13 @@ def _monasteries(b: Builder, skalholt: Neighbour) -> Neighbour:
         church=MONASTERY,
         place=helgafell,
         summary="A small house on the Snaefellsnes peninsula.",
-        secrets="Printed only on the map (p. 10). The list of houses on p. 44 "
-        "leaves it out, and no order or date is given.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Printed only on the map (p. 10). The list of houses on p. 44 "
+                "leaves it out, and no order or date is given.",
+            ),
+        ],
     )
     return b.church(
         "Kirkjubaer Nunnery",
@@ -707,9 +735,14 @@ def _stories(b: Builder, skalholt: Neighbour, nunnery: Neighbour) -> None:
             "leaves him as exposed as his father. The father killed a man "
             "and his kin paid no blood money, so the dead man's sons want "
             "his blood too (LFI p. 39).",
-            secrets="The safest road is to have a court rule on his status "
-            "and, with luck, declare him free. That takes careful politics, "
-            "for he has enemies well placed.",
+            secrets=[
+                titled(
+                    "Freeing the outlaw's son",
+                    "The safest road for the outlaw's son is to have a court "
+                    "rule on his status and, with luck, declare him free. That "
+                    "takes careful politics, for he has enemies well placed.",
+                ),
+            ],
             antagonist="The sons of the murdered man",
         )
     )

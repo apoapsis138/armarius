@@ -25,9 +25,11 @@ from typing import Any
 from ...models import BodyVis, CreaturePower
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_great,
     vf_minor,
     vf_puissant,
@@ -486,10 +488,12 @@ def _dead(b: Builder) -> None:
             "as a whole (p. 102). The grand convocation of the settuten meets "
             "here (p. 106).",
         ),
-        secrets=(
-            "The healing sleep is the work of Tin Hinan's ghost; few guess "
-            "their good fortune comes from her."
-        ),
+        secrets=[
+            titled(
+                "The healing sleep",
+                "The healing sleep at the Tomb of Tin Hinan is the work of Tin Hinan's ghost; few guess their good fortune comes from her.",
+            )
+        ],
     )
     # Queen of the Berber, her aura the 5 of a major monarch's tomb; the book
     # prints no curse, ward, trap or Build Points for it (p. 92).
@@ -962,10 +966,13 @@ def _inenden(b: Builder) -> None:
             "they calm an animal, or let it go longer without water, or "
             "speed it across shifting sand.",
         ),
-        secrets=(
-            "Only two of his amulets do anything: a minor relic and an imerghi "
-            "Vulnero Magicam charm."
-        ),
+        secrets=[
+            titled(
+                "His amulets",
+                "Only two of his amulets do anything: a minor relic and an imerghi charm.",
+            ),
+            titled("Storyguide Notes", "The imerghi charm is Vulnero Magicam."),
+        ],
     )
     b.stats(
         merin,
@@ -1376,7 +1383,7 @@ def _race(
     *,
     powers: list[CreaturePower] | None = None,
     size: int = 0,
-    secrets: str = "",
+    secrets: Secrets = "",
 ) -> None:
     """A race of Magic Humans: the rules are rules.africa's."""
     b.creature(
@@ -1432,20 +1439,20 @@ def _monstrous_races(b: Builder) -> None:
             "for all their protests that they want only their own.",
             "Tusks: Init 0, Attack +6, Defense +2, Damage +11.",
         ),
-        secrets=paragraphs(
-            "Their Greater Malediction: Magic auras do not keep off "
-            "Acclimation. They must eat human flesh in a ceremony at least "
-            "once a year, or lose a Magic Quality each year until they are "
-            "ordinary, hideous mortals. One corpse feeds five. A family with "
-            "no death to hand must make one, and those who tire of it and let "
-            "themselves acclimate are usually eaten first; the last resort is "
-            "the nearest human settlement.",
-            "Not all are born to it. A human who shares the ceremony gains "
-            "Transformed Human with the Greater Malediction. A village will "
-            "sometimes spare a victim, share the secret, and send him home to "
-            "get them the sacred meal each year. He gains Disfigured after five "
-            "ceremonies, and after fifteen is too monstrous to stay among men.",
-        ),
+        secrets=[
+            titled(
+                "The Man-Eaters' hunger",
+                "Magic auras do not keep off Acclimation for the Anthropophagi. They must eat human flesh in a ceremony at least once a year, or lose a Magic Quality each year until they are ordinary, hideous mortals. One corpse feeds five. A family with no death to hand must make one, and those who tire of it and let themselves acclimate are usually eaten first; the last resort is the nearest human settlement.",
+            ),
+            titled(
+                "Man-Eaters made, not born",
+                "Not all Anthropophagi are born to it. A human who shares the ceremony becomes one of them. A village will sometimes spare a victim, share the secret, and send him home to get them the sacred meal each year. He grows disfigured after five ceremonies, and after fifteen is too monstrous to stay among men.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Their Greater Malediction: Magic auras do not keep off Acclimation. A human who shares the ceremony gains Transformed Human with the Greater Malediction; a spared victim gains Disfigured after five ceremonies.",
+            ),
+        ],
     )
     _race(
         b,
@@ -2261,7 +2268,7 @@ def _god(b: Builder, name: str, words: str, *, mask: str) -> None:
         page="p. 135",
         realm="Infernal",
         notes=paragraphs(words, NO_NUMBERS),
-        secrets=mask,
+        secrets=[titled("What the god truly is", mask)],
     )
 
 
@@ -2280,21 +2287,24 @@ def _carthage(b: Builder) -> None:
             "enemies writing all that survives of it. Tunis is what remains of "
             "its greatness.",
         ),
-        secrets=paragraphs(
-            "The ruins belong to the Infernal realm, the legacy of the gods of "
-            "Carthage (p. 132).",
-            "The book prints the city's destruction as 164 BC on p. 132, likely "
-            "a misprint: p. 15 gives 146 BC, used here.",
-            "A great mass of melted bronze lies buried here, the remains of a "
-            "tophet destroyed in the razing, and with it Ba'al Ammon's urns of "
-            "vis-rich ash.",
-            "Every Punic colony had to build a temple to Tanit and Ba'al "
-            "Ammon, its shrines beside a tophet: a great bronze god or goddess "
-            "with upstretched arms and a fire within. Petitioners laid bound "
-            "offerings on the sloping hands to fall into the mouth and burn. "
-            "The priests buried the ashes in urns dedicated to Tanit, and the "
-            "demon drew on the pits as vast stores of vis.",
-        ),
+        secrets=[
+            titled(
+                "Whose ruins these are",
+                "The Ruins of Carthage belong to the Infernal realm, the legacy of the gods of Carthage (p. 132).",
+            ),
+            titled(
+                "The buried bronze",
+                "A great mass of melted bronze lies buried in the Ruins of Carthage, the remains of a tophet destroyed in the razing, and with it Ba'al Ammon's urns of vis-rich ash.",
+            ),
+            titled(
+                "The tophets",
+                "Every Punic colony had to build a temple to Tanit and Ba'al Ammon, its shrines beside a tophet: a great bronze god or goddess with upstretched arms and a fire within. Petitioners laid bound offerings on the sloping hands to fall into the mouth and burn. The priests buried the ashes in urns dedicated to Tanit, and the demon drew on the pits as vast stores of vis.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book prints the city's destruction as 164 BC on p. 132, likely a misprint: p. 15 gives 146 BC, used here.",
+            ),
+        ],
     )
     b.faction(
         "The Priesthood of Carthage",
@@ -2329,22 +2339,20 @@ def _carthage(b: Builder) -> None:
             "by ancestor worship, and that the greatest priests and kings "
             "might rise likewise. No account of how survives.",
         ),
-        secrets=paragraphs(
-            "Their realm is the Infernal. "
-            "The apotheosis was a lie. The gods were a single demon who enjoyed "
-            "the work, granting just enough to encourage more sin and "
-            "bloodshed, and charging for things it would gladly have done "
-            "anyway.",
-            "Their rite was a now-lost Profane Sacrifice, joining Sacrifice and "
-            "Profaning the Holy (Realms of Power: The Infernal pp. 95-96): "
-            "burning an offering makes a pawn of Vim vis infesta for each +2 "
-            "the offering would give, 5 pawns for an innocent human.",
-            "A storyguide may instead make them Faerie hedge wizards of Faerie "
-            "Bargaining (p. 130; Realms of Power: Faerie p. 131), the child "
-            "sacrifices giving vitality. Later they raised slave children to "
-            "offer in place of their own; such faeries, finding the trick, "
-            "could withdraw their protection.",
-        ),
+        secrets=[
+            titled(
+                "The false apotheosis",
+                "The Priesthood of Carthage's realm is the Infernal. The apotheosis was a lie. The gods were a single demon who enjoyed the work, granting just enough to encourage more sin and bloodshed, and charging for things it would gladly have done anyway.",
+            ),
+            titled(
+                "The priests' rite",
+                "The Priesthood of Carthage's rite was a now-lost Profane Sacrifice: burning an offering makes Vim vis infesta, 5 pawns for an innocent human.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Profane Sacrifice joins Sacrifice and Profaning the Holy (Realms of Power: The Infernal pp. 95-96): burning an offering makes a pawn of Vim vis infesta for each +2 the offering would give.\n\nA storyguide may instead make them Faerie hedge wizards of Faerie Bargaining (p. 130; Realms of Power: Faerie p. 131), the child sacrifices giving vitality. Later they raised slave children to offer in place of their own; such faeries, finding the trick, could withdraw their protection.",
+            ),
+        ],
         rules=paragraphs(
             "The Priesthood's ruins have no printed aura; Tunis is described "
             "with the coasts.",
@@ -2557,11 +2565,13 @@ def _carthage(b: Builder) -> None:
             "The book promises the ghostly war elephants' statistics 'later' "
             "and does not print them.",
         ),
-        secrets=(
-            "He is one demon of Hell who played every god of the Punics, and "
-            "at last revealed himself to the Goetics as Baalzebub. The vast "
-            "cache of vis infesta outside Tunis is his."
-        ),
+        secrets=[
+            titled(
+                "Who he is",
+                "He is one demon of Hell who played every god of the Punics, and at last revealed himself to the Goetics as Baalzebub.",
+            ),
+            titled("His cache", "The vast cache of vis infesta outside Tunis is his."),
+        ],
     )
     _god(
         b,
@@ -3515,12 +3525,16 @@ def _stories(b: Builder) -> None:
                 "infernalist wants it: he hides among the visiting peasants, "
                 "working round every precaution to steal it (p. 131).",
             ),
-            secrets=(
-                "The Cippus of Melqart, in Classic Greek and Punic: a tractatus "
-                "of Dead Language: Punic, Quality 5, studied for a season with "
-                "Dead Language: Punic or Classic Greek of 4 or more. It is a "
-                "key to Phoenician."
-            ),
+            secrets=[
+                titled(
+                    "The Cippus of Melqart",
+                    "The Cippus of Melqart, in Classic Greek and Punic, is a key to Phoenician.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The cippus is a tractatus of Dead Language: Punic, Quality 5, studied for a season with Dead Language: Punic or Classic Greek of 4 or more.",
+                ),
+            ],
         )
     )
     dormant(
@@ -3534,11 +3548,12 @@ def _stories(b: Builder) -> None:
                 "magic of Carthage and the rites of Thoth-Hermes, and name "
                 "secret cult sites in the mountains west of Carthage (p. 131).",
             ),
-            secrets=(
-                "Seekers who follow the trail may find the false faerie Ba'al "
-                "Ammon lingering there, or easily called. He offers ancient "
-                "magic, and the risk of unwitting corruption."
-            ),
+            secrets=[
+                titled(
+                    "What waits at the cult sites",
+                    "Seekers who follow the trail to the cult sites may find the false faerie Ba'al Ammon lingering there, or easily called. He offers ancient magic, and the risk of unwitting corruption.",
+                )
+            ],
         )
     )
     dormant(
@@ -3567,7 +3582,12 @@ def _stories(b: Builder) -> None:
                 "How will they keep another sahir from doing the same? "
                 "(p. 131)",
             ),
-            secrets=("He has found Ba'al Ammon's cache of vis infesta outside Tunis."),
+            secrets=[
+                titled(
+                    "The sahir's source",
+                    "The Gifted sahir has found Ba'al Ammon's cache of vis infesta outside Tunis.",
+                )
+            ],
             stages=[
                 b.stage("Faerie jinn", clues="His first servants are Faerie jinn."),
                 b.stage("Infernal jinn", clues="Later foes are Infernal jinn."),

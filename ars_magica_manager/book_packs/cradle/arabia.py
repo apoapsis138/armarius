@@ -54,7 +54,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, paragraphs
+from ..builder import Builder, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -465,14 +465,21 @@ def _holy_cities(cradle: Cradle) -> None:
             "unknown non-Hermetic effect of ritual strength. The book "
             "gives no number of pawns.",
         ),
-        secrets=paragraphs(
-            "Zamzam is also a name: an ancient Magic marid lies trapped "
-            "in a smothered Magic regio at the bottom of the well, its "
-            "powers crushed by the Divine aura. What strength it keeps "
-            "goes into keeping the water so pure, and it has come to "
-            "hate its prison. It remembers far back, and knows things "
-            "of the past no other source can tell.",
-        ),
+        secrets=[
+            titled(
+                "The marid in the well",
+                "Zamzam is also a name: an ancient Magic marid lies trapped "
+                "in a smothered Magic regio at the bottom of the well, its "
+                "powers crushed by the Divine aura. What strength it keeps "
+                "goes into keeping the water so pure, and it has come to "
+                "hate its prison.",
+            ),
+            titled(
+                "What Zamzam remembers",
+                "The marid Zamzam remembers far back, and knows things "
+                "of the past no other source can tell.",
+            ),
+        ],
     )
     _place(
         cradle,
@@ -1070,12 +1077,15 @@ def _factions(cradle: Cradle) -> None:
             "book suggests playing them as Spirit Votaries, or, if the "
             "cult is corrupt, as diabolists.",
         ),
-        secrets=paragraphs(
-            "Farida, the newest of the three, has doubts: her Muslim "
-            "upbringing, what she is asked to do, or the child she may "
-            "be carrying, who would replace her in a family that is "
-            "never more than three.",
-        ),
+        secrets=[
+            titled(
+                "Farida's doubts",
+                "Farida, the newest of the three Daughters of Allah, has "
+                "doubts: her Muslim upbringing, what she is asked to do, or "
+                "the child she may be carrying, who would replace her in a "
+                "family that is never more than three.",
+            ),
+        ],
     )
     w["witches_of_nizwa"] = b.faction(
         "The Witches of Nizwa",
@@ -1089,12 +1099,16 @@ def _factions(cradle: Cradle) -> None:
             "and keep them as mindless slaves. The book has no "
             "tradition record for them.",
         ),
-        secrets=paragraphs(
-            "The book leaves their nature open: Infernalists, faerie "
-            "wizards, Soqotran witches in exile, agents of the Olibanum "
-            "King working against the Order of Suleiman, the last of "
-            "Sheba's astral sorceresses, or nothing but slander.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves the Witches of Nizwa's nature open: "
+                "Infernalists, faerie wizards, Soqotran witches in exile, "
+                "agents of the Olibanum King working against the Order of "
+                "Suleiman, the last of Sheba's astral sorceresses, or "
+                "nothing but slander.",
+            ),
+        ],
     )
     w["jurhumites"] = b.faction(
         "The Jurhumites",

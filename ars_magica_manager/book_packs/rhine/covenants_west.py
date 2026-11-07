@@ -9,7 +9,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import joined_lines, paragraphs
+from ..builder import joined_lines, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Covenant, Tribunal
@@ -149,14 +149,54 @@ def _durenmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the Fane of the Founders, where twelve magi renew the Founders' vows every seventh year during the Tribunal; most Durenmar magi know of it, none has found it",
         "Hook: the library is unhelpful about exotic and non-Hermetic lore; obscure lab notes and old books hint at forgotten artifacts; magi from distant Tribunals pass through",
     )
-    hidden = joined_lines(
-        "The Black Fir near the Great Library is the King of the Black Mountain's slow revenge: planted at the Aegis's edge over a century ago after his direct attacks failed, it was taken inside the Aegis when the magi found its cones gave vis, and so breached their own defence. It creeps about six inches a year toward the Tower of Bonisagus; what happens when it reaches the tower or the vine is unknown but likely severe. The magi think it immemorial.",
-        "Murion sends her raven familiar Kolkrabus to spy on Dankmar and others she counts enemies, against the Code.",
-        "Vis donations are quietly accepted in place of a contribution to the library and prop up the dwindling vis income; this is never admitted.",
-        "Occultes knows the restricted texts and has copied or moved the most interesting into his own sanctum, passing them to allies whose research they suit.",
-        "Petrus Virilis means to invent a longevity ritual that would probably leave him infertile; Murion would be furious.",
-        "The Fane of the Founders is an artifact into which the Cult of Mercury bound much of the Black Forest's original magical essence (treated as Magic Might 40); if Durenmar fell and the rite lapsed, the King of the Black Mountain hopes to seize that spirit.",
-    )
+    hidden = [
+        titled(
+            "The Black Fir",
+            "The Black Fir near the Great Library is the King of the Black Mountain's "
+            "slow revenge: planted at the Aegis's edge over a century ago after his "
+            "direct attacks failed, it was taken inside the Aegis when the magi found "
+            "its cones gave vis, and so breached their own defence.",
+        ),
+        titled(
+            "The Black Fir creeps",
+            "The Black Fir creeps about six inches a year toward the Tower of "
+            "Bonisagus; what happens when it reaches the tower or the vine is unknown "
+            "but likely severe. The magi think it immemorial.",
+        ),
+        titled(
+            "Murion's raven",
+            "Murion sends her raven familiar Kolkrabus to spy on Dankmar and others "
+            "she counts enemies, against the Code.",
+        ),
+        titled(
+            "Vis for the library",
+            "Vis donations are quietly accepted at Durenmar in place of a "
+            "contribution to the library and prop up the dwindling vis income; this "
+            "is never admitted.",
+        ),
+        titled(
+            "Occultes and the restricted texts",
+            "Occultes knows the restricted texts and has copied or moved the most "
+            "interesting into his own sanctum, passing them to allies whose research "
+            "they suit.",
+        ),
+        titled(
+            "Petrus Virilis's ritual",
+            "Petrus Virilis means to invent a longevity ritual that would probably "
+            "leave him infertile; Murion would be furious.",
+        ),
+        titled(
+            "What the Fane holds",
+            "The Fane of the Founders is an artifact into which the Cult of Mercury "
+            "bound much of the Black Forest's original magical essence; if Durenmar "
+            "fell and the rite lapsed, the King of the Black Mountain hopes to seize "
+            "that spirit.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "The Fane's spirit is treated as Magic Might 40.",
+        ),
+    ]
     durenmar = b.covenant(
         "Durenmar",
         tribunal=tribunal,
@@ -192,8 +232,13 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         "feathers enchanted with illusions, and there are theories about "
         "whom she has impersonated in it. Her familiar is the raven "
         "Kolkrabus.",
-        secrets="She sends Kolkrabus to spy on Dankmar and on others she takes "
-        "for enemies, in breach of the Code.",
+        secrets=[
+            titled(
+                "Murion's raven",
+                "She sends Kolkrabus to spy on Dankmar and on others she takes for "
+                "enemies, in breach of the Code.",
+            ),
+        ],
         traits={
             "Loyal to Personal Agenda": 3,
             "Judgmental": 2,
@@ -270,9 +315,14 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         "him. Murion tolerates and watches him, judging his ambitions "
         "modest and fearing a schism in the House if she moved against "
         "him.",
-        secrets="He knows the restricted texts and has quietly copied or moved "
-        "the most interesting into his own sanctum, passing them to "
-        "close allies whose research they suit.",
+        secrets=[
+            titled(
+                "The restricted texts",
+                "He knows the restricted texts and has quietly copied or moved the "
+                "most interesting into his own sanctum, passing them to close allies "
+                "whose research they suit.",
+            ),
+        ],
         traits={"Friendly": 3, "Inquisitive": 2, "Showy": 1},
     )
     m["ricardus_caespuus"] = b.magus(
@@ -309,10 +359,19 @@ def _durenmar_magi(rhine: Rhine, b: Builder, durenmar: Covenant) -> None:
         "sex and ill at ease with women, he would keep his vis to "
         "himself, but the covenant deems his talent too valuable; "
         "interested young magae write to him.",
-        secrets="He plans to invent a longevity ritual that would probably "
-        "leave him infertile; Murion would be furious. A maga wanting a "
-        "Gifted child must offer more than seduction; he might instead "
-        "fall for a peasant girl and plan a wedding in a nearby town.",
+        secrets=[
+            titled(
+                "A longevity ritual",
+                "He plans to invent a longevity ritual that would probably leave him "
+                "infertile; Murion would be furious.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A maga wanting a Gifted child must offer more than seduction; he "
+                "might instead fall for a peasant girl and plan a wedding in a nearby "
+                "town.",
+            ),
+        ],
         traits={"Shy": 3, "Rebellious": 1, "Trusting": -2},
     )
     m["winfrida"] = b.magus(
@@ -673,11 +732,17 @@ def _dankmar(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Faerie: Orphedra has a pact with the local bockmen to patrol the woods around the covenant",
         "Hook: a cautionary example of what magical domination of mundanes comes to",
     )
-    hidden = (
-        "The book suspects but never states Dankmar's hand in the "
-        "destruction of St Georgen, whose monks were found hanging dead in "
-        "strange dark vines."
-    )
+    hidden = [
+        titled(
+            "The destruction of St Georgen",
+            "Dankmar's hand is suspected in the destruction of St Georgen, whose "
+            "monks were found hanging dead in strange dark vines.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "The book suspects but never states Dankmar's hand.",
+        ),
+    ]
     dankmar = b.covenant(
         "Dankmar",
         tribunal=tribunal,
@@ -801,10 +866,17 @@ def _triamore(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: the library draws visitors, who are expected to contribute a book",
         "Allies: several Normandy covenants, cultivated by Daria",
     )
-    hidden = (
-        "The Quaesitores have long wished to censure the covenant for its "
-        "mundane dealings. The cause of the recent deaths is not stated."
-    )
+    hidden = [
+        titled(
+            "The Quaesitores and Triamore",
+            "The Quaesitores have long wished to censure Triamore for its mundane "
+            "dealings.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "The cause of the recent deaths is not stated.",
+        ),
+    ]
     triamore = b.covenant(
         "Triamore",
         tribunal=tribunal,
@@ -919,10 +991,20 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: a generation hence the Hanseatic League will build bigger ships, sail in convoy and hire soldiers against pirates; with Oculus Septentrionalis at its head an assault on Waddenzee is plausible, but the League is more than twenty years off",
         "Hook: the stolen Hermetic books may have been placed in the pirates' hands and tainted; Lucas may be using infernal lore in his necromancy without knowing it, and only Hachim may have the wisdom to resist",
     )
-    hidden = joined_lines(
-        "Imanitos Mendax of Oculus Septentrionalis feeds Eric advance word of that covenant's ship movements for a share of the plunder, and the Waddenzee magi are party to it; the messages may travel by Astasians, tiny messenger demons taken for airy spirits.",
-        "The power of the Pirates' Graveyards may be Infernal rather than Magic; Lucas has barely considered it.",
-    )
+    hidden = [
+        titled(
+            "Imanitos and the pirates",
+            "Imanitos Mendax of Oculus Septentrionalis feeds Eric advance word of "
+            "that covenant's ship movements for a share of the plunder, and the "
+            "Waddenzee magi are party to it; the messages may travel by Astasians, "
+            "tiny messenger demons taken for airy spirits.",
+        ),
+        titled(
+            "The power in the graveyards",
+            "The power of the Pirates' Graveyards may be Infernal rather than Magic; "
+            "Lucas has barely considered it.",
+        ),
+    ]
     waddenzee = b.covenant(
         "Waddenzee",
         tribunal=tribunal,
@@ -1033,8 +1115,13 @@ def _waddenzee(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         age=None,
         summary="A Frisian shipwright of near-magical skill who keeps the "
         "covenant's five ships at sea.",
-        secrets="He secretly corresponds with Marcus Navicularius of Oculus "
-        "Septentrionalis.",
+        secrets=[
+            titled(
+                "A secret correspondence",
+                "He secretly corresponds with Marcus Navicularius of Oculus "
+                "Septentrionalis.",
+            ),
+        ],
         type="companion",
     )
     b.book(
@@ -1109,11 +1196,36 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: Henri de Tours may negotiate the treaty of Lübeck and Hamburg of 1241 or become Älderman; the League may be the covenant's own idea, and growing wealth brings Quaesitorial risk and the temptation to bribe at Tribunal",
         "Hook: Marcus Navicularius is designing the Baltic cog, round, flat-bottomed, with a centre rudder and one square sail, carrying hundreds of tons of Novgorod timber, which the Hanse will adopt by mid-century",
     )
-    hidden = joined_lines(
-        "The covenant holds three Verditius magestones, given secretly in 1144, each giving a Magic aura of 3 over a large room; they are shared so each magus has a Magic-aura lab for up to two seasons a year. Only Durenmar's senior magi also know. Imanitos might swap them for infernally tainted copies to breed greed in the labs.",
-        "Imanitos Mendax betrays the covenant to Waddenzee, selling its ship movements for a share of the loot; discovery would mean expulsion and undying enmity. He may also be a diabolist of a hidden dark Jerbiton lineage serving the demon Radegast, corrupting Lübeck's notables through the Goldenes Kalb and posing as Radegast's prophet to the Mecklenburg family, with low-Might demons for messengers, thieves, spies and seducers.",
-        "A secret deal with Fengheld: a rook of vis a year in exchange for a huge yearly shipment of luxuries and over a hundred pounds of silver.",
-    )
+    hidden = [
+        titled(
+            "The Verditius magestones",
+            "Oculus Septentrionalis holds three Verditius magestones, given secretly "
+            "in 1144, each giving a Magic aura of 3 over a large room; they are "
+            "shared so each magus has a Magic-aura lab for up to two seasons a year. "
+            "Only Durenmar's senior magi also know.",
+        ),
+        titled(
+            "Imanitos's betrayal",
+            "Imanitos Mendax betrays the covenant to Waddenzee, selling its ship "
+            "movements for a share of the loot; discovery would mean expulsion and "
+            "undying enmity.",
+        ),
+        titled(
+            "The deal with Fengheld",
+            "Oculus Septentrionalis has a secret deal with Fengheld: a rook of vis a "
+            "year in exchange for a huge yearly shipment of luxuries and over a "
+            "hundred pounds of silver.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "Imanitos might swap the magestones for infernally tainted copies to "
+            "breed greed in the labs. He may also be a diabolist of a hidden dark "
+            "Jerbiton lineage serving the demon Radegast, corrupting Lübeck's "
+            "notables through the Goldenes Kalb and posing as Radegast's prophet to "
+            "the Mecklenburg family, with low-Might demons for messengers, thieves, "
+            "spies and seducers.",
+        ),
+    ]
     oculus = b.covenant(
         "Oculus Septentrionalis",
         tribunal=tribunal,
@@ -1193,7 +1305,12 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "anything smaller than a sword; he sells magical ships to "
         "covenants for vis and lost the Nebelkönigin to Waddenzee. He "
         "is designing the Baltic cog the Hanse will adopt.",
-        secrets="He secretly corresponds with Aelfhere, Waddenzee's shipwright.",
+        secrets=[
+            titled(
+                "A secret correspondence",
+                "He secretly corresponds with Aelfhere, Waddenzee's shipwright.",
+            ),
+        ],
         traits={"Proud of his Abilities": 3, "Skillful": 1, "Friendly": -2},
     )
     m["imanitos_mendax"] = b.magus(
@@ -1217,13 +1334,20 @@ def _oculus(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "faint smell of funerary incense. His covenant-mates find him "
         "useful despite his morals; his sanctum on the top floors of "
         "his townhouse is secret and magically guarded.",
-        secrets="He sells Oculus Septentrionalis's ship movements to Eric "
-        "Ribecus of Waddenzee for a share of the plunder. Optionally a "
-        "diabolist of a hidden dark Jerbiton lineage, servant of the "
-        "demon Radegast, corrupting Lübeck's notables through the "
-        "Goldenes Kalb and posing as Radegast's prophet to the "
-        "Mecklenburgs; he might swap the covenant's magestones for "
-        "tainted copies.",
+        secrets=[
+            titled(
+                "Imanitos and the pirates",
+                "He sells Oculus Septentrionalis's ship movements to Eric Ribecus of "
+                "Waddenzee for a share of the plunder.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Optionally a diabolist of a hidden dark Jerbiton lineage, servant of "
+                "the demon Radegast, corrupting Lübeck's notables through the "
+                "Goldenes Kalb and posing as Radegast's prophet to the Mecklenburgs; "
+                "he might swap the covenant's magestones for tainted copies.",
+            ),
+        ],
         traits={"Lustful": 3, "Scheming": 2, "Brave": -1},
     )
     m["carolus"] = b.magus(
@@ -1369,11 +1493,25 @@ def _fengheld(rhine: Rhine, b: Builder, tribunal: Tribunal) -> None:
         "Hook: the library is vast but weighted to low-level books, so Fengheld-trained magi are generalists; specialists are invited as guests to improve it",
         "Hook: Balastor means to return others to a feral state whether they consent or not",
     )
-    hidden = joined_lines(
-        "Fengheld's real policy is to keep every other covenant so tangled in politics that nobody notices its own growing power; it has worked so far, and its vote bloc is the Tribunal's largest.",
-        "Eule has passed into Final Twilight, and her celebrated wisdom is her filius Günther Lupus's fraud.",
-        "The Bears' Cave in the northern Harz is the private vis source of a hidden lineage of bear-heartbeast Bjornaer descending from the Founder: Urgen of Crintera and his filia Odorpes of the Lusatia chapter.",
-    )
+    hidden = [
+        titled(
+            "Fengheld's real policy",
+            "Fengheld's real policy is to keep every other covenant so tangled in "
+            "politics that nobody notices its own growing power; it has worked so "
+            "far, and its vote bloc is the Tribunal's largest.",
+        ),
+        titled(
+            "Eule's wisdom",
+            "Eule has passed into Final Twilight, and her celebrated wisdom is her "
+            "filius Günther Lupus's fraud.",
+        ),
+        titled(
+            "The Bears' Cave",
+            "The Bears' Cave in the northern Harz is the private vis source of a "
+            "hidden lineage of bear-heartbeast Bjornaer descending from the Founder: "
+            "Urgen of Crintera and his filia Odorpes of the Lusatia chapter.",
+        ),
+    ]
     fengheld = b.covenant(
         "Fengheld",
         tribunal=tribunal,
@@ -1471,14 +1609,26 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         "heartbeast, and with Caecilius of Durenmar and Schadrit of "
         "Dankmar one of the oldest magi in the Tribunal. Magi still "
         "come to her for her celebrated advice.",
-        secrets="Only her filius Günther Lupus suspects that she has passed "
-        "into Final Twilight: she has not taken human shape for years "
-        "and has not spoken for longer. Her wisdom is a fraud. An item "
-        "hidden in the floor of her audience room casts a low-level, "
-        "very high Penetration Perdo Mentem effect that calms the mind "
-        "and strips emotion, Günther translates her hoots with a few "
-        "leading prompts, and the calmed petitioners find their own "
-        "answers and thank Eule.",
+        secrets=[
+            titled(
+                "Eule in Final Twilight",
+                "Only her filius Günther Lupus suspects that she has passed into "
+                "Final Twilight: she has not taken human shape for years and has not "
+                "spoken for longer.",
+            ),
+            titled(
+                "Eule's wisdom",
+                "Her wisdom is a fraud. An item hidden in the floor of her audience "
+                "room casts an effect that calms the mind and strips emotion, Günther "
+                "translates her hoots with a few leading prompts, and the calmed "
+                "petitioners find their own answers and thank Eule.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The item in her audience room casts a low-level, very high "
+                "Penetration Perdo Mentem effect.",
+            ),
+        ],
         traits={"Owlish": 6, "Apathetic": 3, "Wise": 3},
     )
     m["peter_von_wurzburg"] = b.magus(
@@ -1539,9 +1689,14 @@ def _fengheld_magi(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         summary="Magus of House Bjornaer (rank not given), Eule's filius, wolf "
         "heartbeast. He hunts oath-breakers with Indulius and attends "
         "his ancient parens.",
-        secrets="He is the author of the Eule fraud, keeping up the myth of her "
-        "wisdom with a hidden Perdo Mentem item and his own translation "
-        "of her hoots.",
+        secrets=[
+            titled(
+                "The Eule fraud",
+                "He is the author of the Eule fraud, keeping up the myth of her "
+                "wisdom with a hidden Perdo Mentem item and his own translation of "
+                "her hoots.",
+            ),
+        ],
     )
     m["balastor"] = b.magus(
         "Balastor",
@@ -1674,7 +1829,15 @@ def _fengheld_chapters(rhine: Rhine, b: Builder, fengheld: Covenant) -> None:
         "Fengheld at Tribunal more than once of neglecting her duties, "
         "but never punished hard for fear of her aggressive, powerful "
         "parens.",
-        secrets="She and Urgen are the two living magi of a hidden lineage of "
-        "bear-heartbeast Bjornaer descending from the Founder herself; "
-        "they harvest the Bears' Cave in the northern Harz.",
+        secrets=[
+            titled(
+                "Odorpes's lineage",
+                "She and Urgen are the two living magi of a hidden lineage of "
+                "bear-heartbeast Bjornaer descending from the Founder herself.",
+            ),
+            titled(
+                "The Bears' Cave",
+                "Odorpes and Urgen harvest the Bears' Cave in the northern Harz.",
+            ),
+        ],
     )

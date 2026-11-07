@@ -27,6 +27,7 @@ from ..builder import (
     characteristics,
     joined_lines,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_great,
@@ -1934,6 +1935,9 @@ def _demon(b: Builder, covenant: Covenant) -> None:
             "split off further spirits, and is safe from relics within a host. "
             "Vis: 4 pawns of Mentem vis sordida in its bowels."
         ),
-        secrets=f"Aboard {NAME}, on no ship the book names. Carles suspects it.",
+        secrets=[
+            titled("Where the demon hides", f"Aboard {NAME}. Carles suspects it."),
+            titled("Storyguide Notes", "The book names no ship for it."),
+        ],
     )
     b.link(covenant, "creatures", demon, "among the crews")

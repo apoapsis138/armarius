@@ -11,9 +11,11 @@ from ...rules import egyptian_tombs as et
 from ...tombs import TombCurse, TombTrap, TombWard
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_ability,
     vf_minor,
 )
@@ -82,7 +84,7 @@ def _seed(
     name: str,
     *parts: str,
     where: Neighbour,
-    secrets: str = "",
+    secrets: Secrets = "",
     antagonist: str = "",
     realm: str = "",
     stages: list[dict[str, Any]] | None = None,
@@ -214,12 +216,19 @@ def _egypt(b: Builder, w: World) -> None:
             "and many gates to Faerie and the Magic Realm are hidden there (p. "
             "58).",
         ),
-        secrets=(
-            "The Black has withdrawn some of the silted or missing mouths from "
-            "the mortal world; others are coiled back as reflections of wounds "
-            "taken from the Red. One, the Pelusiac Mouth, it has hidden as a "
-            "safe base for its servants."
-        ),
+        secrets=[
+            titled(
+                "The Nile's missing mouths",
+                "The Black has withdrawn some of the Nile's silted or missing "
+                "mouths from the mortal world; others are coiled back as "
+                "reflections of wounds taken from the Red.",
+            ),
+            titled(
+                "The Pelusiac Mouth",
+                "One of the Nile's mouths, the Pelusiac Mouth, the Black has "
+                "hidden as a safe base for its servants.",
+            ),
+        ],
     )
     w["sultan"] = b.lord(
         "Ayyubid Sultan of Egypt",
@@ -513,11 +522,14 @@ def _cairo_buildings(b: Builder, w: World) -> None:
             "Its pupils and agents take the Virtues Child of the House and "
             "Agent of the Sultan (p. 61).",
         ),
-        secrets=(
-            "Some suggest the House's leaders have undergone, or at least "
-            "know, further Initiations meant for the priesthood they descend "
-            "from."
-        ),
+        secrets=[
+            titled(
+                "The House's Initiations",
+                "Some suggest the House's leaders have undergone, or at least "
+                "know, further Initiations meant for the priesthood they descend "
+                "from.",
+            ),
+        ],
     )
     _place(
         b,
@@ -572,20 +584,34 @@ def _gizeh(b: Builder, w: World) -> None:
             "Pilgrims widely report that the plateau's sand, the Sand of "
             "Hermes, raises Intelligence if carried as a talisman (p. 62).",
         ),
-        secrets=paragraphs(
-            "The plateau's greatest guardian is the Lady of the Tombs. "
-            "Alexander of Jerbiton's few accounts suggest a potent faerie once "
-            "worshipped as Isis, changed as her story has changed. She can "
-            "call every faerie in the area and, worst of all, rouse a faerie "
-            "variant of the Father of Dread (p. 62).",
-            "The effect of the sand may be faeries using Grant Virtue to give "
-            "scholars at the tombs Improved Characteristics. They take the "
-            "gift back when a scholar stops studying the ruins, so that the "
-            "weak can be led to spend their lives on one confected tomb after "
-            "another, feeding the faeries' need for attention.",
-            "Some say Mykerinos succeeded: his lamps make a room-sized Faerie "
-            "regio where time runs slower. No one knows where they are.",
-        ),
+        secrets=[
+            titled(
+                "The Lady of the Tombs",
+                "The plateau's greatest guardian is the Lady of the Tombs. "
+                "Alexander of Jerbiton's few accounts suggest a potent faerie "
+                "once worshipped as Isis, changed as her story has changed. She "
+                "can call every faerie in the area and, worst of all, rouse a "
+                "faerie variant of the Father of Dread (p. 62).",
+            ),
+            titled(
+                "The sand's gift",
+                "The effect of the sand may be faeries giving scholars at the "
+                "tombs a gift. They take the gift back when a scholar stops "
+                "studying the ruins, so that the weak can be led to spend their "
+                "lives on one confected tomb after another, feeding the faeries' "
+                "need for attention.",
+            ),
+            titled(
+                "Mykerinos's lamps",
+                "Some say Mykerinos succeeded: his lamps make a room-sized Faerie "
+                "regio where time runs slower. No one knows where they are.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The faeries of the sand use Grant Virtue to give scholars "
+                "Improved Characteristics.",
+            ),
+        ],
     )
     _place(
         b,
@@ -617,13 +643,16 @@ def _gizeh(b: Builder, w: World) -> None:
             "side of the pyramid; fear of its defences has so far been "
             "stronger (p. 62)."
         ),
-        secrets=(
-            "A complete recovered set gives great Insight across many projects "
-            "and rescales many Abilities: all readers gain +3 on all Artes "
-            "Liberales rolls, and others as the books' subjects dictate. "
-            "Incomplete sets still give Insight, and serve as books of very "
-            "high level in their Abilities."
-        ),
+        secrets=[
+            titled(
+                "What Aristotle's books give",
+                "A complete recovered set of Aristotle's books gives great "
+                "Insight across many projects and rescales many Abilities: all "
+                "readers gain +3 on all Artes Liberales rolls, and others as the "
+                "books' subjects dictate. Incomplete sets still give Insight, and "
+                "serve as books of very high level in their Abilities.",
+            ),
+        ],
     )
     _place(
         b,
@@ -678,19 +707,25 @@ def _alexandria(b: Builder, w: World) -> None:
             "their elbow; the Jerbiton Itinerarium does not usually come this "
             "far south, but a skilled Jerbiton might bring apprentices (p. 63).",
         ),
-        secrets=(
-            "No one has noticed that the city's nights make no economic sense. "
-            "Lamp oil is why other ports sleep, and there is no satisfactory "
-            "explanation for the cheap oil here. Pilgrims think it one of the "
-            "sultan's bounties; his servants assume nearby farms make it "
-            "cheaply, and do not look, since a tax-free city could grow "
-            "diamonds on trees for all the law cares. Across the Mediterranean "
-            "the Quaesitores would be looking for a magus making it with Creo. "
-            "If a covenant settles in Alexandria they will ask for a full "
-            "investigation, and if unsatisfied send Quaesitores and hoplites, "
-            "a plain message that Hermetic law now reaches North Africa (p. "
-            "63)."
-        ),
+        secrets=[
+            titled(
+                "Alexandria's cheap oil",
+                "No one has noticed that Alexandria's nights make no economic "
+                "sense. Lamp oil is why other ports sleep, and there is no "
+                "satisfactory explanation for the cheap oil here. Pilgrims think "
+                "it one of the sultan's bounties; his servants assume nearby "
+                "farms make it cheaply, and do not look, since a tax-free city "
+                "could grow diamonds on trees for all the law cares.",
+            ),
+            titled(
+                "The Quaesitores and Alexandria",
+                "Across the Mediterranean the Quaesitores would be looking for a "
+                "magus making Alexandria's cheap oil with Creo. If a covenant "
+                "settles in Alexandria they will ask for a full investigation, "
+                "and if unsatisfied send Quaesitores and hoplites, a plain "
+                "message that Hermetic law now reaches North Africa (p. 63).",
+            ),
+        ],
     )
     w["pharos"] = _place(
         b,
@@ -908,13 +943,20 @@ def _crusade(b: Builder, w: World) -> None:
                 ),
             ),
         ],
-        secrets=(
-            "This is the real world's course and need not be Mythic Africa's: "
-            "at any point the characters can change it, sometimes by very "
-            "small acts (p. 67). If this Mythic Europe follows history, the "
-            "Egyptians then pull Damietta down and build a new city of that "
-            "name a mile and a half away (see Pulling it All Down)."
-        ),
+        secrets=[
+            titled(
+                "Damietta pulled down",
+                "If this Mythic Europe follows history, the Egyptians then pull "
+                "Damietta down and build a new city of that name a mile and a "
+                "half away.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "This is the real world's course and need not be Mythic Africa's: "
+                "at any point the characters can change it, sometimes by very "
+                "small acts (p. 67). See Pulling it All Down.",
+            ),
+        ],
     )
 
 
@@ -971,13 +1013,16 @@ def _south_of_cairo(b: Builder, w: World) -> None:
             "them. The town is named for a god classical writers equated with "
             "Pan (p. 68)."
         ),
-        secrets=(
-            "Theories abound. Some magi think their magic weak outside the "
-            "temple's Faerie aura. Some Christians call them worshippers of "
-            "Asmodeus, kept down by the imminent wrath of God. Some Muslims "
-            "reply that they serve a Divine being and keep from the world for "
-            "pious reasons."
-        ),
+        secrets=[
+            titled(
+                "Theories about Akhmim's wizards",
+                "Theories abound about Akhmim's wizards. Some magi think their "
+                "magic weak outside the temple's Faerie aura. Some Christians "
+                "call them worshippers of Asmodeus, kept down by the imminent "
+                "wrath of God. Some Muslims reply that they serve a Divine being "
+                "and keep from the world for pious reasons.",
+            ),
+        ],
     )
     _place(
         b,
@@ -1028,9 +1073,12 @@ def _south_of_cairo(b: Builder, w: World) -> None:
             "crammed with pilgrims in a sea known for wrecks and sharks, and "
             "everyone in town who is not poor owns at least two.",
         ),
-        secrets=(
-            "Most of the city seems to be falling under the sway of evil (p. 57)."
-        ),
+        secrets=[
+            titled(
+                "Evil in 'Aydhab",
+                "Most of 'Aydhab seems to be falling under the sway of evil (p. 57).",
+            ),
+        ],
     )
     w["torturers"] = _place(
         b,
@@ -1045,10 +1093,18 @@ def _south_of_cairo(b: Builder, w: World) -> None:
             "elsewhere, where the tax agents would do what travellers call "
             "only 'worse'. Sultans no longer charge pilgrims (pp. 57, 68)."
         ),
-        secrets=(
-            "It keeps an Infernal aura, the book gives no figure, and minor "
-            "demons living there urge locals to rob or murder pilgrims."
-        ),
+        secrets=[
+            titled(
+                "Demons in the customs house",
+                "Minor demons living in the House of Torturers urge locals to rob "
+                "or murder pilgrims.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The House of Torturers keeps an Infernal aura; the book gives no "
+                "figure.",
+            ),
+        ],
     )
     w["pearl_isles"] = _place(
         b,
@@ -1060,10 +1116,14 @@ def _south_of_cairo(b: Builder, w: World) -> None:
             "June season from divers, about four to the ton of shellfish. Some "
             "divers black out as they surface (p. 68)."
         ),
-        secrets=(
-            "Those who black out seem to sate creatures that guard the pearls. "
-            "If magi make diving safer, the creatures may stop slumbering."
-        ),
+        secrets=[
+            titled(
+                "What guards the pearls",
+                "Those divers who black out seem to sate creatures that guard the "
+                "pearls. If magi make diving safer, the creatures may stop "
+                "slumbering.",
+            ),
+        ],
     )
     w["red_sea"] = _place(
         b,
@@ -1118,7 +1178,12 @@ def _egypt_seeds(b: Builder, w: World) -> None:
         "Lineages) and users of defixiones (Ancient Magic) can use names "
         "for this, and summon a pharaonic wizard here (p. 59).",
         where=cairo,
-        secrets="Some of their magic was only trickery.",
+        secrets=[
+            titled(
+                "The magicians' trickery",
+                "Some of Pharaoh's magicians' magic was only trickery.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1129,15 +1194,30 @@ def _egypt_seeds(b: Builder, w: World) -> None:
         "illness into the pit of the last victims, and gives away clues to "
         "the pit. The head of the Maristan sends an expedition (p. 60).",
         where=maristans,
-        secrets=(
-            "Grave robbers have opened the pit and carried off the talismans. "
-            "While they hold them they stay well but can carry the sickness. "
-            "The Maristan and the Guild of Seekers combine to find them, study "
-            "the talismans and copy them, and the player characters are urged "
-            "to fetch a rare ingredient each one needs. Rivals who learn the "
-            "plan mean to gather as much of it as they can and destroy the "
-            "source, to make their stock priceless."
-        ),
+        secrets=[
+            titled(
+                "The stolen talismans",
+                "Grave robbers have opened the plague pit and carried off the "
+                "talismans. While they hold them they stay well but can carry the "
+                "sickness.",
+            ),
+            titled(
+                "The Maristan's plan",
+                "The Maristan and the Guild of Seekers combine to find the plague "
+                "talismans, study the talismans and copy them.",
+            ),
+            titled(
+                "The rivals' plan",
+                "Rivals who learn the Maristan's plan mean to gather as much of "
+                "the rare ingredient as they can and destroy the source, to make "
+                "their stock priceless.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The player characters are urged to fetch a rare ingredient each "
+                "talisman needs.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1160,7 +1240,13 @@ def _egypt_seeds(b: Builder, w: World) -> None:
         "Twilight. Her parents swear she is their own daughter, raised "
         "from birth (p. 60).",
         where=maristans,
-        secrets="How, then, does she know the Parma Magica?",
+        secrets=[
+            titled(
+                "The young woman's Parma Magica",
+                "How, then, does the young woman in the Maristan know the Parma "
+                "Magica?",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1184,11 +1270,14 @@ def _egypt_seeds(b: Builder, w: World) -> None:
         "keep coming back to Cairo with coins, amulets and papyri that "
         "hint at his tomb (p. 62).",
         where=gizeh,
-        secrets=(
-            "Hermetic magi actually know Alexander was buried in Memphis and "
-            "then Alexandria, and have some idea where. None of the local "
-            "faeries care."
-        ),
+        secrets=[
+            titled(
+                "Where Alexander lies",
+                "Hermetic magi actually know Alexander was buried in Memphis and "
+                "then Alexandria, and have some idea where. None of the local "
+                "faeries care.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1282,7 +1371,12 @@ def _gizeh_seeds(b: Builder, w: World) -> None:
         "has yet dared, for the books meant for publication that Mythic "
         "Europe has never read (p. 62).",
         where=gizeh,
-        secrets="The Tomb of Aristotle's record gives what the books do.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The Tomb of Aristotle's record gives what the books do.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1299,10 +1393,13 @@ def _gizeh_seeds(b: Builder, w: World) -> None:
         "(p. 62).",
         where=gizeh,
         realm="Faerie",
-        secrets=(
-            "Faeries grant the gift and take it back if he stops, feeding on "
-            "the attention."
-        ),
+        secrets=[
+            titled(
+                "The scholar's gift",
+                "Faeries grant the scholar's gift and take it back if he stops, "
+                "feeding on the attention.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1340,13 +1437,16 @@ def _crusade_seeds(b: Builder, w: World) -> None:
         "commissioned bells to ring the victory every year. Both carry "
         "pieces of the chain as keepsakes (p. 66).",
         where=damietta,
-        secrets=(
-            "Some crusade leaders believe both stories in full, each with "
-            "whichever group they are talking to; confronted, they cannot see "
-            "the difficulty and soon forget the conversation. Is this a "
-            "miracle hidden by Divine power, or two powerful faeries "
-            "contesting the crusaders' vitality?"
-        ),
+        secrets=[
+            titled(
+                "Both stories at once",
+                "Some crusade leaders believe both stories of breaking the chain "
+                "in full, each with whichever group they are talking to; "
+                "confronted, they cannot see the difficulty and soon forget the "
+                "conversation. Is this a miracle hidden by Divine power, or two "
+                "powerful faeries contesting the crusaders' vitality?",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1359,11 +1459,15 @@ def _crusade_seeds(b: Builder, w: World) -> None:
         "to find him gone and its general a prisoner, and scattered (p. "
         "66).",
         where=sultan,
-        secrets=(
-            "Was the plot mundane, born in the army or of Christian agents? Or "
-            "a contagious madness from a demon, a faerie whispering promises "
-            "of rule, or a battle between puppets of the Order of Suleiman?"
-        ),
+        secrets=[
+            titled(
+                "Who was behind the plot",
+                "Was the Kurds' plot mundane, born in the army or of Christian "
+                "agents? Or a contagious madness from a demon, a faerie "
+                "whispering promises of rule, or a battle between puppets of the "
+                "Order of Suleiman?",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1373,11 +1477,14 @@ def _crusade_seeds(b: Builder, w: World) -> None:
         "disturbed, and the hidden cesspits of servants of the Infernal "
         "lie open (p. 67).",
         where=damietta,
-        secrets=(
-            "If magi steer the choice of the new site, it might take in "
-            "ancient tombs with Magic auras, leaving lacunae in the city's "
-            "Dominion."
-        ),
+        secrets=[
+            titled(
+                "The new city's site",
+                "If magi steer the choice of the new city's site, it might take "
+                "in ancient tombs with Magic auras, leaving lacunae in the city's "
+                "Dominion.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1428,10 +1535,13 @@ def _upper_egypt_seeds(b: Builder, w: World) -> None:
         "leads back to the old customs house (p. 68).",
         where=w["torturers"],
         realm="Infernal",
-        secrets=(
-            "Minor demons dwelling in the House of Torturers encourage the "
-            "locals to it."
-        ),
+        secrets=[
+            titled(
+                "Who urges the robbers",
+                "Minor demons dwelling in the House of Torturers encourage the "
+                "locals to rob and murder pilgrims.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1439,10 +1549,13 @@ def _upper_egypt_seeds(b: Builder, w: World) -> None:
         "Characters who want money quite legally might try the islands "
         "near 'Aydhab in the brief June pearling season (p. 68).",
         where=w["pearl_isles"],
-        secrets=(
-            "If magi make the diving safe, the guardians that are sated by "
-            "drowning divers may wake."
-        ),
+        secrets=[
+            titled(
+                "The pearls' guardians",
+                "If magi make the diving safe, the guardians that are sated by "
+                "drowning divers may wake.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -1457,10 +1570,13 @@ def _upper_egypt_seeds(b: Builder, w: World) -> None:
         "Philae and worshipped Isis, and their wars made the Romans move "
         "Egypt's border north and garrison it (p. 68).",
         where=egypt,
-        secrets=(
-            "It is unclear whether these are the Bujat, or headless faeries "
-            "who have taken their name and story."
-        ),
+        secrets=[
+            titled(
+                "Who the Bujat are",
+                "It is unclear whether those who lead people north are the Bujat, "
+                "or headless faeries who have taken their name and story.",
+            ),
+        ],
     )
 
 
@@ -1601,10 +1717,14 @@ def _nubia(b: Builder, w: World) -> None:
             "answer to their Muslim neighbours' growing aggression. Smaller "
             "ones have minimal garrisons and lie mostly deserted (p. 80)."
         ),
-        secrets=(
-            "More than one has been quietly taken over by bandits, and "
-            "sometimes something more sinister lives there."
-        ),
+        secrets=[
+            titled(
+                "What holds the forts",
+                "More than one of the river's fortresses has been quietly taken "
+                "over by bandits, and sometimes something more sinister lives "
+                "there.",
+            ),
+        ],
     )
     w["darb"] = _place(
         b,
@@ -1918,7 +2038,13 @@ def _nobatia(b: Builder, w: World) -> None:
                 ),
             )
         ],
-        secrets=("Explorers fail because the temples lie in a Faerie regio of aura 5."),
+        secrets=[
+            titled(
+                "Why explorers fail",
+                "Explorers fail because the temples of Ramses lie in a Faerie regio.",
+            ),
+            titled("Storyguide Notes", "The regio is of aura 5."),
+        ],
     )
     w["menarti"] = _place(
         b,
@@ -1959,7 +2085,12 @@ def _nobatia(b: Builder, w: World) -> None:
             "despite their faith, for continuity. Each intact tumulus has a "
             "Magic aura of 1 (p. 80)."
         ),
-        secrets="A tumulus may hold a grave guardian such as a mummified dog.",
+        secrets=[
+            titled(
+                "Grave guardians",
+                "A tumulus may hold a grave guardian such as a mummified dog.",
+            ),
+        ],
     )
 
 
@@ -2015,15 +2146,23 @@ def _nobatian_towns(b: Builder, w: World) -> None:
             "Makuria.",
             "The town stands on the Kom, a hill that was the original island (p. 79).",
         ),
-        secrets=(
-            "The first Nubians here slew the giant who embodied the Kom, a "
-            "powerful servant of the Red. They crushed its bones and fed them "
-            "to livestock, shredded its flesh for birds, fed those beasts to "
-            "dogs and lions, then killed and burned those and scattered the "
-            "ashes. Some believe the daily sand is the Kom, remaking its body. "
-            "If so it is winning: more sand arrives than can be removed, and "
-            "some claim the heaps ripple like muscles about to flex."
-        ),
+        secrets=[
+            titled(
+                "The slaying of the Kom",
+                "The first Nubians at Pakhoras slew the giant who embodied the "
+                "Kom, a powerful servant of the Red. They crushed its bones and "
+                "fed them to livestock, shredded its flesh for birds, fed those "
+                "beasts to dogs and lions, then killed and burned those and "
+                "scattered the ashes.",
+            ),
+            titled(
+                "What the sand is",
+                "Some believe the daily sand of Pakhoras is the Kom, remaking its "
+                "body. If so it is winning: more sand arrives than can be "
+                "removed, and some claim the heaps ripple like muscles about to "
+                "flex.",
+            ),
+        ],
     )
     b.church(
         "Cathedral of Pakhoras",
@@ -2147,11 +2286,14 @@ def _makuria(b: Builder, w: World) -> None:
             "king's sister's son before his own, and crises are common when no "
             "heir is clear (p. 81)."
         ),
-        secrets=(
-            "Five years ago his armies uprooted and burned Abu Hamad. That "
-            "night a visitor came to his bedchamber, and since then he has "
-            "forbidden anyone to try again."
-        ),
+        secrets=[
+            titled(
+                "The visitor in the night",
+                "Five years ago his armies uprooted and burned Abu Hamad. That "
+                "night a visitor came to his bedchamber, and since then he has "
+                "forbidden anyone to try again.",
+            ),
+        ],
     )
     w["eparch"].answers_to = w["great_king"].id
     w["abu_hamad"] = b.town(
@@ -2169,10 +2311,13 @@ def _makuria(b: Builder, w: World) -> None:
             "ago. Makurian spies see that one set of tents at the heart of the "
             "camp never moves, and they have never got inside (p. 81)."
         ),
-        secrets=(
-            "Those tents are the opulent home of 'Izz el-Afram Hamad, the "
-            "Master of Abu Hamad."
-        ),
+        secrets=[
+            titled(
+                "Whose tents they are",
+                "The tents of Abu Hamad are the opulent home of 'Izz el-Afram "
+                "Hamad, the Master of Abu Hamad.",
+            ),
+        ],
     )
     w["atbara"] = b.town(
         "Atbara",
@@ -2186,13 +2331,19 @@ def _makuria(b: Builder, w: World) -> None:
             "ends the only safe road to Sawakin. Its guides wear green turbans "
             "(p. 81)."
         ),
-        secrets=(
-            "The Blemmyae spare caravans led by Atbarans, and in return their "
-            "chiefs are told the route and goods of the occasional rich "
-            "caravan that somehow cannot get an escort. The Atbarans have a "
-            "like alliance with the Ja'alin at Abu Hamad, so that caravans for "
-            "their rivals never arrive."
-        ),
+        secrets=[
+            titled(
+                "The Atbarans and the Blemmyae",
+                "The Blemmyae spare caravans led by Atbarans, and in return their "
+                "chiefs are told the route and goods of the occasional rich "
+                "caravan that somehow cannot get an escort.",
+            ),
+            titled(
+                "The Atbarans and the Ja'alin",
+                "The Atbarans have a like alliance with the Ja'alin at Abu Hamad, "
+                "so that caravans for their rivals never arrive.",
+            ),
+        ],
     )
     w["berber"] = b.town(
         "Berber",
@@ -2226,12 +2377,15 @@ def _makuria(b: Builder, w: World) -> None:
             "is dry, its settlements are gone, and the land is a desolate "
             "waste (p. 84)."
         ),
-        secrets=(
-            "Galu caused the failure. It was built on the home of the wadi's "
-            "spirit after Napatan priests slew it, hoping to take over the "
-            "water's flow; the effect did not last, and the fortress was left "
-            "guarding a road to nowhere."
-        ),
+        secrets=[
+            titled(
+                "Why the wadi failed",
+                "Galu caused the wadi's failure. It was built on the home of the "
+                "wadi's spirit after Napatan priests slew it, hoping to take over "
+                "the water's flow; the effect did not last, and the fortress was "
+                "left guarding a road to nowhere.",
+            ),
+        ],
     )
     b.church(
         "Ghazali",
@@ -2288,10 +2442,13 @@ def _makuria(b: Builder, w: World) -> None:
             "protect and live in tents they can strike when sentries see "
             "elephants coming (p. 86)."
         ),
-        secrets=(
-            "The sweet rush is hateful to the giant serpents of the gorges "
-            "round about, or so the Old Man of the Forest says."
-        ),
+        secrets=[
+            titled(
+                "Why the serpents stay away",
+                "The sweet rush is hateful to the giant serpents of the gorges "
+                "round about, or so the Old Man of the Forest says.",
+            ),
+        ],
     )
 
 
@@ -2544,13 +2701,19 @@ def _alodia(b: Builder, w: World) -> None:
             "their place. Their Virtue, tradition and Kassalan Dust are the "
             "Kassalan Exorcists' chapter.",
         ),
-        secrets=(
-            "The society's upper ranks know of the Cult of Dedun, and much of "
-            "its work is designed to limit it: church burial for everyone, in "
-            "anonymous graves so the famous cannot be found, guarded "
-            "mausoleums, and magic that counters the cult's sorcerers. Its "
-            "assassins killed Artanyeszame's master."
-        ),
+        secrets=[
+            titled(
+                "The society and the Cult of Dedun",
+                "The society's upper ranks know of the Cult of Dedun, and much of "
+                "its work is designed to limit it: church burial for everyone, in "
+                "anonymous graves so the famous cannot be found, guarded "
+                "mausoleums, and magic that counters the cult's sorcerers.",
+            ),
+            titled(
+                "Artanyeszame's master",
+                "The Mortuary Society's assassins killed Artanyeszame's master.",
+            ),
+        ],
     )
     w["ministry"] = b.faction(
         "The Ministry of Works",
@@ -2656,11 +2819,14 @@ def _alodian_kingdoms(b: Builder, w: World) -> None:
             "city. Each village seems to have its own language, unrelated to "
             "any neighbour's or to Nubian (p. 87)."
         ),
-        secrets=(
-            "They all speak one language, but under a magical curse no native "
-            "Bayudan can understand another speaking it. An outsider who "
-            "learns it from any village is understood by all."
-        ),
+        secrets=[
+            titled(
+                "The Bayudan curse",
+                "Bayuda's villages all speak one language, but under a magical "
+                "curse no native Bayudan can understand another speaking it. An "
+                "outsider who learns it from any village is understood by all.",
+            ),
+        ],
     )
     _place(
         b,
@@ -2829,11 +2995,14 @@ def _meroe(b: Builder, w: World) -> None:
             "ironwork is prized far and wide. Its people have a superior air, "
             "born of their ancient heritage (pp. 89-90).",
         ),
-        secrets=(
-            "The Initiation Script of the Undying Ones survives only among the "
-            "writings on the monuments here, a site the Mortuary Society "
-            "patrols (p. 100)."
-        ),
+        secrets=[
+            titled(
+                "The Undying Ones' Script",
+                "The Initiation Script of the Undying Ones survives only among "
+                "the writings on the monuments of Meroë, a site the Mortuary "
+                "Society patrols (p. 100).",
+            ),
+        ],
     )
     w["taqasi"] = _place(
         b,
@@ -2868,13 +3037,20 @@ def _meroe(b: Builder, w: World) -> None:
             "Western cemetery: 113 tombs, none royal and so no pyramids, "
             "simple and poorly preserved. No Magic aura.",
         ),
-        secrets=(
-            "This is the haunt of Alodia's most powerful devotees of Dedun, "
-            "and some pyramids are occupied, with higher Magic auras aligned "
-            "to the dead. Artanyeszame excludes all other Undying Ones from "
-            "the southern cemetery. Two more dwell in the northern and a third "
-            "in the western."
-        ),
+        secrets=[
+            titled(
+                "The occupied pyramids",
+                "Begarawiyah is the haunt of Alodia's most powerful devotees of "
+                "Dedun, and some pyramids are occupied, with higher Magic auras "
+                "aligned to the dead.",
+            ),
+            titled(
+                "Who holds each cemetery",
+                "Artanyeszame excludes all other Undying Ones from Begarawiyah's "
+                "southern cemetery. Two more dwell in the northern and a third in "
+                "the western.",
+            ),
+        ],
     )
 
 
@@ -3029,14 +3205,21 @@ def _blemmyae(b: Builder, w: World) -> None:
             "The jail beneath Sawakin of the jinn Solomon banished, whose "
             "whereabouts no one knows (p. 96)."
         ),
-        secrets=(
-            "There are 111 jinn in prisons of coral beneath the town, all "
-            "hostile to man. Most are petty nuisances Solomon would not free; "
-            "a few are truly terrible. One is rumoured to be Ashmodai, Prince "
-            "of Temptation, one of the ten mightiest demons save Satan himself "
-            "(Realms of Power: the Infernal p. 27). No one knows, and any "
-            "number of jinn claim to be him."
-        ),
+        secrets=[
+            titled(
+                "The jinn beneath Sawakin",
+                "There are 111 jinn in prisons of coral beneath Sawakin, all "
+                "hostile to man. Most are petty nuisances Solomon would not free; "
+                "a few are truly terrible.",
+            ),
+            titled(
+                "Ashmodai",
+                "One of the jinn beneath Sawakin is rumoured to be Ashmodai, "
+                "Prince of Temptation, one of the ten mightiest demons save Satan "
+                "himself (Realms of Power: the Infernal p. 27). No one knows, and "
+                "any number of jinn claim to be him.",
+            ),
+        ],
     )
 
 
@@ -3067,57 +3250,99 @@ def _cult_of_dedun(b: Builder, w: World) -> None:
             "Napata, killed the priests and took the royal dead (p. 97). Few "
             "in Nubia now suspect it survives.",
         ),
-        secrets=paragraphs(
-            "The priesthood of Kush included Canaanite necromancers (Ancient "
-            "Magic, chapter 2), some come with the Tribe of Dan, others after "
-            "Saul's purge of Canaan's priests. Those seeking that Mystery may "
-            "find clues leading here. Holding the royal dead, the priests held "
-            "their living relatives, by the threat of wracking their spirits "
-            "after death (p. 97).",
-            "The cult lurks in graveyards and forgotten tombs. It now cares "
-            "less for keeping the dead than for power over them, and the Red's "
-            "subtle influence has made it, knowingly or not, a corrupting "
-            "force serving oblivion. It is a Mystery Cult in informal "
-            "districts, each worshipping at a grave site under a temple "
-            "priest; those priests meet every few years. Most members above "
-            "adherent seek magical power, not worship; its Mysteries are of "
-            "the Magic realm, not Faerie. Some priests are fanatics, but none "
-            "deceive themselves: it is a way to eternal life, once offered "
-            "after death as an akh (chapter 4), and now as lordship over one's "
-            "own decaying flesh (pp. 97-98).",
-            "Adherents come from every walk of life, some from families loyal "
-            "for centuries, some wooed by friends in the priesthood, some "
-            "through curiosity about Kush's graves or research into long life "
-            "or necromancy. They attend night rites at the local temple, "
-            "usually four times a year, favour each other in daily life, and "
-            "help when a temple priest asks. Altar priests assist the temple "
-            "priest, keep the temple and the discipline, and silently kill an "
-            "adherent who endangers secrecy; there are rarely more than four "
-            "to a temple. A temple priest usually leaves family and normal "
-            "life to live in squalor in his temple on what can be scrounged, "
-            "sometimes on the bodies he steals, and gathers a court of noted "
-            "corpses, each prepared by his own rite and bearing his name in "
-            "Meroitic, which makes each a permanent Arcane Connection to him. "
-            "There are currently a dozen Undying Ones along the Nile (pp. "
-            "98-100).",
-            "The cult teaches no magic of its own, but draws the unsavoury. "
-            "Sorcerers among it are often Learned Magicians, or have Corpse "
-            "Magic, the Goetic Arts (Summoning and Commanding, in a version "
-            "that reaches ghosts and bears an Infernal taint), or curse magic "
-            "such as Hex, Cursing, the Vulnero Art or Malediction (p. 102).",
-            "The ranks, Initiation Scripts, Virtues, court strength, the loss "
-            "of the Gift, the common powers of the Undying Ones and Corpse "
-            "Magic are the Cult of Dedun's chapter and rules/africa.py (pp. "
-            "98-102). The errata (p. 87) correct the temple priest's script: "
-            "she will not necessarily become bedridden and die of old age at "
-            "Decrepitude 5.",
-            "Under the Empire of Kush a body was embalmed, coated in molten "
-            "glass and set on a pillar, visible for all to see, and by some "
-            "magic not burned. After the priesthood of Dedun fell that secret "
-            "was lost, and the body was first put in a hollow statue of its "
-            "likeness, gold for royalty, silver for princes and the rich, "
-            "earthenware even for the poor, and then in glass (p. 88).",
-        ),
+        secrets=[
+            titled(
+                "The Canaanite necromancers",
+                "The priesthood of Kush included Canaanite necromancers (Ancient "
+                "Magic, chapter 2), some come with the Tribe of Dan, others after "
+                "Saul's purge of Canaan's priests. Those seeking that Mystery may "
+                "find clues leading here.",
+            ),
+            titled(
+                "The priests' hold on the living",
+                "Holding the royal dead, the priests of Kush held their living "
+                "relatives, by the threat of wracking their spirits after death "
+                "(p. 97).",
+            ),
+            titled(
+                "What the cult has become",
+                "The Cult of Dedun lurks in graveyards and forgotten tombs. It "
+                "now cares less for keeping the dead than for power over them, "
+                "and the Red's subtle influence has made it, knowingly or not, a "
+                "corrupting force serving oblivion.",
+            ),
+            titled(
+                "How the cult is ordered",
+                "The Cult of Dedun is a Mystery Cult in informal districts, each "
+                "worshipping at a grave site under a temple priest; those priests "
+                "meet every few years.",
+            ),
+            titled(
+                "What the cult's members seek",
+                "Most members of the Cult of Dedun above adherent seek magical "
+                "power, not worship; its Mysteries are of the Magic realm, not "
+                "Faerie. Some priests are fanatics, but none deceive themselves: "
+                "it is a way to eternal life, once offered after death as an akh "
+                "(chapter 4), and now as lordship over one's own decaying flesh "
+                "(pp. 97-98).",
+            ),
+            titled(
+                "The cult's adherents",
+                "Adherents of the Cult of Dedun come from every walk of life, "
+                "some from families loyal for centuries, some wooed by friends in "
+                "the priesthood, some through curiosity about Kush's graves or "
+                "research into long life or necromancy. They attend night rites "
+                "at the local temple, usually four times a year, favour each "
+                "other in daily life, and help when a temple priest asks.",
+            ),
+            titled(
+                "The altar priests",
+                "Altar priests of the Cult of Dedun assist the temple priest, "
+                "keep the temple and the discipline, and silently kill an "
+                "adherent who endangers secrecy; there are rarely more than four "
+                "to a temple.",
+            ),
+            titled(
+                "The temple priests",
+                "A temple priest of the Cult of Dedun usually leaves family and "
+                "normal life to live in squalor in his temple on what can be "
+                "scrounged, sometimes on the bodies he steals, and gathers a "
+                "court of noted corpses, each prepared by his own rite and "
+                "bearing his name in Meroitic, which makes each a permanent "
+                "Arcane Connection to him.",
+            ),
+            titled(
+                "The Undying Ones along the Nile",
+                "There are currently a dozen Undying Ones along the Nile (pp. 98-100).",
+            ),
+            titled(
+                "The cult's sorcerers",
+                "The Cult of Dedun teaches no magic of its own, but draws the "
+                "unsavoury. Sorcerers among it are often Learned Magicians, or "
+                "have Corpse Magic, the Goetic Arts (Summoning and Commanding, in "
+                "a version that reaches ghosts and bears an Infernal taint), or "
+                "curse magic such as Hex, Cursing, the Vulnero Art or Malediction "
+                "(p. 102).",
+            ),
+            titled(
+                "Bodies in glass",
+                "Under the Empire of Kush a body was embalmed, coated in molten "
+                "glass and set on a pillar, visible for all to see, and by some "
+                "magic not burned. After the priesthood of Dedun fell that secret "
+                "was lost, and the body was first put in a hollow statue of its "
+                "likeness, gold for royalty, silver for princes and the rich, "
+                "earthenware even for the poor, and then in glass (p. 88).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The ranks, Initiation Scripts, Virtues, court strength, the loss "
+                "of the Gift, the common powers of the Undying Ones and Corpse "
+                "Magic are the Cult of Dedun's chapter and rules/africa.py (pp. "
+                "98-102). The errata (p. 87) correct the temple priest's script: "
+                "she will not necessarily become bedridden and die of old age at "
+                "Decrepitude 5.",
+            ),
+        ],
     )
 
 
@@ -3136,28 +3361,51 @@ def _artanyeszame(b: Builder, w: World) -> None:
             "club if he must. He lives in the southern necropolis of "
             "Begarawiyah (pp. 90-92)."
         ),
-        secrets=paragraphs(
-            "An Undying One. Born nearly two centuries ago, a beggar named "
-            "Georgiu of Atbara, he was apprenticed to a learned magician, from "
-            "whom he heard of the Cult of Dedun. Assassins of the Mortuary "
-            "Society killed his master, and he has hated them ever since. With "
-            "his master's resources he built up his power and took the "
-            "transformation. He heads a chapter of the cult, with agents far "
-            "along the Nile, chosen for their skills or contacts.",
-            "He wants an intact Book of Thoth (chapter 5), believing like so "
-            "many before him that he is strong enough to read it unconsumed. "
-            "Until then he gathers power and destroys those who might "
-            "interfere. He lets lesser sorcerers be, but tries to rule or "
-            "remove any strong one, which sets him against 'Izz el-Afram "
-            "Hamad; that feud may catch the characters, courted by one if they "
-            "have crossed the other, and robbed of magical resources if they "
-            "have crossed neither. It will likely end in stalemate. He could "
-            "be an enemy, or for a while a mentor. Compared to a magus he is "
-            "not powerful, but versatile and cunning.",
-            "He ignores those who seek the Undying Ones' Script unless they "
-            "annoy him, when he steers them to a fake he made a century ago, "
-            "which inflicts the Ordeal but grants nothing.",
-        ),
+        secrets=[
+            titled(
+                "Georgiu of Atbara",
+                "An Undying One. Born nearly two centuries ago, a beggar named "
+                "Georgiu of Atbara, he was apprenticed to a learned magician, "
+                "from whom he heard of the Cult of Dedun.",
+            ),
+            titled(
+                "His hatred of the Mortuary Society",
+                "Assassins of the Mortuary Society killed his master, and he has "
+                "hated them ever since.",
+            ),
+            titled(
+                "His chapter of the cult",
+                "With his master's resources he built up his power and took the "
+                "transformation. He heads a chapter of the cult, with agents far "
+                "along the Nile, chosen for their skills or contacts.",
+            ),
+            titled(
+                "What he wants",
+                "He wants an intact Book of Thoth (chapter 5), believing like so "
+                "many before him that he is strong enough to read it unconsumed. "
+                "Until then he gathers power and destroys those who might "
+                "interfere.",
+            ),
+            titled(
+                "His feud with Hamad",
+                "He lets lesser sorcerers be, but tries to rule or remove any "
+                "strong one, which sets him against 'Izz el-Afram Hamad; that "
+                "feud may catch the characters, courted by one if they have "
+                "crossed the other, and robbed of magical resources if they have "
+                "crossed neither. It will likely end in stalemate.",
+            ),
+            titled(
+                "The fake Script",
+                "He ignores those who seek the Undying Ones' Script unless they "
+                "annoy him, when he steers them to a fake he made a century ago, "
+                "which inflicts the Ordeal but grants nothing.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "He could be an enemy, or for a while a mentor. Compared to a "
+                "magus he is not powerful, but versatile and cunning.",
+            ),
+        ],
     )
     block: dict[str, Any] = {
         "characteristics": characteristics(1, -1, -2, 2, -3, 0, -2, -3),
@@ -3295,11 +3543,18 @@ def _artanyeszame(b: Builder, w: World) -> None:
             "of its king, and a powerful necromancer: Communication 1, Corpse "
             "Magic 10, Teaching 4 (p. 92)."
         ),
-        secrets=(
-            "The ally and tutor of Artanyeszame, and part of his court of the "
-            "dead. The Sovereign Ward Against Wandering Shadows has trapped "
-            "her; she claims she enchanted it into the walls herself."
-        ),
+        secrets=[
+            titled(
+                "Artanyeszame's ally",
+                "The ally and tutor of Artanyeszame, and part of his court of the "
+                "dead.",
+            ),
+            titled(
+                "The ward that traps her",
+                "The Sovereign Ward Against Wandering Shadows has trapped her; "
+                "she claims she enchanted it into the walls herself.",
+            ),
+        ],
     )
     b.magus(
         "The Bouda Sisters of Begarawiyah",
@@ -3312,7 +3567,12 @@ def _artanyeszame(b: Builder, w: World) -> None:
             "the antechamber of the Pyramid of Arrakkamani and lead a dozen "
             "magical hyenas. Bouda are described in chapter 8 (p. 92)."
         ),
-        secrets=("Friends of Artanyeszame; the hyenas serve as his covenfolk."),
+        secrets=[
+            titled(
+                "Friends of Artanyeszame",
+                "Friends of Artanyeszame; the hyenas serve as his covenfolk.",
+            ),
+        ],
     )
 
 
@@ -3533,26 +3793,43 @@ def _pyramid(b: Builder, w: World) -> None:
             "A royal pyramid in the southern necropolis of Begarawiyah. A "
             "curse in Meroitic is written at the tomb's entrance (p. 92)."
         ),
-        secrets=paragraphs(
-            "Artanyeszame's home. His court of the dead, of strength 181 over "
-            "four dozen corpses, among them King Arrakkamani and his mother "
-            "Weteriken, is posed in a chamber as if at audience, paying homage "
-            "to the central throne where he broods. Magic aura 6, aligned to "
-            "the dead. The book scores the lair as a covenant site, for 259 "
-            "Build Points overall (p. 92); the Tomb tab holds its curse, "
-            "enchantments and traps.",
-            "Covenfolk: the three bouda sisters and a dozen magical hyenas, "
-            "some with Magic Sensitivity, who can find Corpus vis in the "
-            "necropolis's long-buried dead, and are prone to bouts of madness.",
-            "Library (45 Build Points): Inscription on Petitioning the Dead, a "
-            "summa on Corpse Magic, Level 8, Quality 6; Initiation Script for "
-            "Corpse Magic, Script Bonus +15. Specialists (56): two altar "
-            "priests (Magic Lore 5), four grave guardians (Single Weapon 4), "
-            "the ghost of Queen Weteriken, the three bouda. Vis (35): 2 pawns "
-            "of Vim a year (paint flecks from magical texts), 4 of Corpus "
-            "(bodies robbed by hyenas), 1 of Ignem (glass exposed to the dawn "
-            "sun on the rising of Sirius).",
-        ),
+        secrets=[
+            titled(
+                "Artanyeszame's court",
+                "The Pyramid of Arrakkamani is Artanyeszame's home. His court of "
+                "the dead, over four dozen corpses, among them King Arrakkamani "
+                "and his mother Weteriken, is posed in a chamber as if at "
+                "audience, paying homage to the central throne where he broods.",
+            ),
+            titled(
+                "The pyramid's covenfolk",
+                "The pyramid's covenfolk are the three bouda sisters and a dozen "
+                "magical hyenas, who can find Corpus vis in the necropolis's "
+                "long-buried dead, and are prone to bouts of madness.",
+            ),
+            titled(
+                "The pyramid's library",
+                "Inscription on Petitioning the Dead, a summa on Corpse Magic, "
+                "Level 8, Quality 6; Initiation Script for Corpse Magic, Script "
+                "Bonus +15.",
+            ),
+            titled(
+                "The pyramid's vis",
+                "2 pawns of Vim a year (paint flecks from magical texts), 4 of "
+                "Corpus (bodies robbed by hyenas), 1 of Ignem (glass exposed to "
+                "the dawn sun on the rising of Sirius).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Court of the dead: strength 181. Magic aura 6, aligned to the "
+                "dead. Some hyenas have Magic Sensitivity. The book scores the "
+                "lair as a covenant site, for 259 Build Points overall (p. 92); "
+                "the Tomb tab holds its curse, enchantments and traps. Library "
+                "(45 Build Points). Specialists (56): two altar priests (Magic "
+                "Lore 5), four grave guardians (Single Weapon 4), the ghost of "
+                "Queen Weteriken, the three bouda. Vis (35).",
+            ),
+        ],
     )
     b.tomb(
         w["arrakkamani"],
@@ -3668,23 +3945,42 @@ def _hamad(b: Builder, w: World) -> None:
             "A Bedouin prince of the Ja'alin, the Master of Abu Hamad, "
             "charming, inquisitive and sinister in equal measure (p. 82)."
         ),
-        secrets=paragraphs(
-            "A powerful Gifted sahir, driven from his home by the Ayyubids to "
-            "the southern Nubian Desert with his Ja'alin and a host of jinni. "
-            "Now over eighty and feeling it despite magic that has lengthened "
-            "his life, he has heard from his apprentices of the Cult of Dedun, "
-            "and hopes to learn its trick of immortality. He suffers no "
-            "threat: he tries to remove other Gifted magicians, trains no "
-            "Gifted apprentices lest he raise a rival, and has several "
-            "unGifted ones.",
-            "A particularly powerful jinn serves as ally and servant, chafing "
-            "at bonds it cannot break. His eyes are said to be everywhere, his "
-            "agents mostly Egyptians in administrative posts. The nature of "
-            "his pacts with the jinni, and which realm they belong to, is left "
-            "to the storyguide. The book prints no statistics for him. He "
-            "suits a recurring villain, out of reach of new characters, "
-            "growing as they do.",
-        ),
+        secrets=[
+            titled(
+                "Who he is",
+                "A powerful Gifted sahir, driven from his home by the Ayyubids to "
+                "the southern Nubian Desert with his Ja'alin and a host of jinni.",
+            ),
+            titled(
+                "His hope of immortality",
+                "Now over eighty and feeling it despite magic that has lengthened "
+                "his life, he has heard from his apprentices of the Cult of "
+                "Dedun, and hopes to learn its trick of immortality.",
+            ),
+            titled(
+                "His fear of rivals",
+                "He suffers no threat: he tries to remove other Gifted magicians, "
+                "trains no Gifted apprentices lest he raise a rival, and has "
+                "several unGifted ones.",
+            ),
+            titled(
+                "His jinn",
+                "A particularly powerful jinn serves as ally and servant, chafing "
+                "at bonds it cannot break.",
+            ),
+            titled(
+                "His eyes and agents",
+                "His eyes are said to be everywhere, his agents mostly Egyptians "
+                "in administrative posts.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The nature of his pacts with the jinni, and which realm they "
+                "belong to, is left to the storyguide. The book prints no "
+                "statistics for him. He suits a recurring villain, out of reach "
+                "of new characters, growing as they do.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -3695,14 +3991,25 @@ def _hamad(b: Builder, w: World) -> None:
         "trail leads to Abu Hamad (p. 82).",
         where=w["abu_hamad"],
         antagonist="'Izz el-Afram Hamad",
-        secrets=(
-            "Hamad arranged this to meet and weigh the characters. He insists "
-            "they keep the basket as compensation. It works by a bound jinn, "
-            "which fetches the goods from elsewhere, and a power makes it read "
-            "to Hermetic Investigation as a normal enchantment, like a Shell "
-            "of False Determination. Other clashes with the Ja'alin and his "
-            "minions should fill out the arc."
-        ),
+        secrets=[
+            titled(
+                "Hamad's purpose",
+                "Hamad arranged the merchant's ruin to meet and weigh the "
+                "characters. He insists they keep the basket as compensation.",
+            ),
+            titled(
+                "How the basket works",
+                "The reed basket works by a bound jinn, which fetches the goods "
+                "from elsewhere, and a power makes it read to Hermetic "
+                "Investigation as a normal enchantment, like a Shell of False "
+                "Determination.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Other clashes with the Ja'alin and Hamad's minions should fill "
+                "out the arc.",
+            ),
+        ],
         stages=[
             Builder.stage(
                 "The Magical Basket",
@@ -3750,12 +4057,19 @@ def _hamad(b: Builder, w: World) -> None:
         "within three (p. 83).",
         where=w["berber"],
         antagonist="The Ja'alin",
-        secrets=(
-            "The characters are the first outsiders here in three years. The "
-            "people are enslaved to Ja'alin overlords and set to digging under "
-            "the town. For what, and for whom? 'Izz el-Afram Hamad is the "
-            "obvious mastermind, but by no means the only possibility."
-        ),
+        secrets=[
+            titled(
+                "The digging under Berber",
+                "The characters are the first outsiders in Berber in three years. "
+                "The people are enslaved to Ja'alin overlords and set to digging "
+                "under the town. For what, and for whom?",
+            ),
+            titled(
+                "Storyguide Notes",
+                "'Izz el-Afram Hamad is the obvious mastermind, but by no means "
+                "the only possibility.",
+            ),
+        ],
     )
 
 
@@ -3928,11 +4242,18 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "corpses. No one reports them, and no one follows them to their "
         "graveyard haunt (p. 73).",
         where=nubia,
-        secrets=(
-            "Their work has drawn faeries or demons, who take the look of real "
-            "corpses and copy the crimes. The characters are drawn in when one "
-            "robs them in the shape of someone they know to be dead."
-        ),
+        secrets=[
+            titled(
+                "The false corpses",
+                "The robbers' work has drawn faeries or demons, who take the look "
+                "of real corpses and copy the crimes.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The characters are drawn in when one of these robs them in the "
+                "shape of someone they know to be dead.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -3942,26 +4263,40 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "now, fixed to his outer walls. His house is a local landmark. One "
         "day the swords are gone (p. 74).",
         where=nubia,
-        secrets=(
-            "He is hiding them across the city, muttering in Aramaic, "
-            "believing that with all 689 in their exact places he will summon "
-            "Michael, archangel of the sword, to cast out the city's evil. "
-            "Will it work? Will it bring an archangel? Will Michael define "
-            "evil as men do? Sodom and Gomorrah were the last cities he "
-            "cleansed."
-        ),
+        secrets=[
+            titled(
+                "The old man's plan",
+                "The old man is hiding the swords across the city, muttering in "
+                "Aramaic, believing that with all 689 in their exact places he "
+                "will summon Michael, archangel of the sword, to cast out the "
+                "city's evil.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Will it work? Will it bring an archangel? Will Michael define "
+                "evil as men do? Sodom and Gomorrah were the last cities he "
+                "cleansed.",
+            ),
+        ],
     )
     _seed(
         b,
         "Freedom Fortress",
         "The characters stop for help at a small fortress of the river (p. 80).",
         where=w["fortified_river"],
-        secrets=(
-            "Its garrison are escaped slaves posing as soldiers. Some would "
-            "kill the characters if they guess the truth; another faction "
-            "warns them and may want to leave with them or use them to take "
-            "the fort. The characters could gain useful allies."
-        ),
+        secrets=[
+            titled(
+                "The false garrison",
+                "The fortress's garrison are escaped slaves posing as soldiers.",
+            ),
+            titled(
+                "The garrison's factions",
+                "Some of the fortress's garrison would kill the characters if "
+                "they guess the truth; another faction warns them and may want to "
+                "leave with them or use them to take the fort.",
+            ),
+            titled("Storyguide Notes", "The characters could gain useful allies."),
+        ],
     )
     _seed(
         b,
@@ -3970,12 +4305,24 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "its black market, and find it a den of every vice (p. 82).",
         where=w["fortified_river"],
         realm="Infernal",
-        secrets=(
-            "Its people are ghosts, trapped by the demon that killed them. "
-            "Each is promised freedom for winning a soul for Hell, but the "
-            "demon just consumes the ghost and traps its victim instead. Only "
-            "slaying the demon in the caverns beneath the fort frees them."
-        ),
+        secrets=[
+            titled(
+                "The fortress's ghosts",
+                "The fortress's people are ghosts, trapped by the demon that "
+                "killed them.",
+            ),
+            titled(
+                "The demon's bargain",
+                "Each ghost of the fortress is promised freedom for winning a "
+                "soul for Hell, but the demon just consumes the ghost and traps "
+                "its victim instead.",
+            ),
+            titled(
+                "Freeing the ghosts",
+                "Only slaying the demon in the caverns beneath the fort frees the "
+                "ghosts.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -3985,12 +4332,16 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "gods show the way. The priests' last act was to wipe the paint "
         "from the statues' eyes, making them mere stone (p. 84).",
         where=w["napata"],
-        secrets=(
-            "Wind has uncovered one, and a merchant's daughter, waiting for "
-            "her father at the well, idly coloured in its eyes with kohl. The "
-            "faerie that lived in it has returned, and it now walks slowly and "
-            "inexorably to its destination. There is a town in the way."
-        ),
+        secrets=[
+            titled(
+                "The walking statue",
+                "Wind has uncovered one of the statues, and a merchant's "
+                "daughter, waiting for her father at the well, idly coloured in "
+                "its eyes with kohl. The faerie that lived in it has returned, "
+                "and it now walks slowly and inexorably to its destination. There "
+                "is a town in the way.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -3998,13 +4349,20 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "A desert hawk circles Dju Wa'ab crying, and lands on a temple "
         "roof every day at noon (p. 84).",
         where=dju_waab,
-        secrets=(
-            "A faerie animal with the merest scrap of Might, once emissary of "
-            "Mandulis. If characters are near at midday it takes them for the "
-            "old priests and gives his last message, that Anhur's Spear lies "
-            "where the sun meets the sea and the waves lie still. What does it "
-            "mean?"
-        ),
+        secrets=[
+            titled(
+                "What the hawk is",
+                "The hawk is a faerie animal with the merest scrap of Might, once "
+                "emissary of Mandulis.",
+            ),
+            titled(
+                "The hawk's message",
+                "If characters are near at midday the hawk takes them for the old "
+                "priests and gives Mandulis's last message, that Anhur's Spear "
+                "lies where the sun meets the sea and the waves lie still. What "
+                "does it mean?",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4015,16 +4373,26 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "where the battle can be seen on the night of a new moon (p. 84).",
         where=w["kerma"],
         antagonist="A temple priest of Dedun",
-        secrets=(
-            "Kerma died in a civil war, and the stones mark each side's "
-            "fallen. Every new moon the ghosts fight again; a black soldier "
-            "killed joins the white, and vice versa, and his grave's stones "
-            "change colour over the year, making the mixed graves. If one side "
-            "stands unopposed the army will unite under one commander, free to "
-            "leave. White holds most graves now and gains yearly, the work of "
-            "a temple priest of Dedun. What will he do with 25,000 ghostly "
-            "warriors?"
-        ),
+        secrets=[
+            titled(
+                "The war of Kerma's dead",
+                "Kerma died in a civil war, and the stones mark each side's "
+                "fallen. Every new moon the ghosts fight again; a black soldier "
+                "killed joins the white, and vice versa, and his grave's stones "
+                "change colour over the year, making the mixed graves.",
+            ),
+            titled(
+                "Freeing the ghost army",
+                "If one side stands unopposed the ghost army of Kerma will unite "
+                "under one commander, free to leave.",
+            ),
+            titled(
+                "The priest behind the white",
+                "White holds most graves at Kerma now and gains yearly, the work "
+                "of a temple priest of Dedun. What will he do with 25,000 ghostly "
+                "warriors?",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4047,13 +4415,20 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         where=w["sawakin"],
         antagonist="The cult of 'Ashmodai'",
         realm="Infernal",
-        secrets=(
-            "An earthquake cracked the coral under a warehouse, and an "
-            "Infernal jinn reached a labourer clearing the rubble, who now "
-            "leads a cult of 'Ashmodai'. The cult corrupts the coral and "
-            "tracks its buyers, and recruits the demons they attract, once the "
-            "buyer is dead or corrupted."
-        ),
+        secrets=[
+            titled(
+                "The cult of 'Ashmodai'",
+                "An earthquake cracked the coral under a Sawakin warehouse, and "
+                "an Infernal jinn reached a labourer clearing the rubble, who now "
+                "leads a cult of 'Ashmodai'.",
+            ),
+            titled(
+                "What the cult does",
+                "The cult of 'Ashmodai' corrupts the coral and tracks its buyers, "
+                "and recruits the demons they attract, once the buyer is dead or "
+                "corrupted.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4062,14 +4437,28 @@ def _nubia_seeds(b: Builder, w: World) -> None:
         "poor Nubian, who begs them to free her grandmother from the king "
         "(p. 96).",
         where=w["taqasi"],
-        secrets=(
-            "The 'grandmother' is a magical lioness of Taqasi, the lion's "
-            "equal of a sorceress, with powers including human shape. The king "
-            "found her out and holds her cub to ensure her behaviour. She has "
-            "the Gift, so some pet lions distrust her and may betray her. If "
-            "she and her son go free, she might let the cub become a "
-            "character's familiar or companion."
-        ),
+        secrets=[
+            titled(
+                "Who the grandmother is",
+                "The 'grandmother' is a magical lioness of Taqasi, the lion's "
+                "equal of a sorceress, with powers including human shape.",
+            ),
+            titled(
+                "Why the lioness stays",
+                "The king found the lioness out and holds her cub to ensure her "
+                "behaviour.",
+            ),
+            titled(
+                "The lioness's Gift",
+                "The lioness has the Gift, so some pet lions distrust her and may "
+                "betray her.",
+            ),
+            titled(
+                "The lioness's cub",
+                "If the lioness and her son go free, she might let the cub become "
+                "a character's familiar or companion.",
+            ),
+        ],
     )
 
 
@@ -4081,12 +4470,19 @@ def _dedun_seeds(b: Builder, w: World) -> None:
         "The characters come by a hand of green stone (p. 90).",
         where=pyramid,
         antagonist="Artanyeszame",
-        secrets=(
-            "It is the missing part of the Djet in Cleopatra's Tomb. An agent "
-            "snooping in their things tells Artanyeszame, who realises the "
-            "Djet can show him the Book of Thoth. He has only to trick them "
-            "into wanting to find the tomb."
-        ),
+        secrets=[
+            titled(
+                "What the hand is",
+                "The hand of green stone is the missing part of the Djet in "
+                "Cleopatra's Tomb.",
+            ),
+            titled(
+                "Artanyeszame learns of the hand",
+                "An agent snooping in the characters' things tells Artanyeszame, "
+                "who realises the Djet can show him the Book of Thoth. He has "
+                "only to trick them into wanting to find the tomb.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4096,11 +4492,18 @@ def _dedun_seeds(b: Builder, w: World) -> None:
         "(p. 90).",
         where=pyramid,
         antagonist="The Mortuary Society",
-        secrets=(
-            "He omits that Queen Weteriken is Artanyeszame's ally and tutor, "
-            "in his pyramid. The society hopes the characters will weaken or "
-            "destroy him for them."
-        ),
+        secrets=[
+            titled(
+                "Whose ally the queen is",
+                "The society's member omits that Queen Weteriken is "
+                "Artanyeszame's ally and tutor, in his pyramid.",
+            ),
+            titled(
+                "What the society hopes",
+                "The Mortuary Society hopes the characters will weaken or destroy "
+                "Artanyeszame for them.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4110,11 +4513,18 @@ def _dedun_seeds(b: Builder, w: World) -> None:
         "Cult of Dedun (p. 102).",
         where=dedun,
         antagonist="The Cult of Dedun",
-        secrets=(
-            "He is an adherent. His Prohibition stops him naming his master or "
-            "leading them to his temple if he suspects he is watched, and "
-            "forcing him triggers it."
-        ),
+        secrets=[
+            titled(
+                "Who the raider is", "The raider is an adherent of the Cult of Dedun."
+            ),
+            titled(
+                "What the raider cannot say",
+                "Something stops the raider naming his master or leading them to "
+                "his temple if he suspects he is watched, and forcing him "
+                "triggers it.",
+            ),
+            titled("Storyguide Notes", "This is his Prohibition."),
+        ],
     )
     _seed(
         b,
@@ -4124,10 +4534,17 @@ def _dedun_seeds(b: Builder, w: World) -> None:
         "to free a friend captured by an Undying One (p. 102).",
         where=dedun,
         antagonist="The Cult of Dedun",
-        secrets=(
-            "She is secretly a knowing servant of the Black, and her friend is "
-            "an akh (chapter 4), who could be another strong ally."
-        ),
+        secrets=[
+            titled(
+                "Whom the ally serves",
+                "The ally is secretly a knowing servant of the Black.",
+            ),
+            titled(
+                "The captured friend",
+                "The ally's captured friend is an akh (chapter 4), who could be "
+                "another strong ally.",
+            ),
+        ],
     )
     _seed(
         b,
@@ -4136,10 +4553,13 @@ def _dedun_seeds(b: Builder, w: World) -> None:
         "rivals, and steers them against those rivals (p. 102).",
         where=dedun,
         antagonist="The Cult of Dedun",
-        secrets=(
-            "She has joined in secret. She tells herself she is bringing it "
-            "down from within, but immortality has seduced her, and she hopes "
-            "the characters will find where the Initiation Script for the "
-            "transformation lies."
-        ),
+        secrets=[
+            titled(
+                "The ally's secret",
+                "The characters' ally has joined the cult in secret. She tells "
+                "herself she is bringing it down from within, but immortality has "
+                "seduced her, and she hopes the characters will find where the "
+                "Initiation Script for the transformation lies.",
+            ),
+        ],
     )

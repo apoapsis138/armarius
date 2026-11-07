@@ -47,7 +47,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs
+from ..builder import joined_lines, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -250,18 +250,27 @@ def _aedes_veritatis(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "the cliff below the tower, gathered when they die (Animal, 2 "
         "pawns).",
     )
-    hidden = paragraphs(
-        "Since the Treaty of Baghdad, 'Umar, his sodales and their allies "
-        "inside and outside the Order have kept up a secret war on the "
-        "Crusader covenants, on Foothold above all. The quaesitores have "
-        "not found them out.",
-        "'Umar serves the Ayyubid sultans as well as the Order, a thing "
-        "even Amber and Wardat do not know. If it came out, the trade "
-        "ruling would be the least of the covenant's worries: he would "
-        "likely be Renounced.",
-        "The covenant keeps spies in Domus Pacis, who report everything "
-        "that passes there.",
-    )
+    hidden = [
+        titled(
+            "The secret war",
+            "Since the Treaty of Baghdad, 'Umar, his sodales and their allies "
+            "inside and outside the Order have kept up a secret war on the "
+            "Crusader covenants, on Foothold above all. The quaesitores have "
+            "not found them out.",
+        ),
+        titled(
+            "'Umar's double loyalty",
+            "'Umar serves the Ayyubid sultans as well as the Order, a thing "
+            "even Amber and Wardat do not know. If it came out, the trade "
+            "ruling would be the least of Aedes Veritatis's worries: he "
+            "would likely be Renounced.",
+        ),
+        titled(
+            "Spies in Domus Pacis",
+            "Aedes Veritatis keeps spies in Domus Pacis, who report "
+            "everything that passes there.",
+        ),
+    ]
     covenant = b.covenant(
         "Aedes Veritatis",
         tribunal=tribunal,
@@ -356,13 +365,16 @@ def _aedes_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
             "become his own quest.",
         ),
         traits={"Brave": 3, "Calm": 3, "Careful": 3, "Pious": 3, "Wild": 1},
-        secrets=paragraphs(
-            "'Umar is a servant of the Ayyubid sultans as well as a magus "
-            "of the Order, and not even his sodales know it. If the Order "
-            "learnt of it he would probably be Renounced; but he is "
-            "powerful and would call on the Muslims' own mages for help, "
-            "so a Renunciation might not end in his death.",
-        ),
+        secrets=[
+            titled(
+                "'Umar's double loyalty",
+                "'Umar is a servant of the Ayyubid sultans as well as a magus "
+                "of the Order, and not even his sodales know it. If the Order "
+                "learnt of it he would probably be Renounced; but he is "
+                "powerful and would call on the Muslims' own mages for help, "
+                "so a Renunciation might not end in his death.",
+            ),
+        ],
     )
     m["amber"] = b.magus(
         "Amber the Golden",
@@ -493,11 +505,18 @@ def _domus_pacis(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "soot of the smithy's forge on the night of the winter solstice "
         "(Ignem, 2 pawns).",
     )
-    hidden = paragraphs(
-        "The bellicose magi have slipped spies into the covenant. Aedes "
-        "Veritatis's spies learn everything that happens here; "
-        "Foothold's know what passes in the covenant's council.",
-    )
+    hidden = [
+        titled(
+            "Aedes Veritatis's spies",
+            "The bellicose magi have slipped spies into Domus Pacis. Aedes "
+            "Veritatis's spies learn everything that happens here.",
+        ),
+        titled(
+            "Foothold's spies",
+            "Foothold's spies in Domus Pacis know what passes in the "
+            "covenant's council.",
+        ),
+    ]
     covenant = b.covenant(
         "Domus Pacis",
         tribunal=tribunal,
@@ -624,14 +643,24 @@ def _domus_magi(levant: Levant, b: Builder, covenant: Covenant) -> None:
             "Subtle": 2,
             "Mercenary": 2,
         },
-        secrets=paragraphs(
-            "Esther has been enriching herself by selling powerful "
-            "enchanted devices to Muslim and Latin nobles, which the "
-            "Peripheral Code forbids. If the quaesitores found out, it "
-            "would go hard with her and with her sodales.",
-            "She has a vis source of her own, of Terram, which no one "
-            "else knows of; the book does not say where it is.",
-        ),
+        secrets=[
+            titled(
+                "Esther's trade",
+                "Esther has been enriching herself by selling powerful "
+                "enchanted devices to Muslim and Latin nobles, which the "
+                "Peripheral Code forbids. If the quaesitores found out, it "
+                "would go hard with her and with her sodales.",
+            ),
+            titled(
+                "Esther's own vis",
+                "Esther has a vis source of her own, of Terram, which no one "
+                "else knows of.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book does not say where Esther's vis source is.",
+            ),
+        ],
     )
 
 
@@ -694,14 +723,23 @@ def _foothold(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "a fish the fishermen net off Tyre once a year that never stops "
         "struggling (Corpus, 1 pawn).",
     )
-    hidden = paragraphs(
-        "Magi in the Ayyubids' service have hidden scrying devices in "
-        "Foothold, about 75 levels of them, to have warning of any sudden "
-        "attack by the covenant or its allies. Its magi do not know.",
-        "Foothold's own spies in Domus Pacis tell it what passes in that "
-        "covenant's council.",
-        "Aedes Veritatis wages a secret war on it.",
-    )
+    hidden = [
+        titled(
+            "Scrying devices in Foothold",
+            "Magi in the Ayyubids' service have hidden scrying devices in "
+            "Foothold, about 75 levels of them, to have warning of any sudden "
+            "attack by the covenant or its allies. Its magi do not know.",
+        ),
+        titled(
+            "Foothold's spies",
+            "Foothold's own spies in Domus Pacis tell it what passes in that "
+            "covenant's council.",
+        ),
+        titled(
+            "The secret war",
+            "Aedes Veritatis wages a secret war on Foothold.",
+        ),
+    ]
     covenant = b.covenant(
         "Foothold",
         tribunal=tribunal,
@@ -781,16 +819,22 @@ def _foothold(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
             "Heartless": 2,
             "Vulnerable": 1,
         },
-        secrets=paragraphs(
-            "Fear, not faith, drives him. His parents were diabolists who "
-            "put him through horrors as a child until Gilles de Clary "
-            "rescued him, and he still believes demons are after his "
-            "soul; he hunts magical power to protect himself from them, "
-            "and keeps the root of his zeal to himself.",
-            "He is gathering a hoard of other magi's secrets, and looking "
-            "for the proof that would turn each one into a hold over its "
-            "owner.",
-        ),
+        secrets=[
+            titled(
+                "What drives Rufus",
+                "Fear, not faith, drives him. His parents were diabolists who "
+                "put him through horrors as a child until Gilles de Clary "
+                "rescued him, and he still believes demons are after his "
+                "soul; he hunts magical power to protect himself from them, "
+                "and keeps the root of his zeal to himself.",
+            ),
+            titled(
+                "Rufus's hoard",
+                "He is gathering a hoard of other magi's secrets, and looking "
+                "for the proof that would turn each one into a hold over its "
+                "owner.",
+            ),
+        ],
     )
 
 
@@ -853,13 +897,18 @@ def _embassy(levant: Levant, b: Builder, tribunal: Tribunal) -> None:
         "post lofts that has flown the road from Damascus a hundred "
         "times (Corpus, 1 pawn).",
     )
-    hidden = paragraphs(
-        "The book's guess at its end: when the Mongols take Baghdad in "
-        "1258 and put the caliph and many Muslim mages to death, the "
-        "Embassy falls with the city if it is still there; most of its "
-        "people die, and Aurora, old and weak, is taken by the Mongol "
-        "shamans.",
-    )
+    hidden = [
+        titled(
+            "Storyguide Notes",
+            paragraphs(
+                "When the Mongols take Baghdad in 1258 and put the caliph and "
+                "many Muslim mages to death, the Hermetic Embassy falls with "
+                "the city if it is still there; most of its people die, and "
+                "Aurora, old and weak, is taken by the Mongol shamans.",
+                "The Embassy's end is the book's guess.",
+            ),
+        ),
+    ]
     covenant = b.covenant(
         "The Hermetic Embassy",
         tribunal=tribunal,

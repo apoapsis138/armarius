@@ -45,7 +45,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
-from ..builder import characteristics, paragraphs, wound_ranges
+from ..builder import characteristics, paragraphs, titled, wound_ranges
 
 if TYPE_CHECKING:
     from ...models import Creature, CreaturePower, Neighbour
@@ -351,13 +351,20 @@ def _jinn(levant: Levant) -> None:
             JINN_NATURE,
             DAWN + " " + wound_ranges(3),
         ),
-        secrets=(
-            "Someone who meets the conditions of his release can free him "
-            "from the lamp, and only he knows what they are; the book leaves "
-            "them to the storyguide, and says they are hard. Freed, he could "
-            "be a lasting friend; refused, he makes his holders' lives a "
-            "misery."
-        ),
+        secrets=[
+            titled(
+                "Freeing the Servant of the Lamp",
+                "Someone who meets the conditions of his release can free him "
+                "from the lamp, and only he knows what they are. Freed, he "
+                "could be a lasting friend; refused, he makes his holders' "
+                "lives a misery.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book leaves the conditions of his release to the "
+                "storyguide, and says they are hard.",
+            ),
+        ],
     )
     _MADE["al_qatil"] = b.creature(
         "Al-Qatil, the Slayer",
@@ -453,10 +460,13 @@ def _jinn(levant: Levant) -> None:
             JINN_NATURE,
             DAWN + " " + wound_ranges(0),
         ),
-        secrets=(
-            "He can pass as an ordinary soldier among a covenant's grogs, "
-            "where he sows quarrels until they are ripe for mutiny."
-        ),
+        secrets=[
+            titled(
+                "Al-Qatil among the grogs",
+                "He can pass as an ordinary soldier among a covenant's grogs, "
+                "where he sows quarrels until they are ripe for mutiny.",
+            ),
+        ],
     )
 
 
@@ -519,10 +529,13 @@ def _naddaha(levant: Levant) -> None:
             "immobilised and takes a wound level each round, starting with "
             "the round she seizes him, until her hold is broken. " + wound_ranges(0),
         ),
-        secrets=(
-            "She throws what is left of her victims into the nearest river, "
-            "so the bodies drift downstream from her well."
-        ),
+        secrets=[
+            titled(
+                "Naddaha's victims",
+                "She throws what is left of her victims into the nearest "
+                "river, so the bodies drift downstream from her well.",
+            ),
+        ],
     )
 
 

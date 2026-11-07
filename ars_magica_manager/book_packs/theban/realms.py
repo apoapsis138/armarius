@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...rules.sites import PLACE
-from ..builder import Builder, paragraphs
+from ..builder import Builder, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -137,13 +137,22 @@ def _magical_sites(theban: Theban) -> None:
             "lives alone, and keeps guardians, mortal or otherwise. "
             "For the sibyl's character guide, see the Bestiary.",
         ),
-        secrets="Sibyls are magic humans, immortal and truly far-seeing, "
-        "though few know it; 'sibyl' may be an office handed on rather "
-        "than one woman. Their daughters by visitors, the sibyllides, "
-        "are magic kin gifted in prophecy and second sight, who must "
-        "come home every ten years to tell their mothers how the world "
-        "goes; at least one is a magus of the Order, with a natural "
-        "bent for Intellego.",
+        secrets=[
+            titled(
+                "What a sibyl is",
+                "Sibyls are magic humans, immortal and truly far-seeing, "
+                "though few know it; 'sibyl' may be an office handed on rather "
+                "than one woman.",
+            ),
+            titled(
+                "The sibyllides",
+                "The sibyls' daughters by visitors, the sibyllides, "
+                "are magic kin gifted in prophecy and second sight, who must "
+                "come home every ten years to tell their mothers how the world "
+                "goes; at least one is a magus of the Order, with a natural "
+                "bent for Intellego.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -194,8 +203,13 @@ def _magical_sites(theban: Theban) -> None:
             "Lamites (1123 to 1127) took her as their covenant's "
             "patron and did not live long.",
         ),
-        secrets="Whether the sibyl or the faerie Lamia killed the magi of "
-        "Lamites is the storyguide's to say; each had cause.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Whether the sibyl or the faerie Lamia killed the magi of "
+                "Lamites is the storyguide's to say; each had cause.",
+            ),
+        ],
         **RUMOURED,
     )
 
@@ -245,17 +259,33 @@ def _infernal_sites(theban: Theban) -> None:
             "Greek loyal to the empire and is the enemy of every "
             "unrepentant crusader.",
         ),
-        secrets="Akgah planned the Fourth Crusade and the fall of the city, "
-        "which raised it high among the princes of Hell. It now works "
-        "to keep the successor states at war, feeding their greed and "
-        "mistrust of one another. Before it, Andronikos Komnenos sold "
-        "his soul to a demon in a woman's shape for the throne he took "
-        "in 1182, and his massacre of the Latins set Venice and "
-        "Montferrat against the empire; the excommunication of the "
-        "crusaders after Zara let demons walk among them, and several "
-        "of their lords made pacts for protection, fame or gold. Like "
-        "Andronikos, most of the crusade's leaders were dead within a "
-        "few years.",
+        secrets=[
+            titled(
+                "Who planned the fall",
+                "Akgah planned the Fourth Crusade and the fall of the city, "
+                "which raised it high among the princes of Hell.",
+            ),
+            titled(
+                "Akgah's work now",
+                "Akgah now works to keep the successor states at war, feeding "
+                "their greed and mistrust of one another.",
+            ),
+            titled(
+                "Andronikos's bargain",
+                "Before Akgah's crusade, Andronikos Komnenos sold "
+                "his soul to a demon in a woman's shape for the throne he took "
+                "in 1182, and his massacre of the Latins set Venice and "
+                "Montferrat against the empire.",
+            ),
+            titled(
+                "The crusaders' pacts",
+                "The excommunication of the "
+                "crusaders after Zara let demons walk among them, and several "
+                "of their lords made pacts for protection, fame or gold. Like "
+                "Andronikos, most of the crusade's leaders were dead within a "
+                "few years.",
+            ),
+        ],
         **RUMOURED,
     )
 
@@ -401,14 +431,27 @@ def _leagues(theban: Theban) -> None:
             "early in 1204. The league is now searching Bulgarian "
             "lands for the standard.",
         ),
-        secrets="The league is right: the city has lost Divine favour, and "
-        "the hagka's return would bless a truly devout emperor, Greek "
-        "or not, with Solomon's wisdom, David's strength and St Paul's "
-        "mercy. But the demons have hidden from its spells; it knows "
-        "the fall was Infernal work but not whose hands, and so cannot "
-        "tell friend from foe. The hagka may be whole or broken, in a "
-        "crusader's treasury, a Greek monastery, the burned Venetian "
-        "quarter's rubble or the bed of the Bosporus.",
+        secrets=[
+            titled(
+                "Whether the League of Constantine is right",
+                "The League of Constantine is right: the city has lost Divine "
+                "favour, and the hagka's return would bless a truly devout "
+                "emperor, Greek or not, with Solomon's wisdom, David's strength "
+                "and St Paul's mercy.",
+            ),
+            titled(
+                "What the league cannot see",
+                "The demons have hidden from the League of Constantine's spells; "
+                "it knows the fall was Infernal work but not whose hands, and so "
+                "cannot tell friend from foe.",
+            ),
+            titled(
+                "Where the lost hagka lies",
+                "The lost hagka may be whole or broken, in a "
+                "crusader's treasury, a Greek monastery, the burned Venetian "
+                "quarter's rubble or the bed of the Bosporus.",
+            ),
+        ],
     )
     w["children_of_olympos"] = b.faction(
         "The Children of Olympos",
@@ -450,18 +493,38 @@ def _leagues(theban: Theban) -> None:
             "the Founders to fit the pattern, and that a House was "
             "bound to fall once Ex Miscellanea made thirteen.",
         ),
-        secrets="Under it lies Lucian's unspoken hope that Faerie will replace "
-        "the Magic auras of the Theban covenants and bring back the "
-        "worship of the gods. He believes the gods feed on their epic "
-        "stories, which must be lived again, and he has cast many of "
-        "the Tribunal's magi and covenants as players in his great "
-        "re-enactment: his sudden, seemingly treacherous shifts at "
-        "Tribunal are attempts to push them into their parts. He may be "
-        "channelling impostors, faerie or Infernal; he has yet to win "
-        "any god as a patron; and his Twilight Scars make him forget "
-        "who he is while a god rides him. Proximios means to set "
-        "Celaenea, who loves Hermes, against him, and to slip an "
-        "infernalist into the league so that it calls up a False God.",
+        secrets=[
+            titled(
+                "Lucian's unspoken hope",
+                "Under the Children of Olympos lies Lucian's unspoken hope that "
+                "Faerie will replace the Magic auras of the Theban covenants and "
+                "bring back the worship of the gods.",
+            ),
+            titled(
+                "Lucian's great re-enactment",
+                "Lucian believes the gods feed on their epic "
+                "stories, which must be lived again, and he has cast many of "
+                "the Tribunal's magi and covenants as players in his great "
+                "re-enactment: his sudden, seemingly treacherous shifts at "
+                "Tribunal are attempts to push them into their parts.",
+            ),
+            titled(
+                "Who answers Lucian",
+                "Lucian may be channelling impostors, faerie or Infernal; he has "
+                "yet to win any god as a patron.",
+            ),
+            titled(
+                "Lucian's forgetting",
+                "Lucian's Twilight Scars make him forget "
+                "who he is while a god rides him.",
+            ),
+            titled(
+                "Proximios's designs on the league",
+                "Proximios means to set Celaenea, who loves Hermes, against "
+                "Lucian, and to slip an infernalist into the Children of Olympos "
+                "so that it calls up a False God.",
+            ),
+        ],
     )
     w["league_of_the_vigilant"] = b.faction(
         "The League of the Vigilant",
@@ -488,14 +551,29 @@ def _leagues(theban: Theban) -> None:
             "grow, while others think it needed. The founders' fine "
             "names keep its critics quiet.",
         ),
-        secrets="Proximios is an infernalist and founded the league as the "
-        "first move of his plan to bring the Order down, starting in "
-        "Thebes. He will steer it against innocents who look guilty "
-        "(Caterina da Vigonovo of Polyaigos, the young magi of Erebos, "
-        "and inquisitive Delfini of Aegaea), never leading in person: "
-        "a demon wearing Hydatius's face will give the order to "
-        "strike. As he gains ground he will use the league ever more "
-        "openly as his shock troops. See the story An Enemy Within.",
+        secrets=[
+            titled(
+                "Why the league was founded",
+                "Proximios is an infernalist and founded the League of the "
+                "Vigilant as the first move of his plan to bring the Order down, "
+                "starting in Thebes.",
+            ),
+            titled(
+                "Whom the league will strike",
+                "Proximios will steer the League of the Vigilant against "
+                "innocents who look guilty "
+                "(Caterina da Vigonovo of Polyaigos, the young magi of Erebos, "
+                "and inquisitive Delfini of Aegaea), never leading in person: "
+                "a demon wearing Hydatius's face will give the order to "
+                "strike.",
+            ),
+            titled(
+                "Proximios's shock troops",
+                "As Proximios gains ground he will use the League of the "
+                "Vigilant ever more openly as his shock troops.",
+            ),
+            titled("Storyguide Notes", "See the story An Enemy Within."),
+        ],
     )
     w["league_against_idolatry"] = b.faction(
         "The League Against Idolatry",
@@ -599,13 +677,25 @@ def _titan_factions(theban: Theban) -> None:
             "Hedyosmos is its heart.",
             named,
         ),
-        secrets="The binding magics of old (the epanankoi) are almost "
-        "forgotten; some think Kampe's power fed them. Some ancient "
-        "bindings still hold, and magi fear they could not mend one: "
-        "the defeated giants buried under mountains and islands, the "
-        "monsters of the Persian Wars sealed in objects, the oaths "
-        "beneath the old leagues, and the rumoured Jar of Pandora. "
-        "Delos's binding to the sea floor has already failed.",
+        secrets=[
+            titled(
+                "The epanankoi",
+                "The binding magics of old (the epanankoi) are almost "
+                "forgotten; some think Kampe's power fed them.",
+            ),
+            titled(
+                "The bindings that still hold",
+                "Some ancient bindings still hold, and magi fear they could not "
+                "mend one: the defeated giants buried under mountains and "
+                "islands, the monsters of the Persian Wars sealed in objects, "
+                "the oaths beneath the old leagues, and the rumoured Jar of "
+                "Pandora.",
+            ),
+            titled(
+                "Delos's binding",
+                "Delos's binding to the sea floor has already failed.",
+            ),
+        ],
     )
 
 
@@ -637,15 +727,26 @@ def _traditions(theban: Theban) -> None:
             "hired the Witches to bind the monsters of the Persian "
             "Wars.",
         ),
-        secrets="Mainland magi call the slander rites (diabolai) witchcraft. "
-        "Anyone with the right Lore and a personal tie to a being "
-        "that has taken a place or a matter under its care (a "
-        "village's nymph, an old shrine's god, Asklepios for a "
-        "physician, a mythic forebear) can shame it into using one of "
-        "its powers on a chosen target, by burning or soaking its "
-        "effigy or reversing its rites: Presence + Realm Lore + "
-        "modifiers + stress die against 9 + Might/5. Failure angers "
-        "it for a month; a bad failure turns its power on the caller.",
+        secrets=[
+            titled(
+                "The slander rites",
+                "Mainland magi call the Witches of Thessaly's slander rites "
+                "(diabolai) witchcraft. "
+                "Anyone with the right Lore and a personal tie to a being "
+                "that has taken a place or a matter under its care (a "
+                "village's nymph, an old shrine's god, Asklepios for a "
+                "physician, a mythic forebear) can shame it into using one of "
+                "its powers on a chosen target, by burning or soaking its "
+                "effigy or reversing its rites. Failure angers "
+                "the being for a month; a bad failure turns its power on the "
+                "caller.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A slander rite rolls Presence + Realm Lore + "
+                "modifiers + stress die against 9 + Might/5.",
+            ),
+        ],
     )
     w["daughters_of_erictho"] = b.faction(
         "The Daughters of Erictho",
@@ -743,19 +844,28 @@ def _traditions(theban: Theban) -> None:
             "storyguide may fold them into the Pelasgian wizards "
             "below, or use them in their place.",
         ),
-        secrets="A Greek version of the gruagachan could be drawn from the "
-        "Pelasgians before the Hellenes: worshippers of the titans, "
-        "descended from the serpent-tailed giants, with power over "
-        "curses and blessings tied to what is allowed and forbidden, "
-        "some goetic spirit magic in place of tattoos, and perhaps a "
-        "store of Defixio Lore. Giant-blooded Greeks take Mythic Blood "
-        "(Gigantes), usually with a Focus in strength or Terram and the "
-        "Rebellious Flaw; Large, Snake Legs and needing to touch the "
-        "ground are common. Magi also comb the islands for "
-        "katadesmoi, the cursing tablets of Katadesmos (Defixio) "
-        "Magic, which struck at any range and set conditional curses; "
-        "it is why Leadworker turns up among hedge wizards, though "
-        "among magi it is Tremere's secret.",
+        secrets=[
+            titled(
+                "The katadesmoi",
+                "Magi comb the islands for "
+                "katadesmoi, the cursing tablets of Katadesmos (Defixio) "
+                "Magic, which struck at any range and set conditional curses; "
+                "it is why Leadworker turns up among hedge wizards, though "
+                "among magi it is Tremere's secret.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A Greek version of the gruagachan could be drawn from the "
+                "Pelasgians before the Hellenes: worshippers of the titans, "
+                "descended from the serpent-tailed giants, with power over "
+                "curses and blessings tied to what is allowed and forbidden, "
+                "some goetic spirit magic in place of tattoos, and perhaps a "
+                "store of Defixio Lore. Giant-blooded Greeks take Mythic Blood "
+                "(Gigantes), usually with a Focus in strength or Terram and the "
+                "Rebellious Flaw; Large, Snake Legs and needing to touch the "
+                "ground are common.",
+            ),
+        ],
     )
     w["cult_of_orpheus"] = b.faction(
         "The Cult of Orpheus",
@@ -803,13 +913,29 @@ def _traditions(theban: Theban) -> None:
             "islands are full of their covens; Polyaigos was a nest "
             "of them until Laskaris cleared it.",
         ),
-        secrets="Each coven has a bodiless demon, a Watcher of the Deluders, "
-        "who speaks to them as a voice and teaches maleficia. A new "
-        "witch takes the Infernal Blessing, and her coven's leader can "
-        "give her one more power: flight on gathered winds, healing "
-        "herself with another's blood, or a breath that blights "
-        "crops. Witches elsewhere can call a Mykonian stringles demon "
-        "for a yearly tithe of one infant.",
+        secrets=[
+            titled(
+                "The Watcher of the Deluders",
+                "Each Stringles coven has a bodiless demon, a Watcher of the "
+                "Deluders, who speaks to them as a voice and teaches maleficia.",
+            ),
+            titled(
+                "A new witch's powers",
+                "A new Stringles witch's coven leader can "
+                "give her one more power: flight on gathered winds, healing "
+                "herself with another's blood, or a breath that blights "
+                "crops.",
+            ),
+            titled(
+                "The infant tithe",
+                "Witches elsewhere can call a Mykonian stringles demon "
+                "for a yearly tithe of one infant.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A new witch takes the Infernal Blessing.",
+            ),
+        ],
     )
     w["cult_of_heroes"] = b.faction(
         "The Cult of Heroes",
@@ -901,13 +1027,28 @@ def _holy_and_heretic(theban: Theban) -> None:
             "Eleous preach and argue against it, and most people take "
             "them for bigots.",
         ),
-        secrets="The sect is an Infernal tradition (favoured Abilities "
-        "Ceremony, Debauchery, Diablerie and Malediction). Holding "
-        "the world to be Satan's, its leaders hate Church and "
-        "synagogue alike, slander and denounce both, and strike at "
-        "them with Infernal powers when they can; a diabolist ring "
-        "tied to it worked in Thessaloniki after 1185. Its "
-        "communities grow, but cannot yet raise an army.",
+        secrets=[
+            titled(
+                "What the Paulicians serve",
+                "The Paulicians are an Infernal tradition. Holding "
+                "the world to be Satan's, the sect's leaders hate Church and "
+                "synagogue alike, slander and denounce both, and strike at "
+                "them with Infernal powers when they can.",
+            ),
+            titled(
+                "The Thessaloniki ring",
+                "A diabolist ring tied to the Paulicians worked in Thessaloniki "
+                "after 1185.",
+            ),
+            titled(
+                "The Paulicians' strength",
+                "The Paulicians' communities grow, but cannot yet raise an army.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Favoured Abilities: Ceremony, Debauchery, Diablerie and Malediction.",
+            ),
+        ],
     )
     w["eleusinian_cult"] = b.faction(
         "The Cult of Eleusis",
@@ -943,8 +1084,13 @@ def _holy_and_heretic(theban: Theban) -> None:
             "century. Its priests dress and act like Orthodox clergy "
             "and win converts quietly; Etoumes, the Greek lord of "
             "Sinope, has just taken one as his confessor.",
-            secrets="Serapis is a False God, who hides the Infernal source of "
-            "the powers he grants; few of his flock know what he is.",
+            secrets=[
+                titled(
+                    "What Serapis is",
+                    "Serapis is a False God, who hides the Infernal source of "
+                    "the powers he grants; few of his flock know what he is.",
+                ),
+            ],
         )
 
 

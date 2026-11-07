@@ -28,8 +28,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...models import as_secrets, secret_words
-from ..builder import paragraphs
+from ..builder import Secrets, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -58,11 +57,11 @@ def build(hibernia: Hibernia) -> None:
 # ------------------------------------------------------------ helpers
 
 
-def _append(record: Neighbour, text: str, hidden: str = "") -> None:
+def _append(record: Neighbour, text: str, hidden: Secrets = "") -> None:
     """Add `text` to the summary of a record another part made, and
     `hidden` at the end of its secrets."""
     record.summary = paragraphs(record.summary, text)
-    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
+    record.secrets = more_secrets(record.secrets, hidden)
 
 
 def _find(hibernia: Hibernia, *names: str, contains: str = "") -> Neighbour | None:
@@ -276,9 +275,12 @@ def _archbishops(hibernia: Hibernia) -> None:
             "Kildare to prove it a superstition.",
             ANGLO_IRISH_CHURCH,
         ),
-        secrets="When the Pope's ruling arrives from Cashel, the archbishop "
-        "must either yield or find another road; a man who dared to "
-        "burn his own tenants' deeds is unlikely to bow quietly.",
+        secrets=[
+            titled(
+                "When the ruling arrives",
+                "When the Pope's ruling arrives from Cashel, the Archbishop of Dublin must either yield or find another road; a man who dared to burn his own tenants' deeds is unlikely to bow quietly.",
+            )
+        ],
     )
     w["tuam"] = b.church(
         "Archdiocese of Tuam",
@@ -400,9 +402,12 @@ def _cailleacha(hibernia: Hibernia) -> None:
             "Demonic Familiar and Social Handicap. The app has no "
             "record for the tradition, so it is sketched here.",
         ),
-        secrets="Their lords rarely know what they harbour, and a "
-        "Chailleach's counsel is the kind of quiet goad the demons of "
-        "Hibernia prefer to open war.",
+        secrets=[
+            titled(
+                "What the lords harbour",
+                "The lords of the Cailleacha Phiseogach rarely know what they harbour, and a Chailleach's counsel is the kind of quiet goad the demons of Hibernia prefer to open war.",
+            )
+        ],
     )
 
 
@@ -472,9 +477,15 @@ def _infernal_places(hibernia: Hibernia) -> None:
             "not say where the island is; the pack puts it in "
             "Ulster, at the mouth of the Erne.",
         ),
-        secrets="The cup is an Infernal relic of betrayal. Anyone who sees it "
-        "gains Envious +3 (Penetration 15) and the urge to betray "
-        "whoever owns it and take it for himself.",
+        secrets=[
+            titled(
+                "The cup",
+                "The cup on Inis Saimera is an Infernal relic of betrayal. Anyone who sees it grows envious and gains the urge to betray whoever owns it and take it for himself.",
+            ),
+            titled(
+                "Storyguide Notes", "Seeing the cup gives Envious +3 (Penetration 15)."
+            ),
+        ],
         **LOCAL,
     )
     ridge = _find(hibernia, contains="Druim Leatan")
@@ -613,11 +624,16 @@ def _mellifont(hibernia: Hibernia) -> None:
                 "readying a deputation to restore order.",
                 revolt,
             ),
-            secrets="The cause may be Irish against English, plain "
-            "laxity, or something darker: the abbey's nine granges "
-            "on the Brú na Bóinne sit among ancient sídhe and "
-            "ráths, and the monks may have dug up an old secret "
-            "(The Church, page 94, suggests an Infernal cause).",
+            secrets=[
+                titled(
+                    "Why the monks rebelled",
+                    "The cause of Mellifont's revolt may be Irish against English, plain laxity, or something darker: the abbey's nine granges on the Brú na Bóinne sit among ancient sídhe and ráths, and the monks may have dug up an old secret.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The Church, page 94, suggests an Infernal cause.",
+                ),
+            ],
         )
         hibernia.world["mellifont"] = mellifont
     b.link(
@@ -753,14 +769,31 @@ def _gaileoin(hibernia: Hibernia) -> None:
     _append(
         fir_bolg,
         "",
-        "The Gaileoin's infernalists work as the demons of Hibernia "
-        "like best: not on the king himself but through those around "
-        "him, by obsession and quiet counsel, so the feeble royal line "
-        "seems to rule while others steer it. Their people's idleness "
-        "and casual sins are the slow corruption the Infernal chapter "
-        "describes, not open devil-worship. A Chailleach Phiseogach "
-        "might make them allies; the walk of Inis Doney's Dark "
-        "Path would free a Gaileoin king from any demon riding him.",
+        [
+            titled(
+                "How the infernalists rule",
+                "The Gaileoin's infernalists work as the demons of Hibernia "
+                "like best: not on the king himself but through those around "
+                "him, by obsession and quiet counsel, so the feeble royal line "
+                "seems to rule while others steer it.",
+            ),
+            titled(
+                "The Gaileoin's slow corruption",
+                "The Gaileoin people's idleness and casual sins are the slow "
+                "corruption the Infernal chapter describes, not open "
+                "devil-worship.",
+            ),
+            titled(
+                "Allies for the infernalists",
+                "A Chailleach Phiseogach might make the Gaileoin's "
+                "infernalists allies.",
+            ),
+            titled(
+                "Freeing a Gaileoin king",
+                "The walk of Inis Doney's Dark Path would free a Gaileoin "
+                "king from any demon riding him.",
+            ),
+        ],
     )
 
 
@@ -868,6 +901,11 @@ def _ireland(hibernia: Hibernia) -> None:
     _append(
         ireland,
         paragraphs(DIVINE_IRELAND, INFERNAL_IRELAND),
-        "It is not recorded what turned Vigil's Merinita against the "
-        "Diedne long ago; those who know how demons work may guess.",
+        [
+            titled(
+                "Vigil's Merinita and the Diedne",
+                "It is not recorded what turned Vigil's Merinita against the "
+                "Diedne long ago; those who know how demons work may guess.",
+            )
+        ],
     )

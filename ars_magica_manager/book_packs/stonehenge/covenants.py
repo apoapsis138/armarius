@@ -25,7 +25,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import joined_lines, paragraphs
+from ..builder import Secrets, joined_lines, paragraphs, titled
 from ..records import KNOWN_ORDER, KNOWN_TRIBUNAL
 
 if TYPE_CHECKING:
@@ -278,7 +278,7 @@ def _covenant(
     level: int = 0,
     aura: int = 0,
     realm: str = "Magic",
-    secrets: str = "",
+    secrets: Secrets = "",
 ) -> Covenant:
     covenant = records.b.covenant(
         name,
@@ -337,9 +337,14 @@ def _blackthorn(records: Records, tribunal: Tribunal) -> None:
             "Hook: Hermetic Politics (its lost hold on the Tribunal)",
             "Hook: Dark Secret (the old charges of diabolism)",
         ),
-        secrets="The Wild Hunt is sealed in iron-bound caves near Blackthorn, "
-        "where Flumen of Tremere led it in 1154; its cries went on for weeks "
-        "and have stopped, and no one has seen it since.",
+        secrets=[
+            titled(
+                "The Wild Hunt in the caves",
+                "The Wild Hunt is sealed in iron-bound caves near Blackthorn, "
+                "where Flumen of Tremere led it in 1154; its cries went on for "
+                "weeks and have stopped, and no one has seen it since.",
+            ),
+        ],
     )
     _magi(records, covenant, BLACKTHORN)
 
@@ -517,11 +522,19 @@ def _cad_gadu(records: Records, tribunal: Tribunal) -> None:
             "Hook: Alienable Land (Gwrhyr's kindred will claim the island when he dies)",
             "Hook: Crumbling (a decaying covenant)",
         ),
-        secrets="The Robes of Dusty Dawn, the Columbae's gift to Pralix and "
-        "the sign of the Primacy, lie mostly crumpled on the floor or over a "
-        "chair: Ebroin finds them stifling. He is an orbus, and may still be "
-        "loyal to the Primus of his former House (Houses of Hermes: "
-        "Societates p. 103).",
+        secrets=[
+            titled(
+                "The Robes of Dusty Dawn",
+                "The Robes of Dusty Dawn, the Columbae's gift to Pralix and "
+                "the sign of the Primacy, lie mostly crumpled on the floor or "
+                "over a chair at Cad Gadu: Ebroin finds them stifling.",
+            ),
+            titled(
+                "Ebroin's old loyalty",
+                "Ebroin is an orbus, and may still be loyal to the Primus of "
+                "his former House (Houses of Hermes: Societates p. 103).",
+            ),
+        ],
     )
     _magi(records, covenant, CAD_GADU)
 

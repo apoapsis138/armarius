@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
-from ..builder import characteristics, paragraphs, vf_ward, wound_ranges
+from ..builder import characteristics, paragraphs, titled, vf_ward, wound_ranges
 
 if TYPE_CHECKING:
     from ...models import Creature, CreaturePower, Neighbour
@@ -606,12 +606,20 @@ def _faeries(hibernia: Hibernia) -> None:
             "of men give him more Pretenses than the rules allow; they "
             "are his Abilities here. Good for feud stories, since his "
             "enemies are many, and for war. " + wound_ranges(1),
-            secrets="No one knows why he gathers an army. His great warded "
-            "regio could hide one, and magi fear the endless fighting in "
-            "Munster may set off another war with him; anyone starting a "
-            "war with the Order would find him a ready ally. Nor is it "
-            "known what the living captives are for: servants, husbands "
-            "for his daughters, or subjects for his druids' tests.",
+            secrets=[
+                titled(
+                    "Why Donn gathers an army",
+                    "No one knows why he gathers an army. His great warded regio could hide one.",
+                ),
+                titled(
+                    "Donn and the Order",
+                    "Magi fear the endless fighting in Munster may set off another war with Donn; anyone starting a war with the Order would find him a ready ally.",
+                ),
+                titled(
+                    "The living captives",
+                    "It is not known what Donn's living captives are for: servants, husbands for his daughters, or subjects for his druids' tests.",
+                ),
+            ],
         )
     )
     _MADE["trooping_faerie"] = _not_magic(
@@ -788,7 +796,12 @@ def _faeries(hibernia: Hibernia) -> None:
             "keep them to noble deeds, but they mostly rob and plunder "
             "as they please. The book builds him as a companion a player "
             "could run. " + wound_ranges(0),
-            secrets="His fianna are outlaws who have gone over to the faerie.",
+            secrets=[
+                titled(
+                    "His fianna",
+                    "His fianna are outlaws who have gone over to the faerie.",
+                )
+            ],
         )
     )
     _MADE["arastotail"] = _not_magic(
@@ -1122,14 +1135,16 @@ def _demons(hibernia: Hibernia) -> None:
             "trouble the lowly when their betters offer better sport. "
             "The book prints her Area Lore without a score and a stray 9 "
             "after Brawl; the 9 is taken as the Area Lore's. " + wound_ranges(0),
-            secrets="Her chief weapon is Possession: she hides in the courts of "
-            "the rich, preferably in several advisers to the main "
-            "players at once, and urges reckless deeds dressed as wise "
-            "counsel, stirring lust for what cannot be had until "
-            "betrayal and cruel revenge follow. But she has no "
-            "self-control: an insult to one of her hosts can drive her "
-            "to murder, wrecking her schemes and forcing her to flee "
-            "before she is found out.",
+            secrets=[
+                titled(
+                    "How she works",
+                    "Her chief weapon is Possession: she hides in the courts of the rich, preferably in several advisers to the main players at once, and urges reckless deeds dressed as wise counsel, stirring lust for what cannot be had until betrayal and cruel revenge follow.",
+                ),
+                titled(
+                    "Her weakness",
+                    "Temoneth has no self-control: an insult to one of her hosts can drive her to murder, wrecking her schemes and forcing her to flee before she is found out.",
+                ),
+            ],
         )
     )
 

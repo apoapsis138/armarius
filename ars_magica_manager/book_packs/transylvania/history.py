@@ -19,8 +19,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...models import as_secrets, secret_words
-from ..builder import paragraphs, secrets
+from ..builder import more_secrets, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from . import Transylvania
@@ -675,13 +674,14 @@ ERAS: tuple[tuple[str, str], ...] = (
 )
 
 #: What lies ahead after 1220, for a saga that follows history.
-FUTURE = (
-    "If the saga follows history, Andrew II's nobles force the Golden Bull on "
+FUTURE = titled(
+    "Storyguide Notes",
+    "What follows 1220. If the saga follows history, Andrew II's nobles force the Golden Bull on "
     "him in 1222; the Mongols break the Cumans at the Kalka in 1223; Hermann "
     "von Salza has the Burzenland made a fief of the Holy See in 1225 and the "
     "Knights are driven out; Ivan Asen II spreads his rule over Thrace, "
     "Macedonia and Epiros within the decade; a crusade against Bosnia comes in "
-    "1237; and the Mongols invade in 1241."
+    "1237; and the Mongols invade in 1241.",
 )
 
 
@@ -703,4 +703,4 @@ def build(transylvania: Transylvania) -> None:
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
     # Any history already written keeps its place, its secrets ahead of ours.
     tribunal.history = paragraphs(tribunal.history, eras)
-    tribunal.secrets = as_secrets(paragraphs(secret_words(tribunal.secrets), FUTURE))
+    tribunal.secrets = more_secrets(tribunal.secrets, [FUTURE])

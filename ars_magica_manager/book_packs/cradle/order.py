@@ -49,7 +49,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import Builder, StatBlock, _virtue_flaw, paragraphs
+from ..builder import Builder, Secrets, StatBlock, _virtue_flaw, paragraphs, titled
 from ..east import SAHIRS
 
 if TYPE_CHECKING:
@@ -238,13 +238,21 @@ def _places(cradle: Cradle) -> None:
             "since the war is never discussed at the Majlis, where the "
             "enemy might be listening.",
         ),
-        secrets=paragraphs(
-            "A pit at its centre is the Order's prison. The grand vizier "
-            "is said to hold an Arcane Connection to it, and a Travel "
-            "ritual of level 45, the Oubliette al-Wazir, opens a way "
-            "straight there without crossing the Twilight Void, so a "
-            "traitor can be sent into exile with no one the wiser.",
-        ),
+        secrets=[
+            titled(
+                "The Order's prison",
+                "A pit at the centre of the Grand Vizier's Island Fortress "
+                "is the Order of Suleiman's prison.",
+            ),
+            titled(
+                "The Oubliette al-Wazir",
+                "The grand vizier is said to hold an Arcane Connection to "
+                "the prison pit in his Island Fortress, and a Travel ritual "
+                "of level 45, the Oubliette al-Wazir, opens a way straight "
+                "there without crossing the Twilight Void, so a traitor can "
+                "be sent into exile with no one the wiser.",
+            ),
+        ],
     )
     cradle.places["house_of_the_heavens"] = b.place(
         "The House of the Heavens",
@@ -267,10 +275,13 @@ def _places(cradle: Cradle) -> None:
             "Meriq, the family's Asala, insists that this is still the "
             "family's house and that those who left will come back to it.",
         ),
-        secrets=paragraphs(
-            "The book leaves why they went, and whether Meriq is right, "
-            "to the storyguide.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves why the sahirs of Nasibin went, and whether "
+                "Meriq is right, to the storyguide.",
+            ),
+        ],
     )
     cradle.places["savah_observatory"] = b.place(
         "The Observatory of Savah",
@@ -526,7 +537,7 @@ def _sahir(
     covenant: Covenant | None,
     age: int | None,
     summary: str,
-    secrets: str = "",
+    secrets: Secrets = "",
     gifted: bool = False,
     vizier: bool = False,
 ) -> Character:
@@ -635,11 +646,17 @@ def _sahirs(cradle: Cradle) -> None:
             "enchant. The accusations made against him at the Majlis do "
             "not seem to trouble him.",
         ),
-        secrets=paragraphs(
-            "Many believe he is far too close to the Nizaris, some of "
-            "whom have called on him at the House of Healing; how close, "
-            "the book does not say.",
-        ),
+        secrets=[
+            titled(
+                "Nil and the Nizaris",
+                "Many believe he is far too close to the Nizaris, some of "
+                "whom have called on him at the House of Healing.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "How close Nil is to the Nizaris, the book does not say.",
+            ),
+        ],
     )
     arkhaman = _sahir(
         cradle,
@@ -666,12 +683,15 @@ def _sahirs(cradle: Cradle) -> None:
             "twinkle and a confident smile, a hooded robe that has "
             "hardly travelled, and usually a seat.",
         ),
-        secrets=paragraphs(
-            "Kharrat is sure that the boy's longing for a father's "
-            "approval will carry him into evil, and means to bind him to a "
-            "duty to go and find his mother, whose shame the spirit would "
-            "relish.",
-        ),
+        secrets=[
+            titled(
+                "Kharrat's plan for 'Arkhaman",
+                "Kharrat is sure that the boy's longing for a father's "
+                "approval will carry him into evil, and means to bind him to "
+                "a duty to go and find his mother, whose shame the spirit "
+                "would relish.",
+            ),
+        ],
     )
     b.link(world["order"], "characters", khatrazh, "Grand vizier")
     b.link(world["heart"], "characters", khatrazh, "His family")

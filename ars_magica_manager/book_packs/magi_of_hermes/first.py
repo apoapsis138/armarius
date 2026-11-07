@@ -17,6 +17,7 @@ from ..builder import (
     arts_from,
     characteristics,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_focus,
@@ -2236,10 +2237,13 @@ MAGI: tuple[Magus, ...] = (
             "covenant. Story seeds: magi who want the fertile Longevity Ritual; "
             "the covenant's unusual birth rate.",
         ),
-        secrets=(
-            "The prophecy may be nothing: the priest and the nymph could have "
-            "been faeries wagering they could fool seven generations of magi."
-        ),
+        secrets=[
+            titled(
+                "Whether the prophecy is real",
+                "The prophecy may be nothing: the priest and the nymph could have "
+                "been faeries wagering they could fool seven generations of magi.",
+            ),
+        ],
         printings=_AURULENTUS_PRINTINGS,
     ),
     Magus(
@@ -2261,10 +2265,13 @@ MAGI: tuple[Magus, ...] = (
             "decides. Story seeds: the unfinished spell; a patron's item with a "
             "side effect.",
         ),
-        secrets=(
-            "Cultellus, the Parma-dispelling knife she says she never finished, "
-            "is listed among her works; its patron never came back for it."
-        ),
+        secrets=[
+            titled(
+                "Cultellus",
+                "Cultellus, the Parma-dispelling knife she says she never finished, "
+                "is listed among her works; its patron never came back for it.",
+            ),
+        ],
         printings=_CONSCIENTIA_PRINTINGS,
     ),
     Magus(
@@ -2304,13 +2311,20 @@ MAGI: tuple[Magus, ...] = (
             "that needs a hoplite; his bargain with an einheri; the supposed "
             "Order of Odin.",
         ),
-        secrets=(
-            "Two decades out of apprenticeship he was initiated into the Legion "
-            "of Mithras (The Mysteries Revised pp. 118-122), and holds its "
-            "second rank, the Bride. Its errands take him beyond the Order's "
-            "lands after rumored hostile magicians; he has slain several hedge "
-            "wizards and thinks none was a real threat, but obeys."
-        ),
+        secrets=[
+            titled(
+                "Hugh in the Legion of Mithras",
+                "Two decades out of apprenticeship he was initiated into the Legion "
+                "of Mithras (The Mysteries Revised pp. 118-122), and holds its "
+                "second rank, the Bride.",
+            ),
+            titled(
+                "The Legion's errands",
+                "The Legion of Mithras's errands take Hugh beyond the Order's "
+                "lands after rumored hostile magicians; he has slain several hedge "
+                "wizards and thinks none was a real threat, but obeys.",
+            ),
+        ],
         printings=_HUGH_PRINTINGS,
     ),
 )

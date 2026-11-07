@@ -19,9 +19,17 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import BodyVis, Character, as_secrets, secret_words
+from ...models import BodyVis, Character
 from ...models.world import Neighbour
-from ..builder import Builder, characteristics, dormant, paragraphs
+from ..builder import (
+    Builder,
+    Secrets,
+    characteristics,
+    dormant,
+    more_secrets,
+    paragraphs,
+    titled,
+)
 from ..builder import secrets as hidden
 from ..fourth import Fourth, convert
 
@@ -40,6 +48,8 @@ CORPUS_FORM = (
     "Might Form Corpus is this pack's reading, from the body vis of trolls "
     "and giants (pp. 30-31)."
 )
+#: The title of a record's one secret of table guidance, kept last.
+NOTES = "Storyguide Notes"
 
 
 def build(b: Builder) -> None:
@@ -61,15 +71,22 @@ def _named(b: Builder, name: str) -> Neighbour | None:
 
 
 def _site(
-    b: Builder, name: str, *, summary: str, secrets: str = "", **fields: Any
+    b: Builder,
+    name: str,
+    *,
+    summary: str,
+    about: str = "",
+    secrets: Secrets = "",
+    **fields: Any,
 ) -> Neighbour:
     """The place `name`: another part's record with these words added, or
-    a new one, kept from the player's eye."""
+    a new one, kept from the player's eye; `about` titles the summary
+    when it is added as a secret."""
     found = _named(b, name)
     if found is None:
         return b.place(name, summary=summary, secrets=secrets, **fields)
-    found.secrets = as_secrets(
-        paragraphs(secret_words(found.secrets), summary, secrets)
+    found.secrets = more_secrets(
+        found.secrets, [titled(about or name, summary)], secrets
     )
     return found
 
@@ -80,7 +97,7 @@ def _sketch(
     *,
     age: int | None,
     summary: str,
-    secrets: str,
+    secrets: Secrets,
     traits: dict[str, int] | None = None,
     type: str = "companion",
 ) -> Character:
@@ -88,9 +105,7 @@ def _sketch(
     new sketch."""
     for character in b.saga.characters:
         if character.name == name:
-            character.secrets = as_secrets(
-                paragraphs(secret_words(character.secrets), secrets)
-            )
+            character.secrets = more_secrets(character.secrets, secrets)
             return character
     return b.magus(
         name,
@@ -110,7 +125,7 @@ def _mundane(
     block: Fourth,
     *,
     summary: str,
-    secrets: str,
+    secrets: Secrets,
 ) -> Character:
     """A mundane the book gives a block: converted, without the Gift and
     the Hermetic Virtue the conversion gives a magus."""
@@ -137,8 +152,13 @@ def _thords_feast(b: Builder) -> None:
         b,
         "Stad",
         summary="The estate of the godi Thord Sturluson.",
-        secrets="Thord feasts the foreign magi here, and here Blund Thorgilsson's "
-        "thirty horsemen ride in to summon them (p. 98).",
+        secrets=[
+            titled(
+                "Thord's feast at Stad",
+                "Thord feasts the foreign magi at Stad, and there Blund "
+                "Thorgilsson's thirty horsemen ride in to summon them (p. 98).",
+            ),
+        ],
         realm="",
         inside=snaefellsnes,
     )
@@ -146,9 +166,19 @@ def _thords_feast(b: Builder) -> None:
         b,
         "Thorsnes",
         summary="The seat of a district thing on Snaefellsnes.",
-        secrets="The witchcraft case opens at this varthing and passes to the "
-        "Althing; Blund's man offers terms during the first proceedings (p. "
-        "99). Blund's farm lies about 13 miles east.",
+        about="The thing at Thorsnes",
+        secrets=[
+            titled(
+                "The witchcraft case at Thorsnes",
+                "The witchcraft case opens at the Thorsnes varthing and passes to "
+                "the Althing; Blund's man offers terms during the first "
+                "proceedings (p. 99).",
+            ),
+            titled(
+                "The way to Blund's farm",
+                "Blund's farm lies about 13 miles east of Thorsnes.",
+            ),
+        ],
         realm="",
         inside=snaefellsnes,
     )
@@ -157,14 +187,33 @@ def _thords_feast(b: Builder) -> None:
         "Blund's Farmstead",
         summary="A rich farm on the north coast of Snaefellsnes, with several "
         "tenancies and its own church.",
-        secrets=paragraphs(
-            "About 13 miles east of Thorsnes (p. 99). Every fertile woman and "
-            "beast of the household is miscarrying. A Per + Second Sight roll "
-            "of 9+ shows a great spirit cat falling on the swarms of flies that "
-            "come over the rise, and Intellego Vim also finds them: Hlokk, "
-            "Una's sickly house cat, is fighting them off.",
-            "The cause lies at the mud pits about 2 miles south.",
-        ),
+        secrets=[
+            titled(
+                "Where Blund's farm lies",
+                "About 13 miles east of Thorsnes (p. 99).",
+            ),
+            titled(
+                "The miscarriages at Blund's farm",
+                "Every fertile woman and beast of Blund's household is miscarrying.",
+            ),
+            titled(
+                "The spirit cat",
+                "A great spirit cat falls on the swarms of flies that come over "
+                "the rise to Blund's farm: Hlokk, Una's sickly house cat, is "
+                "fighting them off.",
+            ),
+            titled(
+                "The cause of the blight",
+                "The cause of the blight on Blund's farm lies at the mud pits "
+                "about 2 miles south.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A Per + Second Sight roll of 9+ shows the great spirit cat "
+                "falling on the swarms of flies, and Intellego Vim also finds "
+                "them.",
+            ),
+        ],
         realm="",
         inside=snaefellsnes,
     )
@@ -172,31 +221,56 @@ def _thords_feast(b: Builder) -> None:
         b,
         "Blund's Mud Pits",
         summary="A field of boiling mud pits on Snaefellsnes that the farmers shun.",
-        secrets=paragraphs(
-            "Six pits in an exact circle, in a Magic aura of +4, about 2 miles "
-            "south of Blund's farm; Per + Awareness 6+ spots something just "
-            "under each surface. In each lies a white egg of Size +0, laid in "
-            "the 3rd Century, of Pan Caudarax's brood. Blund and his people have "
-            "no idea (pp. 98, 100).",
-            "In the middle stands a nidstong, a pole with a horse's head, whose "
-            "runes promise loss to a killer of children. It is Einar "
-            "Gamlisson's. Each day it stands there is a chance the curse takes "
-            "the eggs; destroying it ends the effect (p. 101; p. 59). The pole "
-            "is an Arcane Connection to Einar, but a broken one fades within "
-            "twelve weeks. No Intellego reaches him in Glasvellir.",
-            "The disease spirits gather here, trying to get into the eggs, and "
-            "vanish if the curse is broken. One egg is discoloured and its pit "
-            "stinks of rot: the infant in it is dead, and spirits rise from it "
-            "and fly down the valley to Blund's farm. Its shell holds 4 pawns "
-            "of Terram and the body 3 of Animal, 3 of Vim and 3 of Ignem; the "
-            "egg has no Magic Resistance and Soak +5 (pp. 100-101).",
-            "Guarding the site needs a mundane cover: hut-men from among the "
-            "covenfolk, which Blund as landowner and the farmers' hreppur must "
-            "accept, though the land can hardly feed them. Sulfur gathering "
-            "might pass. The galdramen hreppur will not stand for anything a "
-            "traveller could walk into; Intellego and regular visits are the "
-            "easiest answer (p. 106).",
-        ),
+        secrets=[
+            titled(
+                "The eggs in the mud pits",
+                "Six pits in an exact circle, about 2 miles south of Blund's "
+                "farm. In each lies a white egg of Size +0, laid in the 3rd "
+                "Century, of Pan Caudarax's brood. Blund and his people have no "
+                "idea (pp. 98, 100).",
+            ),
+            titled(
+                "The nidstong",
+                "In the middle of the mud pits stands a nidstong, a pole with a "
+                "horse's head, whose runes promise loss to a killer of children. "
+                "It is Einar Gamlisson's. Each day it stands there is a chance "
+                "the curse takes the eggs; destroying it ends the effect (p. 101; "
+                "p. 59).",
+            ),
+            titled(
+                "The nidstong's link to Einar",
+                "The nidstong is an Arcane Connection to Einar, but a broken one "
+                "fades within twelve weeks. No Intellego reaches him in "
+                "Glasvellir.",
+            ),
+            titled(
+                "The disease spirits at the pits",
+                "The disease spirits gather at the mud pits, trying to get into "
+                "the eggs, and vanish if the curse is broken.",
+            ),
+            titled(
+                "The dead egg",
+                "One egg is discoloured and its pit stinks of rot: the infant in "
+                "it is dead, and spirits rise from it and fly down the valley to "
+                "Blund's farm. Its shell holds 4 pawns of Terram and the body 3 "
+                "of Animal, 3 of Vim and 3 of Ignem (pp. 100-101).",
+            ),
+            titled(
+                "Guarding the pits",
+                "Guarding the site needs a mundane cover: hut-men from among the "
+                "covenfolk, which Blund as landowner and the farmers' hreppur "
+                "must accept, though the land can hardly feed them. Sulfur "
+                "gathering might pass. The galdramen hreppur will not stand for "
+                "anything a traveller could walk into; Intellego and regular "
+                "visits are the easiest answer (p. 106).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The pits lie in a Magic aura of +4; Per + Awareness 6+ spots "
+                "something just under each surface. The dead egg has no Magic "
+                "Resistance and Soak +5 (pp. 98, 100-101).",
+            ),
+        ],
         aura=4,
         inside=snaefellsnes,
     )
@@ -204,15 +278,31 @@ def _thords_feast(b: Builder) -> None:
         b,
         "Dagverdara Farmstead",
         summary="A farm of Thord Sturluson's on Snaefellsnes, under Snaefell.",
-        secrets="The farm nearest the tunnel, and Scartaris's foothold on the "
-        "surface; about three miles separate the two (p. 89). Iain completes the "
-        "purchase once Blund's affair is settled. With his money and De "
-        "Panne's support it can employ up to thirty adults and their "
-        "families, a huge household by Icelandic standards: the house must be "
-        "greatly extended and perhaps a second one built. Iain links it to the "
-        "Scartaris gateroom with the spare gatestones, and new Icelandic "
-        "characters can enter the saga simply by coming here for work (p. "
-        "101). The story needs this farm later.",
+        secrets=[
+            titled(
+                "Dagverdara and Scartaris",
+                "The farm nearest the tunnel, and Scartaris's foothold on the "
+                "surface; about three miles separate the two (p. 89).",
+            ),
+            titled(
+                "Iain's purchase",
+                "Iain completes the purchase of Dagverdara once Blund's affair is "
+                "settled. With his money and De Panne's support it can employ up "
+                "to thirty adults and their families, a huge household by "
+                "Icelandic standards: the house must be greatly extended and "
+                "perhaps a second one built.",
+            ),
+            titled(
+                "Dagverdara's gatestones",
+                "Iain links Dagverdara to the Scartaris gateroom with the spare "
+                "gatestones (p. 101).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "New Icelandic characters can enter the saga simply by coming "
+                "here for work (p. 101). The story needs this farm later.",
+            ),
+        ],
         realm="",
         inside=snaefellsnes,
     )
@@ -240,11 +330,24 @@ def _thords_feast(b: Builder) -> None:
         summary="A storbondi of northern Snaefellsnes, tall, dark-haired and "
         "brown-eyed, rich and influential, with several tenancies and the "
         "local church.",
-        secrets="He hates magicians and needs one: his priest has failed him "
-        "and he is growing desperate. He killed a local witch in mistaken "
-        "revenge, so the hreppur left him to suffer (pp. 98, 105). Years later "
-        "Einar turns him against the eggs (p. 114). If he hurts one of Pan "
-        "Caudarax's brood he has few days left (p. 115).",
+        secrets=[
+            titled(
+                "Blund's need",
+                "He hates magicians and needs one: his priest has failed him and "
+                "he is growing desperate.",
+            ),
+            titled(
+                "Blund and the witch",
+                "He killed a local witch in mistaken revenge, so the hreppur "
+                "left him to suffer (pp. 98, 105).",
+            ),
+            titled(
+                "Blund and the eggs",
+                "Years later Einar turns him against the eggs (p. 114). If he "
+                "hurts one of Pan Caudarax's brood he has few days left (p. "
+                "115).",
+            ),
+        ],
     )
     _mundane(
         b,
@@ -266,8 +369,14 @@ def _thords_feast(b: Builder) -> None:
         ),
         summary="Blund Thorgilsson's young wife, of average height with light "
         "brown hair and green eyes, mother of two daughters aged four and two.",
-        secrets="She has miscarried twice in a year and is pregnant again "
-        "without knowing it (p. 99). Her cat Hlokk guards her.",
+        secrets=[
+            titled(
+                "Una's miscarriages",
+                "She has miscarried twice in a year and is pregnant again "
+                "without knowing it (p. 99).",
+            ),
+            titled("Una's guardian", "Her cat Hlokk guards her."),
+        ],
     )
     b.creature(
         "Hlokk",
@@ -328,15 +437,26 @@ def _thords_feast(b: Builder) -> None:
         ],
         vis=[BodyVis(4, "Creo", "in her body")],
         appearance="To all appearances an ordinary tabby.",
-        secrets=paragraphs(
-            "A beast of virtue, worn out by defending Una from the disease "
-            "spirits. If she sees that the magi mean to help she tries to lead "
-            "them to the mud pits (p. 100).",
-            "Converted: her Spiritual Form has Str +3, Sta +1, Size -1 and Soak "
-            "+5. Ferocity 3 is the Virtue, for protecting her mistress. Body "
-            "levels OK, -3, Incapacitated. Might Form Animal is this pack's "
-            "reading. Powers with no Ability now, as printed: Hamfarir 5.",
-        ),
+        secrets=[
+            titled(
+                "Hlokk, beast of virtue",
+                "A beast of virtue, worn out by defending Una from the disease "
+                "spirits.",
+            ),
+            titled(
+                "Hlokk's guidance",
+                "If she sees that the magi mean to help she tries to lead them "
+                "to the mud pits (p. 100).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Converted: her Spiritual Form has Str +3, Sta +1, Size -1 and "
+                "Soak +5. Ferocity 3 is the Virtue, for protecting her mistress. "
+                "Body levels OK, -3, Incapacitated. Might Form Animal is this "
+                "pack's reading. Powers with no Ability now, as printed: "
+                "Hamfarir 5.",
+            ),
+        ],
     )
     b.creature(
         "Disease Spirits",
@@ -362,9 +482,18 @@ def _thords_feast(b: Builder) -> None:
             ),
         ],
         appearance="Fly-like swarms, seen with Second Sight.",
-        secrets="A manifestation of Einar's curse, which disappear if it is "
-        "broken (p. 100). Body levels OK, Banished. The book prints no "
-        "Characteristics; Might Form Corpus is this pack's reading.",
+        secrets=[
+            titled(
+                "What the disease spirits are",
+                "A manifestation of Einar's curse, which disappear if it is "
+                "broken (p. 100).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Body levels OK, Banished. The book prints no Characteristics; "
+                "Might Form Corpus is this pack's reading.",
+            ),
+        ],
     )
     b.creature(
         "Unhatched Dragon of Pan Caudarax",
@@ -376,15 +505,33 @@ def _thords_feast(b: Builder) -> None:
         place=nest,
         soak=40,
         appearance="A large white egg of Size +0 in a boiling mud pit.",
-        secrets=paragraphs(
-            "Each living egg has Magic Resistance +40, Soak +40 and 10 Body "
-            "levels; the infant inside has Magic Might 20 and Soak +10, and if "
-            "the shell breaks it defends itself or tries to flee (p. 100).",
-            "Destroying one is a very bad idea, as Vifil will say, dropping his "
-            "cover to do it (p. 101). They hatch twenty years after the "
-            "settlement with Pan Caudarax (p. 105). Might Form Ignem is this "
-            "pack's reading, from the dead infant's vis.",
-        ),
+        secrets=[
+            titled(
+                "If a shell breaks",
+                "If a dragon egg's shell breaks, the infant inside defends itself "
+                "or tries to flee (p. 100).",
+            ),
+            titled(
+                "Destroying an egg",
+                "Destroying one of the dragon eggs is a very bad idea, as Vifil "
+                "will say, dropping his cover to do it (p. 101).",
+            ),
+            titled(
+                "When the eggs hatch",
+                "The dragon eggs hatch twenty years after the settlement with Pan "
+                "Caudarax (p. 105).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Each living egg has Magic Resistance +40, Soak +40 and 10 "
+                    "Body levels; the infant inside has Magic Might 20 and Soak "
+                    "+10 (p. 100).",
+                    "Might Form Ignem is this pack's reading, from the dead "
+                    "infant's vis.",
+                ),
+            ),
+        ],
     )
     dormant(
         b.threat(
@@ -395,22 +542,31 @@ def _thords_feast(b: Builder) -> None:
             "cursed storbondi, Blund Thorgilsson, demands they lift the blight "
             "on his household, and the godi Thord Sturluson offers to stand "
             "behind them for a price (pp. 98-101).",
-            secrets=paragraphs(
-                "Blund wrongly took vengeance on a local witch, so the regional "
-                "leader of the galdramen hreppur blacklisted him. He hopes to "
-                "force the newcomers to help, and Thord hopes his suit brings "
-                "them under his influence.",
-                "The curse is not aimed at Blund at all. Einar Gamlisson laid it "
-                "on Pan Caudarax's eggs, laid in the 3rd Century, and "
-                "the farm is merely near them. Einar has good reason to hate "
-                "the eggs' father.",
-                "How Blund knows: the magi landed on Snaefellsnes with no known "
-                "ship just as a demon beast ran wild, Brighde/Hetep's "
-                "transformation had many witnesses, and Icelanders with Second "
-                "Sight or Magical Sensitivity soon notice a Parma and a Gift. "
-                "Rumour goes from farm to farm, and magi outside the hreppur "
-                "are easy targets (p. 98).",
-            ),
+            secrets=[
+                titled(
+                    "Why Blund sues",
+                    "Blund wrongly took vengeance on a local witch, so the "
+                    "regional leader of the galdramen hreppur blacklisted him. He "
+                    "hopes to force the newcomers to help, and Thord hopes his "
+                    "suit brings them under his influence.",
+                ),
+                titled(
+                    "Whom the curse is aimed at",
+                    "The curse is not aimed at Blund at all. Einar Gamlisson laid "
+                    "it on Pan Caudarax's eggs, laid in the 3rd Century, and the "
+                    "farm is merely near them. Einar has good reason to hate the "
+                    "eggs' father.",
+                ),
+                titled(
+                    "How Blund knows of the magi",
+                    "The magi landed on Snaefellsnes with no known ship just as a "
+                    "demon beast ran wild, Brighde/Hetep's transformation had "
+                    "many witnesses, and Icelanders with Second Sight or Magical "
+                    "Sensitivity soon notice a Parma and a Gift. Rumour goes from "
+                    "farm to farm, and magi outside the hreppur are easy targets "
+                    "(p. 98).",
+                ),
+            ],
             stages=[
                 S(
                     "The feast at Stad",
@@ -481,13 +637,28 @@ def _hreppur_people(b: Builder) -> None:
         age=196,
         summary=council,
         traits={"Quick Temper": 3, "Distrustful": 2, "Boorish": 1, "Cautious": 1},
-        secrets="A trollsdottir of the council: printed Magic Resistance 63, "
-        "dropped as no hedge wizard has one (Hedge Magic RE p. 9), Size +2, looks "
-        "37, printed Confidence 3. Her giant mother raised her and she never "
-        "met her outlawed father. She picked fights until age taught her some "
-        "caution, and trollsynir magic has left her looking more troll than "
-        "human. She has come to back her descendant Arnor Arngeirsson in his "
-        "dispute, and the attack on the eggs worries her (p. 103).",
+        secrets=[
+            titled(
+                "Signy's upbringing",
+                "A trollsdottir of the council. Her giant mother raised her and "
+                "she never met her outlawed father.",
+            ),
+            titled(
+                "Signy's trollish looks",
+                "She picked fights until age taught her some caution, and "
+                "trollsynir magic has left her looking more troll than human.",
+            ),
+            titled(
+                "Why Signy has come",
+                "She has come to back her descendant Arnor Arngeirsson in his "
+                "dispute, and the attack on the eggs worries her (p. 103).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Printed Magic Resistance 63, dropped as no hedge wizard has one "
+                "(Hedge Magic RE p. 9), Size +2, looks 37, printed Confidence 3.",
+            ),
+        ],
     )
     signy.traditions = ["trad_trollsynir"]
     _sketch(
@@ -501,14 +672,26 @@ def _hreppur_people(b: Builder) -> None:
             "Narrow minded": 2,
             "Cautious": -1,
         },
-        secrets="Leader of the few vitkir left: Size +1, looks 67, printed "
-        "Confidence 4. His temple lies in a regio near his farm, and such "
-        "regiones are rare and precious to vitkir, who must keep their rites "
-        "wholly secret. Wanting back those that have left vitkir hands, for "
-        "vitkir lately fled from Norway, he blights fields and cattle to force "
-        "sales and hides it from his victims' fylgjur. A galdraman has reported "
-        "him. He will answer that the victims never suspected and that he paid "
-        "fair prices (p. 103).",
+        secrets=[
+            titled(
+                "Arnor's regio temple",
+                "Leader of the few vitkir left. His temple lies in a regio near "
+                "his farm, and such regiones are rare and precious to vitkir, who "
+                "must keep their rites wholly secret.",
+            ),
+            titled(
+                "Arnor's blight",
+                "Wanting back those that have left vitkir hands, for vitkir "
+                "lately fled from Norway, he blights fields and cattle to force "
+                "sales and hides it from his victims' fylgjur.",
+            ),
+            titled(
+                "The charge against Arnor",
+                "A galdraman has reported him. He will answer that the victims "
+                "never suspected and that he paid fair prices (p. 103).",
+            ),
+            titled("Storyguide Notes", "Size +1, looks 67, printed Confidence 4."),
+        ],
     )
     _sketch(
         b,
@@ -516,9 +699,19 @@ def _hreppur_people(b: Builder) -> None:
         age=51,
         summary=member,
         traits={"Secretive": 2, "Loyal to the Beogarts": 2, "Warlike": -1},
-        secrets="A vitki of the powerful Beogart family, in a feud of centuries "
-        "with the Odd-Karnors. Size +0, printed Confidence 4. He has come only "
-        "to make plain that he had no part in the attack on the eggs (p. 103).",
+        secrets=[
+            titled(
+                "The Beogart feud",
+                "A vitki of the powerful Beogart family, in a feud of centuries "
+                "with the Odd-Karnors.",
+            ),
+            titled(
+                "Why Leif has come",
+                "He has come only to make plain that he had no part in the "
+                "attack on the eggs (p. 103).",
+            ),
+            titled("Storyguide Notes", "Size +0, printed Confidence 4."),
+        ],
     )
     biorn = _sketch(
         b,
@@ -526,14 +719,33 @@ def _hreppur_people(b: Builder) -> None:
         age=106,
         summary="Leader of the galdramen hreppur.",
         traits={"Detached": 3, "Fair": 2, "Respectful": 3},
-        secrets="Iceland's oldest galdraman, a deft politician: Size +1, looks "
-        "85, printed Confidence 3, Twilight Points 19, which are Warping 6 now "
-        "(DE p. 538). Most galdramen have made "
-        "the long hamfaring (Final Twilight) by his age, and he knows his "
-        "fylgja's call cannot be refused for ever. He wants peace for those to "
-        "come, and finds the quarrel between the two Christian schools the "
-        "hardest to settle (p. 104). He sees no reason the magi should not "
-        "belong, and offers vis rights if they appease the dragon (p. 105).",
+        secrets=[
+            titled(
+                "Biorn the politician",
+                "Iceland's oldest galdraman, a deft politician.",
+            ),
+            titled(
+                "Biorn's long hamfaring",
+                "Most galdramen have made the long hamfaring (Final Twilight) by "
+                "his age, and he knows his fylgja's call cannot be refused for "
+                "ever.",
+            ),
+            titled(
+                "What Biorn wants",
+                "He wants peace for those to come, and finds the quarrel between "
+                "the two Christian schools the hardest to settle (p. 104).",
+            ),
+            titled(
+                "Biorn and the magi",
+                "He sees no reason the magi should not belong, and offers vis "
+                "rights if they appease the dragon (p. 105).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Size +1, looks 85, printed Confidence 3, Twilight Points 19, "
+                "which are Warping 6 now (DE p. 538).",
+            ),
+        ],
     )
     biorn.traditions = ["trad_galdramen"]
     _sketch(
@@ -542,14 +754,31 @@ def _hreppur_people(b: Builder) -> None:
         age=56,
         summary="Represents the Holar school on the hreppur's council.",
         traits={"Cynical": 1, "Calculating": 2, "Curious": 1, "Pragmatic": 2},
-        secrets="Size +0, printed Confidence 3. He seems to want the balance "
-        "kept, but his first aim is his school's right to harvest magical "
-        "sites. Bishop Gudmund's troubles leave Holar to itself. When some "
-        "Skalholt vis sites went unharvested, Holar claimed abandonment and "
-        "took them. Some at Holar deny the hreppur's authority; Halldor thinks "
-        "the moment is wrong, not the idea. The school seeks a breakthrough to "
-        "the strength of the trollsynir and traditional galdramen, and with it "
-        "would press for independence (p. 104).",
+        secrets=[
+            titled(
+                "Halldor's first aim",
+                "He seems to want the balance kept, but his first aim is his "
+                "school's right to harvest magical sites.",
+            ),
+            titled(
+                "Holar's claim",
+                "Bishop Gudmund's troubles leave Holar to itself. When some "
+                "Skalholt vis sites went unharvested, Holar claimed abandonment "
+                "and took them.",
+            ),
+            titled(
+                "Holar against the hreppur",
+                "Some at Holar deny the hreppur's authority; Halldor thinks the "
+                "moment is wrong, not the idea.",
+            ),
+            titled(
+                "Holar's ambition",
+                "The Holar school seeks a breakthrough to the strength of the "
+                "trollsynir and traditional galdramen, and with it would press "
+                "for independence (p. 104).",
+            ),
+            titled("Storyguide Notes", "Size +0, printed Confidence 3."),
+        ],
     )
     _sketch(
         b,
@@ -557,11 +786,21 @@ def _hreppur_people(b: Builder) -> None:
         age=73,
         summary="Represents the Skalholt school on the hreppur's council.",
         traits={"Forthright": 3, "Pious": 2, "Kind": 1, "Tolerant": 1},
-        secrets="Size +0, printed Confidence 2. Local priests gather the "
-        "school's vis, and several have died of late, so sites stood idle "
-        "until new priests came. Holar calls them abandoned. Vebrand hopes the "
-        "hreppur rules against Holar, and it probably will, since abandonment "
-        "normally means many years of disuse (p. 104).",
+        secrets=[
+            titled(
+                "Skalholt's idle sites",
+                "Local priests gather the Skalholt school's vis, and several have "
+                "died of late, so sites stood idle until new priests came. Holar "
+                "calls them abandoned.",
+            ),
+            titled(
+                "Vebrand's hope",
+                "Vebrand hopes the hreppur rules against Holar, and it probably "
+                "will, since abandonment normally means many years of disuse (p. "
+                "104).",
+            ),
+            titled("Storyguide Notes", "Size +0, printed Confidence 2."),
+        ],
     )
     _sketch(
         b,
@@ -569,10 +808,15 @@ def _hreppur_people(b: Builder) -> None:
         age=81,
         summary="Nominal leader of the Seithkona.",
         traits={"Fatalistic": 4, "Otherworldly": 3, "Patient": 3},
-        secrets="Size -1, looks 75, printed Confidence 3. Her gloomy prophecies "
-        "come true often enough that people listen, and some claim to have "
-        "escaped disaster by solving her riddles, but she argues practical "
-        "matters badly (p. 104).",
+        secrets=[
+            titled(
+                "Aldis's prophecies",
+                "Her gloomy prophecies come true often enough that people listen, "
+                "and some claim to have escaped disaster by solving her riddles, "
+                "but she argues practical matters badly (p. 104).",
+            ),
+            titled("Storyguide Notes", "Size -1, looks 75, printed Confidence 3."),
+        ],
     )
     _sketch(
         b,
@@ -580,11 +824,17 @@ def _hreppur_people(b: Builder) -> None:
         age=56,
         summary="Speaks for the Seithkona at the hreppur.",
         traits={"Confidence": 3, "Polite": 3, "Forthright": 2},
-        secrets="Size +0, looks 51, printed Confidence 4. Being women, most "
-        "Seithkona cannot attend, so they are always outvoted. For years she "
-        "has proposed that the absent may hand their votes to those who go, "
-        "which the powers at the hreppur will never pass, unless she brings "
-        "every Seithkona in Iceland to one meeting (pp. 104-105).",
+        secrets=[
+            titled(
+                "Helga's proposal",
+                "Being women, most Seithkona cannot attend, so they are always "
+                "outvoted. For years she has proposed that the absent may hand "
+                "their votes to those who go, which the powers at the hreppur "
+                "will never pass, unless she brings every Seithkona in Iceland to "
+                "one meeting (pp. 104-105).",
+            ),
+            titled("Storyguide Notes", "Size +0, looks 51, printed Confidence 4."),
+        ],
     )
 
 
@@ -595,11 +845,25 @@ def _meet_the_dragon(b: Builder) -> None:
         "Eldborg",
         summary="A great volcanic crater in a flat lava field, a little off the "
         "road to Snaefellsnes.",
-        secrets="About 200 paces across and 50 deep; horses must be left and the "
-        "sides climbed. Half an hour west across country from the northward "
-        "path. The hreppur meets here just after the Althing. At the meeting "
-        "the book describes, over three hours there arrive 11 trollsynir, 6 "
-        "vitkir, 62 galdramen (11 of them schooled) and 8 Seithkona (p. 102).",
+        about="The crater of Eldborg",
+        secrets=[
+            titled(
+                "Reaching Eldborg",
+                "About 200 paces across and 50 deep; horses must be left and the "
+                "sides climbed. Half an hour west across country from the "
+                "northward path.",
+            ),
+            titled(
+                "The hreppur's meeting at Eldborg",
+                "The hreppur meets at Eldborg just after the Althing.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "At the meeting the book describes, over three hours there arrive "
+                "11 trollsynir, 6 vitkir, 62 galdramen (11 of them schooled) and "
+                "8 Seithkona (p. 102).",
+            ),
+        ],
         realm="",
     )
     hekla = _site(
@@ -607,11 +871,17 @@ def _meet_the_dragon(b: Builder) -> None:
         "Hekla Lair",
         summary="Wide tunnels at the foot of the Hekla volcano, in air hot, dry "
         "and sulfurous.",
-        secrets="Pan Caudarax's Icelandic lair, a Magic aura of +9. A river of "
-        "lava comes from the far end of a vast cavern and flows down both "
-        "sides into tunnels flanking the entrance. The dragon sleeps as a "
-        "lindorm on a bed of pure white sand at the centre, in a red glow, "
-        "with dozens of fire spirits darting into the lava (p. 105).",
+        secrets=[
+            titled(
+                "The dragon's lair",
+                "Pan Caudarax's Icelandic lair. A river of lava comes from the "
+                "far end of a vast cavern and flows down both sides into tunnels "
+                "flanking the entrance. The dragon sleeps as a lindorm on a bed "
+                "of pure white sand at the centre, in a red glow, with dozens of "
+                "fire spirits darting into the lava (p. 105).",
+            ),
+            titled("Storyguide Notes", "A Magic aura of +9."),
+        ],
         aura=9,
         inside=_named(b, "Hekla"),
     )
@@ -620,20 +890,40 @@ def _meet_the_dragon(b: Builder) -> None:
         b,
         "Silver Spring of Snaefell",
         summary="A hot spring on the north face of Snaefell.",
-        secrets="On the night of the winter solstice it runs with a silvery "
-        "liquid usable as Vim vis. With the Ice Crystal Cave it is the "
-        "hreppur's reward for a settlement with Pan Caudarax. The book "
-        "recommends the two together give 3 pawns per magus per year; the "
-        "storyguide sets the figure (p. 106).",
+        secrets=[
+            titled(
+                "The Silver Spring's vis",
+                "On the night of the winter solstice the Silver Spring of "
+                "Snaefell runs with a silvery liquid usable as Vim vis.",
+            ),
+            titled(
+                "The hreppur's reward",
+                "With the Ice Crystal Cave the Silver Spring is the hreppur's "
+                "reward for a settlement with Pan Caudarax.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book recommends the two together give 3 pawns per magus per "
+                "year; the storyguide sets the figure (p. 106).",
+            ),
+        ],
         inside=snaefell,
     )
     _site(
         b,
         "Ice Crystal Cave",
         summary="An icy cave high on Snaefell.",
-        secrets="Through the summer it washes out odd ice crystals that do not "
-        "melt until the summer solstice; gathered, they serve as Rego vis (p. "
-        "106). Shared yield with the Silver Spring of Snaefell.",
+        secrets=[
+            titled(
+                "The ice crystals",
+                "Through the summer the Ice Crystal Cave washes out odd ice "
+                "crystals that do not melt until the summer solstice; gathered, "
+                "they serve as Rego vis (p. 106).",
+            ),
+            titled(
+                "Storyguide Notes", "Shared yield with the Silver Spring of Snaefell."
+            ),
+        ],
         inside=snaefell,
     )
     dormant(
@@ -645,32 +935,54 @@ def _meet_the_dragon(b: Builder) -> None:
             "Eldborg, and the dragon Pan Caudarax wants the priests of Hermes "
             "at his lair at the autumnal equinox to answer for the attack on "
             "his nest (pp. 102-106).",
-            secrets=paragraphs(
-                "One unborn dragon is dead and Pan Caudarax is sure to want "
-                "revenge; the task is to keep it to the guilty. Had the hreppur "
-                "known the truth of Blund's curse it would have acted at once, "
-                "but it let him suffer because he had killed one of its own (p. "
-                "105).",
-                "The hreppur's authority is loose, with no oath or ceremony. "
-                "Its agreement with the godar protects members from unwarranted "
-                "suits, if they keep its laws; Eldborg and the pathway tax are "
-                "voluntary. The Order of Hermes draws no objection from Biorn; "
-                "the Order of Odin means nothing to anyone here (p. 105).",
-                "Einar cannot be traced for now: he is in Glasvellir, and no "
-                "galdraman knows who attacked the nest. The nearest clue is the "
-                "ship Pan Caudarax destroyed five years ago, on which many "
-                "Icelanders lost kin, none known as magicians (p. 106).",
-                "Dragon magi. The Oath allows Hermetic training only for "
-                "apprentices who will join the Order, and nothing forbids a "
-                "non-human, though many would be vexed. The magi can agree: "
-                "the dragons hatch in about 20 years, become human babies, "
-                "start training five years later, and after 15 years' "
-                "apprenticeship have no reason not to swear; the Order may "
-                "debate it, but with no Oath broken a March is unlikely. They "
-                "can agree and renegotiate or refuse in 25 years, when they may "
-                "stand a chance against him. Or they can refuse now and be "
-                "eaten (p. 106).",
-            ),
+            secrets=[
+                titled(
+                    "The dragon's revenge",
+                    "One unborn dragon is dead and Pan Caudarax is sure to want "
+                    "revenge.",
+                ),
+                titled(
+                    "Why the hreppur let Blund suffer",
+                    "Had the hreppur known the truth of Blund's curse it would "
+                    "have acted at once, but it let him suffer because he had "
+                    "killed one of its own (p. 105).",
+                ),
+                titled(
+                    "The hreppur's loose authority",
+                    "The hreppur's authority is loose, with no oath or ceremony. "
+                    "Its agreement with the godar protects members from "
+                    "unwarranted suits, if they keep its laws; Eldborg and the "
+                    "pathway tax are voluntary.",
+                ),
+                titled(
+                    "The hreppur and the two Orders",
+                    "The Order of Hermes draws no objection from Biorn; the Order "
+                    "of Odin means nothing to anyone at the hreppur (p. 105).",
+                ),
+                titled(
+                    "Einar cannot be traced",
+                    "Einar cannot be traced for now: he is in Glasvellir, and no "
+                    "galdraman knows who attacked the nest. The nearest clue is "
+                    "the ship Pan Caudarax destroyed five years ago, on which "
+                    "many Icelanders lost kin, none known as magicians (p. 106).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The task is to keep the dragon's revenge to the guilty.",
+                        "Dragon magi: the Oath allows Hermetic training only for "
+                        "apprentices who will join the Order, and nothing forbids "
+                        "a non-human, though many would be vexed. The magi can "
+                        "agree: the dragons hatch in about 20 years, become human "
+                        "babies, start training five years later, and after 15 "
+                        "years' apprenticeship have no reason not to swear; the "
+                        "Order may debate it, but with no Oath broken a March is "
+                        "unlikely. They can agree and renegotiate or refuse in 25 "
+                        "years, when they may stand a chance against him. Or they "
+                        "can refuse now and be eaten (p. 106).",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "The Althing",
@@ -752,11 +1064,24 @@ def _feast_of_thanks(b: Builder) -> None:
         "The Troll Caves of Snaefell",
         summary="A cave reaching far back into the mountains near Snaefell, "
         "shunned by men.",
-        secrets="Kollbjorn's trolls hold this cave system; its head is a night's "
-        "shelter on the winter road to Bard. The trolls and the mountain giants "
-        "keep a truce that begins only on the Longest Night. Passages twist "
-        "and divide, some very narrow, some widened, and toward midday one "
-        "section runs through a glacier in faint blue light (pp. 108-109).",
+        secrets=[
+            titled(
+                "Kollbjorn's caves",
+                "Kollbjorn's trolls hold this cave system; its head is a night's "
+                "shelter on the winter road to Bard.",
+            ),
+            titled(
+                "The troll truce",
+                "The trolls and the mountain giants keep a truce that begins only "
+                "on the Longest Night.",
+            ),
+            titled(
+                "Inside the troll caves",
+                "Passages twist and divide, some very narrow, some widened, and "
+                "toward midday one section runs through a glacier in faint blue "
+                "light (pp. 108-109).",
+            ),
+        ],
         inside=snaefell,
     )
     cave = _site(
@@ -764,11 +1089,19 @@ def _feast_of_thanks(b: Builder) -> None:
         "The Singing Cave",
         summary="A deep, nearly closed valley among five mountains on "
         "Snaefellsnes, known by its echoes.",
-        secrets="Songhellir in Norse. It looks like a cavern, but its roof is "
-        "open and the winter sun "
-        "comes down to a floor nearly three hundred paces across; every voice "
-        "echoes perfectly. Bard holds his midwinter feast here (p. 109). No "
-        "aura is printed.",
+        secrets=[
+            titled(
+                "Inside the Singing Cave",
+                "Songhellir in Norse. It looks like a cavern, but its roof is "
+                "open and the winter sun comes down to a floor nearly three "
+                "hundred paces across; every voice echoes perfectly.",
+            ),
+            titled(
+                "Bard's midwinter feast",
+                "Bard holds his midwinter feast in the Singing Cave (p. 109).",
+            ),
+            titled("Storyguide Notes", "No aura is printed."),
+        ],
         inside=snaefell,
     )
     _site(
@@ -776,11 +1109,21 @@ def _feast_of_thanks(b: Builder) -> None:
         "Husavik",
         summary="A fishing station and a farm around a small church, near the "
         "mouth of the River Laxa in the Northern Quarter.",
-        secrets="The folk found a wounded eagle on the beach and laugh at talk of "
-        "a giant bird: their priest carried it in his two hands and gave it to "
-        "the hermit. On the rocky beach of the broad cove nearby the Scottish "
-        "giants saw it fill the shore from the water to the clifftop, a "
-        "wingspan of over 50 feet (p. 111).",
+        about="The station at Husavik",
+        secrets=[
+            titled(
+                "The wounded eagle",
+                "The folk of Husavik found a wounded eagle on the beach and laugh "
+                "at talk of a giant bird: their priest carried it in his two "
+                "hands and gave it to the hermit.",
+            ),
+            titled(
+                "What the giants saw",
+                "On the rocky beach of the broad cove near Husavik the Scottish "
+                "giants saw the eagle fill the shore from the water to the "
+                "clifftop, a wingspan of over 50 feet (p. 111).",
+            ),
+        ],
         realm="",
     )
     _site(
@@ -788,10 +1131,19 @@ def _feast_of_thanks(b: Builder) -> None:
         "Skjalfandi",
         summary="An island near Husavik, home of a hermit known for his "
         "holiness and his care of hurt animals.",
-        secrets="Reached by a borrowed boat. It lies in a Divine aura, of no "
-        "printed strength (pp. 111-112). In the ashes of the hermit's fire lies "
-        "the silver arrowhead, scratched with a runic curse to drain power from "
-        "a spirit; he burnt the arrow as soon as he drew it.",
+        secrets=[
+            titled("Reaching Skjalfandi", "Reached by a borrowed boat."),
+            titled(
+                "The silver arrowhead",
+                "In the ashes of the hermit's fire lies the silver arrowhead, "
+                "scratched with a runic curse to drain power from a spirit; he "
+                "burnt the arrow as soon as he drew it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "It lies in a Divine aura, of no printed strength (pp. 111-112).",
+            ),
+        ],
         realm="Divine",
         inside=_named(b, "Northern Quarter"),
     )
@@ -823,18 +1175,30 @@ def _feast_of_thanks(b: Builder) -> None:
         "exceedingly ugly face, the nose broken in three places and knotted, "
         "twisted like an old ram's horns.",
         notes=TROLL_POWERS,
-        secrets=paragraphs(
-            "The meanest of a mean lot, secure in his lordship with his mother "
-            "Skrukka and his henchmen Gapi and Gljufra-Geir behind him (p. 113). "
-            "He entraps a lone man before the truce begins, claims his life is "
-            "forfeit, and offers a deal that Skrukka seals with a Curse.",
-            "Converted: the book gives no combat table, only the standard "
-            "troll's raised by 5 to Init, Atk and Dfn and by 3 to Damage; those "
-            "totals are here, and his fatigue levels are the standard troll's. "
-            "A Rock has no Defense (n/a), shown as 0. No more magic than the "
-            "average troll.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Kollbjorn's lordship",
+                "The meanest of a mean lot, secure in his lordship with his "
+                "mother Skrukka and his henchmen Gapi and Gljufra-Geir behind him "
+                "(p. 113).",
+            ),
+            titled(
+                "Kollbjorn's trap",
+                "He entraps a lone man before the truce begins, claims his life "
+                "is forfeit, and offers a deal that Skrukka seals with a Curse.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Converted: the book gives no combat table, only the "
+                    "standard troll's raised by 5 to Init, Atk and Dfn and by 3 "
+                    "to Damage; those totals are here, and his fatigue levels are "
+                    "the standard troll's. A Rock has no Defense (n/a), shown as "
+                    "0. No more magic than the average troll.",
+                    CORPUS_FORM,
+                ),
+            ),
+        ],
     )
     b.creature(
         "Skrukka",
@@ -870,19 +1234,32 @@ def _feast_of_thanks(b: Builder) -> None:
         "eyes are filmed white, though she sees well. A fearful stench goes "
         "with her.",
         notes=TROLL_POWERS,
-        secrets=paragraphs(
-            "Most trolls who know of her are afraid of her. Many say she is the "
-            "true chief, never in Kollbjorn's hearing. She is about as evil as "
-            "trolls get. Her illusions split parties in the caves and show "
-            "Solrun walking into them (p. 108).",
-            "Printed abilities, described and not built: Curse 12, External "
-            "Soul, Potency 9, Shapeshift 12, Speak Jotunn 9, Svonhverfing 18 "
-            "(pp. 57-59 for those talents).",
-            "The book's Curse example (p. 59) has a troll-sorceress Skrukka "
-            "curse a man, Jorik, to marry her granddaughter, with Curse 8, Speak "
-            "Jotunn 7 and Potency 6 against the 12, 9 and 9 of her block here.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Skrukka, the true chief",
+                "Most trolls who know of her are afraid of her. Many say she is "
+                "the true chief, never in Kollbjorn's hearing. She is about as "
+                "evil as trolls get.",
+            ),
+            titled(
+                "Skrukka's illusions",
+                "Her illusions split parties in the caves and show Solrun "
+                "walking into them (p. 108).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Printed abilities, described and not built: Curse 12, "
+                    "External Soul, Potency 9, Shapeshift 12, Speak Jotunn 9, "
+                    "Svonhverfing 18 (pp. 57-59 for those talents).",
+                    "The book's Curse example (p. 59) has a troll-sorceress "
+                    "Skrukka curse a man, Jorik, to marry her granddaughter, "
+                    "with Curse 8, Speak Jotunn 7 and Potency 6 against the 12, "
+                    "9 and 9 of her block here.",
+                    CORPUS_FORM,
+                ),
+            ),
+        ],
     )
     b.faction(
         "Trolls of the Western Quarter",
@@ -891,9 +1268,17 @@ def _feast_of_thanks(b: Builder) -> None:
         "(p. 125), who steal much-needed livestock (p. 107).",
         ruler="Kollbjorn",
         place=caves,
-        secrets="Led by Kollbjorn, with his mother Skrukka and the henchmen Gapi "
-        "and Gljufra-Geir. Trolls' law forbids stealing from or killing a "
-        "relative (p. 108).",
+        secrets=[
+            titled(
+                "Who leads the trolls",
+                "Led by Kollbjorn, with his mother Skrukka and the henchmen Gapi "
+                "and Gljufra-Geir.",
+            ),
+            titled(
+                "Trolls' law",
+                "Trolls' law forbids stealing from or killing a relative (p. 108).",
+            ),
+        ],
     )
     b.creature(
         "Drit",
@@ -918,13 +1303,21 @@ def _feast_of_thanks(b: Builder) -> None:
         vis=[BodyVis(5, "Corpus", "in her body (p. 30)")],
         appearance="Plain to men, ugly to trolls. Her name means excrement.",
         notes=TROLL_POWERS,
-        secrets=paragraphs(
-            "Kollbjorn's daughter, for whom no troll husband can be found. She "
-            "has a normal troll's statistics (p. 30) with Presence -1, and may "
-            "become a player character if the storyguide agrees (p. 108). A "
-            "Rock has no Defense (n/a), shown as 0.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Drit's want of a husband",
+                "Kollbjorn's daughter, for whom no troll husband can be found.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "She has a normal troll's statistics (p. 30) with Presence "
+                    "-1, and may become a player character if the storyguide "
+                    "agrees (p. 108). A Rock has no Defense (n/a), shown as 0.",
+                    CORPUS_FORM,
+                ),
+            ),
+        ],
     )
     _scottish_giants(b)
     _bards_kin(b, cave)
@@ -938,12 +1331,26 @@ def _feast_of_thanks(b: Builder) -> None:
             "feast in thanks for appeasing Pan Caudarax, and sets them among "
             "Iceland's supernatural powers (pp. 107-112). Best where the "
             "covenant already has trouble with trolls.",
-            secrets="Bard believes Iceland's guardians are under attack. The "
-            "first was Pan Caudarax; the second is Vindsvall, now found shot; "
-            "the third has been blunted by the Dominion; the fourth is himself "
-            "(p. 111). He makes no claim to be more than a man who pays his "
-            "debts, though Int + Area Lore 8+ ties his name to the spirit "
-            "locals thank when disaster passes.",
+            secrets=[
+                titled(
+                    "Bard's fear for the guardians",
+                    "Bard believes Iceland's guardians are under attack. The "
+                    "first was Pan Caudarax; the second is Vindsvall, now found "
+                    "shot; the third has been blunted by the Dominion; the "
+                    "fourth is himself (p. 111).",
+                ),
+                titled(
+                    "Who Bard is",
+                    "Bard makes no claim to be more than a man who pays his "
+                    "debts, though his name is tied to the spirit locals thank "
+                    "when disaster passes.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Int + Area Lore 8+ ties his name to the spirit locals thank "
+                    "when disaster passes.",
+                ),
+            ],
             stages=[
                 S(
                     "The invitation",
@@ -1064,16 +1471,32 @@ def _feast_of_thanks(b: Builder) -> None:
             antagonist="Kollbjorn and Skrukka",
             summary="Story seed (p. 108): Kollbjorn's price for the trespasser's "
             "life is marriage to his daughter Drit.",
-            secrets="Skrukka lays Curses of Lost Love and Short Attention Span "
-            "on the groom, so he will come to the wedding to be rid of them. "
-            "The feast is frightening: horse and human flesh, violent games, a "
-            "rock-catching game for the humans. Skrukka performs the rite and "
-            "the trolls drink themselves senseless, meaning to eat the guests "
-            "but not the groom; Solrun comes by night to get them out. "
-            "Kollbjorn's clan gives chase until several trolls are dead. A "
-            "troll-chief for a father-in-law may in time bring peace between "
-            "covenant and trolls, since their law protects kin, though Skrukka "
-            "will likely oppose it.",
+            secrets=[
+                titled(
+                    "Skrukka's curses on the groom",
+                    "Skrukka lays curses on the groom, so he will come to the "
+                    "wedding to be rid of them.",
+                ),
+                titled(
+                    "The troll wedding",
+                    "The feast is frightening: horse and human flesh, violent "
+                    "games, a rock-catching game for the humans. Skrukka performs "
+                    "the rite and the trolls drink themselves senseless, meaning "
+                    "to eat the guests but not the groom; Solrun comes by night to "
+                    "get them out. Kollbjorn's clan gives chase until several "
+                    "trolls are dead.",
+                ),
+                titled(
+                    "A troll-chief for a father-in-law",
+                    "A troll-chief for a father-in-law may in time bring peace "
+                    "between covenant and trolls, since their law protects kin, "
+                    "though Skrukka will likely oppose it.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Skrukka's curses are Lost Love and Short Attention Span.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1082,9 +1505,14 @@ def _feast_of_thanks(b: Builder) -> None:
             antagonist="Unknown",
             summary="Story seed (p. 112): is anything truly hunting Iceland's "
             "guardians?",
-            secrets="The book leaves it deliberately open whether a systematic "
-            "threat exists: Einar Gamlisson may work alone, or someone unknown "
-            "may be using him.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "The book leaves it deliberately open whether a systematic "
+                    "threat exists: Einar Gamlisson may work alone, or someone "
+                    "unknown may be using him.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1095,12 +1523,21 @@ def _feast_of_thanks(b: Builder) -> None:
             summary="Story seed (p. 112): Bard, fearing a supernatural attack, "
             "perhaps by Damhan-Allaidh himself, asks the characters to 'rescue' "
             "Iceland's third guardian from the Dominion's grip.",
-            secrets="The Bishop of Skalholt owns the bull and will not part with "
-            "it, for its many fine calves have made him prosperous, so a raid "
-            "may be needed. Let loose on pasture free of the Dominion it casts "
-            "off its tameness and over a matter of weeks, faster in a magical "
-            "aura, grows dramatically; it lets no human near, and takes up "
-            "Iceland's defence again.",
+            secrets=[
+                titled(
+                    "The bishop's bull",
+                    "The Bishop of Skalholt owns the Gray Bull and will not part "
+                    "with it, for its many fine calves have made him prosperous, "
+                    "so a raid may be needed.",
+                ),
+                titled(
+                    "The bull set free",
+                    "Let loose on pasture free of the Dominion the Gray Bull "
+                    "casts off its tameness and over a matter of weeks, faster in "
+                    "a magical aura, grows dramatically; it lets no human near, "
+                    "and takes up Iceland's defence again.",
+                ),
+            ],
         )
     )
 
@@ -1113,24 +1550,49 @@ def _scottish_giants(b: Builder) -> None:
         "and barely tolerated by its giants, who think them barbarians.",
         ruler="Geamhradh Grian",
         wants="To leave Iceland.",
-        secrets=paragraphs(
-            "Five appear at Bard's feast: Suil Aon (sool-oon, One-Eye), "
-            "Creagcas (kreg kos, Rock-Foot), Beinn (beyn, Mountain), Sruth Dubh "
-            "(sroo-doo, Black Tide) and their leader Geamhradh Grian (gev-ra "
-            "grean, Winter Sun). They speak Pictish, Jotunn and Gaelic. Use the "
-            "giants' statistics of p. 31; none has magical abilities.",
-            "Damhan-Allaidh laid a geas on the clan after Victor took the Carnac "
-            "gateway, seeking another road to the temple: they cannot leave "
-            "Iceland until they have visited the Temple of Thoth in the "
-            "Kerlingarfjoll valley. They have found the valley but not the way "
-            "in. Bard wants them gone and knows nothing of it (p. 111).",
-            "Telling them frees Iceland of them but may hand Damhan-Allaidh "
-            "vital secrets. One answer: set the Kerlingarfjoll gatestone outside "
-            "the covenant and walk them through briefly, so the geas is met and "
-            "they still cannot find the way in. Freed, they go home and refuse "
-            "him further service; otherwise he forces them to one last service "
-            "(pp. 111, 125).",
-        ),
+        secrets=[
+            titled(
+                "The giants at Bard's feast",
+                "Five appear at Bard's feast: Suil Aon (sool-oon, One-Eye), "
+                "Creagcas (kreg kos, Rock-Foot), Beinn (beyn, Mountain), Sruth "
+                "Dubh (sroo-doo, Black Tide) and their leader Geamhradh Grian "
+                "(gev-ra grean, Winter Sun). They speak Pictish, Jotunn and "
+                "Gaelic.",
+            ),
+            titled(
+                "The geas on the Scottish giants",
+                "Damhan-Allaidh laid a geas on the clan after Victor took the "
+                "Carnac gateway, seeking another road to the temple: they cannot "
+                "leave Iceland until they have visited the Temple of Thoth in the "
+                "Kerlingarfjoll valley. They have found the valley but not the "
+                "way in.",
+            ),
+            titled(
+                "What Bard knows of the Scottish giants",
+                "Bard wants the Scottish giants gone and knows nothing of the "
+                "geas (p. 111).",
+            ),
+            titled(
+                "Showing the giants the way",
+                "Telling the Scottish giants the way in frees Iceland of them but "
+                "may hand Damhan-Allaidh vital secrets.",
+            ),
+            titled(
+                "If the geas is met",
+                "Freed, the Scottish giants go home and refuse Damhan-Allaidh "
+                "further service; otherwise he forces them to one last service "
+                "(pp. 111, 125).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Use the giants' statistics of p. 31; none has magical abilities.",
+                    "One answer: set the Kerlingarfjoll gatestone outside the "
+                    "covenant and walk them through briefly, so the geas is met "
+                    "and they still cannot find the way in.",
+                ),
+            ),
+        ],
     )
 
 
@@ -1140,11 +1602,28 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         faction="Family",
         summary="The nine golden-haired daughters of Bard Snaefellsass, all healers.",
         place=cave,
-        secrets="Giantesses. By his first wife: Helga, Thordis and Solrun. By "
-        "his second: Ragnhild, Flaumgerd, Thora, Thorkild, Geirrid and Mjoll. "
-        "Some, Helga among them, have great magic, others less; all have the "
-        "Jotunn Affinity with Frost and the Healer talent. A child of one and "
-        "a human is likely to be a trollson (p. 112).",
+        secrets=[
+            titled(
+                "Bard's nine daughters",
+                "Giantesses. By his first wife: Helga, Thordis and Solrun. By "
+                "his second: Ragnhild, Flaumgerd, Thora, Thorkild, Geirrid and "
+                "Mjoll.",
+            ),
+            titled(
+                "The daughters' magic",
+                "Some of Bard's daughters, Helga among them, have great magic, "
+                "others less.",
+            ),
+            titled(
+                "A child of Bard's daughters",
+                "A child of one of Bard's daughters and a human is likely to be a "
+                "trollson (p. 112).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "All have the Jotunn Affinity with Frost and the Healer talent.",
+            ),
+        ],
     )
     _sketch(
         b,
@@ -1153,11 +1632,22 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         type="mythic companion",
         summary="A strikingly lovely woman with long golden hair, pale skin and "
         "very blue eyes, charming, guileless and full of stories.",
-        secrets="Bard's daughter, sent to bring the characters to his feast; "
-        "she calls herself his servant. She treats every admirer alike. She "
-        "is a giantess with the Jotunn Affinity with Frost and the Healer "
-        "talent, and turns up at need to rescue guests from the trolls (pp. "
-        "107-108, 112).",
+        secrets=[
+            titled(
+                "Solrun's errand",
+                "Bard's daughter, sent to bring the characters to his feast; she "
+                "calls herself his servant. She treats every admirer alike.",
+            ),
+            titled(
+                "Solrun the giantess",
+                "She is a giantess, and turns up at need to rescue guests from "
+                "the trolls (pp. 107-108, 112).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "She has the Jotunn Affinity with Frost and the Healer talent.",
+            ),
+        ],
     )
     _sketch(
         b,
@@ -1165,8 +1655,14 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         age=None,
         type="mythic companion",
         summary="A golden-haired daughter of Bard Snaefellsass.",
-        secrets="Paired with the party's leader at the feast, where she proposes "
-        "the toast to the guests (p. 109). See Bard's Daughters.",
+        secrets=[
+            titled(
+                "Thordis at the feast",
+                "Paired with the party's leader at the feast, where she proposes "
+                "the toast to the guests (p. 109).",
+            ),
+            titled("Storyguide Notes", "See Bard's Daughters."),
+        ],
     )
     _sketch(
         b,
@@ -1175,10 +1671,19 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         type="mythic companion",
         summary="The eldest of Bard Snaefellsass's nine daughters, who does not "
         "live with him.",
-        secrets="She has substantial magic, and quarrels constantly with a father "
-        "much like her. Red-Cloak, Thorkel's eldest son, is drawn to her and "
-        "cannot admit it, so it comes out as rivalry and spite: he once set "
-        "her adrift on an ice floe in a storm (pp. 112-113).",
+        secrets=[
+            titled(
+                "Helga and her father",
+                "She has substantial magic, and quarrels constantly with a "
+                "father much like her.",
+            ),
+            titled(
+                "Red-Cloak and Helga",
+                "Red-Cloak, Thorkel's eldest son, is drawn to her and cannot "
+                "admit it, so it comes out as rivalry and spite: he once set her "
+                "adrift on an ice floe in a storm (pp. 112-113).",
+            ),
+        ],
     )
     b.creature(
         "Thorkel Red-Cloak's Son",
@@ -1199,17 +1704,29 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         appearance="Forty feet tall, a twisted parody of a face under a mop of "
         "straight black hair, with a pronounced limp.",
         notes="Bard's half-brother and leader of the clan of Hrym.",
-        secrets=paragraphs(
-            "Their mother Mjoll married the giant Red-Cloak after the giant-king "
-            "Hardverk killed her first husband. Bard broke Thorkel's leg in a "
-            "duel. Violent, unprincipled and cunning, he has a bad name as a "
-            "troublemaker; humans annoy him, no more (p. 113).",
-            "Printed abilities, described and not built: External Soul, Jotunn "
-            "Affinity with Frost (blizzards) 20, Curse (bad luck) 10, Transform "
-            "(into rocks) 15, Speak Jotunn (Clan of Hrym) 8, Potency 8. The book "
-            "gives him no combat table.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Thorkel's parentage",
+                "Thorkel and Bard's mother Mjoll married the giant Red-Cloak "
+                "after the giant-king Hardverk killed her first husband.",
+            ),
+            titled("Thorkel's limp", "Bard broke Thorkel's leg in a duel."),
+            titled(
+                "Thorkel's bad name",
+                "Violent, unprincipled and cunning, he has a bad name as a "
+                "troublemaker; humans annoy him, no more (p. 113).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Printed abilities, described and not built: External Soul, "
+                    "Jotunn Affinity with Frost (blizzards) 20, Curse (bad luck) "
+                    "10, Transform (into rocks) 15, Speak Jotunn (Clan of Hrym) "
+                    "8, Potency 8. The book gives him no combat table.",
+                    CORPUS_FORM,
+                ),
+            ),
+        ],
     )
     b.faction(
         "Thorkel's Sons",
@@ -1218,9 +1735,18 @@ def _bards_kin(b: Builder, cave: Neighbour) -> None:
         "him: Red-Cloak, Solvi, Svadi, Ox-Thorir, Asvald and Skeggi.",
         place=cave,
         ruler="Thorkel Red-Cloak's Son",
-        secrets="All share his temper, though Ox-Thorir finds humans intriguing "
-        "and wants to know more. Red-Cloak, the eldest, torments Helga, Bard's "
-        "daughter, because he is drawn to her (p. 113).",
+        secrets=[
+            titled(
+                "The sons' temper",
+                "All share Thorkel's temper, though Ox-Thorir finds humans "
+                "intriguing and wants to know more.",
+            ),
+            titled(
+                "Red-Cloak and Helga",
+                "Red-Cloak, the eldest, torments Helga, Bard's daughter, because "
+                "he is drawn to her (p. 113).",
+            ),
+        ],
     )
 
 
@@ -1251,40 +1777,60 @@ def _glittering_plains(b: Builder) -> None:
                 ),
             )
         ],
-        secrets=paragraphs(
-            "The road (pp. 115-116): the glacier has a Magic aura of +3 and the "
-            "shaft +4, which cannot be found at other times. A steep tunnel runs "
-            "east by southeast for a day and a half to a fork. The eastern way "
-            "goes on two days, then rises to a dead end a day later, by which "
-            "time the entrance has sealed. The western way goes a day and meets "
-            "a hole in the wall jetting hot, drinkable water, from a fast river "
-            "beyond a few feet of granite; the aura is +5 here, and the stream "
-            "shows the road. Then two days southwest, level, past side tunnels "
-            "that all fail, and a near-vertical crack of a stair for two and a "
-            "half days, the stream a torrent, into a cavern with a barely "
-            "visible roof and an aura of +8.",
-            "Other tunnels lead out, none known to go anywhere, and digging by "
-            "spell is as haphazard.",
-            "Gudmund's realm has plains of golden barley and lush growth that "
-            "glow softly. The arrival bank is about 200 yards wide under the "
-            "cavern wall; the river is nearly 300 yards across and far too fast "
-            "to swim, though it has cooled. Those swept off and able to stay "
-            "afloat (Str + Swim) reach Geirrod's bank. A day downstream a bridge "
-            "of what seems solid gold crosses it, or magic and ropes will serve. "
-            "On the far side the barley stands eight feet tall, goats match "
-            "cows, and cows match elephants (p. 116).",
-            "Small families of twelve-foot giants herd and reap along the river "
-            "and feed the city far to the southeast, where about three hundred "
-            "families live in luxury under Gudmund. Most can shapeshift and have "
-            "no other magic (p. 116).",
-            "Gudmund's wonders (p. 117): a many-coloured waterfall and a cave of "
-            "perfect echoes; a hall being built of gold studded with gems, from "
-            "nuggets the river leaves on its banks; the hunt for immense boar in "
-            "thick forest; a spring on a rocky hillock that tastes of the finest "
-            "honey-mead, a draft of it holding 3 pawns of Creo vis and granting "
-            "the Free Expression virtue for a day; the village of humans; and a "
-            "day-long feast with the court's illusions.",
-        ),
+        secrets=[
+            titled(
+                "The road to Glasvellir",
+                "The shaft cannot be found at other times. A steep tunnel runs "
+                "east by southeast for a day and a half to a fork. The eastern "
+                "way goes on two days, then rises to a dead end a day later, by "
+                "which time the entrance has sealed. The western way goes a day "
+                "and meets a hole in the wall jetting hot, drinkable water, from "
+                "a fast river beyond a few feet of granite; the stream shows the "
+                "road. Then two days southwest, level, past side tunnels that all "
+                "fail, and a near-vertical crack of a stair for two and a half "
+                "days, the stream a torrent, into a cavern with a barely visible "
+                "roof (pp. 115-116).",
+            ),
+            titled(
+                "The other tunnels",
+                "Other tunnels lead out of the cavern below Snaefell, none known "
+                "to go anywhere, and digging by spell is as haphazard.",
+            ),
+            titled(
+                "Gudmund's realm",
+                "Gudmund's realm has plains of golden barley and lush growth that "
+                "glow softly. The arrival bank is about 200 yards wide under the "
+                "cavern wall; the river is nearly 300 yards across and far too fast "
+                "to swim, though it has cooled. Those swept off and able to stay "
+                "afloat (Str + Swim) reach Geirrod's bank. A day downstream a bridge "
+                "of what seems solid gold crosses it, or magic and ropes will serve. "
+                "On the far side the barley stands eight feet tall, goats match "
+                "cows, and cows match elephants (p. 116).",
+            ),
+            titled(
+                "Gudmund's giants",
+                "Small families of twelve-foot giants herd and reap along the "
+                "river and feed the city far to the southeast, where about three "
+                "hundred families live in luxury under Gudmund. Most can "
+                "shapeshift and have no other magic (p. 116).",
+            ),
+            titled(
+                "Gudmund's wonders",
+                "Gudmund's wonders (p. 117): a many-coloured waterfall and a cave "
+                "of perfect echoes; a hall being built of gold studded with gems, "
+                "from nuggets the river leaves on its banks; the hunt for immense "
+                "boar in thick forest; a spring on a rocky hillock that tastes of "
+                "the finest honey-mead, a draft of it holding 3 pawns of Creo vis "
+                "and granting the Free Expression virtue for a day; the village "
+                "of humans; and a day-long feast with the court's illusions.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Auras on the road (pp. 115-116): the glacier has a Magic aura "
+                "of +3 and the shaft +4; the aura is +5 at the hole jetting hot "
+                "water, and +8 in the cavern.",
+            ),
+        ],
         aura=8,
     )
     b.faction(
@@ -1293,11 +1839,24 @@ def _glittering_plains(b: Builder) -> None:
         summary="A village descended from people who strayed into Glasvellir "
         "centuries ago.",
         place=plains,
-        secrets="They live in peace with its giants, speak West Norse and keep "
-        "the heathen Norse gods. Einar Gamlisson settled here and started a new "
-        "family. Geirrod's people raided the village lately and took several "
-        "children as slaves or meat, Einar's among them; questions are referred "
-        "to Gudmund (p. 117).",
+        secrets=[
+            titled(
+                "The villagers' ways",
+                "They live in peace with Glasvellir's giants, speak West Norse "
+                "and keep the heathen Norse gods.",
+            ),
+            titled(
+                "Einar's new family",
+                "Einar Gamlisson settled in the village of Glasvellir and "
+                "started a new family.",
+            ),
+            titled(
+                "The raid on the village",
+                "Geirrod's people raided the village lately and took several "
+                "children as slaves or meat, Einar's among them; questions are "
+                "referred to Gudmund (p. 117).",
+            ),
+        ],
     )
     b.faction(
         "Gudmund's People",
@@ -1305,12 +1864,24 @@ def _glittering_plains(b: Builder) -> None:
         summary="The fair folk of Glasvellir, more courtiers than warriors.",
         ruler="Gudmund",
         place=plains,
-        secrets="Size +3, bigger than trolls, far smaller than giants proper. "
-        "They usually have no magic but Shapechange in a handful of forms. "
-        "About one in twenty is magically powerful, with the full range of "
-        "trollsynir abilities and often Jotunn Affinities; these are usually "
-        "his men-at-arms. The court has experts in illusion. His twelve sons "
-        "attend him, all in red like their father (pp. 116, 119).",
+        secrets=[
+            titled(
+                "The powers of Gudmund's folk",
+                "They usually have no magic but Shapechange in a handful of "
+                "forms. About one in twenty is magically powerful, with the full "
+                "range of trollsynir abilities and often Jotunn Affinities; these "
+                "are usually Gudmund's men-at-arms.",
+            ),
+            titled(
+                "Gudmund's court",
+                "The court has experts in illusion. Gudmund's twelve sons attend "
+                "him, all in red like their father (pp. 116, 119).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Size +3, bigger than trolls, far smaller than giants proper.",
+            ),
+        ],
     )
     b.creature(
         "Gudmund of Glasvellir",
@@ -1325,41 +1896,70 @@ def _glittering_plains(b: Builder) -> None:
         "and blue-eyed, in white with a rich scarlet cloak.",
         notes="King of the Glittering Plains, a gracious host in the best Norse "
         "manner, generous, forgiving and eager to supply his guests' needs.",
-        secrets=paragraphs(
-            "An extremely ancient giant who calls himself the son of Mimir, "
-            "which would make him cousin to Odin (Mimir's sister Bestla being "
-            "Odin's mother). The claim cannot be tested. He has a wide range of "
-            "powers, but does not own the regio or control its bounds. The book "
-            "says no other characteristics should be needed (p. 118).",
-            "He may be magical or faerie: lineage and manners suggest fay, yet "
-            "like landvaettir he is at home in a magic realm. The book leaves "
-            "it deliberately open; Magic here is the printed realm of the regio, "
-            "not a ruling.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Gudmund's lineage",
+                "An extremely ancient giant who calls himself the son of Mimir, "
+                "which would make him cousin to Odin (Mimir's sister Bestla being "
+                "Odin's mother). The claim cannot be tested.",
+            ),
+            titled(
+                "Gudmund and the regio",
+                "He has a wide range of powers, but does not own the regio or "
+                "control its bounds.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book says no other characteristics should be needed (p. 118).",
+                    "He may be magical or faerie: lineage and manners suggest "
+                    "fay, yet like landvaettir he is at home in a magic realm. "
+                    "The book leaves it deliberately open; Magic here is the "
+                    "printed realm of the regio, not a ruling.",
+                    CORPUS_FORM,
+                ),
+            ),
+        ],
     )
     geirrodargard = _site(
         b,
         "Geirrodargard",
         summary="The land beyond the icy Hemra River on the north of the "
         "Glittering Plains.",
-        secrets=paragraphs(
-            "The sky seems dark red, thin mist lies on black soil and blasted "
-            "plants, and packs of immense dogs roam so that almost nothing "
-            "lives outside the city. There is one ford over the Hemra, about "
-            "five miles from the city (p. 117).",
-            "The obsidian-walled city is over five miles across, its walls three "
-            "hundred feet high. Over two thousand trolls live there, with about "
-            "five hundred human slaves, in ruin and decay under smoke that cuts "
-            "sight to under fifteen paces. Visitors must trick their way in (p. "
-            "118).",
-            "One thing stands whole, hidden at the centre: a ziggurat over five "
-            "hundred feet high, seemingly cut from a single block of obsidian, "
-            "three golden winged sphinxes guarding its triple stairs, its one "
-            "chamber at the summit behind an iron door. Its residents never go "
-            "near it and have forgotten what it was (pp. 118, 130).",
-            "The Hemra ford is where Einar stands with the Norns (p. 118).",
-        ),
+        secrets=[
+            titled(
+                "The red land",
+                "The sky of Geirrodargard seems dark red, thin mist lies on black "
+                "soil and blasted plants, and packs of immense dogs roam so that "
+                "almost nothing lives outside the city.",
+            ),
+            titled(
+                "The Hemra ford",
+                "There is one ford over the Hemra, about five miles from "
+                "Geirrod's city (p. 117).",
+            ),
+            titled(
+                "The obsidian city",
+                "The obsidian-walled city is over five miles across, its walls "
+                "three hundred feet high. Over two thousand trolls live there, "
+                "with about five hundred human slaves, in ruin and decay under "
+                "smoke that cuts sight to under fifteen paces. Visitors must "
+                "trick their way in (p. 118).",
+            ),
+            titled(
+                "The ziggurat",
+                "One thing stands whole, hidden at the centre of Geirrod's city: "
+                "a ziggurat over five hundred feet high, seemingly cut from a "
+                "single block of obsidian, three golden winged sphinxes guarding "
+                "its triple stairs, its one chamber at the summit behind an iron "
+                "door. Its residents never go near it and have forgotten what it "
+                "was (pp. 118, 130).",
+            ),
+            titled(
+                "Einar at the ford",
+                "The Hemra ford is where Einar stands with the Norns (p. 118).",
+            ),
+        ],
         inside=plains,
         level=1,
     )
@@ -1374,15 +1974,27 @@ def _glittering_plains(b: Builder) -> None:
         confidence=CONFIDENCE,
         appearance="A six-headed troll.",
         notes="King of Geirrodargard, Gudmund's brother and his enemy.",
-        secrets=paragraphs(
-            "Not as strong as his brother, but formidable. He has a special "
-            "power over fire: he handles molten metal bare-handed and flings it "
-            "in combat. He has an External Soul, so unless the magi have made a "
-            "Setna's Blade for him he survives a battle (pp. 118, 127-128). He "
-            "knows where Damhan-Allaidh's soulstone is. No other statistics are "
-            "printed.",
-            CORPUS_FORM,
-        ),
+        secrets=[
+            titled(
+                "Geirrod's power over fire",
+                "Not as strong as his brother, but formidable. He has a special "
+                "power over fire: he handles molten metal bare-handed and flings "
+                "it in combat.",
+            ),
+            titled(
+                "Geirrod's External Soul",
+                "He has an External Soul, so unless the magi have made a Setna's "
+                "Blade for him he survives a battle (pp. 118, 127-128).",
+            ),
+            titled(
+                "What Geirrod knows",
+                "He knows where Damhan-Allaidh's soulstone is.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs("No other statistics are printed.", CORPUS_FORM),
+            ),
+        ],
     )
     _sketch(
         b,
@@ -1390,7 +2002,12 @@ def _glittering_plains(b: Builder) -> None:
         age=None,
         type="mythic companion",
         summary="Geirrod's lieutenant, a troll.",
-        secrets="He rules Geirrod's people with an iron fist (p. 118).",
+        secrets=[
+            titled(
+                "Agdi's rule",
+                "He rules Geirrod's people with an iron fist (p. 118).",
+            ),
+        ],
     )
     b.faction(
         "Geirrod's People",
@@ -1399,10 +2016,22 @@ def _glittering_plains(b: Builder) -> None:
         "twisted and ugly, as mean and petty as any troll.",
         ruler="Geirrod",
         place=geirrodargard,
-        secrets="Physically identical to trolls, kin to those the characters "
-        "know. Many have a Jotunn Affinity with Fire and many of the females the "
-        "Gift of the Magic Arts (p. 119). Their human slaves, about five "
-        "hundred, have been hearing the Aesir religion from Einar (p. 127).",
+        secrets=[
+            titled(
+                "Kin of the trolls",
+                "Physically identical to trolls, kin to those the characters know.",
+            ),
+            titled(
+                "The slaves and the Aesir faith",
+                "The human slaves of Geirrod's people, about five hundred, have "
+                "been hearing the Aesir religion from Einar (p. 127).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Many have a Jotunn Affinity with Fire and many of the females "
+                "the Gift of the Magic Arts (p. 119).",
+            ),
+        ],
     )
     b.faction(
         "The Norn Landvaettir",
@@ -1411,9 +2040,22 @@ def _glittering_plains(b: Builder) -> None:
         "shadowy shapes about a lady.",
         place=plains,
         realm="Magic",
-        secrets="Einar stands high among them, and their lady will help him. "
-        "They can pass the characters off as human slaves and hide them from "
-        "Second Sight. Attacking Einar enrages the lady and her court (p. 118).",
+        secrets=[
+            titled(
+                "The Norns and Einar",
+                "Einar stands high among the Norn landvaettir, and their lady "
+                "will help him.",
+            ),
+            titled(
+                "The Norns' disguise",
+                "The Norn landvaettir can pass the characters off as human slaves "
+                "and hide them from Second Sight.",
+            ),
+            titled(
+                "Attacking Einar",
+                "Attacking Einar enrages the Norns' lady and her court (p. 118).",
+            ),
+        ],
     )
     _sketch(
         b,
@@ -1421,19 +2063,34 @@ def _glittering_plains(b: Builder) -> None:
         age=None,
         summary="A peddler of household goods who carries the Snaefellsnes "
         "gossip from farm to farm.",
-        secrets="He brings word of the dragon rumour and of Blund's tall "
-        "machine, and nearly took a beating for asking about it (p. 114).",
+        secrets=[
+            titled(
+                "Kar's news",
+                "He brings word of the dragon rumour and of Blund's tall "
+                "machine, and nearly took a beating for asking about it (p. "
+                "114).",
+            ),
+        ],
     )
     _sketch(
         b,
         "Thorodd Gamlisson",
         age=None,
         summary="A farmer on the north side of Snaefell who keeps his own counsel.",
-        secrets="Einar's brother. He says nothing of Einar until threatened, by "
-        "force or magic. Then he says Einar has gone back to the Glittering "
-        "Plains, beyond reach, and under more pressure that the way in lies in "
-        "Snaefell's central crater. He knows nothing but the reasons for the "
-        "vendetta (p. 115).",
+        secrets=[
+            titled(
+                "Thorodd's silence",
+                "Einar's brother. He says nothing of Einar until threatened, by "
+                "force or magic.",
+            ),
+            titled(
+                "What Thorodd tells",
+                "Threatened, Thorodd says Einar has gone back to the Glittering "
+                "Plains, beyond reach, and under more pressure that the way in "
+                "lies in Snaefell's central crater. He knows nothing but the "
+                "reasons for the vendetta (p. 115).",
+            ),
+        ],
     )
     dormant(
         b.threat(
@@ -1443,17 +2100,30 @@ def _glittering_plains(b: Builder) -> None:
             summary="Two years before the dragon eggs hatch, a rumour of a horde "
             "of dragons sets the Snaefellsnes farmers against the nest, and the "
             "man behind it can at last be followed (pp. 114-119).",
-            secrets=paragraphs(
-                "The galdraman Einar Gamlisson stirs up the farmers and is gone "
-                "before the magi come. Pan Caudarax killed his first wife and "
-                "their two children, and he has killed at least one of the "
-                "dragon's. His honour is partly satisfied, so terms are possible: "
-                "a settlement at the hreppur with compensation each way, even "
-                "each fostering the other's child (p. 118).",
-                "What matters to him now is his living children, whom Geirrod's "
-                "people took. Without the characters' help he dies trying to "
-                "save them (p. 119).",
-            ),
+            secrets=[
+                titled(
+                    "Who stirs the farmers",
+                    "The galdraman Einar Gamlisson stirs up the farmers and is "
+                    "gone before the magi come.",
+                ),
+                titled(
+                    "Einar's vendetta",
+                    "Pan Caudarax killed Einar's first wife and their two "
+                    "children, and he has killed at least one of the dragon's.",
+                ),
+                titled(
+                    "Terms with Einar",
+                    "Einar's honour is partly satisfied, so terms are possible: a "
+                    "settlement at the hreppur with compensation each way, even "
+                    "each fostering the other's child (p. 118).",
+                ),
+                titled(
+                    "Einar's living children",
+                    "What matters to Einar now is his living children, whom "
+                    "Geirrod's people took. Without the characters' help he dies "
+                    "trying to save them (p. 119).",
+                ),
+            ],
             stages=[
                 S(
                     "A plot is hatching",
@@ -1552,29 +2222,45 @@ def _brighdes_gauntlet(b: Builder) -> None:
             "Victor leaves her body and she is set down alone in a remote part "
             "of Flanders for her Gauntlet, to cast out the demon within her (pp. "
             "120-124).",
-            secrets=paragraphs(
-                "Victor's plan. Demonic deceit defeats magic, but demons can be "
-                "fooled, and only Hetep knows where Damhan-Allaidh lies, whom "
-                "Victor means to see destroyed. For one season a year he has "
-                "taught her the Arts, and for the other three how to fight the "
-                "demon he locked in her. On leaving her he goes back to his "
-                "own body, still preserved in his Scartaris lab behind a ward "
-                "that falls only at his death. Brighde lets Hetep seem to win; "
-                "the player magi follow to the lair; she Leaps home by a waiting "
-                "spell into the restored ward; Hetep is held in Victor's body, "
-                "and Victor destroys it, holding the spirit for the Thothian "
-                "Watchers (p. 84). That is his death and his choice, and it "
-                "frees Brighde.",
-                "Hetep's plan. He has learnt to break free of her and can block "
-                "the Leap. He bides his time; with Victor gone he means to take "
-                "another host, kill her and escape.",
-                "If Brighde is a player character whose player refuses, Hetep "
-                "escapes into one of the covenfolk and is pursued instead (p. "
-                "121).",
-                "The story should end with Damhan-Allaidh and Hetep escaping. If "
-                "Victor knew of Hetep's threat to the Magic Realm he would "
-                "destroy himself at once, but nobody knows of it yet (p. 122).",
-            ),
+            secrets=[
+                titled(
+                    "Brighde's training",
+                    "Demonic deceit defeats magic, but demons can be fooled, and "
+                    "only Hetep knows where Damhan-Allaidh lies, whom Victor "
+                    "means to see destroyed. For one season a year Victor has "
+                    "taught Brighde the Arts, and for the other three how to "
+                    "fight the demon he locked in her.",
+                ),
+                titled(
+                    "Victor's plan",
+                    "On leaving Brighde, Victor goes back to his own body, still "
+                    "preserved in his Scartaris lab behind a ward that falls "
+                    "only at his death. Brighde lets Hetep seem to win; the "
+                    "player magi follow to the lair; she Leaps home by a waiting "
+                    "spell into the restored ward; Hetep is held in Victor's "
+                    "body, and Victor destroys it, holding the spirit for the "
+                    "Thothian Watchers (p. 84). That is his death and his "
+                    "choice, and it frees Brighde.",
+                ),
+                titled(
+                    "Hetep's plan",
+                    "Hetep has learnt to break free of Brighde and can block the "
+                    "Leap. He bides his time; with Victor gone he means to take "
+                    "another host, kill her and escape.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "If Brighde is a player character whose player refuses, "
+                        "Hetep escapes into one of the covenfolk and is pursued "
+                        "instead (p. 121).",
+                        "The story should end with Damhan-Allaidh and Hetep "
+                        "escaping. If Victor knew of Hetep's threat to the Magic "
+                        "Realm he would destroy himself at once, but nobody "
+                        "knows of it yet (p. 122).",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Council meeting",
@@ -1650,23 +2336,34 @@ def _spider_through_mist(b: Builder) -> None:
             "Kerlingarfjoll valley and tries to pass the Obsidian Gateway; if he "
             "does, the sacred stelae are corrupted (pp. 125-126). Best about "
             "four years before the players can finish the Obsidian Gate ritual.",
-            secrets=paragraphs(
-                "His allies depend on the storyguide and on Feast of Thanks: "
-                "the Scottish giants are forced to serve unless their geas was "
-                "met, in which case they have gone home and refuse him. Side "
-                "stories may have the characters foil his search for allies.",
-                "Hetep knows a break in the ward, and a ritual like Tearing the "
-                "Mystic Veil (Wizard's Grimoire Revised) that opens a tear wide "
-                "enough for giants. It takes an hour to perform and ten minutes "
-                "to widen, with a huge disturbance on both levels.",
-                "If the stelae fall, corruption spreads to all magical writing "
-                "in the world, far slower than if Hetep did it directly, with "
-                "much variation. An average summa turns in as many years as the "
-                "experience points it holds (55 for level 10); a Tractatus or "
-                "Liber Quaestionum in years equal to its Quality; an average "
-                "Authority in over 365. Books written meanwhile are corrupt "
-                "from the start (p. 126).",
-            ),
+            secrets=[
+                titled(
+                    "Hetep's way through the ward",
+                    "Hetep knows a break in the ward, and a ritual like Tearing "
+                    "the Mystic Veil (Wizard's Grimoire Revised) that opens a "
+                    "tear wide enough for giants. It takes an hour to perform and "
+                    "ten minutes to widen, with a huge disturbance on both "
+                    "levels.",
+                ),
+                titled(
+                    "If the stelae fall",
+                    "If the stelae fall, corruption spreads to all magical "
+                    "writing in the world, far slower than if Hetep did it "
+                    "directly, with much variation. An average summa turns in as "
+                    "many years as the experience points it holds (55 for level "
+                    "10); a Tractatus or Liber Quaestionum in years equal to its "
+                    "Quality; an average Authority in over 365. Books written "
+                    "meanwhile are corrupt from the start (p. 126).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Damhan-Allaidh's allies depend on the storyguide and on "
+                    "Feast of Thanks: the Scottish giants are forced to serve "
+                    "unless their geas was met, in which case they have gone home "
+                    "and refuse him. Side stories may have the characters foil "
+                    "his search for allies.",
+                ),
+            ],
             stages=[
                 S(
                     "Foreshadowing",
@@ -1723,9 +2420,14 @@ def _spider_through_mist(b: Builder) -> None:
             antagonist="Damhan-Allaidh",
             summary="Story seed (p. 125): trolls on Snaefellsnes, the thickest "
             "concentration in Iceland, are being gathered under one leader.",
-            secrets="Needing allies, Damhan-Allaidh tries to unite the Western "
-            "Quarter's trolls, no easy task with so territorial and quarrelsome "
-            "a people, and the characters live among them.",
+            secrets=[
+                titled(
+                    "Who gathers the trolls",
+                    "Needing allies, Damhan-Allaidh tries to unite the Western "
+                    "Quarter's trolls, no easy task with so territorial and "
+                    "quarrelsome a people, and the characters live among them.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1734,11 +2436,20 @@ def _spider_through_mist(b: Builder) -> None:
             antagonist="Leiken",
             summary="Story seed (p. 125): old women ride the covenfolk through "
             "terrifying dreams, sapping their strength.",
-            secrets="The mara are evil landvaettir, witch-spirits, led by "
-            "Leiken, among the most powerful of the yarthkin (p. 33), who has "
-            "joined Damhan-Allaidh. After a few attacks Victor may be persuaded "
-            "to let the characters fight them on their own terms in his Morphean "
-            "Landscape. If he is dead, it is harder.",
+            secrets=[
+                titled(
+                    "Leiken and the mara",
+                    "The mara are evil landvaettir, witch-spirits, led by Leiken, "
+                    "among the most powerful of the yarthkin (p. 33), who has "
+                    "joined Damhan-Allaidh.",
+                ),
+                titled(
+                    "Fighting the mara in dreams",
+                    "After a few attacks Victor may be persuaded to let the "
+                    "characters fight the mara on their own terms in his Morphean "
+                    "Landscape. If he is dead, it is harder.",
+                ),
+            ],
         )
     )
 
@@ -1751,41 +2462,66 @@ def _into_the_gateway(b: Builder) -> None:
         b,
         "The Obsidian Temple",
         summary="Nothing is known of this place.",
-        secrets=paragraphs(
-            "Where Thoth hid the first magical writings, reached from the "
-            "summit chamber of the ziggurat in Geirrodargard or by the Obsidian "
-            "Gateway. It is neither in the mundane world nor a regio, but a cut-"
-            "off part of the Magic Realm with a +10 aura, in which magical "
-            "abilities may break out in small ways; how strange is the "
-            "storyguide's choice. There is no way on into the Realm: Setna "
-            "warns those who try, and beyond the walls is only the Twilight "
-            "Void, at the least an automatic temporary Twilight (p. 130).",
-            "Three golden sphinxes guard the entrance, then come seven gates: "
-            "iron, bronze, wood, ivory, ebony, silver and gold. Each opens by "
-            "ritual from cryptic instructions on it (pp. 130-132). The roll is "
-            "the best Intelligence plus the two best of Magic Theory or "
-            "equivalent, Occult Lore, Enigmatic Wisdom, Philosophiae and Artes "
-            "Liberales, among all who can really contribute, plus the highest "
-            "quality die anyone rolls; Mythic Intelligence adds 5 and Mythic "
-            "Feats do not apply. A failure spends the base time. Each full 3 "
-            "points above the difficulty halves the time.",
-            "Iron and Bronze, one week each, difficulty 18 and 21. Wood and "
-            "Ivory, one month, 24 and 27. Ebony and Silver, one season, 30 and "
-            "33. Gold, one year, 36. The doors cannot be damaged and are beyond "
-            "Hermetic magic (p. 132).",
-            "The Sanctum of the Stelae (p. 131): a black hemisphere 343 cubits "
-            "(about 150 paces) across. The twin of the Obsidian Gateway stands "
-            "at its centre, and before it a huge seated statue of Setna in "
-            "gneiss, an ibis for Thoth at the back of his head; his spirit "
-            "usually dwells in it. Around the wall stand seven emerald pillar "
-            "stelae, seven cubits (about 3 paces) high, their hieroglyphics "
-            "unknown. To a student Setna accepts they shift into his own tongue. "
-            "They allow Arcane Experimentation (WGRE pp. 83-87) with no vis, "
-            "lab or control rolls, the Research Lab Total at +10 for the aura; "
-            "or they serve as a Quality 10 Authority on any magical Art or "
-            "Knowledge. One student at a time, for no more than four seasons "
-            "each.",
-        ),
+        secrets=[
+            titled(
+                "What the Obsidian Temple is",
+                "Where Thoth hid the first magical writings, reached from the "
+                "summit chamber of the ziggurat in Geirrodargard or by the "
+                "Obsidian Gateway. It is neither in the mundane world nor a "
+                "regio, but a cut-off part of the Magic Realm, in which magical "
+                "abilities may break out in small ways.",
+            ),
+            titled(
+                "Beyond the temple walls",
+                "There is no way on from the Obsidian Temple into the Realm: "
+                "Setna warns those who try, and beyond the walls is only the "
+                "Twilight Void, at the least an automatic temporary Twilight (p. "
+                "130).",
+            ),
+            titled(
+                "The seven gates",
+                "Three golden sphinxes guard the entrance, then come seven gates: "
+                "iron, bronze, wood, ivory, ebony, silver and gold. Each opens by "
+                "ritual from cryptic instructions on it (pp. 130-132).",
+            ),
+            titled(
+                "The unbreakable doors",
+                "The doors of the Obsidian Temple cannot be damaged and are "
+                "beyond Hermetic magic (p. 132).",
+            ),
+            titled(
+                "The Sanctum of the Stelae",
+                "A black hemisphere 343 cubits (about 150 paces) across (p. "
+                "131). The twin of the Obsidian Gateway stands at its centre, "
+                "and before it a huge seated statue of Setna in gneiss, an ibis "
+                "for Thoth at the back of his head; his spirit usually dwells in "
+                "it. Around the wall stand seven emerald pillar stelae, seven "
+                "cubits (about 3 paces) high, their hieroglyphics unknown. To a "
+                "student Setna accepts they shift into his own tongue.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "A +10 aura; how strange the magical outbreaks are is the "
+                    "storyguide's choice.",
+                    "Opening a gate: the roll is the best Intelligence plus the "
+                    "two best of Magic Theory or equivalent, Occult Lore, "
+                    "Enigmatic Wisdom, Philosophiae and Artes Liberales, among "
+                    "all who can really contribute, plus the highest quality die "
+                    "anyone rolls; Mythic Intelligence adds 5 and Mythic Feats do "
+                    "not apply. A failure spends the base time. Each full 3 "
+                    "points above the difficulty halves the time.",
+                    "Iron and Bronze, one week each, difficulty 18 and 21. Wood "
+                    "and Ivory, one month, 24 and 27. Ebony and Silver, one "
+                    "season, 30 and 33. Gold, one year, 36 (p. 132).",
+                    "The stelae allow Arcane Experimentation (WGRE pp. 83-87) "
+                    "with no vis, lab or control rolls, the Research Lab Total at "
+                    "+10 for the aura; or they serve as a Quality 10 Authority on "
+                    "any magical Art or Knowledge. One student at a time, for no "
+                    "more than four seasons each.",
+                ),
+            ),
+        ],
         aura=10,
     )
     b.creature(
@@ -1846,10 +2582,19 @@ def _into_the_gateway(b: Builder) -> None:
         "claws. Body levels OK 0, 0, 0, -1, -1, -3, -3, -5, -5, Destroyed. The "
         "book prints Dex 15 without a sign, and Might Form Terram is this "
         "pack's reading.",
-        secrets="The automata know of Setna's fate and of the corruption. Magi "
-        "who think to explain themselves are let by, and defended on their "
-        "way through the doors. Instead of harvesting vis they can be studied "
-        "for liquid fire and true intelligence in automata (The Mysteries).",
+        secrets=[
+            titled(
+                "What the sphinxes know",
+                "The automata know of Setna's fate and of the corruption. Magi "
+                "who think to explain themselves are let by, and defended on "
+                "their way through the doors.",
+            ),
+            titled(
+                "Studying the sphinxes",
+                "Instead of harvesting vis the golden sphinxes can be studied for "
+                "liquid fire and true intelligence in automata (The Mysteries).",
+            ),
+        ],
     )
     b.creature(
         "Setna",
@@ -1882,28 +2627,47 @@ def _into_the_gateway(b: Builder) -> None:
         appearance="Usually speaks through his gneiss statue, which he animates "
         "for first impressions, though he can leave it.",
         notes="Might Form Vim is this pack's reading.",
-        secrets=paragraphs(
-            "Might 120, reduced to 30 by long battle with Hetep's corruption.",
-            "Son of Rameses II, the most learned man in Egypt and perhaps its "
-            "greatest magician, schooled in secret texts beyond the priests of "
-            "Amen-Ra. Proud, he took the book of Thoth from Nefrekeptah's tomb "
-            "despite warnings; a terrible vision from Thoth made him return it "
-            "and do penance. He rose in Thoth's favour and was given the "
-            "stelae's guardianship, which his spirit has held for nearly two and "
-            "a half millennia.",
-            "He has always seen Hetep's shadow in the magicians who tried to "
-            "bring the poison in, until Damhan-Allaidh. For four centuries he "
-            "has fought it, and he can no longer bar Damhan-Allaidh or stand "
-            "against him. As the first to try to codify magical thought, he "
-            "has become the embodiment of man's understanding of magic.",
-            "Setna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: Ind. He "
-            "supplies a papyrus scroll. It can only be invested in a weapon, "
-            "never made a spell, and each weapon is for one named victim. Driven "
-            "through the heart, whatever Magic Resistance stands against it, it "
-            "destroys the soulstone and kills. In the end he can restore any "
-            "magus Hetep's Sunder the Magician's Spirit has maimed, Iain "
-            "included (p. 129).",
-        ),
+        secrets=[
+            titled(
+                "Setna's past",
+                "Son of Rameses II, the most learned man in Egypt and perhaps its "
+                "greatest magician, schooled in secret texts beyond the priests of "
+                "Amen-Ra. Proud, he took the book of Thoth from Nefrekeptah's tomb "
+                "despite warnings; a terrible vision from Thoth made him return it "
+                "and do penance. He rose in Thoth's favour and was given the "
+                "stelae's guardianship, which his spirit has held for nearly two and "
+                "a half millennia.",
+            ),
+            titled(
+                "Setna's long fight",
+                "He has always seen Hetep's shadow in the magicians who tried to "
+                "bring the poison in, until Damhan-Allaidh. For four centuries "
+                "he has fought it, and he can no longer bar Damhan-Allaidh or "
+                "stand against him.",
+            ),
+            titled(
+                "What Setna has become",
+                "As the first to try to codify magical thought, he has become "
+                "the embodiment of man's understanding of magic.",
+            ),
+            titled(
+                "Setna's Blade",
+                "Setna's Blade, PeVi 40, R: Spec, D: Spec (Constant Use), T: "
+                "Ind. He supplies a papyrus scroll. It can only be invested in a "
+                "weapon, never made a spell, and each weapon is for one named "
+                "victim. Driven through the heart, whatever Magic Resistance "
+                "stands against it, it destroys the soulstone and kills.",
+            ),
+            titled(
+                "Setna's healing",
+                "In the end he can restore any magus Hetep's Sunder the "
+                "Magician's Spirit has maimed, Iain included (p. 129).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Might 120, reduced to 30 by long battle with Hetep's corruption.",
+            ),
+        ],
     )
     b.creature(
         "Hetep's Undead Form",
@@ -1964,10 +2728,19 @@ def _into_the_gateway(b: Builder) -> None:
         ],
         appearance="Damhan-Allaidh's body, more hideous than in life: a huge "
         "skinless baboon running with putrefaction.",
-        secrets="Hetep is bound into his former servant's shell. Destroying it "
-        "lets the Thothian watchers capture him at once (p. 128). Body levels "
-        "OK, 0, 0, -1, -3, -5, Incapacitated. Presence is printed N/A, shown as "
-        "0. Might Form Corpus is this pack's reading.",
+        secrets=[
+            titled(
+                "Hetep in Damhan-Allaidh's shell",
+                "Hetep is bound into his former servant's shell. Destroying it "
+                "lets the Thothian watchers capture him at once (p. 128).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Body levels OK, 0, 0, -1, -3, -5, Incapacitated. Presence is "
+                "printed N/A, shown as 0. Might Form Corpus is this pack's "
+                "reading.",
+            ),
+        ],
     )
     dormant(
         b.threat(
@@ -1978,18 +2751,31 @@ def _into_the_gateway(b: Builder) -> None:
             "must break into the Obsidian Temple to destroy the corrupted "
             "stelae, or defend them (pp. 127-132). Which half is played turns on "
             "the end of Spider Through Mist. It closes the saga.",
-            secrets=paragraphs(
-                "If they succeed, Hetep is imprisoned and the Magic Realm saved. "
-                "Victor, if alive, says goodbye and dispels his ward. With "
-                "stelae uncorrupted the magi could win untold power and fame; "
-                "the storyguide may consider which Hermetic Limits are only "
-                "Hermetic and which are limits of Magic, and from there the saga "
-                "is his (pp. 129-130).",
-                "Without Einar and Gudmund's support either assault is much "
-                "harder. Einar has been teaching the Aesir religion to the "
-                "human slaves and plans a rising, and they can poison the "
-                "trolls wholesale when the gates open.",
-            ),
+            secrets=[
+                titled(
+                    "If the magi succeed",
+                    "If they succeed, Hetep is imprisoned and the Magic Realm "
+                    "saved. Victor, if alive, says goodbye and dispels his ward.",
+                ),
+                titled(
+                    "The power of the stelae",
+                    "With stelae uncorrupted the magi could win untold power and "
+                    "fame (pp. 129-130).",
+                ),
+                titled(
+                    "Einar's rising",
+                    "Without Einar and Gudmund's support either assault is much "
+                    "harder. Einar has been teaching the Aesir religion to the "
+                    "human slaves and plans a rising, and they can poison the "
+                    "trolls wholesale when the gates open.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The storyguide may consider which Hermetic Limits are only "
+                    "Hermetic and which are limits of Magic, and from there the "
+                    "saga is his (pp. 129-130).",
+                ),
+            ],
             stages=[
                 S(
                     "Corrupted: the wasteland",

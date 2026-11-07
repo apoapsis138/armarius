@@ -12,7 +12,14 @@ secrets."""
 from __future__ import annotations
 
 from ...models import BodyVis
-from ..builder import Builder, characteristics, dormant, paragraphs, vf_puissant
+from ..builder import (
+    Builder,
+    characteristics,
+    dormant,
+    paragraphs,
+    titled,
+    vf_puissant,
+)
 
 S = Builder.stage
 FATIGUE = "OK, 0, -1, -3, -5, Unconscious"
@@ -145,24 +152,44 @@ def _abaissier(b: Builder):
             "him a Lord of the Angels of Punishment. Vis: the book gives 7 "
             "pawns, one in each whip, and five chains.",
         ),
-        secrets=paragraphs(
-            "A demon of Pride who turns the very pious from God: suffer more, "
-            "he says, and you are more beloved of Him. It is false, and the "
-            "more people have given up, the harder it is to admit it. He "
-            "tempts single believers and seduces charismatic men who then "
-            "lead small heretical groups, and he makes sinners harm themselves "
-            "and think they have atoned. As a Lord he commands many lesser "
-            "demons.",
-            "He brings several cells into the open at once so they are hard "
-            "to stamp out, then forces the weaker Fabrico into servitude. When "
-            "the Church or the magi move, he stays out of sight and will "
-            "sacrifice Fabrico if it shows him who his enemies are and how "
-            "they work. He signs his work: the red mark on the flagellants' "
-            "robes is a cult symbol he has used before.",
-            "His Pride is his weakness. He underestimates the player "
-            "characters and can be goaded into a fight; evidence able to "
-            "destroy the cult's remains may bring him to attack in person.",
-        ),
+        secrets=[
+            titled(
+                "Abaissier's false teaching",
+                "A demon of Pride who turns the very pious from God: suffer "
+                "more, he says, and you are more beloved of Him. It is false, "
+                "and the more people have given up, the harder it is to admit "
+                "it. He tempts single believers and seduces charismatic men "
+                "who then lead small heretical groups, and he makes sinners "
+                "harm themselves and think they have atoned.",
+            ),
+            titled(
+                "Abaissier's servants",
+                "As a Lord he commands many lesser demons.",
+            ),
+            titled(
+                "How Abaissier spreads the cult",
+                "He brings several cells into the open at once so they are "
+                "hard to stamp out, then forces the weaker Fabrico into "
+                "servitude.",
+            ),
+            titled(
+                "Abaissier under pressure",
+                "When the Church or the magi move, he stays out of sight and "
+                "will sacrifice Fabrico if it shows him who his enemies are "
+                "and how they work.",
+            ),
+            titled(
+                "Abaissier's mark",
+                "He signs his work: the red mark on the flagellants' robes is "
+                "a cult symbol he has used before.",
+            ),
+            titled(
+                "Abaissier's weakness",
+                "His Pride is his weakness. He underestimates the player "
+                "characters and can be goaded into a fight; evidence able to "
+                "destroy the cult's remains may bring him to attack in person.",
+            ),
+        ],
     )
 
 
@@ -272,24 +299,47 @@ def _bufonia(b: Builder):
             "something the players think of as mild, such as measles or "
             "scarlet fever, or symptoms they cannot name.",
         ),
-        secrets=paragraphs(
-            "She teaches people to poison wells, and never does it herself, "
-            "so that a scapegoat takes the hatred: Jews, lepers, pagans, "
-            "Muslims, sorcerers and, her own passion, greengrocers. In human "
-            "form she tells some dupes their brews protect against plague. "
-            "They drink it strong to save themselves and soon die, and she so "
-            "enjoys telling them whom they have killed that she keeps a few "
-            "such victims when willing helpers would do more harm.",
-            "For this plague each potion needs a human heart, best from a "
-            "plague death. Neither ally nor servant of Abaissier, she thinks "
-            "Fabrico rules the flagellants and does not fear him. Once the "
-            "processions begin she recruits poisoners in towns near them to "
-            "destroy whichever outsiders come easiest, magi included, and if "
-            "strong opposition appears she wants Fabrico blamed. Their evils "
-            "fit so well they seem to be working together.",
-            "She can brew many diseases and may change them to avoid being "
-            "caught, but must not show more range than Fabrico could (p. 100).",
-        ),
+        secrets=[
+            titled(
+                "Bufonia's poisoners",
+                "She teaches people to poison wells, and never does it "
+                "herself, so that a scapegoat takes the hatred: Jews, lepers, "
+                "pagans, Muslims, sorcerers and, her own passion, "
+                "greengrocers.",
+            ),
+            titled(
+                "Bufonia's false remedies",
+                "In human form she tells some dupes their brews protect "
+                "against plague. They drink it strong to save themselves and "
+                "soon die, and she so enjoys telling them whom they have "
+                "killed that she keeps a few such victims when willing "
+                "helpers would do more harm.",
+            ),
+            titled(
+                "What Bufonia's potions need",
+                "For this plague each potion needs a human heart, best from a "
+                "plague death.",
+            ),
+            titled(
+                "Bufonia and the other demons",
+                "Neither ally nor servant of Abaissier, she thinks Fabrico "
+                "rules the flagellants and does not fear him. Their evils fit "
+                "so well they seem to be working together.",
+            ),
+            titled(
+                "Bufonia's plan for the processions",
+                "Once the processions begin she recruits poisoners in towns "
+                "near them to destroy whichever outsiders come easiest, magi "
+                "included, and if strong opposition appears she wants Fabrico "
+                "blamed.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "She can brew many diseases and may change them to avoid "
+                "being caught, but must not show more range than Fabrico "
+                "could (p. 100).",
+            ),
+        ],
     )
 
 
@@ -380,21 +430,34 @@ def _fabrico(b: Builder):
             "Cost of Delusion and Envisioning: 1 or 5 points. Cost of "
             "Obsession: 1 to 3 points.",
         ),
-        secrets=paragraphs(
-            "He enjoys passing off his work as the Divine: he makes ordinary "
-            "objects, wraps them in fake miracles until they are hailed as "
-            "relics, and backs whoever teaches the resulting errors. His "
-            "little cults believe a saint has chosen them, and that regular "
-            "signs let them know God's will better than the Church. The "
-            "Church usually puts them down.",
-            "In this story he first spreads prophets of the Antichrist and "
-            "the world's end, then notices the flagellants and claims part of "
-            "them. Beaten, he serves Abaissier against his will and knows his "
-            "master would spend him as a decoy, so the player characters may "
-            "set him on Abaissier and weaken both. Destroying him does not "
-            "end the cult, but it costs it the public's love and drives it "
-            "back, over time, to secret cells.",
-        ),
+        secrets=[
+            titled(
+                "Fabrico's false relics",
+                "He enjoys passing off his work as the Divine: he makes "
+                "ordinary objects, wraps them in fake miracles until they are "
+                "hailed as relics, and backs whoever teaches the resulting "
+                "errors. His little cults believe a saint has chosen them, "
+                "and that regular signs let them know God's will better than "
+                "the Church. The Church usually puts them down.",
+            ),
+            titled(
+                "Fabrico's prophets",
+                "In this story he first spreads prophets of the Antichrist "
+                "and the world's end, then notices the flagellants and claims "
+                "part of them.",
+            ),
+            titled(
+                "Fabrico and Abaissier",
+                "Beaten, he serves Abaissier against his will and knows his "
+                "master would spend him as a decoy, so the player characters "
+                "may set him on Abaissier and weaken both.",
+            ),
+            titled(
+                "If Fabrico is destroyed",
+                "Destroying him does not end the cult, but it costs it the "
+                "public's love and drives it back, over time, to secret cells.",
+            ),
+        ],
     )
 
 
@@ -441,8 +504,13 @@ def _small_demons(b: Builder):
             "Wound Penalties as printed: -1 (1), -3 (2), -5 (3), "
             "Incapacitated (4), Dead (5+).",
         ),
-        secrets="Abaissier orders them to rot seed corn, to break communities "
-        "with famine before his preachers arrive.",
+        secrets=[
+            titled(
+                "Why the demons rot the grain",
+                "Abaissier orders the Small Demons of Rot to rot seed corn, to "
+                "break communities with famine before his preachers arrive.",
+            ),
+        ],
     )
 
 
@@ -521,18 +589,34 @@ def _malicia(b: Builder):
             "ranges; the usual table starts Incapacitated at 16.",
             "Cost of Envisioning: 1 or 5 points. Cost of Obsession: 1 to 3 points.",
         ),
-        secrets=paragraphs(
-            "A Fury, feeding on the anger that destroys the one who feels it, "
-            "drawn to the cult by a promise of plenty of prey. Flagellants she "
-            "takes whip the onlookers and may kill themselves by mistake; "
-            "leaders she takes may counsel suicide.",
-            "She is the lieutenant to set before the player characters so the "
-            "saga does not close too early in a fight with the main demons. "
-            "Destroying her slows the cult and weakens it locally, though it "
-            "still reaches the next stage. If Abaissier falls she tries to "
-            "seize part of his cult and turn its despair under the crackdown "
-            "into mass suicide.",
-        ),
+        secrets=[
+            titled(
+                "What Malicia feeds on",
+                "A Fury, feeding on the anger that destroys the one who feels "
+                "it, drawn to the cult by a promise of plenty of prey.",
+            ),
+            titled(
+                "Those Malicia takes",
+                "Flagellants she takes whip the onlookers and may kill "
+                "themselves by mistake; leaders she takes may counsel suicide.",
+            ),
+            titled(
+                "If Malicia is destroyed",
+                "Destroying her slows the cult and weakens it locally, though "
+                "it still reaches the next stage.",
+            ),
+            titled(
+                "If Abaissier falls",
+                "If Abaissier falls Malicia tries to seize part of his cult "
+                "and turn its despair under the crackdown into mass suicide.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "She is the lieutenant to set before the player characters so "
+                "the saga does not close too early in a fight with the main "
+                "demons.",
+            ),
+        ],
     )
 
 
@@ -550,11 +634,18 @@ def _possessed(b: Builder):
             "their Soak and +3 to their damage. The book prints no Form for "
             "the Might."
         ),
-        secrets=(
-            "These attack the counter-processions, and defend the rag "
-            "manufactory, where bodiless demons help the acolytes fight and "
-            "work their corpses after death. Some guard the false saints."
-        ),
+        secrets=[
+            titled(
+                "Where the possessed fight",
+                "Possessed followers attack the counter-processions, and "
+                "defend the rag manufactory, where bodiless demons help the "
+                "acolytes fight and work their corpses after death.",
+            ),
+            titled(
+                "Guards of the false saints",
+                "Some possessed followers guard the false saints.",
+            ),
+        ],
     )
 
 
@@ -579,38 +670,80 @@ def _cult(b: Builder):
             "They call and answer in songs as they whip themselves, and at "
             "the name of Christ fling themselves to the ground."
         ),
-        secrets=paragraphs(
-            "Each cell's preacher thinks an angel chose him alone; the angel "
-            "is Abaissier, an Angel of Punishment. Cells do not talk to each "
-            "other, which is the cult's weakness, since Redcaps do. Questioned "
-            "gently in many places and with the answers pooled, its members "
-            "reveal its shape without ever noticing. A leader flattered in "
-            "his spiritual Pride describes his visitor well enough for an "
-            "expert in Infernal Lore to name the kind of demon.",
-            "Money and goods: at first members' own goods and alms; later "
-            "extortion from towns and gifts from hidden patrons. Stocks were "
-            "laid up for years, a sin in itself, and the processional crosses "
-            "come from distant artisans, a first hint that the plot spans "
-            "Europe. Unused caches can be destroyed. Tracing the goods names "
-            "the nobles and churchmen who secretly support it; they will put "
-            "themselves at the front of the crackdown and sabotage it.",
-            "Items. Uniforms: robes of wool or cotton given as alms by a "
-            "nobleman in penance for a terrible crime, told to by an 'angel'; "
-            "tracing them finds many local gathering points. False relics: "
-            "Fabrico's, some breathing out the evil airs of plague, with an "
-            "antidote for the flagellants. Blood-soaked rags: see the Open "
-            "Heresy stage. Bufonia's 'holy oil', sprinkled on the rags. The "
-            "Letter From an Angel: a false relic read out before a procession, "
-            "which eases its way past obstacles and whose symbols Fabrico "
-            "marks on things to order them destroyed, held or venerated.",
-            "Truly pious flagellants exist, monks and even saints among them. "
-            "Moderate, voluntary flagellation or one set by a bishop is "
-            "allowed when treated as punishment or as a way to fix the "
-            "attention, not as earning merit; penance in place of atonement "
-            "is not. Abaissier tries to trick his enemies into attacking "
-            "such people. Those spared can dispute with the leaders and "
-            "bring followers back to the Church.",
-        ),
+        secrets=[
+            titled(
+                "The flagellants' angel",
+                "Each cell's preacher thinks an angel chose him alone; the "
+                "angel is Abaissier, an Angel of Punishment.",
+            ),
+            titled(
+                "The flagellants' weakness",
+                "The flagellants' cells do not talk to each other, which is "
+                "the cult's weakness, since Redcaps do. Questioned gently in "
+                "many places and with the answers pooled, its members reveal "
+                "its shape without ever noticing.",
+            ),
+            titled(
+                "A flattered leader",
+                "A flagellant leader flattered in his spiritual Pride "
+                "describes his visitor well enough for an expert in Infernal "
+                "Lore to name the kind of demon.",
+            ),
+            titled(
+                "The flagellants' money and goods",
+                "At first members' own goods and alms; later extortion from "
+                "towns and gifts from hidden patrons. Stocks were laid up for "
+                "years, a sin in itself. Unused caches can be destroyed.",
+            ),
+            titled(
+                "The processional crosses",
+                "The flagellants' processional crosses come from distant "
+                "artisans, a first hint that the plot spans Europe.",
+            ),
+            titled(
+                "The flagellants' hidden patrons",
+                "Tracing the flagellants' goods names the nobles and "
+                "churchmen who secretly support the cult; they will put "
+                "themselves at the front of the crackdown and sabotage it.",
+            ),
+            titled(
+                "The flagellants' uniforms",
+                "The flagellants' robes are of wool or cotton given as alms "
+                "by a nobleman in penance for a terrible crime, told to by an "
+                "'angel'; tracing them finds many local gathering points.",
+            ),
+            titled(
+                "The flagellants' false relics",
+                "The flagellants' false relics are Fabrico's, some breathing "
+                "out the evil airs of plague, with an antidote for the "
+                "flagellants.",
+            ),
+            titled(
+                "The holy oil",
+                "Bufonia's 'holy oil' is sprinkled on the flagellants' "
+                "blood-soaked rags.",
+            ),
+            titled(
+                "The Letter From an Angel",
+                "A false relic read out before a flagellant procession, which "
+                "eases its way past obstacles and whose symbols Fabrico marks "
+                "on things to order them destroyed, held or venerated.",
+            ),
+            titled(
+                "The truly pious",
+                "Truly pious flagellants exist, monks and even saints among "
+                "them. Moderate, voluntary flagellation or one set by a "
+                "bishop is allowed when treated as punishment or as a way to "
+                "fix the attention, not as earning merit; penance in place of "
+                "atonement is not. Abaissier tries to trick his enemies into "
+                "attacking such people. Those spared can dispute with the "
+                "leaders and bring followers back to the Church.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Blood-soaked rags: see the Open Heresy stage.",
+            ),
+        ],
     )
     b.faction(
         "The False Saints",
@@ -621,21 +754,39 @@ def _cult(b: Builder):
             "noblemen already on poor terms with the bishops."
         ),
         decides="Its leader",
-        secrets=paragraphs(
-            "Their deaths and returns are elaborate waking dreams worked by "
-            "Abaissier and Fabrico, given to one leader in each region so "
-            "that each thinks himself uniquely blessed. Once false priests "
-            "are ordained the Church turns on these groups, with arms if "
-            "needed.",
-            "Finding one means learning where he hides and passing his "
-            "guards: noblemen, possessed followers, or animals tainted by "
-            "demons without his knowing. A pious character can win one over "
-            "on a contested roll of stress die + Communication + Theology "
-            "against his Pride, beating him by at least 6; showing him that "
-            "demonic animals guard him adds 6. The penitent may enter a "
-            "monastery or nunnery, though some bishops will want him dead, or "
-            "find work with the Order.",
-        ),
+        secrets=[
+            titled(
+                "The false saints' deaths and returns",
+                "The false saints' deaths and returns are elaborate waking "
+                "dreams worked by Abaissier and Fabrico, given to one leader "
+                "in each region so that each thinks himself uniquely blessed.",
+            ),
+            titled(
+                "The Church and the false priests",
+                "Once the false saints ordain false priests the Church turns "
+                "on these groups, with arms if needed.",
+            ),
+            titled(
+                "The false saints' guards",
+                "Finding a false saint means learning where he hides and "
+                "passing his guards: noblemen, possessed followers, or "
+                "animals tainted by demons without his knowing.",
+            ),
+            titled(
+                "Winning a false saint over",
+                "A pious character can win a false saint over; showing him "
+                "that demonic animals guard him helps. The penitent may enter "
+                "a monastery or nunnery, though some bishops will want him "
+                "dead, or find work with the Order.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Winning one over is a contested roll of stress die + "
+                "Communication + Theology against his Pride, beating him by "
+                "at least 6; showing him that demonic animals guard him adds "
+                "6.",
+            ),
+        ],
     )
     b.faction(
         "The Loyal Flagellants",
@@ -647,33 +798,59 @@ def _cult(b: Builder):
             "favour them."
         ),
         decides="Its leader",
-        secrets=paragraphs(
-            "Their opposition is a strategic pose that survives the purge and "
-            "lets Abaissier go on training heretics for some years.",
-            "Ways to prove it. Bring Church witnesses to one of the secret "
-            "meetings between senior members of the two halves. Capture one "
-            "of the very few 'loyal' men the demons have told are saints: put "
-            "to the question, he is too Proud to keep up the lie. Help the "
-            "nobleman who has had a false angel and also a true vision of the "
-            "Archangel Michael: he attacks lords of the 'loyal' side while "
-            "rivals in disguise muster with the false saints, and if he wins "
-            "he can take them, or their bodies, to the Church as proof.",
-        ),
+        secrets=[
+            titled(
+                "The loyal flagellants' pose",
+                "The loyal flagellants' opposition to the false saints is a "
+                "strategic pose that survives the purge and lets Abaissier go "
+                "on training heretics for some years.",
+            ),
+            titled(
+                "The secret meetings",
+                "Senior members of the loyal flagellants and the false saints "
+                "hold secret meetings; Church witnesses brought to one prove "
+                "the loyal side's opposition a pose.",
+            ),
+            titled(
+                "The 'loyal' saints",
+                "The demons have told a very few 'loyal' flagellants that "
+                "they are saints. Captured and put to the question, such a "
+                "man is too Proud to keep up the lie.",
+            ),
+            titled(
+                "The nobleman's true vision",
+                "A nobleman has had a false angel and also a true vision of "
+                "the Archangel Michael: he attacks lords of the 'loyal' side "
+                "while rivals in disguise muster with the false saints, and "
+                "if he wins he can take them, or their bodies, to the Church "
+                "as proof.",
+            ),
+        ],
     )
     b.place(
         "The Abandoned Building",
         realm="",
         summary="An abandoned building in the district.",
-        secrets=paragraphs(
-            "The manufactory of bloodied rags. Flagellants take turns whipping themselves here, sitting on a "
-            "floor spread with filthy bed sheets. Each evening an acolyte "
-            "cuts the sheets into palm-sized pieces, which are carried off, "
-            "sprinkled with 'holy oil' and smuggled to supporters in nearby "
-            "towns.",
-            "If it is attacked, bodiless demons possess the acolytes, help "
-            "them fight and move their bodies after death. The book sets it "
-            "in the covenant's local area, and prints no aura.",
-        ),
+        secrets=[
+            titled(
+                "The manufactory of bloodied rags",
+                "Flagellants take turns whipping themselves in the abandoned "
+                "building, sitting on a floor spread with filthy bed sheets. "
+                "Each evening an acolyte cuts the sheets into palm-sized "
+                "pieces, which are carried off, sprinkled with 'holy oil' and "
+                "smuggled to supporters in nearby towns.",
+            ),
+            titled(
+                "The manufactory's defenders",
+                "If the rag manufactory is attacked, bodiless demons possess "
+                "the acolytes, help them fight and move their bodies after "
+                "death.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book sets it in the covenant's local area, and prints no aura.",
+            ),
+        ],
     )
     return cult
 
@@ -689,41 +866,80 @@ def _threat(b: Builder):
                 "region, and prophets are foretelling the Antichrist and the "
                 "end of the world."
             ),
-            secrets=paragraphs(
-                "Three demons who usually work alone happen to be active in "
-                "one region. Demons cannot truly be patient or share, so this "
-                "is no plan: each sets its minions going, and the humans, who "
-                "can scheme, find their own mischief. Left alone the cult "
-                "kills thousands, ruins the region's economy and leaves "
-                "Infernal auras behind. A storyguide need not use every "
-                "stage, but should plant the motifs of any skipped.",
-                "Why magi must care. The Church or the Divine will end the "
-                "heresy, but not gently: preachers first, then armies, and an "
-                "invasion is an invasion to a covenant's farmers and "
-                "merchants. Crusaders also strike at Jews, Muslims, pagans and "
-                "problem people with fortresses, and a younger son who takes a "
-                "heretic's castle may keep it, so beaten raids do not deter "
-                "them. Infernal auras left behind seed later trouble.",
-                "Any stage. Abaissier may trick the characters into attacking "
-                "the truly pious. His movement also wrecks other demons' "
-                "plots, so a storyguide who wants it harder may have him "
-                "suborn them as fractious lieutenants. Rival bands fall out, "
-                "and helping one side yields the other's secrets, which are "
-                "much the same.",
-                "Research. Infernal Lore can find earlier flagellant heretics, "
-                "but naming a demon from the Order's usual sources is very "
-                "hard. Specialists can spot Abaissier and foresee the early "
-                "stages, until he and Fabrico join and the precedent breaks; "
-                "the uniforms then make him easy to identify.",
-                "Ending it. Goad Abaissier into battle, or draw out Fabrico. "
-                "Dispute with the charismatic dupes: if they are humbled and "
-                "reconciled the cult crumbles. Relieve the famine and disease "
-                "that feed it, and prove the prophecies false. A big enough "
-                "lie may do it, a false miracle saying God is satisfied and "
-                "sending people back to the Church. Comedy works too: one "
-                "historical revival died when the laity of Rome laughed at "
-                "its marchers.",
-            ),
+            secrets=[
+                titled(
+                    "The demons behind the flagellants",
+                    "Three demons who usually work alone happen to be active "
+                    "in one region. Demons cannot truly be patient or share, "
+                    "so this is no plan: each sets its minions going, and the "
+                    "humans, who can scheme, find their own mischief.",
+                ),
+                titled(
+                    "If the flagellants are left alone",
+                    "Left alone the flagellant cult kills thousands, ruins "
+                    "the region's economy and leaves Infernal auras behind.",
+                ),
+                titled(
+                    "How the Church will end the heresy",
+                    "The Church or the Divine will end the flagellant heresy, "
+                    "but not gently: preachers first, then armies, and an "
+                    "invasion is an invasion to a covenant's farmers and "
+                    "merchants.",
+                ),
+                titled(
+                    "The crusaders",
+                    "Crusaders against the flagellant heresy also strike at "
+                    "Jews, Muslims, pagans and problem people with "
+                    "fortresses, and a younger son who takes a heretic's "
+                    "castle may keep it, so beaten raids do not deter them.",
+                ),
+                titled(
+                    "The auras the cult leaves",
+                    "Infernal auras left behind by the flagellant cult seed "
+                    "later trouble.",
+                ),
+                titled(
+                    "Abaissier and the truly pious",
+                    "Abaissier may trick the characters into attacking the "
+                    "truly pious.",
+                ),
+                titled(
+                    "Abaissier and other demons",
+                    "Abaissier's movement also wrecks other demons' plots.",
+                ),
+                titled(
+                    "Rival bands",
+                    "Rival flagellant bands fall out, and helping one side "
+                    "yields the other's secrets, which are much the same.",
+                ),
+                titled(
+                    "Ending the flagellant cult",
+                    "Goad Abaissier into battle, or draw out Fabrico. Dispute "
+                    "with the charismatic dupes: if they are humbled and "
+                    "reconciled the cult crumbles. Relieve the famine and "
+                    "disease that feed it, and prove the prophecies false. A "
+                    "big enough lie may do it, a false miracle saying God is "
+                    "satisfied and sending people back to the Church. Comedy "
+                    "works too: one historical revival died when the laity of "
+                    "Rome laughed at its marchers.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "A storyguide need not use every stage, but should "
+                        "plant the motifs of any skipped.",
+                        "Any stage: a storyguide who wants it harder may have "
+                        "Abaissier suborn other demons as fractious "
+                        "lieutenants.",
+                        "Research. Infernal Lore can find earlier flagellant "
+                        "heretics, but naming a demon from the Order's usual "
+                        "sources is very hard. Specialists can spot Abaissier "
+                        "and foresee the early stages, until he and Fabrico "
+                        "join and the precedent breaks; the uniforms then "
+                        "make him easy to identify.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Cells of Flagellants",

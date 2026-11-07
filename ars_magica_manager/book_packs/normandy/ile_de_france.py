@@ -17,7 +17,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs
+from ..builder import Builder, joined_lines, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -214,7 +214,16 @@ def _paris(normandy: Normandy, region: Neighbour) -> None:
             "parts of Paris have a high Divine aura (not given in "
             "numbers).",
         ),
-        secrets="Infernal auras lurk in the city's worst quarters, unmapped by the book.",
+        secrets=[
+            titled(
+                "Infernal quarters",
+                "Infernal auras lurk in the worst quarters of the Île de la Cité.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book does not map the Infernal auras.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _place(
@@ -291,9 +300,16 @@ def _paris(normandy: Normandy, region: Neighbour) -> None:
             "was once Mons Mercurius and carried a Roman temple; a new "
             "abbey now stands on its slopes.",
         ),
-        secrets="In the saga frame of the Boar King, the faerie courtier "
-        "Salvirius asks a magus to carry a message to the Hill of "
-        "Martyrs at an exact day and hour.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The faerie courtier Salvirius asks a magus to carry a message "
+                    "to the Hill of Martyrs at an exact day and hour.",
+                    "Salvirius's message belongs to the saga frame of the Boar King.",
+                ),
+            ),
+        ],
         **KNOWN_REGION,
     )
     _place(
@@ -347,8 +363,14 @@ def _fontainebleau(normandy: Normandy, region: Neighbour) -> None:
             "dressed in dark blue, who grows in power by striking "
             "bargains with mortals and always asks a strange price.",
         ),
-        secrets="The man-shaped boulders may be hunters and hounds who pressed "
-        "their chase into the nymph's domain and were cursed for it.",
+        secrets=[
+            titled(
+                "The man-shaped boulders",
+                "The man-shaped boulders of Fontainebleau may be hunters and hounds "
+                "who pressed their chase into the nymph's domain and were cursed for "
+                "it.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _place(
@@ -549,8 +571,13 @@ def _church(normandy: Normandy) -> None:
             "1214. Magi cannot tell whether it is Divine or Magical, and "
             "none admits to having tried his powers against it.",
         ),
-        secrets="The Oriflamme's true nature is left open by the book; a "
-        "storyguide may decide.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The Oriflamme's true nature is left open by the book; a storyguide "
+                "may decide.",
+            ),
+        ],
     )
     w["st_genevieve"] = b.church(
         "Abbey of St. Geneviève",
@@ -746,7 +773,12 @@ def _towns(normandy: Normandy) -> None:
             "missed are hidden among the crowds, and Parisian magi must "
             "buy them, warn them off, or kill them.",
         ),
-        secrets="Hidden Infernal auras fester in the seediest parts of the city.",
+        secrets=[
+            titled(
+                "Hidden Infernal auras",
+                "Hidden Infernal auras fester in the seediest parts of Paris.",
+            ),
+        ],
     )
     w["st_denis_town"] = b.town(
         "St. Denis",
@@ -947,13 +979,24 @@ def _factions(normandy: Normandy) -> None:
             "kidnapped to be made one of the cagoux; visitors are caught "
             "up in a turf war between the king and a pretender.",
         ),
-        secrets="The present king is the magus Anacrôn of House Ex Miscellanea. "
-        "Each year he enslaves a band of fighting men with The "
-        "Irresistible Pressgang to serve as cagoux; when the spell "
-        "ends, the Warping often leaves them witless and they sink "
-        "among the calots. Two of his Hermetic forebears, crippled by "
-        "age and Warping, live hidden among the beggars, kept alive "
-        "against their will.",
+        secrets=[
+            titled(
+                "Who the king is",
+                "The present King of the Beggars is the magus Anacrôn of House Ex "
+                "Miscellanea.",
+            ),
+            titled(
+                "The cagoux",
+                "Each year Anacrôn enslaves a band of fighting men with The "
+                "Irresistible Pressgang to serve as cagoux; when the spell ends, the "
+                "Warping often leaves them witless and they sink among the calots.",
+            ),
+            titled(
+                "Anacrôn's forebears",
+                "Two of Anacrôn's Hermetic forebears, crippled by age and Warping, "
+                "live hidden among the beggars, kept alive against their will.",
+            ),
+        ],
     )
     w["free_spirit"] = b.faction(
         "The Brethren of the Free Spirit (Paris)",
@@ -1020,9 +1063,17 @@ def _factions(normandy: Normandy) -> None:
             "resentment. Since Aries's Final Twilight in 1215 he has "
             "allowed the exchange of the mirror.",
         ),
-        secrets="His limitless power may be borrowed: he may get the wishes he "
-        "grants from other faeries or from humans through yet more "
-        "pacts. Mnemon owes him an unknown and fearsome task.",
+        secrets=[
+            titled(
+                "Where Candidus's power comes from",
+                "His limitless power may be borrowed: he may get the wishes he grants "
+                "from other faeries or from humans through yet more pacts.",
+            ),
+            titled(
+                "Mnemon's debt",
+                "Mnemon owes him an unknown and fearsome task.",
+            ),
+        ],
     )
 
 
@@ -1095,15 +1146,45 @@ def _eboris(normandy: Normandy, tribunal: Tribunal) -> None:
         "Mundane: influence over the quarter's thugs and the criminal class; patronage of artists; trust of the Byzantine émigrés",
         "Mundane: supports the French crown and the French Church",
     )
-    hidden = joined_lines(
-        "Mathieus's revels may honour magi long forgotten or entirely invented; some say the maga who never existed ought to have.",
-        "Mathieus will help the Quaesitores by claiming injury when it suits him.",
-        "Seed, the Folk Magicians: hedge wizards hidden in Paris need buying, warning off or killing.",
-        "Seed, Rescuing Constantinopolitans: a slave of a Roman Tribunal covenant asks Mathieus to rescue survivors of his old covenant; Mathieus fears a Venetian trap and sends young magi to scout and smuggle.",
-        "Seed, Treasure in Constantinople: Mathieus sealed away his dead friends' treasures in the city and now wants sturdy young magi to bring them out; he will not go himself.",
-        "Seed, Succession: his named heir, Constantina filia Andru, was picked mostly to silence petitioners; a novel enough experience might win the player characters the place.",
-        "Seed, Tremors at the End of the World: Paris's ivory comes through Trebizond, so a sudden stop means trouble in Asia, and Andru will send magi to look; a glut of walrus ivory would also make Mathieus ask who took it and why.",
-    )
+    hidden = [
+        titled(
+            "Mathieus's revels",
+            "Mathieus's revels may honour magi long forgotten or entirely invented; "
+            "some say the maga who never existed ought to have.",
+        ),
+        titled(
+            "Mathieus and the Quaesitores",
+            "Mathieus will help the Quaesitores by claiming injury when it suits him.",
+        ),
+        titled(
+            "Treasure in Constantinople",
+            "Mathieus sealed away his dead friends' treasures in Constantinople.",
+        ),
+        titled(
+            "Mathieus's heir",
+            "Mathieus's named heir, Constantina filia Andru, was picked mostly to "
+            "silence petitioners.",
+        ),
+        titled(
+            "Storyguide Notes",
+            paragraphs(
+                "The Folk Magicians: hedge wizards hidden in Paris need buying, "
+                "warning off or killing.",
+                "Rescuing Constantinopolitans: a slave of a Roman Tribunal covenant "
+                "asks Mathieus to rescue survivors of his old covenant; Mathieus "
+                "fears a Venetian trap and sends young magi to scout and smuggle.",
+                "Treasure in Constantinople: Mathieus wants sturdy young magi to "
+                "bring his dead friends' treasures out of the city; he will not go "
+                "himself.",
+                "Succession: a novel enough experience might win the player "
+                "characters the place of Mathieus's heir.",
+                "Tremors at the End of the World: Paris's ivory comes through "
+                "Trebizond, so a sudden stop means trouble in Asia, and Andru will "
+                "send magi to look; a glut of walrus ivory would also make Mathieus "
+                "ask who took it and why.",
+            ),
+        ),
+    ]
     eboris = b.covenant(
         "Eboris",
         tribunal=tribunal,
@@ -1160,9 +1241,14 @@ def _eboris_magi(normandy: Normandy, eboris: Covenant) -> None:
             "Roman covenants with chapter houses in Venice. He is a "
             "master of illusion and of casting in a city.",
         ),
-        secrets="He named Constantina his heir mostly to stop people pestering "
-        "him, and could be talked into naming someone who offers him a "
-        "genuinely new experience.",
+        secrets=[
+            titled(
+                "Mathieus's heir",
+                "He named Constantina his heir mostly to stop people pestering him, "
+                "and could be talked into naming someone who offers him a genuinely "
+                "new experience.",
+            ),
+        ],
         traits={"Brave": 3, "Genteel": 2, "Debauched": 1, "Sad": 1},
     )
     m["marcus_of_paris"] = b.magus(
@@ -1285,12 +1371,32 @@ def _lapis_crudus(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: Mnemon's unknown debt to Candidus",
         "Tension: Somnifer is second in line for Praeco after Celeres of Cunfin",
     )
-    hidden = joined_lines(
-        "Seed, Through the Looking Glass: to travel, the magi must tempt other magi to take their place, offering seasons in the library; once out, they do not want to go back.",
-        "Seed: as the price of the new terms Candidus bound Mnemon to a fearsome task once he gets out, which might destroy a player covenant's faerie-bound vis source, kill its guardian, or stir mundane politics to have it disbanded.",
-        "Seed: Lapis Crudus will try to reassert its lost Oaths of Fealty, perhaps over the player covenant.",
-        "Each magus took a Warping Point a year from the aura alone during the eighty years, and more from Longevity Rituals; the opening may have come just in time.",
-    )
+    hidden = [
+        titled(
+            "Mnemon's bargain",
+            "As the price of the new terms Candidus bound Mnemon to a fearsome task "
+            "once he gets out.",
+        ),
+        titled(
+            "The eighty years' Warping",
+            "Each magus took a Warping Point a year from the aura alone during the "
+            "eighty years, and more from Longevity Rituals; the opening may have come "
+            "just in time.",
+        ),
+        titled(
+            "Storyguide Notes",
+            paragraphs(
+                "Through the Looking Glass: to travel, the magi of Lapis Crudus must "
+                "tempt other magi to take their place, offering seasons in the "
+                "library; once out, they do not want to go back.",
+                "Mnemon's task might destroy a player covenant's faerie-bound vis "
+                "source, kill its guardian, or stir mundane politics to have it "
+                "disbanded.",
+                "Lost Oaths of Fealty: Lapis Crudus will try to reassert its lost "
+                "Oaths of Fealty, perhaps over the player covenant.",
+            ),
+        ),
+    ]
     lapis = b.covenant(
         "Lapis Crudus",
         tribunal=tribunal,
@@ -1355,8 +1461,13 @@ def _lapis_magi(normandy: Normandy, lapis: Covenant) -> None:
             "after Celeres of Cunfin in the line of eldest magi from "
             "which the Praeco is named.",
         ),
-        secrets="Proctor, who wants a Praeco he can trust or control, finds "
-        "Somnifer as awkward a choice as Celeres.",
+        secrets=[
+            titled(
+                "Proctor's view of Somnifer",
+                "Proctor, who wants a Praeco he can trust or control, finds Somnifer "
+                "as awkward a choice as Celeres.",
+            ),
+        ],
         traits={"Sleepy": 5, "Thoughtful": 2, "Attentive": -2},
     )
     m["mnemon"] = b.magus(
@@ -1375,9 +1486,14 @@ def _lapis_magi(normandy: Normandy, lapis: Covenant) -> None:
             "an unsettling habit of popping across a room or snapping "
             "objects into his hand.",
         ),
-        secrets="Nobody knows what he promised Candidus. Once someone takes "
-        "his place he must carry out a fearsome task the faerie bound "
-        "him to, which could fall on a player covenant.",
+        secrets=[
+            titled(
+                "Mnemon's promise",
+                "Nobody knows what he promised Candidus. Once someone takes his place "
+                "he must carry out a fearsome task the faerie bound him to, which "
+                "could fall on a player covenant.",
+            ),
+        ],
         traits={"Impatient": 3, "Sly": 2, "Apparently Trustworthy": 1},
     )
     m["languidus"] = b.magus(
@@ -1434,20 +1550,36 @@ def _eremites(normandy: Normandy) -> None:
             "instinct. Montverte has dealt with him on raids against "
             "other covenants' town storehouses.",
         ),
-        secrets=paragraphs(
-            "His lineage shares a Death Prophecy: none can die until "
-            "he is the eldest of the tradition alive. Two of his "
-            "forebears, his grand-parens's own parens and her mater, "
-            "survive hidden among his beggars in ruined bodies, "
-            "riddled with Decrepitude and Warping and longing to die; "
-            "he will not let them, since each death brings his own "
-            "nearer. An enemy might strike at him through them.",
-            "He knows many dirty secrets of Normandy's magi and has a "
-            "few genuine allies who value his information. He might "
-            "draw help from a cabal or Mystery Cult, or be a double "
-            "agent hunting High Crimes among his apparent friends for "
-            "the Quaesitores.",
-        ),
+        secrets=[
+            titled(
+                "The lineage's prophecy",
+                "His lineage shares a prophecy: none can die until he is the eldest "
+                "of the tradition alive.",
+            ),
+            titled(
+                "Anacrôn's forebears",
+                "Two of his forebears, his grand-parens's own parens and her mater, "
+                "survive hidden among his beggars in ruined bodies, riddled with "
+                "Decrepitude and Warping and longing to die; he will not let them, "
+                "since each death brings his own nearer. An enemy might strike at him "
+                "through them.",
+            ),
+            titled(
+                "What Anacrôn knows",
+                "He knows many dirty secrets of Normandy's magi and has a few genuine "
+                "allies who value his information.",
+            ),
+            titled(
+                "Whom Anacrôn may serve",
+                "He might draw help from a cabal or Mystery Cult, or be a double "
+                "agent hunting High Crimes among his apparent friends for the "
+                "Quaesitores.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The lineage's prophecy is a Death Prophecy.",
+            ),
+        ],
         traits={"Jealous": 3, "Spiteful": 3, "Bitter": 3},
     )
 

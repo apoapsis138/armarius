@@ -28,8 +28,7 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
-from ...models import as_secrets, secret_words
-from ..builder import Builder, dormant, paragraphs
+from ..builder import Builder, Secrets, dormant, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Hibernia
@@ -83,16 +82,17 @@ def _connacht(hibernia: Hibernia) -> None:
             "Lir's express request, or to seek bees for their hives, "
             "and its new masters may try to stretch it.",
         ),
-        secrets=paragraphs(
-            "Báetáin, who handed the Gáe Bulg to Ballack, now shares "
-            "his tower with Guillaume, whose fire killed the people he "
-            "knew; his regret is a lever for anyone who would turn "
-            "Praesis from within.",
-            "Maoilfhinnéin of Vigil is quietly steering the shards of "
-            "Gráinne's broken first talisman into Guillaume's hands "
-            "(see Maoilfhinnéin's Plot), which may draw Guillaume's "
-            "attention east to Vigil before he finishes with Connacht.",
-        ),
+        secrets=[
+            titled(
+                "Báetáin's regret",
+                "Báetáin, who handed the Gáe Bulg to Ballack, now shares his tower with Guillaume, whose fire killed the people he knew; his regret is a lever for anyone who would turn Praesis from within.",
+            ),
+            titled(
+                "The shards for Guillaume",
+                "Maoilfhinnéin of Vigil is quietly steering the shards of Gráinne's broken first talisman into Guillaume's hands, which may draw Guillaume's attention east to Vigil before he finishes with Connacht.",
+            ),
+            titled("Storyguide Notes", "See Maoilfhinnéin's Plot."),
+        ],
         antagonist="Guillaume Flambeau of Praesis and his Bréifne mercenaries",
         position=1,
         stages=[
@@ -326,16 +326,16 @@ def _reform(hibernia: Hibernia) -> None:
             "who attacked Damisona were found guilty only of a Low "
             "Crime.",
         ),
-        secrets=paragraphs(
-            "Lugardis of Elk's Run, sent by Durenmar to judge the "
-            "Order in Hibernia, has concluded that the Tribunal keeps "
-            "the Code, if with an odd Peripheral Code, and has written "
-            "home in its praise; an appeal abroad may find less "
-            "sympathy than the reformers expect.",
-            "Dorján and Konstanczia of Ashenrise are directed by the "
-            "Transylvanian magi who hold their sigils to help Ashenrise "
-            "bring the Tribunal up to date.",
-        ),
+        secrets=[
+            titled(
+                "Lugardis's verdict",
+                "Lugardis of Elk's Run, sent by Durenmar to judge the Order in Hibernia, has concluded that the Tribunal keeps the Code, if with an odd Peripheral Code, and has written home in its praise; an appeal abroad may find less sympathy than the reformers expect.",
+            ),
+            titled(
+                "Ashenrise's Transylvanian masters",
+                "Dorján and Konstanczia of Ashenrise are directed by the Transylvanian magi who hold their sigils to help Ashenrise bring the Tribunal up to date.",
+            ),
+        ],
         antagonist="The English Council and the reformers of Ashenrise",
         position=1,
         stages=[
@@ -442,21 +442,28 @@ def _grainne(hibernia: Hibernia) -> None:
                 "married to a faerie princess of Inishtrahull, an island "
                 "six miles out from the head.",
             ),
-            secrets=paragraphs(
-                "Maoilfhinnéin believes Ireland's old stories are bound "
-                "to repeat, and that the Ordo Hiberniae will be driven "
-                "back as the native wizards were; he sees the first "
-                "signs already. Should Vigil be threatened, he has "
-                "prepared to carry the tusks to Inishtrahull and found "
-                "the covenant anew there.",
-                "He has three schemes in hand. He supports Lámbaird's "
-                "positions at Tribunal, to mend the harm Éinri's feud "
-                "has done. He feeds Gráinne's overconfidence, seeing "
-                "that a sacrifice may soon be needed. And his allies in "
-                "the sea brought him the shards of her broken sword: he "
-                "has fixed them as an Arcane Connection to her and is "
-                "working them into the hands of Guillaume.",
-            ),
+            secrets=[
+                titled(
+                    "Maoilfhinnéin's belief",
+                    "Maoilfhinnéin believes Ireland's old stories are bound to repeat, and that the Ordo Hiberniae will be driven back as the native wizards were; he sees the first signs already.",
+                ),
+                titled(
+                    "Maoilfhinnéin's refuge",
+                    "Should Vigil be threatened, Maoilfhinnéin has prepared to carry the tusks to Inishtrahull and found the covenant anew there.",
+                ),
+                titled(
+                    "Maoilfhinnéin at Tribunal",
+                    "Maoilfhinnéin supports Lámbaird's positions at Tribunal, to mend the harm Éinri's feud has done.",
+                ),
+                titled(
+                    "Gráinne's overconfidence",
+                    "Maoilfhinnéin feeds Gráinne's overconfidence, seeing that a sacrifice may soon be needed.",
+                ),
+                titled(
+                    "The shards of Gráinne's sword",
+                    "Maoilfhinnéin's allies in the sea brought him the shards of Gráinne's broken sword: he has fixed them as an Arcane Connection to her and is working them into the hands of Guillaume.",
+                ),
+            ],
             antagonist="Maoilfhinnéin mac Lir, Ambassador to the Sea",
             stages=[
                 S(
@@ -546,9 +553,12 @@ def _ballack(hibernia: Hibernia) -> None:
                 "only on loan, yet he cannot be seen to give it up. "
                 "Praesis must start paying for itself, and soon.",
             ),
-            secrets="His benefactors are a powerful, secretive cult or society "
-            "to which Ballack does not belong, though he took its aid; "
-            "lately he has been forgetting what he owes it.",
+            secrets=[
+                titled(
+                    "Ballack's benefactors",
+                    "Ballack's benefactors are a powerful, secretive cult or society to which Ballack does not belong, though he took its aid; lately he has been forgetting what he owes it.",
+                )
+            ],
             antagonist="Ballack's hidden creditors",
             stages=[
                 S(
@@ -641,9 +651,12 @@ def _donn(hibernia: Hibernia) -> None:
                 "faerie blood to be born, meant as the core of a new "
                 "army. Find has not yet answered.",
             ),
-            secrets="Whether Ulster's Donn and the lord of Teach Duínn are one "
-            "being is left to the storyguide; if they are, the "
-            "faerie-blooded children are the first sign of the host.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "Whether Ulster's Donn and the lord of Teach Duínn are one being is left to the storyguide; if they are, the faerie-blooded children are the first sign of the host.",
+                )
+            ],
             antagonist="Donn of Teach Duínn",
             realm="Faerie",
             stages=[
@@ -720,17 +733,20 @@ def _gaileoin(hibernia: Hibernia) -> None:
                 "Tara, and the isles lie in Connacht, where no magus "
                 "may stay beyond three nights.",
             ),
-            secrets=paragraphs(
-                "Unknown to the other tribes, a cadre of infernalists "
-                "rules the Gaileoin through their king. Their meddling "
-                "has left the royal line feeble-minded, puppets who "
-                "speak as they are told. The tribe as a whole has been "
-                "slow to corrupt.",
-                "Dealing with demons is the one crime for which the "
-                "Code calls a Wizard's March without debate, which sets "
-                "the Order's law against the Treaty's limits and the "
-                "Fir Bolg alliance the moment the truth comes out.",
-            ),
+            secrets=[
+                titled(
+                    "Who rules the Gaileoin",
+                    "Unknown to the other tribes, a cadre of infernalists rules the Gaileoin through their king. The tribe as a whole has been slow to corrupt.",
+                ),
+                titled(
+                    "The puppet kings",
+                    "The infernalists' meddling has left the Gaileoin royal line feeble-minded, puppets who speak as they are told.",
+                ),
+                titled(
+                    "The Code and the Treaty",
+                    "Dealing with demons is the one crime for which the Code calls a Wizard's March without debate, which sets the Order's law against the Treaty's limits and the Fir Bolg alliance the moment the truth about the Gaileoin comes out.",
+                ),
+            ],
             antagonist="The infernalists behind the Gaileoin king",
             realm="Infernal",
             stages=[
@@ -821,9 +837,12 @@ def _giant(hibernia: Hibernia) -> None:
                 "the giant is held by the symbolic act of singing "
                 "rather than by the songs, and wants to learn how.",
             ),
-            secrets="No one knows what the giant truly is. If Máel-ruanaid is "
-            "right, some other symbolic act could take the songs' "
-            "place.",
+            secrets=[
+                titled(
+                    "What the giant is",
+                    "No one knows what the giant under Qui Sonant truly is. If Máel-ruanaid is right, some other symbolic act could take the songs' place.",
+                )
+            ],
             antagonist="Whatever silences the songs",
             realm="Magic",
             stages=[
@@ -987,11 +1006,12 @@ def _mellifont(hibernia: Hibernia) -> None:
                 "faerie mound above their valley. Jerpoint has joined "
                 "the revolt.",
             ),
-            secrets="Why the monks rebelled is the storyguide's choice: the "
-            "quarrel of Irish and English, a lax life they will not "
-            "give up, an Infernal corruption of the Cistercians, or "
-            "some ancient magical secret the lay brothers turned up "
-            "among the barrows of the Brú na Bóinne.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "Why the monks rebelled is the storyguide's choice: the quarrel of Irish and English, a lax life they will not give up, an Infernal corruption of the Cistercians, or some ancient magical secret the lay brothers turned up among the barrows of the Brú na Bóinne.",
+                )
+            ],
             antagonist="Abbot Thomas and the rebel houses",
             stages=[
                 S(
@@ -1084,15 +1104,24 @@ def _oireadh(hibernia: Hibernia) -> None:
                 "with the widest acquaintance among hedge wizards; and "
                 "Tuathal an Iarrainn, a goetic smith of Rosbeg.",
             ),
-            secrets=paragraphs(
-                "The Pact's true aim, hidden from the Order and the "
-                "Coill Trí alike, is a Parma Magica of its own. Ádhamh "
-                "needs 120 breakthrough points and has 15, and doubts "
-                "he will live to finish; he keeps his notes for those "
-                "who come after.",
-                "Tuathal's arts are Infernal in origin, which Ádhamh has "
-                "yet to discover.",
-            ),
+            secrets=[
+                titled(
+                    "The Pact's true aim",
+                    "The Pact's true aim, hidden from the Order and the Coill Trí alike, is a Parma Magica of its own.",
+                ),
+                titled(
+                    "Ádhamh's doubts",
+                    "Ádhamh doubts he will live to finish the Pact's Parma; he keeps his notes for those who come after.",
+                ),
+                titled(
+                    "Tuathal's arts",
+                    "Tuathal's arts are Infernal in origin, which Ádhamh has yet to discover.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Ádhamh needs 120 breakthrough points and has 15.",
+                ),
+            ],
             antagonist="Ádhamh Brathair and the Pact of Oireadh",
             realm="Magic",
             stages=[
@@ -1193,12 +1222,14 @@ def _find(records: list[Any], *names: str) -> Any | None:
     return None
 
 
-def _add_to(record: Any, more: str, hidden: str = "", attr: str = "summary") -> None:
+def _add_to(
+    record: Any, more: str, hidden: Secrets = "", attr: str = "summary"
+) -> None:
     """Add a paragraph to a record's summary (or notes), and `hidden` to
     its secrets."""
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
     if hidden:
-        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
+        record.secrets = more_secrets(record.secrets, hidden)
 
 
 def _place(hibernia: Hibernia, places: list[Any], *keys: str) -> Any | None:
@@ -1527,7 +1558,7 @@ FEUDS: tuple[tuple[tuple[str, ...], tuple[str, ...], str, str], ...] = (
 #: covenants that exists ("covenant:" before a covenant's key; a covenant
 #: takes it in its notes), with the province or island as the last
 #: fallback: (targets, the seed, what only the storyguide knows).
-SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
+SEEDS: tuple[tuple[tuple[str, ...], str, Secrets], ...] = (
     (
         ("fionntans_grave", "Fionntan's Grave", "river_shannon", "The River Shannon"),
         "Story seed: Finding Fionntan. Ireland's first druid, Fionntan, who "
@@ -1623,7 +1654,12 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "hoping an outsider's voice adds weight. Menacing visitors, "
         "apparently sent by the Archbishop of Tuam, show that someone will "
         "go to supernatural lengths to keep Mayo under Tuam.",
-        "The archbishop may be only a pawn in a larger game.",
+        [
+            titled(
+                "Behind the Archbishop of Tuam",
+                "The Archbishop of Tuam may be only a pawn in a larger game.",
+            )
+        ],
     ),
     (
         ("tuam", "Tuam", "connacht"),
@@ -1633,7 +1669,12 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "men turn to robbery and raiding, and hedge wizards, perhaps magi "
         "too, feel it. Do the characters punish the strays, or face what "
         "drove them?",
-        "Demons are stirring both the greed and the hardship.",
+        [
+            titled(
+                "The Devils of Tuam",
+                "Demons are stirring both the greed and the hardship of Tuam.",
+            )
+        ],
     ),
     (
         ("athlone", "Athlone", "meath"),
@@ -1673,8 +1714,13 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "men in Connacht. Barred from crossing, the magi send companions to "
         "find Umor Ard Mac Adar in the hills above Lough Conn and bring him "
         "back in time.",
-        "Umor's three cousins have come into Connacht to kill him, and the "
-        "companions must run their gauntlet.",
+        [
+            titled(
+                "Umor's cousins",
+                "Umor's three cousins have come into Connacht to kill him, and the "
+                "companions must run their gauntlet.",
+            )
+        ],
     ),
     (
         ("covenant:praesis",),
@@ -1742,8 +1788,13 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "Story seed: The Púca Speaks? The Púca may not be the mindless beast "
         "it seems. It might give up its killings for favours or conditions, "
         "and might ask to be ridden to Tribunal to speak for itself there.",
-        "It may instead be a powerful Infernal being, whose wishes will be "
-        "neither pleasant nor easily met.",
+        [
+            titled(
+                "What the Púca may be",
+                "The Púca may instead be a powerful Infernal being, whose wishes "
+                "will be neither pleasant nor easily met.",
+            )
+        ],
     ),
     (
         ("kildare", "Kildare", "leinster"),
@@ -1773,8 +1824,14 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "Story seed: The Witches of Kilkenny. Kilkenny blames a coven of "
         "dark witches for the accidents that dog its new cathedral. The "
         "witches are secretive, and resolving their quarrel will be hard.",
-        "The accidents are only accidents: the witches belong to the Coill "
-        "Trí and are busy with a long feud among themselves.",
+        [
+            titled(
+                "The Witches of Kilkenny",
+                "The accidents at Kilkenny's new cathedral are only accidents: the "
+                "witches belong to the Coill Trí and are busy with a long feud "
+                "among themselves.",
+            )
+        ],
     ),
     (
         (
@@ -1910,9 +1967,18 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "assumes a youth in the macgnímartha took it, as they take cathaigh, "
         "and asks the characters to get it back; a trail leads to the woods "
         "around the Killarney lakes.",
-        "The trail is false. The thief is an older magus who wants an "
-        "inglorious episode cut from the annals, and hopes to slip the book "
-        "back while the characters search the woods.",
+        [
+            titled(
+                "The false trail",
+                "The trail to the woods around the Killarney lakes is false.",
+            ),
+            titled(
+                "Who took the Red Book",
+                "The thief of Leth Moga's Red Book is an older magus who wants an "
+                "inglorious episode cut from the annals, and hopes to slip the book "
+                "back while the characters search the woods.",
+            ),
+        ],
     ),
     (
         ("leacht_abartaigh", "Leacht Ábartaigh", "ulster"),
@@ -1932,8 +1998,14 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "of the characters is attacked without cause by an Irish monk who "
         "proves to have been possessed, and the trail leads back to the "
         "ruined monastery.",
-        "The murdered monks' ghosts have been whispering compulsions to "
-        "their living brothers, and the plot has turned to bloody revenge.",
+        [
+            titled(
+                "The ghosts of Erenagh",
+                "The murdered monks' ghosts at Erenagh have been whispering "
+                "compulsions to their living brothers, and the plot has turned to "
+                "bloody revenge.",
+            )
+        ],
     ),
     (
         ("sliabh_cruibe", "Sliabh Crúibe", "mountains_of_mourne", "ulster"),
@@ -1941,11 +2013,20 @@ SEEDS: tuple[tuple[tuple[str, ...], str, str], ...] = (
         "people carry stones up the mountain to help bury twelve kings, and "
         "magi have found that some of the stones hold vis, gathered over "
         "many years.",
-        "Eleven of the graves hold a demon bound in a dead tyrant's body. "
-        "The Cailleacha Phiseogach know that if mortal hands uncover them "
-        "they will rise, and that the world ends when a twelfth king joins "
-        "them; unable to dig themselves, they make sure greedy magi hear of "
-        "the vis.",
+        [
+            titled(
+                "The Demon Kings",
+                "Eleven of the graves of Sliabh Crúibe hold a demon bound in a "
+                "dead tyrant's body. The Cailleacha Phiseogach know that if mortal "
+                "hands uncover them they will rise, and that the world ends when a "
+                "twelfth king joins them.",
+            ),
+            titled(
+                "Why magi hear of the vis",
+                "Unable to dig the graves of Sliabh Crúibe themselves, the "
+                "Cailleacha Phiseogach make sure greedy magi hear of the vis.",
+            ),
+        ],
     ),
     (
         ("covenant:leth_cuinn", "ulster"),

@@ -23,10 +23,12 @@ from ...models import (
 )
 from ..builder import (
     Builder,
+    Secrets,
     StatBlock,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_art,
 )
 
@@ -263,29 +265,43 @@ def _household(b: Builder) -> tuple[Character, Character, Character]:
             "an acknowledged bastard, has few enemies, and has always been "
             "a God-fearing man who takes faeries and unicorns for tales.",
         ),
-        secrets=paragraphs(
-            "His first brush with the supernatural turns into an obsession. "
-            "He wants it for three reasons: plain curiosity, in an idle and "
-            "secure lord; display, since a noble who commands an enchanter "
-            "outshines one who pays a painter, and can give magical prizes "
-            "and gifts and keep a veiled threat over his rivals; and use, "
-            "with crops, spies and victories to be had from the right "
-            "magician (Ant p. 13).",
-            "He can never learn a Supernatural Ability himself. He attempts "
-            "Initiations, but he is too much the master of his domain to be "
-            "anyone's apprentice, so they all fail, and he contents himself "
-            "with keeping those who have the gifts he lacks (Ant p. 9). Every "
-            "time he reappears after the first meeting he should have some "
-            "new magical possession to show off (Ant p. 10).",
-            "He suspects, but cannot be sure, that François is his son, and "
-            "may have an astrologer settle it (Ant pp. 10, 21).",
-            "Relocating him (Ant pp. 8-10): he is a lesser baron and need "
-            "not stay one. He needs enough wealth to spend his time on this, "
-            "secure lands, and holdings both near the covenant and far "
-            "enough off to explain long absences. In a saga set near Arques, "
-            "move his old lands elsewhere. The local manors may be a dowry, "
-            "an inheritance, or won by conquest or at a tourney.",
-        ),
+        secrets=[
+            titled(
+                "Why Geoffroi wants magic",
+                "His first brush with the supernatural turns into an obsession. "
+                "He wants it for three reasons: plain curiosity, in an idle and "
+                "secure lord; display, since a noble who commands an enchanter "
+                "outshines one who pays a painter, and can give magical prizes "
+                "and gifts and keep a veiled threat over his rivals; and use, "
+                "with crops, spies and victories to be had from the right "
+                "magician (Ant p. 13).",
+            ),
+            titled(
+                "Geoffroi's Initiations",
+                "He can never learn a Supernatural Ability himself. He attempts "
+                "Initiations, but he is too much the master of his domain to be "
+                "anyone's apprentice, so they all fail, and he contents himself "
+                "with keeping those who have the gifts he lacks (Ant p. 9).",
+            ),
+            titled(
+                "Geoffroi and François",
+                "He suspects, but cannot be sure, that François is his son, and "
+                "may have an astrologer settle it (Ant pp. 10, 21).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Every time he reappears after the first meeting he should "
+                    "have some new magical possession to show off (Ant p. 10).",
+                    "Relocating him (Ant pp. 8-10): he is a lesser baron and need "
+                    "not stay one. He needs enough wealth to spend his time on "
+                    "this, secure lands, and holdings both near the covenant and "
+                    "far enough off to explain long absences. In a saga set near "
+                    "Arques, move his old lands elsewhere. The local manors may be "
+                    "a dowry, an inheritance, or won by conquest or at a tourney.",
+                ),
+            ),
+        ],
     )
     b.stats(geoffroi, _geoffroi_block())
     geoffroi.description.physical_description = (
@@ -306,19 +322,35 @@ def _household(b: Builder) -> tuple[Character, Character, Character]:
             "with assurance and is modest and quiet before her husband and "
             "his guests."
         ),
-        secrets=paragraphs(
-            "Her first care is the safety and future of her children. She "
-            "loves Geoffroi, but as his obsession grows she can be brought "
-            "to put them before him, which makes her the weak link the "
-            "characters can work on (Ant pp. 10, 11). She knows of Guillaume "
-            "and does not know of François.",
-            "Near the end she fears for her children, for his people, and "
-            "that his lands will fall to his wizards or to knights picking "
-            "over his failing estates. She can tell the covenant what is "
-            "planned for Alenard, who is to take him, and that for all his "
-            "Initiations Geoffroi has never learned the least piece of magic "
-            "(Ant p. 19).",
-        ),
+        secrets=[
+            titled(
+                "Ysabeau's first care",
+                "Her first care is the safety and future of her children. She "
+                "loves Geoffroi, but as his obsession grows she can be brought "
+                "to put them before him (Ant pp. 10, 11).",
+            ),
+            titled(
+                "What she knows of Guillaume and François",
+                "She knows of Guillaume and does not know of François.",
+            ),
+            titled(
+                "Ysabeau's fears",
+                "Near the end she fears for her children, for his people, and "
+                "that his lands will fall to his wizards or to knights picking "
+                "over his failing estates (Ant p. 19).",
+            ),
+            titled(
+                "What Ysabeau can tell the covenant",
+                "Near the end she can tell the covenant what is planned for "
+                "Alenard, who is to take him, and that for all his Initiations "
+                "Geoffroi has never learned the least piece of magic (Ant p. 19).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Her care for her children makes her the weak link the "
+                "characters can work on (Ant pp. 10, 11).",
+            ),
+        ],
     )
     b.stats(ysabeau, _ysabeau_block())
     ysabeau.description.physical_description = (
@@ -338,15 +370,22 @@ def _household(b: Builder) -> tuple[Character, Character, Character]:
             "Benedictine monastery, he has served the household for six "
             "years and is known for his loyalty and sobriety."
         ),
-        secrets=paragraphs(
-            "In his first year he resented his master's wealth and his own "
-            "place, and made enemies. One night persons unknown beat him "
-            "almost to death, and an angel enfolded him and showed him his "
-            "faults. He renewed his loyalty and gave up his old ways, and the "
-            "angel promised him protection while he stays true. The household "
-            "barely remembers the man he was (Ant p. 12).",
-            "He is loyal to the end and cannot be turned by mundane means (Ant p. 10).",
-        ),
+        secrets=[
+            titled(
+                "The night Claude was beaten",
+                "In his first year he resented his master's wealth and his own "
+                "place, and made enemies. One night persons unknown beat him "
+                "almost to death, and an angel enfolded him and showed him his "
+                "faults. He renewed his loyalty and gave up his old ways, and "
+                "the angel promised him protection while he stays true. The "
+                "household barely remembers the man he was (Ant p. 12).",
+            ),
+            titled(
+                "Claude's loyalty",
+                "He is loyal to the end and cannot be turned by mundane means "
+                "(Ant p. 10).",
+            ),
+        ],
     )
     b.stats(claude, _claude_block())
     claude.description.physical_description = (
@@ -374,12 +413,18 @@ def _children(b: Builder) -> dict[str, Character]:
                 "the Normandy tourney circuit."
             ),
             traits={"Loyal": 2},
-            secrets=(
-                "Geoffroi means to give him much of his land as an appanage, "
-                "held until Guillaume's death. If the baron is left to decline, "
-                "Guillaume is among those fighting over the estates "
-                "(Ant pp. 19, 20)."
-            ),
+            secrets=[
+                titled(
+                    "Guillaume's appanage",
+                    "Geoffroi means to give him much of his land as an appanage, "
+                    "held until Guillaume's death (Ant pp. 19, 20).",
+                ),
+                titled(
+                    "Guillaume if the baron declines",
+                    "If the baron is left to decline, Guillaume is among those "
+                    "fighting over the estates (Ant pp. 19, 20).",
+                ),
+            ],
         ),
         "francois": b.magus(
             "François",
@@ -391,13 +436,23 @@ def _children(b: Builder) -> dict[str, Character]:
                 "A boy of ten, brought up as the son of a man of rank in Normandy."
             ),
             traits={"Loyal": 0},
-            secrets=(
-                "He is the baron's bastard by a married woman of rank, though "
-                "only she and Geoffroi suspect it and neither can be sure, and "
-                "the boy knows nothing. Her resentment of Geoffroi has kept "
-                "his Loyalty at 0. Made public, it would set a vengeful "
-                "cuckold on the baron's Norman lands (Ant pp. 10, 20)."
-            ),
+            secrets=[
+                titled(
+                    "François's father",
+                    "He is the baron's bastard by a married woman of rank, though "
+                    "only she and Geoffroi suspect it and neither can be sure, "
+                    "and the boy knows nothing (Ant pp. 10, 20).",
+                ),
+                titled(
+                    "If François's parentage were known",
+                    "Made public, François's parentage would set a vengeful "
+                    "cuckold on the baron's Norman lands (Ant pp. 10, 20).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "His mother's resentment of Geoffroi has kept his Loyalty at 0.",
+                ),
+            ],
         ),
         "alenard": b.magus(
             "Alenard",
@@ -410,12 +465,22 @@ def _children(b: Builder) -> dict[str, Character]:
                 "a young prince as any."
             ),
             traits={"Loyal": 2},
-            secrets=(
-                "His Loyalty may change as he grows and understands where he "
-                "stands beside his brothers. Geoffroi means him for magic, "
-                "and promises him to one of the court's wizards (Ant pp. 10, "
-                "16, 19). He comes to resent how his father has used him."
-            ),
+            secrets=[
+                titled(
+                    "Alenard's promised future",
+                    "Geoffroi means him for magic, and promises him to one of "
+                    "the court's wizards (Ant pp. 10, 16, 19).",
+                ),
+                titled(
+                    "Alenard and his father",
+                    "He comes to resent how his father has used him.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "His Loyalty may change as he grows and understands where he "
+                    "stands beside his brothers.",
+                ),
+            ],
         ),
         "joie": b.magus(
             "Joie",
@@ -462,13 +527,23 @@ def _barony(
             "At first his court looks like that of any rich noble, if with "
             "an eye for the unusual and a readiness to pay for the best.",
         ),
-        secrets=(
-            "Every family tie is a lever: track the children's ages, because "
-            "the baron's marriages for them and his fears for them can be "
-            "used against him (Ant p. 10). As a wealthy lord he need give "
-            "only a season a year to his estates, and in time he fails even "
-            "that (Ant p. 17)."
-        ),
+        secrets=[
+            titled(
+                "The baron's children as levers",
+                "Every family tie is a lever: the baron's marriages for his "
+                "children and his fears for them can be used against him "
+                "(Ant p. 10).",
+            ),
+            titled(
+                "How the baron tends his estates",
+                "As a wealthy lord the baron need give only a season a year to "
+                "his estates, and in time he fails even that (Ant p. 17).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Track the children's ages (Ant p. 10).",
+            ),
+        ],
     )
     b.link(barony, "characters", geoffroi, "the baron")
     b.link(barony, "characters", ysabeau, "the baron's wife")
@@ -495,16 +570,30 @@ def _locke(b: Builder, school: Neighbour) -> Character:
             "York's cathedral school, forty years old, with the look of a man "
             "left permanently unamused by his students."
         ),
-        secrets=paragraphs(
-            "An elementalist, unGifted. He neither hides his magic from his "
-            "colleagues nor discusses it, and lives two lives, one in the "
-            "cathedral and one among spirits and supernatural beasts. He knows "
-            "little of the realms themselves, but knows of other traditions "
-            "and of the Order, and sees meeting them as an intellectual "
-            "challenge (Ant p. 16). He is the likeliest of the wizards to "
-            "go out and bring others to the court (Ant p. 12), and may "
-            "take Claude's place as steward (Ant p. 18).",
-        ),
+        secrets=[
+            titled(
+                "Edwin Locke's two lives",
+                "He is an elementalist, unGifted. He neither hides his magic "
+                "from his colleagues nor discusses it, and lives two lives, one "
+                "in the cathedral and one among spirits and supernatural beasts "
+                "(Ant p. 16).",
+            ),
+            titled(
+                "What Locke knows of other magic",
+                "He knows little of the realms themselves, but knows of other "
+                "traditions and of the Order, and sees meeting them as an "
+                "intellectual challenge (Ant p. 16).",
+            ),
+            titled(
+                "Locke as recruiter",
+                "He is the likeliest of the baron's wizards to go out and bring "
+                "others to the court (Ant p. 12).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "He may take Claude's place as steward (Ant p. 18).",
+            ),
+        ],
     )
     b.stats(
         locke,
@@ -599,49 +688,86 @@ def _locke(b: Builder, school: Neighbour) -> Character:
 
 #: The council's sample wizards: name, what is known of them, their secrets,
 #: and the hedge traditions the book's heading gives them.
-_WIZARDS: tuple[tuple[str, str, str, tuple[str, ...]], ...] = (
+_WIZARDS: tuple[tuple[str, str, Secrets, tuple[str, ...]], ...] = (
     (
         "Ádhamh Brathair",
         "A learned scholar from Hibernia at the baron's court. His name is "
         "said EWE BRO-hur.",
-        "A learned magician, who means to build one unified theory of magic "
-        "on sound philosophy. He studies his colleagues' magic and pursues "
-        "the breakthroughs the theory needs.",
+        [
+            titled(
+                "Ádhamh's unified theory",
+                "He is a learned magician, who means to build one unified "
+                "theory of magic on sound philosophy. He studies his "
+                "colleagues' magic and pursues the breakthroughs the theory "
+                "needs.",
+            ),
+        ],
         ("trad_learned_magicians",),
     ),
     (
         "Dominici Viterbo",
         "A scholar who has lately joined the baron's court.",
-        "A goetic sorcerer, desperate to escape a dark fate, who hopes to "
-        "hide in the council. The demons of his past soon find him. By "
-        "teaching others he may mend his mistakes and cleanse his arts of "
-        "their corruption.",
+        [
+            titled(
+                "Dominici's dark fate",
+                "He is a goetic sorcerer, desperate to escape a dark fate, who "
+                "hopes to hide in the council. The demons of his past soon "
+                "find him.",
+            ),
+            titled(
+                "Dominici's hope of mending",
+                "By teaching others he may mend his mistakes and cleanse his "
+                "arts of their corruption.",
+            ),
+        ],
         (),
     ),
     (
         "Hannelore of the Baron's Council",
         "A woman who has joined the baron's council of scholars.",
-        "A student of the Maleficia who brings Infernal magic to the council "
-        "for protection from Hermetic enemies of her past. She wants a "
-        "direct road to influence, and sets out to take Ysabeau's place "
-        "in the baron's affections.",
+        [
+            titled(
+                "Why Hannelore joined the council",
+                "She is a student of the Maleficia who brings Infernal magic "
+                "to the council for protection from Hermetic enemies of her "
+                "past.",
+            ),
+            titled(
+                "Hannelore's designs on the baron",
+                "She wants a direct road to influence, and sets out to take "
+                "Ysabeau's place in the baron's affections.",
+            ),
+        ],
         (),
     ),
     (
         "Jabir Al-Qazwini",
         "An Arabic magus who has travelled far to the baron's court.",
-        "An itinerant sahir, seeking a council of the wise that a powerful "
-        "spirit of the sands promised him. He believes he has found it and "
-        "stays to learn, seemingly blind to the baron's decline and the "
-        "council's growing power.",
+        [
+            titled(
+                "What Jabir seeks",
+                "He is an itinerant sahir, seeking a council of the wise that a "
+                "powerful spirit of the sands promised him. He believes he has "
+                "found it and stays to learn, seemingly blind to the baron's "
+                "decline and the council's growing power.",
+            ),
+        ],
         (),
     ),
     (
         "Carles Peregrinus",
         "A man with a grievance, newly welcome at the baron's council.",
-        "A failed Hermetic apprentice, denied what he sees as his place in "
-        "the Order. He means to dominate the council through his strong "
-        "Entrancement.",
+        [
+            titled(
+                "Carles's grievance",
+                "He is a failed Hermetic apprentice, denied what he sees as his "
+                "place in the Order.",
+            ),
+            titled(
+                "Carles's plan for the council",
+                "He means to dominate the council through his strong Entrancement.",
+            ),
+        ],
         (),
     ),
 )
@@ -671,51 +797,86 @@ def _council(b: Builder, geoffroi: Character, locke: Character) -> Neighbour:
             "side by side, and speaks of shared learning and peaceful "
             "understanding."
         ),
-        secrets=paragraphs(
-            "Most members are unGifted, because of what The Gift does to "
-            "company; one or two with the Gentle Gift may lead. Since a "
-            "tradition takes an opened Gift or a ritual Initiation, they "
-            "exchange only knowledge of the realms, of the Order, and of "
-            "each other's traditions (Ant p. 11).",
-            "Under the talk of learning, their shared concern is to get all "
-            "they can from the baron. They counsel him and manage what he "
-            "sees of the world, and give him trinkets for security and "
-            "funds: at court each enjoys the effect of the Wealthy Virtue, "
-            "an extra season of study (Ant p. 11).",
-            "Output (Ant p. 11): one average tractatus on Magic, Faerie or "
-            "Infernal Lore for each practitioner; one or two inceptions and "
-            "formulae a year; one enriched object a year; 10 levels of other "
-            "enchantments a year. The collection may be studied book by "
-            "book or as realia (Covenants p. 102; Ant p. 15).",
-            "Lesser folk touched by magic, not on the council (Ant p. 13): a "
-            "mundane astrologer and philosopher, skilled in inceptions, who "
-            "wants true magic; a blind beggar cursed with prophetic visions, "
-            "who would trade one sight for the other; a young boy who sees "
-            "ghosts, and the mother who took him from their frightened "
-            "village; a faerie-touched armorer of great skill, who needs a "
-            "place to work, money for his workshop, and someone to deal with "
-            "the faerie forever trying to take back its tools.",
-            "Sample inceptions (Art & Academe ch. 5; the astrologer knows how "
-            "to make each, and a season makes copies, finished by casting the "
-            "horoscopes): Has N Betrayed the Confidence of NA?, level 5, "
-            "Binary (Base 4, +1 past), whether the first person has probably "
-            "revealed a secret of the second: Geoffroi uses it on Ysabeau. Is "
-            "N the Father of NA?, level 5, Binary (Base 5), which reads the "
-            "boy's present state, not the past: Geoffroi uses it on François "
-            "(Ant p. 21).",
-            "Sample reagent: Glass of Uncommon Purity, level 20, Substantial "
-            "(Base 10, +2 Substantial), purifies glass as it is worked; "
-            "decanters and glasses of it give a host +2 to Leadership while "
-            "entertaining guests (Ant pp. 21-22).",
-            "Sample theriacs: Compress of Tormentil, level 15, Mild (Base 10, "
-            "+1 Mild), a bandage of tormentil and comfrey that heals a Light "
-            "Wound from a slashing or piercing weapon in a week. Tincture of "
-            "Vitality, level 15, Moderate (Base 5, +2 Moderate), a draft that "
-            "at once lifts Tired to Weary: Geoffroi uses these at the tourney "
-            "(Ant p. 22).",
-            "Without Art & Academe, use only the effects (Ant p. 21). The "
-            "amulets, chartae and wondrous items are device records.",
-        ),
+        secrets=[
+            titled(
+                "Why the council is unGifted",
+                "Most members of the baron's council are unGifted, because of "
+                "what The Gift does to company; one or two with the Gentle Gift "
+                "may lead (Ant p. 11).",
+            ),
+            titled(
+                "What the council's members share",
+                "Since a tradition takes an opened Gift or a ritual Initiation, "
+                "the council's members exchange only knowledge of the realms, "
+                "of the Order, and of each other's traditions (Ant p. 11).",
+            ),
+            titled(
+                "What the council wants from the baron",
+                "Under the talk of learning, the council's shared concern is to "
+                "get all they can from the baron. They counsel him and manage "
+                "what he sees of the world, and give him trinkets for security "
+                "and funds: at court each has an extra season of study "
+                "(Ant p. 11).",
+            ),
+            titled(
+                "The mundane astrologer",
+                "Touched by magic but not on the council: a mundane astrologer "
+                "and philosopher, skilled in inceptions, who wants true magic "
+                "(Ant p. 13).",
+            ),
+            titled(
+                "The blind beggar",
+                "Touched by magic but not on the council: a blind beggar cursed "
+                "with prophetic visions, who would trade one sight for the "
+                "other (Ant p. 13).",
+            ),
+            titled(
+                "The boy who sees ghosts",
+                "Touched by magic but not on the council: a young boy who sees "
+                "ghosts, and the mother who took him from their frightened "
+                "village (Ant p. 13).",
+            ),
+            titled(
+                "The faerie-touched armorer",
+                "Touched by magic but not on the council: a faerie-touched "
+                "armorer of great skill, who needs a place to work, money for "
+                "his workshop, and someone to deal with the faerie forever "
+                "trying to take back its tools (Ant p. 13).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "At court each council member enjoys the effect of the "
+                    "Wealthy Virtue (Ant p. 11).",
+                    "Output (Ant p. 11): one average tractatus on Magic, Faerie "
+                    "or Infernal Lore for each practitioner; one or two "
+                    "inceptions and formulae a year; one enriched object a year; "
+                    "10 levels of other enchantments a year. The collection may "
+                    "be studied book by book or as realia (Covenants p. 102; Ant "
+                    "p. 15).",
+                    "Sample inceptions (Art & Academe ch. 5; the astrologer knows how "
+                    "to make each, and a season makes copies, finished by casting the "
+                    "horoscopes): Has N Betrayed the Confidence of NA?, level 5, "
+                    "Binary (Base 4, +1 past), whether the first person has probably "
+                    "revealed a secret of the second: Geoffroi uses it on Ysabeau. Is "
+                    "N the Father of NA?, level 5, Binary (Base 5), which reads the "
+                    "boy's present state, not the past: Geoffroi uses it on François "
+                    "(Ant p. 21).",
+                    "Sample reagent: Glass of Uncommon Purity, level 20, Substantial "
+                    "(Base 10, +2 Substantial), purifies glass as it is worked; "
+                    "decanters and glasses of it give a host +2 to Leadership while "
+                    "entertaining guests (Ant pp. 21-22).",
+                    "Sample theriacs: Compress of Tormentil, level 15, Mild (Base 10, "
+                    "+1 Mild), a bandage of tormentil and comfrey that heals a Light "
+                    "Wound from a slashing or piercing weapon in a week. Tincture of "
+                    "Vitality, level 15, Moderate (Base 5, +2 Moderate), a draft that "
+                    "at once lifts Tired to Weary: Geoffroi uses these at the tourney "
+                    "(Ant p. 22).",
+                    "Without Art & Academe, use only the effects (Ant p. 21). The "
+                    "amulets, chartae and wondrous items are device records.",
+                ),
+            ),
+        ],
     )
     b.link(council, "characters", geoffroi, "its patron")
     b.link(council, "characters", locke, "the Elementalist")
@@ -737,11 +898,18 @@ def _council(b: Builder, geoffroi: Character, locke: Character) -> Neighbour:
         realm="Faerie",
         appearance="A wise woman of the baron's council.",
         notes="The book prints no statistics.",
-        secrets=(
-            "A faerie in the guise of a wise woman, with pretenses and powers "
-            "in place of magical ability, who has joined the council to learn "
-            "how men use their power for the good of others."
-        ),
+        secrets=[
+            titled(
+                "Dorothy Anning's true nature",
+                "She is a faerie in the guise of a wise woman, with pretenses "
+                "and powers in place of magical ability.",
+            ),
+            titled(
+                "Why Dorothy joined the council",
+                "She has joined the council to learn how men use their power "
+                "for the good of others.",
+            ),
+        ],
     )
     b.link(council, "creatures", anning, "a member of the council")
     return council
@@ -902,45 +1070,65 @@ def _story(b: Builder, barony: Neighbour, council: Neighbour) -> None:
             "A rich and curious baron near the covenant starts to take an "
             "interest in magic, and in the scholars next door."
         ),
-        secrets=paragraphs(
-            "Geoffroi begins as a reasonable man and a possible ally, grows "
-            "obsessed, and ends a danger to himself, his vassals and his "
-            "neighbors. He sees little difference between Divine, Faerie, "
-            "Magic and Infernal, fills his woods with beasts from afar and "
-            "his court with magicians. The story has two sides, his research "
-            "and the neglect of his lands, and the book advises at least one "
-            "story from each stage. Many stages can serve as news brought by "
-            "infiltration, intrigue or scrying (Ant p. 14). The Infernal "
-            "and Parma stages can be braided with the Divine Abbot's story "
-            "(Ant p. 113).",
-            "Investigating (Ant p. 18): the troubles plainly lead to his "
-            "court; what remains is why, who holds his ear, and how to end "
-            "it. Infiltrating the council can be done openly, but it will "
-            "expect its members to do the baron's wishes, which an oath may "
-            "forbid. Spying or scrying shows the alliances and plots kept out "
-            "of the chamber, and can split the council. Arcane Connections "
-            "taken from people or rooms allow listening in, or worse.",
-            "Endings (Ant pp. 19-21). Let sleeping dogs lie: he loses his "
-            "lands, signing whatever he is handed, and dies poor, while "
-            "nobles and Guillaume fight over them, Ysabeau and her daughters "
-            "go back to Arques, and the war or the wizards become the "
-            "covenant's problem. Persuade him: threaten his family, expose "
-            "François, take the council's place with proof of its treachery, "
-            "or send rivals, friends or the Church to turn him. Eliminate "
-            "him, if an heir is of age, or leave him infirm under a regent: "
-            "the Code forbids it, the court wizards may trace it, and Ysabeau "
-            "and the heir must then be guarded from them. Persuade the wizards "
-            "to leave, by threats, bribes or a fair sharing of learning. "
-            "Eliminate the wizards, perhaps through Tremere, Flambeau or "
-            "Hoplites, and expect their traditions' revenge and the baron's "
-            "own, by trade and fear. Induct them into Ex Miscellanea, under "
-            "the Oath. Or found a rival order with a code of its own, which "
-            "House Tremere would oppose, and which could become the great "
-            "question of the next Grand Tribunal.",
-            "Interference: whether acting against a hedge wizard is meddling "
-            "with mundanes has no fixed answer. Each case goes to Tribunal, "
-            "for the magi to argue and not for the troupe to rule (Ant p. 19).",
-        ),
+        secrets=[
+            titled(
+                "How the baron's hunger grows",
+                "Geoffroi begins as a reasonable man and a possible ally, grows "
+                "obsessed, and ends a danger to himself, his vassals and his "
+                "neighbors. He sees little difference between Divine, Faerie, "
+                "Magic and Infernal, fills his woods with beasts from afar and "
+                "his court with magicians (Ant p. 14).",
+            ),
+            titled(
+                "Joining the baron's council",
+                "Infiltrating Geoffroi's council can be done openly, but it will "
+                "expect its members to do the baron's wishes, which an oath may "
+                "forbid (Ant p. 18).",
+            ),
+            titled(
+                "Hedge wizards and the Code",
+                "Whether acting against a hedge wizard is meddling with "
+                "mundanes has no fixed answer. Each case goes to Tribunal, for "
+                "the magi to argue (Ant p. 19).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The story has two sides, his research and the neglect of "
+                    "his lands, and the book advises at least one story from "
+                    "each stage. Many stages can serve as news brought by "
+                    "infiltration, intrigue or scrying (Ant p. 14). The Infernal "
+                    "and Parma stages can be braided with the Divine Abbot's "
+                    "story (Ant p. 113).",
+                    "Investigating (Ant p. 18): the troubles plainly lead to his "
+                    "court; what remains is why, who holds his ear, and how to "
+                    "end it. Spying or scrying shows the alliances and plots "
+                    "kept out of the chamber, and can split the council. Arcane "
+                    "Connections taken from people or rooms allow listening in, "
+                    "or worse.",
+                    "Endings (Ant pp. 19-21). Let sleeping dogs lie: he loses his "
+                    "lands, signing whatever he is handed, and dies poor, while "
+                    "nobles and Guillaume fight over them, Ysabeau and her daughters "
+                    "go back to Arques, and the war or the wizards become the "
+                    "covenant's problem. Persuade him: threaten his family, expose "
+                    "François, take the council's place with proof of its treachery, "
+                    "or send rivals, friends or the Church to turn him. Eliminate "
+                    "him, if an heir is of age, or leave him infirm under a regent: "
+                    "the Code forbids it, the court wizards may trace it, and Ysabeau "
+                    "and the heir must then be guarded from them. Persuade the wizards "
+                    "to leave, by threats, bribes or a fair sharing of learning. "
+                    "Eliminate the wizards, perhaps through Tremere, Flambeau or "
+                    "Hoplites, and expect their traditions' revenge and the baron's "
+                    "own, by trade and fear. Induct them into Ex Miscellanea, under "
+                    "the Oath. Or found a rival order with a code of its own, which "
+                    "House Tremere would oppose, and which could become the great "
+                    "question of the next Grand Tribunal.",
+                    "Interference: each case of acting against a hedge wizard "
+                    "is for the magi to argue at Tribunal, and not for the "
+                    "troupe to rule (Ant p. 19).",
+                ),
+            ),
+        ],
         stages=[
             S(
                 "First Encounter",
@@ -1139,26 +1327,59 @@ def _seeds(b: Builder) -> None:
         (
             "The Ambitious Medicus",
             "An itinerant doctor settles happily into the baron's court.",
-            "Skilled in the elemental arts, he tilts the court's humors "
-            "toward the sanguine, so that all think him a friend, even as the "
-            "baron's riches begin to vanish. Only the phlegmatic steward "
-            "suspects, and looks for someone who will listen (Ant p. 13).",
+            [
+                titled(
+                    "The medicus's arts",
+                    "Skilled in the elemental arts, the ambitious medicus tilts "
+                    "the baron's court's humors toward the sanguine, so that all "
+                    "think him a friend, even as the baron's riches begin to "
+                    "vanish (Ant p. 13).",
+                ),
+                titled(
+                    "Who suspects the medicus",
+                    "Only the baron's phlegmatic steward suspects the medicus, "
+                    "and looks for someone who will listen (Ant p. 13).",
+                ),
+            ],
         ),
         (
             "The Magical Swordsmith",
             "The baron asks that his swordsmith be let work at the covenant.",
-            "A peasant craftsman, daunted by the wealthy and the Gifted, who "
-            "needs the covenant's beneficial air. Can the magi learn from him, "
-            "and will they send him back to Geoffroi or keep him for another "
-            "use (Ant p. 15)?",
+            [
+                titled(
+                    "Who the swordsmith is",
+                    "The baron's swordsmith is a peasant craftsman, daunted by "
+                    "the wealthy and the Gifted, who needs the covenant's "
+                    "beneficial air (Ant p. 15).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Can the magi learn from him, and will they send him back "
+                    "to Geoffroi or keep him for another use (Ant p. 15)?",
+                ),
+            ],
         ),
         (
             "The Stolen Ring",
             "A Jewish goldsmith and his apprentice ask the magi's help.",
-            "A ring he burned magic into for Baron Geoffroi has been stolen. "
-            "He fears the baron's wrath and that it will serve as an Arcane "
-            "Connection to him. Where is it, what does the thief intend, and "
-            "what is the apprentice's part (Ant p. 22)?",
+            [
+                titled(
+                    "The goldsmith's ring",
+                    "A ring the goldsmith burned magic into for Baron Geoffroi "
+                    "has been stolen (Ant p. 22).",
+                ),
+                titled(
+                    "What the goldsmith fears",
+                    "The goldsmith fears the baron's wrath and that the stolen "
+                    "ring will serve as an Arcane Connection to the baron "
+                    "(Ant p. 22).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Where is the ring, what does the thief intend, and what is "
+                    "the apprentice's part (Ant p. 22)?",
+                ),
+            ],
         ),
     ):
         dormant(b.threat(name, antagonist=BARON, summary=summary, secrets=hidden))

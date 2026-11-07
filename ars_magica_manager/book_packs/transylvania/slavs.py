@@ -23,7 +23,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -307,8 +307,13 @@ def _bosnia(transylvania: Transylvania) -> None:
             "local merchants came to blows there and one died; no "
             "visiting magus or servant was involved.",
         ),
-        secrets="Some suspect an Infernal aura has grown in the mansio; none "
-        "has yet been detected.",
+        secrets=[
+            titled(
+                "An aura in the mansio",
+                "Some suspect an Infernal aura has grown in the mansio of "
+                "Vrhbosna; none has yet been detected.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
 
@@ -594,12 +599,21 @@ def _istria(transylvania: Transylvania) -> None:
             "(see the Bestiary). Loosing a swarm of them just to see "
             "what they guard seems excessive.",
         ),
-        secrets="Some Seekers think Medea made her brother an airy spirit "
-        "fit to be patron of a mystery cult, the serpents perhaps "
-        "part of its Ordeals. A few magi desperate for her secret of "
-        "regeneration have died to strong wards trying to break in; "
-        "whether Medea, the Histrians or a cult already serving "
-        "Aspytrus set them is unknown.",
+        secrets=[
+            titled(
+                "What Medea made of Aspytrus",
+                "Some Seekers think Medea made her brother Aspytrus an airy "
+                "spirit fit to be patron of a mystery cult, the serpents at "
+                "his grave perhaps part of its Ordeals.",
+            ),
+            titled(
+                "The wards on the grave",
+                "A few magi desperate for Medea's secret of regeneration have "
+                "died to strong wards trying to break into the Grave of "
+                "Aspytrus; whether Medea, the Histrians or a cult already "
+                "serving Aspytrus set them is unknown.",
+            ),
+        ],
         **RUMOURED,
     )
 
@@ -725,9 +739,16 @@ def _old_histria(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "year and no season. Of the unnamed magi, one is Gifted and in "
         "Istria and two are in Venice.",
     )
-    hidden = joined_lines(
-        "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.",
-    )
+    hidden = [
+        titled(
+            "Pahniro's frailty",
+            "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat.",
+        ),
+        titled(
+            "Pahniro the spymaster",
+            "Pahniro may well be the House's spymaster for the Roman Tribunal.",
+        ),
+    ]
     covenant = b.covenant(
         "Old Histria",
         tribunal=tribunal,
@@ -918,8 +939,13 @@ def _histrian_magi(transylvania: Transylvania, b: Builder) -> None:
             "Mercere often send him after strigons, which he passes "
             "to younger magi.",
         ),
-        secrets="His doddering is misdirection: he served twenty years as a "
-        "hoplite and has killed three magi in single combat.",
+        secrets=[
+            titled(
+                "Pahniro's frailty",
+                "His doddering is misdirection: he served twenty years as a "
+                "hoplite and has killed three magi in single combat.",
+            ),
+        ],
         traits={
             "Brave": 4,
             "Likes fooling people with his old codger act": 3,

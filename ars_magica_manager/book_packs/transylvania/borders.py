@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
 from ...models.world import FULL
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -498,11 +498,19 @@ def _lycaneon(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> Non
         "The book gives no founding year (the Founder's own time) and no "
         "season. Nine of the fourteen magi are unnamed.",
     )
-    hidden = joined_lines(
-        "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.",
-        "A rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
-        "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
-    )
+    hidden = [
+        titled(
+            "Lycaneon's early mobilisation",
+            "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
+        ),
+        titled(
+            "Storyguide Notes",
+            joined_lines(
+                "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.",
+                "A rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
+            ),
+        ),
+    ]
     lycaneon = b.covenant(
         "Lycaneon",
         tribunal=tribunal,
@@ -707,10 +715,19 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
             "beaten off both times; they spoke only of taking back "
             "something they had lost.",
         ),
-        secrets="There may be a second, deeper level of the regio known only "
-        "to the headmaster; this has never been confirmed or denied. "
-        "Whether the storm wizards want the tower or something hidden "
-        "in it is unknown.",
+        secrets=[
+            titled(
+                "A deeper level",
+                "There may be a second, deeper level of the Scholomance's "
+                "regio known only to the headmaster; this has never been "
+                "confirmed or denied.",
+            ),
+            titled(
+                "What the storm wizards want",
+                "Whether the storm wizards want the Scholomance's tower or "
+                "something hidden in it is unknown.",
+            ),
+        ],
         **RUMOURED,
     )
     summary = paragraphs(
@@ -795,13 +812,18 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
         "in 1095); the book gives no season. One of the three magi is "
         "unnamed.",
     )
-    hidden = joined_lines(
-        "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.",
-        "A snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.",
-        "A shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.",
-        "A friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.",
-        "Sebastian's name echoes the dragon king Aževastjepan's; see Sebastian.",
-    )
+    hidden = [
+        titled(
+            "Storyguide Notes",
+            joined_lines(
+                "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.",
+                "A snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.",
+                "A shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.",
+                "A friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.",
+                "Sebastian's name echoes the dragon king Aževastjepan's; see Sebastian.",
+            ),
+        ),
+    ]
     scholomance = b.covenant(
         "The Scholomance",
         tribunal=tribunal,
@@ -900,8 +922,13 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
             "the dragon king Aževastjepan; nobody has confronted him, "
             "but they tread warily round him.",
         ),
-        secrets="Sebastian may be Aževastjepan himself, the seven-headed "
-        "dragon king of the Carpathians, in human guise.",
+        secrets=[
+            titled(
+                "Sebastian's true nature",
+                "Sebastian may be Aževastjepan himself, the seven-headed "
+                "dragon king of the Carpathians, in human guise.",
+            ),
+        ],
     )
     m["ludmilla"] = b.magus(
         "Ludmilla",
@@ -923,8 +950,13 @@ def _scholomance(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> 
             "there into one of her tradition's Abilities. People "
             "suspect her of being a nightwalker, which she denies.",
         ),
-        secrets="She is a nightwalker. When she walks, her phantasticum is a "
-        "white moth with a lovely young girl's face.",
+        secrets=[
+            titled(
+                "What Ludmilla denies",
+                "She is a nightwalker. When she walks, her phantasticum is a "
+                "white moth with a lovely young girl's face.",
+            ),
+        ],
     )
 
 
@@ -1130,33 +1162,45 @@ def _factions(transylvania: Transylvania, b: Builder) -> None:
             "which the Tremere ban on contact forbids, or whether to "
             "wipe out the garrison and leave no witness.",
         ),
-        secrets=paragraphs(
-            "Two optional Orders. A holier one fights for the "
-            "Dominion: its conquests carry a Brave Dominion aura, it "
-            "sends preachers among the Cumans before its armies, and "
-            "an inner circle of Divine wonder-workers uses "
-            "Invocation, Blessing and Cursing and senses holiness. "
-            "Their Blessing of the relic (Invocation 30) lends one "
-            "relic's Magic Resistance and its scourge of demons to up "
-            "to ten men who keep together, for a Sabbath.",
-            "A profane one serves infernal masters, wants power over "
-            "land more than pagan blood, and hoards occult lore, "
-            "capturing shamans, witches and taltós; many of its "
-            "leaders are goetic sorcerers and the rest diabolists, "
-            "and it rules the common folk through fear, possession "
-            "and blackmail. Its favoured knights carry great swords "
-            "with a bound demon that whispers in their dreams, and "
-            "that can trade a blow's damage for an Incapacitating "
-            "wound that heals the wielder's own worst wound, three "
-            "times a day (Consumption 37).",
-            "If history runs its course, Andrew II (home from "
-            "crusade since 1218) is forced to grant the Golden Bull "
-            "in 1222 but will not take the Burzenland back; in 1225 "
-            "Hermann von Salza puts it under the Holy See, and the "
-            "king drives the knights out by force when they refuse "
-            "to go. The Cumans then pour through the weakened "
-            "defences.",
-        ),
+        secrets=[
+            titled(
+                "A holier Order",
+                "A holier Teutonic Order fights for the "
+                "Dominion: its conquests carry a Brave Dominion aura, it "
+                "sends preachers among the Cumans before its armies, and "
+                "an inner circle of Divine wonder-workers uses "
+                "Invocation, Blessing and Cursing and senses holiness. "
+                "Their Blessing of the relic (Invocation 30) lends one "
+                "relic's Magic Resistance and its scourge of demons to up "
+                "to ten men who keep together, for a Sabbath.",
+            ),
+            titled(
+                "A profane Order",
+                "A profane Teutonic Order serves infernal masters, wants "
+                "power over land more than pagan blood, and hoards occult "
+                "lore, capturing shamans, witches and taltós; many of its "
+                "leaders are goetic sorcerers and the rest diabolists, "
+                "and it rules the common folk through fear, possession "
+                "and blackmail. Its favoured knights carry great swords "
+                "with a bound demon that whispers in their dreams, and "
+                "that can trade a blow's damage for an Incapacitating "
+                "wound that heals the wielder's own worst wound, three "
+                "times a day (Consumption 37).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Two optional Orders: the holier one and the profane one.",
+                    "If history runs its course, Andrew II (home from "
+                    "crusade since 1218) is forced to grant the Golden Bull "
+                    "in 1222 but will not take the Burzenland back; in 1225 "
+                    "Hermann von Salza puts it under the Holy See, and the "
+                    "king drives the Teutonic Knights out by force when they "
+                    "refuse to go. The Cumans then pour through the weakened "
+                    "defences.",
+                ),
+            ),
+        ],
     )
     w["saxons"] = b.faction(
         "The Transylvanian Saxons",

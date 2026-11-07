@@ -13,7 +13,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, StatBlock, joined_lines, paragraphs, vf_art
+from ..builder import Builder, StatBlock, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -181,8 +181,14 @@ def _places(normandy: Normandy) -> None:
             "great deal of Perdo and Corpus vis; the book gives no "
             "tenure for it.",
         ),
-        secrets="Some of the Perdo and Corpus vis gathered in the regio carries "
-        "an Infernal taint, and nothing marks which.",
+        secrets=[
+            titled(
+                "The tainted vis",
+                "Some of the Perdo and Corpus vis gathered in the regio of the "
+                "Catalaunian Fields carries an Infernal taint, and nothing marks "
+                "which.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The Endless Battle",
@@ -251,9 +257,17 @@ def _places(normandy: Normandy) -> None:
             "survives inside so strong a Divine aura is unknown, and "
             "several Bonisagus magi have studied it.",
         ),
-        secrets="Rumour, perhaps true, says the abbey was founded in 1136 by "
-        "Valoran, a pupil of St. Nerius; Eloi believes Valoran was "
-        "Angelus's parens.",
+        secrets=[
+            titled(
+                "Who founded the abbey",
+                "Rumour, perhaps true, says the abbey in the Valley of Cunfin was "
+                "founded in 1136 by Valoran, a pupil of St. Nerius.",
+            ),
+            titled(
+                "Valoran and Angelus",
+                "Eloi believes Valoran was Angelus's parens.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "Celeres's Castle",
@@ -451,11 +465,27 @@ def _cunfin(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the new Dominican Order's hunt for heretics; Eloi fears the inquisitors will turn north once the Cathars are done",
         "Hook: everything rests on Eloi; without him the arrangement would fall apart",
     )
-    hidden = joined_lines(
-        "The abbot knows what Eloi and the magi are and shares their aims.",
-        "Jerome of Confluensis secretly saves troublesome heirs marked for death, convincing the world they are dead and hiding them in monasteries and covenants; Eloi is his chief partner, and Artorius was one such child. It is very likely a breach of the Code.",
-        "The covenant may not survive the Church's growing hostility even with Eloi (The Specter of Rome).",
-    )
+    hidden = [
+        titled(
+            "What the abbot knows",
+            "The abbot knows what Eloi and the magi are and shares their aims.",
+        ),
+        titled(
+            "Jerome's troublesome heirs",
+            "Jerome of Confluensis secretly saves troublesome heirs marked for death, "
+            "convincing the world they are dead and hiding them in monasteries and "
+            "covenants; Eloi is his chief partner, and Artorius was one such child. "
+            "It is very likely a breach of the Code.",
+        ),
+        titled(
+            "The Church's hostility",
+            "Cunfin may not survive the Church's growing hostility even with Eloi.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "The Church's hostility: see The Specter of Rome.",
+        ),
+    ]
     cunfin = b.covenant(
         "Cunfin",
         tribunal=tribunal,
@@ -507,9 +537,13 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
             "the Church. His present worry is the new Dominicans and "
             "their zeal against heresy.",
         ),
-        secrets="He is Jerome's chief partner in hiding rescued heirs, which "
-        "is very likely a breach of the Code; it brought Artorius to "
-        "Cunfin.",
+        secrets=[
+            titled(
+                "Eloi and the rescued heirs",
+                "He is Jerome's chief partner in hiding rescued heirs, which is very "
+                "likely a breach of the Code; it brought Artorius to Cunfin.",
+            ),
+        ],
     )
     m["angelus"] = b.magus(
         "Angelus",
@@ -533,8 +567,13 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
             "though Eloi and even Celeres come to him for counsel. He "
             "alone of Cunfin's magi lacks the Gentle Gift.",
         ),
-        secrets="He will not speak of his lineage; Eloi believes his parens was "
-        "Valoran, filius of St. Nerius himself.",
+        secrets=[
+            titled(
+                "Angelus's lineage",
+                "He will not speak of his lineage; Eloi believes his parens was "
+                "Valoran, filius of St. Nerius himself.",
+            ),
+        ],
     )
     m["celeres"] = b.magus(
         "Celeres",
@@ -609,9 +648,17 @@ def _cunfin_magi(normandy: Normandy, b: Builder, cunfin: Covenant) -> None:
             "parens named him after the legendary king of Britain. He "
             "has the Gentle Gift; his plans are his own.",
         ),
-        secrets="He is one of the heirs Jerome saved from death for their "
-        "birthright and hid with Eloi's help; whose heir he is, the book "
-        "does not say.",
+        secrets=[
+            titled(
+                "Who saved Artorius",
+                "He is one of the heirs Jerome saved from death for their birthright "
+                "and hid with Eloi's help.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Whose heir Artorius is, the book does not say.",
+            ),
+        ],
     )
     m["evrard"] = b.magus(
         "Évrard de Tours",
@@ -857,10 +904,18 @@ def _atramentum_renatus(normandy: Normandy, b: Builder, tribunal: Tribunal) -> N
         "Tension: the founders were evicted from their first covenant by their liege's own magi",
         "Hook: Iacula's new projectile spells have great martial potential",
     )
-    hidden = joined_lines(
-        "Whether the ravaging beast is Gulo in his heartbeast's shape, and whether he harmed mundanes by it, is the Quaesitor's open question.",
-        "Cynics say Helios and Gulo were duped into preparing Atramentum's site for the elder Tytali of Exspectatio.",
-    )
+    hidden = [
+        titled(
+            "The ravaging beast",
+            "Whether the ravaging beast is Gulo in his heartbeast's shape, and "
+            "whether he harmed mundanes by it, is the Quaesitor's open question.",
+        ),
+        titled(
+            "Who the site was prepared for",
+            "Cynics say Helios and Gulo were duped into preparing Atramentum's site "
+            "for the elder Tytali of Exspectatio.",
+        ),
+    ]
     renatus = b.covenant(
         "Atramentum Renatus",
         tribunal=tribunal,
@@ -1296,10 +1351,18 @@ def _churches(normandy: Normandy, b: Builder) -> None:
             "over. Its abbot, Martin, is a man in middle age with "
             "considerable influence in the Cistercian Order.",
         ),
-        secrets="Brother Eligius is Eloi of Jerbiton, and the abbey shares its "
-        "valley with the covenant of Cunfin. Martin, the cellarer and a "
-        "few brothers know and help the magi, and Martin uses his "
-        "influence in the Order on their behalf.",
+        secrets=[
+            titled(
+                "Brother Eligius",
+                "Brother Eligius is Eloi of Jerbiton, and the abbey shares its valley "
+                "with the covenant of Cunfin.",
+            ),
+            titled(
+                "The abbey's helpers",
+                "Martin, the cellarer and a few brothers know and help the magi, and "
+                "Martin uses his influence in the Order on their behalf.",
+            ),
+        ],
     )
     w["st_germanus_auxerre"] = b.church(
         "Abbey of St. Germanus, Auxerre",
@@ -1345,11 +1408,15 @@ def _churches(normandy: Normandy, b: Builder) -> None:
             "inside. The Basilica of St. Mary Magdalene has since been "
             "rebuilt.",
         ),
-        secrets="The relics' origin is unclear: one story says St. Badilo "
-        "brought them from the Holy Land in the ninth century, another "
-        "that the saint's tomb was found at St. Maximin in Provence, "
-        "identified by a carving of the anointing at Bethany. The monks "
-        "do not doubt them.",
+        secrets=[
+            titled(
+                "The relics' origin",
+                "The relics' origin is unclear: one story says St. Badilo brought "
+                "them from the Holy Land in the ninth century, another that the "
+                "saint's tomb was found at St. Maximin in Provence, identified by a "
+                "carving of the anointing at Bethany. The monks do not doubt them.",
+            ),
+        ],
     )
     w["bishop_of_autun"] = b.church(
         "Bishop of Autun (Cathedral of St. Lazarus)",
@@ -1432,11 +1499,19 @@ def _churches(normandy: Normandy, b: Builder) -> None:
             "richest in Europe, and the abbots keep a fine townhouse in "
             "Paris. Its Divine aura is strong (strength not given).",
         ),
-        secrets="Optionally, dark powers may be working Cluny's slow "
-        "corruption through the monks' love of luxury: servants of the "
-        "Devil hidden in its hierarchy, Infernal auras pocketed inside "
-        "the Divine one, or places where the Divine aura is weaker than "
-        "it should be.",
+        secrets=[
+            titled(
+                "Cluny's corruption",
+                "Dark powers may be working Cluny's slow corruption through the "
+                "monks' love of luxury: servants of the Devil hidden in its "
+                "hierarchy, Infernal auras pocketed inside the Divine one, or places "
+                "where the Divine aura is weaker than it should be.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The dark powers behind Cluny's corruption are optional.",
+            ),
+        ],
     )
     w["pontigny"] = b.church(
         "Pontigny Abbey",

@@ -35,7 +35,7 @@ from dataclasses import replace
 from ...models import BodyVis, Character, Covenant, Creature, Neighbour
 from ...rules.sites import PLACE
 from ...rules.xp import ABILITY_FACTOR, ability_xp, score_from_xp
-from ..builder import Builder, StatBlock, characteristics, paragraphs
+from ..builder import Builder, Secrets, StatBlock, characteristics, paragraphs, titled
 from ..fourth import Fourth, convert
 
 #: The Area Lore that takes a block's Legend Lore.
@@ -235,7 +235,7 @@ def _person(
     block: Fourth,
     *,
     summary: str,
-    secrets: str,
+    secrets: Secrets,
     covenant: Covenant | None = None,
     born: int | None = None,
     working: frozenset[str] = frozenset(),
@@ -342,18 +342,34 @@ def _scots(b: Builder) -> None:
         "fair dealer from London to Constantinople, with light red hair and "
         "blue eyes and no scar worth the name. He says little of himself and "
         "cares most for his family.",
-        secrets=paragraphs(
-            "Iain the Unbowed, filius and son of Liam the Shapeless, an original "
-            "member of Vindolanda, and now a natural magician. Born in 778, he "
-            "looks 29 without his rings. Hetep maimed his Gift in Pralix's war "
-            "and Setna alone can restore it (pp. 72, 77, 88, 129). After more "
-            "than a hundred years' study he has the basics of Natural Magic. "
-            "He serves Victor and his family with equal devotion, and hides his "
-            "age and his past from the world (p. 133).",
-            "He guarded the Scartaris gatestone from 888, settled in De Panne "
-            "in 1182, and after 1220 runs Vindolanda's daily affairs for Victor "
-            "(pp. 72, 77, 87).",
-        ),
+        secrets=[
+            titled(
+                "Iain the Unbowed",
+                "Iain the Unbowed, filius and son of Liam the Shapeless, an "
+                "original member of Vindolanda, and now a natural magician. Born "
+                "in 778, he looks 29 without his rings.",
+            ),
+            titled(
+                "Iain's maimed Gift",
+                "Hetep maimed his Gift in Pralix's war and Setna alone can "
+                "restore it (pp. 72, 77, 88, 129). After more than a hundred "
+                "years' study he has the basics of Natural Magic.",
+            ),
+            titled(
+                "What Iain hides",
+                "He serves Victor and his family with equal devotion, and hides "
+                "his age and his past from the world (p. 133).",
+            ),
+            titled(
+                "Iain's long watch",
+                "He guarded the Scartaris gatestone from 888 and settled in De "
+                "Panne in 1182 (pp. 72, 77).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "After 1220 he runs Vindolanda's daily affairs for Victor (p. 87).",
+            ),
+        ],
     )
     _person(
         b,
@@ -459,14 +475,26 @@ def _scots(b: Builder) -> None:
         summary="Iain's son and partner at De Panne, a very tall man of 28 with "
         "light brown hair and blue eyes, known among Flemish merchants as a "
         "fair trader, with a young daughter, Brighde.",
-        secrets="A natural magician with the Gift (p. 87), and consors of "
-        "Vindolanda (p. 80), frantic to rescue Brighde in 1220. He knows his "
-        "father's secret and has been "
-        "taught by him in the Scartaris library. He tells nothing of the "
-        "gateway or of Scartaris unless he must, and then the least he can. "
-        "Hermetic magi make him a little nervous and their magic fascinates "
-        "him. He would once have made a fine apprentice and might even now "
-        "learn the Arts, but he would not take an apprentice's place (p. 134).",
+        secrets=[
+            titled(
+                "Donncadh's Gift",
+                "A natural magician with the Gift (p. 87), and consors of "
+                "Vindolanda (p. 80), frantic to rescue Brighde in 1220.",
+            ),
+            titled(
+                "Donncadh and his father's secret",
+                "He knows his father's secret and has been taught by him in the "
+                "Scartaris library. He tells nothing of the gateway or of "
+                "Scartaris unless he must, and then the least he can.",
+            ),
+            titled(
+                "Donncadh and the Arts",
+                "Hermetic magi make him a little nervous and their magic "
+                "fascinates him. He would once have made a fine apprentice and "
+                "might even now learn the Arts, but he would not take an "
+                "apprentice's place (p. 134).",
+            ),
+        ],
     )
     _person(
         b,
@@ -499,11 +527,20 @@ def _scots(b: Builder) -> None:
         "She is delighted with her marriage, expecting a second child, a "
         "proud mother and known among the merchants' wives for her close "
         "interest in everyone's affairs, though not in the family trade.",
-        secrets="She knows nothing of Iain's true past or her husband's magic; "
-        "recent events, and arriving at a Hermetic covenant, have shaken her "
-        "badly. Her fylgja (p. 32) is a hawk. She has never linked her little "
-        "accidents to coming danger, so it spent the past week trying and "
-        "failing to warn her (pp. 134-135).",
+        secrets=[
+            titled(
+                "What Mari does not know",
+                "She knows nothing of Iain's true past or her husband's magic; "
+                "recent events, and arriving at a Hermetic covenant, have shaken "
+                "her badly.",
+            ),
+            titled(
+                "Mari's fylgja",
+                "Her fylgja (p. 32) is a hawk. She has never linked her little "
+                "accidents to coming danger, so it spent the past week trying "
+                "and failing to warn her (pp. 134-135).",
+            ),
+        ],
     )
 
 
@@ -515,46 +552,68 @@ def _victor(b: Builder) -> None:
         age=438,
         summary="A follower of Pralix, given his sigil when she defeated "
         "Damhan-Allaidh in 816, whom the Order has long counted among the dead.",
-        secrets=paragraphs(
-            "In life he could bring anyone round to any position, with an "
-            "understanding of people unmatched in his day, but a demon was "
-            "beyond him. Hetep overwhelmed him and shut him in a hellish "
-            "dream, where he suffered for sixty years until he outwitted the "
-            "demon and seized the dreamscape. Since then each has argued the "
-            "other's soul in the language of dreams, over grace and its "
-            "rejection; Victor now rules the dream and Hetep must endure his "
-            "constant calls to renounce Hell (p. 135).",
-            "Spirit and body are parted, though he is technically alive, and "
-            "the body would crumble within weeks if his ward failed, so he "
-            "works by possession alone. Brighde, his friend's granddaughter, "
-            "comes first, but everything he does bends toward destroying the "
-            "Spider, and he will draw the magi into risky schemes in return "
-            "for scraps of knowledge about Damhan-Allaidh or Hetep (pp. 135-136).",
-            "He looks a tall man in Roman robes, frozen in the ward in his "
-            "Scartaris laboratory (p. 82). Founder and Disceptator of Vindolanda, "
-            "he entered the battle of wills in 888 (p. 72). Born in 782.",
-            "The book calls him founder of House Ex Miscellanea (pp. 84, 88). "
-            "That is a title for a leading figure of the House: Pralix "
-            "founded the Ordo Miscellanea and was its prima (p. 71; Heirs to "
-            "Merlin p. 13).",
-            "Magic Might 50. Possession (ReMe 50, cost varies): any human in "
-            "eye contact, or in sight of his body. Entry costs Might equal to "
-            "the victim's Confidence + Stamina (+3 if Strong-Willed) + twice "
-            "any True Faith. Parma Magica resists, using the highest of "
-            "Corpus, Mentem or Vim, against his penetration of 50 + stress "
-            "die; a Natural Resistance roll (Stamina + stress die) of 50 also "
-            "stops it. In a Gifted host he uses his full magic without Might. "
-            "He does not want a stolen body, and takes control or searches a "
-            "mind only at need.",
-            "Morphean Landscape (ReMe, 10 points): melds the dreams of up to "
-            "twelve people into one under his control, for meetings. Mastery of "
-            "the Mind (Me): any Mentem spell to level 50, including his own, "
-            "and the Oneiromantic spells of The Mysteries if the troupe uses "
-            "them. Mastery of the Image (Im): the same with Imaginem to level "
-            "30. Mastery of the Forms: other Forms to level 15. Each costs "
-            "twice the spell's magnitude in Might, with no words or gestures, "
-            "only a moment's thought.",
-        ),
+        secrets=[
+            titled(
+                "Victor and Hetep's dream",
+                "In life he could bring anyone round to any position, with an "
+                "understanding of people unmatched in his day, but a demon was "
+                "beyond him. Hetep overwhelmed him and shut him in a hellish "
+                "dream, where he suffered for sixty years until he outwitted the "
+                "demon and seized the dreamscape. Since then each has argued the "
+                "other's soul in the language of dreams, over grace and its "
+                "rejection; Victor now rules the dream and Hetep must endure his "
+                "constant calls to renounce Hell (p. 135).",
+            ),
+            titled(
+                "Victor's body",
+                "Spirit and body are parted, though he is technically alive, and "
+                "the body would crumble within weeks if his ward failed, so he "
+                "works by possession alone.",
+            ),
+            titled(
+                "What Victor wants",
+                "Brighde, his friend's granddaughter, comes first, but "
+                "everything he does bends toward destroying the Spider, and he "
+                "will draw the magi into risky schemes in return for scraps of "
+                "knowledge about Damhan-Allaidh or Hetep (pp. 135-136).",
+            ),
+            titled(
+                "Victor in his ward",
+                "He looks a tall man in Roman robes, frozen in the ward in his "
+                "Scartaris laboratory (p. 82).",
+            ),
+            titled(
+                "Victor's past",
+                "Founder and Disceptator of Vindolanda, he entered the battle of "
+                "wills in 888 (p. 72). Born in 782.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book calls him founder of House Ex Miscellanea (pp. 84, 88). "
+                    "That is a title for a leading figure of the House: Pralix "
+                    "founded the Ordo Miscellanea and was its prima (p. 71; Heirs to "
+                    "Merlin p. 13).",
+                    "Magic Might 50. Possession (ReMe 50, cost varies): any human in "
+                    "eye contact, or in sight of his body. Entry costs Might equal to "
+                    "the victim's Confidence + Stamina (+3 if Strong-Willed) + twice "
+                    "any True Faith. Parma Magica resists, using the highest of "
+                    "Corpus, Mentem or Vim, against his penetration of 50 + stress "
+                    "die; a Natural Resistance roll (Stamina + stress die) of 50 also "
+                    "stops it. In a Gifted host he uses his full magic without Might. "
+                    "He does not want a stolen body, and takes control or searches a "
+                    "mind only at need.",
+                    "Morphean Landscape (ReMe, 10 points): melds the dreams of up to "
+                    "twelve people into one under his control, for meetings. Mastery of "
+                    "the Mind (Me): any Mentem spell to level 50, including his own, "
+                    "and the Oneiromantic spells of The Mysteries if the troupe uses "
+                    "them. Mastery of the Image (Im): the same with Imaginem to level "
+                    "30. Mastery of the Forms: other Forms to level 15. Each costs "
+                    "twice the spell's magnitude in Might, with no words or gestures, "
+                    "only a moment's thought.",
+                ),
+            ),
+        ],
     )
     block = Fourth(
         age=438,
@@ -663,21 +722,34 @@ def _liam(b: Builder) -> None:
         soak=41,
         fatigue_levels="Tireless (Shapeless Form)",
         tires=False,
-        secrets=paragraphs(
-            "A gruagach born in 749, father of Iain, reckoned "
-            "dead by the magi after three centuries buried. Once "
-            "recovered he is barely human, fighting for each breath in constant "
-            "pain, and moves only by shapeshifting, into the one form he can hold "
-            "for long. Endurance of the Berserkers, or any Corpus or Mentem effect "
-            "that quells pain, gives him respite, and with it he can help the magi "
-            "hunt Damhan-Allaidh; without it he can only beg to die. Even so he "
-            "will ask Iain to destroy his soulstone once the Spider is gone (p. "
-            "136).",
-            "A fleshy thing with no shape, bones or organs, able to squeeze "
-            "into small places, forever putting out and drawing in tentacles "
-            "of flesh.",
-            stat["notes"],
-        ),
+        secrets=[
+            titled(
+                "Liam the gruagach",
+                "A gruagach born in 749, father of Iain, reckoned dead by the "
+                "magi after three centuries buried.",
+            ),
+            titled(
+                "Liam's pain",
+                "Once recovered he is barely human, fighting for each breath in "
+                "constant pain, and moves only by shapeshifting, into the one "
+                "form he can hold for long. Endurance of the Berserkers, or any "
+                "Corpus or Mentem effect that quells pain, gives him respite, and "
+                "with it he can help the magi hunt Damhan-Allaidh; without it he "
+                "can only beg to die.",
+            ),
+            titled(
+                "Liam's soulstone",
+                "Even so he will ask Iain to destroy his soulstone once the "
+                "Spider is gone (p. 136).",
+            ),
+            titled(
+                "Liam's true shape",
+                "A fleshy thing with no shape, bones or organs, able to squeeze "
+                "into small places, forever putting out and drawing in tentacles "
+                "of flesh.",
+            ),
+            titled("Storyguide Notes", stat["notes"]),
+        ],
     )
     _top_up(liam, stat)
 
@@ -775,21 +847,38 @@ def _hetep(b: Builder) -> None:
             "his Quickness less the cost; the Might Form, unprinted, is Vim, "
             "his vis, this pack's reading. Printed Fatigue total +11 left out.",
         ),
-        secrets="Once a servant of Thoth, he betrayed his master for Hell and "
-        "means to turn all magic to its service, working chiefly on "
-        "magicians. His former kin kept watch: Setna caught him time and "
-        "again hiding in those who came to Thoth's stelae, until "
-        "Damhan-Allaidh brought him into the sanctum. There he set to "
-        "corrupting Thoth's own words, hoping to lay the magic realm at "
-        "Hell's feet. Setna noticed before it was done and drove "
-        "Damhan-Allaidh out, but the corruption went on sapping Setna, and "
-        "Hetep needed only time, until Pralix broke in on the Spider's "
-        "preparations and in the end beat him. Victor of Vindolanda captured "
-        "Hetep in 875. The two have been locked in a battle of wills ever "
-        "since, beyond mortal understanding; for a century Victor has "
-        "withstood all the demon can conjure. Hetep is no great thinker, and "
-        "Victor has tricked him into letting slip that he was close to "
-        "finishing some plot against the Order (pp. 137-138).",
+        secrets=[
+            titled(
+                "Hetep's betrayal",
+                "Once a servant of Thoth, he betrayed his master for Hell and "
+                "means to turn all magic to its service, working chiefly on "
+                "magicians.",
+            ),
+            titled(
+                "Hetep in Thoth's sanctum",
+                "His former kin kept watch: Setna caught him time and again "
+                "hiding in those who came to Thoth's stelae, until "
+                "Damhan-Allaidh brought him into the sanctum. There he set to "
+                "corrupting Thoth's own words, hoping to lay the magic realm at "
+                "Hell's feet. Setna noticed before it was done and drove "
+                "Damhan-Allaidh out, but the corruption went on sapping Setna, "
+                "and Hetep needed only time, until Pralix broke in on the "
+                "Spider's preparations and in the end beat him.",
+            ),
+            titled(
+                "Hetep and Victor",
+                "Victor of Vindolanda captured Hetep in 875. The two have been "
+                "locked in a battle of wills ever since, beyond mortal "
+                "understanding; for a century Victor has withstood all the demon "
+                "can conjure.",
+            ),
+            titled(
+                "Hetep's plot against the Order",
+                "Hetep is no great thinker, and Victor has tricked him into "
+                "letting slip that he was close to finishing some plot against "
+                "the Order (pp. 137-138).",
+            ),
+        ],
     )
 
 
@@ -911,21 +1000,35 @@ def _damhan_allaidh(b: Builder) -> None:
         ],
         soak=16,
         fatigue_levels="OK, 0, 0, -1, -3, -5, Unconscious",
-        secrets=paragraphs(
-            "The ancient gruagach, born in 570, whom the Order thinks dead. His "
-            "name, said davan-alli, is Gaelic for the spider, and he is also "
-            "called Dav'nalleous (pp. 70-71). "
-            "His mind is close to ruin, and the scrap of humanity left in it "
-            "longs to be free of him. Beast instinct usually rules and he obeys "
-            "Hetep at a word. Brought to reflect on his state, by The Gift of "
-            "Reason or fine roleplaying, he may turn on Hetep and seek God's "
-            "grace. Only true remorse, unlikely as it is, would move God to "
-            "undo the soul he hid away and let him rest (p. 139).",
-            "No longer human at all: hairless, crusted with pus and open sores, "
-            "with a beast's head of huge jaw and fangs, a back too twisted to "
-            "walk upright, and long iron-hard claws for hands and feet.",
-            stat["notes"],
-        ),
+        secrets=[
+            titled(
+                "Damhan-Allaidh lives",
+                "The ancient gruagach, born in 570, whom the Order thinks dead. "
+                "His name, said davan-alli, is Gaelic for the spider, and he is "
+                "also called Dav'nalleous (pp. 70-71).",
+            ),
+            titled(
+                "Damhan-Allaidh's ruined mind",
+                "His mind is close to ruin, and the scrap of humanity left in it "
+                "longs to be free of him. Beast instinct usually rules and he "
+                "obeys Hetep at a word.",
+            ),
+            titled(
+                "Damhan-Allaidh's remorse",
+                "Brought to reflect on his state, by The Gift of Reason or fine "
+                "roleplaying, he may turn on Hetep and seek God's grace. Only "
+                "true remorse, unlikely as it is, would move God to undo the "
+                "soul he hid away and let him rest (p. 139).",
+            ),
+            titled(
+                "Damhan-Allaidh's shape",
+                "No longer human at all: hairless, crusted with pus and open "
+                "sores, with a beast's head of huge jaw and fangs, a back too "
+                "twisted to walk upright, and long iron-hard claws for hands and "
+                "feet.",
+            ),
+            titled("Storyguide Notes", stat["notes"]),
+        ],
     )
     _top_up(spider, stat)
 
@@ -1027,21 +1130,50 @@ def _einar(b: Builder) -> None:
         summary="A distinguished Icelander who looks in his late fifties, with "
         "straight black hair, rare among the Norse, a neat beard, a blue robe "
         "embroidered in knots and a voice like honey that talks people round.",
-        secrets="A traditional galdraman and the main antagonist of the Fire and "
-        "Song story arc, sworn against the dragon Pan Caudarax. In 1210 "
-        "he went to Norway to help his kinsman Bjarke Odd-Karnor in a feud, "
-        "and there married Yrsa and had two sons. In 1218 she sailed to join "
-        "him on a ship that also carried Flambeau magi bound to destroy the "
-        "Order of Odin. The landvaettir felt them, and the dragon burned the "
-        "ship. Not seeing the dragon's reasons, Einar swore to destroy its "
-        "family as his was destroyed (pp. 69-70). He is a great friend of the "
-        "alfar and of the Norns; the Norn who became his fylgja showed him "
-        "his own doom, so he hurries his revenge, and she now looks much like "
-        "his dead wife (p. 140). His nidstong cursed Pan Caudarax's eggs (pp. "
-        "98, 100). He fled to Glasvellir, where he took a new wife and children "
-        "in the human village, and in 1230 stirred Blund Thorgilsson against "
-        "the eggs; Thorodd Gamlisson of Snaefell is his brother (pp. 114-117). "
-        "If he lives he teaches the Aesir faith to Geirrod's slaves (p. 127).",
+        secrets=[
+            titled(
+                "Einar the galdraman",
+                "A traditional galdraman, sworn against the dragon Pan Caudarax.",
+            ),
+            titled(
+                "Einar's lost family",
+                "In 1210 he went to Norway to help his kinsman Bjarke Odd-Karnor "
+                "in a feud, and there married Yrsa and had two sons. In 1218 she "
+                "sailed to join him on a ship that also carried Flambeau magi "
+                "bound to destroy the Order of Odin. The landvaettir felt them, "
+                "and the dragon burned the ship. Not seeing the dragon's reasons, "
+                "Einar swore to destroy its family as his was destroyed (pp. "
+                "69-70).",
+            ),
+            titled(
+                "Einar's fylgja",
+                "He is a great friend of the alfar and of the Norns; the Norn who "
+                "became his fylgja showed him his own doom, so he hurries his "
+                "revenge, and she now looks much like his dead wife (p. 140).",
+            ),
+            titled(
+                "Einar's nidstong",
+                "His nidstong cursed Pan Caudarax's eggs (pp. 98, 100).",
+            ),
+            titled(
+                "Einar at Glasvellir",
+                "He fled to Glasvellir, where he took a new wife and children in "
+                "the human village; Thorodd Gamlisson of Snaefell is his brother "
+                "(pp. 114-117).",
+            ),
+            titled(
+                "If Einar lives",
+                "If he lives he teaches the Aesir faith to Geirrod's slaves (p. 127).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Einar is the main antagonist of the Fire and Song story arc.",
+                    "In 1230 he stirs Blund Thorgilsson against the eggs (pp. "
+                    "114-117).",
+                ),
+            ),
+        ],
     )
 
 
@@ -1115,22 +1247,34 @@ def _pan_caudarax(b: Builder) -> None:
             "Powers with no Ability now, as printed: Curse 31 (thieves); Geas "
             "34 (deals); Gift 28 (one time bonus); Transform 29 (tasty).",
         ),
-        secrets=paragraphs(
-            "He has a weak spot beneath his left ear, where the scales never "
-            "quite grew. Anyone who knows may aim for it at -3 to Attack, and "
-            "there his Soak is only +5.",
-            "First Guardian of Iceland, he came back to Hekla in 108 after "
-            "nearly a thousand years in Flanders, where he took priests of "
-            "Mercury and Apollo to teach him their magic and built up a hoard. "
-            "He has lairs across the world.",
-            "The prophecy of De Panne: leaving Flanders as too crowded, he "
-            "declared that he went by choice, not wishing to live among men "
-            "or to wipe them out, that he remembered the treasure he left "
-            "there, and that anyone who robbed it would bring him back in a "
-            "vengeance feared for centuries. He has not yet had to keep the "
-            "oath (p. 140), and will raze the town only if the hoard is "
-            "robbed (p. 63).",
-        ),
+        secrets=[
+            titled(
+                "Pan Caudarax's weak spot",
+                "He has a weak spot beneath his left ear, where the scales never "
+                "quite grew.",
+            ),
+            titled(
+                "Pan Caudarax's past",
+                "First Guardian of Iceland, he came back to Hekla in 108 after "
+                "nearly a thousand years in Flanders, where he took priests of "
+                "Mercury and Apollo to teach him their magic and built up a "
+                "hoard. He has lairs across the world.",
+            ),
+            titled(
+                "The prophecy of De Panne",
+                "Leaving Flanders as too crowded, Pan Caudarax declared that he "
+                "went by choice, not wishing to live among men or to wipe them "
+                "out, that he remembered the treasure he left there, and that "
+                "anyone who robbed it would bring him back in a vengeance feared "
+                "for centuries. He has not yet had to keep the oath (p. 140), "
+                "and will raze the town only if the hoard is robbed (p. 63).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Anyone who knows of the weak spot beneath his left ear may aim "
+                "for it at -3 to Attack, and there his Soak is only +5.",
+            ),
+        ],
     )
 
 
@@ -1214,21 +1358,44 @@ def _bard(b: Builder) -> None:
         "outdoors, and often carries an iron-shod staff, with a huge gray dog, "
         "Snati, at his side.",
         notes=stat["notes"],
-        secrets="Born in 960 in Helluland, the giants' realm beyond Greenland, "
-        "son of King Dumb, half giant and half troll, and of Mjoll, daughter "
-        "of the frost giant Snaer the Old; fostered by giants in Iceland, he "
-        "settled in Norway. A trollson in Ars Magica's terms, more human than "
-        "giant after so long among men. He left Norway with so many others "
-        "when Harald Finehair took the crown, came to Iceland with his nine "
-        "daughters, named Snaefellsnes and made his home at Songhellir, the "
-        "Singing Cave. His brother Thorkel settled with him; their families "
-        "feuded and made peace. Having guarded the people there against the "
-        "trolls that swarm in those parts, he is held their guardian spirit. "
-        "He leads all Iceland's giants and is one of the land's Guardians "
-        "(p. 141). He wants peace between the dragon and Einar, and counts "
-        "himself guardian of the land where the characters' covenant stands "
-        "(p. 70). The book's dates disagree: born in 960, he leaves Norway at "
-        "the accession of a Harald who reigns 890-930 (pp. 17, 141).",
+        secrets=[
+            titled(
+                "Bard's birth",
+                "Born in 960 in Helluland, the giants' realm beyond Greenland, "
+                "son of King Dumb, half giant and half troll, and of Mjoll, "
+                "daughter of the frost giant Snaer the Old; fostered by giants in "
+                "Iceland, he settled in Norway.",
+            ),
+            titled(
+                "Bard at Songhellir",
+                "He left Norway with so many others when Harald Finehair took "
+                "the crown, came to Iceland with his nine daughters, named "
+                "Snaefellsnes and made his home at Songhellir, the Singing Cave. "
+                "His brother Thorkel settled with him; their families feuded and "
+                "made peace.",
+            ),
+            titled(
+                "Bard the guardian spirit",
+                "Having guarded the people there against the trolls that swarm "
+                "in those parts, he is held their guardian spirit. He leads all "
+                "Iceland's giants and is one of the land's Guardians (p. 141).",
+            ),
+            titled(
+                "What Bard wants",
+                "He wants peace between the dragon and Einar, and counts himself "
+                "guardian of the land where the characters' covenant stands (p. "
+                "70).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "A trollson in Ars Magica's terms, more human than giant "
+                    "after so long among men.",
+                    "The book's dates disagree: born in 960, he leaves Norway at "
+                    "the accession of a Harald who reigns 890-930 (pp. 17, 141).",
+                ),
+            ),
+        ],
     )
 
 
@@ -1295,11 +1462,20 @@ def _thord(b: Builder) -> None:
         "the strongest man in southern Iceland, his brother Sighvat holds a "
         "like place in the north, and his youngest brother is Snorri Sturluson. "
         "He is known as fair by his thingmen, and as ambitious by everyone.",
-        secrets="He rides against Hetep's dead on Snaefellsnes with thirty men, "
-        "takes ship with the magi, and gives out a tale the public can accept "
-        "(pp. 86-87). He wants the foreign magi under his influence: he offers "
-        "them law and his support as thingmen, sells Dagverdara, and lends them "
-        "Vifil, who watches them for him (pp. 98-99).",
+        secrets=[
+            titled(
+                "Thord against Hetep's dead",
+                "He rides against Hetep's dead on Snaefellsnes with thirty men, "
+                "takes ship with the magi, and gives out a tale the public can "
+                "accept (pp. 86-87).",
+            ),
+            titled(
+                "Thord and the foreign magi",
+                "He wants the foreign magi under his influence: he offers them "
+                "law and his support as thingmen, sells Dagverdara, and lends "
+                "them Vifil, who watches them for him (pp. 98-99).",
+            ),
+        ],
     )
 
 
@@ -1376,11 +1552,27 @@ def _vifil(b: Builder) -> None:
         "farm work. His smithy makes tools and now and then weapons, and "
         "earns him well. His son runs the farm and its three laborers, and "
         "he is known for his generosity to neighbors in hard times.",
-        secrets="A moderately powerful traditional galdraman who quietly sells "
-        "his services around the region. With the farm in his son's hands he "
-        "means to work on his magic (p. 142). Thord asks him to guide the "
-        "foreign magi, and to watch and report on them, which he admits only "
-        "if asked; he has no Gentle Gift, so they may guess (p. 99). He can "
-        "tell them about Pan Caudarax (p. 101), brings them to the hreppur, "
-        "and shares the vis if he found the nidstong himself (pp. 102, 106).",
+        secrets=[
+            titled(
+                "Vifil the galdraman",
+                "A moderately powerful traditional galdraman who quietly sells "
+                "his services around the region. With the farm in his son's "
+                "hands he means to work on his magic (p. 142).",
+            ),
+            titled(
+                "Vifil watches the magi",
+                "Thord asks him to guide the foreign magi, and to watch and "
+                "report on them, which he admits only if asked (p. 99).",
+            ),
+            titled(
+                "Vifil's help",
+                "He can tell the foreign magi about Pan Caudarax (p. 101), brings "
+                "them to the hreppur, and shares the vis if he found the "
+                "nidstong himself (pp. 102, 106).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "He has no Gentle Gift, so the magi may guess he watches them (p. 99).",
+            ),
+        ],
     )

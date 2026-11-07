@@ -15,7 +15,7 @@ from typing import Any
 
 from ...models import Saga
 from .. import BookPack, register
-from ..builder import Builder, StatBlock
+from ..builder import Builder, Secrets, StatBlock
 
 NAME = "Magi of Hermes"
 SOURCE_BOOK = "MoH"
@@ -49,7 +49,7 @@ class Magus:
     house: str
     summary: str
     printings: tuple[Printing, ...]
-    secrets: str = ""
+    secrets: Secrets = ()
     home: str = ""
     sketch: str = ""
     label: str = DEFAULT_LABEL

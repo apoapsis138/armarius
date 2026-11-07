@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages.normandy import LIBRARY_HELD
-from ..builder import joined_lines, paragraphs, vf_ability, vf_art
+from ..builder import joined_lines, paragraphs, titled, vf_ability, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -80,8 +80,13 @@ def _places(normandy: Normandy, b: Builder) -> None:
         "the mist and the turb captain one that thickens or thins it; "
         "and a ring of active defences, which the magi say they change "
         "often, lies beyond.",
-        secrets="One of the covenant's founders had a flaw in her Gift that "
-        "made building on the tide necessary; only a few magi know it.",
+        secrets=[
+            titled(
+                "Why the covenant is built on the tide",
+                "One of Confluensis's founders had a flaw in her Gift that made "
+                "building on the tide necessary; only a few magi know it.",
+            ),
+        ],
     )
     p["the_orchard"] = b.place(
         "The Orchard",
@@ -314,14 +319,40 @@ def _confluensis(normandy: Normandy, b: Builder, tribunal: Tribunal) -> Covenant
         "skinchangers, the watery ghosts of past boar kings, or a white "
         "lady sent as the marsh's envoy."
     )
-    hidden = joined_lines(
-        "One of the founders had a flaw in her Gift that made building on the tide necessary.",
-        "Jerome secretly saves 'troublesome heirs' from murder with Mentem magic and hides them in monasteries and covenants, very likely against the Code; Eloi of Cunfin is his chief partner, and Proctor does not know.",
-        "Valerian's familiar is a spirit beyond Hermetic binding, so he must belong to a Mystery Cult, probably the Guernicus Terrae cult.",
-        "Augustina belongs to the Cabal of Frankish Gold, which works for the Lotharingian Tribunal; she thinks it will fail but wants to see how the Order reacts.",
-        "The Traitor's key is thought to weaken the defences of Fudarus, or perhaps by now to be only a symbol.",
-        "The stone flowers were not made by Terram magi: they belong to an older pact between the marsh's faerie powers and the Venelli.",
-    )
+    hidden = [
+        titled(
+            "Why Confluensis is built on the tide",
+            "One of the founders had a flaw in her Gift that made building on the "
+            "tide necessary.",
+        ),
+        titled(
+            "Jerome's troublesome heirs",
+            "Jerome secretly saves 'troublesome heirs' from murder with Mentem magic "
+            "and hides them in monasteries and covenants, very likely against the "
+            "Code; Eloi of Cunfin is his chief partner, and Proctor does not know.",
+        ),
+        titled(
+            "Valerian's familiar",
+            "Valerian's familiar is a spirit beyond Hermetic binding, so he must "
+            "belong to a Mystery Cult, probably the Guernicus Terrae cult.",
+        ),
+        titled(
+            "Augustina's cabal",
+            "Augustina belongs to the Cabal of Frankish Gold, which works for the "
+            "Lotharingian Tribunal; she thinks it will fail but wants to see how the "
+            "Order reacts.",
+        ),
+        titled(
+            "The Traitor's key",
+            "The Traitor's key is thought to weaken the defences of Fudarus, or "
+            "perhaps by now to be only a symbol.",
+        ),
+        titled(
+            "The stone flowers",
+            "The stone flowers were not made by Terram magi: they belong to an older "
+            "pact between the marsh's faerie powers and the Venelli.",
+        ),
+    ]
     confluensis = b.covenant(
         "Confluensis",
         tribunal=tribunal,
@@ -425,8 +456,13 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         "strange. The covenfolk like him, since he leaves their doings "
         "alone; he gardens, his tools and methods have eased the "
         "gatherers' work, and he mends their homes with rituals.",
-        secrets="No Hermetic magus could bind such a familiar: Valerian is a "
-        "Mystery Cult initiate, and the crow form hides it.",
+        secrets=[
+            titled(
+                "Valerian's familiar",
+                "No Hermetic magus could bind such a familiar: Valerian is a Mystery "
+                "Cult initiate, and the crow form hides it.",
+            ),
+        ],
         traits={"Indifferent": 3, "Deliberate": 2, "Reliable": 2},
     )
     m["jerome"] = b.magus(
@@ -447,14 +483,34 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         "dresses like a preaching friar rather than a lord, carries a "
         "wand, and has a bearded vulture for familiar, its breast "
         "turned moss green by what it eats in the swamp.",
-        secrets="Jerome saves 'troublesome heirs', children likely to be killed "
-        "for their birthright, convinces everyone they are dead with "
-        "Mentem magic and places them in monasteries or covenants; now "
-        "and then one is Gifted, as Artorius was. He knows it is very "
-        "likely a breach of the Code. Proctor does not know. Eloi is "
-        "his chief partner, and anyone in the network has the Dark "
-        "Secret Flaw but a strong ally in Jerome. The network may be "
-        "old: William the Bastard vanished for eight years as a child.",
+        secrets=[
+            titled(
+                "Jerome's troublesome heirs",
+                "Jerome saves 'troublesome heirs', children likely to be killed for "
+                "their birthright, convinces everyone they are dead with Mentem magic "
+                "and places them in monasteries or covenants; now and then one is "
+                "Gifted, as Artorius was.",
+            ),
+            titled(
+                "Jerome and the Code",
+                "He knows saving the heirs is very likely a breach of the Code. "
+                "Proctor does not know.",
+            ),
+            titled(
+                "Eloi and the network",
+                "Eloi is his chief partner, and anyone in the network has a dark "
+                "secret but a strong ally in Jerome.",
+            ),
+            titled(
+                "How old the network is",
+                "Jerome's network may be old: William the Bastard vanished for eight "
+                "years as a child.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Anyone in Jerome's network has the Dark Secret Flaw.",
+            ),
+        ],
         traits={"Caring": 3, "Friendly": 2, "Modest": 2},
     )
     m["augustina"] = b.magus(
@@ -481,10 +537,19 @@ def _magi(normandy: Normandy, b: Builder, confluensis: Covenant) -> None:
         "she often looks tired and happy at once. Her familiar is a "
         "small ape; her talisman is a locket on a ribbon or a dagger, "
         "nobody knows which, as one is always wound round the other.",
-        secrets="She is a member of the Cabal of Frankish Gold, which works for "
-        "the Lotharingian Tribunal. She expects it to fail but holds "
-        "that discontented magi should be able to leave a Tribunal, "
-        "and wants to see how the Order answers.",
+        secrets=[
+            titled(
+                "Augustina's cabal",
+                "She is a member of the Cabal of Frankish Gold, which works for the "
+                "Lotharingian Tribunal.",
+            ),
+            titled(
+                "Why Augustina joined",
+                "She expects the Lotharingian Tribunal to fail but holds that "
+                "discontented magi should be able to leave a Tribunal, and wants to "
+                "see how the Order answers.",
+            ),
+        ],
         traits={"Concerned About House Tytalus": 3, "Carefree": 1},
     )
 

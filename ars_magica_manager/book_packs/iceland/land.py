@@ -22,7 +22,7 @@ parts'."""
 from __future__ import annotations
 
 from ...models import Neighbour
-from ..builder import Builder, dormant, joined_lines, paragraphs
+from ..builder import Builder, dormant, joined_lines, paragraphs, titled
 
 S = Builder.stage
 DATED = "Fixed dates"
@@ -336,26 +336,35 @@ def _island(b: Builder) -> Neighbour:
             "another, as Viga-Thord, Battle-Thord, or Thord inn audgi, Thord "
             "the Rich.",
         ),
-        secrets=paragraphs(
-            "Auras (p. 9): the lowlands are mundane. Dominion is low and "
-            "patchy: a farm beside a church may have Divine 1, seldom reaching "
-            "its neighbours, and only around the cathedrals does it cover much "
-            "ground. Most faerie auras of the pagan temples went with the "
-            "conversion. Lowland volcanic regions often keep Magic 1 or 2; "
-            "little-travelled highlands a patchy Magic 1; mountains and "
-            "glaciers normally Magic 2, peaking higher at particular sites. "
-            "Before the Irish priests, the aura in many places reached right "
-            "into the magic realm (p. 6).",
-            "Wards (p. 9): the magicians keep wards on the interior paths that "
-            "stop trolls and landvaettir of Magic Might 20 or less, and on "
-            "some stretches up to 30.",
-            "The Order (p. 9): Icelandic magicians do not know of Hermetic "
-            "magi, and the Order knows little of the island. Magi suspect all "
-            "Nordic lands, where many blame a powerful Order of Odin for the "
-            "loss of every covenant tried there, so most shun even the "
-            "Scandinavian mainland and few have heard of Iceland. In 1220 it "
-            "has no known Hermetic presence.",
-        ),
+        secrets=[
+            titled(
+                "Wards on the interior paths",
+                "Iceland's magicians keep wards on the interior paths that stop "
+                "trolls and landvaettir of Magic Might 20 or less, and on some "
+                "stretches up to 30 (p. 9).",
+            ),
+            titled(
+                "Iceland and the Order",
+                "Icelandic magicians do not know of Hermetic magi, and the Order "
+                "knows little of the island (p. 9). Magi suspect all Nordic "
+                "lands, where many blame a powerful Order of Odin for the loss "
+                "of every covenant tried there, so most shun even the "
+                "Scandinavian mainland and few have heard of Iceland. In 1220 it "
+                "has no known Hermetic presence.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Auras (p. 9): the lowlands are mundane. Dominion is low and "
+                "patchy: a farm beside a church may have Divine 1, seldom "
+                "reaching its neighbours, and only around the cathedrals does it "
+                "cover much ground. Most faerie auras of the pagan temples went "
+                "with the conversion. Lowland volcanic regions often keep Magic "
+                "1 or 2; little-travelled highlands a patchy Magic 1; mountains "
+                "and glaciers normally Magic 2, peaking higher at particular "
+                "sites. Before the Irish priests, the aura in many places "
+                "reached right into the magic realm (p. 6).",
+            ),
+        ],
     )
 
 
@@ -431,15 +440,21 @@ def _sites(
             "He has cared little for humans since, and they seldom come near. "
             "Eruptions still happen, but they are not his doing.",
         ),
-        secrets=paragraphs(
-            "Pan Caudarax came back to his lair in 108 after almost a thousand "
-            "years in Flanders and made a nest for his mate's brood. The eggs "
-            "were laid in 232, and he then took the mantle of Guardian from "
-            "his mate. They will hatch on the day of the solar eclipse, 22 May "
-            "1248 (p. 11).",
-            "The book prints 924 here (p. 11) and 925 in its timeline (p. 17), "
-            "where vitkir join the attackers.",
-        ),
+        secrets=[
+            titled(
+                "The dragon's brood at Hekla",
+                "Pan Caudarax came back to his lair at Hekla in 108 after almost "
+                "a thousand years in Flanders and made a nest for his mate's "
+                "brood. The eggs were laid in 232, and he then took the mantle "
+                "of Guardian from his mate. They will hatch on the day of the "
+                "solar eclipse, 22 May 1248 (p. 11).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book prints 924 here (p. 11) and 925 in its timeline (p. "
+                "17), where vitkir join the attackers.",
+            ),
+        ],
     )
     b.place(
         "Eldborg",
@@ -449,7 +464,12 @@ def _sites(
         "open by Pan Caudarax's wrath about 925. The way to its wide floor goes "
         "up the outer slope and down the inner. Iceland's magicians have met "
         "here since 950, in memory of the alliance that stood against him.",
-        secrets="A magical site; the book prints no aura for it (pp. 17, 27, 102).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "A magical site; the book prints no aura for it (pp. 17, 27, 102).",
+            ),
+        ],
     )
     b.place(
         "Odadahraun, the Lava Fields of Misdeeds",
@@ -465,16 +485,26 @@ def _sites(
             "Pan Caudarax's older brood have settled here, and giants are "
             "fairly common, above all of the clans of Geirrod and Bergelmir.",
         ),
-        secrets=paragraphs(
-            "Vis (p. 14): this may be Iceland's richest ground for it. A season "
-            "of searching yields one pawn for each ten points of Per + "
-            "Intellego + Vim + 10, likely of Perdo, Ignem, Terram, Aquam or "
-            "Auram. The season costs at least a penalty to the aging roll, of "
-            "a size the book does not print, and always draws the notice of "
-            "something living here.",
-            "The Dominion has never reached it. The book prints no aura for it "
-            "(p. 14).",
-        ),
+        secrets=[
+            titled(
+                "Vis in the Lava Fields",
+                "The Lava Fields of Misdeeds may be Iceland's richest ground for "
+                "vis (p. 14).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Vis (p. 14): a season of searching yields one pawn for each "
+                    "ten points of Per + Intellego + Vim + 10, likely of Perdo, "
+                    "Ignem, Terram, Aquam or Auram. The season costs at least a "
+                    "penalty to the aging roll, of a size the book does not "
+                    "print, and always draws the notice of something living "
+                    "here.",
+                    "The Dominion has never reached it. The book prints no aura "
+                    "for it (p. 14).",
+                ),
+            ),
+        ],
     )
     glacier = "Mountains and glaciers normally have Magic 2 (p. 9)."
     myrdal = b.place(
@@ -482,7 +512,7 @@ def _sites(
         inside=iceland,
         aura=2,
         summary="A southern glacier, with the volcano Katla under its ice.",
-        secrets=glacier,
+        secrets=[titled("Storyguide Notes", glacier)],
     )
     vatna = b.place(
         "Vatnajokull",
@@ -490,7 +520,7 @@ def _sites(
         aura=2,
         summary="The great glacier, with the Lava Fields of Misdeeds to its "
         "north and the volcanoes Grimsvotn and Oraefi beneath it.",
-        secrets=glacier,
+        secrets=[titled("Storyguide Notes", glacier)],
     )
     active = "An active volcano"
     b.place("Katla", inside=myrdal, summary=f"{active} beneath Myrdalsjokull.")
@@ -689,9 +719,18 @@ def _west_over_sea(b: Builder) -> None:
         realm="",
         summary="Flatstone Land, which Leif Eiriksson found: "
         "mountains and glaciers, barren and without grass.",
-        secrets="A realm ruled by giants, where King Dumb reigned and Bard "
-        "Snaefellsass was born (p. 141). Fleeing trollsynir and giants make "
-        "for it in the Icelandic Wars (Icelandic Wars p. 13).",
+        secrets=[
+            titled(
+                "Helluland's giants",
+                "A realm ruled by giants, where King Dumb reigned and Bard "
+                "Snaefellsass was born (p. 141).",
+            ),
+            titled(
+                "Refuge in Helluland",
+                "Fleeing trollsynir and giants make for Helluland in the "
+                "Icelandic Wars (Icelandic Wars p. 13).",
+            ),
+        ],
     )
     b.place(
         "Markland",
@@ -750,23 +789,41 @@ def _guardians(b: Builder) -> None:
             "to each new chief. Bard Dumbson is the second to hold it. All the "
             "clans of giants set aside their rivalries to march with him.",
         ),
-        secrets=paragraphs(
-            "Rules (p. 7): the landvaettir alert the Guardians only to a being "
-            "of substantial magical power who means harm to the land or its "
-            "people, judged as Sight of the Transparent Motive at Penetration "
-            "45, resistance counting as hostile.",
-            "Their weakness is within: they were set against invaders, and "
-            "ignore magicians native to Iceland. In the Toframanna Saga the "
-            "portal to the Scartaris Sanctum, opening inside Iceland, does not "
-            "alert them either.",
-            "Those without Second Sight see neither the spirit hosts nor the "
-            "eagle, only a tumult of air or a storm. Under the Dominion the "
-            "Gray Bull's power lies dormant, so the host goes past it to the "
-            "Fourth Guardian; if it were freed its host would take the shapes "
-            "of land animals. The landvaettir lend the giants power (p. 7).",
-            "The landvaettir are described on p. 32, and Pan Caudarax's stats "
-            "are on p. 140.",
-        ),
+        secrets=[
+            titled(
+                "The Guardians' weakness",
+                "The Guardians' weakness is within: they were set against "
+                "invaders, and ignore magicians native to Iceland. In the "
+                "Toframanna Saga the portal to the Scartaris Sanctum, opening "
+                "inside Iceland, does not alert them either.",
+            ),
+            titled(
+                "The unseen hosts",
+                "Those without Second Sight see neither the Guardians' spirit "
+                "hosts nor the eagle, only a tumult of air or a storm.",
+            ),
+            titled(
+                "The Gray Bull's sleeping power",
+                "Under the Dominion the Gray Bull's power lies dormant, so the "
+                "host goes past it to the Fourth Guardian; if it were freed its "
+                "host would take the shapes of land animals.",
+            ),
+            titled(
+                "The giants' power",
+                "The landvaettir lend the giants power (p. 7).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Rules (p. 7): the landvaettir alert the Guardians only to a "
+                    "being of substantial magical power who means harm to the "
+                    "land or its people, judged as Sight of the Transparent "
+                    "Motive at Penetration 45, resistance counting as hostile.",
+                    "The landvaettir are described on p. 32, and Pan Caudarax's "
+                    "stats are on p. 140.",
+                ),
+            ),
+        ],
     )
 
 
@@ -859,20 +916,28 @@ def _freestate(b: Builder) -> None:
                 *(f"{date}: {words}" for _, date, words in TIMELINE),
             ),
         ),
-        secrets=paragraphs(
-            "The law on magic is quoted from Gragas on p. 14: lesser outlawry "
-            "for spells, a panel of twelve, and full outlawry for black "
-            "sorcery.",
-            "Figures differ in the book: ten to twenty thousand settlers "
-            "(pp. 8, 17) against 40-50 thousand people by 930 (p. 17). The "
-            "hreppur is of the early tenth century on p. 12 and 950 on pp. 11 "
-            "and 17. Skuli's expedition of 1218-1220 in the timeline (p. 18) "
-            "sits oddly with the fleet Snorri talks him out of sending "
-            "(p. 16). Both are entered as printed.",
-            "Spellings: Isleif Gizursson and Jon Ogmundarson follow p. 43, "
-            "where p. 18 prints Gizarson and Ogmudarson, and Bishop Gizur "
-            "follows p. 43 for Gizurr.",
-        ),
+        secrets=[
+            titled(
+                "The law on magic",
+                "The law on magic is quoted from Gragas on p. 14: lesser "
+                "outlawry for spells, a panel of twelve, and full outlawry for "
+                "black sorcery.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Figures differ in the book: ten to twenty thousand settlers "
+                    "(pp. 8, 17) against 40-50 thousand people by 930 (p. 17). The "
+                    "hreppur is of the early tenth century on p. 12 and 950 on pp. 11 "
+                    "and 17. Skuli's expedition of 1218-1220 in the timeline (p. 18) "
+                    "sits oddly with the fleet Snorri talks him out of sending "
+                    "(p. 16). Both are entered as printed.",
+                    "Spellings: Isleif Gizursson and Jon Ogmundarson follow p. 43, "
+                    "where p. 18 prints Gizarson and Ogmudarson, and Bishop Gizur "
+                    "follows p. 43 for Gizurr.",
+                ),
+            ),
+        ],
     )
 
 
@@ -909,8 +974,13 @@ def _families(b: Builder) -> None:
         summary="Prominent in bringing Christianity to Iceland, they hold all "
         "three chieftaincies of Arnesthing, and keep a famous school at "
         "Haukadalur.",
-        secrets="The history prints Haukdaelir (p. 15) and the section on "
-        "literacy Haukadalja (p. 24); the pack uses the first.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The history prints Haukdaelir (p. 15) and the section on "
+                "literacy Haukadalja (p. 24); the pack uses the first.",
+            ),
+        ],
     )
     b.faction(
         "The Sturlungar",
@@ -1195,11 +1265,16 @@ def _stories(b: Builder, iceland: Neighbour) -> None:
                     "to offend the Icelanders.",
                 ),
             ],
-            secrets="The book spells Thorvald's fjord Vatsfjord and Vatfjord, "
-            "Borgarfjord also Bogarfjord, and Kolbeinn also Kolbein (pp. 15, "
-            "18-19); Skuli is Earl on p. 16 and Duke on pp. 18-19. The story "
-            "here uses one spelling of each. Snorri's home is printed only as "
-            "Rekjaholt.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "The book spells Thorvald's fjord Vatsfjord and Vatfjord, "
+                    "Borgarfjord also Bogarfjord, and Kolbeinn also Kolbein (pp. "
+                    "15, 18-19); Skuli is Earl on p. 16 and Duke on pp. 18-19. "
+                    "The story here uses one spelling of each. Snorri's home is "
+                    "printed only as Rekjaholt.",
+                ),
+            ],
         )
     )
     dormant(

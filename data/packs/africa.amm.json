@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.83.0",
+  "app_version": "3.84.0",
   "kind": "pack",
   "name": "Between Sand and Sea",
   "from_saga": "Between Sand and Sea",
@@ -84,8 +84,38 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Why no covenants (pp. 8-11). Any of these may be true in a saga: the pact of 925, which questionable covenants may have broken; the early Order's heart being the Black Forest and not Rome, so young magi found sites nearer home; Muslim Sicily and Castille having once stood between the core Tribunals and the Maghreb; the desert uprisings of uncompromising nomad Muslims, unbribable and seemingly Divinely protected, who wreck irrigation and ruin agrarian lands. The book details no failed covenants, but a troupe may add them.\n\nWhat Africa offers magi: rival-free vis and resources, troubled only by Moorish or Berber settlements and local sorcerers; no vote, no Tribunal approval, no Peripheral Code on vis sites, and little fear of a charge of mundane interference, though acts that spill over the Mediterranean can still bring charges in Europe. Against that: isolation from news and help, native distrust of foreigners, and no safe assumption that magic is superior, since a campaign of conquest may unite sahirs, murabitin, the Tuareg and the Wind Spirits. Weak Divine reach and thin population make Magic sites easy to find, and nothing stops magi evicting a weaker sorcerer, genius loci or faerie. Muslim magi avoid the strife of the Iberian or Levant Tribunals. Exiles from the Order may hide here, near enough to keep ties that may also betray them.\n\nLogistics (pp. 11-12): a magus must belong to one Tribunal, and one may refuse an African covenant, or several may fight to claim it; Houses Mercere and Guernicus may object to the journeys, and a covenant may need an enchantment for redcaps or even a Mercere Portal. Hermetic settlement is left undefined, and later books assume none. Options for any city: a Mercere trading house with wharf and warehouse, keeping magic quiet; Jerbiton scholars at the madrasas, a loose network anxious about coming civil war; Criamon's small Sufi membership, welcoming to those learning Enigmatic Wisdom; or Tremere spies, African-looking magi raised from Gifted children Mercere gathered at the Primus's request a few decades ago.\n\nLanguages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; Derija is the common speech, Classical the tongue of scholarship and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in the central highlands, Zenaga in south-west Mauritania, Tamahak among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir (Western, Eastern), the commonest tongue of visiting Europeans; Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek (Classical), Latin (Classical), Libyan, Punic (Carthaginian, Phoenician). Scholars and travellers often lose their dialect for a standard specialty. Northern Arabic and Tamazight use Arabic script, the Tuareg and southern Berbers Tifinagh, Khalidan a Phoenician variant, the Germans Gothic. Penalties to both speakers: dialects of one language -1; northern Tamazight with Tamahak -2; any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. Others are mutually unintelligible. Almoravid and Almohad warriors and clerics often have only Arabic (Classical) 3.\n\nPronunciation and Tamazight plurals are on p. 19; Arabic pronunciation is in Realms of Power: The Divine p. 107. Art & Academe p. 28 discusses the shape of the world.",
+            "title": "What Africa offers magi",
+            "text": "What Africa offers magi: rival-free vis and resources, troubled only by Moorish or Berber settlements and local sorcerers; no vote, no Tribunal approval, no Peripheral Code on vis sites, and little fear of a charge of mundane interference, though acts that spill over the Mediterranean can still bring charges in Europe.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "What Africa costs magi",
+            "text": "Against what Africa offers magi: isolation from news and help, native distrust of foreigners, and no safe assumption that magic is superior, since a campaign of conquest may unite sahirs, murabitin, the Tuareg and the Wind Spirits.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Magic sites in Africa",
+            "text": "Weak Divine reach and thin population make Magic sites in Africa easy to find, and nothing stops magi evicting a weaker sorcerer, genius loci or faerie.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Muslim magi in Africa",
+            "text": "Muslim magi in Africa avoid the strife of the Iberian or Levant Tribunals.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Exiles in Africa",
+            "text": "Exiles from the Order may hide in Africa, near enough to keep ties that may also betray them.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Why no covenants (pp. 8-11). Any of these may be true in a saga: the pact of 925, which questionable covenants may have broken; the early Order's heart being the Black Forest and not Rome, so young magi found sites nearer home; Muslim Sicily and Castille having once stood between the core Tribunals and the Maghreb; the desert uprisings of uncompromising nomad Muslims, unbribable and seemingly Divinely protected, who wreck irrigation and ruin agrarian lands. The book details no failed covenants, but a troupe may add them.\n\nLogistics (pp. 11-12): a magus must belong to one Tribunal, and one may refuse an African covenant, or several may fight to claim it; Houses Mercere and Guernicus may object to the journeys, and a covenant may need an enchantment for redcaps or even a Mercere Portal. Hermetic settlement is left undefined, and later books assume none. Options for any city: a Mercere trading house with wharf and warehouse, keeping magic quiet; Jerbiton scholars at the madrasas, a loose network anxious about coming civil war; Criamon's small Sufi membership, welcoming to those learning Enigmatic Wisdom; or Tremere spies, African-looking magi raised from Gifted children Mercere gathered at the Primus's request a few decades ago.\n\nLanguages (pp. 18-19). Living: Arabic (Andalusi, Classical, Derija; Derija is the common speech, Classical the tongue of scholarship and the Qur'an, and reading the Qur'an needs Artes Liberales 1 and Arabic (Classical) 3; dhimmis from Iberia often speak Andalusi); Tamazight (Tarifit in the Maghreb and Rif, Kabyle, Tashelhiyt in the central highlands, Zenaga in south-west Mauritania, Tamahak among the Tuareg, Siwi at Siwah alone); Lingua Franca or Sabir (Western, Eastern), the commonest tongue of visiting Europeans; Punic (Khalidan). Dead: East German (Gothic, Vandalic), Greek (Classical), Latin (Classical), Libyan, Punic (Carthaginian, Phoenician). Scholars and travellers often lose their dialect for a standard specialty. Northern Arabic and Tamazight use Arabic script, the Tuareg and southern Berbers Tifinagh, Khalidan a Phoenician variant, the Germans Gothic. Penalties to both speakers: dialects of one language -1; northern Tamazight with Tamahak -2; any Tamazight with Punic (Khalidan) -3; Punic with Libyan -2. Others are mutually unintelligible. Almoravid and Almohad warriors and clerics often have only Arabic (Classical) 3.\n\nPronunciation and Tamazight plurals are on p. 19; Arabic pronunciation is in Realms of Power: The Divine p. 107. Art & Academe p. 28 discusses the shape of the world.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -316,8 +346,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Deprivation rolls for thirst come every two hours (see Hazards of the Great Desert), and sun on bare skin does +5 non-combat damage as often. Patches that give life may lie in Magic or Faerie auras or regiones joined to the desert's regio network; desert dwellers are likely to know them. A storyguide may keep the south beyond the desert habitable, or in regiones.\n\nIf the troupe wants it impassable, it can be a Divine edict: the heat, coming from the superlunar sun, lies past Hermetic magic, grows until it beats any defence, foils magic spectacularly and may be patrolled by angels. Research on the Limit of the Lunar Sphere may profit here. Ideas for what lies within: a city of refugees from Carthage under a college of priestesses; Prester John's peaceful empire; grasslands and jungles whose nomads herd for sphinxes; a river of gems and vis through black ravines that trap the ghosts of those who die there; the true home of the Sudanese in Aethiopia Occidentalis. Whether Aethiopia is the torrid zone is for the saga.",
+            "title": "Life in the Torrid Zone",
+            "text": "Patches of the Torrid Zone that give life may lie in Magic or Faerie auras or regiones joined to the desert's regio network; desert dwellers are likely to know them.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Deprivation rolls for thirst come every two hours (see Hazards of the Great Desert), and sun on bare skin does +5 non-combat damage as often. A storyguide may keep the south beyond the desert habitable, or in regiones.\n\nIf the troupe wants it impassable, it can be a Divine edict: the heat, coming from the superlunar sun, lies past Hermetic magic, grows until it beats any defence, foils magic spectacularly and may be patrolled by angels. Research on the Limit of the Lunar Sphere may profit here. Ideas for what lies within: a city of refugees from Carthage under a college of priestesses; Prester John's peaceful empire; grasslands and jungles whose nomads herd for sphinxes; a river of gems and vis through black ravines that trap the ghosts of those who die there; the true home of the Sudanese in Aethiopia Occidentalis. Whether Aethiopia is the torrid zone is for the saga.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -348,7 +384,7 @@
             "kind": "places",
             "target_id": "the_banu_sulaym",
             "note": "Nomads of Cyrenaica and Tripolitania, which the Ayyubids control (p. 19)",
-            "id": "52666af5d684"
+            "id": "4238bccb15a7"
           }
         ],
         "arms": {},
@@ -379,7 +415,7 @@
             "kind": "places",
             "target_id": "mythic_africa",
             "note": "Holds Cyrenaica and Tripolitania",
-            "id": "92cb88dd347c"
+            "id": "24389d8d29bc"
           }
         ],
         "arms": {},
@@ -669,8 +705,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Most Berber gods belong to the Faerie Realm. Whether the Dii Mauri still hear, or lie smothered by the Divine, is left open. The settuten, dedicated to the god of sacrifices, are the nearest thing to a priesthood (ch. 4). Traditional ahadjam forms are in the Tattoo Magicians section, pp. 93-95.\n\nNames (p. 21): most Berbers follow the Muslim pattern with Berber isms; traditional men are 'name ag name', women go by one name or a Tamazight laqab. Lists of men's and women's isms are on p. 21.",
+            "title": "The Berber gods",
+            "text": "Most Berber gods belong to the Faerie Realm.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The settuten",
+            "text": "The settuten, dedicated to the god of sacrifices, are the nearest thing to a Berber priesthood (ch. 4).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Whether the Dii Mauri still hear, or lie smothered by the Divine, is left open. Traditional ahadjam forms are in the Tattoo Magicians section, pp. 93-95.\n\nNames (p. 21): most Berbers follow the Muslim pattern with Berber isms; traditional men are 'name ag name', women go by one name or a Tamazight laqab. Lists of men's and women's isms are on p. 21.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -701,8 +749,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "It is part of the Faerie Realm, and parts of it lie in Faerie regiones, which are easier to visit.",
+            "title": "The Netherworld's realm",
+            "text": "The Netherworld is part of the Faerie Realm, and parts of it lie in Faerie regiones, which are easier to visit.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1306,8 +1354,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Elder men, driven apart by Warping, wander into the deep desert, where some bargain with the Hunger for release and become Spirit Votaries with Servant of the Desert, or Dessicated Men, undead Magic Humans with Might.",
+            "title": "The elders in the deep desert",
+            "text": "Elder Tuareg men, driven apart by Warping, wander into the deep desert, where some bargain with the Hunger for release and become its servants, or Dessicated Men, undead.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Those who bargain become Spirit Votaries with Servant of the Desert, or Dessicated Men, undead Magic Humans with Might.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1469,7 +1523,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Whether the far southern tribes are humans, Magic-kin, Magic Humans or faeries playing raiders is uncertain.",
             "revealed_year": null,
             "revealed_season": ""
@@ -1502,7 +1556,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Whether the far southern tribes are humans, Magic-kin, Magic Humans or faeries playing raiders is uncertain.",
             "revealed_year": null,
             "revealed_season": ""
@@ -1535,7 +1589,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Whether the far southern tribes are humans, Magic-kin, Magic Humans or faeries playing raiders is uncertain.",
             "revealed_year": null,
             "revealed_season": ""
@@ -1594,8 +1648,32 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "They worship the Unholy Trinity. The Zawiya and most Hassane know these are demons and believe, after five centuries, that they hold the upper hand; the Znaga and slaves mostly do not know. The upper ranks are goetic sorcerers, usually by pact, as the Gift is no commoner than in Europe. Hassane Summon and Ablate for life, healing and strength, so a duel goes to the greater demon. Zawiya Command demons to build roads and houses, and Bind Aerial Powers into stone pylons that cool the cities and bring rain. Almost yearly a demon breaks loose. Hell lets them be: with no Divine faith to reach, every one of them can fall, and the emirs play the Three against each other.\n\nCharacters: Hassane, Knight or Emir, or Landed Noble or Muqta', the great ones Diabolist Mythic Companions; Zawiya, Priest or 'Alim with Commanding and Binding; Znaga, any Free status; Haratan, the Freed Slave Flaw (p. 37) with Warrior or Educated; 'Abid, the 'Abid Flaw. See Realms of Power: The Infernal ch. 11 and Realms of Power: The Divine pp. 114-115. Names: Abisme, Alphaien, Burdel, Canabeus, Chernubles, Corsablix, Esperveres, Eudropin, Faldrun, Gemalfin, Guarlan, Jouna, Malduit, Marcule, Priamon, Timozel.",
+            "title": "What the Banu Khalida worship",
+            "text": "The Banu Khalida worship the Unholy Trinity. The Zawiya and most Hassane know these are demons and believe, after five centuries, that they hold the upper hand; the Znaga and slaves mostly do not know.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Banu Khalida's sorcerers",
+            "text": "The upper ranks of the Banu Khalida are goetic sorcerers, usually by pact, as the Gift is no commoner than in Europe. Hassane Summon and Ablate for life, healing and strength, so a duel goes to the greater demon. Zawiya Command demons to build roads and houses, and Bind Aerial Powers into stone pylons that cool the cities and bring rain.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Demons breaking loose",
+            "text": "Almost yearly a demon breaks loose among the Banu Khalida.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Why Hell lets them be",
+            "text": "Hell lets the Banu Khalida be: with no Divine faith to reach, every one of them can fall, and the emirs play the Three against each other.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Characters: Hassane, Knight or Emir, or Landed Noble or Muqta', the great ones Diabolist Mythic Companions; Zawiya, Priest or 'Alim with Commanding and Binding; Znaga, any Free status; Haratan, the Freed Slave Flaw (p. 37) with Warrior or Educated; 'Abid, the 'Abid Flaw. See Realms of Power: The Infernal ch. 11 and Realms of Power: The Divine pp. 114-115. Names: Abisme, Alphaien, Burdel, Canabeus, Chernubles, Corsablix, Esperveres, Eudropin, Faldrun, Gemalfin, Guarlan, Jouna, Malduit, Marcule, Priamon, Timozel.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1627,8 +1705,26 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Demons of the Order of False Gods (Realms of Power: The Infernal p. 37) who sow hate between Christian and Muslim anywhere from Africa to the Middle East, in whatever form suits the listener, high in Hell and able to feign patience.\n\nMahound: a parody of a prophet in green silk and gold, leering, with immense ears. It seeks apostasy, sends missionaries north and watches visitors to the Cities.\n\nTermagant: a wrinkled hag with bulging eyes, spitting venom and clawing at eyes with jagged nails. It wants blood, drives the Hassane to pointless violence, teaches contempt for slaves and seeks more of them.\n\nApollyon: a hunchbacked, ugly blond parody of Apollo in a dripping, acid, oversized gold cloak, whose lyre jangles the senses to stillness. It is greed: it brings gold, always stolen from elsewhere, to lure merchants and sends them home corrupted.",
+            "title": "What the Trinity are",
+            "text": "The Unholy Trinity are demons of the Order of False Gods (Realms of Power: The Infernal p. 37) who sow hate between Christian and Muslim anywhere from Africa to the Middle East, in whatever form suits the listener, high in Hell and able to feign patience.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Mahound",
+            "text": "Mahound is a parody of a prophet in green silk and gold, leering, with immense ears. It seeks apostasy, sends missionaries north and watches visitors to the Cities.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Termagant",
+            "text": "Termagant is a wrinkled hag with bulging eyes, spitting venom and clawing at eyes with jagged nails. It wants blood, drives the Hassane to pointless violence, teaches contempt for slaves and seeks more of them.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Apollyon",
+            "text": "Apollyon is a hunchbacked, ugly blond parody of Apollo in a dripping, acid, oversized gold cloak, whose lyre jangles the senses to stillness. It is greed: it brings gold, always stolen from elsewhere, to lure merchants and sends them home corrupted.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1659,8 +1755,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A council of twelve emirs and the senior Zawiyas balance the Three. The demon-bound pylons keep the climate.",
+            "title": "Who rules the Cities",
+            "text": "A council of twelve emirs and the senior Zawiyas balance the Three in the Twelve Cities.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The pylons",
+            "text": "The demon-bound pylons keep the climate of the Twelve Cities.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1873,8 +1975,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Its emir has been corrupted by Baal-Peor.",
+            "title": "Malprimis's emir",
+            "text": "The emir of Malprimis has been corrupted by Baal-Peor.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2449,8 +2551,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A large pack of bouda has come up from the south to strip the ruins (p. 42).",
+            "title": "Bouda in the ruins",
+            "text": "A large pack of bouda has come up from the south to strip the Maghreb's ruins (p. 42).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2678,7 +2780,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_anfa",
             "note": "Its harbour",
-            "id": "1df8a5552f3d"
+            "id": "e0aeef9ca662"
           }
         ],
         "arms": {},
@@ -2708,7 +2810,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_asfi",
             "note": "Its harbour",
-            "id": "3e44e41bf802"
+            "id": "21e288994aea"
           }
         ],
         "arms": {},
@@ -2748,8 +2850,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A ruined cellar door in an overgrown Roman villa is the way into the regio.",
+            "title": "The way into the regio",
+            "text": "A ruined cellar door in an overgrown Roman villa on Mogador is the way into the regio.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2851,8 +2953,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Little Divine aura troubles the place. Those who speak Aramaic may talk to Punic ghosts as if they had Dead Language: Punic at their score less 3 (below zero, not at all). Defixiones may lie in the abandoned Roman quarter.",
+            "title": "Punic ghosts",
+            "text": "At Chellah, those who speak Aramaic may talk to Punic ghosts.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Curse tablets",
+            "text": "Defixiones may lie in Chellah's abandoned Roman quarter.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Little Divine aura troubles the place. Those who speak Aramaic talk to Punic ghosts as if they had Dead Language: Punic at their score less 3 (below zero, not at all).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2915,8 +3029,32 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "It lies in a regio with several entrances, all at sea in fog. Seeing through the boundary takes Ease Factor 15 (ArM5 p. 189); at certain times of year particular headings lead straight through without any special ability.\n\nThe first enchantment, Penetration 0, turns every human and any other creature affected by Corpus who does not resist into a mundane monkey suited to its nature: warriors hamadryades, the clever callithrices, the agile cercopitheci. Intelligence, Virtues, Flaws and Abilities remain; clothes and gear do not change. A monkey character can talk with monkeys, and understand but not speak human tongues, so a magus casts only with quiet words (ArM5 p. 83). It lasts while on the island and causes Warping as a powerful mystical effect, and Flaws so gained are simian. Dispelling it is as a level 55 enchantment (about MuCo base 10, +1 Touch, +4 Until, +4 Boundary); a Bjornaer's Heartbeast Ability also ends it.\n\nThe second, Penetration 50, keeps out anything in human shape: one it overcomes cannot leave the beach landward or affect anything beyond it, and is driven to the nearest beach if it takes human shape inland, even partly once the shape is recognisable. It is as a level 85 enchantment (about ReCo base 15, +1 Touch, +4 Until, +4 Boundary, +25 for Penetration). Magi who want to explore must probably suppress their Magic Resistance and accept the change. Both effects come from the island, by no known magic; the guidelines are only for investigating and dispelling them.",
+            "title": "Finding Pithecousa",
+            "text": "Pithecousa lies in a regio with several entrances, all at sea in fog. At certain times of year particular headings lead straight through without any special ability.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The monkey enchantment",
+            "text": "The first enchantment of Pithecousa turns every human and any other creature affected by Corpus who does not resist into a mundane monkey suited to its nature: warriors hamadryades, the clever callithrices, the agile cercopitheci. Intelligence, Virtues, Flaws and Abilities remain; clothes and gear do not change. A monkey character can talk with monkeys, and understand but not speak human tongues, so a magus casts only with quiet words (ArM5 p. 83). It lasts while on the island; a Bjornaer's Heartbeast Ability also ends it.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The ward against human shape",
+            "text": "The second enchantment of Pithecousa keeps out anything in human shape: one it overcomes cannot leave the beach landward or affect anything beyond it, and is driven to the nearest beach if it takes human shape inland, even partly once the shape is recognisable. Magi who want to explore must probably suppress their Magic Resistance and accept the change.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Whence the enchantments come",
+            "text": "Both of Pithecousa's enchantments come from the island, by no known magic.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Seeing through the regio boundary takes Ease Factor 15 (ArM5 p. 189). The first enchantment has Penetration 0 and causes Warping as a powerful mystical effect, and Flaws so gained are simian. Dispelling it is as a level 55 enchantment (about MuCo base 10, +1 Touch, +4 Until, +4 Boundary). The second has Penetration 50 and is as a level 85 enchantment (about ReCo base 15, +1 Touch, +4 Until, +4 Boundary, +25 for Penetration). The guidelines are only for investigating and dispelling them.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2948,8 +3086,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The King and his counsellors, drawn from all five kinds and more exotic ones, are Magic Animals. He and many of them have true Intelligence. He may have higher Might and further powers, as his storyguide chooses; the book prints no block for him.",
+            "title": "The King and his counsellors",
+            "text": "The King of Monkeys and his counsellors, drawn from all five kinds and more exotic ones, are Magic Animals. He and many of them have true Intelligence.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The King may have higher Might and further powers, as his storyguide chooses; the book prints no block for him.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -2980,8 +3124,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The troupe chooses what the Marinids are: a rampaging horde like the Mongols, or, as in history, future conquerors of the western Maghreb who spare Fez and bring a new age of art and learning.\n\nTheir weakness: the dynasty holds together only while it raids and grows. When plunder or conquest stops, each warlord looks to swallow his cousins and their followers. Stalling their advance forces a civil war that leaves them united but far smaller (p. 49).",
+            "title": "The Marinids' weakness",
+            "text": "The Marinid dynasty holds together only while it raids and grows. When plunder or conquest stops, each warlord looks to swallow his cousins and their followers. Stalling their advance forces a civil war that leaves them united but far smaller (p. 49).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The troupe chooses what the Marinids are: a rampaging horde like the Mongols, or, as in history, future conquerors of the western Maghreb who spare Fez and bring a new age of art and learning.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3011,7 +3161,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tangier",
             "note": "Its harbour",
-            "id": "fc34a35a992f"
+            "id": "1a570d465fdf"
           }
         ],
         "arms": {},
@@ -3260,7 +3410,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Thieves of Marrakesh take Virtues that suit them only if they use those Abilities often (pp. 52-53): Affinity, Cautious with or Puissant in Athletics, Awareness, Legerdemain or Stealth, Intuition, Keen Vision, Light Touch, Perfect Balance, Premonitions, Ways of the Town, and the catalog's All According to Plan, Falls Like a Cat, Indescribable Face, Just an Instant, Finding Hidden Loot, Rat Up a Drainpipe, Schooled in Crime, See in Darkness (the book's Sees in the Dark) and Skilled Smuggler. Childhoods raised by thieves (p. 53, each with Native Language 5): burglar, Awareness, Bargain, Stealth 2; grifter, Charm, Guile, Legerdemain 2; lookout, Awareness, Legerdemain, Stealth 2; runner, Area Lore, Athletics, Legerdemain 2.",
             "revealed_year": null,
             "revealed_season": ""
@@ -3361,7 +3511,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tunis",
             "note": "Its harbour",
-            "id": "0b7e0ba6bc9e"
+            "id": "cf2a38f6dea1"
           }
         ],
         "arms": {},
@@ -3391,7 +3541,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_tripoli",
             "note": "Its harbour",
-            "id": "28b72f855bb0"
+            "id": "00dae6f67a14"
           }
         ],
         "arms": {},
@@ -3421,7 +3571,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_mahdia",
             "note": "Its harbour",
-            "id": "f765bedd3e62"
+            "id": "fb91e55ae3a6"
           }
         ],
         "arms": {},
@@ -3451,7 +3601,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sfax",
             "note": "Its harbour",
-            "id": "a7c4d1be9352"
+            "id": "06bafdbf7c74"
           }
         ],
         "arms": {},
@@ -3481,7 +3631,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sharshal",
             "note": "Its harbour",
-            "id": "6581cbc2adda"
+            "id": "bf3f535f481d"
           }
         ],
         "arms": {},
@@ -3511,7 +3661,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_en_nassria",
             "note": "Its harbour",
-            "id": "502a07b10369"
+            "id": "e2d135e54063"
           }
         ],
         "arms": {},
@@ -3701,7 +3851,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The book gives no figure for its Divine aura (p. 56).",
             "revealed_year": null,
             "revealed_season": ""
@@ -3915,8 +4065,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A Virgilian cabal left texts and works here when the Arabs came, and never returned.",
+            "title": "The Virgilian cabal",
+            "text": "A Virgilian cabal left texts and works in the Catacombs of Soussa when the Arabs came, and never returned.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3947,8 +4097,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Magical creatures rest in auras larger than themselves, so a site of aura 3 or more, big enough for laboratories, must lie here (p. 55).",
+            "title": "A site for laboratories",
+            "text": "Magical creatures rest in auras larger than themselves, so a site of aura 3 or more, big enough for laboratories, must lie at the mouth of the Bagradas (p. 55).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3979,8 +4129,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Gathered in late summer after the sirocco, the husks give four pawns of Muto and Imaginem vis (p. 54). Taking the vis ruins them for dye, so a magus must come to terms with the tribe, which guides southbound caravans and keeps grudges for generations.",
+            "title": "Vis in the husks",
+            "text": "Gathered in late summer after the sirocco, the husks of the Wadi of the Molting Beetles give four pawns of Muto and Imaginem vis (p. 54).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The dyers' grudge",
+            "text": "Taking the vis ruins the beetle husks for dye, so a magus must come to terms with the tribe, which guides southbound caravans and keeps grudges for generations.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4011,8 +4167,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The Lotophagi withdrew long ago into isolated regiones marked by clusters of lotus shrubs, avoid the islanders, and come out rarely to gather Lotus Fruit of Virtue on the Summer Solstice.\n\nIn a secluded gully on a nearly inaccessible shore grows an untended copse of Lotus of Virtue, the narcotic fruit that held Odysseus's crew. Berries picked on the morning of the summer solstice give three pawns of Herbam and three of Mentem vis. Three seeds exposed only to full moonlight for a year and then sealed in an amulet give the wearer Clear Thinker (p. 57).",
+            "title": "Where the Lotophagi went",
+            "text": "The Lotophagi of Djerba withdrew long ago into isolated regiones marked by clusters of lotus shrubs, avoid the islanders, and come out rarely to gather Lotus Fruit of Virtue on the Summer Solstice.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The lotus copse",
+            "text": "In a secluded gully on a nearly inaccessible shore of Djerba grows an untended copse of Lotus of Virtue, the narcotic fruit that held Odysseus's crew. Berries picked on the morning of the summer solstice give three pawns of Herbam and three of Mentem vis.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The lotus seed amulet",
+            "text": "Three seeds of Djerba's Lotus of Virtue exposed only to full moonlight for a year and then sealed in an amulet give the wearer Clear Thinker (p. 57).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4313,8 +4481,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The cyclopskin retreated to regiones here, and may be at war beneath the island.",
+            "title": "The cyclopskin",
+            "text": "The cyclopskin retreated to regiones at Ghar Dalam, and may be at war beneath the island.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4420,8 +4588,32 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Silphium of Virtue survives only in a few lost Magic regiones in the coastal mountains. Enriched by cutting the stem and sealing the faintly scented resin in a jar of pine nuts for a season, then eating one nut a day, it wards against poison as Greater Immunity for a year, with infertility as Lesser Malediction for as long. Unenriched, its heart-shaped seeds hold 2 pawns of extraordinary Corpus vis, or serve as a finite-use Lesser Enchantment, Silphium Seeds of Corpus Vis (PeCo 15; R: Touch, D: Mom, T: Unborn Child; Base 5, +1 Touch, +1 Part), which ends a pregnancy, with a Stamina stress roll against 6 after the first month or a Medium Wound. It derives from Black Anne's Kiss (Ancient Magic pp. 54-56), and study may give Insight into that magic (pp. 62-63).",
+            "title": "Where silphium survives",
+            "text": "Silphium of Virtue survives only in a few lost Magic regiones in Cyrenaica's coastal mountains.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Enriched silphium",
+            "text": "Enriched by cutting the stem and sealing the faintly scented resin in a jar of pine nuts for a season, then eating one nut a day, silphium wards against poison for a year, with infertility for as long.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Silphium seeds",
+            "text": "Unenriched, silphium's heart-shaped seeds hold 2 pawns of extraordinary Corpus vis, or serve as a finite-use Lesser Enchantment, Silphium Seeds of Corpus Vis, which ends a pregnancy, with a Stamina stress roll against 6 after the first month or a Medium Wound.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Silphium and Black Anne's Kiss",
+            "text": "The silphium seed enchantment derives from Black Anne's Kiss (Ancient Magic pp. 54-56), and study may give Insight into that magic (pp. 62-63).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Enriched silphium wards against poison as Greater Immunity, with infertility as Lesser Malediction. Silphium Seeds of Corpus Vis: PeCo 15; R: Touch, D: Mom, T: Unborn Child; Base 5, +1 Touch, +1 Part.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4474,7 +4666,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_sidi_rafaa",
             "note": "Its harbour",
-            "id": "b91af61fc60e"
+            "id": "4a80d692e36f"
           }
         ],
         "arms": {},
@@ -4533,8 +4725,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Inside are a makeshift Hermetic laboratory, a shattered oversized glass lens, a freshly slain man and signs of a fight with a great sea creature.",
+            "title": "Inside the Pharos",
+            "text": "Inside the Pharos of Apollonia are a makeshift Hermetic laboratory, a shattered oversized glass lens, a freshly slain man and signs of a fight with a great sea creature.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4600,8 +4792,26 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Kura is an unfettered Magic spirit, a nereid and genius loci who remembers true silphium and the groves above the city. She cannot leave her precinct. Sacrifice or a restored shrine will win her help, and she may use Zeynab as intermediary through a Spiritual Pact, taking her as Spirit Votary (Realms of Power: Magic pp. 88-89). She might be patron of a Theban-style covenant (The Sundered Eagle pp. 30-31) but mistrusts Hermetics after hostile Berber and Arab wizards; her price includes veneration, perhaps a magus's Spiritual Pact and a promise to restore her public worship, which risks the Code.",
+            "title": "Who Kura is",
+            "text": "Kura is an unfettered Magic spirit, a nereid and genius loci who remembers true silphium and the groves above the city. She cannot leave her precinct.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Winning Kura's help",
+            "text": "Sacrifice or a restored shrine will win Kura's help, and she may use Zeynab as intermediary.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Kura as patron",
+            "text": "Kura might be patron of a Theban-style covenant (The Sundered Eagle pp. 30-31) but mistrusts Hermetics after hostile Berber and Arab wizards; her price includes veneration, perhaps a magus's Spiritual Pact and a promise to restore her public worship, which risks the Code.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Kura uses Zeynab through a Spiritual Pact, taking her as Spirit Votary (Realms of Power: Magic pp. 88-89).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4743,8 +4953,26 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The Philaeni are inseparable daimonic Heroes with pooled Magic Might 35, summoned only by a joint theurgic rite of two wizards using Wizard's Communion. Once they gave swiftness to legions on their stretch of road; they can also grant duplication of a recently cast spell, enforce truth, and curse oathbreakers. The contemporary Cult of Mercury (The Mysteries: Revised Edition pp. 114-117) sometimes holds initiations here.",
+            "title": "The Philaeni",
+            "text": "The Philaeni are inseparable daimonic Heroes, summoned only by a joint theurgic rite of two wizards.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Philaeni's gifts",
+            "text": "Once the Philaeni gave swiftness to legions on their stretch of road; they can also grant duplication of a recently cast spell, enforce truth, and curse oathbreakers.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Cult of Mercury here",
+            "text": "The contemporary Cult of Mercury (The Mysteries: Revised Edition pp. 114-117) sometimes holds initiations at the Altars of the Philaeni.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The Philaeni have pooled Magic Might 35; the rite uses Wizard's Communion.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4973,7 +5201,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Bouda from the south",
             "text": "A large pack of bouda is moving in from the south to pick the region clean.",
             "revealed_year": null,
             "revealed_season": ""
@@ -5155,8 +5383,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The sheepskin carries whoever sits on it, and itself, in a blink to any place asked, even unseen or conditional ('wherever the man who stole my trousers has gone').\n\nThe cap makes the wearer and what he wears or holds invisible, but not mounts or objects like statues; he can still be heard, or smelled by dogs.\n\nThe pipe turns exhaled smoke to small gold ingots, without limit while there is hashish, but the smoker is out of his mind and under the storyguide's control, usually to his humiliation, and often with the other two items. That is why the merchant forbade the pavilion.",
+            "title": "The sheepskin",
+            "text": "The pavilion's sheepskin carries whoever sits on it, and itself, in a blink to any place asked, even unseen or conditional ('wherever the man who stole my trousers has gone').",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The cap",
+            "text": "The pavilion's cap makes the wearer and what he wears or holds invisible, but not mounts or objects like statues; he can still be heard, or smelled by dogs.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The pipe",
+            "text": "The pavilion's pipe turns exhaled smoke to small gold ingots, without limit while there is hashish, but the smoker is out of his mind and under the storyguide's control, usually to his humiliation, and often with the other two items. That is why the merchant forbade the pavilion.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5187,8 +5427,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Verecunda made it for the King of Monkeys in payment for her familiar. A treacherous servant stole it years ago and has become formidable. He needs it to return and challenge the King, and will pose as a helper to get it.",
+            "title": "Who made the Fist",
+            "text": "Verecunda made the Monkey's Fist for the King of Monkeys in payment for her familiar.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The thief",
+            "text": "A treacherous servant stole the Monkey's Fist from the King of Monkeys years ago and has become formidable. He needs it to return and challenge the King, and will pose as a helper to get it.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5244,8 +5490,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "They are shapechanged serpents sent by the King of Punt, the Egyptian name for Soqotra (Rival Magic ch. 5), to kill the King of Monkeys. Punt's mighty serpent king has further plans.",
+            "title": "Who the envoys are",
+            "text": "The Embassy from Furthest Hind are shapechanged serpents sent by the King of Punt, the Egyptian name for Soqotra (Rival Magic ch. 5), to kill the King of Monkeys.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Punt's further plans",
+            "text": "Punt's mighty serpent king has further plans.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5557,8 +5809,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The dead man is Diurnum Lumen of Flambeau, left behind from a Jerbiton-led Theban settlement abandoned under ten years ago. He was rebuilding the pharos to recover the Lineage of Abydaros, a lost African mystery cult of Apollo with powers from sunlight.\n\nHis killer may be Glaucus, a murderous Makhai (the Theban Muspelli of Rival Magic), who serves the sea Titan Okeanos and his monsters and has moved on. Magi who settle here may rebuild the experiments and invite his return.",
+            "title": "The dead man",
+            "text": "The dead man in the pharos is Diurnum Lumen of Flambeau, left behind from a Jerbiton-led Theban settlement abandoned under ten years ago. He was rebuilding the pharos to recover the Lineage of Abydaros, a lost African mystery cult of Apollo with powers from sunlight.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The killer",
+            "text": "Diurnum Lumen's killer may be Glaucus, a murderous Makhai (the Theban Muspelli of Rival Magic), who serves the sea Titan Okeanos and his monsters and has moved on. Magi who settle at the pharos may rebuild the experiments and invite his return.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5614,7 +5872,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "What drives Syyd",
             "text": "A demon has preyed on Syyd's solitude and led him step by step to feel justified in killing.",
             "revealed_year": null,
             "revealed_season": ""
@@ -5746,8 +6004,62 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Sun (BS&S p. 66): the Deprivation check for lack of water comes every 4 hours in the deserts, and exposed skin takes +1 non-combat damage (ArM5 pp. 180-181).\n\nDry quicksand in the ergs pulls a man under in two rounds, and he then suffocates. In the first round he may make a Strength or Quickness stress roll against Ease Factor 9 to get free; a botch traps his arms next round. After that it is up to his companions, though with free arms he may help in the second round, lowering their further Ease Factors by 3.\n\nBrigands prey on caravans not clearly well guarded, as far as their need drives them. Sandstorms and dust-storms can smother or flay: natural, the work of sorcerers, elemental jinn, or witches in disguise. Jinn and demons send false oases; the victim learns of it when her first long drink turns out to be sand.\n\nMyrtle of Virtue (p. 72): berries fermented in a silver urn underground for a season give a draught of +3 to all recovery rolls for a season. A flowering sprig gives its bearer Clear Thinker if the intended user sleeps with it under the pillow for a season, or by some Jewish traditions if it dries in the Holy of Holies, touched by each day's rising sun for a season. Soaked in seawater for a season in a place sacred to Aphrodite it stays supple and fresh and gives Venus' Blessing.\n\nWhy slaves rarely flee (p. 84): all three faiths hold that a runaway is a thief bound for Hell, tempted by evil spirits, though each forbids enslaving its own. Many are freed anyway: a mother of her master's child, warriors after a campaign, domestics by will or charity. A runaway in the Maghreb has nowhere to go where slaves do not already do the work, and some would rather be a trusted ghilman than free and poor. Maghrebi Muslims also take suffering as God's will, which flight cannot change.\n\nVis: a sprig of myrtle leaves with a flower or berry holds 2 pawns of Mentem. Its enrichment is in the Secrets.\n\nBooks: travellers can read up on the routes in Arabic works. Abu Abdullah al-Bakri's Book of Routes and Places (1068, drawn from two centuries of merchants' reports) is a summa on Area Lore: Maghreb, level 3, Quality 10, with a tractatus on Area Lore: Great Desert, Quality 10; it is held in merchants' and nobles' private libraries in the Maghreb and Al-Andalus. Ibn Hawqal's Kitab Surat al-'Ard, Face of the Earth, in the same libraries, is a summa on Area Lore: Maghreb, level 5, Quality 11, with tractatus on Area Lore: Provence, Iberia and Sicily, each Quality 11; its praise of Fraxinet makes some Hermetic scholars suspect he followed Jerbiton. Yusuf al-Warraq's On the Topography of North Africa is a tractatus on Area Lore: Maghreb, Quality 8, and al-Zuhri's Kitab al-Jaghrafiyya, Book of Geography, another, Quality 10.",
+            "title": "Dry quicksand",
+            "text": "Dry quicksand in the Great Desert's ergs pulls a man under in two rounds, and he then suffocates.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Brigands",
+            "text": "Brigands prey on caravans in the Great Desert not clearly well guarded, as far as their need drives them.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Sandstorms",
+            "text": "Sandstorms and dust-storms in the Great Desert can smother or flay: natural, the work of sorcerers, elemental jinn, or witches in disguise.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "False oases",
+            "text": "Jinn and demons send false oases in the Great Desert; the victim learns of it when her first long drink turns out to be sand.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Myrtle berries",
+            "text": "Myrtle of Virtue (p. 72): berries fermented in a silver urn underground for a season give a draught of +3 to all recovery rolls for a season.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Myrtle sprigs",
+            "text": "A flowering sprig of Myrtle of Virtue gives its bearer Clear Thinker if the intended user sleeps with it under the pillow for a season, or by some Jewish traditions if it dries in the Holy of Holies, touched by each day's rising sun for a season. Soaked in seawater for a season in a place sacred to Aphrodite it stays supple and fresh and gives Venus' Blessing.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Why slaves rarely flee",
+            "text": "Why slaves rarely flee (p. 84): all three faiths hold that a runaway is a thief bound for Hell, tempted by evil spirits, though each forbids enslaving its own. Many are freed anyway: a mother of her master's child, warriors after a campaign, domestics by will or charity. A runaway in the Maghreb has nowhere to go where slaves do not already do the work, and some would rather be a trusted ghilman than free and poor. Maghrebi Muslims also take suffering as God's will, which flight cannot change.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at The Great Desert",
+            "text": "Vis: a sprig of myrtle leaves with a flower or berry holds 2 pawns of Mentem. Its enrichment is in the Secrets.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Books at The Great Desert",
+            "text": "Books: travellers can read up on the routes in Arabic works. Abu Abdullah al-Bakri's Book of Routes and Places (1068, drawn from two centuries of merchants' reports) is a summa on Area Lore: Maghreb, level 3, Quality 10, with a tractatus on Area Lore: Great Desert, Quality 10; it is held in merchants' and nobles' private libraries in the Maghreb and Al-Andalus. Ibn Hawqal's Kitab Surat al-'Ard, Face of the Earth, in the same libraries, is a summa on Area Lore: Maghreb, level 5, Quality 11, with tractatus on Area Lore: Provence, Iberia and Sicily, each Quality 11; its praise of Fraxinet makes some Hermetic scholars suspect he followed Jerbiton. Yusuf al-Warraq's On the Topography of North Africa is a tractatus on Area Lore: Maghreb, Quality 8, and al-Zuhri's Kitab al-Jaghrafiyya, Book of Geography, another, Quality 10.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Sun (BS&S p. 66): the Deprivation check for lack of water comes every 4 hours in the deserts, and exposed skin takes +1 non-combat damage (ArM5 pp. 180-181). Quicksand: in the first round he may make a Strength or Quickness stress roll against Ease Factor 9 to get free; a botch traps his arms next round. After that it is up to his companions, though with free arms he may help in the second round, lowering their further Ease Factors by 3.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5787,8 +6099,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A character with the (Desert) Regio Network Minor Virtue (Realms of Power: Magic p. 45; the catalog's entry is {land} Regio Network) can enter and leave at different mundane places. Some may reach other deserts this way: the Sahara, the Empty Quarter, the Nefud, the Kyzylkum and Karakum, the Taklimakan, and perhaps unknown deserts beyond Mythic Europe.",
+            "title": "Paths to other deserts",
+            "text": "Some may reach other deserts by the Great Desert Regio Network: the Sahara, the Empty Quarter, the Nefud, the Kyzylkum and Karakum, the Taklimakan, and perhaps unknown deserts beyond Mythic Europe.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "A character with the (Desert) Regio Network Minor Virtue (Realms of Power: Magic p. 45; the catalog's entry is {land} Regio Network) can enter and leave at different mundane places.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5995,7 +6313,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at The Field of Glass",
             "text": "Vis: the clearest, brightest pieces, bared on windswept dune crests, hold Ignem or Auram vis, the best of them both. Very large pieces hold two or three pawns. Whether the aura outlasts the gathering of all the vis-bearing glass is an open question.",
             "revealed_year": null,
             "revealed_season": ""
@@ -6217,7 +6535,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at The Changing Lake",
             "text": "Vis: twice a year, as the season and the colour change, red sand blows over the lake, and some floats by the shore reeds as 2 pawns each of Imaginem and Muto vis. Locals sometimes gather it and work it into their pots and bricks.",
             "revealed_year": null,
             "revealed_season": ""
@@ -6324,8 +6642,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The book does not say where it lies (p. 68). It prints the second Form as Aurum, read here as Auram.\n\nVis: split trees give fragments rich in Terram vis; one pawn in five is Herbam or Auram instead, but only in vis found in spring.",
+            "title": "Vis at The Forest of the Jobar",
+            "text": "Vis: split trees give fragments rich in Terram vis; one pawn in five is Herbam or Auram instead, but only in vis found in spring.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The book does not say where it lies (p. 68). It prints the second Form as Aurum, read here as Auram.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6382,8 +6706,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Their magic (pp. 70-71) was non-Hermetic, limited, and erratic near the Divine: preserving, animating, sensing through and commanding corpses, with a small side in sensing water. No text of its secrets left the kingdom, but some may lie in a hidden stronghold.\n\nTheir ritual for binding a horde of corpses without an Arcane Connection to each counts in Hermetic research as a Minor Magical Breakthrough. It yields a simple supernatural ritual adding a corpse to a horde bound to an object, often a crown or feathered headdress. Its wearer may use Voice and Group levels of effect for spells on or through the horde, at Arcane Connection distance and past a usual Group's numbers. The ritual has no Penetration, works only on mundane corpses and cannot last in a Divine aura. Recovered bound objects can be researched as a source of Garamantian Lore or Insight (Ancient Magic p. 8).\n\nHermetic Intellego far outdoes their water-sensing, but relics of it help to understand their methods or to translate Tifinagh.",
+            "title": "Garamantian magic",
+            "text": "Garamantian magic (pp. 70-71) was non-Hermetic, limited, and erratic near the Divine: preserving, animating, sensing through and commanding corpses, with a small side in sensing water. No text of its secrets left the kingdom, but some may lie in a hidden stronghold.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The corpse-binding ritual",
+            "text": "The Garamantian ritual for binding a horde of corpses without an Arcane Connection to each counts in Hermetic research as a Minor Magical Breakthrough. It yields a simple supernatural ritual adding a corpse to a horde bound to an object, often a crown or feathered headdress. Its wearer may use Voice and Group levels of effect for spells on or through the horde, at Arcane Connection distance and past a usual Group's numbers. The ritual has no Penetration, works only on mundane corpses and cannot last in a Divine aura. Recovered bound objects can be researched as a source of Garamantian Lore or Insight (Ancient Magic p. 8).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Garamantian water-sensing",
+            "text": "Hermetic Intellego far outdoes the Garamantians' water-sensing, but relics of it help to understand their methods or to translate Tifinagh.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6414,8 +6750,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Buried in an urn in a small cave nearby is the last initiation script for Dowsing (ArM5 p. 64), in Tifinagh Punic. To self-initiate (Target Level 18; The Mysteries: Revised Edition p. 13) one must properly mummify and entomb 10 people in Garamantian tombs (+3), go to the cut-stone pool at the autumn equinox (+3), and bathe there by moonlight while ritually scarred, the equal of the Blatant Gift (+9). If Garamantian Lore + Presence + Initiation Script bonus exceeds 18, one gains Dowsing for drinking water. Finding and reading the script may be a whole story arc.",
+            "title": "The Dowsing script",
+            "text": "Buried in an urn in a small cave near Zinchecra is the last initiation script for Dowsing (ArM5 p. 64), in Tifinagh Punic.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Dowsing initiation",
+            "text": "To self-initiate with the Dowsing script one must properly mummify and entomb 10 people in Garamantian tombs, go to the cut-stone pool at the autumn equinox, and bathe there by moonlight while ritually scarred.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Self-initiation: Target Level 18 (The Mysteries: Revised Edition p. 13); the tombs +3, the pool +3, the scarring the equal of the Blatant Gift (+9). If Garamantian Lore + Presence + Initiation Script bonus exceeds 18, one gains Dowsing for drinking water. Finding and reading the script may be a whole story arc.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6496,7 +6844,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at The Forgotten Foggara",
             "text": "Vis: after rare storms the overflow leaves 5 pawns of Aquam vis on the wadi's shore, in bone fragments of the lost workers.",
             "revealed_year": null,
             "revealed_season": ""
@@ -6563,7 +6911,7 @@
             "kind": "places",
             "target_id": "the_central_great_desert",
             "note": "Passes by the Central Great Desert",
-            "id": "5fddfe1346c4"
+            "id": "d8174c101c30"
           }
         ],
         "arms": {},
@@ -6951,8 +7299,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The remotest heights are pocked with Magic auras. In the sharpest clefts at their feet lie small Infernal auras, home to demons and Infernal jnun of the Aerial Powers and Furies, who send flash floods down the gueltas.\n\nVis: Tahat, Ilaman, Amjer, Tiouyen and Iherhe are the highest peaks, and the Tuareg say their spirits quarrelled over love. At the foot of Ilaman is the spring that opened when jealous Amjer struck his brother's shoulder; its water is a liquid form of Terram vis.",
+            "title": "Demons of the clefts",
+            "text": "In the sharpest clefts at the feet of the Ahaggar's remotest heights dwell demons and Infernal jnun of the Aerial Powers and Furies, who send flash floods down the gueltas.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at The Ahaggar",
+            "text": "Vis: Tahat, Ilaman, Amjer, Tiouyen and Iherhe are the highest peaks, and the Tuareg say their spirits quarrelled over love. At the foot of Ilaman is the spring that opened when jealous Amjer struck his brother's shoulder; its water is a liquid form of Terram vis.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The remotest heights are pocked with Magic auras. The sharpest clefts at their feet hold small Infernal auras.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7056,7 +7416,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at Wadi Amazar",
             "text": "Vis: Tuareg hedge magicians must beg a tree's spirit for timber. A fallen limb holds Vim vis, each tree's giving its own power once enriched: Tin-Balalan Puissant Leadership, Tin-Ambarak Puissant Ride, Tin-Gaded Wilderness Sense, Tin-Tamanzazt Lesser Immunity to Thirst. Wandering male inenden know the enrichment and must be bargained with or forced. Ancient cypress wood gives +3 to spirits and +3 to necromancy.",
             "revealed_year": null,
             "revealed_season": ""
@@ -7147,7 +7507,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The book prints no strength for its auras (p. 74).",
             "revealed_year": null,
             "revealed_season": ""
@@ -7253,7 +7613,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The book disagrees on the road to Taghaza: 165 leagues north-north-east from here (p. 74), 125 leagues south-south-east from there (p. 75).",
             "revealed_year": null,
             "revealed_season": ""
@@ -7333,7 +7693,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The book disagrees on the road to Iwalatan: 125 leagues south-south-east from here (p. 75), 165 leagues north-north-east from there (p. 74).",
             "revealed_year": null,
             "revealed_season": ""
@@ -7874,7 +8234,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The Ride Ability covers camels. Many warriors ride a camel to battle and change to a horse to fight. Camel statistics are in the book's Bestiary Appendix (p. 136).",
             "revealed_year": null,
             "revealed_season": ""
@@ -7906,8 +8266,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Theories traded at dinner parties in the Tell (pp. 81-82): that the Sudanese are faeries; that their way of life would disgust the Arabs; that they are the servant caste of a people who shun Allah's servants, such as evil jinn; that the gold comes corruptly, perhaps as monsters' excrement; that the desert truly is the world's edge and the Sudan is in Faerie; that gold is as cheap as sand to them; or that their faerie rulers want the journey, not the gold, and every trade good ever brought sits in a pile outside Kombuh Saleh.\n\nIf history holds, the kingdoms here are small and war-tossed, between the fall of the Empire of Ghana in 1204 and the founding of the Empire of Mali about 1240.",
+            "title": "What the Tell says of the Sudan",
+            "text": "Theories traded at dinner parties in the Tell (pp. 81-82): that the Sudanese are faeries; that their way of life would disgust the Arabs; that they are the servant caste of a people who shun Allah's servants, such as evil jinn; that the gold comes corruptly, perhaps as monsters' excrement; that the desert truly is the world's edge and the Sudan is in Faerie; that gold is as cheap as sand to them; or that their faerie rulers want the journey, not the gold, and every trade good ever brought sits in a pile outside Kombuh Saleh.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "If history holds, the kingdoms here are small and war-tossed, between the fall of the Empire of Ghana in 1204 and the founding of the Empire of Mali about 1240.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7960,7 +8326,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Who they are the book leaves open: faeries feeding on the exchange, demons breeding greed, tribesmen without speech, or emissaries of a lost kingdom such as Atlantis, Prester John or the Sorcerer-King of Sosso.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8013,8 +8379,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Lieutenants of either side may initiate seekers into Mysteries that turn their side's power on the other; Red Initiations such as desiccation are in the book's next chapter.",
+            "title": "Mysteries of the Red and the Black",
+            "text": "Lieutenants of either the Red or the Black may initiate seekers into Mysteries that turn their side's power on the other.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Red Initiations such as desiccation are in the book's next chapter.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8045,8 +8417,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A choice for the troupe (the Faerie reading, p. 86). Use the cannibal spirit of Realms of Power: Faerie or The Cradle and the Crescent's tribe, or rework faeries into ghoulish knights, giants and beasts.\n\nThe ruler may be an ancient ghoul, an angel, a demon, a mortal tale-teller, the ghost of a Criamon Primus, nobody, or whatever spirit is nearest in the story.\n\nThe treasury is a cave that opens when asked in the name of a mysterious person. The stealthy, minding the ghouls' keen noses, may overhear the name from guards; it may be an Arcane Connection to the Ghoul King or the vault's maker.",
+            "title": "The ghouls' treasury",
+            "text": "The treasury of the Kingdom of the Ghouls is a cave that opens when asked in the name of a mysterious person. The stealthy, minding the ghouls' keen noses, may overhear the name from guards; it may be an Arcane Connection to the Ghoul King or the vault's maker.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "A choice for the troupe (the Faerie reading, p. 86). Use the cannibal spirit of Realms of Power: Faerie or The Cradle and the Crescent's tribe, or rework faeries into ghoulish knights, giants and beasts. The ruler may be an ancient ghoul, an angel, a demon, a mortal tale-teller, the ghost of a Criamon Primus, nobody, or whatever spirit is nearest in the story.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8077,8 +8455,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "In this version the Great Desert has an Infernal aura of 2, higher where people hid in it to do crimes. Demons dance on its sands, parts are almost the Fiery Pit, Hell has gates in the mountains, and Infernal smiths forge weapons for the last war in the Hoggar.",
+            "title": "Hell in the desert",
+            "text": "In this version demons dance on the Great Desert's sands, parts are almost the Fiery Pit, Hell has gates in the mountains, and Infernal smiths forge weapons for the last war in the Hoggar.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "In this version the Great Desert has an Infernal aura of 2, higher where people hid in it to do crimes.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8109,8 +8493,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Faerie markets: each caravan is a troupe of faeries bearing real, exhausted goods, trading for vital things or a part in mortal stories.\n\nWounded worlds: the Hope and the Hunger fight in other worlds too. Slavers from a Hunger-ruled world trade gold they cannot eat and captives they will not feed; or traders from a world drowned in fecundity, the Black's kind face a mask, come for life-giving salt with the gold that breeds under their earth.\n\nUnknowable places: the caravans come from deep in the Magic Realm, as spirits or the Realm's way of clearing travellers' leavings. Magi who follow pass into the Twilight Void and never come back to tell.",
+            "title": "Faerie markets",
+            "text": "Each caravan through the Crack Between the Worlds is a troupe of faeries bearing real, exhausted goods, trading for vital things or a part in mortal stories.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Wounded worlds",
+            "text": "The Hope and the Hunger fight in other worlds too. Slavers from a Hunger-ruled world trade gold they cannot eat and captives they will not feed; or traders from a world drowned in fecundity, the Black's kind face a mask, come for life-giving salt with the gold that breeds under their earth.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Unknowable places",
+            "text": "The caravans come from deep in the Magic Realm, as spirits or the Realm's way of clearing travellers' leavings. Magi who follow pass into the Twilight Void and never come back to tell.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8150,8 +8546,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The standard setting of this book: the Western Nile exists but has faded into a regio as the Red defeats the Black. Victories for the Hope draw it closer. A shattering injury to the Hunger, on the scale of the European Forest's splitting (Guardians of the Forest), might bring it back to the world.\n\nA troupe may instead use real geography, where the Nile rises in central Africa and the Sahel lies beyond the desert. That suits characters built around crossing the desert, and gives it a more realistic tone; the Western Nile suits high fantasy and a permeable desert.",
+            "title": "The fading Nile",
+            "text": "The Western Nile exists but has faded into a regio as the Red defeats the Black. Victories for the Hope draw it closer. A shattering injury to the Hunger, on the scale of the European Forest's splitting (Guardians of the Forest), might bring it back to the world.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The fading Nile is the standard setting of this book. A troupe may instead use real geography, where the Nile rises in central Africa and the Sahel lies beyond the desert. That suits characters built around crossing the desert, and gives it a more realistic tone; the Western Nile suits high fantasy and a permeable desert.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8278,8 +8680,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "She speaks if shocked into botching a Personality Trait roll, most easily by storytelling. Her servants know this has been tried and love stories fail; tales of outrage and vice rewarded may anger her into shouting.",
+            "title": "What makes the princess speak",
+            "text": "The Silent Princess speaks if shocked, most easily by storytelling. Her servants know this has been tried and love stories fail; tales of outrage and vice rewarded may anger her into shouting.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "She speaks if shocked into botching a Personality Trait roll.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8310,8 +8718,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "All its people sleep unaging under a king and queen; a thief may carry off what he can if he dodges the guards and does not stray near the couple, lest they wake. Why they sleep and what will wake them is unrecorded.",
+            "title": "The sleepers of Zerzura",
+            "text": "All Zerzura's people sleep unaging under a king and queen; a thief may carry off what he can if he dodges the guards and does not stray near the couple, lest they wake.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Why they sleep and what will wake them is unrecorded.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8417,7 +8831,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The tale is told all over the Near East, so they may be faeries playing at wealth and poverty, or the valley may be real.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8574,8 +8988,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The prophecy works as the Death Prophecy Virtue, though a few kings do not actually die when their reign ends.",
+            "title": "Kings who live on",
+            "text": "Despite the prophecy, a few kings do not actually die when their reign ends.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The prophecy works as the Death Prophecy Virtue.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8702,7 +9122,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "What the flies are",
             "text": "The flies are a horde of False God demons. Where death and murder are common they feed on the sin, and whisk away gold from hovels and caravans whenever a weak fool needs tempting.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8734,7 +9154,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Anyone living at Taghaza or Taodeni takes -3 on Aging rolls for the conditions (ArM5 p. 170), plus any Warping from the aura.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8766,8 +9186,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The Azalai may end in Arcadia, where salt becomes goods and captives are changed and sent north as black slaves with altered memories. At least one merchant is a disguised faerie with Spirit Away (Realms of Power: Faerie pp. 23-24); guides are men Warped away or minor faeries.\n\nOr demons run it to punish sinners, whose fragments of memory make Taghaza a mundane purgatory.",
+            "title": "The road to Arcadia",
+            "text": "The Azalai may end in Arcadia, where salt becomes goods and captives are changed and sent north as black slaves with altered memories. At least one merchant is a disguised faerie; guides are men Warped away or minor faeries.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "A mundane purgatory",
+            "text": "Or demons run the Azalai to punish sinners, whose fragments of memory make Taghaza a mundane purgatory.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The disguised faerie merchant has Spirit Away (Realms of Power: Faerie pp. 23-24).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8798,8 +9230,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Exposure to the site's Infernal occupants gives nearly all mundane miners Weak Willed through Warping, and most hold the equivalent of the Delusion Flaw: the memories are false, and neither mundane nor magical means show it. Some miners and overseers are incognizant dark faeries or demons who feed on the suffering and warp the memories of the miners and female slaves.",
+            "title": "The miners' memories",
+            "text": "Exposure to the Infernal occupants of the Mines of Despair warps nearly all mundane miners: the memories are false, and neither mundane nor magical means show it.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Who feeds on the miners",
+            "text": "Some miners and overseers at the Mines of Despair are incognizant dark faeries or demons who feed on the suffering and warp the memories of the miners and female slaves.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Exposure to the site's Infernal occupants gives nearly all mundane miners Weak Willed through Warping, and most hold the equivalent of the Delusion Flaw.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8855,8 +9299,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Some claim he can use traded salt and gold as Arcane Connections, and see and hear through the slaves he sends into Mythic Europe.",
+            "title": "The Sorcerer-King's eyes",
+            "text": "Some claim the Sorcerer-King of Sosso can use traded salt and gold as Arcane Connections, and see and hear through the slaves he sends into Mythic Europe.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8954,8 +9398,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "They are a slave-soldier cadre who killed guards in their escape. Their owner comes to reclaim his property before a local magistrate.",
+            "title": "Who the grogs are",
+            "text": "The southern grogs are a slave-soldier cadre who killed guards in their escape.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Their owner",
+            "text": "The grogs' owner comes to reclaim his property before a local magistrate.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -9296,8 +9746,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The healing sleep is the work of Tin Hinan's ghost; few guess their good fortune comes from her.",
+            "title": "The healing sleep",
+            "text": "The healing sleep at the Tomb of Tin Hinan is the work of Tin Hinan's ghost; few guess their good fortune comes from her.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -9926,8 +10376,26 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The ruins belong to the Infernal realm, the legacy of the gods of Carthage (p. 132).\n\nThe book prints the city's destruction as 164 BC on p. 132, likely a misprint: p. 15 gives 146 BC, used here.\n\nA great mass of melted bronze lies buried here, the remains of a tophet destroyed in the razing, and with it Ba'al Ammon's urns of vis-rich ash.\n\nEvery Punic colony had to build a temple to Tanit and Ba'al Ammon, its shrines beside a tophet: a great bronze god or goddess with upstretched arms and a fire within. Petitioners laid bound offerings on the sloping hands to fall into the mouth and burn. The priests buried the ashes in urns dedicated to Tanit, and the demon drew on the pits as vast stores of vis.",
+            "title": "Whose ruins these are",
+            "text": "The Ruins of Carthage belong to the Infernal realm, the legacy of the gods of Carthage (p. 132).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The buried bronze",
+            "text": "A great mass of melted bronze lies buried in the Ruins of Carthage, the remains of a tophet destroyed in the razing, and with it Ba'al Ammon's urns of vis-rich ash.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The tophets",
+            "text": "Every Punic colony had to build a temple to Tanit and Ba'al Ammon, its shrines beside a tophet: a great bronze god or goddess with upstretched arms and a fire within. Petitioners laid bound offerings on the sloping hands to fall into the mouth and burn. The priests buried the ashes in urns dedicated to Tanit, and the demon drew on the pits as vast stores of vis.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The book prints the city's destruction as 164 BC on p. 132, likely a misprint: p. 15 gives 146 BC, used here.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -9959,8 +10427,20 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Their realm is the Infernal. The apotheosis was a lie. The gods were a single demon who enjoyed the work, granting just enough to encourage more sin and bloodshed, and charging for things it would gladly have done anyway.\n\nTheir rite was a now-lost Profane Sacrifice, joining Sacrifice and Profaning the Holy (Realms of Power: The Infernal pp. 95-96): burning an offering makes a pawn of Vim vis infesta for each +2 the offering would give, 5 pawns for an innocent human.\n\nA storyguide may instead make them Faerie hedge wizards of Faerie Bargaining (p. 130; Realms of Power: Faerie p. 131), the child sacrifices giving vitality. Later they raised slave children to offer in place of their own; such faeries, finding the trick, could withdraw their protection.",
+            "title": "The false apotheosis",
+            "text": "The Priesthood of Carthage's realm is the Infernal. The apotheosis was a lie. The gods were a single demon who enjoyed the work, granting just enough to encourage more sin and bloodshed, and charging for things it would gladly have done anyway.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The priests' rite",
+            "text": "The Priesthood of Carthage's rite was a now-lost Profane Sacrifice: burning an offering makes Vim vis infesta, 5 pawns for an innocent human.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The Profane Sacrifice joins Sacrifice and Profaning the Holy (Realms of Power: The Infernal pp. 95-96): burning an offering makes a pawn of Vim vis infesta for each +2 the offering would give.\n\nA storyguide may instead make them Faerie hedge wizards of Faerie Bargaining (p. 130; Realms of Power: Faerie p. 131), the child sacrifices giving vitality. Later they raised slave children to offer in place of their own; such faeries, finding the trick, could withdraw their protection.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -10116,8 +10596,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The Cippus of Melqart, in Classic Greek and Punic: a tractatus of Dead Language: Punic, Quality 5, studied for a season with Dead Language: Punic or Classic Greek of 4 or more. It is a key to Phoenician.",
+            "title": "The Cippus of Melqart",
+            "text": "The Cippus of Melqart, in Classic Greek and Punic, is a key to Phoenician.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The cippus is a tractatus of Dead Language: Punic, Quality 5, studied for a season with Dead Language: Punic or Classic Greek of 4 or more.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -10148,8 +10634,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Seekers who follow the trail may find the false faerie Ba'al Ammon lingering there, or easily called. He offers ancient magic, and the risk of unwitting corruption.",
+            "title": "What waits at the cult sites",
+            "text": "Seekers who follow the trail to the cult sites may find the false faerie Ba'al Ammon lingering there, or easily called. He offers ancient magic, and the risk of unwitting corruption.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -10236,8 +10722,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "He has found Ba'al Ammon's cache of vis infesta outside Tunis.",
+            "title": "The sahir's source",
+            "text": "The Gifted sahir has found Ba'al Ammon's cache of vis infesta outside Tunis.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -11832,8 +12318,20 @@
         "summary": "A young Hassane of the Banu Khalida seeking fame as a warrior: nearly seven feet tall, ebony-skinned and shaven, his face painted with red ochre for battle, in a chain shirt under a black djebellah. He cannot leave a jar, door, shutter or chest open.",
         "secrets": [
           {
-            "title": "",
-            "text": "He preys on the ghosts of those he beats, Ablating experience, Confidence, Characteristics or healing from them, fifteen victories so far, gaining Warping and Infernal Reputation, and tainting his Abilities. The remnants hang at the edge of his sight, which is why he closes every place a spirit might hide. A demon is bound in his great sword.",
+            "title": "The ghosts he beats",
+            "text": "He preys on the ghosts of those he beats, fifteen victories so far. The remnants hang at the edge of his sight, which is why he closes every place a spirit might hide.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The demon in the sword",
+            "text": "A demon is bound in Jurfaret's great sword.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "He Ablates experience, Confidence, Characteristics or healing from the ghosts, gaining Warping and Infernal Reputation, and tainting his Abilities.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -12909,8 +13407,14 @@
         "summary": "A Tuareg inenden saddle-maker who wanders the Ahaggar, his pariah birth barring him from the lasting protection of any drum group, though the nobles he serves prize his work. Mortally afraid of the desert spirits, he trades much of what he makes for charms against magic, most of which do nothing. He is worn in the face, in a tattered light veil and a dirty white robe, and hung all over with small metal amulets and glass.\n\nHis saddles are made for one rider and give +3 to riding or a Ride score of 8 on camels, or carry small Animal enchantments: they calm an animal, or let it go longer without water, or speed it across shifting sand.",
         "secrets": [
           {
-            "title": "",
-            "text": "Only two of his amulets do anything: a minor relic and an imerghi Vulnero Magicam charm.",
+            "title": "His amulets",
+            "text": "Only two of his amulets do anything: a minor relic and an imerghi charm.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The imerghi charm is Vulnero Magicam.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -13184,7 +13688,7 @@
             "attack": 9,
             "defense": 7,
             "damage": -3,
-            "id": "637e21c31df1"
+            "id": "068bc1edcb65"
           },
           {
             "name": "Evasion",
@@ -13192,7 +13696,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "ee65fa8280c6"
+            "id": "9d32514f83be"
           }
         ],
         "soak": 1,
@@ -13265,7 +13769,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a minor natural ability or mundane Quality of an animal he sees, such as a frog's swimming, a cat's night vision, horns, spines or a bear's pelt, but no major change like wings. One at a time; a second replaces the first. It lasts indefinitely, but he loses a Might point each sunrise and sunset while he keeps it, regained in three hours or less in a Magic aura. MuAn 25 (Base 4, +2 Sun, +1 Part, +1 Constant effect, +1 can change ability possessed); Personal Power (25 levels, -2 Might cost).",
-            "id": "35a07d007114"
+            "id": "527aea281154"
           },
           {
             "name": "Mimic the Man",
@@ -13279,7 +13783,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Copies any sound exactly, even human speech, without understanding it. MuIm 3 (Base 1, +1 Conc, +1 Complexity); Personal Power (3 levels, -1 Might cost, +1 Init).",
-            "id": "c3d8e2f9e16e"
+            "id": "323580824a90"
           }
         ],
         "vis": [
@@ -13287,7 +13791,7 @@
             "pawns": 2,
             "art": "Muto",
             "where": "one pawn in each hand",
-            "id": "1a44fa9302c6"
+            "id": "6c05d891300a"
           }
         ],
         "equipment": "",
@@ -13734,7 +14238,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 12,
-            "id": "3902f6c6950e"
+            "id": "f97c74001d50"
           },
           {
             "name": "Bite",
@@ -13742,7 +14246,7 @@
             "attack": 15,
             "defense": 10,
             "damage": 11,
-            "id": "c97937748c7a"
+            "id": "808566871b57"
           }
         ],
         "soak": 10,
@@ -13934,7 +14438,7 @@
             "penetration_bonus": 15,
             "quality": "",
             "description": "With a moment's concentration he learns the physical state of any Beast of Virtue whose token he holds. InAn 35 (Base 3, +4 Arc, +4 Boundary); Ritual Power x2. Might spent so is recovered only by resting in a Magic aura of 4 or higher.",
-            "id": "84d499f2e6fc"
+            "id": "63444fdd97aa"
           },
           {
             "name": "Routing Bellow",
@@ -13948,7 +14452,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that makes men and beasts who hear it flee in fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "e2b9695d2dd9"
+            "id": "a77546aeabe8"
           },
           {
             "name": "Circle of Beast Warding",
@@ -13962,7 +14466,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ring traced in the earth that no mundane beast of Size +4 or less may cross; he thinks it unsporting for hunting. ReAn 20 (Base 2, +1 Touch, +2 Ring, +3 Size); Lesser Power (20 levels, +5xp Penetration).",
-            "id": "eda57bc33ae1"
+            "id": "53d49d02ce48"
           },
           {
             "name": "Cowing Snarl",
@@ -13976,7 +14480,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A man or beast of his size or less, caught by his gaze, kneels in fear. ReAn 25 (Base 4, +1 Eye, +1 Diam, +2 Size, +1 Mentem requisite); Lesser Power (25 levels), Improved Powers x3 (-5 Might cost, +10 Initiative).",
-            "id": "ef70e7df6185"
+            "id": "e9b8c284d7a3"
           },
           {
             "name": "Trackless Step",
@@ -13990,7 +14494,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His sweeping tail erases his tracks as he walks. ReTe 10 (Base 4, +1 Touch, +1 Conc); Lesser Power (10 levels, +15xp Concentration).",
-            "id": "6759eadf3a67"
+            "id": "334699daf063"
           },
           {
             "name": "Hunter's Pounce",
@@ -14004,7 +14508,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaps up to 50 paces. ReAn 25 (Base 15, +2 Size); Personal Power (25 levels).",
-            "id": "af85eb22b762"
+            "id": "703c197b2893"
           },
           {
             "name": "Sleep with Eyes Open",
@@ -14018,7 +14522,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He sleeps with open eyes and is hard to surprise. ReAn 20 (Base 4, +2 Sun, +2 Size); Personal Power (20 levels, -1 Might cost).",
-            "id": "8ad1531ad29e"
+            "id": "9cb1bda657ce"
           }
         ],
         "vis": [
@@ -14026,7 +14530,7 @@
             "pawns": 8,
             "art": "Animal",
             "where": "in his mane",
-            "id": "9693531c49a5"
+            "id": "0ff9ccf2c8a2"
           }
         ],
         "equipment": "",
@@ -14489,7 +14993,7 @@
             "attack": 17,
             "defense": 13,
             "damage": 13,
-            "id": "d9c3478f96c3"
+            "id": "8da71dcb0155"
           },
           {
             "name": "Teeth",
@@ -14497,7 +15001,7 @@
             "attack": 12,
             "defense": 10,
             "damage": 7,
-            "id": "541766cde094"
+            "id": "b891175be089"
           },
           {
             "name": "Grapple",
@@ -14505,7 +15009,7 @@
             "attack": 11,
             "defense": 9,
             "damage": null,
-            "id": "a409ce951d54"
+            "id": "790cb7f03393"
           }
         ],
         "soak": 13,
@@ -14641,7 +15145,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A roar that freezes men and beasts who hear it, trembling with fear. ReAn(Me) 30 (Base 5, +1 Diam, +3 Sound, +1 Mentem requisite); Greater Power (30 levels, -3 Might cost, +5xp Penetration).",
-            "id": "8be3f92ec4d0"
+            "id": "8880f27ab9c9"
           },
           {
             "name": "Thunderous Swipe",
@@ -14655,7 +15159,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A blow that throws anything up to his own size 5 paces; Dex against Ease Factor 12 to stay standing. Thrown straight up or into something hard, the target takes falling damage (+1 per 2 feet, +7 at most). It may join a claw attack. ReAn 25 (Base 10, +1 Touch, +1 Size, +1 Corpus requisite); Lesser Power (25 levels), Improved Powers (-5 Might cost).",
-            "id": "2b4524e68959"
+            "id": "4f9822455896"
           }
         ],
         "vis": [
@@ -14663,7 +15167,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in his claws",
-            "id": "78600d975c17"
+            "id": "fcc58662b8dd"
           }
         ],
         "equipment": "",
@@ -15041,7 +15545,7 @@
             "attack": null,
             "defense": 1,
             "damage": null,
-            "id": "57fef725dbbf"
+            "id": "923d88005a78"
           },
           {
             "name": "Fist",
@@ -15049,7 +15553,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 16,
-            "id": "adb8d8729783"
+            "id": "b09c8f04b83e"
           },
           {
             "name": "Kick",
@@ -15057,7 +15561,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 13,
-            "id": "b555e240d85e"
+            "id": "fd1c9db1c17c"
           },
           {
             "name": "Cudgel",
@@ -15065,7 +15569,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 17,
-            "id": "bfb86e9e9e4d"
+            "id": "23aac5b3db70"
           },
           {
             "name": "Thrown Stone",
@@ -15073,7 +15577,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 15,
-            "id": "0127369acc81"
+            "id": "3db6062acaca"
           }
         ],
         "soak": 16,
@@ -15174,7 +15678,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He looks and sounds like a Size 0 man. MuIm 25 (Base 2, +4 size, +2 Sun, +1 Moving Image); Improved Powers: -3 Might cost.",
-            "id": "f4a807c7c5c8"
+            "id": "4acc96e4b805"
           },
           {
             "name": "Friend of the Desert",
@@ -15188,7 +15692,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "He ignores heat and fire damage of +15 or less. ReIg (Base 4, +2 for +15 or less, +2 Sun, +1 size; the book gives no total); Improved Powers: -2 Might cost; Slow Power.",
-            "id": "0d3b1dfc4dd3"
+            "id": "2362dc6d31d2"
           }
         ],
         "vis": [
@@ -15196,7 +15700,7 @@
             "pawns": 4,
             "art": "Ignem",
             "where": "in his heart",
-            "id": "96c00d082388"
+            "id": "a1709b45f2b0"
           }
         ],
         "equipment": "Acacia wood cudgel, sack of salt, gold, trinkets",
@@ -15305,7 +15809,7 @@
             "attack": 7,
             "defense": 4,
             "damage": 5,
-            "id": "473370225d84"
+            "id": "f23c1b5bf727"
           },
           {
             "name": "Grapple",
@@ -15313,7 +15817,7 @@
             "attack": 3,
             "defense": 6,
             "damage": null,
-            "id": "b9dabff14fda"
+            "id": "3de1e986af7b"
           }
         ],
         "soak": 11,
@@ -15591,7 +16095,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "12ae5c1822df"
+            "id": "148386946c7f"
           },
           {
             "name": "Bite",
@@ -15599,7 +16103,7 @@
             "attack": 11,
             "defense": 7,
             "damage": 8,
-            "id": "18890aad90bd"
+            "id": "616c6f67cf90"
           }
         ],
         "soak": 3,
@@ -15707,7 +16211,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its gaze fills a victim with the wish to chase it until sunrise or sunset. ReMe 15 (Base 4, +1 Eye, +2 Sun): Lesser Power (15 levels, -2 Might cost).",
-            "id": "bdb46edb4495"
+            "id": "32ae2ca5f7af"
           },
           {
             "name": "Gone to Ground",
@@ -15721,7 +16225,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Teleports to a place within 500 paces to which it has an Arcane Connection. ReAn 20 (Base 20): Personal Power (20 levels, -1 Might cost). Not while observed.",
-            "id": "682d969ff824"
+            "id": "e111c9f84b80"
           },
           {
             "name": "Unsporting Stalker",
@@ -15735,7 +16239,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Blends into the terrain, +3 to vision-based Stealth checks. MuIm 3 (Base 1, +1 Diam, +1 moving images): Personal Power (5 levels, -1 Might cost, +15xp Concentration). The book prints Duration Conc but prices +1 Diam.",
-            "id": "e8aa5f723def"
+            "id": "9f49b81ebeb0"
           }
         ],
         "vis": [
@@ -15743,7 +16247,7 @@
             "pawns": 3,
             "art": "Animal",
             "where": "in its tail",
-            "id": "5e962bac7dcc"
+            "id": "e29191093736"
           }
         ],
         "equipment": "",
@@ -15958,7 +16462,7 @@
             "attack": 9,
             "defense": 10,
             "damage": 0,
-            "id": "caf802c5eadf"
+            "id": "6aa9c0d4463d"
           },
           {
             "name": "Grapple",
@@ -15966,7 +16470,7 @@
             "attack": 9,
             "defense": 0,
             "damage": null,
-            "id": "9bab35e9aacc"
+            "id": "b4562e3b23c0"
           },
           {
             "name": "Sting",
@@ -15974,7 +16478,7 @@
             "attack": 9,
             "defense": 2,
             "damage": -3,
-            "id": "8e0a003cbd71"
+            "id": "f7f66360dcf0"
           }
         ],
         "soak": 4,
@@ -16089,7 +16593,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armor Protection (not Soak), the victim suffers an exceptionally debilitating poison (Stamina roll against Ease Factor 6, Incapacitating), wounded or not.",
-            "id": "283ea6dea85a"
+            "id": "1826bd10506c"
           },
           {
             "name": "Drive Berserk",
@@ -16103,7 +16607,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its touch drives the target to attack everything nearby for a Diameter. CrMe 10 (Base 4, +1 Touch, +1 Diameter): Lesser Power (10 levels, -1 Might cost, 5xp Concentration, +5xp Penetration).",
-            "id": "fee29026c4dd"
+            "id": "386fe615c16b"
           },
           {
             "name": "Lie in Wait",
@@ -16117,7 +16621,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Sitting still, it looks like a plain rock or small dune. MuIm 10 (Base 5, +1 Conc): Personal Power (10 levels, -1 Might cost, +10xp Concentration).",
-            "id": "3809b9b5b61e"
+            "id": "802e247cd4b5"
           }
         ],
         "vis": [
@@ -16125,7 +16629,7 @@
             "pawns": 2,
             "art": "Mentem",
             "where": "in its stinger",
-            "id": "06876ecbe0f6"
+            "id": "bc5dffd165f9"
           }
         ],
         "equipment": "",
@@ -16205,7 +16709,7 @@
             "attack": 16,
             "defense": 14,
             "damage": 13,
-            "id": "40b8a301f6af"
+            "id": "38803e10a443"
           }
         ],
         "soak": 7,
@@ -16250,7 +16754,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form in one round, most often a wave of grinding stones, and may discorporate almost at once. Its rocky body can hide trails and landmarks.",
-            "id": "16effab87844"
+            "id": "ba9acf13b110"
           },
           {
             "name": "Elemental Control of Water",
@@ -16264,7 +16768,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable cost: any Creo, Muto or Rego Aquam effect at 1 Might a magnitude, minor effects of level no higher than its Might. It taunts those dying of thirst.",
-            "id": "97ce4cd1bcf7"
+            "id": "5f1684871f75"
           },
           {
             "name": "Envisioning",
@@ -16278,7 +16782,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Subtly alters dreams to make them more ominous and depressing.",
-            "id": "67af2aab8f1c"
+            "id": "d5c5d1ea8867"
           },
           {
             "name": "Obsession",
@@ -16292,7 +16796,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "When a human commits a venial sin and it spends Might, then at the next crisis of worthiness the storyguide rolls a simple die +3 and the player a simple die + a suitable Personality Trait - adjustments for harsh surroundings. If the demon's total is higher, the character gains Doubt +1; acting on it puts him in a state of sin, and the demon then coagulates and kills him.",
-            "id": "728625537faf"
+            "id": "c2a199cda608"
           }
         ],
         "vis": [
@@ -16300,7 +16804,7 @@
             "pawns": 2,
             "art": "Perdo",
             "where": "tainted, in its body",
-            "id": "8ed66ae8cdc3"
+            "id": "726af2ffcaa5"
           }
         ],
         "equipment": "",
@@ -16490,7 +16994,7 @@
             "attack": 11,
             "defense": 12,
             "damage": 2,
-            "id": "1a8848e8563b"
+            "id": "e2fe418a5440"
           }
         ],
         "soak": -1,
@@ -16556,7 +17060,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "+3 on all rolls to impress others. Base 3, +1 Touch, +2 Sun.",
-            "id": "69ef7c482e2b"
+            "id": "5a74b2b114b9"
           },
           {
             "name": "Grant Major Flaw (Wildness)",
@@ -16570,7 +17074,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover grows helpless before all faeries, and suffers a different random Minor Personality Flaw each scene, stilled briefly by ecstatic experience such as dance, music or wandering dry riverbeds in hope of meeting faeries again.",
-            "id": "5b35a1b0cef2"
+            "id": "3d70276830eb"
           },
           {
             "name": "Grant Minor Flaw (Impotence)",
@@ -16584,7 +17088,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Ritual, no Hermetic equivalent. Her lover cannot have sex with others.",
-            "id": "c10a5585c0cc"
+            "id": "ffb9e329c19a"
           },
           {
             "name": "Guide",
@@ -16598,7 +17102,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leads a character into danger like the Common Sense Virtue, but serving her ends. ReMe Base 5, +2 Voice, +1 Conc, +2 Group.",
-            "id": "92754b1cb0f5"
+            "id": "b7874bb4c3db"
           },
           {
             "name": "Hound",
@@ -16612,7 +17116,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Tells her the direction and distance of her human quarry. InCo Base 3, +4 Arc, +1 Conc.",
-            "id": "8f306572fbd7"
+            "id": "138e097e6dda"
           },
           {
             "name": "Invisibility",
@@ -16626,7 +17130,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A personal Veil of Invisibility (ArM5 p. 146). Base 4, +2 Sun, +1 moving image. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "2c6c95d20587"
+            "id": "7038be0cb975"
           },
           {
             "name": "Pine Away",
@@ -16640,7 +17144,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A major disease, Ease Factor 15, causing a Light Wound, treatable with Faerie Lore or Medicine; the victim loses the will and the vitality to live. Base 30 (5 + 25 virulence), +2 Voice.",
-            "id": "e79240d13ae5"
+            "id": "cdc35947615e"
           },
           {
             "name": "Silent Motion",
@@ -16654,7 +17158,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Constant: she moves without a sound. Base 3, +2 Sun, +1 constant. The book prints '1 point, Init 0, Mentem' before '1 point, constant, Imaginem'.",
-            "id": "acc84950c556"
+            "id": "5b62f9784875"
           },
           {
             "name": "Steal Judgment",
@@ -16668,7 +17172,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "The target believes almost any lie she tells; an Intelligence roll against Ease Factor 6 resists, easier for truly incredible lies. Base 4, +1 Eye, +2 Sun. The book prints '1 point, Init 0, Mentem' before these figures.",
-            "id": "4423c3523d96"
+            "id": "8ac453c101f5"
           }
         ],
         "vis": [
@@ -16676,7 +17180,7 @@
             "pawns": 9,
             "art": "",
             "where": "bones of a goat",
-            "id": "ddb3d606df35"
+            "id": "1663bbc99dbd"
           }
         ],
         "equipment": "Any trappings of a woman of wealth and dubious virtue.",
@@ -17053,7 +17557,7 @@
             "attack": null,
             "defense": 9,
             "damage": null,
-            "id": "5bd4d2c29866"
+            "id": "d0ab3eb183ff"
           },
           {
             "name": "Falchion",
@@ -17061,7 +17565,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 5,
-            "id": "0531fc05cd40"
+            "id": "24d9282a8b1d"
           },
           {
             "name": "Fist",
@@ -17069,7 +17573,7 @@
             "attack": 8,
             "defense": 8,
             "damage": 2,
-            "id": "e6c93b5f8406"
+            "id": "45e3605e1529"
           }
         ],
         "soak": 2,
@@ -17275,7 +17779,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A Constant effect. With a few moments' concentration he learns anything that happens within the bounds of the Great Desert.",
-            "id": "c70f42161567"
+            "id": "36ead4b70312"
           },
           {
             "name": "Donning the Corporeal Veil",
@@ -17289,7 +17793,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Cr(Re)Co).",
-            "id": "dbf82d0405ec"
+            "id": "6526dc4a3942"
           },
           {
             "name": "Eidolon",
@@ -17303,7 +17807,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An illusory form material beings can see and hear. It moves and speaks as he directs and lasts until he has no use for it.",
-            "id": "801724ae9530"
+            "id": "112be363ebe9"
           },
           {
             "name": "Master of Sandstorms",
@@ -17317,7 +17821,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points, a point a magnitude: any non-ritual Creo, Muto or Rego Auram effect up to 7th magnitude, with Terram or Ignem prerequisites as he likes.",
-            "id": "92bdfcda6cfe"
+            "id": "979d2741a4b9"
           },
           {
             "name": "Master of Thirst",
@@ -17331,7 +17835,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Draws most of the water out of any object (PeAq(Co)).",
-            "id": "261f7d439e3e"
+            "id": "c1683fe813c5"
           }
         ],
         "vis": [
@@ -17339,7 +17843,7 @@
             "pawns": 7,
             "art": "Auram",
             "where": "in the dust on his clothes or in his cyclone",
-            "id": "4f2ff028b1ae"
+            "id": "a94b024729da"
           }
         ],
         "equipment": "",
@@ -17724,7 +18228,7 @@
             "attack": 0,
             "defense": -3,
             "damage": -2,
-            "id": "596419a64703"
+            "id": "101854964065"
           }
         ],
         "soak": 2,
@@ -17888,7 +18392,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes on a material form (Lesser Power, -5 Might cost).",
-            "id": "1d79820d50a3"
+            "id": "85799f5f9bf6"
           },
           {
             "name": "Focus Power (Divination)",
@@ -17902,7 +18406,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Intellego Corpus, Imaginem or Vim effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "864c2280d96c"
+            "id": "089b033e6e6b"
           },
           {
             "name": "Focus Power (Destruction)",
@@ -17916,7 +18420,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Perdo Animal, Corpus or Terram effects up to 7th magnitude. Its Initiative is the magnitude - 3.",
-            "id": "14b843c69d15"
+            "id": "af0a78f805a9"
           },
           {
             "name": "Invisibility",
@@ -17930,7 +18434,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "She, or someone she touches, turns invisible at will, though Second Sight still sees her. The effect is PeIm 15; the book also says the Lesser Power's 25 levels.",
-            "id": "b78f5de508e3"
+            "id": "99fd77e719a1"
           },
           {
             "name": "Ritual Focus Power (Healing)",
@@ -17944,7 +18448,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 7 points: Creo Corpus ritual effects up to 7th magnitude, paid for with any fitting vis she holds. Its Initiative is (2 x magnitude) - 3.",
-            "id": "ea711a30d46b"
+            "id": "8b2dd7176250"
           }
         ],
         "vis": [
@@ -17952,7 +18456,7 @@
             "pawns": 7,
             "art": "Mentem",
             "where": "in her bracelets",
-            "id": "237cd52550c7"
+            "id": "9207772ca41a"
           }
         ],
         "equipment": "",
@@ -18175,7 +18679,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "3de6b96cca8c"
+            "id": "e3da7c21b7b5"
           },
           {
             "name": "Fist",
@@ -18183,7 +18687,7 @@
             "attack": 3,
             "defense": 6,
             "damage": 1,
-            "id": "947be6f1c70b"
+            "id": "f8e913fc9e22"
           },
           {
             "name": "Sling",
@@ -18191,7 +18695,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 5,
-            "id": "b349c540d9aa"
+            "id": "4122234eb641"
           }
         ],
         "soak": 2,
@@ -18271,7 +18775,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "With a touch, a tunnel a pace deep. Used over and over to build warrens, and to loosen stones for the great burial mounds (PeTe; 2 mastery points on Might cost, 1 on Initiative).",
-            "id": "630631b02d8e"
+            "id": "8d7f61158947"
           }
         ],
         "vis": [
@@ -18279,7 +18783,7 @@
             "pawns": 1,
             "art": "Terram",
             "where": "in its hands",
-            "id": "d4e66eed6ca1"
+            "id": "824254db6ca0"
           }
         ],
         "equipment": "Any small thing that caught its interest, a camel-hide loincloth, and a sling wound round the waist or worn as a sash with a stone ready.",
@@ -19142,7 +19646,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 4,
-            "id": "ca4e8bc3cbb4"
+            "id": "aa25f1cfbf34"
           },
           {
             "name": "Great Sword",
@@ -19150,7 +19654,7 @@
             "attack": 21,
             "defense": 17,
             "damage": 13,
-            "id": "ee3ce46b2ec4"
+            "id": "af36ceddd106"
           }
         ],
         "soak": 4,
@@ -19272,7 +19776,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Once in a body, he shifts to any human form, even with animal parts such as curling ram's horns, and dissolves them at will. A natural change: Magic Resistance does not stop physical attacks.",
-            "id": "81fe52b96b20"
+            "id": "02ad1ced4316"
           },
           {
             "name": "Know the Places of Men",
@@ -19286,7 +19790,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Intellego Corpus or Imaginem effects up to 10th magnitude.",
-            "id": "9847cc066310"
+            "id": "8c37e9d92e47"
           },
           {
             "name": "Master of Flame",
@@ -19300,7 +19804,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Up to 10 points, a point a magnitude: Ignem effects up to 10th magnitude.",
-            "id": "9ba391f8c539"
+            "id": "70513395d536"
           },
           {
             "name": "Summon the Herd of Destruction",
@@ -19314,7 +19818,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A ritual power (ReMe 15, +4 Arc, +3 Moon, +2 Group): 10 ghostly war elephants who obey him, or one he names, for Moon Duration. They understand only Punic.",
-            "id": "1a4ce4f1a09a"
+            "id": "a2f67681c607"
           },
           {
             "name": "Coagulation",
@@ -19328,7 +19832,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes a material form, which he may dissolve at will.",
-            "id": "3687dddf10a8"
+            "id": "d18fdb468324"
           },
           {
             "name": "Envisioning",
@@ -19342,7 +19846,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 point to appear in a sleeper's dreams, 5 for a waking dream. So he often spoke to his worshippers.",
-            "id": "b0b749bb7e74"
+            "id": "ac2ab8894245"
           },
           {
             "name": "His Master's Voice",
@@ -19356,7 +19860,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: summons demons or corrupt beasts to him, 1 point for each point of their Infernal Might, so rarely used. He has no control over what comes.",
-            "id": "1376330ff400"
+            "id": "4b8f4be55575"
           },
           {
             "name": "Obsession",
@@ -19370,7 +19874,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "1 to 3 points: imposes the Obsession Traits of Greed, Merciless Ambition and Pride (Realms of Power: The Infernal pp. 31-32).",
-            "id": "1bd677ccf04c"
+            "id": "ffb3af2a1d6f"
           },
           {
             "name": "Possession",
@@ -19384,7 +19888,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: as Realms of Power: The Infernal. Might moved into a Possession Pool stays there until the possession ends. The more Might, the more he can do and the weaker the Penetration. Each portion is an independent copy of his mind using any Power its pool can pay for. He may give the host Magic Resistance equal to the Pool, or hide within and pass wards. Forcing the host, or using its powers, draws on the pool (1 point a magnitude or Ability point, or the Might the victim spent; a questionable act must beat the host's Trait on stress die + Might spent). The possession ends at pool 0. Vim spells drain the pool but must Penetrate his full Might.",
-            "id": "2d54275b025f"
+            "id": "068a4a9b3db8"
           },
           {
             "name": "Shroud the Stench of the Pit",
@@ -19398,7 +19902,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Variable: conceals the Infernal nature of a power or aura as Magical or Faerie, or as wholly mundane, even from Sense Holiness and Unholiness, for as long as what it masks. It costs the masked Power's cost, or its magnitude if it costs no Might.",
-            "id": "a6b6720991cb"
+            "id": "2f4616544c12"
           },
           {
             "name": "Wealth of Nations",
@@ -19412,7 +19916,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Summons riches of intrinsic value up to 50 pounds of gold from somewhere else, a royal treasury or the purse of the man beside you, chosen to corrupt most.",
-            "id": "ab4dce5553ff"
+            "id": "700fe8422b05"
           }
         ],
         "vis": [
@@ -19420,13 +19924,13 @@
             "pawns": 10,
             "art": "Vim",
             "where": "in his curling horns",
-            "id": "861c955c65e1"
+            "id": "a427071590bb"
           },
           {
             "pawns": 20,
             "art": "Vim",
             "where": "vis infesta, carried on long stays abroad",
-            "id": "a57fe5e7a720"
+            "id": "ecb448e08f8e"
           }
         ],
         "equipment": "",
@@ -19441,8 +19945,14 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
-            "text": "He is one demon of Hell who played every god of the Punics, and at last revealed himself to the Goetics as Baalzebub. The vast cache of vis infesta outside Tunis is his.",
+            "title": "Who he is",
+            "text": "He is one demon of Hell who played every god of the Punics, and at last revealed himself to the Goetics as Baalzebub.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "His cache",
+            "text": "The vast cache of vis infesta outside Tunis is his.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -19671,7 +20181,7 @@
             "attack": 3,
             "defense": 1,
             "damage": 0,
-            "id": "af1708067549"
+            "id": "5a5ef84d89f7"
           }
         ],
         "soak": 0,
@@ -19716,7 +20226,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "For 1 or more points, if it penetrates, the victim is possessed and under her direct control. Using the host's magic costs 1 Might per magnitude; a questionable act against the host's nature needs a stress die + Might spent over the host's Personality Trait roll (see Entrancement, ArM5 p. 65, for modifiers), and both costs apply together. Under her direct control the host has her Magic Resistance and is stopped by wards against her; acting freely, the host has neither. The costs follow Realms of Power: Magic, not Hermetic magic.",
-            "id": "2e73ac8acc59"
+            "id": "40c24f394e2f"
           }
         ],
         "vis": [
@@ -19724,7 +20234,7 @@
             "pawns": 3,
             "art": "Mentem",
             "where": "in the fingernails of the possession victim",
-            "id": "b597a4534d7f"
+            "id": "c8eefd6a9d7b"
           }
         ],
         "equipment": "Someone else's body and all her goods.",
@@ -20285,7 +20795,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 3. Any voice of man or creature, in any language it knows, in any shape (MuIm).",
-            "id": "cc5f602ee998"
+            "id": "07b271130335"
           },
           {
             "name": "Trembling Fear of the Predator's Gaze",
@@ -20299,7 +20809,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. While it holds his eye the target cannot run or dodge, though he can use his hands or call out; he loses his Quickness from Defense and takes -3 (ReCo).",
-            "id": "b852efa4904d"
+            "id": "65be301bc222"
           },
           {
             "name": "Rending Fangs",
@@ -20313,7 +20823,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 3. Its bite destroys leather, bone, wood, cloth, stone or metal it can get its teeth round. With an attack it takes a point of Protection off armour, or instead of one it breaks a weapon or shield if it beats Defense by 3 or more, doing no damage; not together with Ripping Jaws (PeTe(An, He)).",
-            "id": "b209785e120b"
+            "id": "2271e5e2227c"
           },
           {
             "name": "Ripping Jaws",
@@ -20327,7 +20837,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. Its Initiative is Qik - 2. The victim takes -3 to all recovery rolls until fully healed, for any wound; Incapacitating Wounds leave scars that never fade (PeCo).",
-            "id": "4832568dcbf0"
+            "id": "ef4321e204a6"
           },
           {
             "name": "The Beast Between",
@@ -20341,7 +20851,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A common power. 3 points or Fatigue; Initiative Qik - 2. A hyena's head, claws, fur and tail on a man's upright frame, human mental Characteristics and a hyena's physical ones, usable hands, Protection +2. Bite of the hybrid form: Init 0, Attack +3, Defense +1, Damage +4. Ended early by changing shape (MuCo, free Animal requisite).",
-            "id": "5704d1574f34"
+            "id": "27bc6cc315b7"
           }
         ],
         "vis": [],
@@ -20606,7 +21116,7 @@
             "attack": 7,
             "defense": 5,
             "damage": 9,
-            "id": "bc5ee5b530b4"
+            "id": "aa98a67001f0"
           },
           {
             "name": "Bite",
@@ -20614,7 +21124,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 8,
-            "id": "12225ca29ca3"
+            "id": "0960ca2f9b2f"
           }
         ],
         "soak": 3,
@@ -20708,7 +21218,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Or Crafter's Healing, below. 1 point a magnitude, Initiative variable: any non-Ritual Creo, Muto, Rego or Perdo Terram spell, within its motif as a blacksmith.",
-            "id": "3e18c15d5be6"
+            "id": "4518545d9cf7"
           },
           {
             "name": "Crafter's Healing",
@@ -20722,7 +21232,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In place of Blacksmithing, as the Major Supernatural Virtue (City & Guild p. 71).",
-            "id": "a96da8028233"
+            "id": "f7d0cf2635e1"
           },
           {
             "name": "Looked at Thrice",
@@ -20736,7 +21246,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Trembling Fear of the Predator's Gaze.",
-            "id": "22f2fe141c7b"
+            "id": "b4cb66109324"
           },
           {
             "name": "The Shadow Stays the Hound",
@@ -20750,7 +21260,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Paralyzes a dog the werehyena's shadow falls on (Base 5, +2 Sight, +1 Conc).",
-            "id": "87d4ee4f44a8"
+            "id": "ef382d454761"
           },
           {
             "name": "Transform into Human",
@@ -20764,7 +21274,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Human form for Duration: Sun, and only at sunrise (Personal, MuAn(Co)).",
-            "id": "b4f2d8fba85f"
+            "id": "11284065fa65"
           }
         ],
         "vis": [
@@ -20772,7 +21282,7 @@
             "pawns": 3,
             "art": "Terram",
             "where": "in its tools",
-            "id": "4b271871b67c"
+            "id": "b0137c3b87b4"
           }
         ],
         "equipment": "Blacksmith tools, apron.",
@@ -20910,8 +21420,20 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
-            "text": "Their Greater Malediction: Magic auras do not keep off Acclimation. They must eat human flesh in a ceremony at least once a year, or lose a Magic Quality each year until they are ordinary, hideous mortals. One corpse feeds five. A family with no death to hand must make one, and those who tire of it and let themselves acclimate are usually eaten first; the last resort is the nearest human settlement.\n\nNot all are born to it. A human who shares the ceremony gains Transformed Human with the Greater Malediction. A village will sometimes spare a victim, share the secret, and send him home to get them the sacred meal each year. He gains Disfigured after five ceremonies, and after fifteen is too monstrous to stay among men.",
+            "title": "The Man-Eaters' hunger",
+            "text": "Magic auras do not keep off Acclimation for the Anthropophagi. They must eat human flesh in a ceremony at least once a year, or lose a Magic Quality each year until they are ordinary, hideous mortals. One corpse feeds five. A family with no death to hand must make one, and those who tire of it and let themselves acclimate are usually eaten first; the last resort is the nearest human settlement.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Man-Eaters made, not born",
+            "text": "Not all Anthropophagi are born to it. A human who shares the ceremony becomes one of them. A village will sometimes spare a victim, share the secret, and send him home to get them the sacred meal each year. He grows disfigured after five ceremonies, and after fifteen is too monstrous to stay among men.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Their Greater Malediction: Magic auras do not keep off Acclimation. A human who shares the ceremony gains Transformed Human with the Greater Malediction; a spared victim gains Disfigured after five ceremonies.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -21055,7 +21577,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Any sound, speech, song or music comes from the head, no louder than a human could make; only suppressing the power silences it (CrIm).",
-            "id": "1d4a9cea8b42"
+            "id": "5f15f16c6823"
           }
         ],
         "vis": [],
@@ -21449,7 +21971,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. He makes out detail at any distance as if a foot away, and judges distance to an inch or so at several miles (InIm, Personal Power x2).",
-            "id": "d4a53f1b42ba"
+            "id": "58de05f80821"
           }
         ],
         "vis": [],
@@ -21599,7 +22121,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 2. A short-term Fatigue level for flight as fast as a running horse. Every minute a Stamina + Concentration roll against 6 or another Fatigue level; none when Dazed. Athletics steers (ReCo).",
-            "id": "9659b29f3082"
+            "id": "e3d5737cdbdb"
           }
         ],
         "vis": [],
@@ -21771,7 +22293,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. The eyes shine like a lantern for five paces, without hurting sight; only closing them or a Confidence point shuts it off (CrIg; printed Greater Power, 10 levels, -2 cost).",
-            "id": "8ec739209424"
+            "id": "2da37b9bd553"
           },
           {
             "name": "The Sun's Breath",
@@ -21785,7 +22307,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik - 1. Heats a thing no bigger than her head: metal glows red, water boils, the flammable ignites. It cools normally (CrIg).",
-            "id": "1ad65b4ca5b5"
+            "id": "b7c500755896"
           },
           {
             "name": "The Sun's Shout",
@@ -21799,7 +22321,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Initiative is Qik + 1. Spits a dart of fire for +5 damage if it Penetrates (CrIg).",
-            "id": "99e89d87f855"
+            "id": "aab1588e0555"
           }
         ],
         "vis": [],
@@ -21957,7 +22479,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A constant effect, no cost. Moves freely in complete darkness, as the Hermetic spell (ArM5 p. 127; InAu).",
-            "id": "ea5c16650bc0"
+            "id": "3e2f6c7f1b69"
           }
         ],
         "vis": [],
@@ -23009,7 +23531,7 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
+            "title": "What the god truly is",
             "text": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon.",
             "revealed_year": null,
             "revealed_season": ""
@@ -23090,7 +23612,7 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
+            "title": "What the god truly is",
             "text": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon.",
             "revealed_year": null,
             "revealed_season": ""
@@ -23171,7 +23693,7 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
+            "title": "What the god truly is",
             "text": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon.",
             "revealed_year": null,
             "revealed_season": ""
@@ -23252,7 +23774,7 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
+            "title": "What the god truly is",
             "text": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon.",
             "revealed_year": null,
             "revealed_season": ""
@@ -23333,7 +23855,7 @@
         "favours": [],
         "secrets": [
           {
-            "title": "",
+            "title": "What the god truly is",
             "text": "Only a mask. Whatever this god once was, by the fall of Carthage the whole pantheon was one demon, Ba'al Ammon.",
             "revealed_year": null,
             "revealed_season": ""
@@ -23421,7 +23943,7 @@
             "attack": 4,
             "defense": 2,
             "damage": 2,
-            "id": "a60ac8c9f071"
+            "id": "ca0c2d9c4a30"
           }
         ],
         "soak": 3,
@@ -23712,7 +24234,7 @@
             "attack": 8,
             "defense": 3,
             "damage": 5,
-            "id": "7c92757a1127"
+            "id": "5dcda4dfa90f"
           }
         ],
         "soak": 2,
@@ -23792,7 +24314,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns it into dromedary or Bactrian form and back, changing its Characteristics and non-magical Qualities to suit (MuAn; Base 5, +2 Sun).",
-            "id": "ba84190e66bf"
+            "id": "5803dc58aa4e"
           },
           {
             "name": "Keep the Simoon at Bay",
@@ -23806,7 +24328,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Shields the camel, its herd and any riders from the simoon, the scorching wind and sandstorm of the deep desert (ReAu).",
-            "id": "57917728f143"
+            "id": "f676aee2b2a4"
           },
           {
             "name": "Scent the Distant Waters of the Oasis",
@@ -23820,7 +24342,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Finds any natural water on the path it is travelling, by simple Perception rolls against 6, once a day on long journeys; invoked again if the water is more than half a day off (InAq; Base 2, +2 Road, +2 Smell, +2 Sun).",
-            "id": "7fb115844361"
+            "id": "64544f11b380"
           },
           {
             "name": "Subtle Taste of Poison and Purity",
@@ -23834,7 +24356,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As the spell (ArM5 p. 122); poison does not harm it, a Magical Animal, so it tastes fouled water safely (InAq).",
-            "id": "08e782fbf42d"
+            "id": "c9f5a5985ad8"
           }
         ],
         "vis": [],
@@ -24026,7 +24548,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "43ef99c92e6f"
+            "id": "0a002827d756"
           },
           {
             "name": "Bite",
@@ -24034,7 +24556,7 @@
             "attack": 12,
             "defense": 9,
             "damage": 1,
-            "id": "f3662df0d2c2"
+            "id": "44cbc4363159"
           }
         ],
         "soak": 2,
@@ -24232,7 +24754,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "87af1b6d943a"
+            "id": "8f14e8cc737d"
           },
           {
             "name": "Bite",
@@ -24240,7 +24762,7 @@
             "attack": 9,
             "defense": 10,
             "damage": -5,
-            "id": "056883508fff"
+            "id": "711c1ea324f0"
           }
         ],
         "soak": -1,
@@ -24461,7 +24983,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 2,
-            "id": "50aec71c4cc1"
+            "id": "8e90431d8a04"
           },
           {
             "name": "Hooves",
@@ -24469,7 +24991,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 1,
-            "id": "a946ebfde6a9"
+            "id": "0de07f3e2783"
           }
         ],
         "soak": 1,
@@ -24712,7 +25234,7 @@
             "attack": 9,
             "defense": 7,
             "damage": 5,
-            "id": "9121aabc3814"
+            "id": "1ff1c426db37"
           },
           {
             "name": "Dodge",
@@ -24720,7 +25242,7 @@
             "attack": null,
             "defense": 5,
             "damage": null,
-            "id": "65818c8b25a7"
+            "id": "1124108a8280"
           }
         ],
         "soak": 3,
@@ -25007,7 +25529,7 @@
             "attack": null,
             "defense": 6,
             "damage": null,
-            "id": "71fea2f7b6ed"
+            "id": "2b29be556e43"
           },
           {
             "name": "Bite",
@@ -25015,7 +25537,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -2,
-            "id": "e5633245f989"
+            "id": "3a168ac22ed2"
           }
         ],
         "soak": 2,
@@ -25345,7 +25867,7 @@
             "attack": 11,
             "defense": 6,
             "damage": 9,
-            "id": "427507f6adbf"
+            "id": "787a07eeec02"
           },
           {
             "name": "Grapple",
@@ -25353,7 +25875,7 @@
             "attack": 7,
             "defense": 4,
             "damage": null,
-            "id": "3fdebbd80ce6"
+            "id": "82641d439cf9"
           }
         ],
         "soak": 8,
@@ -25419,7 +25941,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 12 or Incapacitating, whether or not the bite wounds. Boots do not stop it, and it serves well on a victim held in its locking bite.",
-            "id": "84ec991467d5"
+            "id": "5b255a8bdb64"
           }
         ],
         "vis": [],
@@ -25577,7 +26099,7 @@
             "attack": null,
             "defense": 8,
             "damage": null,
-            "id": "816d38e76dce"
+            "id": "8e76c03fa6f4"
           },
           {
             "name": "Kick (as hoof)",
@@ -25585,7 +26107,7 @@
             "attack": 8,
             "defense": 7,
             "damage": 3,
-            "id": "88a3f6861436"
+            "id": "f3b6d2500d81"
           }
         ],
         "soak": 3,
@@ -25784,7 +26306,7 @@
             "attack": 10,
             "defense": 14,
             "damage": -6,
-            "id": "0b48510ef057"
+            "id": "df70c19b446d"
           },
           {
             "name": "Grapple",
@@ -25792,7 +26314,7 @@
             "attack": 7,
             "defense": 11,
             "damage": null,
-            "id": "1e440359cf47"
+            "id": "1efd67c6f375"
           },
           {
             "name": "Sting",
@@ -25800,7 +26322,7 @@
             "attack": 10,
             "defense": 6,
             "damage": -9,
-            "id": "ef84ae79dd6b"
+            "id": "fcca8cf75770"
           }
         ],
         "soak": 4,
@@ -25880,7 +26402,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "If its Attack Advantage beats the victim's armour Protection (not Soak), he suffers an exceptionally debilitating poison, Stamina against 6 or Incapacitating, whether or not the sting wounds. High leather boots and other simple measures hinder it.",
-            "id": "a552d97e7e1e"
+            "id": "322d1fa33ca9"
           }
         ],
         "vis": [],
@@ -26101,7 +26623,7 @@
             "attack": 11,
             "defense": 9,
             "damage": 11,
-            "id": "edd851f246b2"
+            "id": "a3a86bfb5739"
           },
           {
             "name": "Trample",
@@ -26109,7 +26631,7 @@
             "attack": 9,
             "defense": 8,
             "damage": 9,
-            "id": "d98e060c37ab"
+            "id": "6e905ce86db9"
           }
         ],
         "soak": 11,
@@ -26175,7 +26697,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A natural power. It spends a Fatigue level to charge over flat ground with its horn, adding its Combat Ability to its Attack roll; anything smaller it strikes is knocked prone (Lords of Men p. 123).",
-            "id": "cf8632ded53e"
+            "id": "c5732d727c8e"
           }
         ],
         "vis": [],
@@ -26335,7 +26857,7 @@
             "attack": 6,
             "defense": 10,
             "damage": -4,
-            "id": "c306261100d9"
+            "id": "a01d2aacd7eb"
           },
           {
             "name": "Beak",
@@ -26343,7 +26865,7 @@
             "attack": 6,
             "defense": 7,
             "damage": -3,
-            "id": "548114062bcd"
+            "id": "5de6ca9efeac"
           },
           {
             "name": "Stone (dropped)",
@@ -26351,7 +26873,7 @@
             "attack": -1,
             "defense": 0,
             "damage": null,
-            "id": "69bff06eab7e"
+            "id": "e7946aecce96"
           },
           {
             "name": "Stone (bludgeon)",
@@ -26359,7 +26881,7 @@
             "attack": 0,
             "defense": 6,
             "damage": -2,
-            "id": "1a544d339394"
+            "id": "320651197e9e"
           }
         ],
         "soak": 3,

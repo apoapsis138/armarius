@@ -27,6 +27,7 @@ from ..builder import (
     joined_lines,
     paragraphs,
     secrets,
+    titled,
     vf_ability,
     vf_art,
     vf_focus,
@@ -637,9 +638,14 @@ MAGI = (
         "varied use, fears Final Twilight and calmly prepares for her end. "
         "Her memory fails, and she takes the young magi for someone called "
         "Heinrich.",
-        "No one has learned who Heinrich was, or whether he ever lived; yet "
-        "her sanctum marker bears his name, and she remembers him borrowing "
-        "good books.",
+        [
+            titled(
+                "Who Heinrich was",
+                "No one has learned who Heinrich was, or whether he ever lived; "
+                "yet her sanctum marker bears his name, and she remembers him "
+                "borrowing good books.",
+            ),
+        ],
     ),
     (
         "baliana",
@@ -656,10 +662,15 @@ MAGI = (
         "was fostered for a time by Occultes. She studies the portals, "
         "wants the rune alphabet, and means to build a broad repertoire and "
         "Vim for her travels, working with Pancrestis of Heorot.",
-        "She joined the Ash Gild, odd for her House, to please her mentors "
-        "and learn what it knows of the Order of Odin, which Occultes means "
-        "to find, understand, and perhaps fight. The project is young and "
-        "kept secret from Durenmar.",
+        [
+            titled(
+                "Baliana and the Order of Odin",
+                "She joined the Ash Gild, odd for her House, to please her "
+                "mentors and learn what it knows of the Order of Odin, which "
+                "Occultes means to find, understand, and perhaps fight. The "
+                "project is young and kept secret from Durenmar.",
+            ),
+        ],
     ),
     (
         "freki",
@@ -695,10 +706,20 @@ MAGI = (
         "knightly school of Ramius, with a line that recruits nobles' "
         "lesser sons for arms and a Gentle Gift, he likes a fair fight and "
         "protects the weak and the Order.",
-        "He is the father of Erika, Johanna's daughter, and the rumour is "
-        "true. He thinks she may be Gifted but has not had Freki check: "
-        "the Rhine says a journeyman may not train her, his line takes "
-        "younger noble sons, not bastard daughters, and she may not want it.",
+        [
+            titled(
+                "Erika's father",
+                "He is the father of Erika, Johanna's daughter, and the rumour "
+                "is true.",
+            ),
+            titled(
+                "Is Erika Gifted",
+                "He thinks Erika may be Gifted but has not had Freki check: the "
+                "Rhine says a journeyman may not train her, his line takes "
+                "younger noble sons, not bastard daughters, and she may not "
+                "want it.",
+            ),
+        ],
     ),
     (
         "julia",
@@ -1517,14 +1538,28 @@ def _places(rhine: Rhine) -> dict[str, Neighbour]:
             "Holzstein somewhere in the hills, and its general whereabouts, "
             "but not how to get in."
         ),
-        secrets=(
-            "A small Magical regio with a huge magical oak as its tether, "
-            "where Holzstein of the second generation built his sanctum, in "
-            "and around the tree. Agnes the wood spirit guards it, and the "
-            "Man in the Woods stands near. His filii retreated to Crintera "
-            "at the Schism War and it has been forgotten since. Research "
-            "beating Ease Factor 15 hints at an allied spirit."
-        ),
+        secrets=[
+            titled(
+                "Holzstein's sanctum",
+                "A small Magical regio with a huge magical oak as its tether, where "
+                "Holzstein of the second generation built his sanctum, in and around "
+                "the tree.",
+            ),
+            titled(
+                "The Tree House's guardians",
+                "Agnes the wood spirit guards the Tree House, and the Man in the "
+                "Woods stands near.",
+            ),
+            titled(
+                "Why the Tree House was forgotten",
+                "Holzstein's filii retreated to Crintera at the Schism War and the "
+                "Tree House has been forgotten since.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Research beating Ease Factor 15 hints at an allied spirit.",
+            ),
+        ],
         levels=[b.level("Holzstein's regio", 5)],
     )
     man = b.place(
@@ -1537,12 +1572,23 @@ def _places(rhine: Rhine) -> dict[str, Neighbour]:
             "The chronicles name it as the covenant's only Corpus vis source, "
             "lost with Holzstein's laboratory."
         ),
-        secrets=(
-            "A yew grown into a man's shape: two trunks for legs, tangled "
-            "branches for a body, a snapped stump with a face, long arms with "
-            "talons. Golden resin from its cracks yields 2 pawns of Corpus "
-            "vis at each season's end. 40 Build Points."
-        ),
+        secrets=[
+            titled(
+                "What the Man in the Woods is",
+                "A yew grown into a man's shape: two trunks for legs, tangled "
+                "branches for a body, a snapped stump with a face, long arms with "
+                "talons.",
+            ),
+            titled(
+                "The golden resin",
+                "Golden resin from the Man in the Woods' cracks yields 2 pawns of "
+                "Corpus vis at each season's end.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "40 Build Points.",
+            ),
+        ],
     )
     living_wood = b.place(
         "The Portal of Living Wood",
@@ -1550,13 +1596,19 @@ def _places(rhine: Rhine) -> dict[str, Neighbour]:
         status="Rumoured",
         known="",
         summary="A faint path winding through the wooded hills.",
-        secrets=(
-            "A new source of Vim: the path ends where two trees with "
-            "entwined branches form a portal across it, though no regio "
-            "entrance. Their hardening sap gives 7 pawns each autumn. A magus "
-            "searching the woods with Intellego Vim finds it easily. 35 "
-            "Build Points."
-        ),
+        secrets=[
+            titled(
+                "The two trees",
+                "A new source of Vim: the path ends where two trees with entwined "
+                "branches form a portal across it, though no regio entrance. Their "
+                "hardening sap gives 7 pawns each autumn.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A magus searching the woods with Intellego Vim finds it easily. 35 "
+                "Build Points.",
+            ),
+        ],
     )
     return {
         "site": site,
@@ -1688,47 +1740,73 @@ def _covenant(rhine: Rhine, site: Neighbour) -> Covenant:
             "frontier Tribunal, which voids the gild Virtues. As a "
             "background covenant it offers trade, diplomacy and old lore.",
         ),
-        secrets=paragraphs(
-            "Hidden Resources. Searching takes a month with the chronicles, "
-            "rolls and maps: a stress roll of Int + Organization Lore: Collem "
-            "Leonis against 12, +3 for a whole season, leads to one of these "
-            "stories: Franka's Hermetic Nursery, Joachim's Stolen Cache, the "
-            "Tree House, the Armoire of Excess, the Portal of Living Wood "
-            "and A Missing Bookcase.",
-            "Apprentice's Lofty Cave. Franka of Bjornaer made off with the "
-            "introductory books about 1195, on a preliminary leave from the "
-            "council, meaning them for Bjornaer apprentices of owl heartbeast "
-            "like her own. They lie wrapped in cloth and leather in a dry "
-            "cave on a Bjornaer-only peak, whose mouth is the size of a large "
-            "bird and reached only by flying. Authors' names have been "
-            "removed; some may be Diedne. Adler watches the peak.",
-            "Sins of the Predecessor. Joachim, tempted by a minor demon that "
-            "breeds discontent with superiors, studied Goetic arts, stole "
-            "books to sell to the merchant Ruprecht of Lübeck, and hid them "
-            "in a cave in 1208. Repenting, he tried to bind the demon in a "
-            "gold ring; it killed him, and his corpse still grips it, the "
-            "ring's Magic Resistance guarding it from notice. Someone finds "
-            "the ring while hunting and the demon goads him to dreadful "
-            "acts; the trail leads to the cave, the books and Ruprecht's "
-            "letters. The bound demon can use its powers and talk from the "
-            "ring, but cannot leave it.",
-            "The Dark Magus. Ruprecht was Imanitos Mendax of Jerbiton, here "
-            "taken as a dark magus (Guardians of the Forests pp. 72-74), who "
-            "corrupted Joachim and never got the books. He bullied Erich "
-            "into spying, gave it up, and bides his time in a new guise in "
-            "Dortmund and Cologne. Erich's Second Sight saw through his "
-            "Imaginem disguise and would know him.",
-            "Lost Laboratory. Agnes first dissuades intruders without harming "
-            "them, and is easily won with courtesy; otherwise the vis is hard "
-            "to take and the laboratory unusable.",
-            "A Missing Bookcase. Ferra had grogs move a cabinet of spell "
-            "mastery texts to a storeroom, forgot it in Twilight, and crates "
-            "have buried it since. The rolls mention the move; only a search "
-            "of the covenant finds it. A fire a decade ago ruined most other "
-            "Lab Texts and mastery books.",
-            "The kobold and Scipio: the kobold's story is under the "
-            "creature; Scipio's fate is unknown.",
-        ),
+        secrets=[
+            titled(
+                "Apprentice's Lofty Cave",
+                "Franka of Bjornaer made off with Collem Leonis's introductory books "
+                "about 1195, on a preliminary leave from the council, meaning them "
+                "for Bjornaer apprentices of owl heartbeast like her own. They lie "
+                "wrapped in cloth and leather in a dry cave on a Bjornaer-only peak, "
+                "whose mouth is the size of a large bird and reached only by flying. "
+                "Authors' names have been removed; some may be Diedne. Adler watches "
+                "the peak.",
+            ),
+            titled(
+                "Sins of the Predecessor",
+                "Joachim, tempted by a minor demon that breeds discontent with "
+                "superiors, studied Goetic arts, stole books to sell to the merchant "
+                "Ruprecht of Lübeck, and hid them in a cave in 1208. Repenting, he "
+                "tried to bind the demon in a gold ring; it killed him, and his "
+                "corpse still grips it, the ring's Magic Resistance guarding it from "
+                "notice.",
+            ),
+            titled(
+                "The demon in the ring",
+                "The demon bound in Joachim's ring can use its powers and talk from "
+                "the ring, but cannot leave it.",
+            ),
+            titled(
+                "The Dark Magus",
+                "Ruprecht was Imanitos Mendax of Jerbiton, who corrupted Joachim and "
+                "never got the books.",
+            ),
+            titled(
+                "Ruprecht and Erich",
+                "Ruprecht bullied Erich into spying, gave it up, and bides his time "
+                "in a new guise in Dortmund and Cologne. Erich's Second Sight saw "
+                "through his Imaginem disguise and would know him.",
+            ),
+            titled(
+                "Lost Laboratory",
+                "Agnes first dissuades intruders from Holzstein's laboratory without "
+                "harming them, and is easily won with courtesy; otherwise the vis is "
+                "hard to take and the laboratory unusable.",
+            ),
+            titled(
+                "A Missing Bookcase",
+                "Ferra had grogs move a cabinet of spell mastery texts to a "
+                "storeroom, forgot it in Twilight, and crates have buried it since. "
+                "The rolls mention the move; only a search of the covenant finds it.",
+            ),
+            titled(
+                "The fire",
+                "A fire at Collem Leonis a decade ago ruined most other Lab Texts and "
+                "mastery books.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Hidden Resources. Searching takes a month with the chronicles, rolls "
+                "and maps: a stress roll of Int + Organization Lore: Collem Leonis "
+                "against 12, +3 for a whole season, leads to one of these stories: "
+                "Franka's Hermetic Nursery, Joachim's Stolen Cache, the Tree House, "
+                "the Armoire of Excess, the Portal of Living Wood and A Missing "
+                "Bookcase. In Sins of the Predecessor, someone finds the ring while "
+                "hunting and the demon goads him to dreadful acts; the trail leads to "
+                "the cave, the books and Ruprecht's letters. Imanitos Mendax is here "
+                "taken as a dark magus (Guardians of the Forests pp. 72-74). The "
+                "kobold's story is under the creature; Scipio's fate is unknown.",
+            ),
+        ],
     )
 
 
@@ -1758,14 +1836,20 @@ def _people(rhine: Rhine, covenant: Covenant) -> None:
             "from concealment, and most of his work to Renardus and now "
             "Julia, who buys his news regularly. He avoids Cologne."
         ),
-        secrets=(
-            "In Cologne his Second Sight showed him an invisible man and led "
-            "him to a coven of diabolists, some of them powerful; he fled in "
-            "terror and keeps it quiet for fear of being sent back. Ruprecht, "
-            "a merchant of that coven, later cowed him into spying on the "
-            "magi. He told nothing of worth, and Ruprecht stopped coming, "
-            "but he lives in dread of his return."
-        ),
+        secrets=[
+            titled(
+                "What Erich saw in Cologne",
+                "In Cologne his Second Sight showed him an invisible man and led him "
+                "to a coven of diabolists, some of them powerful; he fled in terror "
+                "and keeps it quiet for fear of being sent back.",
+            ),
+            titled(
+                "Ruprecht's hold on Erich",
+                "Ruprecht, a merchant of that coven, later cowed him into spying on "
+                "the magi. He told nothing of worth, and Ruprecht stopped coming, but "
+                "he lives in dread of his return.",
+            ),
+        ],
     )
     rhine.magi["paul"] = b.magus(
         "Paul the Spearman",
@@ -1818,13 +1902,19 @@ def _world(rhine: Rhine, covenant: Covenant) -> None:
             "lord of Collem Leonis, his family holding the lands for two "
             "generations."
         ),
-        secrets=(
-            "The Flambeau and Tremere of the covenant have made his family "
-            "their puppet over generations. He is a willing ally, since the "
-            "wizards help keep his unhereditary lands in the family, but "
-            "secretly fears them and keeps a little distance, which suits "
-            "them."
-        ),
+        secrets=[
+            titled(
+                "The family's masters",
+                "The Flambeau and Tremere of the covenant have made his family their "
+                "puppet over generations.",
+            ),
+            titled(
+                "Vorderhagen's fear",
+                "He is a willing ally, since the wizards help keep his unhereditary "
+                "lands in the family, but secretly fears them and keeps a little "
+                "distance, which suits them.",
+            ),
+        ],
     )
     reinhart = b.lord(
         "Reinhart II, Freiherr of Soest",
@@ -1855,12 +1945,22 @@ def _world(rhine: Rhine, covenant: Covenant) -> None:
         realm="Infernal",
         place=rhine.places["rhine_valley"],
         summary="A secret circle in Cologne, known to few.",
-        secrets=(
-            "A coven of diabolists, some of them men of power, whom Erich "
-            "stumbled on a few years ago; Ruprecht, that is Imanitos Mendax, "
-            "takes part in its rites, and Count Frederick of Isenberg is "
-            "tied to it."
-        ),
+        secrets=[
+            titled(
+                "What the coven is",
+                "A coven of diabolists, some of them men of power, whom Erich "
+                "stumbled on a few years ago.",
+            ),
+            titled(
+                "Ruprecht in the coven",
+                "Ruprecht, that is Imanitos Mendax, takes part in the Cologne coven's "
+                "rites.",
+            ),
+            titled(
+                "Count Frederick",
+                "Count Frederick of Isenberg is tied to the Cologne coven.",
+            ),
+        ],
     )
     for record, note in (
         (w["archbishop_of_cologne"], "enemy of the count of Mark"),
@@ -2317,11 +2417,18 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
             "Vis: 4 pawns of Perdo in the heart, 2 of Animal in the body, and "
             "whatever it has eaten in its stomach.",
         ),
-        secrets=(
-            "Ravens over the woods mark its birth from the earth, and their "
-            "flight shows its path. It stops to eat vis and burrows to "
-            "digest it, sometimes for months, growing all the while."
-        ),
+        secrets=[
+            titled(
+                "The ravens' sign",
+                "Ravens over the woods mark its birth from the earth, and their "
+                "flight shows its path.",
+            ),
+            titled(
+                "The Lindorm's feeding",
+                "It stops to eat vis and burrows to digest it, sometimes for months, "
+                "growing all the while.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", lindorm, "behind the portals")
     agnes = b.creature(
@@ -2426,11 +2533,17 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
             "Incapacitated (13-16), Dead (17+). Vis: 2 pawns of Herbam in the "
             "leaves of her hair."
         ),
-        secrets=(
-            "Bound by her own will to Holzstein's laboratory. Suspicious of "
-            "intruders, but with respect and kindness she will gladly bond "
-            "with a new master."
-        ),
+        secrets=[
+            titled(
+                "Agnes's bond",
+                "Bound by her own will to Holzstein's laboratory.",
+            ),
+            titled(
+                "A new master",
+                "Suspicious of intruders, but with respect and kindness she will "
+                "gladly bond with a new master.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", agnes, "guardian of the lost laboratory")
     kobold = b.creature(
@@ -2462,13 +2575,18 @@ def _creatures(b: Builder, covenant: Covenant, places: dict[str, Neighbour]) -> 
             "Hermes: Mystery Cults p. 41)."
         ),
         appearance="A very large, near-perfect eagle.",
-        secrets=(
-            "The founding maga, who took her eagle heartbeast as a Great "
-            "Beast at her Final Twilight, and watches the peak where "
-            "Franka's books lie. She hinders climbers, the non-Bjornaer most, "
-            "with her powers, and stays hidden unless a Bjornaer seeks her "
-            "with respect."
-        ),
+        secrets=[
+            titled(
+                "Who Adler was",
+                "The founding maga, who took her eagle heartbeast as a Great Beast at "
+                "her Final Twilight, and watches the peak where Franka's books lie.",
+            ),
+            titled(
+                "Adler and climbers",
+                "She hinders climbers, the non-Bjornaer most, with her powers, and "
+                "stays hidden unless a Bjornaer seeks her with respect.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", adler, "watcher of the Bjornaer peak")
     gorm = b.creature(

@@ -35,7 +35,7 @@ from typing import TYPE_CHECKING
 from ... import storage
 from ...models import Possession
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs
+from ..builder import Secrets, joined_lines, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Character, Covenant, Tribunal
@@ -89,7 +89,7 @@ def _magus(
     summary: str,
     *,
     kind: str = "magus",
-    secrets: str = "",
+    secrets: Secrets = "",
 ) -> Character:
     character = alps.b.magus(
         name,
@@ -189,16 +189,26 @@ def _cave(alps: Alps, tribunal: Tribunal) -> None:
         detail=FULL,
         season="Winter",
         unnamed_magi=8,
-        secrets=paragraphs(
-            "La, when still the apprentice Lucia, fell in with the Black "
-            "Mark, a Criamon splinter that holds the Dominion will destroy "
-            "all magic unless stopped and doubts that it comes from an "
-            "almighty God; she murdered a priest on his own altar and has "
-            "been cursed by God since.",
-            "Echo is in love with a Criamon three centuries dead, an affair "
-            "that is also an illicit Twilight; the ghostly Esther is a juno "
-            "born of it. The Primi delay Esther's unpetrifying to watch it.",
-        ),
+        secrets=[
+            titled(
+                "La and the Black Mark",
+                "La, when still the apprentice Lucia, fell in with the Black "
+                "Mark, a Criamon splinter that holds the Dominion will destroy "
+                "all magic unless stopped and doubts that it comes from an "
+                "almighty God; she murdered a priest on his own altar and has "
+                "been cursed by God since.",
+            ),
+            titled(
+                "Echo's love",
+                "Echo is in love with a Criamon three centuries dead, an affair "
+                "that is also an illicit Twilight; the ghostly Esther is a juno "
+                "born of it.",
+            ),
+            titled(
+                "Why Esther stays stone",
+                "The Primi delay Esther's unpetrifying to watch Echo's affair.",
+            ),
+        ],
     )
     alps.covenants["cave"] = covenant
     for key, name, age, summary in CAVE_MAGI:
@@ -902,7 +912,7 @@ def _sinews(alps: Alps, tribunal: Tribunal) -> None:
         _magus(alps, key, name, covenant, house, age, summary, secrets=hidden)
 
 
-SINEWS_MAGI: tuple[tuple[str, str, str, int | None, str, str], ...] = (
+SINEWS_MAGI: tuple[tuple[str, str, str, int | None, str, Secrets], ...] = (
     (
         "philomena",
         "Philomena",
@@ -919,12 +929,21 @@ SINEWS_MAGI: tuple[tuple[str, str, str, int | None, str, str], ...] = (
         "who sees Bonisagus as human and fallible and her own generation "
         "as no lesser. Many suspect she can strip a man's organs out onto a "
         "table; in truth she is no combat maga.",
-        "She is an amaranth halfling, daughter of one of the faeries who "
-        "grow the forbidden flower: immune to it, since her body makes it, "
-        "she stopped aging at 21 and began gaining Twilight as if under a "
-        "longevity potion, and expects to fade into Arcadia to join her "
-        "father. She has a weak hold over amaranth addicts, who resist her "
-        "words the worse for their addiction.",
+        [
+            titled(
+                "Philomena's faerie father",
+                "She is an amaranth halfling, daughter of one of the faeries "
+                "who grow the forbidden flower: immune to it, since her body "
+                "makes it, she stopped aging at 21 and began gaining Twilight "
+                "as if under a longevity potion, and expects to fade into "
+                "Arcadia to join her father.",
+            ),
+            titled(
+                "Philomena and amaranth addicts",
+                "She has a weak hold over amaranth addicts, who resist her "
+                "words the worse for their addiction.",
+            ),
+        ],
     ),
     (
         "paxon",

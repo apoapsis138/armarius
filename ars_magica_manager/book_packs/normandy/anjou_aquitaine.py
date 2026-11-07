@@ -15,7 +15,15 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, joined_lines, paragraphs, secrets, vf_art, vf_focus
+from ..builder import (
+    Builder,
+    joined_lines,
+    paragraphs,
+    secrets,
+    titled,
+    vf_art,
+    vf_focus,
+)
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -196,21 +204,32 @@ def _anjou_places(normandy: Normandy) -> None:
             "clerics or to speak openly, ask the magi through a go-between "
             "to take the stone away quietly.",
         ),
-        secrets=paragraphs(
-            "The menhir was the heart of a fertility cult whose true rite "
-            "is forgotten: at each equinox a sheep was killed and its "
-            "blood poured over the stone; once dry, it scrapes off as "
-            "several pawns of Creo vis. The first "
-            "Christians meant to move it, but whoever tried met with a "
-            "nasty accident, so they built it into the church. Its "
-            "Magic aura was once 6 round the stone; with the cult gone it "
-            "would be 4, but the cathedral's Dominion smothers it.",
-            "A year ago some drunken local lads rediscovered what the "
-            "holes were really for, and their wives and sweethearts bore "
-            "strong, healthy babies nine months later. The story has "
-            "spread, others are trying their luck, and the Church wants "
-            "it stopped.",
-        ),
+        secrets=[
+            titled(
+                "The menhir's cult",
+                "The menhir was the heart of a fertility cult whose true rite is "
+                "forgotten: at each equinox a sheep was killed and its blood poured "
+                "over the stone; once dry, it scrapes off as several pawns of Creo "
+                "vis.",
+            ),
+            titled(
+                "Why the menhir is in the church",
+                "The first Christians meant to move the menhir, but whoever tried met "
+                "with a nasty accident, so they built it into the church.",
+            ),
+            titled(
+                "What the holes are for",
+                "A year ago some drunken local lads rediscovered what the menhir's "
+                "holes were really for, and their wives and sweethearts bore strong, "
+                "healthy babies nine months later. The story has spread, others are "
+                "trying their luck, and the Church wants it stopped.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The menhir's Magic aura was once 6 round the stone; with the cult "
+                "gone it would be 4, but the cathedral's Dominion smothers it.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _place(
@@ -223,8 +242,13 @@ def _anjou_places(normandy: Normandy) -> None:
         "over the Loire's north bank, sixteen feet square and about a "
         "hundred feet tall. No one locally knows what it was for. The "
         "Magic aura is 1 at its foot and rises to 5 at the top.",
-        secrets="Roman soldiers built it during the conquest of Gaul as a lookout "
-        "for a magician of the Cult of Mercury.",
+        secrets=[
+            titled(
+                "Who built the tower",
+                "Roman soldiers built the tower during the conquest of Gaul as a "
+                "lookout for a magician of the Cult of Mercury.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _place(
@@ -342,14 +366,29 @@ def _anjou_world(normandy: Normandy) -> None:
         "plain iron head hangs on his wall; thrown, it has no lift and "
         "always lands flat. Two old folk of the castle believe it is one "
         "of the spears of the abbey's legend.",
-        secrets="It is. The second lies forgotten in an old chest in the darkest "
-        "corner of the oldest part of the abbey crypt, and a farmer's "
-        "wife a few miles out treasures the third as an heirloom. Each "
-        "is an Arcane Connection to the other two, and once all three "
-        "are together, each drips a drop of red flame holding a pawn of "
-        "Divine-tainted Ignem vis on the first Sunday after Pentecost. "
-        "Swapping the count's for a new spear is easy, but negotiation "
-        "is safer than theft.",
+        secrets=[
+            titled(
+                "The count's spear",
+                "Count John's spear is one of the spears of the abbey's legend.",
+            ),
+            titled(
+                "The other two spears",
+                "The second spear lies forgotten in an old chest in the darkest "
+                "corner of the oldest part of the abbey crypt, and a farmer's wife a "
+                "few miles out treasures the third as an heirloom.",
+            ),
+            titled(
+                "The three spears together",
+                "Each spear is an Arcane Connection to the other two, and once all "
+                "three are together, each drips a drop of red flame holding a pawn of "
+                "Divine-tainted Ignem vis on the first Sunday after Pentecost.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Swapping the count's spear for a new one is easy, but negotiation is "
+                "safer than theft.",
+            ),
+        ],
     )
 
     w["angers"] = b.town(
@@ -667,13 +706,38 @@ def _aquitaine_places(normandy: Normandy) -> None:
         "east and the oak and beech of the Argenson Forest on the hills "
         "to the east and south. Five local abbeys have lately joined to "
         "drain its northern part for farmland.",
-        secrets="The drainage will damage or destroy several vis sources the "
-        "abbeys know nothing of: moulted tail feathers of pintails "
-        "wintering at one pool (Animal, 4 pawns a year); the leaves of an "
-        "aspen that quiver in still air (Auram, 3); the oversized cones "
-        "of one alder (Creo, 3); plume feathers of egrets nesting in a "
-        "certain grove (Imaginem, 2); and the bark of a white poplar "
-        "whose black diamond marks are unusually regular (Rego, 4).",
+        secrets=[
+            titled(
+                "What the drainage will destroy",
+                "The drainage of the Marsh of the Sèvre will damage or destroy "
+                "several vis sources the abbeys know nothing of.",
+            ),
+            titled(
+                "The pintails' feathers",
+                "The moulted tail feathers of pintails wintering at one pool in the "
+                "Marsh of the Sèvre are a vis source (Animal, 4 pawns a year).",
+            ),
+            titled(
+                "The quivering aspen",
+                "The leaves of an aspen in the Marsh of the Sèvre that quiver in "
+                "still air are a vis source (Auram, 3).",
+            ),
+            titled(
+                "The alder's cones",
+                "The oversized cones of one alder in the Marsh of the Sèvre are a vis "
+                "source (Creo, 3).",
+            ),
+            titled(
+                "The egrets' plumes",
+                "The plume feathers of egrets nesting in a certain grove in the Marsh "
+                "of the Sèvre are a vis source (Imaginem, 2).",
+            ),
+            titled(
+                "The white poplar",
+                "The bark of a white poplar in the Marsh of the Sèvre whose black "
+                "diamond marks are unusually regular is a vis source (Rego, 4).",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _place(
@@ -697,20 +761,31 @@ def _aquitaine_places(normandy: Normandy) -> None:
             "mound is entered from the east by a low passage to two "
             "chambers.",
         ),
-        secrets=paragraphs(
-            "A tribe long gone built it for a chieftain, his family and "
-            "the retinue that would guard and serve them. Animals or "
-            "dark-loving fae may have moved into a mound, or all may be "
-            "undisturbed. The large mound holds the scant bones of some "
-            "twenty hunters and warriors among scattered stones; the "
-            "long barrow is empty; the smaller round mound holds the "
-            "broken bones of one dismembered man, a shaman, in a filled "
-            "pit by the platform; each small oval mound holds the "
-            "remains of a woman with jet bracelets, the chief's "
-            "daughters or concubines; and the last mound holds the "
-            "chieftain and his wife. At least one mound probably has a "
-            "ghost.",
-        ),
+        secrets=[
+            titled(
+                "Who the tumuli were built for",
+                "A tribe long gone built the Bougon Tumuli for a chieftain, his "
+                "family and the retinue that would guard and serve them.",
+            ),
+            titled(
+                "What lies in the mounds",
+                "The large mound holds the scant bones of some twenty hunters and "
+                "warriors among scattered stones; the long barrow is empty; the "
+                "smaller round mound holds the broken bones of one dismembered man, a "
+                "shaman, in a filled pit by the platform; each small oval mound holds "
+                "the remains of a woman with jet bracelets, the chief's daughters or "
+                "concubines; and the last mound holds the chieftain and his wife.",
+            ),
+            titled(
+                "A ghost in the tumuli",
+                "At least one of the Bougon mounds probably has a ghost.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Animals or dark-loving fae may have moved into a mound, or all may "
+                "be undisturbed.",
+            ),
+        ],
         **RUMOURED,
     )
     _place(
@@ -725,11 +800,20 @@ def _aquitaine_places(normandy: Normandy) -> None:
         "changing room, warm, hot, steam and cold rooms, plunge pools "
         "and exercise hall can still be traced. The healing water holds "
         "Creo vis, but it flows weakly and fitfully.",
-        secrets="When Christianity came, the pagan statues were thrown into the "
-        "gutters and sewers, then buried when invaders pulled the town "
-        "down. If the right god's statue is dug out of the old drains "
-        "under the baths and set back in its temple, the water will "
-        "flow strongly and steadily again.",
+        secrets=[
+            titled(
+                "The lost statues",
+                "When Christianity came, the pagan statues of Chassenon were thrown "
+                "into the gutters and sewers, then buried when invaders pulled the "
+                "town down.",
+            ),
+            titled(
+                "How the water may flow again",
+                "If the right god's statue is dug out of the old drains under the "
+                "baths and set back in its temple, the water will flow strongly and "
+                "steadily again.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _place(
@@ -793,17 +877,35 @@ def _aquitaine_places(normandy: Normandy) -> None:
             "out to Rouffignac to the west and along the Beune valley to "
             "the east, and touches the surface at 1 in a few places.",
         ),
-        secrets=paragraphs(
-            "Undiscovered caves and passages run beneath, many painted "
-            "or carved with deer, horses, mighty bulls and huge beasts "
-            "with great curved tusks; where the pictures are most vivid "
-            "the aura is 5 or 6, aligned with Animal. Other caves are "
-            "hung with coloured stone, stalactites, stalagmites and "
-            "crystal, the finest with auras up to 6, one or two aligned "
-            "with Imaginem. Bjornaer of Clan Ilfetu know a cave here "
-            "that is an ancestor site, fit for House rituals.",
-            "A string of small caves and low passages leads into a regio.",
-        ),
+        secrets=[
+            titled(
+                "The painted caves",
+                "Undiscovered caves and passages run beneath the Vézère valley, many "
+                "painted or carved with deer, horses, mighty bulls and huge beasts "
+                "with great curved tusks.",
+            ),
+            titled(
+                "The crystal caves",
+                "Other caves beneath the Vézère valley are hung with coloured stone, "
+                "stalactites, stalagmites and crystal.",
+            ),
+            titled(
+                "The Bjornaer ancestor site",
+                "Bjornaer of Clan Ilfetu know a cave in the Vézère valley that is an "
+                "ancestor site, fit for House rituals.",
+            ),
+            titled(
+                "The way into a regio",
+                "A string of small caves and low passages in the Vézère valley leads "
+                "into a regio.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Where the pictures are most vivid the aura is 5 or 6, aligned with "
+                "Animal; the finest of the crystal caves have auras up to 6, one or "
+                "two aligned with Imaginem.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The fresh paintings",
@@ -835,7 +937,13 @@ def _aquitaine_places(normandy: Normandy) -> None:
         summary="All that is left of the druids' sacred wood where Clermont now "
         "stands is a clump of stunted trees south-west of the cathedral, "
         "beside a market, where a mineral spring soaks the soil.",
-        secrets="Some Diedne magi knew of it and found a way into a regio here.",
+        secrets=[
+            titled(
+                "The Diedne and the grove",
+                "Some Diedne magi knew of the Druids' Grove of Clermont and found a "
+                "way into a regio here.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The living grove",
@@ -857,9 +965,18 @@ def _aquitaine_places(normandy: Normandy) -> None:
         "sorcerers of the Auvergne meet there at dead of night, a memory "
         "of the Mercurian magicians of Rome. What is left of a Roman road "
         "climbs to the top.",
-        secrets="Climbing on foot and keeping exactly to the Roman road crosses "
-        "into a small regio. A higher level, where the temple is whole, "
-        "and an older route up to Lug's shrine are still undiscovered.",
+        secrets=[
+            titled(
+                "The Roman road's regio",
+                "Climbing the Puy de Dôme on foot and keeping exactly to the Roman "
+                "road crosses into a small regio.",
+            ),
+            titled(
+                "The undiscovered heights",
+                "A higher level of the regio, where the temple is whole, and an older "
+                "route up to Lug's shrine are still undiscovered.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The roofless temple",
@@ -983,8 +1100,13 @@ def _aquitaine_world(normandy: Normandy) -> None:
             "has Undine Blood and could be worth recruiting; one bears "
             "his ancestress's curse and wants it lifted.",
         ),
-        secrets="Mélusine wants help to save her spring, which is being made "
-        "into a well for a new convent.",
+        secrets=[
+            titled(
+                "Mélusine's spring",
+                "Mélusine wants help to save her spring, which is being made into a "
+                "well for a new convent.",
+            ),
+        ],
     )
     w["angouleme_countess"] = b.lord(
         "Isabella, Countess of Angoulême",
@@ -1059,9 +1181,17 @@ def _aquitaine_world(normandy: Normandy) -> None:
         "castle in 1185, quarrelled over it with his jealous brother "
         "Constantine, who with the help of Henry's son Richard ruined it "
         "the next year.",
-        secrets="Bertrand's music had a supernatural gift; his brother had "
-        "something darker and more destructive, and magic probably "
-        "brought the fortress down.",
+        secrets=[
+            titled(
+                "Bertrand's gift",
+                "Bertrand's music had a supernatural gift.",
+            ),
+            titled(
+                "The fall of Hautefort",
+                "Bertrand's brother had something darker and more destructive, and "
+                "magic probably brought the fortress down.",
+            ),
+        ],
     )
 
     w["la_rochelle"] = b.town(
@@ -1516,12 +1646,43 @@ def _oleron(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: the Keepers of a Thousand Tales dislike the Stone Couches for fixing stories to one place and one version",
         "Mundane: can raise gangs of sailors from the isle to make trouble in Paris, but keeps no agents there",
     )
-    hidden = joined_lines(
-        "Caprican has helped other covenants claim Fudarus's resources while Fudarus is weak, and has added and fortified vassals; if House Tytalus learns of it there will be reprisals once it unites behind a Primus.",
-        "One ancient Sleeper, older than the Hermetic colony, may be a mighty faerie Ogier the Dane, Charlemagne's paladin whom Morgan le Fay kept two hundred years in Avalon with a rejuvenating ring and a crown of forgetfulness. He has woken and escaped at least once and might again if disaster strikes Denmark; Rhine and Norman magi who dream of colonising Denmark would like his help, but he is hard to control and would likely seek service with Philip II. Whoever puts on the ring he wears dies at once, his place taken by a faerie that believes it is, and may be, his spirit.",
-        "The prophecy of a last battle may itself be a story planted to wake every Sleeper at the covenant's hour of need.",
-        "Nidi's weakness is a lure Oleron built for Tytalus: Oleron can reinforce it by rapid travel magic and stocks it with hidden resources.",
-    )
+    hidden = [
+        titled(
+            "Caprican's dealings",
+            "Caprican has helped other covenants claim Fudarus's resources while "
+            "Fudarus is weak, and has added and fortified vassals; if House Tytalus "
+            "learns of it there will be reprisals once it unites behind a Primus.",
+        ),
+        titled(
+            "The oldest Sleeper",
+            "One ancient Sleeper, older than the Hermetic colony, may be a mighty "
+            "faerie Ogier the Dane, Charlemagne's paladin whom Morgan le Fay kept two "
+            "hundred years in Avalon with a rejuvenating ring and a crown of "
+            "forgetfulness.",
+        ),
+        titled(
+            "Ogier's waking",
+            "The Sleeper who may be Ogier has woken and escaped at least once and "
+            "might again if disaster strikes Denmark; Rhine and Norman magi who dream "
+            "of colonising Denmark would like his help, but he is hard to control and "
+            "would likely seek service with Philip II.",
+        ),
+        titled(
+            "Ogier's ring",
+            "Whoever puts on the ring the Sleeper wears dies at once, his place taken "
+            "by a faerie that believes it is, and may be, his spirit.",
+        ),
+        titled(
+            "The prophecy of a last battle",
+            "The prophecy of a last battle may itself be a story planted to wake "
+            "every Sleeper at Oleron's hour of need.",
+        ),
+        titled(
+            "Nidi's weakness",
+            "Nidi's weakness is a lure Oleron built for Tytalus: Oleron can reinforce "
+            "it by rapid travel magic and stocks it with hidden resources.",
+        ),
+    ]
     oleron = b.covenant(
         "Oleron",
         tribunal=tribunal,
@@ -1603,10 +1764,15 @@ def _oleron_magi(normandy: Normandy, b: Builder, oleron: Covenant) -> None:
             "of people and animals. He belongs to the Keepers of a "
             "Thousand Tales.",
         ),
-        secrets="While Fudarus is empty and its leaders feud, he has helped "
-        "other covenants take its resources and has added and fortified "
-        "vassals. He expects reprisals if Tytalus finds out, and is "
-        "untroubled: with Ushant so near, attacks will come anyway.",
+        secrets=[
+            titled(
+                "Caprican and Fudarus",
+                "While Fudarus is empty and its leaders feud, he has helped other "
+                "covenants take its resources and has added and fortified vassals. He "
+                "expects reprisals if Tytalus finds out, and is untroubled: with "
+                "Ushant so near, attacks will come anyway.",
+            ),
+        ],
     )
     m["amelie"] = b.magus(
         "Amelie of Merinita",
@@ -1666,9 +1832,17 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
             "chase, kept for the lord's hunting and patrolled by his "
             "men. In the chase stand wax statues of classical heroes.",
         ),
-        secrets="The chase hides a grove of oaks, perhaps druidic, overgrown by "
-        "huge lilacs always in flower whose blossoms yield Herbam vis; "
-        "the statues are the work of Regulus's bees.",
+        secrets=[
+            titled(
+                "The grove in the chase",
+                "Lord Henri's chase hides a grove of oaks, perhaps druidic, overgrown "
+                "by huge lilacs always in flower whose blossoms yield Herbam vis.",
+            ),
+            titled(
+                "The wax statues",
+                "The statues in Lord Henri's chase are the work of Regulus's bees.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     labs = _place(
@@ -1681,9 +1855,14 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
         summary="A clay bank on the river, half a mile north of the castle, once a water "
         "nymph's home, with a weak Faerie aura. A hollow tree full of "
         "bees stands there, and their stings keep the locals away.",
-        secrets="Nidi's laboratories are dug into the bank. Most entrances suit "
-        "something smaller than a man; the one a human can use is "
-        "through the bee-infested tree.",
+        secrets=[
+            titled(
+                "Nidi's laboratories",
+                "Nidi's laboratories are dug into the bank. Most entrances suit "
+                "something smaller than a man; the one a human can use is through the "
+                "bee-infested tree.",
+            ),
+        ],
         **UNKNOWN,
     )
     summary = paragraphs(
@@ -1734,12 +1913,33 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
         "Tension: Henri's only child Lila must marry a man the covenant can manage, and be happy, or the arrangement fails; Henri will soon want a longevity potion",
         "Tension: a girl found as a baby in a wild hive a few days south may be a Bee Queen; Regulus wants her raised far away",
     )
-    hidden = joined_lines(
-        "Nidi's weakness is deliberate. Oleron means it to look a fit target for House Tytalus once the Tytalan civil war ends and its magi go back to provoking the Tribunal: Tytalus magi who attack it in earnest will underestimate it, be driven off and be exposed before the Tribunal.",
-        "Its hidden resources: many small magic items it never uses, several copies of a remarkably strong Aegis of the Hearth, and servants whom awakened Sleepers have trained. Its magi may use them only with Oleron's leave or against magi of Fudarus, and Oleron can reinforce it quickly by travel magic.",
-        "For over thirty years its tithes have been repaid, or traded at good rates for other vis, by Oleron.",
-        "Its magi are promised places in Oleron or another of its vassals should Nidi fall.",
-    )
+    hidden = [
+        titled(
+            "Nidi's weakness",
+            "Nidi's weakness is deliberate. Oleron means it to look a fit target for "
+            "House Tytalus once the Tytalan civil war ends and its magi go back to "
+            "provoking the Tribunal: Tytalus magi who attack it in earnest will "
+            "underestimate it, be driven off and be exposed before the Tribunal.",
+        ),
+        titled(
+            "Nidi's hidden resources",
+            "Nidi's hidden resources: many small magic items it never uses, several "
+            "copies of a remarkably strong Aegis of the Hearth, and servants whom "
+            "awakened Sleepers have trained. Its magi may use them only with Oleron's "
+            "leave or against magi of Fudarus, and Oleron can reinforce it quickly by "
+            "travel magic.",
+        ),
+        titled(
+            "Nidi's tithes",
+            "For over thirty years Nidi's tithes have been repaid, or traded at good "
+            "rates for other vis, by Oleron.",
+        ),
+        titled(
+            "If Nidi falls",
+            "Nidi's magi are promised places in Oleron or another of its vassals "
+            "should Nidi fall.",
+        ),
+    ]
     nidi = b.covenant(
         "Nidi",
         tribunal=tribunal,
@@ -1776,12 +1976,23 @@ def _nidi(normandy: Normandy, tribunal: Tribunal) -> None:
             "choose a husband, or another covenant's magi might bring a "
             "servant to Nidi as a suitor.",
         ),
-        secrets="The covenant needs Lila to marry a man it can steer. Once Henri "
-        "takes his longevity potion he will age too slowly: cosmetics "
-        "will serve a few decades, then illusions, and in true old age "
-        "he must be hidden away. Mythic Europe holds others like him, and "
-        "the covenant could be asked to find a place for one who has "
-        "become inconvenient.",
+        secrets=[
+            titled(
+                "Lila's marriage",
+                "Nidi needs Lila to marry a man it can steer.",
+            ),
+            titled(
+                "Henri's longevity",
+                "Once Henri takes his longevity potion he will age too slowly: "
+                "cosmetics will serve a few decades, then illusions, and in true old "
+                "age he must be hidden away.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Mythic Europe holds others like Henri, and the covenant could be "
+                "asked to find a place for one who has become inconvenient.",
+            ),
+        ],
     )
     _nidi_magi(normandy, b, nidi)
     b.book(
@@ -1821,11 +2032,19 @@ def _nidi_magi(normandy: Normandy, b: Builder, nidi: Covenant) -> None:
             "holding Animal vis, and his bees build the wax statues in "
             "the chase.",
         ),
-        secrets="Two Bee Kings can never meet: if Regulus comes within scent of "
-        "the hive-girl he will fall into a murderous rage and have to "
-        "kill her. She is the child of faeries like him, or his own by "
-        "some forgotten affair; he wants her raised happily far away, "
-        "and watched, for he has never heard of a human Bee Queen.",
+        secrets=[
+            titled(
+                "Two Bee Kings",
+                "Two Bee Kings can never meet: if Regulus comes within scent of the "
+                "hive-girl he will fall into a murderous rage and have to kill her.",
+            ),
+            titled(
+                "Who the hive-girl is",
+                "The hive-girl is the child of faeries like Regulus, or his own by "
+                "some forgotten affair; he wants her raised happily far away, and "
+                "watched, for he has never heard of a human Bee Queen.",
+            ),
+        ],
     )
     m["luna"] = b.magus(
         "Luna of Bjornaer",

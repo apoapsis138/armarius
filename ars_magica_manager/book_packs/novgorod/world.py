@@ -29,7 +29,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ..records import Records
@@ -145,9 +145,17 @@ def _russia(records: Records) -> None:
         "Norway, and means to dig canals to the Pripet and drain the marsh "
         "for pasture, dealing firmly with any opposition. He thinks he "
         "faces wild beasts or faeries, not magi.",
-        secrets="The Church may be brought in if he finds solid proof of "
-        "supernatural meddling, and Pripet Maior is no secret in the "
-        "district.",
+        secrets=[
+            titled(
+                "Mikhail and the Church",
+                "The Church may be brought in if Mikhail finds solid proof of "
+                "supernatural meddling.",
+            ),
+            titled(
+                "Pripet Maior in the district",
+                "Pripet Maior is no secret in the district.",
+            ),
+        ],
     )
     w["valdemar_ii"] = b.lord(
         "Valdemar II of Denmark",

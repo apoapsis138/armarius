@@ -26,6 +26,7 @@ from ..builder import (
     joined_lines,
     paragraphs,
     secrets,
+    titled,
     vf_ability,
     vf_great,
     vf_puissant,
@@ -103,27 +104,41 @@ CONCIATTA_ABILITIES: list[tuple[str, int, str]] = [
     ("Teaching", 3, "Magic Theory"),
 ]
 
-REMEMBERED = joined_lines(
+REMEMBERED = [
+    titled(
+        "What all know of Conciatta",
+        "Ease Factor 0, Known by All: she brought the four realms under the "
+        "single Art of Vim; apprentices often study her The Application of Vim "
+        "to the Supernatural Humors; she left Hermetic society in later life.",
+    ),
+    titled(
+        "What is widely known of Conciatta",
+        "Ease Factor 6, Widely Known: she lived in Iberia, with ties to "
+        "Christian and Muslim communities alike; her parens was marched for "
+        "diabolic corruption; her husband, a Jerbiton artist, aided her work.",
+    ),
+    titled(
+        "Uncommon knowledge of Conciatta",
+        "Ease Factor 12, Uncommon Knowledge: some hold she kept part of her "
+        "research from the Order; she overcame the Dominion's effect on magic "
+        "(false: a distortion grown from Currito's later writings); she "
+        "vanished into Twilight before the turn of the millennium (what the "
+        "Order at large believes, and false).",
+    ),
+    titled(
+        "Conciatta's lost secrets",
+        "Ease Factor 18, Lost Secrets: the hubris of her research cost her "
+        "control of her magic; she died in a convent near Toledo; shortly "
+        "before her death four women came to her, and she gave each a magical "
+        "treasure.",
+    ),
+]
+REMEMBERED_NOTES = (
     "What the Order Remembers (p. 14; rule pp. 10-11): Intelligence + Order "
     "of Hermes Lore simple roll; the character recalls everything up to the "
     "Ease Factor reached. Bonisagi add +3, for her rank of Cannophori "
     "(Houses of Hermes: True Lineages p. 21). Research in a fit library: "
-    "Covenants p. 98.",
-    "Ease Factor 0, Known by All: she brought the four realms under the "
-    "single Art of Vim; apprentices often study her The Application of Vim "
-    "to the Supernatural Humors; she left Hermetic society in later life.",
-    "Ease Factor 6, Widely Known: she lived in Iberia, with ties to Christian "
-    "and Muslim communities alike; her parens was marched for diabolic "
-    "corruption; her husband, a Jerbiton artist, aided her work.",
-    "Ease Factor 12, Uncommon Knowledge: some hold she kept part of her "
-    "research from the Order; she overcame the Dominion's effect on magic "
-    "(false: a distortion grown from Currito's later writings); she vanished "
-    "into Twilight before the turn of the millennium (what the Order at "
-    "large believes, and false).",
-    "Ease Factor 18, Lost Secrets: the hubris of her research cost her "
-    "control of her magic; she died in a convent near Toledo; shortly "
-    "before her death four women came to her, and she gave each a magical "
-    "treasure.",
+    "Covenants p. 98."
 )
 
 ARTIFACTS = joined_lines(
@@ -397,13 +412,26 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "line the walls. The window shows Moorish Saraqusta and the Noor "
             "Mosque, like a painting hung a few feet beyond the frame, and "
             "only from where she stands.",
-            "The open book is the journal of an unnamed magus thrown by "
-            "accident into a regio that stifled his magic, who broke out by "
-            "spending all his vis; the line under her finger says all of it "
-            "was Vim vis. A tractatus on Vim in archaic Hermetic Latin lies "
-            "beside it, arguing that the realms could only be touched by new "
-            "Arts, which any magus now sees is absurd. The pages cannot be "
-            "turned. The door is the way in and out.",
+            [
+                titled(
+                    "The open book",
+                    "The open book in the Vestige of Study is the journal of an "
+                    "unnamed magus thrown by accident into a regio that stifled "
+                    "his magic, who broke out by spending all his vis; the line "
+                    "under Conciatta's finger says all of it was Vim vis.",
+                ),
+                titled(
+                    "The archaic tractatus",
+                    "A tractatus on Vim in archaic Hermetic Latin lies beside "
+                    "the open book, arguing that the realms could only be "
+                    "touched by new Arts, which any magus now sees is absurd. "
+                    "The pages cannot be turned.",
+                ),
+                titled(
+                    "The way out of the Vestige of Study",
+                    "The door is the way in and out.",
+                ),
+            ],
         ),
         (
             "acclaim",
@@ -416,10 +444,19 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "breaking out, and at last applause, as a few elders stalk out. "
             "Through all of it Currito sits at the back, quietly proud, and "
             "does not rise.",
-            "The last image, seen only from where she stands, shows the first "
-            "sign of what was to come: the silver stylus on her lectern has "
-            "curled in on itself and floats above the wood. The door at the "
-            "rear is the way in and out.",
+            [
+                titled(
+                    "The curled stylus",
+                    "The last image of the Vestige of Acclaim, seen only from "
+                    "where Conciatta stands, shows the first sign of what was "
+                    "to come: the silver stylus on her lectern has curled in on "
+                    "itself and floats above the wood.",
+                ),
+                titled(
+                    "The way out of the Vestige of Acclaim",
+                    "The door at the rear is the way in and out.",
+                ),
+            ],
         ),
         (
             "seclusion",
@@ -430,11 +467,24 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "bowed, dressed for the road with a heavy bag on his shoulder. "
             "The steps behind the visitors dissolve into mist, and those "
             "ahead end at Conciatta's door.",
-            "To step off the stair is to fall into the void. Behind the door "
-            "there is nothing but its other side; through the keyhole is her "
-            "darkened sanctum, with things floating about her as she stands "
-            "weeping at her table, fists clenched. Opening the door is the "
-            "way out.",
+            [
+                titled(
+                    "Off the stair",
+                    "To step off the stair in the Vestige of Seclusion is to "
+                    "fall into the void.",
+                ),
+                titled(
+                    "Behind Conciatta's door",
+                    "Behind the door there is nothing but its other side; "
+                    "through the keyhole is her darkened sanctum, with things "
+                    "floating about her as she stands weeping at her table, "
+                    "fists clenched.",
+                ),
+                titled(
+                    "The way out of the Vestige of Seclusion",
+                    "Opening Conciatta's door is the way out.",
+                ),
+            ],
         ),
         (
             "death",
@@ -446,29 +496,42 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "rise as if lifted, weakly, and fall. At her last breath the "
             "candles die, and in the gloom four figures stand in the room's "
             "four corners. Then it all begins again.",
-            "Her last words beg that her broken soul be gathered: one part "
-            "is here, one in fire and damnation, one deep in the lost city, "
-            "one at home at last. Currito's triptych of Saint Ildefonso hangs "
-            "here and also exists in the mundane convent, his gift for their "
-            "help with her studies (Intelligence + Church Lore simple roll "
-            "against 6 names the saint). Looked at closely, it also shows the "
-            "other three tempora, and is the way to each.",
+            [
+                titled(
+                    "Conciatta's last words",
+                    "Her last words beg that her broken soul be gathered: one "
+                    "part is here, one in fire and damnation, one deep in the "
+                    "lost city, one at home at last.",
+                ),
+                titled(
+                    "Currito's triptych",
+                    "Currito's triptych of Saint Ildefonso hangs in the Vestige "
+                    "of Death and also exists in the mundane convent, his gift "
+                    "for their help with her studies (Intelligence + Church "
+                    "Lore simple roll against 6 names the saint). Looked at "
+                    "closely, it also shows the other three tempora, and is the "
+                    "way to each.",
+                ),
+            ],
         ),
     ):
         sites[key] = b.place(
             name,
             summary=words,
-            secrets=paragraphs(
-                hidden,
-                f"A tempus of the Magic Realm (LoH pp. 19-21), found during a "
-                f"story of that realm. Those within gain the Personality Trait "
-                f"{trait} +3 while they stay, unless they have a supernatural "
-                f"ability of the Magic Realm (Realms of Power: Magic p. 15). "
-                f"With the Magical Travel rules (same book p. 23) it has a "
-                f"level of 5, Ease Factor 15 to reach the next tempus. No "
-                f"vestige connects to the mundane world, so none leads "
-                f"straight to the sanctum.",
-            ),
+            secrets=[
+                *hidden,
+                titled(
+                    "Storyguide Notes",
+                    f"A tempus of the Magic Realm (LoH pp. 19-21), found during "
+                    f"a story of that realm. Those within gain the Personality "
+                    f"Trait {trait} +3 while they stay, unless they have a "
+                    f"supernatural ability of the Magic Realm (Realms of Power: "
+                    f"Magic p. 15). With the Magical Travel rules (same book p. "
+                    f"23) it has a level of 5, Ease Factor 15 to reach the next "
+                    f"tempus. No vestige connects to the mundane world, so none "
+                    f"leads straight to the sanctum.",
+                ),
+            ],
             **RUMOURED,
         )
 
@@ -495,10 +558,15 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "the Banu Hud, whose armies El Cid led from 1081 to 1086. The "
             "Almoravids held it from 1110.",
         ),
-        secrets="When Alfonso took the city many libraries went south with "
-        "fleeing Muslims, and the rest were sent to Paris, where they remain "
-        "in the university's care. Hermetic texts were among them, Conciatta's "
-        "too (p. 22).",
+        secrets=[
+            titled(
+                "Zaragoza's lost libraries",
+                "When Alfonso took Zaragoza many libraries went south with "
+                "fleeing Muslims, and the rest were sent to Paris, where they "
+                "remain in the university's care. Hermetic texts were among "
+                "them, Conciatta's too (p. 22).",
+            ),
+        ],
         **KNOWN,
     )
     sites["torre"] = b.place(
@@ -518,43 +586,83 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "which is all that most know of it: birds appear and vanish in "
             "the air above the place.",
         ),
-        secrets=paragraphs(
-            "The cellar lies in a level 2 Dominion that subsumes a Magic aura "
-            "of level 1 (p. 24). The covenant is in the regio above, which "
-            "hangs high in the air. Currito raised the tower inside it by "
-            "ritual after buying the land, and built wharfs and the warehouse "
-            "in the mundane world as cover and income. It dissolved in 990.",
-            "Finding it (p. 23). Mercere records at Harco place it only in "
-            "Saraqusta. Yuval's, the Mercer house in Barcelona (Houses of "
-            "Hermes: True Lineages p. 82), names Currito and Conciatta, says "
-            "the tower rose from a regio on the south bank of the Ebro, gives "
-            "a place for Redcaps in the east of the city apart from the "
-            "sancta, and hints the regio lay north of the Noor Mosque. That "
-            "mosque is gone: Intelligence + Zaragoza Lore against 9 shows the "
-            "Aljaferia palace stands on its site. Or watch the air for birds "
-            "appearing or vanishing: Perception + Awareness simple roll "
-            "against 9, a week's search plus a week per point missed.",
-            "The fresco (pp. 24-25). The older painting, by Currito, is a "
-            "casting tablet for Conciatta's ritual Subsume the Apparent "
-            "Dominion (printed ReVi 40 here, ReVi 50 on p. 26, whose working "
-            "adds to 50; 50 is followed), its Hermetic words wound among scenes of the Cordoban "
-            "city. It is damaged and deliberately incomplete; the rest is the "
-            "wall behind Conciatta in the illumination in Currito's journal, "
-            "which shows her between these two pillars. It is the only "
-            "casting tablet for the spell. With both, Intelligence + Magic "
-            "Theory stress roll against 9, +1 per magus collaborating after "
-            "the first, one day plus a day per point missed. On a botch the "
-            "magus thinks he has it, but the casting total is 0 and he rolls "
-            "six extra botch dice. Casting tablets: Covenants p. 89. Once the "
-            "Dominion is subsumed the level 1 Magic aura shows and the regio "
-            "is far easier to enter. Reyes knows nothing of the design.",
-            "After the reunion (p. 45). The tower gains a preternatural "
-            "tether of Strength 1 and its aura aligns to Vim; 12 pawns of Vim "
-            "vis lie there as crystal shards, and 4 pawns of Vim manifest in "
-            "the tower on each anniversary. But the regio has lost the great "
-            "being that helped tether its aura, and unless the tower returns "
-            "to magical use the aura weakens over time.",
-        ),
+        secrets=[
+            titled(
+                "The covenant in the air",
+                "The covenant of La Torre no Vista is in the regio above the "
+                "cellar, which hangs high in the air.",
+            ),
+            titled(
+                "How Currito built the tower",
+                "Currito raised the tower inside the regio by ritual after "
+                "buying the land, and built wharfs and the warehouse in the "
+                "mundane world as cover and income. The covenant dissolved in "
+                "990.",
+            ),
+            titled(
+                "What the Mercere records say",
+                "Mercere records at Harco place La Torre no Vista only in "
+                "Saraqusta. Yuval's, the Mercer house in Barcelona (Houses of "
+                "Hermes: True Lineages p. 82), names Currito and Conciatta, says "
+                "the tower rose from a regio on the south bank of the Ebro, "
+                "gives a place for Redcaps in the east of the city apart from "
+                "the sancta, and hints the regio lay north of the Noor Mosque.",
+            ),
+            titled(
+                "Where the Noor Mosque stood",
+                "The Noor Mosque is gone: Intelligence + Zaragoza Lore against 9 "
+                "shows the Aljaferia palace stands on its site.",
+            ),
+            titled(
+                "The fresco",
+                "The fresco (pp. 24-25). The older painting in the cellar, by "
+                "Currito, is a casting tablet for Conciatta's ritual Subsume the "
+                "Apparent Dominion (printed ReVi 40 here, ReVi 50 on p. 26, "
+                "whose working adds to 50; 50 is followed), its Hermetic words "
+                "wound among scenes of the Cordoban city.",
+            ),
+            titled(
+                "The missing part of the fresco",
+                "The fresco is damaged and deliberately incomplete; the rest is "
+                "the wall behind Conciatta in the illumination in Currito's "
+                "journal, which shows her between these two pillars. It is the "
+                "only casting tablet for the spell.",
+            ),
+            titled(
+                "Subsuming the cellar's Dominion",
+                "Once the cellar's Dominion is subsumed the level 1 Magic aura "
+                "shows and the regio is far easier to enter.",
+            ),
+            titled(
+                "What Reyes knows of the fresco",
+                "Reyes knows nothing of the design.",
+            ),
+            titled(
+                "The tower after the reunion",
+                "After the reunion (p. 45). The tower gains a preternatural "
+                "tether of Strength 1 and its aura aligns to Vim; 12 pawns of Vim "
+                "vis lie there as crystal shards, and 4 pawns of Vim manifest in "
+                "the tower on each anniversary. But the regio has lost the great "
+                "being that helped tether its aura, and unless the tower returns "
+                "to magical use the aura weakens over time.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The cellar lies in a level 2 Dominion that subsumes a "
+                    "Magic aura of level 1 (p. 24).",
+                    "Finding it (p. 23). Or watch the air for birds appearing "
+                    "or vanishing: Perception + Awareness simple roll against "
+                    "9, a week's search plus a week per point missed.",
+                    "With both parts of the casting tablet, Intelligence + "
+                    "Magic Theory stress roll against 9, +1 per magus "
+                    "collaborating after the first, one day plus a day per "
+                    "point missed. On a botch the magus thinks he has it, but "
+                    "the casting total is 0 and he rolls six extra botch dice. "
+                    "Casting tablets: Covenants p. 89.",
+                ),
+            ),
+        ],
         levels=[
             b.level(
                 "The tower",
@@ -650,7 +758,7 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "a red cross ending in a sword, protect pilgrims, and admit "
             "secular knights and lay members; they think the Calatravans weak.",
         ),
-        secrets="Dominion aura 4 by day (p. 28).",
+        secrets=[titled("Storyguide Notes", "Dominion aura 4 by day (p. 28).")],
         **KNOWN,
     )
     sites["convent"] = b.place(
@@ -671,37 +779,63 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "The small graveyard lies some way off in the shade of a low "
             "hill. One small headstone bears the name of Conciatta.",
         ),
-        secrets=paragraphs(
-            "The aura is a constant level 5 (p. 28). By custom, the novice who "
-            "last carried Conciatta's spirit lies in that grave when she dies; "
-            "Conciatta's bones, like those of every later host, were moved to "
-            "the ossuary, and no record says which are hers.",
-            "The audience (pp. 29-30). No outsider may see the holy sister, "
-            "but money buys a seeming audience the next day: one visitor, "
-            "with Prudencia and an attendant, addresses a curtain. Behind it "
-            "her other attendant plays the seer, telling of a long journey, "
-            "revelations, slights borne by grace, and acting both forcefully "
-            "and temperately. If the sham is exposed Prudencia does not "
-            "apologize, and shows them the girl, thinking that will send them "
-            "away.",
-            "Automatic Writing (p. 30): a great heap of scrolls, books and "
-            "slates written by the hosts out of Conciatta's knowledge. A "
-            "season's collating yields several tractatus, of the storyguide's "
-            "making, on Magic Theory, Vim and Dominion Lore, and a lab text "
-            "for a large casting circle enchanted with Maintaining the "
-            "Unstable Conjuration, ReVi 30, Pen +16, 3/day (R Personal, D "
-            "Ring, T Circle): it sustains a spell of level 15 or less cast "
-            "within, even the non-Hermetic magic of the Learned Magicians, "
-            "until the target leaves or another spell is cast there. Built, "
-            "it is a large iron ring in pieces, riveted in brass to the floor "
-            "and opened with 20 pawns of vis; it gives a +1 specialization in "
-            "experimentation and +1 Safety. The text gives +6 to the insight "
-            "roll, and finishing the ring gives 6 points toward Confluence of "
-            "the Realms. The notes call this one of four effects for one "
-            "Greater Enchanted Device, the others for the other realms and "
-            "for spirits' non-Hermetic effects, which implies Infernal spirits "
-            "once aided her.",
-        ),
+        secrets=[
+            titled(
+                "Who lies in Conciatta's grave",
+                "By custom, the novice who last carried Conciatta's spirit lies "
+                "in that grave when she dies; Conciatta's bones, like those of "
+                "every later host, were moved to the ossuary, and no record "
+                "says which are hers.",
+            ),
+            titled(
+                "The seeming audience",
+                "The audience (pp. 29-30). No outsider may see the holy sister, "
+                "but money buys a seeming audience the next day: one visitor, "
+                "with Prudencia and an attendant, addresses a curtain. Behind it "
+                "her other attendant plays the seer, telling of a long journey, "
+                "revelations, slights borne by grace, and acting both forcefully "
+                "and temperately. If the sham is exposed Prudencia does not "
+                "apologize, and shows them the girl, thinking that will send them "
+                "away.",
+            ),
+            titled(
+                "The automatic writing",
+                "Automatic Writing (p. 30): a great heap of scrolls, books and "
+                "slates written by the hosts out of Conciatta's knowledge.",
+            ),
+            titled(
+                "What collating yields",
+                "A season's collating of the convent's automatic writing yields "
+                "several tractatus, of the storyguide's making, on Magic Theory, "
+                "Vim and Dominion Lore, and a lab text for a large casting "
+                "circle.",
+            ),
+            titled(
+                "The casting circle",
+                "The convent writings' casting circle is enchanted with "
+                "Maintaining the "
+                "Unstable Conjuration, ReVi 30, Pen +16, 3/day (R Personal, D "
+                "Ring, T Circle): it sustains a spell of level 15 or less cast "
+                "within, even the non-Hermetic magic of the Learned Magicians, "
+                "until the target leaves or another spell is cast there. Built, "
+                "it is a large iron ring in pieces, riveted in brass to the floor "
+                "and opened with 20 pawns of vis; it gives a +1 specialization in "
+                "experimentation and +1 Safety. The text gives +6 to the insight "
+                "roll, and finishing the ring gives 6 points toward Confluence of "
+                "the Realms.",
+            ),
+            titled(
+                "Four effects for one device",
+                "Conciatta's notes call Maintaining the Unstable Conjuration one "
+                "of four effects for one Greater Enchanted Device, the others "
+                "for the other realms and for spirits' non-Hermetic effects, "
+                "which implies Infernal spirits once aided her.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The aura is a constant level 5 (p. 28).",
+            ),
+        ],
         **KNOWN,
     )
 
@@ -720,13 +854,23 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "history, who go about their affairs unseen by most. Strangers, "
             "and magi above all, draw their interest.",
         ),
-        secrets="Dominion aura 2 on average, 1 at night, and the city is full "
-        "of lacunae of Magic, Faerie and Infernal (p. 33). After some days, "
-        "Second Sight or fit magic shows ghosts watching the characters: "
-        "loose-formed specters sent by stronger masters, who mostly flee if "
-        "challenged. Then the characters begin to see others abroad at night. "
-        "The storyguide may offer a ghost ally, who can make introductions and "
-        "point out places of power, and will expect something in return.",
+        secrets=[
+            titled(
+                "The watching ghosts",
+                "After some days in Qadis, Second Sight or fit magic shows "
+                "ghosts watching the characters: loose-formed specters sent by "
+                "stronger masters, who mostly flee if challenged. Then the "
+                "characters begin to see others abroad at night.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Dominion aura 2 on average, 1 at night, and the city is full "
+                "of lacunae of Magic, Faerie and Infernal (p. 33). The "
+                "storyguide may offer a ghost ally, who can make introductions "
+                "and point out places of power, and will expect something in "
+                "return.",
+            ),
+        ],
         **KNOWN,
     )
     sites["theatre"] = b.place(
@@ -738,8 +882,17 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
         "haunting are likely why it was never built over. The living know the "
         "place, but not the name of the actor who holds it; the dead know "
         "both, and come often to watch.",
-        secrets="Seiffeddin is its only ghost. The dead attend less for love "
-        "of his art than from the constraints of their own roles (p. 34).",
+        secrets=[
+            titled(
+                "The theater's ghost",
+                "Seiffeddin is the Roman Theater's only ghost.",
+            ),
+            titled(
+                "Why the dead attend",
+                "The dead attend Seiffeddin less for love of his art than from "
+                "the constraints of their own roles (p. 34).",
+            ),
+        ],
         **KNOWN,
     )
     marsh = sites["marsh"] = b.place(
@@ -749,9 +902,19 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
         summary="The marshes around the Guadalquivir delta, a day's ride north "
         "of Qadis. Bits of an ancient wall lie out in them, and a witch's "
         "torch moves about by night.",
-        secrets="Other faeries here lure the unwary to their doom (Realms of "
-        "Power: Faerie p. 92). Faerie aura 2 where the city stood; sections of "
-        "the old walls lie in Faerie regiones (same book p. 16).",
+        secrets=[
+            titled(
+                "The marsh faeries",
+                "Other faeries in the Guadalquivir Marshes lure the unwary to "
+                "their doom (Realms of Power: Faerie p. 92).",
+            ),
+            titled(
+                "The old walls",
+                "Sections of the old walls in the marshes lie in Faerie "
+                "regiones (Realms of Power: Faerie p. 16).",
+            ),
+            titled("Storyguide Notes", "Faerie aura 2 where the city stood."),
+        ],
         **KNOWN,
     )
     sites["tartessos"] = b.place(
@@ -769,23 +932,33 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
             "Every brick that falls has another about to fall. At the center "
             "stands the shell of a palace, all pillars and broken arches.",
         ),
-        secrets=paragraphs(
-            "The story's theme is reunification (pp. 36-37). Each challenge "
-            "passed leads closer to the palace; each failure closer to the "
-            "mundane world. Examples: a mother crying for her lost daughter; "
-            "two brothers fighting over the last loaf; a statue of a young "
-            "warrior who has lost his spear, which lies in the path (Excellent "
-            "quality long spear, +2 attack and defense): return it and he "
-            "points the way, take it and robbers may come; an old man whose "
-            "well bucket has fallen, who leads to the palace only if the well "
-            "is mended. Two or more passed find the palace; three failed find "
-            "a facade whose doors lead out to the mundane world. Each success "
-            "earns a Fable Point (Realms of Power: Faerie p. 21).",
-            "Bruja brings the characters to the road but does not go in; she "
-            "meets them when they leave, gives them a book with a warning not "
-            "to open it until the other side, and summons the Threshold. The "
-            "book holds the Faerie Conciatta.",
-        ),
+        secrets=[
+            titled(
+                "Bruja's book",
+                "Bruja brings the characters to the road but does not go in; "
+                "she meets them when they leave, gives them a book with a "
+                "warning not to open it until the other side, and summons the "
+                "Threshold.",
+            ),
+            titled(
+                "What Bruja's book holds",
+                "Bruja's book holds the Faerie Conciatta.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The story's theme is reunification (pp. 36-37). Each challenge "
+                "passed leads closer to the palace; each failure closer to the "
+                "mundane world. Examples: a mother crying for her lost daughter; "
+                "two brothers fighting over the last loaf; a statue of a young "
+                "warrior who has lost his spear, which lies in the path (Excellent "
+                "quality long spear, +2 attack and defense): return it and he "
+                "points the way, take it and robbers may come; an old man whose "
+                "well bucket has fallen, who leads to the palace only if the well "
+                "is mended. Two or more passed find the palace; three failed find "
+                "a facade whose doors lead out to the mundane world. Each success "
+                "earns a Fable Point (Realms of Power: Faerie p. 21).",
+            ),
+        ],
         levels=[
             b.level(
                 "The city gates",
@@ -828,8 +1001,15 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
         "There are few dhimmis this far into Al Andalus, but people from all "
         "the Islamic world. The poor quarters mistrust foreigners, the rich "
         "ones are used to them, and men who look for trouble find it.",
-        secrets="Dominion aura 3 over most of its lands (p. 40). The town "
-        "knows little of the evil in the mountains.",
+        secrets=[
+            titled(
+                "The evil in the mountains",
+                "Narixa knows little of the evil in the mountains.",
+            ),
+            titled(
+                "Storyguide Notes", "Dominion aura 3 over most of its lands (p. 40)."
+            ),
+        ],
         **KNOWN,
     )
     sites["mosque"] = b.place(
@@ -840,29 +1020,39 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
         "fill Narixa's skyline. Its imams have little interest in helping "
         "foreigners hunt old scrolls, but may send the persuasive to Hamid "
         "ibn Harun, who keeps the library.",
-        secrets=paragraphs(
-            "Conciatta and Currito left many notes here on the last of their "
-            "visits, well over two centuries ago (p. 40).",
-            "Conciatta's Scrolls (p. 41): collated, a map of a cave system "
-            "two miles east of the town, with how to find and enter it, and a "
-            "warning of tunnels where the unwary slip between regio levels "
-            "unawares. It gives +1 to rolls to navigate the caves and their "
-            "regiones.",
-            "The Insightful Stylus (p. 41): in a small sealed leather case "
-            "marked Conciatta ex Bonisagus, a slender silver stylus traced "
-            "with Hermetic and occult symbols of the Infernal, and a scrap of "
-            "parchment on its effects. Opened with 12 pawns of vis. Sense the "
-            "Line, InVi 14, Pen +0, constant (R Touch, D Sun, T Ind): detects "
-            "the line of an Infernal regio boundary. Inscribe the Line, ReTe "
-            "14, Pen +0, constant (R Personal, D Sun, T Ind): held to a wax "
-            "tablet, the stylus traces that boundary in miniature, at the "
-            "speed of a magus drawing a circle. Note These Landmarks, ReTe "
-            "14, Pen +0, unlimited (R Personal, D Mom, T Ind): at a Latin "
-            "command it marks distances and landmarks, even while inscribing. "
-            "It must be investigated in the laboratory, and is then a source "
-            "of insight; re-creating it gives 5 points toward Insight of the "
-            "Realms.",
-        ),
+        secrets=[
+            titled(
+                "Notes left at the mosque",
+                "Conciatta and Currito left many notes in the Al Narixa "
+                "Mosque's library on the last of their visits, well over two "
+                "centuries ago (p. 40).",
+            ),
+            titled(
+                "Conciatta's Scrolls",
+                "Conciatta's Scrolls (p. 41): collated, a map of a cave system "
+                "two miles east of the town, with how to find and enter it, and a "
+                "warning of tunnels where the unwary slip between regio levels "
+                "unawares. It gives +1 to rolls to navigate the caves and their "
+                "regiones.",
+            ),
+            titled(
+                "The Insightful Stylus",
+                "The Insightful Stylus (p. 41): in a small sealed leather case "
+                "marked Conciatta ex Bonisagus, a slender silver stylus traced "
+                "with Hermetic and occult symbols of the Infernal, and a scrap of "
+                "parchment on its effects. Opened with 12 pawns of vis. Sense the "
+                "Line, InVi 14, Pen +0, constant (R Touch, D Sun, T Ind): detects "
+                "the line of an Infernal regio boundary. Inscribe the Line, ReTe "
+                "14, Pen +0, constant (R Personal, D Sun, T Ind): held to a wax "
+                "tablet, the stylus traces that boundary in miniature, at the "
+                "speed of a magus drawing a circle. Note These Landmarks, ReTe "
+                "14, Pen +0, unlimited (R Personal, D Mom, T Ind): at a Latin "
+                "command it marks distances and landmarks, even while inscribing. "
+                "It must be investigated in the laboratory, and is then a source "
+                "of insight; re-creating it gives 5 points toward Insight of the "
+                "Realms.",
+            ),
+        ],
         **KNOWN,
     )
     sites["caves"] = b.place(
@@ -874,27 +1064,39 @@ def _sites(b: Builder) -> dict[str, Neighbour]:
         "of deep fissures and domed chambers. Mice, scorpions and snakes "
         "swarm over floor and wall, and the laughter of hyena echoes from "
         "somewhere deep inside. Here and there human bones jut from the rock.",
-        secrets=paragraphs(
-            "A hive of corrupted beasts, jinn and demons. A level 3 Malevolent "
-            "Infernal aura, with Tartaran regiones throughout (Realms of "
-            "Power: The Infernal pp. 15-16). Unlike most, these regiones bleed "
-            "into each other as the tunnels do, and the bones are those of "
-            "victims caught between a regio and the mundane world. The "
-            "unprepared are certain to be lost for good (pp. 39-41).",
-            "All terrain is hazardous: an extra botch die on physical actions, "
-            "and large weapons at -2 to attack and defense. Three events "
-            "should test the party on the way to the throne room (pp. 41-43). "
-            "A sheer face: three climb rolls of rising difficulty (6, 9, 12, "
-            "say); a failure starts a fall with an initiative of 6, for "
-            "fast-casting; a botch may be lethal or draw him into a regio, "
-            "and Area Lore: Narixa Caves stress against 12 finds him. A rock "
-            "fall: those beating an initiative of 6 may react, and the rest "
-            "are as in a collapsing stone building (ArM5 p. 181). Hyena "
-            "ambush: Perception + Awareness against their stealth; a pack "
-            "splits, two dragging one victim toward a regio and three blocking "
-            "the rest. After four rounds he is taken deeper: a grog is dead, "
-            "any other may fight free and flee the regio.",
-        ),
+        secrets=[
+            titled(
+                "What dwells in the caves",
+                "The Narixa Caves are a hive of corrupted beasts, jinn and demons.",
+            ),
+            titled(
+                "The bleeding regiones",
+                "Unlike most, the regiones of the Narixa Caves bleed into each "
+                "other as the tunnels do, and the bones are those of victims "
+                "caught between a regio and the mundane world. The unprepared "
+                "are certain to be lost for good (pp. 39-41).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "A level 3 Malevolent Infernal aura, with Tartaran regiones "
+                    "throughout (Realms of Power: The Infernal pp. 15-16).",
+                    "All terrain is hazardous: an extra botch die on physical actions, "
+                    "and large weapons at -2 to attack and defense. Three events "
+                    "should test the party on the way to the throne room (pp. 41-43). "
+                    "A sheer face: three climb rolls of rising difficulty (6, 9, 12, "
+                    "say); a failure starts a fall with an initiative of 6, for "
+                    "fast-casting; a botch may be lethal or draw him into a regio, "
+                    "and Area Lore: Narixa Caves stress against 12 finds him. A rock "
+                    "fall: those beating an initiative of 6 may react, and the rest "
+                    "are as in a collapsing stone building (ArM5 p. 181). Hyena "
+                    "ambush: Perception + Awareness against their stealth; a pack "
+                    "splits, two dragging one victim toward a regio and three blocking "
+                    "the rest. After four rounds he is taken deeper: a grog is dead, "
+                    "any other may fight free and flee the regio.",
+                ),
+            ),
+        ],
         levels=[
             b.level(
                 "The throne room",
@@ -963,29 +1165,49 @@ def _legends(b: Builder) -> None:
             "magi use of auras is hers: diffuse and tethered; stable, waning "
             "and waxing; existential and moral; apparent and subsumed.",
         ),
-        secrets=paragraphs(
-            "Her Gift grew blatant and magic began to leak from her unbidden, "
-            "ruining her studies and drawing Twilight on. After five years "
-            "alone, as the millennium turned, she went to a convent near "
-            "Toledo she knew from her research, hoping the Dominion would "
-            "quiet it. It did for a while. Warping took her into Final "
-            "Twilight eleven years on, and her spirit broke into four "
-            "aspects, one for each realm, which fled the convent. Each keeps something of her and "
-            "guards a part of her unpublished breakthroughs (p. 14).",
-            REMEMBERED,
-            ARTIFACTS,
-            "Her new Virtues and Flaw, spells and guidelines (pp. 14-18) are "
-            "in the catalogs: Confluence, Insight and True Understanding of "
-            "the Realms; The Constant Expression, which magi Initiating her "
-            "Virtues take through ordeal; To See What Binds this Magical "
-            "Place; This Heart of Darkness; Dominance Over the Infernal. Her "
-            "guidelines may be used by any maga who has studied one of her "
-            "unpublished works. Integrating her discoveries: Ancient Magic p. "
-            "7; original research: Houses of Hermes: True Lineages p. 26; "
-            "summary: Hedge Magic Revised Edition p. 14; the two add together "
-            "(p. 18). The book gives her dates as c. 885 to 1007, yet has her "
-            "at the convent eleven years from the new millennium (p. 14).",
-        ),
+        secrets=[
+            titled(
+                "Conciatta's leaking magic",
+                "Her Gift grew blatant and magic began to leak from her "
+                "unbidden, ruining her studies and drawing Twilight on.",
+            ),
+            titled(
+                "Conciatta at the convent",
+                "After five years alone, as the millennium turned, she went to "
+                "a convent near Toledo she knew from her research, hoping the "
+                "Dominion would quiet her magic. It did for a while.",
+            ),
+            titled(
+                "Conciatta's broken spirit",
+                "Warping took her into Final Twilight eleven years on, and her "
+                "spirit broke into four aspects, one for each realm, which fled "
+                "the convent.",
+            ),
+            titled(
+                "What the aspects guard",
+                "Each of Conciatta's four aspects keeps something of her and "
+                "guards a part of her unpublished breakthroughs (p. 14).",
+            ),
+            *REMEMBERED,
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    REMEMBERED_NOTES,
+                    ARTIFACTS,
+                    "Her new Virtues and Flaw, spells and guidelines (pp. 14-18) are "
+                    "in the catalogs: Confluence, Insight and True Understanding of "
+                    "the Realms; The Constant Expression, which magi Initiating her "
+                    "Virtues take through ordeal; To See What Binds this Magical "
+                    "Place; This Heart of Darkness; Dominance Over the Infernal. Her "
+                    "guidelines may be used by any maga who has studied one of her "
+                    "unpublished works. Integrating her discoveries: Ancient Magic p. "
+                    "7; original research: Houses of Hermes: True Lineages p. 26; "
+                    "summary: Hedge Magic Revised Edition p. 14; the two add together "
+                    "(p. 18). The book gives her dates as c. 885 to 1007, yet has her "
+                    "at the convent eleven years from the new millennium (p. 14).",
+                ),
+            ),
+        ],
     )
     b.magus(
         "Currito of Jerbiton",
@@ -1007,27 +1229,37 @@ def _legends(b: Builder) -> None:
             "until his welcome wore out. In unguarded moments he spoke of a "
             "great prize: Hermetic magic fueled by the Dominion's own aura.",
         ),
-        secrets=paragraphs(
-            "The Life of Currito (p. 22): his book, written in age, in a "
-            "shaky hand between leather flaps; a five-day distraction to read. "
-            "It tells that their hidden covenant was still plagued by birds "
-            "from the mundane world; that Conciatta stayed in Zaragoza after "
-            "La Torre no Vista dissolved; that she studied the Dominion at a "
-            "convent in Toledo and ended her days there; that they survived "
-            "an Infernal cave system at Narixa and left notes and a map in "
-            "the library of the al Narixa mosque; and, with evident "
-            "bitterness and no detail, that she bargained for knowledge with "
-            "the king of a lost city outside Qadis, which began to turn her "
-            "from him.",
-            "A full-page illumination shows her under a wide arch, its pillars "
-            "held up on one side by an angel on a demon, on the other by a "
-            "dragon on a winged man with a lute. Hermetic text fills the wall "
-            "behind her: the missing part of the cellar's casting tablet.",
-            "Books and devices he took may turn up in a covenant's library or "
-            "stores, and casting tablets of his on auras too; his surviving "
-            "frescoes can foreshadow the story by showing one subject as "
-            "touched by the four realms (p. 19).",
-        ),
+        secrets=[
+            titled(
+                "The Life of Currito",
+                "The Life of Currito (p. 22): his book, written in age, in a "
+                "shaky hand between leather flaps; a five-day distraction to read. "
+                "It tells that their hidden covenant was still plagued by birds "
+                "from the mundane world; that Conciatta stayed in Zaragoza after "
+                "La Torre no Vista dissolved; that she studied the Dominion at a "
+                "convent in Toledo and ended her days there; that they survived "
+                "an Infernal cave system at Narixa and left notes and a map in "
+                "the library of the al Narixa mosque; and, with evident "
+                "bitterness and no detail, that she bargained for knowledge with "
+                "the king of a lost city outside Qadis, which began to turn her "
+                "from him.",
+            ),
+            titled(
+                "The illumination",
+                "A full-page illumination in The Life of Currito shows "
+                "Conciatta under a wide arch, its pillars held up on one side "
+                "by an angel on a demon, on the other by a dragon on a winged "
+                "man with a lute. Hermetic text fills the wall behind her: the "
+                "missing part of the cellar's casting tablet.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Books and devices he took may turn up in a covenant's library "
+                "or stores, and casting tablets of his on auras too; his "
+                "surviving frescoes can foreshadow the story by showing one "
+                "subject as touched by the four realms (p. 19).",
+            ),
+        ],
     )
 
 
@@ -1044,9 +1276,18 @@ def _people(b: Builder) -> None:
         "keeps another warehouse, but will buy and sell most things. He has "
         "three daughters, of 17, 16 and 14, and no sons, and wants husbands "
         "who will care for his business and his daughters, in that order.",
-        secrets="His warehouse cellar bounds the old covenant's aura, which he "
-        "knows nothing of. Characters wanting the cellar may appeal to his "
-        "wish for sons-in-law (pp. 23-24).",
+        secrets=[
+            titled(
+                "What lies under Reyes's warehouse",
+                "His warehouse cellar bounds the old covenant's aura, which he "
+                "knows nothing of.",
+            ),
+            titled(
+                "Winning Reyes's cellar",
+                "Characters wanting the cellar may appeal to his wish for "
+                "sons-in-law (pp. 23-24).",
+            ),
+        ],
     )
     b.stats(reyes, REYES, source="LoH")
     prudencia = b.magus(
@@ -1059,17 +1300,32 @@ def _people(b: Builder) -> None:
         "aloof; the aloofness is mostly contempt for the men who come to her "
         "convent for their own secular gain. She knows little of magic and "
         "dislikes magi at her door.",
-        secrets=paragraphs(
-            "She unknowingly wears a relic of San Ildefonso, a cord from his "
-            "robe wound into a belt handed from abbess to abbess, with one "
-            "Faith Point. She holds the vow, passed down the line of abbesses, "
-            "to protect the spirit, and will not lightly break it (pp. 29-30).",
-            "Winning her trust: a task she needs done, of no great danger, "
-            "that lets the characters show virtue; a good name for kindness, "
-            "charity or judgment around Toledo; or generosity to the convent. "
-            "If she is persuaded the spirit harms the girl, she will not let "
-            "the suffering go on, and lets the magi try to part them (p. 32).",
-        ),
+        secrets=[
+            titled(
+                "Prudencia's relic",
+                "She unknowingly wears a relic of San Ildefonso, a cord from his "
+                "robe wound into a belt handed from abbess to abbess.",
+            ),
+            titled(
+                "The abbesses' vow",
+                "She holds the vow, passed down the line of abbesses, to protect "
+                "the spirit, and will not lightly break it (pp. 29-30).",
+            ),
+            titled(
+                "Winning Prudencia's trust",
+                "Winning her trust: a task she needs done, of no great danger, "
+                "that lets the characters show virtue; a good name for "
+                "kindness, charity or judgment around Toledo; or generosity to "
+                "the convent.",
+            ),
+            titled(
+                "If the spirit harms the girl",
+                "If she is persuaded the spirit harms the girl, she will not let "
+                "the suffering go on, and lets the magi try to part them (p. "
+                "32).",
+            ),
+            titled("Storyguide Notes", "The relic has one Faith Point."),
+        ],
     )
     b.stats(prudencia, PRUDENCIA, source="LoH")
     immaculada = b.magus(
@@ -1083,20 +1339,35 @@ def _people(b: Builder) -> None:
         "care for herself. She lives in a windowless room lit by candles, "
         "among bedding, slates and parchment, writing and speaking in "
         "tongues without warning.",
-        secrets=paragraphs(
-            "She carries the Divine Conciatta, the latest of generations of "
-            "possessed novices, and fares worst of them all. The convent has "
-            "long taken this for God's miracle, and its magical origin is all "
-            "but forgotten (p. 29).",
-            "When visitors enter, sense surfaces in her babble (pp. 31-32): "
-            "she once had many brothers and sisters and now only three, who "
-            "hide, though she remembers where she went; Seiffeddin, an actor "
-            "in Qadis, may know her and where she is; she would like to see "
-            "her sisters.",
-            "Her fear of being alone binds the spirit to her. If that is "
-            "abated, the spirit can pass to another host; how is left to the "
-            "troupe (p. 32).",
-        ),
+        secrets=[
+            titled(
+                "The spirit Immaculada carries",
+                "She carries the Divine Conciatta, the latest of generations of "
+                "possessed novices, and fares worst of them all.",
+            ),
+            titled(
+                "A miracle forgotten",
+                "The convent has long taken Immaculada's possession for God's "
+                "miracle, and its magical origin is all but forgotten (p. 29).",
+            ),
+            titled(
+                "Sense in her babble",
+                "When visitors enter, sense surfaces in her babble (pp. 31-32): "
+                "she once had many brothers and sisters and now only three, "
+                "who hide, though she remembers where she went; Seiffeddin, an "
+                "actor in Qadis, may know her and where she is; she would like "
+                "to see her sisters.",
+            ),
+            titled(
+                "What binds the spirit to her",
+                "Her fear of being alone binds the spirit to her. If that is "
+                "abated, the spirit can pass to another host.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "How the spirit passes to another host is left to the troupe (p. 32).",
+            ),
+        ],
     )
     b.stats(immaculada, IMMACULADA, source="LoH")
     habib = b.magus(
@@ -1111,26 +1382,36 @@ def _people(b: Builder) -> None:
         "the city with a strange instrument, and likes nothing better than "
         "to talk to the learned. His observatory is his room on the top "
         "floor of a tenement in a poor and noisy district.",
-        secrets=paragraphs(
-            "He found the Fourfold Lens lately, took it for a device to study "
-            "the heavens, and has seen auras and the ghostly citizens through "
-            "it. He files what he sees under the four elements, tying them "
-            "uncertainly to the four auras. He is slow to lend or sell it, "
-            "but may part with it if his study of supernatural Qadis can be "
-            "fed some other way (pp. 34-35).",
-            "The Fourfold Lens (p. 34): an adjustable iron stand with four "
-            "hand-sized lenses on swinging arms, each enchanted for one "
-            "realm and clear if its aura is absent. Conciatta made it for her "
-            "custos and Currito to take on journeys, and it was lost on one. "
-            "Each lens is Unveil the Subsumed (Realm), InVi 54, constant (R "
-            "Personal, D Sun, T Vision, 2/day triggered at sunrise and "
-            "sunset): it shows any aura present of its realm, subsumed or "
-            "not, and the world as that aura would make it. It finds "
-            "subsumed auras of any level but can only penetrate an apparent "
-            "aura of level 3, and only the lowest level of each, so it does "
-            "not show regiones. Re-creating it gives 11 points toward "
-            "Confluence of the Realms.",
-        ),
+        secrets=[
+            titled(
+                "Habib's strange instrument",
+                "He found the Fourfold Lens lately, took it for a device to "
+                "study the heavens, and has seen auras and the ghostly citizens "
+                "through it. He files what he sees under the four elements, "
+                "tying them uncertainly to the four auras.",
+            ),
+            titled(
+                "Parting Habib from the Lens",
+                "He is slow to lend or sell the Fourfold Lens, but may part "
+                "with it if his study of supernatural Qadis can be fed some "
+                "other way (pp. 34-35).",
+            ),
+            titled(
+                "The Fourfold Lens",
+                "The Fourfold Lens (p. 34): an adjustable iron stand with four "
+                "hand-sized lenses on swinging arms, each enchanted for one "
+                "realm and clear if its aura is absent. Conciatta made it for her "
+                "custos and Currito to take on journeys, and it was lost on one. "
+                "Each lens is Unveil the Subsumed (Realm), InVi 54, constant (R "
+                "Personal, D Sun, T Vision, 2/day triggered at sunrise and "
+                "sunset): it shows any aura present of its realm, subsumed or "
+                "not, and the world as that aura would make it. It finds "
+                "subsumed auras of any level but can only penetrate an apparent "
+                "aura of level 3, and only the lowest level of each, so it does "
+                "not show regiones. Re-creating it gives 11 points toward "
+                "Confluence of the Realms.",
+            ),
+        ],
     )
     b.stats(habib, HABIB, source="LoH")
     hamid = b.magus(
@@ -1142,8 +1423,13 @@ def _people(b: Builder) -> None:
         summary="An imam of the Al Narixa Mosque all his adult life, kept "
         "mostly to its library. He suffers visions he takes for warnings from "
         "Allah, always of tunnels, caves, and hungry yellow eyes in the dark.",
-        secrets="If the caves are spoken of with or near him in Arabic, he "
-        "also sees a seductive queen clothed in smoke and fire (p. 40).",
+        secrets=[
+            titled(
+                "The queen in Hamid's visions",
+                "If the caves are spoken of with or near him in Arabic, he also "
+                "sees a seductive queen clothed in smoke and fire (p. 40).",
+            ),
+        ],
     )
     b.stats(hamid, HAMID, source="LoH")
 
@@ -1235,11 +1521,20 @@ def _aspects(
             "then waits for proper overtures; in time she will find a reason "
             "to deal with them calmly (p. 25).",
         ),
-        secrets="She knows she is dead and suspects a Final Twilight, "
-        "prolonged and somehow made lasting, and that others like her may "
-        "exist for the other realms. She knows she can learn nothing new of "
-        "note, unless perhaps what follows if her Final Twilight is let "
-        "finish (p. 25). Her books scrape over her own work again and again.",
+        secrets=[
+            titled(
+                "What she knows of her death",
+                "She knows she is dead and suspects a Final Twilight, prolonged "
+                "and somehow made lasting, and that others like her may exist "
+                "for the other realms.",
+            ),
+            titled(
+                "Nothing new to learn",
+                "She knows she can learn nothing new of note, unless perhaps "
+                "what follows if her Final Twilight is let finish (p. 25). Her "
+                "books scrape over her own work again and again.",
+            ),
+        ],
     )
     found["divine"] = b.creature(
         "The Divine Conciatta",
@@ -1289,9 +1584,14 @@ def _aspects(
         "who chooses to carry her has no conscious access to it, but bears "
         "her Personality Traits and gains the protection of her Divine Might. "
         "A new host suffers Enfeebled and Visions.",
-        secrets="Visions in a new host may show her as a queen, wreathed in "
-        "serpents, or in the heart of a great fire, or a shining city sinking "
-        "under a mighty river (p. 32).",
+        secrets=[
+            titled(
+                "Visions in a new host",
+                "Visions in a new host may show her as a queen, wreathed in "
+                "serpents, or in the heart of a great fire, or a shining city "
+                "sinking under a mighty river (p. 32).",
+            ),
+        ],
     )
     found["faerie"] = b.creature(
         "The Faerie Conciatta",
@@ -1348,19 +1648,29 @@ def _aspects(
             "Arganthonios imposes her Sovereign Ward; it lifts when his "
             "bargain is met. " + wound_ranges(0),
         ),
-        secrets=paragraphs(
-            "She is not truly Conciatta. The aspect the characters seek faded "
-            "a century ago and became glamour, after pining for what she "
-            "gave up and dying a second death; the true one had come back "
-            "centuries ago to keep a bargain with the king. If reminded of "
-            "her love for Currito she is released, and takes her role to be "
-            "reunited with her sisters (pp. 38-39).",
-            "On leaving Tartessos her essence goes into the book Bruja gives: "
-            "a quality 7 tractatus on Faerie Lore in somewhat archaic Hermetic "
-            "Latin. The one given it gains one of her breakthroughs as a "
-            "charm (Realms of Power: Faerie pp. 39, 104), usable while he "
-            "carries the book and keeps it secret (p. 45).",
-        ),
+        secrets=[
+            titled(
+                "Not truly Conciatta",
+                "She is not truly Conciatta. The aspect the characters seek "
+                "faded a century ago and became glamour, after pining for what "
+                "she gave up and dying a second death; the true one had come "
+                "back centuries ago to keep a bargain with the king.",
+            ),
+            titled(
+                "Releasing the Faerie Conciatta",
+                "If reminded of her love for Currito she is released, and takes "
+                "her role to be reunited with her sisters (pp. 38-39).",
+            ),
+            titled(
+                "The book of her essence",
+                "On leaving Tartessos her essence goes into the book Bruja "
+                "gives: a quality 7 tractatus on Faerie Lore in somewhat "
+                "archaic Hermetic Latin. The one given it gains one of her "
+                "breakthroughs as a charm (Realms of Power: Faerie pp. 39, "
+                "104), usable while he carries the book and keeps it secret "
+                "(p. 45).",
+            ),
+        ],
     )
     found["infernal"] = b.creature(
         "The Infernal Conciatta",
@@ -1415,18 +1725,34 @@ def _aspects(
             "are as printed, though the block gives four powers marked Focus "
             "and two Greater.",
         ),
-        secrets=paragraphs(
-            "She mocks the visitors and says the Order's rules no longer bind "
-            "her. If the host of the Divine aspect is there, she offers to "
-            "let the others go for one life; she will not keep her word. Soon "
-            "bored, she sends in her army. She watches for hastily drawn "
-            "circles and breaks them with Master of Stone, and does not trust "
-            "her penetration against Parma Magica (p. 44).",
-            "She will fight to the death. Her Might makes wards a hard way to "
-            "bind her, and the troupe should be creative: holy relics; Perdo "
-            "Vim to lower her Might; intense cold may harm her and force her "
-            "to submit (pp. 44-45).",
-        ),
+        secrets=[
+            titled(
+                "Beyond the Order's rules",
+                "She mocks the visitors and says the Order's rules no longer bind her.",
+            ),
+            titled(
+                "Her false bargain",
+                "If the host of the Divine aspect is there, she offers to let "
+                "the others go for one life; she will not keep her word.",
+            ),
+            titled(
+                "How the Infernal Conciatta fights",
+                "Soon bored, she sends in her army. She watches for hastily "
+                "drawn circles and breaks them with Master of Stone, and does "
+                "not trust her penetration against Parma Magica (p. 44). She "
+                "will fight to the death.",
+            ),
+            titled(
+                "What may bind her",
+                "Her Might makes wards a hard way to bind her: holy relics; "
+                "Perdo Vim to lower her Might; intense cold may harm her and "
+                "force her to submit (pp. 44-45).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The troupe should be creative in binding her.",
+            ),
+        ],
     )
     return found
 
@@ -1527,26 +1853,39 @@ def _creatures(b: Builder, sites: dict[str, Neighbour]) -> None:
         notes="He contains no vis. His illusions spend his Might and leave "
         "him drained after each performance. Nervous of strangers, having been "
         "killed by one in life, he is welcoming once reassured. " + wound_ranges(0),
-        secrets=paragraphs(
-            "He remembers Conciatta and her quest for Tartessos. He taught "
-            "her and Currito, with other spirits of Qadis, over a year, and "
-            "under him they made a set of stones that added power to their "
-            "magic; he offers the magi the same teaching. He can say how to "
-            "reach Tartessos: only on the anniversary of its loss, a night "
-            "the storyguide sets, and they must find Bruja out on the marsh "
-            "(pp. 34-35).",
-            "The stones are ceremonial casting props (Houses of Hermes: "
-            "Societates p. 59). A season of Magic Lore under him is a source "
-            "of insight for Insight of the Realms, +10 to the initial roll. "
-            "The maga must then enchant Clearing the Mind of the Caster, PeIm "
-            "(Vi) 30, Pen +0, 1/day (R Touch, D Ring, T Circle): fifteen slate "
-            "tablets, laced with leather and each carved with a symbol, laid "
-            "around the caster in three rounds. Sensations not of the Magic "
-            "realm are dulled as they cross in, though she may still attend "
-            "to them; +1 to Concentration for activities wholly within, +3 "
-            "as props in ceremonial casting. Re-creating it gives 6 points "
-            "toward Insight of the Realms (p. 33).",
-        ),
+        secrets=[
+            titled(
+                "Seiffeddin remembers Conciatta",
+                "He remembers Conciatta and her quest for Tartessos.",
+            ),
+            titled(
+                "Seiffeddin's teaching",
+                "He taught Conciatta and Currito, with other spirits of Qadis, "
+                "over a year, and under him they made a set of stones that "
+                "added power to their magic; he offers the magi the same "
+                "teaching.",
+            ),
+            titled(
+                "The way to Tartessos",
+                "He can say how to reach Tartessos: only on the anniversary of "
+                "its loss, a night the storyguide sets, and they must find "
+                "Bruja out on the marsh (pp. 34-35).",
+            ),
+            titled(
+                "The casting stones",
+                "Seiffeddin's stones are ceremonial casting props (Houses of "
+                "Hermes: Societates p. 59). A season of Magic Lore under him is a source "
+                "of insight for Insight of the Realms, +10 to the initial roll. "
+                "The maga must then enchant Clearing the Mind of the Caster, PeIm "
+                "(Vi) 30, Pen +0, 1/day (R Touch, D Ring, T Circle): fifteen slate "
+                "tablets, laced with leather and each carved with a symbol, laid "
+                "around the caster in three rounds. Sensations not of the Magic "
+                "realm are dulled as they cross in, though she may still attend "
+                "to them; +1 to Concentration for activities wholly within, +3 "
+                "as props in ceremonial casting. Re-creating it gives 6 points "
+                "toward Insight of the Realms (p. 33).",
+            ),
+        ],
     )
     b.creature(
         "Bruja, the Marsh Witch",
@@ -1632,11 +1971,24 @@ def _creatures(b: Builder, sites: dict[str, Neighbour]) -> None:
             "until applied. Most are brewed with a given person in mind, so "
             "cause no Warping.",
         ),
-        secrets="She will lead the characters to the gates if given a creature "
-        "or herb not found in her marsh. She keeps no stock of potions, and "
-        "brews each with spent Might; the Threshold draught is likely a live "
-        "frog to be swallowed whole. Arganthonios can command her to give "
-        "safe passage on a later visit (pp. 35-36, 39).",
+        secrets=[
+            titled(
+                "Bruja's price",
+                "She will lead the characters to the gates if given a creature "
+                "or herb not found in her marsh.",
+            ),
+            titled(
+                "Bruja's potions",
+                "She keeps no stock of potions, and brews each with spent "
+                "Might; the Threshold draught is likely a live frog to be "
+                "swallowed whole.",
+            ),
+            titled(
+                "Safe passage",
+                "Arganthonios can command her to give safe passage on a later "
+                "visit (pp. 35-36, 39).",
+            ),
+        ],
     )
     b.creature(
         "Arganthonios, the Silver King",
@@ -1714,14 +2066,27 @@ def _creatures(b: Builder, sites: dict[str, Neighbour]) -> None:
         "Leadership and the Reclusive Flaw. He is Incognizant: for all his "
         "understanding he cannot change or better his role. The book spells "
         "them Pretences; Tartessos Lore is entered as an Area Lore. " + wound_ranges(2),
-        secrets="Alone but for his queen, it is his nature to endure loss, "
-        "and he frees her freely (p. 38). He made a bargain with Conciatta: "
-        "she would rule beside him for knowledge of Faerie places, at the "
-        "cost of renouncing her love for Currito. He explains what became of "
-        "her, and offers that if the characters reunite this remnant with "
-        "that love, he will release her to the world of men. If they cannot "
-        "meet it yet, he gives them leave to go and return, and commands "
-        "Bruja to grant safe passage (pp. 38-39).",
+        secrets=[
+            titled(
+                "A king who endures loss",
+                "Alone but for his queen, it is his nature to endure loss, and "
+                "he frees her freely (p. 38).",
+            ),
+            titled(
+                "His bargain with Conciatta",
+                "He made a bargain with Conciatta: she would rule beside him "
+                "for knowledge of Faerie places, at the cost of renouncing her "
+                "love for Currito.",
+            ),
+            titled(
+                "His offer to the characters",
+                "He explains what became of Conciatta, and offers that if the "
+                "characters reunite this remnant with that love, he will "
+                "release her to the world of men. If they cannot meet it yet, "
+                "he gives them leave to go and return, and commands Bruja to "
+                "grant safe passage (pp. 38-39).",
+            ),
+        ],
     )
     b.creature(
         "Narixa Hyena",
@@ -1840,16 +2205,26 @@ def _ghosts(b: Builder, qadis: Neighbour) -> None:
         "and use mindless specters as tools.",
         wants="To protect their interests, descendants and city; few care "
         "to be laid to rest.",
-        secrets=paragraphs(
-            "The ranks follow the ghost types of Realms of Power: Magic p. "
-            "115, with apparitions at the top (p. 35).",
-            "Faeries, drawn here for centuries, now fill the roles of the "
-            "recently dead, who mostly get proper burial and do not linger. "
-            "They think themselves ghosts, differ only in their Might, and "
-            "feed on the living by quietly touching their lives. Demons take "
-            "the forms of the dead too, to corrupt the living, and the Magic "
-            "and Faerie ghosts fight them as best they can.",
-        ),
+        secrets=[
+            titled(
+                "Faerie ghosts",
+                "Faeries, drawn to Qadis for centuries, now fill the roles of "
+                "the recently dead, who mostly get proper burial and do not "
+                "linger. They think themselves ghosts, differ only in their "
+                "Might, and feed on the living by quietly touching their lives.",
+            ),
+            titled(
+                "Demons among the dead",
+                "Demons take the forms of the dead of Qadis too, to corrupt the "
+                "living, and the Magic and Faerie ghosts fight them as best "
+                "they can.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The ranks follow the ghost types of Realms of Power: Magic p. "
+                "115, with apparitions at the top (p. 35).",
+            ),
+        ],
     )
 
 
@@ -1867,35 +2242,43 @@ def _stories(b: Builder, sites: dict[str, Neighbour]) -> None:
                 "Tartessos, and the depths of the Narixa caves. Whoever finds "
                 "them may gather her treasures and make her whole.",
             ),
-            secrets=paragraphs(
-                "It can run as one story or as separate episodes, moving the "
-                "clues to spread it out (p. 18). The history and the journal "
-                "come in either order, and the four aspects in any order "
-                "the troupe likes (p. 19); the numbers on this track are only "
-                "the book's order of telling.",
-                "Foreshadowing (p. 19): raise her name in unrelated stories. "
-                "Run stories that turn on auras, or on the lack of any way "
-                "to find what anchors one. Old casting tablets on auras, "
-                "books or devices Currito took, her glosses in others' works, "
-                "and his frescoes may all surface; any study of Vim from a "
-                "book can bring up her name.",
-                "Moving it (p. 19): Tartessos could be Sybaris in the Roman "
-                "Tribunal, Zaragoza could be Paris with the Seine for the "
-                "Ebro, and Jerusalem could stand for Toledo.",
-                "Rewards (p. 45): a suggested 5 experience points for the "
-                "events around each aspect, 20 in all. Experience in the "
-                "Magic Realm comes as vis that can transform a character "
-                "(Realms of Power: Magic pp. 20, 26). Bonisagus Acclaim: "
-                "Houses of Hermes: True Lineages p. 21 and p. 45 here.",
-                "Aftermath (p. 45): magi still need a separate effect for "
-                "each realm. Letting Vim spells affect every realm without "
-                "re-invention would be a Hermetic Breakthrough, which her "
-                "Virtues reduce to a Major Breakthrough, with troupe approval; "
-                "a further Major Breakthrough can fully integrate each of "
-                "hers, so that all who study the sources may use Realm Lore. "
-                "Whoever brings her secrets back ties his name to hers; "
-                "whoever takes them further wins fame of his own.",
-            ),
+            secrets=[
+                titled(
+                    "Her secrets brought back",
+                    "Whoever brings Conciatta's secrets back ties his name to "
+                    "hers; whoever takes them further wins fame of his own.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "It can run as one story or as separate episodes, moving the "
+                        "clues to spread it out (p. 18). The history and the journal "
+                        "come in either order, and the four aspects in any order "
+                        "the troupe likes (p. 19); the numbers on this track are only "
+                        "the book's order of telling.",
+                        "Foreshadowing (p. 19): raise her name in unrelated stories. "
+                        "Run stories that turn on auras, or on the lack of any way "
+                        "to find what anchors one. Old casting tablets on auras, "
+                        "books or devices Currito took, her glosses in others' works, "
+                        "and his frescoes may all surface; any study of Vim from a "
+                        "book can bring up her name.",
+                        "Moving it (p. 19): Tartessos could be Sybaris in the Roman "
+                        "Tribunal, Zaragoza could be Paris with the Seine for the "
+                        "Ebro, and Jerusalem could stand for Toledo.",
+                        "Rewards (p. 45): a suggested 5 experience points for the "
+                        "events around each aspect, 20 in all. Experience in the "
+                        "Magic Realm comes as vis that can transform a character "
+                        "(Realms of Power: Magic pp. 20, 26). Bonisagus Acclaim: "
+                        "Houses of Hermes: True Lineages p. 21 and p. 45 here.",
+                        "Aftermath (p. 45): magi still need a separate effect for "
+                        "each realm. Letting Vim spells affect every realm without "
+                        "re-invention would be a Hermetic Breakthrough, which her "
+                        "Virtues reduce to a Major Breakthrough, with troupe approval; "
+                        "a further Major Breakthrough can fully integrate each of "
+                        "hers, so that all who study the sources may use Realm Lore.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "History Unfolding",
@@ -1986,9 +2369,18 @@ def _stories(b: Builder, sites: dict[str, Neighbour]) -> None:
             "early years, and offers a good price for the journal. It seems "
             "odd that the master will not settle for a chance to study it: he "
             "wants the book itself.",
-            secrets="The messenger unknowingly carries possessing spirits "
-            "across the Aegis (Realms of Power: The Infernal p. 32). Inside, "
-            "they hunt for the book and spread fear and mischief (p. 21).",
+            secrets=[
+                titled(
+                    "What the messenger carries",
+                    "The messenger unknowingly carries possessing spirits "
+                    "across the Aegis (Realms of Power: The Infernal p. 32).",
+                ),
+                titled(
+                    "The spirits' hunt",
+                    "Inside the Aegis, the messenger's possessing spirits hunt "
+                    "for the book and spread fear and mischief (p. 21).",
+                ),
+            ],
         )
     )
     dormant(
@@ -2001,9 +2393,19 @@ def _stories(b: Builder, sites: dict[str, Neighbour]) -> None:
             "characters to his castle for his birthday, and his wife has "
             "brought food, wine and players from all Iberia. His dour priest "
             "scorns the excess and refuses the feast.",
-            secrets="The priest may be right. How long until the magi notice "
-            "the debauched Infernal aura? Will they give in? And must they "
-            "either let the devil win or damage the knight's name (p. 28)?",
+            secrets=[
+                titled(
+                    "The priest's warning",
+                    "The knight's priest may be right: the feast has a "
+                    "debauched Infernal aura.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "How long until the magi notice the debauched Infernal "
+                    "aura? Will they give in? And must they either let the "
+                    "devil win or damage the knight's name (p. 28)?",
+                ),
+            ],
         )
     )
     dormant(
@@ -2014,10 +2416,19 @@ def _stories(b: Builder, sites: dict[str, Neighbour]) -> None:
             summary="Yusuf ibn Ahmad al-Mu'taman ibn Hud ruled Zaragoza from "
             "1082 to 1085 and wrote at length on geometry. Readers of his "
             "works find references to magic there too.",
-            secrets="He was a Learned Magician (Hedge Magic Revised Edition "
-            "p. 79), of a line that taught Conciatta its ways past the ill "
-            "effects of auras. Modern magi might learn much from them, if "
-            "they can be found and bargained with (p. 23).",
+            secrets=[
+                titled(
+                    "Al-Mu'taman's line",
+                    "Al-Mu'taman was a Learned Magician (Hedge Magic Revised "
+                    "Edition p. 79), of a line that taught Conciatta its ways "
+                    "past the ill effects of auras.",
+                ),
+                titled(
+                    "What his line could teach",
+                    "Modern magi might learn much from al-Mu'taman's line, if "
+                    "they can be found and bargained with (p. 23).",
+                ),
+            ],
         )
     )
     dormant(
@@ -2028,8 +2439,13 @@ def _stories(b: Builder, sites: dict[str, Neighbour]) -> None:
             summary="Workers of spirit magic come to Qadis from time to time "
             "in search of strong new servants. Those allowed to leave go away "
             "disappointed.",
-            secrets="The ghosts will not stand for any attempt to control "
-            "them, and unite against whoever tries (p. 35).",
+            secrets=[
+                titled(
+                    "The ghosts unite",
+                    "The ghosts of Qadis will not stand for any attempt to "
+                    "control them, and unite against whoever tries (p. 35).",
+                ),
+            ],
         )
     )
 

@@ -50,7 +50,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import Builder, paragraphs
+from ..builder import Builder, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -332,15 +332,18 @@ def _rivers(cradle: Cradle) -> None:
             "strongest, and a clever magus or sahir might strike a "
             "bargain with one against the other.",
         ),
-        secrets=paragraphs(
-            "The winter freeze is the outcome of a running struggle "
-            "between the Faerie and Magic jinn who claim the lands on "
-            "either bank. In winter the faeries rule and the rivers ice "
-            "over, letting nomads, and their stories, cross between "
-            "steppe and town, feeding the faeries on the strife; in "
-            "summer the old Magic spirits take back the rivers and let "
-            "them run to water the towns downstream.",
-        ),
+        secrets=[
+            titled(
+                "Why the Oxus freezes",
+                "The Oxus's winter freeze is the outcome of a running "
+                "struggle between the Faerie and Magic jinn who claim the "
+                "lands on either bank. In winter the faeries rule and the "
+                "rivers ice over, letting nomads, and their stories, cross "
+                "between steppe and town, feeding the faeries on the strife; "
+                "in summer the old Magic spirits take back the rivers and let "
+                "them run to water the towns downstream.",
+            ),
+        ],
     )
     _place(
         cradle,
@@ -378,14 +381,21 @@ def _rivers(cradle: Cradle) -> None:
             "and just outside them ends a road from Arcadia to a faerie "
             "image of the steppe.",
         ),
-        secrets=paragraphs(
-            "The old river spirit feeds on the townsmen's dread of the "
-            "steppe's barbarians: every few centuries it calls a faerie "
-            "host under a new name down the Arcadian road by Talas, one "
-            "more wave in an endless cycle of ruin, each slightly "
-            "different, each breaking on civilisation's shore. The "
-            "Mongols may be only its latest telling.",
-        ),
+        secrets=[
+            titled(
+                "The Jaxartes's old spirit",
+                "The Jaxartes's old river spirit feeds on the townsmen's "
+                "dread of the steppe's barbarians: every few centuries it "
+                "calls a faerie host under a new name down the Arcadian road "
+                "by Talas, one more wave in an endless cycle of ruin, each "
+                "slightly different, each breaking on civilisation's shore.",
+            ),
+            titled(
+                "The Mongols and the river spirit",
+                "The Mongols may be only the latest telling of the Jaxartes "
+                "spirit's endless cycle of faerie hosts.",
+            ),
+        ],
     )
     aral = _place(
         cradle,
@@ -793,10 +803,13 @@ def _bactria_and_farghana(cradle: Cradle) -> None:
             "Alexander founded. If history holds, the Mongols lay waste "
             "the Jaxartes towns as far as Khojend in 1220.",
         ),
-        secrets=paragraphs(
-            "Another altar of Alexander is hidden under the town or in "
-            "the ruins beside it.",
-        ),
+        secrets=[
+            titled(
+                "Khojend's altar",
+                "Another altar of Alexander is hidden under Khojend or in "
+                "the ruins beside it.",
+            ),
+        ],
     )
     _town(
         cradle,
@@ -906,14 +919,17 @@ def _the_east(cradle: Cradle) -> None:
             "in a ruq's claws. Its strange folk look human but say they "
             "come of an ancient magical race that once ruled the earth.",
         ),
-        secrets=paragraphs(
-            "The book leaves its truth open, offering a lost Nephilim "
-            "settlement, the real Hyperborea in Turkistan, an old and "
-            "secluded covenant of elder magi, the heirs of a rival "
-            "tradition founded by Viea, Trianoma's sister, a final "
-            "hiding place of the Zoroastrian mobeds, a high covenant site, or "
-            "the Diedne's last sanctum.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves Janaindar's truth open, offering a lost "
+                "Nephilim settlement, the real Hyperborea in Turkistan, an "
+                "old and secluded covenant of elder magi, the heirs of a "
+                "rival tradition founded by Viea, Trianoma's sister, a final "
+                "hiding place of the Zoroastrian mobeds, a high covenant "
+                "site, or the Diedne's last sanctum.",
+            ),
+        ],
     )
     _place(
         cradle,
@@ -977,12 +993,23 @@ def _the_east(cradle: Cradle) -> None:
             "desert storm spirit, a buran, laid waste every seven years, "
             "ruining its crops and herds, until a sahir bound it.",
         ),
-        secrets=paragraphs(
-            "The sahir who bound the buran is Infernally aligned and used "
-            "the Goetic Art of Binding (Realms of Power: The Infernal); "
-            "the spirit rages in his ancestral sword, ever trying to "
-            "wreak elemental havoc round its careless captor.",
-        ),
+        secrets=[
+            titled(
+                "Who bound the buran",
+                "The sahir who bound the buran of Yenghissar is Infernally "
+                "aligned and used Goetic binding.",
+            ),
+            titled(
+                "The buran in the sword",
+                "The buran of Yenghissar rages in its binder's ancestral "
+                "sword, ever trying to wreak elemental havoc round its "
+                "careless captor.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Goetic Art of Binding: Realms of Power: The Infernal.",
+            ),
+        ],
     )
     _place(
         cradle,
@@ -1131,24 +1158,30 @@ def _lords(cradle: Cradle) -> None:
             "him, and are checked only by Egypt's Mamluks in Syria in "
             "1260.",
         ),
-        secrets=paragraphs(
-            "What the Khan truly is the book leaves to each troupe, "
-            "offering, with none chosen: an Infernal horde, its leaders "
-            "Angels of Punishment, demons of the Avengers of Evil posing "
-            "as God's vengeance, or the Khan a new Zahhak possessed by "
-            "Azi Dahak; the Spawn of Gog and Magog, a horde ridden out "
-            "of Arcadia in the endless nomad cycle, the Khan a dark "
-            "faerie monarch and his officers court faeries; the legions "
-            "of Prester John, faeries playing a pious part, born of "
-            "garbled tales of the Qara Khitai's defeat of Sultan Sanjar; "
-            "the Vengeance of God, a true Divine host of punishment; "
-            "Blood of Heroes, the Khan and his generals scions of Ares "
-            "or of Attila; or a Spirit Votary of Great Tengri, who made "
-            "his bargain on the holy mountain of Burkhan Khaldun and "
-            "wields elemental powers great enough to force the Order of "
-            "Hermes to unite against him. Some Persian sahirs already "
-            "fear the Zahhak.",
-        ),
+        secrets=[
+            titled(
+                "What the sahirs fear",
+                "Some Persian sahirs already fear that the Great Khan is the Zahhak.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "What the Khan truly is the book leaves to each troupe, "
+                "offering, with none chosen: an Infernal horde, its leaders "
+                "Angels of Punishment, demons of the Avengers of Evil posing "
+                "as God's vengeance, or the Khan a new Zahhak possessed by "
+                "Azi Dahak; the Spawn of Gog and Magog, a horde ridden out "
+                "of Arcadia in the endless nomad cycle, the Khan a dark "
+                "faerie monarch and his officers court faeries; the legions "
+                "of Prester John, faeries playing a pious part, born of "
+                "garbled tales of the Qara Khitai's defeat of Sultan Sanjar; "
+                "the Vengeance of God, a true Divine host of punishment; "
+                "Blood of Heroes, the Khan and his generals scions of Ares "
+                "or of Attila; or a Spirit Votary of Great Tengri, who made "
+                "his bargain on the holy mountain of Burkhan Khaldun and "
+                "wields elemental powers great enough to force the Order of "
+                "Hermes to unite against him.",
+            ),
+        ],
     )
     w["qara_khitai"] = b.faction(
         "The Qara Khitai",

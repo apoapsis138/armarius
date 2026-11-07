@@ -23,6 +23,7 @@ from ..builder import (
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_ability,
     vf_minor,
 )
@@ -282,45 +283,93 @@ def _rasa(b: Builder):
             "dragon's past. The troupe's choice colours how the characters "
             "deal with it.",
         ),
-        secrets=paragraphs(
-            "Once a mere marauding serpent that gained a sliver of what it "
-            "ate, it grew aware and began to choose: fewer beasts, more "
-            "villages and caravans. A veteran of the Silk Road sent it east; "
-            "years there gave it scraps of six tongues. A missionary priest "
-            "turned it west toward the great cities of the Eastern Empire. "
-            "It lingered in one "
-            "place after another for decades, for centuries, until it ate the "
-            "abbot.",
-            "It threatened a remote abbey, and the abbot, a man of True Faith, "
-            "went out alone to face it. Eating him gave it his understanding "
-            "and Faith, and an epiphany that changed it. It took his place; "
-            "the community called it a miracle and serves it devoutly. Its "
-            "faith is genuine, though its grasp of people and the Divine is "
-            "secondhand and a little flawed.",
-            "It works to widen the Divine, believing that brings people nearer "
-            "God and the world nearer Paradise: through charity, teaching "
-            "crafts, and great works. It cares for the other realms only as "
-            "foils, and may lure their creatures near for its monks to beat. "
-            "Their texts and artifacts are to be gathered, hidden and at last "
-            "destroyed. It treats opposition as God's test of its faith and "
-            "never blames its opponents.",
-            "Enemies: a Tremere whose Redcap lover it ate, who raised a "
-            "vexillation that failed to hunt it; the jinn Howling Knife of the "
-            "Dunes; and Stellatus (ArM5 p. 194, the Definitive Edition p. 465), "
-            "who could not transform to stop its attack on a caravan he rode "
-            "with, and fought it several times in the decades after.",
-            "It eats trained birds for what they saw, the reason for the "
-            "abbey's aviaries, and now and then dogs or cats, with a small "
-            "prayer of thanks. Because these are natural and non-magical, "
-            "Parma does not interfere, though neither bird nor dragon knows "
-            "of it. It must eat vis, so friars harvest lesser sites, knowing "
-            "that success destroys what it needs.",
-            "It buried a hoard at every old lair, full of coin, jewels, "
-            "weapons and curios. A trusted clergyman or penitent knight goes "
-            "with a mule and a gift of its blood to fetch them, journeys that "
-            "may take long, and its plans allow for that. From its stolen "
-            "memories it also recalls where relics lie.",
-        ),
+        secrets=[
+            titled(
+                "A marauder that learned to choose",
+                "Once a mere marauding serpent that gained a sliver of what it "
+                "ate, it grew aware and began to choose: fewer beasts, more "
+                "villages and caravans.",
+            ),
+            titled(
+                "East and west",
+                "A veteran of the Silk Road sent it east; years there gave it "
+                "scraps of six tongues. A missionary priest turned it west toward "
+                "the great cities of the Eastern Empire. It lingered in one place "
+                "after another for decades, for centuries, until it ate the abbot.",
+            ),
+            titled(
+                "Eating the abbot",
+                "It threatened a remote abbey, and the abbot, a man of True Faith, "
+                "went out alone to face it. Eating him gave it his understanding "
+                "and Faith, and an epiphany that changed it.",
+            ),
+            titled(
+                "In the abbot's place",
+                "It took the abbot's place; the community called it a miracle and "
+                "serves it devoutly.",
+            ),
+            titled(
+                "Rasa's faith",
+                "Its faith is genuine, though its grasp of people and the Divine is "
+                "secondhand and a little flawed.",
+            ),
+            titled(
+                "What Rasa works for",
+                "It works to widen the Divine, believing that brings people nearer "
+                "God and the world nearer Paradise: through charity, teaching "
+                "crafts, and great works.",
+            ),
+            titled(
+                "The other realms",
+                "It cares for the other realms only as foils, and may lure their "
+                "creatures near for its monks to beat. Their texts and artifacts "
+                "are to be gathered, hidden and at last destroyed.",
+            ),
+            titled(
+                "Opposition as a test",
+                "It treats opposition as God's test of its faith and never blames "
+                "its opponents.",
+            ),
+            titled(
+                "The Tremere's grudge",
+                "An enemy: a Tremere whose Redcap lover it ate, who raised a "
+                "vexillation that failed to hunt it.",
+            ),
+            titled(
+                "Howling Knife of the Dunes",
+                "An enemy: the jinn Howling Knife of the Dunes.",
+            ),
+            titled(
+                "Stellatus",
+                "An enemy: Stellatus (ArM5 p. 194, the Definitive Edition p. 465), "
+                "who could not transform to stop its attack on a caravan he rode "
+                "with, and fought it several times in the decades after.",
+            ),
+            titled(
+                "What the birds tell it",
+                "It eats trained birds for what they saw, the reason for the "
+                "abbey's aviaries, and now and then dogs or cats, with a small "
+                "prayer of thanks. Because these are natural and non-magical, "
+                "Parma does not interfere, though neither bird nor dragon knows "
+                "of it.",
+            ),
+            titled(
+                "Why the friars gather vis",
+                "It must eat vis, so friars harvest lesser sites, knowing that "
+                "success destroys what it needs.",
+            ),
+            titled(
+                "Hoards at the old lairs",
+                "It buried a hoard at every old lair, full of coin, jewels, weapons "
+                "and curios. A trusted clergyman or penitent knight goes with a "
+                "mule and a gift of its blood to fetch them, journeys that may take "
+                "long, and its plans allow for that.",
+            ),
+            titled(
+                "Where relics lie",
+                "From its stolen memories it also recalls where relics lie.",
+            ),
+        ],
     )
 
 
@@ -329,11 +378,17 @@ def _jinn(b: Builder):
         "Howling Knife of the Dunes",
         page="pp. 108-109",
         notes="A jinn. The book prints no statistics, Might or realm.",
-        secrets=(
-            "It sold protection to a sorcerer, whom Rasa ate, spoiling a "
-            "reputation until then unblemished, and it hates the dragon still. "
-            "The abbot's rivalry with it can be worked into later stories."
-        ),
+        secrets=[
+            titled(
+                "Why it hates Rasa",
+                "It sold protection to a sorcerer, whom Rasa ate, spoiling a "
+                "reputation until then unblemished, and it hates the dragon still.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The abbot's rivalry with it can be worked into later stories.",
+            ),
+        ],
     )
 
 
@@ -351,34 +406,68 @@ def _abbey(b: Builder):
             "scriptorium's windows are sealed with parchment, and the library "
             "is closed.",
         ),
-        secrets=paragraphs(
-            "The abbot is the dragon. Only a few monks know; three or four "
-            "senior brothers run the house and tell the rest he has visions "
-            "on his sickbed (use the priest, ArM5 p. 23, or Brother Julian, "
-            "Art & Academe p. 85). The archdeacon may be among those who "
-            "revere it. No one lies for it: they say the abbot cannot come or "
-            "dine, and the prior stands in.",
-            "The aura is Divine 4 or 5 in the abbey and scriptorium (p. 118). "
-            "The order is the troupe's: the book says friars and monks "
-            "loosely, and no order of 1220 has both, so decide at the start "
-            "of the saga (p. 109).",
-            "If discovery nears, the abbot 'dies', and a trusted elder or the "
-            "prior is elected to front for it while it hides nearby or in the "
-            "cellars. If nobles push in a new abbot, the monks do not contest "
-            "it, but work to bring him into the fold.",
-            "Relics and items (p. 113): Ancient Magic oddities such as "
-            "Canaanite clay tablets, defixio plates, fetish figures or pieces "
-            "of automata; texts about them; practical Hermetic devices of at "
-            "most three magnitudes, for moving stones or clearing brush; and "
-            "small relics such as thorns of the Crown, scraps of Christ's "
-            "robe, slivers of the True Cross or saints' bones. It uses what "
-            "it safely can for the people, as tools of God, then gives relics "
-            "to the bishop after parading them; what it cannot use it destroys "
-            "or locks away.",
-            "A band's leader may carry a small relic giving a little Magic "
-            "Resistance, and bands take four pigeons, two to send for help, "
-            "one after two nights, and one kept for an attack.",
-        ),
+        secrets=[
+            titled("Who the abbot is", "The abbot is the dragon."),
+            titled(
+                "Who knows the secret",
+                "Only a few monks know the abbot is the dragon; three or four "
+                "senior brothers run the house and tell the rest he has visions on "
+                "his sickbed. The archdeacon may be among those who revere it.",
+            ),
+            titled(
+                "No one lies for it",
+                "No one at the abbey lies for the dragon: they say the abbot cannot "
+                "come or dine, and the prior stands in.",
+            ),
+            titled(
+                "If discovery nears",
+                "If discovery nears, the abbot 'dies', and a trusted elder or the "
+                "prior is elected to front for it while it hides nearby or in the "
+                "cellars.",
+            ),
+            titled(
+                "A new abbot pushed in",
+                "If nobles push in a new abbot, the monks do not contest it, but "
+                "work to bring him into the fold.",
+            ),
+            titled(
+                "What the abbey holds",
+                "Relics and items: Ancient Magic oddities such as Canaanite clay "
+                "tablets, defixio plates, fetish figures or pieces of automata; "
+                "texts about them; practical Hermetic devices of at most three "
+                "magnitudes, for moving stones or clearing brush; and small relics "
+                "such as thorns of the Crown, scraps of Christ's robe, slivers of "
+                "the True Cross or saints' bones. (p. 113)",
+            ),
+            titled(
+                "What becomes of them",
+                "The dragon uses what relics and items it safely can for the "
+                "people, as tools of God, then gives relics to the bishop after "
+                "parading them; what it cannot use it destroys or locks away. "
+                "(p. 113)",
+            ),
+            titled(
+                "A relic for the band's leader",
+                "A leader of the abbey's bands may carry a small relic giving a "
+                "little Magic Resistance.",
+            ),
+            titled(
+                "The bands' pigeons",
+                "The abbey's bands take four pigeons, two to send for help, one "
+                "after two nights, and one kept for an attack.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "For the senior brothers use the priest, ArM5 p. 23, or "
+                    "Brother Julian, Art & Academe p. 85.",
+                    "The aura is Divine 4 or 5 in the abbey and scriptorium (p. "
+                    "118). The order is the troupe's: the book says friars and "
+                    "monks loosely, and no order of 1220 has both, so decide at "
+                    "the start of the saga (p. 109).",
+                ),
+            ),
+        ],
     )
 
 
@@ -469,10 +558,14 @@ def _friar(b: Builder) -> Character:
             "or walks the roads on errands for its abbot. The abbot, he says, "
             "beat the dragon and lies recovering."
         ),
-        secrets=(
-            "These are the bulk of the dragon's servants, and few know what "
-            "their abbot is. The senior priests do, and keep up the story."
-        ),
+        secrets=[
+            titled(
+                "What the brothers know",
+                "The friars and monks are the bulk of the dragon's servants, and "
+                "few know what their abbot is. The senior priests do, and keep up "
+                "the story.",
+            )
+        ],
     )
     blank = deepcopy(friar)
     b.variants[friar.id] = [
@@ -497,16 +590,34 @@ def _prior(b: Builder) -> Character:
             "he may seem friendly and genial, brusque, or distant and "
             "calculating."
         ),
-        secrets=paragraphs(
-            "He knows. Choose his kind. A sincere man inspired by a miracle, "
-            "Peter to the dragon's messiah. A faithless pragmatist who sees "
-            "what a real miracle can do. Or a man unbalanced by a Divine act "
-            "who might go either way, Paul or Judas: as a betrayer he goes on "
-            "serving, collecting records, secretly asking for help, and "
-            "learning weaknesses for those who would truly kill it.",
-            "He inspects the sleeping quarters and dines with guests in the "
-            "abbot's place, and may be elected abbot to front for the dragon.",
-        ),
+        secrets=[
+            titled("What the prior knows", "He knows what the abbot is."),
+            titled(
+                "A sincere believer",
+                "A sincere man inspired by a miracle, Peter to the dragon's messiah.",
+            ),
+            titled(
+                "A faithless pragmatist",
+                "A faithless pragmatist who sees what a real miracle can do.",
+            ),
+            titled(
+                "Paul or Judas",
+                "A man unbalanced by a Divine act who might go either way, Paul or "
+                "Judas: as a betrayer he goes on serving, collecting records, "
+                "secretly asking for help, and learning weaknesses for those who "
+                "would truly kill it.",
+            ),
+            titled(
+                "Standing in for the abbot",
+                "He inspects the sleeping quarters and dines with guests in the "
+                "abbot's place, and may be elected abbot to front for the dragon.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Choose his kind: a sincere believer, a faithless pragmatist, or "
+                "Paul or Judas.",
+            ),
+        ],
     )
     b.stats(
         prior,
@@ -574,12 +685,21 @@ def _knight(b: Builder) -> Character:
             "wrathful. He wears the black until his quest is done, to show "
             "his sinful state, and leads a small band of men-at-arms."
         ),
-        secrets=(
-            "He does not know what the abbot is. He seeks absolution for a "
-            "wrong done on his travels, believes this task will win it, and "
-            "cannot be talked out of it. He is met recovering an item or "
-            "harvesting a vis site for the dragon."
-        ),
+        secrets=[
+            titled(
+                "What the knight does not know",
+                "He does not know what the abbot is.",
+            ),
+            titled(
+                "His penance",
+                "He seeks absolution for a wrong done on his travels, believes the "
+                "abbot's task will win it, and cannot be talked out of it.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "He is met recovering an item or harvesting a vis site for the dragon.",
+            ),
+        ],
     )
     b.stats(
         knight,
@@ -650,10 +770,15 @@ def _acumenis(b: Builder) -> Character:
         house=EX_MISC,
         age=None,
         summary="A magus of Ex Miscellanea who keeps a journal.",
-        secrets=(
-            "The book gives no more than this. The journal describes Rasa at length, in a converted scriptorium "
-            "(p. 108), so its writer has met the Dragon Abbot face to face."
-        ),
+        secrets=[
+            titled(
+                "Acumenis's journal",
+                "Acumenis's journal describes Rasa at length, in a converted "
+                "scriptorium (p. 108), so its writer has met the Dragon Abbot face "
+                "to face.",
+            ),
+            titled("Storyguide Notes", "The book gives no more than this."),
+        ],
     )
 
 
@@ -691,64 +816,112 @@ def _threat(b: Builder):
                 "to plough and wagon. Vis sites seem to yield less, and folk "
                 "of the old places grow uneasy."
             ),
-            secrets=paragraphs(
-                "A long-term foe with no wish for open conflict. It remakes "
-                "the covenant's world instead: as the Divine aura climbs, "
-                "Magic and Faerie ones fade and vis fails. Run it behind "
-                "another arc, using all four first stories in order, with two "
-                "or three of the main arc's stories between each. The book's "
-                "example braids it with Baron Geoffroi (p. 113). Treat these "
-                "as stages of one slow rise, ending when the troupe notices "
-                "or the storyguide chooses, when it becomes the main arc.",
-                "Works. Relics found from memory are paraded to build faith, "
-                "then given to the bishop. Hoard money rebuilds churches, "
-                "bridges, walls and wells, opens missions and pays for "
-                "seasonal fairs at the abbey (City & Guild p. 106), quietly "
-                "refunding peasants' table fees. Apprentices sponsored go "
-                "home and enrich their regions.",
-                "How magi notice. Quaesitores and Hoplites may come asking, "
-                "magi at the edge of their powers notice it first, or Tribunal "
-                "assigns it. Faeries seek out the cause and may offer alliance. "
-                "Demons driven off look for sinful grogs and covenfolk, "
-                "possessing them past the Aegis or harassing them outside it. "
-                "Failing vis sets covenants against each other in certamen "
-                "and at Tribunal, which argues the effect and not the cause. "
-                "Masons and craftsmen won't work for anyone but the abbey; "
-                "grogs take vows and crusade, covenfolk go on pilgrimage, "
-                "scholars shun the covenant, and loaned books vanish into the "
-                "abbey.",
-                "The soft way. Win its trust and talk it into leaving: a "
-                "pilgrimage to Jerusalem or the Sea of Galilee, St Catherine's "
-                "on Sinai, Santiago by the Way of St. James, Canterbury, or a "
-                "far hermitage. It stays there, and people from that place "
-                "may later come asking where it came from. Or persuade it "
-                "to sacrifice itself for its flock against Mongols, Crusaders "
-                "or a Moorish or Arab host, with gathered proof of such armies' "
-                "cruelty.",
-                "The hard way. A frontal attack is near hopeless, given its "
-                "Might, the aura and the consequences of assaulting a house "
-                "of God. Hurt its supports instead. Ambush travelling clergy, "
-                "at a cost in nerve and reputation. Impersonate monks to "
-                "disgrace them, risking confession. Turn the Church on them "
-                "with charges of heresy or crimes, or expose what it is, since "
-                "it is not even human. Blight crops and stock, for instance "
-                "Wizard's Autumn (PeHe 15), a moon-long salting of the earth "
-                "(CrTe 15: Base 3, +1 Touch, +3 Moon), Clouds of Rain and "
-                "Thunder or Clouds of Summer Snow (CrAu 25), or Curse of the "
-                "Ravenous Swarm (CrAn 45); destroy a flock's wool (PeAn 15: "
-                "Base 3, +2 Voice, +2 Group); or stop milk and eggs (PeAn 25: "
-                "Base 5, +2 Voice, +2 Group). Spoil trade, for instance with "
-                "Pains of Perpetual Worry (CrMe 20), Panic of the Trembling "
-                "Heart (CrMe 15) or a moon-long Recollection of Memories Never "
-                "Quite Lived (MuMe 5), or tip off bandits. A dragonslayer or "
-                "another dragon may do the fighting. With Arcane Connections "
-                "gathered and the dragon drawn out of its aura, magi stand a "
-                "good chance.",
-                "The enemy of my enemy. Another covenant, demons, an archbishop, "
-                "the whole Tribunal or faeries may do the deed, but each leaves "
-                "consequences: Quaesitores stay, clergy start purges, demons "
-                "stay on, and faeries may turn from heroes to despots.",
-            ),
+            secrets=[
+                titled(
+                    "The abbot's long game",
+                    "The Reclusive Abbot is a long-term foe with no wish for open "
+                    "conflict. It remakes the covenant's world instead: as the "
+                    "Divine aura climbs, Magic and Faerie ones fade and vis fails.",
+                ),
+                titled(
+                    "Paraded relics",
+                    "Relics the dragon finds from memory are paraded to build "
+                    "faith, then given to the bishop.",
+                ),
+                titled(
+                    "Where the hoard money goes",
+                    "The dragon's hoard money rebuilds churches, bridges, walls "
+                    "and wells, opens missions and pays for seasonal fairs at the "
+                    "abbey (City & Guild p. 106), quietly refunding peasants' "
+                    "table fees.",
+                ),
+                titled(
+                    "The abbey's apprentices",
+                    "Apprentices the abbey sponsors go home and enrich their regions.",
+                ),
+                titled(
+                    "Faeries seeking the cause",
+                    "Faeries seek out the cause of the spreading Divine aura and "
+                    "may offer alliance.",
+                ),
+                titled(
+                    "Demons driven off",
+                    "Demons driven off by the abbey's aura look for sinful grogs "
+                    "and covenfolk, possessing them past the Aegis or harassing "
+                    "them outside it.",
+                ),
+                titled(
+                    "Covenants at odds",
+                    "Failing vis sets covenants against each other in certamen and "
+                    "at Tribunal, which argues the effect and not the cause.",
+                ),
+                titled(
+                    "The covenant's people drawn away",
+                    "Masons and craftsmen won't work for anyone but the abbey; "
+                    "grogs take vows and crusade, covenfolk go on pilgrimage, "
+                    "scholars shun the covenant, and loaned books vanish into the "
+                    "abbey.",
+                ),
+                titled(
+                    "Talking it into leaving",
+                    "Win the Dragon Abbot's trust and talk it into leaving: a "
+                    "pilgrimage to Jerusalem or the Sea of Galilee, St Catherine's "
+                    "on Sinai, Santiago by the Way of St. James, Canterbury, or a "
+                    "far hermitage. It stays there, and people from that place may "
+                    "later come asking where it came from.",
+                ),
+                titled(
+                    "A sacrifice for its flock",
+                    "The Dragon Abbot may be persuaded to sacrifice itself for its "
+                    "flock against Mongols, Crusaders or a Moorish or Arab host, "
+                    "with gathered proof of such armies' cruelty.",
+                ),
+                titled(
+                    "Why a frontal attack fails",
+                    "A frontal attack on the Dragon Abbot is near hopeless, given "
+                    "its Might, the aura and the consequences of assaulting a "
+                    "house of God.",
+                ),
+                titled(
+                    "Out of its aura",
+                    "With Arcane Connections gathered and the Dragon Abbot drawn "
+                    "out of its aura, magi stand a good chance.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Run it behind another arc, using all four first stories "
+                        "in order, with two or three of the main arc's stories "
+                        "between each. The book's example braids it with Baron "
+                        "Geoffroi (p. 113). Treat these as stages of one slow "
+                        "rise, ending when the troupe notices or the storyguide "
+                        "chooses, when it becomes the main arc.",
+                        "How magi notice: Quaesitores and Hoplites may come "
+                        "asking, magi at the edge of their powers notice it "
+                        "first, or Tribunal assigns it.",
+                        "The hard way: hurt its supports. Ambush travelling clergy, "
+                        "at a cost in nerve and reputation. Impersonate monks to "
+                        "disgrace them, risking confession. Turn the Church on them "
+                        "with charges of heresy or crimes, or expose what it is, since "
+                        "it is not even human. Blight crops and stock, for instance "
+                        "Wizard's Autumn (PeHe 15), a moon-long salting of the earth "
+                        "(CrTe 15: Base 3, +1 Touch, +3 Moon), Clouds of Rain and "
+                        "Thunder or Clouds of Summer Snow (CrAu 25), or Curse of the "
+                        "Ravenous Swarm (CrAn 45); destroy a flock's wool (PeAn 15: "
+                        "Base 3, +2 Voice, +2 Group); or stop milk and eggs (PeAn 25: "
+                        "Base 5, +2 Voice, +2 Group). Spoil trade, for instance with "
+                        "Pains of Perpetual Worry (CrMe 20), Panic of the Trembling "
+                        "Heart (CrMe 15) or a moon-long Recollection of Memories Never "
+                        "Quite Lived (MuMe 5), or tip off bandits. A dragonslayer or "
+                        "another dragon may do the fighting.",
+                        "The enemy of my enemy: another covenant, demons, an "
+                        "archbishop, the whole Tribunal or faeries may do the "
+                        "deed, but each leaves consequences: Quaesitores stay, "
+                        "clergy start purges, demons stay on, and faeries may "
+                        "turn from heroes to despots.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Conflict Over Vis",

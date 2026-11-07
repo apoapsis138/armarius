@@ -20,7 +20,15 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs, vf_ability, vf_art, vf_focus
+from ..builder import (
+    Builder,
+    joined_lines,
+    paragraphs,
+    titled,
+    vf_ability,
+    vf_art,
+    vf_focus,
+)
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -157,8 +165,13 @@ def _places(normandy: Normandy) -> None:
         summary="A surviving fragment of the primordial forest of the Seine basin, "
         "a favourite hunting ground of the Norman nobility. A castle stands "
         "at its heart, and building it destroyed the spirit of the forest.",
-        secrets="The wild woodsmen say the forest is not dead and will rise one day "
-        "to take back its heart.",
+        secrets=[
+            titled(
+                "The forest's waking",
+                "The wild woodsmen say the Forest of Lyons is not dead and will rise "
+                "one day to take back its heart.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _place(
@@ -350,13 +363,25 @@ def _places(normandy: Normandy) -> None:
             "pulled out). Then its Divine aura is 4; at high tide it is "
             "a regio of 8.",
         ),
-        secrets="The Uncovered Crypt: a magus dreams of the archangel pointing to "
-        "the Mont, with headaches that halve her Study and Lab Totals until "
-        "she goes. As she arrives, builders open a crypt under a tower: a "
-        "dozen skeletons and an untitled Holy Magic Theory summa (Level 3, "
-        "Quality 17). Whoever studies it is visited by Michael, who means "
-        "to replace Hermetic magic, which he thinks pagan, with a Divine "
-        "kind.",
+        secrets=[
+            titled(
+                "The Uncovered Crypt",
+                "A magus dreams of the archangel pointing to the Mont, with headaches "
+                "until she goes. As she arrives, builders open a crypt under a tower: "
+                "a dozen skeletons and an untitled Holy Magic Theory summa.",
+            ),
+            titled(
+                "Michael's purpose",
+                "Whoever studies the summa in the crypt is visited by Michael, who "
+                "means to replace Hermetic magic, which he thinks pagan, with a "
+                "Divine kind.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The headaches halve her Study and Lab Totals until she goes. The "
+                "summa is Level 3, Quality 17.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
 
@@ -513,11 +538,19 @@ def _crown_and_lords(normandy: Normandy, b: Builder) -> None:
             "does, but its walls have won every war. The magi swear him no "
             "oath and say he runs his own affairs.",
         ),
-        secrets="For generations the family has been wholly, and unknowingly, "
-        "ruled by the magi through persuasion and subtle magic. The "
-        "baron's high chair, centuries old, was enchanted by an early magus "
-        "with a Mentem effect that keeps whoever sits in it compliant; long "
-        "use has left a line of slightly Warped barons.",
+        secrets=[
+            titled(
+                "Who rules the barons",
+                "For generations the family has been wholly, and unknowingly, ruled "
+                "by the magi of Montverte through persuasion and subtle magic.",
+            ),
+            titled(
+                "The baron's high chair",
+                "The baron's high chair, centuries old, was enchanted by an early "
+                "magus with a Mentem effect that keeps whoever sits in it compliant; "
+                "long use has left a line of slightly Warped barons.",
+            ),
+        ],
     )
 
 
@@ -554,12 +587,29 @@ def _church(normandy: Normandy, b: Builder) -> None:
             "who helped the saint drag the Gargouille, a scaled beast of the "
             "Seine with pale blue eyes, back to the town to be burned.",
         ),
-        secrets="The Gargouille: townsmen are found dead near a covenant and the "
-        "magi blamed. Archbishop Robert calls the magi the Gargouilles of "
-        "the age, frees half a dozen condemned men and marches with them "
-        "on the covenant behind the shrine of St Romanus (Faith Points 5). "
-        "Harming him could start a crusade against the Order in Normandy; "
-        "if the magi are innocent, someone framed them.",
+        secrets=[
+            titled(
+                "The Gargouille",
+                "Townsmen are found dead near a covenant and the magi blamed. "
+                "Archbishop Robert calls the magi the Gargouilles of the age, frees "
+                "half a dozen condemned men and marches with them on the covenant "
+                "behind the shrine of St Romanus.",
+            ),
+            titled(
+                "Harming the archbishop",
+                "Harming Archbishop Robert could start a crusade against the Order in "
+                "Normandy.",
+            ),
+            titled(
+                "Who killed the townsmen",
+                "If the magi are innocent of the deaths near their covenant, someone "
+                "framed them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The shrine of St Romanus has Faith Points 5.",
+            ),
+        ],
     )
     bishops = (
         (
@@ -731,14 +781,30 @@ def _church(normandy: Normandy, b: Builder) -> None:
             "burst from its coffin and the bishops, choking, botched the "
             "rite.",
         ),
-        secrets="The Infernal Grave: an infernalist's belongings hold The "
-        "Conquered Bastard (Infernal Lore tractatus, Quality 6), which says "
-        "a demon inhabits William's corpse, helped him to his conquests and "
-        "rotted his body, and was trapped in it by the botched rite; the "
-        "infernalist's notes show he was trying to free her. Freeing or "
-        "destroying her means digging William up and crossing the Church "
-        "in Caen. The text may be a forgery, by demons or by rivals in the "
-        "Tribunal, to drag the magi into an infernal plot.",
+        secrets=[
+            titled(
+                "The Infernal Grave",
+                "An infernalist's belongings hold The Conquered Bastard (Infernal "
+                "Lore tractatus), which says a demon inhabits William's corpse, "
+                "helped him to his conquests and rotted his body, and was trapped in "
+                "it by the botched rite; the infernalist's notes show he was trying "
+                "to free her.",
+            ),
+            titled(
+                "Freeing the demon",
+                "Freeing or destroying the demon in William's corpse means digging "
+                "William up and crossing the Church in Caen.",
+            ),
+            titled(
+                "Whether the text is a forgery",
+                "The Conquered Bastard may be a forgery, by demons or by rivals in "
+                "the Tribunal, to drag the magi into an infernal plot.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Conquered Bastard is Quality 6.",
+            ),
+        ],
     )
     w["womens_abbey"] = b.church(
         "The Women's Abbey of Caen",
@@ -852,9 +918,14 @@ def _towns(normandy: Normandy, b: Builder) -> None:
         "it was the seat of rival Norse settlers who sometimes rose against "
         "Rouen; it is quiet now. Its mills serve the country round, and "
         "its cathedral keeps Odo's tapestry.",
-        secrets="Rumour puts a regio somewhere in the town that held the small "
-        "Diedne vassal covenant Baiocassium Minor; no living magus admits "
-        "to knowing where.",
+        secrets=[
+            titled(
+                "Baiocassium Minor",
+                "Rumour puts a regio somewhere in the town that held the small Diedne "
+                "vassal covenant Baiocassium Minor; no living magus admits to knowing "
+                "where.",
+            ),
+        ],
     )
     w["avranches"] = b.town(
         "Avranches",
@@ -1017,13 +1088,38 @@ def _montverte(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: the succession to the Praeco: Geirlaug is third eldest in the Tribunal, after Celeres and Somnifer",
         "Tension: the Lotharingian Tribunal movement, which would carve covenants away from Normandy",
     )
-    hidden = joined_lines(
-        "The inner council is largely dysfunctional: each councillor is very able alone, but they barely coordinate, and behind a polite show of deference to Geirlaug runs a quiet contest of wills.",
-        "The baron's high chair carries an old Mentem enchantment that keeps its occupant compliant, and has left several barons slightly Warped.",
-        "Through a Mirror, Darkly: Geirlaug's face in the mirror begins to show two personalities quarrelling; perhaps a demon has supplanted her and rules through her image. Only Thormod seems untroubled.",
-        "Odin's Magus: Thormod is a leading member of the Children of Odin, practises Viking magic and uses his position for the cult; he may be kin or lover of its hierophant, Queen Skuld.",
-        "The Pirate Covenant: the council has allied with Waddenzee, the pirate covenant of the Rhine; Waddenzee would join the Lotharingian secession and then declare itself Montverte's vassal in Normandy instead, crippling the new Tribunal and winning a Tribunal that tolerates its raids.",
-    )
+    hidden = [
+        titled(
+            "The inner council",
+            "The inner council is largely dysfunctional: each councillor is very able "
+            "alone, but they barely coordinate, and behind a polite show of deference "
+            "to Geirlaug runs a quiet contest of wills.",
+        ),
+        titled(
+            "The baron's high chair",
+            "The baron's high chair carries an old Mentem enchantment that keeps its "
+            "occupant compliant, and has left several barons slightly Warped.",
+        ),
+        titled(
+            "Through a Mirror, Darkly",
+            "Geirlaug's face in the mirror begins to show two personalities "
+            "quarrelling; perhaps a demon has supplanted her and rules through her "
+            "image. Only Thormod seems untroubled.",
+        ),
+        titled(
+            "Odin's Magus",
+            "Thormod is a leading member of the Children of Odin, practises Viking "
+            "magic and uses his position for the cult; he may be kin or lover of its "
+            "hierophant, Queen Skuld.",
+        ),
+        titled(
+            "The Pirate Covenant",
+            "Montverte's council has allied with Waddenzee, the pirate covenant of "
+            "the Rhine; Waddenzee would join the Lotharingian secession and then "
+            "declare itself Montverte's vassal in Normandy instead, crippling the new "
+            "Tribunal and winning a Tribunal that tolerates its raids.",
+        ),
+    ]
     montverte = b.covenant(
         "Montverte",
         tribunal=tribunal,
@@ -1091,9 +1187,14 @@ def _montverte_magi(normandy: Normandy, b: Builder, montverte: Covenant) -> None
         "Alone on the council he seems quite untroubled by Geirlaug and "
         "trusts her rule completely; if anyone knows her true state, it is "
         "he, and he says nothing.",
-        secrets="He is a leading member of the Children of Odin, practises Viking "
-        "magic and bends his influence to the cult's ends; he may be "
-        "related to its hierophant, Queen Skuld, by blood or by a tryst.",
+        secrets=[
+            titled(
+                "Thormod and the Children of Odin",
+                "He is a leading member of the Children of Odin, practises Viking "
+                "magic and bends his influence to the cult's ends; he may be related "
+                "to its hierophant, Queen Skuld, by blood or by a tryst.",
+            ),
+        ],
         traits={"Scheming": 2, "Tidy": 2, "Emotional": -3},
     )
     m["eduardus"] = b.magus(

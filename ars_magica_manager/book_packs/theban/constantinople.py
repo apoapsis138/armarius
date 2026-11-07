@@ -25,7 +25,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -152,20 +152,36 @@ def _region(theban: Theban) -> None:
             "does not say whether any of them is one of the polity's "
             "common sources.",
         ),
-        secrets=paragraphs(
-            "Three demons have long taken a close interest in the city: "
-            "Golab, called the Seraphim's Foe, with Hulikang and Nike "
-            "under him, who for centuries each ran one of the circus "
-            "factions, the Greens and the Blues, and through them much "
-            "of its politics and trade, despite the wards. Some suspect "
-            "they now drive the 'Frank' and 'Venetian' factions; the "
-            "book leaves it open, and the stilled riots may be their "
-            "doing rather than the wards'.",
-            "The prince of Hell Akgah, who orchestrated the fall, has "
-            "his lair in an Infernal regio about a dozen miles outside "
-            "the walls (see the realms' places), and fought the Hagka "
-            "in the Hippodrome in 1204.",
-        ),
+        secrets=[
+            titled(
+                "The demons of the circus factions",
+                "Three demons have long taken a close interest in "
+                "Constantinople: Golab, called the Seraphim's Foe, with "
+                "Hulikang and Nike under him, who for centuries each ran one "
+                "of the circus factions, the Greens and the Blues, and "
+                "through them much of its politics and trade, despite the "
+                "wards.",
+            ),
+            titled(
+                "The new factions",
+                "Some suspect the demons Hulikang and Nike now drive "
+                "Constantinople's 'Frank' and 'Venetian' factions, and the "
+                "stilled riots may be their doing rather than the wards'.",
+            ),
+            titled(
+                "Akgah's lair",
+                "The prince of Hell Akgah, who orchestrated Constantinople's "
+                "fall, has his lair in an Infernal regio about a dozen miles "
+                "outside the walls, and fought the Hagka in the Hippodrome "
+                "in 1204.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book leaves open whether the demons drive the 'Frank' "
+                "and 'Venetian' factions. For Akgah's lair see the realms' "
+                "places.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
 
@@ -233,9 +249,14 @@ def _approaches(theban: Theban) -> None:
             "under the walls near the Gate of Pege, which its search "
             "parties use to come hunting for lost treasures and relics.",
         ),
-        secrets="The globe of the Golden Mantle may be one of the protective "
-        "enchantments Hermetic magi made for the city, and one that "
-        "failed.",
+        secrets=[
+            titled(
+                "The globe of the Golden Mantle",
+                "The globe of the Golden Mantle may be one of the protective "
+                "enchantments Hermetic magi made for Constantinople, and one "
+                "that failed.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -293,8 +314,14 @@ def _forums_and_waters(theban: Theban) -> None:
             "built the Ark with, the Magdalene's jar of perfume and the "
             "crosses of the two thieves. All went missing in 1204.",
         ),
-        secrets="Whoever restores the palladium and those relics to the vault "
-        "wakes both of the city's wards again.",
+        secrets=[
+            titled(
+                "Waking the wards",
+                "Whoever restores the palladium and those relics to the vault "
+                "beneath the Column of Constantine wakes both of the city's "
+                "wards again.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -505,10 +532,15 @@ def _hippodrome(theban: Theban) -> None:
             "a shard may be offered a token to neutralise it for "
             "delivering one.",
         ),
-        secrets="In 1204 the demon Akgah fought the Hagka here among the "
-        "statues; the battle wrecked part of the arena, Akgah won, and "
-        "the wounded Hagka fled. Crusaders who saw it took it for a "
-        "vision of the lion of Venice triumphant.",
+        secrets=[
+            titled(
+                "The battle among the statues",
+                "In 1204 the demon Akgah fought the Hagka in the Hippodrome "
+                "among the statues; the battle wrecked part of the arena, "
+                "Akgah won, and the wounded Hagka fled. Crusaders who saw it "
+                "took it for a vision of the lion of Venice triumphant.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -651,8 +683,13 @@ def _palaces(theban: Theban) -> None:
             "them from decay in 1220 and lives in apartments here given "
             "to her by the emperor's autocrat.",
         ),
-        secrets="Whether Passara serves the Latin emperor, as Formosos of "
-        "Guernicus insists, the book leaves to the storyguide.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Whether Passara serves the Latin emperor, as Formosos of "
+                "Guernicus insists, the book leaves to the storyguide.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -760,8 +797,13 @@ def _sacred_sites(theban: Theban) -> None:
             "would uncover them, and Catella will pay any magus with a "
             "workable plan in vis and gold for his time and notes.",
         ),
-        secrets="The insights from Heron are really there in the building's "
-        "fabric, for a magus who spends the season.",
+        secrets=[
+            titled(
+                "Heron's insights",
+                "The insights from Heron are really there in Hagia Sophia's "
+                "fabric, for a magus who spends the season.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -797,8 +839,13 @@ def _sacred_sites(theban: Theban) -> None:
             "emperors not gone to Heaven in the Infernal aura of Zeno's "
             "lair. Both were perilous.",
         ),
-        secrets="The storyguide may hide almost any treasure here, perhaps a "
-        "clue to another story, to be won only by getting past Zeno.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The storyguide may hide almost any treasure here, perhaps a "
+                "clue to another story, to be won only by getting past Zeno.",
+            ),
+        ],
         **RUMOURED_TRIBUNAL,
     )
 
@@ -856,12 +903,26 @@ def _lords(theban: Theban, b: Builder) -> None:
             "his death late in 1219 and then the papal legate Giovanni "
             "Colonna.",
         ),
-        secrets="Some say Baldwin was seen alive in Flanders, and House "
-        "Tremere is whispered to know more of his fate than it says; "
-        "the indiscreet Redcap who spread that tale died soon after in "
-        "a fall from his horse, and the magistrates of the day let it "
-        "lie. Peter's body was never found either. Hermetic gossip ties "
-        "the vanished Maria of Bulgaria to the Daughters of Erictho.",
+        secrets=[
+            titled(
+                "Baldwin's fate",
+                "Some say Baldwin was seen alive in Flanders, and House "
+                "Tremere is whispered to know more of his fate than it says; "
+                "the indiscreet Redcap who spread that tale died soon after "
+                "in a fall from his horse, and the magistrates of the day let "
+                "it lie.",
+            ),
+            titled(
+                "Peter's fate",
+                "The body of Peter, Latin Emperor of Constantinople, was "
+                "never found either.",
+            ),
+            titled(
+                "Maria of Bulgaria",
+                "Hermetic gossip ties the vanished Maria of Bulgaria to the "
+                "Daughters of Erictho.",
+            ),
+        ],
     )
     w["podesta"] = b.lord(
         "Podestà of Romania",
@@ -1014,7 +1075,13 @@ def _churches(theban: Theban, b: Builder) -> None:
             "in the old cistern under the orphanage, and leave them "
             "alone.",
         ),
-        secrets="The hermits are the Criamon magi of Xylinites.",
+        secrets=[
+            titled(
+                "Who the hermits are",
+                "The hermits of the Monastery of St. Christopoulos are the "
+                "Criamon magi of Xylinites.",
+            ),
+        ],
     )
     w["st_john_hebdomon"] = b.church(
         "The Church of St. John the Baptist at Hebdomon",
@@ -1133,9 +1200,18 @@ def _factions(theban: Theban, b: Builder) -> None:
         "others. Armed bands and bandits nest in the burnt-out ruins, "
         "the ash of the Venetian Quarter among them, and smugglers use "
         "the Venetian ports to slip goods in.",
-        secrets="Some suspect the demons Hulikang and Nike, once patrons of the "
-        "Greens and Blues, of now stirring up a 'Frank' and a "
-        "'Venetian' faction; the book does not say if it is true.",
+        secrets=[
+            titled(
+                "Demons behind the factions",
+                "Some suspect the demons Hulikang and Nike, once patrons of "
+                "the Greens and Blues, of now stirring up a 'Frank' and a "
+                "'Venetian' faction among the gangs of Constantinople.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book does not say whether Hulikang and Nike stir the factions.",
+            ),
+        ],
     )
     w["venetian_council"] = b.faction(
         "The Venetian Council of Constantinople",
@@ -1264,13 +1340,23 @@ def _michaels_tabula(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: 1207, at the Tribunal after the fall; the oath was sworn "
         "in 1204. Season: the book gives none; it is a young covenant.",
     )
-    hidden = joined_lines(
-        "Fylakas may instead be a demon loosed from its binding in "
-        "the sack, deceiving the pious magi.",
-        "Despite their piety, one or more of the magi might stoop to "
-        "demonic help if it would rid the city of the Franks.",
-        "The book leaves the anonymous sponsor's identity to the storyguide.",
-    )
+    hidden = [
+        titled(
+            "What Fylakas may be",
+            "Fylakas may instead be a demon loosed from its binding in the "
+            "sack, deceiving the pious magi of Michael's Tabula.",
+        ),
+        titled(
+            "How far the magi would go",
+            "Despite their piety, one or more of the magi of Michael's Tabula "
+            "might stoop to demonic help if it would rid the city of the "
+            "Franks.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "The book leaves the anonymous sponsor's identity to the storyguide.",
+        ),
+    ]
     tabula = b.covenant(
         "Michael's Tabula",
         tribunal=tribunal,
@@ -1380,9 +1466,15 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "storerooms and mad hermits below, and a few bold ones have "
             "broken curfew to explore the vaults.",
         ),
-        secrets="The aura flows from Loukia herself: she is not dead but held "
-        "in something like Twilight between this world and the Magic "
-        "Realm, and magic pours through her into the world.",
+        secrets=[
+            titled(
+                "Where the aura comes from",
+                "The Cistern of Xylinites' aura flows from Loukia herself: "
+                "she is not dead but held in something like Twilight between "
+                "this world and the Magic Realm, and magic pours through her "
+                "into the world.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     summary = paragraphs(
@@ -1477,18 +1569,30 @@ def _xylinites(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: 1074. The book dates the near-destruction to 1205 in "
         "places; the city fell in 1204.",
     )
-    hidden = joined_lines(
-        "Meditating on the icon works as a summa of Animal Ken, "
-        "level 3, Quality 10. None of the magi has realised it, "
-        "since they fear to meditate on it long, but the Criamon may "
-        "find it out.",
-        "Loukia is not dead but caught in something like Twilight "
-        "between this world and the Magic Realm, which is why the "
-        "aura pours from her icon.",
-        "Artoud knows Trasaricus must soon be sent far from the "
-        "city to avert disaster, but cannot bring himself to "
-        "expel him.",
-    )
+    hidden = [
+        titled(
+            "What the icon teaches",
+            "Meditating on Loukia's icon teaches Animal Ken. None of the "
+            "magi of Xylinites has realised it, since they fear to meditate "
+            "on it long, but the Criamon may find it out.",
+        ),
+        titled(
+            "Loukia's fate",
+            "Loukia is not dead but caught in something like Twilight "
+            "between this world and the Magic Realm, which is why the aura "
+            "pours from her icon.",
+        ),
+        titled(
+            "Artoud and Trasaricus",
+            "Artoud knows Trasaricus must soon be sent far from the city to "
+            "avert disaster, but cannot bring himself to expel him.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "Meditating on the icon works as a summa of Animal Ken, level 3, "
+            "Quality 10.",
+        ),
+    ]
     xylinites = b.covenant(
         "Xylinites",
         tribunal=tribunal,
@@ -1553,13 +1657,27 @@ def _xylinites_magi(theban: Theban, b: Builder, home: Covenant) -> None:
             "gives sporadic, half-hearted support to the League Against "
             "Idolatry.",
         ),
-        secrets="His body is in better shape now than at twenty-one: he does "
-        "not age, shrugs off injuries quickly and moves with more than "
-        "human grace, the fruit of long mastery of the flesh on the "
-        "Path of the Body (Houses of Hermes: Mystery Cults). He hides "
-        "it, passing off the pale scars on his tanned skin as the marks "
-        "of mortification, feigning a stoop and a slight limp among "
-        "mundanes, and moving as little as he can.",
+        secrets=[
+            titled(
+                "Artoud's body",
+                "Artoud's body is in better shape now than at twenty-one: he "
+                "does not age, shrugs off injuries quickly and moves with "
+                "more than human grace, the fruit of long mastery of the "
+                "flesh.",
+            ),
+            titled(
+                "How Artoud hides it",
+                "Artoud hides his unageing body, passing off the pale scars "
+                "on his tanned skin as the marks of mortification, feigning "
+                "a stoop and a slight limp among mundanes, and moving as "
+                "little as he can.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Artoud's mastery is of the Path of the Body (Houses of "
+                "Hermes: Mystery Cults).",
+            ),
+        ],
         traits={"Graceful": 5, "Pious": 3, "Devoted to House Criamon": 3},
     )
     m["theoderet"] = b.magus(
@@ -1620,7 +1738,13 @@ def _palace_magi(theban: Theban, b: Builder) -> None:
             "emperor and does more than tend the automata, and means to "
             "prove it.",
         ),
-        secrets="The book leaves whether she truly serves the emperor to the storyguide.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves whether Passara truly serves the emperor to "
+                "the storyguide.",
+            ),
+        ],
     )
     m["formosos"] = b.magus(
         "Formosos",

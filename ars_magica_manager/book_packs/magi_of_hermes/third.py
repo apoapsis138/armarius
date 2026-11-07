@@ -18,6 +18,7 @@ from ..builder import (
     arts_from,
     characteristics,
     paragraphs,
+    titled,
     vf_ability,
     vf_art,
     vf_puissant,
@@ -2026,16 +2027,26 @@ MAGI: tuple[Magus, ...] = (
             "hiding through agents and proxies, and a long feud with Solar "
             "Magnus of Tytalus runs through his life."
         ),
-        secrets=(
-            "Quaesitor Valeria of Donum Chanuti found evidence that he "
-            "killed Thomas Roxbury, a notary of House Guernicus, with a "
-            "Light of Fell Disease candle while hunting Solar Magnus at "
-            "Canterbury. He destroyed Solar Magnus there with a Dreams You "
-            "Shall Not Wake From sheet, having learned when the Tytalus's "
-            "cyclic magic left his resistance weakest. He bought Let the Sun "
-            "Not Bother Me This Day from Yestin of Jerbiton for use in that "
-            "feud."
-        ),
+        secrets=[
+            titled(
+                "The death of Thomas Roxbury",
+                "Quaesitor Valeria of Donum Chanuti found evidence that he "
+                "killed Thomas Roxbury, a notary of House Guernicus, with a "
+                "Light of Fell Disease candle while hunting Solar Magnus at "
+                "Canterbury.",
+            ),
+            titled(
+                "The end of Solar Magnus",
+                "He destroyed Solar Magnus at Canterbury with a Dreams You "
+                "Shall Not Wake From sheet, having learned when the Tytalus's "
+                "cyclic magic left his resistance weakest.",
+            ),
+            titled(
+                "A spell from Yestin",
+                "He bought Let the Sun Not Bother Me This Day from Yestin of "
+                "Jerbiton for use in his feud with Solar Magnus.",
+            ),
+        ],
         printings=(
             Printing("Gauntlet", 25, PETALICHUS_GAUNTLET),
             Printing("+15", 40, PETALICHUS_15),
@@ -2121,13 +2132,23 @@ MAGI: tuple[Magus, ...] = (
             "predator wanting peace through his art and no more power than "
             "survival needs, and he seems bound for a March as his master was."
         ),
-        secrets=(
-            "He is a practising diabolist, raised to see the Church as his "
-            "enemy, with demons about him waiting for his fall; salvation "
-            "does not occur to him. His imp familiar is unlikely to have "
-            "come by chance. Around +30 his dealings are found out and he is "
-            "Marched, and survives."
-        ),
+        secrets=[
+            titled(
+                "Tolides the diabolist",
+                "He is a practising diabolist, raised to see the Church as his "
+                "enemy, with demons about him waiting for his fall; salvation "
+                "does not occur to him.",
+            ),
+            titled(
+                "Tolides's imp",
+                "His imp familiar is unlikely to have come by chance.",
+            ),
+            titled(
+                "Tolides Marched",
+                "Around +30 his dealings are found out and he is Marched, and "
+                "survives.",
+            ),
+        ],
         printings=(
             Printing("Gauntlet", 21, TOLIDES_GAUNTLET),
             Printing("+15", 36, TOLIDES_15),

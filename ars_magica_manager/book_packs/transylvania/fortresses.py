@@ -25,7 +25,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...models import InstilledEffect
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs, vf_art
+from ..builder import joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -150,8 +150,13 @@ def _fort_places(transylvania: Transylvania) -> None:
             "village, a magical dragon in a mountain fort, or knights "
             "or bandits looking for a refuge may move in too.",
         ),
-        secrets="Whether a fort left standing still belongs to Kezdö Válasz "
-        "once its magi have gone is an open question.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Whether a fort left standing still belongs to Kezdö Válasz "
+                "once its magi have gone is an open question.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -190,8 +195,14 @@ def _fort_places(transylvania: Transylvania) -> None:
             "Neither river nor caves has been found.",
             "Kezdö Válasz has not looked for it: the hoard is small beside Lycaneon's.",
         ),
-        secrets="Slavonic dragons line their lairs with gold and silver, and a "
-        "treasure this size has very probably drawn one.",
+        secrets=[
+            titled(
+                "A dragon and Decebalus's hoard",
+                "Slavonic dragons line their lairs with gold and silver, and "
+                "a treasure the size of Decebalus's hoard has very probably "
+                "drawn one.",
+            ),
+        ],
         **RUMOURED,
     )
 
@@ -488,9 +499,17 @@ def _zenodochium_places(transylvania: Transylvania) -> None:
             "try now and then to find the surgeon. The book gives no "
             "aura.",
         ),
-        secrets="Zadar's violence breeds Infernal auras and regiones over its "
-        "worst killings; what became of the lacuna and its people is "
-        "left to the storyguide.",
+        secrets=[
+            titled(
+                "Zadar's Infernal places",
+                "Zadar's violence breeds Infernal auras and regiones over its "
+                "worst killings.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "What became of the lacuna and its people is left to the storyguide.",
+            ),
+        ],
         **RUMOURED,
     )
 
@@ -817,7 +836,12 @@ def _gigas(transylvania: Transylvania) -> None:
             "and Gigas is the obvious suspect. If its denials are true, "
             "who is framing it, and why?",
         ),
-        secrets="The book leaves the true raiders to the storyguide.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves the true raiders to the storyguide.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
 

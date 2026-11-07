@@ -15,7 +15,7 @@ The rest is a summary of the book, not its words."""
 from __future__ import annotations
 
 from ...models import BodyVis, Neighbour
-from ..builder import Builder, characteristics, dormant, paragraphs
+from ..builder import Builder, Secrets, characteristics, dormant, paragraphs, titled
 
 SOURCE = "LoH"
 TREMERE = "house_tremere"
@@ -42,25 +42,31 @@ WOUNDS_SIZE_0 = (
 )
 FISH_FATIGUE = "OK, OK, 0, -1, -3, -5, Unconscious"
 
-STAFF = paragraphs(
-    "Staff of the Wooden Soldiers. An invested device, a thick hazel staff "
-    "topped with a silver eye, with a small chamber near the top for an Arcane "
-    "Connection to one mannequin. Opened with 14 pawns, all filled. Four "
-    "powers, each 12 a day, item maintains concentration, R: Arc, D: Conc: "
-    "Pretense of Humanity (MuIm 19, T: Ind), the mannequin looks like a person "
-    "of its size; Animate Mannequin (ReHe 34, T: Ind), it moves as the holder "
-    "commands, with the holder's Dexterity, Quickness and Abilities and "
-    "Strength +3; View from the Mannequin and Ears of the Mannequin (each InIm "
-    "34, T: special, based on Room), the holder's sight or hearing moves to "
-    "the mannequin, seeing or hearing even creatures with Magic Resistance, "
-    "and into adjacent rooms and out of windows (p. 112-113).",
-    "A blow of damage 10 or more takes a limb off a mannequin, 19 or more on "
-    "the armored ones of the complex. Melee weapons they swing are resisted by "
-    "Magic Resistance; crossbow bolts are not, not being driven by magic. "
-    "Each mannequin's detachable wooden feature serves as the Arcane "
-    "Connection, changed regularly at Coeris; those here have not decayed, as "
-    "no time passed in the Void.",
-)
+STAFF = [
+    titled(
+        "Staff of the Wooden Soldiers",
+        "The Staff of the Wooden Soldiers is an invested device, a thick hazel staff "
+        "topped with a silver eye, with a small chamber near the top for an Arcane "
+        "Connection to one mannequin. Opened with 14 pawns, all filled. Four "
+        "powers, each 12 a day, item maintains concentration, R: Arc, D: Conc: "
+        "Pretense of Humanity (MuIm 19, T: Ind), the mannequin looks like a person "
+        "of its size; Animate Mannequin (ReHe 34, T: Ind), it moves as the holder "
+        "commands, with the holder's Dexterity, Quickness and Abilities and "
+        "Strength +3; View from the Mannequin and Ears of the Mannequin (each InIm "
+        "34, T: special, based on Room), the holder's sight or hearing moves to "
+        "the mannequin, seeing or hearing even creatures with Magic Resistance, "
+        "and into adjacent rooms and out of windows (p. 112-113).",
+    ),
+    titled(
+        "Breaking a mannequin",
+        "A blow of damage 10 or more takes a limb off a mannequin, 19 or more on "
+        "the armored ones of the complex. Melee weapons they swing are resisted by "
+        "Magic Resistance; crossbow bolts are not, not being driven by magic. "
+        "Each mannequin's detachable wooden feature serves as the Arcane "
+        "Connection, changed regularly at Coeris; those here have not decayed, as "
+        "no time passed in the Void.",
+    ),
+]
 
 
 def _people(b: Builder) -> None:
@@ -126,23 +132,37 @@ def _people(b: Builder) -> None:
             "searching after the vexillation reported and dissolved. She "
             "disappeared in 1110, without a trace.",
         ),
-        secrets=paragraphs(
-            "False among the recollections (p. 96): the Diedne cabal; the "
-            "laboratory enchanted to move; the Provencal town of giant bats. "
-            "Much of his work may be known only inside House Tremere (p. 11).",
-            "By 1091 he saw the House would never give him the vis, and "
-            "meant to find it himself; but his fears kept him in his laboratory, "
-            "behind eight warded rings. So he enchanted one of the Coeris "
-            "mannequins and sent it out under his control, through Opening the "
-            "Intangible Tunnel, to look for vis. That autumn evening in 1098 "
-            "it stood on the sea floor off the south coast of Crete, among the "
-            "wrecks of Demetrios the Poliorketes' battle with Ptolemy, and he "
-            "tried to bring the vis home with a Rego spell from a casting "
-            "tablet. The casting failed terribly. He and his familiar were "
-            "lost to Final Twilight; the laboratory and its structure went to "
-            "the Terram province of the Twilight Void, tethered to the "
-            "mannequin and the vis.",
-        ),
+        secrets=[
+            titled(
+                "Which tales of Hermanus are false",
+                "False among the recollections of Hermanus (p. 96): the Diedne "
+                "cabal; the laboratory enchanted to move; the Provencal town of "
+                "giant bats.",
+            ),
+            titled(
+                "Hermanus' wandering mannequin",
+                "By 1091 he saw the House would never give him the vis, and "
+                "meant to find it himself; but his fears kept him in his "
+                "laboratory, behind eight warded rings. So he enchanted one of "
+                "the Coeris mannequins and sent it out under his control, "
+                "through Opening the Intangible Tunnel, to look for vis.",
+            ),
+            titled(
+                "How Hermanus was lost",
+                "That autumn evening in 1098 his mannequin stood on the sea "
+                "floor off the south coast of Crete, among the wrecks of "
+                "Demetrios the Poliorketes' battle with Ptolemy, and he tried "
+                "to bring the vis home with a Rego spell from a casting tablet. "
+                "The casting failed terribly. He and his familiar were lost to "
+                "Final Twilight; the laboratory and its structure went to the "
+                "Terram province of the Twilight Void, tethered to the "
+                "mannequin and the vis.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Much of his work may be known only inside House Tremere (p. 11).",
+            ),
+        ],
     )
     b.magus(
         "Amarantha of Tremere",
@@ -159,10 +179,20 @@ def _people(b: Builder) -> None:
             "she feared looking a fool, and doubting the vexillation would "
             "have offended influential magi of the House.",
         ),
-        secrets="Her end came far from help, somewhere the Abyssal Bearer "
-        "Vexillation, charged with recovering the bodies of Tremere magi, never "
-        "knew of. Her notes held some ideas for researching a spell to bring "
-        "the laboratory back, but no firm plan. See The Remains of Amarantha.",
+        secrets=[
+            titled(
+                "Where Amarantha died",
+                "Her end came far from help, somewhere the Abyssal Bearer "
+                "Vexillation, charged with recovering the bodies of Tremere "
+                "magi, never knew of.",
+            ),
+            titled(
+                "Amarantha's ideas",
+                "Her notes held some ideas for researching a spell to bring "
+                "Hermanus' laboratory back, but no firm plan.",
+            ),
+            titled("Storyguide Notes", "See The Remains of Amarantha."),
+        ],
     )
     b.magus(
         "Velius of Tremere",
@@ -235,34 +265,48 @@ def _valley(b: Builder) -> Neighbour:
             "D: Sun, T: Part. Water stays 6 paces from the ring; the wearer "
             "cannot drink, and sweat is thrown from the body.",
         ),
-        secrets=paragraphs(
-            "The battle was fought between Demetrios the Poliorketes and "
-            "Ptolemy I; the book dates it 306 BC on p. 99 and 309 BC on p. 101. "
-            "Near the center of the valley lies a wreck with no ghosts on it. "
-            "On it stands Hermanus' wooden mannequin, human-sized, gripping the "
-            "mast, which is waterlogged but wholly free of rot and holds 8 "
-            "pawns of Mentem vis. Hermanus' last spell pins both in place, "
-            "against nearly any physical force.",
-            "The return. Any spell aimed at either object (to move it, an "
-            "Intellego spell, Rego Vim to draw the vis) undoes that spell and "
-            "brings the laboratory structure back. All water within thirteen "
-            "paces is thrust out, with sand and debris; swimmers are carried "
-            "at least 20 paces unless they act against it. Characters not "
-            "submerged should not be crushed. Stirred sediment blinds for a few "
-            "minutes. A storyguide who wants the laboratory won rather than "
-            "handed over can have the characters fetch it from the Twilight "
-            "Void: Arcane Connections do not cross from the mundane world, "
-            "so they must find a way into the Magic Realm (Realms of Power: "
-            "Magic chapter three; p. 104).",
-            "Moving the story (p. 101). Ancient naval battles fit, more or "
-            "less as written, across the Mediterranean: Actium, 31 BC, in the "
-            "Ionian Sea; Alalia off Corsica, 540 BC. North of it, Carlingford "
-            "Loch, Ireland, where Norse and Danes fought three days in 852. "
-            "A storyguide may invent a battle old enough to be unrecorded, or "
-            "drop the water: the mannequin could lie in a regio of huge ice "
-            "caves, a Saharan oasis, or the player covenant's best vis source, "
-            "if that was claimed after 1098.",
-        ),
+        secrets=[
+            titled(
+                "The ancient battle",
+                "The battle in the Aquatic Valley was fought between Demetrios "
+                "the Poliorketes and Ptolemy I; the book dates it 306 BC on p. "
+                "99 and 309 BC on p. 101.",
+            ),
+            titled(
+                "The wreck with no ghosts",
+                "Near the center of the valley lies a wreck with no ghosts on "
+                "it. On it stands Hermanus' wooden mannequin, human-sized, "
+                "gripping the mast, which is waterlogged but wholly free of rot "
+                "and holds 8 pawns of Mentem vis. Hermanus' last spell pins "
+                "both in place, against nearly any physical force.",
+            ),
+            titled(
+                "What brings the laboratory back",
+                "Any spell aimed at Hermanus' mannequin or the mast (to move "
+                "it, an Intellego spell, Rego Vim to draw the vis) undoes that "
+                "spell and brings the laboratory structure back. All water "
+                "within thirteen paces is thrust out, with sand and debris; "
+                "swimmers are carried at least 20 paces unless they act "
+                "against it. Stirred sediment blinds for a few minutes.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Characters not submerged should not be crushed when the "
+                "laboratory returns. A storyguide who wants the laboratory won "
+                "rather than handed over can have the characters fetch it from "
+                "the Twilight Void: Arcane Connections do not cross from the "
+                "mundane world, so they must find a way into the Magic Realm "
+                "(Realms of Power: Magic chapter three; p. 104).\n\n"
+                "Moving the story (p. 101). Ancient naval battles fit, more or "
+                "less as written, across the Mediterranean: Actium, 31 BC, in the "
+                "Ionian Sea; Alalia off Corsica, 540 BC. North of it, Carlingford "
+                "Loch, Ireland, where Norse and Danes fought three days in 852. "
+                "A storyguide may invent a battle old enough to be unrecorded, or "
+                "drop the water: the mannequin could lie in a regio of huge ice "
+                "caves, a Saharan oasis, or the player covenant's best vis source, "
+                "if that was claimed after 1098.",
+            ),
+        ],
     )
     b.creature(
         "Genius Loci of the Aquatic Valley",
@@ -342,10 +386,19 @@ def _valley(b: Builder) -> Neighbour:
             "valley left beautiful and undisturbed forever, with no hope of "
             "anything better. Its vis does not accumulate if left unharvested.",
         ),
-        secrets="It cares little for the mannequin. Disturbing the old ships or "
-        "destroying the ghosts for good it takes as an attack on itself. If it "
-        "hears of such plans it will try to bargain, without much hope, reading "
-        "every offer and motive in the bleakest light.",
+        secrets=[
+            titled(
+                "What the genius loci guards",
+                "It cares little for the mannequin. Disturbing the old ships or "
+                "destroying the ghosts for good it takes as an attack on itself.",
+            ),
+            titled(
+                "How the genius loci bargains",
+                "If it hears of plans to disturb the ships or destroy the ghosts "
+                "it will try to bargain, without much hope, reading every offer "
+                "and motive in the bleakest light.",
+            ),
+        ],
     )
     b.creature(
         "Ghost of an Ancient Sailor",
@@ -485,31 +538,54 @@ def _spirits(b: Builder, sanctum: Neighbour) -> None:
                 "they cannot manifest physically. No Soak, Fatigue or Wounds "
                 "printed.",
             ),
-            secrets=paragraphs(
-                "Bound by old agreements with Hermanus to defend the complex, "
-                "they know its defenses and devices well. Summoned by the "
-                "Statue of Conjured Assistants, they go first to the receiving "
-                "room for the Staves, then use the mannequins to carry justiciars "
-                "and sentinels about against the intruders, keeping as far from "
-                "magi as they can, perhaps slipping outside to act only through "
-                "the dolls. If the mannequins of the spare laboratory are "
-                "destroyed and they still hold the Staves, they will fetch Arcane "
-                "Connections from the store room pair.",
-                "In the laboratory proper they find they can trigger the "
-                "Butterfly's Gaze and the Tapestry of Confident Possession at "
-                "will, and use them to fire any justiciar that helps. Once the "
-                "ward against magical creatures is down they might, as a last "
-                "resort, use the Helm of Unravelling, but are likelier to teach "
-                "its use to any non-magus they think is under the Cross of the "
-                "Preempted Conflict (errata p. 79).",
-                "They will not die for the laboratory. If destruction can be "
-                "avoided only by flight or surrender they do that; if magi "
-                "clearly mean to destroy them they leave and go overland to "
-                "Coeris to warn the House. That takes a season, with finding "
-                "it, drawing notice from outside its Aegis of the Hearth, and "
-                "proving their good will. Entering the spare laboratory while "
-                "the Hourglass or Prison stands there would trap them.",
-            ),
+            secrets=[
+                titled(
+                    "Bound to Hermanus",
+                    "Bound by old agreements with Hermanus to defend the "
+                    "complex, Ferox and Fidelius know its defenses and devices "
+                    "well.",
+                ),
+                titled(
+                    "How the spirits defend the complex",
+                    "Summoned by the "
+                    "Statue of Conjured Assistants, Ferox and Fidelius go first to the receiving "
+                    "room for the Staves, then use the mannequins to carry justiciars "
+                    "and sentinels about against the intruders, keeping as far from "
+                    "magi as they can, perhaps slipping outside to act only through "
+                    "the dolls. If the mannequins of the spare laboratory are "
+                    "destroyed and they still hold the Staves, they will fetch Arcane "
+                    "Connections from the store room pair.",
+                ),
+                titled(
+                    "The spirits in the laboratory",
+                    "In the laboratory proper Ferox and Fidelius find they can "
+                    "trigger the Butterfly's Gaze and the Tapestry of Confident "
+                    "Possession at will, and use them to fire any justiciar that "
+                    "helps.",
+                ),
+                titled(
+                    "The spirits and the Helm",
+                    "Once the ward against magical creatures is down Ferox and "
+                    "Fidelius might, as a last resort, use the Helm of "
+                    "Unravelling, but are likelier to teach its use to any "
+                    "non-magus they think is under the Cross of the Preempted "
+                    "Conflict (errata p. 79).",
+                ),
+                titled(
+                    "If the spirits are beaten",
+                    "They will not die for the laboratory. If destruction can be "
+                    "avoided only by flight or surrender they do that; if magi "
+                    "clearly mean to destroy them they leave and go overland to "
+                    "Coeris to warn the House. That takes a season, with finding "
+                    "it, drawing notice from outside its Aegis of the Hearth, "
+                    "and proving their good will.",
+                ),
+                titled(
+                    "A trap for the spirits",
+                    "Entering the spare laboratory while the Hourglass or Prison "
+                    "stands there would trap Ferox and Fidelius.",
+                ),
+            ],
         )
 
 
@@ -620,7 +696,7 @@ def _beasts(b: Builder) -> None:
 
 
 def _room(
-    b: Builder, lab: Neighbour, name: str, summary: str, secrets: str
+    b: Builder, lab: Neighbour, name: str, summary: str, secrets: Secrets
 ) -> Neighbour:
     return b.place(
         f"Laboratory of Hermanus: {name}",
@@ -646,55 +722,93 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
             "dry space the water does not enter. Nothing in it has aged a day "
             "since 1098.",
         ),
-        secrets=paragraphs(
-            "Until the return it lies in the Terram province of the Twilight "
-            "Void, tethered to the mannequin and mast in the Aquatic Valley; "
-            "the fragments of lower floors hold nothing of value. No aura is "
-            "printed for the structure. Seven rooms, each a record here: "
-            "hallway, scriptorium and store room on the outer ring; receiving "
-            "room, spare laboratory, sanctum (room 6) and laboratory (room 7).",
-            "Sentinels and justiciars. Sentinels are devices with Intellego "
-            "effects and Herald of Imperative, which fires the justiciars of "
-            "the room; justiciars incapacitate. Built for a covenant where "
-            "people live, they mostly imprison rather than kill. At Coeris "
-            "other devices report any firing, so even one that fails to "
-            "penetrate raises the alarm. Many of these "
-            "devices are copies of those guarding Coeris.",
-            "Herald of Imperative: ReVi 29, 50/day, R: Touch, D: Mom, T: Room. "
-            "Performs one fixed triggering action on every object in the room. "
-            "(Base 5, +1 Touch, +2 Room; +6 levels 50 uses, +3 levels linked "
-            "trigger.) Rego Vim guideline, level 5: activate a device with a "
-            "simple trigger, the caster knowing the action; the item fires "
-            "directly (p. 107).",
-            "The justiciar action. Every justiciar here, and at Coeris, uses "
-            "one long, complex action of delicate handling and exact "
-            "intonation: three rounds by hand, days of intense study to learn. "
-            "It can be written down from the Herald's Lab Texts or by laboratory "
-            "investigation of a sentinel or justiciar. The House keeps all "
-            "other texts of it in the Coeris vaults; the ones here are the only "
-            "others. An outsider who knows it weakens Coeris badly, which is "
-            "the House's real concern. The vexillation argued over one action "
-            "or many: one was easier to monitor and rearrange, and magi of the "
-            "work were vetted by Intellego.",
-            "A Modification (Penetration, frequency, triggers, effect use) does "
-            "not count toward whether an effect warps its target, so Alarm of "
-            "Dissemblance, say, does not (p. 112).",
-            "Balance (p. 117; errata p. 78). Challenging, not impossible, "
-            "avoiding the trivial and the merely annoying. For impatient or "
-            "weaker groups, less active spirits or clues in Amarantha's notes; "
-            "for strong ones, more than two elemental spirits, or greater "
-            "Might. Players should see that disturbing the rings in the outer "
-            "rooms may flood at least those rooms.",
-            "Riches (p. 119), besides the devices and the laboratory: 6 pawns "
-            "of Rego, 18 of Mentem and 8 of Vim vis. Lab Texts for every "
-            "enchantment on the laboratory and every device in it, all "
-            "sentinels and justiciars of this chapter, and the Ring and Circle "
-            "wards active here, including Circular Ward Against Magical Spirits. "
-            "A casting tablet (Covenants pp. 89-90) of Cargo of Angel's Wings, "
-            "printed R: Arc, which Hermanus used through a spell like Opening "
-            "the Intangible Tunnel to fetch vis and connections from his "
-            "mannequin.",
-        ),
+        secrets=[
+            titled(
+                "Where the laboratory lies",
+                "Until the return the laboratory lies in the Terram province of "
+                "the Twilight Void, tethered to the mannequin and mast in the "
+                "Aquatic Valley; the fragments of lower floors hold nothing of "
+                "value.",
+            ),
+            titled(
+                "Sentinels and justiciars",
+                "Sentinels are devices with Intellego "
+                "effects and Herald of Imperative, which fires the justiciars of "
+                "the room; justiciars incapacitate. Built for a covenant where "
+                "people live, they mostly imprison rather than kill. At Coeris "
+                "other devices report any firing, so even one that fails to "
+                "penetrate raises the alarm. Many of these "
+                "devices are copies of those guarding Coeris.",
+            ),
+            titled(
+                "Herald of Imperative",
+                "Herald of Imperative: ReVi 29, 50/day, R: Touch, D: Mom, T: "
+                "Room. Performs one fixed triggering action on every object in "
+                "the room. (Base 5, +1 Touch, +2 Room; +6 levels 50 uses, +3 "
+                "levels linked trigger.) Rego Vim guideline, level 5: activate "
+                "a device with a simple trigger, the caster knowing the action; "
+                "the item fires directly (p. 107).",
+            ),
+            titled(
+                "The justiciar action",
+                "Every justiciar here, and at Coeris, uses "
+                "one long, complex action of delicate handling and exact "
+                "intonation: three rounds by hand, days of intense study to learn. "
+                "It can be written down from the Herald's Lab Texts or by laboratory "
+                "investigation of a sentinel or justiciar. The House keeps all "
+                "other texts of it in the Coeris vaults; the ones here are the only "
+                "others.",
+            ),
+            titled(
+                "Why the House fears the action",
+                "An outsider who knows the justiciar action weakens Coeris "
+                "badly, which is the House's real concern.",
+            ),
+            titled(
+                "One action or many",
+                "The vexillation argued over one justiciar action or many: one "
+                "was easier to monitor and rearrange, and magi of the work were "
+                "vetted by Intellego.",
+            ),
+            titled(
+                "Vis in the laboratory",
+                "Riches (p. 119), besides the devices and the laboratory: 6 "
+                "pawns of Rego, 18 of Mentem and 8 of Vim vis.",
+            ),
+            titled(
+                "The laboratory's Lab Texts",
+                "Lab Texts for every enchantment on the laboratory and every "
+                "device in it, all sentinels and justiciars of this chapter, "
+                "and the Ring and Circle wards active here, including Circular "
+                "Ward Against Magical Spirits.",
+            ),
+            titled(
+                "Hermanus' casting tablet",
+                "A casting tablet (Covenants pp. 89-90) of Cargo of Angel's "
+                "Wings, printed R: Arc, which Hermanus used through a spell "
+                "like Opening the Intangible Tunnel to fetch vis and "
+                "connections from his mannequin.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "No aura is printed for the structure. Seven rooms, each a "
+                    "record here: hallway, scriptorium and store room on the "
+                    "outer ring; receiving room, spare laboratory, sanctum "
+                    "(room 6) and laboratory (room 7).",
+                    "A Modification (Penetration, frequency, triggers, effect "
+                    "use) does not count toward whether an effect warps its "
+                    "target, so Alarm of Dissemblance, say, does not (p. 112).",
+                    "Balance (p. 117; errata p. 78). Challenging, not "
+                    "impossible, avoiding the trivial and the merely annoying. "
+                    "For impatient or weaker groups, less active spirits or "
+                    "clues in Amarantha's notes; for strong ones, more than two "
+                    "elemental spirits, or greater Might. Players should see "
+                    "that disturbing the rings in the outer rooms may flood at "
+                    "least those rooms.",
+                ),
+            ),
+        ],
     )
     _mannequin(b, lab)
     _room(
@@ -706,32 +820,49 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "candles, and a small table bearing a locked chest with a little marble "
         "statue of a man on it. Four doors. Steel bands run along the outer wall, "
         "and a few inches of sea water cling where it meets floor and ceiling.",
-        paragraphs(
-            "The doors: north, just under two paces high, to the sea floor, "
-            "where water stands like a wall; a like door on the inside wall at "
-            "the south end; and at each end a floor-to-ceiling door, flush with "
-            "the outer wall so a caster can trace the rings. All but the outer "
-            "are locked.",
-            "Bands in the hallway, scriptorium and store room hold the outer "
-            "wards: Ward Against Water (ReAq 20, cast forcelessly, Houses of "
-            "Hermes: True Lineages p. 72, so Penetration 0, and magi and "
-            "creatures with Magic Resistance carry their liquids through; "
-            "others wet or sweating are slowed as water is stripped off them); "
-            "Circular Ward Against Demons, level 40, Penetration 37; Circular "
-            "Ward Against Faerie Spirits, level 40, Penetration 35, so Might 34 "
-            "or lower. Rings can be reached over the small doors.",
-            "Locksmith's Will (sentinel), on the north door: a lead horseshoe, "
-            "opened with 6 pawns, filled. Lock Improperly Opened, InTe 29, "
-            "constant, R: Touch, D: Sun, T: Room: fires the Herald when a lock "
-            "in the room, walls and doors included, is opened without its key, "
-            "whether picked, by magic or smashed.",
-            "Statue of Conjured Assistants: hand-sized marble, like the statues "
-            "in the sanctum. Summon the Stony Servants, ReTe 52, Penetration 8, "
-            "6/day, R: Arc, D: Mom, T: Group, Arcane Connections built in: "
-            "brings Ferox and Fidelius to the statue. Any improper opening "
-            "here does so.",
-            "In the locked chest: a silver ring holding 2 pawns of Vim vis.",
-        ),
+        [
+            titled(
+                "The hallway doors",
+                "The hallway's doors: north, just under two paces high, to the "
+                "sea floor, where water stands like a wall; a like door on the "
+                "inside wall at the south end; and at each end a "
+                "floor-to-ceiling door, flush with the outer wall so a caster "
+                "can trace the rings. All but the outer are locked.",
+            ),
+            titled(
+                "The outer wards",
+                "Bands in the hallway, scriptorium and store room hold the outer "
+                "wards: Ward Against Water (ReAq 20, cast forcelessly, Houses of "
+                "Hermes: True Lineages p. 72, so Penetration 0, and magi and "
+                "creatures with Magic Resistance carry their liquids through; "
+                "others wet or sweating are slowed as water is stripped off them); "
+                "Circular Ward Against Demons, level 40, Penetration 37; Circular "
+                "Ward Against Faerie Spirits, level 40, Penetration 35, so Might 34 "
+                "or lower. Rings can be reached over the small doors.",
+            ),
+            titled(
+                "Locksmith's Will",
+                "Locksmith's Will (sentinel), on the hallway's north door: a "
+                "lead horseshoe, opened with 6 pawns, filled. Lock Improperly "
+                "Opened, InTe 29, constant, R: Touch, D: Sun, T: Room: fires "
+                "the Herald when a lock in the room, walls and doors included, "
+                "is opened without its key, whether picked, by magic or "
+                "smashed.",
+            ),
+            titled(
+                "Statue of Conjured Assistants",
+                "Statue of Conjured Assistants: hand-sized marble, like the "
+                "statues in the sanctum. Summon the Stony Servants, ReTe 52, "
+                "Penetration 8, 6/day, R: Arc, D: Mom, T: Group, Arcane "
+                "Connections built in: brings Ferox and Fidelius to the statue. "
+                "Any improper opening in the hallway does so.",
+            ),
+            titled(
+                "In the locked chest",
+                "In the hallway's locked chest: a silver ring holding 2 pawns "
+                "of Vim vis.",
+            ),
+        ],
     )
     _room(
         b,
@@ -741,21 +872,31 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "illuminators along the inner wall, with nothing in hand on them. A "
         "tall door at each end; the steel bands and clinging water run on "
         "through.",
-        paragraphs(
-            "The work in hand was taken away that evening at Hermanus' "
-            "request, before he raised his defenses.",
-            "Handle of Ill Will (sentinel), on the door to the store room: "
-            "opened with 10 pawns, 9 filled. Test of Motive, InMe 60, "
-            "Penetration +60, unlimited, R: Touch, D: Mom, T: Ind: whoever "
-            "touches the handle, asks whether they wish House Tremere ill "
-            "fortune, and fires the Herald if so.",
-            "Net of Patient Thieves (justiciar), tied under a desk: a tiny "
-            "bronze net, charged, 11 charges, usually hidden so victims cannot "
-            "reach it. Elevation of the Interloper, ReCo 65, Penetration +60, "
-            "R: Touch, D: Sun, T: Room: all people in the room float a few "
-            "inches clear of floor and walls until next dawn or dusk, stuck "
-            "unless they can move without touching anything.",
-        ),
+        [
+            titled(
+                "The missing work",
+                "The scriptorium's work in hand was taken away that evening at "
+                "Hermanus' request, before he raised his defenses.",
+            ),
+            titled(
+                "Handle of Ill Will",
+                "Handle of Ill Will (sentinel), on the scriptorium's door to "
+                "the store room: opened with 10 pawns, 9 filled. Test of "
+                "Motive, InMe 60, Penetration +60, unlimited, R: Touch, D: Mom, "
+                "T: Ind: whoever touches the handle, asks whether they wish "
+                "House Tremere ill fortune, and fires the Herald if so.",
+            ),
+            titled(
+                "Net of Patient Thieves",
+                "Net of Patient Thieves (justiciar), tied under a desk in the "
+                "scriptorium: a tiny bronze net, charged, 11 charges, usually "
+                "hidden so victims cannot reach it. Elevation of the "
+                "Interloper, ReCo 65, Penetration +60, R: Touch, D: Sun, T: "
+                "Room: all people in the room float a few inches clear of floor "
+                "and walls until next dawn or dusk, stuck unless they can move "
+                "without touching anything.",
+            ),
+        ],
     )
     _room(
         b,
@@ -765,25 +906,32 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "the inner wall are packed with laboratory equipment, and among it "
         "stand two wooden mannequins in chain hauberks with polearms and "
         "crossbows. The steel bands and clinging water continue here.",
-        paragraphs(
-            "Censer of the Unseen (sentinel), rock crystal, on the shelves: "
-            "opened with 8 pawns, printed with one pawn free. Room of Pleasant "
-            "Incense, CrAu 9, constant, R: Touch, D: Sun, T: Ind: smoke fills "
-            "the room but no further, and those with Magic Resistance cannot "
-            "smell it. Ascertaining the Absence of Images, InIm 34, constant, "
-            "R: Touch, D: Sun, T: Room: fires the Herald if any space holds no "
-            "image of smoke or object, as an invisible being does, or if all "
-            "the smoke is cleared.",
-            "Pebble of the Stone Prison (justiciar), a polished river pebble "
-            "on the shelves, lesser device. Box of Stone, CrTe 16, 2/day, R: "
-            "Touch, D: Sun, T: Ind: a foot of stone lines floor, walls and "
-            "ceiling, between the room and its contents, pushing things a foot "
-            "inward; things with Magic Resistance are not moved but left in "
-            "holes in the stone. Things fixed to the room stay outside it. "
-            "Self-supporting, but its great weight needs footing: a foolish "
-            "choice for an upper floor, though the room now rests on the "
-            "seabed.",
-        ),
+        [
+            titled(
+                "Censer of the Unseen",
+                "Censer of the Unseen (sentinel), rock crystal, on the store "
+                "room's shelves: "
+                "opened with 8 pawns, printed with one pawn free. Room of Pleasant "
+                "Incense, CrAu 9, constant, R: Touch, D: Sun, T: Ind: smoke fills "
+                "the room but no further, and those with Magic Resistance cannot "
+                "smell it. Ascertaining the Absence of Images, InIm 34, constant, "
+                "R: Touch, D: Sun, T: Room: fires the Herald if any space holds no "
+                "image of smoke or object, as an invisible being does, or if all "
+                "the smoke is cleared.",
+            ),
+            titled(
+                "Pebble of the Stone Prison",
+                "Pebble of the Stone Prison (justiciar), a polished river pebble "
+                "on the store room's shelves, lesser device. Box of Stone, CrTe 16, 2/day, R: "
+                "Touch, D: Sun, T: Ind: a foot of stone lines floor, walls and "
+                "ceiling, between the room and its contents, pushing things a foot "
+                "inward; things with Magic Resistance are not moved but left in "
+                "holes in the stone. Things fixed to the room stay outside it. "
+                "Self-supporting, but its great weight needs footing: a foolish "
+                "choice for an upper floor, though the room now rests on the "
+                "seabed.",
+            ),
+        ],
     )
     _room(
         b,
@@ -795,24 +943,38 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "tipped with silver eyes lean on the inner wall. The north door bears "
         "the sanctum symbol; a door-sized patch of different stonework marks "
         "the old way to the laboratory.",
-        paragraphs(
-            "Ferox and Fidelius have likely taken the staves before the party "
-            "comes. If either is here it may lie on purpose to spring the room.",
-            "Ear of Truth (sentinel), the copper bowl: invested, 10 pawns, "
-            "printed filled. Alarm of Dissemblance, InMe 55, Penetration 34, "
-            "unlimited, R: Touch, D: Diam, T: Room: fires the Herald on any "
-            "lie told here. The limit of the Infernal keeps it from working on "
-            "demons.",
-            "Box of Vines (justiciar), a carved box the size of a loaf, lesser "
-            "device. Chamber of Thorns, CrHe 16, 2/day, R: Touch, D: Sun, T: "
-            "Group: in a flash, thorny bushes fill the room, around all within. "
-            "Soak +15; only edged weapons cut them, a Heavy wound a pace. "
-            "Forcing through: Strength stress roll, Ease Factor 9 a pace, "
-            "+15 damage either way, 5 more on a botch.",
-            STAFF,
-            "These two staves hold the right ears of the spare laboratory's "
-            "mannequins.",
-        ),
+        [
+            titled(
+                "Ear of Truth",
+                "Ear of Truth (sentinel), the copper bowl in the receiving "
+                "room: invested, 10 pawns, printed filled. Alarm of "
+                "Dissemblance, InMe 55, Penetration 34, unlimited, R: Touch, D: "
+                "Diam, T: Room: fires the Herald on any lie told here. The "
+                "limit of the Infernal keeps it from working on demons.",
+            ),
+            titled(
+                "Box of Vines",
+                "Box of Vines (justiciar), a carved box the size of a loaf in "
+                "the receiving room, lesser device. Chamber of Thorns, CrHe 16, "
+                "2/day, R: Touch, D: Sun, T: Group: in a flash, thorny bushes "
+                "fill the room, around all within. Soak +15; only edged weapons "
+                "cut them, a Heavy wound a pace. Forcing through: Strength "
+                "stress roll, Ease Factor 9 a pace, +15 damage either way, 5 "
+                "more on a botch.",
+            ),
+            *STAFF,
+            titled(
+                "What the staves hold",
+                "The receiving room's two staves hold the right ears of the "
+                "spare laboratory's mannequins.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Ferox and Fidelius have likely taken the staves before the "
+                "party comes. If either is here it may lie on purpose to spring "
+                "the room.",
+            ),
+        ],
     )
     _room(
         b,
@@ -823,19 +985,30 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "limestone and a silver candlestick. Two wooden mannequins in full "
         "chain stand ready with polearms and crossbows, each missing its right "
         "ear.",
-        paragraphs(
-            "Hourglass of Airy Trespass (sentinel): opened with 11 pawns. Sense "
-            "the Airy Trespass, InVi 50 (errata p. 78; printed 75), Penetration "
-            "+32, constant, R: Touch, D: Sun, T: Room: fires the Herald every "
-            "round a being of Magic Might 31 or lower is present. The book says "
-            "the two effects fill the 11 pawns; that was before the correction.",
-            "Prison of Audacious Spirits (justiciar), the candlestick, so named "
-            "on p. 113 though once called Prison of Insubstantial Spirits: "
-            "charged, 7 charges. Insubstantial Prison, ReVi 71, Penetration 30, "
-            "R: Touch, D: Sun, T: Room: creatures of Magic Might 30 or less "
-            "cannot cross the room's bounds, nor can their powers, until it "
-            "ends or is dispelled. Not limited to spirits.",
-        ),
+        [
+            titled(
+                "Hourglass of Airy Trespass",
+                "Hourglass of Airy Trespass (sentinel), in the spare "
+                "laboratory: opened with 11 pawns. Sense the Airy Trespass, "
+                "InVi 50 (errata p. 78; printed 75), Penetration +32, constant, "
+                "R: Touch, D: Sun, T: Room: fires the Herald every round a "
+                "being of Magic Might 31 or lower is present.",
+            ),
+            titled(
+                "Prison of Audacious Spirits",
+                "Prison of Audacious Spirits (justiciar), the spare laboratory's candlestick, so named "
+                "on p. 113 though once called Prison of Insubstantial Spirits: "
+                "charged, 7 charges. Insubstantial Prison, ReVi 71, Penetration 30, "
+                "R: Touch, D: Sun, T: Room: creatures of Magic Might 30 or less "
+                "cannot cross the room's bounds, nor can their powers, until it "
+                "ends or is dispelled. Not limited to spirits.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book says the Hourglass's two effects fill the 11 pawns; "
+                "that was before the correction.",
+            ),
+        ],
     )
     sanctum = _room(
         b,
@@ -845,43 +1018,66 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "the handle sat. Cleared, the room is richly furnished: fine tapestries, "
         "a bed, a dresser, a desk, and two foot-and-a-half granite statues of "
         "men. Two wooden mannequins stand by.",
-        paragraphs(
-            "Charm of the Herbam Padlock, a small silver ring on the floor by "
-            "the laboratory door, where Hermanus left it: opened with 6 pawns, "
-            "filled, made for the Coeris vaults, kept active there. Chamber of "
-            "Heartwood, CrHe 29, constant, R: Touch, D: Sun, T: Ind: one block "
-            "of wood fills the room, snug round its contents, on touching the "
-            "door with the charm. Insubstantial Wooden Foundation, ReHe 24, "
-            "constant, R: Touch, D: Sun, T: Ind: holds the block and keeps its "
-            "weight off the floor.",
-            "Two sentinels and one justiciar. Drawing a metal weapon without "
-            "the House Tremere symbol, or touching the carpet while believing "
-            "the House would disapprove of one's plans, fires the turtle.",
-            "Ward against Foreign Steel (sentinel), a marble apple behind a "
-            "chest by the bed: 8 pawns, filled. React to Naked Blades, InTe(Im) "
-            "45, Penetration 42, constant, R: Touch, D: Sun, T: Room. Coeris "
-            "grogs carry marked weapons, but visiting Tremere have had "
-            "accidents.",
-            "Carpet of Loyalty (sentinel), under the desk: an embroidered square "
-            "rug about 2 paces across, showing Tremere and Guernicus, silver "
-            "wires in the border; 9 pawns, filled. Interrogation of Interlopers, "
-            "InMe 60, Penetration +60, unlimited, R: Touch, D: Mom, T: Ind: "
-            "asks whoever touches it if the House's members would disapprove "
-            "of their plans. Those with no idea what the Tremere think do not "
-            "fire it.",
-            "Turtle of Welcome Reflection (justiciar), a jet figurine in the "
-            "northwest corner: charged, 11 charges. Armoring the Intruder, "
-            "MuCo(An) 60, Penetration +50, R: Touch, D: Sun, T: Room: humans "
-            "and others subject to Corpus spells become turtles until next "
-            "sunrise or sunset.",
-            "Oracle-Countering Tapestry, on the wall right of the door from the "
-            "receiving room, lesser device, one of several copies. Masking the "
-            "Magical Chamber, PeVi 45, constant, R: Touch, D: Sun, T: Room: "
-            "Hermetic Intellego Vim cannot detect magic here below level 53.",
-            "This third pair of mannequins is out of the spirits' reach until "
-            "the block is gone, and even then they must get Arcane Connections "
-            "to the staves.",
-        ),
+        [
+            titled(
+                "Charm of the Herbam Padlock",
+                "Charm of the Herbam Padlock, a small silver ring on the floor by "
+                "the laboratory door, where Hermanus left it: opened with 6 pawns, "
+                "filled, made for the Coeris vaults, kept active there. Chamber of "
+                "Heartwood, CrHe 29, constant, R: Touch, D: Sun, T: Ind: one block "
+                "of wood fills the room, snug round its contents, on touching the "
+                "door with the charm. Insubstantial Wooden Foundation, ReHe 24, "
+                "constant, R: Touch, D: Sun, T: Ind: holds the block and keeps its "
+                "weight off the floor.",
+            ),
+            titled(
+                "What fires the turtle",
+                "The sanctum has two sentinels and one justiciar. Drawing a "
+                "metal weapon without the House Tremere symbol, or touching the "
+                "carpet while believing the House would disapprove of one's "
+                "plans, fires the turtle.",
+            ),
+            titled(
+                "Ward against Foreign Steel",
+                "Ward against Foreign Steel (sentinel), a marble apple behind a "
+                "chest by the sanctum's bed: 8 pawns, filled. React to Naked "
+                "Blades, InTe(Im) 45, Penetration 42, constant, R: Touch, D: "
+                "Sun, T: Room. Coeris grogs carry marked weapons, but visiting "
+                "Tremere have had accidents.",
+            ),
+            titled(
+                "Carpet of Loyalty",
+                "Carpet of Loyalty (sentinel), under the sanctum's desk: an embroidered square "
+                "rug about 2 paces across, showing Tremere and Guernicus, silver "
+                "wires in the border; 9 pawns, filled. Interrogation of Interlopers, "
+                "InMe 60, Penetration +60, unlimited, R: Touch, D: Mom, T: Ind: "
+                "asks whoever touches it if the House's members would disapprove "
+                "of their plans. Those with no idea what the Tremere think do not "
+                "fire it.",
+            ),
+            titled(
+                "Turtle of Welcome Reflection",
+                "Turtle of Welcome Reflection (justiciar), a jet figurine in the "
+                "sanctum's northwest corner: charged, 11 charges. Armoring the Intruder, "
+                "MuCo(An) 60, Penetration +50, R: Touch, D: Sun, T: Room: humans "
+                "and others subject to Corpus spells become turtles until next "
+                "sunrise or sunset.",
+            ),
+            titled(
+                "Oracle-Countering Tapestry",
+                "Oracle-Countering Tapestry, on the sanctum wall right of the "
+                "door from the receiving room, lesser device, one of several "
+                "copies. Masking the Magical Chamber, PeVi 45, constant, R: "
+                "Touch, D: Sun, T: Room: Hermetic Intellego Vim cannot detect "
+                "magic here below level 53.",
+            ),
+            titled(
+                "The sanctum's mannequins",
+                "The sanctum's mannequins, the third pair, are out of the "
+                "spirits' reach until the block is gone, and even then they "
+                "must get Arcane Connections to the staves.",
+            ),
+        ],
     )
     _spirits(b, sanctum)
     _room(
@@ -896,76 +1092,108 @@ def _laboratory(b: Builder, valley: Neighbour) -> None:
         "small wooden doll. The plaster ceiling shows the night sky reversed, "
         "black stars on white, and brass wires carry hooked spheres marked for "
         "the planets.",
-        paragraphs(
-            "Rings: Circular Ward Against Demons, level 40, Penetration 35; Ring "
-            "of Warding Against Spirits, level 30, Penetration 40; Circular "
-            "Ward Against Magical Spirits, level 40, Penetration 36; Circular "
-            "Ward Against Faerie Spirits, level 40, Penetration 37; Ward Against "
-            "Faeries of the Water, level 25, Penetration 30; Ward Against the "
-            "Beasts of Legend, level 30, Penetration 30; Circle of Beast "
-            "Warding; Ward Against Water.",
-            "As a laboratory (Covenants chapter nine): Size +1, Refinement +6, "
-            "and when working General Quality +3, Upkeep +4, Aesthetics +5, "
-            "with +6 item creation, +1 texts, +1 Intellego, +1 Imaginem. "
-            "Virtues: Greater Feature (workbench), Lesser Feature (ceiling), "
-            "Greater Expansion, Highly Organized, Superior Lighting (the Orb). "
-            "A Laboratory record needs a covenant, so it is kept here in words.",
-            "Staff of the Wooden Soldiers: as in the Receiving Room; this one "
-            "holds a connection to the remains of the sea-floor mannequin. The "
-            "doll is a fixed Arcane Connection to that mannequin.",
-            "Tapestry of Confident Possession (sentinel), silver-ornamented, "
-            "covering about a third of the walls, so that entering or reaching "
-            "many cabinets and books means moving it: invested, 16 pawns, 10 "
-            "filled. Assurance of Ownership, InMe 65, Penetration 50, unlimited, "
-            "R: Touch, D: Mom, T: Room: on moving it, fires the Herald if any "
-            "mind present does not believe the laboratory is its own.",
-            "Cross of the Preempted Conflict (justiciar), a small metal cross: "
-            "charged, 13 charges. Beneficent Gift of Loyalty, ReMe 65, "
-            "Penetration +40, R: Touch, D: Sun, T: Room: those present must do "
-            "all they can to guard the laboratory, its contents and above all "
-            "its rightful owners. Who those are is now arguable; Ferox and "
-            "Fidelius will say House Tremere, and the characters may differ. "
-            "None under it will let anything be taken from the complex. The "
-            "vexillation hoped thieves would give themselves up.",
-            "Butterfly's Gaze, a six-inch silver butterfly with ivory inlay on "
-            "the wall: invested, 15 pawns. Gaze of Maker's Mark, InVi 49, "
-            "constant, R: Touch, D: Sun, T: Room: seeks magic without Hermanus' "
-            "sigil, the embattled lines. Counter Intruding Magics, PeVi 63, "
-            "unlimited, R: Special, D: Mom, T: Ind: dispels it if its level "
-            "doubled is met by stress die + 55, once a round, target chosen at "
-            "random, when a targeted spell enters or is cast. A Momentary spell "
-            "may take effect first.",
-            "Wolf's Gaze, a six-inch silver wolf's head on the wall: invested, "
-            "6 pawns, 5 filled. Awareness of Fire, InIg 14, constant, R: Touch, "
-            "D: Sun, T: Room: triggers Protection of Cool and Dark, PeIg 28, "
-            "unlimited, R: Touch, D: Mom, T: Room, putting out fires of +5 "
-            "damage per exposure or less (ArM5 p. 181).",
-            "Orb of Obedient Sunlight, a gold-colored wooden sphere on the "
-            "wires, lesser device. Obedient Sunlight, CrIg 20, unlimited, item "
-            "maintains concentration, R: Per, D: Conc, T: Ind: bright light on "
-            "command, against fire and open windows.",
-            "Helm of Unravelling, a steel helmet, 12 pawns, for grogs to break "
-            "enemy magic; Coeris's trusted grogs carry but rarely wear them, "
-            "for Sight of Forming Spells warps. Sight of Forming Spells, InVi "
-            "60, Penetration +32, constant, R: Touch, D: Sun, T: Vision: magic "
-            "shows as a violet glow, strongest in casting, not old residues. "
-            "Shout of Unravelling, PeVi 60, Penetration +32, 12/day, R: Voice, "
-            "D: Mom, T: Ind: shouted while staring at a power or effect; "
-            "dispels if its level doubled is met by stress die + 50, and can "
-            "counter a spell cast later in the round. Neither works past Magic "
-            "Resistance it does not penetrate.",
-            "On the room itself. Opened by Hermanus in its walls with 20 pawns, "
-            "15 filled. Foreboding of Stones, InTe 19, constant, R: Pers, D: "
-            "Sun, T: Hearing: senses a solid thing about to strike hard enough "
-            "to do damage, and triggers Skin of the Sapphire Tortoise, MuTe(He) "
-            "35, unlimited, R: Pers, D: Diam, T: Room: walls, floor or ceiling "
-            "as hard as gemstone and tough as iron. Protection of the Mason's "
-            "Vision, ReTe(He) 28, unlimited, R: Pers, D: Mom, T: Special: "
-            "puts back any part of the structure removed, up to 5 paces out; "
-            "rubble cannot reassemble. Invisible Eye Uncovered, InVi(Im) 45, "
-            "constant, R: Pers, D: Sun, T: Room: shows any magical spying of "
-            "up to level 52 as a flickering image in the room.",
-        ),
+        [
+            titled(
+                "The eight rings",
+                "The laboratory's rings: Circular Ward Against Demons, level 40, Penetration 35; Ring "
+                "of Warding Against Spirits, level 30, Penetration 40; Circular "
+                "Ward Against Magical Spirits, level 40, Penetration 36; Circular "
+                "Ward Against Faerie Spirits, level 40, Penetration 37; Ward Against "
+                "Faeries of the Water, level 25, Penetration 30; Ward Against the "
+                "Beasts of Legend, level 30, Penetration 30; Circle of Beast "
+                "Warding; Ward Against Water.",
+            ),
+            titled(
+                "The laboratory's staff and doll",
+                "Staff of the Wooden Soldiers: as in the Receiving Room; the "
+                "one in Hermanus' laboratory holds a connection to the remains "
+                "of the sea-floor mannequin. The doll is a fixed Arcane "
+                "Connection to that mannequin.",
+            ),
+            titled(
+                "Tapestry of Confident Possession",
+                "Tapestry of Confident Possession (sentinel), silver-ornamented, "
+                "covering about a third of the walls, so that entering or reaching "
+                "many cabinets and books means moving it: invested, 16 pawns, 10 "
+                "filled. Assurance of Ownership, InMe 65, Penetration 50, unlimited, "
+                "R: Touch, D: Mom, T: Room: on moving it, fires the Herald if any "
+                "mind present does not believe the laboratory is its own.",
+            ),
+            titled(
+                "Cross of the Preempted Conflict",
+                "Cross of the Preempted Conflict (justiciar), a small metal cross: "
+                "charged, 13 charges. Beneficent Gift of Loyalty, ReMe 65, "
+                "Penetration +40, R: Touch, D: Sun, T: Room: those present must do "
+                "all they can to guard the laboratory, its contents and above all "
+                "its rightful owners. Who those are is now arguable; Ferox and "
+                "Fidelius will say House Tremere, and the characters may differ. "
+                "None under it will let anything be taken from the complex. The "
+                "vexillation hoped thieves would give themselves up.",
+            ),
+            titled(
+                "Butterfly's Gaze",
+                "Butterfly's Gaze, a six-inch silver butterfly with ivory inlay on "
+                "the wall: invested, 15 pawns. Gaze of Maker's Mark, InVi 49, "
+                "constant, R: Touch, D: Sun, T: Room: seeks magic without Hermanus' "
+                "sigil, the embattled lines. Counter Intruding Magics, PeVi 63, "
+                "unlimited, R: Special, D: Mom, T: Ind: dispels it if its level "
+                "doubled is met by stress die + 55, once a round, target chosen at "
+                "random, when a targeted spell enters or is cast. A Momentary spell "
+                "may take effect first.",
+            ),
+            titled(
+                "Wolf's Gaze",
+                "Wolf's Gaze, a six-inch silver wolf's head on the wall: invested, "
+                "6 pawns, 5 filled. Awareness of Fire, InIg 14, constant, R: Touch, "
+                "D: Sun, T: Room: triggers Protection of Cool and Dark, PeIg 28, "
+                "unlimited, R: Touch, D: Mom, T: Room, putting out fires of +5 "
+                "damage per exposure or less (ArM5 p. 181).",
+            ),
+            titled(
+                "Orb of Obedient Sunlight",
+                "Orb of Obedient Sunlight, a gold-colored wooden sphere on the "
+                "wires, lesser device. Obedient Sunlight, CrIg 20, unlimited, item "
+                "maintains concentration, R: Per, D: Conc, T: Ind: bright light on "
+                "command, against fire and open windows.",
+            ),
+            titled(
+                "Helm of Unravelling",
+                "Helm of Unravelling, a steel helmet, 12 pawns, for grogs to break "
+                "enemy magic; Coeris's trusted grogs carry but rarely wear them, "
+                "for Sight of Forming Spells warps. Sight of Forming Spells, InVi "
+                "60, Penetration +32, constant, R: Touch, D: Sun, T: Vision: magic "
+                "shows as a violet glow, strongest in casting, not old residues. "
+                "Shout of Unravelling, PeVi 60, Penetration +32, 12/day, R: Voice, "
+                "D: Mom, T: Ind: shouted while staring at a power or effect; "
+                "dispels if its level doubled is met by stress die + 50, and can "
+                "counter a spell cast later in the round. Neither works past Magic "
+                "Resistance it does not penetrate.",
+            ),
+            titled(
+                "Enchantments on the laboratory",
+                "Opened by Hermanus in the laboratory's walls with 20 pawns, "
+                "15 filled. Foreboding of Stones, InTe 19, constant, R: Pers, D: "
+                "Sun, T: Hearing: senses a solid thing about to strike hard enough "
+                "to do damage, and triggers Skin of the Sapphire Tortoise, MuTe(He) "
+                "35, unlimited, R: Pers, D: Diam, T: Room: walls, floor or ceiling "
+                "as hard as gemstone and tough as iron. Protection of the Mason's "
+                "Vision, ReTe(He) 28, unlimited, R: Pers, D: Mom, T: Special: "
+                "puts back any part of the structure removed, up to 5 paces out; "
+                "rubble cannot reassemble. Invisible Eye Uncovered, InVi(Im) 45, "
+                "constant, R: Pers, D: Sun, T: Room: shows any magical spying of "
+                "up to level 52 as a flickering image in the room.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "As a laboratory (Covenants chapter nine): Size +1, Refinement "
+                "+6, and when working General Quality +3, Upkeep +4, Aesthetics "
+                "+5, with +6 item creation, +1 texts, +1 Intellego, +1 "
+                "Imaginem. Virtues: Greater Feature (workbench), Lesser Feature "
+                "(ceiling), Greater Expansion, Highly Organized, Superior "
+                "Lighting (the Orb). A Laboratory record needs a covenant, so it "
+                "is kept here in words.",
+            ),
+        ],
     )
 
 
@@ -983,26 +1211,38 @@ def _remains(b: Builder) -> None:
             "what might have been a creature of might's lair in Hermanus' day. "
             "It can be worked into another adventure of the saga.",
         ),
-        secrets=paragraphs(
-            "The satchel (p. 100): a lesser enchanted device of Amarantha's "
-            "own. Enchantment of Incorruptible Vellum, CrAn(He) 24, constant, "
-            "R: Touch, D: Sun, T: Group: guards it and its animal and plant "
-            "contents from natural decay. Long exposure has warped satchel and "
-            "contents: the food cannot be digested and sickens anyone who "
-            "tries it, and bare skin that touches leather or notes takes a "
-            "mild rash.",
-            "The notes take about a day to read. They say who she was and what "
-            "she was about; sum up Hermanus' life and habits; tell of the "
-            "mannequin, a fixed Arcane Connection, sent about the world and "
-            "run by spells through Opening the Intangible Tunnel; say the "
-            "laboratory surely held much vis, and that the House badly wants "
-            "the texts and devices for what they reveal of Coeris's defenses; "
-            "and give a part-checked list of sites.",
-            "The list is long, but a century of Hermetic work has ruled out "
-            "most of it. Checked against House Mercere's lists of covenants "
-            "and claimed vis sources it falls to a short list, or to the true "
-            "site alone, as the storyguide wishes.",
-        ),
+        secrets=[
+            titled(
+                "Amarantha's satchel",
+                "The satchel (p. 100): a lesser enchanted device of "
+                "Amarantha's own. Enchantment of Incorruptible Vellum, CrAn(He) "
+                "24, constant, R: Touch, D: Sun, T: Group: guards it and its "
+                "animal and plant contents from natural decay.",
+            ),
+            titled(
+                "The warped satchel",
+                "Long exposure has warped Amarantha's satchel and contents: the "
+                "food cannot be digested and sickens anyone who tries it, and "
+                "bare skin that touches leather or notes takes a mild rash.",
+            ),
+            titled(
+                "What Amarantha's notes tell",
+                "Amarantha's notes take about a day to read. They say who she was and what "
+                "she was about; sum up Hermanus' life and habits; tell of the "
+                "mannequin, a fixed Arcane Connection, sent about the world and "
+                "run by spells through Opening the Intangible Tunnel; say the "
+                "laboratory surely held much vis, and that the House badly wants "
+                "the texts and devices for what they reveal of Coeris's defenses; "
+                "and give a part-checked list of sites.",
+            ),
+            titled(
+                "Amarantha's list of sites",
+                "Amarantha's list is long, but a century of Hermetic work has "
+                "ruled out most of it. Checked against House Mercere's lists of "
+                "covenants and claimed vis sources it falls to a short list, or "
+                "to the true site alone, as the storyguide wishes.",
+            ),
+        ],
     )
 
 
@@ -1115,19 +1355,29 @@ def _stories(b: Builder, valley: Neighbour) -> None:
             "perhaps robes. The House would like the finder to bring it to "
             "Coeris and tell how it was found, for a reward that barely pays "
             "the trip.",
-            secrets=paragraphs(
-                "The item holds a Waiting Spell, perhaps hidden by Masking the "
-                "Odor of Magic, that wakes inside Coeris and summons a strong "
-                "being bent on all the harm it can do. It appears among the "
-                "characters, who may not be taken for bystanders. They, it and "
-                "the defenders chase one another through the sentinels and "
-                "justiciars.",
-                "Outside the vaults these devices are built to delay, hold and "
-                "above all raise the alarm, and several in Coeris locate any "
-                "that fire. A raid on the vaults themselves is no fit story: "
-                "the defenses, the House's resolve and the Order all stand "
-                "against it (p. 98).",
-            ),
+            secrets=[
+                titled(
+                    "The Waiting Spell",
+                    "The Tremere item holds a Waiting Spell, perhaps hidden by "
+                    "Masking the Odor of Magic, that wakes inside Coeris and "
+                    "summons a strong being bent on all the harm it can do. It "
+                    "appears among the characters, who may not be taken for "
+                    "bystanders. They, it and the defenders chase one another "
+                    "through the sentinels and justiciars.",
+                ),
+                titled(
+                    "Coeris's sentinels and justiciars",
+                    "Outside the vaults Coeris's sentinels and justiciars are "
+                    "built to delay, hold and above all raise the alarm, and "
+                    "several in Coeris locate any that fire.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "A raid on the vaults themselves is no fit story: the "
+                    "defenses, the House's resolve and the Order all stand "
+                    "against it (p. 98).",
+                ),
+            ],
         )
     )
     dormant(
@@ -1153,9 +1403,14 @@ def _stories(b: Builder, valley: Neighbour) -> None:
                 "suits the saga). Defending her people she fell into Twilight. "
                 "Her familiar escapes to the covenant to beg for rescue.",
             ),
-            secrets="The rescuers face both the inhabitants and the maze of "
-            "sentinels and justiciars the trapped party has set up to protect "
-            "itself.",
+            secrets=[
+                titled(
+                    "The trapped party's defenses",
+                    "The rescuers face both the regio's inhabitants and the maze "
+                    "of sentinels and justiciars the trapped party has set up to "
+                    "protect itself.",
+                ),
+            ],
         )
     )
 

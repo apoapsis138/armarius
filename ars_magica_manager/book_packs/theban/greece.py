@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -186,9 +186,14 @@ def _epiros(theban: Theban) -> None:
             "merchants and townsfolk crossing all day, Arta's market "
             "has turned sordid and dishonest.",
         ),
-        secrets="The raven could perhaps be driven off, but the bridge might "
-        "fall with it, and the ruler of Epiros would want to know who "
-        "brought it down.",
+        secrets=[
+            titled(
+                "Driving off the raven",
+                "The raven of the Bridge of Arta could perhaps be driven off, "
+                "but the bridge might fall with it, and the ruler of Epiros "
+                "would want to know who brought it down.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -494,8 +499,13 @@ def _macedonia(theban: Theban) -> None:
             "are Erebos's enemies, clashing with it over ground and "
             "magical resources.",
         ),
-        secrets="Cyra, Erebos's patron, curses whoever comes into the valley "
-        "meaning the covenant harm.",
+        secrets=[
+            titled(
+                "Cyra's curse",
+                "Cyra, Erebos's patron, curses whoever comes into the valley "
+                "meaning the covenant harm.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -726,12 +736,18 @@ def _attica(theban: Theban) -> None:
             "for those of royal blood, however thin (see the Bestiary "
             "for a sibyl).",
         ),
-        secrets="The Absent Oracle: visitors may find only a young girl who "
-        "says she is Pythia's apprentice, that her mistress is away, "
-        "and repeats a last prophecy that seems to foretell both the "
-        "disappearance and its rescuers. Whether Pythia has been "
-        "taken or is being eccentric, the riddle must be solved to "
-        "bring her back.",
+        secrets=[
+            titled(
+                "Pythia's absence",
+                "Visitors to Delphi may find only a young girl who says she "
+                "is Pythia's apprentice, that her mistress is away, and "
+                "repeats a last prophecy that seems to foretell both the "
+                "disappearance and its rescuers. Whether Pythia has been "
+                "taken or is being eccentric, the riddle must be solved to "
+                "bring her back.",
+            ),
+            titled("Storyguide Notes", "This is the story The Absent Oracle."),
+        ],
         **KNOWN_ORDER,
     )
     _add(
@@ -767,10 +783,16 @@ def _attica(theban: Theban) -> None:
             "tears him apart; if he accepts she drags him under and "
             "drowns him.",
         ),
-        secrets="Sometimes the man is instead carried to her palace beneath "
-        "the waves and given that life, and she teaches him many "
-        "secrets she has gathered: a perilous way to study, with "
-        "great rewards. Many lamiae can initiate Mystery Virtues.",
+        secrets=[
+            titled(
+                "Beneath the waves",
+                "Sometimes the young man is instead carried to the lamia's "
+                "palace beneath the waves and given that life, and she "
+                "teaches him many secrets she has gathered: a perilous way "
+                "to study, with great rewards.",
+            ),
+            titled("Storyguide Notes", "Many lamiae can initiate Mystery Virtues."),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -826,8 +848,13 @@ def _attica(theban: Theban) -> None:
             "which the Tribunal has so far declined to gather rather "
             "than profit from a Greek defeat, even a symbolic one.",
         ),
-        secrets="The Perdo vis vanishes soon after the battle, and no one "
-        "knows who or what is collecting it.",
+        secrets=[
+            titled(
+                "The vanishing vis",
+                "The Perdo vis of the Tumulus of Marathon vanishes soon after "
+                "the battle, and no one knows who or what is collecting it.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -1082,9 +1109,14 @@ def _morea(theban: Theban) -> None:
             "of Hermes she can reach the very roots of magic. The book "
             "gives no aura.",
         ),
-        secrets="Proximios means to tell her that Lucian of Aegaea hopes to "
-        "raise the forgotten gods, trusting her love of Hermes to turn "
-        "her against him and his league.",
+        secrets=[
+            titled(
+                "Proximios's plan for Celaenea",
+                "Proximios means to tell Celaenea that Lucian of Aegaea hopes "
+                "to raise the forgotten gods, trusting her love of Hermes to "
+                "turn her against him and his league.",
+            ),
+        ],
         **RUMOURED,
     )
     zakynthos = _add(
@@ -1238,10 +1270,26 @@ def _epidauros(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (only before the Order's "
         "founding) and no season. Two magi are unnamed.",
     )
-    hidden = joined_lines(
-        "Healing the Realm: Geoffrey II of Achaea, in whose land the covenant lies, falls gravely ill, and his wife Agnes begs the magi for a cure. Refuse, and if he dies they make an enemy of her and leave a war of succession; heal him, and a rival accuses him of dealing with pagan sorcerers. Either way the covenant could be charged with interfering with mundanes.",
-        "Magi of Epidauros wonder whether the nectar and ambrosia Tantalus is said to have stolen could improve Longevity Rituals.",
-    )
+    hidden = [
+        titled(
+            "Geoffrey of Achaea's illness",
+            "Geoffrey II of Achaea, in whose land Epidauros lies, falls "
+            "gravely ill, and his wife Agnes begs the magi for a cure.",
+        ),
+        titled(
+            "Nectar and ambrosia",
+            "Magi of Epidauros wonder whether the nectar and ambrosia "
+            "Tantalus is said to have stolen could improve Longevity Rituals.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "Healing the Realm: if the magi refuse Agnes and Geoffrey dies, "
+            "they make an enemy of her and leave a war of succession; heal "
+            "him, and a rival accuses him of dealing with pagan sorcerers. "
+            "Either way the covenant could be charged with interfering with "
+            "mundanes.",
+        ),
+    ]
     epidauros = b.covenant(
         "Epidauros",
         tribunal=tribunal,
@@ -1329,8 +1377,13 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "from its bats, but have not gone in because of the "
             "cultists' traps.",
         ),
-        secrets="Cyra, the patron, curses anyone entering the valley with ill "
-        "intent towards Erebos.",
+        secrets=[
+            titled(
+                "Cyra's curse",
+                "Cyra, Erebos's patron, curses anyone entering the valley "
+                "with ill intent towards Erebos.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     summary = paragraphs(
@@ -1393,10 +1446,18 @@ def _erebos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (the later ninth century) and no "
         "season. Nine magi are unnamed.",
     )
-    hidden = joined_lines(
-        "Cyra is most likely a Magic spirit, but given the dark magic of the Witches of Thessaly she might be Infernal.",
-        "Proximios, through the League of the Vigilant, means to set demon-hunters on the young magi of Erebos as supposed diabolists.",
-    )
+    hidden = [
+        titled(
+            "Proximios and Erebos",
+            "Proximios, through the League of the Vigilant, means to set "
+            "demon-hunters on the young magi of Erebos as supposed diabolists.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "Cyra is most likely a Magic spirit, but given the dark magic of "
+            "the Witches of Thessaly she might be Infernal.",
+        ),
+    ]
     erebos = b.covenant(
         "Erebos",
         tribunal=tribunal,
@@ -1524,9 +1585,15 @@ def _gigas(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "citizenship; the book names none of them, so the register lists "
         "only Boustaphan, Monorchis and Allectores, all politai.",
     )
-    hidden = joined_lines(
-        "Proximios hopes to convince Aiakia that Gigas's Tremere brought about the fall of Constantinople and plan to strike at her covenant, and Tisiphon that they have escaped justice; Boustaphan would never open Gigas's records to clear them.",
-    )
+    hidden = [
+        titled(
+            "Proximios and Gigas",
+            "Proximios hopes to convince Aiakia that Gigas's Tremere brought "
+            "about the fall of Constantinople and plan to strike at her "
+            "covenant, and Tisiphon that they have escaped justice; "
+            "Boustaphan would never open Gigas's records to clear them.",
+        ),
+    ]
     gigas = b.covenant(
         "Gigas",
         tribunal=tribunal,
@@ -1758,13 +1825,45 @@ def _hedyosmos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "The book gives no founding year (before the Order) and no "
         "season. Three magi are unnamed.",
     )
-    hidden = joined_lines(
-        "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken Hades's power over the titans' prison and set them free to bring a golden age of magic; this is the Theban cult's aim, not the Terrae Cult's at large.",
-        "Ausculator's mater vanished; he says she will not return, and most think she went into the lower labyrinth and never came out.",
-        "Vrakos the cook, beneath the magi's notice, has been won over by Askalaphos, the faerie tattletale of Hades whom Demeter cursed into a screech owl. He has become a priest of Hades, holds secret rites in the depths and quietly recruits among the servants; for now he asks only offerings of milk, honey and a black ram's blood.",
-        "The Estate of Hades: Askalaphos means in time to make the covenant a temple of Hades again and rid it of the magi; the Aegis of the Hearth stands in his way, and he wonders how to get himself invited into the ritual.",
-        "Proximios hopes to turn Aiakia and Tisiphon against Gigas, and Celaenea against Lucian of Aegaea.",
-    )
+    hidden = [
+        titled(
+            "What Kampe's Lovers want",
+            "Kampe's Lovers, centred on Hedyosmos's cult, mean to weaken "
+            "Hades's power over the titans' prison and set them free to bring "
+            "a golden age of magic; this is the Theban cult's aim, not the "
+            "Terrae Cult's at large.",
+        ),
+        titled(
+            "Ausculator's mater",
+            "Ausculator's mater vanished; he says she will not return, and "
+            "most think she went into the lower labyrinth of Hedyosmos and "
+            "never came out.",
+        ),
+        titled(
+            "Vrakos the cook",
+            "Vrakos the cook of Hedyosmos, beneath the magi's notice, has been "
+            "won over by Askalaphos, the faerie tattletale of Hades whom "
+            "Demeter cursed into a screech owl. Vrakos has become a priest of "
+            "Hades, holds secret rites in the depths and quietly recruits "
+            "among the servants; for now he asks only offerings of "
+            "milk, honey and a black ram's blood.",
+        ),
+        titled(
+            "What Askalaphos wants",
+            "Askalaphos means in time to make Hedyosmos a temple of Hades "
+            "again and rid it of the magi; the Aegis of the Hearth stands in "
+            "his way, and he wonders how to get himself invited into the "
+            "ritual.",
+        ),
+        titled(
+            "Proximios and Hedyosmos",
+            "Proximios hopes to turn Aiakia and Tisiphon against Gigas, and "
+            "Celaenea against Lucian of Aegaea.",
+        ),
+        titled(
+            "Storyguide Notes", "Askalaphos's plan is the story The Estate of Hades."
+        ),
+    ]
     hedyosmos = b.covenant(
         "Hedyosmos",
         tribunal=tribunal,
@@ -2124,8 +2223,14 @@ def _pythia(theban: Theban, b: Builder) -> None:
             "sees supplicants only between spring and autumn.",
             "The book gives no age; her present self is not described.",
         ),
-        secrets="In the Absent Oracle a girl claiming to be her apprentice "
-        "meets visitors with the news that Pythia is gone.",
+        secrets=[
+            titled(
+                "Pythia's absence",
+                "A girl claiming to be Pythia's apprentice meets visitors "
+                "with the news that Pythia is gone.",
+            ),
+            titled("Storyguide Notes", "This is the story The Absent Oracle."),
+        ],
     )
     b.link(
         theban.magi["pythia"],
@@ -2177,8 +2282,17 @@ def _lords(theban: Theban, b: Builder) -> None:
             "The book calls him both Theodore Dukas and Theodore "
             "Komnenos.",
         ),
-        secrets="Arta's new castle has an Infernal aura from Michael's "
-        "depravities, guarded by a flock of sinister ravens.",
+        secrets=[
+            titled(
+                "Arta's new castle",
+                "Arta's new castle is tainted by Michael's depravities, "
+                "guarded by a flock of sinister ravens.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Arta's new castle has an Infernal aura from Michael's depravities.",
+            ),
+        ],
     )
     w["thessaloniki_kingdom"] = b.lord(
         "Kingdom of Thessaloniki",
@@ -2297,8 +2411,14 @@ def _lords(theban: Theban, b: Builder) -> None:
             "church lands, to the pope's annoyance. Epidauros lies in "
             "his lands. The book names no seat; Andravida is history's.",
         ),
-        secrets="If he falls gravely ill, Agnes will come to Epidauros begging "
-        "for a cure (Healing the Realm).",
+        secrets=[
+            titled(
+                "Agnes and Epidauros",
+                "If Geoffrey II falls gravely ill, Agnes will come to "
+                "Epidauros begging for a cure.",
+            ),
+            titled("Storyguide Notes", "This is the story Healing the Realm."),
+        ],
     )
     w["bulgaria"] = b.lord(
         "Tsardom of Bulgaria",
@@ -2711,8 +2831,13 @@ def _factions(theban: Theban, b: Builder) -> None:
         "count chained in the castle at Serres. Freed years later, "
         "Oberto swore revenge on the emperor and still works "
         "tirelessly for William; he is King Demetrios's mortal enemy.",
-        secrets="Oberto may have poisoned Henry in 1216, though others blame "
-        "his Bulgarian empress Maria.",
+        secrets=[
+            titled(
+                "Emperor Henry's death",
+                "Oberto may have poisoned Emperor Henry in 1216, though "
+                "others blame his Bulgarian empress Maria.",
+            ),
+        ],
     )
     w["thessalonian_greeks"] = b.faction(
         "The Greek Families of Thessaloniki",

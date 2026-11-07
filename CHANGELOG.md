@@ -123,6 +123,15 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.0 — 2026-11-07
+
+### Peregrinatio
+
+- **Titled secrets in every pack**: the Tribunal, region and book packs and the Dammërstein saga starter now bring each record's secrets as a list of titled secrets, each one thing the players could learn on its own and worded to make sense when revealed by itself.
+- Each record's table notes (auras and Might, rolls, where a stat block is, the rules' names for a trait, story seeds and what the book says happens after 1220) are gathered in its last secret, **Storyguide Notes**, which is for the storyguide and not meant to be revealed.
+- A place's or covenant's vis and books are a secret for each kind, such as "Vis at Durenmar".
+- In Dammërstein, the Spinner's Court keeps only the secrets of its pact with the house; the Spinner's own are on her Bestiary card.
+
 ## 3.84.0 — 2026-11-07
 
 ### Sodales

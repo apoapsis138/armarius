@@ -24,8 +24,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...models import as_secrets, secret_words
-from ..builder import Builder, dormant, paragraphs
+from ..builder import Builder, Secrets, dormant, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Transylvania
@@ -95,26 +94,39 @@ def _dragon_war(transylvania: Transylvania) -> None:
             "woven in: a storm wizard, a shapechanged magus, or a "
             "magus corrupted to lead the Infernal dragons.",
         ),
-        secrets=paragraphs(
-            "Who keeps the peace: one ending the book offers is that a "
-            "renowned Flambeau hunter tracked Fetillusclaviceps to its "
-            "lair and killed it about a century ago, then, seeing that "
-            "the peace died with it, has played the Roman dragon ever "
-            "since rather than confess. If the troupe uncovers this, "
-            "continuing the pretence is probably a breach of the Code, "
-            "since it means dealing with Infernal beasts, and House "
-            "Tremere's good name rides on whether a substitute keeper "
-            "can be found.",
-            "Another: the stone column where Leontine of Old Histria "
-            "argues ethics with an ancient zmaj was taken by Dominic "
-            "of Tytalus, aedile of Coeris, perhaps to test his protégé "
-            "and perhaps to start the war on purpose. Dominic then "
-            "vanishes, dead or in hiding, and the column may lie "
-            "somewhere within Coeris's defences.",
-            "Sebastian, the ageless caretaker of the Scholomance, may "
-            "be the seven-headed zmaj king Aževastjepan, who rules the "
-            "Carpathian dragons and has banished aždaje from his realm.",
-        ),
+        secrets=[
+            titled(
+                "Who keeps the peace",
+                "A renowned Flambeau hunter tracked Fetillusclaviceps to its "
+                "lair and killed it about a century ago, then, seeing that "
+                "the peace died with it, has played the Roman dragon ever "
+                "since rather than confess. If the troupe uncovers this, "
+                "continuing the pretence is probably a breach of the Code, "
+                "since it means dealing with Infernal beasts, and House "
+                "Tremere's good name rides on whether a substitute keeper "
+                "can be found.",
+            ),
+            titled(
+                "The stolen column",
+                "The stone column where Leontine of Old Histria "
+                "argues ethics with an ancient zmaj was taken by Dominic "
+                "of Tytalus, aedile of Coeris, perhaps to test his protégé "
+                "and perhaps to start the war on purpose. Dominic then "
+                "vanishes, dead or in hiding, and the column may lie "
+                "somewhere within Coeris's defences.",
+            ),
+            titled(
+                "Sebastian and the zmaj king",
+                "Sebastian, the ageless caretaker of the Scholomance, may "
+                "be the seven-headed zmaj king Aževastjepan, who rules the "
+                "Carpathian dragons and has banished aždaje from his realm.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Who keeps the peace and the stolen column are two of the "
+                "endings the book offers.",
+            ),
+        ],
         antagonist="The dragons of the Tribunal, once the Pax Draconis fails",
         realm="Magic",
         stages=[
@@ -354,14 +366,24 @@ def _teutonic(transylvania: Transylvania) -> None:
                 "might accept a hand held out, but the Code makes such "
                 "friendship delicate.",
             ),
-            secrets="The book offers three Teutonic Orders. One is pious and "
-            "mundane. A holier one makes Dominion auras of a brave "
-            "temper on the land it conquers and keeps an inner circle "
-            "of Divine wonder-workers. A profane one serves Hell: its "
-            "leaders are goetic sorcerers, its knights take part in "
-            "infernal rites, it seizes shamans, witches and taltós for "
-            "their lore, and its favoured knights carry great swords "
-            "with a demon bound inside that whispers in their dreams.",
+            secrets=[
+                titled("A pious Order", "A pious Teutonic Order is mundane."),
+                titled(
+                    "A holier Order",
+                    "A holier Teutonic Order makes Dominion auras of a brave "
+                    "temper on the land it conquers and keeps an inner circle "
+                    "of Divine wonder-workers.",
+                ),
+                titled(
+                    "A profane Order",
+                    "A profane Teutonic Order serves Hell: its "
+                    "leaders are goetic sorcerers, its knights take part in "
+                    "infernal rites, it seizes shamans, witches and taltós for "
+                    "their lore, and its favoured knights carry great swords "
+                    "with a demon bound inside that whispers in their dreams.",
+                ),
+                titled("Storyguide Notes", "The book offers three Teutonic Orders."),
+            ],
             antagonist="The Teutonic Knights under Brother Theoderich",
             realm="",
             moves=DATED,
@@ -540,8 +562,13 @@ def _bosnian_crusade(transylvania: Transylvania) -> None:
                 "quarrelsome place where a brawl ended in murder a year "
                 "ago.",
             ),
-            secrets="Some suspect an Infernal aura has grown in the Vrhbosna "
-            "mansio; none has been detected yet.",
+            secrets=[
+                titled(
+                    "An aura in the mansio",
+                    "Some suspect an Infernal aura has grown in the Vrhbosna "
+                    "mansio; none has been detected yet.",
+                ),
+            ],
             antagonist="The crusaders of Hungary and Croatia",
             realm="Divine",
             moves=DATED,
@@ -698,11 +725,24 @@ def _zalmoxis(transylvania: Transylvania) -> None:
                 "at a distance. Then he learns that a wizard called "
                 "Zalmoxis lives in the hollow mountain nearby.",
             ),
-            secrets="Archmagus Zalmoxis of Verditius, Lycaneon's longevity "
-            "specialist, is only named after the god and has nothing "
-            "to do with the cult, and the magi of Lycaneon know "
-            "nothing of what is brewing. The vrajitoarele belong to "
-            "the Magic realm; none of their powers is Infernal.",
+            secrets=[
+                titled(
+                    "Archmagus Zalmoxis",
+                    "Archmagus Zalmoxis of Verditius, Lycaneon's longevity "
+                    "specialist, is only named after the god and has nothing "
+                    "to do with the cult.",
+                ),
+                titled(
+                    "What Lycaneon knows",
+                    "The magi of Lycaneon know nothing of what is brewing "
+                    "among the cults of Zalmoxis.",
+                ),
+                titled(
+                    "The vrajitoarele's powers",
+                    "The vrajitoarele belong to the Magic realm; none of their "
+                    "powers is Infernal.",
+                ),
+            ],
             antagonist="A Gifted vrajitoarea of the Cult of Zalmoxis",
             realm="Magic",
             stages=[
@@ -852,7 +892,13 @@ def _succession(transylvania: Transylvania) -> None:
                 "with him deep in the Novgorod Tribunal, and he knows "
                 "the House's structure and Coeris's defences.",
             ),
-            secrets="Janus is a lycanthrope, which is why he will never seek the office.",
+            secrets=[
+                titled(
+                    "Why Janus will not stand",
+                    "Janus is a lycanthrope, which is why he will never seek "
+                    "the office.",
+                ),
+            ],
             antagonist="The House's rival candidates",
             stages=[
                 S(
@@ -942,9 +988,14 @@ def _legate(transylvania: Transylvania) -> None:
                 "nor denying them. That leaves many former pupils who "
                 "could talk.",
             ),
-            secrets="Sebastian, the school's ageless caretaker, may be the "
-            "zmaj king Aževastjepan; a legate who found him would find "
-            "more than he bargained for.",
+            secrets=[
+                titled(
+                    "Sebastian and the zmaj king",
+                    "Sebastian, the Scholomance's ageless caretaker, may be the "
+                    "zmaj king Aževastjepan; a legate who found him would find "
+                    "more than he bargained for.",
+                ),
+            ],
             antagonist="The papal legate, lodged with the Teutonic Knights",
             realm="Divine",
             stages=[
@@ -1020,12 +1071,14 @@ def _find(records: list[Any], *names: str) -> Any | None:
     return None
 
 
-def _add_to(record: Any, more: str, hidden: str = "", attr: str = "summary") -> None:
+def _add_to(
+    record: Any, more: str, hidden: Secrets = "", attr: str = "summary"
+) -> None:
     """Add a paragraph to a record's summary (or notes), and `hidden` to
     its secrets."""
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
     if hidden:
-        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
+        record.secrets = more_secrets(record.secrets, hidden)
 
 
 def _place(transylvania: Transylvania, places: list[Any], *keys: str) -> Any | None:

@@ -56,7 +56,14 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models import BodyVis
-from ..builder import characteristics, paragraphs, vf_great, vf_minor, vf_puissant
+from ..builder import (
+    characteristics,
+    paragraphs,
+    titled,
+    vf_great,
+    vf_minor,
+    vf_puissant,
+)
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -317,11 +324,15 @@ def _infernal_jinn(cradle: Cradle) -> None:
             "'Arkhaman has kept him in hand with vis, as his elders warned "
             "him to. Reputations: none.",
         ),
-        secrets=(
-            "His aim is to bind 'Arkhaman by an accepted duty and send him "
-            "to find his mother, the imam's niece who hid his birth: the "
-            "shame his coming would bring her is what the demon relishes."
-        ),
+        secrets=[
+            titled(
+                "Kharrat's aim",
+                "His aim is to bind 'Arkhaman by an accepted duty and send "
+                "him to find his mother, the imam's niece who hid his birth: "
+                "the shame his coming would bring her is what the demon "
+                "relishes.",
+            ),
+        ],
     )
     _MADE["buran"] = b.creature(
         "The Buran of Yenghissar",
@@ -710,14 +721,24 @@ def _infernal_jinn(cradle: Cradle) -> None:
             "and steal the powers of other spirits. His Goetic Arts are "
             "entered as Abilities.",
         ),
-        secrets=(
-            "Some Persian sahirs suspect that Genghis Khan is a Zahhak, or "
-            "takes counsel from one, since he turns on Persia the way Azi "
-            "Dahak's hosts do; whether it is so is the storyguide's choice. "
-            "The first Zahhak was never slain: an angel helped Feridun chain "
-            "him beneath Mount Damavand, where he lives yet, freed of the "
-            "demon and kept from death by holy bonds."
-        ),
+        secrets=[
+            titled(
+                "Genghis Khan and the Zahhak",
+                "Some Persian sahirs suspect that Genghis Khan is a Zahhak, "
+                "or takes counsel from one, since he turns on Persia the way "
+                "Azi Dahak's hosts do.",
+            ),
+            titled(
+                "The first Zahhak",
+                "The first Zahhak was never slain: an angel helped Feridun "
+                "chain him beneath Mount Damavand, where he lives yet, freed "
+                "of the demon Azi Dahak and kept from death by holy bonds.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Whether Genghis Khan is a Zahhak is the storyguide's choice.",
+            ),
+        ],
     )
 
 

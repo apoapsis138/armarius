@@ -19,11 +19,13 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...models import as_secrets, secret_words
-from ..builder import paragraphs, secrets
+from ..builder import more_secrets, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from . import Theban
+
+#: The title of a record's one secret of table guidance.
+NOTES = "Storyguide Notes"
 
 #: The order of the seasons within a year; an entry with none comes first.
 SEASON_ORDER = {"": 0, "Spring": 1, "Summer": 2, "Autumn": 3, "Winter": 4}
@@ -1068,19 +1070,44 @@ ERAS: tuple[tuple[str, str], ...] = (
 )
 
 #: What lies ahead after spring 1220, for a saga that follows the book.
-FUTURE = (
-    "The Tribunal next meets on Delos in 1221. Leontius means to resign as "
-    "logothete there, and the Redcaps plan to propose Proximios; Pancratius, "
-    "Syagricus's apprentice, hopes for his Gauntlet; and the League Against Idolatry "
-    "presses to end the Ceremony of Propitiation. House Tremere has asked the Grand "
-    "Tribunal of 1228 to try the two surviving members of the League of Advisors "
-    "again, and the Verditius Contest of 1234 will test whether Ingasia is now the "
-    "House's domus magna. If the saga follows history, Robert of Courtenay reaches "
-    "Constantinople in 1221, Theodore Laskaris takes Holkos, and the Latins, beset "
-    "from the north, sue for peace that year.\n\n"
-    "Proximios of Alexandria, founder of the League of the Vigilant, is an "
-    "Infernalist who means to bring the Order down, starting in Thebes."
-)
+FUTURE = [
+    titled(
+        "The Tribunal of 1221",
+        "The Theban Tribunal next meets on Delos in 1221. Leontius means to "
+        "resign as logothete there, and the Redcaps plan to propose Proximios.",
+    ),
+    titled(
+        "Pancratius's Gauntlet",
+        "Pancratius, Syagricus's apprentice, hopes for his Gauntlet at the "
+        "Tribunal of 1221.",
+    ),
+    titled(
+        "The Ceremony of Propitiation",
+        "At the Tribunal of 1221 the League Against Idolatry presses to end "
+        "the Ceremony of Propitiation.",
+    ),
+    titled(
+        "The League of Advisors tried again",
+        "House Tremere has asked the Grand Tribunal of 1228 to try the two "
+        "surviving members of the League of Advisors again.",
+    ),
+    titled(
+        "The Verditius Contest of 1234",
+        "The Verditius Contest of 1234 will test whether Ingasia is now the "
+        "House Verditius's domus magna.",
+    ),
+    titled(
+        "What Proximios means to do",
+        "Proximios of Alexandria, founder of the League of the Vigilant, is "
+        "an Infernalist who means to bring the Order down, starting in Thebes.",
+    ),
+    titled(
+        "Storyguide Notes",
+        "If the saga follows history, Robert of Courtenay reaches "
+        "Constantinople in 1221, Theodore Laskaris takes Holkos, and the "
+        "Latins, beset from the north, sue for peace that year.",
+    ),
+]
 
 
 def build(theban: Theban) -> None:
@@ -1099,4 +1126,12 @@ def build(theban: Theban) -> None:
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
     # Any history already written keeps its place, its secrets ahead of ours.
     tribunal.history = paragraphs(tribunal.history, eras)
-    tribunal.secrets = as_secrets(paragraphs(secret_words(tribunal.secrets), FUTURE))
+    tribunal.secrets = more_secrets(tribunal.secrets, FUTURE)
+
+
+def finish(theban: Theban) -> None:
+    """Join the Storyguide Notes the parts gave the Tribunal into one,
+    last, once every part's secrets are in (this part finishes after
+    the stories')."""
+    if theban.tribunal is not None:
+        theban.tribunal.secrets = more_secrets(theban.tribunal.secrets)

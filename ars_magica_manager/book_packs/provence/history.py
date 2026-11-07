@@ -15,8 +15,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...models import as_secrets, secret_words
-from ..builder import paragraphs, secrets
+from ..builder import more_secrets, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from . import Provence
@@ -911,17 +910,31 @@ ERAS: tuple[tuple[str, str], ...] = (
 )
 
 #: What lies ahead after spring 1220, for a saga that follows the book.
-FUTURE = (
-    "The Tribunal next meets in summer 1221 at the ruins of Glanum, a neutral site "
-    "agreed on by all; its first business is whether Beatrice of Guernicus succeeds "
-    "Tibaut as Presiding Quaesitor. If the Tribunal resolves to act against the crusade "
-    "and the Church, the Pyrenean covenants may boycott the meeting of 1227 and, with "
-    "the four covenants a Tribunal needs, ask the Grand Tribunal of 1228 to let them "
-    "secede. If the saga follows history, Guy de Montfort is killed near Castelnaudary "
-    "in April 1220, James I of Aragon comes of age in 1223, the count of Foix defies "
-    "Louis in 1226 and 1227, and the crusade ends in 1229.\n\n"
-    "Dama must renew her Longevity Ritual before 1232."
-)
+FUTURE = [
+    titled(
+        "The Tribunal of 1221",
+        "The Tribunal next meets in summer 1221 at the ruins of Glanum, a neutral "
+        "site agreed on by all; its first business is whether Beatrice of Guernicus "
+        "succeeds Tibaut as Presiding Quaesitor.",
+    ),
+    titled(
+        "Dama's Longevity Ritual",
+        "Dama must renew her Longevity Ritual before 1232.",
+    ),
+    titled(
+        "Storyguide Notes",
+        paragraphs(
+            "If the Tribunal resolves to act against the crusade and the Church, "
+            "the Pyrenean covenants may boycott the meeting of 1227 and, with the "
+            "four covenants a Tribunal needs, ask the Grand Tribunal of 1228 to "
+            "let them secede.",
+            "If the saga follows history, Guy de Montfort is killed near "
+            "Castelnaudary in April 1220, James I of Aragon comes of age in 1223, "
+            "the count of Foix defies Louis in 1226 and 1227, and the crusade "
+            "ends in 1229.",
+        ),
+    ),
+]
 
 
 def build(provence: Provence) -> None:
@@ -940,4 +953,4 @@ def build(provence: Provence) -> None:
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
     # Any history already written keeps its place, its secrets ahead of ours.
     tribunal.history = paragraphs(tribunal.history, eras)
-    tribunal.secrets = as_secrets(paragraphs(secret_words(tribunal.secrets), FUTURE))
+    tribunal.secrets = more_secrets(tribunal.secrets, FUTURE)

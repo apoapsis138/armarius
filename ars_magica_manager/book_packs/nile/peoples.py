@@ -29,6 +29,7 @@ from ..builder import (
     dormant,
     joined_lines,
     paragraphs,
+    titled,
     vf_great,
     vf_minor,
     vf_puissant,
@@ -154,48 +155,82 @@ def _lands(b: Builder) -> tuple[Neighbour, Neighbour]:
             "641. Heliopolis, now a suburb of Cairo, is where Herodotus set "
             "the phoenix's death and rebirth.",
         ),
-        secrets=paragraphs(
-            "Themes for sagas (pp. 6-9), none excluding another. The Red and "
-            "the Black: Africa is the battleground of the Great Hunger and "
-            "the Hope, and these lands lie in the Black's stronghold. The Kom, "
-            "a giant who was the Red's chief servant, was slain and seeks to "
-            "remake itself (at Pakhoras). The Cult of Dedun serves the Red "
-            "indirectly by gathering power from death and decay, seeking "
-            "immortality through decrepitude. Wesir, the first human to learn "
-            "how to become a Daimon, is now a mighty servant of the Black. The "
-            "old rites of death cleansed favoured ghosts of the Red and raised "
-            "them as Daimons, allies of the Black. Egypt just grows marvels: "
-            "the superabundance of tombs is another face of the Black's "
-            "fertility. Secrets and mysteries: the Red devours secrets, so some "
-            "mysteries no longer have answers, and others never had any, being "
-            "plain marvels of God; players must expect that. Endlessness: see "
-            "above. The Black's servants include the lector priests who were "
-            "the pharaohs' magicians.",
-            "Why the Order might come here (pp. 127-128). The book puts no magi "
-            "in these lands in 1220. A saga may loot the past with no neighbours "
-            "and add other covenants later; a crusading or tired covenant may "
-            "come to escape the Code or a Peripheral Code, until its actions "
-            "bring magi from the Roman or Levant Tribunals; a covenant may join "
-            "an existing Tribunal, if Redcaps or that Tribunal's members can "
-            "reach it in good time and its Peripheral Code allows, or contest a "
-            "border at Grand Tribunal, where no precedent yet exists, for vis or "
-            "votes (Houses of Hermes: True Lineages p. 49; ArM5 p. 14). A Nile "
-            "Tribunal needs at least twelve magi of four covenants and a "
-            "Quaesitor, and a sponsor at the Grand Tribunal of 1228 or 1261. It "
-            "must outlast the Fifth Crusade and, if history holds, the Seventh "
-            "(1248 to 1254), against eremites, Moorish sahirs, treasure hunters "
-            "and magi who want no new delegation.",
-            "Every monument of medieval Africa stands in Mythic Africa, with "
-            "many more. The book follows thirteenth-century folklore, not "
-            "modern archaeology. Tombs hold bizarre traps, strange creatures "
-            "and puzzles, because people then believed they did: it explained "
-            "why the treasure was still there. Old Egyptian magic is far weaker "
-            "in attack than Hermetic magic; its priest-magicians excelled at "
-            "healing and at commanding spirits.",
-            "Beasts of the valley with statistics elsewhere: the lion, in The "
-            "Book of Mundane Beasts; a magical lion and the pard in Realms of "
-            "Power: Magic pp. 60-61; other animals in Between Sand and Sea.",
-        ),
+        secrets=[
+            titled(
+                "The Red and the Black",
+                "Africa is the battleground of the Great Hunger and the Hope, and "
+                "these lands lie in the Black's stronghold (pp. 6-9).",
+            ),
+            titled(
+                "The Kom",
+                "The Kom, a giant who was the Red's chief servant, was slain and "
+                "seeks to remake itself (at Pakhoras).",
+            ),
+            titled(
+                "The Cult of Dedun and the Red",
+                "The Cult of Dedun serves the Red indirectly by gathering power "
+                "from death and decay, seeking immortality through decrepitude.",
+            ),
+            titled(
+                "Wesir",
+                "Wesir, the first human to learn how to become a Daimon, is now a "
+                "mighty servant of the Black.",
+            ),
+            titled(
+                "The old rites of death",
+                "The old rites of death cleansed favoured ghosts of the Red and "
+                "raised them as Daimons, allies of the Black.",
+            ),
+            titled(
+                "Why Egypt grows marvels",
+                "Egypt just grows marvels: the superabundance of tombs is another "
+                "face of the Black's fertility.",
+            ),
+            titled(
+                "The Red devours secrets",
+                "The Red devours secrets, so some mysteries no longer have "
+                "answers, and others never had any, being plain marvels of God.",
+            ),
+            titled(
+                "The lector priests",
+                "The Black's servants include the lector priests who were the "
+                "pharaohs' magicians.",
+            ),
+            titled(
+                "Old Egyptian magic",
+                "Old Egyptian magic is far weaker in attack than Hermetic magic; "
+                "its priest-magicians excelled at healing and at commanding "
+                "spirits.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Themes for sagas (pp. 6-9), none excluding another: the Red and "
+                "the Black; Egypt just grows marvels; secrets and mysteries, "
+                "where players must expect that; endlessness: see above.\n\nWhy the "
+                "Order might come here (pp. 127-128). The book puts no magi in "
+                "these lands in 1220. A saga may loot the past with no neighbours "
+                "and add other covenants later; a crusading or tired covenant may "
+                "come to escape the Code or a Peripheral Code, until its actions "
+                "bring magi from the Roman or Levant Tribunals; a covenant may "
+                "join an existing Tribunal, if Redcaps or that Tribunal's members "
+                "can reach it in good time and its Peripheral Code allows, or "
+                "contest a border at Grand Tribunal, where no precedent yet "
+                "exists, for vis or votes (Houses of Hermes: True Lineages p. 49; "
+                "ArM5 p. 14). A Nile Tribunal needs at least twelve magi of four "
+                "covenants and a Quaesitor, and a sponsor at the Grand Tribunal "
+                "of 1228 or 1261. It must outlast the Fifth Crusade and, if "
+                "history holds, the Seventh (1248 to 1254), against eremites, "
+                "Moorish sahirs, treasure hunters and magi who want no new "
+                "delegation.\n\nEvery monument of medieval Africa stands in Mythic "
+                "Africa, with many more. The book follows thirteenth-century "
+                "folklore, not modern archaeology. Tombs hold bizarre traps, "
+                "strange creatures and puzzles, because people then believed they "
+                "did: it explained why the treasure was still there.\n\nBeasts of "
+                "the valley with statistics elsewhere: the lion, in The Book of "
+                "Mundane Beasts; a magical lion and the pard in Realms of Power: "
+                "Magic pp. 60-61; other animals in Between Sand and Sea.",
+            ),
+        ],
     )
     b.place(
         "The Abyssinian Highlands",
@@ -217,20 +252,34 @@ def _lands(b: Builder) -> tuple[Neighbour, Neighbour]:
             "that show them palm-shaded pools. The first long drink may prove "
             "to be a mouthful of sand."
         ),
-        secrets=paragraphs(
-            "Hazards (p. 10). Deprivation checks for lack of water come every "
-            "4 hours here, and sun on bare skin does +1 non-combat damage "
-            "(ArM5 pp. 180-181).",
-            "Dry quicksand: the victim is under within two rounds, then "
-            "suffocates unless rescued. In the first round a Strength or "
-            "Quickness stress roll against 9 frees him; a botch traps his arms "
-            "for the next round. After that his companions must save him, and "
-            "if his arms are free he may help in the second round, taking 3 "
-            "off any further Ease Factors he faces. Then he has gone under.",
-            "Brigands usually leave a well-guarded caravan alone, unless "
-            "desperate. Sandstorms and dust storms may be natural, made by "
-            "sorcerers, elemental jinn, or even witches in disguise.",
-        ),
+        secrets=[
+            titled(
+                "Dry quicksand",
+                "In dry quicksand the victim is under within two rounds, then "
+                "suffocates unless rescued.",
+            ),
+            titled(
+                "Brigands",
+                "Brigands usually leave a well-guarded caravan alone, unless "
+                "desperate.",
+            ),
+            titled(
+                "Sandstorms",
+                "Sandstorms and dust storms may be natural, made by sorcerers, "
+                "elemental jinn, or even witches in disguise.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Hazards (p. 10). Deprivation checks for lack of water come every "
+                "4 hours here, and sun on bare skin does +1 non-combat damage "
+                "(ArM5 pp. 180-181).\n\nDry quicksand: in the first round a "
+                "Strength or Quickness stress roll against 9 frees him; a botch "
+                "traps his arms for the next round. After that his companions "
+                "must save him, and if his arms are free he may help in the "
+                "second round, taking 3 off any further Ease Factors he faces. "
+                "Then he has gone under.",
+            ),
+        ],
     )
     b.place(
         "The Libyan Desert",
@@ -1776,7 +1825,12 @@ def _stories(b: Builder, slavelands: Neighbour) -> None:
                 "the Red Sea and are raiding merchant ships with it, very unlike "
                 "that peaceful people."
             ),
-            secrets="Who is really directing the tribe is left open.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "Who is really directing the tribe is left open.",
+                ),
+            ],
             antagonist="The Icthyophagi",
         )
     )
@@ -1803,11 +1857,18 @@ def _stories(b: Builder, slavelands: Neighbour) -> None:
                 "the tribe in its branches have clubs and rocks. The locals turn "
                 "to the magi."
             ),
-            secrets=(
-                "If the characters cannot attack it directly, they should learn "
-                "why the tree has turned north: perhaps the tribe's new "
-                "witch-doctor."
-            ),
+            secrets=[
+                titled(
+                    "Why the tree turned north",
+                    "Why the tree has turned north: perhaps the tribe's new "
+                    "witch-doctor.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "If the characters cannot attack it directly, they should learn "
+                    "why the tree has turned north.",
+                ),
+            ],
             antagonist="The village-tree and its Hylophagi",
             place=slavelands,
         )
@@ -1819,16 +1880,26 @@ def _stories(b: Builder, slavelands: Neighbour) -> None:
                 "Acridophagi come into the Nile Valley seeking help and meet "
                 "contempt. The characters may yet listen to them."
             ),
-            secrets=(
-                "Long ago a sorcerer bound a famine demon into an Acridophagus "
-                "child, inking the bindings on his skin. The boy lived as a "
-                "king, safe from harm: at his death the winged lice would each "
-                "carry off a piece of the demon and destroy it. Now the tribe "
-                "fear the sorcerer was corrupt, and that when the man soon dies "
-                "the demon will be multiplied and borne to the ends of the "
-                "earth. The answer may lie in finding the sorcerer, surely very "
-                "powerful by now, or be as simple as killing the vessel."
-            ),
+            secrets=[
+                titled(
+                    "The bound famine demon",
+                    "Long ago a sorcerer bound a famine demon into an Acridophagus "
+                    "child, inking the bindings on his skin. The boy lived as a king, "
+                    "safe from harm: at his death the winged lice would each carry "
+                    "off a piece of the demon and destroy it.",
+                ),
+                titled(
+                    "The tribe's fear",
+                    "Now the Acridophagi fear the sorcerer was corrupt, and that when "
+                    "the man soon dies the demon will be multiplied and borne to the "
+                    "ends of the earth.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The answer may lie in finding the sorcerer, surely very powerful "
+                    "by now, or be as simple as killing the vessel.",
+                ),
+            ],
             antagonist="A famine demon",
             realm="Infernal",
         )
@@ -1842,10 +1913,13 @@ def _stories(b: Builder, slavelands: Neighbour) -> None:
                 "the answer, and a wanderer cut off from his homeland is rumoured "
                 "to be nearby."
             ),
-            secrets=(
-                "His price is steep, and when the work is done he may prove more "
-                "trouble than the bouda was."
-            ),
+            secrets=[
+                titled(
+                    "The Cynamolgus's price",
+                    "The Cynamolgus's price is steep, and when the work is done he "
+                    "may prove more trouble than the bouda was.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1857,10 +1931,13 @@ def _stories(b: Builder, slavelands: Neighbour) -> None:
                 "up. Magic is suspected, and the characters may fall under "
                 "suspicion themselves."
             ),
-            secrets=(
-                "Every lost cow came from Megabari lands: stolen spoils among "
-                "which came carnivorous bulls, now loose in the herds of Makuria."
-            ),
+            secrets=[
+                titled(
+                    "Where the cows came from",
+                    "Every lost cow came from Megabari lands: stolen spoils among "
+                    "which came carnivorous bulls, now loose in the herds of Makuria.",
+                ),
+            ],
             antagonist="Carnivorous bulls",
         )
     )

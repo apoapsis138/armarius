@@ -14,7 +14,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models import BodyVis
-from ..builder import characteristics, vf_great, vf_minor
+from ..builder import characteristics, titled, vf_great, vf_minor
 
 if TYPE_CHECKING:
     from ...models import Creature, Neighbour
@@ -1009,15 +1009,35 @@ def _might_only(theban: Theban) -> None:
         "standing on the altar cast a ritual without vis, drawing on "
         "her power; such spells risk odd side effects, and a botch is "
         "tainted as if with faerie vis.",
-        secrets="The Theban magi do not know she is there. The bonds have a "
-        "strength of 50, renewed each new year; every ritual cast "
-        "from the altar wears them down by the pawns it would "
-        "normally need. If they reach 0 within one year the altar "
-        "splits and Klymene is free, and unhappy about it, with "
-        "nowhere to go: she may go back to the Magic Realm, settle "
-        "on a mountaintop and upset all around her, or roam the "
-        "Tribunal freeing other bound titanesses. Lucian's Children "
-        "of Olympus are drawn to the altar.",
+        secrets=[
+            titled(
+                "Unknown to the magi",
+                "The Theban magi do not know Klymene is there.",
+            ),
+            titled(
+                "The bonds wear thin",
+                "Every ritual cast from the altar at Pergamos wears down "
+                "Klymene's bonds. If they reach nothing within one year the "
+                "altar splits and Klymene is free.",
+            ),
+            titled(
+                "Klymene freed",
+                "Freed, Klymene is unhappy about it, with nowhere to go: she "
+                "may go back to the Magic Realm, settle on a mountaintop and "
+                "upset all around her, or roam the Tribunal freeing other "
+                "bound titanesses.",
+            ),
+            titled(
+                "The Children of Olympus",
+                "Lucian's Children of Olympus are drawn to Klymene's altar.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The bonds have a strength of 50, renewed each new year; "
+                "every ritual cast from the altar wears them down by the "
+                "pawns it would normally need, and they fail at 0.",
+            ),
+        ],
     )
     _MADE["belisarius"] = b.creature(
         "Belisarius of the Serpent Column",

@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.83.0",
+  "app_version": "3.84.0",
   "kind": "pack",
   "name": "Sanctuary of Ice: the Greater Alps Tribunal",
   "from_saga": "Sanctuary of Ice: the Greater Alps Tribunal",
@@ -123,8 +123,32 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "La, when still the apprentice Lucia, fell in with the Black Mark, a Criamon splinter that holds the Dominion will destroy all magic unless stopped and doubts that it comes from an almighty God; she murdered a priest on his own altar and has been cursed by God since.\n\nEcho is in love with a Criamon three centuries dead, an affair that is also an illicit Twilight; the ghostly Esther is a juno born of it. The Primi delay Esther's unpetrifying to watch it.\n\nVis stores: 100 pawns\n\nVis: 160 pawns a year, much of it from creatures that must be hunted down and killed (the book's own figure, kept: A12 as amended)\n\nLibrary: the ghosts serve as its library, about 2100 levels of spells if they will teach; Hermetic books worth 450 points, kept mostly for trade (its magi study from vis or in the Magic realm); mundane books worth 60 points, mostly tractatus on Enigmatic Wisdom",
+            "title": "La and the Black Mark",
+            "text": "La, when still the apprentice Lucia, fell in with the Black Mark, a Criamon splinter that holds the Dominion will destroy all magic unless stopped and doubts that it comes from an almighty God; she murdered a priest on his own altar and has been cursed by God since.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Echo's love",
+            "text": "Echo is in love with a Criamon three centuries dead, an affair that is also an illicit Twilight; the ghostly Esther is a juno born of it.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Why Esther stays stone",
+            "text": "The Primi delay Esther's unpetrifying to watch Echo's affair.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at The Cave of Twisting Shadows",
+            "text": "Vis stores: 100 pawns\nVis: 160 pawns a year, much of it from creatures that must be hunted down and killed (the book's own figure, kept: A12 as amended)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at The Cave of Twisting Shadows",
+            "text": "Library: the ghosts serve as its library, about 2100 levels of spells if they will teach; Hermetic books worth 450 points, kept mostly for trade (its magi study from vis or in the Magic realm); mundane books worth 60 points, mostly tractatus on Enigmatic Wisdom",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -272,19 +296,19 @@
             "kind": "places",
             "target_id": "the_rorschach_chapter",
             "note": "A chapter of the covenant",
-            "id": "1d9283005630"
+            "id": "f33c3b5a2a90"
           },
           {
             "kind": "places",
             "target_id": "juno_s_spire",
             "note": "A chapter of the covenant",
-            "id": "d389507357af"
+            "id": "19d87e6f4232"
           },
           {
             "kind": "places",
             "target_id": "the_tower_of_ashes",
             "note": "A chapter of the covenant",
-            "id": "66ac296c50fc"
+            "id": "fad1e53310e7"
           }
         ],
         "unnamed_magi": 9,
@@ -310,8 +334,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis stores: 100 pawns\n\nVis: 60 pawns a year, with the Domleschg oak grove's Rego vis among its sources and the Bavarian Common divided at the Fair\n\nLibrary: 2100 levels of spells, favouring investigation and violence; Hermetic books worth 900 points, strongest in Intellego and Ignem; mundane books worth 240 points, favouring Hermetic history and law",
+            "title": "Vis at The Covenant of the Icy North",
+            "text": "Vis stores: 100 pawns\nVis: 60 pawns a year, with the Domleschg oak grove's Rego vis among its sources and the Bavarian Common divided at the Fair",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at The Covenant of the Icy North",
+            "text": "Library: 2100 levels of spells, favouring investigation and violence; Hermetic books worth 900 points, strongest in Intellego and Ignem; mundane books worth 240 points, favouring Hermetic history and law",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -427,8 +457,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis stores: 200 pawns\n\nVis: 105 pawns a year, mostly Perdo, Auram and Herbam (the book prints +15; 30 pawns and 5 a point, Fourth Edition core p. 206)\n\nLibrary: 4500 levels of spells, mostly unpleasant faerie magic; Hermetic books worth 1350 points, favouring Perdo; mundane books worth 300 points, favouring faerie lore",
+            "title": "Vis at The Covenant Where Journeys End",
+            "text": "Vis stores: 200 pawns\nVis: 105 pawns a year, mostly Perdo, Auram and Herbam (the book prints +15; 30 pawns and 5 a point, Fourth Edition core p. 206)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at The Covenant Where Journeys End",
+            "text": "Library: 4500 levels of spells, mostly unpleasant faerie magic; Hermetic books worth 1350 points, favouring Perdo; mundane books worth 300 points, favouring faerie lore",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -595,8 +631,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis stores: 200 pawns, mostly Corpus\n\nVis: 80 pawns a year, 50 of them Corpus, the dead god's flesh among them\n\nLibrary: 3900 levels of spells, mostly Corpus rituals; Hermetic books worth 1800 levels, mostly fine Corpus tractatus with the lab texts and notes of every longevity researcher; mundane books worth 240 levels",
+            "title": "Vis at Sinews of Knowledge",
+            "text": "Vis stores: 200 pawns, mostly Corpus\nVis: 80 pawns a year, 50 of them Corpus, the dead god's flesh among them",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Sinews of Knowledge",
+            "text": "Library: 3900 levels of spells, mostly Corpus rituals; Hermetic books worth 1800 levels, mostly fine Corpus tractatus with the lab texts and notes of every longevity researcher; mundane books worth 240 levels",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -712,7 +754,7 @@
         },
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at Tarragon Vale",
             "text": "Vis: its income, about twenty years' worth, held in store by the Quaesitores",
             "revealed_year": null,
             "revealed_season": ""
@@ -810,31 +852,31 @@
             "kind": "places",
             "target_id": "valnastium_s_vienna_chapter",
             "note": "A chapter of the covenant",
-            "id": "39dba9ac28f9"
+            "id": "85703459e43c"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_constance_chapter",
             "note": "A chapter of the covenant",
-            "id": "59e2f1a2963f"
+            "id": "b7466ad137e4"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_saint_gallen_chapter",
             "note": "A chapter of the covenant",
-            "id": "0b00964b9061"
+            "id": "d477a9aab824"
           },
           {
             "kind": "places",
             "target_id": "valnastium_s_geneva_chapter",
             "note": "A chapter of the covenant",
-            "id": "67a4aa355070"
+            "id": "c38cfd56e067"
           },
           {
             "kind": "neighbours",
             "target_id": "the_abbey_of_saint_gallen",
             "note": "Ally",
-            "id": "99c12c652f6d"
+            "id": "f98f850a364c"
           }
         ],
         "unnamed_magi": 7,
@@ -860,8 +902,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis stores: 100 pawns\n\nVis: 125 pawns a year, traded to give a broad mix of Techniques (the book prints +19, 570 pawns; 30 pawns and 5 a point gives 125, and 570 is taken for a slip)\n\nLibrary: 2400 levels of spells; Hermetic books worth 900 levels; mundane books worth 1200 levels, some held in the chapters",
+            "title": "Vis at Valnastium",
+            "text": "Vis stores: 100 pawns\nVis: 125 pawns a year, traded to give a broad mix of Techniques (the book prints +19, 570 pawns; 30 pawns and 5 a point gives 125, and 570 is taken for a slip)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Valnastium",
+            "text": "Library: 2400 levels of spells; Hermetic books worth 900 levels; mundane books worth 1200 levels, some held in the chapters",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -900,98 +948,98 @@
             "year": null,
             "says": "A magus votes at the Tribunal only if his covenant has bought him a chair: it declares a permanent vis source, has the Quaesitores assess it, and pledges ten pawns a year of it to his upkeep, at least a year before the meeting if he is to vote. The vis is not paid to anyone; the pledge shows the covenant will not poach from its neighbours. Vis distilled from an aura (\"farming\") does not count. A magus with no chair is a vagrant, a Low Crime, though a chair registered at any time protects him from its punishments. A chair belongs to the covenant, whose council fills it when its magus leaves.",
             "case_id": "",
-            "id": "e3a8ed09e78f"
+            "id": "3c778afa91ec"
           },
           {
             "title": "The yearly pawn",
             "year": null,
             "says": "Each covenant pays a pawn of vis a year to the senior members of Houses Guernicus and Mercere in the Tribunal. It began as a tradition and entered the Code; it was once a pawn for each magus.",
             "case_id": "",
-            "id": "c269f794209a"
+            "id": "da2c91d61678"
           },
           {
             "title": "Vis treaties",
             "year": null,
             "says": "Gifts of vis exchanged so often between two covenants that both sides want the supply guaranteed are ratified as treaties and entered in the Code; they are delivered in Frustration Week. A treaty's income may pay for a chair, but vis owed away may not.",
             "case_id": "",
-            "id": "93a52b2a3078"
+            "id": "8c33fc844520"
           },
           {
             "title": "No new covenants",
             "year": null,
             "says": "No new covenant may be founded unless it can show that, after its costs, it can spend ten pawns a year on each magus from sources no one else has claimed, and a pawn for the Quaesitores and Redcaps. None has been allowed for centuries; the Tribunal grows by chapters instead.",
             "case_id": "",
-            "id": "4e4a76958d1b"
+            "id": "7383070dbe92"
           },
           {
             "title": "Ostracism",
             "year": null,
             "says": "As the first business of each meeting every magus writes on a sherd the name of the magus he most despises, or leaves it blank. If at least one magus in four named the one with the most sherds, that magus must leave the Greater Alps before the second full moon, for twenty-one years, or be Marched. The exile ends the day before a Tribunal. An ostracised Praeco is replaced by the next eldest, with no second vote; an ostracised chief Quaesitor by his deputy. An ostracised magus may hand the sigils he carries, his own aside, to another magus.",
             "case_id": "",
-            "id": "0e063fcb09f7"
+            "id": "5a62f3987dc0"
           },
           {
             "title": "Amaranth",
             "year": null,
             "says": "All amaranth, the faerie flower that addicts magi, is to be destroyed. The traffic goes on, around Ingolstadt above all; the neighbouring Tribunals have not banned it, and the Grand Tribunal has never been asked.",
             "case_id": "",
-            "id": "b8f6e1d11975"
+            "id": "5fb8f122ccf2"
           },
           {
             "title": "Churches the Code protects",
             "year": null,
             "says": "The city of Constance and the monasteries of the Great and Little Saint Bernard passes, vital to the Redcaps and favoured by House Jerbiton, are named in the Code as places where even minor violence is judged interference with the Church.",
             "case_id": "",
-            "id": "4b892ac26d40"
+            "id": "cb3bd6139929"
           },
           {
             "title": "Flagrant spending",
             "year": null,
             "says": "Covenants may not draw attention to themselves by making goods from vis to sell. The ruling was aimed at Sinews of Knowledge, which was ordered to stop its trade.",
             "case_id": "",
-            "id": "fc8463ebf8fb"
+            "id": "4ae52dc50d6e"
           },
           {
             "title": "Pilate's ghost",
             "year": null,
             "says": "No magus may harvest vis from the ghost of Pontius Pilate on Mount Pilatus. The meeting that made the ruling also sent its condolences to the sodales of the magi crushed by the avalanche that spoiled the first attempt.",
             "case_id": "",
-            "id": "41333236964b"
+            "id": "14d3948b611e"
           },
           {
             "title": "The Bavarian Common",
             "year": null,
             "says": "After the Sundering of Tremere destroyed the covenant of Highest Aspiration, several covenants raced to claim its resources. An emergency meeting gave its vis sources to the Quaesitores to harvest and divide among the covenants each year, and disbanded every rival chapter house in Bavaria but the Icy North's. The Common supports two chairs, for the quaesitor and the hoplite who keep it.",
             "case_id": "",
-            "id": "0e310b37c017"
+            "id": "7a8e839410d1"
           },
           {
             "title": "The estates of Tarragon Vale",
             "year": null,
             "says": "No estate of Tarragon Vale's vanished magi may be settled without proof of their deaths; until then the Quaesitores keep the covenant's vis income, spending only what its Aegis and its Shrouded Glen need. The heirs have pressed the matter at a meeting, and the Quaesitores' position was upheld pending further evidence.",
             "case_id": "",
-            "id": "931c71529b52"
+            "id": "51383e070115"
           },
           {
             "title": "A sanctum a season",
             "year": 1165,
             "says": "Snadstrich of Ex Miscellanea, of no covenant, was said to have moved her sanctum seven times in one year. The Tribunal ruled that a magus may not establish a new sanctum more than once a season (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "e778cd2ee7e0"
+            "id": "8e072f32fa1f"
           },
           {
             "title": "Andru's pardon",
             "year": 1194,
             "says": "A faerie lord took grogs and covenfolk of Valnastium to use as pieces in a great game of his; its magi rescued them, killing many faeries. Andru argued that every magus may defend his property, servants included, and that the rescue was self-defence; the Tribunal narrowly accepted it and pardoned him (The Wizard's Grimoire; Sanctuary of Ice calls it a just war on one of the faerie kings of Val Fanes, and gossip says Andru claimed a summer prince's crown in it).",
             "case_id": "",
-            "id": "bb81281d4df4"
+            "id": "041cf09b7278"
           },
           {
             "title": "Syrestis's fine",
             "year": 1194,
             "says": "Syrestis of Bjornaer, visiting covenants of the Greater Alps, killed livestock and game in his animal shapes, harming his hosts' relations with their neighbours. Both the Rhine and the Greater Alps heard the case: the Rhine fined him three pawns, the Greater Alps ten. A quaesitor ruled that he must pay the Greater Alps, where the crimes were done, and owed the Rhine nothing (The Wizard's Grimoire).",
             "case_id": "",
-            "id": "f8f9dae73ceb"
+            "id": "b8404123a0a6"
           }
         ],
         "treasury": [],
@@ -1003,7 +1051,7 @@
             "details": "The Grand Tribunal of 865 awards the site of the dead god's priesthood, sealed by House Guernicus since the Sundering, to Sancia filia Sabrina, who founds the Longevity Project there.",
             "changes": [],
             "margin": "",
-            "id": "e16a9b64d35d"
+            "id": "41a25acadd24"
           },
           {
             "year": 1165,
@@ -1012,7 +1060,7 @@
             "details": "The meeting rules on Snadstrich's seven sancta in a year.",
             "changes": [],
             "margin": "",
-            "id": "6efa8ac21f36"
+            "id": "a15b3950a61e"
           },
           {
             "year": 1194,
@@ -1021,7 +1069,7 @@
             "details": "The meeting narrowly accepts Andru's defence of Valnastium's rescue of its servants from a faerie lord, and fines Syrestis of Bjornaer ten pawns.",
             "changes": [],
             "margin": "",
-            "id": "bb6380aec06e"
+            "id": "5fafc6feac35"
           },
           {
             "year": 1198,
@@ -1030,7 +1078,7 @@
             "details": "The four magi of Tarragon Vale and its covenfolk vanish without a trace. The Quaesitores begin keeping its vis.",
             "changes": [],
             "margin": "",
-            "id": "29cdb50d9898"
+            "id": "3f488278e808"
           },
           {
             "year": 1206,
@@ -1039,7 +1087,7 @@
             "details": "The Primus of Guernicus appoints Athena Alpina, trained in the Roman Tribunal, chief Quaesitor of the Alps.",
             "changes": [],
             "margin": "",
-            "id": "a948f8bf7c5e"
+            "id": "4fa4bee1bfc1"
           },
           {
             "year": 1214,
@@ -1048,7 +1096,7 @@
             "details": "At the meeting Athena is forced to send away one of her hoplites, a Tremere maga.",
             "changes": [],
             "margin": "",
-            "id": "162936735a44"
+            "id": "0270ddde7b45"
           },
           {
             "year": 1215,
@@ -1057,7 +1105,7 @@
             "details": "A magical accident in Sicily brings about the birth of two dozen Gifted children at once.",
             "changes": [],
             "margin": "",
-            "id": "b399e123ebdf"
+            "id": "768a00521a49"
           },
           {
             "year": 1217,
@@ -1066,7 +1114,7 @@
             "details": "Kentigern of Ex Miscellanea, newly retrained at Magvillus, joins the Quaesitores at the Icy North motherhouse.",
             "changes": [],
             "margin": "",
-            "id": "494d04aa0496"
+            "id": "a8056d48ebd0"
           }
         ],
         "package_data": {
@@ -1084,8 +1132,20 @@
         "meeting": null,
         "secrets": [
           {
-            "title": "",
-            "text": "Athena Alpina's even-handedness toward House Tremere, which her neighbours call blatant favouritism, may see her ostracised at the next meeting. Cato was sent to the Alps partly to make sure that, if she goes, Adrasteia of Tytalus does not become chief Quaesitor.\n\nA myth runs through the Alps that the mountains lie across the spine of a dragon so large it eats other dragons, and that widespread disorder would wake it. Few magi believe it wholeheartedly.",
+            "title": "Athena Alpina's ostracism",
+            "text": "Athena Alpina's even-handedness toward House Tremere, which her neighbours call blatant favouritism, may see her ostracised at the next meeting.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Why Cato came to the Alps",
+            "text": "Cato was sent to the Alps partly to make sure that, if Athena Alpina goes, Adrasteia of Tytalus does not become chief Quaesitor.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The dragon under the Alps",
+            "text": "A myth runs through the Alps that the mountains lie across the spine of a dragon so large it eats other dragons, and that widespread disorder would wake it. Few magi believe it wholeheartedly.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3278,7 +3338,7 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "Its leader",
-            "id": "354644b660b2"
+            "id": "802e784e4d12"
           }
         ],
         "arms": {},
@@ -3311,13 +3371,13 @@
             "kind": "characters",
             "target_id": "constance",
             "note": "A leading member",
-            "id": "db5c09968c0c"
+            "id": "88d132413ec1"
           },
           {
             "kind": "characters",
             "target_id": "angela",
             "note": "A member",
-            "id": "0f36fecfbc21"
+            "id": "e760aef3b122"
           }
         ],
         "arms": {},
@@ -3350,7 +3410,7 @@
             "kind": "characters",
             "target_id": "pietro",
             "note": "Its founder",
-            "id": "4a2b67b7a0b9"
+            "id": "aa74bef593a7"
           }
         ],
         "arms": {},
@@ -3470,26 +3530,26 @@
             "kind": "characters",
             "target_id": "athena_alpina",
             "note": "The magus at risk",
-            "id": "69aa5796fbac"
+            "id": "e826084a0e73"
           },
           {
             "kind": "characters",
             "target_id": "cato",
             "note": "Her deputy",
-            "id": "a6c78e6e79ac"
+            "id": "d40c16aaf7d1"
           },
           {
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Who must not succeed her",
-            "id": "166473b6fa88"
+            "id": "d199a2966798"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Cato was sent to the Alps partly so that, if she goes, the chief Quaesitor's place passes to him and not to Adrasteia of Tytalus.",
+            "title": "Why Cato came to the Alps",
+            "text": "Cato was sent to the Alps partly so that, if Athena Alpina goes, the chief Quaesitor's place passes to him and not to Adrasteia of Tytalus.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3531,13 +3591,13 @@
             "kind": "characters",
             "target_id": "adrasteia",
             "note": "Hunts the raiders",
-            "id": "1b8949aa8a41"
+            "id": "646f37bc97da"
           },
           {
             "kind": "characters",
             "target_id": "katrina",
             "note": "Hunts the raiders",
-            "id": "0e7e7f3154e1"
+            "id": "1f65e349040b"
           }
         ],
         "arms": {},
@@ -3579,7 +3639,7 @@
             "kind": "covenants",
             "target_id": "the_covenant_of_the_icy_north",
             "note": "Offers the chair",
-            "id": "559e047138ae"
+            "id": "a04025cdc31e"
           }
         ],
         "arms": {},
@@ -3611,13 +3671,13 @@
             "kind": "covenants",
             "target_id": "tarragon_vale",
             "note": "The vanished covenant",
-            "id": "01e740ced60e"
+            "id": "976027444fe9"
           },
           {
             "kind": "characters",
             "target_id": "cymena",
             "note": "Lives at the site",
-            "id": "2940628be5c7"
+            "id": "5d8c9409b19c"
           }
         ],
         "arms": {},
@@ -3649,7 +3709,7 @@
             "kind": "characters",
             "target_id": "jacinta",
             "note": "The likely Prima",
-            "id": "9f3d53772b31"
+            "id": "cec016bd602b"
           }
         ],
         "arms": {},
@@ -3681,7 +3741,7 @@
             "kind": "characters",
             "target_id": "philomena",
             "note": "An amaranth halfling",
-            "id": "d5f92f6ed36c"
+            "id": "cd6847eaf75d"
           }
         ],
         "arms": {},
@@ -3713,7 +3773,7 @@
             "kind": "characters",
             "target_id": "esther",
             "note": "The petrified maga",
-            "id": "fc1359212efb"
+            "id": "f4bd64199cd3"
           }
         ],
         "arms": {},
@@ -3745,7 +3805,7 @@
             "kind": "covenants",
             "target_id": "the_covenant_where_journeys_end",
             "note": "Searches for it",
-            "id": "fbd12fb80d64"
+            "id": "2eed457944e1"
           }
         ],
         "arms": {},
@@ -3777,7 +3837,7 @@
             "kind": "characters",
             "target_id": "kentigern",
             "note": "Suspects a magus makes basilisks",
-            "id": "b02306f65a67"
+            "id": "e8c8a2fd3677"
           }
         ],
         "arms": {},
@@ -3834,13 +3894,13 @@
             "kind": "covenants",
             "target_id": "sinews_of_knowledge",
             "note": "The covenant",
-            "id": "00719dcb8ac4"
+            "id": "f61de30a8ecc"
           },
           {
             "kind": "characters",
             "target_id": "ragoneda",
             "note": "Its liaison to a trading partner",
-            "id": "a0cf0922eecf"
+            "id": "40cd110b1249"
           }
         ],
         "arms": {},
@@ -19968,7 +20028,7 @@
             "kind": "characters",
             "target_id": "sourdine",
             "note": "His contact at Valnastium",
-            "id": "417c81bee497"
+            "id": "d1ac3def53de"
           }
         ],
         "attitudes": [],
@@ -21596,8 +21656,14 @@
         "summary": "Archmaga, filia Rafe, the Longevity Project's chief researcher, slowed because her predecessors all but exhausted its line of work; if she succeeds, magi of middling Corpus could keep themselves until Twilight. Her own contribution is the potion that slows apparent aging. She asks magi to send her the bodies of human-shaped faeries through the Redcaps, freely shares a spell that keeps such bodies from decay, and pays for rare ones; some Merinita hate her for dissecting their kin. A Progressive, who sees Bonisagus as human and fallible and her own generation as no lesser. Many suspect she can strip a man's organs out onto a table; in truth she is no combat maga.",
         "secrets": [
           {
-            "title": "",
-            "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+            "title": "Philomena's faerie father",
+            "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Philomena and amaranth addicts",
+            "text": "She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -26770,13 +26836,13 @@
             "kind": "characters",
             "target_id": "carmine",
             "note": "His wife",
-            "id": "33285aff2b62"
+            "id": "4439a0d374c3"
           },
           {
             "kind": "creatures",
             "target_id": "crucifixo",
             "note": "his familiar, Crucifixo",
-            "id": "af5efa48e16f"
+            "id": "c055a28f7307"
           }
         ],
         "attitudes": [],
@@ -31018,7 +31084,7 @@
             "kind": "characters",
             "target_id": "andru",
             "note": "Her husband",
-            "id": "f45a77389700"
+            "id": "dae1acd46e35"
           }
         ],
         "attitudes": [],
@@ -31926,7 +31992,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 0,
-            "id": "f6ae2a19fd1d"
+            "id": "e47a0ed74119"
           }
         ],
         "soak": 0,
@@ -32118,7 +32184,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Handles the things she loved in life as if alive. Her gloves make it needless, but most strong ghosts have it.",
-            "id": "de356c6eb44a"
+            "id": "c060b4070446"
           },
           {
             "name": "Unquiet Spirit",
@@ -32132,7 +32198,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Flings things with her thoughts: in the Cave, up to 250 pounds as far as 100 paces, lighter things falling straight down at the edge of its reach; landing one precisely is a targeting roll, +2 to hit a man-sized target with a small object. ReTe with Animal, Aquam, Corpus or Herbam requisites for what she throws. Fourth Edition: 1 points.",
-            "id": "de97e4efc5a1"
+            "id": "e411d7817989"
           }
         ],
         "vis": [],
@@ -32253,7 +32319,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Moves things of extraordinary weight anywhere in the aura, a Might point a magnitude of Target; she seems to touch what she moves. Nothing in the aura less than a year can be moved, though she can push it with other things. Fourth Edition: 3 points.",
-            "id": "157d2f2a639d"
+            "id": "eef92999af3b"
           },
           {
             "name": "The Primi's Magic",
@@ -32267,7 +32333,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Casts any spontaneous spell up to level 25 and any formulaic spell she knows up to level 60, at 1 Might point a magnitude; she earns no Twilight. Points spent come back to the Primi when a new Primus joins them. She knows every Vim and Mentem spell of the core rules to level 60 and many spells to level 25 of other Forms.",
-            "id": "d777c71ab32c"
+            "id": "9d36ce5eacc5"
           }
         ],
         "vis": [],
@@ -32377,7 +32443,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A snowstorm that buries the gnomes and their enemies: the book's Control Auram 8, fixed as a Greater Power, as their Might follows their role.",
-            "id": "7173d44781dc"
+            "id": "25a46cfe153e"
           },
           {
             "name": "Shake the Mountain",
@@ -32391,7 +32457,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Brings snow and rock down on those below: the book's Control Terram 8, fixed as a Greater Power.",
-            "id": "3977824df8c2"
+            "id": "93d460a86c2d"
           },
           {
             "name": "Faerie Gifts",
@@ -32405,7 +32471,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Enchants small objects, as the Fourth Edition's Faeries describes: the cheese one gave a poor girl of Lucerne turned to gold.",
-            "id": "8909c3ead87d"
+            "id": "956e355bde24"
           }
         ],
         "vis": [
@@ -32413,7 +32479,7 @@
             "pawns": 2,
             "art": "Terram",
             "where": "one pawn in each great foot; its Art is whatever the gnome was doing when killed",
-            "id": "764233b2b94f"
+            "id": "dde80e7fae17"
           }
         ],
         "equipment": "",
@@ -32484,7 +32550,7 @@
             "attack": 13,
             "defense": 14,
             "damage": -1,
-            "id": "4646100f44f3"
+            "id": "54d53919d971"
           }
         ],
         "soak": 0,
@@ -32718,7 +32784,7 @@
             "pawns": 1,
             "art": "Mentem",
             "where": "in his body",
-            "id": "a0aa831b2c4b"
+            "id": "adce8eaa8c6a"
           }
         ],
         "equipment": "",
@@ -38709,8 +38775,14 @@
       "summary": "Archmaga, filia Rafe, the Longevity Project's chief researcher, slowed because her predecessors all but exhausted its line of work; if she succeeds, magi of middling Corpus could keep themselves until Twilight. Her own contribution is the potion that slows apparent aging. She asks magi to send her the bodies of human-shaped faeries through the Redcaps, freely shares a spell that keeps such bodies from decay, and pays for rare ones; some Merinita hate her for dissecting their kin. A Progressive, who sees Bonisagus as human and fallible and her own generation as no lesser. Many suspect she can strip a man's organs out onto a table; in truth she is no combat maga.",
       "secrets": [
         {
-          "title": "",
-          "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father. She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
+          "title": "Philomena's faerie father",
+          "text": "She is an amaranth halfling, daughter of one of the faeries who grow the forbidden flower: immune to it, since her body makes it, she stopped aging at 21 and began gaining Twilight as if under a longevity potion, and expects to fade into Arcadia to join her father.",
+          "revealed_year": null,
+          "revealed_season": ""
+        },
+        {
+          "title": "Philomena and amaranth addicts",
+          "text": "She has a weak hold over amaranth addicts, who resist her words the worse for their addiction.",
           "revealed_year": null,
           "revealed_season": ""
         }
@@ -41204,7 +41276,7 @@
           "kind": "characters",
           "target_id": "andru",
           "note": "Her husband",
-          "id": "f45a77389700"
+          "id": "dae1acd46e35"
         }
       ],
       "attitudes": [],

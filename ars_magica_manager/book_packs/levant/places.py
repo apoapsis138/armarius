@@ -54,7 +54,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Neighbour
@@ -702,11 +702,19 @@ def _egypt_and_sinai(levant: Levant) -> None:
             "the Great Pyramid, and the Pyramids (II), the priesthood in "
             "the regio.",
         ),
-        secrets=paragraphs(
-            "If the first Pyramids are in play, Ruth and Pariah have "
-            "mastered the plateau's wandering spirits and use them to "
-            "learn the pyramids' past and to keep intruders away.",
-        ),
+        secrets=[
+            titled(
+                "The plateau's spirits",
+                "Ruth and Pariah have mastered the Giza plateau's wandering "
+                "spirits and use them to learn the pyramids' past and to keep "
+                "intruders away.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Ruth and Pariah's mastery of the spirits holds if the first "
+                "Pyramids are in play.",
+            ),
+        ],
         **KNOWN_ORDER,
     )
     _add(

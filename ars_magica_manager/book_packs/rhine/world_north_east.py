@@ -15,6 +15,7 @@ from typing import TYPE_CHECKING
 
 from ...arms import Arms
 from ...models import Neighbour
+from ..builder import titled
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -116,9 +117,18 @@ def _lowlands(rhine: Rhine) -> None:
         "and drove the pagans into the countryside. They have since accepted "
         "Christianity and sworn to the emperor, hoping to win back their "
         "ancestral lands.",
-        secrets="The Mecklenburgs still secretly worship Radegast and have gained "
-        "unnatural powers from him. Imanitos Mendax of Oculus Septentrionalis "
-        "has lately appeared to them as a prophet of the god.",
+        secrets=[
+            titled(
+                "The Mecklenburgs and Radegast",
+                "The Mecklenburgs still secretly worship Radegast and have gained "
+                "unnatural powers from him.",
+            ),
+            titled(
+                "A prophet of Radegast",
+                "Imanitos Mendax of Oculus Septentrionalis has lately appeared to the "
+                "Mecklenburgs as a prophet of Radegast.",
+            ),
+        ],
     )
 
     # Churches of the north.
@@ -260,8 +270,16 @@ def _lowlands(rhine: Rhine) -> None:
         "chief town of the Sorbian princes of Mecklenburg. Valdemar I burnt it in "
         "1161 and drove its Radegast-worshippers into the countryside, and it is "
         "now mostly German.",
-        secrets="The Mecklenburg family still worship Radegast in secret; see their "
-        "record and the Cult of Radegast.",
+        secrets=[
+            titled(
+                "The Mecklenburgs' worship",
+                "The Mecklenburg family still worship Radegast in secret.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "See the Princes of Mecklenburg's record and the Cult of Radegast.",
+            ),
+        ],
     )
 
     # Towns of Saxony and Westphalia.
@@ -1058,11 +1076,23 @@ def _factions(rhine: Rhine) -> None:
         "secret informants across the Empire. Its supreme head is the archbishop "
         "of Cologne. Philippus Niger of Durenmar has assured House Guernicus that "
         "it poses no danger to the Order.",
-        secrets="Philippus Niger uses the Vehm: two of his trusted men are Freigrafs and "
-        "he knows more than twenty Fehmenotes. He has had dozens of suspected "
-        "hedge wizards and at least one Marched magus hanged by its courts, and "
-        "is spreading it southward as a weapon against hedge wizards. He has no "
-        "grounds for his assurance to House Guernicus.",
+        secrets=[
+            titled(
+                "Philippus Niger's men in the Vehm",
+                "Philippus Niger uses the Vehm: two of his trusted men are Freigrafs "
+                "and he knows more than twenty Fehmenotes.",
+            ),
+            titled(
+                "The Vehm's hangings",
+                "Philippus Niger has had dozens of suspected hedge wizards and at "
+                "least one Marched magus hanged by the Vehm's courts, and is "
+                "spreading it southward as a weapon against hedge wizards.",
+            ),
+            titled(
+                "Philippus Niger's assurance",
+                "Philippus Niger has no grounds for his assurance to House Guernicus.",
+            ),
+        ],
     )
     w["harz_witches"] = b.faction(
         "The Witches of the Harz",
@@ -1116,11 +1146,26 @@ def _factions(rhine: Rhine) -> None:
         "pagan families and serve as court advisers; his favoured are inspiring "
         "and commanding, and overconfident. The princes of Mecklenburg were "
         "driven from his open worship in 1161.",
-        secrets="The Mecklenburg nobility still come secretly to Rethra to honour "
-        "Radegast and have gained powers from him; Imanitos Mendax poses as the "
-        "god's prophet to them. In the saga plot Between the Devil and the Deep "
-        "Blue Sea, Radegast is a demon. At Roznov the summer-solstice festival "
-        "hides human sacrifices.",
+        secrets=[
+            titled(
+                "The Mecklenburgs at Rethra",
+                "The Mecklenburg nobility still come secretly to Rethra to honour "
+                "Radegast and have gained powers from him.",
+            ),
+            titled(
+                "A prophet of Radegast",
+                "Imanitos Mendax poses as Radegast's prophet to the Mecklenburgs.",
+            ),
+            titled(
+                "The Roznov festival",
+                "At Roznov the summer-solstice festival hides human sacrifices.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "In the saga plot Between the Devil and the Deep Blue Sea, Radegast "
+                "is a demon.",
+            ),
+        ],
     )
     w["frisian_pirates"] = b.faction(
         "Pirates of Frisia",
@@ -1165,11 +1210,21 @@ def _factions(rhine: Rhine) -> None:
         summary="Bjornaer magi of bear heartbeast who look back to the Founder herself; "
         "the Senior Elder of the House always has a bear heartbeast in her "
         "memory.",
-        secrets="An ancient hidden line descending from Bjornaer, now only Archmage "
-        "Urgen of Crintera and his filia Odorpes of Fengheld's Lusatia chapter. "
-        "They keep the Bears' Cave in the northern Harz, floored with the bones "
-        "of primeval bears, as a private source of Animal vis; each visits now "
-        "and then and would be furious to find anyone else harvesting it.",
+        secrets=[
+            titled(
+                "Who is left of the line",
+                "An ancient hidden line descending from Bjornaer, now only Archmage "
+                "Urgen of Crintera and his filia Odorpes of Fengheld's Lusatia "
+                "chapter.",
+            ),
+            titled(
+                "The Bears' Cave",
+                "Urgen and Odorpes keep the Bears' Cave in the northern Harz, floored "
+                "with the bones of primeval bears, as a private source of Animal vis; "
+                "each visits now and then and would be furious to find anyone else "
+                "harvesting it.",
+            ),
+        ],
     )
     w["harmonists"] = b.faction(
         "Harmonists of House Bjornaer",
@@ -1208,9 +1263,14 @@ def _factions(rhine: Rhine) -> None:
         "priestess of Hertha, backs them. They gain adherents as the occupation "
         "of Rügen drags on, and the Gathering of 1227 is expected to bring the "
         "dispute to a head.",
-        secrets="Urgen is widely suspected of driving mundanes from the wild with covert "
-        "animal attacks, and is stepping up such campaigns now he is free of the "
-        "Primacy.",
+        secrets=[
+            titled(
+                "Urgen's campaigns",
+                "Urgen is widely suspected of driving mundanes from the wild with "
+                "covert animal attacks, and is stepping up such campaigns now he is "
+                "free of the Primacy.",
+            ),
+        ],
     )
     w["forest_brothers_volkhvy"] = b.faction(
         "Volkhvy of the Forest Brothers",
@@ -1227,10 +1287,16 @@ def _factions(rhine: Rhine) -> None:
         "open the great empty barrow there, which they often let Bjornaer magi "
         "use because of their friendship with Crintera; Janis, leader of "
         "Crintera's Swan clan, is one of them.",
-        secrets="The barrow is a pre-Hermetic gateway, one end of a faerie trod through "
-        "a particularly dark region of Arcadia that comes out near the covenant "
-        "of Pripet Major in the Novgorod Tribunal. Nobody at the Russian end can "
-        "open it, so it works one way only.",
+        secrets=[
+            titled(
+                "The barrow's gateway",
+                "The barrow at the Ziegensteine is a pre-Hermetic gateway, one end of "
+                "a faerie trod through a particularly dark region of Arcadia that "
+                "comes out near the covenant of Pripet Major in the Novgorod "
+                "Tribunal. Nobody at the Russian end can open it, so it works one way "
+                "only.",
+            ),
+        ],
     )
     w["svantovit_volkhvy"] = b.faction(
         "Volkhvy of Svantovit",
@@ -1251,10 +1317,16 @@ def _factions(rhine: Rhine) -> None:
         "it, and the rite's display of power would make the doubter a zealous "
         "pagan messiah bent on returning Rügen to the god, which watching magi "
         "might take for diabolism.",
-        secrets="The two have laboriously moved the surviving upper half of Svantovit's "
-        "statue from Arkona into a well-hidden shrine: four faces looking four "
-        "ways, a bull's horn in its right hand, the god's huge sword laid before "
-        "it. Looters took the jewelled saddle and bridle.",
+        secrets=[
+            titled(
+                "Svantovit's statue",
+                "The two priests of Svantovit have laboriously moved the surviving "
+                "upper half of Svantovit's statue from Arkona into a well-hidden "
+                "shrine: four faces looking four ways, a bull's horn in its right "
+                "hand, the god's huge sword laid before it. Looters took the jewelled "
+                "saddle and bridle.",
+            ),
+        ],
     )
     w["hertha_priesthood"] = b.faction(
         "Priesthood of Hertha",
@@ -1336,10 +1408,19 @@ def _factions(rhine: Rhine) -> None:
         "especially women, become greatly respected witches with powers of "
         "entrancement or second sight. The storyguide may add bear or lynx "
         "clans.",
-        secrets="Their legends tell of the betrayal of Bjornaer, who carried their "
-        "secrets to the Roman priests, which they blame for their fall from "
-        "kings of men to fringe-dwellers; the Founder was a Pomeranian "
-        "shapeshifter-witch of their kind.",
+        secrets=[
+            titled(
+                "The betrayal of Bjornaer",
+                "The Pomeranian werewolves' legends tell of the betrayal of Bjornaer, "
+                "who carried their secrets to the Roman priests, which they blame for "
+                "their fall from kings of men to fringe-dwellers.",
+            ),
+            titled(
+                "What the Founder was",
+                "Bjornaer the Founder was a Pomeranian shapeshifter-witch of their "
+                "kind.",
+            ),
+        ],
     )
     w["god_of_truth"] = b.faction(
         "The God of Truth",
@@ -1358,9 +1439,14 @@ def _factions(rhine: Rhine) -> None:
         "cannot stamp it out. Tales speak of the Prophet Iacob, always "
         "accompanied by an albino crow, who appears unpredictably and never "
         "preaches, yet the religion springs up wherever he has been seen.",
-        secrets="The Prophet is Iacob of Irencillia, whose caricature Nestor is the "
-        "white crow, carrying out Primus Handri's plan to found a religion in "
-        "the name of the fae. The Quaesitores would be appalled.",
+        secrets=[
+            titled(
+                "Who the Prophet is",
+                "The Prophet is Iacob of Irencillia, whose caricature Nestor is the "
+                "white crow, carrying out Primus Handri's plan to found a religion in "
+                "the name of the fae. The Quaesitores would be appalled.",
+            ),
+        ],
     )
 
 
@@ -1477,9 +1563,14 @@ def _threats(rhine: Rhine) -> None:
         "Their informants are everywhere, their jurisdiction covers witchcraft "
         "and sacrilege, and their courts have lately begun to sit south of their "
         "old lands.",
-        secrets="Philippus Niger of Durenmar turns the Vehm on hedge wizards, has had at "
-        "least one Marched magus hanged by it, and spreads it southward while "
-        "telling House Guernicus it is no threat to the Order.",
+        secrets=[
+            titled(
+                "Philippus Niger and the Vehm",
+                "Philippus Niger of Durenmar turns the Vehm on hedge wizards, has had "
+                "at least one Marched magus hanged by it, and spreads it southward "
+                "while telling House Guernicus it is no threat to the Order.",
+            ),
+        ],
         stages=[
             stage(
                 "Courts in the south",
@@ -1513,15 +1604,24 @@ def _threats(rhine: Rhine) -> None:
         "the blackmail and extortion of citizens and magi. Tall, lean and "
         "handsome, a subtle Mentem specialist with competent Imaginem for "
         "disguises; his covenant-mates find him useful despite his morals.",
-        secrets="He feeds Eric Ribecus of Waddenzee advance word of the covenant's ship "
-        "movements for a share of the plunder, perhaps by tiny Astasian "
-        "messenger demons taken for airy spirits; discovery would mean expulsion "
-        "and undying enmity. Optionally he is a diabolist of a hidden dark "
-        "Jerbiton lineage serving the demon Radegast, corrupting Lübeck's "
-        "notables through the Goldenes Kalb, posing as the prophet of Radegast "
-        "to the Mecklenburgs, able to swap the covenant's three Verditius "
-        "magestones for infernally tainted copies, and perhaps planting "
-        "corruption at the heart of the coming merchant league.",
+        secrets=[
+            titled(
+                "Imanitos and the pirates",
+                "Imanitos Mendax feeds Eric Ribecus of Waddenzee advance word of the "
+                "covenant's ship movements for a share of the plunder, perhaps by "
+                "tiny Astasian messenger demons taken for airy spirits; discovery "
+                "would mean expulsion and undying enmity.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Optionally he is a diabolist of a hidden dark Jerbiton lineage "
+                "serving the demon Radegast, corrupting Lübeck's notables through the "
+                "Goldenes Kalb, posing as the prophet of Radegast to the "
+                "Mecklenburgs, able to swap the covenant's three Verditius magestones "
+                "for infernally tainted copies, and perhaps planting corruption at "
+                "the heart of the coming merchant league.",
+            ),
+        ],
         stages=[
             stage(
                 "Word reaches the pirates",
@@ -1615,9 +1715,14 @@ def _threats(rhine: Rhine) -> None:
         "itself as the Tribunal's neutral peacemaker and arbiter of disputes. "
         "The more paranoid magi already suspect a hidden agenda behind the "
         "neutrality.",
-        secrets="Fengheld's real policy is to keep every other covenant so tangled in "
-        "politics that nobody notices its own growing power, and it has worked "
-        "so far.",
+        secrets=[
+            titled(
+                "Fengheld's real policy",
+                "Fengheld's real policy is to keep every other covenant so tangled in "
+                "politics that nobody notices its own growing power, and it has "
+                "worked so far.",
+            ),
+        ],
     )
     w["balastor_liberation"] = b.threat(
         "Balastor's liberation",
@@ -1736,11 +1841,24 @@ def _threats(rhine: Rhine) -> None:
         "slave costs a few shillings, less than a good horse; the exceptional "
         "ten times that, and the young, healthy and strong fetch more. Owning "
         "slaves is legal in Germany and frowned on by the Church.",
-        secrets="Ladislaus, a shady-looking man at the market, is a trusted companion of "
-        "Roznov with Magic Sensitivity; he picks out Gifted children among the "
-        "slaves, who are delivered to Coeris, the domus magna of House Tremere "
-        "in Transylvania. The other slaves he buys are traded or used by Roznov, "
-        "and some become the victims of its summer-solstice sacrifices.",
+        secrets=[
+            titled(
+                "Who Ladislaus is",
+                "Ladislaus, a shady-looking man at the market, is a trusted companion "
+                "of Roznov; he picks out Gifted children among the slaves, who are "
+                "delivered to Coeris, the domus magna of House Tremere in "
+                "Transylvania.",
+            ),
+            titled(
+                "Where the other slaves go",
+                "The other slaves Ladislaus buys are traded or used by Roznov, and "
+                "some become the victims of its summer-solstice sacrifices.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Ladislaus has Magic Sensitivity.",
+            ),
+        ],
     )
     w["bohemian_giants"] = b.threat(
         "Giants of the Bohemian Forest",

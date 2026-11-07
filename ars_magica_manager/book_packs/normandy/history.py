@@ -13,8 +13,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ...models import as_secrets, secret_words
-from ..builder import paragraphs, secrets
+from ..builder import more_secrets, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from . import Normandy
@@ -856,29 +855,45 @@ ERAS: tuple[tuple[str, str], ...] = (
 
 #: What the timeline foretells after 1220, for a saga that follows real
 #: history, with the book's hints at what lies behind the crown.
-FUTURE = (
-    "If the saga follows real history: Frederick II is crowned emperor in 1220. Louis "
-    "VIII becomes king in 1223, and his son Louis IX, the future St Louis, in 1226. The "
-    "seventeenth Grand Tribunal meets in 1228, the year of the Sixth Crusade and a papal "
-    "ban on teaching Aristotle at Paris. The Albigensian Crusade ends in 1229. Orléans's "
-    "cathedral school becomes a university in 1235 and Angers gains one in 1250. The "
-    "Seventh Crusade runs from 1248 to 1254, and the Treaty of Corbeil settles France's "
-    "claims against Aragon in 1258. The eighteenth Grand Tribunal meets in 1261, when a "
-    "Troyes cobbler's son becomes Pope Urban IV; France takes a single coinage in 1263, "
-    "and Guido le Gros of Saint-Gilles becomes Clement IV in 1265. The Eighth Crusade "
-    "sails in 1270 and Philip III takes the throne. Simon de Brie of Touraine becomes "
-    "Martin IV in 1281, Philip IV the Fair is crowned in 1285, the nineteenth Grand "
-    "Tribunal meets in 1294, and Louis IX is made a saint in 1297. The Tribunal next "
-    "meets in 1221, then 1227 (moved a year for the Grand Tribunal), 1235 and every "
-    "seven years after.\n\n"
-    "The seven generations granted to Hugh Capet's line end with Philip Augustus, so "
-    "some sudden change of dynasty is due at his death. The Royal Touch that cures "
-    "scrofula comes from the holy oil, not from Merovech's blood; most Merovingian heirs "
-    "carry a hidden immunity to drowning and a red cross birthmark. And Arthur of "
-    "Brittany may not be dead: if he had the Gift and was hidden away in a late "
-    "apprenticeship, his memory altered by Mentem, he would only now have passed his "
-    "Gauntlet, unaware of his birthright."
-)
+FUTURE = [
+    titled(
+        "The Tribunal's next meetings",
+        "The Tribunal next meets in 1221, then 1227 (moved a year for the Grand "
+        "Tribunal), 1235 and every seven years after.",
+    ),
+    titled(
+        "Storyguide Notes",
+        "History after 1220. If the saga follows real history: Frederick II is crowned emperor in 1220. Louis "
+        "VIII becomes king in 1223, and his son Louis IX, the future St Louis, in 1226. The "
+        "seventeenth Grand Tribunal meets in 1228, the year of the Sixth Crusade and a papal "
+        "ban on teaching Aristotle at Paris. The Albigensian Crusade ends in 1229. Orléans's "
+        "cathedral school becomes a university in 1235 and Angers gains one in 1250. The "
+        "Seventh Crusade runs from 1248 to 1254, and the Treaty of Corbeil settles France's "
+        "claims against Aragon in 1258. The eighteenth Grand Tribunal meets in 1261, when a "
+        "Troyes cobbler's son becomes Pope Urban IV; France takes a single coinage in 1263, "
+        "and Guido le Gros of Saint-Gilles becomes Clement IV in 1265. The Eighth Crusade "
+        "sails in 1270 and Philip III takes the throne. Simon de Brie of Touraine becomes "
+        "Martin IV in 1281, Philip IV the Fair is crowned in 1285, the nineteenth Grand "
+        "Tribunal meets in 1294, and Louis IX is made a saint in 1297.",
+    ),
+    titled(
+        "The end of Hugh Capet's line",
+        "The seven generations granted to Hugh Capet's line end with Philip Augustus, "
+        "so some sudden change of dynasty is due at his death.",
+    ),
+    titled(
+        "The Royal Touch and Merovech's blood",
+        "The Royal Touch that cures scrofula comes from the holy oil, not from "
+        "Merovech's blood; most Merovingian heirs carry a hidden immunity to drowning "
+        "and a red cross birthmark.",
+    ),
+    titled(
+        "Arthur of Brittany",
+        "Arthur of Brittany may not be dead: if he had the Gift and was hidden away in "
+        "a late apprenticeship, his memory altered by Mentem, he would only now have "
+        "passed his Gauntlet, unaware of his birthright.",
+    ),
+]
 
 
 def build(normandy: Normandy) -> None:
@@ -894,4 +909,4 @@ def build(normandy: Normandy) -> None:
     eras = paragraphs(*(f"{title}. {text}" for title, text in ERAS))
     # Any history already written keeps its place, its secrets ahead of ours.
     tribunal.history = paragraphs(tribunal.history, eras)
-    tribunal.secrets = as_secrets(paragraphs(secret_words(tribunal.secrets), FUTURE))
+    tribunal.secrets = more_secrets(tribunal.secrets, FUTURE)

@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs, vf_art
+from ..builder import joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -369,10 +369,21 @@ def _laniena(transylvania: Transylvania, b: Builder, tribunal: Tribunal) -> None
         "that Murat the Younger has let a vampire live, House Tremere's "
         "anger could fall on the whole oppidum.",
     )
-    hidden = joined_lines(
-        "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
-        "Only Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
-    )
+    hidden = [
+        titled(
+            "What Murat of Terezin was",
+            "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human.",
+        ),
+        titled(
+            "Murat of Terezin's family",
+            "Murat of Terezin, risen as a vampire, lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
+        ),
+        titled(
+            "Murat the Younger's silence",
+            "Only Murat the Younger knows that Murat of Terezin lives on as a vampire. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
+        ),
+        titled("Storyguide Notes", "The kukudhi: see the Bestiary."),
+    ]
     laniena = b.covenant(
         "Laniena",
         tribunal=tribunal,

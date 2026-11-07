@@ -29,11 +29,11 @@ from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
 from ...rules import sites
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
-    from ...models import Covenant, Neighbour, Tribunal
+    from ...models import Covenant, Neighbour, Secret, Tribunal
     from . import Theban
 
 BJORNAER = "house_bjornaer"
@@ -380,8 +380,14 @@ def _north(theban: Theban) -> None:
             "east coast; the sponge-divers knew it well and dived there "
             "until a monster guarding it ate one who went too near.",
         ),
-        secrets="The islanders notice occasional visitors who are always "
-        "dripping wet, and suspect they come from the drowned city.",
+        secrets=[
+            titled(
+                "The dripping visitors",
+                "The islanders of Samothraki notice occasional visitors who "
+                "are always dripping wet, and suspect they come from the "
+                "drowned city.",
+            )
+        ],
         **KNOWN_LOCALLY,
     )
 
@@ -530,10 +536,15 @@ def _delos(theban: Theban) -> None:
             "the phyle teaches its young magi or lends them on Casting "
             "Tablets.",
         ),
-        secrets="The vault is less safe than it looks: a clever magus could "
-        "rob it, or a dishonest arche skim from it, without great "
-        "difficulty. No one thinks it has ever happened, and it would "
-        "be judged a grave crime.",
+        secrets=[
+            titled(
+                "How safe the vault is",
+                "The vault on Delos is less safe than it looks: a clever magus "
+                "could rob it, or a dishonest arche skim from it, without great "
+                "difficulty. No one thinks it has ever happened, and it would "
+                "be judged a grave crime.",
+            )
+        ],
         **KNOWN_ORDER,
     )
 
@@ -573,9 +584,14 @@ def _cyclades(theban: Theban) -> None:
             "Vis: the springs yield vis to those their guardians allow "
             "(the book names neither Art nor amount).",
         ),
-        secrets="When anyone takes an interest in the springs, Krini turns "
-        "into a white cat, passes itself off as Karava, and grants "
-        "leave to take vis from Karava's spring.",
+        secrets=[
+            titled(
+                "Krini's white cat",
+                "When anyone takes an interest in the springs, Krini turns "
+                "into a white cat, passes itself off as Karava, and grants "
+                "leave to take vis from Karava's spring.",
+            )
+        ],
         **KNOWN_LOCALLY,
     )
     andros = _add(
@@ -607,8 +623,14 @@ def _cyclades(theban: Theban) -> None:
             "The fifth ship is to carry three laboratories, and the "
             "book offers it as a home for a troupe's magi.",
         ),
-        secrets="Memnos never sails: a Death Prophecy says he will die with "
-        "the sky above him and the sea below.",
+        secrets=[
+            titled(
+                "Why Memnos never sails",
+                "Memnos never sails: a prophecy says he will die with the sky "
+                "above him and the sea below.",
+            ),
+            titled("Storyguide Notes", "Memnos's prophecy is a Death Prophecy."),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -729,9 +751,14 @@ def _cyclades(theban: Theban) -> None:
             "enters the bay, and if he suddenly flees Thera, a great "
             "storm from Typhon may be coming.",
         ),
-        secrets="The Seekers of the Fallen believe that clearing the mouth of "
-        "the sunken volcano would open a way into Tartaros, part of the "
-        "Magic Realm.",
+        secrets=[
+            titled(
+                "The way into Tartaros",
+                "The Seekers of the Fallen believe that clearing the mouth of "
+                "the sunken volcano in the Bay of Thera would open a way into "
+                "Tartaros, part of the Magic Realm.",
+            )
+        ],
         **KNOWN_TRIBUNAL,
     )
 
@@ -829,8 +856,13 @@ def _dodecanese(theban: Theban) -> None:
             "inside the town's Divine aura.",
             "Vis: the old wreath holds 8 pawns of Creo vis.",
         ),
-        secrets="A magus usually waits unobtrusively in a boat to fish the "
-        "wreath out of the sea.",
+        secrets=[
+            titled(
+                "Who fishes out the wreath",
+                "A magus usually waits unobtrusively in a boat to fish the "
+                "wreath of the Tree of Hippocrates out of the sea.",
+            )
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -875,14 +907,30 @@ def _dodecanese(theban: Theban) -> None:
             "book on the island; only works he approves, which flatter "
             "him, may be sold.",
         ),
-        secrets="The despot's closest adviser is a hedge wizard of foul "
-        "character, very likely Infernal, who bends him to his own "
-        "ends; he wrote the only books left on the island, tainted "
-        "works including a corrupted Bible, and is greedily hoarding "
-        "the island's vis while his demon master watches, pleased. "
-        "Rumours of depravity and sorcery on Rodos may lead the "
-        "Tribunal to ask for volunteers to look into it (The Despot's "
-        "Advisor).",
+        secrets=[
+            titled(
+                "The despot's adviser",
+                "The despot of Rodos's closest adviser is a hedge wizard of "
+                "foul character, very likely Infernal, who bends him to his "
+                "own ends.",
+            ),
+            titled(
+                "The adviser's books",
+                "The despot's adviser wrote the only books left on Rodos, "
+                "tainted works including a corrupted Bible.",
+            ),
+            titled(
+                "Rodos's vis",
+                "The despot's adviser is greedily hoarding the vis of Rodos "
+                "while his demon master watches, pleased.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Rumours of depravity and sorcery on Rodos may lead the "
+                "Tribunal to ask for volunteers to look into it (The Despot's "
+                "Advisor).",
+            ),
+        ],
         **KNOWN_REGION,
     )
 
@@ -1003,9 +1051,22 @@ def _candia(theban: Theban) -> None:
             "the catacombs beneath for what a magical bull cult of the "
             "Minoans knew.",
         ),
-        secrets="Marcus has not yet found that the whole labyrinth survives "
-        "inside a regio, whose highest level has a Faerie aura of 6. "
-        "Talos was bound in one of the cellars until lately.",
+        secrets=[
+            titled(
+                "The labyrinth's regio",
+                "Marcus has not yet found that the whole labyrinth of Knossos "
+                "survives inside a regio.",
+            ),
+            titled(
+                "Talos in the cellars",
+                "Talos was bound in one of the cellars of the labyrinth of "
+                "Knossos until lately.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The labyrinth's regio's highest level has a Faerie aura of 6.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     gorge = _add(
@@ -1163,11 +1224,32 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "meaning must be read between the lines.",
         "Founded: the book says about two centuries ago; 1020 is assumed.",
     )
-    hidden = joined_lines(
-        "They probably could do real harm to other covenants' shipping if they ever cared to.",
-        "Lucian is the only magus with an Olympian Pact; he is mystagogue of every member of his league who has Elysian Ecstasy, and may be channelling pretenders, faerie or infernal, rather than gods.",
-        "Proximios means to have the nosy Delfini falsely accused of diabolism by the League of the Vigilant, and to set Celaenea of Hedyosmos against Lucian.",
-    )
+    hidden = [
+        titled(
+            "Aegaea's reach at sea",
+            "Aegaea's magi probably could do real harm to other covenants' "
+            "shipping if they ever cared to.",
+        ),
+        titled(
+            "Lucian's Olympian Pact",
+            "Lucian is the only magus with an Olympian Pact; he is mystagogue "
+            "of every member of his league who has Elysian Ecstasy.",
+        ),
+        titled(
+            "What Lucian may be channelling",
+            "Lucian may be channelling pretenders, faerie or infernal, rather "
+            "than gods.",
+        ),
+        titled(
+            "Proximios's plan for Delfini",
+            "Proximios means to have the nosy Delfini falsely accused of "
+            "diabolism by the League of the Vigilant.",
+        ),
+        titled(
+            "Proximios against Lucian",
+            "Proximios means to set Celaenea of Hedyosmos against Lucian.",
+        ),
+    ]
     aegaea = b.covenant(
         "Aegaea",
         tribunal=tribunal,
@@ -1229,15 +1311,31 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "all lapses in which he forgets who he is and claims to be "
             "someone else, usually a hero of Greek legend.",
         ),
-        secrets="He devised two Mysteries, Elysian Ecstasy and Olympian Pact, "
-        "through which a person is possessed by a Greek god, and he "
-        "alone holds an Olympian Pact. His changeable politics are a "
-        "plan: he has cast the Tribunal's magi and covenants in roles "
-        "in a grand re-enactment of the myths and steers them toward "
-        "their parts, hoping Faerie will one day replace the Magic "
-        "auras of the covenants. He may be duped by pretenders, faerie "
-        "or infernal, and Proximios hopes to slip an infernalist into "
-        "his league so that it raises a False God.",
+        secrets=[
+            titled(
+                "Lucian's two Mysteries",
+                "He devised two Mysteries, Elysian Ecstasy and Olympian Pact, "
+                "through which a person is possessed by a Greek god, and he "
+                "alone holds an Olympian Pact.",
+            ),
+            titled(
+                "Lucian's grand re-enactment",
+                "His changeable politics are a plan: he has cast the "
+                "Tribunal's magi and covenants in roles in a grand "
+                "re-enactment of the myths and steers them toward their "
+                "parts, hoping Faerie will one day replace the Magic auras of "
+                "the covenants.",
+            ),
+            titled(
+                "Lucian's pretenders",
+                "He may be duped by pretenders, faerie or infernal.",
+            ),
+            titled(
+                "Proximios and Lucian's league",
+                "Proximios hopes to slip an infernalist into Lucian's league "
+                "so that it raises a False God.",
+            ),
+        ],
         traits={"Scholarly": 4, "Whimsical": 3, "Treacherous": 2},
     )
     m["leukothea"] = b.magus(
@@ -1274,8 +1372,13 @@ def _aegaea(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "lucky). Most magi like her for her open ways, but some "
             "think her a busybody and distrust her.",
         ),
-        secrets="Proximios has marked her as one of the innocents the League "
-        "of the Vigilant is to be steered into accusing of diabolism.",
+        secrets=[
+            titled(
+                "Marked by Proximios",
+                "Proximios has marked her as one of the innocents the League "
+                "of the Vigilant is to be steered into accusing of diabolism.",
+            )
+        ],
         traits={"Gregarious": 2, "Curious": 2, "Fierce": 1},
     )
     m["krum"] = b.magus(
@@ -1445,10 +1548,19 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "covenant about fifty years ago and spent decades on the first "
         "ship; 1190 is assumed for the Philomela's first voyage.",
     )
-    hidden = joined_lines(
-        "Peter Monocheiros pays the covenant a third of his plunder for its protection; Basil sells anything traceable in distant ports.",
-        "Peter's crew wear masks at their 'work', and his ships are enchanted to change their look, so nothing can be traced to Favonius.",
-    )
+    hidden = [
+        titled(
+            "Peter Monocheiros's plunder",
+            "Peter Monocheiros pays Favonius a third of his plunder for its "
+            "protection; Basil sells anything traceable in distant ports.",
+        ),
+        titled(
+            "Masks and changing ships",
+            "Peter's crew wear masks at their 'work', and his ships are "
+            "enchanted to change their look, so nothing can be traced to "
+            "Favonius.",
+        ),
+    ]
     favonius = b.covenant(
         "Favonius",
         tribunal=tribunal,
@@ -1496,9 +1608,15 @@ def _favonius(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "Mysteries Revised Edition), or whatever cult teaches "
             "Hermetic Architecture in your saga.",
         ),
-        secrets="An initiation gone wrong left him with a Death Prophecy, that "
-        "he will die with the sky above and the sea below; so he has "
-        "never sailed on any of his own ships.",
+        secrets=[
+            titled(
+                "Why Memnos never sails",
+                "An initiation gone wrong left him with a prophecy, that he "
+                "will die with the sky above and the sea below; so he has "
+                "never sailed on any of his own ships.",
+            ),
+            titled("Storyguide Notes", "His prophecy is a Death Prophecy."),
+        ],
         traits={
             "Hubris": 4,
             "Fearful of Open Water": 3,
@@ -1626,11 +1744,30 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "Founded: the book gives no year: in law after Verdi; the pact "
         "with Mosychlos dates from the Tribunal's founding.",
     )
-    hidden = joined_lines(
-        "Gemma and Bobila sell more enchanted items than the law allows, and favour Nicaea, sworn enemy of Venice; Stouritus, busy with his buildings, has not noticed, and they raise the covenant's wealth slowly to avoid notice. Their long-term aims are unknown.",
-        "Theodorus has seen the twins' rising takings but says nothing, since the money will pay for Stouritus's building.",
-        "Proximios is using Hydatius and the League of the Vigilant to persecute innocent magi; a demon in Hydatius's likeness is to lead the league's members to attack.",
-    )
+    hidden = [
+        titled(
+            "The twins' unlawful trade",
+            "Gemma and Bobila sell more enchanted items than the law allows, "
+            "and favour Nicaea, sworn enemy of Venice; Stouritus, busy with "
+            "his buildings, has not noticed, and they raise the covenant's "
+            "wealth slowly to avoid notice. Their long-term aims are unknown.",
+        ),
+        titled(
+            "What Theodorus has seen",
+            "Theodorus has seen the twins' rising takings but says nothing, "
+            "since the money will pay for Stouritus's building.",
+        ),
+        titled(
+            "Proximios's use of Hydatius",
+            "Proximios is using Hydatius and the League of the Vigilant to "
+            "persecute innocent magi.",
+        ),
+        titled(
+            "The demon in Hydatius's likeness",
+            "A demon in Hydatius's likeness is to lead the League of the "
+            "Vigilant's members to attack.",
+        ),
+    ]
     ingasia = b.covenant(
         "Ingasia",
         tribunal=tribunal,
@@ -1714,11 +1851,21 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "patiently for a slip. Their fine reputations make the "
             "league respectable, and its critics hold their tongues.",
         ),
-        secrets="Proximios, an infernalist, founded the league through him "
-        "and talked him into leading it, meaning to turn it on "
-        "innocents (Caterina, the young magi of Erebos, Delfini). He "
-        "will urge Hydatius to send members after the suspects, and a "
-        "demon in Hydatius's shape will order them to attack.",
+        secrets=[
+            titled(
+                "Who is behind the league",
+                "Proximios, an infernalist, founded the League of the "
+                "Vigilant through him and talked him into leading it, "
+                "meaning to turn it on innocents (Caterina, the young magi "
+                "of Erebos, Delfini).",
+            ),
+            titled(
+                "The demon in his shape",
+                "Proximios will urge Hydatius to send members after the "
+                "suspects, and a demon in Hydatius's shape will order them "
+                "to attack.",
+            ),
+        ],
     )
     m["eudoxia"] = b.magus(
         "Eudoxia",
@@ -1746,19 +1893,26 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "forge-companions and runs her own Hermetic business. They take "
         "a season off only to study vis.",
     )
-    twins_secret = (
-        "Unknown to Stouritus, they sell more items than the law allows, "
-        "and favour Nicaea, Venice's sworn enemy; they enrich the covenant "
-        "slowly so as not to be noticed, and their long-term plans are "
-        "unknown."
-    )
+
+    def twins_secrets() -> list[Secret]:
+        """The twins' secret, a fresh copy for each sister's record."""
+        return [
+            titled(
+                "The twins' unlawful trade",
+                "Unknown to Stouritus, Gemma and Bobila sell more items than "
+                "the law allows, and favour Nicaea, Venice's sworn enemy; "
+                "they enrich the covenant slowly so as not to be noticed, and "
+                "their long-term plans are unknown.",
+            )
+        ]
+
     m["gemma"] = b.magus(
         "Gemma",
         covenant=ingasia,
         house=VERDITIUS,
         age=89,
         summary=paragraphs(twins, "Her twin is Bobila."),
-        secrets=twins_secret,
+        secrets=twins_secrets(),
         traits={"Hubris": 3, "Diligent": 2, "Bickering": 1},
     )
     m["bobila"] = b.magus(
@@ -1769,7 +1923,7 @@ def _ingasia(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         summary=paragraphs(
             twins, "Her twin is Gemma. (The book also spells her Boblia.)"
         ),
-        secrets=twins_secret,
+        secrets=twins_secrets(),
         traits={"Hubris": 3, "Diligent": 2, "Bickering": 1},
     )
     b.link(m["gemma"], "characters", m["bobila"], "Her conjoined twin")
@@ -1845,7 +1999,12 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         inside=cyclades,
         summary="An island a little north of Argentiera, with ancient gold and "
         "silver mines long abandoned.",
-        secrets="Polyaigos has quietly reopened them.",
+        secrets=[
+            titled(
+                "Who works the mines",
+                "Polyaigos has quietly reopened the mines of Sifnos.",
+            )
+        ],
         **RUMOURED,
     )
     summary = paragraphs(
@@ -1908,12 +2067,28 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
         "mans the warship. Several have wives and families on Melos.",
         "Founded: the book gives only the eleventh century; 1050 is assumed.",
     )
-    hidden = joined_lines(
-        "Marco Sanudo, Duke of Naxos, overlord in name of the Cyclades, has heard of the school's wealth and envies it.",
-        "Caterina has met the duke, posing as a rich noblewoman, and is laying the ground for a quiet arrangement with him.",
-        "Satabus, newly arrived, is the duke's lost brother Pietro and has not yet written to him.",
-        "Proximios means to have Caterina falsely accused of diabolism by the League of the Vigilant.",
-    )
+    hidden = [
+        titled(
+            "The duke's envy",
+            "Marco Sanudo, Duke of Naxos, overlord in name of the Cyclades, "
+            "has heard of Polyaigos's wealth and envies it.",
+        ),
+        titled(
+            "Caterina and the duke",
+            "Caterina has met the Duke of Naxos, posing as a rich noblewoman, "
+            "and is laying the ground for a quiet arrangement with him.",
+        ),
+        titled(
+            "Who Satabus is",
+            "Satabus, newly arrived, is the Duke of Naxos's lost brother "
+            "Pietro and has not yet written to him.",
+        ),
+        titled(
+            "Proximios's plan for Caterina",
+            "Proximios means to have Caterina falsely accused of diabolism by "
+            "the League of the Vigilant.",
+        ),
+    ]
     polyaigos = b.covenant(
         "Polyaigos",
         tribunal=tribunal,
@@ -2014,10 +2189,18 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "name and earn tokens. As a metoikos she can hold none until "
             "her citizenship is decreed.",
         ),
-        secrets="She has met the Duke of Naxos in the guise of a rich "
-        "noblewoman and is preparing a discreet arrangement with him. "
-        "Proximios has marked her as an innocent for the League of the "
-        "Vigilant to accuse of diabolism.",
+        secrets=[
+            titled(
+                "Caterina and the duke",
+                "She has met the Duke of Naxos in the guise of a rich "
+                "noblewoman and is preparing a discreet arrangement with him.",
+            ),
+            titled(
+                "Marked by Proximios",
+                "Proximios has marked her as an innocent for the League of "
+                "the Vigilant to accuse of diabolism.",
+            ),
+        ],
         traits={"Opulent": 2, "Elegant": 2, "Vain": 1},
     )
     m["satabus"] = b.magus(
@@ -2029,14 +2212,22 @@ def _polyaigos(theban: Theban, b: Builder, tribunal: Tribunal) -> None:
             "A young Verditius, trained at Ingasia, who has just moved "
             "to Polyaigos. The book gives no age or traits.",
         ),
-        secrets="He was born Pietro, younger brother of Marco Sanudo, Duke of "
-        "Naxos, and nephew of Doge Enrico Dandolo: a pleasant, clever, "
-        "bookish boy with something deeply strange about him, who made "
-        "his brother uneasy. Among his last acts Dandolo found him a "
-        "place, which was apprenticeship at Ingasia. At Polyaigos he has "
-        "learnt of Marco's rise; he keeps a warm love for his family but "
-        "has not yet got in touch, while Marco often wonders what became "
-        "of him and hopes for news.",
+        secrets=[
+            titled(
+                "Satabus's birth",
+                "He was born Pietro, younger brother of Marco Sanudo, Duke of "
+                "Naxos, and nephew of Doge Enrico Dandolo: a pleasant, clever, "
+                "bookish boy with something deeply strange about him, who "
+                "made his brother uneasy. Among his last acts Dandolo found "
+                "him a place, which was apprenticeship at Ingasia.",
+            ),
+            titled(
+                "Satabus and his family",
+                "At Polyaigos he has learnt of Marco's rise; he keeps a warm "
+                "love for his family but has not yet got in touch, while "
+                "Marco often wonders what became of him and hopes for news.",
+            ),
+        ],
     )
 
 
@@ -2068,7 +2259,12 @@ def _loose_magi(theban: Theban, b: Builder) -> None:
             "catacombs for the lore of a magical bull cult of the "
             "Minoans.",
         ),
-        secrets="He has not yet found the regio in which the labyrinth survives whole.",
+        secrets=[
+            titled(
+                "The labyrinth's regio",
+                "He has not yet found the regio in which the labyrinth survives whole.",
+            )
+        ],
     )
 
 
@@ -2106,10 +2302,19 @@ def _lords(theban: Theban, b: Builder) -> None:
             "finished the Kastro on Naxos and begun a cathedral. He has "
             "heard tales of Polyaigos's riches and envies them.",
         ),
-        secrets="His younger brother Pietro, whom he never felt easy with and "
-        "often wonders about, is Satabus of Verditius, now at "
-        "Polyaigos. Caterina da Vigonovo has met him as a wealthy "
-        "noblewoman and is preparing a quiet bargain.",
+        secrets=[
+            titled(
+                "The duke's lost brother",
+                "Marco Sanudo's younger brother Pietro, whom he never felt "
+                "easy with and often wonders about, is Satabus of Verditius, "
+                "now at Polyaigos.",
+            ),
+            titled(
+                "Caterina and the duke",
+                "Caterina da Vigonovo has met Marco Sanudo as a wealthy "
+                "noblewoman and is preparing a quiet bargain.",
+            ),
+        ],
     )
     b.link(
         w["duke_of_naxos"],
@@ -2190,9 +2395,22 @@ def _lords(theban: Theban, b: Builder) -> None:
             "confiscate every book; only works he has approved, which "
             "show him in a good light, may be sold.",
         ),
-        secrets="His closest adviser, an infernal hedge wizard, steers him, "
-        "wrote the island's only books (a perverted Bible among them), "
-        "and is gathering all its vis for himself.",
+        secrets=[
+            titled(
+                "The despot's adviser",
+                "The despot of Rodos's closest adviser, an infernal hedge "
+                "wizard, steers him.",
+            ),
+            titled(
+                "The adviser's books",
+                "The despot's adviser wrote the only books on Rodos (a "
+                "perverted Bible among them).",
+            ),
+            titled(
+                "Rodos's vis",
+                "The despot's adviser is gathering all the vis of Rodos for himself.",
+            ),
+        ],
     )
 
 
@@ -2380,11 +2598,20 @@ def _factions(theban: Theban, b: Builder) -> None:
         "ships of his own, with eight of the covenant's best fighters "
         "sworn to him. He owes his life to Aeliophanes and is utterly "
         "loyal.",
-        secrets="He gives the covenant a third of his plunder for the fleet's "
-        "protection, passing anything identifiable to Basil to sell in "
-        "far ports; his men wear masks at work and his ships are "
-        "enchanted to change their look, so nothing leads back to "
-        "Favonius.",
+        secrets=[
+            titled(
+                "Peter's share to Favonius",
+                "Peter Monocheiros gives Favonius a third of his plunder for "
+                "the fleet's protection, passing anything identifiable to "
+                "Basil to sell in far ports.",
+            ),
+            titled(
+                "Masks and changing ships",
+                "Peter Monocheiros's men wear masks at work and his ships are "
+                "enchanted to change their look, so nothing leads back to "
+                "Favonius.",
+            ),
+        ],
     )
     w["basil_andros"] = b.faction(
         "The trading house of Basil of Andros",

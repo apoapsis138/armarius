@@ -22,6 +22,7 @@ from ..builder import (
     dormant,
     joined_lines,
     paragraphs,
+    titled,
     vf_minor,
     vf_ward,
     wound_ranges,
@@ -683,68 +684,106 @@ THOMAE_SUMMARY = paragraphs(
     "Africa, may be more folklore than fact.",
 )
 
-THOMAE_SECRETS = paragraphs(
-    "His true end (p. 122): crossing the Alps, the castle overflew a griffon "
-    "nesting site. With no Aegis, it could be attacked directly. A griffon "
-    "clawed through the base of the High Tower to get at his treasury, and "
-    "the castle listed and fell (the wreck's record has how). He wore an item "
-    "that kept him from falling, so as the castle dropped he was dashed "
-    "against the navigation room's ceiling. His remains are scattered through "
-    "the wreck. He died by violence without rites, so his ghost can be "
-    "reached and is probably deranged (p. 123), though the Faerie Dealings "
-    "story supposes he left none (p. 138).",
-    "His great deceit (pp. 122-123): he gave out that a team of skilled "
-    "helpers had made the castle by strange rituals and rare components, with "
-    "mighty wards and weapons. In truth it is a bronze building on a lesser "
-    "enchanted device made in one season, and his missing years were spent "
-    "fitting out a laboratory big and secret enough for the Verditius he "
-    "hired, and raising that magus's fee and silence. His life does not add "
-    "up: too much is fitted in, and his notes show more ancillary items than "
-    "he could have made or paid for (p. 138). See the stories of Thomae's "
-    "Secret. How deep the deceit goes is the storyguide's.",
-    "What the Order Remembers (p. 122; roll Intelligence + Order of Hermes "
-    "Lore, pp. 10-11; +3 for a character with some reason to care about his "
-    "works or his legal case; the recollections may be false).",
-    joined_lines(
-        "Ease Factor 0, Known to All:",
-        "- A magus of House Tytalus, active late last century.",
-        "- He built a flying castle.",
-        "- He had trouble at law.",
-        "- He vanished about 20 years ago.",
+THOMAE_SECRETS = [
+    titled(
+        "How the castle fell",
+        "His true end (p. 122): crossing the Alps, the castle overflew a "
+        "griffon nesting site. With no Aegis, it could be attacked directly. A "
+        "griffon clawed through the base of the High Tower to get at his "
+        "treasury, and the castle listed and fell.",
     ),
-    joined_lines(
-        "Ease Factor 6, Widely Known:",
-        "- He vanished young for a magus, and many think he lives, tyrannizing "
-        "natives somewhere remote in Africa or Asia.",
-        "- Politics bored him; flight was his obsession.",
-        "- His castle was of bronze.",
-        "- He was known as a slayer of magical beasts and a magical mercenary.",
-        "- He was charged with provoking mundanes by showing off his castle.",
-        "- He ranged far after vis to pay for it, long in the Holy Land and Africa.",
-        "- He settled his case by promising not to fly over civilized lands, "
-        "though it was doubted he kept to it.",
+    titled(
+        "How Thomae died",
+        "He wore an item that kept him from falling, so as the castle dropped "
+        "he was dashed against the navigation room's ceiling. His remains are "
+        "scattered through the wreck.",
     ),
-    joined_lines(
-        "Ease Factor 12, Uncommon Knowledge:",
-        "- He told his tribunal that many of his magic items were bought, not made.",
-        "- The castle's costly safety gear for his servants won their loyalty.",
-        "- He claimed to be a Hermetic Architect, of one of the Order's least "
-        "secret mystery societies.",
-        "- Quaesitores examined the castle during his case, but it was held to "
-        "be his sanctum, so not even fellow Architects went aboard.",
+    titled(
+        "Thomae's ghost",
+        "He died by violence without rites, so his ghost can be reached and is "
+        "probably deranged (p. 123), though the Faerie Dealings story supposes "
+        "he left none (p. 138).",
     ),
-    joined_lines(
-        "Ease Factor 18, Lost Secrets:",
-        "- His timeline is wrong: he seems to have fitted in more than he "
-        "could, so he probably lied about what he did and when.",
-        "- He was probably no Hermetic Architect, though he said so.",
+    titled(
+        "Thomae's great deceit",
+        "His great deceit (pp. 122-123): he gave out that a team of skilled "
+        "helpers had made the castle by strange rituals and rare components, "
+        "with mighty wards and weapons. In truth it is a bronze building on a "
+        "lesser enchanted device made in one season, and his missing years "
+        "were spent fitting out a laboratory big and secret enough for the "
+        "Verditius he hired, and raising that magus's fee and silence.",
     ),
-    joined_lines(
-        "Ease Factor 12, Hermetic Architects only:",
-        "- Many effects he called integral to the castle were impossible "
-        "without a breakthrough in Hermetic Architecture.",
+    titled(
+        "A life that does not add up",
+        "His life does not add up: too much is fitted in, and his notes show "
+        "more ancillary items than he could have made or paid for (p. 138).",
     ),
-)
+    titled(
+        "What all know of Thomae",
+        joined_lines(
+            "Ease Factor 0, Known to All:",
+            "- A magus of House Tytalus, active late last century.",
+            "- He built a flying castle.",
+            "- He had trouble at law.",
+            "- He vanished about 20 years ago.",
+        ),
+    ),
+    titled(
+        "What is widely known of Thomae",
+        joined_lines(
+            "Ease Factor 6, Widely Known:",
+            "- He vanished young for a magus, and many think he lives, tyrannizing "
+            "natives somewhere remote in Africa or Asia.",
+            "- Politics bored him; flight was his obsession.",
+            "- His castle was of bronze.",
+            "- He was known as a slayer of magical beasts and a magical mercenary.",
+            "- He was charged with provoking mundanes by showing off his castle.",
+            "- He ranged far after vis to pay for it, long in the Holy Land and Africa.",
+            "- He settled his case by promising not to fly over civilized lands, "
+            "though it was doubted he kept to it.",
+        ),
+    ),
+    titled(
+        "Uncommon knowledge of Thomae",
+        joined_lines(
+            "Ease Factor 12, Uncommon Knowledge:",
+            "- He told his tribunal that many of his magic items were bought, not made.",
+            "- The castle's costly safety gear for his servants won their loyalty.",
+            "- He claimed to be a Hermetic Architect, of one of the Order's least "
+            "secret mystery societies.",
+            "- Quaesitores examined the castle during his case, but it was held to "
+            "be his sanctum, so not even fellow Architects went aboard.",
+        ),
+    ),
+    titled(
+        "Thomae's lost secrets",
+        joined_lines(
+            "Ease Factor 18, Lost Secrets:",
+            "- His timeline is wrong: he seems to have fitted in more than he "
+            "could, so he probably lied about what he did and when.",
+            "- He was probably no Hermetic Architect, though he said so.",
+        ),
+    ),
+    titled(
+        "What Hermetic Architects know of Thomae",
+        joined_lines(
+            "Ease Factor 12, Hermetic Architects only:",
+            "- Many effects he called integral to the castle were impossible "
+            "without a breakthrough in Hermetic Architecture.",
+        ),
+    ),
+    titled(
+        "Storyguide Notes",
+        paragraphs(
+            "The wreck's record has how the castle fell. See the stories of "
+            "Thomae's Secret. How deep the deceit goes is the storyguide's.",
+            "What the Order Remembers (p. 122; roll Intelligence + Order of "
+            "Hermes Lore, pp. 10-11; +3 for a character with some reason to "
+            "care about his works or his legal case; the recollections may be "
+            "false).",
+        ),
+    ),
+]
 
 TIMELINE = joined_lines(
     "Timeline of the Order (p. 139)",
@@ -814,92 +853,143 @@ WRECK_SUMMARY = paragraphs(
     "from their chains. The foot of the High Tower is torn open by huge claws.",
 )
 
-WRECK_SECRETS = paragraphs(
-    "Where it is: the book sets the crash in the Alps, on a peak beyond a "
-    "range of mountains about half a day west of Santa Lucia, and leaves the "
-    "place to the saga. Skilled questioning of the villagers (Presence with "
-    "Leadership or Charm, Ease Factor 12) gives a closer position. No aura "
-    "is printed. How badly it is damaged is the storyguide's. Mended or "
-    "altered a little, it can be the start of a Spring covenant (p. 121). The "
-    "griffon alternatives story offers other reasons it fell. The bodies "
-    "of Santa Lucians killed on the road lie heaped in the courtyard, their "
-    "ghosts penned there by the Dogs of the Castle.",
-    "The griffons' claw marks: Intelligence + Magic Lore against 18 shows a "
-    "giant eagle made them, 12 if the site has been scoured for mixed giant "
-    "eagle feathers and lion hairs. A griffon may be glimpsed far off "
-    "(Perception + Awareness 18). A ghost or a befriended faerie hound may "
-    "tell.",
-    "The Flight Disk (p. 123): a single flat circle of hard stone 300 paces "
-    "across and just under a pace thick, in a metal jacket beneath the "
-    "bronze courtyard: a lesser enchanted device, not Hermetic Architecture, "
-    "of one season's work. ReTe level 33, Pen +0, constant. R: Personal, D: "
-    "Diameter, T: Individual. Flies the castle at a horse's running speed, "
-    "steered by colored lights. It triggers itself whenever the spell is not "
-    "running, so a single PeVi cannot bring it down and the flight never "
-    "jerks. Base 3, +1 Diameter, +3 size, +1 stone; unlimited use +10, "
-    "environmental trigger +3.",
-    "The Control Chain (p. 123): a steel chain fixed to the disk's center, "
-    "rising through the High Tower to the laboratory, ending in a metal bulb. "
-    "Doors in its tube let it be reached from many rooms. Touch it and speak "
-    "Latin commands, and the bulb shines in colors and strengths that steer "
-    "the disk. CrIg level 9, Pen +0, constant. R: Personal, D: Sun, T: "
-    "Individual. Base 1, +2 Sun, +2 caster's control of color; constant "
-    "use +4. It has many spare patterns, called by speaking numbers, meant "
-    "for later additions to the disk. This is what killed him: the griffon's "
-    "hole cracked the jacket, sunlight fell on the disk, and the castle "
-    "listed before he could work out why. A separate item from the disk.",
-    "Boundary effects (p. 123): they do not move, so an Aegis of the Hearth "
-    "or Boundary ward on the castle would be left behind as it flew. That is "
-    "why it has no Aegis. Thomae trusted its reputation and his soldiers.",
-    "Laboratory notes (pp. 123-124): his laboratory was wrecked, but his "
-    "best books survive in magical storage chests. The codices have lab notes "
-    "for: the flying disk; the large laboratory it was made in; the control "
-    "chain (useful for triggering other items from afar, in mines or under "
-    "water); the siege finials, plain mystical artillery that look like all "
-    "the other finials on the walls; Thomae's anchor, a whimsical ship's "
-    "anchor trailed through the air behind and below the castle that hides "
-    "the castle from the ground but not itself, bought or made after his "
-    "legal troubles; Thomae's whip, his talisman, a long bronze chain that "
-    "moves by magic, used to work things at a distance, extend Touch range "
-    "and lash in battle; the falling bells; and the medallions of flight, "
-    "invisibility, safe falling, attack and espionage. No levels are "
-    "printed for these, and the book says only that the notes survive, not "
-    "where the items lie.",
-    "The falling bells (p. 124): large bells in public spaces, whose sound "
-    "the castle's bronze carried far. While in free fall they chime, and all "
-    "who hear can fly for the rest of the day. Special winches let out one "
-    "loop of chain at a time, so a bell drops a second before the slack "
-    "takes it. These were for emergencies.",
-    "Training bell (p. 124): smaller bells for training, festivities and "
-    "missions; servants learned to leap to a tower top and back, some to "
-    "fly in earnest. ReCo level 35, Pen +0. R: Touch, D: Sun, T: Individual. "
-    "Worked by holding the handle and ringing. The user flies at a brisk walk "
-    "for the rest of the day. Tapped on a child as it rings it gives guided "
-    "flight, and in theory it could be swung as a club to set a victim "
-    "flying. Base 10, +1 Touch, +2 Sun; constant use +10.",
-    "Thomae's tender (pp. 124-125): a floating metal platform for lifting "
-    "stores, faster than the castle, able to scout ahead or catch up. It was "
-    "meant as expedition vehicle and lifeboat but never so used, and lacks "
-    "climate control, artillery or incorrupt food stores. A large moonstone "
-    "powers it: moved to a like metal plate, it powers that one. Its words "
-    "are plain Latin, found by patient trial, in the ruins, or in the "
-    "laboratory. ReTe level 34, Pen +0, constant. R: Touch, D: Sun, T: "
-    "Individual. Carries as much as can be piled on it. Base 3, +1 Touch, +2 "
-    "Sun, +2 size, +2 metal; constant use +4.",
-    "If the characters cannot fly, a medallion, the tender or a training "
-    "bell may turn up here to bring the griffons' lair within reach (p. 133).",
-    "Covenant goods (p. 125): a laboratory, a private library, and stores to "
-    "keep his servants in luxury, much destroyed by the crash and the "
-    "weather since. Not enough to equip a covenant's laboratories, but there "
-    "may be enchanted lab equipment, valuable books, or wealth to buy "
-    "supplies. Storyguides may place items from the book's other chapters here.",
-    "The bronze (p. 125): he chose it because a skin of corrosion stops its "
-    "decay. It sells at 200 to 300 Mythic Pounds a ton, or up to 1,500 "
-    "reworked as fine brassware. The trouble is weight, remoteness and "
-    "flooding the market, not supply.",
-    "The griffons attack anything flying larger than a bird, horses and draft "
-    "animals, and gold-carriers. See Flights of Fancy.",
-)
+WRECK_SECRETS = [
+    titled(
+        "Where the wreck lies",
+        "Thomae's castle crashed in the Alps, on a peak beyond a range of "
+        "mountains about half a day west of Santa Lucia.",
+    ),
+    titled(
+        "The heaped bodies",
+        "The bodies of Santa Lucians killed on the road lie heaped in the "
+        "courtyard of Thomae's wreck, their ghosts penned there by the Dogs of "
+        "the Castle.",
+    ),
+    titled(
+        "The Flight Disk",
+        "The Flight Disk (p. 123): a single flat circle of hard stone 300 paces "
+        "across and just under a pace thick, in a metal jacket beneath the "
+        "bronze courtyard: a lesser enchanted device, not Hermetic Architecture, "
+        "of one season's work. ReTe level 33, Pen +0, constant. R: Personal, D: "
+        "Diameter, T: Individual. Flies the castle at a horse's running speed, "
+        "steered by colored lights. It triggers itself whenever the spell is not "
+        "running, so a single PeVi cannot bring it down and the flight never "
+        "jerks. Base 3, +1 Diameter, +3 size, +1 stone; unlimited use +10, "
+        "environmental trigger +3.",
+    ),
+    titled(
+        "The Control Chain",
+        "The Control Chain (p. 123): a steel chain fixed to the disk's center, "
+        "rising through the High Tower to the laboratory, ending in a metal bulb. "
+        "Doors in its tube let it be reached from many rooms. Touch it and speak "
+        "Latin commands, and the bulb shines in colors and strengths that steer "
+        "the disk. CrIg level 9, Pen +0, constant. R: Personal, D: Sun, T: "
+        "Individual. Base 1, +2 Sun, +2 caster's control of color; constant "
+        "use +4. It has many spare patterns, called by speaking numbers, meant "
+        "for later additions to the disk. A separate item from the disk.",
+    ),
+    titled(
+        "What killed Thomae",
+        "The disk's steering by light is what killed Thomae: the griffon's "
+        "hole cracked the jacket, sunlight fell on the disk, and the castle "
+        "listed before he could work out why.",
+    ),
+    titled(
+        "Why the castle has no Aegis",
+        "Boundary effects (p. 123): they do not move, so an Aegis of the "
+        "Hearth or Boundary ward on Thomae's castle would be left behind as it "
+        "flew. That is why it has no Aegis. Thomae trusted its reputation and "
+        "his soldiers.",
+    ),
+    titled(
+        "Thomae's laboratory notes",
+        "Laboratory notes (pp. 123-124): his laboratory was wrecked, but his "
+        "best books survive in magical storage chests. The codices have lab notes "
+        "for: the flying disk; the large laboratory it was made in; the control "
+        "chain (useful for triggering other items from afar, in mines or under "
+        "water); the siege finials, plain mystical artillery that look like all "
+        "the other finials on the walls; Thomae's anchor, a whimsical ship's "
+        "anchor trailed through the air behind and below the castle that hides "
+        "the castle from the ground but not itself, bought or made after his "
+        "legal troubles; Thomae's whip, his talisman, a long bronze chain that "
+        "moves by magic, used to work things at a distance, extend Touch range "
+        "and lash in battle; the falling bells; and the medallions of flight, "
+        "invisibility, safe falling, attack and espionage.",
+    ),
+    titled(
+        "The falling bells",
+        "The falling bells (p. 124): large bells in public spaces, whose sound "
+        "the castle's bronze carried far. While in free fall they chime, and all "
+        "who hear can fly for the rest of the day. Special winches let out one "
+        "loop of chain at a time, so a bell drops a second before the slack "
+        "takes it. These were for emergencies.",
+    ),
+    titled(
+        "The training bells",
+        "Training bell (p. 124): smaller bells for training, festivities and "
+        "missions; servants learned to leap to a tower top and back, some to "
+        "fly in earnest. ReCo level 35, Pen +0. R: Touch, D: Sun, T: Individual. "
+        "Worked by holding the handle and ringing. The user flies at a brisk walk "
+        "for the rest of the day. Tapped on a child as it rings it gives guided "
+        "flight, and in theory it could be swung as a club to set a victim "
+        "flying. Base 10, +1 Touch, +2 Sun; constant use +10.",
+    ),
+    titled(
+        "Thomae's tender",
+        "Thomae's tender (pp. 124-125): a floating metal platform for lifting "
+        "stores, faster than the castle, able to scout ahead or catch up. It was "
+        "meant as expedition vehicle and lifeboat but never so used, and lacks "
+        "climate control, artillery or incorrupt food stores. A large moonstone "
+        "powers it: moved to a like metal plate, it powers that one. Its words "
+        "are plain Latin, found by patient trial, in the ruins, or in the "
+        "laboratory. ReTe level 34, Pen +0, constant. R: Touch, D: Sun, T: "
+        "Individual. Carries as much as can be piled on it. Base 3, +1 Touch, +2 "
+        "Sun, +2 size, +2 metal; constant use +4.",
+    ),
+    titled(
+        "Covenant goods in the wreck",
+        "Covenant goods (p. 125): a laboratory, a private library, and stores "
+        "to keep Thomae's servants in luxury, much destroyed by the crash and "
+        "the weather since. Not enough to equip a covenant's laboratories, but "
+        "there may be enchanted lab equipment, valuable books, or wealth to "
+        "buy supplies.",
+    ),
+    titled(
+        "The castle's bronze",
+        "The bronze (p. 125): Thomae chose it because a skin of corrosion stops "
+        "its decay. It sells at 200 to 300 Mythic Pounds a ton, or up to 1,500 "
+        "reworked as fine brassware. The trouble is weight, remoteness and "
+        "flooding the market, not supply.",
+    ),
+    titled(
+        "What the griffons attack",
+        "The griffons attack anything flying larger than a bird, horses and "
+        "draft animals, and gold-carriers.",
+    ),
+    titled(
+        "Storyguide Notes",
+        paragraphs(
+            "The book sets the crash in the Alps and leaves the place to the "
+            "saga. Skilled questioning of the villagers (Presence with "
+            "Leadership or Charm, Ease Factor 12) gives a closer position. No "
+            "aura is printed. How badly it is damaged is the storyguide's. "
+            "Mended or altered a little, it can be the start of a Spring "
+            "covenant (p. 121). The griffon alternatives story offers other "
+            "reasons it fell.",
+            "The griffons' claw marks: Intelligence + Magic Lore against 18 "
+            "shows a giant eagle made them, 12 if the site has been scoured for "
+            "mixed giant eagle feathers and lion hairs. A griffon may be "
+            "glimpsed far off (Perception + Awareness 18). A ghost or a "
+            "befriended faerie hound may tell.",
+            "No levels are printed for the items in Thomae's notes, and the "
+            "book says only that the notes survive, not where the items lie.",
+            "If the characters cannot fly, a medallion, the tender or a "
+            "training bell may turn up here to bring the griffons' lair within "
+            "reach (p. 133). Storyguides may place items from the book's other "
+            "chapters here. See Flights of Fancy.",
+        ),
+    ),
+]
 
 
 def build(b: Builder) -> None:
@@ -918,26 +1008,48 @@ def build(b: Builder) -> None:
         "Latin and are ruled by three councilors with metal badges of office. "
         "Its pasture has grown too poor for its growing numbers, and the "
         "village is packing up to move before winter.",
-        secrets=paragraphs(
-            "The book places it in the Alps and tells the storyguide to "
-            "change its name and place to suit the saga. Its people are the "
-            "castle's surviving covenfolk and their children. Many of the old "
-            "ones have skills of use to magi, learned aboard, and a covenant "
-            "short of skilled folk could recruit them (p. 126).",
-            "Their folk tale (p. 131): they served a wizard, Thomae, with a "
-            "castle in the sky, which 'bird-cats' destroyed. He had made sure "
-            "that his servants could fly a little if it fell, and they "
-            "escaped into the eye of the sun, where the monsters could not "
-            "follow. Intelligence + Magic Lore 12 shows the bird-cats to be "
-            "griffons.",
-            "The three badges were the marks of Thomae's bodyguards. "
-            "Intelligence + Order of Hermes Lore 12 recognizes them (21 "
-            "normally, lowered because the characters are looking for just "
-            "this and hold a twin). If it suits, they are magical, and may "
-            "pass some of Thomae's defenses. The book names one councilor, "
-            "Rogerio. They are the last symbolic tie to the castle (see Flights "
-            "of Fancy).",
-        ),
+        secrets=[
+            titled(
+                "Who the Santa Lucians are",
+                "Santa Lucia's people are the castle's surviving covenfolk and "
+                "their children.",
+            ),
+            titled(
+                "Skills of the old Santa Lucians",
+                "Many of Santa Lucia's old ones have skills of use to magi, "
+                "learned aboard Thomae's castle, and a covenant short of "
+                "skilled folk could recruit them (p. 126).",
+            ),
+            titled(
+                "The villagers' folk tale",
+                "Their folk tale (p. 131): they served a wizard, Thomae, with a "
+                "castle in the sky, which 'bird-cats' destroyed. He had made "
+                "sure that his servants could fly a little if it fell, and they "
+                "escaped into the eye of the sun, where the monsters could not "
+                "follow. Intelligence + Magic Lore 12 shows the bird-cats to be "
+                "griffons.",
+            ),
+            titled(
+                "The councilors' badges",
+                "The three badges of Santa Lucia's councilors were the marks of "
+                "Thomae's bodyguards.",
+            ),
+            titled(
+                "The village's last tie",
+                "The councilors' badges are Santa Lucia's last symbolic tie to "
+                "Thomae's castle.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book places Santa Lucia in the Alps and tells the "
+                "storyguide to change its name and place to suit the saga. "
+                "Intelligence + Order of Hermes Lore 12 recognizes the badges "
+                "(21 normally, lowered because the characters are looking for "
+                "just this and hold a twin). If it suits, they are magical, and "
+                "may pass some of Thomae's defenses. The book names one "
+                "councilor, Rogerio. See Flights of Fancy.",
+            ),
+        ],
         status=RUMOURED,
         known=LOCALLY,
     )
@@ -947,12 +1059,22 @@ def build(b: Builder) -> None:
         summary="A valley the Santa Lucians are making their own, with carts "
         "on the road, temporary bridges and fords, and a village still to "
         "build.",
-        secrets="An allod: land no nobleman claims, which makes a fine site "
-        "for a Spring covenant, with the castle and the Santa Lucians as the "
-        "saga's first story (p. 126). In that case the griffons are likely too "
-        "much for newly Gauntleted magi, and one of the griffon alternatives "
-        "should take their place. Its location is left to the saga. Santa "
-        "Lucia's work there is in Flights of Fancy.",
+        secrets=[
+            titled(
+                "Whose land the valley is",
+                "The New Valley of Santa Lucia is an allod: land no nobleman "
+                "claims, which makes a fine site for a Spring covenant.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A Spring covenant here can have the castle and the Santa "
+                "Lucians as the saga's first story (p. 126). In that case the "
+                "griffons are likely too much for newly Gauntleted magi, and "
+                "one of the griffon alternatives should take their place. Its "
+                "location is left to the saga. Santa Lucia's work there is in "
+                "Flights of Fancy.",
+            ),
+        ],
         status=RUMOURED,
         known=LOCALLY,
     )
@@ -962,34 +1084,54 @@ def build(b: Builder) -> None:
         summary="A nest high in some place no man can climb to, woven of gold, "
         "griffon feathers and the woods of strange trees, with eggs like "
         "great polished agates.",
-        secrets=paragraphs(
-            "Griffons lair where few can reach. The book gives no place, only "
-            "that its range overlaps the crash site. Ways of finding it are in "
-            "Flights of Fancy.",
-            "The Nest of Gold (p. 125): a fortune in gold, and worth more as a "
-            "focus: +7 to enchantments for defending a home or protecting "
-            "treasure. To use it, it must reach a laboratory with its "
-            "structure whole, by careful handling, skilled goldsmithing to "
-            "solder it, or magic, until it can be stabilized and enchanted. "
-            "An intact nest may also be needed for eggs to hatch.",
-            "Eggs of Agate (p. 125): griffon eggs are flawless agates the size "
-            "of an ostrich's. Agate in the mouth is said to stop thirst, and "
-            "sorcerers have used it since Rome to rule rivers and storms. "
-            "Linked to Auram magic (+3), protection from storms (+5), and "
-            "protection from venom (+7). Shells of hatched eggs may be "
-            "enchanted the same way.",
-            "Baby griffons (pp. 125-126): hatched at a covenant they grow "
-            "slowly, little bigger than dogs for decades, and do as they are "
-            "told if they accept someone local as head of their pride. They "
-            "act like flying kittens with keen sight and the strength to "
-            "tear holes in things, and may suit as familiars. Magic can hasten "
-            "their growth, but grown griffons are far harder to train, being "
-            "notoriously impossible to coerce. Rules for training magical "
-            "animals are in Realms of Power: Magic p. 81.",
-            "Griffons prey on livestock and would ruin farming, so they "
-            "belong in far mountains. The Avars' flight west in the sixth century is sometimes laid to a plague "
-            "of them (p. 130).",
-        ),
+        secrets=[
+            titled(
+                "Where the griffons lair",
+                "Griffons lair where few can reach. The griffons' range "
+                "overlaps the crash site of Thomae's castle.",
+            ),
+            titled(
+                "The Nest of Gold",
+                "The Nest of Gold (p. 125): a fortune in gold, and worth more as a "
+                "focus: +7 to enchantments for defending a home or protecting "
+                "treasure. To use it, it must reach a laboratory with its "
+                "structure whole, by careful handling, skilled goldsmithing to "
+                "solder it, or magic, until it can be stabilized and enchanted. "
+                "An intact nest may also be needed for eggs to hatch.",
+            ),
+            titled(
+                "Eggs of Agate",
+                "Eggs of Agate (p. 125): griffon eggs are flawless agates the size "
+                "of an ostrich's. Agate in the mouth is said to stop thirst, and "
+                "sorcerers have used it since Rome to rule rivers and storms. "
+                "Linked to Auram magic (+3), protection from storms (+5), and "
+                "protection from venom (+7). Shells of hatched eggs may be "
+                "enchanted the same way.",
+            ),
+            titled(
+                "Baby griffons",
+                "Baby griffons (pp. 125-126): hatched at a covenant they grow "
+                "slowly, little bigger than dogs for decades, and do as they are "
+                "told if they accept someone local as head of their pride. They "
+                "act like flying kittens with keen sight and the strength to "
+                "tear holes in things, and may suit as familiars. Magic can hasten "
+                "their growth, but grown griffons are far harder to train, being "
+                "notoriously impossible to coerce.",
+            ),
+            titled(
+                "Griffons and farming",
+                "Griffons prey on livestock and would ruin farming, so they "
+                "belong in far mountains. The Avars' flight west in the sixth "
+                "century is sometimes laid to a plague of them (p. 130).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book gives no place for the nest, only that the griffons' "
+                "range overlaps the crash site. Ways of finding it are in "
+                "Flights of Fancy. Rules for training magical animals are in "
+                "Realms of Power: Magic p. 81.",
+            ),
+        ],
         status=RUMOURED,
         known=LOCALLY,
     )
@@ -998,11 +1140,23 @@ def build(b: Builder) -> None:
         realm="",
         summary="A workshop no one has found, built to make the greatest "
         "enchantment the Order has seen.",
-        secrets="Thomae set it up to make the disk, and his Verditius "
-        "collaborator has kept it (p. 138). Where it is, the book leaves "
-        "open; one suggestion puts it in a small African or Asian kingdom "
-        "Thomae conquered. His lab notes for it survive in the wreck. Its "
-        "stories are in Thomae's Secret: The Verditius.",
+        secrets=[
+            titled(
+                "Who keeps the laboratory",
+                "Thomae set his secret laboratory up to make the disk, and his "
+                "Verditius collaborator has kept it (p. 138).",
+            ),
+            titled(
+                "Notes for the laboratory",
+                "Thomae's lab notes for his secret laboratory survive in the wreck.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Where it is, the book leaves open; one suggestion puts it in a "
+                "small African or Asian kingdom Thomae conquered. Its stories "
+                "are in Thomae's Secret: The Verditius.",
+            ),
+        ],
         status=RUMOURED,
         known=LOCALLY,
     )
@@ -1027,59 +1181,94 @@ def build(b: Builder) -> None:
         summary="A former mercenary in his mid-twenties, now stealing unseen "
         "from the great houses of a large town. He keeps a bronze medal of "
         "Saint Thomas and thinks it holy.",
-        secrets=paragraphs(
-            "No threat to a band of seasoned grogs. The book gives him no "
-            "statistics: choose a generic to fit what he becomes after the "
-            "story (p. 127). He got the medal from Roberto, whose vanishing "
-            "in battle he saw, and made sure to take it when arrows killed "
-            "Roberto. He thought of sending it home, but a tiny Alpine "
-            "village seemed too much trouble. He has Roberto's other "
-            "belongings, which may point to Santa Lucia, and knows where "
-            "Roberto lies buried.",
-            "The medallion (pp. 127-128): small bronze on a chain of the same, "
-            "a man's portrait on one side and a stylized castle on the "
-            "other, like a pilgrim's medal. But Saint Thomas's marks are "
-            "wrong (Intelligence + Church Lore 3): the halo is a spiral and "
-            "nothing else names him, though Thomas is patron of architects, "
-            "so the castle could pass. Maker's marks at the bottom edge. His "
-            "garbled Latin prayer works because the triggers of two powers "
-            "are 'Thomae' and the Latin for 'help'. It takes him two rounds, "
-            "and he always uses both, not knowing they are separable. He "
-            "knows the medal eases his landings, not that free fall does it. "
-            "He does not know that blowing on it spies. Roberto did, which is "
-            "why he kissed it before battle: to hear his commanders and get "
-            "himself put in the reserve.",
-            "This one was made for training covenfolk: slower flight, far "
-            "longer lasting. Scent of frying onions marks the maker's sigil "
-            "while Aerial Dancer and Veil of Invisibility last.",
-            joined_lines(
-                "Aerial Dancer: ReCo 35, Pen +0, unlimited/day. R: Touch, D: "
-                "Sun, T: Individual. Spoken 'Thomae'. Moves the wearer "
-                "through the air any way he likes at a running pace. Base 10, "
-                "+1 Touch, +2 Sun; unlimited +10. The other medallions fly "
-                "for two minutes at a running horse's speed (Base 15, +1 "
-                "Touch, +1 Diameter; unlimited +10).",
-                "Failure to Fall: ReCo 25, Pen +0, unlimited/day. R: Touch, D: "
-                "Diameter, T: Individual. Triggered by free fall. Lowers the "
-                "faller about a foot a second for 120 feet, then reactivates "
-                "if he is falling still, with a brief gap in the onion smell "
-                "by which covenfolk claimed to judge their drop. Base 5, +1 "
-                "Touch, +1 Diameter; unlimited +10. (The book says two "
-                "minutes and, a sentence on, three.)",
-                "Veil of Invisibility: PeIm 25, Pen +0, 24 uses/day. R: "
-                "Touch, D: Sun, T: Individual. Spoken 'help' in Latin. As the "
-                "spell (ArM5 p. 146). Base 4, +1 Touch, +2 Sun, +1 moving; 24 "
-                "uses +5.",
-                "Whispering Winds: printed ReAu 15, Pen +0, 1 use/day. R: "
-                "Sight, D: Concentration, T: Individual. Worked by blowing on "
-                "the medallion. As the spell (ArM5 p. 127, which has it as "
-                "InAu 15). Eavesdrops on a group in view. Unique.",
+        secrets=[
+            titled(
+                "Where Andros got the medal",
+                "He got the medal from Roberto, whose vanishing in battle he "
+                "saw, and made sure to take it when arrows killed Roberto. He "
+                "thought of sending it home, but a tiny Alpine village seemed "
+                "too much trouble.",
             ),
-            "Thomae's three shield grogs each had a medallion, a little "
-            "different from each other, and his bodyguards made a strange "
-            "three-dimensional martial art of them. The others are with the "
-            "leaders of the Santa Lucians (p. 124).",
-        ),
+            titled(
+                "Roberto's belongings",
+                "He has Roberto's other belongings, which may point to Santa "
+                "Lucia, and knows where Roberto lies buried.",
+            ),
+            titled(
+                "The medallion",
+                "The medallion (pp. 127-128): small bronze on a chain of the "
+                "same, a man's portrait on one side and a stylized castle on "
+                "the other, like a pilgrim's medal. Maker's marks at the bottom "
+                "edge.",
+            ),
+            titled(
+                "The medal's false saint",
+                "Saint Thomas's marks on Andros's medal are wrong "
+                "(Intelligence + Church Lore 3): the halo is a spiral and "
+                "nothing else names him, though Thomas is patron of architects, "
+                "so the castle could pass.",
+            ),
+            titled(
+                "Why Andros's prayer works",
+                "His garbled Latin prayer works because the triggers of two "
+                "powers are 'Thomae' and the Latin for 'help'. It takes him two "
+                "rounds, and he always uses both, not knowing they are "
+                "separable.",
+            ),
+            titled(
+                "What Andros does not know",
+                "He knows the medal eases his landings, not that free fall does "
+                "it. He does not know that blowing on it spies. Roberto did, "
+                "which is why he kissed it before battle: to hear his "
+                "commanders and get himself put in the reserve.",
+            ),
+            titled(
+                "A training medallion",
+                "Andros's medallion was made for training covenfolk: slower "
+                "flight, far longer lasting. Scent of frying onions marks the "
+                "maker's sigil while Aerial Dancer and Veil of Invisibility "
+                "last.",
+            ),
+            titled(
+                "The medallion's powers",
+                joined_lines(
+                    "Aerial Dancer: ReCo 35, Pen +0, unlimited/day. R: Touch, D: "
+                    "Sun, T: Individual. Spoken 'Thomae'. Moves the wearer "
+                    "through the air any way he likes at a running pace. Base 10, "
+                    "+1 Touch, +2 Sun; unlimited +10. The other medallions fly "
+                    "for two minutes at a running horse's speed (Base 15, +1 "
+                    "Touch, +1 Diameter; unlimited +10).",
+                    "Failure to Fall: ReCo 25, Pen +0, unlimited/day. R: Touch, D: "
+                    "Diameter, T: Individual. Triggered by free fall. Lowers the "
+                    "faller about a foot a second for 120 feet, then reactivates "
+                    "if he is falling still, with a brief gap in the onion smell "
+                    "by which covenfolk claimed to judge their drop. Base 5, +1 "
+                    "Touch, +1 Diameter; unlimited +10. (The book says two "
+                    "minutes and, a sentence on, three.)",
+                    "Veil of Invisibility: PeIm 25, Pen +0, 24 uses/day. R: "
+                    "Touch, D: Sun, T: Individual. Spoken 'help' in Latin. As the "
+                    "spell (ArM5 p. 146). Base 4, +1 Touch, +2 Sun, +1 moving; 24 "
+                    "uses +5.",
+                    "Whispering Winds: printed ReAu 15, Pen +0, 1 use/day. R: "
+                    "Sight, D: Concentration, T: Individual. Worked by blowing on "
+                    "the medallion. As the spell (ArM5 p. 127, which has it as "
+                    "InAu 15). Eavesdrops on a group in view. Unique.",
+                ),
+            ),
+            titled(
+                "The other medallions",
+                "Thomae's three shield grogs each had a medallion, a little "
+                "different from each other, and his bodyguards made a strange "
+                "three-dimensional martial art of them. The others are with the "
+                "leaders of the Santa Lucians (p. 124).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "No threat to a band of seasoned grogs. The book gives him no "
+                "statistics: choose a generic to fit what he becomes after the "
+                "story (p. 127).",
+            ),
+        ],
     )
     roberto = b.magus(
         "Roberto",
@@ -1090,10 +1279,22 @@ def build(b: Builder) -> None:
         summary="A dead soldier of a mercenary company, who said he came "
         "from a tiny Alpine village called Santa Lucia and always kissed his "
         "medal before a fight.",
-        secrets="Son of Rogerio, whose medallion he stole before going off to "
-        "soldier. Shot down by arrows. He died in battle and was buried "
-        "anyhow, so his ghost can be summoned (p. 129). Returning his remains "
-        "to Rogerio will be taken very kindly (p. 131).",
+        secrets=[
+            titled(
+                "Roberto's theft",
+                "Son of Rogerio, whose medallion he stole before going off to soldier.",
+            ),
+            titled(
+                "Roberto's ghost",
+                "Shot down by arrows. He died in battle and was buried anyhow, "
+                "so his ghost can be summoned (p. 129).",
+            ),
+            titled(
+                "Roberto's remains",
+                "Returning Roberto's remains to Rogerio will be taken very "
+                "kindly (p. 131).",
+            ),
+        ],
     )
     rogerio = b.magus(
         "Rogerio",
@@ -1103,13 +1304,29 @@ def build(b: Builder) -> None:
         type="companion",
         summary="One of the three councilors of Santa Lucia, old now, who "
         "wears a metal badge of office.",
-        secrets="A ranking servant of Thomae, perhaps one of his guard. His "
-        "badge replaces the medallion his son Roberto stole, and he wants the "
-        "original back. He assumes at first that the characters took it from "
-        "Roberto. His goodwill is worth having. He would not use a combat "
-        "item now as he did when young, so another offer of position may sway "
-        "him. Andros's story fits what he recalls of his reckless son (p. "
-        "131). The book gives no statistics.",
+        secrets=[
+            titled(
+                "Rogerio's past",
+                "A ranking servant of Thomae, perhaps one of his guard.",
+            ),
+            titled(
+                "Rogerio's lost medallion",
+                "His badge replaces the medallion his son Roberto stole, and he "
+                "wants the original back. He assumes at first that the "
+                "characters took it from Roberto.",
+            ),
+            titled(
+                "Winning Rogerio over",
+                "His goodwill is worth having. He would not use a combat item "
+                "now as he did when young, so another offer of position may "
+                "sway him.",
+            ),
+            titled(
+                "Rogerio's reckless son",
+                "Andros's story fits what he recalls of his reckless son (p. 131).",
+            ),
+            titled("Storyguide Notes", "The book gives no statistics."),
+        ],
     )
     flavia = b.magus(
         "Flavia of Verditius",
@@ -1118,14 +1335,26 @@ def build(b: Builder) -> None:
         age=None,
         summary="A living Verditius, maker of a bronze medal bearing a spiral. "
         "Her sigil is the smell of frying onions.",
-        secrets="She holds a fixed Arcane Connection to Thomae, taken to "
-        "ensure he paid, and let him believe it destroyed. She has never used "
-        "it, thinking he has made himself a king in Africa or Asia, and that "
-        "it is folly to vex a magician-king with a flying fortress. The "
-        "characters must persuade her with skill to let them use it. To go on "
-        "to the search for the secret laboratory, the storyguide should send "
-        "them by another lead (p. 129). The book does not say she is the "
-        "castle's Verditius collaborator.",
+        secrets=[
+            titled(
+                "Flavia's Arcane Connection",
+                "She holds a fixed Arcane Connection to Thomae, taken to ensure "
+                "he paid, and let him believe it destroyed.",
+            ),
+            titled(
+                "Why Flavia never used it",
+                "She has never used her Arcane Connection to Thomae, thinking he "
+                "has made himself a king in Africa or Asia, and that it is folly "
+                "to vex a magician-king with a flying fortress.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The characters must persuade her with skill to let them use "
+                "it. To go on to the search for the secret laboratory, the "
+                "storyguide should send them by another lead (p. 129). The book "
+                "does not say she is the castle's Verditius collaborator.",
+            ),
+        ],
     )
     b.link(andros, "characters", roberto, "Took his medal")
     b.link(rogerio, "characters", roberto, "His son")
@@ -1220,10 +1449,16 @@ def build(b: Builder) -> None:
             "items for the castle's defense that a dog can trigger; destroying "
             "its body then destroys the item.",
         ),
-        secrets="They guard the line between home and away from home, and "
-        "the Santa Lucians, by moving, are crossing it. So they kill those "
-        "hauling goods, and drag bodies and ghosts back to be 'at home' in "
-        "the courtyard. See Flights of Fancy.",
+        secrets=[
+            titled(
+                "Why the Dogs kill",
+                "They guard the line between home and away from home, and the "
+                "Santa Lucians, by moving, are crossing it. So they kill those "
+                "hauling goods, and drag bodies and ghosts back to be 'at home' "
+                "in the courtyard.",
+            ),
+            titled("Storyguide Notes", "See Flights of Fancy."),
+        ],
     )
     _griffons(b, nest)
     _road_creatures(b)
@@ -1236,12 +1471,25 @@ def build(b: Builder) -> None:
             moves="A track",
             summary="An unseen thief is robbing a large town near the "
             "covenant, by a power that looks like the work of a magus.",
-            secrets="The adventure of the chapter (pp. 126-133). The thief's medal "
-            "leads to a mountain village, its bronze hounds, and the wreck of "
-            "Thomae's castle. The Dogs and "
-            "griffons need not be fought: each has a subtler answer below. "
-            "Griffons attack gold-carriers, draft animals (horses above all, "
-            "which they love) and anything flying bigger than a bird.",
+            secrets=[
+                titled(
+                    "Where the thief's medal leads",
+                    "The thief's medal leads to a mountain village, its bronze "
+                    "hounds, and the wreck of Thomae's castle.",
+                ),
+                titled(
+                    "What the griffons attack",
+                    "Griffons attack gold-carriers, draft animals (horses above "
+                    "all, which they love) and anything flying bigger than a "
+                    "bird.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The adventure of the chapter (pp. 126-133). The Dogs and "
+                    "griffons need not be fought: each has a subtler answer "
+                    "below.",
+                ),
+            ],
             stages=[
                 b.stage(
                     "Foreshadowing",
@@ -1379,13 +1627,26 @@ def build(b: Builder) -> None:
             antagonist="Time and ignorance",
             summary="Agate eggs from the nest of gold lie cold. No magus knows "
             "how they hatch, or even if they die away from their nest.",
-            secrets="Story seed (p. 125). It may take a story to find a way: "
-            "a favor to the covenant with a great library; a powerful Bjornaer "
-            "said to take griffon shape; Jerbiton covenants that train magical "
-            "beasts, and a maga at remote Valnastium with potent items for "
-            "training griffons, who may never have hatched one and may be too "
-            "far to reach in time. It is unknown whether eggs die outside the "
-            "right environment or wait for their mystic climate.",
+            secrets=[
+                titled(
+                    "Whether the eggs die",
+                    "It is unknown whether griffon eggs die outside the right "
+                    "environment or wait for their mystic climate.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Story seed (p. 125).",
+                        "It may take a story to find a way to hatch the "
+                        "griffons' eggs: a favor to the covenant with a great "
+                        "library; a powerful Bjornaer said to take griffon "
+                        "shape; Jerbiton covenants that train magical beasts, "
+                        "and a maga at remote Valnastium with potent items for "
+                        "training griffons, who may never have hatched one and "
+                        "may be too far to reach in time.",
+                    ),
+                ),
+            ],
         )
     )
     dormant(
@@ -1395,19 +1656,30 @@ def build(b: Builder) -> None:
             antagonist="A demon of Pride, or a flock of magical moths",
             summary="What if something other than griffons brought down the "
             "castle? It may be waiting for the next who tries to fly.",
-            secrets=paragraphs(
-                "Alternatives to the griffons (p. 137), which the book also "
-                "suggests for a saga's first story (p. 126).",
-                "A demon: a powerful one of an Order that punishes human sin "
-                "struck the castle down, taking flight as Pride. The castle "
-                "mends with little trouble, and the mender becomes its target. "
-                "It may be mixed with the griffons to give the covenant a new "
-                "Enemy. The book gives no statistics.",
-                "Moths: a flock of ethereal magical moths flew through the "
-                "side of the disk to the light within. Set the chain's orb to "
-                "black and offer another mystic light, with simple CrIm or CrIg "
-                "spells of Ring duration, to lure them out of the works.",
-            ),
+            secrets=[
+                titled(
+                    "A demon of Pride",
+                    "A demon: a powerful one of an Order that punishes human "
+                    "sin struck Thomae's castle down, taking flight as Pride. "
+                    "The castle mends with little trouble, and the mender "
+                    "becomes its target.",
+                ),
+                titled(
+                    "Magical moths",
+                    "Moths: a flock of ethereal magical moths flew through the "
+                    "side of Thomae's disk to the light within. Set the chain's "
+                    "orb to black and offer another mystic light, with simple "
+                    "CrIm or CrIg spells of Ring duration, to lure them out of "
+                    "the works.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Alternatives to the griffons (p. 137), which the book also "
+                    "suggests for a saga's first story (p. 126). The demon may "
+                    "be mixed with the griffons to give the covenant a new "
+                    "Enemy. The book gives no statistics.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1416,26 +1688,37 @@ def build(b: Builder) -> None:
             antagonist="The griffons of old stories",
             summary="Griffons guard more than a golden nest: old Greek tales "
             "set them at the edges of the world and beside the gods' arms.",
-            secrets=paragraphs(
-                "Ties to earlier books (p. 137). Aristeas's lost Arimaspea, "
-                "reported by Herodotus, sets griffons close to the north wind, "
-                "their land dividing Hyperborea from the world. Magi after "
-                "Hyperborean magic (Ancient Magic) could tame one and use its "
-                "migratory sense to seek the land of gold.",
-                "Aristeas was a Nightwalker. In Hedge Magic's story a faerie "
-                "Aristeas tries to turn the cult from the Lady to Apollo, and "
-                "is said to have hidden his body in the griffons' land.",
-                "In the Hesperides quest (Ancient Magic), one outcome seeks "
-                "the weapons of the old gods. A Greek poem gives Zeus griffons "
-                "as guard dogs, so they may nest on the mountain hiding the "
-                "Titans' weapons.",
-            ),
+            secrets=[
+                titled(
+                    "Griffons by the north wind",
+                    "Aristeas's lost Arimaspea, reported by Herodotus, sets "
+                    "griffons close to the north wind, their land dividing "
+                    "Hyperborea from the world. Magi after Hyperborean magic "
+                    "(Ancient Magic) could tame one and use its migratory sense "
+                    "to seek the land of gold.",
+                ),
+                titled(
+                    "Aristeas the Nightwalker",
+                    "Aristeas was a Nightwalker. In Hedge Magic's story a "
+                    "faerie Aristeas tries to turn the cult from the Lady to "
+                    "Apollo, and is said to have hidden his body in the "
+                    "griffons' land.",
+                ),
+                titled(
+                    "Griffons and the Titans' weapons",
+                    "In the Hesperides quest (Ancient Magic), one outcome seeks "
+                    "the weapons of the old gods. A Greek poem gives Zeus "
+                    "griffons as guard dogs, so they may nest on the mountain "
+                    "hiding the Titans' weapons.",
+                ),
+                titled("Storyguide Notes", "Ties to earlier books (p. 137)."),
+            ],
         )
     )
     opening = (
         "What Thomae was hiding is the troupe's to choose (p. 138). Point to "
         "it with: who or what was his 'Verditius collaborator', and where is "
-        "his ghost? "
+        "his ghost?"
     )
     dormant(
         b.threat(
@@ -1443,13 +1726,19 @@ def build(b: Builder) -> None:
             antagonist="Thomae's Verditius collaborator",
             summary="Thomae had a Verditius helper who has never claimed the "
             "credit. Why would a Verditius stay so modest?",
-            secrets=opening
-            + "The Verditius has kept the secret laboratory and hides it for "
-            "a reason: it holds prohibited faerie or demonic elements; or it "
-            "lies at the heart of a small African or Asian kingdom Thomae "
-            "conquered, probably against the Code; or it has spent twenty "
-            "years turning out flying squares that clip together into a "
-            "platform for a flying city.",
+            secrets=[
+                titled(
+                    "Why the Verditius hides the laboratory",
+                    "Thomae's Verditius collaborator has kept the secret "
+                    "laboratory and hides it for a reason: it holds prohibited "
+                    "faerie or demonic elements; or it lies at the heart of a "
+                    "small African or Asian kingdom Thomae conquered, probably "
+                    "against the Code; or it has spent twenty years turning out "
+                    "flying squares that clip together into a platform for a "
+                    "flying city.",
+                ),
+                titled("Storyguide Notes", opening),
+            ],
         )
     )
     dormant(
@@ -1458,18 +1747,32 @@ def build(b: Builder) -> None:
             antagonist="The faerie come to collect",
             summary="Time and money should have stopped Thomae. Something "
             "else paid, and may yet come for the debt.",
-            secrets=opening
-            + "He built the castle and items in Arcadia, solving both limits. "
-            "If he died there unknowing, what came back was a powerful faerie, "
-            "which is why there is no ghost and why creatures perfect for his "
-            "story struck him down; his wanderings to far mountains may have "
-            "been his glamor seeking to finish its script. Faeries trade "
-            "wishes for vitality, and so large a thing brought out of Faerie "
-            "means vast vitality given, or promised. A collector comes, or "
-            "takes the castle back: a dark faerie wanting the blood of the "
-            "dead of a war he promised to start, or a Queen of Sylphs "
-            "demanding the tears of ten thousand babies, this century's rent "
-            "for her flying throne.",
+            secrets=[
+                titled(
+                    "Built in Arcadia",
+                    "Thomae built the castle and items in Arcadia, solving both "
+                    "limits.",
+                ),
+                titled(
+                    "What came back from Arcadia",
+                    "If Thomae died in Arcadia unknowing, what came back was a "
+                    "powerful faerie, which is why there is no ghost and why "
+                    "creatures perfect for his story struck him down; his "
+                    "wanderings to far mountains may have been his glamor "
+                    "seeking to finish its script.",
+                ),
+                titled(
+                    "The faerie debt",
+                    "Faeries trade wishes for vitality, and so large a thing as "
+                    "Thomae's castle brought out of Faerie means vast vitality "
+                    "given, or promised. A collector comes, or takes the castle "
+                    "back: a dark faerie wanting the blood of the dead of a war "
+                    "he promised to start, or a Queen of Sylphs demanding the "
+                    "tears of ten thousand babies, this century's rent for her "
+                    "flying throne.",
+                ),
+                titled("Storyguide Notes", opening),
+            ],
         )
     )
     dormant(
@@ -1478,20 +1781,37 @@ def build(b: Builder) -> None:
             antagonist="Whatever the disk held down",
             summary="The control chain is plainly Hermetic. The great disk may "
             "be something far older.",
-            secrets=opening
-            + "Herodotus tells of Chemiss, a floating island bearing a temple "
-            "of Apollo. Hunting vis in Egypt, Thomae found that a stone disc "
-            "held it up, worked out, perhaps with help, that colored lights "
-            "steered it, and spent his missing years ordering the lesser "
-            "items. His Verditius ally lets others think he built it, keeping "
-            "the bragging rights, and exposure would wound his standing. In "
-            "myth, Latona or a priestess made the island float to hide Apollo "
-            "(Horus) from Typhon (Set); she was the city goddess of Buto, "
-            "with an oracle there by Herodotus, so some trace may remain. So "
-            "the disc hid a faerie from a magical being in Egypt's "
-            "Titanomachy. What else lay beneath it: a weapons cache's "
-            "capstone, a faerie road's door? What goes on there now he has "
-            "taken this barrier away?",
+            secrets=[
+                titled(
+                    "What Thomae found in Egypt",
+                    "Herodotus tells of Chemiss, a floating island bearing a "
+                    "temple of Apollo. Hunting vis in Egypt, Thomae found that "
+                    "a stone disc held it up, worked out, perhaps with help, "
+                    "that colored lights steered it, and spent his missing "
+                    "years ordering the lesser items.",
+                ),
+                titled(
+                    "The Verditius ally's silence",
+                    "Thomae's Verditius ally lets others think he built the "
+                    "disk, keeping the bragging rights, and exposure would "
+                    "wound his standing.",
+                ),
+                titled(
+                    "Chemiss in myth",
+                    "In myth, Latona or a priestess made the island of Chemiss "
+                    "float to hide Apollo (Horus) from Typhon (Set); she was "
+                    "the city goddess of Buto, with an oracle there by "
+                    "Herodotus, so some trace may remain. So the disc hid a "
+                    "faerie from a magical being in Egypt's Titanomachy.",
+                ),
+                titled(
+                    "What lay beneath the disc",
+                    "What else lay beneath Chemiss's disc: a weapons cache's "
+                    "capstone, a faerie road's door? What goes on there now "
+                    "Thomae has taken this barrier away?",
+                ),
+                titled("Storyguide Notes", opening),
+            ],
         )
     )
     b.link(old_village, "places", new_valley, "Where the village is moving")

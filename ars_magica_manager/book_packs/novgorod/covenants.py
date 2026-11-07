@@ -27,7 +27,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs
+from ..builder import joined_lines, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Character, Covenant, Tribunal
@@ -151,8 +151,13 @@ def _three_lakes(records: Records, tribunal: Tribunal) -> None:
             "Hook: Mundane Politics (the Royal Embargo and Novgorod's princes)",
             "Hook: Infants (four apprentices trained together)",
         ),
-        secrets="Zashya Miyovna's secret: her daughter by a Rurikid prince, "
-        "and her granddaughter Nastassia Baramov of Thousand Caves.",
+        secrets=[
+            titled(
+                "Zashya Miyovna's secret",
+                "Zashya Miyovna has a daughter by a Rurikid prince, and her "
+                "granddaughter is Nastassia Baramov of Thousand Caves.",
+            ),
+        ],
     )
     records.covenants["three_lakes"] = covenant
     _members(records, covenant, THREE_LAKES)
@@ -559,9 +564,14 @@ def _pripet_maior(records: Records, tribunal: Tribunal) -> None:
             "Hook: Rival (Thousand Caves)",
             "Hook: Infamous (to the marsh's peasants)",
         ),
-        secrets="Miya Cossuri does not know that Nastassia Baramov of "
-        "Thousand Caves, whom the covenant loathes, is her own "
-        "great-granddaughter.",
+        secrets=[
+            titled(
+                "Miya Cossuri's great-granddaughter",
+                "Miya Cossuri does not know that Nastassia Baramov of "
+                "Thousand Caves, whom the covenant loathes, is her own "
+                "great-granddaughter.",
+            ),
+        ],
     )
     records.covenants["pripet_maior"] = covenant
     _members(records, covenant, PRIPET_MAIOR)

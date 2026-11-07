@@ -12,7 +12,7 @@ from typing import TYPE_CHECKING
 
 from ... import vassals
 from ...tribunal_packages.normandy import KEY
-from ..builder import paragraphs
+from ..builder import Secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Covenant
@@ -81,24 +81,42 @@ SUMMARY = paragraphs(
     "Tribunal's luctationes are kept at Confluensis.",
 )
 
-SECRET = (
-    "The Cabal of the Golden Coin, begun by Tytalus magi and now drawn "
-    "from many Houses, fixes Tourney events between its members and "
-    "pushed through several of the odd prize levels to profit by them; "
-    "the young three-magus team that has finished 14th at the last three "
-    "Tourneys, just past the prizeless Siege of Shame, is one of its "
-    "fronts. The Siege of Notatus's large prize may have a more practical "
-    "origin than the tale of Notatus's love of seven, buried in the "
-    "Tribunal's records. Three Normandy covenants back the Lotharingian "
-    "movement, which would take some of the Tribunal's richest vis "
-    "sources away and leave Tytalan Brittany producing more vis than the "
-    "rest combined; a Tytalan Cabal of Frankish Gold works for it, with "
-    "Augustina the Traitor among its members and at least one saboteur "
-    "inside. Proctor's inherited hatred of House Tytalus may yet drive "
-    "him to extremes. Rumour that Diedne survivors wait inside "
-    "Branugurix's sealed regio, and that someone means to free them, may "
-    "be true."
-)
+SECRET = [
+    titled(
+        "The Cabal of the Golden Coin",
+        "The Cabal of the Golden Coin, begun by Tytalus magi and now drawn "
+        "from many Houses, fixes Tourney events between its members and "
+        "pushed through several of the odd prize levels to profit by them; "
+        "the young three-magus team that has finished 14th at the last three "
+        "Tourneys, just past the prizeless Siege of Shame, is one of its "
+        "fronts.",
+    ),
+    titled(
+        "The Siege of Notatus's prize",
+        "The Siege of Notatus's large prize may have a more practical "
+        "origin than the tale of Notatus's love of seven, buried in the "
+        "Tribunal's records.",
+    ),
+    titled(
+        "The Lotharingian movement's backers",
+        "Three Normandy covenants back the Lotharingian "
+        "movement, which would take some of the Tribunal's richest vis "
+        "sources away and leave Tytalan Brittany producing more vis than the "
+        "rest combined; a Tytalan Cabal of Frankish Gold works for it, with "
+        "Augustina the Traitor among its members and at least one saboteur "
+        "inside.",
+    ),
+    titled(
+        "Proctor's hatred",
+        "Proctor's inherited hatred of House Tytalus may yet drive him to extremes.",
+    ),
+    titled(
+        "Diedne in Branugurix",
+        "Rumour that Diedne survivors wait inside "
+        "Branugurix's sealed regio, and that someone means to free them, may "
+        "be true.",
+    ),
+]
 
 
 #: The duties of the Oath of Fealty a vassal covenant swears, and how it
@@ -532,7 +550,7 @@ KNOWN_LOCALLY = {"status": "Known", "known": "Locally"}
 RUMOURED = {"status": "Rumoured", "known": "Locally"}
 
 #: Each fallen covenant: (key, name, realm, status/known, summary, secret).
-RUINS: tuple[tuple[str, str, str, dict[str, str], str, str], ...] = (
+RUINS: tuple[tuple[str, str, str, dict[str, str], str, Secrets], ...] = (
     (
         "bibracte",
         "Bibracte",
@@ -550,8 +568,13 @@ RUINS: tuple[tuple[str, str, str, dict[str, str], str, str], ...] = (
         "ruins are mostly forgotten, though Helios of Atramentum Renatus now "
         "studies them and Philip of the Donatores fears he is angering the "
         "ghosts.",
-        "Whether the cult succeeded in raising Vercingetorix's spirit is "
-        "unknown; Helios means to find out.",
+        [
+            titled(
+                "Vercingetorix's spirit",
+                "Whether Bibracte's cult succeeded in raising Vercingetorix's "
+                "spirit is unknown; Helios means to find out.",
+            )
+        ],
     ),
     (
         "pagus",
@@ -803,10 +826,15 @@ def _ruins(normandy: Normandy) -> None:
             "and the House watches anyone who spends long around Mount "
             "Dol.",
         ),
-        secrets="Rumour says some Diedne survived inside the sealed regio and "
-        "that someone is working to free them after two centuries; "
-        "Lapis Crudus's return from its own regio has made the Tribunal "
-        "fear this again.",
+        secrets=[
+            titled(
+                "Diedne in the sealed regio",
+                "Rumour says some Diedne survived inside Branugurix's sealed "
+                "regio and that someone is working to free them after two "
+                "centuries; Lapis Crudus's return from its own regio has made "
+                "the Tribunal fear this again.",
+            )
+        ],
         realm="Magic",
         status="Known",
         known="In the Order",

@@ -22,7 +22,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages import levant as package
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -97,15 +97,24 @@ SUMMARY = paragraphs(
     "will make friends and enemies inside the Order and out.",
 )
 
-SECRETS = paragraphs(
-    "The book's own guess at what follows 1220: the Treaty fails, "
-    "perhaps once the True Cross is lost, and the Tribunal joins the "
-    "war; or it holds until the Mongols come, and then the Mamluks "
-    "drive the Order from the mainland by 1291, leaving only Cyprus.",
-    "The Praeco's office should strictly be Wraith's, of Urbs Rubra, "
-    "the elder of the Tribunal's two eldest; the quaesitores ruled Tau "
-    "the eldest in 1207 only because no one could reach her.",
-)
+SECRETS = [
+    titled(
+        "Whose office the Praeco's is",
+        "The Praeco's office should strictly be Wraith's, of Urbs Rubra, "
+        "the elder of the Tribunal's two eldest; the quaesitores ruled Tau "
+        "the eldest in 1207 only because no one could reach her.",
+    ),
+    titled(
+        "Storyguide Notes",
+        paragraphs(
+            "What follows 1220: the Treaty of Baghdad fails, perhaps once the "
+            "True Cross is lost, and the Tribunal joins the war; or it holds "
+            "until the Mongols come, and then the Mamluks drive the Order "
+            "from the mainland by 1291, leaving only Cyprus.",
+            "What follows 1220 is the book's own guess.",
+        ),
+    ),
+]
 
 #: The Peripheral Code: (year or None, title, what it says).
 RULINGS: tuple[tuple[int | None, str, str], ...] = (

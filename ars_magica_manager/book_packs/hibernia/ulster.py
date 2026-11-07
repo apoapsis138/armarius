@@ -34,7 +34,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...models.world import FULL
-from ..builder import joined_lines, paragraphs
+from ..builder import joined_lines, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -944,13 +944,20 @@ def _earldom(hibernia: Hibernia) -> None:
             "No one holds it.",
             "",
         ),
-        secrets="The kings must stay buried. Eleven of the twelve graves "
-        "hold a demon bound into a dead tyrant's body. The "
-        "Cailleacha Phiseogach know a legend that if mortal hands "
-        "uncover the kings they will rise, and that when a twelfth "
-        "king joins them the world will end. They cannot dig the "
-        "graves themselves, so they mean to lure vis-hungry magi "
-        "into doing it.",
+        secrets=[
+            titled(
+                "What lies in the graves",
+                "The kings of Sliabh Crúibe must stay buried. Eleven of the twelve graves hold a demon bound into a dead tyrant's body.",
+            ),
+            titled(
+                "The legend of the kings",
+                "The Cailleacha Phiseogach know a legend that if mortal hands uncover the kings of Sliabh Crúibe they will rise, and that when a twelfth king joins them the world will end.",
+            ),
+            titled(
+                "The Cailleacha's plan",
+                "The Cailleacha Phiseogach cannot dig the graves of Sliabh Crúibe themselves, so they mean to lure vis-hungry magi into doing it.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -1922,16 +1929,22 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "Cantarus, Master of the Songs, Finn, Lewis and Turlough are "
         "described.",
     )
-    hidden = joined_lines(
-        "Turlough of Criamon, who keeps the cemetery and the spirits, "
-        "wants more from the dead than summoning them, and hides his "
-        "growing interest from his sodales; any help he gets must "
-        "come from outside, and he would trade his favour with the "
-        "Coill Trí for it.",
-        "Should a magus appear who would commit himself to the covenant, "
-        "Cantarus would happily pass Finn over and make that magus Master of "
-        "the Songs.",
-    )
+    hidden = [
+        titled(
+            "Turlough and the dead",
+            "Turlough of Criamon, who keeps the cemetery and the spirits, "
+            "wants more from the dead than summoning them, and hides his "
+            "growing interest from his sodales; any help he gets must "
+            "come from outside, and he would trade his favour with the "
+            "Coill Trí for it.",
+        ),
+        titled(
+            "The next Master of the Songs",
+            "Should a magus appear who would commit himself to the covenant, "
+            "Cantarus would happily pass Finn over and make that magus Master of "
+            "the Songs.",
+        ),
+    ]
     qui_sonant = b.covenant(
         "Qui Sonant Pro Quieto",
         tribunal=tribunal,
@@ -2034,10 +2047,12 @@ def _qui_sonant(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
             "won another at the last Tribunal through his warm "
             "relations with the Coill Trí.",
         ),
-        secrets="He feels there is more to gain from the spirits than summoning "
-        "them, and fears his sodales will learn of this growing "
-        "interest, so any help must come from outside; he would gladly "
-        "bargain his influence with the Coill Trí for it.",
+        secrets=[
+            titled(
+                "His interest in the spirits",
+                "He feels there is more to gain from the spirits than summoning them, and fears his sodales will learn of this growing interest, so any help must come from outside; he would gladly bargain his influence with the Coill Trí for it.",
+            )
+        ],
         traits={"Secretive": 3, "Affable": 2, "Disciplined": 1},
     )
 
@@ -2078,12 +2093,16 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
             "mostly forgotten.",
             "",
         ),
-        secrets="Many magical weapons and devices brought from distant lands "
-        "have outlasted centuries of rot in the drowned vaults, with "
-        "a library of casting tablets and lab texts against Infernal "
-        "sickness and foul weather. The old records are lost and "
-        "Vigil's magi have no idea what lies under their feet, but "
-        "the Vitae Magorum of Hibernia's magi mention the vaults.",
+        secrets=[
+            titled(
+                "The drowned vaults",
+                "Many magical weapons and devices brought from distant lands have outlasted centuries of rot in the drowned vaults of the Old Fortress of Vigil, with a library of casting tablets and lab texts against Infernal sickness and foul weather.",
+            ),
+            titled(
+                "Who knows of the vaults",
+                "The old records of Vigil's drowned vaults are lost and Vigil's magi have no idea what lies under their feet, but the Vitae Magorum of Hibernia's magi mention the vaults.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -2262,21 +2281,41 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
         "described. The founding year is not given (the Merinita took the "
         "tusks soon after 851).",
     )
-    hidden = joined_lines(
-        "The drowned vaults hold forgotten magical weapons and "
-        "devices from far lands and a library against Infernal "
-        "plague and winters; covenants struck by such troubles may "
-        "come asking for it.",
-        "No one recorded what turned Vigil's Merinita against the "
-        "Diedne; those who know how demons work may wonder.",
-        "Maoilfhinnéin expects the Ordo Hiberniae to be driven back "
-        "as the native wizards once were, and has readied Inishtrahull "
-        "to take the cathach and a rebuilt Vigil; he is courting "
-        "Lámbaird, feeding Gráinne's overconfidence because a "
-        "sacrifice may be needed, and steering the shards of her "
-        "first talisman, now an Arcane Connection to her, toward "
-        "Guillaume of Praesis.",
-    )
+    hidden = [
+        titled(
+            "The drowned vaults",
+            "The drowned vaults of Vigil hold forgotten magical weapons and "
+            "devices from far lands and a library against Infernal "
+            "plague and winters; covenants struck by such troubles may "
+            "come asking for it.",
+        ),
+        titled(
+            "Vigil's Merinita and the Diedne",
+            "No one recorded what turned Vigil's Merinita against the "
+            "Diedne; those who know how demons work may wonder.",
+        ),
+        titled(
+            "Maoilfhinnéin's refuge",
+            "Maoilfhinnéin expects the Ordo Hiberniae to be driven back "
+            "as the native wizards once were, and has readied Inishtrahull "
+            "to take the cathach and a rebuilt Vigil.",
+        ),
+        titled(
+            "Maoilfhinnéin and Lámbaird",
+            "Maoilfhinnéin is courting Lámbaird.",
+        ),
+        titled(
+            "Maoilfhinnéin and Gráinne",
+            "Maoilfhinnéin is feeding Gráinne's overconfidence because a "
+            "sacrifice may be needed.",
+        ),
+        titled(
+            "Gráinne's first talisman",
+            "Maoilfhinnéin is steering the shards of Gráinne's "
+            "first talisman, now an Arcane Connection to her, toward "
+            "Guillaume of Praesis.",
+        ),
+    ]
     vigil = b.covenant(
         "Vigil",
         tribunal=tribunal,
@@ -2406,16 +2445,28 @@ def _vigil(hibernia: Hibernia, b: Builder, tribunal: Tribunal) -> None:
             "sturdy frame he looks like some old sea god, a likeness he "
             "plays up to keep eyes off what he is really doing.",
         ),
-        secrets="He believes the old stories must repeat, that the Ordo "
-        "Hiberniae will be driven back as the native wizards were, and "
-        "sees the first signs already. Should Vigil come under threat, all is "
-        "ready for the cathach to go to Inishtrahull and the covenant to be "
-        "rebuilt on the island. Meanwhile he backs Lámbaird's views at Tribunal "
-        "to mend the harm Éinri has done; he feeds Gráinne's "
-        "overconfidence, knowing a sacrifice may soon be needed; and his "
-        "allies in the sea have brought him the shards of her first "
-        "talisman, which he has fixed as an Arcane Connection and is "
-        "steering into the hands of Guillaume of Praesis.",
+        secrets=[
+            titled(
+                "The old stories",
+                "He believes the old stories must repeat, that the Ordo Hiberniae will be driven back as the native wizards were, and sees the first signs already.",
+            ),
+            titled(
+                "Ready to rebuild",
+                "Should Vigil come under threat, all is ready for the cathach to go to Inishtrahull and the covenant to be rebuilt on the island.",
+            ),
+            titled(
+                "At Tribunal",
+                "Meanwhile he backs Lámbaird's views at Tribunal to mend the harm Éinri has done.",
+            ),
+            titled(
+                "Gráinne's overconfidence",
+                "He feeds Gráinne's overconfidence, knowing a sacrifice may soon be needed.",
+            ),
+            titled(
+                "The shards of the talisman",
+                "His allies in the sea have brought him the shards of Gráinne's first talisman, which he has fixed as an Arcane Connection and is steering into the hands of Guillaume of Praesis.",
+            ),
+        ],
         traits={"Scheming": 3, "Loyal to Hibernia": 2, "Friendly": 1},
     )
 

@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING, Any
 
 from ...tribunal_packages import theban as package
 from ...tribunal_packages.theban import THEBAN
-from ..builder import paragraphs
+from ..builder import Secrets, paragraphs, titled
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -108,13 +108,20 @@ SUMMARY = paragraphs(
     "Advisors.",
 )
 
-SECRET = paragraphs(
-    "Proximios, the likely next logothete, secretly serves the Infernal "
-    "and founded the League of the Vigilant to turn the polity's own "
-    "suspicions against the innocent; see An Enemy Within.",
-    "Gemma and Bobila of Ingasia are selling more enchanted items to "
-    "mundanes than the Peripheral Code allows, mostly to Nicaea.",
-)
+SECRET = [
+    titled(
+        "Whom Proximios serves",
+        "Proximios, the likely next logothete, secretly serves the Infernal "
+        "and founded the League of the Vigilant to turn the polity's own "
+        "suspicions against the innocent.",
+    ),
+    titled(
+        "Ingasia's trade with mundanes",
+        "Gemma and Bobila of Ingasia are selling more enchanted items to "
+        "mundanes than the Peripheral Code allows, mostly to Nicaea.",
+    ),
+    titled("Storyguide Notes", "See An Enemy Within."),
+]
 
 
 def build(theban: Theban) -> None:
@@ -366,7 +373,7 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
 
 #: Each ruined, abandoned or lost covenant: (key, name, region key in
 #: `theban.places`, realm, aura, status, summary, secret).
-RUINS: tuple[tuple[str, str, str, str, int, str, str, str], ...] = (
+RUINS: tuple[tuple[str, str, str, str, int, str, str, Secrets], ...] = (
     (
         "dorostolon",
         "Dorostolon",
@@ -482,14 +489,31 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str], ...] = (
         "patron. By the next meeting covenant and magi had vanished without "
         "a trace, and the Tribunal has turned down every later proposal to "
         "settle at Ilion. See the Wilusa story.",
-        "A faerie calling himself Odysseus tricked Droserius into building "
-        "in the wrong regio, a Faerie aura of 4, then shut its boundaries. "
-        "He has dressed the covenant as Troy and replays the last assault "
-        "on it endlessly; the magi defend it by reflex, and have lived only "
-        "a few months while a century has passed outside. Other regiones "
-        "at Ilion stage the same war, to mislead searchers, and the lost "
-        "magi will be slow to leave unless told how long they have been "
-        "gone.",
+        [
+            titled(
+                "Odysseus's trick",
+                "A faerie calling himself Odysseus tricked Droserius into "
+                "building Wilusa in the wrong regio, then shut its boundaries.",
+            ),
+            titled(
+                "Wilusa dressed as Troy",
+                "Odysseus has dressed the covenant of Wilusa as Troy and replays "
+                "the last assault on it endlessly; the magi defend it by reflex, "
+                "and have lived only a few months while a century has passed "
+                "outside.",
+            ),
+            titled(
+                "The other regiones at Ilion",
+                "Other regiones at Ilion stage the same war as Wilusa, to "
+                "mislead searchers.",
+            ),
+            titled(
+                "Leaving Wilusa",
+                "The lost magi of Wilusa will be slow to leave unless told how "
+                "long they have been gone.",
+            ),
+            titled("Storyguide Notes", "Wilusa's regio has a Faerie aura of 4."),
+        ],
     ),
     (
         "thermakopolis",
@@ -509,8 +533,13 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str], ...] = (
         "is the great shame of House Jerbiton, and young Jerbiton magi want "
         "to found a covenant in the city again: its site is the obvious "
         "ruin to refound on.",
-        "Their mind magic failed because several crusade leaders carried "
-        "protections born of a union of men and demons.",
+        [
+            titled(
+                "Why Thermakopolis's magic failed",
+                "Thermakopolis's mind magic failed because several crusade "
+                "leaders carried protections born of a union of men and demons.",
+            )
+        ],
     ),
     (
         "lamites",

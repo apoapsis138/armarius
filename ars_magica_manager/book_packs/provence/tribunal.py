@@ -11,7 +11,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...tribunal_packages.provence import PROVENCE
-from ..builder import paragraphs
+from ..builder import Secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from ...models import Covenant
@@ -118,26 +118,56 @@ SUMMARY = paragraphs(
     VOTES_TEXT,
 )
 
-SECRET = paragraphs(
-    "Fraxinetum Redux, the hidden successor of Fraxinetum on the Hyères "
-    "islands, holds 3 votes it has never claimed, since the Tribunal does "
-    "not know it exists.",
-    "The Praeco killed both of the last two Presiding Quaesitors. Senex, "
-    "investigating her cult of Matres & Matrones, slipped into her "
-    "sanctum at Mimizan in 1210 while she was away at an akelarre and "
-    "was caught there; his death was lawful under the Code, but she hid "
-    "it. Tibaut took up his trail, and in 1219 Dama and her familiar "
-    "Maju ambushed him near the road to Foix, stripping his Parma with "
-    "Revoke the Protection of Bonisagus; he died of the serpent's poison "
-    "at the Abbey of Saint Hilaire, where crusaders had carried him, and "
-    "his belongings are still locked in the abbot's chest. A letter he "
-    "sent Beatrice by an Iberian Redcap lies in the satchel of the "
-    "Redcap, who died of his wounds beside the Via Domitia. Dama bought "
-    "the Chief Redcap's tacit support with a Longevity Ritual for "
-    "Alazais's mundane lover. Beatrice is suspected of sympathy with the "
-    "cult, and Alazais and Mariola of Tolosa Paratge are rumoured to be "
-    "members.",
-)
+SECRET = [
+    titled(
+        "The unclaimed votes",
+        "Fraxinetum Redux, the hidden successor of Fraxinetum on the Hyères "
+        "islands, holds 3 votes it has never claimed, since the Tribunal does "
+        "not know it exists.",
+    ),
+    titled(
+        "Who killed the Presiding Quaesitors",
+        "The Praeco killed both of the last two Presiding Quaesitors.",
+    ),
+    titled(
+        "The death of Senex",
+        "Senex, investigating the Praeco's cult of Matres & Matrones, slipped "
+        "into her sanctum at Mimizan in 1210 while she was away at an akelarre "
+        "and was caught there; his death was lawful under the Code, but she "
+        "hid it.",
+    ),
+    titled(
+        "The death of Tibaut",
+        "Tibaut took up Senex's trail, and in 1219 Dama and her familiar Maju "
+        "ambushed him near the road to Foix, stripping his Parma with Revoke "
+        "the Protection of Bonisagus; he died of the serpent's poison at the "
+        "Abbey of Saint Hilaire, where crusaders had carried him.",
+    ),
+    titled(
+        "Tibaut's belongings",
+        "Tibaut's belongings are still locked in the abbot's chest at the "
+        "Abbey of Saint Hilaire.",
+    ),
+    titled(
+        "Tibaut's letter",
+        "A letter Tibaut sent Beatrice by an Iberian Redcap lies in the "
+        "satchel of the Redcap, who died of his wounds beside the Via Domitia.",
+    ),
+    titled(
+        "The Praeco's bargain",
+        "Dama bought the Chief Redcap's tacit support with a Longevity Ritual "
+        "for Alazais's mundane lover.",
+    ),
+    titled(
+        "Beatrice and the cult",
+        "Beatrice is suspected of sympathy with the cult of Matres & Matrones.",
+    ),
+    titled(
+        "The cult's rumoured members",
+        "Alazais and Mariola of Tolosa Paratge are rumoured to be members of "
+        "the Matres & Matrones.",
+    ),
+]
 
 
 def build(provence: Provence) -> None:
@@ -337,7 +367,7 @@ RULINGS: tuple[tuple[int | None, str, str], ...] = (
 #: Each ruined, abandoned or lost covenant: (key, name, region key in
 #: `provence.places`, realm, aura, status, known, summary, secret).
 #: Val-Negra belongs to val_negra.py.
-RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
+RUINS: tuple[tuple[str, str, str, str, int, str, str, str, Secrets], ...] = (
     # The Toulousain.
     (
         "windgraven",
@@ -375,9 +405,17 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
         "village site and the wood, where dark shapes move at night. "
         "Garsenda of Lariander, now of the Ostal des Exiles, believes "
         "herself the only survivor.",
-        "Garsenda herself, with faerie white ladies, stirred the villagers "
-        "to attack the column in the hope of saving Lavaur, and blames "
-        "herself for her covenant's ruin.",
+        [
+            titled(
+                "Who stirred the villagers",
+                "Garsenda herself, with faerie white ladies, stirred the "
+                "villagers to attack the column in the hope of saving Lavaur.",
+            ),
+            titled(
+                "Garsenda's guilt",
+                "Garsenda blames herself for Lariander's ruin.",
+            ),
+        ],
     ),
     (
         "berinor",
@@ -461,10 +499,18 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
         "His notes and journals lie in an "
         "old ossuary beside his crypt: a rare window on early Diedne magic "
         "and ritual, and a likely way to reopen old Schism War wounds.",
-        "Bachlach was a pagan warrior-magus who beheaded Valerie when she "
-        "refused to marry him; when she rose and carried her head to the "
-        "archbishop at Limoges, he was converted on the spot. His "
-        "followers' initiations may reenact the beheading.",
+        [
+            titled(
+                "Bachlach and Valerie",
+                "Bachlach was a pagan warrior-magus who beheaded Valerie when "
+                "she refused to marry him; when she rose and carried her head "
+                "to the archbishop at Limoges, he was converted on the spot.",
+            ),
+            titled(
+                "The Valerenes' initiations",
+                "Bachlach's followers' initiations may reenact the beheading.",
+            ),
+        ],
     ),
     (
         "nemetannais",
@@ -747,8 +793,13 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
         "aura of 4 inside a dense palisade of ash, and what remains of the "
         "defensive rituals wakes the larger trees against intruders, so "
         "peasants say the place is haunted and leave it alone.",
-        "Fraxinetum's heirs survive in secret as Fraxinetum Redux on the "
-        "Hyères islands.",
+        [
+            titled(
+                "Fraxinetum's heirs",
+                "Fraxinetum's heirs survive in secret as Fraxinetum Redux on "
+                "the Hyères islands.",
+            ),
+        ],
     ),
     (
         "yf",
@@ -769,7 +820,13 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
         "Extraordinary Intellego vis that, burnt, lets its bearer speak "
         "with the dead once as by Whispers Through the Black Gate. No "
         "covenant claims it.",
-        "The magi of Fraxinetum Redux quietly harvest vis on the deserted isle.",
+        [
+            titled(
+                "Who harvests the yew",
+                "The magi of Fraxinetum Redux quietly harvest vis on the "
+                "deserted isle of Yf.",
+            ),
+        ],
     ),
     (
         "castra_peccaius",
@@ -838,25 +895,43 @@ RUINS: tuple[tuple[str, str, str, str, int, str, str, str, str], ...] = (
         "(Caturigomagus), Embrun (Ebrodunum) and Oulx (Ulcium). Berber "
         "raiders overran it in 906; the survivor Anaïs of Jerbiton fled to "
         "Avignon and pressed for the league that became the Coenobium.",
-        paragraphs(
-            "Brigantium: its magi brought the mountain down on the "
-            "raiders and sealed themselves in; ghosts of the magi and "
-            "Infernal shades of the attackers haunt the rubble, and its "
-            "Mercere Portal lies buried beneath.",
-            "Caturigomagus: a sanctum under a ruined Roman way station a "
-            "day beyond Chorges, its slain Merinita's books of Faerie "
-            "magic guarded by three seductive dememoilles.",
-            "Vapincum: in the crypts under Gap cathedral, an old temple to "
-            "Apollo, its weak aura smothered by the church's.",
-            "Ebrodunum: a stabling post, its hidden shrine to Mercury "
-            "built into the new cathedral and its aura gone; descendants "
-            "of the covenfolk may hold books and records.",
-            "Ulcium: a temple of Mars Ultor reached through a regio in the "
-            "ruins above Oulx, the easiest to resettle but on the Roman "
-            "Tribunal's border.",
-            "The heirs of Anaïs in the Coenobium may resist anyone who "
-            "tries to reopen these sites.",
-        ),
+        [
+            titled(
+                "Brigantium",
+                "Brigantium's magi brought the mountain down on the raiders "
+                "and sealed themselves in; ghosts of the magi and Infernal "
+                "shades of the attackers haunt the rubble, and Brigantium's "
+                "Mercere Portal lies buried beneath.",
+            ),
+            titled(
+                "Caturigomagus",
+                "Caturigomagus is a sanctum under a ruined Roman way station a "
+                "day beyond Chorges, its slain Merinita's books of Faerie "
+                "magic guarded by three seductive dememoilles.",
+            ),
+            titled(
+                "Vapincum",
+                "Vapincum lies in the crypts under Gap cathedral, an old temple "
+                "to Apollo, its weak aura smothered by the church's.",
+            ),
+            titled(
+                "Ebrodunum",
+                "Ebrodunum was a stabling post, its hidden shrine to Mercury "
+                "built into the new cathedral and its aura gone; descendants "
+                "of the covenfolk may hold books and records.",
+            ),
+            titled(
+                "Ulcium",
+                "Ulcium is a temple of Mars Ultor reached through a regio in "
+                "the ruins above Oulx, the easiest to resettle but on the "
+                "Roman Tribunal's border.",
+            ),
+            titled(
+                "The heirs of Anaïs",
+                "The heirs of Anaïs in the Coenobium may resist anyone who "
+                "tries to reopen the sites of Portus Cottiae.",
+            ),
+        ],
     ),
 )
 

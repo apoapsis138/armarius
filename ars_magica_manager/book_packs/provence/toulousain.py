@@ -26,7 +26,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -293,8 +293,14 @@ def _city(provence: Provence) -> None:
             "At night the Spirit of Tolosa sometimes sits on the boom in "
             "the shape of a fisherman, glad to talk to anyone.",
         ),
-        secrets="The boom helps the regio not through the water but through the "
-        "prosperity it has brought the mills and their shareholders.",
+        secrets=[
+            titled(
+                "How the boom helps",
+                "The boom helps Tolosa Paratge's regio not through the water but "
+                "through the prosperity it has brought the mills and their "
+                "shareholders.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -377,15 +383,30 @@ def _lake(provence: Provence) -> None:
             "sworn on the steps of Saint-Pierre des Cuisines. The magi "
             "leave it alone, but know it has grown much weaker of late.",
         ),
-        secrets="The regio echoes the old sacrificial lake and is bound both to "
-        "the river and to the power and prosperity of Toulouse itself. "
-        "De Montfort's conquest and the city's strife are what weakened "
-        "the aura and made the regio hard to reach, and the magi's own "
-        "feud mirrors the city's. Only healing the city will save the "
-        "covenant: restoring learning and culture, perhaps by founding a "
-        "university inside the walls or championing Occitan letters. "
-        "Adam's boom is only a first step, and it worked through the "
-        "mills' wealth, not the water.",
+        secrets=[
+            titled(
+                "What the regio is bound to",
+                "The regio echoes the old sacrificial lake and is bound both to "
+                "the river and to the power and prosperity of Toulouse itself.",
+            ),
+            titled(
+                "What weakened the regio",
+                "De Montfort's conquest and the city's strife are what weakened "
+                "the aura and made the regio hard to reach, and the magi's own "
+                "feud mirrors the city's.",
+            ),
+            titled(
+                "The only cure",
+                "Only healing Toulouse will save Tolosa Paratge: restoring "
+                "learning and culture, perhaps by founding a university inside "
+                "the walls or championing Occitan letters.",
+            ),
+            titled(
+                "Adam's boom",
+                "Adam's boom is only a first step, and it worked through the "
+                "mills' wealth, not the water.",
+            ),
+        ],
         levels=[
             Builder.level(
                 "The drowned streets and the lake",
@@ -453,8 +474,13 @@ def _hinterland(provence: Provence) -> None:
         "Château Narbonnais and hanged what was left of them outside the "
         "walls. Arnaud Amalric often stays here as St. Tropez's guest. "
         "Held in 1220 by St. Tropez.",
-        secrets="St. Tropez believes the Gorgiastic Cathar Marc controlled the "
-        "knights' minds; it fed the hatred that ended in Marc's death.",
+        secrets=[
+            titled(
+                "St. Tropez's belief",
+                "St. Tropez believes the Gorgiastic Cathar Marc controlled the "
+                "knights' minds; it fed the hatred that ended in Marc's death.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -479,10 +505,15 @@ def _hinterland(provence: Provence) -> None:
             "Tremere covenant the crusaders destroyed in the reprisals, "
             "mistaking its black-robed magi for Cathar perfecti.",
         ),
-        secrets="The tales are true. Garsenda of Lariander stirred the villagers "
-        "to fall on the column, hoping it would save Lavaur, with the "
-        "demesoilles' help, and so brought the crusaders down on her own "
-        "covenant.",
+        secrets=[
+            titled(
+                "Who stirred the villagers",
+                "The tales are true. Garsenda of Lariander stirred the villagers "
+                "to fall on the column, hoping it would save Lavaur, with the "
+                "demesoilles' help, and so brought the crusaders down on her own "
+                "covenant.",
+            ),
+        ],
         **KNOWN_TRIBUNAL,
     )
     _add(
@@ -505,9 +536,14 @@ def _hinterland(provence: Provence) -> None:
             "sometimes raises the waters to carry off the lady, her maids "
             "and the singer beneath the water to a regio where all of them must serve her.",
         ),
-        secrets="Lambert de Thury may come home from a late Midsummer hunt to "
-        "find his castle empty and his wife and household gone beneath "
-        "the lake.",
+        secrets=[
+            titled(
+                "Lambert's homecoming",
+                "Lambert de Thury may come home from a late Midsummer hunt to "
+                "find his castle empty and his wife and household gone beneath "
+                "the lake.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -619,7 +655,12 @@ def _albigeois(provence: Provence) -> None:
             "bones left alone, and anyone trying to lay her to rest will "
             "face Gui de Lucy and his men.",
         ),
-        secrets="Nobody knows why the crusaders cannot see the ghost.",
+        secrets=[
+            titled(
+                "The unseen ghost",
+                "Nobody knows why the crusaders cannot see the ghost.",
+            ),
+        ],
         **KNOWN_REGION,
     )
 
@@ -650,13 +691,30 @@ def _agenais(provence: Provence) -> None:
         "own men betrayed him to two of his brother's knights; he was "
         "hauled naked from his bed and carried off over a saddle, then "
         "hanged at Montauban a few days later.",
-        secrets="Dying, Baudouin cursed his brother's bones never to be buried "
-        "and the traitors of Lolmie to early graves. Most of the thirty "
-        "have died in strange accidents, and the rest are desperate for "
-        "help. The curse is a unique Invocation of level 60, of Divine or "
-        "Infernal power as the storyguide chooses; its victims roll four "
-        "extra botch dice until they confess the treachery and are "
-        "forgiven.",
+        secrets=[
+            titled(
+                "Baudouin's curse",
+                "Dying, Baudouin cursed his brother's bones never to be buried "
+                "and the traitors of Lolmie to early graves.",
+            ),
+            titled(
+                "The thirty traitors",
+                "Most of the thirty traitors of Lolmie have died in strange "
+                "accidents, and the rest are desperate for help.",
+            ),
+            titled(
+                "Lifting the curse",
+                "Baudouin's curse holds its victims until they confess the "
+                "treachery and are forgiven.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The curse is a unique Invocation of level 60, of Divine or "
+                "Infernal power as the storyguide chooses; its victims roll four "
+                "extra botch dice until they confess the treachery and are "
+                "forgiven.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -693,10 +751,15 @@ def _cahors(provence: Provence) -> None:
         "almost every south-facing slope, many crowned by castles. A few "
         "flasks, rightly made, hold a strong source of spell-like vis "
         "(unclaimed).",
-        secrets="A Cahors moneylender ruined by a noble of Toulouse who calls his "
-        "loan void under the city's ban on usury offers the magical wine "
-        "to anyone who can make the debt good; the loan was made after "
-        "the ban, so it may take the capitouls or the bishop to settle.",
+        secrets=[
+            titled(
+                "The moneylender's offer",
+                "A Cahors moneylender ruined by a noble of Toulouse who calls his "
+                "loan void under the city's ban on usury offers the magical wine "
+                "to anyone who can make the debt good; the loan was made after "
+                "the ban, so it may take the capitouls or the bishop to settle.",
+            ),
+        ],
         **KNOWN_REGION,
     )
 
@@ -730,7 +793,12 @@ def _carcasses(provence: Provence) -> None:
         "failed in a hard drought, and with its viscount taken by "
         "treachery the city surrendered. The besiegers call it a miracle; "
         "the townsfolk suspect magic was turned on them.",
-        secrets="Nobody has found out what dried the wells.",
+        secrets=[
+            titled(
+                "What dried the wells",
+                "Nobody has found out what dried the wells of Carcassonne.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -797,12 +865,25 @@ def _carcasses(provence: Provence) -> None:
             "wolf. Now old, she waits in exile with her three bewitching "
             "daughters.",
         ),
-        secrets="Na Loba is blamed for betraying her liege Raimond-Roger "
-        "Trencavel in 1209: he spurned her for her eldest daughter, so "
-        "she arranged his safe-conduct to de Montfort and then withdrew "
-        "her guards. She may bear the Curse of Venus, Venus' Blessing or "
-        "something darker. Peasants whisper that her daughters are "
-        "werewolves, and those who repeat it disappear.",
+        secrets=[
+            titled(
+                "Na Loba's betrayal",
+                "Na Loba is blamed for betraying her liege Raimond-Roger "
+                "Trencavel in 1209: he spurned her for her eldest daughter, so "
+                "she arranged his safe-conduct to de Montfort and then withdrew "
+                "her guards.",
+            ),
+            titled(
+                "Na Loba's daughters",
+                "Peasants whisper that Na Loba's daughters are werewolves, and "
+                "those who repeat it disappear.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Na Loba may bear the Curse of Venus, Venus' Blessing or "
+                "something darker.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -865,9 +946,15 @@ def _carcasses(provence: Provence) -> None:
         "buried them alive under stones, and took its two knights to "
         "Minerve to be blinded and mutilated. The moat has an Infernal "
         "aura of 4.",
-        secrets="The buried garrison still claws at the earth at night and will "
-        "soon break out to take revenge on the living, unless someone "
-        "buries them deeper or brings their spirits peace.",
+        secrets=[
+            titled(
+                "The buried garrison",
+                "The buried garrison of Puisserguier still claws at the earth at "
+                "night and will soon break out to take revenge on the living, "
+                "unless someone buries them deeper or brings their spirits "
+                "peace.",
+            ),
+        ],
         **KNOWN_LOCALLY,
     )
     _add(
@@ -921,8 +1008,13 @@ def _carcasses(provence: Provence) -> None:
         "and a long grasping tongue, a corrupted beast that may still "
         "roam the country. Once a heretic stronghold, the town now meets "
         "Cathars with threats and denounces them.",
-        secrets="Perfecti keep slipping back into Fanjeaux at the risk of the "
-        "stake; they are looking for something they left there.",
+        secrets=[
+            titled(
+                "The perfecti's search",
+                "Perfecti keep slipping back into Fanjeaux at the risk of the "
+                "stake; they are looking for something they left there.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     castle = _add(
@@ -1089,13 +1181,40 @@ def _tolosa_paratge(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "that made up the Tribunal when the regional Tribunals were set up "
         "in 773.",
     )
-    hidden = joined_lines(
-        "The regio is tied to the prosperity of Toulouse as well as to the river: the city's conquest and strife weakened it, and the magi's feud mirrors the city's. Healing the city (a university, or championing Occitan learning) is the only lasting cure.",
-        "Bishop Foulques came to the island as a gifted young troubadour; his memory of it may have been altered by magic, or he may think it a dream.",
-        "Mariola is rumoured to be an initiate of the Matres & Matrones.",
-        "Raimond of the Blacks believes he will drown in the Garonne and fears no other death.",
-        "Adam joined the Whites over his debts to the Jewish moneylenders of Cahors and an old grudge against the Gorgiastics, who opposed his boom.",
-    )
+    hidden = [
+        titled(
+            "What the regio is bound to",
+            "Tolosa Paratge's regio is tied to the prosperity of Toulouse as well "
+            "as to the river: the city's conquest and strife weakened it, and the "
+            "magi's feud mirrors the city's.",
+        ),
+        titled(
+            "The only lasting cure",
+            "Healing Toulouse (a university, or championing Occitan learning) is "
+            "the only lasting cure for Tolosa Paratge's regio.",
+        ),
+        titled(
+            "Bishop Foulques's visit",
+            "Bishop Foulques came to the island as a gifted young troubadour; his "
+            "memory of it may have been altered by magic, or he may think it a "
+            "dream.",
+        ),
+        titled(
+            "Mariola and the cult",
+            "Mariola is rumoured to be an initiate of the Matres & Matrones.",
+        ),
+        titled(
+            "Raimond's death",
+            "Raimond of the Blacks believes he will drown in the Garonne and "
+            "fears no other death.",
+        ),
+        titled(
+            "Why Adam joined the Whites",
+            "Adam joined the Whites over his debts to the Jewish moneylenders of "
+            "Cahors and an old grudge against the Gorgiastics, who opposed his "
+            "boom.",
+        ),
+    ]
     tolosa = b.covenant(
         "Tolosa Paratge",
         tribunal=tribunal,
@@ -1148,7 +1267,12 @@ def _tolosa_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         "has shut herself in her sanctum, sunk in doubt. She corresponds "
         "with Jean Marie of Stella Durus, who has fallen for her. Looks "
         "about eighty.",
-        secrets="She is rumoured to belong to the Matres & Matrones.",
+        secrets=[
+            titled(
+                "Mariola and the cult",
+                "She is rumoured to belong to the Matres & Matrones.",
+            ),
+        ],
         traits={"Proud": 2, "Indecisive": 2, "Withdrawn": 2},
     )
     m["carolus_st_tropez"] = b.magus(
@@ -1172,10 +1296,19 @@ def _tolosa_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         "that only their destruction will spare it. No Tribunal has "
         "convicted him, and he may seek martyrdom attacking the "
         "Gorgiastics first. Looks about forty-two.",
-        secrets="Arnaud Amalric does not know St. Tropez is a magus; he thinks "
-        "the Order a loose fellowship of scholars and natural "
-        "philosophers. St. Tropez also blames Marc for the crusader "
-        "knights of Pujol, whom he thinks Marc controlled.",
+        secrets=[
+            titled(
+                "What Arnaud Amalric knows",
+                "Arnaud Amalric does not know St. Tropez is a magus; he thinks "
+                "the Order a loose fellowship of scholars and natural "
+                "philosophers.",
+            ),
+            titled(
+                "St. Tropez and Marc",
+                "St. Tropez also blames Marc for the crusader knights of Pujol, "
+                "whom he thinks Marc controlled.",
+            ),
+        ],
         traits={"Vindictive": 3, "Determined": 2, "Pious": 1},
     )
     m["cyprian"] = b.magus(
@@ -1312,11 +1445,28 @@ def _ostal(provence: Provence, b: Builder, tribunal: Tribunal) -> None:
         "The founding year is not given; the covenant took shape after the "
         "Tribunal of 1214.",
     )
-    hidden = joined_lines(
-        "Garsenda roused the villagers of Montgey, with the demesoilles, to massacre the crusader column in 1211, and so brought the crusaders down on Lariander. She dreads the Order learning she brought ruin on her sodales.",
-        "Gilbert may be a mystagogue of the Knights of the Green Stone; Garsenda met him through an esoteric cult, perhaps the same.",
-        "Gilbert has boasted that he would fight a second Schism War for his homeland even if the Grand Tribunal condemned him.",
-    )
+    hidden = [
+        titled(
+            "Garsenda and Montgey",
+            "Garsenda roused the villagers of Montgey, with the demesoilles, to "
+            "massacre the crusader column in 1211, and so brought the crusaders "
+            "down on Lariander.",
+        ),
+        titled(
+            "Garsenda's dread",
+            "Garsenda dreads the Order learning she brought ruin on her sodales.",
+        ),
+        titled(
+            "Gilbert's cult",
+            "Gilbert may be a mystagogue of the Knights of the Green Stone; "
+            "Garsenda met him through an esoteric cult, perhaps the same.",
+        ),
+        titled(
+            "Gilbert's boast",
+            "Gilbert has boasted that he would fight a second Schism War for his "
+            "homeland even if the Grand Tribunal condemned him.",
+        ),
+    ]
     ostal = b.covenant(
         "Ostal des Exiles",
         tribunal=tribunal,
@@ -1365,7 +1515,13 @@ def _ostal_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         "courtly love, solitude has given him the strength to lead, and "
         "he has vowed to defend the Order against all its foes and to cut down anyone who hinders him. Charismatic and unstable, he leads "
         "the Knights of the Green Stone here. Looks about forty.",
-        secrets="Few care to test whether his boast of a second Schism War is only talk.",
+        secrets=[
+            titled(
+                "Gilbert's boast",
+                "Few care to test whether his boast of a second Schism War is "
+                "only talk.",
+            ),
+        ],
         traits={"Aloof": 3, "Vengeful": 2, "Genteel": 1},
     )
     m["rixenda"] = b.magus(
@@ -1409,10 +1565,18 @@ def _ostal_magi(provence: Provence, b: Builder, home: Covenant) -> None:
         "She sympathises with the Cathars only because she questions "
         "every authority by nature, and has no religion. Guilt makes her "
         "jumpy and short-tempered with magi she does not know.",
-        secrets="Her part in the Montgey massacre brought the crusaders down on "
-        "Lariander, and she fears the Order will learn of it. She may be "
-        "a Knight of the Green Stone, and met Gilbert through an esoteric "
-        "mystery cult.",
+        secrets=[
+            titled(
+                "Garsenda and Montgey",
+                "Her part in the Montgey massacre brought the crusaders down on "
+                "Lariander, and she fears the Order will learn of it.",
+            ),
+            titled(
+                "Garsenda's cult",
+                "She may be a Knight of the Green Stone, and met Gilbert through "
+                "an esoteric mystery cult.",
+            ),
+        ],
         traits={"Troubled": 2, "Brash": 2, "Vengeful": 1},
     )
     m["popilia"] = b.magus(
@@ -1545,8 +1709,13 @@ def _lords(provence: Provence, b: Builder) -> None:
         "from the crusaders in 1213. He has befriended the legate Arnaud "
         "Amalric, who often stays with him and has been swayed by him "
         "against the French.",
-        secrets="The lord is Carolus St. Tropez of Tolosa Paratge, leader of its "
-        "White faction.",
+        secrets=[
+            titled(
+                "Who the lord is",
+                "The Lord of Pujol is Carolus St. Tropez of Tolosa Paratge, "
+                "leader of its White faction.",
+            ),
+        ],
     )
     w["gui_de_lucy"] = b.lord(
         "Gui de Lucy",
@@ -1644,10 +1813,19 @@ def _churches(provence: Provence, b: Builder) -> None:
             "Order and add it to the crusade's targets unless the pope "
             "forbade it.",
         ),
-        secrets="As a young man he went to Tolosa Paratge as a gifted "
-        "troubadour; his mind may have been magically changed afterwards, "
-        "or he may have put it down to a dream. He is a great latent "
-        "danger to the Order in the south.",
+        secrets=[
+            titled(
+                "The bishop at Tolosa Paratge",
+                "As a young man the Bishop of Toulouse went to Tolosa Paratge as "
+                "a gifted troubadour; his mind may have been magically changed "
+                "afterwards, or he may have put it down to a dream.",
+            ),
+            titled(
+                "A latent danger",
+                "The Bishop of Toulouse is a great latent danger to the Order in "
+                "the south.",
+            ),
+        ],
     )
     bishop = w["bishop_of_toulouse"]
     w["arnaud_amalric"] = b.church(
@@ -1675,9 +1853,17 @@ def _churches(provence: Provence, b: Builder) -> None:
             "found it sheltering heretics he would turn the curia against "
             "it unless it cast them out.",
         ),
-        secrets="He does not know St. Tropez is a magus, and St. Tropez's "
-        "influence has hardened him against the French and woken his "
-        "southern sympathies.",
+        secrets=[
+            titled(
+                "What the legate knows",
+                "Arnaud Amalric does not know St. Tropez is a magus.",
+            ),
+            titled(
+                "St. Tropez's influence",
+                "St. Tropez's influence has hardened Arnaud Amalric against the "
+                "French and woken his southern sympathies.",
+            ),
+        ],
     )
     w["saint_sernin_abbey"] = b.church(
         "Basilica of Saint-Sernin",
@@ -1738,10 +1924,15 @@ def _churches(provence: Provence, b: Builder) -> None:
         "with the Cathars (his mother and brother among them), but "
         "Bernard still claims the see and disputes Gui's appointment. Gui "
         "defrocked the treacherous priest of Montreal at Bram.",
-        secrets="On the feast of Saint Nazarius Gui may suddenly cry out from the "
-        "altar that he is a usurper and hand his mitre to Bishop "
-        "Raimond, then at sunset claim he was bewitched and accuse "
-        "Raimond of sorcery.",
+        secrets=[
+            titled(
+                "The feast of Saint Nazarius",
+                "On the feast of Saint Nazarius Gui may suddenly cry out from the "
+                "altar that he is a usurper and hand his mitre to Bishop "
+                "Raimond, then at sunset claim he was bewitched and accuse "
+                "Raimond of sorcery.",
+            ),
+        ],
     )
     w["albi_cathedral"] = b.church(
         "Cathedral of Saint Cecilia, Albi",
@@ -2066,9 +2257,18 @@ def _factions(provence: Provence, b: Builder) -> None:
         "castles of Lastours. With no Trencavel overlord left to answer to, the daughters seek husbands rather than wait for them, and use their dark allure to "
         "snare good husbands, while the old woman remains a formidable "
         "schemer; they travel the country looking for powerful allies.",
-        secrets="Peasants whisper that the daughters are werewolves, and anyone "
-        "who says so soon vanishes. Na Loba betrayed Raimond-Roger "
-        "Trencavel to de Montfort in 1209 out of jealousy.",
+        secrets=[
+            titled(
+                "The daughters",
+                "Peasants whisper that Na Loba's daughters are werewolves, and "
+                "anyone who says so soon vanishes.",
+            ),
+            titled(
+                "Na Loba's betrayal",
+                "Na Loba betrayed Raimond-Roger Trencavel to de Montfort in 1209 "
+                "out of jealousy.",
+            ),
+        ],
     )
     w["cahors_moneylenders"] = b.faction(
         "The Moneylenders of Cahors",

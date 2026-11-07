@@ -1,6 +1,6 @@
 {
   "format": "armarius-export",
-  "app_version": "3.83.0",
+  "app_version": "3.84.0",
   "kind": "pack",
   "name": "Against the Dark: the Transylvanian Tribunal",
   "from_saga": "Against the Dark: the Transylvanian Tribunal",
@@ -164,8 +164,38 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human (see the Bestiary). He lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.\nOnly Murat the Younger knows. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.\n\nVis: Baradla Cave, Imaginem and Muto\n\nVis: Dobsinska Cave, Ignem\n\nVis: Ochtinska Cave, Rego (the flowers of iron, also lesser enchantment vis)\n\nLibrary: Murat of Terezin's initiation scripts for the Hunters' Arts, which Murat the Younger keeps from Lexander",
+            "title": "What Murat of Terezin was",
+            "text": "Murat of Terezin was secretly a dhampir himself. On his death he rose as a vampire, and has lasted long enough to become a kukudhi, a vampire that passes as human.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Murat of Terezin's family",
+            "text": "Murat of Terezin, risen as a vampire, lives far from Laniena with his fourth mortal wife and has fathered more than twenty children, every one a dhampir.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Murat the Younger's silence",
+            "text": "Only Murat the Younger knows that Murat of Terezin lives on as a vampire. He lets the vampire be, because it gives the Fectores a steady stream of Faerie-blooded hunters and has given at least one Gifted child.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Laniena",
+            "text": "Vis: Baradla Cave, Imaginem and Muto\nVis: Dobsinska Cave, Ignem\nVis: Ochtinska Cave, Rego (the flowers of iron, also lesser enchantment vis)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Laniena",
+            "text": "Library: Murat of Terezin's initiation scripts for the Hunters' Arts, which Murat the Younger keeps from Lexander",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The kukudhi: see the Bestiary.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -292,8 +322,20 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Oeagrus keeps the mummified arm of Orpheus and means to remake the god by grafting his scattered limbs onto his own body.\n\nVis: Imaginem from the year's first silivriak flowers\n\nVis: Corpus, bone fragments washed up in the Devil's Throat (now and then)\n\nVis: a yearly grant to the teacher at Gela (a Personal Vis Source)\n\nLibrary: no books named",
+            "title": "Oeagrus's treasure",
+            "text": "Oeagrus keeps the mummified arm of Orpheus and means to remake the god by grafting his scattered limbs onto his own body.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Evredika",
+            "text": "Vis: Imaginem from the year's first silivriak flowers\nVis: Corpus, bone fragments washed up in the Devil's Throat (now and then)\nVis: a yearly grant to the teacher at Gela (a Personal Vis Source)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Evredika",
+            "text": "Library: no books named",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -430,8 +472,26 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "The town's charter from Diocletian is a clever forgery.\nRumour, perhaps true, says the Red Library also holds magic items, seized in investigations and never destroyed, that cast some of the Red Spells; the House might argue they are lawful to own, and lawful to use on hedge wizards, the Orders of Odin and Solomon, and Renounced magi, whom the Code does not protect.\nSaturnino thinks gathering the Red and Black Libraries was a grave mistake.\n\nLibrary: the Red and Black Libraries, Benilda's charge",
+            "title": "Seuthopolis's charter",
+            "text": "The town of Seuthopolis's charter from Diocletian is a clever forgery.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Red Spells in the Red Library",
+            "text": "Rumour, perhaps true, says the Red Library also holds magic items, seized in investigations and never destroyed, that cast some of the Red Spells; the House might argue they are lawful to own, and lawful to use on hedge wizards, the Orders of Odin and Solomon, and Renounced magi, whom the Code does not protect.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Saturnino's doubts",
+            "text": "Saturnino thinks gathering the Red and Black Libraries was a grave mistake.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Seuthopolis",
+            "text": "Library: the Red and Black Libraries, Benilda's charge",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -568,8 +628,44 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "The Empty Laboratory's void window is a vis source the residents do not know of: now and then frost forms on its sill that can be gathered as Mentem vis before it melts, 2 pawns a season. The ghost knows.\nNestor keeps most of the Curators' necklaces hidden and carries only the one for the most visited levels; his real laboratory is in a level of its own.\nThe Dungeon's excess: either infernalists with their own Arcane Connections use it to hide their cult's paraphernalia, coming and going by Leap of Homecoming, or Hell has got in, and possessed exhibits are summoning more demons into the hall.\nTheodore once told Nestor many exhibits should be destroyed, and lately told Demetrius the Order has outlived its purpose.\n\nVis: Vim, extracted from the aura in the shared Vim Distillery (Vis Extraction +10)\n\nLibrary: the Transylvania Chronicle, the Spell Hall and the exhibits as realia",
+            "title": "The Empty Laboratory's window",
+            "text": "The Empty Laboratory's void window is a vis source the residents do not know of: now and then frost forms on its sill that can be gathered as Mentem vis before it melts, 2 pawns a season. The ghost knows.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Curators' necklaces",
+            "text": "Nestor keeps most of the Curators' necklaces hidden and carries only the one for the most visited levels.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Nestor's real laboratory",
+            "text": "Nestor's real laboratory is in a level of its own.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Dungeon's excess",
+            "text": "Either infernalists with their own Arcane Connections use the Dungeon to hide their cult's paraphernalia, coming and going by Leap of Homecoming, or Hell has got in, and possessed exhibits are summoning more demons into the hall.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "What Theodore said",
+            "text": "Theodore once told Nestor many exhibits should be destroyed, and lately told Demetrius the Order has outlived its purpose.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Tablinum",
+            "text": "Vis: Vim, extracted from the aura in the shared Vim Distillery (Vis Extraction +10)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Tablinum",
+            "text": "Library: the Transylvania Chronicle, the Spell Hall and the exhibits as realia",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -696,8 +792,26 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat, and he may well be the House's spymaster for the Roman Tribunal.\n\nVis: the mercury pool, a rich Terram source (a child dipped in it gains Visions and often worse Flaws)\n\nVis: the truffles of the northern Istrian woods (Herbam), sought by faeries, worth their weight in gold\n\nVis: the Strange Vis, a little Creo in the roof tar of the four corner houses of random villages on Saint John's Eve, collected Tribunal-wide\n\nLibrary: no books named; the Mercere House's records",
+            "title": "Pahniro's frailty",
+            "text": "Pahniro's frailty is an act: he was a hoplite for twenty years and has killed three magi in single combat.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Pahniro the spymaster",
+            "text": "Pahniro may well be the House's spymaster for the Roman Tribunal.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Old Histria",
+            "text": "Vis: the mercury pool, a rich Terram source (a child dipped in it gains Visions and often worse Flaws)\nVis: the truffles of the northern Istrian woods (Herbam), sought by faeries, worth their weight in gold\nVis: the Strange Vis, a little Creo in the roof tar of the four corner houses of random villages on Saint John's Eve, collected Tribunal-wide",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Old Histria",
+            "text": "Library: no books named; the Mercere House's records",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -813,8 +927,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis: the well of blood, a major Corpus source, used for the Redcaps' longevity rituals\n\nVis: Rego washed up on one beach after storms among ships' wreckage, accruing through the year\n\nLibrary: no books named",
+            "title": "Vis at Shrouded Bay",
+            "text": "Vis: the well of blood, a major Corpus source, used for the Redcaps' longevity rituals\nVis: Rego washed up on one beach after storms among ships' wreckage, accruing through the year",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Shrouded Bay",
+            "text": "Library: no books named",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -981,8 +1101,20 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.\nA rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.\nLycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.\n\nLibrary: none described; its leader holds one of the twelve copies of the Book of Legacies",
+            "title": "Lycaneon's early mobilisation",
+            "text": "Lycaneon was fully mobilised almost a year before the Corruption of Tytalus was announced, which suggests House Tremere knew the war was coming.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Lycaneon",
+            "text": "Library: none described; its leader holds one of the twelve copies of the Book of Legacies",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Providing solutions: a magus pays Lycaneon to fix a setback, and the troupe must study it and design (and build or commission) the item that solves it; the problem may not be what it seems, the device may misbehave, or the client may not pay. Sample commissions: a weapon made of cabbages; swallowable items that make the carrier vomit them up later, on command, past faerie guards; a way to smuggle a stolen Gifted baby past city guards; a use for a mine that oozes custard; a weapon against demons that fear their own reflections; a better river toll than a chain.\nA rapid response force: the Prima sends a team of military specialists, publicly, through the Harco network to help covenants in other Tribunals fight; between missions they rest and refit here, and the foes (faeries of many kinds, little demons that merge into big ones, fringe traditions, vast beasts, entrenched hedge wizards, corrupt magi, or raiders who claim to be Diedne) turn out to share one master.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1129,8 +1261,20 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.\nA snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.\nA shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.\nA friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.\nSebastian's name echoes the dragon king A\u017eevastjepan's; see Sebastian.\n\nVis: the Furus brook at Ikafalva, a pawn of Aquam each full moon, gathered by the older Gifted pupils\n\nLibrary: on the second floor, mundane and occult learning and an unmatched collection on non-Hermetic magic, but nothing on the Arts or the Order\n\nLibrary: on the guarded third floor, the oppidum's Hermetic texts",
+            "title": "Vis at The Scholomance",
+            "text": "Vis: the Furus brook at Ikafalva, a pawn of Aquam each full moon, gathered by the older Gifted pupils",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at The Scholomance",
+            "text": "Library: on the second floor, mundane and occult learning and an unmatched collection on non-Hermetic magic, but nothing on the Arts or the Order\nLibrary: on the guarded third floor, the oppidum's Hermetic texts",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The specialist: a character with a Supernatural Ability is asked to teach it to a troubled boy; every earlier teacher of his died horribly, in ways linked to that Ability and beyond what a child could do.\nA snake in the classroom: a pupil gets past the third floor's guards and vanishes with several key texts, among them a summa on the Parma Magica; he belongs to another tradition, and the school's future may hang on catching him before the book reaches his fellows.\nA shadow on the mind: a former pupil dreams of dread and bloody claws, and finds that he and all his classmates have lost the same season at the school; the masters erased it for a reason.\nA friend in need: an old classmate accused of a Hermetic crime in another Tribunal asks a character of standing for an alibi to buy time.\nSebastian's name echoes the dragon king A\u017eevastjepan's; see Sebastian.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1246,8 +1390,62 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge (see the Gate's place).\nThe Night Contingency for taking Coeris is closely kept and probably salted with false information.\nJanus is a lycanthrope and Tatiana a Keeper of the Silence of the Temple (see their summaries).\nPoena may learn she has a wasting illness that will cloud her judgement, and quietly have possible successors weighed before a decisive certamen at the next Decennial.\nShould Poena die suddenly, Monica is Prima pro tempore while the councillors are summoned, and may use the time to finish Poena's schemes and push a few of her own.\nPoena plans to hold the Order's great chess competition at the Tribunal site in two years, for the House's prestige.\n\nLibrary: the Book of Legacies (most of its twelve copies), the Book of Placements and the House's official war plans\n\nVis: none named in the book",
+            "title": "The Gate of Eurydice",
+            "text": "The Gate of Eurydice opens on the City Below in the Magic Realm, House Tremere's last refuge.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Night Contingency",
+            "text": "The Night Contingency for taking Coeris is closely kept and probably salted with false information.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Janus's affliction",
+            "text": "Janus is a lycanthrope.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Tatiana's society",
+            "text": "Tatiana is a Keeper of the Silence of the Temple.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Poena's illness",
+            "text": "Poena may learn she has a wasting illness that will cloud her judgement, and quietly have possible successors weighed before a decisive certamen at the next Decennial.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "If Poena dies suddenly",
+            "text": "Should Poena die suddenly, Monica is Prima pro tempore while the councillors are summoned, and may use the time to finish Poena's schemes and push a few of her own.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Poena's chess competition",
+            "text": "Poena plans to hold the Order's great chess competition at the Tribunal site in two years, for the House's prestige.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Coeris",
+            "text": "Library: the Book of Legacies (most of its twelve copies), the Book of Placements and the House's official war plans",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Coeris",
+            "text": "Vis: none named in the book",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "See the Gate's place, and Janus's and Tatiana's summaries.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1384,8 +1582,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis: the oppidum's stockpile at Sarmizegethusa (the book names no source)\n\nLibrary: casting tablets for the ritual that raises a fort, for generic laboratories, and for one that destroys a fort (Destroy the Fort)",
+            "title": "Vis at Kezd\u00f6 V\u00e1lasz",
+            "text": "Vis: the oppidum's stockpile at Sarmizegethusa (the book names no source)",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at Kezd\u00f6 V\u00e1lasz",
+            "text": "Library: casting tablets for the ritual that raises a fort, for generic laboratories, and for one that destroys a fort (Destroy the Fort)",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1512,8 +1716,14 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Vis: up to two rooks of Corpus vis in each zenodochium, to be replaced after use\n\nLibrary: casting tablets of Arms of the Salamander, The Rite of Healing and Universal Poultice in each",
+            "title": "Vis at The Zenodochia",
+            "text": "Vis: up to two rooks of Corpus vis in each zenodochium, to be replaced after use",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Library at The Zenodochia",
+            "text": "Library: casting tablets of Arms of the Salamander, The Rite of Healing and Universal Poultice in each",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -1686,7 +1896,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "ceef4e931d33"
+            "id": "822ff628505b"
           },
           {
             "title": "Harco and the Tribunal's Redcaps",
@@ -1718,7 +1928,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "1598a0e9d441"
+            "id": "85d243cf467c"
           },
           {
             "title": "A Portal from Old Histria to Venice",
@@ -1750,7 +1960,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "922835789f81"
+            "id": "f429efcd1c80"
           },
           {
             "title": "Whether Laniena is lawful",
@@ -1782,7 +1992,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "c081d5981356"
+            "id": "ae81db6c30f6"
           },
           {
             "title": "Murat of Terezin's secret",
@@ -1814,7 +2024,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "f69bc811733b"
+            "id": "9bf9008b2afb"
           },
           {
             "title": "Gigas and Evredika's vis",
@@ -1846,7 +2056,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "f8886518f731"
+            "id": "f9cb1f2c86b7"
           },
           {
             "title": "The papal legate and the Scholomance",
@@ -1878,7 +2088,7 @@
             "intrigue_aim": "",
             "intrigue_parma": true,
             "intrigue_blatant": false,
-            "id": "7a52a3a3146d"
+            "id": "ddef177b48ab"
           }
         ],
         "rulings": [
@@ -1887,210 +2097,210 @@
             "year": 848,
             "says": "After the Sundering a Grand Tribunal capped the Tribunal at five named covenants: Coeris, Domostron, Asclepius, Diodorus and Pannonia. All five have since moved or changed how they admit members, but in law they still stand, and no new covenant can be added. A body of outsiders that joins the Tribunal enters Pannonia. The Tremere do not ask for the limit to be lifted, lest it stir old fears, and no one else gains by asking.",
             "case_id": "",
-            "id": "1947c8b00f90"
+            "id": "3f40bde18ab4"
           },
           {
             "title": "Privileges",
             "year": null,
             "says": "Every resident magus holds a privilege: a written agreement with the Praeco, on the Tribunal's behalf, that sets the magus's place in Transylvanian society. A Quaesitor witnesses it and it is read into the Peripheral Code at a meeting. There are five broad kinds, one for each legal covenant, but each is bargained for, and terms may be added later as reward or punishment. A magus may leave the Tribunal freely, returning what he was paid for unfinished work; one who goes with great items, much vis or other treasures is pursued by the Tremere.",
             "case_id": "",
-            "id": "a8866ecf0614"
+            "id": "4c5d7eeb50cd"
           },
           {
             "title": "Cives (Coeris)",
             "year": null,
             "says": "Every Tremere belongs to Coeris, and may resign and rejoin at will. Other magi may be made cives as a mark of the Tribunal's esteem. A cives may draw on House Tremere's aid, send a Tremere proxy to the House's Decennial, stand for any office including Praeco, raise apprentices, move between oppida (if not Tremere), and wear black or grey at meetings; where cives are the larger group of an oppidum they choose its aedile from the others. In return a cives must live as the Tremere admire: cooperate, work usefully, muster for war and pay taxes.",
             "case_id": "",
-            "id": "04afe2b3a626"
+            "id": "e488bafd34d9"
           },
           {
             "title": "Socii (Domostron)",
             "year": null,
             "says": "The socii are allies of other Houses treated much as if they were Tremere: nearly all the Quaesitores, Redcaps and dedicated hoplites, who are socii unless they are cives. They may hold any office but Praeco, raise an apprentice, draw dedicated resources and crisis taxes for their work, and wear designs like Decorations; where they are the larger group they name three candidates for aedile and the Praeco picks one. They must do their duty or renegotiate, give no one a fair cause for Wizard's War (as the Praeco judges), ask leave to found an oppidum, stand in as aediles when none can be found, and wear their badges at meetings.",
             "case_id": "",
-            "id": "654964ad38ad"
+            "id": "1b3176a2b6ce"
           },
           {
             "title": "Coloniae (Asclepius)",
             "year": null,
             "says": "The coloniae are young magi from other Tribunals settled under close terms to open up neglected corners of the land. They are promised aid in war or disaster, the resources named in their privilege and a share of new ones found. They may not choose their aedile, seek any office but aedile, call themselves archmagi, take apprentices without leave, invite other magi in (save Quaesitores, Redcaps and hoplites), behave scandalously, or wear what looks like a Decoration they have not earned. At meetings they go unshod (sandals and slippers are now allowed) and may eat no aphrodisiac, from shellfish and truffles to carrots and pepper.",
             "case_id": "",
-            "id": "8c77ad8053dc"
+            "id": "877c76da756c"
           },
           {
             "title": "Hospites (Diodorus)",
             "year": null,
             "says": "The hospites, the Tribunal's guests, are magi hired to practise a skill for House Tremere, and most live at Lycaneon. They are paid fairly, use what their task is given, escape many taxes, are protected if War is declared on them, and are not called to Wizard's Marches. They must ask leave before seeking office, taking an apprentice, binding a familiar, making a talisman, founding or changing oppidum, voting for a particular aedile, or wearing what looks like a Decoration; a privilege may grant some of these in advance, for less pay.",
             "case_id": "",
-            "id": "3b0b030ed0e2"
+            "id": "380120b54839"
           },
           {
             "title": "Foederati (Pannonia)",
             "year": null,
             "says": "The foederati are magi of covenants that left neighbouring Tribunals for shelter here, and each keeps the customs written into its privilege, offensive to the Tremere or not, so long as it breaks neither the Code nor the Tribunal's peace. They keep the resources they held when they joined, train apprentices (the eldest is taken on as a foederatus too), move oppidum with notice and may stand for any office. They need leave to drop the duties their privilege names, which only the Praeco and the magus together can change, to use the title archmagus, found oppida, invite magi in, or trade vis or items with outsiders other than the socii. Should Pannonia ever lack outsiders, some magi of other covenants join it automatically, so it never lapses.",
             "case_id": "",
-            "id": "9d8eb96019c9"
+            "id": "09a960400b6e"
           },
           {
             "title": "The leaders of the legal covenants",
             "year": null,
             "says": "To keep the Tribunal whole after the Sundering, Tremere granted concessions to the other covenants' leaders, now paid by the Tribunal. Asclepius's members elect a leader each year, who is invited to Coeris for the Triumph of Asclepius: sixteen pawns of vis, three pounds of pure gold, six books of his choosing copied from a certain library, a fine dinner and lesser tokens, in return for minor duties to the other leaders that take about two seasons. Magi of any covenant, and non-residents, may hold it. The hospites elect their leader every seven years, with the Praeco's approval, for a smaller yearly payment. Domostron is led by the senior Quaesitor and Pannonia by the Orphic cult of the south, whose members long ago sold their concessions to the chief Mercere.",
             "case_id": "",
-            "id": "075690f7a338"
+            "id": "4f8a0220e975"
           },
           {
             "title": "Oppida",
             "year": null,
             "says": "Every magus must belong to an oppidum in some sense, and keep broadly aware of what its other members are doing. An oppidum must have at least two members, at least one of them cives, and may not be made up wholly of one House, so in practice each has a Tremere and someone who is not.",
             "case_id": "",
-            "id": "d4b2104ae3ca"
+            "id": "3e3f9e8cb950"
           },
           {
             "title": "Aediles",
             "year": null,
             "says": "Each oppidum has an aedile, the odd member set there to keep House Tremere from corruption and the others from treason; where cives and non-cives are equal in number it has two. Aediles have no set duties, but may demand an urgent audience with the Praeco and the chief Quaesitor, and the Quaesitores treat an aedile's disappearance, or War declared on one, gravely.",
             "case_id": "",
-            "id": "5c2768209336"
+            "id": "5665ab5ecd5f"
           },
           {
             "title": "Decorations",
             "year": null,
             "says": "The Tribunal honours service with five Decorations, worn as jewellery or embroidery on a magus's robes, never awarded twice to the same magus; a higher one replaces a lower. The Laurel goes to the magus who leads a campaign against a foe that could destroy the Order (no one now wears it); the Myrtle to the general of a lesser campaign of more than one magical battle; the Oak to one who plans such a campaign without fighting in it; the Grass to a magus who saves other magi from death, first given to the defenders of covenants against the Diedne; and the Parsley for the killing blow on a magus the Tribunal has cast out.",
             "case_id": "",
-            "id": "10615fe01f59"
+            "id": "65923397053a"
           },
           {
             "title": "The Praeco",
             "year": null,
             "says": "The Praeco is chosen by vote, not by age, and needs the Prima of Tremere's approval to take office and her goodwill to keep it. He has wider powers than Praecones elsewhere, ceded by the House slowly and reversibly. The Praeco appoints the Tribunal's envoys and asks magi to settle when the Prima wants an oppidum founded.",
             "case_id": "",
-            "id": "f7d1baaabd18"
+            "id": "7e7d8d5680bc"
           },
           {
             "title": "Taxes and stipends",
             "year": null,
             "says": "The Praeco gathers taxes for the projects each meeting assigns him, and the cives, socii, coloniae and some foederati must give reasonable aid to them. A large vis source is reserved for his use, once meant for the upkeep of the meeting site's wards, which the Quaesitores now see to. He also collects the stipends the Peripheral Code sets for the Redcaps and Quaesitores, and his Redcaps deliver them, so the Tremere can see what is claimed without spying and no one can call it a bribe from the House.",
             "case_id": "",
-            "id": "8dccf0ec862a"
+            "id": "db726607bb94"
           },
           {
             "title": "Promissory notes",
             "year": null,
             "says": "Before he could tax, the Praeco borrowed against his reserved vis by issuing notes promising payment, and he still issues them for trade and diplomacy. Old notes never redeemed pass from hand to hand as a currency of great value. Forging one is a crime, held to be fraud aimed at robbing a magus of the vis that is his power.",
             "case_id": "",
-            "id": "af569087332e"
+            "id": "e3274ae0fcf2"
           },
           {
             "title": "Annual emergency Tribunals",
             "year": null,
             "says": "Elsewhere the Quaesitores call emergency Tribunals when they must; in Transylvania House Guernicus calls one every year at the Tribunal site, to give swifter justice and accept newly trained apprentices sooner. A group of Tremere advocates holds proxies for every Transylvanian Tremere, so the vote always suits the House, which uses these meetings to keep its allies content and often concedes more than the votes require.",
             "case_id": "",
-            "id": "35e9a0a68e08"
+            "id": "21cb1c3e0429"
           },
           {
             "title": "Wizard's War",
             "year": null,
             "says": "Magi keep their right under the Code to declare War, but the Tribunal strongly prefers that wizards fight wizards only in Marches voted at an emergency Tribunal. Quarrels go first to mediation by the Quaesitores or the Prima's people, and then to certamen; private Wars are very rare.",
             "case_id": "",
-            "id": "c2904bc23859"
+            "id": "e19de3711873"
           },
           {
             "title": "Certamen in place of War",
             "year": null,
             "says": "A challenge to certamen says the challenger would kill his rival if he were less civilised. The winner is treated as having spared a life he could have taken, the loser lives by his mercy, and the winner has the right to strike the loser once in the face. Certamen rules are otherwise the Definitive Edition's.",
             "case_id": "",
-            "id": "6c5e9660484d"
+            "id": "9e52cb4d749d"
           },
           {
             "title": "Certamen for love",
             "year": null,
             "says": "Most duels are fought for love, as sport or over small matters. Before two witnesses the Tribunal could question, the duellists declare that it is for love, the stake, how it is won if not by yielding (first sound blow, first wound or unconsciousness are common), forgiveness in advance for any hurt, and that the loser yields. They may not strike a blow at the end, use vis, gamble basely, wager an officer's duties, duel naked or drunk, use spells or items (or let onlookers) to sway the result, couple during the duel, or challenge one worn down by an earlier duel.",
             "case_id": "",
-            "id": "bb68862f2e69"
+            "id": "5f1e136def53"
           },
           {
             "title": "Dealings with outsiders",
             "year": null,
             "says": "Many oppida may not make treaties with foreign covenants or Tribunals. Trading arrangements with outsiders need either a place in the Peripheral Code or the Praeco's approval, witnessed by a Quaesitor; the Praeco's appointees speak for the Tribunal abroad.",
             "case_id": "",
-            "id": "eeef221cb484"
+            "id": "36ef0e699e28"
           },
           {
             "title": "Settlers and Gifted children",
             "year": null,
             "says": "No magus may bring a Gifted child into the Tribunal or invite a magus to settle. He may instead ask the Praeco to do it, which lets the Tremere govern how many magi live here.",
             "case_id": "",
-            "id": "4686e25343c2"
+            "id": "aedda3e5952f"
           },
           {
             "title": "Sales of vis and enchanted items",
             "year": null,
             "says": "Only the Praeco, the Prima of Tremere, the socii and their agents may sell vis or enchanted items to outsiders. Old Histria is the registry for every such sale in the Tribunal; the goods need not go there, as matching letters notarised by a Quaesitor suffice. The Praeco's people may bid for anything of interest, and buyers of common vis may consult the list of notes kept by the master of the vis trade at Old Histria.",
             "case_id": "",
-            "id": "f0cd3d32e62e"
+            "id": "004695b4e6c7"
           },
           {
             "title": "Magical animals",
             "year": null,
             "says": "Magical animals may not be exported without licence, which lets House Tremere, ever seeking breeding stock for war, buy first on exports and bid alongside on imports. Selling through the Redcaps is lawful but recorded.",
             "case_id": "",
-            "id": "deb743730c3e"
+            "id": "802c70fda744"
           },
           {
             "title": "One name to a Tremere",
             "year": null,
             "says": "No two Tremere magi in the Tribunal may share a name, so that the House's records can tell each apart; a maga who arrives bearing a name already held may have to defend it by certamen.",
             "case_id": "",
-            "id": "6246b1ae3a66"
+            "id": "17802d1052e7"
           },
           {
             "title": "Amaranth",
             "year": null,
             "says": "Amaranth, a faerie flower whose vis gives magi pleasant visions, addiction and Warping, is destroyed wherever it is found in Transylvania.",
             "case_id": "",
-            "id": "23cad38ff14e"
+            "id": "b636729d31eb"
           },
           {
             "title": "Lictors",
             "year": null,
             "says": "Lictors, magi sworn to long service as hoplites, guard the Quaesitores and follow their orders. They may call on any cives, socius, foederatus or colonus for reasonable aid, the Tribunal judging afterwards what was reasonable for the danger. All belong to one legal covenant and so wear the same red and silver sash, pinned with a winged silver brooch, the astraea, each with its own variation. Carrying a copy of a lictor's badge is a serious crime.",
             "case_id": "",
-            "id": "d8b6012d979f"
+            "id": "ff8c439fdd86"
           },
           {
             "title": "The zenodochia",
             "year": null,
             "says": "The Tribunal keeps safehouses for sick or wounded magi along its roads, and wants them used. Taking vis from one is a Low Crime, though a magus who cannot repay is usually let work off the debt for the Tribunal; damaging or destroying one on purpose is a High Crime, while one who repairs accidental damage unasked is not prosecuted. Items and casting tablets must stay; vis and supplies used must be replaced.",
             "case_id": "",
-            "id": "7b025b0ec743"
+            "id": "a96d41b312cb"
           },
           {
             "title": "The Curantis",
             "year": null,
             "says": "Each meeting elects a Curantis to serve until the next, usually the single candidate the elders agree on beforehand; no one may serve two terms running. He tours the zenodochia for about a season a year, repairs them, must build at least one new one in his term, and has a Quaesitor's powers in cases touching them. He is paid generously in vis and may draw on the Tribunal's stores. His Notary, chosen by the previous Curantis and often a Redcap, serves as his aedile.",
             "case_id": "",
-            "id": "33441c92d273"
+            "id": "1812cd4e36d0"
           },
           {
             "title": "The Curator of Tablinum",
             "year": null,
             "says": "The Curator, who keeps the museum oppidum of Tablinum, holds office for life. The Transylvania Chronicle kept there is the authoritative record of the Tribunal's history and its rulings.",
             "case_id": "",
-            "id": "1d025f533075"
+            "id": "b2ae866fe696"
           },
           {
             "title": "Mercere votes",
             "year": null,
             "says": "By the terms of their covenant with the Tribunal, only Gifted Mercere vote at its meetings; in exchange the Tribunal lets the families of unGifted Redcaps grow as large as they like.",
             "case_id": "",
-            "id": "1eecdaae90a7"
+            "id": "d274895520fb"
           },
           {
             "title": "Hedge wizards and Laniena",
             "year": null,
             "says": "The Code's Join or Die provision applies to Gifted hedge wizards. The Tribunal's policy lets Laniena train Gifted children as Fectores, hunters who are not Hermetic magi, on the ground that trainees are outside the Order and so outside the Code; once trained, each is offered the Order's protection. Laniena knows it lasts only on sufferance, since the High Crime of depriving a magus of his magic could be charged whenever the Tremere wished.",
             "case_id": "",
-            "id": "0f0cdaf8b074"
+            "id": "5d346c21ed84"
           }
         ],
         "treasury": [],
@@ -2102,7 +2312,7 @@
             "details": "The Order is founded. The Transylvania Chronicle, kept in Tablinum's exhibit hall, begins its record with this year, though sceptics note how little it says of House Tremere's beginnings.",
             "changes": [],
             "margin": "",
-            "id": "db1dc8abda70"
+            "id": "47a3d1690648"
           },
           {
             "year": 780,
@@ -2111,7 +2321,7 @@
             "details": "In the Order's first years the Founder Tremere fights a band of Theban magi at the Shipka Pass, the best road through Bulgaria's mountains. A regio lies beside the battlefield: some say Tremere knew of it and laid his ambush from it, others that a Twilight born of the fight's strain made it. For long afterwards House Tremere and the Theban covenants meet there to reflect and to sign their treaties. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "510e832d6ff9"
+            "id": "76915040ea6f"
           },
           {
             "year": 803,
@@ -2120,7 +2330,7 @@
             "details": "Khan Krum the Conqueror adds the lands of Hungary and Transylvania to the First Bulgarian Empire.",
             "changes": [],
             "margin": "",
-            "id": "cc0f4d5f48c0"
+            "id": "9aa18e3723fa"
           },
           {
             "year": 810,
@@ -2129,7 +2339,7 @@
             "details": "Early in the ninth century, when dragon raids flare up in defiance of the Pax Draconis, the Founder Tremere takes the shape of Fetillusclaviceps, the Roman dragon who made the peace, and puts down the rebels. He never speaks of it, and whatever record of his reasons existed was lost in the Sundering. (The book gives no exact year.)",
             "changes": [],
             "margin": "",
-            "id": "504c6ce53a31"
+            "id": "7e2497aa42b5"
           },
           {
             "year": 814,
@@ -2138,7 +2348,7 @@
             "details": "Krum, who had beaten two Byzantine emperors in battle and laid siege to Constantinople, dies suddenly, and no one knows quite how.",
             "changes": [],
             "margin": "",
-            "id": "4d5e81c311a6"
+            "id": "0e57aceba178"
           },
           {
             "year": 848,
@@ -2147,7 +2357,7 @@
             "details": "Tremere's bid to master the Order ends in the Sundering. No longer trusting his domus magna at what is now Lycaneon, he moves his seat, and its name, to Coeris in Maramures, where the Covenant of Asclepius then stood; Lycaneon stays the House's manufactory. His successor Albanus turns the Order's anger at Tremere's memory into a means of binding the House together. A Grand Tribunal caps the Tribunal at five named covenants, Coeris, Domostron, Asclepius, Diodorus and Pannonia, which still exist in law though every one has since moved or changed its membership. To keep the others from seceding, Tremere grants concessions to their leaders, and the covenants bind one another by contract; the Triumph of Asclepius is still paid from them.",
             "changes": [],
             "margin": "",
-            "id": "91c0565ea84a"
+            "id": "df1a7da2cf42"
           },
           {
             "year": 850,
@@ -2156,7 +2366,7 @@
             "details": "The maga Akilina comes upon a place in the Danube delta where many regiones lie one over another, the future site of Tablinum. (The book says only the middle of the ninth century.)",
             "changes": [],
             "margin": "",
-            "id": "b06a174f6c88"
+            "id": "01609f6f7e73"
           },
           {
             "year": 878,
@@ -2165,7 +2375,7 @@
             "details": "In the years after the Sundering Tablinum is founded as a storehouse for artifacts, with Akilina its first Curator. Since the Tribunal may hold only five covenants, it has no official standing and no recognised residents until the custom of oppida spreads, when it remakes itself as an oppidum with Curators who live there. Its founders are said to have walked a ritual path through the regiones, fixing an Arcane Connection to each level and destroying the path behind them.",
             "changes": [],
             "margin": "",
-            "id": "f9d358faa0b3"
+            "id": "23036ef2a362"
           },
           {
             "year": 886,
@@ -2174,7 +2384,7 @@
             "details": "Boris I, the first Christian khan of Bulgaria, baptised Michael, welcomes the mission of Saints Cyril and Methodius, from which the Bulgarian Church takes its descent.",
             "changes": [],
             "margin": "",
-            "id": "2f041cdaf73e"
+            "id": "71278aaf2a70"
           },
           {
             "year": 900,
@@ -2183,7 +2393,7 @@
             "details": "Akilina names her apprentice Potitus her successor and resigns. The first Curator to make his home at Tablinum, he opens what had been a closed storehouse to study. By this year the Chronicle already mentions its regiones and the Arcane Connections that reach them.",
             "changes": [],
             "margin": "",
-            "id": "fa5428114b66"
+            "id": "63ec89036329"
           },
           {
             "year": 917,
@@ -2192,7 +2402,7 @@
             "details": "Tablinum's first Curator disappears and is presumed dead.",
             "changes": [],
             "margin": "",
-            "id": "00fad831b9d5"
+            "id": "4112955ea584"
           },
           {
             "year": 926,
@@ -2201,7 +2411,7 @@
             "details": "Symeon, son of Boris and the first Bulgarian ruler to style himself tsar rather than khan, makes the Bulgarian Church autonomous. By the peace of 927 the patriarch of Constantinople accepts its independence, and it soon has a patriarch of its own.",
             "changes": [],
             "margin": "",
-            "id": "8a229564b728"
+            "id": "ad5acc10527f"
           },
           {
             "year": 946,
@@ -2210,7 +2420,7 @@
             "details": "Potitus appoints Tiberia, a Tremere general, as his successor, and for a short time the two share the office; Potitus's term ends in 948. In the same year the hermit, healer and mystic Ivan Rilski dies; his body, still uncorrupted, now lies at Tarnovo, and he is Bulgaria's patron saint.",
             "changes": [],
             "margin": "",
-            "id": "2131f90c2051"
+            "id": "de948b6cc78e"
           },
           {
             "year": 1001,
@@ -2219,7 +2429,7 @@
             "details": "The Cult of Orpheus had worshipped in the Rhodope mountains for decades as an informal cult, and when it joined the Order its sacred sites there became Hermetic ground. In this year Evredika, named for Eurydice in the Bulgarian tongue, becomes a formal oppidum.",
             "changes": [],
             "margin": "",
-            "id": "71e2c0e21e2e"
+            "id": "bbf69833e651"
           },
           {
             "year": 1005,
@@ -2228,7 +2438,7 @@
             "details": "During the Schism War the Tremere generals plan a network of tiny hidden hospitals, the zenodochia, reasoning that one hospital oppidum would be found and destroyed in time, while a web of small ones could not be, and that no single captured magus would know more than a few of them. Hundreds are planned; many are never built. (The book gives no year.)",
             "changes": [],
             "margin": "",
-            "id": "65f3bb4fa00e"
+            "id": "e6004e4b7956"
           },
           {
             "year": 1007,
@@ -2237,7 +2447,7 @@
             "details": "Tiberia is killed in the Schism War. Anatolus, also a Tremere general, succeeds her, the first Curator of Tablinum chosen by the Tribunal rather than by the one before. He becomes known for strange battle magic, said to come from Tablinum's halls.",
             "changes": [],
             "margin": "",
-            "id": "11a578d8b33c"
+            "id": "4a74933407c3"
           },
           {
             "year": 1008,
@@ -2246,7 +2456,7 @@
             "details": "Norsius of House Tremere, more scholar than soldier, founds Primum Responsans, better known by its Hungarian name Kezd\u00f6 V\u00e1lasz, to guard the Tribunal's borders in the Schism War. Taking Trajan's Wall as his model, he builds a few forts in magic auras near the frontier, each with two magi who study between alarms; his own first fort stands in the ruins of Sarmizegethusa, Decebalus's palace. The war never reaches Transylvania, and the forts are never tested. Later his filius Gasparus spreads the forts across the whole Tribunal and has each pair of magi move to a new one after every Tribunal meeting.",
             "changes": [],
             "margin": "",
-            "id": "21363bbb7daf"
+            "id": "170303d317b3"
           },
           {
             "year": 1018,
@@ -2255,7 +2465,7 @@
             "details": "The First Bulgarian Empire, founded by Asparukh's Bulgars, falls to Byzantine rule. The Bulgarian Church loses its independence, is reduced to an archbishopric at Ohrid and filled with Greek clergy. In the same year the Curator Anatolus dies in a Wizard's War, and Tablinum has no Curator for two years.",
             "changes": [],
             "margin": "",
-            "id": "b1f342700be5"
+            "id": "43f885778c30"
           },
           {
             "year": 1020,
@@ -2264,7 +2474,7 @@
             "details": "Silus becomes Curator of Tablinum.",
             "changes": [],
             "margin": "",
-            "id": "6452d7792f45"
+            "id": "fb8fc3ca8726"
           },
           {
             "year": 1027,
@@ -2273,7 +2483,7 @@
             "details": "Silus is accused of infernalism and Marched. His successor Justius is said to have taken apart a number of infernal exhibits and driven demons out of many of Tablinum's regio levels during his long tenure.",
             "changes": [],
             "margin": "",
-            "id": "f3852dff4989"
+            "id": "d8b9e53f44e4"
           },
           {
             "year": 1080,
@@ -2282,7 +2492,7 @@
             "details": "Scribonius becomes Curator of Tablinum and writes the first catalogue of its exhibits to claim completeness.",
             "changes": [],
             "margin": "",
-            "id": "29be31dcbfa7"
+            "id": "9f574656b018"
           },
           {
             "year": 1091,
@@ -2291,7 +2501,7 @@
             "details": "The Trpimirovi\u0107 line of Croatian kings ends in a feeble quarrel between brothers, and the nobles of the north invite Ladislaus I of Hungary to rule. Croatia has been a vassal principality of Hungary ever since.",
             "changes": [],
             "margin": "",
-            "id": "f998203f0859"
+            "id": "0e40f655352b"
           },
           {
             "year": 1092,
@@ -2300,7 +2510,7 @@
             "details": "A Church council in Hungary rules that a village with a church may not move far from it, beginning the end of the Magyars' wandering villages.",
             "changes": [],
             "margin": "",
-            "id": "7693fb9ceefb"
+            "id": "bdbfcbac2b32"
           },
           {
             "year": 1095,
@@ -2309,7 +2519,7 @@
             "details": "The Order had long known of a phantom castle in the Carpathians; this year Jeremiah of Tremere solves the secret of its regio and becomes the first magus to enter the tower. One inhabitant waits there, and he has not aged since.",
             "changes": [],
             "margin": "",
-            "id": "a5a81472ac1a"
+            "id": "3bc429d244c2"
           },
           {
             "year": 1100,
@@ -2318,7 +2528,7 @@
             "details": "King Coloman the Learned of Hungary decrees that, as witches do not exist, no one may be tried for witchcraft. The Quaesitors look into it as discreetly as they can but find no magus behind it, and the law still stands. (The book says only the eleventh century; Coloman reigned from 1095 to 1116.)",
             "changes": [],
             "margin": "",
-            "id": "6918530982a9"
+            "id": "6c5923dc7cfb"
           },
           {
             "year": 1102,
@@ -2327,7 +2537,7 @@
             "details": "Scribonius resigns as Curator, quits House Tremere and joins House Jerbiton in the Theban Tribunal. His successor Calpurnius greatly enlarges Tablinum's Faerie collection.",
             "changes": [],
             "margin": "",
-            "id": "53d54586e1bc"
+            "id": "1e4679c25b25"
           },
           {
             "year": 1120,
@@ -2336,7 +2546,7 @@
             "details": "The vampire of a dead magus hunts out dhampirs, has them trained and then kills them to make more vampires, the latest of the infiltrations that have dogged House Tremere. The famed hunter Murat of Terezin comes to Coeris and with the young Radomir of Tremere clears every vampire from the House; Murat kills the nest's master himself. The two ask the Tribunal for an oppidum to train hunters, and once Murat joins House Ex Miscellanea the Praeco agrees. Working from old initiation scripts a Gnostic scholar took down while spying on a talt\u00f3s clan, they learn after years of trials to Open the Gifted to the Hunters' Arts; Radomir calls them interfectores, soon shortened to Fectores. Laniena begins as part of the Scholomance and later moves to the Aggtelek caves. House Tremere now forbids its magi to take a dhampir as apprentice. (The book says about a hundred years ago.)\n\nSecrets\nMurat of Terezin was himself a dhampir, and became a vampire when he died. He survives as a kukudhi, a vampire passing as a man, living far from Laniena with his fourth mortal wife and fathering dhampirs. Only Murat the Younger knows, and lets him be for the hunters his children give Laniena.",
             "changes": [],
             "margin": "",
-            "id": "d9e21de31dfc"
+            "id": "9f1e431d4276"
           },
           {
             "year": 1125,
@@ -2345,7 +2555,7 @@
             "details": "Thirty years after Jeremiah's entry Coeris claims the ghostly tower and makes it a mansio for the Redcaps of the Tribunal's north. Within a few years it is training Redcaps, and soon after mundanes of use to House Tremere.",
             "changes": [],
             "margin": "",
-            "id": "e89223f32ac9"
+            "id": "a8d73b7a49a1"
           },
           {
             "year": 1137,
@@ -2354,7 +2564,7 @@
             "details": "Magi studying at Tablinum report meeting Akilina, or someone who claims to be her, in the maze of its regiones, two centuries after she vanished. Scribonius, the former Curator, dies this year.",
             "changes": [],
             "margin": "",
-            "id": "af3638e98813"
+            "id": "c4cbb18159db"
           },
           {
             "year": 1164,
@@ -2363,7 +2573,7 @@
             "details": "Stefan Nemanja, a Serbian prince of modest beginnings and then a Byzantine vassal, helps the emperor in his war on Hungary.",
             "changes": [],
             "margin": "",
-            "id": "6a17430961ef"
+            "id": "b7e891058fac"
           },
           {
             "year": 1165,
@@ -2372,7 +2582,7 @@
             "details": "Fetillusclaviceps, keeper of the Pax Draconis, is seen for the last time. He had shown himself only half a dozen times in three centuries, never to a magus, and his lair has never been found. (The book says only more than fifty years before 1220.)\n\nSecrets\nSome Tremere wonder whether the later sightings were the dragon at all, or magi of their own House repeating the Founder's disguise.",
             "changes": [],
             "margin": "",
-            "id": "de3ecade8fd6"
+            "id": "2d89b1304169"
           },
           {
             "year": 1167,
@@ -2381,7 +2591,7 @@
             "details": "Stefan Nemanja turns on his Byzantine overlord and beats an imperial army at the Battle of Pantino.",
             "changes": [],
             "margin": "",
-            "id": "07b3f73c46ce"
+            "id": "3dae0b637355"
           },
           {
             "year": 1170,
@@ -2390,7 +2600,7 @@
             "details": "Nestor succeeds Calpurnius as Curator of Tablinum, an office held for life, and becomes known for his research into regiones.",
             "changes": [],
             "margin": "",
-            "id": "e547cc32d9b9"
+            "id": "3791d8d80128"
           },
           {
             "year": 1171,
@@ -2399,7 +2609,7 @@
             "details": "Nemanja allies with Venice, Hungary and German princes to throw off Byzantine rule, but Serbian feuds, a Venetian mutiny and plague wreck the campaign. Manuel Komnenos invades Ra\u0161ka, besieges Ras and carries Nemanja to Constantinople in chains; against all expectation the two become friends, and Nemanja returns as the emperor's strategos and the sole lawful ruler of the Serbs.",
             "changes": [],
             "margin": "",
-            "id": "56dab851a6e9"
+            "id": "e088d2b3f7bd"
           },
           {
             "year": 1185,
@@ -2408,7 +2618,7 @@
             "details": "Three brothers, Teodor Petar, Ivan Asen and Kaloyan, lead the Bulgarians out of Byzantine rule and found the Second Bulgarian Empire. Their origins are a mystery, perhaps Bulgarian, perhaps Vlach or Cuman, and their inherited gift for swaying crowds troubles the Order. Cuman tribes shelter the rebel princes after their first army is beaten and supply the core of the next.",
             "changes": [],
             "margin": "",
-            "id": "eeca2064c339"
+            "id": "72f55a7cb40f"
           },
           {
             "year": 1190,
@@ -2417,7 +2627,7 @@
             "details": "Barbarossa died in 1189 and most of his German nobles went home, but a faithful few stay for the siege of Acre. Ill and neglected by the French and English Hospitallers, crusaders from Bremen and L\u00fcbeck found a hospital order for Germans, backed by Duke Friedrich of Swabia, and Pope Celestine III approves it. (The book says some twenty years before 1220.)",
             "changes": [],
             "margin": "",
-            "id": "616eb3d384f1"
+            "id": "c98a1086029c"
           },
           {
             "year": 1195,
@@ -2426,7 +2636,7 @@
             "details": "Stefan Nemanja retires and hands Serbia to his second son, Stefan, passing over the eldest, Vukan.",
             "changes": [],
             "margin": "",
-            "id": "db12929755e5"
+            "id": "30e911d43cf1"
           },
           {
             "year": 1197,
@@ -2435,7 +2645,7 @@
             "details": "Kaloyan begins his reign and restores the Bulgarian Empire; his Cuman bride seals an alliance with the nomads that must be renewed by rite each summer. New German crusaders reach the Holy Land and find the Teutonic hospital flourishing.",
             "changes": [],
             "margin": "",
-            "id": "bc025742e123"
+            "id": "773c89a13dfa"
           },
           {
             "year": 1198,
@@ -2444,7 +2654,7 @@
             "details": "Seeing the crusader kingdom's border forts badly manned, the newcomers decide the Teutonic brothers, former knights, can fight as well as nurse, and the pope gives the Order a new charter as a military order.",
             "changes": [],
             "margin": "",
-            "id": "635498fca27c"
+            "id": "c9ce7374d444"
           },
           {
             "year": 1199,
@@ -2453,7 +2663,7 @@
             "details": "Nemanja dies, and holy oil begins to flow from his tomb, so the people call him the Myrrh-flowing.",
             "changes": [],
             "margin": "",
-            "id": "93aefe204e06"
+            "id": "4edc87c489cc"
           },
           {
             "year": 1200,
@@ -2462,7 +2672,7 @@
             "details": "Less than a year after his death the Eastern Church canonises Stefan Nemanja. Stefan II accuses his first wife, Eudocia Angelina, daughter of Emperor Alexios Angelos and mother of five of his children, of adultery and drives her from Serbia. About this time Hungary stops exporting slaves, probably as part of the king's plan to people the kingdom's edges.",
             "changes": [],
             "margin": "",
-            "id": "c511d7c2aa50"
+            "id": "ba3a24672130"
           },
           {
             "year": 1202,
@@ -2471,7 +2681,7 @@
             "details": "Crusaders raid and destroy Zadar, Croatia's richest port and a possession of the King of Hungary, and little is done to dislodge the Venetians.",
             "changes": [],
             "margin": "",
-            "id": "e24bec2010a0"
+            "id": "9811457a6b72"
           },
           {
             "year": 1203,
@@ -2480,7 +2690,7 @@
             "details": "Pope Innocent III names the Archbishop of Tarnovo primate of all Bulgaria and Wallachia, tying the Asens' church to Rome, though Ohrid stays Orthodox. Soon after the violence at Zadar, House Tremere builds a zenodochium in a regio within a magical lacuna in the city and staffs it with a skilled surgeon and his assistants. Some months later the House loses touch with them, and the regio itself seems to vanish.",
             "changes": [],
             "margin": "",
-            "id": "965dc3c1f525"
+            "id": "985a2b7341e1"
           },
           {
             "year": 1204,
@@ -2489,7 +2699,7 @@
             "details": "Constantinople falls to the Latins, and the Latin Church soon controls much of the city; the magi of Thebes learn what crusading armies can do. Two months later Adulio of House Tremere, just out of his apprenticeship, joins Kezd\u00f6 V\u00e1lasz to keep the same fate from Transylvania. In Serbia Vukan's resentment breaks into civil war against his brother Stefan II, who wins but cannot take any of the lost Byzantine lands. A loyal Croatian noble wrests Zadar back from the crusaders.",
             "changes": [],
             "margin": "",
-            "id": "2b6b26ed1ab8"
+            "id": "b69fe16a08dd"
           },
           {
             "year": 1205,
@@ -2498,7 +2708,7 @@
             "details": "Tsar Kaloyan captures Emperor Baldwin of the Latin Empire, who is held in the tower above Tarnovo's Frankish quarter that still bears his name. Venice takes Dubrovnik, which pays it tribute and harbours its galleys, and regains Zadar, this time by a treaty that makes the Venetians overseers rather than occupiers; the townsfolk see through it.",
             "changes": [],
             "margin": "",
-            "id": "30bee4b515eb"
+            "id": "9aa4fe34b94b"
           },
           {
             "year": 1206,
@@ -2507,7 +2717,7 @@
             "details": "Nemanja's relics are carried from Mount Athos to the monastery of Studenica.",
             "changes": [],
             "margin": "",
-            "id": "eb21f23d1252"
+            "id": "ba194f5c8660"
           },
           {
             "year": 1207,
@@ -2516,7 +2726,7 @@
             "details": "Kaloyan's reign ends. In Germany the Landgrave of Thuringia (the book calls him margrave) holds a contest for the crown of poetry, on the terms that every losing singer must die; Henry of Ofterdingen loses to Wolfram von Eschenbach and is let go to fetch the one bard he says is better, Klingsohr.",
             "changes": [],
             "margin": "",
-            "id": "29fddcfb6a39"
+            "id": "e19744910966"
           },
           {
             "year": 1208,
@@ -2525,7 +2735,7 @@
             "details": "Sava, Nemanja's youngest son, who had left family politics for the monks of Mount Athos, comes back to Studenica and begins to organise the Serbian Orthodox Church.",
             "changes": [],
             "margin": "",
-            "id": "c79c7429a601"
+            "id": "e1f1ad33a2b1"
           },
           {
             "year": 1210,
@@ -2534,7 +2744,7 @@
             "details": "Hermann von Salza is elected hochmeister of the Teutonic Order. About this time Simium, headmaster of the Scholomance, begins writing to Polyaigos in the Theban Tribunal, a covenant that also prepares pupils before apprenticeship; an exchange is talked of, but old enmity between Thebes and Transylvania stands in its way. (The book says within the last ten years or so.)",
             "changes": [],
             "margin": "",
-            "id": "21959980edf3"
+            "id": "44e9f98509b8"
           },
           {
             "year": 1211,
@@ -2543,7 +2753,7 @@
             "details": "Straight after a marriage contract between King Andrew II and Landgrave Hermann of Thuringia for their children, Hermann von Salza's Order is invited to Transylvania (the book also credits a King Bela, and makes Hermann of Thuringia head of the Salza family). Andrew gives it the Burzenland, free of taxes and dues, keeping the right to mint and half the gold and silver mined, and charges it to hold the Carpathian passes against the Cumans. Brother Theoderich commands the mission; Saxon settlers follow in numbers, and the Knights begin five castles, Marienburg, Kronstadt, Rosenau, Schwarzenburg and Kreuzburg.",
             "changes": [],
             "margin": "",
-            "id": "2235a8038d06"
+            "id": "0a6a9f44dfe7"
           },
           {
             "year": 1215,
@@ -2552,7 +2762,7 @@
             "details": "Macrobius, filius of Gasparus and leader of Kezd\u00f6 V\u00e1lasz, is torn apart by an angry griffin he met by chance in the Prokletije, the Accursed Mountains. His filius Essedarius, the fourth leader in Norsius's line, takes command. Leona, his partner, was not with him; she hunts the beast down and still hunts griffins in her grief.",
             "changes": [],
             "margin": "",
-            "id": "3a0ee82b4918"
+            "id": "ccd97e6a28b6"
           },
           {
             "year": 1216,
@@ -2561,7 +2771,7 @@
             "details": "A Tremere necromancer serving as a hoplite finds the burial ground of the ancient Thracian kings close to Seuthopolis, their old capital. Tremere's necromancers rejoice and House Verditius wants a dig too, since the Thracians honoured smith gods; Benilda, wary of cheerful necromancers, bars the way.",
             "changes": [],
             "margin": "",
-            "id": "9da02ec3ae56"
+            "id": "3c7be5f6a115"
           },
           {
             "year": 1217,
@@ -2570,7 +2780,7 @@
             "details": "A papal legate crowns Stefan II king of all the Serbian and coastal lands, and most Serbian dioceses take up the Latin rite, though Kotor and Ston keep the Greek. Andrew II of Hungary sets out on crusade.",
             "changes": [],
             "margin": "",
-            "id": "89f7af27c1af"
+            "id": "daba5c04a754"
           },
           {
             "year": 1218,
@@ -2579,7 +2789,7 @@
             "details": "Poena becomes Prima of House Tremere, and Monica Ierne takes the post of legata, the House's field commander. The former Primus is given charge of the Burning Acorns Vexillation, which hunts surviving Diedne, a post that lets him roam as he pleases. Ivan Asen II takes the Bulgarian throne at Tarnovo and marries a daughter of the King of Hungary. Andrew II comes home from crusade to a hostile nobility (the book dates his return to 1222).",
             "changes": [],
             "margin": "",
-            "id": "cc3300408865"
+            "id": "f6f222e4404c"
           },
           {
             "year": 1219,
@@ -2588,7 +2798,7 @@
             "details": "At Sava's request the patriarch of the Greek Church makes the Serbian Church self-governing and consecrates Sava its archbishop. Sava's Nomocanon becomes the book of church law for all the Slav churches.",
             "changes": [],
             "margin": "",
-            "id": "bbaf7e455bda"
+            "id": "dd4ea7d412d2"
           }
         ],
         "package_data": {
@@ -2835,8 +3045,8 @@
         "meeting": null,
         "secrets": [
           {
-            "title": "",
-            "text": "If the saga follows history, Andrew II's nobles force the Golden Bull on him in 1222; the Mongols break the Cumans at the Kalka in 1223; Hermann von Salza has the Burzenland made a fief of the Holy See in 1225 and the Knights are driven out; Ivan Asen II spreads his rule over Thrace, Macedonia and Epiros within the decade; a crusade against Bosnia comes in 1237; and the Mongols invade in 1241.",
+            "title": "Storyguide Notes",
+            "text": "What follows 1220. If the saga follows history, Andrew II's nobles force the Golden Bull on him in 1222; the Mongols break the Cumans at the Kalka in 1223; Hermann von Salza has the Burzenland made a fief of the Holy See in 1225 and the Knights are driven out; Ivan Asen II spreads his rule over Thrace, Macedonia and Epiros within the decade; a crusade against Bosnia comes in 1237; and the Mongols invade in 1241.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3099,19 +3309,19 @@
             "kind": "creatures",
             "target_id": "upokorituma",
             "note": "an a\u017edaja that sinks river boats on the upper Danube",
-            "id": "1d74f13cce40"
+            "id": "c531f1ce81fc"
           },
           {
             "kind": "creatures",
             "target_id": "costache",
             "note": "a giant kept chained in a barrel in some king's palace",
-            "id": "50b5922075f9"
+            "id": "f607e3873ad5"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at Hungary",
             "text": "Vis (each in its place): Gyogy-to (Ignem and Aquam), and Laniena's Aggtelek caves: Baradla (Imaginem and Muto), Dobsinska (Ignem) and Ochtinska (Rego).",
             "revealed_year": null,
             "revealed_season": ""
@@ -3666,13 +3876,13 @@
             "kind": "creatures",
             "target_id": "broukolak",
             "note": "the Bulgarian demon that wears a corpse",
-            "id": "b7739a2dc036"
+            "id": "51e6e4bb62b0"
           },
           {
             "kind": "creatures",
             "target_id": "zuban_a_four_eyed_dog",
             "note": "a four-eyed dog, born to hunt vampires",
-            "id": "cb3e8a467391"
+            "id": "c444c073d158"
           }
         ],
         "arms": {},
@@ -3728,8 +3938,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "A Tarnovo man who has found a tunnel beneath his house looks for foreign adventurers to explore it, since no local will go down; he means to cheat them of whatever gold they bring out.",
+            "title": "The tunnel under a Tarnovo house",
+            "text": "A Tarnovo man has found a tunnel beneath his house, and means to cheat whoever explores it of whatever gold they bring out.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The Tarnovo man looks for foreign adventurers to explore his tunnel, since no local will go down.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3760,8 +3976,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Others insist Baldwin still lives, a prisoner the present tsar keeps for some purpose of his own.",
+            "title": "Whether Baldwin lives",
+            "text": "Others insist Baldwin still lives, a prisoner the present tsar keeps in the tower for some purpose of his own.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3877,7 +4093,7 @@
             "kind": "creatures",
             "target_id": "saint_ivan_rilski",
             "note": "the patron saint of Bulgaria",
-            "id": "ace5e72a0a02"
+            "id": "6ac4b7e0c7e9"
           }
         ],
         "arms": {},
@@ -3918,7 +4134,7 @@
             "kind": "creatures",
             "target_id": "minor_vila",
             "note": "a template for the white ladies of the Tribunal",
-            "id": "92c3e49736c6"
+            "id": "43331b58ab42"
           }
         ],
         "arms": {},
@@ -3949,8 +4165,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The genius may or may not be the goddess once worshipped here; its Magic nature suggests not, and if so, something befell Bendis that settlers would be wise to learn first.\n\nVis: Terram and Herbam, gathered within a few yards of the temple (the book gives no amounts).",
+            "title": "The genius and Bendis",
+            "text": "Starosel's genius may or may not be the goddess once worshipped here; its Magic nature suggests not, and if so, something befell Bendis that settlers would be wise to learn first.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Vis at Starosel",
+            "text": "Vis: Terram and Herbam, gathered within a few yards of the temple (the book gives no amounts).",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -3982,13 +4204,13 @@
             "kind": "creatures",
             "target_id": "nicoleta_a_giant_s_mother",
             "note": "a giant's mother on her hidden horse farm",
-            "id": "7bc81162fd10"
+            "id": "8c719101b136"
           },
           {
             "kind": "creatures",
             "target_id": "fet_frumos_a_faerie_horse",
             "note": "the faerie horse starved on Nicoleta's farm",
-            "id": "aec7db17ca24"
+            "id": "8a2f55be0136"
           }
         ],
         "arms": {},
@@ -4019,7 +4241,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Story seed: a bolyar the magi know begs them to shelter him from the Horseman, loosed on him, he says, by a faerie wizard. In truth he paid the wizard to raise the Horseman against his enemies, but the Horseman had heard his people's prayers and judged the bolyar's pride and ambition the region's worst threat. The wizard only failed to warn him. If the magi let things run their course, the Lion may interfere.",
             "revealed_year": null,
             "revealed_season": ""
@@ -4226,8 +4448,26 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The false Kabeiros (see the Bestiary), a strong local faerie, is reviving the Cabeiri cult here: a tall brass man with a great crab claw for a left hand, which serves him as smith's tongs and to punish the unjust. He courts the servants of Quaesitors, posing as the guide of kings and giver of justice. His cult has four degrees (Interrogator, Invader, Observer, Liberator), all initiated in the valley on a holy day under a Vow to give fair and swift justice; they confer Piercing Gaze, Invasive Eyes, Bright Eyes and Eyes of Theseus, and he can take back Eyes of Theseus from the disloyal. He wants to teach Second Sight but has not yet stolen it from anyone.\nHe took the idea from a cult of servants at a Quaesitorial covenant who long ago worshipped Asmodeus as patron of prying; an Infernal scholar of the Black Library might trace it, and Asmodeus may punish the cult if he learns his idea was reused.",
+            "title": "The false Kabeiros",
+            "text": "A strong local faerie, the false Kabeiros, is reviving the Cabeiri cult in the Valley of the Thracian Kings: a tall brass man with a great crab claw for a left hand, which serves him as smith's tongs and to punish the unjust. He courts the servants of Quaesitors, posing as the guide of kings and giver of justice.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Kabeiros cult's degrees",
+            "text": "The false Kabeiros's cult has four degrees (Interrogator, Invader, Observer, Liberator), all initiated in the valley on a holy day under a Vow to give fair and swift justice; they confer Piercing Gaze, Invasive Eyes, Bright Eyes and Eyes of Theseus, and he can take back Eyes of Theseus from the disloyal. He wants to teach Second Sight but has not yet stolen it from anyone.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Where the cult's idea came from",
+            "text": "The false Kabeiros took the idea for his cult from a cult of servants at a Quaesitorial covenant who long ago worshipped Asmodeus as patron of prying; an Infernal scholar of the Black Library might trace it, and Asmodeus may punish the cult if he learns his idea was reused.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The false Kabeiros: see the Bestiary.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4339,8 +4579,44 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Six hidden exhibits are rumoured, which most of the Tribunal only guesses at; some magi claim to have been there, and may be liars or mad. Even the Curator may not hold their Arcane Connections, which a cabal or Mystery Cult may keep, or which may be lost:\nThe Founder's Exhibit: realia of the Founders' lives, first traditions and deaths, some say with several Founders' bodies on show.\nThe Lower Dungeon: a web of wards binding hundreds of demons; its keepers would risk a charge of infernalism.\nThe Refuge: not an exhibit but stocked laboratories and lodgings in hidden regiones, readied for House Tremere to flee to should catastrophe strike the House, the Tribunal or the world, and outlast it. Hidden laboratories do exist (Nestor uses one); if disaster such as the Mongols comes, desperate magi will come here.\nThe Schism Exhibit: a full record of the Schism War, including Expurgatio, said to catalogue all the evidence House Tremere gathered against the Diedne in the decades before the war, with the artifacts and Lab Texts it names; called 'the truth', against a public record many think Tremere propaganda.\nThe Seeker's Forum: realia of extinct (and not so extinct) magical traditions the Tremere have recovered across Mythic Europe, a rich source of Insight.\nThe Warehouse of Ares: a great store of magic weapons, many made by both sides around the Schism War, kept against the day the Order splits in war again.",
+            "title": "Six hidden exhibits",
+            "text": "Six hidden exhibits of Tablinum are rumoured, which most of the Tribunal only guesses at; some magi claim to have been there, and may be liars or mad. Even the Curator may not hold their Arcane Connections, which a cabal or Mystery Cult may keep, or which may be lost.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Founder's Exhibit",
+            "text": "The Founder's Exhibit, one of Tablinum's rumoured hidden exhibits: realia of the Founders' lives, first traditions and deaths, some say with several Founders' bodies on show.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Lower Dungeon",
+            "text": "The Lower Dungeon, one of Tablinum's rumoured hidden exhibits: a web of wards binding hundreds of demons; its keepers would risk a charge of infernalism.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Refuge",
+            "text": "The Refuge, one of Tablinum's rumoured hidden exhibits: not an exhibit but stocked laboratories and lodgings in hidden regiones, readied for House Tremere to flee to should catastrophe strike the House, the Tribunal or the world, and outlast it. Hidden laboratories do exist (Nestor uses one); if disaster such as the Mongols comes, desperate magi will come here.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Schism Exhibit",
+            "text": "The Schism Exhibit, one of Tablinum's rumoured hidden exhibits: a full record of the Schism War, including Expurgatio, said to catalogue all the evidence House Tremere gathered against the Diedne in the decades before the war, with the artifacts and Lab Texts it names; called 'the truth', against a public record many think Tremere propaganda.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Seeker's Forum",
+            "text": "The Seeker's Forum, one of Tablinum's rumoured hidden exhibits: realia of extinct (and not so extinct) magical traditions the Tremere have recovered across Mythic Europe, a rich source of Insight.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The Warehouse of Ares",
+            "text": "The Warehouse of Ares, one of Tablinum's rumoured hidden exhibits: a great store of magic weapons, many made by both sides around the Schism War, kept against the day the Order splits in war again.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4508,8 +4784,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "An angel has taken Vasiliy under its wing, while a demon has fixed on the parish priest through his pride in the work, and the congregation are caught between them. Vasiliy may sense the struggle and ask for help, or the angel may ask the characters, or the demon trick them, to finish off the other.",
+            "title": "Angel and demon at Boyana",
+            "text": "An angel has taken Vasiliy under its wing, while a demon has fixed on the parish priest through his pride in the work, and the congregation are caught between them.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Vasiliy may sense the struggle and ask for help, or the angel may ask the characters, or the demon trick them, to finish off the other.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4584,8 +4866,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The charter is a skilful forgery; the oppidum of Seuthopolis rules here.",
+            "title": "The town's charter",
+            "text": "The town of Seuthopolis's charter is a skilful forgery.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Who rules Seuthopolis",
+            "text": "The oppidum of Seuthopolis rules the town.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -4843,8 +5131,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Some suspect an Infernal aura has grown in the mansio; none has yet been detected.",
+            "title": "An aura in the mansio",
+            "text": "Some suspect an Infernal aura has grown in the mansio of Vrhbosna; none has yet been detected.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5176,8 +5464,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Some Seekers think Medea made her brother an airy spirit fit to be patron of a mystery cult, the serpents perhaps part of its Ordeals. A few magi desperate for her secret of regeneration have died to strong wards trying to break in; whether Medea, the Histrians or a cult already serving Aspytrus set them is unknown.",
+            "title": "What Medea made of Aspytrus",
+            "text": "Some Seekers think Medea made her brother Aspytrus an airy spirit fit to be patron of a mystery cult, the serpents at his grave perhaps part of its Ordeals.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The wards on the grave",
+            "text": "A few magi desperate for Medea's secret of regeneration have died to strong wards trying to break into the Grave of Aspytrus; whether Medea, the Histrians or a cult already serving Aspytrus set them is unknown.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -5393,7 +5687,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_dubrovnik",
             "note": "Its harbour",
-            "id": "f70929db6a15"
+            "id": "b511e575b84c"
           }
         ],
         "arms": {},
@@ -5515,7 +5809,7 @@
             "kind": "places",
             "target_id": "the_harbour_of_zadar",
             "note": "Its harbour",
-            "id": "49e62fb7bf07"
+            "id": "32186d66e9bb"
           }
         ],
         "arms": {},
@@ -5622,37 +5916,37 @@
             "kind": "creatures",
             "target_id": "human_like_vampire",
             "note": "the commonest vampire, wearing a dead villager's shape",
-            "id": "9612f8801432"
+            "id": "4306d1df4f56"
           },
           {
             "kind": "creatures",
             "target_id": "bestial_vampire",
             "note": "the boneless wolf-shaped vampire",
-            "id": "3bd56259e865"
+            "id": "d65f0040896b"
           },
           {
             "kind": "creatures",
             "target_id": "incorporeal_vampire",
             "note": "the unseen vampire that haunts a dead man's kin",
-            "id": "1e1b489c9507"
+            "id": "e0522f1c544b"
           },
           {
             "kind": "creatures",
             "target_id": "gadja",
             "note": "the formless sack the young vampire becomes",
-            "id": "09e9b16003de"
+            "id": "833dd04f3f49"
           },
           {
             "kind": "creatures",
             "target_id": "vampire_snake",
             "note": "a snake turned vampire",
-            "id": "bd22d15e5473"
+            "id": "56ce49fd1e8a"
           },
           {
             "kind": "creatures",
             "target_id": "vampire_tree",
             "note": "a hanging tree turned vampire",
-            "id": "f3a66248ad12"
+            "id": "92a592ed494d"
           }
         ],
         "arms": {},
@@ -5983,7 +6277,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at Ikafalva and the Furus",
             "text": "Vis: a pawn of Aquam can be drawn from the source under each full moon. It is easy to gather, and the Scholomance sends its older Gifted pupils to do it, except when the Vlachs and the Hungarian clans to the west, who both claim the brook, are fighting over it: then children may be caught in a skirmish and need rescuing.",
             "revealed_year": null,
             "revealed_season": ""
@@ -6016,7 +6310,7 @@
             "kind": "creatures",
             "target_id": "georghe_and_ladislau",
             "note": "two giant brothers forever quarrelling over a fence",
-            "id": "122c1f506e21"
+            "id": "ceb44687b080"
           }
         ],
         "arms": {},
@@ -6181,8 +6475,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "There may be a second, deeper level of the regio known only to the headmaster; this has never been confirmed or denied. Whether the storm wizards want the tower or something hidden in it is unknown.",
+            "title": "A deeper level",
+            "text": "There may be a second, deeper level of the Scholomance's regio known only to the headmaster; this has never been confirmed or denied.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "What the storm wizards want",
+            "text": "Whether the storm wizards want the Scholomance's tower or something hidden in it is unknown.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6532,8 +6832,20 @@
         },
         "secrets": [
           {
-            "title": "",
-            "text": "Two optional Orders. A holier one fights for the Dominion: its conquests carry a Brave Dominion aura, it sends preachers among the Cumans before its armies, and an inner circle of Divine wonder-workers uses Invocation, Blessing and Cursing and senses holiness. Their Blessing of the relic (Invocation 30) lends one relic's Magic Resistance and its scourge of demons to up to ten men who keep together, for a Sabbath.\n\nA profane one serves infernal masters, wants power over land more than pagan blood, and hoards occult lore, capturing shamans, witches and talt\u00f3s; many of its leaders are goetic sorcerers and the rest diabolists, and it rules the common folk through fear, possession and blackmail. Its favoured knights carry great swords with a bound demon that whispers in their dreams, and that can trade a blow's damage for an Incapacitating wound that heals the wielder's own worst wound, three times a day (Consumption 37).\n\nIf history runs its course, Andrew II (home from crusade since 1218) is forced to grant the Golden Bull in 1222 but will not take the Burzenland back; in 1225 Hermann von Salza puts it under the Holy See, and the king drives the knights out by force when they refuse to go. The Cumans then pour through the weakened defences.",
+            "title": "A holier Order",
+            "text": "A holier Teutonic Order fights for the Dominion: its conquests carry a Brave Dominion aura, it sends preachers among the Cumans before its armies, and an inner circle of Divine wonder-workers uses Invocation, Blessing and Cursing and senses holiness. Their Blessing of the relic (Invocation 30) lends one relic's Magic Resistance and its scourge of demons to up to ten men who keep together, for a Sabbath.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "A profane Order",
+            "text": "A profane Teutonic Order serves infernal masters, wants power over land more than pagan blood, and hoards occult lore, capturing shamans, witches and talt\u00f3s; many of its leaders are goetic sorcerers and the rest diabolists, and it rules the common folk through fear, possession and blackmail. Its favoured knights carry great swords with a bound demon that whispers in their dreams, and that can trade a blow's damage for an Incapacitating wound that heals the wielder's own worst wound, three times a day (Consumption 37).",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Two optional Orders: the holier one and the profane one.\n\nIf history runs its course, Andrew II (home from crusade since 1218) is forced to grant the Golden Bull in 1222 but will not take the Burzenland back; in 1225 Hermann von Salza puts it under the Holy See, and the king drives the Teutonic Knights out by force when they refuse to go. The Cumans then pour through the weakened defences.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6747,7 +7059,7 @@
             "kind": "creatures",
             "target_id": "silexa",
             "note": "",
-            "id": "6c8bc065d90d"
+            "id": "89ca659a3952"
           }
         ],
         "arms": {},
@@ -6788,14 +7100,26 @@
             "kind": "covenants",
             "target_id": "coeris",
             "note": "Coeris's refuge, beneath the oppidum",
-            "id": "4cd8636a154a"
+            "id": "e7a7ddefe1be"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The Gate is a permanent, open way into the Magic Realm, to an insula the Tremere call the City Below: the place Coeris's people will withdraw to if the oppidum can no longer be held, almost an afterlife, though perhaps one the House could come back from once its enemies stop watching. The book gives no aura for it.\n\nA troupe may prefer another answer: a Portal to a warded cemetery far off in Africa or Asia; a fortress deep in Faerie built as a last refuge in the Sundering; a prison for Diedne magi, still alive since no one ages in the Magic Realm; or a pleasant garden where a cheerful old man named Tremere grows roses among the ghosts of his family, plays with his wolf and wonders whether his brother will call.",
+            "title": "Where the Gate leads",
+            "text": "The Gate of Eurydice is a permanent, open way into the Magic Realm, to an insula the Tremere call the City Below.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The City Below",
+            "text": "The City Below is the place Coeris's people will withdraw to if the oppidum can no longer be held, almost an afterlife, though perhaps one the House could come back from once its enemies stop watching.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The book gives no aura for the City Below.\n\nA troupe may prefer another answer: a Portal to a warded cemetery far off in Africa or Asia; a fortress deep in Faerie built as a last refuge in the Sundering; a prison for Diedne magi, still alive since no one ages in the Magic Realm; or a pleasant garden where a cheerful old man named Tremere grows roses among the ghosts of his family, plays with his wolf and wonders whether his brother will call.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -6946,7 +7270,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "Whether a fort left standing still belongs to Kezd\u00f6 V\u00e1lasz once its magi have gone is an open question.",
             "revealed_year": null,
             "revealed_season": ""
@@ -7003,8 +7327,8 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Slavonic dragons line their lairs with gold and silver, and a treasure this size has very probably drawn one.",
+            "title": "A dragon and Decebalus's hoard",
+            "text": "Slavonic dragons line their lairs with gold and silver, and a treasure the size of Decebalus's hoard has very probably drawn one.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7086,8 +7410,14 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Zadar's violence breeds Infernal auras and regiones over its worst killings; what became of the lacuna and its people is left to the storyguide.",
+            "title": "Zadar's Infernal places",
+            "text": "Zadar's violence breeds Infernal auras and regiones over its worst killings.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "What became of the lacuna and its people is left to the storyguide.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7143,7 +7473,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Storyguide Notes",
             "text": "The book leaves the true raiders to the storyguide.",
             "revealed_year": null,
             "revealed_season": ""
@@ -7178,19 +7508,19 @@
             "kind": "characters",
             "target_id": "thietmar",
             "note": "A storm wizard",
-            "id": "64761fc28fb2"
+            "id": "8ccd6fcd924a"
           },
           {
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "Twice attacked its tower",
-            "id": "b9c67df7636d"
+            "id": "8e8e5f3f7996"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "What the Tremere bury",
             "text": "The Tremere may be burying what they know of the storm wizards on purpose: their powers baffled the Diedne in the Schism War, and the House may want that surprise kept for the next war.",
             "revealed_year": null,
             "revealed_season": ""
@@ -7222,7 +7552,7 @@
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Vis at A storm wizards' ice cave",
             "text": "Vis: Auram, soaked into the ice of the walls, drawn out with a spell like Gather the Essence of the Beast (amount not given). Magi who use it will have to share or fight for it with the storm wizards, who are angry at first but may be talked round to trade or alliance.",
             "revealed_year": null,
             "revealed_season": ""
@@ -7257,32 +7587,44 @@
             "kind": "covenants",
             "target_id": "laniena",
             "note": "Trains them",
-            "id": "d9f77d4cbb1d"
+            "id": "a4b75f896d4d"
           },
           {
             "kind": "characters",
             "target_id": "lexander",
             "note": "Drills the Fectores",
-            "id": "9af610821d3c"
+            "id": "829fb6b6ed5a"
           },
           {
             "kind": "characters",
             "target_id": "murat_the_younger",
             "note": "Teaches them the Ban Art; Hermetic Fector",
-            "id": "fd7bb30a3dab"
+            "id": "fe6147f13ea6"
           },
           {
             "kind": "characters",
             "target_id": "bendis",
             "note": "The ablest non-Hermetic Fector",
-            "id": "3ca9133264b0"
+            "id": "b0874d4be590"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Murat of Terezin was a dhampir and rose as a vampire when he died: he is now a kukudhi living far from Laniena with his fourth mortal wife and has fathered over twenty dhampir children. Only Murat the Younger knows, and lets him be for the hunters his children make.",
+            "title": "What Murat of Terezin was",
+            "text": "Murat of Terezin was a dhampir and rose as a vampire when he died: he is now a kukudhi.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Murat of Terezin's family",
+            "text": "Murat of Terezin, now a kukudhi, lives far from Laniena with his fourth mortal wife and has fathered over twenty dhampir children.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Murat the Younger's silence",
+            "text": "Only Murat the Younger knows that Murat of Terezin lives on as a vampire, and lets him be for the hunters his children make.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7424,7 +7766,7 @@
             "kind": "characters",
             "target_id": "tibor_of_bor_a",
             "note": "A dhampir hunter",
-            "id": "5133e25bb4b2"
+            "id": "27197193bbe8"
           }
         ],
         "arms": {},
@@ -7511,7 +7853,7 @@
             "kind": "characters",
             "target_id": "ludmilla",
             "note": "Leads a coven",
-            "id": "b68d620f6258"
+            "id": "f71bcc7e9fc7"
           }
         ],
         "arms": {},
@@ -7723,104 +8065,122 @@
             "kind": "creatures",
             "target_id": "danaslepih",
             "note": "A zmaj of the war",
-            "id": "fb9b3332e5cb"
+            "id": "3ef03c2da48c"
           },
           {
             "kind": "creatures",
             "target_id": "upokorituma",
             "note": "An a\u017edaja of the war",
-            "id": "0a29142d3a40"
+            "id": "cf29e998e475"
           },
           {
             "kind": "creatures",
             "target_id": "georghe_and_ladislau",
             "note": "Giants the war could drive to rampage",
-            "id": "37bfe318b8f1"
+            "id": "84ad3d153fac"
           },
           {
             "kind": "characters",
             "target_id": "leontine_adiran",
             "note": "Argues with an old zmaj",
-            "id": "cbfa9e88128e"
+            "id": "8cbca4931999"
           },
           {
             "kind": "characters",
             "target_id": "dominic_of_tytalus",
             "note": "Took the column",
-            "id": "40736218e032"
+            "id": "4f77bb83f08b"
           },
           {
             "kind": "characters",
             "target_id": "lexander",
             "note": "Abandons Laniena",
-            "id": "1623366446d3"
+            "id": "4b95f4c03a75"
           },
           {
             "kind": "characters",
             "target_id": "poena",
             "note": "Must be warned",
-            "id": "1b63f8eaad7e"
+            "id": "663b5a6798df"
           },
           {
             "kind": "characters",
             "target_id": "monica_ierne",
             "note": "The House's field commander",
-            "id": "b98c48372521"
+            "id": "9b2bf40b81ea"
           },
           {
             "kind": "characters",
             "target_id": "sebastian",
             "note": "Perhaps the dragon king",
-            "id": "3824c8258405"
+            "id": "2574280bc1f3"
           },
           {
             "kind": "covenants",
             "target_id": "old_histria",
             "note": "Leontine's zmaj attacks it",
-            "id": "35688db871d4"
+            "id": "64b1b8777d40"
           },
           {
             "kind": "covenants",
             "target_id": "laniena",
             "note": "The first to fall",
-            "id": "acf39a05a98d"
+            "id": "87b06dc238f3"
           },
           {
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "Its pupils sent south",
-            "id": "68de4138422c"
+            "id": "8ea8e1cb9362"
           },
           {
             "kind": "covenants",
             "target_id": "coeris",
             "note": "Where the column may lie",
-            "id": "f3b2acb04311"
+            "id": "7e49de709393"
           },
           {
             "kind": "covenants",
             "target_id": "lycaneon",
             "note": "A mountain oppidum to defend",
-            "id": "57268b7606a5"
+            "id": "0c4a44c9cf8f"
           },
           {
             "kind": "covenants",
             "target_id": "kezd_v_lasz",
             "note": "Its old forts could be used to frame it",
-            "id": "45371d4d7f85"
+            "id": "15f1ffe806e0"
           },
           {
             "kind": "places",
             "target_id": "the_bran_pass",
             "note": "The scholars' road",
-            "id": "da1711edb435"
+            "id": "c2e11e25b955"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Who keeps the peace: one ending the book offers is that a renowned Flambeau hunter tracked Fetillusclaviceps to its lair and killed it about a century ago, then, seeing that the peace died with it, has played the Roman dragon ever since rather than confess. If the troupe uncovers this, continuing the pretence is probably a breach of the Code, since it means dealing with Infernal beasts, and House Tremere's good name rides on whether a substitute keeper can be found.\n\nAnother: the stone column where Leontine of Old Histria argues ethics with an ancient zmaj was taken by Dominic of Tytalus, aedile of Coeris, perhaps to test his prot\u00e9g\u00e9 and perhaps to start the war on purpose. Dominic then vanishes, dead or in hiding, and the column may lie somewhere within Coeris's defences.\n\nSebastian, the ageless caretaker of the Scholomance, may be the seven-headed zmaj king A\u017eevastjepan, who rules the Carpathian dragons and has banished a\u017edaje from his realm.",
+            "title": "Who keeps the peace",
+            "text": "A renowned Flambeau hunter tracked Fetillusclaviceps to its lair and killed it about a century ago, then, seeing that the peace died with it, has played the Roman dragon ever since rather than confess. If the troupe uncovers this, continuing the pretence is probably a breach of the Code, since it means dealing with Infernal beasts, and House Tremere's good name rides on whether a substitute keeper can be found.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The stolen column",
+            "text": "The stone column where Leontine of Old Histria argues ethics with an ancient zmaj was taken by Dominic of Tytalus, aedile of Coeris, perhaps to test his prot\u00e9g\u00e9 and perhaps to start the war on purpose. Dominic then vanishes, dead or in hiding, and the column may lie somewhere within Coeris's defences.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Sebastian and the zmaj king",
+            "text": "Sebastian, the ageless caretaker of the Scholomance, may be the seven-headed zmaj king A\u017eevastjepan, who rules the Carpathian dragons and has banished a\u017edaje from his realm.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "Who keeps the peace and the stolen column are two of the endings the book offers.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7893,20 +8253,38 @@
             "kind": "places",
             "target_id": "the_burzenland",
             "note": "The knights' grant",
-            "id": "b0e9c3caccc8"
+            "id": "280f2e041195"
           },
           {
             "kind": "places",
             "target_id": "kronstadt_castle",
             "note": "Their central castle",
-            "id": "cb798811096d"
+            "id": "8776122602a3"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "The book offers three Teutonic Orders. One is pious and mundane. A holier one makes Dominion auras of a brave temper on the land it conquers and keeps an inner circle of Divine wonder-workers. A profane one serves Hell: its leaders are goetic sorcerers, its knights take part in infernal rites, it seizes shamans, witches and talt\u00f3s for their lore, and its favoured knights carry great swords with a demon bound inside that whispers in their dreams.",
+            "title": "A pious Order",
+            "text": "A pious Teutonic Order is mundane.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "A holier Order",
+            "text": "A holier Teutonic Order makes Dominion auras of a brave temper on the land it conquers and keeps an inner circle of Divine wonder-workers.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "A profane Order",
+            "text": "A profane Teutonic Order serves Hell: its leaders are goetic sorcerers, its knights take part in infernal rites, it seizes shamans, witches and talt\u00f3s for their lore, and its favoured knights carry great swords with a demon bound inside that whispers in their dreams.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Storyguide Notes",
+            "text": "The book offers three Teutonic Orders.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -7969,13 +8347,13 @@
             "kind": "covenants",
             "target_id": "tablinum",
             "note": "Said to hide the Refuge",
-            "id": "c7e60272dd08"
+            "id": "ae68e2354b86"
           },
           {
             "kind": "places",
             "target_id": "hungary",
             "note": "The horde's target",
-            "id": "b511e0627275"
+            "id": "6689e109f31a"
           }
         ],
         "arms": {},
@@ -8038,13 +8416,13 @@
             "kind": "places",
             "target_id": "bosnia",
             "note": "The Patarians' land",
-            "id": "365736eedda8"
+            "id": "8c9b1098c055"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "An aura in the mansio",
             "text": "Some suspect an Infernal aura has grown in the Vrhbosna mansio; none has been detected yet.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8118,19 +8496,19 @@
             "kind": "places",
             "target_id": "the_valley_of_the_thracian_kings",
             "note": "The burial ground",
-            "id": "08321863674e"
+            "id": "1605abf2dac7"
           },
           {
             "kind": "covenants",
             "target_id": "seuthopolis",
             "note": "Guards the valley",
-            "id": "ca4c936a8041"
+            "id": "2494c5f33baa"
           },
           {
             "kind": "characters",
             "target_id": "benilda",
             "note": "Blocks the dig",
-            "id": "7ede7c702b4d"
+            "id": "14b6a9f850c4"
           }
         ],
         "arms": {},
@@ -8193,26 +8571,38 @@
             "kind": "covenants",
             "target_id": "lycaneon",
             "note": "The hollow mountain",
-            "id": "d9cce749b55b"
+            "id": "6962e8b313e4"
           },
           {
             "kind": "characters",
             "target_id": "zalmoxis",
             "note": "Taken for the god",
-            "id": "b75c32c56645"
+            "id": "fc9d90ec397a"
           },
           {
             "kind": "places",
             "target_id": "maramures",
             "note": "The cults' mountains",
-            "id": "23aefda9e080"
+            "id": "a935504fc859"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Archmagus Zalmoxis of Verditius, Lycaneon's longevity specialist, is only named after the god and has nothing to do with the cult, and the magi of Lycaneon know nothing of what is brewing. The vrajitoarele belong to the Magic realm; none of their powers is Infernal.",
+            "title": "Archmagus Zalmoxis",
+            "text": "Archmagus Zalmoxis of Verditius, Lycaneon's longevity specialist, is only named after the god and has nothing to do with the cult.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "What Lycaneon knows",
+            "text": "The magi of Lycaneon know nothing of what is brewing among the cults of Zalmoxis.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "The vrajitoarele's powers",
+            "text": "The vrajitoarele belong to the Magic realm; none of their powers is Infernal.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8275,13 +8665,13 @@
             "kind": "characters",
             "target_id": "tatiana",
             "note": "Born a Szekler",
-            "id": "2fd71dddf9ca"
+            "id": "5aa951e74901"
           },
           {
             "kind": "covenants",
             "target_id": "laniena",
             "note": "Holds talt\u00f3s initiation scripts",
-            "id": "061d7dbd3062"
+            "id": "0fb635707dd2"
           }
         ],
         "arms": {},
@@ -8354,37 +8744,37 @@
             "kind": "characters",
             "target_id": "poena",
             "note": "The Prima",
-            "id": "2ebbdc17b348"
+            "id": "65576ecef925"
           },
           {
             "kind": "characters",
             "target_id": "monica_ierne",
             "note": "The legata and heir",
-            "id": "5f3a2d6731ca"
+            "id": "f443dab4198d"
           },
           {
             "kind": "characters",
             "target_id": "horatius",
             "note": "A compromise candidate",
-            "id": "c24fc38cb40c"
+            "id": "f69e322f1890"
           },
           {
             "kind": "characters",
             "target_id": "janus",
             "note": "Will never stand",
-            "id": "625d41756e5d"
+            "id": "75464dba8068"
           },
           {
             "kind": "covenants",
             "target_id": "coeris",
             "note": "The Prima's seat",
-            "id": "d3ecccd31412"
+            "id": "244ba43a6057"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
+            "title": "Why Janus will not stand",
             "text": "Janus is a lycanthrope, which is why he will never seek the office.",
             "revealed_year": null,
             "revealed_season": ""
@@ -8448,32 +8838,32 @@
             "kind": "covenants",
             "target_id": "the_scholomance",
             "note": "The school he hunts",
-            "id": "3723d872b990"
+            "id": "44e25eff92ac"
           },
           {
             "kind": "characters",
             "target_id": "simium_arileins",
             "note": "The headmaster",
-            "id": "07a68f1b74ab"
+            "id": "ee75d4bb31a7"
           },
           {
             "kind": "characters",
             "target_id": "sebastian",
             "note": "The caretaker",
-            "id": "367df2a0ec0d"
+            "id": "c11b62f5b84e"
           },
           {
             "kind": "places",
             "target_id": "the_burzenland",
             "note": "Where he lodges",
-            "id": "a63408b9b72c"
+            "id": "9388506ed262"
           }
         ],
         "arms": {},
         "secrets": [
           {
-            "title": "",
-            "text": "Sebastian, the school's ageless caretaker, may be the zmaj king A\u017eevastjepan; a legate who found him would find more than he bargained for.",
+            "title": "Sebastian and the zmaj king",
+            "text": "Sebastian, the Scholomance's ageless caretaker, may be the zmaj king A\u017eevastjepan; a legate who found him would find more than he bargained for.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -8505,7 +8895,7 @@
             "kind": "creatures",
             "target_id": "danaslepih",
             "note": "a blind zmaj guarding a horse-chestnut grove",
-            "id": "61e0c6f19dd6"
+            "id": "9781dc01041b"
           }
         ],
         "arms": {},
@@ -9165,7 +9555,7 @@
             "kind": "characters",
             "target_id": "murat_the_younger",
             "note": "Sodalis and constant rival; wants Murat's scripts",
-            "id": "1844ac58d78c"
+            "id": "3219e1af0207"
           }
         ],
         "attitudes": [],
@@ -10671,7 +11061,7 @@
         "summary": "The senior Orphic magus of the Tribunal, looking sixty-eight, who fancies himself head of the whole Cult, with no grounds at all. Unlike most of the Cult he worships Orpheus openly as a god, which has won him no friends among the Tremere. He thinks the Cult on Lesbos has Orpheus's head and is keeping it from him. He is mad: the Cult tends to call it divine madness, everyone else plain lunacy. He hates women.\n\nOutsiders seldom see him. He goes about in a loincloth, careless of his looks, his hair wild and twigs caught in his tangled beard.",
         "secrets": [
           {
-            "title": "",
+            "title": "Oeagrus's treasure",
             "text": "His treasure is the mummified arm of Orpheus, whom the Maenads tore apart; he seeks a way to rebuild the god by grafting the dismembered body onto himself.",
             "revealed_year": null,
             "revealed_season": ""
@@ -13590,7 +13980,7 @@
         "summary": "Marshal of Transylvania: House Guernicus's chief hoplite in the Tribunal, the senior lictor and leader of Wizard's Marches; his age is unknown. He is one of the elders of the Path of Strife, Criamon extremists who do evil so that their Housemates may stay clean, and who, unlike other Criamon, plunge into the world to dirty themselves. His House's notion of evil is so strange that he usually seems a very ordinary magus: eating meat is evil, and so is having a wife, and he does both.\n\nOnly slowly do others see that he finds no moral difference between a bacon pie and burning a child, and would do either if it were needed. He knows right from wrong and, without remorse, picks wrong when it must be done, so others need not; but he does no pointless cruelty, will not deal with demons, which he thinks personal weakness, and will not betray his sect or his wife, since that would be right. He kills magi well and, in his own odd terms, can be relied on. He is still a Criamon, with riddles, strange quests and errands to magical places, only more often bloody to the elbows. He excels at surprising foes and at mystical swordplay.",
         "secrets": [
           {
-            "title": "",
+            "title": "Why Saturnino serves",
             "text": "He serves here because he thinks gathering the Red and Black Libraries was a deep error, and because he wonders whether the Tribunal's strange faeries come of the Criamon having stolen the World Tree.",
             "revealed_year": null,
             "revealed_season": ""
@@ -13602,7 +13992,7 @@
             "kind": "characters",
             "target_id": "caledonia",
             "note": "Lictor on her team",
-            "id": "0e23ba56b04d"
+            "id": "234f618f39dd"
           }
         ],
         "attitudes": [],
@@ -14607,7 +14997,7 @@
             "kind": "characters",
             "target_id": "caledonia",
             "note": "Lictor on her team",
-            "id": "1fc377b54e1b"
+            "id": "6dcc2c27d195"
           }
         ],
         "attitudes": [],
@@ -15890,13 +16280,13 @@
             "kind": "characters",
             "target_id": "theodora",
             "note": "His apprentice, raised at Tablinum",
-            "id": "49d551d127e6"
+            "id": "924247d951a8"
           },
           {
             "kind": "characters",
             "target_id": "theodore",
             "note": "His apprentice, raised at Tablinum",
-            "id": "5b4aaf35ef10"
+            "id": "9eb2e2521cd1"
           }
         ],
         "attitudes": [],
@@ -16978,7 +17368,7 @@
             "kind": "characters",
             "target_id": "theodore",
             "note": "Her twin",
-            "id": "d8aa3e674740"
+            "id": "f8f84640d911"
           }
         ],
         "attitudes": [],
@@ -19416,7 +19806,7 @@
         "summary": "The aedile of Old Histria, an old Tremere near Twilight given the post as a useful retirement, since few in the House expect trouble at Histria; he is the House's eyes on this western gate. He equips mundane spies, is rumoured to run the House's agents in the Roman Tribunal, and laughs that off: surely a spymaster would live in Venice? He says he is only an old man finishing his talisman as a legacy, with Placido as his lab assistant.\n\nAnyone breaking the Code nearby may meet him first, sizing things up before he calls the hoplites and Quaesitors. A prolific letter writer, he asks Tremere for help when he wants to look into something without alarming the Redcaps, and trades news with others for favours; coloniae often owe senior Tremere aid by their terms, so players may be bound to serve his whims. The Mercere often send him after strigons, which he passes to younger magi.",
         "secrets": [
           {
-            "title": "",
+            "title": "Pahniro's frailty",
             "text": "His doddering is misdirection: he served twenty years as a hoplite and has killed three magi in single combat.",
             "revealed_year": null,
             "revealed_season": ""
@@ -25652,7 +26042,7 @@
         "summary": "The tower's caretaker and a tutor, a riddle: he was its only inhabitant when Jeremiah of Tremere first got in, in 1095, and has not visibly aged since. He looks an ordinary man in his forties. Most magi think him some kind of magic kin, but those rude enough to probe him with magic found nothing, not even a Might score, and the headmaster works to keep the resulting suspicion in check. He tells each headmaster his secret, or part of it, helps run the school, knows the tower and its regio better than anyone, and has helped headmasters master it in hard times.\n\nFriendly but close, he enjoys knowing more than others, except when he teaches philosophy, the liberal arts, dead languages and forgotten lore, which he loves.\n\nSome magi have noticed that his name is close to that of the dragon king A\u017eevastjepan; nobody has confronted him, but they tread warily round him.",
         "secrets": [
           {
-            "title": "",
+            "title": "Sebastian's true nature",
             "text": "Sebastian may be A\u017eevastjepan himself, the seven-headed dragon king of the Carpathians, in human guise.",
             "revealed_year": null,
             "revealed_season": ""
@@ -25850,7 +26240,7 @@
         "summary": "A Romanian strigoica, a witch: a Gifted folk witch (see the hedge traditions) with the Entrancement Ability, in her middle fifties, slim, her beauty fading; she hides her hands, which are knotted and swollen at the knuckles. She teaches pupils the Supernatural Abilities she shares with them, for free use of the oppidum's books.\n\nShe also uses the school to spot recruits for the coven she leads. The masters politely look away, because she has sometimes Initiated an unGifted Tremere agent trained there into one of her tradition's Abilities. People suspect her of being a nightwalker, which she denies.",
         "secrets": [
           {
-            "title": "",
+            "title": "What Ludmilla denies",
             "text": "She is a nightwalker. When she walks, her phantasticum is a white moth with a lovely young girl's face.",
             "revealed_year": null,
             "revealed_season": ""
@@ -28826,8 +29216,14 @@
         "summary": "Secretary for contingencies: he keeps the House's stockpiles and asks for Tremere, or magi of the oppida, to be trained in odd skills in case one of his unlikely events comes to pass. Raised in the Rhineland, muscular and handsome, chaste and aloof with attractive women; his sigil is ribbons of scarlet light. He favours Creo, Intellego, Rego and above all Mentem, a well-known speciality that weakens him in certamen, and is a spiritual necromancer with a gift for spycraft and the Visions Flaw. He was secretary for operations under the previous Primus.\n\nHe watches characters whose doings might, however remotely, start a crisis, and quietly sets counterweights; years later he may call on skills he had them learn, to untangle a crisis born of several unlikely chances at once.",
         "secrets": [
           {
-            "title": "",
-            "text": "Janus suffers a lycanthropy that magic can hold back and that changes only his shape, not his mind. He is ashamed of it and keeps it secret, so he will never seek the Primacy, and it passes by intercourse, hence his coldness to women.",
+            "title": "Janus's affliction",
+            "text": "Janus suffers a lycanthropy that magic can hold back and that changes only his shape, not his mind. He is ashamed of it and keeps it secret, so he will never seek the Primacy.",
+            "revealed_year": null,
+            "revealed_season": ""
+          },
+          {
+            "title": "Janus's coldness to women",
+            "text": "Janus's lycanthropy passes by intercourse, hence his coldness to women.",
             "revealed_year": null,
             "revealed_season": ""
           }
@@ -30551,7 +30947,7 @@
         "summary": "Secretary for emergencies and Poena's spymistress: she warns the House of trouble ahead and finds answers when it is caught off guard. Of a Szekler family she has not seen since her apprenticeship; she turns briefly invisible whenever she casts, to her irritation. She favours Creo, Muto, Herbam and Corpus, and Isaac assists her.\n\nShe appears when something dreadful is close, takes over the characters' help and resources, and sends them into the worst of it to buy the House and Order time; magi who refuse her are tarnished for good in some circles.",
         "secrets": [
           {
-            "title": "",
+            "title": "Tatiana's society",
             "text": "Tatiana secretly belongs to the Keepers of the Silence of the Temple, a small, unofficial society named for the man who burnt the temple of Artemis at Ephesus to be famous and whose name was then forbidden. They hold that Tytalus magi too often do monstrous, foolish things for fame, and set out to destroy such vandals, then their memory.",
             "revealed_year": null,
             "revealed_season": ""
@@ -31336,7 +31732,7 @@
             "kind": "creatures",
             "target_id": "silexa",
             "note": "her familiar, Silexa",
-            "id": "23f6949c9c2b"
+            "id": "ece4b58c294d"
           }
         ],
         "attitudes": [],
@@ -31975,7 +32371,7 @@
             "kind": "characters",
             "target_id": "leona",
             "note": "Fort partner",
-            "id": "e14d5731822d"
+            "id": "2ac130cae57f"
           }
         ],
         "attitudes": [],
@@ -33235,7 +33631,7 @@
             "kind": "characters",
             "target_id": "neculai",
             "note": "Fort partner, resented",
-            "id": "9009b93e4b9b"
+            "id": "5d8fdb2af3f6"
           }
         ],
         "attitudes": [],
@@ -33784,7 +34180,7 @@
             "kind": "characters",
             "target_id": "leona",
             "note": "Sent to watch over her",
-            "id": "1fee3662f22b"
+            "id": "17d6c6f129da"
           }
         ],
         "attitudes": [],
@@ -34695,7 +35091,7 @@
         "summary": "A dhampir vampire hunter, plain-looking in a peasant's smock and leather vambraces, his hauberk kept for trouble, a cloth tied over an empty eye socket and a spear carved from one piece of wood in his hand.\n\nHis father came home from a war unlooked for, and only later did his mother learn her husband had fallen in battle a month before. At eleven Tibor left the Transylvanian grain-lands to hunt that vampire down and has been a merciless hunter since. A few years ago he found it at last; it took his eye and left him for dead. The nearby village mourned him, and, not knowing the proper rites, thought nothing strange when his corpse came back to haunt them. Now one rumour says he is dead and another that he hunts vampires, and he must live with both.",
         "secrets": [
           {
-            "title": "",
+            "title": "What came back",
             "text": "The thing that came back was not Tibor: his father's vampire took his shape, and it still follows him.",
             "revealed_year": null,
             "revealed_season": ""
@@ -37122,7 +37518,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 4,
-            "id": "12cb27581859"
+            "id": "bce5cde545b6"
           }
         ],
         "soak": 7,
@@ -37188,7 +37584,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Hardens his claws for a day, adding +4 to their Damage.",
-            "id": "e8779ff53c36"
+            "id": "6e5a6b3bbdc8"
           },
           {
             "name": "February's Frosty Bite",
@@ -37202,7 +37598,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A cold so fierce it burns, striking a target he can see for +10 damage.",
-            "id": "790bc04fbf91"
+            "id": "75f367c5b4c7"
           },
           {
             "name": "Flight of the Raven",
@@ -37216,7 +37612,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: gives him wings strong enough to fly.",
-            "id": "00eb411a0614"
+            "id": "213fc72d2baf"
           }
         ],
         "vis": [
@@ -37224,7 +37620,7 @@
             "pawns": 4,
             "art": "Vim",
             "where": "one in each of his four biggest fangs",
-            "id": "829b27b8a0ad"
+            "id": "72b9de9e6681"
           }
         ],
         "equipment": "",
@@ -37492,7 +37888,7 @@
             "attack": 17,
             "defense": 9,
             "damage": 13,
-            "id": "00ee3f635725"
+            "id": "1be427ddada6"
           }
         ],
         "soak": 9,
@@ -37572,7 +37968,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: five more heads, six in all, each able to talk and bite. Lost or hurt heads do not grow back. Bought as three Personal Powers and Improved Powers.",
-            "id": "f01a1227601b"
+            "id": "cded8dc15b7f"
           },
           {
             "name": "Assuming the Horse-chestnut",
@@ -37586,7 +37982,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Becomes a horse-chestnut tree, upright if he rears onto his hind legs first, or a fallen trunk if he lies down.",
-            "id": "4b1907634dca"
+            "id": "38e4fc999155"
           },
           {
             "name": "The Field Made Fallow",
@@ -37600,7 +37996,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch of his claw withers a field: as many as ten thousand plants at once.",
-            "id": "69a8b8564a59"
+            "id": "cd509a58bfaf"
           },
           {
             "name": "The Captive Encased in Bark",
@@ -37614,7 +38010,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "His breath, from nostrils almost touching the victim, turns a person into a smaller horse-chestnut.",
-            "id": "a0451ccbc074"
+            "id": "1d60d68344f4"
           },
           {
             "name": "Inquiry of the Leafy Sentinel",
@@ -37628,7 +38024,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Lets him talk with trees and bushes.",
-            "id": "239854785fab"
+            "id": "eaf1e041184f"
           }
         ],
         "vis": [
@@ -37636,7 +38032,7 @@
             "pawns": 5,
             "art": "Animal",
             "where": "in the five largest scales along his back",
-            "id": "c7657e1b6d98"
+            "id": "b6e282f3a025"
           }
         ],
         "equipment": "",
@@ -37786,7 +38182,7 @@
             "attack": 13,
             "defense": 6,
             "damage": 17,
-            "id": "3f1ad6cdfd27"
+            "id": "78cbdf1f6f43"
           },
           {
             "name": "Long Sword & Heater Shield (mounted)",
@@ -37794,7 +38190,7 @@
             "attack": 15,
             "defense": 8,
             "damage": 17,
-            "id": "368133c3a7bc"
+            "id": "e02504fde3bf"
           },
           {
             "name": "Lance & Heater Shield (mounted)",
@@ -37802,7 +38198,7 @@
             "attack": 14,
             "defense": 4,
             "damage": 16,
-            "id": "f21d5a49ae1d"
+            "id": "68ccfee294c7"
           }
         ],
         "soak": 12,
@@ -37875,7 +38271,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "In a moment he shrinks to Size +2 or grows back to +4, his arms and armour with him. The book prints no Init.",
-            "id": "e31581515973"
+            "id": "a92aa12df94e"
           }
         ],
         "vis": [
@@ -37883,7 +38279,7 @@
             "pawns": 3,
             "art": "Corpus",
             "where": "one in each ear and one in the nose",
-            "id": "cf1a280e805d"
+            "id": "4f714d0e12bf"
           }
         ],
         "equipment": "Full chainmail, heater shield, long sword.",
@@ -38031,7 +38427,7 @@
             "attack": 8,
             "defense": -1,
             "damage": 7,
-            "id": "28aa2bcf927e"
+            "id": "a511255244b5"
           }
         ],
         "soak": 3,
@@ -38139,7 +38535,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Everyone in the building is gripped by curiosity and goes poking into every passage, room and locked door.",
-            "id": "3dbf7b84b12f"
+            "id": "1a5f1b3f98b1"
           },
           {
             "name": "Flee like a Bird",
@@ -38153,7 +38549,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "As Wings of the Soaring Wind: once let out, he flies off through a window.",
-            "id": "ace3764e8f61"
+            "id": "2abe6839f1a5"
           },
           {
             "name": "The Shock of Consequence",
@@ -38167,7 +38563,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Freezes up to ten people where they stand; he uses it on his rescuers the moment he is free, scolds them and makes off with something valuable.",
-            "id": "1801fc6fac7c"
+            "id": "c61b6a90a52e"
           }
         ],
         "vis": [
@@ -38175,7 +38571,7 @@
             "pawns": 4,
             "art": "Mentem",
             "where": "in his tongue",
-            "id": "35f28fe6a2cd"
+            "id": "bc3b5d6db511"
           }
         ],
         "equipment": "",
@@ -38341,7 +38737,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 1,
-            "id": "b8b3d1b540ff"
+            "id": "f4507ae278d4"
           },
           {
             "name": "Brawl (as a wheel)",
@@ -38349,7 +38745,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 6,
-            "id": "cc2ceed2e028"
+            "id": "d0be76714cc7"
           },
           {
             "name": "Brawl (as a flaming wheel)",
@@ -38357,7 +38753,7 @@
             "attack": 10,
             "defense": 12,
             "damage": 26,
-            "id": "df7df333d061"
+            "id": "820fcfcf1622"
           }
         ],
         "soak": 2,
@@ -38444,7 +38840,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Turns her into a great stony cartwheel that runs her foes down, adding +5 to her Brawl damage.",
-            "id": "45335172dc2a"
+            "id": "92ca30c431f9"
           },
           {
             "name": "A Mother's Fury",
@@ -38458,7 +38854,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wraps her in flames that do +20 damage to whoever she touches, if they penetrate.",
-            "id": "2f4a130b3674"
+            "id": "680cb0579a5c"
           }
         ],
         "vis": [
@@ -38466,7 +38862,7 @@
             "pawns": 6,
             "art": "Ignem",
             "where": "in her two tusks",
-            "id": "b24d12a7f16d"
+            "id": "3a9bfc5b9389"
           }
         ],
         "equipment": "",
@@ -38626,7 +39022,7 @@
             "attack": 9,
             "defense": 4,
             "damage": 5,
-            "id": "7fac757192a9"
+            "id": "e20c3026de83"
           }
         ],
         "soak": 2,
@@ -38692,7 +39088,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Always on: he can fly (Realms of Power: Faerie).",
-            "id": "5f7f801ddd9d"
+            "id": "51a55649b0b2"
           }
         ],
         "vis": [
@@ -38700,7 +39096,7 @@
             "pawns": 2,
             "art": "Auram",
             "where": "one in each front hoof",
-            "id": "4783a935450b"
+            "id": "14d320016513"
           }
         ],
         "equipment": "Fitting tack and harness.",
@@ -38840,7 +39236,7 @@
             "attack": 8,
             "defense": 10,
             "damage": 4,
-            "id": "c303fd41ab82"
+            "id": "5925469e46c2"
           }
         ],
         "soak": 2,
@@ -38920,7 +39316,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "abc1318d0aac"
+            "id": "68037a8614f1"
           }
         ],
         "vis": [
@@ -38928,7 +39324,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "in grave dirt",
-            "id": "ac0d97844937"
+            "id": "8714bc3b0cff"
           }
         ],
         "equipment": "",
@@ -39078,7 +39474,7 @@
             "attack": 13,
             "defense": 10,
             "damage": 7,
-            "id": "3ac1a09050c9"
+            "id": "a43e4c4c7aaa"
           }
         ],
         "soak": 9,
@@ -39158,7 +39554,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Squeezes its boneless body through the smallest crack, or hides where nothing so big could fit.",
-            "id": "3814280b669d"
+            "id": "50cc3e5eb9bf"
           },
           {
             "name": "Transform into Animal",
@@ -39172,7 +39568,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Takes the shape of a wolf for the day (a Personal Power).",
-            "id": "a4e2dbae7abf"
+            "id": "6083cdf4ccfb"
           },
           {
             "name": "Sap the Life",
@@ -39186,7 +39582,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "d7f63aee7572"
+            "id": "421199911670"
           }
         ],
         "vis": [
@@ -39194,7 +39590,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in its eyes",
-            "id": "71a61010fda4"
+            "id": "cf107cca42e4"
           }
         ],
         "equipment": "",
@@ -39354,7 +39750,7 @@
             "attack": null,
             "defense": 7,
             "damage": null,
-            "id": "553cebb2c6aa"
+            "id": "20797ed19518"
           },
           {
             "name": "Thrown Knife",
@@ -39362,7 +39758,7 @@
             "attack": 5,
             "defense": 6,
             "damage": 7,
-            "id": "9b252df023c0"
+            "id": "a48f3bab2e2a"
           }
         ],
         "soak": 0,
@@ -39456,7 +39852,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "An image it can see and hear through and steer as it likes, usually the dead one's likeness, kept until it has no more use for it.",
-            "id": "a4f7348c78d8"
+            "id": "9f231ac8bf11"
           },
           {
             "name": "Sap the Life",
@@ -39470,7 +39866,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "ed2a9fc2930b"
+            "id": "cafe81d708db"
           },
           {
             "name": "Ghost Touch",
@@ -39484,7 +39880,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Its Focus Power: moves loose objects, 5 pounds for 1 point and double for each point more; thrown, an object does +5 damage a point, and every physical attack must penetrate. The cost varies with the weight.",
-            "id": "dfa6677f3e92"
+            "id": "447ee73b4386"
           }
         ],
         "vis": [
@@ -39492,7 +39888,7 @@
             "pawns": 1,
             "art": "Ignem",
             "where": "in the object its Ghost Touch is moving",
-            "id": "c7f69ce5fce8"
+            "id": "bf944e31f3c1"
           }
         ],
         "equipment": "",
@@ -39640,7 +40036,7 @@
             "attack": 7,
             "defense": 7,
             "damage": 4,
-            "id": "001e2df00a79"
+            "id": "e46e9b91db57"
           }
         ],
         "soak": 3,
@@ -39720,7 +40116,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Keeps a beast from running away as it rolls up to feed.",
-            "id": "f06837a0f379"
+            "id": "6e31d201f38a"
           },
           {
             "name": "Sap the Life",
@@ -39734,7 +40130,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "4b7aa2728d3d"
+            "id": "92c5f4bc4ad5"
           }
         ],
         "vis": [
@@ -39742,7 +40138,7 @@
             "pawns": 2,
             "art": "Corpus",
             "where": "in the jelly of blood inside it",
-            "id": "657bf887a4d1"
+            "id": "17969abc8c1f"
           }
         ],
         "equipment": "",
@@ -39864,7 +40260,7 @@
             "attack": 10,
             "defense": 8,
             "damage": -5,
-            "id": "b4be5e7f2c77"
+            "id": "114a52970464"
           }
         ],
         "soak": 0,
@@ -39937,7 +40333,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Medium Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "5c4e61e201c9"
+            "id": "02d2b437d361"
           }
         ],
         "vis": [
@@ -39945,7 +40341,7 @@
             "pawns": 1,
             "art": "Animal",
             "where": "in its tongue",
-            "id": "887e1014e0f9"
+            "id": "5e42123cb02c"
           }
         ],
         "equipment": "",
@@ -40115,7 +40511,7 @@
             "attack": 9,
             "defense": 2,
             "damage": 12,
-            "id": "34a66c55a987"
+            "id": "947ddacfd80d"
           },
           {
             "name": "Grapple",
@@ -40123,7 +40519,7 @@
             "attack": 8,
             "defense": 1,
             "damage": null,
-            "id": "6d06bb865624"
+            "id": "035d005abe85"
           }
         ],
         "soak": 15,
@@ -40210,7 +40606,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A touch that saps the victim's vitality: a disease beginning with a Light Wound and two Fatigue levels lost until it passes. Each week a Recovery roll of 12 holds steady and 18 improves; Faerie Lore or Medicine can treat it.",
-            "id": "0b6116bc0b4d"
+            "id": "dfd99244ce63"
           }
         ],
         "vis": [
@@ -40218,7 +40614,7 @@
             "pawns": 2,
             "art": "Herbam",
             "where": "in its bark",
-            "id": "5513c10ffb22"
+            "id": "0b5c5b134b49"
           }
         ],
         "equipment": "",
@@ -40324,7 +40720,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 4,
-            "id": "390da7a8029e"
+            "id": "7e0a73141940"
           },
           {
             "name": "Teeth",
@@ -40332,7 +40728,7 @@
             "attack": 10,
             "defense": 8,
             "damage": 7,
-            "id": "06bc062b1429"
+            "id": "e55d20687c75"
           },
           {
             "name": "Spittle",
@@ -40340,7 +40736,7 @@
             "attack": 6,
             "defense": 0,
             "damage": 10,
-            "id": "a9e2bee600bc"
+            "id": "7badf8299bd1"
           }
         ],
         "soak": 14,
@@ -40413,7 +40809,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Reveals its true horror (Realms of Power: The Infernal).",
-            "id": "1f9a9118b747"
+            "id": "134b34b87b85"
           },
           {
             "name": "Form of Man",
@@ -40427,7 +40823,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Wears the dead man's face (Realms of Power: The Infernal).",
-            "id": "7afcfd1a6113"
+            "id": "5922608d5e58"
           },
           {
             "name": "Contagious Obsession",
@@ -40441,7 +40837,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A point for each victim (Realms of Power: The Infernal).",
-            "id": "4fe021dba0b6"
+            "id": "be6050b0ec3a"
           },
           {
             "name": "Obsession",
@@ -40455,7 +40851,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Costs 1 to 3 points: the Obsession Trait Fear.",
-            "id": "9720b06db278"
+            "id": "0b7248a8523f"
           },
           {
             "name": "Burning Spittle",
@@ -40469,7 +40865,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Spits liquid fire as far as five paces: +10 damage if it penetrates, and whatever parries it is eaten away and ruined.",
-            "id": "f17e6363e0bf"
+            "id": "0586acf5662c"
           }
         ],
         "vis": [
@@ -40477,7 +40873,7 @@
             "pawns": 4,
             "art": "Corpus",
             "where": "in its teeth (the book gives no Art)",
-            "id": "3ddffe26935e"
+            "id": "82a9a4958eb3"
           }
         ],
         "equipment": "",
@@ -40580,7 +40976,7 @@
             "attack": 6,
             "defense": 7,
             "damage": 3,
-            "id": "7646910c9a2a"
+            "id": "309c1bc4766c"
           }
         ],
         "soak": 0,
@@ -40660,7 +41056,7 @@
             "pawns": 1,
             "art": "Corpus",
             "where": "in a long fair hair",
-            "id": "e695746f5ec8"
+            "id": "45e9b4de1eb0"
           }
         ],
         "equipment": "",
@@ -40939,7 +41335,7 @@
             "attack": 11,
             "defense": 13,
             "damage": 6,
-            "id": "2676d16fdf5b"
+            "id": "606919e756cc"
           }
         ],
         "soak": 11,
@@ -41047,7 +41443,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Carries things as though she had hands, with Strength 5; doing anything but carrying needs concentration (a Personal Power).",
-            "id": "0bfe6c0b49ed"
+            "id": "6d1896d872d5"
           }
         ],
         "vis": [
@@ -41055,7 +41451,7 @@
             "pawns": 2,
             "art": "Animal",
             "where": "in her heart",
-            "id": "4b17a7b82d10"
+            "id": "c43a31bbc842"
           }
         ],
         "equipment": "",
@@ -41283,7 +41679,7 @@
             "attack": 7,
             "defense": 9,
             "damage": -3,
-            "id": "96be415623d6"
+            "id": "6b247b708080"
           }
         ],
         "soak": 3,
@@ -41370,7 +41766,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "A faerie that hears his bark loses 5 Might if it penetrates; his Slow Power means he must bark for two rounds first.",
-            "id": "149e97ee40c5"
+            "id": "2ada474fa9b3"
           }
         ],
         "vis": [
@@ -41378,7 +41774,7 @@
             "pawns": 1,
             "art": "Intellego",
             "where": "in his eyes",
-            "id": "3e8f0763ef76"
+            "id": "3dea724b6cef"
           }
         ],
         "equipment": "",
@@ -41466,7 +41862,7 @@
             "penetration_bonus": 0,
             "quality": "",
             "description": "Leaves the target wholly mute until the saint chooses to lift it.",
-            "id": "36ee543904d0"
+            "id": "cb457acd546f"
           }
         ],
         "vis": [],
@@ -42162,7 +42558,7 @@
           "kind": "characters",
           "target_id": "murat_the_younger",
           "note": "Sodalis and constant rival; wants Murat's scripts",
-          "id": "1844ac58d78c"
+          "id": "3219e1af0207"
         }
       ],
       "attitudes": [],
@@ -42608,7 +43004,7 @@
       "summary": "The senior Orphic magus of the Tribunal, looking sixty-eight, who fancies himself head of the whole Cult, with no grounds at all. Unlike most of the Cult he worships Orpheus openly as a god, which has won him no friends among the Tremere. He thinks the Cult on Lesbos has Orpheus's head and is keeping it from him. He is mad: the Cult tends to call it divine madness, everyone else plain lunacy. He hates women.\n\nOutsiders seldom see him. He goes about in a loincloth, careless of his looks, his hair wild and twigs caught in his tangled beard.",
       "secrets": [
         {
-          "title": "",
+          "title": "Oeagrus's treasure",
           "text": "His treasure is the mummified arm of Orpheus, whom the Maenads tore apart; he seeks a way to rebuild the god by grafting the dismembered body onto himself.",
           "revealed_year": null,
           "revealed_season": ""
@@ -43695,7 +44091,7 @@
       "summary": "Marshal of Transylvania: House Guernicus's chief hoplite in the Tribunal, the senior lictor and leader of Wizard's Marches; his age is unknown. He is one of the elders of the Path of Strife, Criamon extremists who do evil so that their Housemates may stay clean, and who, unlike other Criamon, plunge into the world to dirty themselves. His House's notion of evil is so strange that he usually seems a very ordinary magus: eating meat is evil, and so is having a wife, and he does both.\n\nOnly slowly do others see that he finds no moral difference between a bacon pie and burning a child, and would do either if it were needed. He knows right from wrong and, without remorse, picks wrong when it must be done, so others need not; but he does no pointless cruelty, will not deal with demons, which he thinks personal weakness, and will not betray his sect or his wife, since that would be right. He kills magi well and, in his own odd terms, can be relied on. He is still a Criamon, with riddles, strange quests and errands to magical places, only more often bloody to the elbows. He excels at surprising foes and at mystical swordplay.",
       "secrets": [
         {
-          "title": "",
+          "title": "Why Saturnino serves",
           "text": "He serves here because he thinks gathering the Red and Black Libraries was a deep error, and because he wonders whether the Tribunal's strange faeries come of the Criamon having stolen the World Tree.",
           "revealed_year": null,
           "revealed_season": ""
@@ -43707,7 +44103,7 @@
           "kind": "characters",
           "target_id": "caledonia",
           "note": "Lictor on her team",
-          "id": "0e23ba56b04d"
+          "id": "234f618f39dd"
         }
       ],
       "attitudes": [],
@@ -44138,7 +44534,7 @@
           "kind": "characters",
           "target_id": "caledonia",
           "note": "Lictor on her team",
-          "id": "1fc377b54e1b"
+          "id": "6dcc2c27d195"
         }
       ],
       "attitudes": [],
@@ -44569,13 +44965,13 @@
           "kind": "characters",
           "target_id": "theodora",
           "note": "His apprentice, raised at Tablinum",
-          "id": "49d551d127e6"
+          "id": "924247d951a8"
         },
         {
           "kind": "characters",
           "target_id": "theodore",
           "note": "His apprentice, raised at Tablinum",
-          "id": "5b4aaf35ef10"
+          "id": "9eb2e2521cd1"
         }
       ],
       "attitudes": [],
@@ -45006,7 +45402,7 @@
           "kind": "characters",
           "target_id": "theodore",
           "note": "Her twin",
-          "id": "d8aa3e674740"
+          "id": "f8f84640d911"
         }
       ],
       "attitudes": [],
@@ -45866,7 +46262,7 @@
       "summary": "The aedile of Old Histria, an old Tremere near Twilight given the post as a useful retirement, since few in the House expect trouble at Histria; he is the House's eyes on this western gate. He equips mundane spies, is rumoured to run the House's agents in the Roman Tribunal, and laughs that off: surely a spymaster would live in Venice? He says he is only an old man finishing his talisman as a legacy, with Placido as his lab assistant.\n\nAnyone breaking the Code nearby may meet him first, sizing things up before he calls the hoplites and Quaesitors. A prolific letter writer, he asks Tremere for help when he wants to look into something without alarming the Redcaps, and trades news with others for favours; coloniae often owe senior Tremere aid by their terms, so players may be bound to serve his whims. The Mercere often send him after strigons, which he passes to younger magi.",
       "secrets": [
         {
-          "title": "",
+          "title": "Pahniro's frailty",
           "text": "His doddering is misdirection: he served twenty years as a hoplite and has killed three magi in single combat.",
           "revealed_year": null,
           "revealed_season": ""
@@ -49294,8 +49690,14 @@
       "summary": "Secretary for contingencies: he keeps the House's stockpiles and asks for Tremere, or magi of the oppida, to be trained in odd skills in case one of his unlikely events comes to pass. Raised in the Rhineland, muscular and handsome, chaste and aloof with attractive women; his sigil is ribbons of scarlet light. He favours Creo, Intellego, Rego and above all Mentem, a well-known speciality that weakens him in certamen, and is a spiritual necromancer with a gift for spycraft and the Visions Flaw. He was secretary for operations under the previous Primus.\n\nHe watches characters whose doings might, however remotely, start a crisis, and quietly sets counterweights; years later he may call on skills he had them learn, to untangle a crisis born of several unlikely chances at once.",
       "secrets": [
         {
-          "title": "",
-          "text": "Janus suffers a lycanthropy that magic can hold back and that changes only his shape, not his mind. He is ashamed of it and keeps it secret, so he will never seek the Primacy, and it passes by intercourse, hence his coldness to women.",
+          "title": "Janus's affliction",
+          "text": "Janus suffers a lycanthropy that magic can hold back and that changes only his shape, not his mind. He is ashamed of it and keeps it secret, so he will never seek the Primacy.",
+          "revealed_year": null,
+          "revealed_season": ""
+        },
+        {
+          "title": "Janus's coldness to women",
+          "text": "Janus's lycanthropy passes by intercourse, hence his coldness to women.",
           "revealed_year": null,
           "revealed_season": ""
         }
@@ -49927,7 +50329,7 @@
       "summary": "Secretary for emergencies and Poena's spymistress: she warns the House of trouble ahead and finds answers when it is caught off guard. Of a Szekler family she has not seen since her apprenticeship; she turns briefly invisible whenever she casts, to her irritation. She favours Creo, Muto, Herbam and Corpus, and Isaac assists her.\n\nShe appears when something dreadful is close, takes over the characters' help and resources, and sends them into the worst of it to buy the House and Order time; magi who refuse her are tarnished for good in some circles.",
       "secrets": [
         {
-          "title": "",
+          "title": "Tatiana's society",
           "text": "Tatiana secretly belongs to the Keepers of the Silence of the Temple, a small, unofficial society named for the man who burnt the temple of Artemis at Ephesus to be famous and whose name was then forbidden. They hold that Tytalus magi too often do monstrous, foolish things for fame, and set out to destroy such vandals, then their memory.",
           "revealed_year": null,
           "revealed_season": ""
@@ -50161,7 +50563,7 @@
           "kind": "characters",
           "target_id": "leona",
           "note": "Fort partner",
-          "id": "e14d5731822d"
+          "id": "2ac130cae57f"
         }
       ],
       "attitudes": [],
@@ -50612,7 +51014,7 @@
           "kind": "characters",
           "target_id": "neculai",
           "note": "Fort partner, resented",
-          "id": "9009b93e4b9b"
+          "id": "5d8fdb2af3f6"
         }
       ],
       "attitudes": [],
@@ -50841,7 +51243,7 @@
           "kind": "characters",
           "target_id": "leona",
           "note": "Sent to watch over her",
-          "id": "1fee3662f22b"
+          "id": "17d6c6f129da"
         }
       ],
       "attitudes": [],

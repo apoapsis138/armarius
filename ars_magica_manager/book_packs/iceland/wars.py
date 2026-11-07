@@ -36,9 +36,16 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import Creature, Neighbour, as_secrets, secret_words
+from ...models import Creature, Neighbour
 from ...rules.sites import PLACE
-from ..builder import Builder, characteristics, dormant, paragraphs
+from ..builder import (
+    Builder,
+    characteristics,
+    dormant,
+    more_secrets,
+    paragraphs,
+    titled,
+)
 
 S = Builder.stage
 DATED = "Fixed dates"
@@ -81,9 +88,7 @@ def _replace_sketch(b: Builder, creature: Creature) -> None:
     for sketch in b.saga.creatures:
         if sketch.name == creature.name and sketch is not creature:
             creature.id = sketch.id
-            creature.secrets = as_secrets(
-                paragraphs(secret_words(sketch.secrets), secret_words(creature.secrets))
-            )
+            creature.secrets = more_secrets(sketch.secrets, creature.secrets)
             creature.place_id = sketch.place_id or creature.place_id
             creature.place_level = sketch.place_level
             b.saga.creatures.remove(sketch)
@@ -112,19 +117,37 @@ def _places(b: Builder) -> dict[str, Neighbour]:
         "bergen": b.town(
             "Bergen",
             summary="A Norwegian port with ships bound for Iceland.",
-            secrets="Hadrianus and his two filii took ship here in 1214 "
-            "(Icelandic Wars p. 1). The ship of Flambeau magi in Land of Fire "
-            "& Ice p. 70 sailed from here on a separate voyage in 1218. This "
-            "is not the Bergen on Rügen.",
+            secrets=[
+                titled(
+                    "Hadrianus at Bergen",
+                    "Hadrianus and his two filii took ship at Bergen in 1214 "
+                    "(Icelandic Wars p. 1).",
+                ),
+                titled(
+                    "The Flambeau ship of 1218",
+                    "The ship of Flambeau magi in Land of Fire & Ice p. 70 "
+                    "sailed from Bergen on a separate voyage in 1218.",
+                ),
+                titled("Storyguide Notes", "This is not the Bergen on Rügen."),
+            ],
         ),
         "island": b.place(
             "The Haunted Scottish Island",
             summary="One of the Scottish isles, unnamed, which islanders say "
             "is haunted.",
-            secrets="The drowned body of Hadrianus came ashore here and his "
-            "spirit walks the island. In 1224 a magus of Loch Leglean meets "
-            "it and hears its broken story; having told it, the spirit rests "
-            "(Icelandic Wars p. 2).",
+            secrets=[
+                titled(
+                    "The island's ghost",
+                    "The drowned body of Hadrianus came ashore on the island and "
+                    "his spirit walks it (Icelandic Wars p. 2).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "In 1224 a magus of Loch Leglean meets the ghost and hears "
+                    "its broken story; having told it, the spirit rests "
+                    "(Icelandic Wars p. 2).",
+                ),
+            ],
             realm="",
             status="Rumoured",
         ),
@@ -133,12 +156,27 @@ def _places(b: Builder) -> dict[str, Neighbour]:
             summary="A covenant of House Bjornaer on a frozen bay of "
             "Norway's southern coast, long out of touch with the Order. Its "
             "magi dislike strangers.",
-            secrets="The Mythic Seas pp. 62-63 prints it, and has it on a "
-            "perpetually frozen bay. "
-            "Crusaders may send to it for Bjornaer help; its magi may "
-            "be allied with Norse wizards, and one may be a trollson "
-            "(Icelandic Wars p. 9). That book places it on an island off the "
-            "southeast coast; here that is only a rumour.",
+            secrets=[
+                titled(
+                    "Bjornaer help for the crusade",
+                    "Crusaders may send to Sinus Wodinis for Bjornaer help "
+                    "(Icelandic Wars p. 9).",
+                ),
+                titled(
+                    "Sinus Wodinis and the Norse wizards",
+                    "The magi of Sinus Wodinis may be allied with Norse wizards, "
+                    "and one may be a trollson (Icelandic Wars p. 9).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The Mythic Seas pp. 62-63 prints it, and has it on a "
+                        "perpetually frozen bay.",
+                        "The Icelandic Wars places it on an island off the "
+                        "southeast coast; here that is only a rumour.",
+                    ),
+                ),
+            ],
             realm="",
             status="Rumoured",
         ),
@@ -146,9 +184,14 @@ def _places(b: Builder) -> dict[str, Neighbour]:
             "The Southeastern Harbor",
             summary="A bay on Iceland's southeastern quarter, where a ship can anchor.",
             inside=_neighbour(b, "Iceland"),
-            secrets="The armada's surviving ship drops anchor here, and if "
-            "the Gray Bull is free it charges into the bay (Icelandic Wars "
-            "p. 8).",
+            secrets=[
+                titled(
+                    "The armada at the harbor",
+                    "The armada's surviving ship drops anchor in the "
+                    "Southeastern Harbor, and if the Gray Bull is free it "
+                    "charges into the bay (Icelandic Wars p. 8).",
+                ),
+            ],
             realm="",
         ),
         "tower": b.place(
@@ -156,18 +199,28 @@ def _places(b: Builder) -> dict[str, Neighbour]:
             summary="A very remote part of Iceland's southeastern highlands, "
             "in a valley with mountains around it.",
             inside=_neighbour(b, "Iceland"),
-            secrets=paragraphs(
-                "Once the crusade lands (or Bjornaer magi carry the materials "
-                "ashore) a Hermes Portal is secretly set up here; a strong "
-                "force comes through, conjures a Mystic Tower and casts an "
-                "Aegis of the Hearth, and hunts Iceland's magicians from it "
-                "(Icelandic Wars p. 9).",
-                "Julius's magi keep Gull's son here, alive through his "
-                "External Soul, and cut him for vis (p. 11). Gull's hammer "
-                "needs seven strikes to break the Aegis; if it falls, over a "
-                "hundred giants cross the valley and the host tears the "
-                "tower apart (p. 12).",
-            ),
+            secrets=[
+                titled(
+                    "The Hermes Portal in the valley",
+                    "Once the crusade lands (or Bjornaer magi carry the materials "
+                    "ashore) a Hermes Portal is secretly set up in this valley; "
+                    "a strong force comes through, conjures a Mystic Tower and "
+                    "casts an Aegis of the Hearth, and hunts Iceland's magicians "
+                    "from it (Icelandic Wars p. 9).",
+                ),
+                titled(
+                    "Gull's son in the tower",
+                    "Julius's magi keep Gull's son in the crusaders' Mystic "
+                    "Tower, alive through his External Soul, and cut him for "
+                    "vis (p. 11).",
+                ),
+                titled(
+                    "Breaking the tower's Aegis",
+                    "Gull's hammer needs seven strikes to break the Aegis on the "
+                    "crusaders' Mystic Tower; if it falls, over a hundred giants "
+                    "cross the valley and the host tears the tower apart (p. 12).",
+                ),
+            ],
             realm="",
             status="Rumoured",
             known="Locally",
@@ -185,25 +238,44 @@ def _people(b: Builder) -> dict[str, Any]:
         house=FLAMBEAU,
         age=None,
         summary="An archmagus of House Flambeau, teacher of two filii.",
-        secrets=paragraphs(
-            "In 1214 he heard of magicians working from Iceland and sailed "
-            "from Bergen with his two filii. Their hostility roused the "
-            "landvaettir watchers, and Pan Caudarax burned the ship. The "
-            "filii died at once. Hadrianus lived through the flame and "
-            "killed a band of landvaettir, then botched a spell and fell "
-            "into brief Twilight, and was thrown in the sea and drowned "
-            "(Icelandic Wars pp. 1-2).",
-            "His ghost haunts a Scottish island until 1224, when it tells a "
-            "magus of Loch Leglean, incoherently, that forces of the Order "
-            "of Odin killed him, and rests. A summoning to learn more sends "
-            "him into Final Twilight (p. 2). He spoke of a dragon and other "
-            "beasts, not of spirits, as the landvaettir took solid form to "
-            "reach him past his Parma (p. 6).",
-            "Land of Fire & Ice p. 70 tells of a separate voyage, with no "
-            "names: in 1218 other powerful Flambeau magi on a ship from "
-            "Bergen drew the dragon's fire, and Einar Gamlisson's wife and "
-            "sons died with them.",
-        ),
+        secrets=[
+            titled(
+                "Hadrianus's voyage",
+                "In 1214 he heard of magicians working from Iceland and sailed "
+                "from Bergen with his two filii. Their hostility roused the "
+                "landvaettir watchers, and Pan Caudarax burned the ship. The "
+                "filii died at once.",
+            ),
+            titled(
+                "How Hadrianus died",
+                "Hadrianus lived through the flame and killed a band of "
+                "landvaettir, then botched a spell and fell into brief Twilight, "
+                "and was thrown in the sea and drowned (Icelandic Wars pp. 1-2).",
+            ),
+            titled(
+                "Hadrianus's ghost",
+                "His ghost haunts a Scottish island (p. 2).",
+            ),
+            titled(
+                "What Hadrianus saw",
+                "He spoke of a dragon and other beasts, not of spirits, as the "
+                "landvaettir took solid form to reach him past his Parma (p. 6).",
+            ),
+            titled(
+                "The other voyage",
+                "Land of Fire & Ice p. 70 tells of a separate voyage, with no "
+                "names: in 1218 other powerful Flambeau magi on a ship from "
+                "Bergen drew the dragon's fire, and Einar Gamlisson's wife and "
+                "sons died with them.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "His ghost haunts the island until 1224, when it tells a magus "
+                "of Loch Leglean, incoherently, that forces of the Order of Odin "
+                "killed him, and rests. A summoning to learn more sends him "
+                "into Final Twilight (p. 2).",
+            ),
+        ],
     )
     julius = b.magus(
         "Julius of Flambeau",
@@ -212,17 +284,23 @@ def _people(b: Builder) -> dict[str, Any]:
         age=None,
         summary="An archmagus of House Flambeau, an Ignem specialist, whose "
         "strongest spells are made for hunting renounced magi.",
-        secrets=paragraphs(
-            "After 1224 he rises to prominence and, with Lavinia, prepares "
-            "the invasion of Iceland (Icelandic Wars p. 2). He is only "
-            "average in Vim, and his Perdo Vim spells are against demons, "
-            "not magical spirits (p. 6).",
-            "He beats the senior opponent of the crusade in certamen at the "
-            "War Tribunal (p. 4), burns Biorn Egilsson as he asks to talk "
-            "(p. 9), and leads the hoplites against Vindolanda (p. 12). If "
-            "Bard wins and Julius lives, he is taken at sunset and given to "
-            "the Yfel lords (p. 13).",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "After 1224 he rises to prominence and, with Lavinia, "
+                    "prepares the invasion of Iceland (Icelandic Wars p. 2).",
+                    "He beats the senior opponent of the crusade in certamen at "
+                    "the War Tribunal (p. 4), burns Biorn Egilsson as he asks to "
+                    "talk (p. 9), and leads the hoplites against Vindolanda (p. "
+                    "12).",
+                    "If Bard wins and Julius lives, he is taken at sunset and "
+                    "given to the Yfel lords (p. 13).",
+                    "He is only average in Vim, and his Perdo Vim spells are "
+                    "against demons, not magical spirits (p. 6).",
+                ),
+            ),
+        ],
     )
     lavinia = b.magus(
         "Lavinia of Guernicus",
@@ -231,28 +309,38 @@ def _people(b: Builder) -> dict[str, Any]:
         age=None,
         summary="An archmaga and Quaesitor of House Guernicus, an Intellego "
         "specialist skilled in wards and necromancy.",
-        secrets=paragraphs(
-            "With Julius she prepares the invasion. In 1230 she calls the War "
-            "Tribunal at Durenmar, the domus magna of House Bonisagus in the "
-            "Rhine Tribunal, open to all with an interest, to debate and "
-            "organise a crusade against Iceland, and declares it legal and "
-            "binding (Icelandic Wars pp. 2, 4). She has no offensive spells "
-            "against magical spirits (p. 6).",
-            "If the hreppur swears the Oath she answers that joining a House "
-            "needs its primus's consent, demands that the Primus of Ex "
-            "Miscellanea approve each candidate, an approval that cannot be "
-            "had, and declares the membership invalid (p. 4). She has "
-            "witches' hearts brought to her to question their ghosts (p. "
-            "10). Her own divinations slowly show that Iceland's magicians "
-            "knew nothing of any Order of Odin (p. 12).",
-            "The book prints that Primus as an unnamed, reclusive prima who "
-            "refuses all contact as she readies for the doom she has foretold "
-            "for decades, which is what makes the demand impossible (p. 4). "
-            "In the Stonehenge Tribunal's Order, which this pack follows, "
-            "Immanola entered Final Twilight in 1216 and Ebroin has held the "
-            "office since, so a troupe must settle why his approval cannot "
-            "be had.",
-        ),
+        secrets=[
+            titled(
+                "Lavinia against spirits",
+                "She has no offensive spells against magical spirits (p. 6).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "With Julius she prepares the invasion. In 1230 she calls "
+                    "the War Tribunal at Durenmar, the domus magna of House "
+                    "Bonisagus in the Rhine Tribunal, open to all with an "
+                    "interest, to debate and organise a crusade against "
+                    "Iceland, and declares it legal and binding (Icelandic Wars "
+                    "pp. 2, 4).",
+                    "If the hreppur swears the Oath she answers that joining a "
+                    "House needs its primus's consent, demands that the Primus "
+                    "of Ex Miscellanea approve each candidate, an approval that "
+                    "cannot be had, and declares the membership invalid (p. 4).",
+                    "She has witches' hearts brought to her to question their "
+                    "ghosts (p. 10).",
+                    "Her own divinations slowly show that Iceland's magicians "
+                    "knew nothing of any Order of Odin (p. 12).",
+                    "The book prints that Primus as an unnamed, reclusive prima "
+                    "who refuses all contact as she readies for the doom she has "
+                    "foretold for decades, which is what makes the demand "
+                    "impossible (p. 4). In the Stonehenge Tribunal's Order, "
+                    "which this pack follows, Immanola entered Final Twilight in "
+                    "1216 and Ebroin has held the office since, so a troupe must "
+                    "settle why his approval cannot be had.",
+                ),
+            ),
+        ],
     )
     albinus = b.magus(
         "Albinus of Ex Miscellanea",
@@ -260,18 +348,24 @@ def _people(b: Builder) -> dict[str, Any]:
         house=EX_MISC,
         age=None,
         summary="An archmagus of House Ex Miscellanea, a Theban spirit master.",
-        secrets=paragraphs(
-            "His spells can beat the guardians. If support for the crusade "
-            "holds he sails with it, drives off the Host and can bottle "
-            "Vindsvall; he has an even chance of stopping the Gray Bull "
-            "(Icelandic Wars pp. 7-8).",
-            "If support is undermined he withdraws. If Lavinia rebuffs the "
-            "hreppur he goes to Iceland, affirms its membership to the "
-            "guardians and Biorn Egilsson, and with a laboratory from "
-            "Vindolanda can make them magics against the crusade (p. 7). If "
-            "the hreppur joins the Order he works to bring galdor into "
-            "Hermetic Theory (p. 15).",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "His spells can beat the guardians. If support for the "
+                    "crusade holds he sails with it, drives off the Host and can "
+                    "bottle Vindsvall; he has an even chance of stopping the "
+                    "Gray Bull (Icelandic Wars pp. 7-8). If support is "
+                    "undermined he withdraws.",
+                    "If Lavinia rebuffs the hreppur he goes to Iceland, affirms "
+                    "its membership to the guardians and Biorn Egilsson, and with "
+                    "a laboratory from Vindolanda can make them magics against "
+                    "the crusade (p. 7).",
+                    "If the hreppur joins the Order he works to bring galdor into "
+                    "Hermetic Theory (p. 15).",
+                ),
+            ),
+        ],
     )
     gunnar = b.magus(
         "Gunnar Loftursson",
@@ -281,9 +375,14 @@ def _people(b: Builder) -> dict[str, Any]:
         type="companion",
         summary="A bondi of Snaefellsnes, warden of the local church, married "
         "to the galdrakona Asta.",
-        secrets="A neighbour of Dagverdara. His young daughter falls gravely "
-        "ill during the war, and he rides to the magi for ond (Icelandic Wars "
-        "p. 10).",
+        secrets=[
+            titled(
+                "Gunnar's daughter",
+                "A neighbour of Dagverdara. His young daughter falls gravely ill "
+                "during the war, and he rides to the magi for ond (Icelandic "
+                "Wars p. 10).",
+            ),
+        ],
     )
     asta = b.magus(
         "Asta",
@@ -292,9 +391,14 @@ def _people(b: Builder) -> dict[str, Any]:
         age=None,
         type="companion",
         summary="A young galdrakona, wife of Gunnar Loftursson, with a fylgja.",
-        secrets="Crusaders mark her for death. Warned by her fylgja, she "
-        "keeps singing the spell that holds a Biarg spirit at her daughter's "
-        "side from inside the church (Icelandic Wars p. 10).",
+        secrets=[
+            titled(
+                "Asta marked for death",
+                "Crusaders mark her for death. Warned by her fylgja, she keeps "
+                "singing the spell that holds a Biarg spirit at her daughter's "
+                "side from inside the church (Icelandic Wars p. 10).",
+            ),
+        ],
     )
     vigdis = b.magus(
         "Vigdis",
@@ -303,10 +407,15 @@ def _people(b: Builder) -> dict[str, Any]:
         age=None,
         type="mythic companion",
         summary="A Norn lady, a landvaettir lady of the Orlog spirits.",
-        secrets="With Bard and Gull she warns Vindolanda that Julius has "
-        "found Scartaris and will strike in three days, and she can give each "
-        "magus a landvaettir attendant of Might 50 (Icelandic Wars pp. "
-        "11-12).",
+        secrets=[
+            titled(
+                "Vigdis's warning",
+                "With Bard and Gull she warns Vindolanda that Julius has found "
+                "Scartaris and will strike in three days, and she can give each "
+                "magus a landvaettir attendant of Might 50 (Icelandic Wars pp. "
+                "11-12).",
+            ),
+        ],
     )
     return {
         "hadrianus": hadrianus,
@@ -323,14 +432,21 @@ def _people(b: Builder) -> dict[str, Any]:
 
 
 def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
-    odin_hidden = (
-        "The Icelandic Wars keeps it a phantom: a century of rumour and "
-        "destroyed spring covenants in Norse lands drive the Order's fear, "
-        "searches find only weak hedge wizards who have never heard the "
-        "name, and neither Pan Caudarax nor any Icelandic magician knows of "
-        "it. Who destroyed those covenants the book never says (Icelandic "
-        "Wars pp. 1-3, 12)."
-    )
+    odin_hidden = [
+        titled(
+            "Whether the Order of Odin exists",
+            "The Icelandic Wars keeps the Order of Odin a phantom: a century of "
+            "rumour and destroyed spring covenants in Norse lands drive the "
+            "Order's fear, searches find only weak hedge wizards who have never "
+            "heard the name, and neither Pan Caudarax nor any Icelandic "
+            "magician knows of it.",
+        ),
+        titled(
+            "Storyguide Notes",
+            "Who destroyed those covenants the book never says (Icelandic Wars "
+            "pp. 1-3, 12).",
+        ),
+    ]
     odin = _neighbour(b, "The Order of Odin")
     if odin is None:
         odin = b.faction(
@@ -343,22 +459,30 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
             secrets=odin_hidden,
         )
     else:
-        odin.secrets = as_secrets(paragraphs(secret_words(odin.secrets), odin_hidden))
+        odin.secrets = more_secrets(odin.secrets, odin_hidden)
     crusaders = b.faction(
         "The Hermetic Crusaders",
         summary="Magi of Houses Flambeau and Guernicus who want action "
         "against the Norse wizards.",
-        secrets=paragraphs(
-            "Led by Julius and Lavinia, for idealism, glory or vis. With "
-            "strong support the force is twelve powerful hoplites and twenty "
-            "moderately powerful magi, mostly Flambeau, with Albinus and a "
-            "hundred well-equipped grogs a ship beyond the crew. If support "
-            "is undermined Albinus, six hoplites and five other magi stay "
-            "home; if the hreppur was rebuffed, eight hoplites and ten other "
-            "magi leave it, and Albinus turns against them (Icelandic Wars p. 7).",
-            "They carry spells for killing huge beasts and vis to pierce any "
-            "resistance, but know nothing of spirits unless told (pp. 6, 8).",
-        ),
+        secrets=[
+            titled(
+                "The crusaders' force",
+                "Led by Julius and Lavinia, for idealism, glory or vis. With "
+                "strong support the force is twelve powerful hoplites and twenty "
+                "moderately powerful magi, mostly Flambeau, with Albinus and a "
+                "hundred well-equipped grogs a ship beyond the crew. If support "
+                "is undermined Albinus, six hoplites and five other magi stay "
+                "home; if the hreppur was rebuffed, eight hoplites and ten other "
+                "magi leave it, and Albinus turns against them (Icelandic Wars "
+                "p. 7).",
+            ),
+            titled(
+                "What the crusaders carry",
+                "The crusaders carry spells for killing huge beasts and vis to "
+                "pierce any resistance, but know nothing of spirits unless told "
+                "(pp. 6, 8).",
+            ),
+        ],
         faction="Hermetic group",
         ruler="Julius of Flambeau and Lavinia of Guernicus",
         wants="Revenge for Hadrianus, and the end of the Order of Odin",
@@ -367,17 +491,31 @@ def _factions(b: Builder, people: dict[str, Any]) -> dict[str, Neighbour]:
         "The Magi Against the Crusade",
         summary="Magi who say the Order of Odin is a myth, and are threatened "
         "for it by Flambeau and Guernicus magi as traitors.",
-        secrets="Older magi stand ready against a real threat and have no "
-        "time for childish adventures. If the player characters argue well "
-        "many powerful magi withdraw, and after the War Tribunal some pledge "
-        "to take the matter to the Grand Tribunal (Icelandic Wars pp. 3-4).",
+        secrets=[
+            titled(
+                "Why the older magi hold back",
+                "Older magi stand ready against a real threat and have no time "
+                "for childish adventures.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "If the player characters argue well many powerful magi "
+                "withdraw, and after the War Tribunal some pledge to take the "
+                "matter to the Grand Tribunal (Icelandic Wars pp. 3-4).",
+            ),
+        ],
         faction="Hermetic group",
     )
     leglean = b.faction(
         "The Loch Leglean Tribunal",
         summary="The Order's Tribunal in Scotland.",
-        secrets="One of its magi looks into the haunting of Hadrianus in 1224 "
-        "(Icelandic Wars p. 2).",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "One of the Loch Leglean Tribunal's magi looks into the haunting "
+                "of Hadrianus in 1224 (Icelandic Wars p. 2).",
+            ),
+        ],
         faction="Hermetic group",
     )
     Builder.link(crusaders, "characters", people["julius"], "Leads it")
@@ -641,11 +779,20 @@ def _creatures(b: Builder) -> dict[str, Creature]:
             "Body levels as printed: OK, 0, 0, 0, -1, -1, -1, -3, -3, -5, -5, "
             "Incapacitated. The Might Form is the pack's reading of his fire.",
         ),
-        secrets="A Hermetic scouting party attacked his son's regio home, "
-        "killed his two granddaughters and took his son's beaten body to "
-        "their tower. The son lives through his External Soul, and the magi "
-        "cut him for vis; Gull takes it for a depraved game and wants Julius's "
-        "forces dead (Icelandic Wars p. 11).",
+        secrets=[
+            titled(
+                "Gull's son",
+                "A Hermetic scouting party attacked his son's regio home, killed "
+                "his two granddaughters and took his son's beaten body to their "
+                "tower. The son lives through his External Soul, and the magi "
+                "cut him for vis.",
+            ),
+            titled(
+                "What Gull wants",
+                "Gull takes the cutting of his son for a depraved game and wants "
+                "Julius's forces dead (Icelandic Wars p. 11).",
+            ),
+        ],
     )
     _replace_sketch(b, vindsvall)
     clan = _neighbour(b, "The Clan of Geirrod")
@@ -689,25 +836,42 @@ def _war(b: Builder) -> Neighbour:
                 "touches the mainland's mundane history, but could alter "
                 "Iceland's: see Land of Fire & Ice p. 18.",
             ),
-            secrets=paragraphs(
-                "Land of Fire & Ice pp. 29 and 63 foresee this war: killing "
-                "great galdramen enrages the landvaettir lords, killing "
-                "trollsynir enrages the giants, and the hreppur is the "
-                "nearest thing to an Order of Odin that exists. The saga "
-                "there is not official history (p. 67), and neither is this.",
-                "Land of Fire & Ice p. 70 tells of a separate voyage: in 1218 "
-                "another ship of Flambeau magi from Bergen burns, and Einar "
-                "Gamlisson's family dies with them. Hadrianus's is the voyage "
-                "of 1214.",
-                "At the War Tribunal the characters may keep quiet, which the "
-                "winner will remember; aid the crusade out of duty, ignorance "
-                "or fear, for who else destroyed those covenants; or try for "
-                "peace, which for Vindolanda means showing that it survives "
-                "(p. 3). Many there want a hunt, glory or new vis, whatever "
-                "is said. Whether Julius and Lavinia are renounced, punished "
-                "or pardoned after a crusade ruled illegal is the storyguide's; "
-                "their followers share it by rank (pp. 12-13).",
-            ),
+            secrets=[
+                titled(
+                    "What enrages Iceland's guardians",
+                    "Land of Fire & Ice pp. 29 and 63 foresee this war: killing "
+                    "great galdramen enrages the landvaettir lords, killing "
+                    "trollsynir enrages the giants, and the hreppur is the "
+                    "nearest thing to an Order of Odin that exists.",
+                ),
+                titled(
+                    "The other voyage",
+                    "Land of Fire & Ice p. 70 tells of a separate voyage: in "
+                    "1218 another ship of Flambeau magi from Bergen burns, and "
+                    "Einar Gamlisson's family dies with them. Hadrianus's is the "
+                    "voyage of 1214.",
+                ),
+                titled(
+                    "What the War Tribunal wants",
+                    "Many at the War Tribunal want a hunt, glory or new vis, "
+                    "whatever is said.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "The saga of Land of Fire & Ice is not official history "
+                        "(p. 67), and neither is this.",
+                        "At the War Tribunal the characters may keep quiet, which "
+                        "the winner will remember; aid the crusade out of duty, "
+                        "ignorance or fear, for who else destroyed those "
+                        "covenants; or try for peace, which for Vindolanda means "
+                        "showing that it survives (p. 3). Whether Julius and "
+                        "Lavinia are renounced, punished or pardoned after a "
+                        "crusade ruled illegal is the storyguide's; their "
+                        "followers share it by rank (pp. 12-13).",
+                    ),
+                ),
+            ],
             antagonist="Archmagi Julius of Flambeau and Lavinia of Guernicus",
             moves=DATED,
             stages=[

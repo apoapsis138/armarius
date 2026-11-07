@@ -14,7 +14,7 @@ from ...models import Character
 from ...rules import rhine_ranks
 from ...tribunal_packages import rhine as rhine_package
 from ...tribunal_packages.rhine import KEY
-from ..builder import paragraphs
+from ..builder import paragraphs, titled
 from .history import ERAS, REGION_HISTORY
 
 if TYPE_CHECKING:
@@ -56,16 +56,26 @@ SUMMARY = paragraphs(
     "the 1360th year of the Aegis.",
 )
 
-SECRET = (
-    "The Apple Gild, with Oculus Septentrionalis, Triamore, about half of "
-    "Fengheld's magi and two covenants of Normandy, means to propose a new "
-    "Lotharingian Tribunal over the Low Countries and the north-west at the "
-    "Grand Tribunal of 1228; Waddenzee, though no friend of the Apple Gild, "
-    "would join to escape the Rhine. The Ash Gild's older members quietly "
-    "plan war on the Norse wizards beyond the Baltic, which Murion does "
-    "not oppose. Eule of Fengheld, the likeliest Praeco by age, is in fact "
-    "in Final Twilight, which her covenant conceals."
-)
+SECRET = [
+    titled(
+        "A Lotharingian Tribunal",
+        "The Apple Gild, with Oculus Septentrionalis, Triamore, about half of "
+        "Fengheld's magi and two covenants of Normandy, means to propose a new "
+        "Lotharingian Tribunal over the Low Countries and the north-west at the Grand "
+        "Tribunal of 1228; Waddenzee, though no friend of the Apple Gild, would join "
+        "to escape the Rhine.",
+    ),
+    titled(
+        "The Ash Gild's war",
+        "The Ash Gild's older members quietly plan war on the Norse wizards beyond "
+        "the Baltic, which Murion does not oppose.",
+    ),
+    titled(
+        "Eule in Final Twilight",
+        "Eule of Fengheld, the likeliest Praeco by age, is in fact in Final Twilight, "
+        "which her covenant conceals.",
+    ),
+]
 
 
 def build(rhine: Rhine) -> None:

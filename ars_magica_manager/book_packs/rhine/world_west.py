@@ -14,7 +14,7 @@ from typing import TYPE_CHECKING
 
 from ...arms import Arms
 from ...models import Neighbour
-from ..builder import Builder, paragraphs
+from ..builder import Builder, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Rhine
@@ -873,8 +873,13 @@ def _factions(
         "Hercynius are working to channel the primal magic of the forests and "
         "finish the opus maximum of Bonisagus, who believed that Hermetic magic "
         "was only the beginning of it.",
-        secrets="The lineage's existence and purpose are rumour only; the book "
-        "confirms nothing.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The lineage's existence and purpose are rumour only; the book "
+                "confirms nothing.",
+            ),
+        ],
     )
     w["hedge_wizards_of_the_paths"] = b.faction(
         "Hedge wizards of the forest paths",
@@ -930,10 +935,15 @@ def _factions(
             "The Holy Vehm of Saxony counts them mortal enemies, hunts them and "
             "means to prove their claims false.",
         ),
-        secrets="An option for the saga: the magi of Fengheld's Cologne chapter house, "
-        "all of the Apple Gild, may lead the Brethren, and a part of the cult "
-        "may be a Mystery Cult of Rhine and Normandy magi; the creed suits the "
-        "Apple Gild's aim of winning mundane acceptance of magic.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "An option for the saga: the magi of Fengheld's Cologne chapter "
+                "house, all of the Apple Gild, may lead the Brethren, and a part of "
+                "the cult may be a Mystery Cult of Rhine and Normandy magi; the creed "
+                "suits the Apple Gild's aim of winning mundane acceptance of magic.",
+            ),
+        ],
     )
     w["chasidim"] = b.faction(
         "The Chasidim",
@@ -1047,11 +1057,24 @@ def _threats(
         summary="An elderly Bjornaer of the Hawthorn Gild, once of Rheinstein, lives "
         "alone at the Rhinefalls. Odd disturbances of the river would be the "
         "first sign that something is wrong.",
-        secrets="Schwall, a powerful Wilderist hidden in the Rhinefalls regio, means to "
-        "release the imprisoned spirit of the Rhine and merge with it to cheat "
-        "Final Twilight. The floods would devastate shipping, towns and cities "
-        "the length of the river, a breach of the Code the Tribunal would "
-        "answer with a Wizard's March. Magi may hinder him or help him.",
+        secrets=[
+            titled(
+                "Schwall's plan",
+                "Schwall, a powerful Wilderist hidden in the Rhinefalls regio, means "
+                "to release the imprisoned spirit of the Rhine and merge with it to "
+                "cheat Final Twilight.",
+            ),
+            titled(
+                "What the floods would do",
+                "Schwall's floods would devastate shipping, towns and cities the "
+                "length of the river, a breach of the Code the Tribunal would answer "
+                "with a Wizard's March.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Magi may hinder him or help him.",
+            ),
+        ],
         stages=[
             Builder.stage(
                 "Disturbances on the river",
@@ -1132,8 +1155,16 @@ def _threats(
         summary="The folk of Thuringia take Pulch, who haunts the Kammerforst and "
         "punishes wood-thieves and those who harm the trees, for a spirit of "
         "the forest.",
-        secrets="He is a Merinita magus skirting the edge of the Code; Quaesitores may "
-        "send characters to bring him to account.",
+        secrets=[
+            titled(
+                "Pulch and the Code",
+                "Pulch is a Merinita magus skirting the edge of the Code.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Quaesitores may send characters to bring him to account.",
+            ),
+        ],
     )
     w["wild_hunt_and_holzfrau"] = b.threat(
         "The Wild Hunt and the Holzfrau",
@@ -1216,8 +1247,16 @@ def _threats(
             "with no mundane witnesses there was no breach of the Code. A close "
             "vote refused an investigation.",
         ),
-        secrets="Dankmar's part in the destruction is suspected; the book does not "
-        "state it as fact.",
+        secrets=[
+            titled(
+                "Dankmar's part",
+                "Dankmar's part in the destruction is suspected.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book does not state Dankmar's part as fact.",
+            ),
+        ],
         stages=[
             Builder.stage(
                 "The monks found dead",

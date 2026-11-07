@@ -16,7 +16,7 @@ from __future__ import annotations
 from typing import TYPE_CHECKING, Any
 
 from ...arms import Arms
-from ..builder import Builder, joined_lines, paragraphs, vf_art
+from ..builder import Builder, joined_lines, paragraphs, titled, vf_art
 from ..generated import Profile, apply
 
 if TYPE_CHECKING:
@@ -287,9 +287,14 @@ def _picardy_places(normandy: Normandy) -> None:
         aura=4,
         summary="A dark grove of twisted, stunted black beeches in the east of the "
         "forest, with a Faerie aura of 4, which the local peasants avoid.",
-        secrets="The wilder stories say a dark, dwarfish folk carry off villagers "
-        "who stray in; those who come back bear some deformity and will "
-        "not speak of what happened.",
+        secrets=[
+            titled(
+                "The dwarfish folk",
+                "The wilder stories say a dark, dwarfish folk carry off villagers who "
+                "stray into the Faux de Verzy; those who come back bear some "
+                "deformity and will not speak of what happened.",
+            ),
+        ],
         **RUMOURED,
     )
     _add(
@@ -332,8 +337,14 @@ def _picardy_places(normandy: Normandy) -> None:
         "rivers and ponds, full of deer, wolves and boar, and crossed by a "
         "few roads, many hunting paths and the odd village and monastery. "
         "The abbey of Prémontré lies in a hidden valley within it.",
-        secrets="The Tribunal knows of no real faerie presence here; if the forest "
-        "has a faerie ruler, it is shy and kindly to mortals.",
+        secrets=[
+            titled(
+                "The forest's faerie ruler",
+                "The Tribunal knows of no real faerie presence in the Forest of "
+                "Cuise; if the forest has a faerie ruler, it is shy and kindly to "
+                "mortals.",
+            ),
+        ],
         **KNOWN_REGION,
     )
     _add(
@@ -435,13 +446,40 @@ def _florum(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None:
         "Tension: suspected by some magi of raising the tidal wave of 1134 that opened the Zwin to Bruges; never investigated for want of evidence",
         "Tension: champion needed for Tourneys and raids; Alroy hopes to fight Tytali",
     )
-    hidden = joined_lines(
-        "Piet de Spinnen is Petrus, Calvinus's mundane son, born at Valnastium; a mercenary in Italy who faked his death to escape his rivals and was trained by an old Redcap to play the heir of the childless Arne de Spinnen, who was himself a front. The de Spinnens are a fiction the magi keep up.",
-        "Two of Piet's children spent a year at the new university in Paris and then went secretly to Valnastium to be trained as servants of House Jerbiton.",
-        "Calvinus's 'uncle Calvin' persona, his Italian wife and his daughter brought up by her grandparents are all invented; the daughter newly arrived in Ghent is his apprentice Sophia.",
-        "The flax origin legend of the Spinnen is common knowledge in the Low Countries, so anyone with enough clues might guess what the spider-kin are.",
-        "The visiting Quaesitor, hoplite and Redcap are scouting for Confluensis's planned Quaesitorial covenant and Mercer House in a Lotharingian Tribunal.",
-    )
+    hidden = [
+        titled(
+            "Who Piet de Spinnen is",
+            "Piet de Spinnen is Petrus, Calvinus's mundane son, born at Valnastium; a "
+            "mercenary in Italy who faked his death to escape his rivals and was "
+            "trained by an old Redcap to play the heir of the childless Arne de "
+            "Spinnen, who was himself a front. The de Spinnens are a fiction the magi "
+            "keep up.",
+        ),
+        titled(
+            "Piet's children",
+            "Two of Piet's children spent a year at the new university in Paris and "
+            "then went secretly to Valnastium to be trained as servants of House "
+            "Jerbiton.",
+        ),
+        titled(
+            "Calvinus's invented family",
+            "Calvinus's 'uncle Calvin' persona, his Italian wife and his daughter "
+            "brought up by her grandparents are all invented; the daughter newly "
+            "arrived in Ghent is his apprentice Sophia.",
+        ),
+        titled(
+            "The flax legend",
+            "The flax origin legend of the Spinnen is common knowledge in the Low "
+            "Countries, so anyone with enough clues might guess what the spider-kin "
+            "are.",
+        ),
+        titled(
+            "The visitors' errand",
+            "The visiting Quaesitor, hoplite and Redcap are scouting for "
+            "Confluensis's planned Quaesitorial covenant and Mercer House in a "
+            "Lotharingian Tribunal.",
+        ),
+    ]
     florum = b.covenant(
         "Florum",
         tribunal=tribunal,
@@ -504,9 +542,18 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
         "covenant's mundane rivals, and at arranging crimes. His "
         "apprentice Sophia is charming and as bookish as he is, so that "
         "her cousins fear she will never marry.",
-        secrets="Piet is really his son Petrus. His Italian wife was invented, and "
-        "the 'daughter' who has just arrived in Ghent, supposedly raised "
-        "by equally invented grandparents, is Sophia.",
+        secrets=[
+            titled(
+                "Who Piet is",
+                "Piet is really his son Petrus.",
+            ),
+            titled(
+                "Calvinus's invented family",
+                "His Italian wife was invented, and the 'daughter' who has just "
+                "arrived in Ghent, supposedly raised by equally invented "
+                "grandparents, is Sophia.",
+            ),
+        ],
         traits={"Wily": 3, "Aloof": 1},
     )
     m["alroy"] = b.magus(
@@ -552,8 +599,13 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
             "because she believes the faeries' strange surrender to the "
             "Divine belongs to Flanders, Brabant and perhaps Frisia alone.",
         ),
-        secrets="She could restore the stone faeries but usually harvests them for "
-        "vis instead.",
+        secrets=[
+            titled(
+                "Prunellie and the stone faeries",
+                "She could restore the stone faeries but usually harvests them for "
+                "vis instead.",
+            ),
+        ],
         traits={"Generous": 3, "Secretive": 1},
     )
     m["piet_de_spinnen"] = b.magus(
@@ -566,12 +618,21 @@ def _florum_magi(normandy: Normandy, b: Builder, florum: Covenant) -> None:
         "old Arne de Spinnen's bastard, which also explains his keen "
         "interest in the Church's works. He has several children, two of "
         "whom spent a year at the new university in Paris.",
-        secrets="He is Petrus, the mundane son of Calvinus of Jerbiton, born at "
-        "Valnastium; a successful mercenary in Italy who made dangerous "
-        "rivals, faked his death, and was trained by an old Redcap to be "
-        "the heir the childless Arne needed. He is very content with how "
-        "his life has turned out. His two children went on from Paris to "
-        "Valnastium to train as servants of House Jerbiton.",
+        secrets=[
+            titled(
+                "Who Piet is",
+                "He is Petrus, the mundane son of Calvinus of Jerbiton, born at "
+                "Valnastium; a successful mercenary in Italy who made dangerous "
+                "rivals, faked his death, and was trained by an old Redcap to be the "
+                "heir the childless Arne needed. He is very content with how his life "
+                "has turned out.",
+            ),
+            titled(
+                "Piet's children",
+                "His two children went on from Paris to Valnastium to train as "
+                "servants of House Jerbiton.",
+            ),
+        ],
         type="companion",
     )
 
@@ -719,9 +780,17 @@ def _requies_aeterna(normandy: Normandy, b: Builder, tribunal: Tribunal) -> None
         place=site,
         summary=summary,
         what_matters=what_matters,
-        secrets="Philip of Atramentum Renatus was formerly a member here, and "
-        "other Donatores are scattered across western Europe. Without "
-        "Eulogius the covenant would surely fall.",
+        secrets=[
+            titled(
+                "The Donatores",
+                "Philip of Atramentum Renatus was formerly a member of Requies "
+                "Aeterna, and other Donatores are scattered across western Europe.",
+            ),
+            titled(
+                "Without Eulogius",
+                "Without Eulogius Requies Aeterna would surely fall.",
+            ),
+        ],
         aura=5,
         season="Winter",
     )
@@ -1451,16 +1520,35 @@ def _factions(normandy: Normandy, b: Builder) -> None:
         "died, the spider passed a simple test and took human shape, and "
         "he gave his bride the first flax plant, weaving her wedding dress "
         "from it with his fingers.",
-        secrets="A few in each generation can turn their own weight of fibre into "
-        "cloth each day by touch (the Virtue Faerie Blood (Spinnen)), or "
-        "unweave old cloth within the same limit; some make tents, ropes "
-        "or sails instead. Pelagius of Jerbiton found a dozen soon after "
-        "the Order's founding; in 1220 there are almost thirty, all "
-        "employed by Florum and living far better for it. They hide in "
-        "plain sight, many in the Weavers' Guild of Ghent, and their "
-        "relatives weave by ordinary means in the covenant's workshop. "
-        "Their flax legend is widely known, so the wary might guess the "
-        "truth.",
+        secrets=[
+            titled(
+                "The Spinnen's gift",
+                "A few Spinnen in each generation can turn their own weight of fibre "
+                "into cloth each day by touch, or unweave old cloth within the same "
+                "limit; some make tents, ropes or sails instead.",
+            ),
+            titled(
+                "How many Spinnen there are",
+                "Pelagius of Jerbiton found a dozen Spinnen soon after the Order's "
+                "founding; in 1220 there are almost thirty, all employed by Florum "
+                "and living far better for it.",
+            ),
+            titled(
+                "Where the Spinnen hide",
+                "The Spinnen hide in plain sight, many in the Weavers' Guild of "
+                "Ghent, and their relatives weave by ordinary means in Florum's "
+                "workshop.",
+            ),
+            titled(
+                "The flax legend",
+                "The Spinnen's flax legend is widely known, so the wary might guess "
+                "the truth.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Spinnen's gift is the Virtue Faerie Blood (Spinnen).",
+            ),
+        ],
     )
     w["kabouters"] = b.faction(
         "The kabouters of the Low Countries",

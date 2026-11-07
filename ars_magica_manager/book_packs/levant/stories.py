@@ -38,8 +38,8 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
-from ...models import Covenant, Creature, as_secrets, secret_words
-from ..builder import Builder, dormant, paragraphs
+from ...models import Covenant, Creature
+from ..builder import Builder, dormant, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Levant
@@ -88,16 +88,27 @@ def _treaty(levant: Levant) -> None:
             "if it falls, the Embassy must leave Baghdad at once, and "
             "Foothold is likely to be the first covenant to burn.",
         ),
-        secrets=paragraphs(
-            "The book's guess at the future: the Treaty fails, perhaps "
-            "once the True Cross is lost at Damietta, and the Tribunal "
-            "joins the war; or it holds until the Mongols, after which the "
-            "Mamluks drive the Order off the mainland. If it is broken, "
-            "the Crusader magi may plan a strike at the caliph's mages in "
-            "Baghdad (see the Hermetic Embassy's story seeds), and "
-            "openly pro-Muslim covenants such as Aedes Veritatis are the "
-            "first to be Renounced.",
-        ),
+        secrets=[
+            titled(
+                "The Treaty's future",
+                "The Treaty of Baghdad fails, perhaps once the True Cross is "
+                "lost at Damietta, and the Tribunal joins the war; or it "
+                "holds until the Mongols, after which the Mamluks drive the "
+                "Order off the mainland.",
+            ),
+            titled(
+                "If the Treaty is broken",
+                "If the Treaty of Baghdad is broken, the Crusader magi may "
+                "plan a strike at the caliph's mages in Baghdad, and openly "
+                "pro-Muslim covenants such as Aedes Veritatis are the first "
+                "to be Renounced.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The Treaty's future is the book's guess. For the strike on "
+                "Baghdad, see the Hermetic Embassy's story seeds.",
+            ),
+        ],
         antagonist="The Crusader covenants, led by Foothold",
         moves=DATED,
         stages=[
@@ -191,16 +202,30 @@ def _secret_war(levant: Levant) -> None:
             "its French grogs have begun to grumble. It may take a sharp "
             "blow to wake them.",
         ),
-        secrets=paragraphs(
-            "Since 1193 'Umar, his sodales and their allies, Hermetic and "
-            "mundane, have waged a hidden war on the Crusader covenants, "
-            "Foothold above all, and the quaesitores have not caught them. "
-            "Aedes Veritatis has spies in Domus Pacis who learn "
-            "everything said there, and Foothold has its own there who "
-            "hear what is said in council. Mages in the Ayyubids' service "
-            "have hidden scrying devices in Foothold to warn of any "
-            "attack.",
-        ),
+        secrets=[
+            titled(
+                "Who wages the war",
+                "Since 1193 'Umar, his sodales and their allies, Hermetic and "
+                "mundane, have waged a hidden war on the Crusader covenants, "
+                "Foothold above all, and the quaesitores have not caught "
+                "them.",
+            ),
+            titled(
+                "Aedes Veritatis's spies",
+                "Aedes Veritatis has spies in Domus Pacis who learn "
+                "everything said there.",
+            ),
+            titled(
+                "Foothold's spies",
+                "Foothold has its own spies in Domus Pacis who hear what is "
+                "said in council.",
+            ),
+            titled(
+                "Scrying devices in Foothold",
+                "Mages in the Ayyubids' service have hidden scrying devices "
+                "in Foothold to warn of any attack.",
+            ),
+        ],
         antagonist="Sharaf al-Din 'Umar and the counter-Crusaders",
         position=1,
         stages=[
@@ -295,14 +320,17 @@ def _umar(levant: Levant) -> None:
                 "magus who attacked him, with no one to witness that it "
                 "was self-defence, and means to see him Renounced.",
             ),
-            secrets=paragraphs(
-                "'Umar is sworn to the Ayyubid sultans as well as to the "
-                "Order, and serves them in secret; not even his own "
-                "sodales know. If the Order finds out he will almost "
-                "certainly be Renounced, but he is powerful and would call "
-                "on the Muslims' own mages to shelter him, so a "
-                "Renunciation need not mean his death.",
-            ),
+            secrets=[
+                titled(
+                    "'Umar's oath to the sultans",
+                    "'Umar is sworn to the Ayyubid sultans as well as to the "
+                    "Order, and serves them in secret; not even his own "
+                    "sodales know. If the Order finds out he will almost "
+                    "certainly be Renounced, but he is powerful and would "
+                    "call on the Muslims' own mages to shelter him, so a "
+                    "Renunciation need not mean his death.",
+                ),
+            ],
             antagonist="The sultans' claim on 'Umar, and Foothold's hunt for it",
             stages=[
                 S(
@@ -388,15 +416,21 @@ def _esther(levant: Levant) -> None:
                 "away with it. She is not above a little mind magic to "
                 "win a bargain.",
             ),
-            secrets=paragraphs(
-                "She grows rich on her own account by selling potent "
-                "enchanted devices to Muslim and Latin nobles, which the "
-                "Peripheral Code forbids as meddling. If the quaesitores "
-                "learn of it, her sodales at Domus Pacis, the Praeco and a "
-                "quaesitor among them, will suffer with her. She also "
-                "draws Terram vis from a source of her own that no one "
-                "else knows.",
-            ),
+            secrets=[
+                titled(
+                    "Esther's sales",
+                    "Esther grows rich on her own account by selling potent "
+                    "enchanted devices to Muslim and Latin nobles, which the "
+                    "Peripheral Code forbids as meddling. If the quaesitores "
+                    "learn of it, her sodales at Domus Pacis, the Praeco and "
+                    "a quaesitor among them, will suffer with her.",
+                ),
+                titled(
+                    "Esther's own vis",
+                    "Esther draws Terram vis from a source of her own that "
+                    "no one else knows.",
+                ),
+            ],
             antagonist="Esther of Verditius",
             stages=[
                 S(
@@ -465,15 +499,23 @@ def _rufus(levant: Levant) -> None:
                 "gets proof. In debate he says the Crusade must go on for "
                 "the Order's good.",
             ),
-            secrets=paragraphs(
-                "Rufus's zeal is fear, not faith. His parents were "
-                "diabolists who tormented him as a child until his master "
-                "Gilles de Clary rescued him, and he believes demons still "
-                "hunt his soul. He gathers magical power, and means to "
-                "take his share of the East's riches when the Order "
-                "conquers it, to protect himself. His own past is the one "
-                "secret he would kill to keep.",
-            ),
+            secrets=[
+                titled(
+                    "What drives Rufus",
+                    "Rufus's zeal is fear, not faith. His parents were "
+                    "diabolists who tormented him as a child until his "
+                    "master Gilles de Clary rescued him, and he believes "
+                    "demons still hunt his soul. His own past is the one "
+                    "secret he would kill to keep.",
+                ),
+                titled(
+                    "Why Rufus gathers power",
+                    "Rufus gathers magical power, and means to take his "
+                    "share of the East's riches when the Order conquers it, "
+                    "to protect himself from the demons he believes hunt "
+                    "his soul.",
+                ),
+            ],
             antagonist="Rufus de Clary",
             stages=[
                 S(
@@ -611,15 +653,23 @@ def _aurora(levant: Levant) -> None:
                 "eyes and almost impossible to understand, and no "
                 "diplomat. She is looking hard for an answer.",
             ),
-            secrets=paragraphs(
-                "When she was eight, lightning struck Aurora, wakening her "
-                "Gift, and showed her how she would end: a second bolt "
-                "carrying her into Final Twilight.",
-                "If the Embassy is still in Baghdad when the Mongols take "
-                "the city in 1258 it falls with it, and Aurora, old and "
-                "weak, is taken by the Mongol shamans (see her story "
-                "seeds).",
-            ),
+            secrets=[
+                titled(
+                    "Aurora's foreseen end",
+                    "When she was eight, lightning struck Aurora, wakening "
+                    "her Gift, and showed her how she would end: a second "
+                    "bolt carrying her into Final Twilight.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "If the Hermetic Embassy is still in Baghdad when the "
+                        "Mongols take the city in 1258 it falls with it, and "
+                        "Aurora, old and weak, is taken by the Mongol shamans.",
+                        "See Aurora's story seeds.",
+                    ),
+                ),
+            ],
             antagonist="Time, and the Twilight that is claiming Aurora",
             stages=[
                 S(
@@ -692,11 +742,14 @@ def _urbs_rubra(levant: Levant) -> None:
                 "Most magi think the jinn killed them long ago and keep up "
                 "the pretence for reasons of their own.",
             ),
-            secrets=paragraphs(
-                "They live: senile, close to Final Twilight and heedless of "
-                "the Tribunal's business, while the jinn shut out a world "
-                "their masters can no longer face.",
-            ),
+            secrets=[
+                titled(
+                    "Whether Fade and Wraith live",
+                    "Fade and Wraith live: senile, close to Final Twilight "
+                    "and heedless of the Tribunal's business, while the jinn "
+                    "shut out a world their masters can no longer face.",
+                ),
+            ],
             antagonist="The jinn of Urbs Rubra",
             realm="Magic",
             stages=[
@@ -952,11 +1005,18 @@ def _true_cross(levant: Levant) -> None:
                 "called on the Order for magi to join them, but few will "
                 "come until Damietta is safer.",
             ),
-            secrets=paragraphs(
-                "If history runs its course the crusaders lose Damietta in "
-                "1221, and the book suggests the loss of the True Cross may "
-                "be what finally breaks the Treaty.",
-            ),
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "If history runs its course the crusaders lose "
+                        "Damietta in 1221, and the loss of the True Cross may "
+                        "be what finally breaks the Treaty of Baghdad.",
+                        "The book suggests the loss of the True Cross may "
+                        "break the Treaty.",
+                    ),
+                ),
+            ],
             antagonist="The Muslim armies closing on Damietta",
             stages=[
                 S(
@@ -1025,10 +1085,13 @@ def _pyramids(levant: Levant) -> None:
                 "their single-mindedness disturbing; nobody knows how far "
                 "they will go.",
             ),
-            secrets=paragraphs(
-                "No one knows what might come out if one of the sealed "
-                "pyramids is opened; the storyguide decides.",
-            ),
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "No one knows what might come out if one of the sealed "
+                    "pyramids is opened; the storyguide decides.",
+                ),
+            ],
             antagonist="Ruth and Pariah",
             realm="Magic",
             stages=[
@@ -1611,9 +1674,15 @@ STORIES = paragraphs(
 )
 
 
+#: The title of a record's one secret of table guidance.
+NOTES = "Storyguide Notes"
+
+
 def _add(record: Any, attr: str, more: str) -> None:
     if attr == "secrets":
-        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), more))
+        # A seed for the storyguide alone is table guidance: it joins the
+        # record's Storyguide Notes, which stay last.
+        record.secrets = more_secrets(record.secrets, [titled(NOTES, more)])
         return
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
 

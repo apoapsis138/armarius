@@ -25,8 +25,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING, Any
 
-from ...models import as_secrets, secret_words
-from ..builder import Builder, dormant, paragraphs
+from ..builder import Builder, Secrets, dormant, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Theban
@@ -88,37 +87,66 @@ def _enemy_within(theban: Theban) -> None:
             "at full strength it would overwhelm young magi before the "
             "saga had found its feet.",
         ),
-        secrets=paragraphs(
-            "Proximios is an infernalist. He has mastered the Unholy "
-            "Method of Incantation and the Unholy Power of Diablerie "
-            "and holds a long list of demons' True Names; the Tempters "
-            "and Evil Spirits he calls up spy for him, bait his traps "
-            "and urge his sodales into sin. He wants the whole Order "
-            "brought low, beginning with Thebes, and works slowly and "
-            "covertly because the Tribunal is full of magi who would "
-            "spot a clumsy Infernal plot. The letters that pass "
-            "through Alexandria show him where each covenant is weak.",
-            "He set Hydatius at the league's head so that its mistakes "
-            "would be someone else's. He will steer it toward magi who "
-            "look like diabolists and are not, send its members out to "
-            "investigate without going himself, and once they are in "
-            "the field a demon wearing Hydatius's face will order the "
-            "attack. Other infernalists have told "
-            "him that an infernalist planted among Lucian's Children "
-            "of Olympos would probably raise a False God for them to "
-            "bind instead of a faerie; finding such a magus is the "
-            "hard part.",
-            "In 1220 all this is still taking shape in his mind. He "
-            "will take the logothete's post, making a show of "
-            "reluctance so that no blame sticks to him when his plans "
-            "come apart, and as keeper of the register of tokens and "
-            "shards he can favour those who help him. He has no "
-            "Hermetic accomplices yet, but has noted a few magi he "
-            "thinks could be tempted. Each scheme is built to look "
-            "like another's work; as he gains ground he will use the "
-            "Vigilant more openly, as shock troops for a Tribunal "
-            "remade to suit him.",
-        ),
+        secrets=[
+            titled(
+                "Proximios's allegiance",
+                "Proximios is an infernalist. He holds a long list of demons' "
+                "True Names; the Tempters "
+                "and Evil Spirits he calls up spy for him, bait his traps "
+                "and urge his sodales into sin.",
+            ),
+            titled(
+                "What Proximios wants",
+                "Proximios wants the whole Order "
+                "brought low, beginning with Thebes, and works slowly and "
+                "covertly because the Tribunal is full of magi who would "
+                "spot a clumsy Infernal plot. The letters that pass "
+                "through Alexandria show him where each covenant is weak.",
+            ),
+            titled(
+                "Hydatius as figurehead",
+                "Proximios set Hydatius at the League of the Vigilant's head so "
+                "that its mistakes would be someone else's. He will steer it "
+                "toward magi who look like diabolists and are not, send its "
+                "members out to investigate without going himself, and once "
+                "they are in the field a demon wearing Hydatius's face will "
+                "order the attack.",
+            ),
+            titled(
+                "An infernalist among the Children",
+                "Other infernalists have told "
+                "Proximios that an infernalist planted among Lucian's Children "
+                "of Olympos would probably raise a False God for them to "
+                "bind instead of a faerie; finding such a magus is the "
+                "hard part.",
+            ),
+            titled(
+                "Proximios and the logothete's post",
+                "In 1220 Proximios's plans are still taking shape in his mind. "
+                "He will take the logothete's post, making a show of "
+                "reluctance so that no blame sticks to him when his plans "
+                "come apart, and as keeper of the register of tokens and "
+                "shards he can favour those who help him.",
+            ),
+            titled(
+                "Proximios's accomplices",
+                "Proximios has no "
+                "Hermetic accomplices yet, but has noted a few magi he "
+                "thinks could be tempted.",
+            ),
+            titled(
+                "How Proximios hides his hand",
+                "Each of Proximios's schemes is built to look "
+                "like another's work; as he gains ground he will use the "
+                "Vigilant more openly, as shock troops for a Tribunal "
+                "remade to suit him.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Proximios has mastered the Unholy "
+                "Method of Incantation and the Unholy Power of Diablerie.",
+            ),
+        ],
         antagonist="Proximios of House Mercere, a Redcap secretly in league with Hell",
         realm="Infernal",
         stages=[
@@ -270,10 +298,18 @@ def _tribunal_1221(theban: Theban) -> None:
             "the mysterious knight who saved the Nicene emperor in "
             "1211.",
         ),
-        secrets="The logothete's election is the second stage of An Enemy "
-        "Within. Gemma and Bobila of Ingasia have quietly sold Nicaea "
-        "more enchanted items than the Code's five a year allow; if "
-        "that comes out, Ingasia's neutrality is in question.",
+        secrets=[
+            titled(
+                "Ingasia's sales to Nicaea",
+                "Gemma and Bobila of Ingasia have quietly sold Nicaea "
+                "more enchanted items than the Code's five a year allow; if "
+                "that comes out, Ingasia's neutrality is in question.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The logothete's election is the second stage of An Enemy Within.",
+            ),
+        ],
         antagonist="The Tribunal's factions and leagues",
         moves=DATED,
         stages=[
@@ -443,9 +479,14 @@ def _epiros(theban: Theban) -> None:
             "Epirote Thessaly, and the Frankish covenant of "
             "Novocastrum died resisting Epiros in 1212.",
         ),
-        secrets="The book tells the war only to 1220. The later stages follow "
-        "history in broad strokes; a troupe whose saga takes another "
-        "road changes them.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book tells the war only to 1220. The later stages follow "
+                "history in broad strokes; a troupe whose saga takes another "
+                "road changes them.",
+            ),
+        ],
         antagonist="Theodore Komnenos Doukas, ruler of Epiros",
         moves=DATED,
         stages=[
@@ -569,10 +610,19 @@ def _nicaea(theban: Theban) -> None:
             "At Moero's Garden, members of the League of Constantine "
             "want the covenant to back the emperor.",
         ),
-        secrets="The book calls him Theodore II; history has Theodore I "
-        "Laskaris. It says the invasion succeeded and the Latins, "
-        "harried from the north, sued for peace in 1221. The later "
-        "stages follow history in broad strokes.",
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "How the invasion ends: Theodore Laskaris's invasion "
+                    "succeeded and the Latins, harried from the north, sued "
+                    "for peace in 1221.",
+                    "The book calls him Theodore II; history has Theodore I "
+                    "Laskaris. The later stages follow history in broad "
+                    "strokes.",
+                ),
+            ),
+        ],
         antagonist="Theodore I Laskaris, Emperor of Nicaea",
         moves=DATED,
         stages=[
@@ -680,25 +730,42 @@ def _akgah(theban: Theban) -> None:
             "excommunication, and in the hordes that came over the "
             "walls in 1204. Since then the successor states have "
             "fought one another without pause.",
-            secrets=paragraphs(
-                "It was the design of Akgah, a prince of Hell with an "
-                "Infernal Might of 50 and the Hagka's enemy and mirror: "
-                "a two-headed winged leopard the size of an elephant, "
-                "a mockery of the lion of Venice, gold and black with "
-                "golden wings and a sweet smell, whose company fills "
-                "men with greed, lust and battle-madness (see the "
-                "Bestiary). In 1204 it fought the Hagka in the "
-                "Hippodrome, wrecking part of the arena, and drove it "
-                "off wounded; crusaders who saw it thought they had "
-                "seen Venice's lion triumph by God's will.",
-                "Its success has raised it high among the princes of "
-                "Hell. Now it keeps the old empire's heirs at war and "
-                "feeds their distrust and greed. Its lair lies about a "
-                "dozen miles outside Constantinople, an Infernal regio "
-                "like a ruined battlefield, where it gorges on heaps of "
-                "corpses among looted treasure and defiled relics, "
-                "with hundreds of bodies hung on pikes around it.",
-            ),
+            secrets=[
+                titled(
+                    "Whose design the crusade was",
+                    "The Fourth Crusade was the design of Akgah, a prince of "
+                    "Hell and the Hagka's enemy and mirror: "
+                    "a two-headed winged leopard the size of an elephant, "
+                    "a mockery of the lion of Venice, gold and black with "
+                    "golden wings and a sweet smell, whose company fills "
+                    "men with greed, lust and battle-madness.",
+                ),
+                titled(
+                    "Akgah in the Hippodrome",
+                    "In 1204 Akgah fought the Hagka in the "
+                    "Hippodrome, wrecking part of the arena, and drove it "
+                    "off wounded; crusaders who saw it thought they had "
+                    "seen Venice's lion triumph by God's will.",
+                ),
+                titled(
+                    "Akgah's work now",
+                    "Akgah's success has raised it high among the princes of "
+                    "Hell. Now it keeps the old empire's heirs at war and "
+                    "feeds their distrust and greed.",
+                ),
+                titled(
+                    "Akgah's lair",
+                    "Akgah's lair lies about a "
+                    "dozen miles outside Constantinople, an Infernal regio "
+                    "like a ruined battlefield, where it gorges on heaps of "
+                    "corpses among looted treasure and defiled relics, "
+                    "with hundreds of bodies hung on pikes around it.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Akgah has an Infernal Might of 50 (see the Bestiary).",
+                ),
+            ],
             antagonist="Akgah, the demon of the Fourth Crusade",
             realm="Infernal",
             stages=[
@@ -785,24 +852,42 @@ def _lucian(theban: Theban) -> None:
                 "his league prize the Great Altar at Pergamos, which "
                 "powers rituals without vis.",
             ),
-            secrets=paragraphs(
-                "Lucian has devised two Mysteries, Elysian Ecstasy and "
-                "the Olympian Pact, by which a person channels a god "
-                "who possesses him; in the end the god may overwhelm "
-                "the channeller and walk the earth in his body. He has "
-                "initiated every member who knows the first, and holds "
-                "the only Olympian Pact himself. Beneath his plan lies "
-                "a hope he does not voice: that Faerie auras will "
-                "replace the Magic ones of most covenants, and the old "
-                "worship return.",
-                "He thinks he channels the gods themselves, but they "
-                "may be pretenders, faerie or Infernal; his Twilight "
-                "Scars make him forget who he is when a god rides him. "
-                "No channelled god has yet agreed to be a patron. "
-                "Proximios knows of the plan and wants an infernalist "
-                "among the initiates, so that what the league binds is "
-                "a False God (An Enemy Within).",
-            ),
+            secrets=[
+                titled(
+                    "Lucian's Mysteries",
+                    "Lucian has devised two Mysteries, Elysian Ecstasy and "
+                    "the Olympian Pact, by which a person channels a god "
+                    "who possesses him; in the end the god may overwhelm "
+                    "the channeller and walk the earth in his body. He has "
+                    "initiated every member who knows the first, and holds "
+                    "the only Olympian Pact himself.",
+                ),
+                titled(
+                    "Lucian's unvoiced hope",
+                    "Beneath Lucian's plan lies "
+                    "a hope he does not voice: that Faerie auras will "
+                    "replace the Magic ones of most covenants, and the old "
+                    "worship return.",
+                ),
+                titled(
+                    "Who Lucian channels",
+                    "Lucian thinks he channels the gods themselves, but they "
+                    "may be pretenders, faerie or Infernal. "
+                    "No channelled god has yet agreed to be a patron.",
+                ),
+                titled(
+                    "Lucian's forgetting",
+                    "Lucian's Twilight "
+                    "Scars make him forget who he is when a god rides him.",
+                ),
+                titled(
+                    "Proximios and Lucian's plan",
+                    "Proximios knows of Lucian's plan and wants an infernalist "
+                    "among the initiates, so that what the league binds is "
+                    "a False God.",
+                ),
+                titled("Storyguide Notes", "See An Enemy Within."),
+            ],
             antagonist="Lucian the Scholar and the gods he channels",
             realm="Faerie",
             stages=[
@@ -901,14 +986,23 @@ def _kampe(theban: Theban) -> None:
                 "Sundering of 848, when Typhon is said to have been "
                 "loosed on Dorostolon and then bound again.",
             ),
-            secrets="In Thebes the threskeia geine of Hedyosmos is the heart "
-            "of Kampe's Lovers: it has taken over Hades's old offices "
-            "without honouring him, and quietly works to loosen his "
-            "grip on the titans' prison, hoping to bring them back "
-            "and begin a golden age of magic. Minthe's gate is the "
-            "key to that plan. Since 1204 many ancient bindings across "
-            "the Tribunal have failed, and no living magus could mend "
-            "the greatest of them.",
+            secrets=[
+                titled(
+                    "Hedyosmos and the titans",
+                    "In Thebes the threskeia geine of Hedyosmos is the heart "
+                    "of Kampe's Lovers: it has taken over Hades's old offices "
+                    "without honouring him, and quietly works to loosen his "
+                    "grip on the titans' prison, hoping to bring them back "
+                    "and begin a golden age of magic. Minthe's gate is the "
+                    "key to that plan.",
+                ),
+                titled(
+                    "The failing bindings",
+                    "Since 1204 many ancient bindings across "
+                    "the Theban Tribunal have failed, and no living magus could "
+                    "mend the greatest of them.",
+                ),
+            ],
             antagonist="The threskeia geine of Hedyosmos and Kampe's Lovers",
             realm="Magic",
             stages=[
@@ -982,16 +1076,33 @@ def _klymene(theban: Theban) -> None:
             "casting can go oddly. The locals have driven magi off "
             "before, taking them for devil-worshippers, and with vis "
             "so plentiful few bother. Lucian's league is drawn to it.",
-            secrets="The altar is the lock on the prison of Klymene, titaness "
-            "of fame, a Kosmokrator Spirit of Magic Might 50 (see the "
-            "Bestiary), one of the titanesses who stayed out of the "
-            "war and was bound somewhere kinder than Tartaros. The "
-            "free rituals draw on her. Her bonds have a strength of "
-            "50, renewed every year, and each ritual cast there wears "
-            "them down by the pawns it would have cost; if they reach "
-            "nothing within one year, the altar splits in two and she "
-            "goes free. She thought her cell a mercy shared with her "
-            "sisters, and freed she has nowhere to go.",
+            secrets=[
+                titled(
+                    "What the altar locks",
+                    "The Great Altar of Pergamos is the lock on the prison of "
+                    "Klymene, titaness of fame, one of the titanesses who stayed "
+                    "out of the war and was bound somewhere kinder than "
+                    "Tartaros. The free rituals draw on her.",
+                ),
+                titled(
+                    "How Klymene goes free",
+                    "Klymene's bonds wear down with each ritual cast at the "
+                    "Great Altar of Pergamos; if they reach nothing within one "
+                    "year, the altar splits in two and she goes free.",
+                ),
+                titled(
+                    "Klymene's cell",
+                    "Klymene thought her cell a mercy shared with her "
+                    "sisters, and freed she has nowhere to go.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Klymene is a Kosmokrator Spirit of Magic Might 50 (see the "
+                    "Bestiary). Her bonds have a strength of "
+                    "50, renewed every year, and each ritual cast there wears "
+                    "them down by the pawns it would have cost.",
+                ),
+            ],
             antagonist="Klymene, the titaness of fame",
             realm="Magic",
             stages=[
@@ -1051,17 +1162,32 @@ def _hades(theban: Theban) -> None:
             summary="Hedyosmos stands on the ruins of an oracle of the dead, "
             "once one of the few places where Hades was worshipped. "
             "Its magi honour the nymph Minthe, never the god.",
-            secrets="Vrakos, the covenant's cook, beneath the magi's notice, "
-            "has been won over by Askalaphos, a faerie servant of "
-            "Hades whom Demeter cursed into a screech owl for "
-            "betraying that Persephone ate the pomegranate seeds. "
-            "Vrakos now holds secret rites in the covenant's depths as "
-            "a priest of Hades, asks for milk, honey and the blood of "
-            "a black ram, and is cautiously recruiting among the "
-            "servants. Askalaphos means in time to take the covenant "
-            "back as a temple of his lord and be rid of the magi. The "
-            "Aegis of the Hearth bars him, and he is looking for a way "
-            "to be invited into its ritual.",
+            secrets=[
+                titled(
+                    "Who won the cook over",
+                    "Vrakos, Hedyosmos's cook, beneath the magi's notice, "
+                    "has been won over by Askalaphos, a faerie servant of "
+                    "Hades whom Demeter cursed into a screech owl for "
+                    "betraying that Persephone ate the pomegranate seeds.",
+                ),
+                titled(
+                    "Rites in the depths",
+                    "Vrakos now holds secret rites in Hedyosmos's depths as "
+                    "a priest of Hades, asks for milk, honey and the blood of "
+                    "a black ram, and is cautiously recruiting among the "
+                    "servants.",
+                ),
+                titled(
+                    "What Askalaphos wants",
+                    "Askalaphos means in time to take Hedyosmos "
+                    "back as a temple of his lord and be rid of the magi.",
+                ),
+                titled(
+                    "Askalaphos and the Aegis",
+                    "The Aegis of the Hearth bars Askalaphos from Hedyosmos, "
+                    "and he is looking for a way to be invited into its ritual.",
+                ),
+            ],
             antagonist="Askalaphos, the owl of Hades, and his priest Vrakos",
             realm="Faerie",
             stages=[
@@ -1128,11 +1254,20 @@ def _tremere_appeal(theban: Theban) -> None:
             "blames Theban magi for the empire's war on Bulgaria in "
             "1014, has appealed to the Grand Tribunal of 1228 to try "
             "the two surviving members again.",
-            secrets="If the appeal succeeds, a Grand Tribunal will have "
-            "overturned a Tribunal's own verdict, which bears on every "
-            "Tribunal's independence and on the Theban polity most of "
-            "all. Boustaphan of Gigas, Tremere's voice in Thebes, "
-            "holds proxies from the House's younger magi.",
+            secrets=[
+                titled(
+                    "What rides on the appeal",
+                    "If the Tremere appeal succeeds, a Grand Tribunal will have "
+                    "overturned a Tribunal's own verdict, which bears on every "
+                    "Tribunal's independence and on the Theban polity most of "
+                    "all.",
+                ),
+                titled(
+                    "Boustaphan's proxies",
+                    "Boustaphan of Gigas, Tremere's voice in Thebes, "
+                    "holds proxies from the House's younger magi.",
+                ),
+            ],
             antagonist="House Tremere, through Gigas",
             moves=DATED,
             stages=[
@@ -1202,8 +1337,13 @@ def _verditius_contest(theban: Theban) -> None:
             "members to show the Order a welcoming house beside a "
             "quarrelsome Verdi. The House is split between the two "
             "covenants' partisans.",
-            secrets="Ingasia's neutrality, and so its trade, would suffer if "
-            "Gemma and Bobila's secret sales to Nicaea came out.",
+            secrets=[
+                titled(
+                    "Ingasia's sales to Nicaea",
+                    "Ingasia's neutrality, and so its trade, would suffer if "
+                    "Gemma and Bobila's secret sales to Nicaea came out.",
+                ),
+            ],
             antagonist="The rivalry of Verdi and Ingasia",
             stages=[
                 S(
@@ -1277,11 +1417,23 @@ def _talos(theban: Theban) -> None:
             "failed lately. He runs round the island three times a "
             "day, stones any hostile ship, and seizes landing "
             "parties in a red-hot grip (see the Bestiary).",
-            secrets="The Venetians who now rule Candia have put a fat price on "
-            "the head of this demon, as they call him. House Verditius "
-            "would give a great deal to learn how he was made, and he "
-            "might serve a new covenant on Candia as its patron. His "
-            "ichor holds 7 pawns of Ignem vis.",
+            secrets=[
+                titled(
+                    "The price on Talos's head",
+                    "The Venetians who now rule Candia have put a fat price on "
+                    "the head of Talos, this demon, as they call him.",
+                ),
+                titled(
+                    "What Talos is worth to magi",
+                    "House Verditius would give a great deal to learn how Talos "
+                    "was made, and he might serve a new covenant on Candia as "
+                    "its patron.",
+                ),
+                titled(
+                    "Talos's ichor",
+                    "Talos's ichor holds 7 pawns of Ignem vis.",
+                ),
+            ],
             antagonist="Talos, the bronze guardian of Candia",
             realm="Magic",
             stages=[
@@ -1345,15 +1497,24 @@ def _naxos(theban: Theban) -> None:
             "the covenant's mines and trade, has met him in the guise "
             "of a wealthy noblewoman and begun to arrange a quiet "
             "understanding.",
-            secrets="Polyaigos's wealth comes from its quarry on Argentiera "
-            "and from the old gold and silver mines of Sifnos, which "
-            "it has reopened in secret. Satabus, the Verditius maga "
-            "who has just joined Polyaigos from Ingasia, is the duke's "
-            "younger brother Pietro, an odd and scholarly boy whom "
-            "Dandolo placed somewhere before he died. Marco still "
-            "wonders what became of him. Satabus knows of his "
-            "brother's rise, still loves his family, and has not "
-            "written.",
+            secrets=[
+                titled(
+                    "Where Polyaigos's wealth comes from",
+                    "Polyaigos's wealth comes from its quarry on Argentiera "
+                    "and from the old gold and silver mines of Sifnos, which "
+                    "it has reopened in secret.",
+                ),
+                titled(
+                    "Who Satabus is",
+                    "Satabus, the Verditius maga "
+                    "who has just joined Polyaigos from Ingasia, is the duke's "
+                    "younger brother Pietro, an odd and scholarly boy whom "
+                    "Dandolo placed somewhere before he died. Marco still "
+                    "wonders what became of him. Satabus knows of his "
+                    "brother's rise, still loves his family, and has not "
+                    "written.",
+                ),
+            ],
             antagonist="Marco Sanudo, Duke of Naxos",
             stages=[
                 S(
@@ -1429,17 +1590,33 @@ def _hagka(theban: Theban) -> None:
                 "is searching Bulgarian lands for the standard in "
                 "hope of a clue to the hagka.",
             ),
-            secrets="The league is right: the city suffers for losing God's "
-            "favour, and the hagka, restored to a truly devout "
-            "emperor, would give him Solomon's wisdom, David's "
-            "strength and Paul's mercy, though not necessarily a "
-            "Greek throne. But the demons hid themselves from the "
-            "league's spells, and it cannot tell friend from foe. The "
-            "icon may be whole or broken, in a crusader's treasury, a "
-            "Greek monastery, the burned Venetian quarter or the bed "
-            "of the Bosporus. The living Hagka, a Divine eagle of "
-            "Might 40 wounded by Akgah, guards Nicaea from the "
-            "wilderness of Asia Minor.",
+            secrets=[
+                titled(
+                    "Whether the League of Constantine is right",
+                    "The League of Constantine is right: the city suffers for "
+                    "losing God's favour, and the hagka, restored to a truly "
+                    "devout emperor, would give him Solomon's wisdom, David's "
+                    "strength and Paul's mercy, though not necessarily a "
+                    "Greek throne.",
+                ),
+                titled(
+                    "What the league cannot see",
+                    "The demons hid themselves from the League of Constantine's "
+                    "spells, and it cannot tell friend from foe.",
+                ),
+                titled(
+                    "Where the lost hagka lies",
+                    "The lost hagka icon may be whole or broken, in a crusader's "
+                    "treasury, a Greek monastery, the burned Venetian quarter or "
+                    "the bed of the Bosporus.",
+                ),
+                titled(
+                    "The living Hagka",
+                    "The living Hagka, a Divine eagle wounded by Akgah, guards "
+                    "Nicaea from the wilderness of Asia Minor.",
+                ),
+                titled("Storyguide Notes", "The living Hagka has Divine Might 40."),
+            ],
             antagonist="The demons who hid the empire's fall, and time",
             realm="Divine",
             stages=[
@@ -1499,19 +1676,37 @@ def _serapis(theban: Theban) -> None:
             "tolerance: Christians, Muslims and Jews worship as they "
             "please under its Greek governor, Etoumes, a vassal of the "
             "sultan but no Muslim.",
-            secrets="Hidden beneath the city is a heretical sect that worships "
-            "Serapis in God's place. Alexander brought the idol to "
-            "Anatolia; Ptolemy took it to Egypt and blended it with "
-            "Egyptian gods; under Hadrian some Egyptian Christians "
-            "took it up. Everyone believed the sect wiped out some "
-            "nine hundred years ago, yet its idol was saved and "
-            "carried in secret to Sinope. Serapis is a False God, a demon. About 200 "
-            "follow him, led by a dozen priests who dress and serve "
-            "like Orthodox clergy and convert quietly; few know what "
-            "they worship, and Shroud the Stench of the Pit hides the "
-            "Infernal taint of the powers he gives them. Etoumes has "
-            "just taken one of the priests as his confessor, to the "
-            "demon's delight.",
+            secrets=[
+                titled(
+                    "The sect beneath Sinope",
+                    "Hidden beneath Sinope is a heretical sect that worships "
+                    "Serapis in God's place. Alexander brought the idol to "
+                    "Anatolia; Ptolemy took it to Egypt and blended it with "
+                    "Egyptian gods; under Hadrian some Egyptian Christians "
+                    "took it up. Everyone believed the sect wiped out some "
+                    "nine hundred years ago, yet its idol was saved and "
+                    "carried in secret to Sinope.",
+                ),
+                titled(
+                    "What Serapis is",
+                    "Serapis is a False God, a demon. About 200 "
+                    "follow him, led by a dozen priests who dress and serve "
+                    "like Orthodox clergy and convert quietly; few know what "
+                    "they worship, and the Infernal taint of the powers he "
+                    "gives them is hidden.",
+                ),
+                titled(
+                    "The governor's confessor",
+                    "Etoumes, governor of Sinope, has "
+                    "just taken one of Serapis's priests as his confessor, to "
+                    "the demon's delight.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Shroud the Stench of the Pit hides the Infernal taint of "
+                    "Serapis's powers.",
+                ),
+            ],
             antagonist="Serapis, a False God",
             realm="Infernal",
             stages=[
@@ -1577,16 +1772,31 @@ def _zeno(theban: Theban) -> None:
             "of dead emperors to guard them, and necromancers called "
             "up those emperors' unquiet souls there. Hermetic legend "
             "says many of both never came back up.",
-            secrets="Beneath it lies Zeno, the Isaurian chieftain Tarasicodissa "
-            "who ruled as emperor from 474 to 491 and was buried "
-            "alive by his enemies. He did not die. Demon-blooded and "
-            "proof against hunger and age, he lies in his open "
-            "sarcophagus by day, while the church's Dominion holds an "
-            "Infernal aura of 3 in check, and at night, when the "
-            "Dominion weakens to 3 and the Infernal rises to 4, he "
-            "climbs out to roam the church, killing and eating anyone "
-            "he catches. Outside an Infernal aura he cannot live, so "
-            "he cannot leave. Whatever lies in the crypts, he guards.",
+            secrets=[
+                titled(
+                    "Who lies beneath the church",
+                    "Beneath the Church of the Holy Apostles lies Zeno, the "
+                    "Isaurian chieftain Tarasicodissa "
+                    "who ruled as emperor from 474 to 491 and was buried "
+                    "alive by his enemies. He did not die. Demon-blooded and "
+                    "proof against hunger and age, he lies in his open "
+                    "sarcophagus by day, and at night he "
+                    "climbs out to roam the church, killing and eating anyone "
+                    "he catches.",
+                ),
+                titled(
+                    "Why Zeno cannot leave",
+                    "Outside an Infernal aura Zeno cannot live, so "
+                    "he cannot leave the Holy Apostles. Whatever lies in the "
+                    "crypts, he guards.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "By day the church's Dominion holds an "
+                    "Infernal aura of 3 in check; at night the "
+                    "Dominion weakens to 3 and the Infernal rises to 4.",
+                ),
+            ],
             antagonist="Zeno, the buried emperor",
             realm="Infernal",
             stages=[
@@ -1643,14 +1853,27 @@ def _thermakopolis(theban: Theban) -> None:
             "the enemy. Four of the five died, and Michael with them; "
             "Mathieus fled west. It is still House Jerbiton's deepest "
             "shame.",
-            secrets="Many Jerbiton magi, above all the apprentices close to "
-            "their Gauntlets, long to plant a covenant in the city "
-            "again; Michael's Tabula already holds the city's defence "
-            "as its cause. The Tribunal cannot decide whether to "
-            "encourage it, and most would wait and see. A founding "
-            "needs a declared purpose, a willing patron living on the "
-            "site, a charter and the Conciliatory Board's review, "
-            "then a decree. The old site is the obvious ground.",
+            secrets=[
+                titled(
+                    "Who longs to refound it",
+                    "Many Jerbiton magi, above all the apprentices close to "
+                    "their Gauntlets, long to plant a covenant in Constantinople "
+                    "again; Michael's Tabula already holds the city's defence "
+                    "as its cause.",
+                ),
+                titled(
+                    "The Tribunal's mind on a refounding",
+                    "The Theban Tribunal cannot decide whether to encourage a new "
+                    "covenant in Constantinople, and most would wait and see.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "A founding "
+                    "needs a declared purpose, a willing patron living on the "
+                    "site, a charter and the Conciliatory Board's review, "
+                    "then a decree. The old site is the obvious ground.",
+                ),
+            ],
             antagonist="The Latin city, and the demons who still haunt it",
             stages=[
                 S(
@@ -1713,19 +1936,46 @@ def _wilusa(theban: Theban) -> None:
             "is a tangle of overlapping Faerie regiones, each "
             "replaying a scene of the war, and its faeries snatch any "
             "visitor for their tales.",
-            secrets="Wilusa was raised by magic in a Faerie regio of aura 4, "
-            "but not the one holding the Scamander's spirit: a faerie "
-            "who calls himself Odysseus tricked Droserius, sealed the "
-            "regio and made the covenant look like Troy. Ever since he "
-            "has put it through the war's last assault, and the magi "
-            "defend it by reflex. He has bent time so that more than "
-            "a century has passed outside while the magi think it a "
-            "few months. Odysseus is very aware, and hopes to gather "
-            "vitality enough to change his own story. Other regiones "
-            "copy the fall of Troy too, so the troupe may beat the "
-            "Greeks and find it is the wrong city. Rescued, Droserius "
-            "and his sodales will not want to leave, until they learn "
-            "how long they have been gone.",
+            secrets=[
+                titled(
+                    "Who sealed Wilusa",
+                    "Wilusa was raised by magic in a Faerie regio, "
+                    "but not the one holding the Scamander's spirit: a faerie "
+                    "who calls himself Odysseus tricked Droserius, sealed the "
+                    "regio and made the covenant look like Troy. Ever since he "
+                    "has put it through the war's last assault, and the magi "
+                    "defend it by reflex.",
+                ),
+                titled(
+                    "Time in Wilusa",
+                    "Odysseus has bent time in Wilusa so that more than "
+                    "a century has passed outside while the magi think it a "
+                    "few months.",
+                ),
+                titled(
+                    "What Odysseus hopes",
+                    "Odysseus is very aware, and hopes to gather "
+                    "vitality enough to change his own story.",
+                ),
+                titled(
+                    "The wrong city",
+                    "Other regiones on the plain of Troy copy the fall of Troy too.",
+                ),
+                titled(
+                    "Droserius rescued",
+                    "Rescued, Droserius "
+                    "and his sodales will not want to leave Wilusa, until they "
+                    "learn how long they have been gone.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Wilusa's Faerie regio has aura 4.",
+                        "The troupe may beat the Greeks in another regio and "
+                        "find it is the wrong city.",
+                    ),
+                ),
+            ],
             antagonist="The faerie Odysseus",
             realm="Faerie",
             stages=[
@@ -1804,11 +2054,11 @@ def _slug(name: str) -> str:
     return _key(name).replace("'", "").replace(" ", "_")
 
 
-def _add_to(record: Any, more: str, hidden: str = "") -> None:
+def _add_to(record: Any, more: str, hidden: Secrets = "") -> None:
     """Add a paragraph to a record's summary, and `hidden` to its
     secrets."""
     record.summary = paragraphs(record.summary, more)
-    record.secrets = as_secrets(paragraphs(secret_words(record.secrets), hidden))
+    record.secrets = more_secrets(record.secrets, hidden)
 
 
 #: The links `finish` makes where the other parts made the target:
@@ -2098,13 +2348,26 @@ HOOKS = paragraphs(
     "and a guardian owl-spirit a covenant might court as its patron.",
 )
 
-HIDDEN_HOOKS = paragraphs(
-    "Behind the seeds: one of the children at the interviews is a faerie "
-    "changeling who means to lead the others away to safety. The flies "
-    "are a nasu bound in a relic of the Persian Wars, and the rival who "
-    "found it commands them. The despot's adviser is close to the "
-    "Infernal, writes the island's only books, among them a corrupt "
-    "Bible, and hoards its vis while his demon watches. The senior magus "
-    "asking after the mysterious knight may be the knight himself, "
-    "testing how easily he could be found out.",
-)
+HIDDEN_HOOKS = [
+    titled(
+        "The child at the interviews",
+        "Behind the story seeds: one of the children at the interviews is a "
+        "faerie changeling who means to lead the others away to safety.",
+    ),
+    titled(
+        "The flies",
+        "The flies are a nasu bound in a relic of the Persian Wars, and the "
+        "rival who found it commands them.",
+    ),
+    titled(
+        "The despot's adviser",
+        "The despot's adviser is close to the "
+        "Infernal, writes the island's only books, among them a corrupt "
+        "Bible, and hoards its vis while his demon watches.",
+    ),
+    titled(
+        "Who asks after the knight",
+        "The senior magus asking after the mysterious knight may be the "
+        "knight himself, testing how easily he could be found out.",
+    ),
+]

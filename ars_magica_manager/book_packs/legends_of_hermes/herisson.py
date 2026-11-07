@@ -21,7 +21,7 @@ from __future__ import annotations
 
 from typing import Any
 
-from ...models import BodyVis, Neighbour
+from ...models import BodyVis, Neighbour, Secret
 from ..builder import (
     Builder,
     StatBlock,
@@ -29,6 +29,7 @@ from ..builder import (
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_art,
     vf_focus,
     vf_minor,
@@ -48,17 +49,39 @@ S = Builder.stage
 #: A location the book leaves to the storyguide.
 OPEN_SITE = "The book leaves where this lies to the storyguide."
 
-HOMUNCULUS = (
-    "A Homunculus Wizard of Realms of Power: Faerie chapter 5: a manikin made "
-    "of a Mandrake of Virtue from Hérisson's Garden is the source of the "
-    "wizard's magic, gained on one visit at the start of the career. The "
-    "tradition gives Greater Immunity (Deprivation), Faerie Magic and the "
-    "Homunculus Wizard Flaw, and all share Disfigured: a green tinge to skin "
-    "and hair. No wounds or Fatigue from want of food, drink or air, but "
-    "Long Term Fatigue returns only with rest and sustenance; the body runs "
-    "on the vegetative spirit woken by daylight. Not of House Merinita, so "
-    "barred from its Inner Mysteries (p. 83)."
+HOMUNCULUS_NOTES = (
+    "A Homunculus Wizard of Realms of Power: Faerie chapter 5. The tradition "
+    "gives Greater Immunity (Deprivation), Faerie Magic and the Homunculus "
+    "Wizard Flaw, and all share Disfigured (p. 83)."
 )
+
+
+def _homunculus(name: str) -> list[Secret]:
+    """What one of Caerfloron's wizards owes to the Garden's mandrake."""
+    return [
+        titled(
+            f"The source of {name}'s magic",
+            "A manikin made of a Mandrake of Virtue from Hérisson's Garden is "
+            f"the source of {name}'s magic, gained on one visit at the start of "
+            "the career.",
+        ),
+        titled(
+            "The green tinge",
+            f"{name} and the other wizards of Caerfloron all share a green "
+            "tinge to skin and hair.",
+        ),
+        titled(
+            "Life without food or air",
+            "No wounds or Fatigue from want of food, drink or air, but Long "
+            "Term Fatigue returns only with rest and sustenance; the body runs "
+            "on the vegetative spirit woken by daylight.",
+        ),
+        titled(
+            "Barred from Merinita's mysteries",
+            "Not of House Merinita, so barred from its Inner Mysteries (p. 83).",
+        ),
+    ]
+
 
 STRABO: StatBlock = {
     "characteristics": characteristics(2, 2, -1, -1, -1, 2, 1, 0),
@@ -228,26 +251,47 @@ def _people(b: Builder) -> None:
             "him; he quarrelled with his House and Primus, and was accused of "
             "showing House secrets to House Diedne.",
         ),
-        secrets=paragraphs(
-            "Ease Factor 18, Lost Secrets: he may descend from Myanar; some "
-            "think his spirit lives on in his Garden; a copy of part of his "
-            "research went to the Great Library at Durenmar.",
-            "He was a theorist of the first rank who completed a Major "
-            "Breakthrough, Hermetic Viresculture, and a Minor one extending "
-            "it to Lesser Enchantment Vis (pp. 72-76). He was working toward "
-            "making Lesser Enchantment Vis, and on the vis in gems and "
-            "metals, when he died. He never made the method general.",
-            "A Descendant of Myanar? (pp. 71-72) Tales give him Nature "
-            "Mysteries like House Merinita's, and the Garden's sentient "
-            "plants look like the work of Awakening Nature (Houses of Hermes: "
-            "Mystery Cults p. 104). He may come of a follower of Myanar who "
-            "fled to House Bjornaer when Quendalon became Primus. Magi who "
-            "know the Nature Mysteries may ask whether he took Guardian of "
-            "Nature and became a genius loci, his death a staged way out of "
-            "the Order. If so he may haunt the Garden as its spirit, and if "
-            "he belonged to a hidden Bjornaer cult his heirs may keep it "
-            "still. The book does not settle any of this.",
-        ),
+        secrets=[
+            titled(
+                "Hérisson's lost secrets",
+                "Ease Factor 18, Lost Secrets: he may descend from Myanar; some "
+                "think his spirit lives on in his Garden; a copy of part of his "
+                "research went to the Great Library at Durenmar.",
+            ),
+            titled(
+                "Hérisson's breakthroughs",
+                "He was a theorist of the first rank who completed a Major "
+                "Breakthrough, Hermetic Viresculture, and a Minor one extending "
+                "it to Lesser Enchantment Vis (pp. 72-76).",
+            ),
+            titled(
+                "Hérisson's unfinished work",
+                "He was working toward making Lesser Enchantment Vis, and on "
+                "the vis in gems and metals, when he died. He never made the "
+                "method general.",
+            ),
+            titled(
+                "A descendant of Myanar",
+                "A Descendant of Myanar? (pp. 71-72) Tales give him Nature "
+                "Mysteries like House Merinita's, and the Garden's sentient "
+                "plants look like the work of Awakening Nature (Houses of "
+                "Hermes: Mystery Cults p. 104). He may come of a follower of "
+                "Myanar who fled to House Bjornaer when Quendalon became "
+                "Primus.",
+            ),
+            titled(
+                "Hérisson as the Garden's spirit",
+                "Magi who know the Nature Mysteries may ask whether he took "
+                "Guardian of Nature and became a genius loci, his death a "
+                "staged way out of the Order. If so he may haunt the Garden as "
+                "its spirit.",
+            ),
+            titled(
+                "A hidden cult",
+                "If he belonged to a hidden Bjornaer cult his heirs may keep it still.",
+            ),
+            titled("Storyguide Notes", "The book does not settle any of this."),
+        ],
     )
     b.magus(
         "Gypaetus of Bjornaer",
@@ -258,10 +302,15 @@ def _people(b: Builder) -> None:
         "Hérisson of betraying cult secrets to magi hostile to the Order, "
         "declared Wizard's War and killed him within two days of the full "
         "moon. He left a single filia, Variña, whose line ended with her.",
-        secrets="Hérisson's will left him the fruits of the research, by way "
-        "of apology for the trouble of having to kill its discoverer. The "
-        "copy buried in the field names him as heir; the notes themselves "
-        "are not with it (p. 77).",
+        secrets=[
+            titled(
+                "Hérisson's will",
+                "Hérisson's will left him the fruits of the research, by way of "
+                "apology for the trouble of having to kill its discoverer. The "
+                "copy buried in the field names him as heir; the notes "
+                "themselves are not with it (p. 77).",
+            ),
+        ],
     )
     tasso = b.magus(
         "Tasso Agricola Areleins",
@@ -282,14 +331,25 @@ def _people(b: Builder) -> None:
             "Age 64, apparent age 46. Gentle Gift; Study Bonus, which pays "
             "him for his labor with soil and crops (p. 78).",
         ),
-        secrets="He holds a few of Hérisson's laboratory texts, out of order "
-        "and in cipher. He has never made sense of them, and lets the "
-        "characters copy them if they will share what they learn of his "
-        "ancestor, since such news is status in his House. Richard Strabo "
-        "has made a friend of him with gifts of farming spells and "
-        "enchantments, and passes for a friend still; word of anyone asking "
-        "after Hérisson soon reaches Strabo. The book prints no Characteristics "
-        "or Arts for him.",
+        secrets=[
+            titled(
+                "Tasso's ciphered texts",
+                "He holds a few of Hérisson's laboratory texts, out of order "
+                "and in cipher. He has never made sense of them, and lets the "
+                "characters copy them if they will share what they learn of his "
+                "ancestor, since such news is status in his House.",
+            ),
+            titled(
+                "Tasso and Strabo",
+                "Richard Strabo has made a friend of him with gifts of farming "
+                "spells and enchantments, and passes for a friend still; word "
+                "of anyone asking after Hérisson soon reaches Strabo.",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book prints no Characteristics or Arts for him.",
+            ),
+        ],
     )
     tasso.aging.apparent_age = 46
     b.magus(
@@ -309,8 +369,13 @@ def _people(b: Builder) -> None:
         summary="The descendants of Hérisson within Clan Arelie of House "
         "Bjornaer, who keep his name though their common ancestor is more "
         "recent. All hold to the Harmonist cause.",
-        secrets="If Hérisson belonged to a hidden Mystery Cult within his "
-        "House, his heirs may keep it still (p. 72).",
+        secrets=[
+            titled(
+                "A hidden cult",
+                "If Hérisson belonged to a hidden Mystery Cult within his "
+                "House, his heirs may keep it still (p. 72).",
+            ),
+        ],
         ruler="Tasso Agricola Areleins",
     )
     b.magus(
@@ -322,12 +387,24 @@ def _people(b: Builder) -> None:
         "Miscellanea of nearly 150 years with a passion for Herbam. He and "
         "his filii keep apart from the Order, content with its protection "
         "and with their right to be left alone.",
-        secrets=paragraphs(
-            "He is close to Final Twilight and will not risk his strongest "
-            "spells. He enchanted the gate that leads into the Garden's regio "
-            "(p. 83). The book prints no block for him or his filii.",
-            HOMUNCULUS,
-        ),
+        secrets=[
+            titled(
+                "Caerfloron near Twilight",
+                "He is close to Final Twilight and will not risk his strongest spells.",
+            ),
+            titled(
+                "The gate to the Garden",
+                "He enchanted the gate that leads into the Garden's regio (p. 83).",
+            ),
+            *_homunculus("Caerfloron"),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book prints no block for him or his filii.",
+                    HOMUNCULUS_NOTES,
+                ),
+            ),
+        ],
     )
     for name in ("Radix", "Surculus", "Folium", "Fructus"):
         b.magus(
@@ -338,7 +415,10 @@ def _people(b: Builder) -> None:
             summary="One of the four filii of Caerfloron, living in a hut "
             "against the walls of their walled garden, and like the others "
             "devoted to Herbam.",
-            secrets=HOMUNCULUS,
+            secrets=[
+                *_homunculus(name),
+                titled("Storyguide Notes", HOMUNCULUS_NOTES),
+            ],
         )
     richard = b.magus(
         "Richard Strabo",
@@ -349,19 +429,36 @@ def _people(b: Builder) -> None:
         "soured under the weight of it. Nothing of his has satisfied the "
         "House in over twenty years, and he has grown bitter and solitary, "
         "dropping hints of a secret project that will change Hermetic magic.",
-        secrets=paragraphs(
-            "Every line he tried came to nothing, until he found Hérisson's "
-            "notes in a forgotten archive of Durenmar's library. He means to "
-            "find the rest and pass the whole off as his own, and has staked "
-            "his name on it. Discovery would finish him in his House, and he "
-            "is unhinged enough to break the Code to prevent it. He corresponds "
-            "under several aliases with Herbam experts across Mythic Europe, "
-            "mining them for ideas, and cultivates Tasso as his sentinel. He "
-            "has not thought of the tomb of the slayer's filia. See The "
-            "Search for Hérisson's Garden.",
-            "By trying to have a magus killed he breaks the Oath and forfeits "
-            "the Code's protection (p. 83).",
-        ),
+        secrets=[
+            titled(
+                "Strabo's find",
+                "Every line he tried came to nothing, until he found "
+                "Hérisson's notes in a forgotten archive of Durenmar's library.",
+            ),
+            titled(
+                "Strabo's plan",
+                "He means to find the rest and pass the whole off as his own, "
+                "and has staked his name on it. Discovery would finish him in "
+                "his House, and he is unhinged enough to break the Code to "
+                "prevent it.",
+            ),
+            titled(
+                "Strabo's aliases",
+                "He corresponds under several aliases with Herbam experts "
+                "across Mythic Europe, mining them for ideas, and cultivates "
+                "Tasso as his sentinel.",
+            ),
+            titled(
+                "What Strabo has missed",
+                "He has not thought of the tomb of the slayer's filia.",
+            ),
+            titled(
+                "Strabo outside the Code",
+                "By trying to have a magus killed he breaks the Oath and "
+                "forfeits the Code's protection (p. 83).",
+            ),
+            titled("Storyguide Notes", "See The Search for Hérisson's Garden."),
+        ],
     )
     b.stats(richard, STRABO, source=SOURCE)
 
@@ -375,23 +472,41 @@ def _places(b: Builder) -> tuple[Neighbour, Neighbour]:
         "a field with nothing else to remark on: no ruin, no legend, only a "
         "faint magic in the ground. In the North they might be rice or orange "
         "trees, in the South carrots or turnips.",
-        secrets=paragraphs(
-            OPEN_SITE + " It lies near the characters' covenant, whose vis "
-            "source it may long have been, or it is won in another story; a "
-            "weak Magic aura, with no figure given.",
-            "Each plant usually bears one offspring holding vis, which grows "
-            "into the next generation. Now and then one bears two: one may be "
-            "taken as vis, while the other grows on. The second pawn glows "
-            "brighter under Sense the Nature of Vis, and only it will grow. "
-            "In a typical year the sixteen yield two pawns to spare.",
-            "Buried here are tiny copper urchins stamped with Hermetic sigils "
-            "and a chest, turned up by the plough or by magic, holding "
-            "Hérisson's will. It leaves the fruits of his research to Gypaetus "
-            "as amends for the bother of killing its discoverer. The notes "
-            "are not there. A Redcap or a keeper of Tribunal records can tell "
-            "that Hérisson once claimed this source and that the urchin was "
-            "his voting sigil, with as much of his story as fits (p. 77).",
-        ),
+        secrets=[
+            titled(
+                "How the field yields vis",
+                "Each plant in the field usually bears one offspring holding "
+                "vis, which grows into the next generation. Now and then one "
+                "bears two: one may be taken as vis, while the other grows on. "
+                "The second pawn glows brighter under Sense the Nature of Vis, "
+                "and only it will grow. In a typical year the sixteen yield two "
+                "pawns to spare.",
+            ),
+            titled(
+                "What lies buried in the field",
+                "Buried in the field are tiny copper urchins stamped with "
+                "Hermetic sigils and a chest, turned up by the plough or by "
+                "magic, holding Hérisson's will.",
+            ),
+            titled(
+                "Hérisson's will",
+                "Hérisson's will leaves the fruits of his research to Gypaetus "
+                "as amends for the bother of killing its discoverer. The notes "
+                "are not there.",
+            ),
+            titled(
+                "Who claimed the field",
+                "A Redcap or a keeper of Tribunal records can tell that "
+                "Hérisson once claimed this source and that the urchin was his "
+                "voting sigil, with as much of his story as fits (p. 77).",
+            ),
+            titled(
+                "Storyguide Notes",
+                OPEN_SITE + " It lies near the characters' covenant, whose vis "
+                "source it may long have been, or it is won in another story; a "
+                "weak Magic aura, with no figure given.",
+            ),
+        ],
         **LOCAL,
     )
     tomb = b.place(
@@ -399,25 +514,42 @@ def _places(b: Builder) -> tuple[Neighbour, Neighbour]:
         summary="A lone tower clinging to a mountainside, the sanctum of a "
         "Bjornaer maga of the last century. Its ground floor holds only rubbish, "
         "and a huge white owl nests on its roof.",
-        secrets=paragraphs(
-            "High in the Pyrenees, or another fitting range. Finding it may "
-            "be a story of its own, or the Redcaps may simply have it on "
-            "record. Each storey lies in a different layer of a regio, so the "
-            "plain tower hides most of what it holds. The map on pp. 79-80 "
-            "has its regio boundaries wrong; the text is followed here "
-            "(errata p. 78).",
-            "The owl has lined her nest with parchment from the library, and "
-            "many of Variña's texts are gone. The storyguide decides how "
-            "much survives, mostly on Auram. Sorted and restored, Hérisson's "
-            "notes among the wreck give nothing toward Viresculture, but his "
-            "diary speaks of a garden like Paradise that is to be his new "
-            "laboratory once his equipment is moved, and it says plainly "
-            "where the Garden is.",
-            "Intelligence + Area Lore or Order of Hermes Lore then tells a "
-            "little of that place, chiefly that Caerfloron lies very near: "
-            "Ease Factor 9 in the same Tribunal, up to 18 across Mythic "
-            "Europe (pp. 80-81).",
-        ),
+        secrets=[
+            titled(
+                "The tower's regio",
+                "Each storey of Variña's tower lies in a different layer of a "
+                "regio, so the plain tower hides most of what it holds.",
+            ),
+            titled(
+                "The owl's nest",
+                "The owl has lined her nest with parchment from the library, "
+                "and many of Variña's texts are gone.",
+            ),
+            titled(
+                "Hérisson's diary",
+                "Sorted and restored, Hérisson's notes among the wreck of "
+                "Variña's library give nothing toward Viresculture, but his "
+                "diary speaks of a garden like Paradise that is to be his new "
+                "laboratory once his equipment is moved, and it says plainly "
+                "where the Garden is.",
+            ),
+            titled(
+                "What lies near the Garden",
+                "Intelligence + Area Lore or Order of Hermes Lore then tells a "
+                "little of the Garden's place, chiefly that Caerfloron lies "
+                "very near: Ease Factor 9 in the same Tribunal, up to 18 across "
+                "Mythic Europe (pp. 80-81).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "High in the Pyrenees, or another fitting range. Finding it may "
+                "be a story of its own, or the Redcaps may simply have it on "
+                "record. The map on pp. 79-80 has its regio boundaries wrong; "
+                "the text is followed here (errata p. 78). The storyguide "
+                "decides how much of Variña's library survives, mostly on "
+                "Auram.",
+            ),
+        ],
         levels=[
             b.level(
                 "The ground floor",
@@ -462,21 +594,45 @@ def _places(b: Builder) -> tuple[Neighbour, Neighbour]:
         "hut against the wall for each of its five magi, far from the "
         "Order's affairs. The nearest neighbour of a place it does not "
         "speak of.",
-        secrets=paragraphs(
-            OPEN_SITE + " A covenant by the book, of Caerfloron and his four "
-            "filii, with an Aegis of the Hearth of level 20, a weak one; its "
-            "founding by the Garden is no chance. It has no record as a "
-            "covenant since this pack keeps none.",
-            "Its magi know enough of the Order to fear Wizard's War and not "
-            "enough to see when the forms were not kept, and they fight by "
-            "trapping a foe and then making him harmless. They know exactly "
-            "where the regio opens, and Caerfloron has made a gate that "
-            "passes its boundary. Each is sworn to enter the Garden but once, "
-            "and will not say why. Others may use it on one condition, given "
-            "before they will show the way: their apprentices may go in at "
-            "the start of training. They will not explain that either; each "
-            "goes to fetch the mandrake that makes a wizard (p. 83).",
-        ),
+        secrets=[
+            titled(
+                "Why Caerfloron lies here",
+                "Caerfloron's founding by Hérisson's Garden is no chance.",
+            ),
+            titled(
+                "How Caerfloron's magi fight",
+                "Caerfloron's magi know enough of the Order to fear Wizard's War "
+                "and not enough to see when the forms were not kept, and they "
+                "fight by trapping a foe and then making him harmless.",
+            ),
+            titled(
+                "The gate to the Garden",
+                "Caerfloron's magi know exactly where the Garden's regio opens, "
+                "and Caerfloron has made a gate that passes its boundary.",
+            ),
+            titled(
+                "Sworn to enter once",
+                "Each of Caerfloron's magi is sworn to enter the Garden but "
+                "once, and will not say why.",
+            ),
+            titled(
+                "The price of the way in",
+                "Others may use Caerfloron's gate on one condition, given before "
+                "its magi will show the way: their apprentices may go in at the "
+                "start of training. They will not explain that either.",
+            ),
+            titled(
+                "Why they go in",
+                "Each of Caerfloron's magi and apprentices goes into the Garden "
+                "to fetch the mandrake that makes a wizard (p. 83).",
+            ),
+            titled(
+                "Storyguide Notes",
+                OPEN_SITE + " A covenant by the book, of Caerfloron and his four "
+                "filii, with an Aegis of the Hearth of level 20, a weak one. It "
+                "has no record as a covenant since this pack keeps none.",
+            ),
+        ],
         **LOCAL,
     )
     garden = b.place(
@@ -494,177 +650,296 @@ def _places(b: Builder) -> tuple[Neighbour, Neighbour]:
             "out of season, and no bird or insect sounds, which makes a walk "
             "through all that green strangely quiet.",
         ),
-        secrets=paragraphs(
-            OPEN_SITE + " It needs untamed wilderness in a wet temperate "
-            "Tribunal, or can be recast as a lush oasis in a southern one. "
-            "Place it near the covenant if it is to stay in the saga, or "
-            "anywhere if it will be left behind. Caerfloron is close by "
-            "(pp. 80-81).",
-            "The plants. Since Hérisson died the strong aura has twisted the "
-            "Awakened plants, and they have split into three tribes, each "
-            "led by a plant that can set its subjects walking. Each leader "
-            "alone knows where a third of the lore is kept, so nothing can be "
-            "safely studied until the feud ends. Curtilagium, the kitchen "
-            "garden, led by Malus: food and medicine plants such as plum, "
-            "medlar, apricot, apple, orange, leek, carrot, vervain, rosemary, "
-            "fennel, alexanders and angelica; they fear humans as predators, "
-            "and are uneasy allies of the Venenarium. Venenarium, the poison "
-            "garden, led by Mandragora: yew, henbane, foxglove, hellebore, "
-            "dodder, aconite and many toadstools, with thistles, brambles, "
-            "holly and hawthorn. Hortulus, the little garden, led by Linum: "
-            "plants of use and of beauty, such as oak, ash, hazel, pine, rue, "
-            "hemp, lily, loosestrife, buttercup and mistletoe; they fawn on "
-            "mankind. See The Battle of the Trees. Mundane plants act only "
-            "when their leader animates them, with Cunning. The leaders "
-            "understand speech only by Converse with Plant and Tree (InHe "
-            "25) or the like; Intuition of the Forest (InHe 10) gives their "
-            "moods. They are obstacles or allies more than foes; to harden "
-            "them make them Summer (240 more experience points) or add 5 to "
-            "10 Might with matching Qualities (pp. 84-86).",
-            "Warping (p. 88). Perennials of five years or more have a Minor "
-            "Flaw from warping, and most trees, past 75, have two Minor Flaws "
-            "and a Minor Virtue: most often (Form) Monstrosity, or Offensive "
-            "to Animals, Warped Senses or a Personality Flaw. Cinnamon trees "
-            "may flare at a loud noise; Wrathful brambles wound the more; a "
-            "rose with Lesser Malediction may blanch in shadow. Plants of "
-            "his magic bear his spines and thorns.",
-            "Enchantments (pp. 88-89), living plants made magic items, which "
-            "stops their ageing. Bloodthorn, CrCo 15, Pen 0, charged, R Touch "
-            "D Moon T Ind: a blackthorn whose sloes give +6 to Wound Recovery "
-            "rolls for a Moon; 4 charges left. (Base 3, +1 Touch, +3 Moon.) "
-            "Fruitful Medlar, CrHe 9, Pen 0, constant, R Per D Sun T Part: a "
-            "Lesser Enchantment; a small tree bearing ten times the fruit in "
-            "season. (Base 1, +2 Sun, +1 Part, +1 size; +1 2/day, +3 "
-            "environmental trigger.) False Mandrake, PeCo 25, Pen 0, 3/day, R "
-            "Voice D Mom T Group: a white bryony Prepared with 4 pawns, a "
-            "small wooden object; touched, it shrieks and deafens all who "
-            "hear, healing as a Light Wound. (Base 5, +2 Voice, +2 Group; +2 "
-            "3/day.) Traveling Thistle, CrVi 14, Pen 0, constant, R Per D Mom "
-            "T Ind (the level sum uses Sun, p. 88): a faint taint of magic that its seedlings inherit but do "
-            "not pass on; the key to self-replicating vis. (Base 3, +2 Sun, "
-            "+1 inherited; +1 2/day, +3 environmental trigger.) Creeping "
-            "Buttercup, ReVi 20, Pen 0, 1/day, R Per D Mom T Part: holds a "
-            "pawn of Herbam vis and once in its life may pass it to a seed, "
-            "whose plant has the same power. (Base 10, +1 Part, +1 special "
-            "effect.) Everlasting Orpine: an orpine with a red stem and "
-            "pinkish-red crown, Prepared with 6 pawns of Vim vis, a Medium "
-            "wooden object; living, but stopped and sterile; an Insight worth "
-            "2 Breakthrough points. Ever-Flowering Bramble, CrHe 33, Pen 0, "
-            "1/day, R Per D Sun T Ind: a blackberry seed grows, fruits, seeds "
-            "and dies in a day, and its seed does so the next, giving a "
-            "handful of good fruit; leave one berry or it ends. (Base 15, +2 "
-            "Sun, +1 special effect; +3 environmental trigger.) Hazel of Many "
-            "Tools, ReHe 5, Pen 0, charged, R Per D Mom T Ind: name a tool "
-            "and a twig takes its shape to be broken off; Intelligence + "
-            "Finesse, Ease Factor 9, for standard quality; craft magic, 10 "
-            "charges left. (Base 5, Covenants p. 51.)",
-            "Stirpes (p. 89), invigoration exhausted, each bearing a single "
-            "magical offspring a generation, itself a Stirps: Adder's Tongue "
-            "(Perdo, in the curled central leaf); Alexanders (Herbam, in the "
-            "stems); Ever-Burning Fire (Ignem, flames in the Fennel of "
-            "Herbam Vis, derived from a fire elemental); Harebell (Animal, "
-            "the furred flower); Pasternack, a purple carrot (Aquam, in the "
-            "roots); Selfheal (Creo); Silverweed (Terram, leaves of real "
-            "silver). One pawn each. Several uninvigorated, immortal "
-            "cultivars grow here too.",
-            "Lesser Enchantment Vis (p. 89), Stirpes likewise exhausted; to "
-            "Invigorate them needs Hérisson's Minor Breakthrough again. Daisy "
-            "of Intellego Vis, InHe 40, Pen 16, 3/day, R Touch D Conc T Ind: "
-            "the toucher converses with plants as Converse with Plant and "
-            "Tree, Penetrating any Resistance of the plant. (Base 15, +1 "
-            "Touch, +1 Conc; +5 maintains concentration, +2 3/day, +8 "
-            "Penetration 16.) Mistletoe Sprig of Herbam Vis: Realms of Power: "
-            "Magic p. 121. Stinking Hellebore of Rego Vis, ReCo 25, Pen 0, "
-            "unlimited, R Touch D Diam T Ind: touching its fleshy green "
-            "flowers paralyzes for two minutes; p. 87 calls it of Corpus Vis. (Base 5, +1 Touch, +1 Diam; "
-            "+10 unlimited uses.) Honeysuckle of Mentem Vis, ReMe 24, Pen 0, "
-            "constant, R Per D Sun T Scent: a vine of hooked yellow flowers; "
-            "as Confusion of the Numbed Will on all who smell it, about 6 "
-            "paces out. (Base 4, +2 Sun, +2 Scent; +1 2/day, +3 environmental "
-            "trigger.) Fennel of Herbam Vis, Re(Cr)Ig(He) 24, Pen 0, constant, "
-            "R Per D Sun T Ind: +5 Soak against fire, whose damage heals at "
-            "once; it hosts the Ever-Burning Fire. (Base 4, +2 Sun, +2 "
-            "requisites; +1 2/day, +3 environmental trigger.)",
-            "Enriched Herbs of Virtue (pp. 89-90; Realms of Power: Magic p. "
-            "124), preserved until used. Henbane of Virtue: a pawn of Perdo "
-            "vis. Three Enriched capsules lie by the stem; a capsule steeped "
-            "in scorpion venom and three crushed owl skulls under Saturn "
-            "ascendant, then swallowed after a season, gives Lesser Immunity "
-            "to Poison and numbs a sense or limb (simple die: 1-2 Afflicted "
-            "Tongue, 3-4 Poor Eyesight, 5-6 Poor Hearing, 7-8 Missing Hand, "
-            "9-10 Lame), for a year. Wild Teasel of Virtue: two pawns of "
-            "Corpus in the juice; fed to a pregnant dog, her litter's "
-            "milk-teeth ground into wine give Puissant Brawl, Tough, Berserk "
-            "and Wrathful for a year or until the drinker tastes valerian "
-            "juice. Valerian of Virtue: two pawns of Creo in the root; "
-            "sliced with silver on a night Venus shows, bathed in horse urine "
-            "each Friday and ground between amber, it gives Rapid "
-            "Convalescence, Enduring Constitution, Reserves of Strength and a "
-            "Code of Honor for a year or until the drinker tastes teasel "
-            "milk.",
-            "Wrestling in the Herb Garden (p. 90). Teasel and valerian grow "
-            "thick on either side of a sward, split by a thin line of grass. "
-            "Touch a patch and the urge to fight whoever explores the other "
-            "takes hold; one champion is picked for each. Teasel's fights "
-            "dirty, for many small wounds; valerian's grapples and pins. "
-            "Whoever beats the teasel's man gets a draft of Enriched Teasel "
-            "Milk, and whoever beats the valerian's a sip of Enriched Valerian "
-            "Juice.",
-            "Wonders (p. 91), among over fifty fine or unique species. The "
-            "Vegetable Lamb: four feet tall, each stem tipped with a tiny "
-            "woolly lamb that grazes around the plant, then, the grass gone, "
-            "dwindles to a ball of wool. A cinnamon grove, pungent and apt "
-            "to ignite. A child of the Drudenbaum of Harberg (Guardians of "
-            "the Forests p. 89) that yields no vis. Perhaps Soqotran totem "
-            "trees (Rival Magic): cinnabar, olibanum, myrrh and aloe. Add "
-            "more with Realms of Power: Magic.",
-            "Rediscovery (pp. 91-92). Hérisson went by Original Research, 45 "
-            "Breakthrough points for the Major and 30 for the Minor. A magus "
-            "here need not: his inventions serve as sources of Insight "
-            "(Ancient Magic p. 8, Hedge Magic p. 14), and duplicating an "
-            "effect earns points equal to its magnitude. His living "
-            "enchantments are read by Investigating in the laboratory in "
-            "place of Intelligence + Magic Theory. So are his Stirpes, each "
-            "as an enchantment of level 15, the Insight being a version of "
-            "Gather the Essence of the Beast: 3 points the first time and 1 "
-            "for each later version. Other plants of the Garden use Ancient "
-            "Magic's process, and the Minor Breakthrough must draw on these, "
-            "after Viresculture itself is regained. At the storyguide's "
-            "option Lab Texts of his creations lie here (p. 92), giving their "
-            "magnitude once studied by recreating the experiment (True "
-            "Lineages p. 29): a tree with a page on each leaf, to be put in "
-            "order; a fruit written on its seeds.",
-            "Study (p. 92). Realia for Herbam (Covenants p. 102), Source "
-            "Quality 6, six times in all. For one who has Hermetic "
-            "Viresculture the Stirpes are realia of it, Quality 4, four "
-            "times.",
-            "Laboratory (pp. 92-94). The Garden is a working Hermetic "
-            "laboratory; adapt it as Taking Over a Laboratory (Covenants p. "
-            "118). Hérisson lived there as a beast, so a tenant needs a hut. "
-            "Virtues: Natural Environment (Major, Structure); Lesser Feature, "
-            "the spring that aids vis extraction (Minor, Structure); Specimens "
-            "x3 and Superior Decorations (Minor, Outfitting; no extra Upkeep, "
-            "being alive); Spacious (Minor, Structure); Vis Source (Minor, "
-            "Supernatural); Idyllic Surroundings (Free, Structure); "
-            "Inexhaustible Supplies (Free, Supernatural); Regio (Free, "
-            "Supernatural). Flaws: Outdoors (Major, Structure); Chaotic and "
-            "Living (Minor, Supernatural); Disorganized (Free, Structure). "
-            "Characteristics: Size +10 (+5), Refinement 0, General Quality "
-            "-1, Upkeep -1, Safety -5, Warping +6, Health 0, Aesthetics +6. "
-            "Specializations: Vis Extraction +3, Experimentation +2, Herbam "
-            "+10, Imaginem +1, Muto +2. Traits: Growing +3, Curious +2, "
-            "Exotic +1.",
-            "Its tools grow: gourds for flasks, fungi for bowls, branches "
-            "over rocks for benches, birch-bark for paper, the Ever-Burning "
-            "Tree for fire (so p. 93; p. 89 has the Ever-Burning Fire), the brook for water. When planning a season "
-            "roll a simple die: under the Warping Characteristic the means "
-            "are to hand; otherwise choose another activity. Add 2 in winter. "
-            "A truce with the plants adds Lesser Horde (Supernatural, no "
-            "Upkeep): +1 General Quality, Safety and Aesthetics, +1 in Perdo "
-            "(Venenarium), Creo (Curtilagium) or Rego (Hortulus). A tribe "
-            "made an enemy adds Gremlins: -3 Safety, +1 Warping, -1 "
-            "Aesthetics, +1 Experimentation, +1 in that same Art.",
-        ),
+        secrets=[
+            titled(
+                "The three tribes",
+                "Since Hérisson died the strong aura has twisted the Awakened "
+                "plants of his Garden, and they have split into three tribes, "
+                "each led by a plant that can set its subjects walking. Each "
+                "leader alone knows where a third of the lore is kept, so "
+                "nothing can be safely studied until the feud ends.",
+            ),
+            titled(
+                "The Curtilagium",
+                "Curtilagium, the kitchen garden, led by Malus: food and "
+                "medicine plants such as plum, medlar, apricot, apple, orange, "
+                "leek, carrot, vervain, rosemary, fennel, alexanders and "
+                "angelica; they fear humans as predators, and are uneasy allies "
+                "of the Venenarium.",
+            ),
+            titled(
+                "The Venenarium",
+                "Venenarium, the poison garden, led by Mandragora: yew, "
+                "henbane, foxglove, hellebore, dodder, aconite and many "
+                "toadstools, with thistles, brambles, holly and hawthorn.",
+            ),
+            titled(
+                "The Hortulus",
+                "Hortulus, the little garden, led by Linum: plants of use and of "
+                "beauty, such as oak, ash, hazel, pine, rue, hemp, lily, "
+                "loosestrife, buttercup and mistletoe; they fawn on mankind.",
+            ),
+            titled(
+                "Hérisson's mark on his plants",
+                "Plants of Hérisson's magic bear his spines and thorns.",
+            ),
+            titled(
+                "The living enchantments",
+                "Enchantments (pp. 88-89), living plants made magic items, "
+                "which stops their ageing.",
+            ),
+            titled(
+                "Bloodthorn",
+                "Bloodthorn, CrCo 15, Pen 0, charged, R Touch D Moon T Ind: a "
+                "blackthorn whose sloes give +6 to Wound Recovery rolls for a "
+                "Moon; 4 charges left. (Base 3, +1 Touch, +3 Moon.)",
+            ),
+            titled(
+                "Fruitful Medlar",
+                "Fruitful Medlar, CrHe 9, Pen 0, constant, R Per D Sun T Part: a "
+                "Lesser Enchantment; a small tree bearing ten times the fruit in "
+                "season. (Base 1, +2 Sun, +1 Part, +1 size; +1 2/day, +3 "
+                "environmental trigger.)",
+            ),
+            titled(
+                "False Mandrake",
+                "False Mandrake, PeCo 25, Pen 0, 3/day, R Voice D Mom T Group: a "
+                "white bryony Prepared with 4 pawns, a small wooden object; "
+                "touched, it shrieks and deafens all who hear, healing as a "
+                "Light Wound. (Base 5, +2 Voice, +2 Group; +2 3/day.)",
+            ),
+            titled(
+                "Traveling Thistle",
+                "Traveling Thistle, CrVi 14, Pen 0, constant, R Per D Mom T Ind "
+                "(the level sum uses Sun, p. 88): a faint taint of magic that "
+                "its seedlings inherit but do not pass on; the key to "
+                "self-replicating vis. (Base 3, +2 Sun, +1 inherited; +1 2/day, "
+                "+3 environmental trigger.)",
+            ),
+            titled(
+                "Creeping Buttercup",
+                "Creeping Buttercup, ReVi 20, Pen 0, 1/day, R Per D Mom T Part: "
+                "holds a pawn of Herbam vis and once in its life may pass it to "
+                "a seed, whose plant has the same power. (Base 10, +1 Part, +1 "
+                "special effect.)",
+            ),
+            titled(
+                "Everlasting Orpine",
+                "Everlasting Orpine: an orpine with a red stem and pinkish-red "
+                "crown, Prepared with 6 pawns of Vim vis, a Medium wooden "
+                "object; living, but stopped and sterile; an Insight worth 2 "
+                "Breakthrough points.",
+            ),
+            titled(
+                "Ever-Flowering Bramble",
+                "Ever-Flowering Bramble, CrHe 33, Pen 0, 1/day, R Per D Sun T "
+                "Ind: a blackberry seed grows, fruits, seeds and dies in a day, "
+                "and its seed does so the next, giving a handful of good fruit; "
+                "leave one berry or it ends. (Base 15, +2 Sun, +1 special "
+                "effect; +3 environmental trigger.)",
+            ),
+            titled(
+                "Hazel of Many Tools",
+                "Hazel of Many Tools, ReHe 5, Pen 0, charged, R Per D Mom T Ind: "
+                "name a tool and a twig takes its shape to be broken off; "
+                "Intelligence + Finesse, Ease Factor 9, for standard quality; "
+                "craft magic, 10 charges left. (Base 5, Covenants p. 51.)",
+            ),
+            titled(
+                "The Stirpes",
+                "Stirpes (p. 89), invigoration exhausted, each bearing a single "
+                "magical offspring a generation, itself a Stirps: Adder's Tongue "
+                "(Perdo, in the curled central leaf); Alexanders (Herbam, in the "
+                "stems); Ever-Burning Fire (Ignem, flames in the Fennel of "
+                "Herbam Vis, derived from a fire elemental); Harebell (Animal, "
+                "the furred flower); Pasternack, a purple carrot (Aquam, in the "
+                "roots); Selfheal (Creo); Silverweed (Terram, leaves of real "
+                "silver). One pawn each. Several uninvigorated, immortal "
+                "cultivars grow here too.",
+            ),
+            titled(
+                "Lesser Enchantment Vis",
+                "Lesser Enchantment Vis (p. 89), Stirpes likewise exhausted; to "
+                "Invigorate them needs Hérisson's Minor Breakthrough again.",
+            ),
+            titled(
+                "Daisy of Intellego Vis",
+                "Daisy of Intellego Vis, InHe 40, Pen 16, 3/day, R Touch D Conc "
+                "T Ind: the toucher converses with plants as Converse with Plant "
+                "and Tree, Penetrating any Resistance of the plant. (Base 15, +1 "
+                "Touch, +1 Conc; +5 maintains concentration, +2 3/day, +8 "
+                "Penetration 16.)",
+            ),
+            titled(
+                "Mistletoe Sprig of Herbam Vis",
+                "Mistletoe Sprig of Herbam Vis: Realms of Power: Magic p. 121.",
+            ),
+            titled(
+                "Stinking Hellebore of Rego Vis",
+                "Stinking Hellebore of Rego Vis, ReCo 25, Pen 0, unlimited, R "
+                "Touch D Diam T Ind: touching its fleshy green flowers paralyzes "
+                "for two minutes; p. 87 calls it of Corpus Vis. (Base 5, +1 "
+                "Touch, +1 Diam; +10 unlimited uses.)",
+            ),
+            titled(
+                "Honeysuckle of Mentem Vis",
+                "Honeysuckle of Mentem Vis, ReMe 24, Pen 0, constant, R Per D "
+                "Sun T Scent: a vine of hooked yellow flowers; as Confusion of "
+                "the Numbed Will on all who smell it, about 6 paces out. (Base "
+                "4, +2 Sun, +2 Scent; +1 2/day, +3 environmental trigger.)",
+            ),
+            titled(
+                "Fennel of Herbam Vis",
+                "Fennel of Herbam Vis, Re(Cr)Ig(He) 24, Pen 0, constant, R Per D "
+                "Sun T Ind: +5 Soak against fire, whose damage heals at once; it "
+                "hosts the Ever-Burning Fire. (Base 4, +2 Sun, +2 requisites; +1 "
+                "2/day, +3 environmental trigger.)",
+            ),
+            titled(
+                "Enriched Herbs of Virtue",
+                "Enriched Herbs of Virtue (pp. 89-90; Realms of Power: Magic p. "
+                "124), preserved until used.",
+            ),
+            titled(
+                "Henbane of Virtue",
+                "Henbane of Virtue: a pawn of Perdo vis. Three Enriched capsules "
+                "lie by the stem; a capsule steeped in scorpion venom and three "
+                "crushed owl skulls under Saturn ascendant, then swallowed after "
+                "a season, gives Lesser Immunity to Poison and numbs a sense or "
+                "limb (simple die: 1-2 Afflicted Tongue, 3-4 Poor Eyesight, 5-6 "
+                "Poor Hearing, 7-8 Missing Hand, 9-10 Lame), for a year.",
+            ),
+            titled(
+                "Wild Teasel of Virtue",
+                "Wild Teasel of Virtue: two pawns of Corpus in the juice; fed to "
+                "a pregnant dog, her litter's milk-teeth ground into wine give "
+                "Puissant Brawl, Tough, Berserk and Wrathful for a year or until "
+                "the drinker tastes valerian juice.",
+            ),
+            titled(
+                "Valerian of Virtue",
+                "Valerian of Virtue: two pawns of Creo in the root; sliced with "
+                "silver on a night Venus shows, bathed in horse urine each "
+                "Friday and ground between amber, it gives Rapid Convalescence, "
+                "Enduring Constitution, Reserves of Strength and a Code of Honor "
+                "for a year or until the drinker tastes teasel milk.",
+            ),
+            titled(
+                "Wrestling in the Herb Garden",
+                "Wrestling in the Herb Garden (p. 90). Teasel and valerian grow "
+                "thick on either side of a sward, split by a thin line of grass. "
+                "Touch a patch and the urge to fight whoever explores the other "
+                "takes hold; one champion is picked for each. Teasel's fights "
+                "dirty, for many small wounds; valerian's grapples and pins. "
+                "Whoever beats the teasel's man gets a draft of Enriched Teasel "
+                "Milk, and whoever beats the valerian's a sip of Enriched "
+                "Valerian Juice.",
+            ),
+            titled(
+                "The Vegetable Lamb",
+                "Wonders (p. 91), among over fifty fine or unique species. The "
+                "Vegetable Lamb: four feet tall, each stem tipped with a tiny "
+                "woolly lamb that grazes around the plant, then, the grass "
+                "gone, dwindles to a ball of wool.",
+            ),
+            titled(
+                "The cinnamon grove",
+                "A cinnamon grove in Hérisson's Garden, pungent and apt to ignite.",
+            ),
+            titled(
+                "A child of the Drudenbaum",
+                "A child of the Drudenbaum of Harberg (Guardians of the Forests "
+                "p. 89) grows in Hérisson's Garden, and yields no vis.",
+            ),
+            titled(
+                "The Soqotran totem trees",
+                "Perhaps Soqotran totem trees (Rival Magic) grow in Hérisson's "
+                "Garden: cinnabar, olibanum, myrrh and aloe.",
+            ),
+            titled(
+                "The Garden as a laboratory",
+                "Laboratory (pp. 92-94). The Garden is a working Hermetic "
+                "laboratory. Hérisson lived there as a beast, so a tenant needs "
+                "a hut.",
+            ),
+            titled(
+                "The Garden's growing tools",
+                "The Garden's tools grow: gourds for flasks, fungi for bowls, "
+                "branches over rocks for benches, birch-bark for paper, the "
+                "Ever-Burning Tree for fire (so p. 93; p. 89 has the "
+                "Ever-Burning Fire), the brook for water.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    OPEN_SITE + " It needs untamed wilderness in a wet temperate "
+                    "Tribunal, or can be recast as a lush oasis in a southern "
+                    "one. Place it near the covenant if it is to stay in the "
+                    "saga, or anywhere if it will be left behind. Caerfloron is "
+                    "close by (pp. 80-81).",
+                    "The plants (pp. 84-86). See The Battle of the Trees. "
+                    "Mundane plants act only when their leader animates them, "
+                    "with Cunning. The leaders understand speech only by "
+                    "Converse with Plant and Tree (InHe 25) or the like; "
+                    "Intuition of the Forest (InHe 10) gives their moods. They "
+                    "are obstacles or allies more than foes; to harden them make "
+                    "them Summer (240 more experience points) or add 5 to 10 "
+                    "Might with matching Qualities.",
+                    "Warping (p. 88). Perennials of five years or more have a "
+                    "Minor Flaw from warping, and most trees, past 75, have two "
+                    "Minor Flaws and a Minor Virtue: most often (Form) "
+                    "Monstrosity, or Offensive to Animals, Warped Senses or a "
+                    "Personality Flaw. Cinnamon trees may flare at a loud noise; "
+                    "Wrathful brambles wound the more; a rose with Lesser "
+                    "Malediction may blanch in shadow.",
+                    "Wonders: add more with Realms of Power: Magic.",
+                    "Rediscovery (pp. 91-92). Hérisson went by Original "
+                    "Research, 45 Breakthrough points for the Major and 30 for "
+                    "the Minor. A magus here need not: his inventions serve as "
+                    "sources of Insight (Ancient Magic p. 8, Hedge Magic p. "
+                    "14), and duplicating an effect earns points equal to its "
+                    "magnitude. His living enchantments are read by "
+                    "Investigating in the laboratory in place of Intelligence + "
+                    "Magic Theory. So are his Stirpes, each as an enchantment of "
+                    "level 15, the Insight being a version of Gather the Essence "
+                    "of the Beast: 3 points the first time and 1 for each later "
+                    "version. Other plants of the Garden use Ancient Magic's "
+                    "process, and the Minor Breakthrough must draw on these, "
+                    "after Viresculture itself is regained. At the storyguide's "
+                    "option Lab Texts of his creations lie here (p. 92), giving "
+                    "their magnitude once studied by recreating the experiment "
+                    "(True Lineages p. 29): a tree with a page on each leaf, to "
+                    "be put in order; a fruit written on its seeds.",
+                    "Study (p. 92). Realia for Herbam (Covenants p. 102), Source "
+                    "Quality 6, six times in all. For one who has Hermetic "
+                    "Viresculture the Stirpes are realia of it, Quality 4, four "
+                    "times.",
+                    "Laboratory (pp. 92-94): adapt it as Taking Over a "
+                    "Laboratory (Covenants p. 118). Virtues: Natural Environment "
+                    "(Major, Structure); Lesser Feature, the spring that aids "
+                    "vis extraction (Minor, Structure); Specimens x3 and "
+                    "Superior Decorations (Minor, Outfitting; no extra Upkeep, "
+                    "being alive); Spacious (Minor, Structure); Vis Source "
+                    "(Minor, Supernatural); Idyllic Surroundings (Free, "
+                    "Structure); Inexhaustible Supplies (Free, Supernatural); "
+                    "Regio (Free, Supernatural). Flaws: Outdoors (Major, "
+                    "Structure); Chaotic and Living (Minor, Supernatural); "
+                    "Disorganized (Free, Structure). Characteristics: Size +10 "
+                    "(+5), Refinement 0, General Quality -1, Upkeep -1, Safety "
+                    "-5, Warping +6, Health 0, Aesthetics +6. Specializations: "
+                    "Vis Extraction +3, Experimentation +2, Herbam +10, Imaginem "
+                    "+1, Muto +2. Traits: Growing +3, Curious +2, Exotic +1.",
+                    "When planning a season roll a simple die: under the "
+                    "Warping Characteristic the means are to hand; otherwise "
+                    "choose another activity. Add 2 in winter. A truce with the "
+                    "plants adds Lesser Horde (Supernatural, no Upkeep): +1 "
+                    "General Quality, Safety and Aesthetics, +1 in Perdo "
+                    "(Venenarium), Creo (Curtilagium) or Rego (Hortulus). A "
+                    "tribe made an enemy adds Gremlins: -3 Safety, +1 Warping, "
+                    "-1 Aesthetics, +1 Experimentation, +1 in that same Art.",
+                ),
+            ),
+        ],
         levels=[
             b.level(
                 "The Garden",
@@ -1045,7 +1320,12 @@ def _creatures(b: Builder, tomb: Neighbour, garden: Neighbour) -> None:
             "Within the Garden each power costs 1 less Might, and the aura "
             "adds to Penetration and Magic Resistance.",
         ),
-        secrets="Its powers fail it near fire, and it keeps well away from any flame.",
+        secrets=[
+            titled(
+                "Malus and fire",
+                "Its powers fail it near fire, and it keeps well away from any flame.",
+            ),
+        ],
     )
     b.creature(
         "Dodder",
@@ -1165,14 +1445,21 @@ def _main_stories(b: Builder, garden: Neighbour) -> None:
             summary="Spiny plants full of vis keep turning up around the "
             "covenant, and a buried will points to the lost research of a "
             "legendary magus. Someone else wants it badly.",
-            secrets=paragraphs(
-                "In Search of Eden (pp. 76-83). Reaching the Garden lets the "
-                "characters rebuild Hermetic Viresculture by Insights, far "
-                "quicker and safer than Original Research. Strabo needs the "
-                "same notes, so he stays ahead of them until unmasked. He "
-                "does not want the magi killed at first, only what they "
-                "carry.",
-            ),
+            secrets=[
+                titled(
+                    "What the Garden offers",
+                    "Reaching Hérisson's Garden lets the characters rebuild "
+                    "Hermetic Viresculture by Insights, far quicker and safer "
+                    "than Original Research.",
+                ),
+                titled(
+                    "Strabo's aim",
+                    "Strabo needs the same notes, so he stays ahead of them "
+                    "until unmasked. He does not want the magi killed at first, "
+                    "only what they carry.",
+                ),
+                titled("Storyguide Notes", "In Search of Eden (pp. 76-83)."),
+            ],
             stages=[
                 S(
                     "Foreshadowing",
@@ -1254,18 +1541,32 @@ def _main_stories(b: Builder, garden: Neighbour) -> None:
             summary="The arrival of strangers sets the old feud of the "
             "Garden's plants alight, and something is watching them from the "
             "grass.",
-            secrets=paragraphs(
-                "Pp. 86-87. The Garden cannot be properly explored until the "
-                "tribes make peace; the plants vital to the research belong "
-                "to all three, and each leader's help is needed. Do not show "
-                "the tribes merely as monsters to kill. Mandragora feeds "
-                "Malus's fear; while it does, there can be no peace with the "
-                "Curtilagium, and attacks by both tribes go on at random. "
-                "The book gives no set way to end the feud. Finding the "
-                "Mistletoe of Herbam Vis early gives a feel for the plants.",
-                "The cruelest trick: kill a grog in secret and send Dodder "
-                "in the corpse to walk among his friends.",
-            ),
+            secrets=[
+                titled(
+                    "Why the tribes must make peace",
+                    "Hérisson's Garden cannot be properly explored until the "
+                    "tribes make peace; the plants vital to the research belong "
+                    "to all three, and each leader's help is needed.",
+                ),
+                titled(
+                    "Mandragora's whispers",
+                    "Mandragora feeds Malus's fear; while it does, there can be "
+                    "no peace with the Curtilagium, and attacks by both tribes "
+                    "go on at random.",
+                ),
+                titled(
+                    "Dodder in a corpse",
+                    "The cruelest trick: kill a grog in secret and send Dodder "
+                    "in the corpse to walk among his friends.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Pp. 86-87. Do not show the tribes merely as monsters to "
+                    "kill. The book gives no set way to end the feud. Finding "
+                    "the Mistletoe of Herbam Vis early gives a feel for the "
+                    "plants.",
+                ),
+            ],
             stages=[
                 S(
                     "Watched",
@@ -1332,19 +1633,33 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             "physician can name. Her one comfort is the scent of a gray and "
             "pink rose found only in her garden, of which a fresh bloom is "
             "brought to her each day.",
-            secrets=paragraphs(
-                "A Wreath of Pale Flowers (pp. 76-77). The rose is an escaped "
-                "cultivar of Hérisson, one of his few destructive ones, with "
-                "Perdo vis in it. Its roots taint her water, and its blossoms "
-                "ease the poison, so uprooting it surely kills her.",
-                "Her father planted the rose in a nearby town some years ago "
-                "to rid himself of opponents by a false plague, then felled "
-                "it, not knowing a seed had reached his daughter's garden. "
-                "No one has connected the plague with the rose. Who gave him "
-                "the plant is left open: a demon tempting him to murder, a "
-                "magus with a grudge against the town, or a faerie hoping to "
-                "gain vitality as the girl's rescuer.",
-            ),
+            secrets=[
+                titled(
+                    "What the rose is",
+                    "The rose is an escaped cultivar of Hérisson, one of his "
+                    "few destructive ones, with Perdo vis in it.",
+                ),
+                titled(
+                    "Why the daughter sickens",
+                    "The rose's roots taint the daughter's water, and its "
+                    "blossoms ease the poison, so uprooting it surely kills "
+                    "her.",
+                ),
+                titled(
+                    "The father's false plague",
+                    "Her father planted the rose in a nearby town some years "
+                    "ago to rid himself of opponents by a false plague, then "
+                    "felled it, not knowing a seed had reached his daughter's "
+                    "garden. No one has connected the plague with the rose.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "A Wreath of Pale Flowers (pp. 76-77). Who gave him the "
+                    "plant is left open: a demon tempting him to murder, a "
+                    "magus with a grudge against the town, or a faerie hoping "
+                    "to gain vitality as the girl's rescuer.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1358,14 +1673,28 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             "beer of Lorris Taverner, loved by the men. Both keep their "
             "recipes close, and passions run high. The magi are asked to "
             "judge.",
-            secrets=paragraphs(
-                "P. 77. Both drinks carry a faint taint of magic. The elder "
-                "Marianne sister is Touched by Magic (City & Guild p. 71) and "
-                "flavors her gruit with hyssop grown in a Magic aura. Lorris "
-                "has no magic, but owns one of Hérisson's oaks: its acorns, "
-                "known by the spines on their cups, hold at least a pawn of "
-                "Imaginem vis, more in a good year.",
-            ),
+            secrets=[
+                titled(
+                    "The tainted brews",
+                    "Both drinks of the brewing contest carry a faint taint of magic.",
+                ),
+                titled(
+                    "The Marianne sister's hyssop",
+                    "The elder Marianne sister flavors her gruit with hyssop "
+                    "grown in a Magic aura.",
+                ),
+                titled(
+                    "Lorris's oak",
+                    "Lorris has no magic, but owns one of Hérisson's oaks: its "
+                    "acorns, known by the spines on their cups, hold at least a "
+                    "pawn of Imaginem vis, more in a good year.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "P. 77. The elder Marianne sister is Touched by Magic (City "
+                    "& Guild p. 71).",
+                ),
+            ],
             stages=[
                 S(
                     "The verdict",
@@ -1390,10 +1719,18 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             summary="Grain does not grow unseen. The local priest has noticed "
             "that the covenant farms, and comes for a tenth of whatever God "
             "gives increase, with a reeve to see he is not cheated.",
-            secrets="P. 76. A story seed of a covenant using Hermetic "
-            "Viresculture. The tithe in theory covers vis, so the characters "
-            "must give up vis whose magic they would not put in anyone's "
-            "hands, least of all the Church's.",
+            secrets=[
+                titled(
+                    "The tithe on vis",
+                    "The tithe in theory covers vis, so the characters must give "
+                    "up vis whose magic they would not put in anyone's hands, "
+                    "least of all the Church's.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "P. 76. A story seed of a covenant using Hermetic Viresculture.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1403,11 +1740,19 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             antagonist="A hungry peasant",
             summary="Something has been eating from the covenant's strange "
             "field, or its livestock has been poached.",
-            secrets="P. 76. A story seed of a covenant using Hermetic "
-            "Viresculture. A peasant eats a crop or beast of Lesser "
-            "Enchantment Vis and gains its effect, perhaps for good, at the "
-            "cost of Warping. He must be found before he tells others and "
-            "they all come for the precious Stirpes.",
+            secrets=[
+                titled(
+                    "The peasant's meal",
+                    "A peasant eats a crop or beast of Lesser Enchantment Vis "
+                    "and gains its effect, perhaps for good, at the cost of "
+                    "Warping. He must be found before he tells others and they "
+                    "all come for the precious Stirpes.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "P. 76. A story seed of a covenant using Hermetic Viresculture.",
+                ),
+            ],
         )
     )
     dormant(
@@ -1418,12 +1763,25 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             antagonist="A dying phoenix",
             summary="A phoenix near the end of its life comes to the Garden "
             "seeking a cinnamon tree for its last nest.",
-            secrets="P. 93. It builds a nest of cinnamon boughs for the rising "
-            "sun to light, and a chick is reborn in the ashes. A magus "
-            "wanting a rare familiar may bargain for the chick. The price is "
-            "the death of a far-off king with a taste for exotic birds. To "
-            "ignore the deal after the parent dies, or put it off, invokes "
-            "the phoenix's death-curse.",
+            secrets=[
+                titled(
+                    "The phoenix's last nest",
+                    "The phoenix builds a nest of cinnamon boughs for the "
+                    "rising sun to light, and a chick is reborn in the ashes.",
+                ),
+                titled(
+                    "The price of the chick",
+                    "A magus wanting a rare familiar may bargain for the "
+                    "phoenix's chick. The price is the death of a far-off king "
+                    "with a taste for exotic birds.",
+                ),
+                titled(
+                    "The phoenix's death-curse",
+                    "To ignore the deal after the parent phoenix dies, or put it "
+                    "off, invokes the phoenix's death-curse.",
+                ),
+                titled("Storyguide Notes", "P. 93."),
+            ],
         )
     )
     dormant(
@@ -1434,13 +1792,22 @@ def _side_stories(b: Builder, garden: Neighbour) -> None:
             antagonist="The Soqotran sorcerers",
             summary="After centuries of searching, a delegation of foreign "
             "sorcerers forces its way into the Garden.",
-            secrets="P. 93; Rival Magic chapter 3. Hérisson stole the "
-            "Soqotrans' totem plants, a theft like kidnapping a loved one, "
-            "that has cost generations of would-be sorcerers their power. One "
-            "from each tribe comes to take back the trees and punish the "
-            "thief. They will take Hermetic magi in the Garden for his heirs, "
-            "since they use his magic, and vent their fury on them before "
-            "they go.",
+            secrets=[
+                titled(
+                    "The stolen totems",
+                    "Hérisson stole the Soqotrans' totem plants, a theft like "
+                    "kidnapping a loved one, that has cost generations of "
+                    "would-be sorcerers their power.",
+                ),
+                titled(
+                    "The sorcerers' vengeance",
+                    "One Soqotran sorcerer from each tribe comes to take back "
+                    "the trees and punish the thief. They will take Hermetic "
+                    "magi in the Garden for his heirs, since they use his magic, "
+                    "and vent their fury on them before they go.",
+                ),
+                titled("Storyguide Notes", "P. 93; Rival Magic chapter 3."),
+            ],
         )
     )
 

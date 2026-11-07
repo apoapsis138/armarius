@@ -35,7 +35,7 @@ from __future__ import annotations
 
 from typing import TYPE_CHECKING
 
-from ..builder import Builder, paragraphs, secrets
+from ..builder import Builder, paragraphs, secrets, titled
 
 if TYPE_CHECKING:
     from . import Cradle
@@ -144,11 +144,14 @@ def _temples(cradle: Cradle) -> None:
             "Its temple stands in a regio of Divine 8; the book gives the "
             "mountain itself no aura.",
         ),
-        secrets=paragraphs(
-            "The mobeds who brought the fire from Khwarazm still live on "
-            "Kavarvand, kept alive across the centuries by the Gifts of "
-            "Gayomart.",
-        ),
+        secrets=[
+            titled(
+                "The mobeds on Kavarvand",
+                "The mobeds who brought Adur Farnbag from Khwarazm still live "
+                "on Kavarvand, kept alive across the centuries by the Gifts "
+                "of Gayomart.",
+            ),
+        ],
     )
     p["adur_gushnasp"] = b.place(
         "Adur Gushnasp",
@@ -455,14 +458,24 @@ def _mazdeans(cradle: Cradle) -> None:
             "the catalog's Theology: Zoroastrian, and its Mobed Lore is "
             "Organization Lore: Mobeds.",
         ),
-        secrets=paragraphs(
-            "The mobeds who carried Adur Farnbag from Khwarazm to Mount "
-            "Kavarvand are still alive there, through the Gifts of "
-            "Gayomart, and a living Mazdean community shelters in the "
-            "higher levels of Naw Bahar's regio. The most devout mobeds "
-            "still know the rite of Saoshyant's Elixir, the faith's road "
-            "to a life without end.",
-        ),
+        secrets=[
+            titled(
+                "The mobeds on Kavarvand",
+                "The mobeds who carried Adur Farnbag from Khwarazm to Mount "
+                "Kavarvand are still alive there, through the Gifts of "
+                "Gayomart.",
+            ),
+            titled(
+                "The community at Naw Bahar",
+                "A living Mazdean community shelters in the higher levels of "
+                "Naw Bahar's regio.",
+            ),
+            titled(
+                "Saoshyant's Elixir",
+                "The most devout Mazdean mobeds still know the rite of "
+                "Saoshyant's Elixir, the faith's road to a life without end.",
+            ),
+        ],
     )
     for key, note in TEMPLES:
         b.link(mazdeans, "places", cradle.places[key], note)

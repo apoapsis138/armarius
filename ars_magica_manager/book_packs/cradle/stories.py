@@ -42,8 +42,8 @@ from __future__ import annotations
 import unicodedata
 from typing import TYPE_CHECKING, Any
 
-from ...models import Covenant, Creature, as_secrets, secret_words
-from ..builder import Builder, dormant, paragraphs
+from ...models import Covenant, Creature
+from ..builder import Builder, dormant, more_secrets, paragraphs, titled
 
 if TYPE_CHECKING:
     from . import Cradle
@@ -366,11 +366,15 @@ def _azi_dahak(cradle: Cradle) -> None:
             "chained alive under Mount Damavand and no longer possessed, "
             "may advise those who would fight the next.",
         ),
-        secrets=paragraphs(
-            "The book leaves it to the troupe whether the demon is behind "
-            "the Mongols. If he is, ridding the horde of him can be a "
-            "whole saga; if not, he waits for another ruler's ambition.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "The book leaves it to the troupe whether the demon Azi "
+                "Dahak is behind the Mongols. If he is, ridding the horde of "
+                "him can be a whole saga; if not, he waits for another "
+                "ruler's ambition.",
+            ),
+        ],
         stages=[
             S(
                 "Whispers in the dreams of princes",
@@ -557,14 +561,17 @@ def _durenmar(cradle: Cradle) -> None:
             "At the Grand Tribunal of 1228, thirty-three years after the "
             "last, something walks through Durenmar's wards.",
         ),
-        secrets=paragraphs(
-            "Whether it is the Aquila himself or a shaman of his line "
-            "travelling by phantasticum, the book does not say. If his "
-            "lineage survived on the steppe, two centuries apart from the "
-            "Order, its magic may no longer look Hermetic, its loyalty "
-            "may lie with the nomads, and it may have given Parma Magica "
-            "to the horde's hedge wizards.",
-        ),
+        secrets=[
+            titled(
+                "Storyguide Notes",
+                "Whether the apparition at Durenmar is the Aquila himself or "
+                "a shaman of his line travelling by phantasticum, the book "
+                "does not say. If his lineage survived on the steppe, two "
+                "centuries apart from the Order, its magic may no longer look "
+                "Hermetic, its loyalty may lie with the nomads, and it may "
+                "have given Parma Magica to the horde's hedge wizards.",
+            ),
+        ],
         stages=[
             S(
                 "Ripples in the West",
@@ -1853,9 +1860,15 @@ SEEDS: tuple[tuple[tuple[Target, ...], str, str, bool], ...] = (
 )
 
 
+#: The title of a record's one secret of table guidance.
+NOTES = "Storyguide Notes"
+
+
 def _add(record: Any, attr: str, more: str) -> None:
     if attr == "secrets":
-        record.secrets = as_secrets(paragraphs(secret_words(record.secrets), more))
+        # A seed for the storyguide alone is table guidance: it joins the
+        # record's Storyguide Notes, which stay last.
+        record.secrets = more_secrets(record.secrets, [titled(NOTES, more)])
         return
     setattr(record, attr, paragraphs(getattr(record, attr) or "", more))
 

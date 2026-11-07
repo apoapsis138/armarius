@@ -29,6 +29,7 @@ from ..builder import (
     joined_lines,
     paragraphs,
     secrets,
+    titled,
     vf_art,
     vf_great,
     vf_minor,
@@ -965,11 +966,24 @@ MAGI = (
         "her in fin amor; none has ever been her lover in fact. She treated "
         "her French-born apprentice Beatriz poorly for her birth. She alone "
         "holds the key to the Door Marked Summer.",
-        "Her charmed look is sorcery, and the aura's turn to Faerie, which "
-        "she did not mean, is her doing. Sooner or later her politics will "
-        "bring armies down on the covenant, as they came to Bellaquin and "
-        "Lariander. The magi hide the fates of questers she let into the "
-        "Night Garden, altering memories where they must.",
+        [
+            titled("Joia's charmed look", "Her charmed look is sorcery."),
+            titled(
+                "The aura's turn to Faerie",
+                "The aura's turn to Faerie at Jardin, which she did not mean, is "
+                "her doing.",
+            ),
+            titled(
+                "Where Joia's politics lead",
+                "Sooner or later her politics will bring armies down on the "
+                "covenant, as they came to Bellaquin and Lariander.",
+            ),
+            titled(
+                "The questers' fates",
+                "The magi hide the fates of questers she let into the Night "
+                "Garden, altering memories where they must.",
+            ),
+        ],
     ),
     (
         "lexora",
@@ -989,10 +1003,18 @@ MAGI = (
         "she bows to no one. Her Heart's Desire, to rule over magi: first "
         "Jardin, then a Tribunal as Praeco, then House Bjornaer as Prima. "
         "Only Hypatia's friendship keeps her and Xenophanes speaking.",
-        "She alone sees the threat in Serena, and suspects her of sympathy "
-        "with the crusade. She talks at Ara Maxima Nova as if Joia were mad "
-        "and dangerous, and secretly copied Joia's tractatus on viticulture "
-        "for them.",
+        [
+            titled(
+                "Lexora and Serena",
+                "She alone sees the threat in Serena, and suspects her of "
+                "sympathy with the crusade.",
+            ),
+            titled(
+                "Lexora and Ara Maxima Nova",
+                "She talks at Ara Maxima Nova as if Joia were mad and dangerous, "
+                "and secretly copied Joia's tractatus on viticulture for them.",
+            ),
+        ],
     ),
     (
         "xenophanes",
@@ -1011,7 +1033,12 @@ MAGI = (
         "talks to Father Augustine and comes away too muddled to leave the "
         "Church. He stands at the third station of the Path of Walking "
         "Backwards.",
-        "Two of his three books could bring the Church down on Jardin.",
+        [
+            titled(
+                "Xenophanes's books",
+                "Two of his three books could bring the Church down on Jardin.",
+            ),
+        ],
     ),
     (
         "beatriz",
@@ -1028,8 +1055,17 @@ MAGI = (
         "Most of the magi pity her. She is obsessed with old shapeshifters "
         "and backs Ahenobarbus when he seeks reform, though she mistrusts "
         "Serena.",
-        "She claims a terrible vision of Tolosa Paratge's future and will "
-        "not tell it. Her failure let Skullface slip through the Aegis.",
+        [
+            titled(
+                "Beatriz's vision",
+                "She claims a terrible vision of Tolosa Paratge's future and "
+                "will not tell it.",
+            ),
+            titled(
+                "How Skullface got in",
+                "Her failure let Skullface slip through the Aegis.",
+            ),
+        ],
     ),
     (
         "ahenobarbus",
@@ -1045,12 +1081,28 @@ MAGI = (
         "thinks the Garden a reckless folly and wants to steer clear of "
         "crusaders and southern lords alike. He is smitten with Serena. He "
         "has never entered the Night Garden.",
-        "Coeris sent him to prove Protendus incompetent, for his parens "
-        "Janus's politics at home; his parens holds his sigil, and he avoids "
-        "reporting to Protendus for as long as he can. Serena's love is "
-        "real, but he has not seen how far her ambition goes. He agrees with "
-        "her that Lexora and Xenophanes should be eased out of the Tribunal, "
-        "and that Jardin should side with the Whites and expel its heretics.",
+        [
+            titled(
+                "Why Ahenobarbus came",
+                "Coeris sent him to prove Protendus incompetent, for his parens "
+                "Janus's politics at home.",
+            ),
+            titled(
+                "Ahenobarbus's sigil",
+                "His parens holds his sigil, and he avoids reporting to "
+                "Protendus for as long as he can.",
+            ),
+            titled(
+                "Serena's love",
+                "Serena's love is real, but he has not seen how far her ambition goes.",
+            ),
+            titled(
+                "Ahenobarbus's views",
+                "He agrees with Serena that Lexora and Xenophanes should be "
+                "eased out of the Tribunal, and that Jardin should side with "
+                "the Whites and expel its heretics.",
+            ),
+        ],
     ),
     (
         "alyssa",
@@ -1067,11 +1119,23 @@ MAGI = (
         "Xenophanes, for her soft spot for odd magi and for the Cathars, "
         "dislikes Serena's cruelty, and respects Lexora enough to back her "
         "against Joia. She wants peace at home and has not yet quested.",
-        "She has been scrying the Whites unseen and means to force a way "
-        "into the regio to save the Gorgiastic Cathars. She raids the "
-        "Whites' vis, a flat breach of the Code, and holds 30 or more pawns "
-        "of it to tempt magi into Wizard's War against Carolus St. Tropez, "
-        "with whom she is in love.",
+        [
+            titled(
+                "Alyssa's scrying",
+                "She has been scrying the Whites unseen and means to force a way "
+                "into the regio to save the Gorgiastic Cathars.",
+            ),
+            titled(
+                "Alyssa's stolen vis",
+                "She raids the Whites' vis, a flat breach of the Code, and holds "
+                "30 or more pawns of it to tempt magi into Wizard's War against "
+                "Carolus St. Tropez.",
+            ),
+            titled(
+                "Whom Alyssa loves",
+                "She is in love with Carolus St. Tropez.",
+            ),
+        ],
     ),
 )
 
@@ -1088,10 +1152,19 @@ PEOPLE = (
         "as autocrat from rooms on the tower's ground floor, and takes her "
         "frustration out on the covenfolk with threats and rages. Vain, she "
         "bitterly resents Joia's beauty.",
-        "Her Heart's Desire is to take back her rightful home and title from "
-        "the magi. She may yet turn to crusaders or southern lords to do it, "
-        "and only her love for Ahenobarbus, whom she pretends is her pawn, "
-        "holds her back.",
+        [
+            titled(
+                "Serena's Heart's Desire",
+                "Her Heart's Desire is to take back her rightful home and title "
+                "from the magi.",
+            ),
+            titled(
+                "What holds Serena back",
+                "She may yet turn to crusaders or southern lords to win back her "
+                "home and title, and only her love for Ahenobarbus, whom she "
+                "pretends is her pawn, holds her back.",
+            ),
+        ],
     ),
     (
         "rosamonde",
@@ -1863,11 +1936,21 @@ def _places(provence: Provence) -> tuple[Neighbour, Neighbour]:
                 ),
             ),
         ],
-        secrets="The site was Magic until Joia built the troubadours' garden "
-        "here. Over the last decade the song has taken hold: Magic gave way to "
-        "Faerie, two strong Faerie regiones replaced the old magical ones, and "
-        "the wild hilltop Androcles sought was tamed. It was once a Clan Maruhs "
-        "ancestor site, where Panthera the Terrible was sometimes found.",
+        secrets=[
+            titled(
+                "The aura's turn to Faerie",
+                "The Fort at Belfort was Magic until Joia built the troubadours' "
+                "garden there. Over the last decade the song has taken hold: "
+                "Magic gave way to Faerie, two strong Faerie regiones replaced "
+                "the old magical ones, and the wild hilltop Androcles sought was "
+                "tamed.",
+            ),
+            titled(
+                "A Clan Maruhs ancestor site",
+                "The Fort at Belfort was once a Clan Maruhs ancestor site, where "
+                "Panthera the Terrible was sometimes found.",
+            ),
+        ],
         detail=FULL,
     )
     wood = b.place(
@@ -2043,13 +2126,26 @@ def _covenant(provence: Provence, site: Neighbour) -> Covenant:
             "Normandy needs least change, and Stonehenge has Fair Rosamund's "
             "maze at Woodstock.",
         ),
-        secrets=paragraphs(
-            "The legends are wrong: the visitor's three nights do nothing, and "
-            "the Heart's Desire is a quest made through the Door. Scholars of "
-            "the Order would flock here if the aura's change were known.",
-            "Serena is the covenant's greatest danger, and Lexora its open "
-            "one. Skullface and lesser faeries already get past the Aegis.",
-        ),
+        secrets=[
+            titled(
+                "The legends are wrong",
+                "The legends are wrong: the visitor's three nights do nothing, "
+                "and the Heart's Desire is a quest made through the Door.",
+            ),
+            titled(
+                "If the aura's change were known",
+                "Scholars of the Order would flock to Jardin if the aura's change "
+                "were known.",
+            ),
+            titled(
+                "Jardin's dangers",
+                "Serena is Jardin's greatest danger, and Lexora its open one.",
+            ),
+            titled(
+                "Past the Aegis",
+                "Skullface and lesser faeries already get past Jardin's Aegis.",
+            ),
+        ],
     )
 
 
@@ -2585,11 +2681,26 @@ def _creatures(
         place=site,
         appearance="An immense, red-toothed predator.",
         notes="A Great Beast of Clan Maruhs. The book gives no statistics.",
-        secrets="A lion-heartbeast Bjornaer who took the pool from shapeshifters "
-        "in the early tenth century, then passed into Final Twilight here. "
-        "Androcles came hunting this ancestor site, and Lexora means to seek "
-        "him for the House's Inner Mysteries. He may return and find his pool "
-        "corrupted.",
+        secrets=[
+            titled(
+                "Who Panthera was",
+                "A lion-heartbeast Bjornaer who took the pool from shapeshifters "
+                "in the early tenth century, then passed into Final Twilight "
+                "at the pool.",
+            ),
+            titled(
+                "Androcles's hunt",
+                "Androcles came hunting Panthera's ancestor site.",
+            ),
+            titled(
+                "Lexora's search",
+                "Lexora means to seek Panthera for the House's Inner Mysteries.",
+            ),
+            titled(
+                "Panthera's return",
+                "He may return and find his pool corrupted.",
+            ),
+        ],
     )
     skullface = b.creature(
         "Skullface",
@@ -2603,8 +2714,13 @@ def _creatures(
         "apart with her Guide power, then helps a new love of equal strength "
         "to grow. Some Merinita say she is why fortunetellers read death as "
         "change. The book gives no statistics.",
-        secrets="She escaped through the Aegis on the night Beatriz failed, "
-        "and has come back to Jardin for a new victim.",
+        secrets=[
+            titled(
+                "Skullface's return",
+                "She escaped through the Aegis on the night Beatriz failed, "
+                "and has come back to Jardin for a new victim.",
+            ),
+        ],
     )
     auranja = b.creature(
         "Auranja",
@@ -2613,8 +2729,13 @@ def _creatures(
         appearance="A big ginger tom who basks on the stable roof.",
         notes="John the Gardener's cat, a magical cat of unknown powers and "
         "Hypatia's lover. The book gives no statistics.",
-        secrets="A power lets him walk through the Door Marked Summer, and he "
-        "gossips with the cats of the region about what he hears there.",
+        secrets=[
+            titled(
+                "Auranja and the Door",
+                "A power lets him walk through the Door Marked Summer, and he "
+                "gossips with the cats of the region about what he hears there.",
+            ),
+        ],
     )
     tibout = b.creature(
         "Tibout",
@@ -2622,7 +2743,12 @@ def _creatures(
         realm="Magic",
         notes="The magical cat companion of the bearded minstrel Izarns. The "
         "book gives no statistics.",
-        secrets="He tells his master the low gossip he picks up from cats.",
+        secrets=[
+            titled(
+                "Tibout's gossip",
+                "He tells his master the low gossip he picks up from cats.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", emotion, "On the Lake of the Night Garden")
     b.link(covenant, "creatures", panthera, "Great Beast of the pool")

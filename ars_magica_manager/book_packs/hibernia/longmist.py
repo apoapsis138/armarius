@@ -16,12 +16,13 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from ...arts import ART_LOOKUP
-from ...models import Book, Character, CharterClause, Covenant, as_secrets, secret_words
+from ...models import Book, Character, CharterClause, Covenant, Secret
 from ...models.books import TEXT_ENCHANTMENT, TEXT_LONGEVITY, TEXT_OTHER, TEXT_SPELL
 from ...models.devices import InstilledEffect
 from ...models.world import FULL
 from ..builder import (
     Builder,
+    Secrets,
     StatBlock,
     add_possession,
     arts_from,
@@ -29,6 +30,7 @@ from ..builder import (
     characteristics,
     joined_lines,
     paragraphs,
+    titled,
     vf_art,
     vf_great,
     vf_puissant,
@@ -734,13 +736,26 @@ MAGI = (
         "agents, some holding Aegis tokens kept in his sanctum. He is the "
         "covenant's Corpus specialist and maker of its Longevity Rituals. "
         "Vain, he wears youthful illusion.",
-        "He has written polemics for Hibernia to secede and set its own "
-        "Code, with residency only for magi who can show three generations "
-        "in Hibernia; none is in the library or yet circulated, though Dara "
-        "knows of them. He has read in the Lebor Feasa Runda that drinkers "
-        "of Tobar Segais, on the plain of Mag Mell, on Tir Na nÓg, ruled by "
-        "the giant Fomórach, live forever. His age is outrunning his ritual, "
-        "and he may soon send his filius for that water.",
+        [
+            titled(
+                "His polemics",
+                "He has written polemics for Hibernia to secede and set its own "
+                "Code, with residency only for magi who can show three generations "
+                "in Hibernia; none is in the library or yet circulated, though Dara "
+                "knows of them.",
+            ),
+            titled(
+                "The water of Tobar Segais",
+                "He has read in the Lebor Feasa Runda that drinkers "
+                "of Tobar Segais, on the plain of Mag Mell, on Tir Na nÓg, ruled by "
+                "the giant Fomórach, live forever.",
+            ),
+            titled(
+                "His failing ritual",
+                "His age is outrunning his ritual, "
+                "and he may soon send his filius for the water of Tobar Segais.",
+            ),
+        ],
     ),
     (
         "conchobor",
@@ -758,9 +773,14 @@ MAGI = (
         "nominally the security of the lands outside the Aegis, which he has "
         "been stretching over everything that comes from outside, vis "
         "sources and stocks included.",
-        "The Tuatha Dé still hold a powerful Arcane Connection to him, a "
-        "coin Ruadan forged from his pain, since he tried to master them "
-        "with his glove's first power.",
+        [
+            titled(
+                "The coin of his pain",
+                "The Tuatha Dé still hold a powerful Arcane Connection to him, a "
+                "coin Ruadan forged from his pain, since he tried to master them "
+                "with his glove's first power.",
+            ),
+        ],
     ),
     (
         "cailleach",
@@ -793,11 +813,20 @@ MAGI = (
         "bargains with and controls elemental spirits, and has spent time "
         "among the druids of Connacht and the Fir Bolg. He respects and "
         "fears his parens, but does not share Lugh's view of the Order.",
-        "In his beardless years he travelled with Brea, a man schooled in "
-        "spirits, and against Brea's advice and out of bravado summoned one "
-        "he could not control. It attacked them; Dara ran, and the druid "
-        "died. He has told no one at Longmist. Something unseen meddles "
-        "with his laboratory, and he fears what it may be.",
+        [
+            titled(
+                "Brea's death",
+                "In his beardless years he travelled with Brea, a man schooled in "
+                "spirits, and against Brea's advice and out of bravado summoned one "
+                "he could not control. It attacked them; Dara ran, and the druid "
+                "died. He has told no one at Longmist.",
+            ),
+            titled(
+                "Something in his laboratory",
+                "Something unseen meddles "
+                "with his laboratory, and he fears what it may be.",
+            ),
+        ],
     ),
     (
         "eochaid",
@@ -835,7 +864,7 @@ MAGI = (
     ),
 )
 
-PEOPLE: tuple[tuple[str, str, str, int, StatBlock, str, str], ...] = (
+PEOPLE: tuple[tuple[str, str, str, int, StatBlock, str, Secrets], ...] = (
     (
         "bran",
         "Bran in Gai Móir",
@@ -848,7 +877,12 @@ PEOPLE: tuple[tuple[str, str, str, int, StatBlock, str, str], ...] = (
         "childless, and he blames an enchantment of the magi. His resentment "
         "is growing and he may soon confront them, and they may have to "
         "research fertility magic.",
-        "He is under no Longevity Ritual, so their childlessness is not its doing.",
+        [
+            titled(
+                "Their childlessness",
+                "He is under no Longevity Ritual, so their childlessness is not its doing.",
+            ),
+        ],
     ),
     (
         "eamonn",
@@ -965,9 +999,19 @@ FOLK: tuple[tuple[str, str, int | None, str], ...] = (
         "7. 7 Build Points.",
     ),
 )
-FOLK_SECRETS = {
-    "una": "For some years she has been cuckolding Cormac with Fearghal.",
-    "fearghal": "He commits adultery with Úna, a sin he forgives himself.",
+FOLK_SECRETS: dict[str, list[Secret]] = {
+    "una": [
+        titled(
+            "Úna and Fearghal",
+            "For some years she has been cuckolding Cormac with Fearghal.",
+        )
+    ],
+    "fearghal": [
+        titled(
+            "Fearghal and Úna",
+            "He commits adultery with Úna, a sin he forgives himself.",
+        )
+    ],
 }
 
 #: covenant key or magus key, name, characteristics, specializations, words.
@@ -2197,11 +2241,10 @@ def _overwrites(hibernia: Hibernia) -> None:
     saga = hibernia.b.saga
     for character in saga.characters:
         if character.name.startswith("Cú Chonnacht"):
-            character.secrets = as_secrets(
-                secret_words(character.secrets).replace(
+            for secret in character.secrets:
+                secret.text = secret.text.replace(
                     "The book says nothing more of him. ", ""
                 )
-            )
     for neighbour in saga.neighbours:
         if neighbour.name == "Tír na nÓg, the Otherworld":
             neighbour.summary = paragraphs(
@@ -2539,18 +2582,30 @@ def _covenant(hibernia: Hibernia, site: Neighbour) -> Covenant:
             "to the valley's faeries, and a keeper of tradition and future "
             "leader.",
         ),
-        secrets=paragraphs(
-            "Tribute from the Underworld is a sham, unknown to Longmist: the "
-            "bodies make no vis, it is put there by the Tuatha Dé's magic, "
-            "perhaps to make the magi party to something unseemly and bind "
-            "them closer.",
-            "Ruadan works against any magus whose doing would take him from "
-            "the valley or bring others to it; his reasons are unknown.",
-            "A tale keen-eyed apprentices may find says the music ban came "
-            "after a faerie princess entranced the whole covenant by her voice.",
-            "Visitors from Normandy are said to have stolen tokens and books "
-            "many years ago.",
-        ),
+        secrets=[
+            titled(
+                "Tribute from the Underworld",
+                "Tribute from the Underworld is a sham, unknown to Longmist: the "
+                "bodies make no vis, it is put there by the Tuatha Dé's magic, "
+                "perhaps to make the magi party to something unseemly and bind "
+                "them closer.",
+            ),
+            titled(
+                "Ruadan's opposition",
+                "Ruadan works against any magus whose doing would take him from "
+                "the valley or bring others to it; his reasons are unknown.",
+            ),
+            titled(
+                "Why music is banned",
+                "A tale keen-eyed apprentices may find says Longmist's music ban came "
+                "after a faerie princess entranced the whole covenant by her voice.",
+            ),
+            titled(
+                "The Norman thieves",
+                "Visitors from Normandy are said to have stolen tokens and books "
+                "from Longmist many years ago.",
+            ),
+        ],
     )
     covenant.boons_hooks = boons_hooks_from(covenant.what_matters)
     return covenant
@@ -2586,7 +2641,7 @@ def _people(hibernia: Hibernia, covenant: Covenant) -> dict[str, Character]:
             age=age,
             summary=summary,
             type="companion",
-            secrets=FOLK_SECRETS.get(key, ""),
+            secrets=FOLK_SECRETS.get(key, []),
         )
     return found
 
@@ -3450,9 +3505,12 @@ def _ruadan(hibernia: Hibernia, covenant: Covenant, site: Neighbour) -> None:
             "roll against Ease Factor 9 holds it off, failure bringing -3 to "
             "all totals.",
         ),
-        secrets=(
-            "He may only now be ready to act on a plan of centuries for Longmist."
-        ),
+        secrets=[
+            titled(
+                "His plan for Longmist",
+                "He may only now be ready to act on a plan of centuries for Longmist.",
+            ),
+        ],
     )
     b.link(covenant, "creatures", ruadan, "Mediator, seated at its council")
 
@@ -3588,10 +3646,13 @@ def _clan(hibernia: Hibernia, longmist: Covenant) -> None:
             "may hire others to track it through Ulaid and into Connacht, and "
             "an enemy of both could bring a truce."
         ),
-        secrets=(
-            "Bán feels no tie to the cathach, and means to use the clan's "
-            "wound to strip Cú Chonnacht of his leadership."
-        ),
+        secrets=[
+            titled(
+                "Bán's ambition",
+                "Bán feels no tie to the cathach, and means to use the clan's "
+                "wound to strip Cú Chonnacht of his leadership.",
+            ),
+        ],
     )
     clan.boons_hooks = boons_hooks_from(clan.what_matters)
     hibernia.covenants["clan_mac_tire"] = clan

@@ -22,6 +22,7 @@ from ..builder import (
     dormant,
     paragraphs,
     secrets,
+    titled,
     vf_ability,
     vf_puissant,
 )
@@ -222,85 +223,163 @@ def _hannelore(b: Builder) -> Character:
             "with accidents or disappear, and people find they cannot bear to "
             "stay long in her company.",
         ),
-        secrets=paragraphs(
-            "Attracted to power, she reads the jealousy the Gift stirs as "
-            "power's natural effect, and fixes on a magus who seems strong "
-            "(p. 85). She is infatuated with him and his power; he may love "
-            "her, she does not love him. Her target is best not repulsive, and "
-            "need not be a man. Variants: avarice (she wants to be taught, "
-            "impossible without the Gift) or envy (she wants his magic from "
-            "him); a male Hannelore; a same-sex pursuit, kept secret, where "
-            "Hugo might seek no clemency; a companion or storyguide character "
-            "as target, whom she can enslave and later curse at Arcane Range "
-            "from connections taken while she held him, watching in crow form "
-            "if he dwells within an Aegis; a weaker version, with a Power or "
-            "her vis taken away, keeping Diablerie; a stronger one, with a "
-            "coven, demons and corrupted beasts in pact, or more Powers; a "
-            "one-time threat with no prior romance, going straight to her "
-            "death and return (pp. 80, 84-85).",
-            "From a block of forbidden books she initiated herself into the "
-            "Unholy Method of Incantation, at the cost of a Warping point. "
-            "The rite drew a powerful demon in a pleasing form, who taught her "
-            "for five years, feeding her instability with its Obsession power. "
-            "She knows her power is illicit but does not at first know it is "
-            "Infernal, or that her beloved's is not (p. 87). She has more "
-            "Virtues than creation allows: demonic tutelage equal to Mentored "
-            "by Demons five times (RoP: Infernal p. 86), 50 extra experience "
-            "a year, and Vituperations that gave her Self-Confident and Aging "
-            "Points. Such an outlay suggests Hell plans more for her, and that "
-            "the infatuation is a distraction (p. 81).",
-            "Hierarchy Score 3. Fragile Constitution, Infernal Blessing and "
-            "Tainted With Evil come from Warping, and Arcane Lore free with "
-            "Diabolist. Her Warping is so high because she takes Warping to "
-            "fuel her magic (RoP: Infernal p. 104) and carries lasting "
-            "effects. Unaffected by The Gift: RoP: Magic p. 47 (p. 81).",
-            "Powers from her Infernal Blessing, a Level 25 Debauchery / "
-            "Phantasm effect (Base 4, +1 Touch, +4 Forsaken) (p. 81). Gaze of "
-            "the Wolf: with eye contact she fixes a person in place while she "
-            "holds the stare; Penetration 5 + Penetration Bonus + Aura "
-            "Modifier. The text calls this her Transfix power (pp. 83, 88). "
-            "Exhaustion: her touch inflicts a Long-Term Fatigue level; not in "
-            "the Dominion or on women; Penetration as above.",
-            "Her vis (p. 81): at least 3 + simple die pawns at any time, some "
-            "turned to vis prava. Not Personal Vis Sources, as it is never "
-            "automatic. She steals the Host at Communion and profanes it (RoP: "
-            "Infernal p. 96); has replaced the relic in her father's chapel "
-            "with a fake and profaned the true one; contests the spring's "
-            "vis; and has the beads on one book of her father's.",
-            "Casting (p. 82): Communication + Incantation + Power + Aura "
-            "modifier + stress die. Her Hierarchy spares her the harsh effects "
-            "of a failed maleficium of level 30 or below. Each use costs a "
-            "Confidence point, adding nothing, or a Warping point. Range "
-            "Personal, Duration Forsaken maleficia are taken as already cast "
-            "(And the Devil, Black Wings, She Who Bears the Mark); each gives a "
-            "Warping point a year, not included in her score. Bonuses: +5 a "
-            "pawn of vis prava or +2 of other vis (at most Incantation + Power "
-            "pawns); +3 a Confidence point (at most 2); +6 for sacrificing a "
-            "black animal; +5 an assistant at Communication +1 and Incantation "
-            "4 (at most 3 with Diablerie, 2 otherwise). With Diablerie, her "
-            "best Power, around 53 + stress die with Infernal aura 2, 2 "
-            "Confidence, 4 pawns of vis prava and a black goat; +15 with a "
-            "coven of 3. See RoP: Infernal chapter 10.",
-            "Her maleficia (pp. 82-83) are not formulaic, and she may vary "
-            "Range, Duration, Target or effect:\n" + "\n".join(_MALEFICIA),
-            "Tactics (pp. 88-90): a maleficium is very obvious, all chanted "
-            "blasphemies, so she uses Gaze of the Wolf first unless she has "
-            "surprise. She times incantations for sunrise or sunset, when "
-            "the Parma Magica lapses. She is no match for a group of magi, with "
-            "low Penetration against those she has no interest in, but curses "
-            "companions and grogs with Minor Flaws such as Noncombatant, "
-            "Palsied Hands or Fear, or blights an Ability or Characteristic, "
-            "all deliverable at Duration Diameter. She fights hit and run from "
-            "spirit form, leaves in crow shape, and may bring minor demons "
-            "under a pact, or a former suitor ensorceled with A Crown of "
-            "Twelve Stars. His name, and any letters in his own hand, are "
-            "sympathetic connections she holds to her love.",
-            "Redemption (p. 89): she is not beyond it. A patient character, "
-            "perhaps with the baron, may bring her to see the source of her "
-            "power and give it up. Abandoned after a true wish to repent, she "
-            "relapses and seeks revenge. Her wish will be tested by God and "
-            "fought by her patron; penance means a nunnery.",
-        ),
+        secrets=[
+            titled(
+                "What draws her to a magus",
+                "Attracted to power, she reads the jealousy the Gift stirs as "
+                "power's natural effect, and fixes on a magus who seems strong "
+                "(p. 85). She is infatuated with him and his power; he may love "
+                "her, she does not love him.",
+            ),
+            titled(
+                "How she learned her craft",
+                "From a block of forbidden books she initiated herself into the "
+                "Unholy Method of Incantation, at the cost of a Warping point "
+                "(p. 87).",
+            ),
+            titled(
+                "Her demon tutor",
+                "The rite drew a powerful demon in a pleasing form, who taught "
+                "her for five years, feeding her instability with its Obsession "
+                "power (p. 87).",
+            ),
+            titled(
+                "What she knows of her power",
+                "She knows her power is illicit but does not at first know it "
+                "is Infernal, or that her beloved's is not (p. 87).",
+            ),
+            titled(
+                "What Hell plans for her",
+                "Such an outlay of demonic tutelage suggests Hell plans more for "
+                "her, and that the infatuation is a distraction (p. 81).",
+            ),
+            titled(
+                "The Gaze of the Wolf",
+                "Gaze of the Wolf: with eye contact she fixes a person in place "
+                "while she holds the stare (pp. 83, 88).",
+            ),
+            titled(
+                "Her exhausting touch",
+                "Exhaustion: her touch inflicts a Long-Term Fatigue level; not "
+                "in the Dominion or on women (p. 81).",
+            ),
+            titled(
+                "Her store of vis",
+                "Her vis (p. 81): at least 3 + simple die pawns at any time, "
+                "some turned to vis prava.",
+            ),
+            titled(
+                "The stolen Host",
+                "She steals the Host at Communion and profanes it (RoP: "
+                "Infernal p. 96) (p. 81).",
+            ),
+            titled(
+                "The relic in her father's chapel",
+                "She has replaced the relic in her father's chapel with a fake "
+                "and profaned the true one (p. 81).",
+            ),
+            titled(
+                "The spring's vis",
+                "She contests the vis of the sulfurous spring (p. 81).",
+            ),
+            titled(
+                "The beads on her father's book",
+                "She has the vis beads on one book of her father's (p. 81).",
+            ),
+            *[titled(m.split(" (", 1)[0], m) for m in _MALEFICIA],
+            titled(
+                "Her chanted blasphemies",
+                "A maleficium of hers is very obvious, all chanted blasphemies, "
+                "so she uses Gaze of the Wolf first unless she has surprise "
+                "(pp. 88-90).",
+            ),
+            titled(
+                "When she casts",
+                "She times incantations for sunrise or sunset, when the Parma "
+                "Magica lapses (pp. 88-90).",
+            ),
+            titled(
+                "How she fights",
+                "She fights hit and run from spirit form, leaves in crow shape, "
+                "and may bring minor demons under a pact, or a former suitor "
+                "ensorceled with A Crown of Twelve Stars (pp. 88-90).",
+            ),
+            titled(
+                "Her hold on her love",
+                "Her beloved's name, and any letters in his own hand, are "
+                "sympathetic connections she holds to him (pp. 88-90).",
+            ),
+            titled(
+                "Whether she can be redeemed",
+                "She is not beyond redemption (p. 89). A patient character, "
+                "perhaps with the baron, may bring her to see the source of her "
+                "power and give it up.",
+            ),
+            titled(
+                "If she is abandoned",
+                "Abandoned after a true wish to repent, she relapses and seeks "
+                "revenge (p. 89).",
+            ),
+            titled(
+                "Her wish to repent",
+                "Her wish to repent will be tested by God and fought by her "
+                "patron; penance means a nunnery (p. 89).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Her target is best not repulsive, and need not be a man "
+                    "(p. 85). Variants: avarice (she wants to be taught, "
+                    "impossible without the Gift) or envy (she wants his magic from "
+                    "him); a male Hannelore; a same-sex pursuit, kept secret, where "
+                    "Hugo might seek no clemency; a companion or storyguide character "
+                    "as target, whom she can enslave and later curse at Arcane Range "
+                    "from connections taken while she held him, watching in crow form "
+                    "if he dwells within an Aegis; a weaker version, with a Power or "
+                    "her vis taken away, keeping Diablerie; a stronger one, with a "
+                    "coven, demons and corrupted beasts in pact, or more Powers; a "
+                    "one-time threat with no prior romance, going straight to her "
+                    "death and return (pp. 80, 84-85).",
+                    "She has more Virtues than creation allows: demonic tutelage "
+                    "equal to Mentored by Demons five times (RoP: Infernal p. 86), 50 "
+                    "extra experience a year, and Vituperations that gave her "
+                    "Self-Confident and Aging Points (p. 81).",
+                    "Hierarchy Score 3. Fragile Constitution, Infernal Blessing and "
+                    "Tainted With Evil come from Warping, and Arcane Lore free with "
+                    "Diabolist. Her Warping is so high because she takes Warping to "
+                    "fuel her magic (RoP: Infernal p. 104) and carries lasting "
+                    "effects. Unaffected by The Gift: RoP: Magic p. 47 (p. 81).",
+                    "Powers from her Infernal Blessing, a Level 25 Debauchery / "
+                    "Phantasm effect (Base 4, +1 Touch, +4 Forsaken) (p. 81). Gaze of "
+                    "the Wolf: Penetration 5 + Penetration Bonus + Aura Modifier. The "
+                    "text calls this her Transfix power (pp. 83, 88). Exhaustion: "
+                    "Penetration as above.",
+                    "Her vis is not Personal Vis Sources, as it is never automatic "
+                    "(p. 81).",
+                    "Casting (p. 82): Communication + Incantation + Power + Aura "
+                    "modifier + stress die. Her Hierarchy spares her the harsh effects "
+                    "of a failed maleficium of level 30 or below. Each use costs a "
+                    "Confidence point, adding nothing, or a Warping point. Range "
+                    "Personal, Duration Forsaken maleficia are taken as already cast "
+                    "(And the Devil, Black Wings, She Who Bears the Mark); each gives a "
+                    "Warping point a year, not included in her score. Bonuses: +5 a "
+                    "pawn of vis prava or +2 of other vis (at most Incantation + Power "
+                    "pawns); +3 a Confidence point (at most 2); +6 for sacrificing a "
+                    "black animal; +5 an assistant at Communication +1 and Incantation "
+                    "4 (at most 3 with Diablerie, 2 otherwise). With Diablerie, her "
+                    "best Power, around 53 + stress die with Infernal aura 2, 2 "
+                    "Confidence, 4 pawns of vis prava and a black goat; +15 with a "
+                    "coven of 3. See RoP: Infernal chapter 10.",
+                    "Her maleficia (pp. 82-83) are not formulaic, and she may vary "
+                    "Range, Duration, Target or effect.",
+                    "Tactics (pp. 88-90): she is no match for a group of magi, with "
+                    "low Penetration against those she has no interest in, but curses "
+                    "companions and grogs with Minor Flaws such as Noncombatant, "
+                    "Palsied Hands or Fear, or blights an Ability or Characteristic, "
+                    "all deliverable at Duration Diameter.",
+                ),
+            ),
+        ],
     )
     blank = deepcopy(hannelore)
     b.variants[hannelore.id] = [
@@ -410,17 +489,28 @@ def _ghost(b: Builder, hannelore: Character) -> None:
             "make her a Master or Lord, +5 or +10. Whether she keeps her "
             "maleficia as a demon is left open.",
         ),
-        secrets=(
-            "Hell lets her back, with her punishment eased a little for each "
-            "soul won. She has a year from the anniversary of her death to win "
-            "one, tempting it to mortal sin and seeing it die unrepentant; each "
-            "success gives another year. Possessed humans pass an Aegis unless "
-            "the demon extends its Magic Resistance over the host (RoP: "
-            "Infernal p. 32), but if the Aegis's Penetration beats her Infernal "
-            "Might all powers cost double. She flees superior force. If she "
-            "sees her beloved she cannot help dropping her plans to kill him "
-            "(p. 94)."
-        ),
+        secrets=[
+            titled(
+                "Her year to win a soul",
+                "Hell lets her back, with her punishment eased a little for "
+                "each soul won. She has a year from the anniversary of her "
+                "death to win one, tempting it to mortal sin and seeing it die "
+                "unrepentant; each success gives another year (p. 94).",
+            ),
+            titled("Before superior force", "She flees superior force (p. 94)."),
+            titled(
+                "If she sees her beloved",
+                "If she sees her beloved she cannot help dropping her plans to "
+                "kill him (p. 94).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Possessed humans pass an Aegis unless the demon extends its "
+                "Magic Resistance over the host (RoP: Infernal p. 32), but if "
+                "the Aegis's Penetration beats her Infernal Might all powers "
+                "cost double (p. 94).",
+            ),
+        ],
     )
     b.link(ghost, "characters", hannelore, "Hannelore after her death")
 
@@ -436,12 +526,18 @@ def _family(
             "The seat of Baron Hugo, a nobleman of middling importance with "
             "authority in the area."
         ),
-        secrets=(
-            "Hannelore's work has spread an Infernal aura over the baron's "
-            "lands and worn the castle's Dominion aura down to 1, so it fades "
-            "entirely after dark (p. 88). The book names no strength for the "
-            "Infernal aura here."
-        ),
+        secrets=[
+            titled(
+                "The failing Dominion",
+                "Hannelore's work has spread an Infernal aura over the baron's "
+                "lands and worn the castle's Dominion aura down to 1, so it "
+                "fades entirely after dark (p. 88).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The book names no strength for the Infernal aura here.",
+            ),
+        ],
     )
     hugo = b.lord(
         "Baron Hugo",
@@ -455,28 +551,51 @@ def _family(
             "disappointed that every match has failed. Little happens on his "
             "lands that he does not hear of.",
         ),
-        secrets=paragraphs(
-            "He need not be a baron or landed: a knight or sheriff does as "
-            "well, or an older brother or uncle who is her guardian. Whoever "
-            "he is, he has a secret past (pp. 84, 86).",
-            "He owns books of Infernal Lore. Why is the storyguide's choice "
-            "(p. 87): he was a sorcerer in youth who broke his staff and has "
-            "lived blamelessly since, kept safe by a Faith point from a "
-            "pilgrimage; or he belongs to a secret society within the Church "
-            "against evil, run through an order such as the Templars, and "
-            "keeps them as spoils to study the Enemy; or they are his wife's "
-            "(see Lady Ermengarde); or an ancestor left them, he can barely "
-            "read, and Hell has seen they stay with those who will use them.",
-            "As the story runs (pp. 88-89): depending on these he is ignorant "
-            "or blinded by love, a pawn she forces, or a demon-hunter calling "
-            "the magi in. Asked for help with proof and respect he is saddened "
-            "but can believe it, given what he has seen. His price is her life "
-            "spared, and he comes along to see to it. He supplies four soldiers "
-            "(Standard Soldier, ArM5 p. 22) under a serjeant (Grizzled Veteran, "
-            "ArM5 p. 21), perhaps a knight in residence, more in a day, and "
-            "knowledge of the manor. He has probably the right of judge, jury "
-            "and executioner over intruders.",
-        ),
+        secrets=[
+            titled(
+                "His books of Infernal Lore",
+                "He owns books of Infernal Lore (p. 87).",
+            ),
+            titled(
+                "Asking Hugo for help",
+                "Asked for help with proof and respect he is saddened but can "
+                "believe it, given what he has seen. His price is Hannelore's "
+                "life spared, and he comes along to see to it (pp. 88-89).",
+            ),
+            titled(
+                "What Hugo can bring",
+                "He supplies four soldiers under a serjeant, perhaps a knight "
+                "in residence, more in a day, and knowledge of the manor "
+                "(pp. 88-89).",
+            ),
+            titled(
+                "Hugo's justice over intruders",
+                "He has probably the right of judge, jury and executioner over "
+                "intruders (pp. 88-89).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "He need not be a baron or landed: a knight or sheriff does "
+                    "as well, or an older brother or uncle who is her guardian. "
+                    "Whoever he is, he has a secret past (pp. 84, 86).",
+                    "Why he owns the books is the storyguide's choice (p. 87): "
+                    "he was a sorcerer in youth who broke his staff and has "
+                    "lived blamelessly since, kept safe by a Faith point from a "
+                    "pilgrimage; or he belongs to a secret society within the "
+                    "Church against evil, run through an order such as the "
+                    "Templars, and keeps them as spoils to study the Enemy; or "
+                    "they are his wife's (see Lady Ermengarde); or an ancestor "
+                    "left them, he can barely read, and Hell has seen they stay "
+                    "with those who will use them.",
+                    "As the story runs (pp. 88-89): depending on these he is "
+                    "ignorant or blinded by love, a pawn she forces, or a "
+                    "demon-hunter calling the magi in. His soldiers are "
+                    "Standard Soldiers (ArM5 p. 22), his serjeant a Grizzled "
+                    "Veteran (ArM5 p. 21).",
+                ),
+            ),
+        ],
     )
     ermengarde = b.magus(
         "Lady Ermengarde",
@@ -485,14 +604,21 @@ def _family(
         age=None,
         type="companion",
         summary="The wife of Baron Hugo and Hannelore's stepmother.",
-        secrets=(
-            "She may be a sorceress herself, the true owner of the books, "
-            "using Hannelore as a cat's-paw to hide her own evil and having "
-            "corrupted her (p. 87). As a ghost Hannelore possesses her, stirs "
-            "her and Hugo with Infatuation, fakes or uncovers an infidelity, "
-            "and drives her with Revenge to kill him; she dies under arrest, "
-            "her soul forsaken (p. 93)."
-        ),
+        secrets=[
+            titled(
+                "Whose books they are",
+                "She may be a sorceress herself, the true owner of Baron Hugo's "
+                "forbidden books, using Hannelore as a cat's-paw to hide her own "
+                "evil and having corrupted her (p. 87).",
+            ),
+            titled(
+                "Ermengarde and Hannelore's ghost",
+                "As a ghost Hannelore possesses Ermengarde, stirs her and Hugo "
+                "with Infatuation, fakes or uncovers an infidelity, and drives "
+                "her with Revenge to kill him; she dies under arrest, her soul "
+                "forsaken (p. 93).",
+            ),
+        ],
     )
     b.link(hannelore, "characters", ermengarde, "Her stepmother")
     fulke = b.magus(
@@ -502,13 +628,23 @@ def _family(
         age=None,
         type="companion",
         summary="The priest assigned to the pastoral care of the nuns.",
-        secrets=(
-            "No priest at all, but an infernalist posing as one, sworn to the "
-            "demon who trained Hannelore and told to help her. If she is to "
-            "escape quickly he corrupted the nunnery before she came, drawing "
-            "younger nuns into rebellion and licence by personal influence "
-            "(RoP: Infernal pp. 22-23) (p. 91)."
-        ),
+        secrets=[
+            titled(
+                "What Fulke really is",
+                "No priest at all, but an infernalist posing as one, sworn to "
+                "the demon who trained Hannelore and told to help her (p. 91).",
+            ),
+            titled(
+                "Fulke and the nunnery",
+                "If Hannelore is to escape quickly he corrupted the nunnery "
+                "before she came, drawing younger nuns into rebellion and "
+                "licence by personal influence (p. 91).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Personal influence: RoP: Infernal pp. 22-23.",
+            ),
+        ],
     )
     caves = b.place(
         "The Baron's Old Storage Caves",
@@ -518,20 +654,38 @@ def _family(
             "perishable food, since abandoned. They were enlarged long ago, "
             "dressed with stone, and go deep into the bedrock for the cool."
         ),
-        secrets=(
-            "Hannelore's hiding place. One cave is her ritual chamber, which "
-            "holds the Infernal aura of 3; the aura is that cave's (p. 89)."
-        ),
+        secrets=[
+            titled(
+                "Who hides here",
+                "The caves are Hannelore's hiding place (p. 89).",
+            ),
+            titled(
+                "The ritual chamber",
+                "One cave is Hannelore's ritual chamber (p. 89).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The ritual chamber holds the Infernal aura of 3; the aura is "
+                "that cave's (p. 89).",
+            ),
+        ],
     )
     spring = b.place(
         "The Sulfurous Spring",
         realm="",
         summary="A spring on the baron's estate that smells of sulfur.",
-        secrets=(
-            "Once a year on Lammas Eve it belches forth vis, which the local "
-            "witch coven has collected since time immemorial and Hannelore "
-            "contests (p. 81)."
-        ),
+        secrets=[
+            titled(
+                "The spring on Lammas Eve",
+                "Once a year on Lammas Eve the sulfurous spring belches forth "
+                "vis (p. 81).",
+            ),
+            titled(
+                "Who takes its vis",
+                "The local witch coven has collected the sulfurous spring's vis "
+                "since time immemorial, and Hannelore contests it (p. 81).",
+            ),
+        ],
     )
     coven = b.faction(
         "The Local Witch Coven",
@@ -539,13 +693,19 @@ def _family(
         realm="Infernal",
         place=spring,
         summary="A coven of witches said to meet about the baron's estate.",
-        secrets=(
-            "It has taken the sulfurous spring's Lammas Eve vis since time "
-            "immemorial (p. 81). A stronger Hannelore takes over a coven of "
-            "infernalists early on, for a Ceremony bonus (p. 84); younger "
-            "siblings she corrupts could form hers instead (p. 86). The book "
-            "gives no members."
-        ),
+        secrets=[
+            titled(
+                "The coven's vis",
+                "The coven has taken the sulfurous spring's Lammas Eve vis since "
+                "time immemorial (p. 81).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "A stronger Hannelore takes over a coven of infernalists early "
+                "on, for a Ceremony bonus (p. 84); younger siblings she corrupts "
+                "could form hers instead (p. 86). The book gives no members.",
+            ),
+        ],
     )
     b.link(hannelore, "places", caves, "Where she hides")
     b.link(hugo, "characters", hannelore, "His daughter")
@@ -582,34 +742,63 @@ def _nunnery(b: Builder, fulke: Character) -> Neighbour:
         "The Nunnery",
         church="Monastery or nunnery",
         summary=("An ordinary religious house with a solid foundation and high walls."),
-        secrets=paragraphs(
-            "The book gives it no name. Establish it early in the saga, perhaps "
-            "by having the characters guide lost novices there, so it seems an "
-            "ordinary house (p. 91).",
-            "Hannelore is walled in here as an anchorite, fed through a hole. "
-            "For an immediate escape it was corrupted before she came, by "
-            "Father Fulke, and Hugo was steered to it by the demon; for a slow "
-            "one it is in a state of grace and she brings it down (p. 91).",
-            "Most of it stays in the Dominion, but its aura weakens, an "
-            "Infernal aura rises at night, and her cell's Dominion erodes "
-            "until it no longer hinders her. Within months a few nuns make her "
-            "comfortable; within a year she has grimoires and smuggled vis "
-            "(pp. 91, 92).",
-            "Corrupted nuns are Initiated into her patron's Favored Abilities: "
-            "Ceremony, Diablerie, Incantation, Malediction, Psychomachia. Each "
-            "adds Presence + Incantation as a ceremonial bonus, and she leads "
-            "one nun per point of Ceremony (RoP: Infernal p. 91); or in a "
-            "leaderless ceremony 12 nuns and she add the sum of their Ceremony "
-            "scores, less 13, on top (p. 91).",
-            "After she flies, her nuns cover for her and the prioress, ashamed, "
-            "tells no one unless the magi stressed the danger. Her cell holds "
-            "books on the maleficia and vis infesta, a crust of profaned Host "
-            "that looks like Corpus vis to Hermetic magic; she took her vis "
-            "prava (p. 91).",
-            "An attack on the nunnery must be utterly secret. Her patron warns "
-            "the authorities, the walls keep people out and the Dominion "
-            "hampers spells. If pressed she may burn it (p. 92).",
-        ),
+        secrets=[
+            titled(
+                "Hannelore's cell",
+                "Hannelore is walled in here as an anchorite, fed through a "
+                "hole (p. 91).",
+            ),
+            titled(
+                "The nunnery's failing Dominion",
+                "Most of the nunnery stays in the Dominion, but its aura "
+                "weakens, an Infernal aura rises at night, and Hannelore's "
+                "cell's Dominion erodes until it no longer hinders her "
+                "(pp. 91, 92).",
+            ),
+            titled(
+                "What the nuns bring her",
+                "Within months a few nuns make Hannelore comfortable; within a "
+                "year she has grimoires and smuggled vis (pp. 91, 92).",
+            ),
+            titled(
+                "After Hannelore flies",
+                "After she flies, Hannelore's nuns cover for her and the "
+                "prioress, ashamed, tells no one unless the magi stressed the "
+                "danger (p. 91).",
+            ),
+            titled(
+                "Her empty cell",
+                "Hannelore's cell holds books on the maleficia and vis infesta, "
+                "a crust of profaned Host that looks like Corpus vis to "
+                "Hermetic magic; she took her vis prava (p. 91).",
+            ),
+            titled(
+                "An attack on the nunnery",
+                "An attack on the nunnery must be utterly secret. Hannelore's "
+                "patron warns the authorities, the walls keep people out and "
+                "the Dominion hampers spells. If pressed she may burn it "
+                "(p. 92).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book gives it no name. Establish it early in the saga, "
+                    "perhaps by having the characters guide lost novices there, "
+                    "so it seems an ordinary house (p. 91).",
+                    "For an immediate escape it was corrupted before she came, "
+                    "by Father Fulke, and Hugo was steered to it by the demon; "
+                    "for a slow one it is in a state of grace and she brings it "
+                    "down (p. 91).",
+                    "Corrupted nuns are Initiated into her patron's Favored "
+                    "Abilities: Ceremony, Diablerie, Incantation, Malediction, "
+                    "Psychomachia. Each adds Presence + Incantation as a "
+                    "ceremonial bonus, and she leads one nun per point of "
+                    "Ceremony (RoP: Infernal p. 91); or in a leaderless "
+                    "ceremony 12 nuns and she add the sum of their Ceremony "
+                    "scores, less 13, on top (p. 91).",
+                ),
+            ),
+        ],
     )
     b.link(fulke, "places", nunnery, "Priest to the nuns")
     b.faction(
@@ -617,11 +806,18 @@ def _nunnery(b: Builder, fulke: Character) -> Neighbour:
         faction="Religious community",
         place=nunnery,
         summary="A group of the younger nuns, lately rebellious and licentious.",
-        secrets=(
-            "Hannelore's servants within the nunnery, won by her or by Father "
-            "Fulke. Neither can corrupt the whole house, but their licence "
-            "weakens its Dominion (p. 91)."
-        ),
+        secrets=[
+            titled(
+                "Whom they serve",
+                "The younger nuns are Hannelore's servants within the nunnery, "
+                "won by her or by Father Fulke (p. 91).",
+            ),
+            titled(
+                "Their licence and the Dominion",
+                "Neither Hannelore nor Fulke can corrupt the whole house, but "
+                "the younger nuns' licence weakens its Dominion (p. 91).",
+            ),
+        ],
     )
     return nunnery
 
@@ -636,18 +832,42 @@ def _patron(b: Builder) -> None:
             "is entered. A Watcher (Realms of Power: The Infernal p. 64) suits "
             "it well."
         ),
-        secrets=paragraphs(
-            "It stays in the background, using Hannelore on Earth. Watchers "
-            "specialize in teaching corrupt magic and are among the most "
-            "powerful demons outside Hell, patient beyond most of their kind "
-            "for a time. It came to her in a form pleasing to the eye and "
-            "fed her instability with its Obsession power. It wants as many "
-            "corrupted as possible. She is not its only project, and it may "
-            "send other cultists if she falters (p. 87).",
-            "It expects her beloved to spurn her and hopes she destroys him "
-            "in her rage; if not, it has her soul anyway (p. 88). It cannot "
-            "visit her in the nunnery (p. 91).",
-        ),
+        secrets=[
+            titled(
+                "Where it works from",
+                "It stays in the background, using Hannelore on Earth (p. 87).",
+            ),
+            titled(
+                "How it came to Hannelore",
+                "It came to Hannelore in a form pleasing to the eye and fed her "
+                "instability with its Obsession power (p. 87).",
+            ),
+            titled(
+                "What it wants",
+                "It wants as many corrupted as possible (p. 87).",
+            ),
+            titled(
+                "Its other cultists",
+                "Hannelore is not its only project, and it may send other "
+                "cultists if she falters (p. 87).",
+            ),
+            titled(
+                "Its hope for her beloved",
+                "It expects Hannelore's beloved to spurn her and hopes she "
+                "destroys him in her rage; if not, it has her soul anyway "
+                "(p. 88).",
+            ),
+            titled(
+                "The nunnery's protection",
+                "It cannot visit Hannelore in the nunnery (p. 91).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Watchers specialize in teaching corrupt magic and are among "
+                "the most powerful demons outside Hell, patient beyond most of "
+                "their kind for a time (p. 87).",
+            ),
+        ],
     )
 
 
@@ -666,9 +886,13 @@ def _story(
             "towns, serving travellers. It is famed for its ale and a favourite "
             "of redcaps."
         ),
-        secrets=(
-            "Where Hannelore burns her enemies. The book gives it no name (p. 92)."
-        ),
+        secrets=[
+            titled(
+                "What happens here",
+                "The road tavern is where Hannelore burns her enemies (p. 92).",
+            ),
+            titled("Storyguide Notes", "The book gives it no name (p. 92)."),
+        ],
     )
     links: list[tuple[str, Any, str]] = [
         ("characters", hannelore, "The diabolist"),
@@ -687,50 +911,64 @@ def _story(
                 "Baron Hugo's clever, wilful daughter has taken a liking to a "
                 "magus of the covenant, and her father would not approve."
             ),
-            secrets=paragraphs(
-                "Five years turn a spoiled girl into a powerful diabolist, "
-                "still infatuated with a player character, and if she cannot "
-                "have him no one shall. It shows both the perils of diabolists "
-                "and their weakness: great strength given preparation, but "
-                "none of a magus's ready firepower. Have Realms of Power: The "
-                "Infernal to hand (pp. 7, 80).",
-                "Other kin (p. 86): brothers may avenge her honour; older "
-                "sisters let Hugo indulge her refusing to marry; siblings, "
-                "younger sisters above all, may form her coven.",
-                "A child (p. 90): if she consummates her lust with her beloved "
-                "she may conceive, if he has no Longevity Ritual yet, or even "
-                "if he is sterile with the help of an Infernal witch or demon "
-                "(the Consumption Power). She may bear it hidden in the nunnery, "
-                "for him to find after she escapes, or a child already born may "
-                "move him to clemency. If it has the Gift it could be his "
-                "apprentice; if Infernal powers helped, is it tainted?",
-                "The burning tavern (pp. 92-93). Smoke: Deprivation rolls "
-                "(ArM5 p. 180) every 5 rounds, then every round; a wet cloth "
-                "gives +3. Heat: a Short-Term Fatigue roll (ArM5 p. 178) each "
-                "active round, -3 in mostly metal armour. Flames: +5 damage a "
-                "round; metal armour stops protecting after 5 rounds; heroics "
-                "may double to quadruple the base (ArM5 p. 181). After 10 "
-                "rounds it is +10 and the roof may fall: each round a simple "
-                "die at or under the rounds since it reached +10 brings +15 "
-                "damage on everyone. Some two dozen panicking people are "
-                "inside; Communication + Leadership, Ease Factor 12, gives "
-                "some influence. Examples: a merchant offering silver to save "
-                "his wares upstairs, a mother whose children are upstairs, "
-                "lovers under a burning table, a local hero flinging ale at "
-                "the fire.",
-                "The doors: Strength against Ease Factor 12. A charge costs a "
-                "Short-Term Fatigue level and adds Athletics. Up to four may "
-                "combine Strength to force, not to charge. A bench as a ram "
-                "adds +3. An axe lies by the back door: each round a stress "
-                "die +3 against Ease Factor 15, and failure, as printed, takes "
-                "one of the door's 2 damage levels.",
-                "Timeline (p. 93). Round 1: Perception + Awareness, Ease Factor "
-                "12, to smell smoke, +3 by day with the cooking fire, +9 if "
-                "asleep; all make a smoke Deprivation roll. Round 3: Ease "
-                "Factor 6. Round 5: unmissable, Deprivation and Fatigue rolls "
-                "every round. Round 10: fires everywhere, +5 a round. Round 15: "
-                "+10 a round, door Ease Factor down 3, collapse possible.",
-            ),
+            secrets=[
+                titled(
+                    "Hannelore's other kin",
+                    "Hannelore's other kin (p. 86): brothers may avenge her "
+                    "honour; older sisters let Hugo indulge her refusing to "
+                    "marry; siblings, younger sisters above all, may form her "
+                    "coven.",
+                ),
+                titled(
+                    "A child by her beloved",
+                    "If Hannelore consummates her lust with her beloved she may "
+                    "conceive, if he has no Longevity Ritual yet, or even if he "
+                    "is sterile with the help of an Infernal witch or demon "
+                    "(p. 90). She may bear it hidden in the nunnery, for him to "
+                    "find after she escapes, or a child already born may move "
+                    "him to clemency. If it has the Gift it could be his "
+                    "apprentice; if Infernal powers helped, is it tainted?",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Five years turn a spoiled girl into a powerful diabolist, "
+                        "still infatuated with a player character, and if she cannot "
+                        "have him no one shall. It shows both the perils of diabolists "
+                        "and their weakness: great strength given preparation, but "
+                        "none of a magus's ready firepower. Have Realms of Power: The "
+                        "Infernal to hand (pp. 7, 80).",
+                        "A child (p. 90): the help of an Infernal witch or demon is "
+                        "the Consumption Power.",
+                        "The burning tavern (pp. 92-93). Smoke: Deprivation rolls "
+                        "(ArM5 p. 180) every 5 rounds, then every round; a wet cloth "
+                        "gives +3. Heat: a Short-Term Fatigue roll (ArM5 p. 178) each "
+                        "active round, -3 in mostly metal armour. Flames: +5 damage a "
+                        "round; metal armour stops protecting after 5 rounds; heroics "
+                        "may double to quadruple the base (ArM5 p. 181). After 10 "
+                        "rounds it is +10 and the roof may fall: each round a simple "
+                        "die at or under the rounds since it reached +10 brings +15 "
+                        "damage on everyone. Some two dozen panicking people are "
+                        "inside; Communication + Leadership, Ease Factor 12, gives "
+                        "some influence. Examples: a merchant offering silver to save "
+                        "his wares upstairs, a mother whose children are upstairs, "
+                        "lovers under a burning table, a local hero flinging ale at "
+                        "the fire.",
+                        "The doors: Strength against Ease Factor 12. A charge costs a "
+                        "Short-Term Fatigue level and adds Athletics. Up to four may "
+                        "combine Strength to force, not to charge. A bench as a ram "
+                        "adds +3. An axe lies by the back door: each round a stress "
+                        "die +3 against Ease Factor 15, and failure, as printed, takes "
+                        "one of the door's 2 damage levels.",
+                        "Timeline (p. 93). Round 1: Perception + Awareness, Ease Factor "
+                        "12, to smell smoke, +3 by day with the cooking fire, +9 if "
+                        "asleep; all make a smoke Deprivation roll. Round 3: Ease "
+                        "Factor 6. Round 5: unmissable, Deprivation and Fatigue rolls "
+                        "every round. Round 10: fires everywhere, +5 a round. Round 15: "
+                        "+10 a round, door Ease Factor down 3, collapse possible.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "A chance encounter",

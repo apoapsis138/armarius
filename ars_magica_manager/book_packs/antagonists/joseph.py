@@ -15,11 +15,13 @@ from ... import storage
 from ...models import Book, Character, Creature, Neighbour
 from ..builder import (
     Builder,
+    Secrets,
     StatBlock,
     characteristics,
     dormant,
     paragraphs,
     secrets,
+    titled,
 )
 
 JOSEPH = "Father Joseph of Napoli"
@@ -159,42 +161,84 @@ def _father(b: Builder) -> Character:
             "that the Order become a true religious order under a Grand Master "
             "and the pope, and he wants magi to think and talk about it.",
         ),
-        secrets=paragraphs(
-            "His mission has three parts: seat a Grand Master, have him "
-            "recognized by the pope as a Christian title, subject to Rome, and "
-            "in time have anyone who refuses the new Order Marched. He "
-            "expects that to mean devout pagans, Muslims and Jews who will not "
-            "convert, and those who want to stay free of Rome. Wizard War "
-            "waged by his allies would also serve, but he prefers a March's "
-            "legal clarity (Ant p. 37).",
-            "He has no quarrel with magic. Canon law would stretch to cover "
-            "magi as a new order of religious, with the Code and the Peripheral "
-            "Codes as new volumes of it. Houses, Tribunals, independence and "
-            "scholarship may all stay, and arcane theories would be treated as "
-            "Church theologians' are: some embraced, some tolerated, a few "
-            "outlawed (Ant pp. 37-38).",
-            "He still knows many covenants of Rome and Rhine, some hidden in "
-            "regiones, their sites and numbers nearly twenty years stale, and "
-            "little of magi Gauntleted since. He knows the Oath, the common "
-            "Peripheral Code rulings, Marches, Wizard War, Certamen, the "
-            "Houses, Quaesitors, Redcaps and the Order's history; that Mystery "
-            "Cults exist; and in outline the Arts, Parma Magica, Arcane "
-            "Connections and vis. He cannot teach or cast, but copied such "
-            "texts for Pompius. He may recognize Aegis of the Hearth, Frosty "
-            "Breath of the Spoken Lie, Whispers Through the Black Gate, Demon's "
-            "Eternal Oblivion and various Wards by their effects (Ant p. 40).",
-            "He once bitterly envied the Gift, and blames that on his own "
-            "failing, perhaps helped by the Gift's effect on others. He says "
-            "little of his family for fear of threats, though threats would "
-            "not sway him, and he accepts he may die in office (Ant pp. 39, 42, "
-            "49). He holds Holy Magic and Hermetic magic to be two cathedrals, "
-            "one built by angels and one by men, both to God's glory (Ant p. "
-            "39). He is not mind-proof: Hermetic magic can ruin his mind or "
-            "turn him from his mission (Ant p. 48).",
-            "The pope may not expect him to succeed; his failure could be the "
-            "pretext for harsher measures against the Order. Whether God "
-            "favors his mission is for the troupe to decide (Ant pp. 38-39).",
-        ),
+        secrets=[
+            titled(
+                "Joseph's mission",
+                "His mission has three parts: seat a Grand Master, have him "
+                "recognized by the pope as a Christian title, subject to Rome, "
+                "and in time have anyone who refuses the new Order Marched. He "
+                "expects that to mean devout pagans, Muslims and Jews who will "
+                "not convert, and those who want to stay free of Rome "
+                "(Ant p. 37).",
+            ),
+            titled(
+                "March or Wizard War",
+                "Wizard War waged by his allies would also serve his mission, "
+                "but he prefers a March's legal clarity (Ant p. 37).",
+            ),
+            titled(
+                "Magi under canon law",
+                "He has no quarrel with magic. Canon law would stretch to cover "
+                "magi as a new order of religious, with the Code and the "
+                "Peripheral Codes as new volumes of it. Houses, Tribunals, "
+                "independence and scholarship may all stay, and arcane theories "
+                "would be treated as Church theologians' are: some embraced, "
+                "some tolerated, a few outlawed (Ant pp. 37-38).",
+            ),
+            titled(
+                "What Joseph knows of the covenants",
+                "He still knows many covenants of Rome and Rhine, some hidden in "
+                "regiones, their sites and numbers nearly twenty years stale, "
+                "and little of magi Gauntleted since (Ant p. 40).",
+            ),
+            titled(
+                "What Joseph knows of the Order",
+                "He knows the Oath, the common Peripheral Code rulings, Marches, "
+                "Wizard War, Certamen, the Houses, Quaesitors, Redcaps and the "
+                "Order's history; that Mystery Cults exist; and in outline the "
+                "Arts, Parma Magica, Arcane Connections and vis. He cannot teach "
+                "or cast, but copied such texts for Pompius (Ant p. 40).",
+            ),
+            titled(
+                "Spells Joseph can recognize",
+                "He may recognize Aegis of the Hearth, Frosty Breath of the "
+                "Spoken Lie, Whispers Through the Black Gate, Demon's Eternal "
+                "Oblivion and various Wards by their effects (Ant p. 40).",
+            ),
+            titled(
+                "Joseph and the Gift",
+                "He once bitterly envied the Gift, and blames that on his own "
+                "failing, perhaps helped by the Gift's effect on others (Ant "
+                "pp. 39, 42, 49).",
+            ),
+            titled(
+                "Why Joseph keeps quiet about his family",
+                "He says little of his family for fear of threats, though "
+                "threats would not sway him, and he accepts he may die in "
+                "office (Ant pp. 39, 42, 49).",
+            ),
+            titled(
+                "The two cathedrals",
+                "He holds Holy Magic and Hermetic magic to be two cathedrals, "
+                "one built by angels and one by men, both to God's glory (Ant "
+                "p. 39).",
+            ),
+            titled(
+                "What the pope expects",
+                "The pope may not expect him to succeed; his failure could be "
+                "the pretext for harsher measures against the Order (Ant pp. "
+                "38-39).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "He is not mind-proof: Hermetic magic can ruin his mind or "
+                    "turn him from his mission (Ant p. 48).",
+                    "Whether God favors his mission is for the troupe to decide "
+                    "(Ant pp. 38-39).",
+                ),
+            ),
+        ],
     )
     b.stats(joseph, _BLOCK, source="Ant")
     joseph.background.faith_points = 2
@@ -217,14 +261,24 @@ def _pompius(b: Builder, joseph: Character) -> Character:
             "A nearby covenant recovered the statue, and his case notes went "
             "to his successor.",
         ),
-        secrets=paragraphs(
-            "He made Joseph a Longevity Ritual and spent long talks with him "
-            "on the place of Order and Church in the Divine plan (Ant p. 39). "
-            "The Quaesitorial records of his cases hold Joseph's signature, a "
-            "Sympathetic Connection to the legate (ArM5 p. 84; Ant p. 42).",
-            "Perhaps Joseph was somebody's pawn from his notary days on (Ant "
-            "pp. 41, 49).",
-        ),
+        secrets=[
+            titled(
+                "Pompius and his notary",
+                "He made Joseph a Longevity Ritual and spent long talks with him "
+                "on the place of Order and Church in the Divine plan (Ant p. 39).",
+            ),
+            titled(
+                "Joseph's signature in the records",
+                "The Quaesitorial records of Pompius's cases hold Joseph's "
+                "signature, a Sympathetic Connection to the legate (ArM5 p. 84; "
+                "Ant p. 42).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Perhaps Joseph was somebody's pawn from his notary days on (Ant "
+                "pp. 41, 49).",
+            ),
+        ],
     )
     b.link(joseph, "characters", pompius, "His old master")
     return pompius
@@ -241,17 +295,34 @@ def _places(b: Builder, joseph: Character) -> tuple[Neighbour, Neighbour]:
             "draw power to itself. To speak to a legate is to speak to the "
             "pope, and an attack on one is as good as an attack on him.",
         ),
-        secrets=paragraphs(
-            "Bringing the Order under Rome would be a great prize, and a "
-            "widespread pseudo-religious order outside papal authority is bad "
-            "politics: the monastic orders might wonder if they too could do "
-            "without Rome. Other Church factions may oppose the mission (Ant "
-            "pp. 38-39). The curia knows of the Societas of the Mystical "
-            "Christ, and Father Joseph's books circulate there (Ant pp. 42, "
-            "45).",
-            "The papacy has no sound way to prove its letters: seals can be "
-            "forged, despite harsh penalties (Ant p. 43).",
-        ),
+        secrets=[
+            titled(
+                "Why Rome wants the Order",
+                "Bringing the Order under Rome would be a great prize, and a "
+                "widespread pseudo-religious order outside papal authority is "
+                "bad politics: the monastic orders might wonder if they too "
+                "could do without Rome (Ant pp. 38-39).",
+            ),
+            titled(
+                "Opposition within the Church",
+                "Other Church factions may oppose Father Joseph's mission (Ant "
+                "pp. 38-39).",
+            ),
+            titled(
+                "The curia and the Societas",
+                "The curia knows of the Societas of the Mystical Christ (Ant "
+                "pp. 42, 45).",
+            ),
+            titled(
+                "Father Joseph's books at the curia",
+                "Father Joseph's books circulate in the curia (Ant pp. 42, 45).",
+            ),
+            titled(
+                "Papal seals",
+                "The papacy has no sound way to prove its letters: seals can be "
+                "forged, despite harsh penalties (Ant p. 43).",
+            ),
+        ],
     )
     napoli = b.town(
         "Napoli",
@@ -281,11 +352,18 @@ def _places(b: Builder, joseph: Character) -> tuple[Neighbour, Neighbour]:
             "Poor folk of Napoli, simple fishermen for the most part, with "
             "several relatives in the lower clergy."
         ),
-        secrets=(
-            "He keeps them out of his talk to protect them from unscrupulous "
-            "magi; he would put his mission first if they were threatened "
-            "(Ant p. 42)."
-        ),
+        secrets=[
+            titled(
+                "Why Joseph never speaks of them",
+                "Father Joseph keeps his family out of his talk to protect them "
+                "from unscrupulous magi (Ant p. 42).",
+            ),
+            titled(
+                "If Joseph's family were threatened",
+                "Father Joseph would put his mission first if his family were "
+                "threatened (Ant p. 42).",
+            ),
+        ],
     )
     b.link(kin, "characters", joseph, "Their son")
     return curia, napoli
@@ -438,26 +516,48 @@ def _societas(b: Builder, joseph: Character) -> Neighbour:
             "Tribunals, that discusses a closer union of the Order and the "
             "Church. It is no secret, but few have heard of it."
         ),
-        secrets=paragraphs(
-            "It was founded at Father Joseph's suggestion, though he is no "
-            "magus, no member, and not its master. He meets its leaders at "
-            "least once a year, knows who belongs, and may seek its help if "
-            "threatened. It spreads his ideas and is the seed of his new "
-            "Order: he expects the first Grand Master to come from its leaders, "
-            "and lets it claim his ideas as its own (Ant pp. 44-45). It looks "
-            "into the writings and deeds of pious magi as possible recruits "
-            "(Ant p. 45).",
-            "The book names no member, and the troupe sets its size and power "
-            "to suit the saga (Ant p. 49). In a saga that wants it, an inner "
-            "circle may hold Mystery scripts for Divine Virtues (Ant p. 45), or "
-            "it may be a cabal of power-mad Tytalus magi, with Father Joseph "
-            "their pawn since his days as a notary (Ant p. 49).",
-            "Other possible allies (Ant p. 45): in the Rhine, it might work as "
-            "a Gild (Guardians of the Forests p. 27) with the olive as its "
-            "tree, or the Apple Gild may join him; in Thebes, a League might "
-            "serve. The Priory of Saint Nerius (RoP:D p. 94) and the covenant "
-            "of Cunfin (The Lion and the Lily p. 106) may also side with him.",
-        ),
+        secrets=[
+            titled(
+                "Who founded the Societas",
+                "The Societas was founded at Father Joseph's suggestion, though "
+                "he is no magus, no member, and not its master (Ant pp. 44-45).",
+            ),
+            titled(
+                "Joseph and the Societas's leaders",
+                "Father Joseph meets the Societas's leaders at least once a "
+                "year, knows who belongs, and may seek its help if threatened "
+                "(Ant pp. 44-45).",
+            ),
+            titled(
+                "The seed of a new Order",
+                "The Societas spreads Father Joseph's ideas and is the seed of "
+                "his new Order: he expects the first Grand Master to come from "
+                "its leaders, and lets it claim his ideas as its own (Ant pp. "
+                "44-45).",
+            ),
+            titled(
+                "How the Societas recruits",
+                "The Societas looks into the writings and deeds of pious magi as "
+                "possible recruits (Ant p. 45).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The book names no member, and the troupe sets its size and "
+                    "power to suit the saga (Ant p. 49). In a saga that wants it, "
+                    "an inner circle may hold Mystery scripts for Divine Virtues "
+                    "(Ant p. 45), or it may be a cabal of power-mad Tytalus magi, "
+                    "with Father Joseph their pawn since his days as a notary "
+                    "(Ant p. 49).",
+                    "Other possible allies (Ant p. 45): in the Rhine, it might "
+                    "work as a Gild (Guardians of the Forests p. 27) with the "
+                    "olive as its tree, or the Apple Gild may join him; in "
+                    "Thebes, a League might serve. The Priory of Saint Nerius "
+                    "(RoP:D p. 94) and the covenant of Cunfin (The Lion and the "
+                    "Lily p. 106) may also side with him.",
+                ),
+            ),
+        ],
     )
     b.link(societas, "characters", joseph, "Shares its aims")
     return societas
@@ -482,68 +582,81 @@ def _mission(
                 "A papal legate is going from covenant to covenant, asking "
                 "magi to consider joining the Order to the Church."
             ),
-            secrets=paragraphs(
-                "Father Joseph attacks no one; he sets the Order against "
-                "itself, and politics may end in violence or a new Schism War "
-                "(Ant p. 7). Decide how far he has come before the characters "
-                "meet him: he may have few Hermetic allies, or many converts "
-                "already (Ant p. 41). The stages are the book's strategies in "
-                "its order.",
-                "First meetings (Ant pp. 41-42). He seeks an audience at a "
-                "covenant he knows of, or meets the magi as another covenant's "
-                "guest. He may prefer a nearby parish church, sending a "
-                "messenger, since spilling blood in a sanctuary is a canon "
-                "crime that might give even hostile magi pause. He may be met "
-                "on the road, as a rumor from friends or foes, or at Tribunal "
-                "with a large faction behind him.",
-                "Finding him out (Ant pp. 42, 46). Roll on the Reputation Ease "
-                "Factor Table (ArM5 p. 19) to know him as Pompius's notary, "
-                "or as a legate; any Church Lore tells what a legate is. Few "
-                "magi remember him, while he remembers them well. Only magi "
-                "with strong Church contacts will have noticed his books.",
-                "If the Order is secretive, say how he got away (Ant pp. 40-41): "
-                "he was thought dead in Pompius's spectacular Twilight; the "
-                "local magi were lax; he was never let go, and is the pawn of "
-                "a faction; or a miracle saved him or his memories.",
-                "Ridicule (Ant p. 48). Many magi laugh, and he answers that "
-                "Rome was a pagan capital once. Ignoring him avoids blame but "
-                "works only for a while, since not every magus will.",
-                "Befuddlement (Ant p. 48). Mentem magic can destroy his mind "
-                "or his purpose, but if the papacy means it, a new legate "
-                "comes, and a miracle may restore him. Tampering with the pope "
-                "means the curia too, again and again, at the risk of a "
-                "miracle, a charge of mundane interference and the Church's "
-                "wrath.",
-                "Enlistment (Ant p. 48). Magi who join may be asked to guard "
-                "him or travel seeking converts, and may maneuver for terms "
-                "or the Grand Mastership, at the risk of charges of "
-                "endangering the Order.",
-                "In the East (Ant pp. 48-49). Orthodox magi may refuse him, "
-                "though Latin crusaders in the east are likely to back a "
-                "papal Order. Greek fathers may raise a rival Order; one Grand "
-                "Master may balance between Rome and Constantinople, or Latin "
-                "and Greek Masters may stand side by side.",
-                "Dominion (Ant p. 49). If Rome can have a Grand Master, might "
-                "a magus become pope? Ambitious magi may see the way.",
-                "Enemies of his enemies (Ant p. 49). Bishop Orris and other "
-                "churchmen, perhaps some of the curia, may work with magi "
-                "against him, and noble courts fear a pope with wizards at "
-                "his command. Old foes may ally.",
-                "Martyrdom (Ant p. 49). He can be killed, though a miracle may "
-                "save him. At best a new legate follows, guarded by the "
-                "military orders, with the Societas behind him. At worst the "
-                "papacy wanted this, and preaches crusade: the military orders "
-                "answer at once, and minor nobles would come for the lands of "
-                "tame nobles called heretics. A major lord like Frederick II "
-                "might use it to meet his own crusade vow close to home. The "
-                "killers face Tribunal for interference, and mundane justice "
-                "besides. If martyred he becomes a saint, perhaps patron of "
-                "wizards, and works on (RoP:D pp. 85-89).",
-                "Scaling him (Ant p. 49). Add Faith to the relic, choose his "
-                "allies' power, and set how warmly the Church backs him. For a "
-                "very high-level saga, a Grand Master has already been "
-                "proclaimed, and the Order must submit or split.",
-            ),
+            secrets=[
+                titled(
+                    "How the legate threatens the Order",
+                    "Father Joseph attacks no one; he sets the Order against "
+                    "itself, and politics may end in violence or a new Schism "
+                    "War (Ant p. 7).",
+                ),
+                titled(
+                    "Who fears a papal Order",
+                    "Noble courts fear a pope with wizards at his command (Ant p. 49).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    paragraphs(
+                        "Decide how far he has come before the characters "
+                        "meet him: he may have few Hermetic allies, or many converts "
+                        "already (Ant p. 41). The stages are the book's strategies in "
+                        "its order.",
+                        "First meetings (Ant pp. 41-42). He seeks an audience at a "
+                        "covenant he knows of, or meets the magi as another covenant's "
+                        "guest. He may prefer a nearby parish church, sending a "
+                        "messenger, since spilling blood in a sanctuary is a canon "
+                        "crime that might give even hostile magi pause. He may be met "
+                        "on the road, as a rumor from friends or foes, or at Tribunal "
+                        "with a large faction behind him.",
+                        "Finding him out (Ant pp. 42, 46). Roll on the Reputation Ease "
+                        "Factor Table (ArM5 p. 19) to know him as Pompius's notary, "
+                        "or as a legate; any Church Lore tells what a legate is. Few "
+                        "magi remember him, while he remembers them well. Only magi "
+                        "with strong Church contacts will have noticed his books.",
+                        "If the Order is secretive, say how he got away (Ant pp. "
+                        "40-41): "
+                        "he was thought dead in Pompius's spectacular Twilight; the "
+                        "local magi were lax; he was never let go, and is the pawn of "
+                        "a faction; or a miracle saved him or his memories.",
+                        "Ridicule (Ant p. 48). Many magi laugh, and he answers that "
+                        "Rome was a pagan capital once. Ignoring him avoids blame but "
+                        "works only for a while, since not every magus will.",
+                        "Befuddlement (Ant p. 48). Mentem magic can destroy his mind "
+                        "or his purpose, but if the papacy means it, a new legate "
+                        "comes, and a miracle may restore him. Tampering with the pope "
+                        "means the curia too, again and again, at the risk of a "
+                        "miracle, a charge of mundane interference and the Church's "
+                        "wrath.",
+                        "Enlistment (Ant p. 48). Magi who join may be asked to guard "
+                        "him or travel seeking converts, and may maneuver for terms "
+                        "or the Grand Mastership, at the risk of charges of "
+                        "endangering the Order.",
+                        "In the East (Ant pp. 48-49). Orthodox magi may refuse him, "
+                        "though Latin crusaders in the east are likely to back a "
+                        "papal Order. Greek fathers may raise a rival Order; one Grand "
+                        "Master may balance between Rome and Constantinople, or Latin "
+                        "and Greek Masters may stand side by side.",
+                        "Dominion (Ant p. 49). If Rome can have a Grand Master, might "
+                        "a magus become pope? Ambitious magi may see the way.",
+                        "Enemies of his enemies (Ant p. 49). Bishop Orris and other "
+                        "churchmen, perhaps some of the curia, may work with magi "
+                        "against him. Old foes may ally.",
+                        "Martyrdom (Ant p. 49). He can be killed, though a miracle may "
+                        "save him. At best a new legate follows, guarded by the "
+                        "military orders, with the Societas behind him. At worst the "
+                        "papacy wanted this, and preaches crusade: the military orders "
+                        "answer at once, and minor nobles would come for the lands of "
+                        "tame nobles called heretics. A major lord like Frederick II "
+                        "might use it to meet his own crusade vow close to home. The "
+                        "killers face Tribunal for interference, and mundane justice "
+                        "besides. If martyred he becomes a saint, perhaps patron of "
+                        "wizards, and works on (RoP:D pp. 85-89).",
+                        "Scaling him (Ant p. 49). Add Faith to the relic, choose his "
+                        "allies' power, and set how warmly the Church backs him. For a "
+                        "very high-level saga, a Grand Master has already been "
+                        "proclaimed, and the Order must submit or split.",
+                    ),
+                ),
+            ],
             stages=[
                 S(
                     "Discussion and Travel",
@@ -649,137 +762,284 @@ def _mission(
 
 
 #: The book's story seeds (Ant pp. 44-48): a public line, then the seed.
-_SEEDS: tuple[tuple[str, str, str], ...] = (
+_SEEDS: tuple[tuple[str, str, Secrets], ...] = (
     (
         "Miracle of the Magi",
         "The local clergy are talking of wonders.",
-        "Local clergy see the magi cast spells, and the dean writes to the "
-        "curia asking guidance. The letter reaches Father Joseph, who "
-        "recognizes Hermetic magic and comes to the deanery to find them (Ant "
-        "p. 44).",
+        [
+            titled(
+                "The dean's letter",
+                "Local clergy see the magi cast spells, and the dean writes to the "
+                "curia asking guidance. The letter reaches Father Joseph, who "
+                "recognizes Hermetic magic and comes to the deanery to find them "
+                "(Ant p. 44).",
+            ),
+        ],
     ),
     (
         "Host of the Church",
         "The covenant is asked to house a preaching guest.",
-        "Sympathetic magi let Father Joseph stay for seasons, and Christian "
-        "magi from all over the Tribunal come to hear him, with retinues to "
-        "house. Then argumentative pagan magi arrive; Father Joseph stays calm, "
-        "but malicious certamen follows, and unless someone calms things, "
-        "Wizard's War or murder (Ant p. 44).",
+        [
+            titled(
+                "Father Joseph's audience",
+                "Sympathetic magi let Father Joseph stay for seasons, and Christian"
+                " magi from all over the Tribunal come to hear him, with retinues "
+                "to house (Ant p. 44).",
+            ),
+            titled(
+                "The argumentative pagans",
+                "Argumentative pagan magi arrive to hear Father Joseph; he stays "
+                "calm, but malicious certamen follows, and unless someone calms "
+                "things, Wizard's War or murder (Ant p. 44).",
+            ),
+        ],
     ),
     (
         "Pilgrimage",
         "A legate wants a magus to travel with him.",
-        "Father Joseph picks a magus who opposes him, though not a homicidal "
-        "one, to travel the Tribunal with him, hoping to win him by argument "
-        "and example. The magus may be accused of revealing hidden covenants, "
-        "if that is a crime, and may have to defend him from pagans (Ant p. "
-        "44).",
+        [
+            titled(
+                "The legate's companion",
+                "Father Joseph picks a magus who opposes him, though not a "
+                "homicidal one, to travel the Tribunal with him, hoping to win him "
+                "by argument and example (Ant p. 44).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The magus may be accused of revealing hidden covenants, if that is"
+                " a crime, and may have to defend him from pagans (Ant p. 44).",
+            ),
+        ],
     ),
     (
         "The Address",
         "A churchman wants to speak at Tribunal.",
-        "Father Joseph wants to propose a treaty and a religious Rule at "
-        "Tribunal, where custom usually lets only magi speak. Allies argue his "
-        "right or speak for him; foes block or answer him. He waits for a "
-        "meeting where he has support; a significant minority publicly backing "
-        "him is his second-best result, and without either he tries the next "
-        "Tribunal (Ant p. 44).",
+        [
+            titled(
+                "What Joseph wants at Tribunal",
+                "Father Joseph wants to propose a treaty and a religious Rule at "
+                "Tribunal, where custom usually lets only magi speak (Ant p. 44).",
+            ),
+            titled(
+                "When Joseph will speak",
+                "Father Joseph waits for a meeting where he has support; a "
+                "significant minority publicly backing him is his second-best "
+                "result, and without either he tries the next Tribunal (Ant p. 44).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Allies argue his right or speak for him; foes block or answer him.",
+            ),
+        ],
     ),
     (
         "Christ Underground",
         "Christian magi in a pagan Tribunal are growing wary.",
-        "Where pagans or other anti-papal magi rule the Tribunal, the Societas "
-        "must hide from concerted Wizard's War, moving Father Joseph from one "
-        "safe house to the next as he preaches, glad of the likeness to the "
-        "early Church; a martyr or two is no disaster. The magi may hide him, "
-        "support their brothers across a border, or be sent to hunt him (Ant "
-        "p. 45).",
+        [
+            titled(
+                "The Societas in hiding",
+                "Where pagans or other anti-papal magi rule the Tribunal, the "
+                "Societas must hide from concerted Wizard's War, moving Father "
+                "Joseph from one safe house to the next as he preaches, glad of the"
+                " likeness to the early Church; a martyr or two is no disaster (Ant"
+                " p. 45).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The magi may hide him, support their brothers across a border, or "
+                "be sent to hunt him (Ant p. 45).",
+            ),
+        ],
     ),
     (
         "The Good News",
         "Someone is asking about the good character of local magi.",
-        "The Societas recruits pious magi on its own account. Members may be "
-        "asked to vouch for neighbors; others may stumble on its agents at "
-        "this work (Ant p. 45).",
+        [
+            titled(
+                "Who is asking",
+                "The Societas recruits pious magi on its own account (Ant p. 45).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Members may be asked to vouch for neighbors; others may stumble on"
+                " its agents at this work (Ant p. 45).",
+            ),
+        ],
     ),
     (
         "First Rights",
         "The bishop has a gift for the covenant.",
-        "On the pope's order the bishop gives the covenant several benefices, "
-        "a Typical Income Source, taken from a chapter of canons he thinks too "
-        "strong. The outraged canons, of the diocese's second church, make "
-        "bitter enemies; refusing makes one of the bishop (Ant p. 46).",
+        [
+            titled(
+                "Where the benefices come from",
+                "On the pope's order the bishop gives the covenant several "
+                "benefices, taken from a chapter of canons he thinks too strong "
+                "(Ant p. 46).",
+            ),
+            titled(
+                "The outraged canons",
+                "The outraged canons, of the diocese's second church, make bitter "
+                "enemies; refusing the benefices makes one of the bishop (Ant p. "
+                "46).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The benefices are a Typical Income Source (Ant p. 46).",
+            ),
+        ],
     ),
     (
         "Care of Souls",
         "The covenant needs a priest for its new parish.",
-        "With a benefice the magi must hire a priest, who then comes to them "
-        "for help: sick farm animals, a lost child, a lie between merchants "
-        "(Ant p. 46).",
+        [
+            titled(
+                "Storyguide Notes",
+                "With a benefice the magi must hire a priest, who then comes to "
+                "them for help: sick farm animals, a lost child, a lie between "
+                "merchants (Ant p. 46).",
+            ),
+        ],
     ),
     (
         "The Tithe",
         "It is time to assess the parish's crops.",
-        "The magi or their agents must go round the parish yearly to assess "
-        "each field's yield, a clerk's usual job and a chance to seek vis. A "
-        "tithe that counted natural vis in the produce would be an easy gain "
-        "(Ant p. 46).",
+        [
+            titled(
+                "Assessing the yield",
+                "The magi or their agents must go round the parish yearly to assess"
+                " each field's yield, a clerk's usual job and a chance to seek vis "
+                "(Ant p. 46).",
+            ),
+            titled(
+                "Vis in the tithe",
+                "A tithe that counted natural vis in the produce would be an easy "
+                "gain (Ant p. 46).",
+            ),
+        ],
     ),
     (
         "Slanderous Accusations",
         "The bishop invites the magi to a synod.",
-        "Slander has been a canon crime since 1215. A bishop who thinks magic "
-        "no evil learns his priests preach that magi serve the devil, and "
-        "calls a synod, inviting the magi to show otherwise (Ant p. 46).",
+        [
+            titled(
+                "Slander in canon law",
+                "Slander has been a canon crime since 1215 (Ant p. 46).",
+            ),
+            titled(
+                "Why the bishop calls a synod",
+                "A bishop who thinks magic no evil learns his priests preach that "
+                "magi serve the devil, and calls a synod, inviting the magi to show"
+                " otherwise (Ant p. 46).",
+            ),
+        ],
     ),
     (
         "Heretics",
         "The rural dean invites the magi to a synod.",
-        "The dean near the covenant and some of his priests have fallen into "
-        "heresy, perhaps Catharism, as the magi see at his synod. Report it "
-        "and they may have to help reform or suppress him; ignore it and they "
-        "may be accused themselves when the bishop finds out (Ant p. 46).",
+        [
+            titled(
+                "The dean's heresy",
+                "The dean near the covenant and some of his priests have fallen "
+                "into heresy, perhaps Catharism, as the magi see at his synod (Ant "
+                "p. 46).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Report it and they may have to help reform or suppress him; ignore"
+                " it and they may be accused themselves when the bishop finds out "
+                "(Ant p. 46).",
+            ),
+        ],
     ),
     (
         "Opulent Council Chambers",
         "The bishop's deacon has come to the covenant's council.",
-        "A severely ascetic deacon, at the covenant's yearly council, is "
-        "shocked by its wealth. The bishop writes asking its sources of "
-        "income, from curiosity, a hope of gifts, or his deacon's concern "
-        "(Ant p. 46).",
+        [
+            titled(
+                "The ascetic deacon",
+                "A severely ascetic deacon, at the covenant's yearly council, is "
+                "shocked by its wealth (Ant p. 46).",
+            ),
+            titled(
+                "The bishop's letter",
+                "The bishop writes asking the covenant's sources of income, from "
+                "curiosity, a hope of gifts, or his deacon's concern (Ant p. 46).",
+            ),
+        ],
     ),
     (
         "Authentic Miracles",
         "A holy man in a village is said to heal lepers.",
-        "The bishop asks the magi if a village holy man who heals lepers who "
-        "pray and fast with him is a true conduit of miracles, a charlatan, or "
-        "a wizard of some kind (Ant p. 47).",
+        [
+            titled(
+                "Storyguide Notes",
+                "The bishop asks the magi if a village holy man who heals lepers "
+                "who pray and fast with him is a true conduit of miracles, a "
+                "charlatan, or a wizard of some kind (Ant p. 47).",
+            ),
+        ],
     ),
     (
         "Possession",
         "A family lies murdered on the cathedral steps.",
-        "In a hot, still summer a Jewish family is murdered on the cathedral "
-        "steps one Sunday evening, and no one knows by whom. Fearing demons "
-        "in the townsfolk and a pogrom to come, the bishop asks the magi to "
-        "investigate and deliver the town (Ant p. 47).",
+        [
+            titled(
+                "The murders on the steps",
+                "In a hot, still summer a Jewish family is murdered on the "
+                "cathedral steps one Sunday evening, and no one knows by whom (Ant "
+                "p. 47).",
+            ),
+            titled(
+                "What the bishop fears",
+                "The bishop fears demons in the townsfolk and a pogrom to come "
+                "(Ant p. 47).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The bishop asks the magi to investigate the murders on the "
+                "cathedral steps and deliver the town (Ant p. 47).",
+            ),
+        ],
     ),
     (
         "The River Jordan",
         "A legate is baptizing magi on the Danube.",
-        "Father Joseph sets up a mission at a covenant on the Danube, offering "
-        "baptism in the river as John did. Pagan magi come to be baptized, "
-        "pursued by the jealous animal spirits of their cult. The magi may be "
-        "hosts facing the spirits, or the converts defeating their old gods "
-        "(Ant p. 47).",
+        [
+            titled(
+                "The mission on the Danube",
+                "Father Joseph sets up a mission at a covenant on the Danube, "
+                "offering baptism in the river as John did (Ant p. 47).",
+            ),
+            titled(
+                "The jealous spirits",
+                "Pagan magi come to be baptized at Father Joseph's Danube mission, "
+                "pursued by the jealous animal spirits of their cult (Ant p. 47).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The magi may be hosts facing the spirits, or the converts "
+                "defeating their old gods (Ant p. 47).",
+            ),
+        ],
     ),
     (
         "Order and Anti-Order",
         "Rival Grand Masters divide the Order.",
-        "Rome and Normandy proclaim rival Grand Masters. Father Joseph asks "
-        "respected magi to broker a peace, since the papacy could settle it "
-        "but cannot tell who has the most support. A player's character may "
-        "be one of the rivals (Ant p. 48).",
+        [
+            titled(
+                "The rival Grand Masters",
+                "Rome and Normandy proclaim rival Grand Masters (Ant p. 48).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "Father Joseph asks respected magi to broker a peace between "
+                    "the rival Grand Masters, since the papacy could settle it but "
+                    "cannot tell who has the most support (Ant p. 48).",
+                    "A player's character may be one of the rivals (Ant p. 48).",
+                ),
+            ),
+        ],
     ),
 )
 

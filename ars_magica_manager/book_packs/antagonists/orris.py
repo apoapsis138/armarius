@@ -15,7 +15,7 @@ secrets. Rules the app does not model are in the secrets, cited by page."""
 
 from __future__ import annotations
 
-from ...models import Character, Covenant, Neighbour
+from ...models import Character, Covenant, Neighbour, Secret
 from ..builder import (
     Builder,
     add_possession,
@@ -24,6 +24,7 @@ from ..builder import (
     dormant,
     joined_lines,
     paragraphs,
+    titled,
     vf_great,
     vf_puissant,
 )
@@ -273,17 +274,34 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
         "a priest, so he is also called Father Geoffrey. He is at home in the "
         "intrigues of the bishop's household and likes to think of himself as "
         "the power behind the throne.",
-        secrets=paragraphs(
-            "He is nothing of the kind: Orris has seen his ambition and keeps "
-            "real influence out of his hands (p. 51). He loves money and skims "
-            "diocesan funds when he thinks it safe.",
-            "He found Turstan, the bishop's double, a few years ago, and takes "
-            'fees from clients for having the "bishop" bless new premises and '
-            "ventures (p. 63). The summoner of the visitation may be in league "
-            "with him, inventing sins for the fees and fines (p. 54).",
-            "The covenant lies in his archdeaconry. Orris questions him about "
-            "it and has him ask around at his next visitation (p. 58).",
-        ),
+        secrets=[
+            titled(
+                "Geoffrey's real influence",
+                "He is no power behind the throne: Orris has seen his ambition "
+                "and keeps real influence out of his hands (p. 51).",
+            ),
+            titled(
+                "Geoffrey skims the funds",
+                "He loves money and skims diocesan funds when he thinks it safe.",
+            ),
+            titled(
+                "Geoffrey and the double",
+                "He found Turstan, the bishop's double, a few years ago, and "
+                'takes fees from clients for having the "bishop" bless new '
+                "premises and ventures (p. 63).",
+            ),
+            titled(
+                "Geoffrey and the summoner",
+                "The summoner of the visitation may be in league with Geoffrey, "
+                "inventing sins for the fees and fines (p. 54).",
+            ),
+            titled(
+                "Geoffrey's archdeaconry",
+                "The covenant lies in his archdeaconry. Orris questions him "
+                "about it and has him ask around at his next visitation (p. "
+                "58).",
+            ),
+        ],
     )
     adam = b.magus(
         "Deacon Adam",
@@ -308,14 +326,27 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
         "confidant. He is old, suspects he has little time left, and worries "
         "that no one can follow him. He respects Brother Theodoric as a true "
         "mystic, but does not count him fit for so worldly a task.",
-        secrets=paragraphs(
-            "He could sway the bishop a great deal and has never tried (p. 51). "
-            "He knows the bishop better than anyone, so an angel or saint "
-            "guiding the characters might turn them toward him (p. 63). He "
-            "works hard to soothe the canons who feel passed over by the "
-            "Cantores (p. 52).",
-            "Theology 5, as the cathedral's provost of canons (p. 52).",
-        ),
+        secrets=[
+            titled(
+                "Father Peter's sway",
+                "He could sway the bishop a great deal and has never tried (p. 51).",
+            ),
+            titled(
+                "Who knows the bishop best",
+                "Father Peter knows the bishop better than anyone, so an angel "
+                "or saint guiding the characters might turn them toward him (p. "
+                "63).",
+            ),
+            titled(
+                "Father Peter and the canons",
+                "He works hard to soothe the canons who feel passed over by the "
+                "Cantores (p. 52).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Theology 5, as the cathedral's provost of canons (p. 52).",
+            ),
+        ],
     )
     theodoric = b.magus(
         "Brother Theodoric",
@@ -328,15 +359,25 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
         summary="The chief chorister of St. John's and its most experienced "
         "singer. He is no natural leader, and does not notice that some "
         "canons feel snubbed.",
-        secrets=paragraphs(
-            "The de facto head of the Holy Tradition of Cantores, which he "
-            "founded here ten years ago. He picks recruits by the visions he "
-            "receives. He has True Faith (p. 52), and Holy Music 8 as chief "
-            "chorister (p. 52).",
-            "If Orris's motives are made selfish, Theodoric may turn ally to "
-            "the characters (p. 53). If the bishop is murdered, his ghost may "
-            "come to Theodoric and tell how he died (p. 66).",
-        ),
+        secrets=[
+            titled(
+                "Theodoric and the Cantores",
+                "He is the de facto head of the Holy Tradition of Cantores, "
+                "which he founded here ten years ago. He picks recruits by the "
+                "visions he receives.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "He has True Faith (p. 52), and Holy Music 8 as chief "
+                    "chorister (p. 52).",
+                    "If Orris's motives are made selfish, Theodoric may turn "
+                    "ally to the characters (p. 53). If the bishop is murdered, "
+                    "his ghost may come to Theodoric and tell how he died (p. "
+                    "66).",
+                ),
+            ),
+        ],
     )
     friars = {
         "peter": b.magus(
@@ -349,8 +390,17 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
             "ready store of Scripture. He keeps up a running banter with Brother "
             "Bartholomew, whom he resembles so closely that they could be kin, "
             "and he speaks the diocese's language as his own.",
-            secrets="More the theologian of the pair, with a great memory for "
-            "Scripture (p. 59). See The Friars Preacher for his statistics.",
+            secrets=[
+                titled(
+                    "Brother Peter's learning",
+                    "More the theologian of the pair, with a great memory for "
+                    "Scripture (p. 59).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "See The Friars Preacher for his statistics.",
+                ),
+            ],
         ),
         "bartholomew": b.magus(
             "Brother Bartholomew",
@@ -362,9 +412,17 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
             "with a practised pratfall and a head-over-heels tumble. He is so "
             "like Brother Peter that they could be brothers by blood, and his "
             "banter puts people at their ease.",
-            secrets="His clowning and common manners hide a keen mind and an "
-            "academic training (p. 59). See The Friars Preacher for his "
-            "statistics.",
+            secrets=[
+                titled(
+                    "Behind Bartholomew's clowning",
+                    "His clowning and common manners hide a keen mind and an "
+                    "academic training (p. 59).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "See The Friars Preacher for his statistics.",
+                ),
+            ],
         ),
         "alonso": b.magus(
             "Brother Alonso",
@@ -376,10 +434,20 @@ def _people(b: Builder, cathedral: Covenant) -> dict[str, Character]:
             "accent and no visible humour. He seems a little sinister, gives no "
             "quarter to sin, and likes to describe the torments of sorcerers in "
             "Hell in fine detail.",
-            secrets="He understands the local tongue better than he lets on, and "
-            "uses his seeming ignorance to keep his distance from the others "
-            "(p. 59). He may come from Aragon or Sicily; rename him Alan if he "
-            "is from northern Europe. See The Friars Preacher for his statistics.",
+            secrets=[
+                titled(
+                    "Alonso's command of the tongue",
+                    "He understands the local tongue better than he lets on, and "
+                    "uses his seeming ignorance to keep his distance from the "
+                    "others (p. 59).",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "He may come from Aragon or Sicily; rename him Alan if he is "
+                    "from northern Europe. See The Friars Preacher for his "
+                    "statistics.",
+                ),
+            ],
         ),
     }
     return {
@@ -513,15 +581,62 @@ def _set_experience(character: Character, ability: str, xp: int) -> None:
     next(a for a in character.abilities if a.name == ability).xp = xp
 
 
-def _orris_secrets() -> str:
+def _orris_secrets() -> list[Secret]:
+    return [
+        titled(
+            "Orris's curse",
+            "He senses evil and the good in people's hearts, and he senses "
+            "magic, but his curse makes the two one to him. He has met the "
+            "power of Hell and feels the same thing around magic, and has never "
+            "felt magic any other way, so he does not know the two can be told "
+            "apart. Add his piety and his dread of the Infernal, and he takes "
+            "the characters for Hell's allies (pp. 50, 57).",
+        ),
+        titled(
+            "What Orris knows of the Order",
+            "He has a working knowledge of the Order, partly wrong through the "
+            "Order's own misinformation (Lords of Men pp. 40-41). He thinks "
+            "covenants are like chapters or monasteries; he knows, unless they "
+            "have hidden it, that this one lies in his diocese, and perhaps its "
+            "name. He has never met a magus and expects blue robes, tall "
+            "brimmed blue hats and staves. He knows of the Order's laws, its "
+            "secret Tribunals and its democracy (pp. 52-53).",
+        ),
+        titled(
+            "Orris reserves judgment",
+            "Sorcerers Orris has met seemed evil to him. He accepts in reason "
+            "that not all wizards are evil, but God has given him the power to "
+            "know evil, and he reserves judgment until he meets them himself "
+            "(pp. 52-53).",
+        ),
+        titled(
+            "What Orris feels near the supernatural",
+            "Near a Divine, Infernal or Magic manifestation Orris grows dizzy "
+            "and breaks into a cold sweat. The Divine brings joy and rays of "
+            "golden light from the source; Infernal or Magic things are hard to "
+            "look at, wrapped in gloom and hollow despair (p. 56).",
+        ),
+        titled(
+            "Orris's nights of prayer",
+            "He spends night after night prostrate on the chancel steps, "
+            "praying for a sign that he judges rightly and that his way is the "
+            "only way to protect his people (p. 62).",
+        ),
+        titled(
+            "Orris under threat",
+            "If the characters are thought ruthless Orris may hire bodyguards "
+            "and keep the relics by him. He prays for a miracle if attacked. "
+            "Beyond that he is an aging man who has never fought and is easily "
+            "killed (p. 66).",
+        ),
+        titled("Storyguide Notes", _orris_notes()),
+    ]
+
+
+def _orris_notes() -> str:
     return paragraphs(
-        "He senses evil and the good in people's hearts, and he senses magic, "
-        "but his curse makes the two one to him. He has met the power of Hell "
-        "and feels the same thing around magic, and has never felt magic any "
-        "other way, so he does not know the two can be told apart. Add his "
-        "piety and his dread of the Infernal, and he takes the characters for "
-        "Hell's allies (pp. 50, 57). He is a good man acting for his flock: run "
-        "him as a puzzle to solve, not a monster to beat (p. 50).",
+        "He is a good man acting for his flock: run him as a puzzle to solve, "
+        "not a monster to beat (p. 50).",
         "Who cursed him is the storyguide's choice (p. 57). God or an angel, to "
         "test whether the characters will keep the high ground and hold back "
         "their power. A demon, years ago, when he was a rising priest, so that "
@@ -529,20 +644,7 @@ def _orris_secrets() -> str:
         "innocent. Or a powerful hedge wizard or faerie he offended when young: "
         "fittingly, he probably saw something he did not understand and "
         "called it the Devil's work.",
-        "What he knows of the Order (pp. 52-53): a working knowledge, partly "
-        "wrong through the Order's own misinformation (Lords of Men pp. 40-41). "
-        "He thinks covenants are like chapters or monasteries; he knows, unless "
-        "they have hidden it, that this one lies in his diocese, and perhaps "
-        "its name. He has never met a magus and expects blue robes, tall "
-        "brimmed blue hats and staves. He knows of the Order's laws, its secret "
-        "Tribunals and its democracy. Sorcerers he has met seemed evil to him. "
-        "He accepts in reason that not all wizards are evil, but God has given "
-        "him the power to know evil, and he reserves judgment until he meets "
-        "them himself.",
-        "His Magic Sensitivity (p. 56): near a Divine, Infernal or Magic "
-        "manifestation he grows dizzy and breaks into a cold sweat. The Divine "
-        "brings joy and rays of golden light from the source; Infernal or Magic "
-        "things are hard to look at, wrapped in gloom and hollow despair. He "
+        "His Magic Sensitivity (p. 56): he "
         "must Penetrate any Magic Resistance to feel anything. The Ease Factor "
         "to detect a Gifted person is 15 minus the highest Art divided by 5, or "
         "the highest Supernatural Ability. Next to the altar his Dominion aura "
@@ -561,17 +663,12 @@ def _orris_secrets() -> str:
         "Holy Influence (pp. 55, 57): Presence + Leadership + stress die. 9 "
         "grants +1, 15 grants +2, 24 grants +3. The temper of the Dominion is "
         "described in RoP: The Divine Revised Edition pp. 38-40.",
-        "His frame of mind (p. 62): he spends night after night prostrate on "
-        "the chancel steps, praying for a sign that he judges rightly and that "
-        "his way is the only way to protect his people. A spy in the cathedral "
-        "may learn from this that he is no villain and that peace can still "
-        "be found.",
-        "Attacking him (p. 66): he may be warned of a plot in a dream, and if "
-        "the characters are thought ruthless he may hire bodyguards and keep "
-        "the relics by him. The Hand gives Magic Resistance 40, and his usual "
-        "Dominion aura of at least 4 raises it to 44. He prays for a miracle "
-        "if attacked. Beyond that he is an aging man who has never fought and "
-        "is easily killed.",
+        "His frame of mind (p. 62): a spy in the cathedral may learn from his "
+        "nights of prayer that he is no villain and that peace can still be "
+        "found.",
+        "Attacking him (p. 66): he may be warned of a plot in a dream. The Hand "
+        "gives Magic Resistance 40, and his usual Dominion aura of at least 4 "
+        "raises it to 44.",
         "Reworking him (pp. 53-54). Not a bishop: an abbot changes least; a "
         "Templar preceptor or a pious noble tied to the clergy, perhaps by a "
         "younger brother, may need rebuilt, more martial statistics. Other "
@@ -610,27 +707,47 @@ def _factions(b: Builder, people: dict[str, Character]) -> None:
         "fills the congregation with wonder at God, or whatever feeling suits "
         "the Mass, and it has made the cathedral famous. Some canons feel "
         "snubbed at being left out of Brother Theodoric's circle of singers.",
-        secrets=paragraphs(
-            "Five of the nine, Theodoric among them, are a Holy Tradition of "
-            "Cantores (RoP: The Divine Revised Edition pp. 93-94), who worship "
-            "through plainchant. The other four, Father Peter among them, "
-            "sometimes join their group ceremonies. Their favored Abilities are "
-            "Holy Music, Invocation, Blessing and Enchanting Music; they use "
-            "the last to move the congregation (p. 53).",
-            "Orris knows what they can do and is in awe of their faith. He has "
-            "rarely asked for their miracles, trusting Theodoric's piety. In "
-            "thanks for this, the chapter has blessed his health in a yearly "
-            "ritual for 10 years: +5 to his aging rolls (Holy Music / Blessing "
-            "50), and the source of his Warping.",
-            "Ceremony totals (p. 53): Theodoric leading the four Cantores adds "
-            "+24 to miraculous effects (the Cantores' Presence + Holy Music). "
-            "The full nine, unled, add +46 (+25 group bonus, -9 participants, "
-            "+30 from the Cantores' and canons' Presence + Holy Music). By "
-            "Invocation instead of Holy Music, the bonus from Communication + "
-            "Invocation is +14 led and +16 unled.",
-            "The block of specialists gives the 4 Cantores Ceremony 5 (p. 52), "
-            "an Ability not among the favored ones of p. 53.",
-        ),
+        secrets=[
+            titled(
+                "The Cantores among the canons",
+                "Five of the nine canons, Theodoric among them, are a Holy "
+                "Tradition of Cantores, who worship through plainchant. The "
+                "other four, Father Peter among them, sometimes join their group "
+                "ceremonies (p. 53).",
+            ),
+            titled(
+                "Orris and the Cantores",
+                "Orris knows what the Cantores can do and is in awe of their "
+                "faith. He has rarely asked for their miracles, trusting "
+                "Theodoric's piety.",
+            ),
+            titled(
+                "The chapter's blessing on Orris",
+                "In thanks for his rarely asking for their miracles, the chapter "
+                "has blessed Orris's health in a yearly ritual for 10 years.",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The Cantores are in RoP: The Divine Revised Edition pp. "
+                    "93-94. Their favored Abilities are Holy Music, Invocation, "
+                    "Blessing and Enchanting Music; they use the last to move "
+                    "the congregation (p. 53).",
+                    "The yearly blessing on Orris gives +5 to his aging rolls "
+                    "(Holy Music / Blessing 50), and is the source of his "
+                    "Warping.",
+                    "Ceremony totals (p. 53): Theodoric leading the four "
+                    "Cantores adds +24 to miraculous effects (the Cantores' "
+                    "Presence + Holy Music). The full nine, unled, add +46 (+25 "
+                    "group bonus, -9 participants, +30 from the Cantores' and "
+                    "canons' Presence + Holy Music). By Invocation instead of "
+                    "Holy Music, the bonus from Communication + Invocation is "
+                    "+14 led and +16 unled.",
+                    "The block of specialists gives the 4 Cantores Ceremony 5 "
+                    "(p. 52), an Ability not among the favored ones of p. 53.",
+                ),
+            ),
+        ],
     )
     for key, note in (("theodoric", "Chief chorister"), ("peter", "Provost")):
         b.link(chapter, "characters", people[key], note)
@@ -649,48 +766,65 @@ def _factions(b: Builder, people: dict[str, Character]) -> None:
         "in market squares and alehouses, moving on every few nights. Their "
         "theme is God's hatred of idolaters and sorcerers, whom they put beside "
         "murderers, adulterers, perjurers and fornicators.",
-        secrets=paragraphs(
-            "The Order of St. Dominic was founded to fight heresy, and Orris "
-            "asks for these three once his inquiries are done (p. 59). They "
-            "call magicians fraudsters who fake miracles, sinners against "
-            "Nature and God, and idolaters who call on demons. They name the "
-            "player magi outright, using whatever Orris has found, but they "
-            "are honest: they do not embellish or lie. On preachers, see Art & "
-            "Academe pp. 13-14.",
-            "Their statistics are not printed. Base them on the Franciscan "
-            "friar of RoP: The Divine Revised Edition p. 96, with Profession: "
-            "Preacher in place of Teaching, and perhaps a Puissant Virtue in "
-            "it (p. 59). Finding them may take several days of following their "
-            "trail (p. 59).",
-            "Reputation (p. 59): their campaign gives everyone identified with "
-            "the covenant's magic a bad Reputation of 1, its nature varying by "
-            "person. Each identifiable event adds an experience point, and so "
-            "does each season of preaching; it rises as an Ability (ArM5 p. "
-            "167). It hurts business in the diocese and the covenfolk's loyalty "
-            "(Covenants p. 40).",
-            "Against them (p. 64): a public clash rallies the locals against "
-            "the attacker, and three mysterious deaths feed the rumours. Orris "
-            "sends replacements, who raise Reputation at half the rate, these "
-            "three being the order's best. If deaths go on, their superior "
-            "eventually refuses to send more.",
-            "Debate (p. 64): a formal challenge draws wide attention, and the "
-            "bad Reputation gains no experience that season; an ad hoc "
-            "debate does not give this. Rules are in Houses of Hermes: "
-            "Societates p. 90 and Art & Academe p. 104. The friars keep to "
-            "academic disputatio; magi may range wider but suffer The Gift's "
-            "penalty. A win earns a good Reputation of 1 that counters the "
-            "bad, possibly for the others too. A loss still stops the rise "
-            "that season; a botch adds a point. Later debates earn 1 experience "
-            "each, and only one debate a season counts.",
-            "Scripture they may quote (p. 60): Wisdom 17:7; Exodus 22:18; "
-            "Leviticus 19:31 and 20:27; Deuteronomy 18:10-12; 1 Samuel 15:23; "
-            "Isaiah 47:13-14; Micah 5:12-13; Malachi 3:5; Galatians 5:19-21; "
-            "Revelation 21:8 and 22:14-15.",
-        ),
+        secrets=[
+            titled(
+                "Who sent for the friars",
+                "The Order of St. Dominic was founded to fight heresy, and "
+                "Orris asks for these three friars once his inquiries are done "
+                "(p. 59).",
+            ),
+            titled(
+                "What the friars say of the magi",
+                "The friars call magicians fraudsters who fake miracles, sinners "
+                "against Nature and God, and idolaters who call on demons. They "
+                "name the player magi outright, using whatever Orris has found, "
+                "but they are honest: they do not embellish or lie (p. 59).",
+            ),
+            titled("Storyguide Notes", _friar_notes()),
+        ],
     )
     for key in ("friar_peter", "friar_bartholomew", "friar_alonso"):
         b.link(friars, "characters", people[key], "A member")
     b.link(friars, "characters", people["orris"], "Asked for them")
+    _knights(b)
+
+
+def _friar_notes() -> str:
+    return paragraphs(
+        "On preachers, see Art & Academe pp. 13-14.",
+        "Their statistics are not printed. Base them on the Franciscan "
+        "friar of RoP: The Divine Revised Edition p. 96, with Profession: "
+        "Preacher in place of Teaching, and perhaps a Puissant Virtue in "
+        "it (p. 59). Finding them may take several days of following their "
+        "trail (p. 59).",
+        "Reputation (p. 59): their campaign gives everyone identified with "
+        "the covenant's magic a bad Reputation of 1, its nature varying by "
+        "person. Each identifiable event adds an experience point, and so "
+        "does each season of preaching; it rises as an Ability (ArM5 p. "
+        "167). It hurts business in the diocese and the covenfolk's loyalty "
+        "(Covenants p. 40).",
+        "Against them (p. 64): a public clash rallies the locals against "
+        "the attacker, and three mysterious deaths feed the rumours. Orris "
+        "sends replacements, who raise Reputation at half the rate, these "
+        "three being the order's best. If deaths go on, their superior "
+        "eventually refuses to send more.",
+        "Debate (p. 64): a formal challenge draws wide attention, and the "
+        "bad Reputation gains no experience that season; an ad hoc "
+        "debate does not give this. Rules are in Houses of Hermes: "
+        "Societates p. 90 and Art & Academe p. 104. The friars keep to "
+        "academic disputatio; magi may range wider but suffer The Gift's "
+        "penalty. A win earns a good Reputation of 1 that counters the "
+        "bad, possibly for the others too. A loss still stops the rise "
+        "that season; a botch adds a point. Later debates earn 1 experience "
+        "each, and only one debate a season counts.",
+        "Scripture they may quote (p. 60): Wisdom 17:7; Exodus 22:18; "
+        "Leviticus 19:31 and 20:27; Deuteronomy 18:10-12; 1 Samuel 15:23; "
+        "Isaiah 47:13-14; Micah 5:12-13; Malachi 3:5; Galatians 5:19-21; "
+        "Revelation 21:8 and 22:14-15.",
+    )
+
+
+def _knights(b: Builder) -> None:
     b.faction(
         "The Church Knights",
         faction="Military order",
@@ -700,23 +834,37 @@ def _factions(b: Builder, people: dict[str, Character]) -> None:
         "of Santiago in Iberia, the Teutonic Order, working from Hungary, in "
         "eastern Europe, and the Knights Templar nearly everywhere else. They "
         "are veterans of war, of sieges above all.",
-        secrets=paragraphs(
-            "The commander has Leadership 5, direct experience in the Holy Land "
-            "and siege engineers who can undermine a fortress; he leads his "
-            "force as a trained group (p. 62).",
-            "Numbers (p. 62): at least five knights beyond the commander, and a "
-            "dozen or more sergeants, sized to the covenant's strength before "
-            "any desertions: at least as many sergeants as the turb had grogs, "
-            "and as many knights as there are companions.",
-            "Statistics (p. 62): The Church pp. 126-127. Otherwise, knights are "
-            "the Knight companion template (ArM5 p. 23), sergeants the Standard "
-            "Soldier (ArM5 p. 22), and the leader of each trained group of five "
-            "a Grizzled Veteran (ArM5 p. 21). Each knight very likely has a "
-            "relic of Faith 1 or more. Mass warfare and sieges: Lords of Men "
-            "pp. 109-116.",
-            "This is the generic force of the story. Sagas with a Tribunal pack "
-            "may already hold the order itself.",
-        ),
+        secrets=[
+            titled(
+                "The knights' commander",
+                "The Church knights' commander has direct experience in the Holy "
+                "Land and siege engineers who can undermine a fortress; he leads "
+                "his force as a trained group (p. 62).",
+            ),
+            titled(
+                "The knights' relics",
+                "Each of the Church knights very likely has a relic (p. 62).",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The commander has Leadership 5 (p. 62).",
+                    "Numbers (p. 62): at least five knights beyond the "
+                    "commander, and a dozen or more sergeants, sized to the "
+                    "covenant's strength before any desertions: at least as many "
+                    "sergeants as the turb had grogs, and as many knights as "
+                    "there are companions.",
+                    "Statistics (p. 62): The Church pp. 126-127. Otherwise, "
+                    "knights are the Knight companion template (ArM5 p. 23), "
+                    "sergeants the Standard Soldier (ArM5 p. 22), and the leader "
+                    "of each trained group of five a Grizzled Veteran (ArM5 p. "
+                    "21). Each knight's relic is of Faith 1 or more. Mass "
+                    "warfare and sieges: Lords of Men pp. 109-116.",
+                    "This is the generic force of the story. Sagas with a "
+                    "Tribunal pack may already hold the order itself.",
+                ),
+            ),
+        ],
     )
 
 
@@ -982,51 +1130,113 @@ def _campaign(b: Builder) -> Neighbour:
     )
 
 
-def _campaign_secrets() -> str:
+def _campaign_secrets() -> list[Secret]:
+    return [
+        titled(
+            "Orris will not rest",
+            "Bishop Orris will not rest, and every step of his campaign is meant "
+            "to drive the magi to submit (p. 62).",
+        ),
+        titled(
+            "What the law says of magic",
+            "Magic alone is neither a secular nor a canon crime in most of "
+            "Mythic Europe; its methods or effects may be. Theft or murder by "
+            "magic is a crime, and idolatry is for the canon court. Bonisagus "
+            "purged overt idolatry, but theologians and holy magicians still "
+            "find sacrilege in Hermetic words and gestures (RoP: The Divine "
+            "Revised Edition pp. 66-69). The charge at the bishop's court is "
+            "that the magic called on pagan beings, and it rests on hearsay (p. "
+            "56). The bishop alone judges, over moral offenses, religious duties "
+            "and all crimes of clergymen (p. 55).",
+        ),
+        titled(
+            "What anathema brings",
+            "Under anathema the baptismal name becomes a sympathetic "
+            "connection. Demons take notice, and a death under it gives Hell "
+            "the soul (p. 62). A non-Christian cannot be anathematized and "
+            "suffers nothing. An excommunicant has no benefit of any sacrament "
+            "but penance (p. 61).",
+        ),
+        titled(
+            "Removing a bishop",
+            "Usually only the pope can remove a bishop (The Church pp. 46-48), "
+            "and legates test every such petition (pp. 63-64).",
+        ),
+        titled(
+            "What Orris asks of the repentant",
+            "Orris gladly meets magi he thinks repentant. He wants them in "
+            "humble dress to confess before the congregation, break their "
+            "staves, swear on the relics never to use magic, give up familiars, "
+            "surrender their books to the Church and accept penance. Public "
+            "confession is normal practice. If they do, he undoes all he has "
+            "done. False oaths risk exposure and Divine anger, such as the "
+            "Curse of Drowning and anathema. If they refuse, he has no more to "
+            "say (p. 64).",
+        ),
+        titled(
+            "The Order and those who submit",
+            "A magus who dislikes the Church may charge magi who submit to "
+            "Orris with endangering their sodales. Those who truly forswear "
+            "magic may count as having left the Order, losing the Code's "
+            "protection, and must be slain before they betray the Parma Magica "
+            "(pp. 64-65).",
+        ),
+        titled(
+            "Witnesses to Orris's curse",
+            "Monks of Orris's novitiate, penitents who dabbled in magic, people "
+            "he freed from possession, or the ghost of a witch convicted in his "
+            "court show that he reacted alike to evil and to magic (p. 63).",
+        ),
+        titled(
+            "Persuading Orris",
+            "Early on Orris is strong and demands full contrition; later, "
+            "complicit in excommunication and bloodshed, he wavers. Magi must "
+            "convince him magic is not evil by scholarship, mysticism or "
+            "theology, openly, for he is a good judge of character and deceit "
+            "would be disastrous, and must correct his ignorance of the Order, "
+            "which may strain their Oath (p. 65).",
+        ),
+        titled(
+            "Orris's terms for peace",
+            "If Orris accepts that magic is not evil (p. 65), he still requires "
+            "confession and penance for known crimes; a church in the covenant, "
+            "with Sunday Mass for all magi and a Friar Preacher as priest in "
+            "charge; tithes; care for the diocese's mad and outcast, a possible "
+            "source of grogs, companions or apprentices; and each magus's "
+            "confession once a year. He does not demand that they give up "
+            "magic. He will not bend for a year or so.",
+        ),
+        titled(
+            "If Orris is killed",
+            "Killing Orris brings the Code, the Church's inquiry and possibly a "
+            "Tribunal conviction. The chapter asks the papacy for a successor "
+            "who knows heresy and the Order, has political weight, and might "
+            "even be a cardinal, with his own Divine Magic Resistance (p. 66).",
+        ),
+        titled("Storyguide Notes", _campaign_notes()),
+    ]
+
+
+def _campaign_notes() -> str:
     return paragraphs(
         "The bishop suits a covenant with ties to the mundane world; a socially "
         "isolated one feels him less. He shows the Order's problem: magi may "
         "not meddle with mundanes, but mundanes may meddle with them (p. 50). He "
-        "can be a new appointment or an incumbent taking a larger part. He will "
-        "not rest, and every step is meant to drive the magi to submit (p. 62).",
-        "The law (p. 55): magic alone is neither a secular nor a canon crime in "
-        "most of Mythic Europe; its methods or effects may be. Theft or murder "
-        "by magic is a crime, and idolatry is for the canon court. Bonisagus "
-        "purged overt idolatry, but theologians and holy magicians still find "
-        "sacrilege in Hermetic words and gestures (RoP: The Divine Revised "
-        "Edition pp. 66-69). A witness who hears and understands a casting may "
+        "can be a new appointment or an incumbent taking a larger part.",
+        "The law (p. 55): a witness who hears and understands a casting may "
         "roll Intelligence + Artes Liberales to see pagan influences: Ease "
-        "Factor 9, or 6 for a Ritual. The charge at court is that the magic "
-        "called on pagan beings, and it rests on hearsay (p. 56). The bishop "
-        "alone judges, over moral offenses, religious duties and all crimes of "
-        "clergymen.",
+        "Factor 9, or 6 for a Ritual (p. 56).",
         "Anathema, at the storyguide's choice (p. 62): all Faith Points lost, "
         "and none gained while excommunicated without True Faith. One Confidence "
         "Point lost on hearing of it. A Local Reputation of Anathema 1. The "
-        "baptismal name becomes a sympathetic connection. Demons take notice, "
-        "and a death under it gives Hell the soul. The Gift's penalty takes on "
-        "the color of impiety. Those with Faith Points sense the danger to "
-        "their souls. A non-Christian cannot be anathematized and suffers "
-        "nothing. An excommunicant has no benefit of any sacrament but penance "
-        "(p. 61).",
+        "Gift's penalty takes on the color of impiety. Those with Faith Points "
+        "sense the danger to their souls.",
         "Ruining his name (pp. 63-64): hard, given a lifetime of good deeds, but "
         "possible with time. Magic can forge evidence. Give him a bad Reputation "
         "by a significant event and raise it as the friars raise theirs; once "
-        "it passes his good one it takes precedence. Usually only the pope can "
-        "remove a bishop (The Church pp. 46-48), and legates test every such "
-        "petition, so the chapter and the local witnesses must be falsified too. "
-        "Using local nobles and churchmen invites a charge of meddling.",
-        "Submitting (p. 64): he gladly meets magi he thinks repentant. He wants "
-        "them in humble dress to confess before the congregation, break their "
-        "staves, swear on the relics never to use magic, give up familiars, "
-        "surrender their books to the Church and accept penance. Public "
-        "confession is normal practice. If they do, he undoes all he has done. "
-        "False oaths risk exposure and Divine anger, such as the Curse of "
-        "Drowning and anathema. If they refuse, he has no more to say.",
-        "The Order's response (pp. 64-65): a magus who dislikes the Church may "
-        "charge them with endangering their sodales. Those who truly forswear "
-        "magic may count as having left the Order, losing the Code's protection, "
-        "and must be slain before they betray the Parma Magica.",
+        "it passes his good one it takes precedence. To remove him, the chapter "
+        "and the local witnesses must be falsified too. Using local nobles and "
+        "churchmen invites a charge of meddling.",
         "Lifting the curse (p. 65; capitulation, hiding or all-out assault being "
         "the three main endings). While it lasts he cannot reach terms. A demon's "
         "curse ends with the demon, above all if he sees it; the demon or a "
@@ -1037,36 +1247,19 @@ def _campaign_secrets() -> str:
         "curse could yield to Perdo Vim, but he is hostile and bears relics. "
         "Against a Vim specialist, raise the curse's level and draw it from an "
         "unfamiliar tradition, so that learning it takes at least another story.",
-        "Investigating him (p. 63): monks of his novitiate, penitents who dabbled "
-        "in magic, people he freed from possession, or the ghost of a witch "
-        "convicted in his court show that he reacted alike to evil and to magic. "
         "A journey to lift the curse could be a pilgrimage (The Church pp. "
-        "15-19).",
-        "Full disclosure (p. 65): early on he is strong and demands full "
-        "contrition; later, complicit in excommunication and bloodshed, he "
-        "wavers. If he suffers The Gift, they cannot persuade him. Those present "
-        "must have the Gentle Gift, be unGifted, or include him in a Parma "
-        "Magica. They must convince him magic is not evil by scholarship, "
-        "mysticism or theology, openly, for he is a good judge of character and "
-        "deceit would be disastrous, and must correct his ignorance of the "
-        "Order, which may strain their Oath. Use the debate rules of Houses of "
-        "Hermes: Societates p. 90, and no dirty tricks.",
-        "If he accepts it (p. 65), he still requires confession and penance for "
-        "known crimes; a church in the covenant, with Sunday Mass for all magi "
-        "and a Friar Preacher as priest in charge; tithes; care for the "
-        "diocese's mad and outcast, a possible source of grogs, companions or "
-        "apprentices; and each magus's confession once a year. He does not "
-        "demand that they give up magic. He will not bend for a year or so.",
+        "15-19) (p. 63).",
+        "Full disclosure (p. 65): if he suffers The Gift, they cannot persuade "
+        "him. Those present must have the Gentle Gift, be unGifted, or include "
+        "him in a Parma Magica. Use the debate rules of Houses of Hermes: "
+        "Societates p. 90, and no dirty tricks.",
         "Disappearance (pp. 65-66): they leave the diocese, or hide the covenant "
         "by powerful magic, with supplies from afar through layers of agents, "
         "and go out only in disguise. The bad Reputation fades by 1 experience "
         "point a year without suspicion, so it may take decades. Orris will "
         "likely be dead by then.",
-        "Killing him (p. 66): the Code, the Church's inquiry and possibly a "
-        "Tribunal conviction follow. The chapter asks the papacy for a successor "
-        "who knows heresy and the Order, has political weight, and might even "
-        "be a cardinal, with his own Divine Magic Resistance. Heaven should not "
-        "leave the murder of a good man unpunished.",
+        "Killing him (p. 66): Heaven should not leave the murder of a good man "
+        "unpunished.",
     )
 
 
@@ -1079,16 +1272,30 @@ def _double(b: Builder, people: dict[str, Character]) -> None:
         age=None,
         summary="A local scoundrel of the diocese, given to drink, dice, loose "
         "women and shady deals.",
-        secrets=paragraphs(
-            "The bishop's near-identical double (p. 63) and his Mistaken Identity "
-            "Flaw. Orris has not worked out that he exists. If confronted he "
-            "claims to be a con man with a chance likeness, but he is bound up "
-            "with the curse, and what he is depends on who laid it: a diabolist "
-            "taking the bishop's form to undo his works, the faerie tormentor "
-            "dropping in to watch its victim, or an angel waiting to reveal the "
-            "curse and set the characters on the road to removing it.",
-            "He knows more about the curse than first appears (p. 63).",
-        ),
+        secrets=[
+            titled(
+                "The bishop's double",
+                "Turstan is the bishop's near-identical double (p. 63). Orris "
+                "has not worked out that he exists.",
+            ),
+            titled(
+                "Turstan and the curse",
+                "If confronted he claims to be a con man with a chance likeness, "
+                "but he is bound up with the bishop's curse.",
+            ),
+            titled(
+                "What Turstan knows",
+                "He knows more about the bishop's curse than first appears (p. 63).",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Turstan is Orris's Mistaken Identity Flaw (p. 63). What he is "
+                "depends on who laid the curse: a diabolist taking the bishop's "
+                "form to undo his works, the faerie tormentor dropping in to "
+                "watch its victim, or an angel waiting to reveal the curse and "
+                "set the characters on the road to removing it.",
+            ),
+        ],
     )
     double = dormant(
         b.threat(
@@ -1096,9 +1303,14 @@ def _double(b: Builder, people: dict[str, Character]) -> None:
             antagonist="Turstan",
             summary="Odd tales of the bishop reach the parishes: sightings that "
             "do not fit where he was.",
-            secrets="The book's way to feed the players' guess that Orris must be "
-            "crooked (p. 63). It is his Story Flaw coming into force during "
-            "this story.",
+            secrets=[
+                titled(
+                    "Storyguide Notes",
+                    "The book's way to feed the players' guess that Orris must "
+                    "be crooked (p. 63). It is his Story Flaw coming into force "
+                    "during this story.",
+                ),
+            ],
             stages=[
                 S(
                     "A Scoundrel in the Bishop's Likeness",
@@ -1129,44 +1341,91 @@ def _side_stories(b: Builder) -> None:
             "Burning Bridges",
             "Freemen across the diocese put sense before custom. One town "
             "commissions a bridge sooner than walk miles to the old one.",
-            "Under the Wise temper (p. 58), the bridge draws a demon builder, such as "
-            "Architectus (RoP: The Infernal p. 66). The town outwits it three "
-            "times; shamed, it frames them for diabolism and makes sure the "
-            "characters see the evidence. If the covenant tries to destroy this "
-            '"evil" bridge, it only proves the bishop right.',
+            [
+                titled(
+                    "The demon builder",
+                    "The town's new bridge draws a demon builder. The town "
+                    "outwits it three times; shamed, it frames them for "
+                    "diabolism and makes sure the characters see the evidence.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "The demon comes under the Wise temper (p. 58); it may be "
+                    "Architectus (RoP: The Infernal p. 66). If the covenant "
+                    'tries to destroy this "evil" bridge, it only proves the '
+                    "bishop right.",
+                ),
+            ],
         ),
         (
             "The Bewitched Cows",
             "Cows are bewitched and bread will not rise, and the covenant is blamed.",
-            "Blame the Witch (p. 60). The faerie responsible gets no vitality "
-            "while the characters take the blame, and its cravings change it into "
-            "something more dangerous. Faeries cannot starve, but defeating it "
-            "does not end the trouble: the cause of the change must be dealt "
-            "with. A cognizant faerie might accuse the characters of molestation "
-            "for stealing its vitality.",
+            [
+                titled(
+                    "The faerie behind the bewitching",
+                    "The faerie responsible for the bewitched cows gets no "
+                    "vitality while the characters take the blame, and its "
+                    "cravings change it into something more dangerous.",
+                ),
+                titled(
+                    "Ending the bewitching",
+                    "Faeries cannot starve, but defeating the faerie behind the "
+                    "bewitched cows does not end the trouble: the cause of its "
+                    "change must be dealt with.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Blame the Witch (p. 60). A cognizant faerie might accuse "
+                    "the characters of molestation for stealing its vitality.",
+                ),
+            ],
         ),
         (
             "The Familiar on Trial",
             "A magus's predatory familiar is accused of eating valuable livestock "
             "and is summoned to the manor court for destroying the lord's "
             "property.",
-            "Blame the Witch (p. 60). Men are sent to the covenant to make sure "
-            "that the familiar attends.",
+            [
+                titled(
+                    "Men from the manor court",
+                    "Men are sent to the covenant to make sure that the familiar "
+                    "attends the manor court.",
+                ),
+                titled("Storyguide Notes", "Blame the Witch (p. 60)."),
+            ],
         ),
         (
             "The Fallen Church",
             "A church in the diocese collapses, and the covenant is blamed.",
-            "Blame the Witch (p. 60). The church stood on an ancient vis source. "
-            "A rival covenant brought it down, trading on the magi's bad "
-            "Reputation, and claims the vis.",
+            [
+                titled(
+                    "What lay under the church",
+                    "The fallen church stood on an ancient vis source.",
+                ),
+                titled(
+                    "Who brought the church down",
+                    "A rival covenant brought the church down, trading on the "
+                    "magi's bad Reputation, and claims the vis.",
+                ),
+                titled("Storyguide Notes", "Blame the Witch (p. 60)."),
+            ],
         ),
         (
             "Unwanted Attention",
             "A Quaesitor passing through hears what is being said of the magi and "
             "starts asking questions.",
-            "Attracting Unwanted Attention (p. 60). If the charges are specific, "
-            "this may look like a clear case of meddling with mundanes, and he "
-            "might find enough to bring a case at Tribunal.",
+            [
+                titled(
+                    "The Quaesitor's case",
+                    "If the charges are specific, the talk of the magi may look "
+                    "like a clear case of meddling with mundanes, and the "
+                    "Quaesitor might find enough to bring a case at Tribunal.",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "Attracting Unwanted Attention (p. 60).",
+                ),
+            ],
         ),
     ):
         dormant(

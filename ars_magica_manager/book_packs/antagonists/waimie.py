@@ -23,9 +23,11 @@ from typing import Any, NamedTuple
 from ...models import BodyVis, Creature, CreaturePower, Neighbour
 from ..builder import (
     Builder,
+    Secrets,
     characteristics,
     dormant,
     paragraphs,
+    titled,
     vf_minor,
     wound_ranges,
 )
@@ -596,40 +598,77 @@ def _waimie(b: Builder, insula: Neighbour) -> Creature:
             "of Size by a Virtue or Flaw does alter Might. The book offers this "
             "as a clarification. (pp. 134-135)",
         ),
-        secrets=paragraphs(
-            "An ancient creature of the Magic Realm, and very strong for it. She "
-            "needs vis to hold what she has learned and to grow, so she bears "
-            "serpents without end and sends them to fetch it. She feels little "
-            "for them. Most die in the crush of siblings; those that live often "
-            "lose ground to Acclimation as they grow. (p. 133)",
-            "She keeps half the year in the Magic Realm, sharing her cave with "
-            "whichever child is least stupid. She spies through her small "
-            "children, and so learned of the Order and how magi hunt and hoard "
-            "vis, which suggested an easier way to feed. She has no knowledge of "
-            "the Aegis of the Hearth. (pp. 133, 137)",
-            "Her large daughters press her constantly, sometimes in league with "
-            "younger ones, for too many survivors try to kill her and mother "
-            "broods of their own. (p. 133)",
-            "Blades cannot harm her. None of the tales is true, but one holds a hint of this, the book does not say which, and nothing tells the characters so. (p. 138)",
-            "In her insula each wound she takes bleeds a living serpent into the "
-            "fight on her side: a one-year-old from a Light Wound, a three-year-old "
-            "from a Medium, a five-year-old from a Heavy or Incapacitating. These "
-            "do not spawn in turn when hurt. She hides among the mounds and "
-            "strikes by surprise, and a harder fight adds her offspring of six to "
-            "eight years. (p. 140)",
-            "A weaker Waimie: use one of the brood as the mother, and slow them "
-            "to two or more years per step. Or alternate the yearly 5 Might with "
-            "5 points of Inferiorities: Minor Flaw (Anchored to (Land), Baneful "
-            "Circumstances, Clumsy, Environmental Sensitivity, Essential Flaw, "
-            "(Form) Monstrosity, Lesser Malediction or Poor Characteristic), "
-            "Reduced Attack, Reduced Might or Reduced Powers; some are in Realms "
-            "of Power: Magic pp. 47-51. (p. 135)",
-            "A stronger Waimie: give her human servants, the Cult of the Serpent, "
-            "held perhaps by something like Entrancement. Without Difficult "
-            "Underlings she can send her children in coordinated groups, and if "
-            "she beats the magi outright she need share no vis source with her "
-            "brood. (p. 136)",
-        ),
+        secrets=[
+            titled(
+                "Why the Waimie wants vis",
+                "An ancient creature of the Magic Realm, and very strong for it. "
+                "She needs vis to hold what she has learned and to grow, so she "
+                "bears serpents without end and sends them to fetch it. (p. 133)",
+            ),
+            titled(
+                "What becomes of her brood",
+                "She feels little for her serpents. Most die in the crush of "
+                "siblings; those that live often lose ground to Acclimation as "
+                "they grow. (p. 133)",
+            ),
+            titled(
+                "Half the year in the Magic Realm",
+                "She keeps half the year in the Magic Realm, sharing her cave with "
+                "whichever child is least stupid. (pp. 133, 137)",
+            ),
+            titled(
+                "Eyes in her children",
+                "She spies through her small children, and so learned of the Order "
+                "and how magi hunt and hoard vis, which suggested an easier way to "
+                "feed. (pp. 133, 137)",
+            ),
+            titled(
+                "What she does not know",
+                "She has no knowledge of the Aegis of the Hearth. (pp. 133, 137)",
+            ),
+            titled(
+                "Her rebellious daughters",
+                "Her large daughters press her constantly, sometimes in league with "
+                "younger ones, for too many survivors try to kill her and mother "
+                "broods of their own. (p. 133)",
+            ),
+            titled("What blades do to her", "Blades cannot harm her. (p. 138)"),
+            titled(
+                "Wounds that bleed serpents",
+                "In her insula each wound she takes bleeds a living serpent into "
+                "the fight on her side: a one-year-old from a Light Wound, a "
+                "three-year-old from a Medium, a five-year-old from a Heavy or "
+                "Incapacitating. These do not spawn in turn when hurt. (p. 140)",
+            ),
+            titled(
+                "How she fights at home",
+                "She hides among the mounds of her insula and strikes by surprise. "
+                "(p. 140)",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "None of the tales is true, but one holds a hint that blades "
+                    "cannot harm her; the book does not say which, and nothing "
+                    "tells the characters so. (p. 138)",
+                    "A harder fight in the insula adds her offspring of six to "
+                    "eight years. (p. 140)",
+                    "A weaker Waimie: use one of the brood as the mother, and slow "
+                    "them to two or more years per step. Or alternate the yearly 5 "
+                    "Might with 5 points of Inferiorities: Minor Flaw (Anchored to "
+                    "(Land), Baneful Circumstances, Clumsy, Environmental "
+                    "Sensitivity, Essential Flaw, (Form) Monstrosity, Lesser "
+                    "Malediction or Poor Characteristic), Reduced Attack, Reduced "
+                    "Might or Reduced Powers; some are in Realms of Power: Magic "
+                    "pp. 47-51. (p. 135)",
+                    "A stronger Waimie: give her human servants, the Cult of the "
+                    "Serpent, held perhaps by something like Entrancement. Without "
+                    "Difficult Underlings she can send her children in coordinated "
+                    "groups, and if she beats the magi outright she need share no "
+                    "vis source with her brood. (p. 136)",
+                ),
+            ),
+        ],
     )
 
 
@@ -715,7 +754,20 @@ def _one_age(b: Builder, caves: Neighbour, age: _Age) -> Creature:
             "lies in the eyes of the corpse (p. 134). As magical creatures they "
             "need no food, water or air (p. 138).",
         ),
-        secrets="Sent for vis by her mother, who may be watching through her eyes. Easily fooled by illusions, shapeshifting and distractions, she is not very attentive and sees poorly, though Magic Sensitivity, once she has it, hinders invisibility used to slip past her. (pp. 134-135, 139)",
+        secrets=[
+            titled(
+                "Sent by the Waimie",
+                "Sent for vis by her mother, the Waimie, who may be watching "
+                "through her eyes. (pp. 134-135, 139)",
+            ),
+            titled(
+                "Poor eyes",
+                "Easily fooled by illusions, shapeshifting and distractions, she is "
+                "not very attentive and sees poorly, though Magic Sensitivity, once "
+                "she has it, hinders invisibility used to slip past her. (pp. "
+                "134-135, 139)",
+            ),
+        ],
     )
 
 
@@ -727,12 +779,22 @@ def _kin(b: Builder, insula: Neighbour, caves: Neighbour) -> tuple[Creature, Cre
         appearance="To look at, a man, and a much smaller thing than his wife.",
         notes="The book prints no statistics and leaves his powers to the "
         "storyguide. An optional inhabitant of the insula.",
-        secrets="The father of the brood. Once the characters are exploring he "
-        "comes to them with a friendly greeting and says who he is, with no wish "
-        "for revenge and no feeling at all at the Waimie's death. He explains "
-        "the Serpent Map and is useful. But the Serpent of Eden was a snake that "
-        "took human shape: he is very likely a shapechanger, either a magical "
-        "man who can be a serpent or a snake who walks as a man.",
+        secrets=[
+            titled("Whose husband he is", "The father of the Waimie's brood."),
+            titled(
+                "A friendly greeting",
+                "Once the characters are exploring he comes to them with a friendly "
+                "greeting and says who he is, with no wish for revenge and no "
+                "feeling at all at the Waimie's death. He explains the Serpent Map "
+                "and is useful.",
+            ),
+            titled(
+                "What he truly is",
+                "The Serpent of Eden was a snake that took human shape: he is very "
+                "likely a shapechanger, either a magical man who can be a serpent or "
+                "a snake who walks as a man.",
+            ),
+        ],
     )
     daughter = b.creature(
         "The Rebellious Daughter",
@@ -740,13 +802,25 @@ def _kin(b: Builder, insula: Neighbour, caves: Neighbour) -> tuple[Creature, Cre
         place=caves,
         notes="An elder daughter of the Waimie. The book names no age and prints "
         "no block of her own: use the brood block that suits.",
-        secrets="If the characters are not at once hostile to the brood, she "
-        "looks to them for freedom. Her mother shuts the eldest out of the Magic "
-        "Realm cave, so that Acclimation stunts them and they can neither "
-        "challenge her nor brood, which needs a serpent of the mother's size. "
-        "Some eat their kin for the vis; some roam far for it, and it is barely "
-        "enough. She needs a Magic aura strong enough to stop Acclimation, and a "
-        "mate that is near enough serpent or dragon.",
+        secrets=[
+            titled(
+                "Looking for freedom",
+                "If the characters are not at once hostile to the brood, she looks "
+                "to them for freedom.",
+            ),
+            titled(
+                "Shut out by the Waimie",
+                "Her mother shuts the eldest out of the Magic Realm cave, so that "
+                "Acclimation stunts them and they can neither challenge her nor "
+                "brood, which needs a serpent of the mother's size. Some eat their "
+                "kin for the vis; some roam far for it, and it is barely enough.",
+            ),
+            titled(
+                "What the daughter needs",
+                "She needs a Magic aura strong enough to stop Acclimation, and a "
+                "mate that is near enough serpent or dragon.",
+            ),
+        ],
     )
     return husband, daughter
 
@@ -783,26 +857,49 @@ def _lair(b: Builder) -> tuple[Neighbour, Neighbour]:
                 "passes through a gate into the Magic Realm.",
             )
         ],
-        secrets=paragraphs(
-            "The saga chooses where the caves lie, but they must be near water "
-            "and in a Magic aura of at least 5, with some local feature to "
-            "explain it, by tethers added together (Realms of Power: Magic p. "
-            "8). The aura is 3 by the entrance and rises with depth to 8 in the "
-            "last cave, reached by no direct way though its passages are the "
-            "widest, ten feet across on average. (pp. 138-139)",
-            "Each cave holds serpents of mixed sizes, who resent intruders but "
-            "hardly talk to each other, so a party meets one caveful at a time. "
-            "On the first visit their mother is away. A lone serpent two years "
-            "older than any yet met will seem the mistress of them all; for a "
-            "harder fight, a horde attacks as an untrained group. Killing them "
-            "does not stop the thefts. (pp. 138-139)",
-            "Area spells catch several at once. An Individual of Ignem fills the "
-            "volume of one Size 0 creature, which is two of Size -1, five of "
-            "Size -2, ten of Size -3 or twenty of Size -4, and so on. A Pilum of "
-            "Fire can hit two hundred hatchlings, or fifty with five yearlings "
-            "and a two-year-old. Once alert they spread out, cutting such spells "
-            "to between a half and a third. Sealed in, they simply wait. (p. 138)",
-        ),
+        secrets=[
+            titled(
+                "The deepening aura",
+                "The aura of the Malachite Caves is 3 by the entrance and rises "
+                "with depth to 8 in the last cave, reached by no direct way though "
+                "its passages are the widest, ten feet across on average. (pp. "
+                "138-139)",
+            ),
+            titled(
+                "A caveful at a time",
+                "Each cave holds serpents of mixed sizes, who resent intruders but "
+                "hardly talk to each other, so a party meets one caveful at a time. "
+                "(pp. 138-139)",
+            ),
+            titled(
+                "Killing the cave serpents",
+                "Killing the serpents of the Malachite Caves does not stop the "
+                "thefts. (pp. 138-139)",
+            ),
+            titled(
+                "When the serpents are alert",
+                "Once alert the cave serpents spread out, cutting area spells to "
+                "between a half and a third. Sealed in, they simply wait. (p. 138)",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The saga chooses where the caves lie, but they must be near "
+                    "water and in a Magic aura of at least 5, with some local "
+                    "feature to explain it, by tethers added together (Realms of "
+                    "Power: Magic p. 8). (pp. 138-139)",
+                    "On the first visit their mother is away. A lone serpent two "
+                    "years older than any yet met will seem the mistress of them "
+                    "all; for a harder fight, a horde attacks as an untrained "
+                    "group. (pp. 138-139)",
+                    "Area spells catch several at once. An Individual of Ignem "
+                    "fills the volume of one Size 0 creature, which is two of Size "
+                    "-1, five of Size -2, ten of Size -3 or twenty of Size -4, and "
+                    "so on. A Pilum of Fire can hit two hundred hatchlings, or "
+                    "fifty with five yearlings and a two-year-old. (p. 138)",
+                ),
+            ),
+        ],
     )
     insula = b.place(
         "The Waimie's Insula",
@@ -817,19 +914,36 @@ def _lair(b: Builder) -> tuple[Neighbour, Neighbour]:
         "ways and interlock, and from a height they look like a map or a "
         "foreign, curling script. The land changes, too slowly to watch, as if "
         "a nest of snakes were languidly coiling.",
-        secrets=paragraphs(
-            "Enclosed by an Animal Boundary of level 4: the effective Magic aura "
-            "is 14, or 18 for anything to do with Animal, her Magic Resistance "
-            "and Penetration among them. Any magical activity has four extra "
-            "botch dice. (p. 140)",
-            "Even with her dead a child may hide here and grow to be a new "
-            "danger, and visitors from elsewhere in the Magic Realm, serpents and "
-            "dragons most of all, slip through the boundary. The storyguide "
-            "peoples its far reaches. (p. 140)",
-            "Crossing a boundary has a base Ease Factor of 18, ignoring "
-            "Familiarity; using a vestige has (10 - vestige level) x 3. See "
-            "Realms of Power: Magic p. 23. (p. 141)",
-        ),
+        secrets=[
+            titled(
+                "The Animal boundary",
+                "The Waimie's Insula is enclosed by an Animal Boundary of level 4. "
+                "(p. 140)",
+            ),
+            titled(
+                "A hiding place for her children",
+                "Even with the Waimie dead a child of hers may hide in the insula "
+                "and grow to be a new danger. (p. 140)",
+            ),
+            titled(
+                "Visitors from the Magic Realm",
+                "Visitors from elsewhere in the Magic Realm, serpents and dragons "
+                "most of all, slip through the boundary of the Waimie's Insula. "
+                "(p. 140)",
+            ),
+            titled(
+                "Storyguide Notes",
+                paragraphs(
+                    "The effective Magic aura is 14, or 18 for anything to do "
+                    "with Animal, her Magic Resistance and Penetration among them. "
+                    "Any magical activity has four extra botch dice. (p. 140)",
+                    "The storyguide peoples its far reaches. (p. 140)",
+                    "Crossing a boundary has a base Ease Factor of 18, ignoring "
+                    "Familiarity; using a vestige has (10 - vestige level) x 3. "
+                    "See Realms of Power: Magic p. 23. (p. 141)",
+                ),
+            ),
+        ],
     )
     b.place(
         "The Serpent Map",
@@ -837,53 +951,68 @@ def _lair(b: Builder) -> tuple[Neighbour, Neighbour]:
         status="Hidden",
         known="Hidden",
         summary="The landscape of the insula itself, read by moving across it.",
-        secrets=paragraphs(
-            "Both a map and a book in the speech of serpents: an intelligent "
-            "snake crossing it begins to take in a chart of part of the Magic "
-            "Realm, marked with its marvels and dangers. (pp. 140-141)",
-            "A season's study is a Summa on Area Lore: Magic Realm, Level 5, "
-            "Quality 4. With the Animal Ken Virtue the Quality is the Animal Ken "
-            "score if over 5; a Bjornaer with a snake heartbeast uses an "
-            "effective Language score of 5 (Houses of Hermes: Mystery Cults p. "
-            "23); and spending half the season as a serpent adds 3. (p. 141)",
-            "At the storyguide's option it can locate things, at a week's study "
-            "per 3 points of Ease Factor and a roll of Intelligence + Area Lore: "
-            "Magic Realm: a Magic aura at 9 + aura, a Magic regio at 12 + its "
-            "highest aura, a vis source at 15 + its yearly pawns, a Magic Realm "
-            "gate at 18. Success lets the reader trace the place from any known "
-            "aura in the mundane world. (p. 141)",
-        ),
+        secrets=[
+            titled(
+                "A map in the speech of serpents",
+                "The Serpent Map is both a map and a book in the speech of "
+                "serpents: an intelligent snake crossing it begins to take in a "
+                "chart of part of the Magic Realm, marked with its marvels and "
+                "dangers. (pp. 140-141)",
+            ),
+            titled(
+                "Studying the Serpent Map",
+                "A season's study of the Serpent Map is a Summa on Area Lore: Magic "
+                "Realm, Level 5, Quality 4. With the Animal Ken Virtue the Quality "
+                "is the Animal Ken score if over 5; a Bjornaer with a snake "
+                "heartbeast uses an effective Language score of 5 (Houses of "
+                "Hermes: Mystery Cults p. 23); and spending half the season as a "
+                "serpent adds 3. (p. 141)",
+            ),
+            titled(
+                "Storyguide Notes",
+                "At the storyguide's option it can locate things, at a week's study "
+                "per 3 points of Ease Factor and a roll of Intelligence + Area "
+                "Lore: Magic Realm: a Magic aura at 9 + aura, a Magic regio at 12 + "
+                "its highest aura, a vis source at 15 + its yearly pawns, a Magic "
+                "Realm gate at 18. Success lets the reader trace the place from any "
+                "known aura in the mundane world. (p. 141)",
+            ),
+        ],
     )
     return caves, insula
 
 
 def _exits(b: Builder, insula: Neighbour) -> None:
-    for name, summary, secret in (
+    for name, summary, title, secret in (
         (
             "The Stream of the Insula",
             "A stream crossing one part of the insula.",
-            "A boundary into an insula aligned to Aquam.",
+            "Where the stream leads",
+            "The stream is a boundary into an insula aligned to Aquam.",
         ),
         (
             "The Great Ivy Root",
             "The root of a huge ivy against one wall, climbing out of sight.",
+            "Where the ivy leads",
             "A climber crosses this Herbam boundary into an insula ruled by plants.",
         ),
         (
             "The Malachite Statue",
             "A little abstract statue of the same malachite on a small mound, all "
             "arches and rings, which from some angles suggests a dancing woman.",
-            "A Terram vestige of level 4, of a Mystery Cult of dancers who raise "
-            "fertility by their art. It is present too in an insula of Mentem and "
-            "one of Corpus.",
+            "The dancers' vestige",
+            "The Malachite Statue is a Terram vestige of level 4, of a Mystery Cult "
+            "of dancers who raise fertility by their art. It is present too in an "
+            "insula of Mentem and one of Corpus.",
         ),
         (
             "The Phantom Mouse",
             "A mouse that runs through the lair, glimpsed from the corner of the "
             "eye or heard as tiny feet.",
-            "An Imaginem vestige of level 2, tied to the dream of a cat that is a "
-            "magus' familiar. It appears in several insulae, and whoever catches "
-            "it can travel with it to them.",
+            "The cat's dream",
+            "The Phantom Mouse is an Imaginem vestige of level 2, tied to the dream "
+            "of a cat that is a magus' familiar. It appears in several insulae, and "
+            "whoever catches it can travel with it to them.",
         ),
     ):
         b.place(
@@ -892,8 +1021,13 @@ def _exits(b: Builder, insula: Neighbour) -> None:
             status="Hidden",
             known="Hidden",
             summary=summary,
-            secrets=f"{secret} A sample exit: the storyguide sets the true "
-            "destination. (p. 141)",
+            secrets=[
+                titled(title, f"{secret} (p. 141)"),
+                titled(
+                    "Storyguide Notes",
+                    "A sample exit: the storyguide sets the true destination. (p. 141)",
+                ),
+            ],
         )
 
 
@@ -903,11 +1037,24 @@ def _vis_places(b: Builder) -> tuple[Neighbour, Neighbour]:
         status="Rumoured",
         known=LOCAL,
         summary="A far-off grove where marjoram grows.",
-        secrets="The Waimie's own vis source, which feeds her Hunger for Animal "
-        "Magic and which she prizes above all other vis. Each year a child of "
-        "hers gathers three sprigs as the star Regulus rises; the herb stills the "
-        "carrier's venom for the trip home. The book gives no pawn count and no "
-        "place. (p. 136)",
+        secrets=[
+            titled(
+                "Whose vis grows here",
+                "The Waimie's own vis source, which she prizes above all other vis. "
+                "(p. 136)",
+            ),
+            titled(
+                "Gathering the marjoram",
+                "Each year a child of the Waimie's gathers three sprigs as the star "
+                "Regulus rises; the herb stills the carrier's venom for the trip "
+                "home. (p. 136)",
+            ),
+            titled(
+                "Storyguide Notes",
+                "The grove feeds her Hunger for Animal Magic. The book gives no pawn "
+                "count and no place. (p. 136)",
+            ),
+        ],
     )
     pasture = b.place(
         "The Church's Parcel in the Valley",
@@ -918,9 +1065,15 @@ def _vis_places(b: Builder) -> tuple[Neighbour, Neighbour]:
         "elsewhere it came out foul and acrid. The freeman who held it died "
         "childless and left it to the Church, which lets it to local serfs for "
         "garden crops.",
-        secrets="Those who know her appetite may guess why she liked the milk: put "
-        "back to pasture, the land would give cows whose milk yields Creo vis. "
-        "The book gives no amount. (p. 138)",
+        secrets=[
+            titled(
+                "Why the milk was good",
+                "Those who know the Waimie's appetite may guess why she liked the "
+                "milk: put back to pasture, the land would give cows whose milk "
+                "yields Creo vis. (p. 138)",
+            ),
+            titled("Storyguide Notes", "The book gives no amount. (p. 138)"),
+        ],
     )
     return grove, pasture
 
@@ -935,9 +1088,18 @@ def _cult(b: Builder, waimie: Creature) -> None:
         "news.",
         faction="Faith or sect",
         decides="A charismatic leader",
-        secrets="An option for a stronger Waimie, not part of the story as "
-        "printed. They gather information and vis for her. Her human servants are perhaps held by a power like the "
-        "Entrancement Ability. (p. 136)",
+        secrets=[
+            titled(
+                "Whom the cult serves",
+                "The cultists gather information and vis for the Waimie. (p. 136)",
+            ),
+            titled(
+                "Storyguide Notes",
+                "An option for a stronger Waimie, not part of the story as printed. "
+                "Her human servants are perhaps held by a power like the "
+                "Entrancement Ability. (p. 136)",
+            ),
+        ],
     )
     leader = b.magus(
         "The Leader of the Cult of the Serpent",
@@ -946,9 +1108,21 @@ def _cult(b: Builder, waimie: Creature) -> None:
         age=None,
         type="companion",
         summary="The persuasive head of the Cult of the Serpent.",
-        secrets="A hedge wizard with The Gentle Gift, Magical Blood of the serpent "
-        "and a selection of serpent-related powers, somehow kin to the brood. The "
-        "book prints no statistics. (p. 136)",
+        secrets=[
+            titled(
+                "A hedge wizard",
+                "A hedge wizard with a selection of serpent-related powers. (p. 136)",
+            ),
+            titled(
+                "Kin to the serpents",
+                "The leader of the cult is somehow kin to the Waimie's brood. (p. 136)",
+            ),
+            titled(
+                "Storyguide Notes",
+                "Has The Gentle Gift and Magical Blood of the serpent. The book "
+                "prints no statistics. (p. 136)",
+            ),
+        ],
     )
     b.link(leader, "places", cult, "Leads it")
     b.link(cult, "creatures", waimie, "Its Scaly Queen")
@@ -965,16 +1139,26 @@ def _story(b: Builder, waimie: Creature) -> Neighbour:
             moves="A track",
             summary="Someone has been at the covenant's vis before the magi could "
             "get there. A snake has been seen near the place.",
-            secrets=paragraphs(
-                "A serpent of the Magic Realm is sending her young to rob the "
-                "covenant's vis, first at its sources, then at home. She suits a "
-                "run of linked stories close together better than a saga-long "
-                "theme, and her brood start small and grow more dangerous. "
-                "(pp. 7, 133)",
-                "She need not be killed: she will settle for a tithe of vis, "
-                "smaller perhaps than what her children would steal, with no "
-                "lives lost. (p. 141)",
-            ),
+            secrets=[
+                titled(
+                    "Who is stealing the vis",
+                    "A serpent of the Magic Realm is sending her young to rob the "
+                    "covenant's vis, first at its sources, then at home. (pp. 7, "
+                    "133)",
+                ),
+                titled(
+                    "A tithe instead of thefts",
+                    "The Waimie need not be killed: she will settle for a tithe of "
+                    "vis, smaller perhaps than what her children would steal, with "
+                    "no lives lost. (p. 141)",
+                ),
+                titled(
+                    "Storyguide Notes",
+                    "She suits a run of linked stories close together better than "
+                    "a saga-long theme, and her brood start small and grow more "
+                    "dangerous. (pp. 7, 133)",
+                ),
+            ],
             stages=[
                 b.stage(
                     "The Empty Vis Source",
@@ -1086,7 +1270,7 @@ def _seed(
     b: Builder,
     name: str,
     summary: str,
-    secret: str,
+    secret: Secrets,
     place: Neighbour | None = None,
 ) -> Neighbour:
     """A story seed: a dormant threat with no stages."""
@@ -1109,41 +1293,73 @@ def _seeds(
         "The Queen's Vis",
         "A small serpent leaves the lair on some errand of its own, each year "
         "at the same time.",
-        "Whoever watches the lair and follows her can reach the marjoram. Taking "
-        "it from her gives a strong hand with the Waimie, who may hold off the "
-        "thefts for as long as he has it hostage. (p. 136)",
+        [
+            titled(
+                "Where the small serpent goes",
+                "Whoever watches the lair and follows the small serpent can reach "
+                "the Waimie's marjoram. (p. 136)",
+            ),
+            titled(
+                "The marjoram as a hostage",
+                "Taking the marjoram from her gives a strong hand with the Waimie, "
+                "who may hold off the thefts for as long as he has it hostage. "
+                "(p. 136)",
+            ),
+        ],
         grove,
     )
     rebel = _seed(
         b,
         "The Rebellious Daughter",
         "One of the great serpents does not attack on sight.",
-        "See the daughter's record. If the characters meet her needs she will "
-        "stand with them against her mother; whether she can be trusted after "
-        "that remains to be seen. (p. 136)",
+        [
+            titled(
+                "An ally against the Waimie",
+                "If the characters meet the Rebellious Daughter's needs she will "
+                "stand with them against her mother; whether she can be trusted "
+                "after that remains to be seen. (p. 136)",
+            ),
+            titled("Storyguide Notes", "See the daughter's record. (p. 136)"),
+        ],
     )
     b.link(rebel, "creatures", daughter, "The daughter")
     _seed(
         b,
         "Wrong Side of the Fence",
         "The siege finds the covenant's people on both sides of the serpent.",
-        "Those outside learn that what they need against her (vis, a ritual's "
-        "casting tablet, an enchantment) is inside, and must get it past the "
-        "coils. (p. 139)",
+        [
+            titled(
+                "What lies inside the coils",
+                "Those outside the serpent learn that what they need against her "
+                "(vis, a ritual's casting tablet, an enchantment) is inside, and "
+                "must get it past the coils. (p. 139)",
+            )
+        ],
     )
     _seed(
         b,
         "Not Alone",
         "A redcap brings word that a Hermetic rival is losing vis to the same "
         "thieves, and proposes a summit.",
-        "The rival wants the meeting held at the players' covenant. Some suspect "
-        "a motive beyond the alliance against her; surely not? (p. 139)",
+        [
+            titled(
+                "Where the rival wants to meet",
+                "The Hermetic rival wants the meeting held at the players' "
+                "covenant. Some suspect a motive beyond the alliance against the "
+                "serpent; surely not? (p. 139)",
+            )
+        ],
     )
     wed = _seed(
         b,
         "The Serpent's Husband",
         "A friendly man is met walking in the Waimie's lair.",
-        "See his record: is he all he seems? (p. 140)",
+        [
+            titled(
+                "Storyguide Notes",
+                "See the husband's record: is he all he seems? (p. 140)",
+            )
+        ],
         insula,
     )
     b.link(wed, "creatures", husband, "The husband")
@@ -1151,20 +1367,42 @@ def _seeds(
         b,
         "Have We Made Things Worse?",
         "The great serpent is dead, and serpents are still seen.",
-        "Her death frees the brood. The young wander lost, and stay until "
-        "Acclimation makes them plain serpents or their elders eat them. The older "
-        "flee to find auras and vis sources of their own; some may mature to her "
-        "statistics and, with mates, brood. With enough auras about there may be "
-        "several Waimies competing for one set of vis sources, or a war until "
-        "one rules. (p. 141)",
+        [
+            titled(
+                "The young serpents",
+                "The Waimie's death frees the brood. The young wander lost, and stay "
+                "until Acclimation makes them plain serpents or their elders eat "
+                "them. (p. 141)",
+            ),
+            titled(
+                "The older serpents",
+                "With the Waimie dead, the older of her brood flee to find auras and "
+                "vis sources of their own; some may mature to her statistics and, "
+                "with mates, brood. (p. 141)",
+            ),
+            titled(
+                "Several Waimies",
+                "With enough auras about there may be several Waimies competing for "
+                "one set of vis sources, or a war until one rules. (p. 141)",
+            ),
+        ],
     )
     _seed(
         b,
         "Unwelcome Visitors",
         "Strangers from the Magic Realm begin to ask after the serpent's lair.",
-        "A few beings of the Magic Realm know of the Serpent Map and will not "
-        "leave the characters to it. Some are only chancers, but what it holds "
-        "is of use to mighty beings, and one will come in time, perhaps far "
-        "worse than she was. (p. 141)",
+        [
+            titled(
+                "Others who want the Serpent Map",
+                "A few beings of the Magic Realm know of the Serpent Map and will "
+                "not leave the characters to it. (p. 141)",
+            ),
+            titled(
+                "A mightier seeker",
+                "Some who seek the Serpent Map are only chancers, but what it holds "
+                "is of use to mighty beings, and one will come in time, perhaps far "
+                "worse than the Waimie was. (p. 141)",
+            ),
+        ],
         insula,
     )
