@@ -1398,6 +1398,13 @@ class XpGain:
 
 
 @dataclass(frozen=True)
+class LabEffect:
+    """Lab work: what the season in the laboratory does."""
+
+    work: lab_seasons.LabWork
+
+
+@dataclass(frozen=True)
 class BookEffect:
     """Book work: what the season does to books."""
 
@@ -1478,7 +1485,8 @@ class Warp:
 #: What a season does to the saga besides experience, as data: seasons/advance
 #: applies each kind (one function per kind), in this order.
 SeasonEffect = (
-    BookEffect
+    LabEffect
+    | BookEffect
     | SupplementEffect
     | GainFaith
     | SeekInsight
@@ -1490,6 +1498,7 @@ SeasonEffect = (
     | SpendVis
 )
 EFFECT_ORDER: tuple[type, ...] = (
+    LabEffect,
     BookEffect,
     SupplementEffect,
     GainFaith,
@@ -1521,12 +1530,22 @@ class Outcome:
     effects: list[SeasonEffect] = field(default_factory=list)
     #: Vis study still to roll (a preview made without a die).
     pending_roll: bool = False
-    #: Lab work: what the season in the laboratory does.
-    lab_work: lab_seasons.LabWork | None = None
 
     @property
     def ok(self) -> bool:
         return not self.problems
+
+    @property
+    def lab_work(self) -> lab_seasons.LabWork | None:
+        """What the season in the laboratory does (its LabEffect's work)."""
+        effect = self.effect_of(LabEffect)
+        return effect.work if effect is not None else None
+
+    @lab_work.setter
+    def lab_work(self, work: lab_seasons.LabWork | None) -> None:
+        self.effects[:] = [e for e in self.effects if not isinstance(e, LabEffect)]
+        if work is not None:
+            self.effects.append(LabEffect(work))
 
     def effect_of[E](self, kind: type[E]) -> E | None:
         """The season's effect of `kind`, if it has one."""

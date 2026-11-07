@@ -123,6 +123,12 @@ version saves, and tagged in git (`v0.2.0`, ...).
 | --- | --- | --- |
 | Armarius | 2.52.0 | the app's new name |
 
+## 3.85.3 — 2026-11-07
+
+### Fundamenta
+
+- **Laboratory work joins the other season effects**: a season's lab work is applied the same way as its book work, supplement and other effects, so advancing a season is one flat sequence of steps. Seasons advance exactly as before.
+
 ## 3.85.2 — 2026-11-07
 
 ### Fundamenta

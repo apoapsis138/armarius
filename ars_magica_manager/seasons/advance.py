@@ -203,6 +203,12 @@ def _apply_season_wide(
         character.campaign_seasons.append(f"{plan.year} {plan.season}")
 
 
+def _apply_lab(
+    saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.LabEffect
+) -> None:
+    apply_lab_work(saga, character, outcome)
+
+
 def _apply_book(
     saga: Saga, character: Character, outcome: rules.Outcome, effect: rules.BookEffect
 ) -> None:
@@ -267,6 +273,7 @@ def _spend_vis(
 
 #: How each kind of effect changes the saga (the kinds are rules.EFFECT_ORDER).
 EFFECT_APPLIERS: dict[type, Callable[..., None]] = {
+    rules.LabEffect: _apply_lab,
     rules.BookEffect: _apply_book,
     rules.SupplementEffect: _apply_supplement,
     rules.GainFaith: _gain_faith,
@@ -292,9 +299,10 @@ def _apply_effects(
 
 #: Effects applied before the season-wide ones (Agency, covers, campaigns),
 #: and those after.
-_FIRST_EFFECTS = rules.EFFECT_ORDER[:2]
-_EARLY_EFFECTS = rules.EFFECT_ORDER[2:5]
-_LATE_EFFECTS = rules.EFFECT_ORDER[5:]
+_LAB_EFFECTS = rules.EFFECT_ORDER[:1]
+_FIRST_EFFECTS = rules.EFFECT_ORDER[1:3]
+_EARLY_EFFECTS = rules.EFFECT_ORDER[3:6]
+_LATE_EFFECTS = rules.EFFECT_ORDER[6:]
 
 
 @dataclass
@@ -322,8 +330,7 @@ def apply(saga: Saga, worked: Sequence[rules.Outcome]) -> Applied:
             if gain.result.xp:
                 _add_xp(character, gain.subject, gain.result.xp)
         _record_raised(character, outcome)
-        if outcome.lab_work is not None:
-            apply_lab_work(saga, character, outcome)
+        _apply_effects(saga, character, outcome, _LAB_EFFECTS)
         if outcome.plan.activity == ls.NEW:
             applied.new_labs[character.id] = set_up_new_lab(saga, character, outcome).id
         _apply_effects(saga, character, outcome, _FIRST_EFFECTS)
